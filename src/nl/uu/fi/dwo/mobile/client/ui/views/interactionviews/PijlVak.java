@@ -30,7 +30,21 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSte
 
 
 
-public class PijlVak extends LayoutPanel{
+public class PijlVak extends LayoutPanel
+{
+	/**
+	 * Marge voor operator string.
+	 */
+	private static final String MARGE_VOOR = "  ";
+	/**
+	 * Marge na operator string.
+	 */
+	private static final String MARGE_NA = " ";
+	/**
+	 * Minimum breedte van het vak waarin de discriminant of 
+	 * een substitutie kan worden ingevuld.
+	 */
+	private static final int MIN_WIDTH_ABC_SUB = 110;
 
 	public static TextConstants rb = Text.constants;
 	
@@ -76,30 +90,39 @@ public class PijlVak extends LayoutPanel{
 		this.setWidgetLeftRight(canvas, 0, Style.Unit.PX, 0, Style.Unit.PX);
 		this.setWidgetTopBottom(canvas, 0, Style.Unit.PX, 0, Style.Unit.PX);
 		
-		width = (fm.getAscent() + fm.getDescent())/2 + fm.getAscent()/4 + (int) ctx.measureText("  "+operator+"   ").getWidth();
+		width = (fm.getAscent() + fm.getDescent())/2 + fm.getAscent()/4 + (int) ctx.measureText(MARGE_VOOR + operator + "   ").getWidth();
 		height = 5*(fm.getAscent() + fm.getDescent())/2;
-		if(op.equals("abc") || op.equals("sub"))
-			width = 110;
 		
-		 
-		if(op.equals(""))
+		if (operator.equals("abc")) 
+		{
+			width = Math.max(MIN_WIDTH_ABC_SUB, (int) ctx.measureText(MARGE_VOOR + "Discriminant" + MARGE_NA).getWidth());
+		}
+		else if (operator.equals("sub")) 
+		{
+			width = Math.max(MIN_WIDTH_ABC_SUB, (int) ctx.measureText(MARGE_VOOR + rb.subLabel() + MARGE_NA).getWidth());
+		}
+
+		
+		if (op.equals(""))
 		{	//ashoogte = 15;
 			width = 30;
 			//height = 30;
 		}
-		ashoogte = 5*(fm.getAscent() + fm.getDescent())/4;
 		
-		
+		ashoogte = 5*(fm.getAscent() + fm.getDescent())/4; // why?
 		
 		setPixelSize(width, height);
 		//this.getElement().getStyle().setBackgroundColor("red");
-		if(operator.equals("abc") || operator.equals("sub"))
-		{	hasPrefix = true;
-			if(operator.equals("abc"))
-			{	prefixVak = new FormuleViewer("D=");
+		if (operator.equals("abc") || operator.equals("sub"))
+		{
+			hasPrefix = true;
+			if (operator.equals("abc"))
+			{
+				prefixVak = new FormuleViewer("D=");
 				prefixVak.setFont(fm);
 			}
-			if(operator.equals("sub"))
+			
+			if (operator.equals("sub"))
 			{	
 				if (this.fe.isVergelijkingVak)
 					prefixVak = new FormuleViewer("p="); // dit is in de java-versie het geval
@@ -114,8 +137,6 @@ public class PijlVak extends LayoutPanel{
 			//this.setWidgetLeftWidth(p, 10, Style.Unit.PX, prefixVak.getWidth(), Style.Unit.PX);
 			//this.setWidgetTopHeight(p, ashoogte, Style.Unit.PX, prefixVak.getHeight(), Style.Unit.PX);
 			//p.getElement().getStyle().setBackgroundColor(CssColor.make(255,255,200).toString());
-			
-			
 		}
 		//prefixVak.setEditable(false);
 		//prefixVak.setLocation((fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+" ").getWidth(),(fm.getAscent() + fm.getDescent())/2);
@@ -150,21 +171,23 @@ public class PijlVak extends LayoutPanel{
 		//editor.setCurrent(0, 0);
 		//editor.requestFocus();
 		if (hasPrefix)
-		{	p.add(prefixVak.getAsPanel());
-			if(operator.equals("abc") || operator.equals("sub"))
+		{
+			p.add(prefixVak.getAsPanel());
+			if (operator.equals("abc") || operator.equals("sub"))
 			{
 				p.setWidgetLeftWidth(prefixVak.getAsPanel(), 10, Style.Unit.PX, prefixVak.getWidth(), Style.Unit.PX);
 				p.setWidgetTopHeight(prefixVak.getAsPanel(), ashoogte, Style.Unit.PX, prefixVak.getHeight(), Style.Unit.PX);
 			}
 		}
 		
-		if(!operator.equals("") && !operator.equals("haakjes") && !operator.equals("herleid") && !operator.equals("gelijkwaardig") && !operator.equals("ontbind") && !operator.equals("splits") && !operator.equals("wortel")  && !operator.equals("implicatie"))
+		if (!operator.equals("") && !operator.equals("haakjes") && !operator.equals("herleid") && !operator.equals("gelijkwaardig") && !operator.equals("ontbind") && !operator.equals("splits") && !operator.equals("wortel")  && !operator.equals("implicatie"))
 		{
 			p.add(editorPanel);
 			//formuleVak.setLocation((fm.getAscent() + fm.getDescent())/2 + fm.stringWidth("  "+operator+" "),(fm.getAscent() + fm.getDescent())/2);
-			p.setWidgetLeftWidth(editorPanel, (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+" ").getWidth(), Style.Unit.PX, editor.getWidth(), Style.Unit.PX);
+			double left = (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText(MARGE_VOOR + operator + MARGE_NA).getWidth();
+			p.setWidgetLeftWidth(editorPanel, left, Style.Unit.PX, editor.getWidth(), Style.Unit.PX);
 			p.setWidgetTopHeight(editorPanel, (fm.getAscent() + fm.getDescent())/2, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
-			if(operator.equals("abc") || operator.equals("sub"))
+			if (operator.equals("abc") || operator.equals("sub"))
 			{
 				p.setWidgetLeftWidth(editorPanel, 10 + prefixVak.getWidth(), Style.Unit.PX, editor.getWidth(), Style.Unit.PX);
 				//p.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
@@ -181,7 +204,8 @@ public class PijlVak extends LayoutPanel{
 	{
 		viewer = new FormuleViewer(text);
 		viewer.setFont(fm);
-		if(editorPanel != null)
+		
+		if (editorPanel != null)
 			editorPanel.clear();
 		editorPanel = (TouchPanel) viewer.getAsPanel();
 		//editorPanel.getElement().getStyle().setBackgroundColor("blue");
@@ -189,56 +213,59 @@ public class PijlVak extends LayoutPanel{
 		//editor.setCurrent(0, 0);
 		//editor.requestFocus();
 		if (hasPrefix)
-		{	prefixVak.getAsPanel().removeFromParent();
+		{
+			prefixVak.getAsPanel().removeFromParent();
 			this.add(prefixVak.getAsPanel());
-			if(operator.equals("abc") || operator.equals("sub"))
+			if (operator.equals("abc") || operator.equals("sub"))
 			{
 				this.setWidgetLeftWidth(prefixVak.getAsPanel(), 10, Style.Unit.PX, prefixVak.getWidth(), Style.Unit.PX);
 				this.setWidgetTopHeight(prefixVak.getAsPanel(), ashoogte + viewer.getAsHoogte() - prefixVak.getAsHoogte(), Style.Unit.PX, prefixVak.getHeight(), Style.Unit.PX);
 			}
 		}
 		
-		if(!operator.equals("") && !operator.equals("haakjes") && !operator.equals("herleid") && !operator.equals("gelijkwaardig") && !operator.equals("ontbind") && !operator.equals("splits") && !operator.equals("wortel")  && !operator.equals("implicatie"))
+		if (!operator.equals("") && !operator.equals("haakjes") && !operator.equals("herleid") && !operator.equals("gelijkwaardig") && !operator.equals("ontbind") && !operator.equals("splits") && !operator.equals("wortel")  && !operator.equals("implicatie"))
 		{
 			this.add(editorPanel);
 			//formuleVak.setLocation((fm.getAscent() + fm.getDescent())/2 + fm.stringWidth("  "+operator+" "),(fm.getAscent() + fm.getDescent())/2);
-			this.setWidgetLeftWidth(editorPanel, (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+" ").getWidth(), Style.Unit.PX, viewer.getWidth(), Style.Unit.PX);
+			double left = (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText(MARGE_VOOR+operator+MARGE_NA).getWidth();
+			this.setWidgetLeftWidth(editorPanel, left, Style.Unit.PX, viewer.getWidth(), Style.Unit.PX);
 			//this.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2-viewer.getMainRegel().getAsHoogte()-fm.getDescent()/2, Style.Unit.PX, viewer.getHeight(), Style.Unit.PX);
 			this.setWidgetTopHeight(editorPanel, ashoogte, Style.Unit.PX, viewer.getHeight(), Style.Unit.PX);
 			
-			
-			if(operator.equals("abc") || operator.equals("sub"))
+			if (operator.equals("abc") || operator.equals("sub"))
 			{
 				this.setWidgetLeftWidth(editorPanel, 10 + prefixVak.getWidth(), Style.Unit.PX, viewer.getWidth(), Style.Unit.PX);
 				//p.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
 				this.setWidgetTopHeight(editorPanel, ashoogte + viewer.getMainRegel().getAsHoogte() - prefixVak.getAsHoogte(), Style.Unit.PX, viewer.getHeight(), Style.Unit.PX);
 			}
-			
 		}
-		zetMaat();
 		
+		zetMaat();
 	}
 	
 	public void setPijlVisible(boolean b)
 	{
-		if(!b && (operator.equals("implicatie") || operator.equals("")) && geefExpressieString().length() < 1)
+		if (!b && (operator.equals("implicatie") || operator.equals("")) && geefExpressieString().length() < 1)
 			setVisible(false);
 		else
 			setVisible(true);
 	}
 	
 	public void paintComponent()
-	{	//ctx.setFont(font);
-		ctx.setFont(XMLView.getDefaultFont());
+	{
+		ctx.setFont(this.fm.toString());
 		
         ctx.setFillStyle("black");
         ctx.setStrokeStyle("black");
 		
-        if(!(operator.equals("abc") || operator.equals("sub")))
-		{	int h = ashoogte;
+        if (!(operator.equals("abc") || operator.equals("sub")))
+		{
+        	// teken de pijl
+        	
+        	int h = ashoogte;
 			//int h = height/2;
 			ctx.beginPath();
-			ctx.arc(-h/2, h, h, (int)(180*Math.PI/4),(int)(-180*Math.PI/2));
+			ctx.arc(-h / 2, h, h, (int) (180 * Math.PI / 4), (int) (-180 * Math.PI / 2));
 			ctx.stroke();
 		
 	        ctx.beginPath();
@@ -253,8 +280,9 @@ public class PijlVak extends LayoutPanel{
 		//g.drawLine(0,getSize().height-4,7,getSize().height-4);
 		//g.setColor(Color.black);
 		
-		if(operator.equals("*"))
-		{	ctx.beginPath();
+		if (operator.equals("*"))
+		{
+			ctx.beginPath();
 			ctx.moveTo((fm.getAscent() + fm.getDescent())/2+6,ashoogte-fm.getAscent()/4+3);
 			ctx.lineTo((7*fm.getAscent()/4 + fm.getDescent())/2+6,ashoogte+fm.getAscent()/4+2);
 			ctx.moveTo((fm.getAscent() + fm.getDescent())/2+6,ashoogte+fm.getAscent()/4+2);
@@ -265,77 +293,86 @@ public class PijlVak extends LayoutPanel{
 			//g.drawLine((fm.getAscent() + fm.getDescent())/2+10,ashoogte+fm.getAscent()/4+2,(7*fm.getAscent()/4 + fm.getDescent())/2+10,ashoogte-fm.getAscent()/4+3);
 		
 		}
-		else if(operator.equals(":"))
-		{	int b=fm.getAscent() + fm.getDescent();
-			ctx.fillRect(b/2+6,ashoogte-b/4+2,2,2);
-			ctx.fillRect(b/2+6,ashoogte+b/4+1,2,2);	
+		else if (operator.equals(":"))
+		{
+			int b = fm.getAscent() + fm.getDescent();
+			double marge = ctx.measureText(MARGE_VOOR).getWidth();
+			ctx.fillRect(marge + b / 2 + 6, ashoogte - b / 4 + 2, 2, 2);
+			ctx.fillRect(marge + b / 2 + 6, ashoogte + b / 4 + 1, 2, 2);
 			ctx.beginPath();
-			ctx.moveTo(b/4+8, ashoogte+2);
-			ctx.lineTo(3*b/4+7, ashoogte+2);
+			ctx.moveTo(marge + b / 4 + 8, ashoogte + 2);
+			ctx.lineTo(marge + 3 * b / 4 + 7, ashoogte + 2);
 			ctx.stroke();
 		
 //			g.fillRect(b/2+10,ashoogte-b/4+2,2,2);
 //			g.fillRect(b/2+10,ashoogte+b/4+1,2,2);
 //			g.drawLine(b/4+11,ashoogte+2,3*b/4+10,ashoogte+2);
 		}
-		else if(operator.equals("haakjes"))
-		{	ctx.fillText(rb.haakjesLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
+		else if (operator.equals("haakjes"))
+		{
+			ctx.fillText(rb.haakjesLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
 			ctx.fillText(rb.haakjesLabel1(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 			//g.drawString(WiskOpdr.rb.getString("haakjesLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
 			//g.drawString(WiskOpdr.rb.getString("haakjesLabel1"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		
 		}
-		else if(operator.equals("herleid"))
-		{	ctx.fillText(rb.herleidLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
+		else if (operator.equals("herleid"))
+		{
+			ctx.fillText(rb.herleidLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
 			ctx.fillText(rb.herleidLabel1(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		
 			//g.drawString(WiskOpdr.rb.getString("herleidLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
 			//g.drawString(WiskOpdr.rb.getString("herleidLabel1"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		
 		}
-		else if(operator.equals("ontbind"))
-		{	ctx.fillText(rb.ontbindLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
+		else if (operator.equals("ontbind"))
+		{
+			ctx.fillText(rb.ontbindLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
 			ctx.fillText("", (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 			
 			//g.drawString(WiskOpdr.rb.getString("ontbindLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
 			//g.drawString("",(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		}
-		else if(operator.equals("splits"))
-		{	ctx.fillText(rb.splitsLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
+		else if (operator.equals("splits"))
+		{
+			ctx.fillText(rb.splitsLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
 			ctx.fillText("", (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 			
 			//g.drawString(WiskOpdr.rb.getString("splitsLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
 			//g.drawString("",(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		}
-		else if(operator.equals("wortel"))
-		{	ctx.fillText(rb.wortelLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
+		else if (operator.equals("wortel"))
+		{
+			ctx.fillText(rb.wortelLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
 			ctx.fillText("", (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 			
 			//g.drawString(WiskOpdr.rb.getString("wortelLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
 			//g.drawString("",(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		}
-		else if(operator.equals("gelijkwaardig"))
-		{	ctx.fillText(rb.gelijkwaardigLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
+		else if (operator.equals("gelijkwaardig"))
+		{
+			ctx.fillText(rb.gelijkwaardigLabel0(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
 			ctx.fillText(rb.gelijkwaardigLabel1(), (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		
 			//g.drawString(WiskOpdr.rb.getString("gelijkwaardigLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
 			//g.drawString(WiskOpdr.rb.getString("gelijkwaardigLabel1"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		
 		}
-		else if(operator.equals("implicatie"))
-		{	//g.drawString(WiskOpdr.rb.getString("gelijkwaardigLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
+		else if (operator.equals("implicatie"))
+		{
+			//g.drawString(WiskOpdr.rb.getString("gelijkwaardigLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
 			//g.drawString(WiskOpdr.rb.getString("gelijkwaardigLabel1"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
-		
 		}
 		
-		else if(operator.equals("abc"))
-		{	ctx.setFillStyle(CssColor.make(255, 255, 200));
+		else if (operator.equals("abc"))
+		{
+			ctx.setFillStyle(CssColor.make(255, 255, 200));
 			//volgende regel eigenlijk alleen voor Noordhoff
 			ctx.setFillStyle("white");
 			ctx.fillRect(0, 0, getWidth(), getHeight());
 			ctx.setStrokeStyle("black");
 			//volgende regel eigenlijk alleen voor Noordhoff
-			ctx.setStrokeStyle(CssColor.make(246,127,142).toString());
+			ctx.setStrokeStyle(CssColor.make(246,127,142).toString()); // rood randje
 			ctx.beginPath();
 			ctx.rect(0, 0, getWidth(), getHeight());
 			ctx.stroke();
@@ -352,8 +389,9 @@ public class PijlVak extends LayoutPanel{
 			//g.drawString("D = ",15 ,ashoogte+fm.getAscent());
 		}
 		
-		else if(operator.equals("sub"))
-		{	ctx.setFillStyle(CssColor.make(255, 255, 200));
+		else if (operator.equals("sub"))
+		{
+			ctx.setFillStyle(CssColor.make(255, 255, 200));
 			//volgende regel eigenlijk alleen voor Noordhoff
 			ctx.setFillStyle("white");
 			ctx.fillRect(0, 0, getWidth(), getHeight());
@@ -370,10 +408,10 @@ public class PijlVak extends LayoutPanel{
 		else
 		{	
 			ctx.setFillStyle("black");
-			ctx.fillText("  "+operator+" ", (fm.getAscent() + fm.getDescent())/2, ashoogte+fm.getAscent()/2);
+			ctx.fillText(MARGE_VOOR + operator + MARGE_NA, 
+				(fm.getAscent() + fm.getDescent()) / 2,
+				ashoogte + fm.getAscent() / 2);
 		}
-		
-		
 	}
 	
 	public int getWidth()
@@ -413,7 +451,8 @@ public class PijlVak extends LayoutPanel{
 	}
 	
 	public void zetExpressie(String s)
-	{	if(editor != null)
+	{
+		if (editor != null)
 			editor.insert(s);
 		else
 			addNewViewer(s);
@@ -423,15 +462,25 @@ public class PijlVak extends LayoutPanel{
 	}
 	
 	public void zetMaat()
-	{	int b = (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+"   ").getWidth();
-		if(editor != null)
+	{
+		int b = (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText(MARGE_VOOR + operator + "   ").getWidth();
+		if (editor != null)
 			b += editor.getWidth();
 		else
 			b += viewer.getWidth();
-		if(operator.equals("abc") || operator.equals("sub")) 
-			b = Math.max(110, getWidth());
+
+		if (operator.equals("abc")) 
+		{
+			b = Math.max(MIN_WIDTH_ABC_SUB, (int) ctx.measureText(MARGE_VOOR + "Discriminant" + MARGE_NA).getWidth());
+		}
+		else if (operator.equals("sub")) 
+		{
+			b = Math.max(MIN_WIDTH_ABC_SUB, (int) ctx.measureText(MARGE_VOOR + rb.subLabel() + MARGE_NA).getWidth());
+		}
+
 		width = b;
-		if(operator.equals("abc") || operator.equals("sub"))
+		
+		if (operator.equals("abc") || operator.equals("sub"))
 		{
 			//hier nog zorgen voor juiste hoogte bij invullen 'hoge' formules.
 			int h = height;
@@ -444,25 +493,29 @@ public class PijlVak extends LayoutPanel{
 			height = h;
 		}
 		setPixelSize(width, height);
-		if(editorPanel.getParent() == this) // FIXME Anders een assertion error bij setWidgetLeftWith
-		{ 
-			this.setWidgetLeftWidth(editorPanel, (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+" ").getWidth(), Style.Unit.PX, (editor != null)?editor.getWidth():viewer.getWidth(), Style.Unit.PX);
-		
-			
+		if (editorPanel.getParent() == this) // FIXME Anders een assertion error bij setWidgetLeftWith
+		{
+			double left = (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText(MARGE_VOOR + operator + MARGE_NA).getWidth();
+			double leftDelen = (fm.getAscent() + fm.getDescent())/2 - 1;
+			if (":".equals(operator))
+			{
+				left = left + leftDelen;
+			}
+//			System.out.println("PijlVak.zetMaat(): ctx.getFont() = " + ctx.getFont() + ", left editorpanel = " + left + ", ascent = " + fm.getAscent() + ", descent = " + fm.getDescent() + ", measureText = " + (int) ctx.measureText(MARGE_VOOR + operator + MARGE_NA).getWidth());
+			this.setWidgetLeftWidth(editorPanel, left, Style.Unit.PX, (editor != null)?editor.getWidth():viewer.getWidth(), Style.Unit.PX);
 			//hieronder: niet editor.getCurrentRegel().getAsHoogte() nodig??
 		    this.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2-((editor != null)?editor.getMainRegel().getAsHoogte():viewer.getMainRegel().getAsHoogte())-fm.getDescent()/2, Style.Unit.PX, (editor != null)?editor.getHeight():viewer.getHeight(), Style.Unit.PX);
 		
 			//formuleVak.setLocation((fm.getAscent() + fm.getDescent())/2 + fm.stringWidth("  "+operator+" "),ashoogte-formuleVak.ashoogte-fm.getDescent()/2);
 			//formuleVakHaakjeR.setLocation((fm.getAscent() + fm.getDescent())/2 + fm.stringWidth("  "+operator+" ") + formuleVakHaakjeL.getSize().width + formuleVak.getSize().width,ashoogte-formuleVak.ashoogte-fm.getDescent()/2);
-			if(operator.equals("abc") || operator.equals("sub"))
-			{	
+			if (operator.equals("abc") || operator.equals("sub"))
+			{
 				this.setWidgetLeftWidth(editorPanel, 10 + prefixVak.getWidth(), Style.Unit.PX, (editor != null)?editor.getWidth():viewer.getWidth(), Style.Unit.PX);
 				this.setWidgetTopHeight(editorPanel, ashoogte, Style.Unit.PX, (editor != null)?editor.getHeight():viewer.getHeight(), Style.Unit.PX);
-				this.setWidgetTopHeight(prefixVak.getAsPanel(), ashoogte + ((editor != null)?editor.getMainRegel().getAsHoogte():viewer.getMainRegel().getAsHoogte()) - prefixVak.getAsHoogte(), Style.Unit.PX, prefixVak.getHeight(), Style.Unit.PX);
-				
+				this.setWidgetTopHeight(prefixVak.getAsPanel(), ashoogte + ((editor != null)?editor.getMainRegel().getAsHoogte():viewer.getMainRegel().getAsHoogte()) - prefixVak.getAsHoogte(), Style.Unit.PX, prefixVak.getHeight(), Style.Unit.PX);	
 			}
-		
 		}
+		
 		fe.zetPijlVakMaat(this);
 		paintComponent();
 	}
@@ -494,18 +547,19 @@ public class PijlVak extends LayoutPanel{
 		}
 		
 		@Override
-		public void enter() {
-            
-			if(!aanpasbaar)
+		public void enter()
+		{
+			if (!aanpasbaar)
 				return;
 			aanpasbaar = false;
-			if(goedKrulImage.isAttached())
+			if (goedKrulImage.isAttached())
 				remove(goedKrulImage);
-			if(foutKruisImage.isAttached())
+			if (foutKruisImage.isAttached())
 				remove(foutKruisImage);
 			
-			if(operator.equals("abc"))
-			{	String vergelijkingString = fe.getLatestAnswer();
+			if (operator.equals("abc"))
+			{
+				String vergelijkingString = fe.getLatestAnswer();
 				VergelijkingMeerv vergelijking = FormuleParser.parseVergelijking("$f" + vergelijkingString + "@");
 				
 				double d = Algebra.geefDiscriminant(vergelijking.geefVergelijking(0));
@@ -520,7 +574,7 @@ public class PijlVak extends LayoutPanel{
 				catch(Exception e)
 				{}
 				
-				if(goed)
+				if (goed)
 				{
 					pijlvak.add(goedKrulImage);
 					setWidgetRightWidth(goedKrulImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
@@ -528,13 +582,14 @@ public class PijlVak extends LayoutPanel{
 					fe.zetEditorTerug();
 				}
 				else
-				{	aanpasbaar = true;
+				{
+					aanpasbaar = true;
 					pijlvak.add(foutKruisImage);
 					setWidgetRightWidth(foutKruisImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
 					setWidgetBottomHeight(foutKruisImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
 				}
 			}
-			else if(operator.equals("sub"))
+			else if (operator.equals("sub"))
 			{
 				String substitutieString = editor.toString();
 				Expressie substitutie = FormuleParser.geefExpressie("$f" + substitutieString + "@");
@@ -542,20 +597,23 @@ public class PijlVak extends LayoutPanel{
 				fe.zetEditorTerug();
 			}
 			else
-			{	if(!operator.equals("haakjes") && !operator.equals("herleid") && !operator.equals("gelijkwaardig") && !operator.equals("ontbind") && !operator.equals("splits") && !operator.equals("wortel")  && !operator.equals("implicatie"))
-				{	if(editor.toString().equals("")) 
-					{	aanpasbaar = true;
+			{
+				if (!operator.equals("haakjes") && !operator.equals("herleid") && !operator.equals("gelijkwaardig") && !operator.equals("ontbind") && !operator.equals("splits") && !operator.equals("wortel")  && !operator.equals("implicatie"))
+				{
+					if (editor.toString().equals("")) 
+					{
+						aanpasbaar = true;
 						return;
 					}
 				}
 				fe.maakBewerkingStap();
 				Expressie exp = FormuleParser.parse(editor.toString());
-		 		if(exp!=null && Algebra.geefTermen(exp,new Vector()).size()>1)
-		 		{	editor.insert("$h" + exp.toString() + "@");
-		 			
+		 		if (exp!=null && Algebra.geefTermen(exp,new Vector()).size()>1)
+		 		{
+		 			editor.insert("$h" + exp.toString() + "@");
 		 		}
 			}
-			if(!aanpasbaar)
+			if (!aanpasbaar)
 				vervangEditorDoorViewer();
 		}
 		
@@ -564,5 +622,80 @@ public class PijlVak extends LayoutPanel{
 			pijlvak.zetMaat();
 		}
 		
+	}
+
+	/**
+	 * Zet het font van het pijlvak (operatie) met de bijbehorende
+	 * editor en resize de benodigde vakken.
+	 * 
+	 * @param font
+	 */
+	public void setFont(FormuleFont font)
+	{
+		// het font van de operatie in het pijlvak
+		this.fm = font;
+		// zet context font
+		ctx.setFont(font.toString());
+		// zet ashoogte
+		ashoogte = 5 * (fm.getAscent() + fm.getDescent())/4;
+		
+		// en pas hoogte en breedte aan
+		this.height = 5*(fm.getAscent() + fm.getDescent())/2;
+		
+		int b = (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText(MARGE_VOOR + operator + "   ").getWidth(); // waarom ruimere marge na?
+		if (editor != null)
+			b += editor.getWidth();
+		else if (viewer != null)
+			b += viewer.getWidth();
+		
+		if (operator.equals("abc")) 
+		{
+			b = Math.max(MIN_WIDTH_ABC_SUB, (int) ctx.measureText(MARGE_VOOR + "Discriminant" + MARGE_NA).getWidth());
+		}
+		else if (operator.equals("sub")) 
+		{
+			b = Math.max(MIN_WIDTH_ABC_SUB, (int) ctx.measureText(MARGE_VOOR + rb.subLabel() + MARGE_NA).getWidth());
+		}
+		
+		width = b;
+		
+		setPixelSize(width, height);
+		
+		// zet font van prefixvak
+		if (operator.equals("abc") || operator.equals("sub"))
+		{
+			prefixVak.setFont(fm);
+			prefixVak.setDefaultFont(fm);
+		}
+		
+		// het font van de editor
+		if (editor != null)
+		{
+			this.editor.setFont(font);
+			this.editor.setDefaultFont(font);
+		}
+		
+		// positioneer de editor
+		// uit zetMaat():
+		if (editorPanel != null && editorPanel.getParent() == this)
+		{
+			double left = (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText(MARGE_VOOR + operator + MARGE_NA).getWidth();
+			double leftDelen = (fm.getAscent() + fm.getDescent())/2 - 1;
+			if (":".equals(operator))
+			{
+				left = left + leftDelen;
+			}
+
+			this.setWidgetLeftWidth(editorPanel, left, Style.Unit.PX, (editor != null)?editor.getWidth():viewer.getWidth(), Style.Unit.PX);
+		    this.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2-((editor != null)?editor.getMainRegel().getAsHoogte():viewer.getMainRegel().getAsHoogte())-fm.getDescent()/2, Style.Unit.PX, (editor != null)?editor.getHeight():viewer.getHeight(), Style.Unit.PX);
+
+			if (operator.equals("abc") || operator.equals("sub"))
+			{
+				this.setWidgetLeftWidth(editorPanel, 10 + prefixVak.getWidth(), Style.Unit.PX, (editor != null)?editor.getWidth():viewer.getWidth(), Style.Unit.PX);
+				this.setWidgetTopHeight(editorPanel, ashoogte, Style.Unit.PX, (editor != null)?editor.getHeight():viewer.getHeight(), Style.Unit.PX);
+				this.setWidgetLeftWidth(prefixVak.getAsPanel(), 10, Style.Unit.PX, prefixVak.getWidth(), Style.Unit.PX);
+				this.setWidgetTopHeight(prefixVak.getAsPanel(), ashoogte + ((editor != null)?editor.getMainRegel().getAsHoogte():viewer.getMainRegel().getAsHoogte()) - prefixVak.getAsHoogte(), Style.Unit.PX, prefixVak.getHeight(), Style.Unit.PX);
+			}
+		}
 	}
 }
