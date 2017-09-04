@@ -44,9 +44,10 @@
 			</g:DockLayoutPanel>
 		</g:west>
 		<g:center>
-			<g:FlowPanel ui:field='centerPanel' styleName='{style.centerPanel}'
+			<g:ScrollPanel ui:field='centerPanel' styleName='{style.centerPanel}'
 				addStyleNames='{style.centerBackground}'
 			>
+			 <g:FlowPanel>
 				<g:HorizontalPanel styleName='{style.itemPanel}'>
 					<g:FlowPanel styleName='{style.titlePanel}'> 
 							<g:HTML styleName='{style.title}' ui:field='title' ></g:HTML>
@@ -61,7 +62,8 @@
 				
 				
 				<cl:CellList ui:field='tiles'></cl:CellList>
-			</g:FlowPanel>
+				</g:FlowPanel>
+			</g:ScrollPanel>
 		</g:center>
 	</g:DockLayoutPanel>
 </ui:UiBinder> 

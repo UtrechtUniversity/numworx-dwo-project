@@ -68,6 +68,9 @@
 		.description {
 			margin-bottom: 36px;
 			margin-left: 18px;
+			font-family: Ubuntu;
+			font-size: 14px;
+			line-height: 18px;
 		}
 		
 		.navTitle {

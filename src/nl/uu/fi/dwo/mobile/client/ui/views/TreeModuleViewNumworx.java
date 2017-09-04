@@ -49,6 +49,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ToggleButton;
@@ -353,6 +354,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	CellList<SelectModuleItem> tiles;
 	@UiField HTML title;
 	@UiField SimplePanel description;
+	//@UiField ScrollPanel scrollpanel;
 	@UiField Image favIcon;
 	@UiField TreeModuleViewNumworxCss style;
 	@UiField FocusPanel homeBtn, upBtn;
@@ -360,7 +362,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	@UiField TextBox searchInput;
 	//@UiField ToggleButton fullBtn;
 	@UiField Label loginLabel;
-	@UiField FlowPanel centerPanel;
+	@UiField ScrollPanel centerPanel;
 	@UiField DockLayoutPanel westPanel;
 	
 	@UiHandler("homeBtn")
@@ -545,6 +547,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		SingleSelectionModel<SelectModuleItem> model = new SingleSelectionModel<SelectModuleItem>(keyprovider);
 		tiles.setSelectionModel(model);
 		pfx = r("");
+		//scrollpanel.setAlwaysShowScrollBars(true);
         final int correctie = 10; // width popup 
 		user = new MenuItem("<i class='fa fa-caret-down fa-2x'></i>", true, items) {
             @Override
@@ -786,7 +789,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				centerPanel.setStyleName(style.folderBackground(), !hasImage/* && flip==1*/);
 				centerPanel.setStyleName(style.centerBackground(), false);
 				description.setWidget(getLabel(item));
-				if(item.showChildren());
+				if(item.showChildren())
 				{	TreeItem parent = inverseMap.get(item);
 					getChildrenPromise(item)
 					.then(new ProvideTreeItems(parent))
@@ -805,7 +808,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				favIcon.setVisible(hasImage);
 				centerPanel.setStyleName(style.centerBackground(), false);
 				centerPanel.setStyleName(style.folderBackground(), !hasImage);
-				if(item.showChildren());
+				if(item.showChildren())
 				{	TreeItem parent = inverseMap.get(item);
 					getScosPromise(item)
 					.then(new ProvideTreeItems(parent))
@@ -846,6 +849,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		} else
 		if(description.startsWith("<html>")) {
 			w = new HTML(description);
+			w.setStyleName(style.description());
 		}else
 		{
 			w = new Label(description);
