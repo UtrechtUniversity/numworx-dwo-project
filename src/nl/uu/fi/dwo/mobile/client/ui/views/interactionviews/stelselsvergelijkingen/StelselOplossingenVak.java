@@ -100,7 +100,6 @@ public class StelselOplossingenVak
 	
 	public StelselOplossingenVak(StelselAntwoordVak parent, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
-		
 		ObjectMap map = JSONUtilities.wrapMap(h);
 		this.breedte = map.getInt("breedte");
 		this.hoogte = map.getInt("hoogte");
@@ -110,8 +109,9 @@ public class StelselOplossingenVak
 		attempts = new Vector();
 
 		Map<String, Object> launchState = null;
-		if(map.containsKey("interactiePanelLaunchState"))
-		{	launchState = map.getMap("interactiePanelLaunchState");
+		if (map.containsKey("interactiePanelLaunchState"))
+		{
+			launchState = map.getMap("interactiePanelLaunchState");
 			init(launchState, randomVarNamen, randomVarWaarden);
 		}
 		
@@ -505,5 +505,24 @@ public class StelselOplossingenVak
 		}
 	}
 
+	public void setFont(TekstRegel regel)
+	{
+		if (!fontOvererving)
+			return;
+		
+		font = FormuleFont.createFromFontSize(regel.getFont().getFontSize(), false);
+		if (!FormuleFont.formTimes)
+		{
+			font.setFont(regel.getFont().getFont());
+		}
 
+		editor.setFont(font);
+		editor.setDefaultFont(font);		
+	}
+
+
+	public boolean isFontOvererving()
+	{
+		return fontOvererving;
+	}
 }
