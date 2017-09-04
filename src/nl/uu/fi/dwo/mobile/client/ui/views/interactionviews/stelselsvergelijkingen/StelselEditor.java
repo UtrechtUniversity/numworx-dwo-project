@@ -23,7 +23,8 @@ import fi.wiskopdr.text.TextConstants;
 
 
 
-public class StelselEditor extends FormuleEditorWithSteps {
+public class StelselEditor extends FormuleEditorWithSteps
+{
 	
 	StelselRekenVak hoofdPanel;
 	private StelselEditor[] kinderen;
@@ -88,6 +89,8 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		stapH = 15;
 		hoogte = 40;
 		scoreMax = parent.scoreMax;
+		
+		this.setFont(parent.findParentRegel());
 	}
 	
 	public void zetStandaardOpties()
@@ -439,17 +442,18 @@ public class StelselEditor extends FormuleEditorWithSteps {
 		h.put("antwoordString", antwoordString);
 		super.setState(h);
 		//in setState wordt geen maakNakijkenAf meer gedaan. Daarom mis je het weghalen van het eennalaatste oranje vinkje.
-		if(editor == null && viewers.size() > 1)
-		{	FormuleViewer viewer = viewers.get(viewers.size() - 2);
+		if (editor == null && viewers.size() > 1)
+		{
+			FormuleViewer viewer = viewers.get(viewers.size() - 2);
 			viewer.showResult(FormuleViewer.NONE);
 		}
-		else if(latest_answer_viewer != null && editor != null && !editor.toString().equals(""))
+		else if (latest_answer_viewer != null && editor != null && !editor.toString().equals(""))
 			latest_answer_viewer.showResult(FormuleViewer.NONE);
 		
 		formuleTeller += stapNrs[editorTeller] + 1;
 		editorTeller++;
 		//dan: setStateEditorEnKinderen voor de kinderen aanroepen
-		if(kinderen != null)
+		if (kinderen != null)
 		{
 			for(int i = 0; i < kinderen.length; i++)
 			{
