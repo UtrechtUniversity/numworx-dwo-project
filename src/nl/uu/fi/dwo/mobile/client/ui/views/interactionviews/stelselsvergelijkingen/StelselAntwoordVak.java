@@ -3,35 +3,26 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkin
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.canvas.client.Canvas;
-import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
-import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
-
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.text.Text;
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
-import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
-import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVak;
@@ -39,7 +30,7 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 
-public class StelselAntwoordVak implements InteractionStub, FacetAware
+public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstElementWithFont
 {
 	static final String holderId = "dockholder";
 	private HashMap<String, Object> launchState; 
@@ -53,7 +44,16 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 	private StelselRekenVak rekenVak;
 	private StelselOplossingenVak oplossingenVak;
 	TekstVak oplossingenLabelVak;
+	/**
+	 * Even een field tbv fontovererving.
+	 */
+	ArrayList<Object> opdrachtObjects;
+	/**
+	 * Het font dat door fontovererving gezet moet worden voor oplossingenLabelVak.
+	 */
+	FormuleFont font;
 	LayoutPanel oplossingenRegel;
+	boolean fontOvererving = false;
 	
 	boolean rekenVakZichtbaar = true;
 	boolean oplossingenRegelZichtbaar = true;
@@ -75,18 +75,18 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 	private int scoreMax = 10;
 	
 	private String[] varNamen;
+	String variabelenString;
 	private Expressie[][] oplossingen;
 	private OpdrNavIF comRoot;
 	
 	
 	public StelselAntwoordVak(HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
-		
 		if (h != null && h.containsKey("breedte"))
 			breedte = ((Number) h.get("breedte")).intValue();
 		if (h != null && h.containsKey("hoogte"))
 			hoogte = ((Number) h.get("hoogte")).intValue();
-		if(h != null && h.containsKey("volledigeBreedte"))
+		if (h != null && h.containsKey("volledigeBreedte"))
 			volledigeBreedte = ((Boolean) h.get("volledigeBreedte")).booleanValue();
 		if (h != null && h.containsKey("interactiePanelLaunchState"))
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
@@ -104,8 +104,8 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 		hoogte = height;
 		ObjectMap map = JSONUtilities.wrapMap(launchData);
 		String antwoordString = "$f@";
-		String variabelenString = "$f@";
-		
+//		String variabelenString = "$f@";
+		variabelenString = "$f@";
 		
 		if (map != null)
 		{
@@ -132,15 +132,16 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 				rekenVakZichtbaar = map.getBoolean("rekenVakZichtbaar");
 			if (map.containsKey("oplossingenRegelZichtbaar"))
 				oplossingenRegelZichtbaar = map.getBoolean("oplossingenRegelZichtbaar");
-			if(map.containsKey("logObjectives"))
-			{	ObjectList logObjectivesList = ( map.getObjectList("logObjectives") );
+			if (map.containsKey("logObjectives"))
+			{
+				ObjectList logObjectivesList = (map.getObjectList("logObjectives"));
 				logObjectives = new boolean[logObjectivesList.size()][];
-				for(int i = 0; i < logObjectivesList.size(); i++)
-				{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
+				for (int i = 0; i < logObjectivesList.size(); i++)
+				{
+					logObjectives[i] = logObjectivesList.getBooleanArray(i);
 				}
 			}
 		}
-		
 		
 		try
 		{
@@ -160,18 +161,19 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 		}
 		variabelenString = variabelenString.replace(" ", "");
 		
-		try{
+		try
+		{
 			//als nodig: haakjes weghalen. Anders alleen $f en @ weghalen.
-			if(variabelenString.startsWith("$f("))
+			if (variabelenString.startsWith("$f("))
 				variabelenString = variabelenString.substring(3, variabelenString.length() - 2);
 			else
 				variabelenString = variabelenString.substring(2, variabelenString.length() -1);
 			varNamen = variabelenString.split(",");
 			
 			//variabelen omzetten naar nette varnamen (met name belangrijk voor variabelen met subscripts)
-			for(int i = 0; i < varNamen.length; i++)
+			for (int i = 0; i < varNamen.length; i++)
 			{
-				if(varNamen[i].length() > 0)
+				if (varNamen[i].length() > 0)
 					FormuleParser.geefExpressie("$f"+ varNamen[i] + "@").geefVarNaam();
 				
 			}
@@ -180,19 +182,20 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 			antwoordString = antwoordString.replace("),(", "):(");
 			String[] oplossingenStrings = antwoordString.split(":");
 			oplossingen = new Expressie[oplossingenStrings.length][varNamen.length];
-			for(int i = 0; i < oplossingenStrings.length; i++)
+			for (int i = 0; i < oplossingenStrings.length; i++)
 			{
 				//haakjes verwijderen:
-				if(oplossingenStrings[i].length() > 0)
+				if (oplossingenStrings[i].length() > 0)
 				{
 					String opl = oplossingenStrings[i].substring(1, oplossingenStrings[i].length() - 1);
 					String[] varWaardes;
-					if(opl.contains(";"))
+					if (opl.contains(";"))
 						varWaardes = opl.split(";");
 					else
 						varWaardes = opl.split(",");
-					for(int j = 0; j < varNamen.length; j++)
-					{	oplossingen[i][j] = FormuleParser.geefExpressie("$f" + varWaardes[j] + "@");
+					for (int j = 0; j < varNamen.length; j++)
+					{
+						oplossingen[i][j] = FormuleParser.geefExpressie("$f" + varWaardes[j] + "@");
 					}
 				}
 			}
@@ -200,15 +203,22 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 			oplossingenLabelVak = new TekstVak();
 			oplossingenLabelVak.setPasHoogteBreedteAan(true, true);
 			
+			// hier wil ik het font zetten in geval van fontovererving
+			if (fontOvererving)
+			{
+				// font zetten van oplossingenLabelVak
+				// hier heb ik het font nog niet, pas in setParentRegel()
+			}
+			
 			TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden, null);
-			ArrayList<Object> opdrachtObjects = new ArrayList<Object>();
+//			ArrayList<Object> opdrachtObjects = new ArrayList<Object>();
+			opdrachtObjects = new ArrayList<Object>();
 			opdrachtObjects = tb.convertTekst(Text.constants.oplossingenLabel() + "$f(" + variabelenString + ")@:", null, false);
 			
 			oplossingenLabelVak.setFontName(XMLView.getDefaultFontName());
 			oplossingenLabelVak.setFontSize(XMLView.getDefaultFontSize());
 			oplossingenLabelVak.setColor(CssColor.make(0, 0, 0));
 			oplossingenLabelVak.setObjects(opdrachtObjects);
-			
 		}
 		catch(Exception e)
 		{}
@@ -227,14 +237,14 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 		
 		
 		//rekenVak initialiseren
-		if(rekenVakZichtbaar)
+		if (rekenVakZichtbaar)
 		{
 			HashMap<String, Object> rekenVakMap = new HashMap<String, Object>();
 			rekenVakMap.put("breedte", breedte);
 			int h = 0;
-			if(rekenVakZichtbaar && oplossingenRegelZichtbaar)
+			if (rekenVakZichtbaar && oplossingenRegelZichtbaar)
 				h = hoogte - 30;
-			else if(rekenVakZichtbaar)
+			else if (rekenVakZichtbaar)
 				h = hoogte;
 			rekenVakMap.put("hoogte", h);
 			rekenVakMap.put("volledigeBreedte", volledigeBreedte);
@@ -246,20 +256,22 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 		}
 		
 		//oplossingenVak en oplossingenRegel initialiseren
-		if(oplossingenRegelZichtbaar)
+		if (oplossingenRegelZichtbaar)
 		{
 			HashMap<String, Object> oplossingenVakMap = new HashMap<String, Object>();
 			oplossingenVakMap.put("breedte", breedte - oplossingenLabelVak.getInhoudBreedte() - 15); //15 is door trial-en-error gevonden
 			oplossingenVakMap.put("hoogte", 30);//deze hoogte doet er volgens mij niet zo veel meer toe.
 			oplossingenVakMap.put("volledigeBreedte", volledigeBreedte);
 			oplossingenVakMap.put("interactiePanelLaunchState", launchState);
-			oplossingenVak = new StelselOplossingenVak(this, oplossingenVakMap, randomVarNamen, randomVarWaarden);
+			oplossingenVak = new StelselOplossingenVak(this, oplossingenVakMap, randomVarNamen, randomVarWaarden); // font meegeven? 
 			oplossingenVak.zetVarNamen(varNamen);
 			oplossingenVak.zetJuisteOplossingen(oplossingen);
 			
 			oplossingenRegel = new LayoutPanel();
 			oplossingenLabelVak.resize();
 			
+			fontOvererving = oplossingenVak.isFontOvererving();
+
 			resize();
 			mainPanel.add(oplossingenRegel);
 		}
@@ -269,12 +281,13 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 	public void resize()
 	{
 		int hoogteRegel = Math.max(oplossingenLabelVak.getHeight(), oplossingenVak.getHeight());
-		if(hoogteRegel == oplossingenRegel.getOffsetHeight())
+		if (hoogteRegel == oplossingenRegel.getOffsetHeight())
 			return;
 		oplossingenRegel.setPixelSize(breedte - 2, hoogteRegel);
 		oplossingenRegel.clear();
-		for(int i = 0; i < hoogteRegel/2 + 1; i++)
-		{	FlowPanel panel = new FlowPanel();
+		for (int i = 0; i < hoogteRegel/2 + 1; i++)
+		{
+			FlowPanel panel = new FlowPanel();
 			panel.getElement().getStyle().setBackgroundColor(CssColor.make(200 + 100*i/hoogteRegel, 200 + 100*i/hoogteRegel, 200 + 100*i/hoogteRegel).toString());
 			oplossingenRegel.add(panel);
 			oplossingenRegel.setWidgetLeftRight(panel, 0, Style.Unit.PX, 0, Style.Unit.PX);
@@ -286,15 +299,14 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 		oplossingenRegel.add(oplossingenVak.asWidget());
 		oplossingenRegel.setWidgetLeftRight(oplossingenVak.asWidget(), 2 + oplossingenLabelVak.getInhoudBreedte() + 5, Style.Unit.PX, 3, Style.Unit.PX);
 		oplossingenRegel.setWidgetTopHeight(oplossingenVak.asWidget(), 2 + Math.max(oplossingenLabelVak.getAsHoogte() - oplossingenVak.geefAsHoogte(), 0), Style.Unit.PX, Math.max(oplossingenLabelVak.getHeight(), oplossingenVak.getHeight()), Style.Unit.PX);
-		if(rekenVakZichtbaar)
+		if (rekenVakZichtbaar)
 			rekenVak.setHeight(hoogte - hoogteRegel - 4);
 	}
 	
 	public void focusNaarOplossingenVak()
 	{
-		if(oplossingenRegelZichtbaar)
+		if (oplossingenRegelZichtbaar)
 			oplossingenVak.requestFocus();
-		
 	}
 	
 	public void requestFocus()
@@ -308,12 +320,14 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 	}
 		
 	@Override
-	public HashMap<String, Object> getState() {
+	public HashMap<String, Object> getState()
+	{
 		HashMap<String, Object> h = new HashMap<String, Object>();
-		if(rekenVakZichtbaar)
-		{	h = rekenVak.getState();
+		if (rekenVakZichtbaar)
+		{
+			h = rekenVak.getState();
 		}
-		if(oplossingenRegelZichtbaar)
+		if (oplossingenRegelZichtbaar)
 		{
 			HashMap<String, Object> h1 = oplossingenVak.getState();
 			h.put("oplRegelState", h1);
@@ -322,14 +336,16 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 	}
 
 	@Override
-	public void setState(HashMap<String, Object> h) {
-		if(h == null)
+	public void setState(HashMap<String, Object> h)
+	{
+		if (h == null)
 			return;
 		PopupFacade.showReview(h, this);
-		if(rekenVakZichtbaar)
+		if (rekenVakZichtbaar)
 			rekenVak.setState(h);
-		if(oplossingenRegelZichtbaar)
-		{	if(h.containsKey("oplRegelState"))
+		if (oplossingenRegelZichtbaar)
+		{
+			if (h.containsKey("oplRegelState"))
 			{
 				HashMap<String, Object> h1 = (HashMap<String, Object>) h.get("oplRegelState");
 				oplossingenVak.setState(h1);
@@ -434,7 +450,61 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware
 		// TODO Auto-generated method stub
 		
 	}
-	
-	
-	
+
+	@Override
+	public void setFontSize(int font_size)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setFontName(String font_name)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setFontStyle(int font_style)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setParentRegel(TekstRegel regel)
+	{
+		// hier font zetten tbv oplossingenLabelVak
+//		font = FormuleFont.createFromFontSize(regel.getFont().getFontSize(), false);
+//		if (!FormuleFont.formTimes)
+//		{
+//			font.setFont(regel.getFont().getFont());
+//		}
+
+		if (rekenVak != null)
+		{
+			rekenVak.setParentRegel(regel);
+		}
+		
+		if (oplossingenVak != null)
+		{
+			oplossingenVak.setFont(regel);
+		}
+		
+		if (oplossingenLabelVak != null)
+		{
+			if (fontOvererving)
+			{
+				font = FormuleFont.createFromFontSize(regel.getFont().getFontSize(), false);
+				if (!FormuleFont.formTimes)
+				{
+					font.setFont(regel.getFont().getFont());
+				}
+
+				oplossingenLabelVak.setFontSize(font.getFontSize());
+				oplossingenLabelVak.setFontName(font.getFont());
+			}
+		}
+	}
 }
