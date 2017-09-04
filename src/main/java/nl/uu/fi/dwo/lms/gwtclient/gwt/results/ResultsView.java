@@ -230,10 +230,8 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
         DOM.setEventListener(elem, new EventListener() {
             @Override
             public void onBrowserEvent(Event event) {
-                LOG.log(Level.INFO, " "+event.getEventTarget().toSource());
                 if (Event.ONCLICK == event.getTypeInt()) {
-                    LOG.log(Level.INFO, "clicked column 1");
-                    Window.alert("click");
+                LOG.log(Level.INFO, " "+Element.as(event.getEventTarget()).getId());
                 }
             }
         });
