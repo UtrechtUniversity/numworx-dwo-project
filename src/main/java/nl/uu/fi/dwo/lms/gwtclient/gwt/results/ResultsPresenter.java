@@ -49,7 +49,7 @@ public class ResultsPresenter {
 
         void clear();
 
-        void plot(ResultPlot data);
+        void plot(ResultPlot data, boolean zoomedClass, boolean zoomedCourse);
 
         void setEmptyTableMessage();
 
@@ -197,7 +197,7 @@ public class ResultsPresenter {
         }
         resultMatrix = calculateResults(course, schoolClass);
         ResultPlot plotData = buildPlotMatrix(resultMatrix);
-        view.plot(plotData);
+        view.plot(plotData, (schoolClass!=null), (course!=null));
     }
     
     /**
@@ -219,14 +219,14 @@ public class ResultsPresenter {
             DomResultScoContext ssc = (DomResultScoContext) resultMatrix.gethIndex(col - 1);
             eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCORESULTS, resultTree, ssc, rs, schoolClass.getSchoolClass()));
             return;
-        }else{
-        //if(col!=0 && select schoolclass and course
-            course = (DomResultCourse) resultMatrix.gethIndex(col - 1);
-            schoolClass = (DomResultSchoolClass) resultMatrix.getvIndex(row);
+//        }else{
+//        //if(col!=0 && select schoolclass and course
+//            course = (DomResultCourse) resultMatrix.gethIndex(col - 1);
+//            schoolClass = (DomResultSchoolClass) resultMatrix.getvIndex(row);
         }        
         resultMatrix = calculateResults(course, schoolClass);
         ResultPlot plotData = buildPlotMatrix(resultMatrix);
-        view.plot(plotData);
+        view.plot(plotData, (schoolClass!=null), (course!=null));
     }
 
     /**
@@ -270,7 +270,7 @@ public class ResultsPresenter {
     public void plotResultsEvent() {
         resultMatrix = calculateResults(course, schoolClass);
         ResultPlot plotData = buildPlotMatrix(resultMatrix);
-        view.plot(plotData);
+        view.plot(plotData, (schoolClass!=null), (course!=null));
     }
 
     public void updateResults() {
@@ -304,7 +304,7 @@ public class ResultsPresenter {
         ResultItem[] hHeaders = new ResultItem[matrix.gethSize()+1];
         List<ResultItem> colHeaders = new ArrayList<ResultItem>(matrix.gethSize() + 1);
         colHeaders.add(null);
-        hHeaders[0] = new ResultItem("drill up ", null);
+        hHeaders[0] = (schoolClass==null) ? new ResultItem("schoolclasses", null) : new ResultItem(schoolClass.getLabel(), null);
         for (int i = 0; i < matrix.gethSize(); i++) {
             DomResultScore score = matrix.gethIndex(i);
             hHeaders[i+1] = new ResultItem(score.getLabel(), score.getScore());

@@ -24,9 +24,9 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
@@ -58,8 +58,8 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
     DataGrid dataGrid;
 //    @UiField(provided = true)            
 //    CellList dataGrid;
-    @UiField(provided = true)
-    SimplePager pager;
+//    @UiField(provided = true)
+//    SimplePager pager;
     @UiField
     Button exportBtn;
 
@@ -77,6 +77,8 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
 //        String tableCellodd();
 //    }
     private int timer = 0;
+    private boolean zoomedClass = false;
+    private boolean zoomedCourse = false;
 
     private ResultsPresenter resultsPresenter;
 
@@ -86,7 +88,7 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
 
         int width;
         int height;
-        String[][] data; //height, width
+        String[][] data; //height, widthis
     }
 
     public ResultsView(ResultsPresenter rp) {
@@ -95,8 +97,8 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
         dataGrid = new DataGrid<List<ResultsPresenter.ResultItem>>();
         dataProvider.addDataDisplay(dataGrid);
 //        dataGrid.setSkipRowHoverCheck(true);
-//        final SingleSelectionModel<List<ResultsPresenter.ResultItem>> selectionModel = new SingleSelectionModel<List<ResultsPresenter.ResultItem>>();
-//        dataGrid.setSelectionModel(selectionModel);
+        final SingleSelectionModel<List<ResultsPresenter.ResultItem>> selectionModel = new SingleSelectionModel<List<ResultsPresenter.ResultItem>>();
+        dataGrid.setSelectionModel(selectionModel);
         dataGrid.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 
         Timer t = new Timer() {
@@ -117,9 +119,9 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
         };
         t.scheduleRepeating(5000);
         SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
-        pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
-        pager.setDisplay(dataGrid);
-        pager.setPageSize(dataGrid.getPageSize());
+//        pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
+//        pager.setDisplay(dataGrid);
+//        pager.setPageSize(dataGrid.getPageSize());
         initWidget(uiBinder.createAndBindUi(this));
         TextHeader header;
         clear();
@@ -140,7 +142,9 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
         //resultsPresenter.plotResultsEvent();
     }
 
-    public void plot(ResultsPresenter.ResultPlot data) {
+    public void plot(ResultsPresenter.ResultPlot data, boolean schoolClass, boolean course) {
+        zoomedClass = schoolClass;
+        zoomedCourse = course;
         for (int i = dataGrid.getColumnCount() - 1; i >= 0; i--) {
             dataGrid.removeColumn(0);
         }
@@ -167,13 +171,13 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
                 dataProvider.getList());
 
         for (int i = 0; i < data.gethIndex().length; i++) {
-        //    if (i == 0) {
-                DwoToolTipClickCell c = new DwoToolTipClickCell();
-                c.addSelectedCellHandler(this);
-                cell = c;
-     //       } else {
-      //          cell = new DwoToolTipCel();
-      //      }
+            //    if (i == 0) {
+            DwoToolTipClickCell c = new DwoToolTipClickCell();
+            c.addSelectedCellHandler(this);
+            cell = c;
+            //       } else {
+            //          cell = new DwoToolTipCel();
+            //      }
 //            }else{
 //                cell = new DwoClickCell();
 //            }
@@ -200,6 +204,7 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
                     }
                 }
             };
+            dynValue.setHorizontalAlignment((colVal==0)? HasHorizontalAlignment.ALIGN_LOCALE_START  : HasHorizontalAlignment.ALIGN_LOCALE_END);
             dynValue.setSortable(true);
             Comparator<List<ResultsPresenter.ResultItem>> comp = new Comparator<List<ResultsPresenter.ResultItem>>() {
                 public int compare(List<ResultsPresenter.ResultItem> o1, List<ResultsPresenter.ResultItem> o2) {
@@ -232,14 +237,21 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
             @Override
             public void onBrowserEvent(Event event) {
                 if (Event.ONCLICK == event.getTypeInt()) {
-                LOG.log(Level.INFO, " "+Element.as(event.getEventTarget()).getId());
-                int col;
-                String colId = Element.as(event.getEventTarget()).getId();
-                col = Integer.parseInt(colId.substring("resultCol".length()));
-                resultsPresenter.selectColumnZoom(col);
+                    LOG.log(Level.INFO, " " + Element.as(event.getEventTarget()).getId());
+                    int col;
+                    String colId = Element.as(event.getEventTarget()).getId();
+                    if (!colId.isEmpty()) {
+                        col = Integer.parseInt(colId.substring("resultCol".length()));
+                        resultsPresenter.selectColumnZoom(col);
+                    }
                 }
             }
         });
+//        if(zoomedClass && zoomedCourse){
+//            dataGrid.setSelectionModel(null);
+//        }else{
+//            dataGrid.setSelectionModel(selectionModel);
+//        }
         dataGrid.redraw();
 
     }
@@ -253,8 +265,10 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
     }
 
     private void cellSelected(int row, int column) {
-        LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataProvider.getList().get(row).get(0).label + "," + dataGrid.getHeader(column).getValue());
-        resultsPresenter.selectRowAndCol(row, column);
+        if(column==0 || (zoomedClass && zoomedCourse) ){
+            LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataProvider.getList().get(row).get(0).label + "," + dataGrid.getHeader(column).getValue());
+            resultsPresenter.selectRowAndCol(row, column);
+        }
     }
 
     public void onSelectedCell(Cell.Context context, String value) {
@@ -314,7 +328,13 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
 
                 div = th.startDiv();
                 //get rid this and add a cell row that has buttons below the header
-                div.startImage().src(drillUpImage.getUrl()).attribute("href", "\"javascript:void(0);\"").id("resultCol" + col).endImage();
+                String imageUrl;
+                if (col == 0) {
+                    imageUrl = (zoomedClass) ? drillUpImage.getUrl() : "";
+                } else {
+                    imageUrl = (zoomedCourse) ? drillUpImage.getUrl() : drillDownImage.getUrl();
+                };
+                div.startImage().src(imageUrl).attribute("href", "\"javascript:void(0);\"").id("resultCol" + col).endImage();
                 div.end();
 
                 th.endTH();
