@@ -38,4 +38,10 @@ public interface DwoResources extends ClientBundle{
 
    @Source("loading.gif")
    public ImageResource loadingIcon();
+   
+   @Source("drillUp.gif")
+   public ImageResource drillUpIcon();
+   
+   @Source("drillDown.gif")
+   public ImageResource drillDownIcon();
 }

@@ -66,7 +66,8 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
     private static final DwoResources resources = GWT.create(DwoResources.class);
     Image emptyImage = new Image(resources.emptyIcon());
     Image loadingImage = new Image(resources.loadingIcon());
-    Image zoomImage = new Image(resources.studentIcon());
+    Image drillUpImage = new Image(resources.drillUpIcon());
+    Image drillDownImage = new Image(resources.drillDownIcon());
 
 //    
 //    public interface Style extends CssResource {
@@ -232,6 +233,10 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
             public void onBrowserEvent(Event event) {
                 if (Event.ONCLICK == event.getTypeInt()) {
                 LOG.log(Level.INFO, " "+Element.as(event.getEventTarget()).getId());
+                int col;
+                String colId = Element.as(event.getEventTarget()).getId();
+                col = Integer.parseInt(colId.substring("resultCol".length()));
+                resultsPresenter.selectColumnZoom(col);
                 }
             }
         });
@@ -309,7 +314,7 @@ public class ResultsView extends Composite implements SelectedCellHandler, Resul
 
                 div = th.startDiv();
                 //get rid this and add a cell row that has buttons below the header
-                div.startImage().src(zoomImage.getUrl()).attribute("href", "\"javascript:void(0);\"").id("resultCol" + col).endImage();
+                div.startImage().src(drillUpImage.getUrl()).attribute("href", "\"javascript:void(0);\"").id("resultCol" + col).endImage();
                 div.end();
 
                 th.endTH();

@@ -180,6 +180,26 @@ public class ResultsPresenter {
         view = aView;
     }
 
+   /**
+     * @param row the course to set
+     */
+    public void selectColumnZoom(int col) {
+        switch(col){
+            case 0: 
+                schoolClass = null;
+                break;
+            default:
+                if(course==null){
+                    course = (DomResultCourse) resultMatrix.gethIndex(col - 1);
+                }else{
+                    course = null;
+                }                
+        }
+        resultMatrix = calculateResults(course, schoolClass);
+        ResultPlot plotData = buildPlotMatrix(resultMatrix);
+        view.plot(plotData);
+    }
+    
     /**
      * @param row the course to set
      */
@@ -207,35 +227,6 @@ public class ResultsPresenter {
         resultMatrix = calculateResults(course, schoolClass);
         ResultPlot plotData = buildPlotMatrix(resultMatrix);
         view.plot(plotData);
-//        row=row-1;
-//        if (row != 0 && col != 0 && schoolClass != null && course != null) {
-//            LOG.log(Level.INFO, "selected a student sco for " + resultMatrix.getMark(row - 1, col - 1).getLabel() + " with score " + resultMatrix.getMark(row - 1, col - 1).getScore());
-//            //send event to show studentSco Context en Data.
-//            DomResultStudent rs = (DomResultStudent) resultMatrix.getvIndex(row - 1);
-//            DomResultScoContext ssc = (DomResultScoContext) resultMatrix.gethIndex(col - 1);
-//            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCORESULTS, resultTree, ssc, rs, schoolClass.getSchoolClass()));
-//            return;
-//        }
-//        if (row == 0 && col == 0 && (schoolClass != null || course != null)) {
-//            //zoom all out
-//            schoolClass = null;
-//            course = null;
-//            return;
-//        }
-//        if (row != 0 && schoolClass == null && resultMatrix.getvIndex(row - 1) instanceof DomResultSchoolClass) {
-//            schoolClass = (DomResultSchoolClass) resultMatrix.getvIndex(row - 1);
-//        } else if (row != 0 && schoolClass != null) {
-//            schoolClass = null;
-//        }
-//
-//        if (col != 0 && course == null && resultMatrix.gethIndex(col - 1) instanceof DomResultCourse) {
-//            course = (DomResultCourse) resultMatrix.gethIndex(col - 1);
-//        } else if (col != 0 && course != null) {
-//            course = null;
-//        }
-//        resultMatrix = calculateResults(course, schoolClass);
-//        ResultPlot plotData = buildPlotMatrix(resultMatrix);
-//        view.plot(plotData);
     }
 
     /**
