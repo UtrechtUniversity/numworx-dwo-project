@@ -565,7 +565,13 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		standardMap = new TreeItem(toSafeHTML(Text.constants.standaardModules()));
 		standardMap.setState(true);
 // Strategy stuff desktop/tablet
-		final boolean desktop = MGWT.getOsDetection().isDesktop() /*&& false*/;
+		selectStrategy();
+	}
+
+
+	private void selectStrategy() {
+		boolean desktop = MGWT.getOsDetection().isDesktop() /*&& false*/;
+		if (!DWOplayer.clientfactory.isIconizer()) desktop = false; // platte versie bij klas zonder tree
 		navigation = desktop ? new TreeNavStrategy() : new ListNavStrategy();
 	}
 

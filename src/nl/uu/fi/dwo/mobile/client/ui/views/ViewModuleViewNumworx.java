@@ -58,6 +58,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		};
 		initWidget(root = uiBinder.createAndBindUi(this));
 		delegate.initialize();
+		delegate.setWindowTop(90); // 90 pixels header
 		delegate.zetMaat();
 		center.setWidget(delegate);
 		root.forceLayout();
