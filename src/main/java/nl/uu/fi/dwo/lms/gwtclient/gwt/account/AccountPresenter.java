@@ -77,7 +77,6 @@ public class AccountPresenter {
                 //calculate tree and call plotting
                 LOG.log(Level.INFO, "DomFullUser data returned.");
                 DomUserFull uf = resolved.getValue();
-                eventBus.fireEvent(new DialogEvent("Success."));
                 view.updateView(uf.getUserName(), uf.getGivenName(), uf.getInsertion(), uf.getFamilyName(), uf.getEmail());
                 dwoGlobalVars.setCurrentUser(uf);//updating data
                 return null;
@@ -169,7 +168,9 @@ public class AccountPresenter {
                 LOG.log(Level.INFO, "DomUser returned.");
                 DomUserFull u = resolved.getValue();
                 dwoGlobalVars.setCurrentUser(u);
+                view.clear();
                 view.updateView(u.getUserName(), u.getGivenName(), u.getInsertion(), u.getFamilyName(), u.getEmail());
+                eventBus.fireEvent(new DialogEvent("Success"));
                 return null;
             }
         },

@@ -77,7 +77,14 @@ public class AccountView extends Composite implements ClickHandler, AccountPrese
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    firstNameText.setText("");
+                    insertionText.setText("");
+                    familyNameText.setText("");
+                    emailText.setText("");
+                    passwordTextBox.setText("");
+                    newPasswordTextBox.setText("");
+                    newPasswordAgainTextBox.setText("");
+                    passwordTextBox.setText("");
     }
 
     public void onClick(ClickEvent event) {

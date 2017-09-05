@@ -375,7 +375,9 @@ public class ResultsPresenter {
         }
 
         return sb.toString();
-
     }
 
+    void finnishedExport(){
+        eventBus.fireEvent(new DialogEvent("Exported tab separated values to clipboard."));
+    }
 }

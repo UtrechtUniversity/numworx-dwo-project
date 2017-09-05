@@ -9,6 +9,8 @@ import com.google.gwt.dom.builder.shared.TableRowBuilder;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.AbstractCellTable;
@@ -124,19 +126,20 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
 //        pager.setDisplay(dataGrid);
 //        pager.setPageSize(dataGrid.getPageSize());
         initWidget(uiBinder.createAndBindUi(this));
-                exportBtn.addClickHandler(this);
+        exportBtn.addClickHandler(this);
 
         TextHeader header;
         clear();
 
     }
 
-public void onClick(ClickEvent event) {
-        if (event.getSource() == exportBtn){
+    public void onClick(ClickEvent event) {
+        if (event.getSource() == exportBtn) {
             copyTextToClipboard(resultsPresenter.getExportString());
+            resultsPresenter.finnishedExport();
         }
     }
-    
+
     @Override
     public void clear() {
         dataGrid.setEmptyTableWidget(loadingImage);
@@ -195,7 +198,7 @@ public void onClick(ClickEvent event) {
             Column<List<ResultsPresenter.ResultItem>, String> dynValue = new Column<List<ResultsPresenter.ResultItem>, String>(cell) {
                 @Override
                 public String getValue(List<ResultsPresenter.ResultItem> object) {
-//                    SafeHtmlBuilder sb = new SafeHtmlBuilder();
+                    SafeHtmlBuilder sb = new SafeHtmlBuilder();
                     if (colVal == 0 && object.get(colVal) != null && object.get(colVal).score != null) {
 //                        if (object.get(colVal).toolTip != null) {
 //                        sb.appendHtmlConstant("<div title=\"" + object.get(colVal).toolTip + "\">");
@@ -204,16 +207,34 @@ public void onClick(ClickEvent event) {
 //                    if (object.get(colVal).toolTip != null) {
 //                        sb.appendHtmlConstant("</div>");
 //                    }
-//                        return sb.toSafeHtml().asString();
                         return object.get(colVal).label;
                     } else if (object.get(colVal) != null && object.get(colVal).score != null) {
-                        return object.get(colVal).score.toString();
+                        //use scorecell to render color
+//                String color = "red";
+//                if (score > 10.0 && score < 60.0) {
+//                    color = "orange";
+//                } else if (score >= 60) {
+//                    color = "green";
+//                }
+//                String prefix;
+//                if (score > 0) {
+//                    int r, g, b;
+//                    b = 0;
+//                    g = (int) (255 * (score / 50));
+//                    r = (int) (255 * (1 - (score - 50) / 50));
+//                    prefix = "<div style=\"text-align: right; padding: 2px; background:rgb(" + r + "," + g + "," + b + ");\">";
+//                } else {
+//                    prefix = "<div style=\"text-align: right; padding: 2px; overflow auto;\">"; // use default of style
+//                }
+//                long iScore = Math.round(score);
+                        String formattedScore = NumberFormat.getFormat("0").format(object.get(colVal).score);
+                        return formattedScore;
                     } else {
                         return "0";
                     }
                 }
             };
-            dynValue.setHorizontalAlignment((colVal==0)? HasHorizontalAlignment.ALIGN_LOCALE_START  : HasHorizontalAlignment.ALIGN_LOCALE_END);
+            dynValue.setHorizontalAlignment((colVal == 0) ? HasHorizontalAlignment.ALIGN_LOCALE_START : HasHorizontalAlignment.ALIGN_LOCALE_END);
             dynValue.setSortable(true);
             Comparator<List<ResultsPresenter.ResultItem>> comp = new Comparator<List<ResultsPresenter.ResultItem>>() {
                 public int compare(List<ResultsPresenter.ResultItem> o1, List<ResultsPresenter.ResultItem> o2) {
@@ -274,7 +295,7 @@ public void onClick(ClickEvent event) {
     }
 
     private void cellSelected(int row, int column) {
-        if(column==0 || (zoomedClass && zoomedCourse) ){
+        if (column == 0 || (zoomedClass && zoomedCourse)) {
             LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataProvider.getList().get(row).get(0).label + "," + dataGrid.getHeader(column).getValue());
             resultsPresenter.selectRowAndCol(row, column);
         }
@@ -390,8 +411,8 @@ public void onClick(ClickEvent event) {
             return true;
         }
     }
-    
-public static native void copyTextToClipboard(String text) /*-{
+
+    public static native void copyTextToClipboard(String text) /*-{
         var textArea = document.createElement("textarea");
         //
         // *** This styling is an extra step which is likely not required. ***
@@ -442,5 +463,5 @@ public static native void copyTextToClipboard(String text) /*-{
             console.log('Unable to copy');
         }
         document.body.removeChild(textArea);
-    }-*/;    
+    }-*/;
 }
