@@ -9,7 +9,7 @@ public class DomResultStudent extends DomResultScore<DomResultSchoolClass> {
 
     public DomResultStudent(DomStudent aStudent){
         student = aStudent;
-        super.setLabel(student.getUniqueDisplayName());
+        super.setLabel(student.getDisplayName());
     }
     
     /**
