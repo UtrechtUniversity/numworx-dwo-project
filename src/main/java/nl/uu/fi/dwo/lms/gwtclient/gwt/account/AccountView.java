@@ -21,15 +21,15 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
  * @author G.A.J. van der Plas
  */
 public class AccountView extends Composite implements ClickHandler, AccountPresenter.Display {
-    
+
     private static final Logger LOG = Logger.getLogger(AccountView.class.getName());
-    
+
     interface MyUiBinder extends UiBinder<Widget, AccountView> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
-    
+
     private AccountPresenter accountPresenter;
-    
+
     @UiField
     TextBox usernameText;
     @UiField
@@ -50,10 +50,10 @@ public class AccountView extends Composite implements ClickHandler, AccountPrese
     Button resetBtn;
     @UiField
     Button updateBtn;
-    
+
     @UiField
     DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
-    
+
     public AccountView(AccountPresenter ap) {
         accountPresenter = ap;
         accountPresenter.setView(this);
@@ -63,7 +63,7 @@ public class AccountView extends Composite implements ClickHandler, AccountPrese
         resetBtn.addClickHandler(this);
         updateBtn.addClickHandler(this);
     }
-    
+
     @Override
     public void init() {
         passwordTextBox.setText("");
@@ -74,12 +74,12 @@ public class AccountView extends Composite implements ClickHandler, AccountPrese
 //        flexTable.setWidget(0, 0, l);
 //        backBtn.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
     }
-    
+
     @Override
     public void clear() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     public void onClick(ClickEvent event) {
         if (event.getSource() == resetBtn) {
             passwordTextBox.setText("");
@@ -87,17 +87,20 @@ public class AccountView extends Composite implements ClickHandler, AccountPrese
             newPasswordAgainTextBox.setText("");
             accountPresenter.updateUserData();
         } else if (event.getSource() == updateBtn) {
-                accountPresenter.updateUser(
-                        firstNameText.getText(),
-                        insertionText.getText(),
-                        familyNameText.getText(),
-                        emailText.getText(),
-                        passwordTextBox.getText(),
-                        newPasswordTextBox.getText(),
-                        newPasswordAgainTextBox.getText());
+            accountPresenter.updateUser(
+                    firstNameText.getText(),
+                    insertionText.getText(),
+                    familyNameText.getText(),
+                    emailText.getText(),
+                    passwordTextBox.getText(),
+                    newPasswordTextBox.getText(),
+                    newPasswordAgainTextBox.getText());
+            passwordTextBox.setText("");
+            newPasswordTextBox.setText("");
+            newPasswordAgainTextBox.setText("");
         }
     }
-    
+
     @Override
     public void updateView(String username, String firstName, String insertion, String familyName, String email) {
         usernameText.setText(username);
@@ -106,5 +109,5 @@ public class AccountView extends Composite implements ClickHandler, AccountPrese
         familyNameText.setText(familyName);
         emailText.setText(email);
     }
-    
+
 }

@@ -77,6 +77,7 @@ public class AccountPresenter {
                 //calculate tree and call plotting
                 LOG.log(Level.INFO, "DomFullUser data returned.");
                 DomUserFull uf = resolved.getValue();
+                eventBus.fireEvent(new DialogEvent("Success."));
                 view.updateView(uf.getUserName(), uf.getGivenName(), uf.getInsertion(), uf.getFamilyName(), uf.getEmail());
                 dwoGlobalVars.setCurrentUser(uf);//updating data
                 return null;
@@ -148,7 +149,7 @@ public class AccountPresenter {
                 && newPassword.compareTo(newPasswordAgain) == 0) {
             if (!SimpleValidUserFieldsChecker.isValidPassword(newPassword)) {
                 //invalid password format
-            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_NewPasswordsDoNotMatch)));
+                eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_NewPasswordsDoNotMatch)));
             } else {
                 user.setPassword(MD5.md5(newPassword));
             }

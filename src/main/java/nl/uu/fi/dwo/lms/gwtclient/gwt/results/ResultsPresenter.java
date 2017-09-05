@@ -124,6 +124,7 @@ public class ResultsPresenter {
             label = aLabel;
             score = aScore;
         }
+
         public ResultItem(String aLabel, Double aScore, String aToolTip) {
             label = aLabel;
             score = aScore;
@@ -180,38 +181,38 @@ public class ResultsPresenter {
         view = aView;
     }
 
-   /**
+    /**
      * @param row the course to set
      */
     public void selectColumnZoom(int col) {
-        switch(col){
-            case 0: 
+        switch (col) {
+            case 0:
                 schoolClass = null;
                 break;
             default:
-                if(course==null){
+                if (course == null) {
                     course = (DomResultCourse) resultMatrix.gethIndex(col - 1);
-                }else{
+                } else {
                     course = null;
-                }                
+                }
         }
         resultMatrix = calculateResults(course, schoolClass);
         ResultPlot plotData = buildPlotMatrix(resultMatrix);
-        view.plot(plotData, (schoolClass!=null), (course!=null));
+        view.plot(plotData, (schoolClass != null), (course != null));
     }
-    
+
     /**
      * @param row the course to set
      */
     public void selectRowAndCol(int row, int col) {
         //col = 0 indicates clicked in student/class column
         if (col == 0 && schoolClass == null && resultMatrix.getvIndex(row) instanceof DomResultSchoolClass) {
-        //if(col==0 && schoolClass ==null select schoolclass
+            //if(col==0 && schoolClass ==null select schoolclass
             schoolClass = (DomResultSchoolClass) resultMatrix.getvIndex(row);
         } else if (col == 0 && schoolClass != null) {
-        //if(col==0 && schoolClass ==null set schoolclass = null
+            //if(col==0 && schoolClass ==null set schoolclass = null
             schoolClass = null;
-        }else if(col != 0 && schoolClass != null && course != null){
+        } else if (col != 0 && schoolClass != null && course != null) {
             //open sco
             LOG.log(Level.INFO, "selected a student sco for " + resultMatrix.getMark(row, col - 1).getLabel() + " with score " + resultMatrix.getMark(row, col - 1).getScore());
             //send event to show studentSco Context en Data.
@@ -223,10 +224,10 @@ public class ResultsPresenter {
 //        //if(col!=0 && select schoolclass and course
 //            course = (DomResultCourse) resultMatrix.gethIndex(col - 1);
 //            schoolClass = (DomResultSchoolClass) resultMatrix.getvIndex(row);
-        }        
+        }
         resultMatrix = calculateResults(course, schoolClass);
         ResultPlot plotData = buildPlotMatrix(resultMatrix);
-        view.plot(plotData, (schoolClass!=null), (course!=null));
+        view.plot(plotData, (schoolClass != null), (course != null));
     }
 
     /**
@@ -270,7 +271,7 @@ public class ResultsPresenter {
     public void plotResultsEvent() {
         resultMatrix = calculateResults(course, schoolClass);
         ResultPlot plotData = buildPlotMatrix(resultMatrix);
-        view.plot(plotData, (schoolClass!=null), (course!=null));
+        view.plot(plotData, (schoolClass != null), (course != null));
     }
 
     public void updateResults() {
@@ -301,13 +302,13 @@ public class ResultsPresenter {
         ResultPlot data = new ResultPlot();
 
         //set column headers
-        ResultItem[] hHeaders = new ResultItem[matrix.gethSize()+1];
+        ResultItem[] hHeaders = new ResultItem[matrix.gethSize() + 1];
         List<ResultItem> colHeaders = new ArrayList<ResultItem>(matrix.gethSize() + 1);
         colHeaders.add(null);
-        hHeaders[0] = (schoolClass==null) ? new ResultItem("schoolclasses", null) : new ResultItem(schoolClass.getLabel(), null);
+        hHeaders[0] = (schoolClass == null) ? new ResultItem("schoolclasses", null) : new ResultItem(schoolClass.getLabel(), null);
         for (int i = 0; i < matrix.gethSize(); i++) {
             DomResultScore score = matrix.gethIndex(i);
-            hHeaders[i+1] = new ResultItem(score.getLabel(), score.getScore());
+            hHeaders[i + 1] = new ResultItem(score.getLabel(), score.getScore());
             colHeaders.add(new ResultItem(score.getLabel(), score.getScore()));
         }
         data.sethIndex(hHeaders);
@@ -318,9 +319,9 @@ public class ResultsPresenter {
         for (int i = 0; i < matrix.getvSize(); i++) {
             DomResultScore score = matrix.getvIndex(i);
             ResultItem item = new ResultItem(score.getLabel(), score.getScore());
-            if(score instanceof DomResultStudent){
+            if (score instanceof DomResultStudent) {
                 String toolTip = ((DomResultStudent) score).getStudent().getUserName();
-                item.toolTip=toolTip;
+                item.toolTip = toolTip;
             }
             vHeaders[i] = item;
             rowHeaders.add(item);
@@ -329,12 +330,12 @@ public class ResultsPresenter {
 
         // built row, col order.
         List<List<ResultItem>> marks = new ArrayList<List<ResultItem>>(matrix.getvSize());
-    //    marks.add(colHeaders);
+        //    marks.add(colHeaders);
         for (int i = 0; i < matrix.getvSize(); i++) {
             marks.add(new ArrayList<ResultItem>(matrix.gethSize()));
             for (int j = 0; j < matrix.gethSize(); j++) {
                 if (j == 0) {
-                    marks.get(i).add(rowHeaders.get(i+1));
+                    marks.get(i).add(rowHeaders.get(i + 1));
                 }
                 DomResultScore score = matrix.getMark(i, j); //row, col
                 if (score == null) {
@@ -348,4 +349,33 @@ public class ResultsPresenter {
         data.setMarks(marks);
         return data;
     }
+
+    String getExportString() {
+        ResultPlot plot = buildPlotMatrix(resultMatrix);
+        StringBuilder sb = new StringBuilder();
+        sb.append("index");
+        for (ResultItem hItem : plot.hIndex) {
+        sb.append('\t');
+            sb.append(hItem.label);
+        }
+        sb.append('\n');
+        for (int r = 0; r < plot.vIndex.length; r++) {
+            sb.append(plot.vIndex[r].label);
+            for (int c = 0; c < plot.hIndex.length; c++) {
+            sb.append('\t');
+                ResultItem item = plot.marks.get(r).get(c);
+                if (item != null && item.score != null) {
+                    sb.append(item.score);
+                } else {
+                    sb.append("0");
+                }
+
+            }
+            sb.append('\n');
+        }
+
+        return sb.toString();
+
+    }
+
 }
