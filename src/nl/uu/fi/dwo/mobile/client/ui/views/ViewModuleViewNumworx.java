@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
+import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
@@ -149,7 +150,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		MenuItem m;
 		String back = delegate.getBackButton().getText();
 		if(DWOplayer.withUser()) {
-			m=items.addItem("Logout", new ScheduledCommand() {
+			m=items.addItem(Text.constants.logout(), new ScheduledCommand() {
 				
 				@Override
 				public void execute() {
@@ -158,7 +159,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 				}
 			});
 		} else {
-			m=items.addItem("Aanmelden", new ScheduledCommand() {
+			m=items.addItem(Text.constants.aanmelden(), new ScheduledCommand() {
 				
 				@Override
 				public void execute() {

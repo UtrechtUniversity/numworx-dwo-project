@@ -76,4 +76,29 @@ public interface Text extends Constants {
 	
 	@DefaultStringValue("Bibliotheek")
 	String bibliotheek();
+	@DefaultStringValue("Voor leerlingen en studenten")
+	String for_students();
+	@DefaultStringValue("Het inloggen is mislukt, probeer het opnieuw")
+	String inloggen_mislukt();
+	@DefaultStringValue("AANMELDEN")
+	String AANMELDEN();
+	
+	@DefaultStringValue("Nog geen account?")
+	String register();
+
+	@DefaultStringValue("Meer informatie over Numworx")
+	String numworx();
+	
+	@DefaultStringValue("Logout")
+	String logout();
+	@DefaultStringValue("Zoek toets of lesstof")
+	String search();
+	@DefaultStringValue("Aantal resultaten: ")
+	String count_results();
+	@DefaultStringValue("Geen resultaat: ")
+	String no_results();
+	@DefaultStringValue("LESSTOF")
+	String LESSTOF();
+	@DefaultStringValue("ZELFTOETS")
+	String ZELFTOETS();
 }
