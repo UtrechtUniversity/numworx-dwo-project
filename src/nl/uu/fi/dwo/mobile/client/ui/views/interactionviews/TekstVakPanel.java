@@ -1749,7 +1749,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 					style.setBackgroundColor(bgColor.toString());
 				else {
 					style.clearBackgroundColor();
-//					style.setBorderColor(randColor.toString());
+					style.setBorderColor(randColor.toString());
 //					style.setBorderWidth(randDikte, Unit.PX);
 //					style.setOpacity(1);
 				}
