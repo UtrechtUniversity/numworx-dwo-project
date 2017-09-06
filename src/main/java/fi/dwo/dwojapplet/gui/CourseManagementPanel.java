@@ -419,7 +419,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 			if(course.getText().startsWith("H4sIAAAAAA"))
             {	editorCB.setSelected(true);
             	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getText());
-            	wiskOpdrEditPanel.setPreferredSize(new Dimension(700,300));
+            	wiskOpdrEditPanel.setPreferredSize(new Dimension(800,350));
             	editorBox.add(wiskOpdrEditPanel);
             }
             else
@@ -430,7 +430,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
             }
             panel.add(editorBox, BorderLayout.NORTH);
         	Image logo = course.getCourseLogo();
-            courseLogoButton = new JButton(new ImageIcon(logo));
+            courseLogoButton = new JButton(new ReducedImageIcon(logo));
             courseLogoButton.setBorderPainted(false);
     // TODO Mac?
             courseLogoButton.setBorder(BorderFactory.createLineBorder(getForeground()));
@@ -611,7 +611,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     	{	if(editorCB.isSelected())
     		{	if(wiskOpdrEditPanel==null)
     			{	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel("");
-            		wiskOpdrEditPanel.setPreferredSize(new Dimension(700,300));
+            		wiskOpdrEditPanel.setPreferredSize(new Dimension(800,350));
             		editorBox.add(wiskOpdrEditPanel);
     			}
     			wiskOpdrEditPanel.setVisible(true);
@@ -917,7 +917,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
             reduced = Toolkit.getDefaultToolkit().createImage(data);
             course.setImageData(data);
             course.setCourseLogo(reduced);
-            courseLogoButton.setIcon(new ImageIcon(reduced));
+            courseLogoButton.setIcon(new ReducedImageIcon(reduced));
 // TODO omzetten in PersistenceFacade!
 //            try {
 //                PersistenceFacade.instance().setLogo(course.getID(), data);
