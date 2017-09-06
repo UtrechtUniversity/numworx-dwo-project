@@ -49,8 +49,12 @@ public class LoginPresenter {
                     if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
                         boolean switchR = switchRole;
                         LOG.log(Level.INFO, "login succeeded for user:" + dwoGlobalVars.getCurrentUser().getUniqueDisplayName());
-                        if(!dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())){
-                            switchR = true;
+                        try{
+                        if(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())){
+                            switchR = false;
+                        }
+                        }catch(Exception e){
+                            switchR=true;
                         }
                         if (switchR) {
                             eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS));
