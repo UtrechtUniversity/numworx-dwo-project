@@ -5,9 +5,9 @@
     <ui:style field="dwoStyle" src="css/dwostyle.css" />    
     <ui:with type="nl.uu.fi.dwo.lms.gwtclient.gwt.icons.AccountImageBundle" field="icons" />
     <g:HeaderPanel addStyleNames='{dwoStyle.dwoAppPanel}'>
-       <g:FlowPanel height="51px">
+        <g:FlowPanel  height='51px'>
         <g:FlowPanel addStyleNames='{dwoStyle.dwoAppHeaderPanel}' ui:field='headerView'>
-            <g:Image addStyleNames='{dwoStyle.leftLogoBox}' height = '90%' width = 'auto' ui:field="dwoLogo" resource="{icons.dwoLogo}" />
+            <g:Image addStyleNames='{dwoStyle.headerLogoBox}' height='90%' width='auto' ui:field="dwoLogo" resource="{icons.dwoLogo}" />
             <g:Label addStyleNames='{dwoStyle.leftHalfBox}' ui:field='activeDeckWidgetLabel'>Login</g:Label>
             <g:PushButton addStyleNames='{dwoStyle.dwoAppMenuButton}'  ui:field="menuButton">
                 <!--                <g:upFace>
@@ -46,13 +46,13 @@
                     <!--</g:FlowPanel>-->
                 </g:DeckPanel>
             </g:layer>     
-            <g:layer right="8px" top="8px" width="200px" bottom="8px">              
+            <g:layer right="8px" top="8px" left="8px" bottom="8px">              
                 <g:FlowPanel addStyleNames='{dwoStyle.dwoAppMenuPanel}' ui:field="menuView" >
-                    <g:Label ui:field="accountLabel">account</g:Label>
-                    <g:Label ui:field="switchRoleLabel">switch rol</g:Label>
-                    <g:Label ui:field="classesLabel">manage classes</g:Label>
-                    <g:Label ui:field="resultsLabel">results</g:Label>
-                    <g:Label ui:field="logoutLabel">logout</g:Label>
+                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="accountLabel">account</g:Label>
+                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="switchRoleLabel">switch rol</g:Label>
+                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="classesLabel">manage classes</g:Label>
+                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="resultsLabel">results</g:Label>
+                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="logoutLabel">logout</g:Label>
                </g:FlowPanel>
 <!--            </g:layer>     
             <g:layer  addStyleNames='{dwoStyle.dwoDeckWidget}'>  -->

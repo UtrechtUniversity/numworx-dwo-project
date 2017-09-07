@@ -27,6 +27,6 @@ public class MenuLabel extends Label implements MouseOverHandler, MouseOutHandle
     @Override
     public void onMouseOut(MouseOutEvent event) {
         // TODO Auto-generated method stub
-        this.getElement().getStyle().setBackgroundColor("#c2d5e1");
+        this.getElement().getStyle().setBackgroundColor("#dddddd");
     }
 }
