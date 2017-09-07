@@ -81,7 +81,11 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	public Login3ViewImpl() {
 		initWidget(createAndBindUi());
 		username.getElement().setPropertyString("placeholder", rb.gebruikersnaam());
+		username.getElement().setAttribute("autocomplete", "off");
+		username.getElement().setAttribute("autocapitalize", "off");
 		password.getElement().setPropertyString("placeholder", rb.wachtwoord());
+		password.getElement().setAttribute("autocapitalize", "off");
+		password.getElement().setAttribute("autocomplete", "off");		
 		messagePanel.setUrl("//cdn.dwo.nl/resources/alert_"
 				+ Text.constants.language()
 				+ ".html");
@@ -89,12 +93,10 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	
 	@Override
 	public String getUsername() {
-		// TODO Auto-generated method stub
 		return username.getText();
 	}
 	@Override
 	public String getPassword() {
-		// TODO Auto-generated method stub
 		return password.getText();
 	}
 	boolean allow = true;

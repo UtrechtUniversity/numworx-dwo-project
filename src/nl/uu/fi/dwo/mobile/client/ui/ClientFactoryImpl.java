@@ -41,7 +41,7 @@ public class ClientFactoryImpl implements ClientFactory
 	private ViewModuleView entryView;
 	private SelectModuleView selectModuleView;
 	protected LoginView loginView;
-	private TreeModuleView treeModuleView;
+	protected TreeModuleView treeModuleView;
 	private RPCHandler handler;
 	private IsWidget logoutWidget;
 	

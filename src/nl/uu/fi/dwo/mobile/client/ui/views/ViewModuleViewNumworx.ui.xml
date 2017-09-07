@@ -3,6 +3,8 @@
 	xmlns:v="nl.uu.fi.dwo.mobile.client.ui.views"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:with field="pfx" type="java.lang.String" />
+	<ui:with field='rb'  type='nl.uu.fi.dwo.mobile.client.text.Text' />
+	
 	<ui:style field='t' src='TreeModuleViewNumworx.css' type='nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworxCss' />
 	<ui:style>
 	@def color15 #314770;
@@ -88,7 +90,7 @@
 				<g:MenuBar addStyleNames='{t.menu}'>
 					<g:MenuItem ui:field='user' addStyleNames='{t.menuItem}' />
 				</g:MenuBar>
-				<g:Label ui:field='loginLabel' styleName='{t.loginname}'>Jolanda van den Berg</g:Label>
+				<g:Label ui:field='loginLabel' styleName='{t.loginname}'></g:Label>
 <!-- 				<g:ToggleButton ui:field='fullBtn' styleName='{t.nav}'> -->
 <!-- 					<g:upFace><img src='{pfx}images/numworx/fullscreen-numworx.svg'></img></g:upFace> -->
 <!-- 					<g:downFace><img src='{pfx}images/numworx/borderdscreen-numworx.svg'/></g:downFace> -->
@@ -105,9 +107,9 @@
 				<g:FocusPanel ui:field='homeBtn' styleName='{t.nav}'><g:Image url='{pfx}images/numworx/home-numworx.svg'/></g:FocusPanel>
 			  </g:FlowPanel>
 			  <g:FlowPanel styleName='{style.headerBottom}' >
-			  		<g:Label styleName='{style.knop}' addStyleNames='{style.hide}' >ZELFTOETS</g:Label>
+			  		<g:Label styleName='{style.knop}' addStyleNames='{style.hide}' ><ui:text from='{rb.ZELFTOETS}'/></g:Label>
 			  		<g:Image styleName='{style.icon}' addStyleNames='{style.hide}' url="{pfx}images/numworx/zelftoets-numworx.svg"/>
-			  		<g:Label styleName='{style.knop}'>LESSTOF</g:Label>
+			  		<g:Label styleName='{style.knop}'><ui:text from='{rb.LESSTOF}'/></g:Label>
 			  		<g:Image styleName='{style.icon}' url='{pfx}images/numworx/lesstof-numworx.svg' />
 			  		<g:Label ui:field='title' styleName='{style.title}'>Hypotheses en betrouwbaarheidsintervallen (activiteit)</g:Label>
 				</g:FlowPanel>

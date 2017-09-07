@@ -184,19 +184,19 @@
 		</g:HTML>
 		<g:HTML ui:field='logoPanel' styleName='{style.logotekst}'>
 			<img src='{pfx}images/numworx/logo-Numworx-wit-blauw.svg' />
-			<p>Voor leerlingen en studenten</p>
+			<p><ui:text from='{rb.for_students}'/></p>
 		</g:HTML>
 		<g:Frame ui:field='messagePanel' styleName='{style.messages}' />
 		<g:FlowPanel ui:field='loginPanel' styleName='{style.login}' addStyleNames='{style.loginError}'>
 			<g:TextBox ui:field='username' styleName='{style.username}' ></g:TextBox>
 			<g:PasswordTextBox ui:field='password' styleName='{style.password}' ></g:PasswordTextBox>
-			<g:Button  ui:field='loginBtn' styleName='{style.button}' >AANMELDEN</g:Button>
-			<g:Label styleName='{style.nologin}'>Het inloggen is mislukt, probeer het opnieuw</g:Label>
+			<g:Button  ui:field='loginBtn' styleName='{style.button}' ><ui:text from='{rb.AANMELDEN}'/></g:Button>
+			<g:Label styleName='{style.nologin}'><ui:text from='{rb.inloggen_mislukt}'/></g:Label>
 		</g:FlowPanel>
 		<g:HTML ui:field='linksPanel' styleName='{style.links}' addStyleNames='{style.linksError}'>
-			<p><a href="/dwo/rest/public/user/requestNewPassword?language={rb.locale}&amp;back={back}">Wachtwoord vergeten?</a></p>
-			<p><a href="/dwo/register?locale={rb.locale}&amp;next={back}">Nog geen account?</a></p>
-			<p><a href='http://www.numworx.nl'>Meer informatie over Numworx</a></p>
+			<p><a href="/dwo/rest/public/user/requestNewPassword?language={rb.locale}&amp;back={back}"><ui:text from='{rb.vergeten}'/></a></p>
+			<p><a href="/dwo/register?locale={rb.locale}&amp;next={back}"><ui:text from='{rb.register}'/></a></p>
+			<p><a href='http://www.numworx.nl'><ui:text from='{rb.numworx}'/></a></p>
 		</g:HTML>
 	</g:FlowPanel>
 	</g:FlowPanel>

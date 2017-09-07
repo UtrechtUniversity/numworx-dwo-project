@@ -147,6 +147,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 					getRPCHandler().logout();
 				}
 				super.logout();
+				treeModuleView = null;
 			}
 
 			public SCORM_guest setupAPI() {
@@ -443,7 +444,9 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 					if(clientfactory.isIconizer())
 						clientfactory.getPlaceController().goTo(new TreeModulePlace("0"));
 					else 
-						clientfactory.getPlaceController().goTo(new FlatModulePlace());
+					{ // was FlatModulePlace();
+						clientfactory.getPlaceController().goTo(new TreeModulePlace("0"));
+					}
 				}});
 			return;
 		

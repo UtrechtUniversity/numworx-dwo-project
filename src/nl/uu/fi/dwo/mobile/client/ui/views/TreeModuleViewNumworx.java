@@ -396,14 +396,14 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 				@Override
 				public Promise<List<SelectModuleItem>> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
-					i.setDescription("Aantal resultaten: " + resolved.getValue().size());
+					i.setDescription(rb.count_results() + resolved.getValue().size());
 					return resolved;
 				}})
 				.recover(new Function<Promise<?>, List<SelectModuleItem>>(){
 
 					@Override
 					public List<SelectModuleItem> apply(Promise<?> t) {
-						i.setDescription("Geen resultaat: " + t.getFailure().getMessage());
+						i.setDescription(rb.no_results() + t.getFailure().getMessage());
 						return Collections.emptyList();
 					}})	
 					
@@ -559,13 +559,19 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		};
 		
 		initWidget(uiBinder.createAndBindUi(this));
-		searchInput.getElement().setPropertyString("placeholder", "Zoek toets of lesstof");
+		searchInput.getElement().setPropertyString("placeholder", rb.search());
 		root.forceLayout();
 // tree stuff		
 		standardMap = new TreeItem(toSafeHTML(Text.constants.standaardModules()));
 		standardMap.setState(true);
 // Strategy stuff desktop/tablet
-		final boolean desktop = MGWT.getOsDetection().isDesktop() /*&& false*/;
+		selectStrategy();
+	}
+
+
+	private void selectStrategy() {
+		boolean desktop = MGWT.getOsDetection().isDesktop() /*&& false*/;
+		if (!DWOplayer.clientfactory.isIconizer()) desktop = false; // platte versie bij klas zonder tree
 		navigation = desktop ? new TreeNavStrategy() : new ListNavStrategy();
 	}
 
@@ -576,6 +582,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	NavStrategy navigation;
 
 	private SelectModuleItem selection;
+
+	@UiField Text rb;
 
 	
 	class ListNavStrategy implements NavStrategy {
@@ -649,7 +657,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				m.addStyleName(style.menuItem());
 			}
 			
-			m=items.addItem("Logout", new ScheduledCommand() {
+			m=items.addItem(rb.logout(), new ScheduledCommand() {
 				
 				@Override
 				public void execute() {
@@ -657,7 +665,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				}
 			});
 		} else {
-			m=items.addItem("Aanmelden", new ScheduledCommand() {
+			m=items.addItem(rb.aanmelden(), new ScheduledCommand() {
 				
 				@Override
 				public void execute() {
