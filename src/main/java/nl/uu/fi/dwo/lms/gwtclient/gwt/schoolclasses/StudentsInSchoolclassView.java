@@ -16,6 +16,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
@@ -202,6 +203,7 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         });
         dataGrid.addColumnSortHandler(columnSortHandler);
         dataGrid.addColumn(value, tableHeaders[0]);
+        dataGrid.getColumnSortList().push(value);
 
         //insertion
         value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
@@ -299,7 +301,8 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         };
         value.setSortable(false);
         dataGrid.addColumn(value, tableHeaders[4]);
-
+        
+        ColumnSortEvent.fire(dataGrid, dataGrid.getColumnSortList());
         //select student
         checkBox = new MyCheckBoxCell(true, true);
         Column<StudentsInSchoolclassPresenter.StudentItem, Boolean> bValue = new Column<StudentsInSchoolclassPresenter.StudentItem, Boolean>(checkBox) {

@@ -33,16 +33,16 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
     interface MyUiBinder extends UiBinder<Widget, SwitchSchoolView> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
-    
+
     @UiField(provided = true)
     CellTable cellTable;
     @UiField(provided = true)
-    SimplePager pager;    
+    SimplePager pager;
     @UiField
     Button cancelBtn;
     @UiField
     Button switchBtn;
-    
+
     private SwitchSchoolPresenter switchSchoolPresenter;
     SwitchSchoolPresenter.SchoolItem selected;
     ListDataProvider<SwitchSchoolPresenter.SchoolItem> dataProvider = new ListDataProvider<SwitchSchoolPresenter.SchoolItem>();
@@ -90,7 +90,9 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
             });
             cellTable.addColumnSortHandler(columnSortHandler);
             cellTable.addColumn(value, header);
+            cellTable.getColumnSortList().push(value);
         }
+
 
         SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
         pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
@@ -104,15 +106,15 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             public void onSelectionChange(SelectionChangeEvent event) {
                 selected = selectionModel.getSelectedObject();
-                LOG.log(Level.INFO, "selection key: "+selectionModel.getSelectedObject().key);
+                LOG.log(Level.INFO, "selection key: " + selectionModel.getSelectedObject().key);
             }
-        });        
-        
+        });
+        ColumnSortEvent.fire(cellTable, cellTable.getColumnSortList());
+
         initWidget(uiBinder.createAndBindUi(this));
         //controller must be before clicks occur
         switchBtn.addClickHandler(this);
     }
-    
 
     @Override
     public void init() {
@@ -137,11 +139,12 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
         }
     }
 
-    public void updateView(Map<String,SwitchSchoolPresenter.SchoolItem> data,SwitchSchoolPresenter.SchoolItem selectedItem) {
+    public void updateView(Map<String, SwitchSchoolPresenter.SchoolItem> data, SwitchSchoolPresenter.SchoolItem selectedItem) {
         dataProvider.getList().clear();
         dataProvider.getList().addAll(data.values());
         dataProvider.refresh();
         cellTable.getSelectionModel().setSelected(selectedItem, true);
+        ColumnSortEvent.fire(cellTable, cellTable.getColumnSortList());
     }
 
 }

@@ -14,6 +14,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
@@ -138,6 +139,8 @@ public class SchoolclassesView extends Composite implements ClickHandler, Select
         });
         dataGrid.addColumnSortHandler(columnSortHandler);
         dataGrid.addColumn(value, tableHeaders[0]);
+        dataGrid.getColumnSortList().push(value);
+
 
         //edit
         final DwoImageToolTipClickCell editClickCell = new DwoImageToolTipClickCell(editImage, "click to edit");
@@ -214,6 +217,9 @@ public class SchoolclassesView extends Composite implements ClickHandler, Select
 
         dataGrid.setRowData(0, data);
         dataGrid.setRowCount(data.size());
+        
+        ColumnSortEvent.fire(dataGrid, dataGrid.getColumnSortList());
+        
         SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
         pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
 

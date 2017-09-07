@@ -38,8 +38,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoToolTipCell;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoToolTipClickCell;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoStyledClickCell;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.SelectedCellHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
 
@@ -164,7 +163,7 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
         dataProvider.setList(data.getMarks());
 
         //create schoolclass/student column
-        DwoToolTipCell cell = new DwoToolTipCell("select to color row");
+        DwoStyledClickCell cell = new DwoStyledClickCell();
         //schoolclass/student
 //        if(data.getvIndex().length>0){
 //        Column<List<ResultsPresenter.ResultItem>, String> value = new Column<List<ResultsPresenter.ResultItem>, String>(cell) {
@@ -183,13 +182,14 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
                 dataProvider.getList());
 
         for (int i = 0; i < data.gethIndex().length; i++) {
-            //    if (i == 0) {
-            DwoToolTipClickCell c = new DwoToolTipClickCell();
+                if (i != 0) {
+            DwoStyledClickCell c = new DwoStyledClickCell();
             c.addSelectedCellHandler(this);
             cell = c;
-            //       } else {
-            //          cell = new DwoToolTipCel();
-            //      }
+                   } else {
+                      cell = new DwoStyledClickCell("background-color: pink;");
+            cell.addSelectedCellHandler(this);
+                  }
 //            }else{
 //                cell = new DwoClickCell();
 //            }
@@ -236,6 +236,7 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
             };
             dynValue.setHorizontalAlignment((colVal == 0) ? HasHorizontalAlignment.ALIGN_LOCALE_START : HasHorizontalAlignment.ALIGN_LOCALE_END);
             dynValue.setSortable(true);
+            dynValue.setCellStyleNames("flexTableHeader");
             Comparator<List<ResultsPresenter.ResultItem>> comp = new Comparator<List<ResultsPresenter.ResultItem>>() {
                 public int compare(List<ResultsPresenter.ResultItem> o1, List<ResultsPresenter.ResultItem> o2) {
                     if (o1.get(colVal) == o2.get(colVal)) {
@@ -254,9 +255,12 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
                 }
             };
             columnSortHandler.setComparator(dynValue, comp);
-            dataGrid.setColumnWidth(dynValue, "200PX");
+                dataGrid.setColumnWidth(dynValue, "200PX");
             dynValue.setDataStoreName(data.gethIndex()[i].label);
             dataGrid.addColumn(dynValue, data.gethIndex()[i].label);
+            if(i==0){
+                dataGrid.getColumnSortList().push(dynValue);
+            }
             LOG.log(Level.INFO, "adding column " + data.gethIndex()[i].label);
         }
         dataGrid.addColumnSortHandler(columnSortHandler);
@@ -282,6 +286,7 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
 //        }else{
 //            dataGrid.setSelectionModel(selectionModel);
 //        }
+        ColumnSortEvent.fire(dataGrid, dataGrid.getColumnSortList());
         dataGrid.redraw();
 
     }
@@ -412,6 +417,11 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
         }
     }
 
+    /**
+     * Function that allows to put a string into the browsers clipboard.
+     * 
+     * @param text 
+     */
     public static native void copyTextToClipboard(String text) /*-{
         var textArea = document.createElement("textarea");
         //

@@ -19,7 +19,7 @@
                     </g:north>-->
                 <g:center>
                     <!--<g:ScrollPanel  addStyleNames='{dwoStyle.dwoDataGridWidget}' height="auto" >-->
-                        <c:DataGrid addStyleNames='{dwoStyle.dwoDataGridWidget}'   ui:field='dataGrid'/>
+                        <c:DataGrid addStyleNames='{dwoStyle.dwoDataGridWidget}'  width=' auto' ui:field='dataGrid'/>
                         <!--</g:ScrollPanel>-->
                 </g:center>
             </g:DockLayoutPanel>

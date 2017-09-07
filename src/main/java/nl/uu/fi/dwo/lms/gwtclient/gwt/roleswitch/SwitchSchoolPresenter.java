@@ -24,7 +24,7 @@ public class SwitchSchoolPresenter {
     private EventBus eventBus;
     private SchoolItem selectedItem;
     private Map<String,DomSchoolRoleAndClassV2> sracData;
-        private String[] tableHeaders = {"school"};
+        private String[] tableHeaders = {"docentrollen"};
         
     private SecuredUserSchoolLoginManagerV2 manager = new SecuredUserSchoolLoginManagerV2();
 
