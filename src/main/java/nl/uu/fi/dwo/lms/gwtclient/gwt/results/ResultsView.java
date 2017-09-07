@@ -302,7 +302,7 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
     private void cellSelected(int row, int column) {
         if (column == 0 || (zoomedClass && zoomedCourse)) {
             LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataProvider.getList().get(row).get(0).label + "," + dataGrid.getHeader(column).getValue());
-            resultsPresenter.selectRowAndCol(row, column);
+            resultsPresenter.selectRowAndCol(dataProvider.getList().get(row).get(0).row, column);
         }
     }
 

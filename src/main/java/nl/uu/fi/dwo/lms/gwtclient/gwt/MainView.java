@@ -63,6 +63,8 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     MainPresenter mainPresenter;
 
     @UiField
+    Label activeDeckWidgetLabel;
+    @UiField
     Label schoolLabel;
     @UiField
     Label schoolName;
@@ -150,7 +152,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         addStudentsView = (AddStudentsView) clientFactory.getAddStudentsView();
         teachersInSchoolclassView = (TeachersInSchoolclassView) clientFactory.getTeachersInSchoolclassView();
         initWidget(uiBinder.createAndBindUi(this));
-         hidePostLoginWidgets();
+        hidePostLoginWidgets();
         int loginIndex = mainDeckPanel.getWidgetIndex(loginView);
         mainDeckPanel.showWidget(loginIndex);
         menuButton.addClickHandler(this);
@@ -307,6 +309,11 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         menuView.removeStyleName("dwoMenuIn");
         setMenuVisible(false);
     }
+    
+    @Override
+    public void currentDeckWidgetName(String panel){
+        activeDeckWidgetLabel.setText(panel);
+    }
 
     @Override
     public void showMessageDialog(String msg) {
@@ -339,10 +346,10 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     }
 
     private void setMenuVisible(boolean visible) {
-    	showMenu = visible;
-    	layout.setWidgetVisible(menuView, visible);
+        showMenu = visible;
+        layout.setWidgetVisible(menuView, visible);
     }
-    
+
     public void onClick(ClickEvent event) {
         if (event.getSource() == menuButton) {
             LOG.log(Level.INFO, "Menu button clicked.");
@@ -352,8 +359,8 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
                 menuView.addStyleName("menuGrow");
                 LOG.log(Level.INFO, "Menu grow.");
             } else {
-            	setMenuVisible(false);
-            	menuView.removeStyleName("menuGrow");
+                setMenuVisible(false);
+                menuView.removeStyleName("menuGrow");
                 LOG.log(Level.INFO, "Menu shrink.");
                 showMenu = false;
             }
@@ -369,7 +376,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
             mainPresenter.selectView(SwitchViewEvent.SelectedView.RESULTS);
         } else if (event.getSource() == logoutLabel) {
             hideMenuView();
-          Window.Location.replace(Window.Location.getHref());
+            Window.Location.replace(Window.Location.getHref());
         } else if (event.getSource() == classesLabel) {
             hideMenuView();
             mainPresenter.selectView(SwitchViewEvent.SelectedView.SCHOOLCLASSES);

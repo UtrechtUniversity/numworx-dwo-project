@@ -115,12 +115,13 @@ public class ResultsPresenter {
     }
 
     public class ResultItem {
-
+        public int row;
         public String label; //unique
         public String toolTip;
         public Double score;
 
-        public ResultItem(String aLabel, Double aScore) {
+        public ResultItem(int aRow, String aLabel, Double aScore) {
+            row = aRow;
             label = aLabel;
             score = aScore;
         }
@@ -201,6 +202,9 @@ public class ResultsPresenter {
         view.plot(plotData, (schoolClass != null), (course != null));
     }
 
+    /**
+     * @param row the course to set
+     */
     /**
      * @param row the course to set
      */
@@ -305,11 +309,11 @@ public class ResultsPresenter {
         ResultItem[] hHeaders = new ResultItem[matrix.gethSize() + 1];
         List<ResultItem> colHeaders = new ArrayList<ResultItem>(matrix.gethSize() + 1);
         colHeaders.add(null);
-        hHeaders[0] = (schoolClass == null) ? new ResultItem("schoolclasses", null) : new ResultItem(schoolClass.getLabel(), null);
+        hHeaders[0] = (schoolClass == null) ? new ResultItem(-1,"schoolclasses", null) : new ResultItem(-1,schoolClass.getLabel(), null);
         for (int i = 0; i < matrix.gethSize(); i++) {
             DomResultScore score = matrix.gethIndex(i);
-            hHeaders[i + 1] = new ResultItem(score.getLabel(), score.getScore());
-            colHeaders.add(new ResultItem(score.getLabel(), score.getScore()));
+            hHeaders[i + 1] = new ResultItem(-1,score.getLabel(), score.getScore());
+            colHeaders.add(new ResultItem(-1, score.getLabel(), score.getScore()));
         }
         data.sethIndex(hHeaders);
 
@@ -318,7 +322,7 @@ public class ResultsPresenter {
         rowHeaders.add(null);
         for (int i = 0; i < matrix.getvSize(); i++) {
             DomResultScore score = matrix.getvIndex(i);
-            ResultItem item = new ResultItem(score.getLabel(), score.getScore());
+            ResultItem item = new ResultItem(i,score.getLabel(), score.getScore());
             if (score instanceof DomResultStudent) {
                 String toolTip = ((DomResultStudent) score).getStudent().getUserName();
                 item.toolTip = toolTip;
@@ -341,7 +345,7 @@ public class ResultsPresenter {
                 if (score == null) {
                     marks.get(i).add(null);
                 } else {
-                    marks.get(i).add(new ResultItem(score.getLabel(), score.getScore()));
+                    marks.get(i).add(new ResultItem(i, score.getLabel(), score.getScore()));
                 }
             }
         }

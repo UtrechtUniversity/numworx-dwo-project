@@ -7,7 +7,8 @@
     <g:HeaderPanel addStyleNames='{dwoStyle.dwoAppPanel}'>
        <g:FlowPanel height="51px">
         <g:FlowPanel addStyleNames='{dwoStyle.dwoAppHeaderPanel}' ui:field='headerView'>
-            <g:Image addStyleNames='{dwoStyle.leftLogoBox}' height = '90%' width = 'auto' ui:field="dwoLogo" resource="{icons.dwoLogo}" />            
+            <g:Image addStyleNames='{dwoStyle.leftLogoBox}' height = '90%' width = 'auto' ui:field="dwoLogo" resource="{icons.dwoLogo}" />
+            <g:Label addStyleNames='{dwoStyle.leftHalfBox}' ui:field='activeDeckWidgetLabel'>Login</g:Label>
             <g:PushButton addStyleNames='{dwoStyle.dwoAppMenuButton}'  ui:field="menuButton">
                 <!--                <g:upFace>
                     <b>click me</b>
