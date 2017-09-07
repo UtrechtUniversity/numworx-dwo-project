@@ -6,6 +6,8 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
+
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.security.PermitAll;
@@ -58,9 +60,15 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 			if(course.getSchoolId() != null) {
 				DomSchool ds = new DomSchool(); ds.setId(course.getSchoolId());
 				schoolId = MySQLPersistenceId.getNativeId(ds);
-			}			
-			if(schoolId != null && ! schoolId.equals(pc.getSchoolID())) {
-	            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+			}
+			
+			Long schoolID_pc = pc.getSchoolID(); // public courses have schoolid 0 in DWOJClient
+			if(schoolID_pc == null) schoolID_pc = Long.valueOf(0L);
+			
+			if(schoolId != null && ! schoolId.equals(schoolID_pc) ) {
+	            Dwo2RestException exception = new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+	            LOG.log(Level.WARNING, "Assume profileadmin or dwoadmin? " + schoolID_pc + " " + schoolId, exception);
+	            throw exception;
 			} else
 // MOVE to different parent within the same school
 			if(course.getParentID() != null) {		
