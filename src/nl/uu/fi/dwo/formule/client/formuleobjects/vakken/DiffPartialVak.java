@@ -77,6 +77,7 @@ public class DiffPartialVak extends FormuleElementWithChildren
 		ctx.setFillStyle(color);
 		
 		String dString = "\u2202";
+		boolean italic = fm.isItalic();
 		fm.setItalic(false);
 		//hier misschien font even 1 pt kleiner zetten. 
 		ctx.setFont(fm.getFontStyle());
@@ -88,7 +89,7 @@ public class DiffPartialVak extends FormuleElementWithChildren
 		ctx.stroke();
 		ctx.fillText(dString, fm.getAscent()/8+ (diffBreuk?0:fm.getAscent()/4), getAsHoogte() - 3*asc/8 - desc);
 		ctx.fillText(dString, fm.getAscent()/8, getAsHoogte() + asc + asc/4 - 3*asc/8 - asc/6);
-		fm.setItalic(true);
+		fm.setItalic(italic);
 		
 		
 		int hoogte = getChild(0).height;

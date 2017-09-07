@@ -82,6 +82,7 @@ public class DiffVak extends FormuleElementWithChildren
 		ctx.setFillStyle(color);
 		
 		String dString = "d";
+		boolean italic = fm.isItalic();
 		fm.setItalic(false);
 		ctx.setFont(fm.getFontStyle());
 		
@@ -93,7 +94,7 @@ public class DiffVak extends FormuleElementWithChildren
 		ctx.fillText(dString, fm.getAscent()/8+ (diffBreuk?0:fm.getAscent()/4), getAsHoogte() - 3*asc/8 - desc);
 		int k2y = getChild(1).getY();
 		ctx.fillText(dString, fm.getAscent()/8, k2y + asc);
-		fm.setItalic(true);
+		fm.setItalic(italic);
 		
 		
 		int hoogte = getChild(0).height;
@@ -189,14 +190,14 @@ public class DiffVak extends FormuleElementWithChildren
 		return this;
 	}
 	
-	@Override
-	public boolean setFont(FormuleFont fm)
-	{
-		if (super.setFont(fm) == false)
-			return false;
-		//getChild().setPosition(5 * fm.getAscent() / 7 - 1, fm.getAscent() / 4);
-		return true;
-	}
+//	@Override
+//	public boolean setFont(FormuleFont fm)
+//	{
+//		if (super.setFont(fm) == false)
+//			return false;
+//		//getChild().setPosition(5 * fm.getAscent() / 7 - 1, fm.getAscent() / 4);
+//		return true;
+//	}
 	
 	@Override
 	public String toString()

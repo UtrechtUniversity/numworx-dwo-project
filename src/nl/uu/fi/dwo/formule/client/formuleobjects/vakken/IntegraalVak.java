@@ -58,11 +58,11 @@ public class IntegraalVak extends FormuleElementWithChildren
         
         //ctx.setTextAlign(TextAlign.CENTER);
 		//ctx.setTextBaseline(TextBaseline.BOTTOM);
+        boolean italic = fm.isItalic();
 		fm.setItalic(false);
 		ctx.setFont(fm.getFontStyle());
-		ctx.fillText("d", tx + asc + getChild(0).width + asc / 5 - 2, ashoogte);
-		
-		fm.setItalic(true);
+		ctx.fillText("d", tx + asc + getChild(0).width + asc / 5 - 2, ashoogte);		
+		fm.setItalic(italic);
 	}
 
 	public void paintObject()

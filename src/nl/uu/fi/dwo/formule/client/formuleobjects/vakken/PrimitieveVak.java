@@ -31,11 +31,11 @@ public class PrimitieveVak extends FormuleElementWithChildren
 		ctx.lineTo(tx + asc/3, ty + th - asc/6);
         ctx.arc(tx + asc / 6, ty + th - asc / 6, asc / 6, 0, Math.PI, false);
 		ctx.stroke();
-        
+        boolean italic = fm.isItalic();
 		fm.setItalic(false);
 		ctx.setFont(fm.getFontStyle());
 		ctx.fillText("d", tx+asc+getChild(0).width+asc/5-2,getAsHoogte());
-		fm.setItalic(true);
+		fm.setItalic(italic);
 	}
 
 	public void paintObject()
