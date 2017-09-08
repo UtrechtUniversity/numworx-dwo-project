@@ -3,21 +3,14 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
 >
     <ui:style field="dwoStyle" src="css/dwostyle.css" />    
+    <ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
     <ui:with type="nl.uu.fi.dwo.lms.gwtclient.gwt.icons.AccountImageBundle" field="icons" />
     <g:HeaderPanel addStyleNames='{dwoStyle.dwoAppPanel}'>
         <g:FlowPanel  height='51px'>
         <g:FlowPanel addStyleNames='{dwoStyle.dwoAppHeaderPanel}' ui:field='headerView'>
             <g:Image addStyleNames='{dwoStyle.headerLogoBox}' height='90%' width='auto' ui:field="dwoLogo" resource="{icons.dwoLogo}" />
-            <g:Label addStyleNames='{dwoStyle.leftHalfBox}' ui:field='activeDeckWidgetLabel'>Login</g:Label>
+            <g:Label addStyleNames='{dwoStyle.leftHalfBox}' ui:field='activeDeckWidgetLabel'><ui:text from='{rb.GUI_View_LOGIN}'/></g:Label>
             <g:PushButton addStyleNames='{dwoStyle.dwoAppMenuButton}'  ui:field="menuButton">
-                <!--                <g:upFace>
-                    <b>click me</b>
-                </g:upFace>
-                <g:upHoveringFace>
-                    <b>Click ME!</b>
-                </g:upHoveringFace>
-                <g:downFace image='{downButton}'/>
-                <g:downHoveringFace image='{downButton}'/>-->
                 &#9776;
             </g:PushButton>            
             <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}'>&nbsp;</g:Label>
@@ -25,7 +18,7 @@
             <!--<g:Label addStyleNames='{dwoStyle.leftFullBox}' ui:field="roleLabel">rol:</g:Label>-->
             <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}' ui:field="userRole"></g:Label>
             <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}' ui:field="schoolName"></g:Label>
-            <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}' ui:field="schoolLabel">School</g:Label>
+            <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}' ui:field="schoolLabel"><ui:text from='{rb.GUI_Label_SchoolName}'/></g:Label>
         </g:FlowPanel>
         </g:FlowPanel>
         <g:LayoutPanel ui:field="layout" addStyleNames='{dwoStyle.dwoAppMainPanel}'>
@@ -48,11 +41,11 @@
             </g:layer>     
             <g:layer right="8px" top="8px" left="8px" bottom="8px">              
                 <g:FlowPanel addStyleNames='{dwoStyle.dwoAppMenuPanel}' ui:field="menuView" >
-                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="accountLabel">account</g:Label>
-                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="switchRoleLabel">switch rol</g:Label>
-                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="classesLabel">manage classes</g:Label>
-                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="resultsLabel">results</g:Label>
-                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="logoutLabel">logout</g:Label>
+                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="accountLabel"><ui:text from='{rb.GUI_View_ACCOUNT}'/></g:Label>
+                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="switchRoleLabel"><ui:text from='{rb.GUI_View_SWITCHSCHOOL}'/></g:Label>
+                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="classesLabel"><ui:text from='{rb.GUI_View_SCHOOLCLASSES}'/></g:Label>
+                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="resultsLabel"><ui:text from='{rb.GUI_View_ACTIVERESULTS}'/></g:Label>
+                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="logoutLabel"><ui:text from='{rb.GUI_View_LOGOUT}'/></g:Label>
                </g:FlowPanel>
 <!--            </g:layer>     
             <g:layer  addStyleNames='{dwoStyle.dwoDeckWidget}'>  -->

@@ -3,6 +3,7 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
+    <ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
     <!--        <g:ScrollPanel styleName="{dwoStyle.fullPanel}">
         <g:FlowPanel>
             <g:FlexTable styleName="{dwoStyle.flexTable}" ui:field="resultTable"/>
@@ -10,10 +11,10 @@
     </g:ScrollPanel>-->
     <g:DockLayoutPanel  unit="EM" addStyleNames='{dwoStyle.dwoWidgetPanel}'>
         <g:north addStyleNames="{dwoStyle.horizontalFloat}" size='3'>
-            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="exportBtn">export</g:Button>
+            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="exportBtn"><ui:text from='{rb.GUI_Button_Export}'/></g:Button>
         </g:north>
         <g:center>
-            <g:DockLayoutPanel addStyleNames='{dwoStyle.dwoFlowPanel}'>
+            <g:DockLayoutPanel >
 <!--                    <g:north  size='20'>
                         <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}' width='90%'  ui:field='pager'/>
                     </g:north>-->

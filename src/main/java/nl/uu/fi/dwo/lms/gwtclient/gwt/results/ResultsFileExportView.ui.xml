@@ -2,11 +2,12 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui" >
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
+    <ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
     <g:FlowPanel addStyleNames='{dwoStyle.dwoDialogPanel}'>
         <g:Grid>
             <g:row>
                 <g:customCell>
-                    <g:Label>Selecteer een file</g:Label>
+                    <g:Label><ui:text from='{rb.GUI_Label_SelectAFile}'/>:</g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:FileUpload addStyleNames='{dwoStyle.dwoTextBox}' ui:field='fileUpload'/>
@@ -15,10 +16,10 @@
             <g:row></g:row>
             <g:row>
                 <g:customCell>
-                    <g:PushButton ui:field='cancelBtn'>cancel</g:PushButton>
+                    <g:PushButton ui:field='cancelBtn'><ui:text from='{rb.GUI_Button_Cancel}'/></g:PushButton>
                 </g:customCell>
                 <g:customCell>
-                    <g:PushButton ui:field='exportBtn'>export</g:PushButton>
+                    <g:PushButton ui:field='exportBtn'><ui:text from='{rb.GUI_Button_Export}'/></g:PushButton>
                 </g:customCell>
             </g:row>
             <!--                <g:row>

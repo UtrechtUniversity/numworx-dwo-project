@@ -3,10 +3,10 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
 >
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />    
-    <ui:with type="nl.uu.fi.dwo.lms.gwtclient.gwt.icons.AccountImageBundle" field="icons" />
+    <!--<ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />-->
+    <!--<ui:with type="nl.uu.fi.dwo.lms.gwtclient.gwt.icons.AccountImageBundle" field="icons" />-->
     <g:FlowPanel addStyleNames='{dwoStyle.dwoDialogPanel}'>
                 <g:HTML ui:field="htmlText" > </g:HTML>
-                
                     <g:PushButton  addStyleNames="{dwoStyle.dwoButton}"  ui:field="okButton">Ok</g:PushButton>
     </g:FlowPanel>
 </ui:UiBinder> 

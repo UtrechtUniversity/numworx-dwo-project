@@ -3,9 +3,10 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
 >
     <ui:style field="dwoStyle" src="css/dwostyle.css" />    
-    <ui:with type="nl.uu.fi.dwo.lms.gwtclient.gwt.icons.AccountImageBundle" field="icons" />
-        <g:HTMLPanel>
-            <g:Label ui:field="msgLabel">loading...</g:Label> 
-            <g:PushButton addStyleNames='{dwoStyle.dwoButton}' ui:field="okButton">ok</g:PushButton>
-        </g:HTMLPanel>
+    <!--<ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />-->
+    <!--<ui:with type="nl.uu.fi.dwo.lms.gwtclient.gwt.icons.AccountImageBundle" field="icons" />-->
+    <g:HTMLPanel>
+        <g:Label ui:field="msgLabel"></g:Label> 
+        <g:PushButton addStyleNames='{dwoStyle.dwoButton}' ui:field="okButton">Ok</g:PushButton>
+    </g:HTMLPanel>
 </ui:UiBinder> 

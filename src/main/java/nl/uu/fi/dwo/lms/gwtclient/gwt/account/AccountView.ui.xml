@@ -7,7 +7,7 @@
         <g:Grid addStyleNames='{dwoStyle.centralWidget} {dwoStyle.dwoWidgetBorder}'>
             <g:row>
                 <g:customCell>
-                    <g:Label><ui:text from='{rb.GUI_Username}' />:</g:Label>
+                    <g:Label><ui:text from='{rb.GUI_Label_UserName}' />:</g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:TextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='usernameText'></g:TextBox>
@@ -15,7 +15,7 @@
             </g:row>
             <g:row>
                 <g:customCell>
-                    <g:Label><ui:text from='{rb.GUI_GivenName}' />:</g:Label>
+                    <g:Label><ui:text from='{rb.GUI_Label_GivenName}' />:</g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:TextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='firstNameText'>
@@ -24,7 +24,7 @@
             </g:row>
             <g:row>
                 <g:customCell>
-                    <g:Label><ui:text from='{rb.GUI_Insertion}' />:</g:Label>
+                    <g:Label><ui:text from='{rb.GUI_Label_Insertion}' />:</g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:TextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='insertionText'>
@@ -33,7 +33,7 @@
             </g:row>
             <g:row>
                 <g:customCell>
-                    <g:Label><ui:text from='{rb.GUI_FamilyName}' />:</g:Label>
+                    <g:Label><ui:text from='{rb.GUI_Label_FamilyName}' />:</g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:TextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='familyNameText'>
@@ -42,7 +42,7 @@
             </g:row>
             <g:row>
                 <g:customCell>
-                    <g:Label><ui:text from='{rb.GUI_Email}' />:</g:Label>
+                    <g:Label><ui:text from='{rb.GUI_Label_Email}' />:</g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:TextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='emailText'>
@@ -52,7 +52,7 @@
             <g:row></g:row>
             <g:row>
                 <g:customCell>
-                    <g:Label><ui:text from="{rb.GUI_Password}" />:</g:Label>
+                    <g:Label><ui:text from="{rb.GUI_Label_Password}" />:</g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:PasswordTextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='passwordTextBox'></g:PasswordTextBox>
@@ -60,7 +60,7 @@
             </g:row>
             <g:row>
                 <g:customCell>
-                    <g:Label><ui:text from="{rb.GUI_NewPassword}" />:</g:Label>
+                    <g:Label><ui:text from="{rb.GUI_Label_NewPassword}" />:</g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:PasswordTextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='newPasswordTextBox'></g:PasswordTextBox>
@@ -68,7 +68,7 @@
             </g:row>
             <g:row>
                 <g:customCell>
-                    <g:Label><ui:text from="{rb.GUI_NewPasswordAgain}" />:</g:Label>
+                    <g:Label><ui:text from="{rb.GUI_Label_NewPasswordAgain}" />:</g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:PasswordTextBox addStyleNames='{dwoStyle.dwoTextBox}' ui:field='newPasswordAgainTextBox'></g:PasswordTextBox>
@@ -77,10 +77,10 @@
             <g:row></g:row>
             <g:row>
                 <g:customCell>
-                    <g:Button ui:field='resetBtn'>reset</g:Button>
+                    <g:Button ui:field='resetBtn'><ui:text from='{rb.GUI_Button_Reset}'/></g:Button>
                 </g:customCell>
                 <g:customCell>
-                    <g:Button ui:field='updateBtn' addStyleNames='{dwoStyle.floatRight} {dwoStyle.margin5}'>update</g:Button>
+                    <g:Button ui:field='updateBtn' addStyleNames='{dwoStyle.floatRight} {dwoStyle.margin5}'><ui:text from='{rb.GUI_Button_Update}'/></g:Button>
                 </g:customCell>
             </g:row>
         </g:Grid>        

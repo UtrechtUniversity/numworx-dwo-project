@@ -36,6 +36,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CoursesOfSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassView;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 /**
@@ -54,7 +55,8 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     interface MyUiBinder extends UiBinder<Widget, MainView> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
-
+    private static final DwoLocalesForGWT rb = GWT.create(DwoLocalesForGWT.class);
+    
     static {
         //Initialize an Exception translator.
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
