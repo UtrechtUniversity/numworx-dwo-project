@@ -61,8 +61,8 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
     DataGrid dataGrid;
 //    @UiField(provided = true)            
 //    CellList dataGrid;
-    @UiField(provided = true)
-    SimplePager pager;
+//    @UiField(provided = true)
+//    SimplePager pager;
     @UiField
     Button exportBtn;
     DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
@@ -122,10 +122,10 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
 //            }
 //        };
 //        t.scheduleRepeating(60000);
-        SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
-        pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
-        pager.setDisplay(dataGrid);
-        pager.setPageSize(dataGrid.getPageSize());
+//        SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
+//        pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
+//        pager.setDisplay(dataGrid);
+//        pager.setPageSize(dataGrid.getPageSize());
         initWidget(uiBinder.createAndBindUi(this));
         exportBtn.addClickHandler(this);
 
