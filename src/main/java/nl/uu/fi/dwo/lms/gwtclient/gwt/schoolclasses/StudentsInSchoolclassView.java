@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoImageToolTipClickCell;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.SelectedCellHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
  * GWT Panel that handles switching the role.
@@ -64,6 +65,8 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
     Button removeSelectedBtn;
     @UiField
     ListBox schoolClassListBox;
+    @UiField
+    DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
     
     private static final DwoResources resources = GWT.create(DwoResources.class);
     Image editImage = new Image(resources.editIcon());
@@ -202,7 +205,7 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
             }
         });
         dataGrid.addColumnSortHandler(columnSortHandler);
-        dataGrid.addColumn(value, tableHeaders[0]);
+        dataGrid.addColumn(value, rb.GUI_Table_GivenName());
         dataGrid.getColumnSortList().push(value);
 
         //insertion
@@ -230,7 +233,7 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
             }
         });
         dataGrid.addColumnSortHandler(columnSortHandler);
-        dataGrid.addColumn(value, tableHeaders[1]);
+        dataGrid.addColumn(value, rb.GUI_Table_Insertion());
 
         //familyName
         value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
@@ -257,7 +260,7 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
             }
         });
         dataGrid.addColumnSortHandler(columnSortHandler);
-        dataGrid.addColumn(value, tableHeaders[2]);
+        dataGrid.addColumn(value, rb.GUI_Table_FamilyName());
 
         //usercode
         value = new Column<StudentsInSchoolclassPresenter.StudentItem, String>(cell) {
@@ -284,7 +287,7 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
             }
         });
         dataGrid.addColumnSortHandler(columnSortHandler);
-        dataGrid.addColumn(value, tableHeaders[3]);
+        dataGrid.addColumn(value, rb.GUI_Table_Usercode());
 
         //edit student
         final DwoImageToolTipClickCell editClickCell = new DwoImageToolTipClickCell(editImage, "click to edit");
@@ -300,7 +303,7 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
             }
         };
         value.setSortable(false);
-        dataGrid.addColumn(value, tableHeaders[4]);
+        dataGrid.addColumn(value, rb.GUI_Table_Edit());
         
         ColumnSortEvent.fire(dataGrid, dataGrid.getColumnSortList());
         //select student
@@ -313,7 +316,7 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         };
 
         bValue.setSortable(false);
-        dataGrid.addColumn(bValue, tableHeaders[5]);
+        dataGrid.addColumn(bValue, rb.GUI_Table_Select());
 
         dataGrid.setRowData(0, data);
         dataGrid.setRowCount(data.size(), true);

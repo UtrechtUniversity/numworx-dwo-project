@@ -40,6 +40,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
  * GWT Panel that handles switching the role.
@@ -53,7 +54,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
     interface MyUiBinder extends UiBinder<Widget, CoursesOfSchoolclassView> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
-    
+
     @UiField(provided = true)
     CellTable dataGrid;
     @UiField(provided = true)
@@ -62,11 +63,13 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
     Tree tree;
     @UiField
     Button backBtn;
-
+    @UiField
+    DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
+    
     private static final DwoResources resources = GWT.create(DwoResources.class);
     Image loadingImage = new Image(resources.loadingIcon());
     Image emptyImage = new Image(resources.emptyIcon());
-    
+
     private CoursesOfSchoolclassPresenter coursesOfSchoolclassPresenter;
     private ListDataProvider<ClassCourseItem> dataProvider = new ListDataProvider<ClassCourseItem>();
 
@@ -245,7 +248,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         dataGrid.addColumnSortHandler(columnSortHandler);
         SafeHtmlBuilder builder = new SafeHtmlBuilder();
         builder.appendHtmlConstant("<div title=\"Click to sort\">")
-                .appendHtmlConstant(tableHeaders[0])
+                .appendHtmlConstant(rb.GUI_Table_CourseName())
                 .appendHtmlConstant("</div>");
         dataGrid.addColumn(value, builder.toSafeHtml());
 
@@ -261,7 +264,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         bValue.setSortable(false);
         builder = new SafeHtmlBuilder();
         builder.appendHtmlConstant("<div title=\"selected means available to class\">")
-                .appendHtmlConstant(tableHeaders[1])
+                .appendHtmlConstant(rb.GUI_Table_AssignedtoClass())
                 .appendHtmlConstant("</div>");
         dataGrid.addColumn(bValue, builder.toSafeHtml());
 
@@ -291,7 +294,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
                 dataProvider.refresh();
             }
         });
-        dataGrid.addColumn(value, tableHeaders[2]);
+        dataGrid.addColumn(value, rb.GUI_Table_CourseType());
 
         //from
         EditTextCell textCell = new EditTextCell();
@@ -334,7 +337,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         dataGrid.addColumnSortHandler(columnSortHandler);
         builder = new SafeHtmlBuilder();
         builder.appendHtmlConstant("<div title=\"Enter YYYY-MM-DD HH:SS or empty to reset.\">")
-                .appendHtmlConstant(tableHeaders[3])
+                .appendHtmlConstant(rb.GUI_Table_FromDate())
                 .appendHtmlConstant("</div>");
 
         dataGrid.addColumn(dateColumn, builder.toSafeHtml());
@@ -379,7 +382,7 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
         });
         builder = new SafeHtmlBuilder();
         builder.appendHtmlConstant("<div title=\"Enter 'YYYY-MM-DD HH:SS' or empty to reset.\">")
-                .appendHtmlConstant(tableHeaders[4])
+                .appendHtmlConstant(rb.GUI_Table_ToDate())
                 .appendHtmlConstant("</div>");
 
         dataGrid.addColumn(dateColumn, builder.toSafeHtml());
@@ -481,11 +484,11 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
 //            }
 
         }
-               if (selItem!=null && ((ClassCourseItem)treeItem.getUserObject()).getKey().equals(((ClassCourseItem) selItem.getUserObject()).getKey())) {
-                    treeItem.setSelected(true);
-                    coursesOfSchoolclassPresenter.setSelectedItem(((ClassCourseItem)treeItem.getUserObject()));
-                }
-         
+        if (selItem != null && ((ClassCourseItem) treeItem.getUserObject()).getKey().equals(((ClassCourseItem) selItem.getUserObject()).getKey())) {
+            treeItem.setSelected(true);
+            coursesOfSchoolclassPresenter.setSelectedItem(((ClassCourseItem) treeItem.getUserObject()));
+        }
+
     }
 
     private void cellSelected(int row, int column) {
@@ -493,11 +496,12 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
 //        dataGrid.getHeader(column);
 //        coursesOfSchoolclassPresenter.selectItem((ClassCourseItem) dataProvider.getList().get(row), column);
     }
-    public void setEmptyTableMessage(){
+
+    public void setEmptyTableMessage() {
         dataGrid.setEmptyTableWidget(emptyImage);
     }
 
-    public void setLoadingTableMessage(){
+    public void setLoadingTableMessage() {
         dataGrid.setEmptyTableWidget(loadingImage);
     }
 }

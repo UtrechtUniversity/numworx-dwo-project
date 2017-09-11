@@ -35,6 +35,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoCell;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoImageToolTipClickCell;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.SelectedCellHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
  * GWT Panel that handles switching the role.
@@ -63,6 +64,8 @@ public class SchoolclassesView extends Composite implements ClickHandler, Select
     SimplePager pager;
     @UiField
     Button addBtn;
+    @UiField
+    DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
 
     private SchoolclassesPresenter schoolclassesPresenter;
     private ViewFactory viewFactory;
@@ -138,9 +141,8 @@ public class SchoolclassesView extends Composite implements ClickHandler, Select
             }
         });
         dataGrid.addColumnSortHandler(columnSortHandler);
-        dataGrid.addColumn(value, tableHeaders[0]);
+        dataGrid.addColumn(value, rb.GUI_Table_Schoolclass());
         dataGrid.getColumnSortList().push(value);
-
 
         //edit
         final DwoImageToolTipClickCell editClickCell = new DwoImageToolTipClickCell(editImage, "click to edit");
@@ -154,7 +156,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, Select
         };
             value.setSortable(false);
         value.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
-        dataGrid.addColumn(value, tableHeaders[1]);
+        dataGrid.addColumn(value, rb.GUI_Table_Edit());
 
         //modules
         final DwoImageToolTipClickCell modulesClickCell = new DwoImageToolTipClickCell(modulesImage, "click to edit");
@@ -170,7 +172,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, Select
             value.setSortable(false);
         value.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 
-        dataGrid.addColumn(value, tableHeaders[2]);
+        dataGrid.addColumn(value, rb.GUI_Table_Courses());
 
         //students col
         final DwoImageToolTipClickCell studentClickCell = new DwoImageToolTipClickCell(studentsImage, "click to edit");
@@ -185,7 +187,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, Select
         value.setSortable(false);
         value.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 
-        dataGrid.addColumn(value, tableHeaders[3]);
+        dataGrid.addColumn(value, rb.GUI_Table_Students());
 
         //teachers col
         final DwoImageToolTipClickCell teacherClickCell = new DwoImageToolTipClickCell(teachersImage, "click to edit");
@@ -199,7 +201,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, Select
         value.setSortable(false);
         value.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 
-        dataGrid.addColumn(value, tableHeaders[4]);
+        dataGrid.addColumn(value, rb.GUI_Table_Teachers());
 
         //remove col
         final DwoImageToolTipClickCell deleteClickCell = new DwoImageToolTipClickCell(deleteImage, "select to delete");
@@ -213,13 +215,13 @@ public class SchoolclassesView extends Composite implements ClickHandler, Select
         value.setSortable(false);
         value.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 
-        dataGrid.addColumn(value, tableHeaders[5]);
+        dataGrid.addColumn(value, rb.GUI_Table_Remove());
 
         dataGrid.setRowData(0, data);
         dataGrid.setRowCount(data.size());
-        
+
         ColumnSortEvent.fire(dataGrid, dataGrid.getColumnSortList());
-        
+
         SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
         pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
 

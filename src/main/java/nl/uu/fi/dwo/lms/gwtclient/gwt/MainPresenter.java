@@ -144,7 +144,8 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 
         switch (selectedView) {
             case ACCOUNT:
-                display.showAccountView();                
+                display.showAccountView();      
+
                 break;
             case LOGIN:
                 display.showLoginView();
@@ -176,7 +177,6 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
             case SCORESULTS:
                 display.showScoResultsView();
         }
-        display.currentDeckWidgetName(selectedView.name());
     }
 
     @Override

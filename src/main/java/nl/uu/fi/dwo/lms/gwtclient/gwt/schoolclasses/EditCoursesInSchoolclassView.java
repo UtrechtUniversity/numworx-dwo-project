@@ -52,8 +52,8 @@ public class EditCoursesInSchoolclassView extends Composite implements ClickHand
     SimplePager pager;
     @UiField
     Button backBtn;
-    @UiField
-    Button saveBtn; // single school students
+//    @UiField
+//    Button saveBtn; // single school students
     @UiField
     Tree courseTree;
 
@@ -317,7 +317,7 @@ public class EditCoursesInSchoolclassView extends Composite implements ClickHand
 //            }
 //        });
         backBtn.addClickHandler(this);
-        saveBtn.addClickHandler(this);
+//        saveBtn.addClickHandler(this);
     }
 
     public void init() {
@@ -332,9 +332,10 @@ public class EditCoursesInSchoolclassView extends Composite implements ClickHand
     public void onClick(ClickEvent event) {
         if (event.getSource() == backBtn) {
             editCoursesInSchoolClassPresenter.goBackToSchoolClasses();
-        } else if (event.getSource() == saveBtn) {
-            //studentsInSchoolclassPresenter.addStudents();
-        }
+        } 
+//        else if (event.getSource() == saveBtn) {
+//            //studentsInSchoolclassPresenter.addStudents();
+//        }
     }
 
     @Override

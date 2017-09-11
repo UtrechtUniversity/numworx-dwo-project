@@ -229,12 +229,14 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
 
     @Override
     public void showAccountView() {
+        currentDeckWidgetName(rb.GUI_View_ACCOUNT());
         int index = mainDeckPanel.getWidgetIndex(accountView);
         mainDeckPanel.showWidget(index);
     }
 
     @Override
     public void showLoginView() {
+        currentDeckWidgetName(rb.GUI_View_LOGIN());
         int index = mainDeckPanel.getWidgetIndex(loginView);
         mainDeckPanel.showWidget(index);
         //    showMessageDialog("hello world");
@@ -242,18 +244,21 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
 
     @Override
     public void showSwitchSchoolView() {
+        currentDeckWidgetName(rb.GUI_View_SWITCHSCHOOL());
         int index = mainDeckPanel.getWidgetIndex(switchSchoolView.asWidget());
         mainDeckPanel.showWidget(index);
     }
 
     @Override
     public void showResultsView() {
+        currentDeckWidgetName(rb.GUI_View_RESULTS());
         int index = mainDeckPanel.getWidgetIndex(resultsView.asWidget());
         mainDeckPanel.showWidget(index);
     }
 
     @Override
     public void showScoResultsView() {
+        currentDeckWidgetName(rb.GUI_View_SCORESULTS());
         int index = mainDeckPanel.getWidgetIndex(scoResultsView);
         mainDeckPanel.showWidget(index);
 
@@ -261,30 +266,35 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
 
     @Override
     public void showSchoolclassesView() {
+        currentDeckWidgetName(rb.GUI_View_SCHOOLCLASSES());
         int index = mainDeckPanel.getWidgetIndex(schoolclassesView.asWidget());
         mainDeckPanel.showWidget(index);
     }
 
     @Override
     public void showCoursesOfSchoolclassView() {
+        currentDeckWidgetName(rb.GUI_View_COURSESOFSCHOOLCLASS());
         int index = mainDeckPanel.getWidgetIndex(coursesOfSchoolclassView.asWidget());
         mainDeckPanel.showWidget(index);
     }
 
     @Override
     public void showStudentsInSchoolclassView() {
+        currentDeckWidgetName(rb.GUI_View_STUDENTSINSCHOOLCLASS());
         int index = mainDeckPanel.getWidgetIndex(studentsInSchoolclassView.asWidget());
         mainDeckPanel.showWidget(index);
     }
 
     @Override
     public void showAddStudentsView() {
+        currentDeckWidgetName(rb.GUI_View_ADDSTUDENTS());
         int index = mainDeckPanel.getWidgetIndex(addStudentsView.asWidget());
         mainDeckPanel.showWidget(index);
     }
 
     @Override
     public void showTeachersInSchoolclassView() {
+        currentDeckWidgetName(rb.GUI_View_TEACHERSINSCHOOLCLASS());
         int index = mainDeckPanel.getWidgetIndex(teachersInSchoolclassView.asWidget());
         mainDeckPanel.showWidget(index);
     }

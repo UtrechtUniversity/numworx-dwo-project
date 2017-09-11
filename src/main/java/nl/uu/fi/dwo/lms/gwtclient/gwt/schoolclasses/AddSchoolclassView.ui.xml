@@ -3,13 +3,14 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
 >
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />    
+    <ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
     <ui:with type="nl.uu.fi.dwo.lms.gwtclient.gwt.icons.AccountImageBundle" field="icons" />
     <g:FlowPanel addStyleNames='{dwoStyle.dwoDialogPanel}'>
         <!--addStyleNames='{dwoStyle.dwoWidgetPanel}'>-->    
         <g:Grid>
             <g:row>
                 <g:customCell>
-                    <g:Label>classname</g:Label>
+                    <g:Label><ui:text from='{rb.GUI_Label_SchoolClassName}'/></g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:TextBox ui:field='schoolclassName'></g:TextBox>
@@ -17,23 +18,23 @@
             </g:row>
             <g:row>
                 <g:customCell>
-                    <g:Label>show tree</g:Label>
+                    <g:Label><ui:text from='{rb.GUI_Label_SchoolClassTreeShow}'/></g:Label>
                 </g:customCell>
                 <g:customCell>
-                    <g:CheckBox ui:field='showTree' checked="false">boomStructuur</g:CheckBox>
-                </g:customCell>
-            </g:row>
-            <g:row>
-                <g:customCell>
-                    <g:Label>schoolclass key</g:Label>
-                </g:customCell>
-                <g:customCell>
-                    <g:CheckBox ui:field='setClassKey' checked="false">klassleutel</g:CheckBox>
+                    <g:CheckBox ui:field='showTree' checked="false"></g:CheckBox>
                 </g:customCell>
             </g:row>
             <g:row>
                 <g:customCell>
-                    <g:Label>classkey</g:Label>
+                    <g:Label><ui:text from='{rb.GUI_Label_UseSchoolClassKey}'/></g:Label>
+                </g:customCell>
+                <g:customCell>
+                    <g:CheckBox ui:field='setClassKey' checked="false"></g:CheckBox>
+                </g:customCell>
+            </g:row>
+            <g:row>
+                <g:customCell>
+                    <g:Label><ui:text from='{rb.GUI_Label_SchoolClassKey}'/></g:Label>
                 </g:customCell>
                 <g:customCell>
                     <g:TextBox ui:field='classKey'></g:TextBox>
@@ -42,10 +43,10 @@
             <g:row></g:row>
             <g:row>
                 <g:customCell>
-                    <g:PushButton  ui:field="cancelButton">Cancel</g:PushButton>
+                    <g:Button  ui:field="cancelButton"><ui:text from='{rb.GUI_Button_Cancel}'/></g:Button>
                 </g:customCell>
                 <g:customCell>
-                    <g:PushButton  ui:field="addButton">Add</g:PushButton>
+                    <g:Button  ui:field="addButton"><ui:text from='{rb.GUI_Button_AddSchoolclass}'/></g:Button>
                 </g:customCell>
             </g:row>
         </g:Grid>   

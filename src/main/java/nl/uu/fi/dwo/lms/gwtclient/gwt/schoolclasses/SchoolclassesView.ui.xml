@@ -3,10 +3,11 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
+     	<ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
     <g:FlowPanel  styleName="{dwoStyle.fullPanel}">
         <!--addStyleNames='{dwoStyle.dwoWidgetPanel}'-->
         <g:FlowPanel styleName="{dwoStyle.absPanel}">
-            <g:Button addStyleNames='dwoStyle.dwoButton' ui:field="addBtn">add schoolclass</g:Button>
+            <g:Button addStyleNames='dwoStyle.dwoButton' ui:field="addBtn"><ui:text from='{rb.GUI_Button_AddSchoolclass}'/></g:Button>
 
             <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataGrid'/>
             <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>

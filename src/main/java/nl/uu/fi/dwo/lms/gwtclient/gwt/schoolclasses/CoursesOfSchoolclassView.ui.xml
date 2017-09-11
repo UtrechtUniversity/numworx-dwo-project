@@ -3,9 +3,10 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
+         	<ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
     <g:DockLayoutPanel  unit="EM" addStyleNames='{dwoStyle.dwoWidgetPanel}'>
         <g:north addStyleNames="{dwoStyle.horizontalFloat}" size='3'>
-            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="backBtn">back</g:Button>
+            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="backBtn"><ui:text from='{rb.GUI_Button_Back}'/></g:Button>
 <!--            <g:Button addStyleNames='{dwoStyle.dwoButton} {dwoStyle.leftFullBox}' ui:field="backBtn">back</g:Button>
             <g:Button addStyleNames='{dwoStyle.dwoButton} {dwoStyle.leftHalfBox}' ui:field="addStudentsBtn">add more students</g:Button>
             <g:Button addStyleNames='{dwoStyle.dwoButton} {dwoStyle.leftHalfBox}' ui:field="deleteSelectedBtn">delete selected students</g:Button>

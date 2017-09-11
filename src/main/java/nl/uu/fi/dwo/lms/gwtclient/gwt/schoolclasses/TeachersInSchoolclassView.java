@@ -33,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.SelectedCellHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
  * GWT Panel that handles switching the role.
@@ -61,12 +62,14 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
     Button removeSelectedBtn;
     @UiField
     ListBox teacherListBox;
+    @UiField
+    DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
 
     private static final DwoResources resources = GWT.create(DwoResources.class);
     Image editImage = new Image(resources.editIcon());
     Image loadingImage = new Image(resources.loadingIcon());
     Image emptyImage = new Image(resources.emptyIcon());
-        
+
     private TeachersInSchoolclassPresenter teachersInSchoolclassPresenter;
     private ListDataProvider<TeachersInSchoolclassPresenter.TeacherItem> dataProvider = new ListDataProvider<TeachersInSchoolclassPresenter.TeacherItem>();
     private List<TeacherListBoxItem> addTeacherList;
@@ -197,7 +200,7 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
             }
         });
         dataGrid.addColumnSortHandler(columnSortHandler);
-        dataGrid.addColumn(value, tableHeaders[0]);
+        dataGrid.addColumn(value, rb.GUI_Table_GivenName());
         dataGrid.getColumnSortList().push(value);
 
         //insertion
@@ -225,7 +228,7 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
             }
         });
         dataGrid.addColumnSortHandler(columnSortHandler);
-        dataGrid.addColumn(value, tableHeaders[1]);
+        dataGrid.addColumn(value, rb.GUI_Table_Insertion());
 
         //familyName
         value = new Column<TeachersInSchoolclassPresenter.TeacherItem, String>(cell) {
@@ -252,7 +255,8 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
             }
         });
         dataGrid.addColumnSortHandler(columnSortHandler);
-        dataGrid.addColumn(value, tableHeaders[2]);
+        dataGrid.addColumn(value, rb.GUI_Table_FamilyName());
+
 
         //usercode
         value = new Column<TeachersInSchoolclassPresenter.TeacherItem, String>(cell) {
@@ -279,7 +283,7 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
             }
         });
         dataGrid.addColumnSortHandler(columnSortHandler);
-        dataGrid.addColumn(value, tableHeaders[3]);
+       dataGrid.addColumn(value,rb.GUI_Table_Usercode());
 
 //        //edit student
 //        value = new Column<TeachersInSchoolclassPresenter.SchoolClassListBoxItem, String>(clickCell) {
@@ -294,7 +298,6 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
 //        };
 //        value.setSortable(false);
 //        dataGrid.addColumn(value, tableHeaders[3]);
-
         //select student
         checkBox = new MyCheckBoxCell(true, true);
         Column<TeachersInSchoolclassPresenter.TeacherItem, Boolean> bValue = new Column<TeachersInSchoolclassPresenter.TeacherItem, Boolean>(checkBox) {
@@ -305,12 +308,12 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
         };
 
         bValue.setSortable(false);
-        dataGrid.addColumn(bValue, tableHeaders[4]);
+        dataGrid.addColumn(bValue, rb.GUI_Table_Select());
 
         dataGrid.setRowData(0, data);
         dataGrid.setRowCount(data.size(), true);
         ColumnSortEvent.fire(dataGrid, dataGrid.getColumnSortList());
-        
+
         SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
         pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
         pager.setDisplay(dataGrid);
@@ -383,18 +386,17 @@ public class TeachersInSchoolclassView extends Composite implements ClickHandler
         dataGrid.getHeader(column);
         teachersInSchoolclassPresenter.selectItem((TeachersInSchoolclassPresenter.TeacherItem) dataProvider.getList().get(row), column);
     }
-    
-    
+
     public void onSelectedCell(Cell.Context context, String value) {
         cellSelected(context.getIndex(), context.getColumn());
-    } 
-    
-    public void setEmptyTableMessage(){
+    }
+
+    public void setEmptyTableMessage() {
         dataGrid.setEmptyTableWidget(emptyImage);
     }
 
-    public void setLoadingTableMessage(){
+    public void setLoadingTableMessage() {
         dataGrid.setEmptyTableWidget(loadingImage);
-    }    
-    
+    }
+
 }

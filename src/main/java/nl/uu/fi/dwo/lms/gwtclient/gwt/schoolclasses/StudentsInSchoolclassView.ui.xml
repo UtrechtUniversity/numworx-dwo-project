@@ -3,13 +3,14 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
+     	<ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
+    
     <g:FlowPanel  addStyleNames='{dwoStyle.dwoWidgetPanel}'>
         <g:FlowPanel addStyleNames="{dwoStyle.horizontalFloat}" width="100%">
-            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="backBtn">back</g:Button>
-            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="addStudentsBtn">add more students</g:Button>
-            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="removeSelectedBtn">remove selected students</g:Button>
-           
-            <g:Button addStyleNames='{dwoStyle.dwoButton} float:right' ui:field="addToSchoolClass">add to schoolclass</g:Button>
+            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="backBtn"><ui:text from='{rb.GUI_Button_Back}'/></g:Button>
+            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="addStudentsBtn"><ui:text from='{rb.GUI_Button_AddStudents}'/></g:Button>
+            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="removeSelectedBtn"><ui:text from='{rb.GUI_Button_RemoveSelectedStudents}'/></g:Button>           
+            <g:Button addStyleNames='{dwoStyle.dwoButton} float:right' ui:field="addToSchoolClass"><ui:text from='{rb.GUI_Button_AddStudentsToClass}'/></g:Button>
             <g:ListBox addStyleNames='{dwoStyle.dwoTextBox} float:right' ui:field="schoolClassListBox">
                 <g:item>
                     Loading...
@@ -26,7 +27,7 @@
                 </g:item>
             </g:ListBox>-->
         </g:FlowPanel>
-            <g:FlowPanel height="2em">
+        <g:FlowPanel height="2em">
         </g:FlowPanel>
         <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' height="auto" ui:field='dataGrid'/>
         <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
