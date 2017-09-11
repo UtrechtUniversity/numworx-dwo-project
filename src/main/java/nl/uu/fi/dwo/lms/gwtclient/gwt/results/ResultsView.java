@@ -41,6 +41,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoClickCell;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoScoreClickCell;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.SelectedCellHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
  * Shows the students results of activities individually or grouped by school
@@ -64,6 +65,7 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
     SimplePager pager;
     @UiField
     Button exportBtn;
+    DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
 
     private static final DwoResources resources = GWT.create(DwoResources.class);
     Image emptyImage = new Image(resources.emptyIcon());
@@ -215,9 +217,12 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
             columnSortHandler.setComparator(dynValue, comp);
             dataGrid.setColumnWidth(dynValue, "200PX");
             dynValue.setDataStoreName(data.gethIndex()[i].label);
-            dataGrid.addColumn(dynValue, data.gethIndex()[i].label);
+            
             if (i == 0) {
+                dataGrid.addColumn(dynValue, rb.GUI_Table_Schoolclasses());
                 dataGrid.getColumnSortList().push(dynValue);
+            }else{
+                dataGrid.addColumn(dynValue, data.gethIndex()[i].label);
             }
             LOG.log(Level.INFO, "adding column " + data.gethIndex()[i].label);
             dataGrid.addColumnSortHandler(columnSortHandler);
