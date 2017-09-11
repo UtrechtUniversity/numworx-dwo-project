@@ -10,7 +10,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.AbstractCellTable;
@@ -61,8 +60,8 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
     DataGrid dataGrid;
 //    @UiField(provided = true)            
 //    CellList dataGrid;
-//    @UiField(provided = true)
-//    SimplePager pager;
+    @UiField(provided = true)
+    SimplePager pager;
     @UiField
     Button exportBtn;
 
@@ -122,9 +121,9 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
 //        };
 //        t.scheduleRepeating(60000);
         SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
-//        pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
-//        pager.setDisplay(dataGrid);
-//        pager.setPageSize(dataGrid.getPageSize());
+        pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
+        pager.setDisplay(dataGrid);
+        pager.setPageSize(dataGrid.getPageSize());
         initWidget(uiBinder.createAndBindUi(this));
         exportBtn.addClickHandler(this);
 

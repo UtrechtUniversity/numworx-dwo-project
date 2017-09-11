@@ -15,9 +15,9 @@
         </g:north>
         <g:center>
             <g:DockLayoutPanel >
-<!--                    <g:north  size='20'>
+                    <g:north  size='20'>
                         <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}' width='90%'  ui:field='pager'/>
-                    </g:north>-->
+                    </g:north>
                 <g:center>
                     <!--<g:ScrollPanel  addStyleNames='{dwoStyle.dwoDataGridWidget}' height="auto" >-->
                         <c:DataGrid addStyleNames='{dwoStyle.dwoDataGridWidget}'  width=' auto' ui:field='dataGrid'/>
