@@ -2,7 +2,7 @@ package nl.uu.fi.dwo.rest.locale;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'/Users/gert/NetBeansProjects/UU/trunk/DWO-gwt-lib/src/nl/uu/fi/dwo/rest/locale/Dwo2LocaleMessages.properties'.
+ * 	'/linuxextra/home-extra/plas0006/NetBeansProjects/UU/svn/DWOProject/trunk/DWO-gwt-lib/src/nl/uu/fi/dwo/rest/locale/Dwo2LocaleMessages.properties'.
  */
 public interface Dwo2LocaleMessages extends com.google.gwt.i18n.client.ConstantsWithLookup {
   
@@ -32,6 +32,42 @@ public interface Dwo2LocaleMessages extends com.google.gwt.i18n.client.Constants
   @DefaultStringValue("An incorrect password was given_")
   @Key("GUI_AnIncorrectPasswordWasGiven")
   String GUI_AnIncorrectPasswordWasGiven();
+
+  /**
+   * Translated "create schoolclass".
+   * 
+   * @return translated "create schoolclass"
+   */
+  @DefaultStringValue("create schoolclass")
+  @Key("GUI_Button_AddSchoolclass")
+  String GUI_Button_AddSchoolclass();
+
+  /**
+   * Translated "create studentaccounts".
+   * 
+   * @return translated "create studentaccounts"
+   */
+  @DefaultStringValue("create studentaccounts")
+  @Key("GUI_Button_AddStudents")
+  String GUI_Button_AddStudents();
+
+  /**
+   * Translated "add students to class".
+   * 
+   * @return translated "add students to class"
+   */
+  @DefaultStringValue("add students to class")
+  @Key("GUI_Button_AddStudentsToClass")
+  String GUI_Button_AddStudentsToClass();
+
+  /**
+   * Translated "add teachers to class".
+   * 
+   * @return translated "add teachers to class"
+   */
+  @DefaultStringValue("add teachers to class")
+  @Key("GUI_Button_AddTeachersToClass")
+  String GUI_Button_AddTeachersToClass();
 
   /**
    * Translated "back".
@@ -70,6 +106,15 @@ public interface Dwo2LocaleMessages extends com.google.gwt.i18n.client.Constants
   String GUI_Button_Export();
 
   /**
+   * Translated "import".
+   * 
+   * @return translated "import"
+   */
+  @DefaultStringValue("import")
+  @Key("GUI_Button_Import")
+  String GUI_Button_Import();
+
+  /**
    * Translated "login".
    * 
    * @return translated "login"
@@ -77,6 +122,24 @@ public interface Dwo2LocaleMessages extends com.google.gwt.i18n.client.Constants
   @DefaultStringValue("login")
   @Key("GUI_Button_Login")
   String GUI_Button_Login();
+
+  /**
+   * Translated "remove selected students".
+   * 
+   * @return translated "remove selected students"
+   */
+  @DefaultStringValue("remove selected students")
+  @Key("GUI_Button_RemoveSelectedStudents")
+  String GUI_Button_RemoveSelectedStudents();
+
+  /**
+   * Translated "remove selected teachers".
+   * 
+   * @return translated "remove selected teachers"
+   */
+  @DefaultStringValue("remove selected teachers")
+  @Key("GUI_Button_RemoveSelectedTeachers")
+  String GUI_Button_RemoveSelectedTeachers();
 
   /**
    * Translated "reset".
@@ -95,6 +158,15 @@ public interface Dwo2LocaleMessages extends com.google.gwt.i18n.client.Constants
   @DefaultStringValue("seal")
   @Key("GUI_Button_Seal")
   String GUI_Button_Seal();
+
+  /**
+   * Translated "switch".
+   * 
+   * @return translated "switch"
+   */
+  @DefaultStringValue("switch")
+  @Key("GUI_Button_Switch")
+  String GUI_Button_Switch();
 
   /**
    * Translated "update".
@@ -223,6 +295,33 @@ public interface Dwo2LocaleMessages extends com.google.gwt.i18n.client.Constants
   String GUI_Label_Password();
 
   /**
+   * Translated "class key".
+   * 
+   * @return translated "class key"
+   */
+  @DefaultStringValue("class key")
+  @Key("GUI_Label_SchoolClassKey")
+  String GUI_Label_SchoolClassKey();
+
+  /**
+   * Translated "class name".
+   * 
+   * @return translated "class name"
+   */
+  @DefaultStringValue("class name")
+  @Key("GUI_Label_SchoolClassName")
+  String GUI_Label_SchoolClassName();
+
+  /**
+   * Translated "show tree".
+   * 
+   * @return translated "show tree"
+   */
+  @DefaultStringValue("show tree")
+  @Key("GUI_Label_SchoolClassTreeShow")
+  String GUI_Label_SchoolClassTreeShow();
+
+  /**
    * Translated "schoolname".
    * 
    * @return translated "schoolname"
@@ -239,6 +338,15 @@ public interface Dwo2LocaleMessages extends com.google.gwt.i18n.client.Constants
   @DefaultStringValue("select a file")
   @Key("GUI_Label_SelectAFile")
   String GUI_Label_SelectAFile();
+
+  /**
+   * Translated "use class key".
+   * 
+   * @return translated "use class key"
+   */
+  @DefaultStringValue("use class key")
+  @Key("GUI_Label_UseSchoolClassKey")
+  String GUI_Label_UseSchoolClassKey();
 
   /**
    * Translated "username".
@@ -383,6 +491,186 @@ public interface Dwo2LocaleMessages extends com.google.gwt.i18n.client.Constants
   @DefaultStringValue("Switch to another school")
   @Key("GUI_SwitchSchool")
   String GUI_SwitchSchool();
+
+  /**
+   * Translated "assigned".
+   * 
+   * @return translated "assigned"
+   */
+  @DefaultStringValue("assigned")
+  @Key("GUI_Table_AssignedtoClass")
+  String GUI_Table_AssignedtoClass();
+
+  /**
+   * Translated "course name".
+   * 
+   * @return translated "course name"
+   */
+  @DefaultStringValue("course name")
+  @Key("GUI_Table_CourseName")
+  String GUI_Table_CourseName();
+
+  /**
+   * Translated "type".
+   * 
+   * @return translated "type"
+   */
+  @DefaultStringValue("type")
+  @Key("GUI_Table_CourseType")
+  String GUI_Table_CourseType();
+
+  /**
+   * Translated "courses".
+   * 
+   * @return translated "courses"
+   */
+  @DefaultStringValue("courses")
+  @Key("GUI_Table_Courses")
+  String GUI_Table_Courses();
+
+  /**
+   * Translated "edit".
+   * 
+   * @return translated "edit"
+   */
+  @DefaultStringValue("edit")
+  @Key("GUI_Table_Edit")
+  String GUI_Table_Edit();
+
+  /**
+   * Translated "email address".
+   * 
+   * @return translated "email address"
+   */
+  @DefaultStringValue("email address")
+  @Key("GUI_Table_Email")
+  String GUI_Table_Email();
+
+  /**
+   * Translated "family name".
+   * 
+   * @return translated "family name"
+   */
+  @DefaultStringValue("family name")
+  @Key("GUI_Table_FamilyName")
+  String GUI_Table_FamilyName();
+
+  /**
+   * Translated "from".
+   * 
+   * @return translated "from"
+   */
+  @DefaultStringValue("from")
+  @Key("GUI_Table_FromDate")
+  String GUI_Table_FromDate();
+
+  /**
+   * Translated "given name".
+   * 
+   * @return translated "given name"
+   */
+  @DefaultStringValue("given name")
+  @Key("GUI_Table_GivenName")
+  String GUI_Table_GivenName();
+
+  /**
+   * Translated "insertion".
+   * 
+   * @return translated "insertion"
+   */
+  @DefaultStringValue("insertion")
+  @Key("GUI_Table_Insertion")
+  String GUI_Table_Insertion();
+
+  /**
+   * Translated "remove".
+   * 
+   * @return translated "remove"
+   */
+  @DefaultStringValue("remove")
+  @Key("GUI_Table_Remove")
+  String GUI_Table_Remove();
+
+  /**
+   * Translated "schoolclass".
+   * 
+   * @return translated "schoolclass"
+   */
+  @DefaultStringValue("schoolclass")
+  @Key("GUI_Table_Schoolclass")
+  String GUI_Table_Schoolclass();
+
+  /**
+   * Translated "class name".
+   * 
+   * @return translated "class name"
+   */
+  @DefaultStringValue("class name")
+  @Key("GUI_Table_SchoolclassName")
+  String GUI_Table_SchoolclassName();
+
+  /**
+   * Translated "schoolclasses".
+   * 
+   * @return translated "schoolclasses"
+   */
+  @DefaultStringValue("schoolclasses")
+  @Key("GUI_Table_Schoolclasses")
+  String GUI_Table_Schoolclasses();
+
+  /**
+   * Translated "select".
+   * 
+   * @return translated "select"
+   */
+  @DefaultStringValue("select")
+  @Key("GUI_Table_Select")
+  String GUI_Table_Select();
+
+  /**
+   * Translated "students".
+   * 
+   * @return translated "students"
+   */
+  @DefaultStringValue("students")
+  @Key("GUI_Table_Students")
+  String GUI_Table_Students();
+
+  /**
+   * Translated "teacher role".
+   * 
+   * @return translated "teacher role"
+   */
+  @DefaultStringValue("teacher role")
+  @Key("GUI_Table_TeacherRoles")
+  String GUI_Table_TeacherRoles();
+
+  /**
+   * Translated "teachers".
+   * 
+   * @return translated "teachers"
+   */
+  @DefaultStringValue("teachers")
+  @Key("GUI_Table_Teachers")
+  String GUI_Table_Teachers();
+
+  /**
+   * Translated "to".
+   * 
+   * @return translated "to"
+   */
+  @DefaultStringValue("to")
+  @Key("GUI_Table_ToDate")
+  String GUI_Table_ToDate();
+
+  /**
+   * Translated "username".
+   * 
+   * @return translated "username"
+   */
+  @DefaultStringValue("username")
+  @Key("GUI_Table_Usercode")
+  String GUI_Table_Usercode();
 
   /**
    * Translated "Userregistration failed.".
