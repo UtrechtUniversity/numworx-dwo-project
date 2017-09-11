@@ -3,6 +3,7 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
+    <ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
     <g:FlowPanel addStyleNames='{dwoStyle.dwoWidgetPanel}'>
        <!--<g:FlowPanel>-->
                         <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget} {dwoStyle.dwoMinWidth}' ui:field='cellTable'/>
@@ -12,10 +13,10 @@
        <g:Grid width="100%">
             <g:row>
                 <g:customCell>
-                <g:Button ui:field="cancelBtn">cancel</g:Button>
+                <g:Button ui:field="cancelBtn"><ui:text from='{rb.GUI_Button_Cancel}'/></g:Button>
                 </g:customCell>
                 <g:customCell>
-                <g:Button addStyleNames='{dwoStyle.floatCenter} {dwoStyle.margin5}' ui:field="switchBtn">switch</g:Button>
+                <g:Button addStyleNames='{dwoStyle.floatCenter} {dwoStyle.margin5}' ui:field="switchBtn"><ui:text from='{rb.GUI_Button_Switch}'/></g:Button>
                 </g:customCell>
             </g:row>
         </g:Grid>                

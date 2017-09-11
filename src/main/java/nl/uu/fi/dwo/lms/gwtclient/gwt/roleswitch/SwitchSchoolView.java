@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
  * GWT Panel that handles switching the role.
@@ -42,6 +43,8 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
     Button cancelBtn;
     @UiField
     Button switchBtn;
+    @UiField
+    DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
 
     private SwitchSchoolPresenter switchSchoolPresenter;
     SwitchSchoolPresenter.SchoolItem selected;
@@ -89,7 +92,7 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
                 }
             });
             cellTable.addColumnSortHandler(columnSortHandler);
-            cellTable.addColumn(value, header);
+            cellTable.addColumn(value, rb.GUI_Table_TeacherRoles());
             cellTable.getColumnSortList().push(value);
         }
 
