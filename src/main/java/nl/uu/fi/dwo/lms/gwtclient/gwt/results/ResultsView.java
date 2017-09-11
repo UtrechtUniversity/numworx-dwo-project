@@ -38,7 +38,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoStyledClickCell;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoClickCell;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoScoreClickCell;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.SelectedCellHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
 
@@ -163,77 +164,35 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
         dataProvider.setList(data.getMarks());
 
         //create schoolclass/student column
-        DwoStyledClickCell cell = new DwoStyledClickCell();
-        //schoolclass/student
-//        if(data.getvIndex().length>0){
-//        Column<List<ResultsPresenter.ResultItem>, String> value = new Column<List<ResultsPresenter.ResultItem>, String>(cell) {
-//            @Override
-//            public String getValue(List<ResultsPresenter.ResultItem> object) {
-//                //return "test" ;
-//                int r=3+timer;
-//                LOG.log(Level.INFO, ""+r);
-//                return (object!=null && object.get(0)!=null && object.get(0).label!=null) ? object.get(0).label : "unknown class";
-//            }
-//        };
-//        dataGrid.addColumn(value, "zoom out");
-//        LOG.log(Level.INFO, "adding schoolclass/student column");
-//        }
+        DwoClickCell cell = new DwoClickCell();
+        cell.addSelectedCellHandler(this);
+        DwoScoreClickCell scoreCell = new DwoScoreClickCell();
+        scoreCell.addSelectedCellHandler(this);
         ColumnSortEvent.ListHandler<List<ResultsPresenter.ResultItem>> columnSortHandler = new ColumnSortEvent.ListHandler<>(
                 dataProvider.getList());
-
+        Column<List<ResultsPresenter.ResultItem>, String> dynValue;
         for (int i = 0; i < data.gethIndex().length; i++) {
-                if (i != 0) {
-            DwoStyledClickCell c = new DwoStyledClickCell();
-            c.addSelectedCellHandler(this);
-            cell = c;
-                   } else {
-                      cell = new DwoStyledClickCell("background-color: pink;");
-            cell.addSelectedCellHandler(this);
-                  }
-//            }else{
-//                cell = new DwoClickCell();
-//            }
             int colVal = i;
-            //givenName
-            Column<List<ResultsPresenter.ResultItem>, String> dynValue = new Column<List<ResultsPresenter.ResultItem>, String>(cell) {
-                @Override
-                public String getValue(List<ResultsPresenter.ResultItem> object) {
-                    SafeHtmlBuilder sb = new SafeHtmlBuilder();
-                    if (colVal == 0 && object.get(colVal) != null && object.get(colVal).score != null) {
-//                        if (object.get(colVal).toolTip != null) {
-//                        sb.appendHtmlConstant("<div title=\"" + object.get(colVal).toolTip + "\">");
-//                    }
-//                        sb.appendEscaped(object.get(colVal).label);
-//                    if (object.get(colVal).toolTip != null) {
-//                        sb.appendHtmlConstant("</div>");
-//                    }
+            if (i == 0) {
+                dynValue = new Column<List<ResultsPresenter.ResultItem>, String>(cell) {
+                    @Override
+                    public String getValue(List<ResultsPresenter.ResultItem> object) {
                         return object.get(colVal).label;
-                    } else if (object.get(colVal) != null && object.get(colVal).score != null) {
-                        //use scorecell to render color
-//                String color = "red";
-//                if (score > 10.0 && score < 60.0) {
-//                    color = "orange";
-//                } else if (score >= 60) {
-//                    color = "green";
-//                }
-//                String prefix;
-//                if (score > 0) {
-//                    int r, g, b;
-//                    b = 0;
-//                    g = (int) (255 * (score / 50));
-//                    r = (int) (255 * (1 - (score - 50) / 50));
-//                    prefix = "<div style=\"text-align: right; padding: 2px; background:rgb(" + r + "," + g + "," + b + ");\">";
-//                } else {
-//                    prefix = "<div style=\"text-align: right; padding: 2px; overflow auto;\">"; // use default of style
-//                }
-//                long iScore = Math.round(score);
-                        String formattedScore = NumberFormat.getFormat("0").format(object.get(colVal).score);
-                        return formattedScore;
-                    } else {
-                        return "0";
                     }
-                }
-            };
+                };
+            } else {
+                dynValue = new Column<List<ResultsPresenter.ResultItem>, String>(scoreCell) {
+                    @Override
+                    public String getValue(List<ResultsPresenter.ResultItem> object) {
+                        if (object.get(colVal) != null && object.get(colVal).score != null) {
+                            String formattedScore = NumberFormat.getFormat("0").format(object.get(colVal).score);
+                            return formattedScore;
+                        } else {
+                            return "0";
+                        }
+                    }
+                };
+            }
             dynValue.setHorizontalAlignment((colVal == 0) ? HasHorizontalAlignment.ALIGN_LOCALE_START : HasHorizontalAlignment.ALIGN_LOCALE_END);
             dynValue.setSortable(true);
             dynValue.setCellStyleNames("flexTableHeader");
@@ -255,15 +214,15 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
                 }
             };
             columnSortHandler.setComparator(dynValue, comp);
-                dataGrid.setColumnWidth(dynValue, "200PX");
+            dataGrid.setColumnWidth(dynValue, "200PX");
             dynValue.setDataStoreName(data.gethIndex()[i].label);
             dataGrid.addColumn(dynValue, data.gethIndex()[i].label);
-            if(i==0){
+            if (i == 0) {
                 dataGrid.getColumnSortList().push(dynValue);
             }
             LOG.log(Level.INFO, "adding column " + data.gethIndex()[i].label);
+            dataGrid.addColumnSortHandler(columnSortHandler);
         }
-        dataGrid.addColumnSortHandler(columnSortHandler);
         dataGrid.setHeaderBuilder(new CustomResultHeaderBuilder(dataGrid, false));
         Element elem = this.getElement();//DOM.getElementById("resultCol1");
         DOM.sinkEvents(elem, Event.ONCLICK | Event.ONMOUSEOUT | Event.ONMOUSEOVER);
@@ -419,8 +378,8 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
 
     /**
      * Function that allows to put a string into the browsers clipboard.
-     * 
-     * @param text 
+     *
+     * @param text
      */
     public static native void copyTextToClipboard(String text) /*-{
         var textArea = document.createElement("textarea");
