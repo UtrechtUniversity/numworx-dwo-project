@@ -314,7 +314,7 @@ public class Text_nl extends ListResourceBundle {
 					"Weet u zeker dat u {0} uit de klas wilt halen" },
 			{ TextMapper.GUIC_DELETE_STUDENT, "Leerling uit klas halen" },
 			{ TextMapper.GUIC_NO_STUDENTS, "Klas {0} bevat geen leerlingen" },
-			{ TextMapper.GUIC_TBL_CLASSNAME, "klasnaam" },
+			{ TextMapper.GUIC_TBL_CLASSNAME, "Klasnaam" },
 			{ TextMapper.GUIC_BTN_SWITCH_CLASS, "Schakel naar klas" },
 			{ TextMapper.GUIRS_RESULTS, "Resultaten" },
 			{ TextMapper.GUIRS_NO_RESULTS, "Geen resultaten om weer te geven" },
