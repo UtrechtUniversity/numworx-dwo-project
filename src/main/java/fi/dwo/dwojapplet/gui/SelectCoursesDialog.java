@@ -403,17 +403,17 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         public String getColumnName(int column) {
             switch (column) {
                 case COURSE_TYPE:
-                    return TextMapper.getText("soort");
+                    return TextMapper.getText(TextMapper.GUICDLG_SOORT);
                 case 4:
-                    return TextMapper.getText("vanaf");
+                    return TextMapper.getText(TextMapper.GUICDLG_VANAF);
                 case 5:
-                    return TextMapper.getText("tot aan");
+                    return TextMapper.getText(TextMapper.GUICDLG_TOTAAN);
                 case 0:
                     return "";
                 case 1:
                     return TextMapper.getText("Module");
                 case 2:
-                    return TextMapper.getText("Ll ggvns");
+                    return TextMapper.getText(TextMapper.GUICDLG_LLGGVNS);
             }
             return super.getColumnName(column);
         }
@@ -575,10 +575,10 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             this.value = (Date) value;
             wat = ""; // of via constructor?
             if (column == 4) {
-                wat = TextMapper.getText("vanaf");
+                wat = TextMapper.getText(TextMapper.GUICDLG_VANAF);
             }
             if (column == 5) {
-                wat = TextMapper.getText("tot");
+                wat = TextMapper.getText(TextMapper.GUICDLG_TOT);
             }
             btn.setText(date2String(value));
             return btn;
@@ -597,7 +597,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
     }
 
-    static final Object[] OBJECT_TYPE = new Object[]{TextMapper.getText("normaal"), TextMapper.getText("afgeschermd"),TextMapper.getText(TextMapper.TBL_INVISIBLE)};
+    static final Object[] OBJECT_TYPE = new Object[]{TextMapper.getText(TextMapper.GUICDLG_NORMAAL), TextMapper.getText(TextMapper.GUICDLG_AFGESCHERMD), TextMapper.getText(TextMapper.GUICDLG_ONZICHTBAAR)};
 
     class CheckBoxNodeRenderer implements TreeCellRenderer {
 
