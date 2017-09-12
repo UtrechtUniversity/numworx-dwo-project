@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.sql.Types;
 import java.text.MessageFormat;
 import java.util.Arrays;
@@ -35,8 +36,9 @@ import fi.beans.scorm2xml.Scorm2Xml;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.SchoolGroupIndices;
 import fi.dwo.commons.persistence.ScormAccessIF;
-
 import fi.dwo.commons.system.MD5;
+
+
 
 //import fi.dwo.client.persistence.PersistenceFacade;
 import java.util.HashMap;
@@ -4234,15 +4236,21 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 //                ps.setInt(6, i);
 //                ps.executeUpdate();
 //            }
-            ps = getStatement("UPDATE tblCourse set sequencenr=? WHERE courseID=? AND schoolID=? AND parentID =? AND dwoProfileID=?");
+            ps = getStatement("UPDATE tblCourse set sequencenr=? WHERE courseID=?");//AND schoolID=? AND parentID =? AND dwoProfileID=?");
             len = vector.size();
             for (int i = 0; i < len; i++) {
                 ps.setInt(1, i);
-                ps.setObject(2, vector.get(i));//courseid
-                ps.setInt(3, schoolID);
-                ps.setInt(4, parent);
-                ps.setInt(5, profileID);
-                ps.executeUpdate();
+                Integer x = (Integer)vector.get(i);
+				ps.setInt(2, x.intValue());//courseid
+//                if(schoolID == 0)
+//                	ps.setNull(3,Types.INTEGER);
+//                else
+//                	ps.setInt(3, schoolID);
+//                ps.setInt(4, parent);
+//                ps.setInt(5, profileID);
+                int n = ps.executeUpdate();
+                log("n = " + n);
+                // assert n == 1
             }
             c.commit();
         } finally {

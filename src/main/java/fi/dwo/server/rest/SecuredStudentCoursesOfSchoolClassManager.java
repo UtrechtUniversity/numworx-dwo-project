@@ -1,5 +1,6 @@
 package fi.dwo.server.rest;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,11 +8,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+
+
+
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
+
+
+
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
@@ -34,6 +41,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -44,6 +52,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class SecuredStudentCoursesOfSchoolClassManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredStudentCoursesOfSchoolClassManager.class.getName());
+    private static final Object INVISIBLE = Integer.valueOf(2);
 
     @PUT
     @Produces({"application/json"})
@@ -67,9 +76,9 @@ public class SecuredStudentCoursesOfSchoolClassManager {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access student functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
-
+        DomSchoolClassAndProfile dom = rest.getDomSchoolClassAndProfile();
         //fetch schoolclass from parameter
-        Long classID = MySQLPersistenceId.getNativeId(rest.getDomSchoolClass());
+        Long classID = MySQLPersistenceId.getNativeId(dom.getDomSchoolClass());
         schoolClass = SchoolClassManager.findEntity(classID);
 
         //verify if user is in class
@@ -91,15 +100,26 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 // end verification		
         DomCoursesOfSchoolClass result = new DomCoursesOfSchoolClass();
 
-        Long profileID = MySQLPersistenceId.getNativeId(rest.getDomDwoProfile());
+        Long profileID = MySQLPersistenceId.getNativeId(dom.getDomDwoProfile());
 
         List<PersistentClassCourse> listClassCourse = ClassCourseManager.findEntities(schoolClass);
 
         Map<PersistenceId, DomClassCourse> classCourseMap = new HashMap<>();
         Map<PersistenceId, DomCourseStudent> courseMap = new HashMap<>();
-
+        Date NOW = new Date();
         listClassCourse.stream().forEach(
                 (scc) -> {
+                	if (INVISIBLE.equals( scc.getType())) 
+                			return;
+// FIXME after and before
+                	if (scc.getNotAfter() != null) {
+                		if (NOW.after(scc.getNotAfter()) )
+                			return;
+                	}
+                	if (scc.getNotBefore() != null) {
+                		if (NOW.before(scc.getNotBefore()))
+                			return;
+                	}
                     Long courseID = scc.getCourseID();
                     PersistentCourse course = CourseManager.findEntity(courseID);
                     if (course == null) {
@@ -123,7 +143,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
                 .stream()
                 .map((e) -> new DomMapEntry<PersistenceId, DomCourseStudent>(e))
                 .collect(Collectors.toList()));
-        result.setFetchTimeStamp(Long.valueOf(System.currentTimeMillis()));
+        result.setFetchTimeStamp(Long.valueOf(NOW.getTime()));
         return result;
 
     }
