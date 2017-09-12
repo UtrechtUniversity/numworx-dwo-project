@@ -17,7 +17,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
-import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+//import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 import com.google.gwt.core.client.GWT;
@@ -66,7 +66,7 @@ public class SelectModuleItem
 		return notAfter;
 	}
 
-	private CourseType toetsType;
+	//private CourseType toetsType;
 
 	public SelectModuleItem(Object id, String name, String file)
 	{
@@ -116,7 +116,7 @@ public class SelectModuleItem
 					SelectModuleItem parent = getParent();
 					this.notAfter = parent.notAfter;
 					this.notBefore = parent.notBefore;
-					this.toetsType = parent.toetsType;
+					//this.toetsType = parent.toetsType;
 				}
 			}
 			break;
@@ -180,7 +180,7 @@ public class SelectModuleItem
 		if (domClassCourse!=null) {
 			notAfter = domClassCourse.getNotAfter();
 			notBefore = domClassCourse.getNotBefore();
-			toetsType = domClassCourse.getEType();
+			//toetsType = domClassCourse.getEnumType();
 		}
 		image = course.getImage();
 		if("".equals(image)) image = null;
@@ -201,7 +201,7 @@ public class SelectModuleItem
 				SelectModuleItem parent = getParent();
 				this.notAfter = parent.notAfter;
 				this.notBefore = parent.notBefore;
-				this.toetsType = parent.toetsType;
+				//this.toetsType = parent.toetsType;
 			}
 		}
 	}
