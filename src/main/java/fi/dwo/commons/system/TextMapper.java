@@ -521,6 +521,18 @@ public abstract class TextMapper {
 	public static final String GUICDLG_LICENCE = "GUICDLG_LICENCE";
 
 	public static final String DWOAPPLET_EXISTS = "DWOAPPLET_EXISTS";
+	
+	public static final String GUICDLG_SOORT = "soort";
+	public static final String GUICDLG_VANAF = "vanaf";
+	public static final String GUICDLG_TOTAAN = "tot aan";
+	public static final String GUICDLG_TOT = "tot";
+	public static final String GUICDLG_NORMAAL = "normaal";
+	public static final String GUICDLG_AFGESCHERMD = "afgeschermd";
+	public static final String GUICDLG_ONZICHTBAAR = "onzichtbaar";
+	public static final String GUICDLG_LLGGVNS = "Ll ggvns";
+	
+	
+	
 	private static ResourceBundle rb;
 
 	private static String language;
