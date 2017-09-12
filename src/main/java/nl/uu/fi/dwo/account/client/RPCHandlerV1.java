@@ -36,6 +36,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -249,7 +250,9 @@ public class RPCHandlerV1 {
 					result.setClassId(idOf(t.get("ClassID"), PersistenceClassType.PersistentSchoolClass));
 					result.setNotAfter(toDate(t.get("notAfter")));
 					result.setNotBefore(toDate(t.get("notBefore")));
-					result.setType(toInt(t.get("type")));
+					Integer int1 = toInt(t.get("type"));
+					if(int1 == null) int1 = 0;
+					result.setEnumType(CourseType.values()[int1]); // FIXME legacy
 					return result;
 				}
 
