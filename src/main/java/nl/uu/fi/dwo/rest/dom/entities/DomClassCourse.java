@@ -56,17 +56,30 @@ public class DomClassCourse {
     /**
      * @return the type
      */
-    public CourseType getType() {
+    public CourseType getEnumType() {
         return type;
     }
-
+    
+    @Deprecated
+    public Integer getType() {
+    	if(type == null) return null;
+    	return type.ordinal();
+    }
+    
     /**
      * @param type the type to set
      */
-    public void setType(CourseType type) {
+    public void setEnumType(CourseType type) {
         this.type = type;
     }
 
+    @Deprecated
+    public void setType(Integer type) {
+    	if(type == null) this.type = null;
+    	else
+    		this.type = CourseType.values()[type.intValue()];
+    }
+    
     /**
      * @return the notBefore
      */
