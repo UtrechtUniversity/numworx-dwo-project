@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 import com.google.gwt.core.client.GWT;
@@ -65,7 +66,7 @@ public class SelectModuleItem
 		return notAfter;
 	}
 
-	private Number toetsType;
+	private CourseType toetsType;
 
 	public SelectModuleItem(Object id, String name, String file)
 	{
@@ -98,7 +99,7 @@ public class SelectModuleItem
 // Alleen als de "classcourse" data ge-piggybacked is.
 			this.notAfter = toDate(map.get("notAfter"));
 			this.notBefore = toDate(map.get("notBefore"));
-			this.toetsType = (Number) map.get("type");
+			//this.toetsType = (Number) map.get("type"); FIXME legacy code
 			break;
 		case SCO:
 			this.type = type;
@@ -179,7 +180,7 @@ public class SelectModuleItem
 		if (domClassCourse!=null) {
 			notAfter = domClassCourse.getNotAfter();
 			notBefore = domClassCourse.getNotBefore();
-			toetsType = domClassCourse.getType();
+			toetsType = domClassCourse.getEType();
 		}
 		image = course.getImage();
 		if("".equals(image)) image = null;
