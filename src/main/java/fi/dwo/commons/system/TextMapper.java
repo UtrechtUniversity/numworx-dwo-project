@@ -66,6 +66,8 @@ public abstract class TextMapper {
 	public static final String HDR_SCHOOLCLASS = "HDR_SCHOOLCLASS";
 
 	/* Table headers */
+        public static final String TBL_INVISIBLE = "invisible";
+
 	public static final String TBL_SCHOOL = "TBL_SCHOOL";
 	public static final String TBL_LOGIN = "TBL_LOGIN";
 	public static final String TBL_ROLE = "TBL_ROLE";

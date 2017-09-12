@@ -55,7 +55,8 @@ public class Text_en extends ListResourceBundle {
 			{ TextMapper.LBL_STUDENTS, "Students" },
 			{ TextMapper.LBL_TEACHERS, "Teachers" },
 			{ TextMapper.LBL_SCHOOLADMINS, "Schooladmins" },
-
+                        
+                        { TextMapper.TBL_INVISIBLE,"invisible"},
 			{ TextMapper.TBL_SCHOOL, "School" },
 			{ TextMapper.TBL_LOGIN, "Login" },
 			{ TextMapper.TBL_ROLE, "Role" },

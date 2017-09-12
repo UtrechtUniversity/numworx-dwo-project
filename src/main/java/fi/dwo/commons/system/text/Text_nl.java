@@ -52,6 +52,7 @@ public class Text_nl extends ListResourceBundle {
 			{ TextMapper.HDR_EDITTEACHERS, "Bewerk docenten" },
 			{ TextMapper.HDR_SCHOOLCLASS, "Klas" },
 
+                        { TextMapper.TBL_INVISIBLE,"onzichtbaar"},
 			{ TextMapper.TBL_SCHOOL, "School" },
 			{ TextMapper.TBL_LOGIN, "Login" },
 			{ TextMapper.TBL_ROLE, "Rol" },
