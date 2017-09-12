@@ -452,6 +452,9 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                     }
                     break;
                 case COURSE_TYPE:
+                    if (OBJECT_TYPE[2].equals(aValue)) {
+                        cd[rowIndex].type = 2;
+                    } else
                     if (OBJECT_TYPE[1].equals(aValue)) {
                         cd[rowIndex].type = 1;
                     } else {
@@ -594,7 +597,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
     }
 
-    static final Object[] OBJECT_TYPE = new Object[]{TextMapper.getText("normaal"), TextMapper.getText("afgeschermd")};
+    static final Object[] OBJECT_TYPE = new Object[]{TextMapper.getText("normaal"), TextMapper.getText("afgeschermd"),TextMapper.getText(TextMapper.TBL_INVISIBLE)};
 
     class CheckBoxNodeRenderer implements TreeCellRenderer {
 
