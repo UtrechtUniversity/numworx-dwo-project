@@ -475,7 +475,7 @@ public class ScoResultsPresenter {
     }
 
     void clearAllStudentResults() {
-        ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure, this will remove results from other classes using the same course too.");
+        ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure?");
         p.getPromise().then(new Success<Boolean, Void>() {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
