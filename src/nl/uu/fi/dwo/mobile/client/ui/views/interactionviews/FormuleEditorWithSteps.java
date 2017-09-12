@@ -2398,14 +2398,19 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{
 			FormuleEditorWithAnswer editor = editorInstance();
 			editor.zetMode(mode); // mode eindtoets zorgt ervoor dat er geen vinkjes worden getoond
-			editor.insert(viewers.get(i).toString());
+			String text;
+			if (hasPrefix)
+				text = removePrefix(viewers.get(i).toString());
+			else
+				text = viewers.get(i).toString();
+			editor.insert(text);
 			editor.bepaalScoreEnCorrect();
 
 			voortgangsScore = Math.max(voortgangsScore, editor.getScore());
+			this.correct = editor.isCorrect(); // het laatst ingevoerde geldige antwoord bepaalt of het correct is
 		}
 		
-//		if (stapNr > viewers.size() && editor != null)
-		if (stapNr + start > viewers.size() && editor != null)
+		if (stapNr + start > viewers.size() - 1 && editor != null && !editor.toString().isEmpty()) // is er nog een (niet-lege) editor die niet is nagekeken?
 		{
 			// verwerk het antwoord in de editor 
 			editor.bepaalScoreEnCorrect();
