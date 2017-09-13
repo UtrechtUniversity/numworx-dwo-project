@@ -174,7 +174,7 @@ public class PersistentClassCourse implements Serializable {
         classCourse.setCourseId(PersistentCourse.buildPersistenceId(this.courseID));
         classCourse.setNotAfter(this.notAfter);
         classCourse.setNotBefore(this.notBefore);
-        classCourse.setEnumType(CourseType.values()[this.type]);
+        classCourse.setCourseType(CourseType.values()[this.type]);
     }
     
        /** Builds a PersistenceId using this object's data.
