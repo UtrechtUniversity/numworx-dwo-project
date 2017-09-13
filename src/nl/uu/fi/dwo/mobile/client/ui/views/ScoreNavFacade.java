@@ -32,6 +32,9 @@ import fi.wiskopdr.text.Text;
 
 public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 
+	private static final String MYPUSHBUTTON = DWOplayer.DWO_BUNDLE.dwoplayercss().myPushButton();
+	private static final String MYPUSHBUTTON_DISABLED = DWOplayer.DWO_BUNDLE.dwoplayercss().myPushButton_disabled();
+	
 	StatusBarIF sb;
 	public void setStatusBar(StatusBarIF bar) {
 		sb = bar;
@@ -76,7 +79,7 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 
 	public ScoreNavFacade() {
 		nakijkKnop = new PushButton(Text.constants.nakijkKnopLabel());
-		nakijkKnop.setStylePrimaryName("myPushButton");
+		nakijkKnop.setStylePrimaryName(MYPUSHBUTTON);
 		nakijkKnop.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
 			{	e.stopPropagation();
@@ -85,7 +88,7 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 		});
 		vorigeKnop = new PushButton("<");//(new Image(DWOplayer.DWO_BUNDLE.vorigeknop().getSafeUri()));
 				//Text.constants.vorigeKnopLabel());
-		vorigeKnop.setStylePrimaryName("myPushButton");
+		vorigeKnop.setStylePrimaryName(MYPUSHBUTTON);
 		//vorigeKnop.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		vorigeKnop.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
@@ -96,7 +99,7 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 		});
 		
 		volgendeKnop = new PushButton(">");//(new Image(DWOplayer.DWO_BUNDLE.volgendeknop().getSafeUri()));//Text.constants.volgendeKnopLabel());
-		volgendeKnop.setStylePrimaryName("myPushButton");
+		volgendeKnop.setStylePrimaryName(MYPUSHBUTTON);
 		//volgendeKnop.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		volgendeKnop.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
@@ -106,8 +109,8 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 			}
 		});
 		
-		eindeKnop = new PushButton("Einde");
-		eindeKnop.setStylePrimaryName("myPushButton");
+		eindeKnop = new PushButton(Text.constants.eindeKnopLabel());
+		eindeKnop.setStylePrimaryName(MYPUSHBUTTON);
 		eindeKnop.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
 			{
@@ -152,9 +155,9 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 	public void setKijkNaEnabled(boolean enable) {
 		nakijkKnop.setEnabled(enable);	
 		if(!enable)
-			nakijkKnop.addStyleDependentName("disabled");
+			nakijkKnop.addStyleName(MYPUSHBUTTON_DISABLED);
 		else
-			nakijkKnop.removeStyleDependentName("disabled");
+			nakijkKnop.removeStyleDependentName(MYPUSHBUTTON_DISABLED);
 	}
 
 	@Override
@@ -175,7 +178,7 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 		if(b) {
 			if(opnieuwKnop ==  null) {
 				opnieuwKnop = new PushButton(Text.constants.opnieuwKnopLabel());
-				opnieuwKnop.setStylePrimaryName("myPushButton");
+				opnieuwKnop.setStylePrimaryName(MYPUSHBUTTON);
 				opnieuwKnop.addClickHandler(new ReloadHandler());
 			}
 			if(opnieuwKnop.getParent() == null) {
@@ -192,7 +195,7 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 		if(b) {
 			if(allesOpnieuwKnop ==  null) {
 				allesOpnieuwKnop = new PushButton(Text.constants.allesOpnieuwKnopLabel());
-				allesOpnieuwKnop.setStylePrimaryName("myPushButton");
+				allesOpnieuwKnop.setStylePrimaryName(MYPUSHBUTTON);
 				allesOpnieuwKnop.addClickHandler(new ReloadAllHandler());
 			} 
 			if(allesOpnieuwKnop.getParent() == null) {
@@ -211,7 +214,7 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 			if(scoresObjectivesKnop == null)
 			{
 				scoresObjectivesKnop = new PushButton(Text.constants.objectivesKnopLabel());
-				scoresObjectivesKnop.setStylePrimaryName("myPushButton");
+				scoresObjectivesKnop.setStylePrimaryName(MYPUSHBUTTON);
 				scoresObjectivesKnop.addClickHandler(new ClickHandler() {
 					public void onClick(ClickEvent e)
 					{
@@ -234,7 +237,7 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 			if(viewMisconceptionsKnop == null)
 			{
 				viewMisconceptionsKnop = new PushButton(Text.constants.viewMisconceptionsKnopLabel());
-				viewMisconceptionsKnop.setStylePrimaryName("myPushButton");
+				viewMisconceptionsKnop.setStylePrimaryName(MYPUSHBUTTON);
 				viewMisconceptionsKnop.addClickHandler(new ClickHandler() {
 					public void onClick(ClickEvent e)
 					{

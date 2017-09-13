@@ -311,13 +311,14 @@ public class DWOplayer implements EntryPoint
 
 	private void setupResources()
 	{
-		resources.put("SelectionColor", "#88f");
+//		resources.put("SelectionColor", "#88f");
+		DWO_BUNDLE.dwoplayercss().ensureInjected();
 	}
 
-	public static String getResource(String resource)
-	{
-		return resources.get(resource);
-	}
+//	public static String getResource(String resource)
+//	{
+//		return resources.get(resource);
+//	}
 
 	//Used for debugging
 	public static void log(String log)

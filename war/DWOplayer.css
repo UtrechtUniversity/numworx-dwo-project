@@ -7,7 +7,6 @@
 @import url("//fonts.googleapis.com/css?family=Roboto");
 
 html,body{margin:0px; padding:0px;}
-
 body#main {margin:0px; background:white; color:#000;}
 
 
@@ -18,16 +17,9 @@ body#main {margin:0px; background:white; color:#000;}
 /*
 div.formula { background: green; width:100px; height: 100px;}
 */
-div { padding: 0px; }
-canvas {outline: none;
-  -webkit-tap-highlight-color: rgba(255, 255, 255, 0); 
-  }
- 
-div.cbg-RP { background-color:#c3d9ff; }
 .keyboardtabs {background:#000;}
 div.keyboard {background:#E5E7E9; left:0px; right:0px; }
 
-div.tekstvak { overflow: hidden; }
 /*div.tekstregel { overflow: hidden; }*/
 
 
@@ -66,11 +58,6 @@ div.disabled:active { background:#b8b8b8; }
 div.keyboardtabs div {color:white; background:#444; border-radius:0px; padding:2px 5px; margin:5px;}
 div.keyboardtabs div:active {background:#e00;}
 
-/*
-div.insert_formule {padding-right:5px; padding-left:5px;}
-*/
-
-div.insert_formule_steps{border-width:1px;}
 
 div.scrollformule {overflow:scroll; background:blue; width:210px;}
 
@@ -110,21 +97,7 @@ div.listitem { color:#000; }
 
 input[name="userid"] { color:#000; }
 
-iframe {
-	border: 0px;
-	border-top: 0px solid #000;
-	border-bottom: 0px solid #000;
-	border-right: 0px solid #000;
-	border-left: 0px solid #000;
-	border-top-width: 0px;
-	border-bottom-width: 0px;
-	border-right-width: 0px;
-	border-left-width: 0px;
-}
 
-.gwt-InlineHTML-cursor, .insert_formule-cursor {
-	border-left: thin solid black;
-}
 
 
 .gwt-Image-noordhoff {
@@ -151,12 +124,6 @@ div.listItem-dwo-separator {
 }
 
 
-.gwt-PopupPanel-WaitScreen {
-	margin: 0px;
-	padding: 0px !important;
-	border-style: none !important;
-	opacity: 0.5;
-}
 
 .statusbar {
 	float: right;
@@ -165,30 +132,6 @@ div.listItem-dwo-separator {
 	width: 90px;	
 }
 
-/*
-		button.getElement().getStyle().setFloat(Style.Float.LEFT);
-		button.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		button.getElement().getStyle().setMarginRight(10, Unit.PX);
-		button.getElement().getStyle().setMarginTop(2, Unit.PX);
-		button.getElement().getStyle().setMarginBottom(4, Unit.PX);
-		button.getElement().getStyle().setPadding(10, Unit.PX);
-		button.getElement().getStyle().setPaddingTop(5, Unit.PX);
-		button.getElement().getStyle().setPaddingBottom(5, Unit.PX);
-		button.getElement().getStyle().setBackgroundColor("#FFBBBB");
-		if (scoresMax[currentActiviteit][j] == 0)
-			button.getElement().getStyle().setBackgroundColor("#909090");
-		if(!buttonsEnabled[currentActiviteit][j])
-			button.getElement().getStyle().setBackgroundColor("white");
-		button.getElement().getStyle().setProperty("borderRadius", "20px");
-
-		button.getElement().getStyle().setBorderWidth(1, Unit.PX);
-		button.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-		button.getElement().getStyle().setBorderColor(CssColor.make(121, 127, 144).toString());//("#979797");
-		button.getElement().getStyle().setCursor(Cursor.POINTER);
-
-		button.setText(" " + (j + 1) + " ");
-
-*/
 
 .opdrbutton-container {
 	background-color: #FFFFFF
@@ -198,49 +141,6 @@ div.listItem-dwo-separator {
 	background-color: #FFFFFF
 }
 
-.myPushButton {
-	float: left;
-	display: inline-block;
-	margin-left: 10px;
-	margin-right: 10px;
-	margin-top: 10px;
-	margin-bottom: 4px;
-	padding: 6px;
-	padding-top: 6px;
-	padding-bottom: 4px;
-	background-color: #B3C2E5;
-	border-radius: 3px;
-	border-width: 0px;
-	border-style: solid;
-	border-color: white;
-	cursor: pointer;
-	color: #FFFFFF;
-	font-weight: bold;
-	font-size: 12px;
-	
-}
-
-.myPushButton-disabled {
-	float: left;
-	display: inline-block;
-	margin-left: 10px;
-	margin-right: 10px;
-	margin-top: 10px;
-	margin-bottom: 4px;
-	padding: 6px;
-	padding-top: 6px;
-	padding-bottom: 4px;
-	background-color: #d2d2d2;
-	border-radius: 3px;
-	border-width: 0px;
-	border-style: solid;
-	border-color: white;
-	cursor: pointer;
-	color: #FFFFFF;
-	font-weight: bold;
-	font-size: 12px;
-	
-}
 
 .spaceLabel {
 	float: left;
@@ -382,12 +282,6 @@ div.listItem-dwo-separator {
 	font-weight: bold;
 	
 }
-/*
-		button.getElement().getStyle().setBorderWidth(3, Unit.PX);
-		button.getElement().getStyle().setBorderColor("#484848");
-		button.getElement().getStyle().setMarginTop(0, Unit.PX);
-
-*/
 
 .scoreBtn-cursor {
 /*	
@@ -408,61 +302,6 @@ div.listItem-dwo-separator {
 	
 }
 
-.textEditor {
-	background-color: #C0C0C0;
-}
-
-.textEditor-readonly {
-	background-color: #808080;
-} 
-.textEditor > div {
-	background-color: white;
-	overflow: auto;
-}
-
-.textEditor div.insert_formule {
-	background-color: rgb(248,248,248);
-	display: inline-block;
-	width: auto;
-	height: auto;
-}
-
-.textEditor table.insert_calculator {
-	background-color: rgb(248,248,248);
-	display: inline-table;
-	width: auto;
-	height: auto;
-	vertical-align: text-bottom;
-}
-
-
-.textEditor-readonly > div {
-	color: gray;
-}
-
-.textEditor .balk {
-	font-size: small;
-}
-
-.textEditor-readonly div.insert_formule {
-	background-color: white;
-	color: gray;
-}
-
-.textEditor-empty > div::before {
-	content: "...";
-	color: #808080
-}
-
-.textEditor-empty > div {
-	color: #808080
-}
-
-.textEditor-nowrap {
-	white-space: nowrap;
-	background-color: white;
-	font-size: 12px !important;
-}
 
 .cursor_gum {
 	cursor: url(images/resources/gumcursor.gif) 10 10, auto; 
@@ -521,20 +360,9 @@ div.listItem-dwo-separator {
 	background-color: transparent;
 }
 
-.StubView-readonly {
-	pointer-events: none !important;
-	background-color: #EEEEEE;
-}
 
 .gwt-DialogBox .Caption {
    cursor: auto !important;
 }
 
-.numworx-popup {
-	box-shadow: 0px 1px 10px 4px rgba(0,0,0,0.30);
-	border-radius: 3px;
-	border-style: solid;
-	border-color: #1B75BB;
-	border-width: 1px;
-}
 

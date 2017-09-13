@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import nl.uu.fi.dwo.mobile.DWOplayer;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.Window;
@@ -25,7 +27,7 @@ public class WaitScreen extends PopupPanel {
 	private WaitScreen() {
 		super(false);
 		setWidget(uiBinder.createAndBindUi(this));
-		addStyleDependentName("WaitScreen");
+		addStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().WaitScreen());
 	}
 
 	

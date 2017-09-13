@@ -42,6 +42,7 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
 
 
 
+
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.BasisExpressie;
@@ -64,6 +65,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -73,6 +75,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private static final int EXECUTE_HEIGHT = 30;
 	private boolean editable = true;
 	private static final Logger LOGGER = Logger.getLogger("TextEditor");
+	private static DWOplayerCss css = DWOplayer.DWO_BUNDLE.dwoplayercss();
 	private int lineHeight = 20;
 	
 	private final static String CIRCA = "\u2248";
@@ -120,7 +123,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				keyboard.setEditor(deze);
 				keyboard.setEnterType(EnterType.ENTER);
 				keyboard.softFocus();
-				hbox.removeStyleDependentName("empty");
+				hbox.removeStyleName(css.textEditor_empty());
 				int flowTop = flow.getAbsoluteTop();
 				int y = event.getClientY() - flowTop;
 				int w;
@@ -171,7 +174,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			keyboard.setEnterType(EnterType.ENTER);
 			shown = true;
 			setCursorWidget(cursorWidget);
-			hbox.removeStyleDependentName("empty");
+			hbox.removeStyleName(css.textEditor_empty());
 			keyboard.softFocus();
 			event.stopPropagation();
 			event.preventDefault();
@@ -185,7 +188,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			setCursorWidget(cursorWidget);
 			keyboard.setEnterType(EnterType.ENTER);
 			keyboard.softFocus();
-			hbox.removeStyleDependentName("empty");
+			hbox.removeStyleName(css.textEditor_empty());
 			event.stopPropagation();
 			event.preventDefault();
 			
@@ -297,7 +300,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			editor.setFormuleToolBijFocus(true);
 			editor.insert('0');
 			HorizontalPanel hbox = new HorizontalPanel();
-			hbox.setStylePrimaryName("insert_calculator");
+			hbox.setStyleName(css.insert_calculator());
 			Panel panel = editor.getAsPanel();
 			TouchDelegate wrap = new TouchDelegate(panel);
 			FormuleEditorTouchHandler h = new FormuleEditorTouchHandler(editor) {
@@ -432,8 +435,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		this.padding = 0;
 		boxsize = boxMetRand?2:0;
 		hbox = new FlowPanel();
-		hbox.setStylePrimaryName("textEditor");
-		hbox.addStyleDependentName("nowrap");
+		hbox.setStyleName(css.textEditor());
+		hbox.addStyleName(css.textEditor_nowrap());
 		initWidget(hbox);
 		menubar = null;
 		content = getContent(null);
@@ -463,7 +466,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		boxMetRand = launchdata.getBoolean("boxMetRand", true);
 		boxsize = boxMetRand?2:0;
 		hbox = new FlowPanel();
-		hbox.setStylePrimaryName("textEditor");
+		hbox.setStyleName(css.textEditor());
 		initWidget(hbox);
 		
 		menubar = getMenuBar(launchdata);
@@ -500,7 +503,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	private void updateEmpty() {
 		if (!boxMetRand) {
-			hbox.setStyleDependentName("empty", isContentEmpty());
+			hbox.setStyleName(css.textEditor_empty(), isContentEmpty());
 		}
 	}
 	
@@ -514,7 +517,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		FocusOnTouch.focus();
 		//shown = true; // mag dat hier al? nee dus
 		setCursorWidget(cursorWidget);
-		hbox.removeStyleDependentName("empty");
+		hbox.removeStyleName(css.textEditor_empty());
 	}
 
 	private void setState(ObjectMap h) { // h kan null zijn!
@@ -549,7 +552,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private Widget setCursorWidget(Widget widget) {
 		if(widget == null) return cursorWidget;
 		removeCursor();
-		widget.setStyleDependentName("cursor", true);
+		widget.setStyleName(css.textEditor_cursor(), true);
 		cursorWidget = widget;
 		int c = flow.getWidgetIndex(widget);
 		if(c >= 0)
@@ -572,7 +575,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		rekentool = launchdata.getBoolean("rekenTool", rekentool);
 		
 		FlowPanel menubar = new FlowPanel();
-		menubar.setStylePrimaryName("balk");
+		menubar.setStyleName(css.balk());
 		//Button fx = new Button("f(x)"); 
 		PushButton fx = new PushButton(new Image(DWOplayer.PARAMETERS.getResource("images/resources/formuleknop.gif")));
 		fx.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
@@ -820,7 +823,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	private void removeCursor() {
 		if(cursorWidget != null)
-			cursorWidget.setStyleDependentName("cursor", false);
+			cursorWidget.setStyleName(css.textEditor_cursor(), false);
 	}
 
 	private class Enter extends InlineHTML implements HasText {
@@ -1061,7 +1064,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	private void setReadonly() {
 		editable = false;
-		widget.setStyleDependentName("readonly", !editable);
+		widget.setStyleName(css.textEditor_readonly(), !editable);
 	}
 
 	public boolean isReadOnly() {

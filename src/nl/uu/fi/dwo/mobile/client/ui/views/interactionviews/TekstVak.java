@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.IFrameView;
@@ -82,7 +83,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	public TekstVak(TekstVakPanel parent, int rij, int kolom)
 	{
 		super();
-		setStylePrimaryName("tekstvak");
+		setStylePrimaryName(DWOplayer.DWO_BUNDLE.dwoplayercss().tekstvak());
 		this.parent = parent;
 		this.rij = rij;
 		this.kolom = kolom;

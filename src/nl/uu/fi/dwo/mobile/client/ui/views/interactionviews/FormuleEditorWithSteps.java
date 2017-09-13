@@ -616,7 +616,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
 		}
 
-		contentPanel.addStyleName("insert_formule_steps");
+		contentPanel.addStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().insert_formule_steps());
 
 		//zorgen dat cursor niet direct, maar pas bij focus verschijnt
 		if(editor != null)

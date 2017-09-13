@@ -828,7 +828,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			if(setNotEditableListener != null) {
 				setNotEditableListener.acceptCBookEvent(event);
 			} else {
-				frame.setStyleDependentName("readonly", true);
+				frame.setStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().StubView_readonly(), true);
 			}
 		}
 	}

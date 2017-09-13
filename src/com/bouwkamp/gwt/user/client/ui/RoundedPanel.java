@@ -15,6 +15,8 @@
  */
 package com.bouwkamp.gwt.user.client.ui;
 
+import nl.uu.fi.dwo.mobile.DWOplayer;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -214,7 +216,7 @@ public class RoundedPanel extends SimplePanel {
   /**
    * Default border style
    */
-  private final static String RPSTYLE = "cbg-RP";
+  private final static String RPSTYLE = DWOplayer.DWO_BUNDLE.dwoplayercss().cbg_RP();
 
   /**
    * Lookup table for corner border width
