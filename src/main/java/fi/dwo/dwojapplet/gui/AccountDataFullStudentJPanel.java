@@ -187,7 +187,7 @@ public class AccountDataFullStudentJPanel extends JPanel implements
         p.add(l);
 
         /* Firstname label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIP_FIRSTNAME) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.TBL_GIVENNAME) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -207,7 +207,7 @@ public class AccountDataFullStudentJPanel extends JPanel implements
         p.add(l);
 
         /* Middlename label */
-        String middleNameLabel = TextMapper.getText(TextMapper.GUIP_MIDDLENAME);
+        String middleNameLabel = TextMapper.getText(TextMapper.TBL_INSERTION);
         l = new JLabel(middleNameLabel + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
@@ -229,7 +229,7 @@ public class AccountDataFullStudentJPanel extends JPanel implements
 
 
         /* Lastname label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIP_LASTNAME) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.TBL_FAMILYNAME) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -249,7 +249,7 @@ public class AccountDataFullStudentJPanel extends JPanel implements
         p.add(l);
 
         /* Email label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIP_EMAIL) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.TBL_EMAIL) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());

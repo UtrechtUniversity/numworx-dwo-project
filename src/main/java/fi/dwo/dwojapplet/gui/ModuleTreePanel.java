@@ -426,8 +426,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 			item = new JMenuItem("Import module");menu.add(item);item.setAction(new ImportModuleAction());
 			item = new JMenuItem("Backup module");menu.add(item);item.setAction(new BackupModuleAction());
 
-			item = new JMenuItem("Import map");menu.add(item);item.setAction(new ImportMapAction());
-			item = new JMenuItem("Backup map");menu.add(item);item.setAction(new BackupMapAction());
+			item = new JMenuItem("Import folder");menu.add(item);item.setAction(new ImportMapAction());
+			item = new JMenuItem("Backup folder");menu.add(item);item.setAction(new BackupMapAction());
 			if( DwoHelper.isScormExportLoggedIn() || DwoHelper.isAppletExportLoggedIn())
 				menu.addSeparator();
 			if( DwoHelper.isScormExportLoggedIn() )

@@ -66,13 +66,13 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
 //    private JComboBox schoolClassComboBox;
     private Clipboard systemClipboard;
     String[] columnNames = {
-        TextMapper.getText(TextMapper.GUIR_FIRSTNAME),
-        TextMapper.getText(TextMapper.GUIR_MIDDLENAME),
-        TextMapper.getText(TextMapper.GUIR_LASTNAME),
-        TextMapper.getText(TextMapper.GUIR_USERNAME),
-        TextMapper.getText(TextMapper.GUIR_PASSWORD),
-        TextMapper.getText(TextMapper.GUIR_EMAIL),
-        TextMapper.getText(TextMapper.BTN_DELSELECTED)
+        TextMapper.getText(TextMapper.TBL_GIVENNAME),
+        TextMapper.getText(TextMapper.TBL_INSERTION),
+        TextMapper.getText(TextMapper.TBL_FAMILYNAME),
+        TextMapper.getText(TextMapper.TBL_USERNAME),
+        TextMapper.getText(TextMapper.TBL_PASSWORD),
+        TextMapper.getText(TextMapper.TBL_EMAIL),
+        TextMapper.getText(TextMapper.TBL_DELETE)
     };
 
     private Image delImage;
