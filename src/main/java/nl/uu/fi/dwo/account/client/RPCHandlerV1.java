@@ -252,7 +252,7 @@ public class RPCHandlerV1 {
 					result.setNotBefore(toDate(t.get("notBefore")));
 					Integer int1 = toInt(t.get("type"));
 					if(int1 == null) int1 = 0;
-					result.setEnumType(CourseType.values()[int1]); // FIXME legacy
+					result.setCourseType(CourseType.values()[int1]); // FIXME legacy
 					return result;
 				}
 
