@@ -56,7 +56,7 @@ public class DomClassCourse {
     /**
      * @return the type
      */
-    public CourseType getEnumType() {
+    public CourseType getCourseType() {
         return type;
     }
     
@@ -69,7 +69,7 @@ public class DomClassCourse {
     /**
      * @param type the type to set
      */
-    public void setEnumType(CourseType type) {
+    public void setCourseType(CourseType type) {
         this.type = type;
     }
 
