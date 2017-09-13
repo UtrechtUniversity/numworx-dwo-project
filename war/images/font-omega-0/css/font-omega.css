@@ -7,3 +7,12 @@
          url('../fonts/omega_0.ttf') format('truetype'),
          url('../fonts/omega_0.svg#omega_0') format('svg');
 }
+@font-face {
+    font-family: 'omega_0';
+    src: url('../fonts/omega_0.eot');
+    src: url('../fonts/omega_0.eot') format('embedded-opentype'),
+         url('../fonts/omega_0.woff2') format('woff2'),
+         url('../fonts/omega_0.woff') format('woff'),
+         url('../fonts/omega_0.ttf') format('truetype'),
+         url('../fonts/omega_0.svg#omega_0') format('svg');
+}
