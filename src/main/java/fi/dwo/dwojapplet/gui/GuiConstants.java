@@ -3,8 +3,11 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.User;
+
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.io.IOException;
 import java.io.InputStream;
@@ -97,7 +100,6 @@ public abstract class GuiConstants {
     public static boolean GUI_SCOUPDATE_UNSAFE;
 
     public final static String RESOURCES =  "" ;
-    //public final static String RESOURCES = "";
 
     public final static Font RED_TEXT = new Font("SansSerif", Font.BOLD, 13);
     public final static Font RED_TEXT_ITALIC = new Font("SansSerif", Font.BOLD | Font.ITALIC, 13);
@@ -143,6 +145,7 @@ public abstract class GuiConstants {
      */
     public static void setDwoProfile(int profile, String ext) {
         Properties prop = getProperties(profile, ext);
+        installFonts(getString(prop,"fonts"));
         GUI_IMAGE_BG = getBoolean(prop, "gui_image_bg");
         HEADER_TEXT = getFont(prop, "header_text");
         MAIN_BACKGROUND = getColor(prop, "main_background");
@@ -283,7 +286,27 @@ public abstract class GuiConstants {
         }
     }
 
-    private static Insets getInsets(Properties prop, String key) {
+    private static void installFonts(String fonts) {
+    	if(fonts == null) return;
+    	StringTokenizer st = new StringTokenizer(fonts.trim(), ",");
+    	GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    	URL root = DwoHelper.getResourceUrlPath();
+		while ( st.hasMoreTokens()) {
+			try {
+				String font = st.nextToken().trim();
+				URL u = new URL(root, font);
+				InputStream in = u.openStream();
+				Font f = Font.createFont(Font.TRUETYPE_FONT, in);
+				ge.registerFont(f);
+				in.close();
+			} catch (Exception e) {
+				LOG.log(Level.SEVERE, "installFonts", e);
+			}
+		}
+		
+	}
+
+	private static Insets getInsets(Properties prop, String key) {
         int[] data = getIntegerArray(prop, key);
         return new Insets(data[0], data[1], data[2], data[3]);
     }
