@@ -159,9 +159,14 @@ public class SecuredUserScoDataManager {
         PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
         PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
 // userid must match
-     		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
-     			return null;
-     	PersistentScoContext scoContext = ScoContextManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomScormValues().getScoContext()));
+ 		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
+ 		{
+    		LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Hasrole mismatch");
+    		throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "This will be logged.");			
+ 		}
+     	Long scocontextid = MySQLPersistenceId.getNativeId(rest.getDomScormValues().getScoContext());
+     	LOG.log(Level.INFO, "getValues " + sc.getUserPrincipal().getName() + " " + scocontextid);
+		PersistentScoContext scoContext = ScoContextManager.findEntity(scocontextid);
 		List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
 		if(list.isEmpty()) {
 			return rest.getDomScormValues();
@@ -275,8 +280,12 @@ public class SecuredUserScoDataManager {
         PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
 // userid must match
  		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
- 			return null;
+ 		{
+    		LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Hasrole mismatch");
+    		throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "This will be logged.");			
+ 		}
      	PersistentScoContext scoContext = ScoContextManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomScormValues().getScoContext()));
+     	LOG.log(Level.INFO, "setValues " + sc.getUserPrincipal().getName() + " " + scoContext.getScoID());
 		List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
 		PersistentStudentScoContext pssc;
 		PersistentStudentScoData pssd = null;
@@ -288,7 +297,7 @@ public class SecuredUserScoDataManager {
 			pssc.setCreateTime(new Time(now));
 			pssc.setScoID(scoContext.getScoID());
 			pssc.setPersistentHasRolePK(hasRoleKey);
-			StudentScoContextManager.create(pssc);
+			StudentScoContextManager.create(pssc); // throw duplicate error
 		} else {
 			pssc = list.get(0);
 			if(COMPLETE.equals(pssc.getCompletionStatus()))
