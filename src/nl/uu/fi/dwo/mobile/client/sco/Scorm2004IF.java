@@ -2,11 +2,13 @@ package nl.uu.fi.dwo.mobile.client.sco;
 
 import nl.uu.fi.dwo.interaction.client.Role;
 
+import org.osgi.util.promise.Promise;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface Scorm2004IF {
 
-	String Commit();
+	Promise<String> Commit();
 
 	String GetValue(String name);
 
@@ -14,7 +16,7 @@ public interface Scorm2004IF {
 
 	String SetValue(String name, String value);
 
-	String Terminate();
+	Promise<String> Terminate();
 	
 	String Initialize();
 

@@ -2,6 +2,9 @@ package nl.uu.fi.dwo.mobile.client.sco;
 
 import nl.uu.fi.dwo.interaction.client.Role;
 
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -9,8 +12,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class SCORM_guest implements Scorm2004IF {
 
 	@Override
-	public String Commit() {
-		return "";
+	public Promise<String> Commit() {
+		return Promises.resolved("");
 	}
 
 	@Override
@@ -55,8 +58,8 @@ public class SCORM_guest implements Scorm2004IF {
 	}
 
 	@Override
-	public String Terminate() {
-		return "";
+	public Promise<String> Terminate() {
+		return Promises.resolved("");
 	}
 
 	@Override

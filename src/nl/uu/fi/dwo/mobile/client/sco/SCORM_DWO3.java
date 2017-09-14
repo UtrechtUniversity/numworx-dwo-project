@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.fusesource.restygwt.client.FailedResponseException;
+import org.osgi.util.function.Function;
+import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -47,10 +50,14 @@ public class SCORM_DWO3 extends SCORM_guest {
 	}
 	
 	public void setScoID(int scoID) {
+log("setScoID " + scoID);
 		if(scoID!=this.scoID)
 		{			
 			if(inited) // Only in Terminated state!!!!
-				throw new IllegalArgumentException("setScoID " + scoID + " " + this.scoID);
+			{	
+				IllegalArgumentException e = new IllegalArgumentException("setScoID " + scoID + " " + this.scoID);
+				log("Not in inited state",e);throw e;
+			}
 			
 			map.clear();
 			if(!dirty.isEmpty())
@@ -64,7 +71,13 @@ public class SCORM_DWO3 extends SCORM_guest {
 	class Committer implements Failure, Success<Object,Void> {
 
 		private static final double initialRetryDelayInMillis = 1000;
-		boolean pending;
+		Deferred<String> deferred = new Deferred<String>();
+		
+		Promise<String> getPromise() {
+			return deferred.getPromise();
+		}
+		
+ 		boolean pending;
 		Map<String,String> dirty, copy;
 		double retry=initialRetryDelayInMillis;//milliseconds never 0
 		
@@ -72,6 +85,11 @@ public class SCORM_DWO3 extends SCORM_guest {
 		public void fail(Promise<?> t) {
 			Throwable caught = t.getFailure();
 			logger.log(Level.SEVERE, "Commit: "+ caught, caught);
+			if(caught instanceof FailedResponseException) {
+				FailedResponseException f= (FailedResponseException)caught;
+				log("Failed statuscode = " + f.getStatusCode());
+				log("Failed response = " + f.getResponse().getHeadersAsString());
+			}
 			retry+=retry/2;//exponential delay
 			Timer backoff = new Timer() {
 
@@ -93,6 +111,7 @@ public class SCORM_DWO3 extends SCORM_guest {
 			else {
 				copy.clear();
 				if(!dirty.isEmpty()) commit();
+				else deferred.resolve("");
 			}
 			return null;
 		}
@@ -124,19 +143,21 @@ public class SCORM_DWO3 extends SCORM_guest {
 	        "cmi.comments_from_lms.0.comment"
 	);
 	
-	public synchronized String Commit() {
+	public synchronized Promise<String> Commit() {
+log("Commit " + dirty.isEmpty());
 		if(!dirty.isEmpty())
 		{
-			if(committer == null) {
+			if(committer == null||committer.getPromise().isDone()) {
 				committer = new Committer(scoID, dirty);
 			} else {
 				committer.add(dirty);
 			}
 			dirty.clear();
 			if(!committer.pending) committer.commit();
-			else logger.info("pending commit");
-			
+			else log("pending commit");
+			return committer.getPromise();
 		}
+		if(committer != null) return committer.getPromise();
 		return super.Commit();
 	}
 	
@@ -148,14 +169,24 @@ public class SCORM_DWO3 extends SCORM_guest {
 		return result;
 	}
 
+	private void log(String msg, Throwable e) {
+		msg = "Sco=" + scoID + ": " + msg;
+ 		logger.log(Level.INFO, msg, e);
+	}
+	private void log(String msg) {
+		log(msg, null);
+	}
+	
 	@Override
 	public String SetValue(String name, String value) {
+log("SetValue " + name);
 		map.put(name, value);
 		dirty.put(name, value);
 		return super.SetValue(name, value);
 	}
 
 	public synchronized void Initialize(final AsyncCallback<Void> callback) {
+log("Initialize "+ pending);
 		if(!pending) {
 			pending = true;
 			Failure failure = new Failure() {
@@ -171,6 +202,7 @@ public class SCORM_DWO3 extends SCORM_guest {
 				@Override
 				public Promise<Void> call(Promise<Map<String, String>> resolved) throws Exception {
 					Map<String,String> result = resolved.getValue();
+log("initialized " +result.keySet());
 					map.putAll(result);
 					map.putAll(dirty);
 					pending = false;
@@ -195,12 +227,27 @@ public class SCORM_DWO3 extends SCORM_guest {
 		}
 	}
 
+	Promise<String> terminated;
 	@Override
-	public String Terminate() {
-		Commit();
-		committer = null; // no access possible
-		inited = false;
-		return super.Terminate();
+	public Promise<String> Terminate() {
+		if(!inited) return super.Terminate();
+		if(terminated != null) return terminated;
+		Promise<String> p = Commit();
+		return terminated = p.map(new Function<String,String>() {
+			public void run() {
+				committer = null; // no access possible
+				inited = false;
+				terminated = null;
+			}
+
+			@Override
+			public String apply(String t) {
+				run();
+				return t;
+			}
+			
+		});
+		
 	}
 
 

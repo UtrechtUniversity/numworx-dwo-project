@@ -1,16 +1,22 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
-import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Role;
+
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SCORM_12_API implements Scorm2004IF {
 
-	public native String Commit() /*-{
+	private native String Commit0() /*-{
 		return $wnd.doLMSCommit()
 	}-*/;
 
+	public Promise<String> Commit() {
+		return Promises.resolved(Commit0());
+	}
+	
 	public native String GetLastError() /*-{
 		return $wnd.doLMSGetLastError()
 	}-*/;
@@ -29,7 +35,11 @@ public class SCORM_12_API implements Scorm2004IF {
 	}-*/;
 
 	@Override
-	public native String Terminate() /*-{
+	public Promise<String> Terminate() {
+		return Promises.resolved(Terminate0());
+	}
+	
+	private native String Terminate0() /*-{
 		return $wnd.doLMSFinish()
 	}-*/;
 	

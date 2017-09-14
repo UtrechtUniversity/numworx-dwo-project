@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.mobile.client.sco;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Promise;
+
 import nl.uu.fi.dwo.interaction.client.Role;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -73,7 +75,7 @@ public class TinCanAPI2 extends SCORM_guest implements Scorm2004IF {
 
 	
 	@Override
-	public String Commit() {
+	public Promise<String> Commit() {
 		success = scoreScaled > 0.99f;
 		sendAnswerAndModuleDataStatements(success, getDuration(), scoreScaled, completion, moduleData);
 		return super.Commit();
@@ -130,7 +132,7 @@ public class TinCanAPI2 extends SCORM_guest implements Scorm2004IF {
 	}
 
 	@Override
-	public String Terminate() {
+	public Promise<String> Terminate() {
 		sendModuleDataStatement(moduleData);
 		if(isCompletion()) sendCompletedStatement(getDuration(), getScoreScaled());
 		sendTerminatedStatement();

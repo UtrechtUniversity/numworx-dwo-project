@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Promise;
+
 import nl.uu.fi.dwo.mobile.DWOplayer;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
@@ -117,7 +119,7 @@ public class SCORM_DWO2 extends SCORM_guest {
 	
 	Committer committer;
 	
-	public synchronized String Commit() {
+	public synchronized Promise<String> Commit() {
 		if(!dirty.isEmpty())
 		{
 			if(committer == null) {
@@ -133,39 +135,39 @@ public class SCORM_DWO2 extends SCORM_guest {
 		return super.Commit();
 	}
 	
-	public synchronized String Commitxxx() {
-		if(!pending && !dirty.isEmpty())
-		{	pending = true;
-			XmlRpcRequest<Boolean> request;
-			final HashMap<String, String> copy = new HashMap<String, String>(dirty);
-			dirty.clear();
-			Object[] params = new Object[] { userID, scoID, copy };
-			AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
-
-				@Override
-				public void onFailure(Throwable caught) {
-					logger.severe("Commit: "+ caught);
-					pending = false;
-					copy.putAll(dirty);
-					dirty.putAll(copy);
-					if (!dirty.isEmpty()) Commit(); // continue until dirty is empty
-				}
-
-				@Override
-				public void onSuccess(Boolean result) {
-					pending = false;
-					if(!Boolean.TRUE.equals(result)) onFailure(null);
-					else
-					if (!dirty.isEmpty()) Commit(); // continue until dirty is empty
-						
-				}};
-				request = new XmlRpcRequest<Boolean>(client, "Commit", params, callback );
-				request.execute();
-		} else {
-			logger.info("pending commit");
-		}
-		return super.Commit();
-	}
+//	public synchronized String Commitxxx() {
+//		if(!pending && !dirty.isEmpty())
+//		{	pending = true;
+//			XmlRpcRequest<Boolean> request;
+//			final HashMap<String, String> copy = new HashMap<String, String>(dirty);
+//			dirty.clear();
+//			Object[] params = new Object[] { userID, scoID, copy };
+//			AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+//
+//				@Override
+//				public void onFailure(Throwable caught) {
+//					logger.severe("Commit: "+ caught);
+//					pending = false;
+//					copy.putAll(dirty);
+//					dirty.putAll(copy);
+//					if (!dirty.isEmpty()) Commit(); // continue until dirty is empty
+//				}
+//
+//				@Override
+//				public void onSuccess(Boolean result) {
+//					pending = false;
+//					if(!Boolean.TRUE.equals(result)) onFailure(null);
+//					else
+//					if (!dirty.isEmpty()) Commit(); // continue until dirty is empty
+//						
+//				}};
+//				request = new XmlRpcRequest<Boolean>(client, "Commit", params, callback );
+//				request.execute();
+//		} else {
+//			logger.info("pending commit");
+//		}
+//		return super.Commit();
+//	}
 
 	@Override
 	public String GetValue(String name) {
@@ -223,7 +225,7 @@ public class SCORM_DWO2 extends SCORM_guest {
 	}
 
 	@Override
-	public String Terminate() {
+	public Promise<String> Terminate() {
 		Commit();
 		committer = null; // no access possible
 		inited = false;

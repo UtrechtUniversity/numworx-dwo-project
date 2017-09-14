@@ -2,6 +2,9 @@ package nl.uu.fi.dwo.mobile.client.sco;
 
 import nl.uu.fi.dwo.interaction.client.Role;
 
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SCORM_2004_API implements Scorm2004IF {
@@ -10,9 +13,12 @@ public class SCORM_2004_API implements Scorm2004IF {
 		return $wnd.doInitialize()
 	}-*/;
 	
-	public native String Terminate() /*-{
+	private native String Terminate0() /*-{
 		return $wnd.doTerminate()
 	}-*/;
+	public Promise<String> Terminate() {
+		return Promises.resolved(Terminate0());
+	}
 	
 	public native String GetValue(String name) /*-{
 		return $wnd.doGetValue(name)
@@ -26,9 +32,13 @@ public class SCORM_2004_API implements Scorm2004IF {
 		return $wnd.doGetLastError()
 	}-*/;
 
-	public native String Commit() /*-{
+	private native String Commit0() /*-{
 		return $wnd.doCommit()
 	}-*/;
+
+	public Promise<String> Commit() {
+		return Promises.resolved(Commit0());
+	}
 	
 	public void Initialize(final AsyncCallback<Void> callback) { if(callback!=null) callback.onSuccess(null); }
 

@@ -3,6 +3,9 @@ package nl.uu.fi.dwo.mobile.client.sco;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+
 import nl.uu.fi.dwo.interaction.client.Role;
 
 import com.google.gwt.user.client.Window;
@@ -42,9 +45,9 @@ public class AssetAPI implements Scorm2004IF {
 	}
 
 	@Override
-	public String Commit() {
+	public Promise<String> Commit() {
 		SetScore(guid,lastScore); // force commit in Noordhoff software.
-		return "";
+		return Promises.resolved("");
 	}
 
 	@Override
@@ -97,9 +100,8 @@ public class AssetAPI implements Scorm2004IF {
 	}
 
 	@Override
-	public String Terminate() {
-		Commit();
-		return "";
+	public Promise<String> Terminate() {
+		return Commit();
 	}
 
 	@Override

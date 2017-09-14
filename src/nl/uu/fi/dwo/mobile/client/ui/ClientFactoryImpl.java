@@ -36,9 +36,46 @@ import com.googlecode.mgwt.ui.client.OsDetection;
  */
 public class ClientFactoryImpl implements ClientFactory
 {
+	interface Provider<T> { T get(); }
+	
+	final static Provider<ViewModuleView> NORMAL = new Provider<ViewModuleView>() {
+
+		@Override
+		public ViewModuleView get() {
+			ViewModuleViewImpl impl = new ViewModuleViewImpl(true);
+			impl.initialize();
+			impl.zetMaat();
+			return impl;
+		}};
+	
+	final static Provider<ViewModuleView> NUMWORX_VIEW = new Provider<ViewModuleView>() {
+
+		@Override
+		public ViewModuleView get() {
+			ViewModuleViewNumworx impl = new ViewModuleViewNumworx();
+			return impl.initialize();
+		}
+		
+	};
+	
+	class ViewModuleHolder implements Provider<ViewModuleView> {
+		final ViewModuleView hold;
+
+		@Override
+		public ViewModuleView get() {
+			return hold;
+		}
+
+		public ViewModuleHolder(ViewModuleView hold) {
+			this.hold = hold;
+		}
+		
+	}
+		
+	
 	private final EventBus eventBus = new SimpleEventBus();
 	private final PlaceController placeController = new PlaceController(eventBus);
-	private ViewModuleView entryView;
+	private Provider<ViewModuleView> entryView = NORMAL;
 	private SelectModuleView selectModuleView;
 	protected LoginView loginView;
 	protected TreeModuleView treeModuleView;
@@ -49,7 +86,6 @@ public class ClientFactoryImpl implements ClientFactory
 
 	public ClientFactoryImpl()
 	{
-		
 	}
 
 	@Override
@@ -67,22 +103,9 @@ public class ClientFactoryImpl implements ClientFactory
 	@Override
 	public ViewModuleView getEntryView()
 	{
-		if(entryView == null)
-		{
-			
-			if(false) {
-				ViewModuleViewNumworx impl = new ViewModuleViewNumworx();
-				entryView = impl.initialize();
-			} else			
-			{
-			
-				ViewModuleViewImpl impl = new ViewModuleViewImpl(true);
-				entryView = impl.initialize();
-				impl.zetMaat();
-			}
-		}
-		entryView.setApi(DWOplayer.api);
-		return entryView;
+		ViewModuleView view = entryView.get();
+		view.setApi(DWOplayer.api);
+		return view;
 	}
 
 	@Override
@@ -108,10 +131,7 @@ public class ClientFactoryImpl implements ClientFactory
 			if(NUMWORX)
 			{
 				
-				ViewModuleViewNumworx impl = new ViewModuleViewNumworx();
-				entryView = impl.initialize();
-
-				
+				entryView = NUMWORX_VIEW;				
 				return this.treeModuleView = new TreeModuleViewNumworx();
 			}
 			
@@ -145,7 +165,7 @@ public class ClientFactoryImpl implements ClientFactory
 
 	@Override
 	public void setEntryView(ViewModuleView view) {
-		entryView = view;
+		entryView = new ViewModuleHolder(view);
 	}
 	
 	public SCORM_guest setupAPI() {

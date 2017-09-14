@@ -14,10 +14,12 @@ import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
@@ -91,20 +93,32 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 			defaultContext = view.getAnchorContext();
 			view.setAnchorContext(this);
 			view.setUnitId(id);
+			Runnable r = 
+new Runnable() {
+	public void run() {
+		try {
 			DWOplayer.api.setScoID(id);
-			AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+		} catch (Exception e) {
+			GWT.log(e.getMessage(), e);
 
-				@Override
-				public void onFailure(Throwable caught) {
-					view.setupModule(sco.getName(), sco.getFile());
-				}
+		}
+		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 
-				@Override
-				public void onSuccess(Void result) {
-					view.setupModule(sco.getName(), sco.getFile());
-				}
-			};
-			DWOplayer.api.Initialize(callback);
+			@Override
+			public void onFailure(Throwable caught) {
+				view.setupModule(sco.getName(), sco.getFile());
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				view.setupModule(sco.getName(), sco.getFile());
+			}
+		};
+		DWOplayer.api.Initialize(callback);
+	}
+};
+			DWOplayer.api.Terminate().onResolve(r);
+			
 			addHandlerRegistration(view.getBackButton().addTapHandler(new TapHandler()
 			{
 
