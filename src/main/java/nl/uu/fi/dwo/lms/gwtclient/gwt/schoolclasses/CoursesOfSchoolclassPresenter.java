@@ -192,7 +192,7 @@ public class CoursesOfSchoolclassPresenter {
             ClassCourseItem item = new ClassCourseItem("root",
                     c.getObject().getCourse().getName(),
                     false,
-                    c.getObject().getClassCourse().getEnumType().name(),
+                    c.getObject().getClassCourse().getCourseType().name(),
                     c.getObject().getClassCourse().getNotBefore(),
                     c.getObject().getClassCourse().getNotAfter()
             );
@@ -215,7 +215,7 @@ public class CoursesOfSchoolclassPresenter {
             ClassCourseItem item = new ClassCourseItem(key,
                     c.getObject().getCourse().getName(),
                     true,
-                    c.getObject().getClassCourse().getEnumType().name(),
+                    c.getObject().getClassCourse().getCourseType().name(),
                     c.getObject().getClassCourse().getNotBefore(),
                     c.getObject().getClassCourse().getNotAfter()
             );
@@ -276,7 +276,7 @@ public class CoursesOfSchoolclassPresenter {
                     cc.setName(coc.getObject().getCourse().getName());
                     cc.setHasStudentData(false);
                     if (coc.getObject().getClassCourse() != null) {
-                        cc.setType(coc.getObject().getClassCourse().getEnumType().name());
+                        cc.setType(coc.getObject().getClassCourse().getCourseType().name());
                         cc.setFrom(coc.getObject().getClassCourse().getNotBefore());
                         cc.setTo(coc.getObject().getClassCourse().getNotAfter());
                         cc.setHasStudentData(true);
