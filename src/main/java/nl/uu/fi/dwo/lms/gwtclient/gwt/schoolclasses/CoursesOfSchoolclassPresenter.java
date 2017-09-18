@@ -38,12 +38,7 @@ public class CoursesOfSchoolclassPresenter {
 
     private String[] tableHeaders = {"module name", "assigned", "type", "from [?]", "to [?]"};
     private DomSchoolClass schoolClass;
-//    private DomCoursesOfSchoolClass4Teacher moduleInfo;
     private DomCoursesOfSchoolclassTree tree;
-//    private Map<String, DomStudent> studentMap;
-//    private Map<String, ClassCourseItem> courseItems;
-//    private Map<String, DomSchoolClass> schoolClassMap;
-//    private List<SchoolClassListBoxItem> schoolClassItems;
     private Display view;
     private int requests = 0;
 
