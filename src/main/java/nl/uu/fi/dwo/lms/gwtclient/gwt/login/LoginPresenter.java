@@ -58,7 +58,7 @@ public class LoginPresenter {
                         if (switchR) {
                             eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS));
                         } else {
-                            eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_RESULTS));
+                            eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_SCHOOLCLASSES));
                         }
                         LOG.log(Level.INFO, "login succeeded. Firing Login success event.");
                     } else {                        

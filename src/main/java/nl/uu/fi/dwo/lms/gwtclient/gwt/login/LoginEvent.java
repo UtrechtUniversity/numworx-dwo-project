@@ -12,6 +12,7 @@ public class LoginEvent extends GwtEvent<LoginEventHandler> {
         FAIL,
         SUCCESS,
         SUCCESS_RESULTS,
+        SUCCESS_SCHOOLCLASSES,
         LOGOUT
     }
     
