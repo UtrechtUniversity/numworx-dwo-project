@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Deferred;
+import org.osgi.util.promise.Promise;
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
@@ -290,8 +293,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		scoreNav.setKijkNa(new ScoreNavIF.Checker()
 		{
 			@Override
-			public void checkOpdracht(final ScoreNavIF source)
-			{
+			public Promise<Void> checkOpdracht(final ScoreNavIF source)
+			{	final Deferred<Void> defer = new Deferred<Void>();
 				p();
 				Scheduler.get().scheduleDeferred(new ScheduledCommand()
 				{
@@ -316,8 +319,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 							getKeyboard().setEditor(null);
 							getKeyboard().blur();
 						}
+						defer.resolve(null);
 					}
 				});
+				return defer.getPromise();
 			}
 		});
 		
@@ -1858,7 +1863,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	@Override
 	public void close() {
-		scoreNav.stopped();
+		scoreNav.stopped(); // ASYNC
 		if(on != null)
 			on.close();
 		PopupFacade.removeAll();

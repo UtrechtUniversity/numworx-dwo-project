@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.TouchButton;
@@ -357,7 +358,14 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		states = memento.getOpdrContStates(states);
 		currentActiviteit = memento.getCurrentActiviteit();
+		if (currentActiviteit < 0) currentActiviteit = 0;
+		else if(currentActiviteit >= aantalActiviteiten) currentActiviteit = aantalActiviteiten-1;
 		currentOpdracht = memento.getCurrentOpdracht();
+		if(currentOpdracht < 0) currentOpdracht = 0;
+		if(currentOpdracht >= aantalOpdrachten[currentActiviteit]) {
+			logger.log(Level.SEVERE, "MISMATCH currentOpdracht " + currentOpdracht + " >= " + aantalOpdrachten[currentActiviteit]);
+			currentOpdracht = 0;
+		}
 
 		memento.getStrafpunten(strafpunten);
 		memento.getOrGoedFout(isCorrect);

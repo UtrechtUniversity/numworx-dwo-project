@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.mobile;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -384,6 +386,21 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 						if(item.getType() == SelectModuleItem.Type.FOLDER)
 							item.setChildren(new ArrayList<SelectModuleItem>());							
 						result.add(item);
+						boolean iconizer = clientfactory.isIconizer();
+
+						if(iconizer)
+						Collections.sort(result, new Comparator<SelectModuleItem>() {
+
+							@Override
+							public int compare(SelectModuleItem o1,
+									SelectModuleItem o2) {
+								int s1 = o1.getSequencenr();
+								int s2 = o2.getSequencenr();
+								int c = Integer.compare(s1, s2);
+								if(c == 0)
+									c = o1.getName().compareTo(o2.getName());
+								return c;
+							} });
 					}
 					return result;
 				}
