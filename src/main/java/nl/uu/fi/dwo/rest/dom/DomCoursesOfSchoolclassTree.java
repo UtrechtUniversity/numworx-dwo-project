@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -81,7 +82,9 @@ public class DomCoursesOfSchoolclassTree {
         for (DomTree<DomCourseOfClass> n : cocMap.values()) {
             //attach classCourse to DomTree<DomCourseOfClass> n if it exists
             //LOG.log(Level.FINE, " id, parent id " + n.getObject().getCourse().getId() + ", " + n.getObject().getCourse().getParentID());
-            if (classCourseMap.containsKey(n.getObject().getCourse().getId().getIdString())) {
+            if (classCourseMap.containsKey(n.getObject().getCourse().getId().getIdString())
+  //              && classCourseMap.get(n.getObject().getCourse().getId().getIdString()).getCourseType()!=CourseType.invisible
+                    ){
                 n.getObject().setClassCourse(classCourseMap.get(n.getObject().getCourse().getId().getIdString()));
             }
             //build tree in O(n) time, link parents and kids
