@@ -8,9 +8,8 @@
         <!--addStyleNames='{dwoStyle.dwoWidgetPanel}'-->
         <g:FlowPanel styleName="{dwoStyle.absPanel}">
             <g:Button addStyleNames='dwoStyle.dwoButton' ui:field="addBtn"><ui:text from='{rb.GUI_Button_AddSchoolclass}'/></g:Button>
-
-            <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataGrid'/>
             <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager'/>
+            <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}' ui:field='dataGrid'/>
         </g:FlowPanel>
     </g:FlowPanel>
 </ui:UiBinder>

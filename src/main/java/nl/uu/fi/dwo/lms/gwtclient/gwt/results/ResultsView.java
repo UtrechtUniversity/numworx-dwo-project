@@ -15,6 +15,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.AbstractCellTable;
 import com.google.gwt.user.cellview.client.AbstractCellTable.Style;
 import com.google.gwt.user.cellview.client.AbstractHeaderOrFooterBuilder;
+import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.ColumnSortList;
@@ -58,11 +59,11 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
     @UiField(provided = true)
-    DataGrid dataGrid;
+    CellTable dataGrid;
 //    @UiField(provided = true)            
 //    CellList dataGrid;
-//    @UiField(provided = true)
-//    SimplePager pager;
+    @UiField(provided = true)
+    SimplePager pager;
     @UiField
     Button exportBtn;
     DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
@@ -98,7 +99,7 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
     public ResultsView(ResultsPresenter rp) {
         resultsPresenter = rp;
         resultsPresenter.setView(this);
-        dataGrid = new DataGrid<List<ResultsPresenter.ResultItem>>();
+        dataGrid = new CellTable<List<ResultsPresenter.ResultItem>>();
         dataProvider.addDataDisplay(dataGrid);
 //        dataGrid.setSkipRowHoverCheck(true);
         final SingleSelectionModel<List<ResultsPresenter.ResultItem>> selectionModel = new SingleSelectionModel<List<ResultsPresenter.ResultItem>>();
@@ -122,10 +123,10 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
 //            }
 //        };
 //        t.scheduleRepeating(60000);
-//        SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
-//        pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
-//        pager.setDisplay(dataGrid);
-//        pager.setPageSize(dataGrid.getPageSize());
+        SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
+        pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
+        pager.setDisplay(dataGrid);
+        pager.setPageSize(dataGrid.getPageSize());
         initWidget(uiBinder.createAndBindUi(this));
         exportBtn.addClickHandler(this);
 

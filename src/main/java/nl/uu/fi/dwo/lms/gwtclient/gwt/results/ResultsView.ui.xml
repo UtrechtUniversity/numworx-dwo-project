@@ -15,13 +15,15 @@
         </g:north>
         <g:center>
             <g:DockLayoutPanel >
-<!--                    <g:north  size='20'>
-                        <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}' width='90%'  ui:field='pager'/>
-                    </g:north>-->
-                <g:center>
-                    <!--<g:ScrollPanel  addStyleNames='{dwoStyle.dwoDataGridWidget}' height="auto" >-->
-                        <c:DataGrid addStyleNames='{dwoStyle.dwoDataGridWidget}'  width=' auto' ui:field='dataGrid'/>
-                        <!--</g:ScrollPanel>-->
+                    <g:north  size='20'>
+                        <g:FlowPanel>
+                        <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}' ui:field='pager'/>
+                        </g:FlowPanel>
+                    </g:north>
+                <g:center> 
+                    <g:ScrollPanel addStyleNames='{dwoStyle.dwoWidgetPanel}' height="auto" >
+                        <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}'  width='auto' ui:field='dataGrid'/>
+                        </g:ScrollPanel>
                 </g:center>
             </g:DockLayoutPanel>
         </g:center>

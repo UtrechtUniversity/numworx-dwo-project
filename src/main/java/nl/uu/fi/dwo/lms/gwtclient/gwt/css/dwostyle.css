@@ -148,8 +148,13 @@ DWO-overrides
 
 .dwoDataGridWidget{
     /*min-width: 20em; min-width: 20rem;*/
+    /*    bottom: 0px;
+        left: 0px;
+        top: 0px;
+        right: 0px;*/
     height: auto;
     width: auto;
+    position: relative;
     padding-left: auto;
     padding-right: auto;
     margin: auto;
