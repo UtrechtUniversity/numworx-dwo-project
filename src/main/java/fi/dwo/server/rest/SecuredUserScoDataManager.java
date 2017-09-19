@@ -223,11 +223,15 @@ public class SecuredUserScoDataManager {
 			case SESSION_TIME:
 				entry.setValue(String.valueOf(pssc.getSessionTime()));break;
 			case SESSION_TIME2004:
-				entry.setValue(CMI.to2004Timex(CMI.from1_2Timex(pssc.getSessionTime())));break;
+				String sessionTime = pssc.getSessionTime();
+				if(sessionTime == null) sessionTime = "0";
+				entry.setValue(CMI.to2004Timex(CMI.from1_2Timex(sessionTime)));break;
 			case TOTAL_TIME:
 				entry.setValue(String.valueOf(pssc.getTotalTime()));break;
 			case TOTAL_TIME2004:
-				entry.setValue(CMI.to2004Timex(CMI.from1_2Timex(pssc.getTotalTime())));break;
+				String totalTime = pssc.getTotalTime();
+				if(totalTime == null) totalTime = "0";
+				entry.setValue(CMI.to2004Timex(CMI.from1_2Timex(totalTime)));break;
 // TODO XML aanvullen met gegevens uit pssc
 			case XML:
 				if(pssd == null) {
