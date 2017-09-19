@@ -305,7 +305,7 @@ public class WriteObject {
 	
 	public void draw(Context2d g, int shiftX, int shiftY) {	
 		g.setStrokeStyle(CssColor.make(0, 0, 0));
-		logger.info("Teken object : "+ teken);
+//		logger.info("Teken object : "+ teken);
 		if (rawPoints.size() > 0) {
 			if ( (".".equals(teken)) || ("*".equals(teken) ) ) {
 				g.setFillStyle(CssColor.make(0, 0, 0));
