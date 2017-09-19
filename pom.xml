@@ -55,5 +55,5 @@
   	<sourceDirectory>src</sourceDirectory>
   </build>
   <description>Recognize handwritten mathematics.</description>
-  <version>2.1.14-SNAPSHOT</version>
+  <version>2.1.20-SNAPSHOT</version>
 </project>
