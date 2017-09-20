@@ -261,6 +261,7 @@ public class DWOplayer implements EntryPoint
 		ViewPort viewport = new MGWTSettings.ViewPort();
 		viewport.setTargetDensity(DENSITY.MEDIUM);
 		viewport.setUserScaleAble(false).setMinimumScale(1.0).setMaximumScale(1.0);
+		viewport.setWidth(1024);
 		MGWTSettings settings = new MGWTSettings();
 		settings.setViewPort(viewport);
 		settings.setAddGlosToIcon(true);
