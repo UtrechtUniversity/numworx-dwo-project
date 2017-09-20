@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
@@ -417,7 +418,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private PushButton getZelftoetsGeschiedenisButton()
 	{
 		final PushButton zelftoetsGeschiedenisKnop = new PushButton(fi.wiskopdr.text.Text.constants.zelftoetsGeschiedenisKnopLabel());
-		zelftoetsGeschiedenisKnop.setStylePrimaryName("myPushButton");
+        DWOplayerCss css = DWOplayer.DWO_BUNDLE.dwoplayercss();
+        zelftoetsGeschiedenisKnop.setStylePrimaryName(css.myPushButton());
 		zelftoetsGeschiedenisKnop.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
 			{
