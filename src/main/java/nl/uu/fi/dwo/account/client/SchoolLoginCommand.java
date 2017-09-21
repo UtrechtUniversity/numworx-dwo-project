@@ -6,9 +6,12 @@
 package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
+
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,14 +40,20 @@ public class SchoolLoginCommand implements Command {
                 return;
             }
             // Create the new popup.
-            PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
+            final PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
             popup.setStyleName("numworx-popup");
             //popup.setSize("500", "400");
             SchoolLoginPanel panel = new SchoolLoginPanel(resetLogin, DwoGlobalVars.instance().getCurrentUser());
             panel.setPopup(popup);
-            //panel.setSize("300", "200");
+            panel.setPixelSize(300, 200);
             popup.add(panel);
-            popup.center();
+            popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+                @Override
+                public void setPosition(int offsetWidth, int offsetHeight) {
+                    int left = (Window.getClientWidth() - offsetWidth) / 3;
+                    int top = (Window.getClientHeight() - offsetHeight) / 3;
+                    popup.setPopupPosition(left, top);
+                }});
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
         }

@@ -1,13 +1,16 @@
 package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManager;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+
 import java.util.logging.Logger;
 
 import org.osgi.util.promise.Promise;
@@ -22,13 +25,13 @@ public class SchoolLoginController {
 
     private SchoolLoginPanel view = null;
     private SecuredUserSchoolLoginManager manager = new SecuredUserSchoolLoginManager();
-    private DomSchoolsRolesAndClasses srcs;
+    private DomSchoolsRolesAndClassesV2 srcs;
 
     /**
      *
      * @return
      */
-    public DomSchoolsRolesAndClasses getSrcs() {
+    public DomSchoolsRolesAndClassesV2 getSrcs() {
         return srcs;
     }
 
@@ -49,14 +52,14 @@ public class SchoolLoginController {
      * @throws Dwo2Exception
      */
     public void init(DomUserFull user) throws Dwo2Exception {
-        manager.getSchoolLogins(new AsyncCallback<DomSchoolsRolesAndClasses>() {
+        manager.getSchoolLogins(new AsyncCallback<DomSchoolsRolesAndClassesV2>() {
             @Override
             public void onFailure(Throwable t) {
                 view.init(DwoGlobalVars.instance().getCurrentUser());
             }
 
             @Override
-            public void onSuccess(DomSchoolsRolesAndClasses result) {
+            public void onSuccess(DomSchoolsRolesAndClassesV2 result) {
                 //success and set all the data in the view
                 srcs = result;
                 view.update(srcs);
@@ -69,7 +72,7 @@ public class SchoolLoginController {
      *
      * @param callBack
      */
-    public void getSchoolLogins(AsyncCallback<DomSchoolsRolesAndClasses> callBack) {
+    public void getSchoolLogins(AsyncCallback<DomSchoolsRolesAndClassesV2> callBack) {
         manager.getSchoolLogins(callBack);
     }
     

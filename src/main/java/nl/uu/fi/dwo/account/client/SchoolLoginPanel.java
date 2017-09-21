@@ -28,6 +28,7 @@ import com.google.gwt.view.client.ListDataProvider;
 import nl.uu.fi.dwo.account.client.icons.AccountImageBundle;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
@@ -208,7 +209,7 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
             popup.hide();
         } else if (event.getSource() == this.addBtn) {
             Window.alert("ADD!");
-            popup.hide();
+            //popup.hide();
         }
     }
 
@@ -216,7 +217,7 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
      *
      * @param srcs
      */
-    void update(DomSchoolsRolesAndClasses srcs) {
+    void update(DomSchoolsRolesAndClassesV2 srcs) {
     	// FIXME Gert?
         //reinitiale the table.
        Grid g = new Grid(5, 3);
