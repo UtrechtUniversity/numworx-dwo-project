@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
@@ -43,7 +44,6 @@ import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionViewWithMisconceptions;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
@@ -57,6 +57,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
@@ -188,6 +189,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	{
 		for (int i = 0; i < buttons.size(); i++)
 			contentPanel.remove(buttons.get(i));
+		
+		// initialize mode
+		int mode = OpdrNav.OEFENEN;
+		
 		try
 		{
 			super.setupView(launchData);
@@ -223,16 +228,35 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			// GEEN randje aan de linkerkant, want dan klopt de maat (100%) niet
 			// meer bij noordhoff
 
-			(on = new OpdrNav()).init(launchData, this, createMemento());
+			(on = new OpdrNav()).init(launchData, this, createMemento()); // hierin worden bollen gezet
+			
+			mode = on.getMode();
+
 			// voor noordhoff
 			int aantalOpdrachten = on.getAantalOpdrachten();
 			if (standalone && !bolletjesZichtbaar && !volgendeKnopZichtbaar
 				&& !vorigeKnopZichtbaar && aantalOpdrachten == 1)
 				removeTitle();
-
+			
 			FlowPanel onp = (FlowPanel) on.getAsPanel();
+			
 			if (bolletjesZichtbaar)
+			{
 				sb.addNavPanel(onp);
+			}
+			
+			if (mode != OpdrNav.OEFENEN) // alleen voor oefenen mag score zichtbaar uit staan
+				scoresZichtbaar = true;
+			if (scoresZichtbaar)
+			{
+				Label score = scoreNav.getTotaalScoreLabel();
+				score.getElement().getStyle().setFloat(Style.Float.LEFT);
+				sb.addLabel(score);
+				onp.removeFromParent();
+				// addKnop() voegt een widget toe 
+				sb.addKnop(onp, false);
+			}
+			
 			if (wrap != null && wrap.containsKey("itemOpnieuw"))
 			{
 				scoreNav.setItemOpnieuw(wrap.getBoolean("itemOpnieuw"));
@@ -275,9 +299,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		{
 			this.loadingHandler.viewModuleViewSetupDone();
 		}
-
+		
 		// benodigde knoppen toevoegen.
-		int mode = on.getMode();
 		if (mode == OpdrNav.ZELFTOETS)
 		{
 			scoreNav.setKijkNaEnabled(isKijkNaEnabled());
@@ -326,6 +349,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			}
 		});
 		
+		// vorige/volgende knop toevoegen
+		scoreNav.setVorigeVisible(vorigeKnopZichtbaar);
+		scoreNav.setVolgendeVisible(volgendeKnopZichtbaar);
+		
 		scoreNav.setNextPrevHandler(this);
 		scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig()
 			&& mode != OpdrNav.EINDTOETS);// && !pilotObjectives);
@@ -335,25 +362,22 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		scoreNav.setMisconceptionsHandler(this);
 		//stelNavigatieIn(); // kan weg; gebeurt al in zetOpdracht(); i.v.m. bijhouden bezocht[]
 
+		if (scoresZichtbaar)
+		{
+			scoreNav.setTotaalScoreLabel((int) on.getScore()); // toon percentagescore
+		}
+		
 		if (mode == OpdrNav.ZELFTOETS)
 		{
 			// set values
-//			scoreNav.setTotaalScoreLabel(on.getTotaalScore());
-			scoreNav.setTotaalScoreLabel((int) on.getScore()); // toon percentagescore
 			scoreNav.setKeerNagekekenLabel(on.getKeerNagekeken());
 
 			// add totaalscore and keer nagekeken labels
-			sb.addLabel(scoreNav.getTotaalScoreLabel());
 			sb.addLabel(scoreNav.getKeerNagekekenLabel());
 		}
 		if ( on.isVerzegeld()) {
 			sb.addLabel(new Label(Text.constants.lockToetsLabel()));
 		}
-//		else if (mode == OpdrNav.OEFENEN || mode == OpdrNav.OEFENEN_STRAFPUNTEN)
-//		{
-//			// Geen nakijkknop, dus ook niet keernagekeken
-//			// maar wel totaalscore
-//		}
 		
 		scoreNav.started();
 	
@@ -417,7 +441,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private PushButton getZelftoetsGeschiedenisButton()
 	{
 		final PushButton zelftoetsGeschiedenisKnop = new PushButton(fi.wiskopdr.text.Text.constants.zelftoetsGeschiedenisKnopLabel());
-		zelftoetsGeschiedenisKnop.setStylePrimaryName("myPushButton");
+		DWOplayerCss css = DWOplayer.DWO_BUNDLE.dwoplayercss();
+		zelftoetsGeschiedenisKnop.setStylePrimaryName(css.myPushButton());
 		zelftoetsGeschiedenisKnop.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
 			{
@@ -843,7 +868,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	}
 	
 	public void stelNavigatieIn()
-	{	//Omzetting in GWT: overal opdrachtenCorrect[actNr][opdrNr] vervangen door on.getOpdrachtCorrect(actNr, opdrNr)
+	{
+		//Omzetting in GWT: overal opdrachtenCorrect[actNr][opdrNr] vervangen door on.getOpdrachtCorrect(actNr, opdrNr)
 		int opdrNr = on.getCurrentOpdracht();
 		int actNr = on.getCurrentActiviteit();
 		
@@ -927,13 +953,14 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		else
 		{	//eindeKnop.setVisible(false);
 			//eindeKnop.setEnabled(false);
-			scoreNav.setVolgendeVisible(volgendeKnopZichtbaar);
-			scoreNav.setVorigeVisible(vorigeKnopZichtbaar);
+
 			//Als leerling pas door mag als alles op pagina correct: volgende bolletjes en volgende/einde-knop disablen.
-			if(allesCorrectNodig && !on.getOpdrachtCorrect(actNr, opdrNr) && !on.geefNoScore(actNr, opdrNr + 1)) //klopt die + 1??
-			{	for(int i = opdrNr + 1; i < on.getAantalOpdrachten(); i++)
+			if (allesCorrectNodig && !on.getOpdrachtCorrect(actNr, opdrNr) && !on.geefNoScore(actNr, opdrNr + 1)) //klopt die + 1??
+			{
+				for(int i = opdrNr + 1; i < on.getAantalOpdrachten(); i++)
+				{
 					scoreNav.setButtonEnabled(i, false);
-				//volgendeKnop.setEnabled(false);
+				}
 				zetVolgendeKnoppenEnabled(false);
 				//eindeKnop.setEnabled(false);
 				zetVorigeKnoppenEnabled(opdrNr > 0);
@@ -941,11 +968,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				return;
 			}
 			
-			if(condNav && condNavPerc)
+			if (condNav && condNavPerc)
 			{	//boolean conditie = on.geefNoScore(actNr, opdrNr + 1) || //or[actNr].geefNoScore(opdrNr + 1) || 
 				//		100.0 * (Math.max(0, on.getScore(actNr, opdrNr) - on.getStrafpunten(actNr, opdrNr))) / on.getMaxScore(actNr, opdrNr) >= condPerc;
 				boolean conditie = on.geefNoScore(actNr, opdrNr + 1) || 100 * on.getScore(actNr, opdrNr) / on.getMaxScore(actNr, opdrNr) >= condPerc;
-				for(int i = opdrNr + 2; i < on.getAantalOpdrachten(); i++)
+				for (int i = opdrNr + 2; i < on.getAantalOpdrachten(); i++)
 				{	//or[actNr].setEnabled(bezocht[actNr][i], i + 1);
 					scoreNav.setButtonEnabled(i, bezocht[actNr][i]);
 				}
@@ -959,38 +986,43 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			//	volgendeKnop.setEnabled(true);
 				
 				zetVolgendeKnoppenEnabled(true);
-			if(condNav && condNavVoorwaarden)
-			{	for(int i = opdrNr + 1; i < on.getAantalOpdrachten(); i++)
+			if (condNav && condNavVoorwaarden)
+			{
+				for(int i = opdrNr + 1; i < on.getAantalOpdrachten(); i++)
 				//	or[actNr].setEnabled(bezocht[actNr][i], i + 1);
 					scoreNav.setButtonEnabled(i, bezocht[actNr][i]);
-				if(bepaalVolgendeOpdracht(actNr, opdrNr) > -1)
-				{	scoreNav.setButtonEnabled(bepaalVolgendeOpdracht(actNr, opdrNr), !allesCorrectNodig || on.geefNoScore(actNr, opdrNr + 1) || on.getOpdrachtCorrect(actNr, opdrNr));
-					if(!allesCorrectNodig)
-					{	int volgende = bepaalVolgendeOpdracht(actNr, opdrNr);
-						while(bepaalVolgendeOpdracht(actNr, volgende) > -1)
-						{	if(bepaalVolgendeOpdracht(actNr, volgende) > volgende + 1)
+				if (bepaalVolgendeOpdracht(actNr, opdrNr) > -1)
+				{
+					scoreNav.setButtonEnabled(bepaalVolgendeOpdracht(actNr, opdrNr), !allesCorrectNodig || on.geefNoScore(actNr, opdrNr + 1) || on.getOpdrachtCorrect(actNr, opdrNr));
+					if (!allesCorrectNodig)
+					{
+						int volgende = bepaalVolgendeOpdracht(actNr, opdrNr);
+						while (bepaalVolgendeOpdracht(actNr, volgende) > -1)
+						{
+							if(bepaalVolgendeOpdracht(actNr, volgende) > volgende + 1)
 								for(int i = volgende + 1; i < bepaalVolgendeOpdracht(actNr, volgende); i++)
+								{
 								//	or[actNr].setEnabled(false, i + 1);
 									scoreNav.setButtonEnabled(i, false);
+								}
 							//or[actNr].setEnabled(true, bepaalVolgendeOpdracht(actNr, volgende) + 1);
 							scoreNav.setButtonEnabled(bepaalVolgendeOpdracht(actNr, volgende), true);
 							volgende = bepaalVolgendeOpdracht(actNr, volgende);
 						}
-						if(volgende + 1 < on.getAantalOpdrachten())
-						{	for(int i = volgende + 1; i < on.getAantalOpdrachten(); i++)
+						if (volgende + 1 < on.getAantalOpdrachten())
+						{
+							for(int i = volgende + 1; i < on.getAantalOpdrachten(); i++)
 							//	or[actNr].setEnabled(false, i + 1);
 							scoreNav.setButtonEnabled(i, false);
 						}
-								
 					}
-				
 				}
 			}
-		
 		}
+		
 		zetVorigeKnoppenEnabled(opdrNr > 0);
 		zetNakijkKnopEnabled();
-		if(!disableScreen.isAttached() && isDesktop())
+		if (!disableScreen.isAttached() && isDesktop())
 			hoofdPanel.tabFocus(null, false);
 	}
 	
@@ -1054,7 +1086,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	public void zetVorigeKnoppenEnabled(boolean b)
 	{
-
 		scoreNav.setVorigeEnabled(b);
 	}
 	
@@ -2239,5 +2270,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public void setTrail(List<SelectModuleItem> trail) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public boolean isScoresZichtbaar()
+	{
+		return scoresZichtbaar;
 	}
 }
