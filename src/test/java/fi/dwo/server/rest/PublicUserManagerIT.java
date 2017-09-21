@@ -32,6 +32,7 @@ import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.SecurityContext;
 
 import org.junit.After;
@@ -219,17 +220,17 @@ public class PublicUserManagerIT {
   	
 		try { 
 			token = instance.getAuthToken("user01", "passw", "nopassword", "noscope");
-// FIXME 			fail("should fail, somehow");
+ 			fail("should fail, somehow");
 			assertNull(token);
-		} catch (Dwo2RestException e) {
-			System.out.println(e);
+		} catch (WebApplicationException e) {
+			System.out.println("All Fine: "+ e);
 		}
 		try { 
 			token = instance.getAuthToken("user01", "pass", "password", "");
-// FIXME 			fail("should fail, somehow");
+ 			fail("should fail, somehow");
 			assertNull(token);
-		} catch (Dwo2RestException e) {
-			System.out.println(e);
+		} catch (WebApplicationException e) {
+			System.out.println("All Fine: "+ e);
 		}
 		
     }
