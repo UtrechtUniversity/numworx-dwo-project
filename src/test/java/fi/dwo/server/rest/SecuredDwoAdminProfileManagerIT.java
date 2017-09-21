@@ -101,7 +101,7 @@ public class SecuredDwoAdminProfileManagerIT {
 	public void testGetProfiles() {
         SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
 		List<DomDwoProfileFull> list = manager.getProfiles(sc);
-		assertEquals("getProfiles listsize", 2, list.size());
+		assertEquals("getProfiles listsize", 3, list.size());
 	}
 
 	@Test
