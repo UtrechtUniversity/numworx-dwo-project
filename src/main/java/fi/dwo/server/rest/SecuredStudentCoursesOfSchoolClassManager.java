@@ -52,7 +52,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class SecuredStudentCoursesOfSchoolClassManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredStudentCoursesOfSchoolClassManager.class.getName());
-    private static final Object INVISIBLE = Integer.valueOf(2);
+//    private static final Object INVISIBLE = Integer.valueOf(2);
 
     @PUT
     @Produces({"application/json"})
@@ -109,8 +109,8 @@ public class SecuredStudentCoursesOfSchoolClassManager {
         Date NOW = new Date();
         listClassCourse.stream().forEach(
                 (scc) -> {
-                	if (INVISIBLE.equals( scc.getType())) 
-                			return;
+//                	if (INVISIBLE.equals( scc.getType())) 
+//                			return;
 // FIXME after and before
                 	if (scc.getNotAfter() != null) {
                 		if (NOW.after(scc.getNotAfter()) )
