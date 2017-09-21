@@ -4,7 +4,6 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
-import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
 import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
@@ -12,17 +11,12 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.BorderStyle;
-import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -121,17 +115,14 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 		eindeKnop.setVisible(false);
 	
 		// De labels voor totaalscore en aantal keer nagekeken
-		totaalScoreLabel = new Label(Text.constants.totaalScoreLabel());
-		totaalScoreLabel.getElement().getStyle().setFontSize(11, Style.Unit.PX);
-		totaalScoreLabel.getElement().getStyle().setColor("#1D71B8");
-		totaalScoreLabel.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);
-		totaalScoreLabel.getElement().getStyle().setPaddingTop(10, Style.Unit.PX);
-		//totaalScoreLabel.setStylePrimaryName("statusBarLabel");
-		keerNagekekenLabel = new Label(0 + Text.constants.nakijkLabel());
+		totaalScoreLabel = new Label(); // zonder "Totaal:"
+		totaalScoreLabel.setStyleName("score");
+		totaalScoreLabel.getElement().getStyle().setPaddingTop(6, Style.Unit.PX);
+		keerNagekekenLabel = new HTML(new SafeHtmlBuilder().appendEscapedLines(0 + Text.constants.nakijkLabel() + "\n" + Text.constants.nakijkLabel2()).toSafeHtml());
 		keerNagekekenLabel.getElement().getStyle().setFontSize(11, Style.Unit.PX);
 		keerNagekekenLabel.getElement().getStyle().setColor("#1D71B8");
 		keerNagekekenLabel.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);
-		//keerNagekekenLabel.setStylePrimaryName("statusBarLabel");
+		keerNagekekenLabel.getElement().getStyle().setPaddingTop(10, Style.Unit.PX);
 	}
 	
 	@Override
@@ -291,26 +282,27 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 	}
 	
 	@Override
-	public void setVolgendeEnabled(boolean enable) {
+	public void setVolgendeEnabled(boolean enable) 
+	{
+		// deze remove zorgt ervoor dat de knoppen op een extra grijze balk onder de navigatiebalk komen...
+//		vorigeKnop.removeFromParent();
+//		volgendeKnop.removeFromParent();
+//		eindeKnop.removeFromParent();
+//		if(enable)
+//			sb.addKnop(volgendeKnop, true);
+//		else
+//		{	sb.addKnop(eindeKnop, true);
+//		//tijdelijk:
+//		eindeKnop.setVisible(false);
+//		}
+//		sb.addKnop(vorigeKnop, true);
 		
-		vorigeKnop.removeFromParent();
-		volgendeKnop.removeFromParent();
-		eindeKnop.removeFromParent();
-		if(enable)
-			sb.addKnop(volgendeKnop, true);
-		else
-		{	sb.addKnop(eindeKnop, true);
-		//tijdelijk:
-		eindeKnop.setVisible(false);
-		}
-		sb.addKnop(vorigeKnop, true);
-		volgendeKnop.setVisible(volgendeKnopZichtbaar);
-		vorigeKnop.setVisible(vorigeKnopZichtbaar);
-		//volgendeKnop.setEnabled(enable);	
+		volgendeKnop.setEnabled(enable);	
 	}
 
 	@Override
-	public void setVorigeEnabled(boolean enable) {
+	public void setVorigeEnabled(boolean enable)
+	{
 		vorigeKnop.setEnabled(enable);
 	}
 
@@ -432,13 +424,13 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 	@Override
 	public void setTotaalScoreLabel(int score)
 	{
-		totaalScoreLabel.setText(Text.constants.totaalScoreLabel() + score + "%");
+		totaalScoreLabel.setText(score + "%");
 	}
 
 	@Override
 	public void setKeerNagekekenLabel(int aantal)
 	{
-		keerNagekekenLabel.setText(aantal + Text.constants.nakijkLabel());
+		((HTML) keerNagekekenLabel).setHTML(new SafeHtmlBuilder().appendEscapedLines(aantal + Text.constants.nakijkLabel() + "\n" + Text.constants.nakijkLabel2()).toSafeHtml());
 	}
 
 	@Override
