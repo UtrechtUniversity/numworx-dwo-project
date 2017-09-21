@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.domain;
 
 import fi.beans.appletutil.AppletUtil;
+import fi.beans.dwomaccess.Compressor;
 import fi.beans.jvmchecker.JVMChecker;
 import fi.beans.mainframe.MainFrame;
 import fi.beans.private_base64code.StringCodeObject;
@@ -283,7 +284,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 
         dwo_env = properties.getProperty(DWO_ENV, super.getParameter(DWO_ENV));
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{DWO_ENV, dwo_env});
-       
+
+        if("test".equals(dwo_env))
+        	Compressor.setSkip(false);
     }
 
     /**
