@@ -169,6 +169,7 @@ public class JSONEncoder {
 
 	public static void encode(Map map, Writer out, ClassLoader cl) throws IOException {
         map = transformMap(map, cl);
+        new Compressor().compress(map);
         JSONObject.writeJSONString(map, out);
 	}
 

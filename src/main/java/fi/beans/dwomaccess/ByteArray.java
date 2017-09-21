@@ -2,9 +2,9 @@ package fi.beans.dwomaccess;
 
 import java.beans.DefaultPersistenceDelegate;
 import java.beans.Encoder;
-import java.beans.XMLEncoder;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Base64;
 
 /**
  *
@@ -43,7 +43,8 @@ public class ByteArray implements Serializable {
     public void setString(String s) {
         cache = s;
         if (s != null) {
-            bytes = new hplb.misc.BASE64Decoder().decodeBuffer(s);
+            //bytes = new hplb.misc.BASE64Decoder().decodeBuffer(s);
+        	bytes = Base64.getDecoder().decode(s);
         } else {
             bytes = null;
         }
@@ -56,7 +57,8 @@ public class ByteArray implements Serializable {
         if (cache != null) {
             return cache;
         }
-        return new hplb.misc.BASE64Encoder(false).encodeBuffer(bytes);
+        //return new hplb.misc.BASE64Encoder(false).encodeBuffer(bytes);
+        return Base64.getEncoder().encodeToString(bytes);
     }
 
     public byte[] getBytes() {
