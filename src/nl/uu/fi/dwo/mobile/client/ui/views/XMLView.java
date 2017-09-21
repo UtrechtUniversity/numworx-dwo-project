@@ -78,6 +78,7 @@ public abstract class XMLView {
 	protected boolean bolletjesZichtbaar = true;
 	protected boolean volgendeKnopZichtbaar = false;
 	protected boolean vorigeKnopZichtbaar = false;
+	protected boolean scoresZichtbaar = true;
 	
 	protected boolean condNav = false;
 	protected boolean condNavPerc = false;
@@ -182,6 +183,8 @@ public abstract class XMLView {
 				FormuleEditorWithSteps.zetFontOverervingForm(wrap.getBoolean("fontOverervingForm"));
 				StelselOplossingenVak.zetFontOverervingForm(wrap.getBoolean("fontOverervingForm"));
 			}
+			if(wrap.containsKey("scoresZichtbaar"))
+				scoresZichtbaar = wrap.getBoolean("scoresZichtbaar");
 			if(wrap.containsKey("volgendeKnopZichtbaar"))
 				volgendeKnopZichtbaar = wrap.getBoolean("volgendeKnopZichtbaar");
 			if(wrap.containsKey("vorigeKnopZichtbaar"))
