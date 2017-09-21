@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  *
  * @author G.A.J. van der Plas
  */
-class SchoolLoginCommand implements Command {
+public class SchoolLoginCommand implements Command {
 
     private static final Logger LOG = Logger.getLogger(SchoolLoginCommand.class.getName());
 	private Command resetLogin;
@@ -38,6 +38,7 @@ class SchoolLoginCommand implements Command {
             }
             // Create the new popup.
             PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
+            popup.setStyleName("numworx-popup");
             //popup.setSize("500", "400");
             SchoolLoginPanel panel = new SchoolLoginPanel(resetLogin, DwoGlobalVars.instance().getCurrentUser());
             panel.setPopup(popup);
