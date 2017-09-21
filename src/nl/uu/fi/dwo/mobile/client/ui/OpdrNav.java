@@ -607,11 +607,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			// logger.fine("setChanged zet Button " + currentOpdracht + "
 			// correct; correct = " + correct);
 
-			// niet voor toets!
-			if (scoresVisible())
+			// niet voor toets! -> check in setButtonCorrect()
+			setButtonCorrect(buttons.get(currentOpdracht), correct, currentOpdracht); // heeft zelf checks voor tonen correct/score
+			if (correctVisible())
 			{
-				setButtonCorrect(buttons.get(currentOpdracht), correct, currentOpdracht);
-
 				if (entry.isTempotoets() && entry.isAllCorrect())
 				{
 					entry.setTempotoetsLocked();
@@ -720,7 +719,28 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	}
 
 	/**
-	 * wordt gebruikt aan het begin, als de pagina gestart wordt.
+	 * Geeft aan of groen correct-vinkje wordt getoond bij bolletje.
+	 * 
+	 * @return
+	 */
+	private boolean correctVisible()
+	{
+		boolean visible = false;
+		
+		if (memento.isReview())
+			visible = true;
+		else if (entry.getZelftoetsNagekeken())
+			visible = true;
+		else if (mode == EINDTOETS && memento.isEindtoetsVerzegeld())
+			visible = true;
+		else if (mode == OEFENEN || mode == OEFENEN_STRAFPUNTEN)
+			visible = true;
+		
+		return visible;
+	}
+
+	/**
+	 * Geeft aan of scores moeten worden getoond in tooltip bij bolletje en in totaalscore.
 	 * 
 	 * @return
 	 */
@@ -728,15 +748,13 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	{
 		boolean visible = false;
 		
-		
 		if (memento.isReview())
 			visible = true;
-		else
-		if (entry.getZelftoetsNagekeken())
+		else if (entry.getZelftoetsNagekeken())
 			visible = true;
 		else if (mode == EINDTOETS && memento.isEindtoetsVerzegeld())
 			visible = true;
-		else if (mode == OEFENEN || mode == OEFENEN_STRAFPUNTEN)
+		else if ((mode == OEFENEN && entry.isScoresZichtbaar()) || mode == OEFENEN_STRAFPUNTEN)
 			visible = true;
 		
 		return visible;
@@ -918,20 +936,25 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			return;
 		}
 		button.setStyleDependentName("max0", false);
-		if (scoresVisible())
+
+		if (correctVisible())
 		{
 			button.setStyleDependentName("correct", b);
-			String value = String.valueOf(getScores()[getCurrentActiviteit()][opdrNr]);
-			int correctie = getItemCorrectie(opdrNr);
-			if (correctie > 0)
+			
+			if (scoresVisible())
 			{
-				value = value + "+" + correctie;
+				String value = String.valueOf(getScores()[getCurrentActiviteit()][opdrNr]);
+				int correctie = getItemCorrectie(opdrNr);
+				if (correctie > 0)
+				{
+					value = value + "+" + correctie;
+				}
+				else if (correctie < 0)
+				{
+					value = value + correctie;
+				}
+				button.getElement().setPropertyString("title", value);
 			}
-			else if (correctie < 0)
-			{
-				value = value + correctie;
-			}
-			button.getElement().setPropertyString("title", value);
 		}
 	}
 
@@ -949,20 +972,25 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			return;
 		}
 		button.setStyleDependentName("max0", false);
-		if (scoresVisible())
+
+		if (correctVisible())
 		{
 			button.setStyleDependentName("correct", b);
-			String value = String.valueOf(getScoresZelftoets()[getCurrentActiviteit()][opdrNr]);
-			int correctie = getItemCorrectie(opdrNr);
-			if (correctie > 0)
+			
+			if (scoresVisible())
 			{
-				value = value + "+" + correctie;
+				String value = String.valueOf(getScoresZelftoets()[getCurrentActiviteit()][opdrNr]);
+				int correctie = getItemCorrectie(opdrNr);
+				if (correctie > 0)
+				{
+					value = value + "+" + correctie;
+				}
+				else if (correctie < 0)
+				{
+					value = value + correctie;
+				}
+				button.getElement().setPropertyString("title", value);
 			}
-			else if (correctie < 0)
-			{
-				value = value + correctie;
-			}
-			button.getElement().setPropertyString("title", value);
 		}
 	}
 
@@ -1303,7 +1331,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		{
 			source.setItemScore(currentOpdracht, scores[currentActiviteit][currentOpdracht]);
 			source.setTotaalScore((int) score);
+			source.setTotaalScoreLabel((int) getScore()); // toon percentagescore
 		}
+		
 		source.setBeantwoord(getAantalBeantwoord()); // noordhoff
 	}
 
@@ -1387,6 +1417,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		memento.setZelftoetsHighScore(getActualScore());
 		setZelftoetsHighScore((int) getActualScore());
 		memento.addScoreZelftoetsHistorie((int) getActualScore());
+		
+		// in memento de high score zetten als score opdat de score in het moduleoverzicht komt voor de docent
+		if (entry.zelftoetsHighScore)
+			memento.setScore(memento.getZelftoetsHighScore());
 
 		for (int j = 0; j < aantalOpdrachten[currentActiviteit]; j++)
 		{
@@ -1492,15 +1526,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public void gotoOpdracht(final int opdracht)
 	{
 		saveCurrentState();
-		if (scoresVisible())
-		{
-			if (mode == ZELFTOETS)
-				setButtonCorrectZelftoets(buttons.get(currentOpdracht), isCorrectZelftoets[currentActiviteit][currentOpdracht],
-					currentOpdracht);
-			else
-				setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht],
-					currentOpdracht);
-		}
+		if (mode == ZELFTOETS)
+			setButtonCorrectZelftoets(buttons.get(currentOpdracht), isCorrectZelftoets[currentActiviteit][currentOpdracht],
+				currentOpdracht);
+		else
+			setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht],
+				currentOpdracht);
 
 		removeButtonCursor(buttons.get(currentOpdracht));
 		currentOpdracht = opdracht;
