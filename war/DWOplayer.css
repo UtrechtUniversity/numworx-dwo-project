@@ -222,6 +222,26 @@ div.listItem-dwo-separator {
 	font-size: 16px;
 }
 
+.score {
+	float: left;
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 10px;
+	margin-bottom: 4px;
+	padding: 6px;
+	padding-top: 6px;
+	padding-bottom: 4px;
+	background-color: #DDE0E3;
+	border-radius: 3px;
+	border-width: 0px;
+	border-style: solid;
+	border-color: white;
+	color: #FFFFFF;
+	font-weight: normal;
+	font-size: 12px;
+}
+
 .scoreBtn {
 	float: left;
 	display: inline-block;
