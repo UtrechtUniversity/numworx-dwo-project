@@ -8,12 +8,13 @@ import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserSchoolLoginRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.entities.RestNewSchoolLogin;
-import nl.uu.fi.dwo.rest.entities.RestSchoolRoleAndClass;
+import nl.uu.fi.dwo.rest.entities.RestSchoolRoleAndClassV2;
 
 import java.util.logging.Logger;
+
 import org.osgi.util.promise.Promise;
 
 /**
@@ -32,38 +33,38 @@ public class SecuredUserSchoolLoginManager {
 //        service.updateAccountData(user, new Callback<DomUserFull>(callBack));
 //    }
 
-    public Promise<DomSchoolsRolesAndClasses> getSchoolLogins() {
-        PromiseCallback<DomSchoolsRolesAndClasses> defer = new PromiseCallback<DomSchoolsRolesAndClasses>();
+    public Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins() {
+        PromiseCallback<DomSchoolsRolesAndClassesV2> defer = new PromiseCallback<DomSchoolsRolesAndClassesV2>();
         this.getSchoolLogins(defer);
         return defer.getPromise();
     }
     
-    public void getSchoolLogins(AsyncCallback<DomSchoolsRolesAndClasses> callBack)  {
-        service.getSchoolLogins(new Callback<DomSchoolsRolesAndClasses> (callBack));
+    public void getSchoolLogins(AsyncCallback<DomSchoolsRolesAndClassesV2> callBack)  {
+        service.getSchoolLogins(new Callback<DomSchoolsRolesAndClassesV2> (callBack));
     }
 
-    public Promise<DomSchoolRoleAndClass> switchToSchoolLogin(DomSchoolRoleAndClass reqSrac) {
-        PromiseCallback<DomSchoolRoleAndClass> defer = new PromiseCallback<DomSchoolRoleAndClass>();
+    public Promise<DomSchoolRoleAndClassV2> switchToSchoolLogin(DomSchoolRoleAndClassV2 reqSrac) {
+        PromiseCallback<DomSchoolRoleAndClassV2> defer = new PromiseCallback<DomSchoolRoleAndClassV2>();
         this.switchToSchoolLogin(reqSrac,defer);
         return defer.getPromise();
     }
     
-    public void switchToSchoolLogin(DomSchoolRoleAndClass reqSrac, AsyncCallback<DomSchoolRoleAndClass> callBack){
-        RestSchoolRoleAndClass rsrc = new RestSchoolRoleAndClass();
+    public void switchToSchoolLogin(DomSchoolRoleAndClassV2 reqSrac, AsyncCallback<DomSchoolRoleAndClassV2> callBack){
+        RestSchoolRoleAndClassV2 rsrc = new RestSchoolRoleAndClassV2();
         rsrc.setRestContext(new DomContext());
         rsrc.setDomSchoolRoleAndClass(reqSrac);
-        service.switchToSchoolLogin(rsrc,new Callback<DomSchoolRoleAndClass> (callBack));
+        service.switchToSchoolLogin(rsrc,new Callback<DomSchoolRoleAndClassV2> (callBack));
     }
 
-    public Promise<Boolean> removeASchoolLogin(DomSchoolRoleAndClass reqSrac) {
+    public Promise<Boolean> removeASchoolLogin(DomSchoolRoleAndClassV2 reqSrac) {
         PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
         this.removeASchoolLogin(reqSrac,defer);
         return defer.getPromise();
     }
         
     
-    public void removeASchoolLogin(DomSchoolRoleAndClass reqSrac, AsyncCallback<Boolean> callBack){
-        RestSchoolRoleAndClass rsrc = new RestSchoolRoleAndClass();
+    public void removeASchoolLogin(DomSchoolRoleAndClassV2 reqSrac, AsyncCallback<Boolean> callBack){
+        RestSchoolRoleAndClassV2 rsrc = new RestSchoolRoleAndClassV2();
         rsrc.setRestContext(new DomContext());
         rsrc.setDomSchoolRoleAndClass(reqSrac);
         service.removeASchoolLogin(rsrc,new Callback<Boolean> (callBack));
