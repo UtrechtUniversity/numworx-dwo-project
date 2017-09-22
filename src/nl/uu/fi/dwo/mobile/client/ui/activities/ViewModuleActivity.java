@@ -103,6 +103,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 				Window.alert(caught.getMessage());
 				History.back();
 				//view.setupModule(sco.getName(), sco.getFile());
+				view = null;
 			}
 
 			@Override

@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -102,8 +103,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	public static final String LESSON_MODE = "cmi.mode";
 	public static final String SHARE_MAP = "shareMap";
 	
-	private Scorm2004IF api;
-
+	final private Scorm2004IF api;
+	final private ViewModuleView view; 
 	private JSONObject suspendData;
 	private JSONObject onsState, shareMap;
 	private JSONObject logState;
@@ -154,13 +155,14 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private JSONArray aantalNakijken;
 	private CmiMode cmi_mode;
 
-	public Memento(Scorm2004IF api)
+	public Memento(Scorm2004IF api, ViewModuleView view)
 	{
 		this.api = api;
+		this.view = view;
 		_instance = this;
-		Window.addWindowClosingHandler(this);
-		Window.addCloseHandler(this);
-		registration = DWOplayer.clientfactory.getEventBus().addHandler(CBookEvent.TYPE, this);
+		registration[0] = Window.addWindowClosingHandler(this);
+		registration[1] = Window.addCloseHandler(this);
+		registration[2] = DWOplayer.clientfactory.getEventBus().addHandler(CBookEvent.TYPE, this);
 		initialize();
 		String value;
 		scoreRaw = getValue(SCORE_RAW);
@@ -611,10 +613,10 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		logger.info("memento flush");
 		try
 		{
-			if(this == _instance) // API break?
+//			if(this == _instance) // API break?
 				api.Commit();
-			else 
-				logger.fine("No commit, since we are closing, terminate should follow!");
+//			else 
+//				logger.fine("No commit, since we are closing, terminate should follow!");
 		}
 		catch (Exception e)
 		{
@@ -623,22 +625,21 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 
 	public void close()
 	{
-		if (this != _instance)
-			return;
-		_instance = null;
+//		if (this != _instance)
+//			return;
+//		_instance = null;
+		if(_instance==this) _instance = null;
+		
 		OpdrNav.immediate(
 		new ScheduledCommand() {
 			public void execute() {
 				logger.info("closing memento");
-				if(registration != null) {
-					registration.removeHandler();
-					registration = null;
-				}
+				removeRegistration();
 				runner.run();
 				setSessionTimes();
 				try {
 					api.Terminate();
-					api = null;
+					//api = null;
 				} catch (Exception e) {
 				}
 			}
@@ -1232,13 +1233,12 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			return (int) this.tempotoetsSecondsLeft.doubleValue();
 	}
 
-	HandlerRegistration registration;
+	HandlerRegistration registration[] = new HandlerRegistration[3];
 	@Override
 	public void acceptCBookEvent(CBookEvent event) {
 		if(CheckButton.AFRONDEN.equals(event.getCommand())) {
 			if(registration == null) return;
-			registration.removeHandler();
-			registration = null;
+			removeRegistration();
 			setSessionTimes();
 			JSONObject reviewData = new JSONObject();
 			reviewData.put("toetsLocked", JSONBoolean.getInstance(true));
@@ -1249,9 +1249,15 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			api.Commit();
 			setValue(COMPLETION_STATUS, COMPLETED);
 			eindtoetsVerzegeld = true;
-			DWOplayer.clientfactory.getEntryView().setReadonly(true);
+			view.setReadonly(true);
 		}
 		
+	}
+
+	private void removeRegistration() {
+		if(registration != null)
+			for(HandlerRegistration r: registration) r .removeHandler();
+		registration = null;
 	}
 
 	void setSessionTimes() {

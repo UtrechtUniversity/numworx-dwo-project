@@ -509,7 +509,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	}
 
 	protected Memento createMemento() {
-		return new Memento(getApi());
+		return new Memento(getApi(), this);
 	}
 	
 	void zetToetsNagekeken(ScoreNavIF source)
@@ -666,7 +666,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		opdrachtObjects = new ArrayList<Object>();
 		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
-		TekstBuffer tb = new TekstBuffer(varnamen, waarden);
+		TekstBuffer tb = new TekstBuffer(varnamen, waarden, getAnchorContext());
 		int[] breedtes = new int[] { 800 };
 		tb.zetVolleBreedtes(breedtes);
 		newVersion = Boolean.FALSE.equals( opdracht.get("hasAntwoordVak") );
@@ -763,7 +763,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		opdrachtObjects = new ArrayList<Object>();
 		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
-		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden);
+		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden, getAnchorContext());
 		int[] breedtes = new int[] { 800 };
 		tb.zetVolleBreedtes(breedtes);
 		newVersion = Boolean.FALSE.equals( opdracht.get("hasAntwoordVak") );

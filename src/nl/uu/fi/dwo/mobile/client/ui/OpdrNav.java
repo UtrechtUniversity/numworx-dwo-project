@@ -1474,7 +1474,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public void close()
 	{
 		memento.close();
-		memento = null;
+		//memento = null;
 	}
 
 	@Override

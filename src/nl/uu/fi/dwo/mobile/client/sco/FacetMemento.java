@@ -15,6 +15,7 @@ import com.google.gwt.json.client.JSONValue;
 
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
+import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 
 public class FacetMemento extends Memento {
 
@@ -77,8 +78,8 @@ public class FacetMemento extends Memento {
 	private FacetAware view;
 	private TriforkAPI api;
 	
-	public FacetMemento(Scorm2004IF api, FacetAware view) {
-		super(api);
+	public FacetMemento(Scorm2004IF api, FacetAware view, ViewModuleView parent) {
+		super(api, parent);
 		this.api = (TriforkAPI)api;
 		this.view = view;
 	}

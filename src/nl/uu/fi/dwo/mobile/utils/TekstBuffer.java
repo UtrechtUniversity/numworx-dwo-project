@@ -535,10 +535,17 @@ public class TekstBuffer
 
 	protected AnchorContext getAnchorContext() {
 		if(context != null) return context;
-		return DWOplayer.clientfactory.getEntryView().getAnchorContext();
+		return NULL_CONTEXT;
 	}
 
 	private Map<InteractionView, Connector> xWidgetMap = new HashMap<InteractionView,Connector>();
+	private static final AnchorContext NULL_CONTEXT = new AnchorContext() {
+
+		@Override
+		public void gotoUrl(String href) {
+			
+			
+		}};
 			
 	/**
 	 * @return the xWidgetMap
