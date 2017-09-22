@@ -47,7 +47,6 @@ public class GuestActivity extends MGWTAbstractActivity implements Activity {
 					instance.setCurrentLoginContext(null);
 					instance.setCurrentUser(null);
 					instance.setCurrentSchoolClass(null);
-					DWOplayer.api = clientFactory.setupAPI();
 					DWOplayer.gotoCourses();
 					return null;
 				}

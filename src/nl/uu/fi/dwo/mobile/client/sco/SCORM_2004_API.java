@@ -53,5 +53,11 @@ public class SCORM_2004_API implements Scorm2004IF {
 		return Role.Learner;
 	}
 
+	@Override
+	public void setScoID(String unitId) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

@@ -222,7 +222,7 @@ public class DWOplayer implements EntryPoint
 	private static Deferred<DomDwoProfileFull> deferredProfile;
 	public static Promise<DomDwoProfileFull> dwoProfile; // NEVER NULL
 	public static ClientFactory clientfactory;
-	public static SCORM_guest api;
+	//public static SCORM_guest api;
 
 	/**
 	 * This is the entry point method.

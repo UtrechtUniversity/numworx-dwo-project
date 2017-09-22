@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.jetty.util.log.Log;
 import org.fusesource.restygwt.client.FailedResponseException;
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Deferred;
@@ -21,6 +22,7 @@ import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SCORM_DWO3 extends SCORM_guest {
@@ -84,11 +86,19 @@ log("setScoID " + scoID);
 		@Override
 		public void fail(Promise<?> t) {
 			Throwable caught = t.getFailure();
-			logger.log(Level.SEVERE, "Commit: "+ caught, caught);
+			logger.log(Level.SEVERE, "Commit failed: "+ caught, caught);
 			if(caught instanceof FailedResponseException) {
 				FailedResponseException f= (FailedResponseException)caught;
 				log("Failed statuscode = " + f.getStatusCode());
 				log("Failed response = " + f.getResponse().getHeadersAsString());
+// FIXME betere foutmelding, message voor cancel?
+				if(!Window.confirm("Saving got error response " + f.getStatusCode() + "\n" + f.getResponse().getStatusText() + 
+						"\nContinue?"))
+				{
+					deferred.fail(caught);
+					return;
+				}
+				
 			}
 			retry+=retry/2;//exponential delay
 			Timer backoff = new Timer() {
@@ -105,6 +115,7 @@ log("setScoID " + scoID);
 		@Override
 		public Promise<Void> call(Promise<Object> t) {
 			Object result = t.getValue();
+			logger.info("Commit success: " + result);
 			pending = false;
 			retry=initialRetryDelayInMillis;
 			if(!Boolean.TRUE.equals(result)) fail(Promises.resolved(null));
@@ -120,6 +131,7 @@ log("setScoID " + scoID);
 			copy.putAll(dirty);
 			dirty.clear();
 			pending = true;
+			logger.info("committing " + copy.keySet());
 			client.setValues(scoID, copy).then(this, this);
 		}
 		
@@ -182,7 +194,7 @@ log("Commit " + dirty.isEmpty());
 log("SetValue " + name);
 		map.put(name, value);
 		dirty.put(name, value);
-		return super.SetValue(name, value);
+		return "true";
 	}
 
 	public synchronized void Initialize(final AsyncCallback<Void> callback) {
@@ -204,7 +216,8 @@ log("Initialize "+ pending);
 					Map<String,String> result = resolved.getValue();
 log("initialized " +result.keySet());
 					map.putAll(result);
-					map.putAll(dirty);
+					dirty.clear();
+					//map.putAll(dirty);
 					pending = false;
 					if(callback!=null)callback.onSuccess(null);					
 					return null;

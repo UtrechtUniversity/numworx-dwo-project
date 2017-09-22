@@ -1746,6 +1746,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	public void setUnitId(String unitId) {
 		this.unitId = unitId;
+		api.setScoID(unitId);
 	}
 
 	public void setWindowTop(int top) {

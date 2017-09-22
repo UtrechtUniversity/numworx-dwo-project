@@ -104,7 +104,7 @@ public class ClientFactoryImpl implements ClientFactory
 	public ViewModuleView getEntryView()
 	{
 		ViewModuleView view = entryView.get();
-		view.setApi(DWOplayer.api);
+		view.setApi(setupAPI());
 		return view;
 	}
 

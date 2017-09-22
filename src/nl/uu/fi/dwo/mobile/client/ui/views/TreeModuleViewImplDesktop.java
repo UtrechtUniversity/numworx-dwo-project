@@ -291,7 +291,7 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 			DWOplayer.clientfactory.setEntryView(viewModuleViewImpl);
 			viewModuleViewImpl.setAnchorContext(new TreeAnchorContext(viewModuleViewImpl.getAnchorContext()));
 			loadedModule = viewModuleViewImpl.initialize(this);
-			viewModuleViewImpl.setApi(DWOplayer.api);
+			viewModuleViewImpl.setApi(DWOplayer.clientfactory.setupAPI());
 			viewModuleViewImpl.setWindowTop(41);
 			viewModuleViewImpl.zetMaat();
 			container.setWidget(loadedModule.asWidget());
@@ -307,7 +307,6 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 			
 			moduleHeaderLabel.setText(item.getName());
 			
-			DWOplayer.api.setScoID(id);
 			AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 
 				@Override
@@ -325,7 +324,7 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 			};
 			
 			//loadingArea.setVisible(true);
-			DWOplayer.api.Initialize(callback);
+			viewModuleViewImpl.getApi().Initialize(callback);
 			
 			place = null;
 			break;

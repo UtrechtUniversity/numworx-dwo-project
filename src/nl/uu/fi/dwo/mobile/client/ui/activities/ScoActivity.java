@@ -1,5 +1,8 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
@@ -13,6 +16,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
@@ -35,12 +40,10 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext {
 	}
 
 	@Override
-	public void start(AcceptsOneWidget panel, EventBus eventBus)
+	public void start(final AcceptsOneWidget panel, EventBus eventBus)
 	{
-		DWOplayer.api = clientFactory.setupAPI();
 		view = clientFactory.getEntryView();
 		defaultContext = view.getAnchorContext();
-		view.setApi(DWOplayer.api);
 
 		view.getBackButton().setText(nl.uu.fi.dwo.mobile.client.text.Text.constants.login());
 		
@@ -72,23 +75,24 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext {
 			});
 			
 		}
-		
-		DWOplayer.api.setScoID(scoID);
-		
+				
 		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				view.setupModule(name, item.getFile());
+				Logger.getLogger("ScoActivity").log(Level.SEVERE, "initialize()", caught);
+				Window.alert(caught.getMessage());
+				History.back();
 			}
 
 			@Override
 			public void onSuccess(Void result) {
 				view.setupModule(name, item.getFile());
+				panel.setWidget(view);
+
 			}
 		};
-		DWOplayer.api.Initialize(callback);
-		panel.setWidget(view);
+		view.getApi().Initialize(callback);
 	}
 
 	@Override
@@ -96,6 +100,11 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext {
 		view.setAnchorContext(defaultContext);
 		view.close();
 		super.onStop();
+	}
+	
+	@Override public void onCancel() {
+		view.setAnchorContext(defaultContext);
+		super.onCancel();
 	}
 
 	@Override
