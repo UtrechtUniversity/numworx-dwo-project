@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.jetty.util.log.Log;
 import org.fusesource.restygwt.client.FailedResponseException;
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Deferred;
@@ -19,8 +18,6 @@ import org.osgi.util.promise.Success;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 
-import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
-import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -93,7 +90,7 @@ log("setScoID " + scoID);
 				log("Failed response = " + f.getResponse().getHeadersAsString());
 // FIXME betere foutmelding, message voor cancel?
 				if(!Window.confirm("Saving got error response " + f.getStatusCode() + "\n" + f.getResponse().getStatusText() + 
-						"\nContinue?"))
+						"\nContinue retry?"))
 				{
 					deferred.fail(caught);
 					return;
