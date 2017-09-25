@@ -36,7 +36,6 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
-		DWOplayer.api = clientFactory.setupAPI();
 		final SelectModuleView view = clientFactory.getHomeView();
 		if(true)
 			view.setMenuWidget(clientFactory.getMenuWidget());

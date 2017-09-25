@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -66,7 +67,7 @@ public class DummyClientFactory implements ClientFactory {
 
 	@Override
 	public SCORM_guest setupAPI() {
-		return DWOplayer.api;
+		return GWT.create(SCORM_guest.class);
 	}
 
 	@Override

@@ -441,8 +441,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private PushButton getZelftoetsGeschiedenisButton()
 	{
 		final PushButton zelftoetsGeschiedenisKnop = new PushButton(fi.wiskopdr.text.Text.constants.zelftoetsGeschiedenisKnopLabel());
-		DWOplayerCss css = DWOplayer.DWO_BUNDLE.dwoplayercss();
-		zelftoetsGeschiedenisKnop.setStylePrimaryName(css.myPushButton());
+        DWOplayerCss css = DWOplayer.DWO_BUNDLE.dwoplayercss();
+        zelftoetsGeschiedenisKnop.setStylePrimaryName(css.myPushButton());
 		zelftoetsGeschiedenisKnop.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
 			{
@@ -532,7 +532,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	}
 
 	protected Memento createMemento() {
-		return new Memento(getApi());
+		return new Memento(getApi(), this);
 	}
 	
 	void zetToetsNagekeken(ScoreNavIF source)
@@ -689,7 +689,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		opdrachtObjects = new ArrayList<Object>();
 		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
-		TekstBuffer tb = new TekstBuffer(varnamen, waarden);
+		TekstBuffer tb = new TekstBuffer(varnamen, waarden, getAnchorContext());
 		int[] breedtes = new int[] { 800 };
 		tb.zetVolleBreedtes(breedtes);
 		newVersion = Boolean.FALSE.equals( opdracht.get("hasAntwoordVak") );
@@ -786,7 +786,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		opdrachtObjects = new ArrayList<Object>();
 		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
-		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden);
+		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden, getAnchorContext());
 		int[] breedtes = new int[] { 800 };
 		tb.zetVolleBreedtes(breedtes);
 		newVersion = Boolean.FALSE.equals( opdracht.get("hasAntwoordVak") );
@@ -1775,6 +1775,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	public void setUnitId(String unitId) {
 		this.unitId = unitId;
+		api.setScoID(unitId);
 	}
 
 	public void setWindowTop(int top) {

@@ -84,4 +84,10 @@ public class TriforkAPI implements Scorm2004IF {
 	public Role getRole() {
 		return Role.Learner;
 	}
+
+	@Override
+	public void setScoID(String unitId) {
+		// TODO Auto-generated method stub
+		
+	}
 }

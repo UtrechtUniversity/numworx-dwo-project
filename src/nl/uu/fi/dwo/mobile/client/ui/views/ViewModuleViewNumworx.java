@@ -202,4 +202,9 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		if(parent == null) parent = "0";
 		goTo(new TreeModulePlace(parent));
 	}
+
+	@Override
+	public Scorm2004IF getApi() {
+		return delegate.getApi();
+	}
 }

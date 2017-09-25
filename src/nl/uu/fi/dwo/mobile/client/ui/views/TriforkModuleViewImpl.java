@@ -24,7 +24,7 @@ public class TriforkModuleViewImpl extends ViewModuleViewImpl implements
 
 	@Override
 	protected Memento createMemento() {
-		return new FacetMemento(getApi(), this);
+		return new FacetMemento(getApi(), this, this);
 	}
 
 	@Override

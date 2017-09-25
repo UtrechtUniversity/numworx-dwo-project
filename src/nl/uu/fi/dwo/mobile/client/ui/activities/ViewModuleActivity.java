@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.mobile.client.ui.activities;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
@@ -48,7 +50,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 	}
 
 	@Override
-	public void start(AcceptsOneWidget panel, EventBus eventBus)
+	public void start(final AcceptsOneWidget panel, EventBus eventBus)
 	{
 // Eindtijd
 // History.back is terug naar waar je vandaan komt
@@ -78,7 +80,6 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 		
 		
 		view = clientFactory.getEntryView();
-		panel.setWidget(view);
 		{
 			final String id = sco.getID().toString();
 			List<SelectModuleItem> trail = new ArrayList<SelectModuleItem>();
@@ -93,31 +94,25 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 			defaultContext = view.getAnchorContext();
 			view.setAnchorContext(this);
 			view.setUnitId(id);
-			Runnable r = 
-new Runnable() {
-	public void run() {
-		try {
-			DWOplayer.api.setScoID(id);
-		} catch (Exception e) {
-			GWT.log(e.getMessage(), e);
-
-		}
+		
 		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				view.setupModule(sco.getName(), sco.getFile());
+				Logger.getLogger("ViewModuleActivity").log(Level.SEVERE, "initialize()", caught);
+				Window.alert(caught.getMessage());
+				History.back();
+				//view.setupModule(sco.getName(), sco.getFile());
+				view = null;
 			}
 
 			@Override
 			public void onSuccess(Void result) {
 				view.setupModule(sco.getName(), sco.getFile());
+				panel.setWidget(view);
 			}
 		};
-		DWOplayer.api.Initialize(callback);
-	}
-};
-			DWOplayer.api.Terminate().onResolve(r);
+		view.getApi().Initialize(callback);
 			
 			addHandlerRegistration(view.getBackButton().addTapHandler(new TapHandler()
 			{
@@ -143,6 +138,18 @@ new Runnable() {
 			sco.setScore(view.getScoreRaw());
 		}
 		super.onStop();
+	}
+	
+	@Override
+	public void onCancel() {
+		if(tm!=null) {
+			tm.cancel();
+			tm=null;
+		}
+		if(view != null) {
+			view.setAnchorContext(defaultContext); // unwrap
+		}
+		super.onCancel();
 	}
 
 	@Override

@@ -25,7 +25,7 @@ public class CoursePlayer extends DWOplayer implements EntryPoint {
 	 */
 	@Override
 	public void onModuleLoad() {
-		api = new SCORM_guest();
+		//api = new SCORM_guest();
 		String org_id, user_id;
 		org_id = Cookies.getCookie(DWO_SAML_ORGANIZATION_ID);
 		user_id = Cookies.getCookie(DWO_SAML_USER_ID);

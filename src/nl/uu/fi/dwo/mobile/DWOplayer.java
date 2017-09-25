@@ -222,7 +222,7 @@ public class DWOplayer implements EntryPoint
 	private static Deferred<DomDwoProfileFull> deferredProfile;
 	public static Promise<DomDwoProfileFull> dwoProfile; // NEVER NULL
 	public static ClientFactory clientfactory;
-	public static SCORM_guest api;
+	//public static SCORM_guest api;
 
 	/**
 	 * This is the entry point method.
@@ -261,6 +261,7 @@ public class DWOplayer implements EntryPoint
 		ViewPort viewport = new MGWTSettings.ViewPort();
 		viewport.setTargetDensity(DENSITY.MEDIUM);
 		viewport.setUserScaleAble(false).setMinimumScale(1.0).setMaximumScale(1.0);
+		viewport.setWidth(1024);
 		MGWTSettings settings = new MGWTSettings();
 		settings.setViewPort(viewport);
 		settings.setAddGlosToIcon(true);

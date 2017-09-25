@@ -24,4 +24,6 @@ public interface Scorm2004IF {
 	public void Initialize(final AsyncCallback<Void> callback);
 
 	Role getRole();
+
+	void setScoID(String unitId);
 }
