@@ -16,10 +16,10 @@
             <g:row></g:row>
             <g:row>
                 <g:customCell>
-                    <g:PushButton ui:field='cancelBtn'><ui:text from='{rb.GUI_Button_Cancel}'/></g:PushButton>
+                    <g:PushButton ui:field='cancelBtn'><g:upFace><ui:text from='{rb.GUI_Button_Cancel}'/></g:upFace></g:PushButton>
                 </g:customCell>
                 <g:customCell>
-                    <g:PushButton ui:field='exportBtn'><ui:text from='{rb.GUI_Button_Export}'/></g:PushButton>
+                    <g:PushButton ui:field='exportBtn'><g:upFace><ui:text from='{rb.GUI_Button_Export}'/></g:upFace></g:PushButton>
                 </g:customCell>
             </g:row>
             <!--                <g:row>
