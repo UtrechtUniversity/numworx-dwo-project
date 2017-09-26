@@ -364,14 +364,26 @@ public class TekstBuffer
 		case 39: case 10: // geogebra3
 			return x(map, new GeogebraView(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 45: // GraphTool
-			return x(map,
+//			return x(map,
 					//new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-					new PopupFacade( 
-						map,
-							new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])
-					)
-		);
-			
+//					new PopupFacade( 
+//						map,
+//							new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])
+//					)
+//		);
+//			return x(map, new StubView("GraphtoolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+//			return x(map,
+//					new PopupFacade(currentVakGegevens, 
+//							new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])
+//					)
+//			);
+//			return x(map, new PopupFacadeWithFont(map, new TextEditor( currentVakGegevens, randomVarNamen, randomVarWaarden )));
+//			return x(map, new PopupFacade(currentVakGegevens, new  fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])));
+			//return x(map, new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return x(map, new PopupFacade(currentVakGegevens, new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])));
+
+			//return x(map, new PopupFacade(currentVakGegevens, new fi.statistiekgwt.client.StatistiekGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])));
+
 		case 15: 
 			return new StubView("DoorzienGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		    //return new PopupFacade( currentVakGegevens, new fi.doorziengwt.client.DoorzienGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
