@@ -26,8 +26,7 @@ import com.google.gwt.view.client.CellPreviewEvent;
 import com.google.gwt.view.client.ListDataProvider;
 
 import nl.uu.fi.dwo.account.client.icons.AccountImageBundle;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -80,12 +79,12 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
     /**
      *
      */
-    CellTable<DomSchoolRoleAndClass> table = new CellTable<DomSchoolRoleAndClass>();
+    CellTable<DomSchoolRoleAndClassV2> table = new CellTable<DomSchoolRoleAndClassV2>();
 
     /**
      *
      */
-    ListDataProvider<DomSchoolRoleAndClass> dataProvider = new ListDataProvider<DomSchoolRoleAndClass>();
+    ListDataProvider<DomSchoolRoleAndClassV2> dataProvider = new ListDataProvider<DomSchoolRoleAndClassV2>();
 
 	private Command resetLogin;
 
@@ -125,34 +124,34 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
     protected void init(DomUserFull user) {
         //this.setSize("400", "500");
         //
-        CellTable<DomSchoolRoleAndClass> table = new CellTable<DomSchoolRoleAndClass>();
+        CellTable<DomSchoolRoleAndClassV2> table = new CellTable<DomSchoolRoleAndClassV2>();
         // Create name column.
-        TextColumn<DomSchoolRoleAndClass> schoolColumn = new TextColumn<DomSchoolRoleAndClass>() {
+        TextColumn<DomSchoolRoleAndClassV2> schoolColumn = new TextColumn<DomSchoolRoleAndClassV2>() {
             @Override
-            public String getValue(DomSchoolRoleAndClass data) {
-                return data.getSchoolName();
+            public String getValue(DomSchoolRoleAndClassV2 data) {
+                return data.getSchool().getSchoolName();
             }
         };
-        TextColumn<DomSchoolRoleAndClass> roleColumn = new TextColumn<DomSchoolRoleAndClass>() {
+        TextColumn<DomSchoolRoleAndClassV2> roleColumn = new TextColumn<DomSchoolRoleAndClassV2>() {
             @Override
-            public String getValue(DomSchoolRoleAndClass data) {
-                return data.getRoleName();
+            public String getValue(DomSchoolRoleAndClassV2 data) {
+                return data.getRole().getRoleName();
             }
         };
 
         schoolColumn.setSortable(true);
 
-        Column<DomSchoolRoleAndClass, ImageResource> loginColumn
-                = new Column<DomSchoolRoleAndClass, ImageResource>(new ImageResourceCell()) {
+        Column<DomSchoolRoleAndClassV2, ImageResource> loginColumn
+                = new Column<DomSchoolRoleAndClassV2, ImageResource>(new ImageResourceCell()) {
             @Override
-            public ImageResource getValue(DomSchoolRoleAndClass object) {
+            public ImageResource getValue(DomSchoolRoleAndClassV2 object) {
                 return AccountImageBundle.instance.student();
             }
         };
-       Column<DomSchoolRoleAndClass, ImageResource> deleteColumn
-                = new Column<DomSchoolRoleAndClass, ImageResource>(new ImageResourceCell()) {
+       Column<DomSchoolRoleAndClassV2, ImageResource> deleteColumn
+                = new Column<DomSchoolRoleAndClassV2, ImageResource>(new ImageResourceCell()) {
             @Override
-            public ImageResource getValue(DomSchoolRoleAndClass object) {
+            public ImageResource getValue(DomSchoolRoleAndClassV2 object) {
                 return AccountImageBundle.instance.delete();
             }
         };                
@@ -161,9 +160,9 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
         
         
         
-        CellPreviewEvent.Handler<DomSchoolRoleAndClass> cellPreviewHandler = new CellPreviewEvent.Handler<DomSchoolRoleAndClass>() {
+        CellPreviewEvent.Handler<DomSchoolRoleAndClassV2> cellPreviewHandler = new CellPreviewEvent.Handler<DomSchoolRoleAndClassV2>() {
             @Override
-            public void onCellPreview(CellPreviewEvent<DomSchoolRoleAndClass> event) {
+            public void onCellPreview(CellPreviewEvent<DomSchoolRoleAndClassV2> event) {
                 int rowIndex = event.getIndex();
                 int columnIndex = event.getColumn();
                 int button = event.getNativeEvent().getButton();
@@ -172,11 +171,11 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
                         //                       && columnIndex == 0 // klik op rijnummer doet selectie
                         && button == NativeEvent.BUTTON_LEFT) {
                     LOG.log(Level.INFO, "x,y:" + rowIndex + "," + columnIndex + ":" + event.getSource());
-                    DomSchoolRoleAndClass sc = dataProvider.getList().get(rowIndex);
+                    DomSchoolRoleAndClassV2 sc = dataProvider.getList().get(rowIndex);
                     switch (rowIndex) {
                         case 2: //relogin with schoolclass set...
                         	control.switchToSchoolLogin(sc)
-                        		.then(new HideAndReset<DomSchoolRoleAndClass>(), new RestFailure());
+                        		.then(new HideAndReset<DomSchoolRoleAndClassV2>(), new RestFailure());
                         	
                               break;
                         case 3:     //remove school and relogin if it was the active schoolclass.

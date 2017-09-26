@@ -6,6 +6,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManager;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
@@ -81,8 +82,8 @@ public class SchoolLoginController {
      * @param sc
      * @return
      */
-    public Promise<DomSchoolRoleAndClass> switchToSchoolLogin(DomSchoolRoleAndClass sc) {
-    	PromiseCallback<DomSchoolRoleAndClass> cb = new PromiseCallback<DomSchoolRoleAndClass>();
+    public Promise<DomSchoolRoleAndClassV2> switchToSchoolLogin(DomSchoolRoleAndClassV2 sc) {
+    	PromiseCallback<DomSchoolRoleAndClassV2> cb = new PromiseCallback<DomSchoolRoleAndClassV2>();
     	manager.switchToSchoolLogin(sc, cb);
     	return cb.getPromise();
     	
@@ -93,7 +94,7 @@ public class SchoolLoginController {
      * @param reqSrac
      * @return
      */
-    public Promise<Boolean> removeASchoolLogin(DomSchoolRoleAndClass reqSrac) {
+    public Promise<Boolean> removeASchoolLogin(DomSchoolRoleAndClassV2 reqSrac) {
     	PromiseCallback<Boolean> cb = new PromiseCallback<Boolean>();
         manager.removeASchoolLogin(reqSrac, cb);
         return cb.getPromise();
