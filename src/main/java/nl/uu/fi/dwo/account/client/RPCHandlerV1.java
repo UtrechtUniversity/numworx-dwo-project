@@ -654,7 +654,8 @@ public class RPCHandlerV1 {
     /**
      *
      */
-    public void logout() {
+    public Promise<Void> logout() {
+		return Promises.resolved(null);
 	}
 	
 	

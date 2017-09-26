@@ -237,14 +237,21 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	}
 
 	@Override
-	public void logout() {
-		context.setDomHasRole(null);
-		scoManager = new PublicScoContextManager();
-		courseManager = new PublicCourseManager();
-		studentManager = new PublicCoursesOfSchoolClassManager();
-		resultManager = new PublicUserResultsManager();
-		scormApi = new PublicStudentScoDataManager();
-		super.logout();
+	public Promise<Void> logout() {
+		return super.logout().then(new Success<Void,Void>(){
+
+			@Override
+			public Promise<Void> call(Promise<Void> resolved) throws Exception {
+				context.setDomHasRole(null);
+				scoManager = new PublicScoContextManager();
+				courseManager = new PublicCourseManager();
+				studentManager = new PublicCoursesOfSchoolClassManager();
+				resultManager = new PublicUserResultsManager();
+				scormApi = new PublicStudentScoDataManager();
+				return null;
+			}});
+
+		
 	}
 
 	@Override

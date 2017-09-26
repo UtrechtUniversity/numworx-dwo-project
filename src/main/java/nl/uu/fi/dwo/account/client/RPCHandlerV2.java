@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+import org.osgi.util.promise.Success;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
@@ -212,19 +214,25 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      *
      */
     @Override
-	public void logout() {
-		super.logout();
-		if(DwoGlobalVars.instance().getCurrentUser() != null)
-			accountManager.logout(DwoGlobalVars.instance().getCurrentLoginContext(), new AsyncCallback<Dwo2Exception>() {
+	public Promise<Void> logout() {
+		return super.logout().then(new Success<Void,Void>() {
 
-				@Override
-				public void onFailure(Throwable caught) {
+			@Override
+			public Promise<Void> call(Promise<Void> resolved) throws Exception {
+				if(DwoGlobalVars.instance().getCurrentUser() != null) {
+					Promise<Void> resolved2 = Promises.resolved(null);
+					resolved = accountManager.logout(DwoGlobalVars.instance().getCurrentLoginContext())
+						.then(new Success<Dwo2Exception, Void>() {
+
+							@Override
+							public Promise<Void> call(Promise<Dwo2Exception> resolved) throws Exception {
+								Window.alert(String.valueOf(resolved.getValue()));
+								return null;
+							}}).fallbackTo(resolved2);
 				}
-
-				@Override
-				public void onSuccess(Dwo2Exception result) {
-					Window.alert(String.valueOf(result));						
-				}});
+				return resolved;
+			}});
+		
 	}
 	
     /**
