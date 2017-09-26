@@ -37,8 +37,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 class DummyRPCHandler implements RPCHandler {
 
 	@Override
-	public void logout() {
-		// TODO Auto-generated method stub
+	public Promise<Void> logout() {
+		return null;
 
 	}
 

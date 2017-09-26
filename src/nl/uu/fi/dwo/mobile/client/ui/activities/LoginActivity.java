@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
@@ -163,103 +164,104 @@ public class LoginActivity extends MGWTAbstractActivity
 	}
 
 	@Override
-	public void start(AcceptsOneWidget panel, EventBus eventBus)
+	public void start(final AcceptsOneWidget panel, EventBus eventBus)
 	{
-		boolean logout = DWOplayer.withUser();
-		clientFactory.logout();
+		final boolean logout = DWOplayer.withUser();
+		WaitScreen.instance().w();
+		clientFactory.logout().onResolve (
 		
-		SelectModuleItemHolder.destroy();
-		String user_id = Cookies.getCookie(DWO_SAML_USER_ID);
-		String org_id = Cookies.getCookie(DWO_SAML_ORGANIZATION_ID);
-		view = clientFactory.getLoginView();
-		view.showError(null);
-		DWOplayer.dwoProfile.then(new Success<DomDwoProfile, Void>() {
+		new Runnable() {
+			public void run() {
+				WaitScreen.instance().hide();
+				SelectModuleItemHolder.destroy();
+				String user_id = Cookies.getCookie(DWO_SAML_USER_ID);
+				String org_id = Cookies.getCookie(DWO_SAML_ORGANIZATION_ID);
+				view = clientFactory.getLoginView();
+				view.showError(null);
+				DWOplayer.dwoProfile.then(new Success<DomDwoProfile, Void>() {
 
-			@Override
-			public Promise<Void> call(Promise<DomDwoProfile> promise)
-					throws Exception {
-				String rights = promise.getValue().getDwoProfileRights();
-				view.allowGuest(rights.indexOf('l') < 0);
-				return null;
-			}
-			
-		});
-// TESTING		
-//		user_id = "292832126";
-//		org_id = "\"lti:385\"";
-		Promise<DomUserFullwLoginContext> promise;
-		
-		if(user_id != null && org_id != null) {
-			
-			if( logout) {
-				panel.setWidget(new Label());
-				logout();
-				return;
-			}
-			panel.setWidget(new Label());
-			promise = clientFactory.getRPCHandler().samlLogin(user_id, org_id);
-		} else {
-
-		String authToken = Window.Location.getParameter("a");
-		if(authToken != null && ! authToken.isEmpty())
-		{
-			if (!logout)
-				promise = clientFactory.getRPCHandler().getUserFromAuthToken(authToken);
-			else {
-				// redirect to zonder ?a=
-				UrlBuilder builder = Window.Location.createUrlBuilder();
-				builder.removeParameter("a");
-				String buildString = builder.buildString();
-				Window.Location.assign(buildString);
-				return;
-			}
-		} else {
-			defer = new Deferred<>();
-			promise = defer.getPromise();
-		}
-		addHandlerRegistration(view.getLoginBtn().addTapHandler(new TapHandler()
-		{
-
-			@Override
-			public void onTap(TapEvent event)
-			{
-				resolve();
-			}
-		}));
-		addHandlerRegistration(view.getGuestBtn().addTapHandler(new TapHandler()
-		{
-
-			@Override
-			public void onTap(TapEvent event)
-			{
-				if(clientFactory.withUser()) clientFactory.logout(); // fail safe?
-				if (defer != null)
-					DWOplayer.dwoProfile.onResolve(new Runnable() {
-					public void run() {
-						defer.resolve(null);
+					@Override
+					public Promise<Void> call(Promise<DomDwoProfile> promise) throws Exception {
+						String rights = promise.getValue().getDwoProfileRights();
+						view.allowGuest(rights.indexOf('l') < 0);
+						return null;
 					}
+
 				});
-			}
-		}));
-		
-		// Register enter handler
-		addHandlerRegistration(view.getMainPanel().addKeyUpHandler(new KeyUpHandler () {
+				// TESTING		
+				//		user_id = "292832126";
+				//		org_id = "\"lti:385\"";
+				Promise<DomUserFullwLoginContext> promise;
+				if (user_id != null && org_id != null) {
 
-			@Override
-			public void onKeyUp(KeyUpEvent event) {
-				// on key up, if there is data in the username and password area, simply login
-				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					if (!(view.getUsername().isEmpty()) && (!(view.getPassword().isEmpty()))) {
-						resolve();						
+					if (logout) {
+						panel.setWidget(new Label());
+						logout();
+						return;
 					}
-				}		
-			}} ));
+					panel.setWidget(new Label());
+					promise = clientFactory.getRPCHandler().samlLogin(user_id, org_id);
+				} else {
 
-		panel.setWidget(view);
+					String authToken = Window.Location.getParameter("a");
+					if (authToken != null && !authToken.isEmpty()) {
+						if (!logout)
+							promise = clientFactory.getRPCHandler().getUserFromAuthToken(authToken);
+						else {
+							// redirect to zonder ?a=
+							UrlBuilder builder = Window.Location.createUrlBuilder();
+							builder.removeParameter("a");
+							String buildString = builder.buildString();
+							Window.Location.assign(buildString);
+							return;
+						}
+					} else {
+						defer = new Deferred<>();
+						promise = defer.getPromise();
+					}
+					addHandlerRegistration(view.getLoginBtn().addTapHandler(new TapHandler() {
+
+						@Override
+						public void onTap(TapEvent event) {
+							resolve();
+						}
+					}));
+					addHandlerRegistration(view.getGuestBtn().addTapHandler(new TapHandler() {
+
+						@Override
+						public void onTap(TapEvent event) {
+							if (clientFactory.withUser())
+								clientFactory.logout(); // fail safe?
+							if (defer != null)
+								DWOplayer.dwoProfile.onResolve(new Runnable() {
+									public void run() {
+										defer.resolve(null);
+									}
+								});
+						}
+					}));
+
+					// Register enter handler
+					addHandlerRegistration(view.getMainPanel().addKeyUpHandler(new KeyUpHandler() {
+
+						@Override
+						public void onKeyUp(KeyUpEvent event) {
+							// on key up, if there is data in the username and password area, simply login
+							if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+								if (!(view.getUsername().isEmpty()) && (!(view.getPassword().isEmpty()))) {
+									resolve();
+								}
+							}
+						}
+					}));
+
+					panel.setWidget(view);
+				}
+				Logger.getLogger("DWOplayer").log(Level.FINE, "Done with panel");
+				rearm(promise);
+			}
 		}
-		Logger.getLogger("DWOplayer").log(Level.FINE,"Done with panel");
-		rearm(promise);
-	
+		);
 	}
 
 	private void rearm(Promise<DomUserFullwLoginContext> promise) {

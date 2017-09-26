@@ -11,11 +11,17 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasAllKeyHandlers;
+import com.google.gwt.event.dom.client.HasKeyUpHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -147,9 +153,34 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 			
 		};
 	}
+	
+	HasKeyUpHandlers h = new HasKeyUpHandlers() {
+		
+		KeyUpHandler up;
+		@Override
+		public void fireEvent(GwtEvent<?> event) {
+			if(up != null)
+				up.onKeyUp((KeyUpEvent) event);
+			
+		}
+		
+		@Override
+		public HandlerRegistration addKeyUpHandler(final KeyUpHandler handler) {
+			up = handler;
+			return new HandlerRegistration() {
+				
+				@Override
+				public void removeHandler() {
+					if(up == handler)
+						up = null;
+				}
+			};
+		}
+	};
+	
 	@Override
-	public HasAllKeyHandlers getMainPanel() {
-		return username;
+	public HasKeyUpHandlers getMainPanel() {
+		return h;
 	}
 
 	public void showError(String string) {
@@ -157,6 +188,11 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 		loginPanel.setStyleName(style.loginError(), shown);
 		linksPanel.setStyleName(style.linksError(), shown);
 		
+	}
+	
+	@UiHandler({"username","password" })
+	void onKeyUpUser(KeyUpEvent up) {
+		h.fireEvent(up);
 	}
 	
 }

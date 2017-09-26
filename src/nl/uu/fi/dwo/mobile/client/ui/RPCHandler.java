@@ -12,19 +12,15 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomScormValues;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
-
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface RPCHandler {
 
-	void logout();
+	Promise<Void> logout();
 
 	Promise<DomDwoProfileFull> getDwoProfile();
 

@@ -65,7 +65,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 
 	static void unload()
 	{
-		logger.severe("unload");
+		logger.fine("unload");
 		if (_instance != null)
 			_instance.close();
 	}
@@ -610,11 +610,11 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 //		System.out.println("START SUSPENDDATA-----------");
 //		System.out.println(suspendData.toString());
 //		System.out.println("END SUSPENDDATA-----------");
-		logger.info("memento flush");
+		logger.fine("memento flush");
 		try
 		{
 //			if(this == _instance) // API break?
-				api.Commit();
+				DWOplayer.clientfactory.addBarrier(api.Commit());
 //			else 
 //				logger.fine("No commit, since we are closing, terminate should follow!");
 		}
@@ -633,12 +633,12 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		OpdrNav.immediate(
 		new ScheduledCommand() {
 			public void execute() {
-				logger.info("closing memento");
+				logger.fine("closing memento");
 				removeRegistration();
 				runner.run();
 				setSessionTimes();
 				try {
-					api.Terminate();
+					DWOplayer.clientfactory.addBarrier(api.Terminate());
 					//api = null;
 				} catch (Exception e) {
 				}

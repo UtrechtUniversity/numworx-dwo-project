@@ -35,6 +35,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
@@ -127,11 +128,21 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		ClientFactoryImpl factory = new ClientFactoryImpl() { 
 			
 			private IsWidget  menuWidget;
+			private TrafficAgent agent = new TrafficAgent();
 			@Override
 			public IsWidget getMenuWidget() {
 				return menuWidget;
 			}
-
+			
+			@Override
+			public void addBarrier(Promise<?> p) {
+				agent.addBarrier(p);
+			}
+			@Override
+			public Promise<Void> barrier() {
+				return agent.barrier();
+			}
+			
 			@Override
 			public LoginView getLoginView()
 			{
@@ -140,16 +151,36 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 					loginView = new Login2ViewImpl();
 				return loginView;
 			}
-
+			private Promise<Void> superLogout() {
+				return super.logout();
+			}
+			
 			@Override
-			public void logout() {
-				menuWidget = null;
-				if(withUser())
-				{
-					getRPCHandler().logout();
-				}
-				super.logout();
-				treeModuleView = null;
+			public Promise<Void> logout() {
+				return barrier().
+						then(new Success<Void,Void>(){
+
+							@Override
+							public Promise<Void> call(Promise<Void> resolved) throws Exception {
+								menuWidget = null;
+								if(withUser()) {
+									return getRPCHandler().logout();
+								}
+								return resolved;
+							}}).
+						then(new Success<Void,Void>() {
+
+							@Override
+							public Promise<Void> call(Promise<Void> resolved) throws Exception {
+								return superLogout();
+							}}).
+						then(new Success<Void,Void>() {
+
+							@Override
+							public Promise<Void> call(Promise<Void> resolved) throws Exception {
+								treeModuleView = null;
+								return null;
+							}});
 			}
 
 			public SCORM_guest setupAPI() {

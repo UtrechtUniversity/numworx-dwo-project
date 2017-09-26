@@ -39,6 +39,11 @@ public class SCORM_DWO3 extends SCORM_guest {
 	
 	// Same URL als rpchandler.
 	private RPCHandler client = DWOplayer.clientfactory.getRPCHandler();
+	
+	private <T> Promise<T> ag(Promise<T> p) {
+		DWOplayer.clientfactory.addBarrier(p);
+		return p;
+	}
 		
 	public int getScoID() {
 		return scoID;
@@ -71,9 +76,9 @@ log("setScoID " + scoID);
 
 		private static final double initialRetryDelayInMillis = 1000;
 		Deferred<String> deferred = new Deferred<String>();
-		
+
 		Promise<String> getPromise() {
-			return deferred.getPromise();
+			return (deferred.getPromise());
 		}
 		
  		boolean pending;
@@ -135,6 +140,7 @@ log("setScoID " + scoID);
 		Committer(int scoID, Map<String,String> dirty) {
 			copy = new HashMap<String,String>(dirty);
 			this.dirty = new HashMap<String,String>();
+			ag(deferred.getPromise());
 		}
 
 		public void add(Map<String, String> dirty) {
@@ -198,7 +204,7 @@ log("SetValue " + name);
 log("Initialize "+ pending);
 		if(!pending) {
 			pending = true;
-			Failure failure = new Failure() {
+			final Failure failure = new Failure() {
 				@Override
 				public void fail(Promise<?> resolved) throws Exception {
 					Throwable caught = resolved.getFailure();
@@ -207,7 +213,7 @@ log("Initialize "+ pending);
 					if(callback!=null)callback.onFailure(caught);
 				}};
 	
-				Success<Map<String,String>, Void> success = new Success<Map<String,String>, Void>() {
+				final Success<Map<String,String>, Void> success = new Success<Map<String,String>, Void>() {
 				@Override
 				public Promise<Void> call(Promise<Map<String, String>> resolved) throws Exception {
 					Map<String,String> result = resolved.getValue();
@@ -219,8 +225,14 @@ log("initialized " +result.keySet());
 					if(callback!=null)callback.onSuccess(null);					
 					return null;
 				}
-			};		
-			client.getValues(scoID, KEYS).then(success, failure);
+			};
+			DWOplayer.clientfactory.barrier().then(new Success<Void,Void>(){
+
+				@Override
+				public Promise<Void> call(Promise<Void> resolved) throws Exception {
+					return ag(client.getValues(scoID, KEYS).then(success, failure));
+				}});
+			
 			
 		} else {
 			logger.info("still pending, wait a little");
@@ -243,7 +255,7 @@ log("initialized " +result.keySet());
 		if(!inited) return super.Terminate();
 		if(terminated != null) return terminated;
 		Promise<String> p = Commit();
-		return terminated = p.map(new Function<String,String>() {
+		return ag(terminated = p.map(new Function<String,String>() {
 			public void run() {
 				committer = null; // no access possible
 				inited = false;
@@ -256,7 +268,7 @@ log("initialized " +result.keySet());
 				return t;
 			}
 			
-		});
+		}));
 		
 	}
 

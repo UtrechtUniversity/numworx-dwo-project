@@ -79,6 +79,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -318,6 +319,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			@Override
 			public Promise<Void> checkOpdracht(final ScoreNavIF source)
 			{	final Deferred<Void> defer = new Deferred<Void>();
+				DWOplayer.clientfactory.addBarrier(defer.getPromise());
 				p();
 				Scheduler.get().scheduleDeferred(new ScheduledCommand()
 				{
@@ -450,18 +452,15 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				// toon popup met scores
 				final PopupPanel panel = new PopupPanel(true);
 				panel.add(getScorePanel());
-				panel.setVisible(false);
-				panel.show();
+				panel.setPopupPositionAndShow(new PositionCallback() {
+					
+					@Override
+					public void setPosition(int offsetWidth, int offsetHeight) {
+						panel.setPopupPosition(zelftoetsGeschiedenisKnop.getAbsoluteLeft(), 
+								zelftoetsGeschiedenisKnop.getAbsoluteTop() - offsetHeight);						
+					}
+				});
 
-				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-					   @Override
-					   public void execute()
-					   {
-					      panel.setPopupPosition(zelftoetsGeschiedenisKnop.getAbsoluteLeft(), 
-									zelftoetsGeschiedenisKnop.getAbsoluteTop() - panel.getOffsetHeight());
-					      panel.setVisible(true);
-					   }
-					});
 			}
 		});
 		
@@ -2041,9 +2040,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	// WaitScreen management: p(); .....; v();
 	private int sema;
+	private Deferred<Void> sema2;
 	private FlowPanel fp;
 	public void p() {
 		if( sema++ == 0) {
+			sema2 = new Deferred<Void>();
+			DWOplayer.clientfactory.addBarrier(sema2.getPromise());
 			waitscreen.w();
 		}
 	}
@@ -2052,6 +2054,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		if ( --sema <= 0) {
 			sema = 0;
 			waitscreen.hide();
+			sema2.resolve(null);
 		}
 	}
 

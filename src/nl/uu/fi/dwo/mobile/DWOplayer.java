@@ -33,6 +33,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
+import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
@@ -40,7 +41,10 @@ import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.ResizeLayoutPanel;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.googlecode.mgwt.mvp.client.AnimatableDisplay;
 import com.googlecode.mgwt.mvp.client.AnimatingActivityManager;
 import com.googlecode.mgwt.ui.client.MGWT;
@@ -284,15 +288,21 @@ public class DWOplayer implements EntryPoint
 
 	private void createTabletDisplay(ClientFactory clientfactory)
 	{
-		AnimatableDisplay display = GWT.create(AnimatableDisplay.class);
+//		AnimatableDisplay display = GWT.create(AnimatableDisplay.class);
+//		TabletActivityMapper appActivityMapper = new TabletActivityMapper(clientfactory);
+//		TabletAnimationMapper animationMapper = new TabletAnimationMapper();
+//		AnimatingActivityManager activityMapper = new AnimatingActivityManager(appActivityMapper, animationMapper, clientfactory.getEventBus());
+//		activityMapper.setDisplay(display);
+//		
+//		display.asWidget().addStyleName("RootPanel");
+		
+		SimplePanel display = new ResizeLayoutPanel();
 		TabletActivityMapper appActivityMapper = new TabletActivityMapper(clientfactory);
-		TabletAnimationMapper animationMapper = new TabletAnimationMapper();
-		AnimatingActivityManager activityMapper = new AnimatingActivityManager(appActivityMapper, animationMapper, clientfactory.getEventBus());
+		ActivityManager activityMapper = new ActivityManager(appActivityMapper, clientfactory.getEventBus());
 		activityMapper.setDisplay(display);
-		
 		display.asWidget().addStyleName("RootPanel");
-		
-		RootPanel.get().add(display);
+	
+		RootLayoutPanel.get().add(display);
 	}
 
 	@Override

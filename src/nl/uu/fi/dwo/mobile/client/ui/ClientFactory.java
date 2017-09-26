@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.Map;
 
+import org.osgi.util.promise.Promise;
+
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
@@ -50,7 +52,9 @@ public interface ClientFactory
 	
 	public SCORM_guest setupAPI();
 
-	void logout();
+	Promise<Void> logout();	
+	Promise<Void> barrier();
+	void addBarrier(Promise<?> p);
 	
 	boolean withUser();
 // Low level functions	

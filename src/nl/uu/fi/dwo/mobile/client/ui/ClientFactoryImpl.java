@@ -20,6 +20,9 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -193,8 +196,9 @@ public class ClientFactoryImpl implements ClientFactory
 	}
 	
 	@Override
-	public void logout() {
+	public Promise<Void> logout() {
 		DWOplayer.profiledata = null;
+		return Promises.resolved(null);
 	}
 
 	public boolean withUser() {
@@ -256,6 +260,15 @@ public class ClientFactoryImpl implements ClientFactory
 
 	public Object getSchoolName() {
 		return DWOplayer.profiledata.get("schoolName");
+	}
+
+	@Override
+	public Promise<Void> barrier() {
+		return Promises.resolved(null);
+	}
+
+	@Override
+	public void addBarrier(Promise<?> p) {
 	}
 	
 }

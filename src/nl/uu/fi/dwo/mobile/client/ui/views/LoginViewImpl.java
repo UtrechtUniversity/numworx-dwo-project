@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.mobile.client.text.Text;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.HasAllKeyHandlers;
+import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -80,7 +81,7 @@ public class LoginViewImpl extends Composite implements LoginView
 	}
 	
 	@Override
-	public HasAllKeyHandlers getMainPanel() {
+	public HasKeyUpHandlers getMainPanel() {
 		return focusPanel;
 		
 	}

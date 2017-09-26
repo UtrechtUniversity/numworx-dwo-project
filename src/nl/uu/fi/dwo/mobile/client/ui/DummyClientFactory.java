@@ -10,6 +10,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
+import org.osgi.util.promise.Promise;
+
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -86,7 +88,8 @@ public class DummyClientFactory implements ClientFactory {
 	}
 
 	@Override
-	public void logout() {
+	public Promise<Void> logout() {
+		return null;
 	}
 
 	public boolean withUser() {
@@ -130,5 +133,17 @@ public class DummyClientFactory implements ClientFactory {
 	public DomSchoolClass getSchoolClass() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Promise<Void> barrier() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void addBarrier(Promise<?> p) {
+		// TODO Auto-generated method stub
+		
 	}
 }
