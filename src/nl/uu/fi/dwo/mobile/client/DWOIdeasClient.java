@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Window;
 
 import nl.uu.fi.dwo.ideas.client.IdeasClient;
@@ -22,7 +23,9 @@ public class DWOIdeasClient extends IdeasClient {
 			{ ENDPOINT = IdeasClient.NONE;
 			  BASE = casServer;
 			}
-		} catch (Exception _) { }
+		} catch (Exception e) { 
+			GWT.log("ideas client", e);
+		}
 	}
 	
 	public DWOIdeasClient() {

@@ -6,13 +6,24 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import org.osgi.util.function.Function;
+import org.osgi.util.promise.Deferred;
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
+import nl.uu.fi.dwo.ideas.client.AbstractRule;
+import nl.uu.fi.dwo.ideas.client.IdeasIF;
+import nl.uu.fi.dwo.ideas.client.RuleCallback;
+import nl.uu.fi.dwo.ideas.client.RuleIF;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
@@ -41,6 +52,7 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Visibility;
@@ -78,14 +90,15 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.wiskopdr.AntwoordVakChecker;
+import fi.wiskopdr.AntwoordVergelijkingVakChecker;
+import fi.wiskopdr.AntwoordFormuleVakChecker;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Aftrekking;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.Optelling;
-import fi.wiskopdr.expressies.Vergelijking;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
-
+import fi.wiskopdr.expressies.Vergelijking;
 
 
 
@@ -128,6 +141,49 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		this.hoofdPanel = hoofdPanel;
 	}
 
+	class RuleRecovery implements Function<Promise<?>, RuleIF> {
+		@Override
+		public RuleIF apply(Promise<?> p) {
+			final Throwable t = p.getFailure();
+			GWT.log("failure diagnose" , t);
+			return new AbstractRule() {
+
+				@Override
+				public String getId() {
+					return RuleIF.EXCEPTION;
+				}
+
+				@Override
+				public String getExpr() {
+					return t.toString();
+				}
+
+				@Override
+				public boolean isException() {
+					return true;
+				}
+			 };
+		}
+	}
+
+	class DeferRuleCallback implements RuleCallback {
+		private final Deferred<RuleIF> defer;
+
+		DeferRuleCallback(Deferred<RuleIF> defer) {
+			this.defer = defer;
+		}
+
+		@Override
+		public void onSuccess(RuleIF result) {
+			defer.resolve(result);
+		}
+
+		@Override
+		public void onFailure(Throwable caught) {
+			defer.fail(caught);
+		}
+	}
+
 	class TekstVakContext {
 
 		private int rij,kolom;
@@ -141,7 +197,6 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		}
 		
 	}
-	
 	
 	private int font_size = 12;
 	private int font_style = 0;
@@ -230,7 +285,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	private int inklapKnopPos;
 	//private String knopImageString1, knopImageString2;
 	private ImageView knopImageView1, knopImageView2;
-	private Image goedKrulImage;
+	private Image goedKrulImage, foutKruisImage, goedKrulHalfImage, feedbackImage;
 	private ToggleButton klapUitButton;
 	private LayoutPanel klapUitPanel;
 	private int klapUitPanelWidth, klapUitPanelHeight;
@@ -261,6 +316,20 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	
 	private String styleString;
 	private boolean doorzochtDoorTab = false;
+	
+	//private boolean isStappenVak = false;
+	private int stapNr = 0;
+	private List<Object> stappen = null;
+	
+	private boolean ideasStatistiek = false;
+	private boolean backButton = false;
+	private boolean hintButton = false;
+	private List<Tupel> lastAnswers = null;
+	private ArrayList<Tupel> initialStatistiekState = null;
+	private int goedHalfFoutStatistiek = AntwoordVakChecker.GEEN;
+	private String feedbackStatistiek = "";
+	private TekstVak feedbackPanel = null;
+	int feedbackPanelHeight = 0;
 	
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
@@ -639,6 +708,17 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		
 		if(launchState.containsKey("randomVar"))
 			randomVar = launchState.getString("randomVar");
+		if(launchState.containsKey("ideasStatistiek"))
+			ideasStatistiek = launchState.getBoolean("ideasStatistiek");
+		if(ideasStatistiek)
+		{ 	goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
+			goedKrulHalfImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
+			foutKruisImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
+		}
+		if(launchState.containsKey("backButton"))
+			backButton = launchState.getBoolean("backButton");
+		if(launchState.containsKey("hintButton"))
+			hintButton = launchState.getBoolean("hintButton");
 
 // FIXME overleg met Peter		
 //		if(ingeklapt) for(int i = 0; i < hoogtes.size(); i++) {
@@ -672,6 +752,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		mainPanel2.addDomHandler(touchHandler, TouchStartEvent.getType());
 		mainPanel2.addDomHandler(touchHandler, TouchMoveEvent.getType());
 		mainPanel2.addDomHandler(touchHandler, TouchEndEvent.getType());
+		
 		
 //		randPanel = new LayoutPanel();
 //		if(bgColorZichtbaar)
@@ -1060,138 +1141,28 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 				
 				//eerst zorgen dat alle opdrachtObjects goed geïnitialiseerd zijn, daarna zet je ze netjes in het tekstvak neer.
 				//voor goede initialisatie van sleepopdr etc is het wel nodig dat de opdrachtobjects al aan het tekstvak zijn toegevoegd.
-				for (int k = 0; k < opdrachtObjects.size(); k++)
-				{
-					Object currentObject = opdrachtObjects.get(k);
-					final Object orgObject = currentObject;
-// FIXME general unwrap decorator pattern.
-					if(currentObject instanceof ShareFacade)
-					{
-						currentObject = ((ShareFacade) currentObject).unwrap();
-					}
-					
-					
-					if (currentObject instanceof InteractionView)
-					{
-						OpdrNavIF comRoot2 = comRoot;
-						Connector connector = find(currentObject);
-						comRoot2 = new OpdrNavContext(comRoot,connector, this.bgColorZichtbaar ? bgColor : comRoot.getBackground());
-						((InteractionView) orgObject).setCommunicationRoot(comRoot2);
-						if(! (currentObject instanceof StateLess))
-						{	interactionViewObjects.add(orgObject);
-						}
-						
-						if(currentObject instanceof CheckValueUnit)
-						{
-							ArrayList<Object> lijst = geefInteractionViews(k, i, j, opdrachtObjects);
-							
-							int aantalValueObjects = ((CheckValueUnit) currentObject).getAantalValueObjects();
-							TekstVakPanel[] waardeObjecten = new TekstVakPanel[aantalValueObjects];
-							
-							for(int l = 0; l < aantalValueObjects; l++)
-							{	waardeObjecten[l] = zoekTekstVakPanel(l+1, lijst);
-							
-							}
-							((CheckValueUnit) currentObject).zetWaardeObjecten(waardeObjecten);
-						}
-						else if(currentObject instanceof CheckSelectieUnit)
-						{
-							ArrayList<Object> lijst = geefInteractionViews(k, i, j, opdrachtObjects);
-							
-							
-							int aantalSelectieObjecten = ((CheckSelectieUnit) currentObject).getAantalSelectieObjecten();
-							TekstVakPanel[] selectieObjecten = new TekstVakPanel[aantalSelectieObjecten];
-							for(int l = 0; l < aantalSelectieObjecten; l++)
-								selectieObjecten[l] = zoekTekstVakPanel(l+1, lijst);
-							
-							((CheckSelectieUnit) currentObject).zetSelectieObjecten(selectieObjecten);
-						}
-						else if(currentObject instanceof CheckSleepUnit)
-						{	
-							ArrayList<Object> lijst = geefInteractionViews(k, i, j, opdrachtObjects);
-							
-							int aantalSleepObjects = ((CheckSleepUnit) currentObject).getAantalSleepObjects();
-							
-							TekstVakPanel[] sleepObjecten = new TekstVakPanel[aantalSleepObjects];
-							for(int l = 0; l < aantalSleepObjects; l++)
-								sleepObjecten[l] = zoekTekstVakPanel(l+1, lijst);
-							
-							int aantalDoelObjects = ((CheckSleepUnit) currentObject).getAantalDoelObjects();
-							TekstVakPanel[] doelObjecten = new TekstVakPanel[aantalDoelObjects];
-							for(int l = 0; l < aantalDoelObjects; l++)
-								doelObjecten[l] = zoekTekstVakPanel(-(l+1), lijst);
-							((CheckSleepUnit) currentObject).zetSleepDoelObjecten(sleepObjecten, doelObjecten);
-						}
-						else if(currentObject instanceof CheckButton)
-						{
-							ArrayList<Object> lijst = geefInteractionViews(k, i, j, opdrachtObjects);
-							((CheckButton) currentObject).zetNakijkObjecten(lijst);
-						}
-					}
-
-					if (currentObject instanceof TekstVakPanel)
-					{
-						Object launchData = opdrachtGegevens.get(aantalVakken);
-						//Als opdrachtGegevens direct uit XMLView komen, zitten er eerst 5 lege entries.
-						if(opdrachtGegevens.get(0) == null || isHoofdPanel())
-						{	launchData = opdrachtGegevens.get(aantalVakken + 5);
-						}
-						aantalVakken++;
-						
-						HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) launchData).get("interactiePanelLaunchState");
-						TekstVakPanel tekstVakChild = (TekstVakPanel) currentObject;
-						tekstVakChild.setParent(tekstVakken[i][j]);
-						tekstVakChild.zetInstellingen(instellingen);
-						tekstVakChild.setKeyboard(kb);
-						tekstVakChild.zetOpdracht(launchState);
-						tekstVakChild.setContainer(new TekstVakContext(i,j));
-						xWidgetMap.putAll(tekstVakChild.xWidgetMap);
-						Connector.calculateSubscriptions(xWidgetMap.values());
-					}
-					else if (currentObject instanceof FormuleEditorWithAnswer)
-					{
-						aantalVakken++;
-						FormuleEditorWithAnswer formuleEditorWithAnswer = (FormuleEditorWithAnswer) currentObject;
-						formuleEditorWithAnswer.zetInstellingen(instellingen);
-						if(i == 0 && j == 0)
-							queuedObject = formuleEditorWithAnswer.getUitwerking(this);
-						else 
-						{
-							formuleEditorWithAnswer.getUitwerking(null);
-						}
-						//formuleEditorWithAnswer.paint(); Verplaatst naar TekstVak.setObjects.
-						
-					}
-					else if (currentObject instanceof FormuleEditorWithAnswer.FormuleEditorPopup)
-					{
-						((FormuleEditorWithSteps) currentObject).zetInstellingen(instellingen);
-					}
-					else if (currentObject instanceof FormuleEditorWithSteps)
-					{
-						aantalVakken++;
-						((FormuleEditorWithSteps) currentObject).zetInstellingen(instellingen);
-					}
-					else if (currentObject instanceof FormuleViewer)
-					{
-						if(this.isSleepbaar())
-							((FormuleViewer) currentObject).setSelectable(false);
-					}
-					else if (currentObject instanceof SymboolPanel)
-					{
-						aantalVakken++;
-						((SymboolPanel) currentObject).zetVolledigeHoogte(tekstVakken[i][j].hoogte);
-					}
-					else if (currentObject instanceof InteractionView)
-					{
-						aantalVakken++;
-					}
-				}
+				aantalVakken = initialiseerObjects(opdrachtObjects, opdrachtGegevens, i, j, aantalVakken);
+				
 				//setObjects(opdrachtObjects, i, j);
 				tekstVakken[i][j].setObjects(opdrachtObjects);
 			}
 			
 		}
 		Connector.calculateSubscriptions(xWidgetMap.values());
+		//Connector c = find(this);
+		for(Connector c : xWidgetMap.values())
+		{
+			if(c != null && c.subscriptions != null && c.subscriptions.containsKey("text.content"))
+			{	
+				if(c.v instanceof TekstVakPanel)
+				{
+					((TekstVakPanel) c.v).initialiseerStappen();
+				}
+			}
+		}
+		
+		
+		
 	
 		if (selectable || (sleepbaar && !sleepHandle))
 			zetKlikPanel();
@@ -1205,12 +1176,335 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		
 		//resize gebeurt in setVisibility.
 		setVisibility(visible);
+		if(ideasStatistiek)
+			initialStatistiekState = initialiseIdeasStatistiek();
+	}
+	
+	private ArrayList<Tupel> initialiseIdeasStatistiek()
+	{
+		ArrayList<Tupel> initialState = new ArrayList<Tupel>();
+		//1. Find the big AntwoordKeuzeVak containing all steps
+		AntwoordKeuzeVak akv = null;
+		//isIdeasStatistiek is checked for the box containing all steps.
+		//The AntwoordKeuzeVak for choosing the steps is situated in the parent of this box.
+		for(int i = 0; i < interactionViewObjects.size(); i++)
+		{
+			if(interactionViewObjects.get(i) instanceof AntwoordKeuzeVak)
+			{	akv = (AntwoordKeuzeVak) interactionViewObjects.get(i);
+				break;
+			}
+		}
 		
+		if(akv == null)
+			return null;
+		
+		for(int i = 0; i < akv.getAnswerModels().length; i++)
+		{
+			if(akv.getAnswerModels()[i].containsKey("feedback"))
+			{
+				try{
+					ObjectMap feedbackMap = akv.getAnswerModels()[i].getObjectMap("feedback");
+					TekstVakPanel tvp = new TekstVakPanel((HashMap<String, Object>) feedbackMap, null, null);
+					tvp.zetInstellingen(instellingen);
+					tvp.setKeyboard(kb);
+					final Object orgObject = tvp;
+					OpdrNavIF comRoot2 = comRoot;
+					Connector connector = find(tvp);
+					comRoot2 = new OpdrNavContext(comRoot,connector, this.bgColorZichtbaar ? bgColor : comRoot.getBackground());
+					((InteractionView) orgObject).setCommunicationRoot(comRoot2);
+					HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) feedbackMap).get("interactiePanelLaunchState");
+					tvp.zetOpdracht(launchState);
+					initialState.addAll(tvp.getAnswerModels());
+				}
+				catch(Exception e)
+				{
+					//Situation back; can be ignored in this method
+				}
+			}
+			
+		}
+		return initialState;
+	}
+	
+	private ArrayList<Tupel> getAnswerModels()
+	{
+		//HashMap<String, Object> map = new HashMap<String, Object>();
+				ArrayList<Tupel> answerModels = new ArrayList<Tupel>();
+				String type = "initial"; //Indicates that this is the initial (author's) answer
+				MapperConstants constants = new MapperConstants(); //map for collecting answers from AntwoordKeuzeVak
+				for(int i = 0; i < tekstVakken.length; i++)
+				{
+					for(int j = 0; j < tekstVakken[i].length; j++)
+					{
+						ArrayList<Object> opdrObjects = tekstVakken[i][j].getOpdrachtObjects();
+						for(int k = 0; k < opdrObjects.size(); k++)
+						{
+							Object object = opdrObjects.get(k);
+							//first check: is it a TekstVakPanel? Then request answers from this TekstVakPanel.
+							if(object instanceof TekstVakPanel)
+							{	
+								ArrayList<Tupel> answers2 = ((TekstVakPanel) object).getAnswerModels();
+								answerModels.addAll(answers2);
+							}
+							else
+							{
+								String logIDLabel = "";
+								String antwoord = "";
+								if(object instanceof FormuleEditorWithAnswer)
+								{
+									FormuleEditorWithAnswer fewa = (FormuleEditorWithAnswer) object;
+									logIDLabel = fewa.getLogIDLabel();
+									//Expressie e = FormuleParser.parse("$f" + fewa.toString() + "@");
+									if(fewa.isVergelijkingVak())
+									{
+										VergelijkingMeerv vgl = ((AntwoordVergelijkingVakChecker)fewa.getAvChecker()).getDesiredSolution();
+										if(vgl != null)
+											antwoord = vgl.toStringStrikt();
+									}
+									else
+									{
+										Expressie[] juisteAntwoorden = ((AntwoordFormuleVakChecker) fewa.getAvChecker()).getJuisteAntwoorden();
+										if(juisteAntwoorden != null && juisteAntwoorden.length > 0)
+										{
+											//for now: assume that only the first possible answer is relevant
+											Expressie e = juisteAntwoorden[0];
+											if(e != null)
+												antwoord = e.toStringStrikt();
+										}
+									}
+								}
+								else if(object instanceof FormuleEditorWithSteps)
+								{
+									FormuleEditorWithSteps fews = (FormuleEditorWithSteps) object;
+									logIDLabel = fews.getLogIDLabel();
+									String[] regels = fews.geefRegels();
+									if(fews.isVergelijkingVak())
+									{
+										VergelijkingMeerv vgl = ((AntwoordVergelijkingVakChecker) fews.getAvChecker()).getDesiredSolution();
+										if(vgl != null)
+											antwoord = vgl.toStringStrikt();
+									}
+									else
+									{
+										Expressie[] juisteAntwoorden = ((AntwoordFormuleVakChecker) fews.getAvChecker()).getJuisteAntwoorden();
+										if(juisteAntwoorden != null && juisteAntwoorden.length > 0)
+										{
+											//for now: assume that only the first possible answer is relevant
+											Expressie e = juisteAntwoorden[0];
+											if(e != null)
+											antwoord = e.toStringStrikt();
+										}
+									}
+								}
+								else if(object instanceof AntwoordKeuzeVak)
+								{
+									AntwoordKeuzeVak akv = (AntwoordKeuzeVak) object;
+									logIDLabel = akv.getLogIDLabel();
+									String juisteAntwoord = akv.getAntwoordString().trim();
+									//if selection is an expression: convert to stringStrikt for merging with other components
+									//else: select key from map
+									if(juisteAntwoord.startsWith("$f") && juisteAntwoord.endsWith("@"))
+									{
+										Expressie e = FormuleParser.geefExpressie(juisteAntwoord);
+										if(e != null)
+										{	antwoord = e.toStringStrikt();
+											
+										}
+										else
+										{	antwoord = juisteAntwoord.substring(2, juisteAntwoord.length() - 1);
+											
+										}
+									}
+									else
+										antwoord = getFromMap(constants, logIDLabel, juisteAntwoord);
+								}
+								else if(object instanceof AntwoordTekstVak)
+								{
+									AntwoordTekstVak atv = (AntwoordTekstVak) object;
+									logIDLabel = atv.getLogIDLabel();
+									Expressie expr = FormuleParser.geefExpressie(atv.getAntwoordString());
+									if(expr != null)
+										antwoord = expr.toStringStrikt();
+								}
+								if(!logIDLabel.equals("") && !antwoord.equals(""))
+								{
+									//does answers already contain tupel with same logIDLabel? Then merge answers
+									String lastLabel = "";
+									Tupel lastTupel = null;
+									if(answerModels.size() > 0)
+									{
+										lastTupel = answerModels.get(answerModels.size() - 1);
+										lastLabel = lastTupel.name;
+									}
+									if(lastTupel != null && lastLabel.equals(logIDLabel))
+									{
+										String lastAnswer = lastTupel.value;
+										String[] vergTekens = { "=", ">", "<", "\u2264", "\u2265", "\u2248", "\u2260" };
+										boolean pasted = false;
+										for(int m = 0; m < vergTekens.length && !pasted; m++)
+										{
+											if(lastAnswer.endsWith(vergTekens[m]) || antwoord.equals(vergTekens[m]))
+											{
+												lastAnswer = lastAnswer + antwoord;
+												pasted = true;
+											}
+										}
+										if(!pasted)
+										{	lastAnswer = lastAnswer + "=" + antwoord;
+										}
+										
+										lastTupel.value = lastAnswer; // this also adjusts the value in the answers arraylist
+									}							
+									else			
+										answerModels.add(new Tupel(logIDLabel, type, antwoord));
+								}
+							}
+						}
+					}
+				}
+				return answerModels;
+	}
+	
+	private int initialiseerObjects(ArrayList<Object> opdrachtObjects, List<Object> opdrachtGegevens, int rij, int kolom, int aantalVakken)
+	{
+		for (int k = 0; k < opdrachtObjects.size(); k++)
+		{
+			Object currentObject = opdrachtObjects.get(k);
+			final Object orgObject = currentObject;
+//FIXME general unwrap decorator pattern.
+			if(currentObject instanceof ShareFacade)
+			{
+				currentObject = ((ShareFacade) currentObject).unwrap();
+			}
+			
+			
+			if (currentObject instanceof InteractionView)
+			{
+				OpdrNavIF comRoot2 = comRoot;
+				Connector connector = find(currentObject);
+				comRoot2 = new OpdrNavContext(comRoot,connector, this.bgColorZichtbaar ? bgColor : comRoot.getBackground());
+				((InteractionView) orgObject).setCommunicationRoot(comRoot2);
+				if(! (currentObject instanceof StateLess))
+				{	interactionViewObjects.add(orgObject);
+				}
+				
+				if(currentObject instanceof CheckValueUnit)
+				{
+					ArrayList<Object> lijst = geefInteractionViews(k, rij, kolom, opdrachtObjects);
+					
+					int aantalValueObjects = ((CheckValueUnit) currentObject).getAantalValueObjects();
+					TekstVakPanel[] waardeObjecten = new TekstVakPanel[aantalValueObjects];
+					
+					for(int l = 0; l < aantalValueObjects; l++)
+					{	waardeObjecten[l] = zoekTekstVakPanel(l+1, lijst);
+					
+					}
+					((CheckValueUnit) currentObject).zetWaardeObjecten(waardeObjecten);
+				}
+				else if(currentObject instanceof CheckSelectieUnit)
+				{
+					ArrayList<Object> lijst = geefInteractionViews(k, rij, kolom, opdrachtObjects);
+					
+					
+					int aantalSelectieObjecten = ((CheckSelectieUnit) currentObject).getAantalSelectieObjecten();
+					TekstVakPanel[] selectieObjecten = new TekstVakPanel[aantalSelectieObjecten];
+					for(int l = 0; l < aantalSelectieObjecten; l++)
+						selectieObjecten[l] = zoekTekstVakPanel(l+1, lijst);
+					
+					((CheckSelectieUnit) currentObject).zetSelectieObjecten(selectieObjecten);
+				}
+				else if(currentObject instanceof CheckSleepUnit)
+				{	
+					ArrayList<Object> lijst = geefInteractionViews(k, rij, kolom, opdrachtObjects);
+					
+					int aantalSleepObjects = ((CheckSleepUnit) currentObject).getAantalSleepObjects();
+					
+					TekstVakPanel[] sleepObjecten = new TekstVakPanel[aantalSleepObjects];
+					for(int l = 0; l < aantalSleepObjects; l++)
+						sleepObjecten[l] = zoekTekstVakPanel(l+1, lijst);
+					
+					int aantalDoelObjects = ((CheckSleepUnit) currentObject).getAantalDoelObjects();
+					TekstVakPanel[] doelObjecten = new TekstVakPanel[aantalDoelObjects];
+					for(int l = 0; l < aantalDoelObjects; l++)
+						doelObjecten[l] = zoekTekstVakPanel(-(l+1), lijst);
+					((CheckSleepUnit) currentObject).zetSleepDoelObjecten(sleepObjecten, doelObjecten);
+				}
+				else if(currentObject instanceof CheckButton)
+				{
+					ArrayList<Object> lijst = geefInteractionViews(k, rij, kolom, opdrachtObjects);
+					((CheckButton) currentObject).zetNakijkObjecten(lijst);
+				}
+			}
 
+			if (currentObject instanceof TekstVakPanel)
+			{
+				Object launchData = opdrachtGegevens.get(aantalVakken);
+				//Als opdrachtGegevens direct uit XMLView komen, zitten er eerst 5 lege entries.
+				if(opdrachtGegevens.get(0) == null || isHoofdPanel())
+				{	launchData = opdrachtGegevens.get(aantalVakken + 5);
+				}
+				aantalVakken++;
+				
+				HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) launchData).get("interactiePanelLaunchState");
+				TekstVakPanel tekstVakChild = (TekstVakPanel) currentObject;
+				tekstVakChild.setParent(tekstVakken[rij][kolom]);
+				tekstVakChild.zetInstellingen(instellingen);
+				tekstVakChild.setKeyboard(kb);
+				tekstVakChild.zetOpdracht(launchState);
+				tekstVakChild.setContainer(new TekstVakContext(rij,kolom));
+				xWidgetMap.putAll(tekstVakChild.xWidgetMap);
+				Connector.calculateSubscriptions(xWidgetMap.values());
+				
+			}
+			else if (currentObject instanceof FormuleEditorWithAnswer)
+			{
+				aantalVakken++;
+				FormuleEditorWithAnswer formuleEditorWithAnswer = (FormuleEditorWithAnswer) currentObject;
+				formuleEditorWithAnswer.zetInstellingen(instellingen);
+				if(rij == 0 && kolom == 0)
+					queuedObject = formuleEditorWithAnswer.getUitwerking(this);
+				else 
+				{
+					formuleEditorWithAnswer.getUitwerking(null);
+				}
+				//formuleEditorWithAnswer.paint(); Verplaatst naar TekstVak.setObjects.
+				
+			}
+			else if (currentObject instanceof FormuleEditorWithAnswer.FormuleEditorPopup)
+			{
+				((FormuleEditorWithSteps) currentObject).zetInstellingen(instellingen);
+			}
+			else if (currentObject instanceof FormuleEditorWithSteps)
+			{
+				aantalVakken++;
+				((FormuleEditorWithSteps) currentObject).zetInstellingen(instellingen);
+			}
+			else if (currentObject instanceof FormuleViewer)
+			{
+				if(this.isSleepbaar())
+					((FormuleViewer) currentObject).setSelectable(false);
+			}
+			else if (currentObject instanceof SymboolPanel)
+			{
+				aantalVakken++;
+				((SymboolPanel) currentObject).zetVolledigeHoogte(tekstVakken[rij][kolom].hoogte);
+			}
+			else if (currentObject instanceof InteractionView)
+			{
+				aantalVakken++;
+			}
+		}
+		return aantalVakken;
 	}
 	
 	private Connector find(Object currentObject) {
 		return getXWidgetMap().get(currentObject);
+	}
+	
+	private void initialiseerStappen()
+	{
+		stappen = new ArrayList<Object>();
+		resize();
 	}
 
 	public ArrayList<Object> geefInteractionViews(int k, int row, int column, ArrayList<Object> opdrachtObjects)
@@ -1248,6 +1542,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		if (dwologger != null) dwologger.setCommunicationRoot(comRoot);
 		comRoot.addCBookEventListener(ACTION_SETVISIBLE, this);
 		comRoot.addCBookEventListener(ACTION_SETNOTVISIBLE, this);
+		comRoot.addCBookEventListener(TEXT_CONTENT, this);
 		comRoot.addCBookEventListener(TVP_SELECT, this);
 		comRoot.addCBookEventListener(TVP_DESELECT, this);
 		comRoot.addCBookEventListener(TVP_KLAPUIT, this);
@@ -1287,6 +1582,14 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		h.put("popupUsed", Boolean.valueOf(popupUsed));
 		h.put("nagekeken", Boolean.valueOf(nagekeken));
 		h.put("visible", new Boolean(visible));
+		if(stappen!=null)
+		{	
+			h.put("stappen", stappen);
+			h.put("stapNr", new Integer(stapNr));
+		}
+		h.put("goedHalfFoutStatistiek", new Integer(goedHalfFoutStatistiek));
+		h.put("feedbackStatistiek", feedbackStatistiek);
+		
 		if(zwevend)
 		{	h.put("locationX", new Integer(locationX));
 			h.put("locationY", new Integer(locationY));
@@ -1336,6 +1639,48 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			breedte = 0;
 		}
 
+		if (h.containsKey("stappen"))
+		{	List<Object> stappenList = JSONUtilities.toArrayList(h.get("stappen")); // read-only origineel
+			stappen = new ArrayList<Object> (stappenList); // read/write kopie
+		}
+		if (h.containsKey("stapNr"))
+			stapNr = map.getInt("stapNr");
+		if(stappen!=null)
+		{
+			for(int i = 0; i < stapNr; i++)
+			{	TekstVakPanel tvp = new TekstVakPanel((HashMap<String, Object>) stappen.get(i), null, null);
+				tvp.setParent(tekstVakken[i][breedtes.size() - 1]);
+				tvp.zetInstellingen(instellingen);
+				tvp.setKeyboard(kb);
+				final Object orgObject = tvp;
+				OpdrNavIF comRoot2 = comRoot;
+				Connector connector = find(tvp);
+				comRoot2 = new OpdrNavContext(comRoot,connector, this.bgColorZichtbaar ? bgColor : comRoot.getBackground());
+				((InteractionView) orgObject).setCommunicationRoot(comRoot2);
+				if(! (tvp instanceof StateLess))
+				{	interactionViewObjects.add(orgObject);
+				}
+									
+				HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) stappen.get(i)).get("interactiePanelLaunchState");
+				tvp.zetOpdracht(launchState);
+				tvp.setContainer(new TekstVakContext(i,breedtes.size() - 1));
+				xWidgetMap.putAll(tvp.xWidgetMap);
+				Connector.calculateSubscriptions(xWidgetMap.values());
+				ArrayList<Object> list = new ArrayList<Object>();
+				list.add(tvp);
+				tekstVakken[i][breedtes.size() - 1].zetOpdrachtObjects(list);
+				tekstVakken[i][breedtes.size() - 1].setObjects(list);
+			}
+		}
+		//Feedback laatste stap hypothesetoetsen terugzetten
+		if(h.containsKey("goedHalfFoutStatistiek"))
+			goedHalfFoutStatistiek = map.getInt("goedHalfFoutStatistiek");
+		if(h.containsKey("feedbackStatistiek"))
+			feedbackStatistiek = map.getString("feedbackStatistiek");
+		if(goedHalfFoutStatistiek != AntwoordVakChecker.GEEN || !feedbackStatistiek.equals(""))
+			genereerFeedback(goedHalfFoutStatistiek, feedbackStatistiek);
+		
+		
 		// hier hoogtes en breedtes aanpassen voor callout
 		if (callOut)
 		{
@@ -1371,6 +1716,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			parent.setWidgetTopHeight(this.asWidget(), locationY, Style.Unit.PX, hoogte, Style.Unit.PX);
 		}
 		setSelected(selected);
+		
 		
 		if(inklapbaar && ( ingeklapt != this.ingeklapt))
 		{	
@@ -1495,6 +1841,16 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	 */
 	public Boolean isCorrect()
 	{
+		if(ideasStatistiek)
+		{
+			if(goedHalfFoutStatistiek == AntwoordVakChecker.GOED)
+				return true;
+			else if(goedHalfFoutStatistiek == AntwoordVakChecker.GEEN)
+				return null;
+			else 
+				return false;
+		}
+		
 		Boolean correct = Boolean.TRUE;
 		for (int i = 0; i < interactionViewObjects.size(); i++)
 		{
@@ -1505,6 +1861,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			if (Boolean.FALSE.equals(check))
 				return check;
 		}
+		
+		
 		return correct;
 	}
 
@@ -1600,6 +1958,604 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	public boolean isSleepbaar()
 	{
 		return sleepbaar;
+	}
+	
+	public TekstVakPanel isInIdeasStatistiek()
+	{
+		if(ideasStatistiek)
+			return this;
+		else if(parent != null)
+			return parent.getTekstVakParent().isInIdeasStatistiek();
+		else
+			return null;
+	}
+	
+	public TekstVakPanel findStappenVak()
+	{
+		if(stappen != null)
+			return this;
+		for(int i = 0; i < interactionViewObjects.size(); i++)
+		{	Object object = interactionViewObjects.get(i);
+			if(object instanceof TekstVakPanel)
+			{
+				TekstVakPanel stappenVak = ((TekstVakPanel) object).findStappenVak();
+				if(stappenVak != null)
+					return stappenVak;
+			}
+		}
+		if(parent != null)
+			return parent.getTekstVakParent().findStappenVak();
+		
+		return null;
+	}
+
+	public Promise<RuleIF> kijkNaIdeasStatistiek()
+	{
+		final List<Tupel> newAnswers = getAnswers();
+		ListIterator<Tupel> iter = newAnswers.listIterator(newAnswers.size());
+		while(iter.hasPrevious()) {
+			Tupel t = iter.previous();
+			if(t.value == null || t.value.isEmpty()) iter.remove();
+		}
+		
+		//lastAnswers should always be a subset of newAnswers
+		//but if steps are removed, or if a student has corrected steps, this is not the case. 
+		//Therefore: remove all Tupels from lastAnswers that are not in newAnswers
+		
+		if(lastAnswers != null)
+		{
+			ListIterator<Tupel> iter2 = lastAnswers.listIterator(lastAnswers.size());
+			while(iter2.hasPrevious()) {
+				Tupel t = iter2.previous();
+				if(!newAnswers.contains(t))
+					iter2.remove();
+			}
+		}
+		
+		
+		
+		List<Tupel> oldAnswers = lastAnswers;
+		
+		//@Wim: maar wat als een student niet iets heeft toegevoegd, maar iets heeft gewijzigd? 
+		//Of, wat nu ook kan, meerdere dingen heeft toegevoegd voordat hij op een checkbutton heeft geklikt?
+		//Kan onderstaande regel nu niet beter weer weg?
+		//if(newAnswers.size() > 0)
+		//	oldAnswers = newAnswers.subList(0, newAnswers.size()-1);
+		
+		//opsturen - Wim
+		
+		//hier kan nu ook oldAnswers bij in. Bij eerste keer nakijken is oldAnswers nog null. 
+		Promise<RuleIF> result = diagnose(oldAnswers, newAnswers)
+		.recover(new RuleRecovery())	
+		.then( 
+				new Success<RuleIF, RuleIF>() {
+
+					@Override
+					public Promise<RuleIF> call(Promise<RuleIF> p) throws Exception {
+						RuleIF resultaat = p.getValue();
+						doeIetsMet(resultaat);						
+						return p;
+					}
+				})
+//		.onResolve(
+//		
+//		new Runnable() {
+//			public void run() {
+//				//na diagnose:
+//				lastAnswers = newAnswers; //antwoorden uit deze ronde nakijken bewaren voor volgende ronde nakijken.
+//			}
+//		}
+//		)
+		;
+		lastAnswers = newAnswers; //antwoorden uit deze ronde nakijken bewaren voor volgende ronde nakijken.
+		return result;
+		
+		// Zie "doetIetsMet(resultaat)"
+		//genereerFeedback(AntwoordVakChecker.GOED, "feedback");
+	}
+
+	private void genereerFeedback(int status, String feedbackReason) {
+		//feedback terugkrijgen en verwerken
+		goedHalfFoutStatistiek = status;
+		feedbackStatistiek = feedbackReason;
+		
+		if(goedHalfFoutStatistiek == AntwoordVakChecker.GOED || goedHalfFoutStatistiek == AntwoordVakChecker.DOOR)
+			feedbackImage = goedKrulImage; //request by social sciences: also green tickmark for correct intermediate steps. 
+					// Otherwise students think they still need to do something with the answer they already gave, instead of continuing with a new step. 
+		else if(goedHalfFoutStatistiek == AntwoordVakChecker.HALF)
+			feedbackImage = goedKrulHalfImage; 
+		else if(goedHalfFoutStatistiek == AntwoordVakChecker.FOUT)
+			feedbackImage = foutKruisImage;
+		
+		MapperConstants constants = new MapperConstants();
+		if(feedbackReason.trim().equals(""))
+			feedbackReason = "noFeedback";
+		vulFeedbackPanelEnVoegToe(getFromMap(constants, "feedback", feedbackReason));
+		
+		comRoot.setChanged(goedHalfFoutStatistiek == AntwoordVakChecker.FOUT);
+	}
+	
+	
+private void vulFeedbackPanelEnVoegToe(String feedbackTekst)
+{
+	if(feedbackPanel == null)
+	{
+		feedbackPanel = new TekstVak();
+		feedbackPanel.setSize(breedte, feedbackPanelHeight);
+		feedbackPanel.setFontSize(XMLView.getDefaultFontSize());
+		feedbackPanel.setFontName(XMLView.getDefaultFontName());
+		feedbackPanel.setColor(CssColor.make("black"));
+		feedbackPanel.setMarges(5, 25);
+		feedbackPanel.setCentering(false, true);
+		feedbackPanel.setPasHoogteBreedteAan(true, false);
+		feedbackPanel.getElement().getStyle().setBackgroundColor("#FFFFDD");
+	}
+	feedbackPanel.removeFromParent();
+	
+	TekstBuffer b = new TekstBuffer();
+	ArrayList<Object> feedbackList = b.convertTekst(feedbackTekst, null, false);
+	feedbackPanel.clear();
+	feedbackPanel.setSize(breedte, 34);
+	feedbackPanel.setObjects(feedbackList);
+	feedbackPanel.resize();
+		
+	if (!feedbackTekst.trim().equals(""))
+	{	
+		feedbackPanelHeight = feedbackPanel.getHeight();
+		
+		mainPanel2.add(feedbackPanel);
+		mainPanel2.setWidgetLeftRight(feedbackPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		mainPanel2.setWidgetBottomHeight(feedbackPanel, 0, Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
+		
+		if(feedbackImage != null)
+		{
+			removeFeedbackImage();
+			mainPanel2.add(feedbackImage);
+			mainPanel2.setWidgetLeftWidth(feedbackImage, 5, Style.Unit.PX, 20, Style.Unit.PX);
+			mainPanel2.setWidgetBottomHeight(feedbackImage, feedbackPanelHeight - 20, Style.Unit.PX, 20, Style.Unit.PX);
+		}
+	}
+	else
+	{	
+		feedbackPanelHeight = 0;
+		removeFeedbackImage();
+		//feedbackImage.removeFromParent();
+		mainPanel2.add(feedbackImage);
+		mainPanel2.setWidgetLeftWidth(feedbackImage, 5, Style.Unit.PX, 20, Style.Unit.PX);
+		mainPanel2.setWidgetBottomHeight(feedbackImage, 5, Style.Unit.PX, 20, Style.Unit.PX);
+	}
+	resize();
+	
+}
+	
+private void removeFeedbackImage()
+{
+	if(feedbackImage != null)
+		feedbackImage.removeFromParent();
+	goedKrulImage.removeFromParent();
+	goedKrulHalfImage.removeFromParent();
+	foutKruisImage.removeFromParent();
+}
+
+/**
+ * Bepaal een hint na answers.
+ * Aanroep:
+ * getOneFirst(getAnswers()).then(new Success<RuleIF, Void>() {...doeietsmetRuleIF(resolved.getValue())...} );
+ * @param answers
+ * @return de hint als promise
+ */
+private Promise<RuleIF> getOneFirst(List<Tupel> answers) {
+	Deferred<RuleIF> defer = new Deferred<RuleIF>();
+	IdeasIF ideas = GWT.create(IdeasIF.class);
+	ideas.setStrategie("hypothesis");
+	String expr = "[]"; // last time
+	
+	final TekstVakPanel statPanel = isInIdeasStatistiek();
+	//final List<Tupel> newAnswers = statPanel.getAnswers();
+	List<Tupel> old = new ArrayList<Tupel>();
+	if(statPanel.initialStatistiekState != null) old.addAll(statPanel.initialStatistiekState);
+	if(answers != null) old.addAll(answers);
+	
+	if(!old.isEmpty()) {
+		StringBuilder input = new StringBuilder();
+		input.append('[');
+		for (Tupel tupel : old) {
+			if(tupel.value == null || tupel.value.isEmpty()) continue;
+			input.append("$C"); // component
+			input.append(deGreek(tupel.value)).append("$n").append(CamelCase(tupel.name)).append("$k");
+			if("initial".equals(tupel.type)) input.append('0'); else input.append('1');
+			input.append("@@@,");
+		}
+		if(input.length()>2) input.setLength(input.length()-1);
+		input.append(']');
+		expr = input.toString();
+	}
+	String prefix = getPrefix(answers);
+	ideas.getOneFirst(wrap(expr, prefix), new DeferRuleCallback(defer));
+	return defer.getPromise().recover(new RuleRecovery());
+}
+
+
+
+private Promise<RuleIF> diagnose(List<Tupel> oldAnswers, List<Tupel> newAnswers) {
+		Promise<RuleIF> cache = fromCache(oldAnswers, newAnswers);
+		if(cache != null) return cache;
+		final Deferred<RuleIF> defer = new Deferred<RuleIF>();
+		IdeasIF ideas = GWT.create(IdeasIF.class);
+		ideas.setStrategie("hypothesis");
+		String expr = "[]"; // last time
+		List<Tupel> old = new ArrayList<Tupel>();
+		if(initialStatistiekState != null) old.addAll(initialStatistiekState);
+		if(oldAnswers != null) old.addAll(oldAnswers);
+		
+		if(!old.isEmpty()) {
+			StringBuilder input = new StringBuilder();
+			input.append('[');
+			for (Tupel tupel : old) {
+				if(tupel.value == null || tupel.value.isEmpty()) continue;
+				input.append("$C"); // component
+				input.append(deGreek(tupel.value)).append("$n").append(CamelCase(tupel.name)).append("$k");
+				if("initial".equals(tupel.type)) input.append('0'); else input.append('1');
+				input.append("@@@,");
+			}
+			if(input.length()>2) input.setLength(input.length()-1);
+			input.append(']');
+			expr = input.toString();
+		}
+		List<Tupel> intupels = new ArrayList<Tupel>();
+		if(initialStatistiekState != null) intupels.addAll(initialStatistiekState);
+		intupels.addAll(newAnswers);
+		
+		StringBuilder input = new StringBuilder();
+		input.append('[');
+		for (Tupel tupel : intupels) {
+			if(tupel.value == null || tupel.value.isEmpty()) continue;
+			input.append("$C"); // component
+			input.append(deGreek(tupel.value)).append("$n").append(CamelCase(tupel.name)).append("$k");
+			if("initial".equals(tupel.type)) input.append('0'); else input.append('1');
+			input.append("@@@,");
+		}
+		if(input.length()>2) input.setLength(input.length()-1);
+		input.append(']');
+		final String instr = input.toString();
+		if(instr.equals(expr)) {
+			return toCache( Promises.resolved((RuleIF)new AbstractRule() {
+
+				@Override
+				public String getId() {
+					return "equal";
+				}
+
+				@Override
+				public String getExpr() {
+					return instr;
+				}
+
+				@Override
+				public String getName() {
+					return "equal";
+				}
+				@Override
+				public boolean isException() {
+					return true;
+				}
+
+			}), oldAnswers, newAnswers);	
+		}
+
+		
+		
+		RuleCallback callback = new DeferRuleCallback(defer);
+GWT.log("expr  = "+ expr);
+GWT.log("input = " + instr);
+		String prefix = getPrefix(oldAnswers);
+GWT.log("prefix = " + prefix);
+		ideas.diagnose(wrap(expr, prefix), wrap(instr, ""), callback );
+		return toCache( defer.getPromise(), oldAnswers, newAnswers);
+	}
+
+private Object deGreek(String value) {
+	return value
+		.replace("$sD@", "")
+		.replace("σ$sM@", "sigmaM")
+		.replace("μ", "mu")
+		.replace("σ", "sigma")
+		.replace("z$sc*r*i*t@", "zcrit")
+		.replace("t$sc*r*i*t@", "tcrit")
+		.replace("$sA@", "1")
+		.replace("$sB@", "2")
+		.replace("$s1@", "1")
+		.replace("$s2@", "2")
+		.replace("wel", "true")
+		.replace("niet", "false")
+		.replace("$vS$nE$sM@@@", "SEM")
+		.replace("s$sM@", "SEM")
+		.replace("$vS$nD@@", "s")
+		.replace("vS$n$bD$n$wn@@", "bs$n$wn") // vervang "SD/sqrt(n)" door "s/sqrt(n)"
+		.replace("S$n$bD", "s$n$b1")// vervang "SD/iets" door "s*1/iets"
+	;	
+}
+
+private Map<Object, Promise<RuleIF>> promiseCache = new HashMap<Object, Promise<RuleIF>>();
+
+private Promise<RuleIF> toCache(Promise<RuleIF> promise, List<Tupel> oud, List<Tupel> nieuw) {
+	Object key = Arrays.asList(oud, nieuw);
+	promiseCache.put(key, promise);
+	if(!nieuw.equals(oud)) 
+		promiseCache.put(nieuw, promise);
+	return promise;
+}
+
+private Promise<RuleIF> fromCache(List<Tupel> oud, List<Tupel> nieuw) {
+	return promiseCache.get(Arrays.asList(oud, nieuw));
+}
+
+private String getPrefix(List<Tupel> nieuw) {
+	Promise<RuleIF> promise = promiseCache.get(nieuw);
+	if(promise != null && promise.isDone() && promise.getFailure() == null && promise.getValue() != null) {
+		return promise.getValue().getPrefix();
+	}
+	return "";
+}
+
+private RuleIF wrap(final String expr, final String prefix) {
+	return new AbstractRule() {
+
+		@Override
+		public String getExpr() {
+			return expr;
+		}
+
+		@Override
+		public String getPrefix() {
+			return prefix;
+		}
+		
+	};
+}
+
+private Object CamelCase(String name) {
+	int i;
+	while( (i=name.indexOf('-')) >=0 ) {
+		if( i <= name.length()-2) {
+		String voor = name.substring(0, i);
+		char   title = name.charAt(i+1);
+		String na = name.substring(i+2);
+		name = voor + (title) + na; // No camelcase
+		} else 
+			name = name.substring(0, i);
+	}
+	return name;
+}
+
+/** berekening van het reasoner resultaat
+ * 	
+ * @param resultaat
+ */
+	protected void doeIetsMet(RuleIF resultaat) {
+		boolean klaar = resultaat.isReady();
+		boolean fout  = resultaat.isException();
+// name: correct similar notequiv 
+		String name = resultaat.getName();
+// zie ik nog niet ingevuld
+		String id = resultaat.getId();
+		if(fout) {
+			GWT.log("Exception: " + resultaat.getExpr());
+		} else 
+		{
+			GWT.log( klaar + ", " + id + ", " + name);
+			int status;
+			if (klaar) status = AntwoordVakChecker.GOED;
+			else if ("notequiv".equals(name)||"buggy".equals(name))
+				status = AntwoordVakChecker.FOUT;
+			else status = AntwoordVakChecker.DOOR;
+			String feedback = id;
+			Map context = resultaat.getContext();
+			String reason = context != null ? (String) context.get("reason") : "";
+			genereerFeedback(status, feedback + reason); 
+		}
+	}
+
+	public static class Tupel {
+	    private String name;
+	    private String type; //initial or derived
+	    private String value;
+
+	    public Tupel(String name, String type, String value) {
+	        super();
+	        this.name = name;
+	        this.type = type;
+	        this.value = value;
+	    }
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((name == null) ? 0 : name.hashCode());
+			result = prime * result + ((type == null) ? 0 : type.hashCode());
+			result = prime * result + ((value == null) ? 0 : value.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Tupel other = (Tupel) obj;
+			if (name == null) {
+				if (other.name != null)
+					return false;
+			} else if (!name.equals(other.name))
+				return false;
+			if (type == null) {
+				if (other.type != null)
+					return false;
+			} else if (!type.equals(other.type))
+				return false;
+			if (value == null) {
+				if (other.value != null)
+					return false;
+			} else if (!value.equals(other.value))
+				return false;
+			return true;
+		}
+	    
+	}
+	
+	public ArrayList<Tupel> getAnswers()
+	{
+		//HashMap<String, Object> map = new HashMap<String, Object>();
+		ArrayList<Tupel> answers = new ArrayList<Tupel>();
+		String type = "derived"; //Indicates that this is a student answer
+		MapperConstants constants = new MapperConstants(); //map for collecting answers from AntwoordKeuzeVak
+		for(int i = 0; i < tekstVakken.length; i++)
+		{
+			for(int j = 0; j < tekstVakken[i].length; j++)
+			{
+				ArrayList<Object> opdrObjects = tekstVakken[i][j].getOpdrachtObjects();
+				for(int k = 0; k < opdrObjects.size(); k++)
+				{
+					Object object = opdrObjects.get(k);
+					//first check: is it a TekstVakPanel? Then request answers from this TekstVakPanel.
+					if(object instanceof TekstVakPanel)
+					{	
+						ArrayList<Tupel> answers2 = ((TekstVakPanel) object).getAnswers();
+						answers.addAll(answers2);
+					}
+					else
+					{
+						String logIDLabel = "";
+						String antwoord = "";
+						if(object instanceof FormuleEditorWithAnswer)
+						{
+							FormuleEditorWithAnswer fewa = (FormuleEditorWithAnswer) object;
+							logIDLabel = fewa.getLogIDLabel();
+							if(fewa.isVergelijkingVak())
+							{
+								VergelijkingMeerv vgl = FormuleParser.parseVergelijking("$f" + fewa.toString() + "@");
+								if(vgl != null)
+									antwoord = vgl.toStringStrikt();
+							}
+							else
+							{
+								Expressie e = FormuleParser.geefExpressie("$f" + fewa.toString() + "@");
+								if(e != null)
+									antwoord = e.toStringStrikt();
+							}
+						}
+						else if(object instanceof FormuleEditorWithSteps)
+						{
+							FormuleEditorWithSteps fews = (FormuleEditorWithSteps) object;
+							logIDLabel = fews.getLogIDLabel();
+							String[] regels = fews.geefRegels();
+							if(fews.isVergelijkingVak())
+							{
+								VergelijkingMeerv[] vergelijkingen = new VergelijkingMeerv[regels.length];
+								for(int m = 0; m < regels.length; m++)
+								{
+									vergelijkingen[m] = FormuleParser.parseVergelijking(regels[m]);//$f are @ already added in geefRegels.
+								}
+								if(vergelijkingen[vergelijkingen.length - 1] != null)
+									antwoord = vergelijkingen[vergelijkingen.length - 1].toStringStrikt();
+							}
+							else
+							{
+								Expressie[] expressies = new Expressie[regels.length];
+								for(int m = 0; m < regels.length; m++)
+								{
+									expressies[m] = FormuleParser.geefExpressie(regels[m]);//$f are @ already added in geefRegels.
+								}
+								if(expressies[expressies.length - 1] != null)
+									antwoord = expressies[expressies.length - 1].toStringStrikt();
+							}
+						}
+						else if(object instanceof AntwoordKeuzeVak)
+						{
+							AntwoordKeuzeVak akv = (AntwoordKeuzeVak) object;
+							logIDLabel = akv.getLogIDLabel();
+							String selection = akv.getSelectedItem().trim();
+							//if selection is an expression: convert to stringStrikt for merging with other components
+							//else: select key from map
+							if(selection.startsWith("$f") && selection.endsWith("@"))
+							{
+								Expressie e = FormuleParser.geefExpressie(selection);
+								if(e != null)
+								{	antwoord = e.toStringStrikt();
+									
+								}
+								else
+								{	antwoord = selection.substring(2, selection.length() - 1);
+									
+								}
+							}
+							else
+								antwoord = getFromMap(constants, logIDLabel, selection);
+						}
+						else if(object instanceof AntwoordTekstVak)
+						{
+							AntwoordTekstVak atv = (AntwoordTekstVak) object;
+							logIDLabel = atv.getLogIDLabel();
+							Expressie expr = FormuleParser.geefExpressie(atv.getText());
+							if(expr != null)
+								antwoord = expr.toStringStrikt();
+						}
+						if(!logIDLabel.equals(""))
+						{
+							//does answers already contain tupel with same logIDLabel? Then merge answers
+							String lastLabel = "";
+							Tupel lastTupel = null;
+							if(answers.size() > 0)
+							{
+								lastTupel = answers.get(answers.size() - 1);
+								lastLabel = lastTupel.name;
+							}
+							if(lastTupel != null && lastLabel.equals(logIDLabel))
+							{
+								String lastAnswer = lastTupel.value;
+								String[] vergTekens = { "=", ">", "<", "\u2264", "\u2265", "\u2248", "\u2260" };
+								boolean pasted = false;
+								for(int m = 0; m < vergTekens.length && !pasted; m++)
+								{
+									if(lastAnswer.endsWith(vergTekens[m]) || antwoord.equals(vergTekens[m]))
+									{
+										lastAnswer = lastAnswer + antwoord;
+										pasted = true;
+									}
+								}
+								if(!pasted && !(lastAnswer.isEmpty()||antwoord.isEmpty())) // geen = als een van beide leeg is.
+								{	lastAnswer = lastAnswer + "=" + antwoord;
+								}
+								
+								lastTupel.value = lastAnswer; // this also adjusts the value in the answers arraylist
+							}							
+							else			
+								answers.add(new Tupel(logIDLabel, type, antwoord));
+						}
+					}
+				}
+			}
+		}
+		return answers;
+	}
+	
+	public String getFromMap(MapperConstants constants, String label, String selectie)
+	{
+		Map m = constants.getMap(label);
+		if(m != null && m.containsKey(selectie)) {
+			String result = m.get(selectie).toString();
+			if (result != null) 
+			{
+				System.out.println("getFromMap, result found: " + selectie + " , result = " + result);
+				return result;
+			}
+		}
+		System.out.println("getFromMap, no result found: " + selectie);
+		return selectie;
 	}
 	
 	public boolean isMouseDown()
@@ -1849,7 +2805,11 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 				if (hoogte - ash > h2)
 					h2 = hoogte - ash;
 			}
-
+			if(stappen!=null && (i>stapNr-1 || stapNr==0))
+			{	totaleHoogte = (totaleHoogte==0) ? cellSpaceRow : totaleHoogte;
+				break;
+			}
+			
 			if (pasAanH && !vulHoogte && !callOut)
 			{
 				hoogtes.set(i, new Double(h1 + h2));
@@ -1892,7 +2852,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 
 		if (!callOut)
 		{
-			setCurrentSize(totaleBreedte, totaleHoogte);
+			setCurrentSize(totaleBreedte, totaleHoogte + feedbackPanelHeight);
 		}
 		
 		plaatsTabelRanden();
@@ -2495,6 +3455,52 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			return;
 		}
 		
+		if(backButton)
+		{
+			if(isInIdeasStatistiek() != null)
+				isInIdeasStatistiek().backAction();
+			else if(findStappenVak() != null)
+				findStappenVak().backAction();
+		}
+
+		if(hintButton)
+		{
+			if(isInIdeasStatistiek() != null)
+			{
+				final TekstVakPanel statPanel = isInIdeasStatistiek();
+				final List<Tupel> newAnswers = statPanel.getAnswers();
+				
+				//TODO: ask for hint based on newAnswers: String hint = ideas.getOneFirst(newAnswers);
+				Promise<String> promise;
+				
+				promise = statPanel.getOneFirst(newAnswers).map(new Function<RuleIF, String>() {
+					private final MapperConstants constants = new MapperConstants();
+					@Override
+					public String apply(RuleIF t) {
+// convert ruleif to string						
+						String id = t.getId(); // ideas identifier
+						String hint;						 
+
+						hint = getFromMap(constants, "hint", id); // ID to hint tekst
+// toevoegen: reason/expr/..?
+						return hint;
+					}});
+				
+				promise.then( new Success<String,Void>() {
+
+					@Override
+					public Promise<Void> call(Promise<String> resolved)
+							throws Exception {
+						String hint = resolved.getValue();
+						
+						statPanel.feedbackImage = null;
+						statPanel.vulFeedbackPanelEnVoegToe(hint);
+						return null;
+					}});
+				return;
+			}
+		}
+		
 		if(!sleepbaar)
 		{
 			return;
@@ -2911,6 +3917,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	
 	private static final String ACTION_SETVISIBLE = "action.setVisible";
 	private static final String ACTION_SETNOTVISIBLE = "action.setNotVisible";
+	private static final String TEXT_CONTENT = "text.content";
+	
 	@Override
 	public void acceptCBookEvent(CBookEvent event) {
 		String command = event.getCommand();
@@ -2919,6 +3927,65 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		}
 		else if(ACTION_SETNOTVISIBLE.equals(command)) {
 			setVisibility(false);
+		}
+		else if(TEXT_CONTENT.equals(command)) {
+			if(stappen == null)
+				stappen = new ArrayList<Object>(); //ObjectMap[hoogtes.size()];
+			Map map = (Map)event.getParameters();
+			
+			if(map!=null)
+			{	ObjectMap objectMap = JSONUtilities.wrapMap(map);
+				
+				//Heeft omliggende (statistiek)TekstVakPanel nog een feedbackPanel? Dan weghalen.
+				TekstVakPanel statPanel = isInIdeasStatistiek();
+				if(statPanel != null && statPanel.feedbackPanel != null)
+				{	statPanel.feedbackPanel.removeFromParent();
+					statPanel.feedbackPanelHeight = 0;
+					statPanel.removeFeedbackImage();
+				}
+				//feedbackPanelHeight = 0;
+				
+				
+				try{
+					String contentString = ((String)map.get("content"));
+					if(contentString.startsWith("back"))
+					{	
+						backAction();
+						return;
+					}
+				}
+				catch(Exception e){
+					ObjectMap contentMap = objectMap.getObjectMap("content");
+					if(stappen.size() > stapNr)
+						stappen.remove(stapNr);
+					stappen.add(contentMap);
+					stapNr++;
+					
+					TekstVakPanel tvp = new TekstVakPanel((HashMap<String, Object>) contentMap, null, null);
+					tvp.setParent(tekstVakken[stapNr - 1][breedtes.size() - 1]);
+					tvp.zetInstellingen(instellingen);
+					tvp.setKeyboard(kb);
+					final Object orgObject = tvp;
+					OpdrNavIF comRoot2 = comRoot;
+					Connector connector = find(tvp);
+					comRoot2 = new OpdrNavContext(comRoot,connector, this.bgColorZichtbaar ? bgColor : comRoot.getBackground());
+					((InteractionView) orgObject).setCommunicationRoot(comRoot2);
+					if(! (tvp instanceof StateLess))
+					{	interactionViewObjects.add(orgObject);
+					}
+										
+					HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) contentMap).get("interactiePanelLaunchState");
+					tvp.zetOpdracht(launchState);
+					tvp.setContainer(new TekstVakContext(stapNr - 1,breedtes.size() - 1));
+					xWidgetMap.putAll(tvp.xWidgetMap);
+					Connector.calculateSubscriptions(xWidgetMap.values());
+					ArrayList<Object> list = new ArrayList<Object>();
+					list.add(tvp);
+					tekstVakken[stapNr - 1][breedtes.size() - 1].zetOpdrachtObjects(list);
+					tekstVakken[stapNr - 1][breedtes.size() - 1].setObjects(list);
+					setVisibility(true);
+				}
+			}
 		}
 		else if(TVP_SELECT.equals(command)) {
 			if(!selected) {
@@ -2955,6 +4022,43 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			if (object instanceof CBookEventListener)
 				((CBookEventListener) object).acceptCBookEvent(event);
 		}
+	}
+	
+	private boolean backAction()
+	{
+		//back has to be performed on this TekstVakPanel
+		if(stappen != null && stappen.size() > 0)
+		{
+			tekstVakken[stapNr-1][breedtes.size()-1].clear();
+			tekstVakken[stapNr-1][breedtes.size()-1].zetOpdrachtObjects(new ArrayList<Object>());
+			if(stapNr > 0)	
+				stapNr--;
+			if(stappen.size() > stapNr)
+				stappen.remove(stapNr);
+			resize();
+			
+			return true;
+		}
+		else //back has to be performed on TekstVakPanel containing stappen, somewhere in this TekstVakPanel
+		{
+			if(feedbackPanel != null)
+			{	feedbackPanel.removeFromParent();
+				feedbackPanelHeight = 0;
+				removeFeedbackImage();
+			}
+			
+			for(int i = 0; i < interactionViewObjects.size(); i++)
+			{
+				Object object = interactionViewObjects.get(i);
+				if(object instanceof TekstVakPanel)
+				{
+					if(((TekstVakPanel) object).backAction())
+						return true;
+				}
+			}
+			return false;
+		}
+			
 	}
 
 	// visible (default) or hidden.
@@ -2997,6 +4101,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 //		if(parent!=null)
 //			parent.resize();
 	}
+	
+	
 	private static final int LEFT = 0;
 	private static final int RIGHT = 1;
 	private static final int MIDDLE = 2;

@@ -3647,6 +3647,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		}
 	}
 	
+	public boolean isVergelijkingVak()
+	{
+		return isVergelijkingVak;
+	}
+	
 	
 	@Override
 	public void getResponses(List<String> responses) {
@@ -3792,6 +3797,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			return avChecker.getPossibleMisconceptions();
 		return null;
 	}
+	
+	public AntwoordVakChecker getAvChecker()
+	{
+		return avChecker;
+	}
 
 	/**
 	 * Methode om correct te laten zetten door FormuleEditorWithAnswer.
@@ -3838,6 +3848,13 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	public void setStapOk(boolean stapOk)
 	{
 		this.stapOk = stapOk;
+	}
+	
+	public String getLogIDLabel()
+	{
+		if(dwologger != null && dwologger instanceof DWOLogger)
+			return ((DWOLogger) dwologger).getLogIDLabel();
+		return "";
 	}
 
 	@Override

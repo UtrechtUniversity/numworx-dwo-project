@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.text.Text;
 import fi.wiskopdr.text.TextConstants;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
+import nl.uu.fi.dwo.ideas.client.RuleIF;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -38,7 +40,9 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 
 public class CheckButton implements InteractionStub, CBookEventListener
@@ -139,7 +143,7 @@ public class CheckButton implements InteractionStub, CBookEventListener
 
 	static final String holderId = "dockholder";
 	private static Logger logger = Logger.getLogger("CheckButton");
-	
+	private Logging logging;
 	private Map<String, Object> launchState; 
 	
 	OpdrNavIF comRoot;
@@ -195,6 +199,21 @@ public class CheckButton implements InteractionStub, CBookEventListener
 			actieBewaren = launchData.getBoolean("actieBewaren", actieBewaren);
 			actieAfronden = launchData.getBoolean("actieAfronden", actieAfronden);
 		}
+	    boolean logOption = true;
+    	boolean[][] logObjectives = null;
+    	String logID = "CheckButton";
+    	String logIDLabel = "";
+
+		if (logOption)
+	    {	
+	    	DWOLogger dwologger = new DWOLogger();
+	    	dwologger.setMaxScore(0);
+	    	dwologger.setClassName("fi.wiskopdr.CheckButton");
+			dwologger.setLogID(logID);
+			dwologger.setLogObjectives(logObjectives);
+			dwologger.setLogIDLabel(logIDLabel);
+	    	logging = dwologger;
+	    }
 	}
 	
 	private void initialize(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
@@ -252,6 +271,61 @@ public class CheckButton implements InteractionStub, CBookEventListener
 			basisPanel.setWidgetTopHeight(checkButton, 5, Style.Unit.PX, imHeight, Style.Unit.PX);
 		} else
 			logger.fine("await checkbutton loaded " + imWidth + " x " + imHeight);
+			
+		checkButton.addClickHandler(new ClickHandler(){
+
+			public void onClick(ClickEvent e)
+			{	e.stopPropagation();
+//				correct = Boolean.TRUE;
+				logger.warning("CheckButton click start");
+				comRoot.pause();
+				TekstVakPanel ideasStatistiekPanel = findParentRegel().getTekstVak().getTekstVakParent().isInIdeasStatistiek();
+				if(ideasStatistiekPanel != null)
+				{
+					//log answers from all FormuleEditorWithAnswer boxes
+					for (int i = 0; i < lijst.size(); i++)
+					{	Object object = lijst.get(i);
+						if(object instanceof FormuleEditorWithAnswer) {
+							((FormuleEditorWithAnswer) object).logAttempt();
+						}
+					}
+					ideasStatistiekPanel.kijkNaIdeasStatistiek().then(new Success<RuleIF, RuleIF>(){
+
+						@Override
+						public Promise<RuleIF> call(Promise<RuleIF> resolved)
+								throws Exception {
+							if(logging != null) {
+								logging.log(buildLog(resolved.getValue()));
+							}
+							
+							
+							
+							return resolved;
+						}
+
+						});
+				}
+				else
+				{
+					for (int i = 0; i < lijst.size(); i++)
+					{	Object object = lijst.get(i);
+						if(object instanceof InteractionView) {
+							InteractionView view = (InteractionView) object;
+							view.kijkNa();
+							//view.zetNagekeken(true); 
+		//						Boolean check = view.isCorrect();
+		//						if(check == null) correct = null;
+		//						if(check == Boolean.FALSE) {
+		//							correct = check; 
+		//							return; // early out.
+		//						}
+						}
+					}
+				}
+				comRoot.unpause();				
+				logger.warning("CheckButton click end");
+			}
+		});
 		
 		if(nakijkenVak) checkButton.addClickHandler(new NakijkenVak());
 		if(nakijkenPagina) checkButton.addClickHandler(new NakijkenPagina());
@@ -260,6 +334,21 @@ public class CheckButton implements InteractionStub, CBookEventListener
 		if(actieAfronden) checkButton.addClickHandler(new ActieAfronden());
 	}
 	
+	
+	private Map<String, ?> buildLog(RuleIF value) {
+		HashMap<String,Object> map = new HashMap<String, Object>();
+		if(value.isReady()) map.put("success", Boolean.TRUE);
+		if("notequiv".equals(value.getName())||"buggy".equals(value.getName())) map.put("success", Boolean.FALSE);
+		map.put("response", value.getExpr());
+		map.put("score", Collections.singletonMap("raw", 0));
+		
+		Map context = value.getContext();
+		String reason = context != null ? (String) context.get("reason") : "";
+		
+		map.put("feedback", value.getName() + "," + value.getId() + reason);
+		map.put("step", "");
+		return map;
+	}
 	boolean fout;
 	private Image knopImage;
 //	private Boolean correct;
@@ -297,6 +386,7 @@ public class CheckButton implements InteractionStub, CBookEventListener
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
 		zetMode(comRoot.getMode());
+		if(logging != null) logging.setCommunicationRoot(comRoot);
 	}
 
 	@Override
@@ -340,6 +430,17 @@ public class CheckButton implements InteractionStub, CBookEventListener
 	@Override
 	public void setAsHoogte(int ashoogte) {
 		this.ashoogte = ashoogte;
+	}
+	
+	public TekstRegel findParentRegel()
+	{
+		Widget parent = asWidget();
+		while (parent != null && !(parent instanceof TekstRegel))
+		{
+			parent = parent.getParent();
+		}
+		return (TekstRegel) parent;
+		
 	}
 
 	@Override

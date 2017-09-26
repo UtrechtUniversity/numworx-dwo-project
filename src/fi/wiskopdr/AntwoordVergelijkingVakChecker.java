@@ -1447,4 +1447,8 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public VergelijkingMeerv getDesiredSolution() {
+		return gewensteEindOplossing;
+	}
 }

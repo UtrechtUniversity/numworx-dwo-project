@@ -1233,6 +1233,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		}
 	}
 
+	
 	public boolean contentUitklapbaar()
 	{
 		boolean uitklapbaar = false;

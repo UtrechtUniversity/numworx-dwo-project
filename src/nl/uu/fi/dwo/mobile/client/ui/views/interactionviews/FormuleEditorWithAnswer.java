@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Promise;
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -64,6 +66,7 @@ import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.AntwoordVergelijkingVakChecker;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.RestartException;
+import fi.wiskopdr.RestartException.RestartHandler;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.Vergelijking;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
@@ -77,6 +80,22 @@ import fi.wiskopdr.expressies.repr.ContentMathML;
  */
 public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionViewWithMisconceptions, CBookEventListener, FacetAware, TekstElementWithFont, PopupListener
 {
+	class RestartStatistiek implements RestartHandler {
+		Promise<?> r;
+		
+		RestartStatistiek(Promise<?> r) {
+			this.r = r;
+		}
+
+		@Override
+		public void restart(String message, Runnable run) {		
+			r.onResolve(run);
+		}
+		
+
+	}
+
+
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
 	public static final String ACTION_FALSE2 = "action.false_2";
@@ -932,11 +951,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			}
 		}
 
-		if (logging != null)
-		{
-			Map<String, Object> map = buildLoggingMap();
-			logging.log(map);
-		}
+		logAttempt();
 	}
 
 	/**
@@ -1055,6 +1070,15 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		
 		return replacedString;
 	}
+	
+	public void logAttempt()
+	{
+		if (logging != null)
+		{
+			Map<String, Object> map = buildLoggingMap();
+			logging.log(map);
+		}
+	}
 
 	Map<String, Object> buildLoggingMap() {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1143,6 +1167,26 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (setState)
 			setChanged(false);
 		
+		
+//		TekstVakPanel ideasStatistiekPanel = null;
+//		if(parentRegel != null)
+//			ideasStatistiekPanel = parentRegel.getTekstVak().getTekstVakParent().isInIdeasStatistiek();
+//		else if(fe != null)
+//			ideasStatistiekPanel = fe.findParentRegel().getTekstVak().getTekstVakParent().isInIdeasStatistiek();
+//		if(ideasStatistiekPanel != null)
+//		{
+//			if(show)
+//			{
+//				Promise<Void> r = ideasStatistiekPanel.kijkNaIdeasStatistiek();
+////				if(!r.isDone()) {
+////					RestartStatistiek handler = new RestartStatistiek(r);
+////					RestartException restart = new RestartException(null, handler);
+////					throw restart;
+////				}
+//			}
+//			return;
+//		}
+				
 		String useranswer = "$f" + this.toString() + "@";
 		if (useranswer.equals("$f@"))
 			ingevuld = false;
@@ -1765,6 +1809,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		return scoreObjectives;
 	}
 	
+	public boolean isVergelijkingVak()
+	{
+		return isVergelijkingVak;
+	}
+	
 	@Override
 	public Boolean isCorrect()
 	{
@@ -1848,6 +1897,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 	public void zetMode(int mode) {
 		this.mode = mode;
+	}
+	
+	public String getLogIDLabel()
+	{
+		if(logging != null && logging instanceof DWOLogger)
+			return ((DWOLogger) logging).getLogIDLabel();
+		return "";
 	}
 
 	public Object getUitwerking(TekstVakPanel parent) {
@@ -1953,11 +2009,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			if(antwoord == null) return "";
 			return ContentMathML.INSTANCE.toString(antwoord);
 		}
-	}
-	
-	public boolean isVergelijkingVak()
-	{
-		return isVergelijkingVak;
 	}
 
 	@Override
@@ -2096,6 +2147,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if(avChecker != null)
 			return avChecker.getPossibleMisconceptions();
 		return null;
+	}
+	
+	public AntwoordVakChecker getAvChecker()
+	{
+		return avChecker;
 	}
 	
 	/**

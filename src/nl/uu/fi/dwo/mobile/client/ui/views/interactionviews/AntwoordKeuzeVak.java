@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -57,6 +58,12 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
 	public static final String ACTION_FALSE2 = "action.false_2";
+	
+	//tbv antwoordvak hypothesetoetsen
+	public static final String TEXT_FEEDBACK = "text.feedback";
+	public static final String TEXT_CHOICE = "text.choice";
+	public static final String INT_INDEX = "int.index";
+
 
 	private static final CBookEvent EVENT_CORRECT = new CBookEvent(ACTION_CORRECT); 
 	private static final CBookEvent EVENT_FALSE = new CBookEvent(ACTION_FALSE); 
@@ -141,6 +148,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 	private int hoogtePopup;
 	private Logging logging;
 	
+	private boolean verbergFeedback = false;
 	
 	
 	
@@ -197,6 +205,9 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 			}
 			if(map.containsKey("logID")) 
 				logID = map.getString("logID");
+			String logIDLabel = "";
+			if(map.containsKey("logIDLabel"))
+				logIDLabel = map.getString("logIDLabel");
 		    if(map.containsKey("check")) 
 				check = map.getBoolean("check");
 			if(map.containsKey("teltMee")) 
@@ -214,6 +225,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		    	if(map.containsKey("logIDLabel"))
 					dwologger.setLogIDLabel(map.getString("logIDLabel"));
 		    	dwologger.setLogObjectives(logObjectives);
+		    	dwologger.setLogIDLabel(logIDLabel);
 		    	dwologger.setTeltMee(teltMee);
 		    	logging = dwologger;
 		    }
@@ -644,6 +656,33 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 			zetGoedFout(GEEN);
 		}
 		setAttempt();
+		
+		
+		//tbv antwoordvak hypothesetoetsen
+		if (hasFeedback && index > 0)
+		{
+			ObjectMap answerModel = answerModels[index-1];
+			Map<String,Object> map = new HashMap<String,Object>();
+			try{
+				String feedbackText = answerModel.getString("feedback");
+				if(feedbackText != null)
+					map.put("content", feedbackText);
+				else
+				{
+					ObjectMap feedbackMap = answerModel.getObjectMap("feedback");
+					map.put("content", feedbackMap);
+				}
+			}
+			catch(Exception e)
+			{
+				System.out.println("Exception in CBookEvent feedback AntwoordKeuzeVak");
+			}
+			fireEvent(new CBookEvent(this, TEXT_FEEDBACK, map));
+			if(verbergFeedback && index > 0)
+				zetSelectie(0);
+		}
+
+		setAttempt();
 	}
 	
 	
@@ -1049,7 +1088,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 
 				if (gelijkwaardig || h == aantalAnswerModels - 1)
 				{
-					if (!feedback.trim().equals(""))
+					if (!feedback.trim().equals("") && !verbergFeedback)
 					{
 						zetFeedback();
 						//feedbackLabel.setVisible(show);
@@ -1176,12 +1215,25 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		else
 			checkPanel.getElement().getStyle().setCursor(Cursor.DEFAULT);
 	}
+
+	public TekstRegel findParentRegel()
+	{
+		Widget parent = asWidget();
+		while (parent != null && !(parent instanceof TekstRegel))
+		{
+			parent = parent.getParent();
+		}
+		return (TekstRegel) parent;
+		
+	}
 	
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
 		zetMode(comRoot.getMode());
 		if(logging != null) logging.setCommunicationRoot(comRoot);
+		if(comRoot.hasListeners("text.feedback")) // Alleen als er 'text' messages kunnen worden ontvangen)
+			verbergFeedback = true;
 		comRoot.addCBookEventListener("action.setNotEditable", this);
 	}
 
@@ -1229,6 +1281,35 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		responses.add(Integer.toString(selectedIndex));
 	}
 
+	public int getSelectedIndex()
+	{
+		return selectedIndex;
+	}
+	
+	public String getSelectedItem()
+	{
+		if(selectedIndex > 0)
+			return keuzeMogelijkheden[selectedIndex - 1];
+		else
+			return "";
+	}
+	
+	public String getLogIDLabel()
+	{
+		if(logging != null && logging instanceof DWOLogger)
+			return ((DWOLogger) logging).getLogIDLabel();
+		return "";
+	}
+	
+	public String getAntwoordString()
+	{
+		return antwoordString;
+	}
+	
+	public ObjectMap[] getAnswerModels()
+	{
+		return answerModels;
+	}
 	@Override
 	public void acceptCBookEvent(CBookEvent event) {
 		if("action.setNotEditable".equals(event.getCommand())) {

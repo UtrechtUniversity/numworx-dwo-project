@@ -593,6 +593,11 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		
 	}
 	
+	public Expressie[] getJuisteAntwoorden()
+	{
+		return juisteAntwoorden;
+	}
+	
 	public void zetJuisteVorm(String s)
 	{	s = s.substring(2,s.length()-1);
 		String[] antwoordStrings = s.split(";");

@@ -53,6 +53,8 @@ import java.util.Vector;
 
 
 
+
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -274,6 +276,9 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 				logOption = map.getBoolean("logOption");
 			if (map.containsKey("logID"))
 				logID = map.getString("logID");
+			String logIDLabel = "";
+			if(map.containsKey("logIDLabel"))
+				logIDLabel = map.getString("logIDLabel");
 			if(logOption) {
 				DWOLogger dwologger = new DWOLogger();
 				dwologger.setMaxScore(scoreMax);
@@ -950,6 +955,16 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 
 	private void kijkNa(boolean show, boolean up)
 	{
+		
+//		TekstVakPanel ideasStatistiekPanel = null;
+//		if(parentRegel != null)
+//			ideasStatistiekPanel = parentRegel.getTekstVak().getTekstVakParent().isInIdeasStatistiek();
+//		if(ideasStatistiekPanel != null)
+//		{
+//			if(show)
+//				ideasStatistiekPanel.kijkNaIdeasStatistiek();
+//			return;
+//		}
 		checkAntwoord(show);
 		
 		if (formuleMode)
@@ -1323,4 +1338,15 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 		
 	}
 	
+	public String getLogIDLabel()
+	{
+		if(logging != null && logging instanceof DWOLogger)
+			return ((DWOLogger) logging).getLogIDLabel();
+		return "";
+	}
+	
+	public String getAntwoordString()
+	{
+		return antwoordString;
+	}
 }
