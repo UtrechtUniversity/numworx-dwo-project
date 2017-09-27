@@ -224,6 +224,14 @@
          <param-value>http://ideas.cs.uu.nl/cgi-bin/ideas.cgi</param-value>
       </init-param>
       <init-param>
+         <param-name>extra-ideascgi</param-name>
+         <param-value>hypothesis</param-value>
+      </init-param>
+      <init-param>
+         <param-name>ideascgi.hypothesis</param-name>
+         <param-value>http://ideastest.science.uu.nl/cgi-bin/statistics.cgi</param-value>
+      </init-param>
+      <init-param>
          <param-name>mixedfraction</param-name>
          <param-value>true</param-value>
       </init-param>
