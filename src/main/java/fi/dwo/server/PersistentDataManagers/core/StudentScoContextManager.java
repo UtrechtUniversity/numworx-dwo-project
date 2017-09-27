@@ -153,12 +153,18 @@ public class StudentScoContextManager {
     public static List<PersistentStudentScoContext> findEntities(PersistentScoContext scoContext, PersistentHasRolePK key) {
         EntityManager em = getEntityManager();
         try {
+        	em.getTransaction().begin();
             javax.persistence.Query q = em.createNamedQuery("PersistentStudentScoContext.findByScoIDandHasRolePK");
             q.setParameter("scoID", scoContext.getScoID());
             q.setParameter("keyID", key);
             List<PersistentStudentScoContext> list = q.getResultList();
+            for(PersistentStudentScoContext pssc: list) em.refresh(pssc);
             LOG.log(Level.FINE, "StudentScoContextManager-manager retrieved {0} PersistentStudentScoContext with scoId {1} and key {2}", new Object[]{list.size(), scoContext.getScoID(), key.toString()});
+            em.getTransaction().commit();
             return list;
+        } catch(RuntimeException e) {
+        	LOG.log(Level.SEVERE, "", e);
+        	throw e;
         } finally {
             em.close();
         }

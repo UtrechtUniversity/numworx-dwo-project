@@ -141,7 +141,14 @@ public class StudentScoDataManager {
     public static PersistentStudentScoData findEntity(Long id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(PersistentStudentScoData.class, id);
+        	em.getTransaction().begin();
+            PersistentStudentScoData o = em.find(PersistentStudentScoData.class, id);
+            if(o != null) em.refresh(o);
+            em.getTransaction().commit();
+			return o;
+        } catch(RuntimeException e) {
+        	LOG.log(Level.SEVERE, "", e);
+        	throw e;
         } finally {
             em.close();
         }

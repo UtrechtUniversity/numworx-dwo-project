@@ -75,7 +75,7 @@ public class SecuredUserScoDataManager {
 		PersistentScoData scoData = ScoDataManager.findEntity(scoId);
         if(scoData == null) {
             LOG.log(Level.WARNING, "not found " + sc.getUserPrincipal().getName() );		
-       	return "{}"; // Not found, not fatal
+            return "{}"; // Not found, not fatal
         }
         PersistentScoContext scoContext = ScoContextManager.findEntity(scoId);
         Long courseID = scoContext.getCourseID();
@@ -175,7 +175,9 @@ public class SecuredUserScoDataManager {
 		PersistentStudentScoContext pssc = list.get(0);
 		getScormValues(entryList, pssc);
 
-    	return rest.getDomScormValues();
+    	DomScormValues domScormValues = rest.getDomScormValues();
+     	LOG.log(Level.INFO, "getValues done " + sc.getUserPrincipal().getName() + " " + scocontextid);
+		return domScormValues;
     }
 
 
@@ -261,7 +263,13 @@ public class SecuredUserScoDataManager {
 				entry.setValue(String.valueOf(pssd.getSuspendData()));
 				break;
 			}
+			logEntry("get", entry, pssc.getPersistentHasRolePK().getUserID(), pssc.getScoID());
 		}
+	}
+
+
+	private static void logEntry(String pfx, DomMapEntry<String, String> entry, Long userid, Long scoid) {
+		LOG.log(Level.INFO, "{0} u:{3}, s:{4}, k:{1}, v:{2}", new Object[] { pfx, entry.getKey(), entry.getValue(), userid, scoid} );
 	}
 
 
@@ -288,11 +296,13 @@ public class SecuredUserScoDataManager {
     		LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Hasrole mismatch");
     		throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "This will be logged.");			
  		}
-     	PersistentScoContext scoContext = ScoContextManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomScormValues().getScoContext()));
-     	LOG.log(Level.INFO, "setValues " + sc.getUserPrincipal().getName() + " " + scoContext.getScoID());
-		List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
-		PersistentStudentScoContext pssc;
+		PersistentStudentScoContext pssc = null;
 		PersistentStudentScoData pssd = null;
+		PersistentScoContext scoContext = null;
+		try {
+			scoContext = ScoContextManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomScormValues().getScoContext()));
+     	LOG.log(Level.INFO, "setValues starts " + sc.getUserPrincipal().getName() + " " + scoContext.getScoID());
+		List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
 		Scorm2Xml xml = null;
 		if (list.isEmpty()) {
 			pssc = new PersistentStudentScoContext();
@@ -302,71 +312,101 @@ public class SecuredUserScoDataManager {
 			pssc.setScoID(scoContext.getScoID());
 			pssc.setPersistentHasRolePK(hasRoleKey);
 			StudentScoContextManager.create(pssc); // throw duplicate error
+			LOG.fine("studentsco1 = " + pssc.getStudentSco());
+			list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
+			pssc = list.get(0);
+			LOG.fine("studentsco2 = " + pssc.getStudentSco());
+			
+			
 		} else {
 			pssc = list.get(0);
 			if(COMPLETE.equals(pssc.getCompletionStatus()))
+			{
+				LOG.warning("data is readonly "+ sc.getUserPrincipal().getName() + " " + scoContext.getScoID());
 				return Boolean.FALSE;
+			}
 		}
 		for(DomMapEntry<String,String> entry: rest.getDomScormValues().getValues()) {
+			logEntry("set", entry, pssc.getPersistentHasRolePK().getUserID(), pssc.getScoID());
 			ScormKey key = ScormKey.getKey(entry.getKey());
 			String value = entry.getValue();
 			switch(key) {
 			case SCORE: 
-				pssc.setScore(Float.parseFloat(value));break;
+				try {
+					pssc.setScore(Float.parseFloat(value));
+				} catch (Exception e) {
+					LOG.warning("setValues: score= " + value + " e:" + e);
+				}break;
 			case LOCATION:
 				pssc.setLocation(value);break;
 			case COMPLETION_STATUS:
 				pssc.setCompletionStatus(value);break;
 			case COCD:
-				if(xml == null) {
-					if(pssd == null) {
-						pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
+				try {
+					if(xml == null) {
 						if(pssd == null) {
-							pssd = new PersistentStudentScoData(pssc.getStudentSco());
-							pssd.setSuspendData("");
-							pssd.setCocd("");
-							StudentScoDataManager.create(pssd);
+							pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
+							if(pssd == null) {
+								pssd = new PersistentStudentScoData(pssc.getStudentSco());
+								pssd.setSuspendData("");
+								pssd.setCocd("");
+								StudentScoDataManager.create(pssd);
+							}
 						}
+						String xmlStr = pssd.getCocd();
+					    xml = new Scorm2Xml(String.valueOf(xmlStr));
 					}
-					String xmlStr = pssd.getCocd();
-	                xml = new Scorm2Xml(String.valueOf(xmlStr));
+					xml.LMSSetValue(entry.getKey(), value);
+				} catch (Exception e) {
+					LOG.warning("setValues: cocd= " + entry.getKey() + ","+ value + " e:" + e);
 				}
-				xml.LMSSetValue(entry.getKey(), value);
 				break;
 			case SESSION_TIME:
 				pssc.setSessionTime(value);
 				break;
 			case SESSION_TIME2004:
-				pssc.setSessionTime(CMI.to1_2Timex(CMI.from2004Time(value)));
+				try {
+					pssc.setSessionTime(CMI.to1_2Timex(CMI.from2004Time(value)));
+				} catch (Exception e) {
+					LOG.warning("setValues: sessiontime= " + entry.getKey() + ","+ value + " e:" + e);
+				}
 				break;
 			case SUSPEND_DATA:
-				value = DbAccess.convertUEsc(value);
-				if(pssd == null) {
-					pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
+				try {
+					value = DbAccess.convertUEsc(value);
 					if(pssd == null) {
-						pssd = new PersistentStudentScoData(pssc.getStudentSco(), value);
-						pssd.setSuspendData(value);
-						pssd.setCocd("");
-						StudentScoDataManager.create(pssd);
+						pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
+						if(pssd == null) {
+							pssd = new PersistentStudentScoData(pssc.getStudentSco(), value);
+							pssd.setSuspendData(value);
+							pssd.setCocd("");
+							StudentScoDataManager.create(pssd);
+						} else {
+							pssd.setSuspendData(value);
+						}
 					} else {
 						pssd.setSuspendData(value);
 					}
-				} else {
-					pssd.setSuspendData(value);
+				} catch (Exception e) {
+					LOG.warning("setValues: suspenddata= " + value + " e:" + e);
 				}
 				break;
 			case TOTAL_TIME:
 				pssc.setTotalTime(value);
 				break;
 			case TOTAL_TIME2004:
-				pssc.setTotalTime(CMI.to1_2Timex(CMI.from2004Time(value)));
+				try {
+					pssc.setTotalTime(CMI.to1_2Timex(CMI.from2004Time(value)));
+				} catch (Exception e) {
+					LOG.warning("setValues: totaltime= " + value + " e:" + e);
+
+				}
 				break;
 			case XML:
 // TODO
 				break;
 			}
 		}
-		try {
 			if (xml != null) {
 				pssd.setCocd(xml.toString());
 			}
@@ -374,6 +414,7 @@ public class SecuredUserScoDataManager {
 				StudentScoDataManager.edit(pssd);
 			}
 			StudentScoContextManager.edit(pssc);
+			LOG.log(Level.INFO, "setValues returns " + sc.getUserPrincipal().getName() + " " + sc.getUserPrincipal().getName() + " " + scoContext.getScoID());
 		} catch (PersistenceException ex) {
             LOG.log(Level.WARNING, "User {0} could not update studentscocontext {1}.", new Object[]{sc.getUserPrincipal().getName(), pssc.getStudentSco()});
             LOG.log(Level.SEVERE, "", ex);
