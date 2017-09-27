@@ -269,7 +269,7 @@ public class SecuredUserScoDataManager {
 
 
 	private static void logEntry(String pfx, DomMapEntry<String, String> entry, Long userid, Long scoid) {
-		LOG.log(Level.INFO, "{0} u:{3}, s:{4}, k:{1}, v:{2}", new Object[] { pfx, entry.getKey(), entry.getValue(), userid, scoid} );
+		LOG.log(Level.INFO, "{0} u:{3}, s:{4}, k:{1}, v:{2}", new Object[] { pfx, entry.getKey(), entry.getValue(), String.valueOf(userid), String.valueOf(scoid)} );
 	}
 
 
