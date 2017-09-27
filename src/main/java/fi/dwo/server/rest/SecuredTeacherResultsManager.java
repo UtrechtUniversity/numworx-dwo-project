@@ -210,6 +210,8 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 ccList.forEach((classCourse) -> {
                     //fetch course and check profile
                     //TODO optimize and fetch only leaves for the current profile and set the parent node to 0?
+                    //PersistentCourse course = classCourse.getCourse();
+                    //if(course!=null) course.setCourseID(classCourse.getCourseID());
                     PersistentCourse course = CourseManager.findEntity(classCourse.getCourseID());
                     //note currently one class course per higher tree node
                     if (course != null && !course.isWithChildren()
