@@ -4039,6 +4039,9 @@ private Object CamelCase(String name) {
 		//back has to be performed on this TekstVakPanel
 		if(stappen != null && stappen.size() > 0)
 		{
+			ArrayList<Object> opdrObjects = tekstVakken[stapNr-1][breedtes.size()-1].getOpdrachtObjects();
+			for(int i = 0; i < opdrObjects.size(); i++)
+				interactionViewObjects.remove(opdrObjects.get(i));
 			tekstVakken[stapNr-1][breedtes.size()-1].clear();
 			tekstVakken[stapNr-1][breedtes.size()-1].zetOpdrachtObjects(new ArrayList<Object>());
 			if(stapNr > 0)	
@@ -4046,7 +4049,6 @@ private Object CamelCase(String name) {
 			if(stappen.size() > stapNr)
 				stappen.remove(stapNr);
 			resize();
-			
 			return true;
 		}
 		else //back has to be performed on TekstVakPanel containing stappen, somewhere in this TekstVakPanel
