@@ -3031,11 +3031,11 @@ public class PersistenceFacade {
                     continue;
                 }
             }
-            o = ht.get("type");
-            if (Integer.valueOf(2).equals(o)) { // INVISIBLE
-            	iter.remove();
-            	continue;
-            }
+//            o = ht.get("type");
+//            if (Integer.valueOf(2).equals(o)) { // INVISIBLE
+//            	iter.remove();
+//            	continue;
+//            }
         }
         return v;
     }

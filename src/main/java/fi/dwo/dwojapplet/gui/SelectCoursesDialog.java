@@ -89,6 +89,9 @@ class CourseData implements CourseMap {
             van = course.link.getNotBefore();
             tot = course.link.getNotAfter();
             type = course.link.getType();
+            //FIXME Wim wn 
+            if(type == 2) 
+            	type = 0;
         }
     }
     Image data;
@@ -452,9 +455,9 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                     }
                     break;
                 case COURSE_TYPE:
-                    if (OBJECT_TYPE[2].equals(aValue)) {
-                        cd[rowIndex].type = 2;
-                    } else
+//                    if (OBJECT_TYPE[2].equals(aValue)) {
+//                        cd[rowIndex].type = 2;
+//                    } else
                     if (OBJECT_TYPE[1].equals(aValue)) {
                         cd[rowIndex].type = 1;
                     } else {
@@ -597,7 +600,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
     }
 
-    static final Object[] OBJECT_TYPE = new Object[]{TextMapper.getText(TextMapper.GUICDLG_NORMAAL), TextMapper.getText(TextMapper.GUICDLG_AFGESCHERMD), TextMapper.getText(TextMapper.GUICDLG_ONZICHTBAAR)};
+    static final Object[] OBJECT_TYPE = new Object[]{TextMapper.getText(TextMapper.GUICDLG_NORMAAL), TextMapper.getText(TextMapper.GUICDLG_AFGESCHERMD)/*, TextMapper.getText(TextMapper.GUICDLG_ONZICHTBAAR)*/};
 
     class CheckBoxNodeRenderer implements TreeCellRenderer {
 
