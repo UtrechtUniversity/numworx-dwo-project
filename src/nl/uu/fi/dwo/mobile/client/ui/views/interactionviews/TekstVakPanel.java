@@ -2268,6 +2268,7 @@ GWT.log("prefix = " + prefix);
 
 private Object deGreek(String value) {
 	return value
+		.replace(",", ".")
 		.replace("$sD@", "")
 		.replace("σ$sM@", "sigmaM")
 		.replace("μ", "mu")
