@@ -29,7 +29,7 @@
     <class>fi.dwo.commons.persistence.entities.PersistentTeacherOfClass</class>
     <class>fi.dwo.commons.persistence.entities.PersistentUser</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
-    <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+    <shared-cache-mode>NONE</shared-cache-mode>
     <properties>
     <!--    Alternative data-nucleus config, required additional and unknown tomcat configs
             <provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
@@ -40,9 +40,10 @@
             <property name="datanucleus.validateTables" value="false"/>
             <property name="datanucleus.validateConstraints" value="false"/>
             -->
-      <property name="eclipselink.weaving" value="static"/>
+      <property name="eclipselink.cache.shared.default" value="false"/>
+<!--      <property name="eclipselink.weaving" value="static"/>
       <property name="eclipselink.weaving.lazy" value="true"/>
-      <property name="eclipselink.allow-zero-id" value="true"/>
+      <property name="eclipselink.allow-zero-id" value="true"/>-->
 <!-- logging all on -->
       <property name="eclipselink.logging.logger" value="JavaLogger"/>      
       <property name="eclipselink.logging.level.sql" value="FINE"/>
