@@ -371,12 +371,18 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		mainPanel.setPixelSize(breedte-2, hoogte-2);
 		mainPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 		mainPanel.getElement().getStyle().setBorderColor("gray");
-		mainPanel.getElement().getStyle().setBackgroundColor("transparent");
+		if (boxMetRand)
+			mainPanel.getElement().getStyle().setBackgroundColor("white");
+		else
+			mainPanel.getElement().getStyle().setBackgroundColor("transparent");
 		mainPanel.getElement().getStyle().setBorderWidth(boxMetRand ? 1 : 0, Unit.PX);
 		
 		headerPanel = new FlowPanel();
 		headerPanel.setPixelSize(breedte - 2, 22);//TODO: hoogte nog even checken
-		headerPanel.getElement().getStyle().setBackgroundColor("transparent");
+		if (boxMetRand)
+			headerPanel.getElement().getStyle().setBackgroundColor("white");
+		else
+			headerPanel.getElement().getStyle().setBackgroundColor("transparent");
 		headerPanel.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		
 		Image buttonImg = new Image(DWOplayer.DWO_BUNDLE.pijlterug().getSafeUri());
