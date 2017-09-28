@@ -8,7 +8,8 @@ Create an empty mysql database and run the createdb.sql in the tools directory
 on the commandline of the mysql executable to fill it with tables. Next create a 
 user account for the new database.
 
-Settings for the database should be as follows in the mysqld.cnf:
+Settings for the database for mysql 5.7 should be as follows in the mysqld.cnf, note the 
+mysql_mode = '' allow to store a “zero” value of '0000-00-00' as a “dummy date”.:
 
 lower_case_table_names=1
 character-set-server = utf8
@@ -16,6 +17,7 @@ collation-server=utf8_unicode_ci
 init-connect='SET NAMES utf8'
 innodb_file_per_table = 1
 default-storage-engine=INNODB
+msql_mode = '' 
 
 The database account for the resource should have select, insert update and 
 delete rights. If the database is named dwodb. One might use the following 
