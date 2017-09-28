@@ -1,4 +1,51 @@
 
+Upgrading from DWOServer 2.1.20 to DWOServer 2.1.21
+
+=== FROM DWO2DB 1.4.1 to 1.5.0 ===
+
+update to database mysql 5.7 and run in the mysql-client:
+
+===
+CREATE TABLE `tblUrnResource` (
+ `urnID` int(11) NOT NULL AUTO_INCREMENT,
+ `extUUID` varchar(54) NOT NULL, /* PRIME:UUID:URNID */
+ `mime-type` varchar(255) NOT NULL,
+ `optlock` int(11) DEFAULT '0',
+ `refCount` int(11) DEFAULT '0',
+ `byteSize` int(11) DEFAULT '0', 
+ `checksum` char(71) DEFAULT '0', /* prefix 7 chars i.e. 'sha256:' */
+ `lastChangeTimeStamp` bigint(20) DEFAULT '0',
+ `del` tinyint(4) NOT NULL DEFAULT b'0',
+ PRIMARY KEY (`urnID`),
+ KEY(`extUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+alter table tblapplet add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tblappletconfig add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tblcoursesequence add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tbldwosystemparameters add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tbluser add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tblschoolgroup add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tblschool add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tblhasrole add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tblstudentscocontext add classID int(11) DEFAULT NULL, add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tblstudentscodata add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0, add `jsonSuspendData` JSON DEFAULT NULL;
+alter table tblstudentof add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tblteacherof add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tblclass add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tblcourse add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tblclasscourse add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0, add `viewState` tinyint(4) NOT NULL DEFAULT 0;
+alter table tbldwoprofile add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tblscocontext add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0, add `publishState` tinyint(4) NOT NULL DEFAULT 0;
+alter table tblscodata add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0, add `jsonLaunchData` JSON DEFAULT NULL;
+alter table tblfromto add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tblimage add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tbllogincontext add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tblsamluser add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tblschool add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+alter table tblgroup add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+===
+
 
 
 === DWOSERVER 2.10 ===
@@ -48,6 +95,7 @@ UPDATE `tbldwosystemparameters` SET `value`='5' WHERE `name`='DBVersion Minor';
 UPDATE `tbldwosystemparameters` SET `value`='0' WHERE `name`='DBVersion Revision';
 
 
+
 === DWOSERVER pre-2.0 ===
 
 DwoServer pre-2.0 uses a MySQL database in the Dwo v1.4 format. Below are the instruction to 
@@ -55,7 +103,6 @@ upgrade and change from an v1.2 database to a Dwo v1.4 database. Knowledge about
 Linux/Unix is assumed.
 
 See our wiki!
-
 
 FROM 1.2 TO 1.4.1
 ===
