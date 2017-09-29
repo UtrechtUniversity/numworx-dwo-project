@@ -44,9 +44,9 @@ public class XSSFilter implements Filter {
             res.setHeader("Access-Control-Expose-Headers", "content-type");
             res.setHeader("Access-Control-Allow-Credentials", "true");
             // ensure there is never any caching for now
-//            res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-//            res.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-//            res.setHeader("Expires", "0"); // Proxies.
+            res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+            res.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+            res.setHeader("Expires", "0"); // Proxies.
             res.setCharacterEncoding("UTF-8");
         }
 

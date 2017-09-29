@@ -28,6 +28,8 @@ import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.Response;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -41,64 +43,69 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 @PermitAll
 @Path("/secure/user/results")
 public class SecuredUserResultsManager {
-    private static final Logger LOG = Logger.getLogger(SecuredUserResultsManager.class.getName());
-	private static final CharSequence LIMITED = "l";
 
-	@PUT
-	@Produces({"application/json"})
+    private static final Logger LOG = Logger.getLogger(SecuredUserResultsManager.class.getName());
+    private static final CharSequence LIMITED = "l";
+
+    @PUT
+    @Produces({"application/json"})
     @Path("/getCourseResults")
-	public List<DomStudentScoContext> getCourseResults(@Context SecurityContext sc, RestCourse rest) throws Dwo2Exception
-	{
-		List<DomStudentScoContext> result = new ArrayList<DomStudentScoContext>();
+    public Response getCourseResults(@Context SecurityContext sc, RestCourse rest) throws Dwo2Exception {
+        List<DomStudentScoContext> result = new ArrayList<DomStudentScoContext>();
 // NPE
-		DomContext context = rest.getRestContext();
-		DomHasRole domHasRole = context.getDomHasRole();
-		DomCourse  domCourse = rest.getDomCourse();
-		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
+        DomContext context = rest.getRestContext();
+        DomHasRole domHasRole = context.getDomHasRole();
+        DomCourse domCourse = rest.getDomCourse();
+        DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
 // Context
         PersistentUser user = null;
         try {
             user = UserManager.findByUserName(sc.getUserPrincipal().getName());
             LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
-        }		
+        }
 // Security 		
-		long pid = MySQLPersistenceId.getNativeId(domDwoProfile);
-		long cid = MySQLPersistenceId.getNativeId(domCourse);
+        long pid = MySQLPersistenceId.getNativeId(domDwoProfile);
+        long cid = MySQLPersistenceId.getNativeId(domCourse);
         PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
 
-		PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
-		PersistentCourse parent = CourseManager.findEntity(cid);
+        PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
+        PersistentCourse parent = CourseManager.findEntity(cid);
         PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
         PersistentSchool school = HasRoleUtilManager.getSchoolforHasRole(phr);
-// match profile		
-		if ( pid != parent.getDwoProfileID().longValue())
-			return result;
-// match school
-		if (parent.getSchoolID() != null) {
-			if (parent.getSchoolID().longValue() != school.getSchoolID().longValue())
-				return result;
-		} else {
-			if (profile.getDwoProfileRights().contains(LIMITED)) {
-				// assert school in profile database....
-			}
-		}
-// userid must match
-		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
-			return result;
-// fetch results
-		List<PersistentScoContext> list = ScoContextManager.findEntities(parent);
 
-		for(PersistentScoContext scoContext: list) {
-			List<PersistentStudentScoContext> lpssc = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
-			if(lpssc.isEmpty()) continue;
-			PersistentStudentScoContext pssc = lpssc.get(0); // assert 1 element
-			DomStudentScoContext results = pssc.buildDomStudentScoContext();			
-			result.add(results);
-		}
-		return result;
-	}
+        CacheControl cc = new CacheControl();
+        cc.setMaxAge(0);
+        cc.setNoCache(true);
+        cc.setNoStore(true);
+// match profile		
+        if (pid != parent.getDwoProfileID().longValue()) {
+            return Response.ok(result, "application/json").cacheControl(cc).build();//List<DomStudentScoContext>
+        }// match school
+        if (parent.getSchoolID() != null) {
+            if (parent.getSchoolID().longValue() != school.getSchoolID().longValue()) {
+            return Response.ok(result, "application/json").cacheControl(cc).build();//List<DomStudentScoContext>
+            }
+        } else if (profile.getDwoProfileRights().contains(LIMITED)) {
+            // assert school in profile database....
+        }
+// userid must match
+        if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue()) {
+            return Response.ok(result, "application/json").cacheControl(cc).build();//List<DomStudentScoContext>
+        }// fetch results
+        List<PersistentScoContext> list = ScoContextManager.findEntities(parent);
+
+        for (PersistentScoContext scoContext : list) {
+            List<PersistentStudentScoContext> lpssc = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
+            if (lpssc.isEmpty()) {
+                continue;
+            }
+            PersistentStudentScoContext pssc = lpssc.get(0); // assert 1 element
+            DomStudentScoContext results = pssc.buildDomStudentScoContext();
+            result.add(results);
+        }
+            return Response.ok(result, "application/json").cacheControl(cc).build();//List<DomStudentScoContext>
+    }
 }
