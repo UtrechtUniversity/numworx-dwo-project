@@ -183,7 +183,7 @@
 			<img src='{pfx}images/numworx/login.png' title="{build}"/>
 		</g:HTML>
 		<g:HTML ui:field='logoPanel' styleName='{style.logotekst}'>
-			<img src='{pfx}images/numworx/logo-Numworx-wit-blauw.svg' />
+			<img src='{pfx}images/numworx/logo-Numworx-wit-blauw3.svg' />
 			<p><ui:text from='{rb.for_students}'/></p>
 		</g:HTML>
 		<g:Frame ui:field='messagePanel' styleName='{style.messages}' />
