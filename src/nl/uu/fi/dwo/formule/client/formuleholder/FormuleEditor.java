@@ -316,10 +316,13 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 
 	@Override
 	public void insert(char charAt) {
-		addElement(new FormuleTeken(getCurrentRegel(), charAt));
+		if(allowed(charAt))
+			addElement(new FormuleTeken(getCurrentRegel(), charAt));
 	}
 	
-	
+	public boolean allowed(char ch) {
+		return ch != '$' && ch != '@';
+	}
 
 	@Override
 	public void macht() {

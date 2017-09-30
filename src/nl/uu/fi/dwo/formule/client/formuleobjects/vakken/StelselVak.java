@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 import java.util.Vector;
 
 import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.core.shared.GWT;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -231,6 +232,10 @@ public class StelselVak extends FormuleElementWithChildren
 				if(ch1 == 'n')
 				{	maakNieuwKind();
 				children.get(children.size() - 1).insert(s.substring(2, eind));
+					s = s.substring(eind);
+				} 
+				else {
+					GWT.log("unparsable " + s);
 					s = s.substring(eind);
 				}
 			}

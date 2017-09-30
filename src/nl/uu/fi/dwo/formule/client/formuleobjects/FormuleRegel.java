@@ -1117,6 +1117,10 @@ public class FormuleRegel extends FormuleElement
 						(holder).setCurrentElement(ne);
 					continue;
 				}
+				else { 
+					GWT.log("unparsable " + s);
+					s = s.substring(eind);
+				}
 			}
 			else
 			{

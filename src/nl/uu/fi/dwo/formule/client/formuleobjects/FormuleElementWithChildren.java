@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.core.shared.GWT;
 
 import fi.wiskopdr.Letter;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
@@ -170,6 +171,10 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 						ne.vulVak(s.substring(2, eind));
 						regel.insert(ne);
 						s = s.substring(eind);
+					} 
+					else {
+						GWT.log("unparsable " + s);
+						s = s.substring(eind); // skip unparsable units 
 					}
 				}
 			}
