@@ -132,18 +132,28 @@
             <version>1.7</version>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>com.jamonapi</groupId>
+<!--         <dependency>
+           <groupId>com.jamonapi</groupId>
             <artifactId>jamon</artifactId>
             <version>2.80</version> 
-            <!--comment scope for elastic beanstalk-->
-        </dependency>  
-        <dependency>
+            <scope>runtime</scope>
+             comment scope for elastic beanstalk
+        </dependency>  -->
+<!--        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.34</version>
-            <!--comment scope for elastic beanstalk-->
-        </dependency>        
+            <scope>runtime</scope>
+            comment scope for elastic beanstalk
+        </dependency>-->
+        <dependency>
+            <groupId>nl.uu.fi.dwo</groupId>
+            <artifactId>DWOServer</artifactId>
+            <type>war</type>
+            <version>2.1.21-SNAPSHOT</version>
+            <scope>runtime</scope>
+        </dependency>
+        
     </dependencies>
     
     <build>
@@ -260,7 +270,83 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
             </plugin>
-
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <version>1.6.4</version>
+                <configuration>
+                    <container>
+                        <containerId>tomcat8x</containerId>
+                        <!--<output>target/catalina-output.log</output>-->
+                        <artifactInstaller>
+                            <groupId>org.apache.tomcat</groupId>
+                            <artifactId>tomcat</artifactId>
+                            <version>7.0.81</version>
+                        </artifactInstaller>
+                    </container>
+                    <dependencies>
+                        <dependency>
+                            <groupId>mysql</groupId>
+                            <artifactId>mysql-connector-java</artifactId>
+                            <version>5.1.34</version>
+                        </dependency>
+<!--                        <dependency>
+                            <groupId>com.jamonapi</groupId>
+                            <artifactId>jamon</artifactId>
+                            <version>2.80</version>
+                        </dependency>        -->
+                    </dependencies>           
+                    <configuration>
+                        <type>standalone</type>            
+                        <home>
+                            ${project.build.directory}/apache-tomcat
+                        </home>
+                        <properties>
+                            <cargo.servlet.port>8080</cargo.servlet.port>
+                            <cargo.logging>low</cargo.logging>
+                        </properties>
+                        
+                    </configuration>
+                    <deployables>
+                        <deployable>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <type>war</type>
+                            <properties>
+                                <context>/</context>
+                            </properties>
+                        </deployable>
+                        <!--    useful in case war is part of compiled local code, hence no version in deployable.-->
+                        <deployable>
+                            <groupId>nl.uu.fi.dwo</groupId>
+                            <artifactId>DWOServer</artifactId> 
+                            <type>war</type>    
+                            <properties>
+                                <context>/</context>
+                            </properties>
+                        </deployable>
+                    </deployables>
+                    <configfiles>
+                        <configfile>
+                            <file>src/test/tomcat/context-ubuntu.xml</file>
+                            <todir>${project.build.directory}/apache-tomcat/conf/Catalina/localhost/</todir>
+                            <tofile>context.xml.default</tofile>
+                        </configfile>     
+                    </configfiles>                                         
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>5.1.34</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.jamonapi</groupId>
+                        <artifactId>jamon</artifactId>
+                        <version>2.80</version>
+                    </dependency>        
+                </dependencies>    
+            </plugin>
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
@@ -268,7 +354,7 @@
                 <configuration>
                     <server>TomcatServer</server>
                     <port>8080</port>
-                    <!--<path>/</path>-->
+                    <path>/</path>
                     
                     <warFile>target/${project.artifactId}-${project.version}.war</warFile>
                     <tomcat.local.deploy.url>http://127.0.0.1:8080/manager/text</tomcat.local.deploy.url> 
