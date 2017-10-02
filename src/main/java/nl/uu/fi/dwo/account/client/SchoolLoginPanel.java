@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.account.client;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -124,7 +125,6 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
     protected void init(DomUserFull user) {
         //this.setSize("400", "500");
         //
-        CellTable<DomSchoolRoleAndClassV2> table = new CellTable<DomSchoolRoleAndClassV2>();
         // Create name column.
         TextColumn<DomSchoolRoleAndClassV2> schoolColumn = new TextColumn<DomSchoolRoleAndClassV2>() {
             @Override
@@ -217,30 +217,11 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
      * @param srcs
      */
     void update(DomSchoolsRolesAndClassesV2 srcs) {
-    	// FIXME Gert?
-        //reinitiale the table.
-       Grid g = new Grid(5, 3);
-        // Put some values in the grid cells.
-        g.setText(0, 0, "school");
-        g.setText(0, 1, "login");
-        g.setText(0, 2, "delete");
-        TextBox login = new TextBox();
-        login.setText(DwoGlobalVars.instance().getCurrentUser().getUserName());
-        g.setWidget(1, 0, login);
-        TextBox name = new TextBox();
-        name.setText(DwoGlobalVars.instance().getCurrentUser().getUniqueDisplayName());
-        g.setWidget(1, 1, name);
-        TextBox delete = new TextBox();
-        delete.setText("X");
-        g.setWidget(1, 2, delete);
-
-        // Just for good measure, let's put a button in the center.
-        addBtn = new Button(DwoLocalesForGWT.instance.GUI_NewSchoolLogin());
-        addBtn.addClickHandler(this);
-        g.setWidget(2, 0, addBtn);
-        closeBtn = new Button(DwoLocalesForGWT.instance.GUI_Button_Cancel());
-        closeBtn.addClickHandler(this);
-        g.setWidget(2, 1, closeBtn);
-        this.add(g);
+    	List<DomSchoolRoleAndClassV2> list = dataProvider.getList();
+    	list.clear();
+    	//current = srcs.getActiveSchoolRoleAndClass().getHasRole();
+    	list.addAll(srcs.getSchoolsRolesAndClassesList());
+    	
+    
     }
 }
