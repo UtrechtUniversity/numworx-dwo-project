@@ -11,7 +11,8 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import fi.dwo.commons.persistence.LogType;
 import javax.persistence.EmbeddedId;
-import javax.persistence.Lob;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import org.json.simple.JSONObject;
 
 /**
  * PersistentLogData contains data for statistical analysis.
@@ -27,19 +28,23 @@ import javax.persistence.Lob;
 public class PersistentLogData {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
-    private PersistentLoginDataPK PersistentLoginDataPK;
+    private PersistentLoDataPK PersistentLoginDataPK;
     @Basic(optional = false)
     @NotNull
     @Column(name = "role", nullable = false)
-    private String role;
+    private RoleType role;
     @Basic(optional = false)
     @NotNull
     @Column(name = "logType", nullable = false, length = 50)
     private LogType logType;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "message", nullable = false, length = 512)
-    private String message;
+    @Column(name = "logLevel", nullable = false)
+    private int logLevel;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "jsonLogData", nullable = false, length = 512)
+    private JSONObject jsonLogData;
     @Basic(optional = false)
 //    @NotNull
 //    @Lob
@@ -50,38 +55,33 @@ public class PersistentLogData {
     @Size(min = 1, max = 128)
     @Column(name = "userip", nullable = false, length = 128)
     private String userIP;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "loglevel", nullable = false, length = 24)
-    private String logLevel;
     
 
     /**
-     * @return the PersistentLoginDataPK
+     * @return the PersistentLoDataPK
      */
-    public PersistentLoginDataPK getPersistentLoginDataPK() {
+    public PersistentLoDataPK getPersistentLoginDataPK() {
         return PersistentLoginDataPK;
     }
 
     /**
-     * @param PersistentLoginDataPK the PersistentLoginDataPK to set
+     * @param PersistentLoginDataPK the PersistentLoDataPK to set
      */
-    public void setPersistentLoginDataPK(PersistentLoginDataPK PersistentLoginDataPK) {
+    public void setPersistentLoginDataPK(PersistentLoDataPK PersistentLoginDataPK) {
         this.PersistentLoginDataPK = PersistentLoginDataPK;
     }
 
     /**
      * @return the role
      */
-    public String getRole() {
+    public RoleType getRole() {
         return role;
     }
 
     /**
      * @param role the role to set
      */
-    public void setRole(String role) {
+    public void setRole(RoleType role) {
         this.role = role;
     }
 
@@ -116,14 +116,14 @@ public class PersistentLogData {
     /**
      * @return the logLevel
      */
-    public String getLogLevel() {
+    public int getLogLevel() {
         return logLevel;
     }
 
     /**
      * @param logLevel the logLevel to set
      */
-    public void setLogLevel(String logLevel) {
+    public void setLogLevel(int logLevel) {
         this.logLevel = logLevel;
     }
 

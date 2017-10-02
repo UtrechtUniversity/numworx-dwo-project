@@ -15,23 +15,21 @@ import javax.validation.constraints.Size;
  * CompoundKey for Persistence. Note that order is important in NoSQL databases
  * for compound keys. The utcTimeStamp should be first in the index sort order
  * on those databases.
- * 
+ *
  * @author Gert van der Plas
  */
 @Embeddable
-public class PersistentLoginDataPK implements Serializable {
-        @Id
-        @Basic(optional = false)
-        @NotNull
-        @Size(min = 1, max = 128)
-        @Column(name = "utctimestamp", nullable = false) 
-        private long utcTimeStamp;
-        @Id
-        @Basic(optional = false)
-        @NotNull
-        @Size(min = 1, max = 128)
-        @Column(name = "username", nullable = false, length = 128)
-        private String username;
+public class PersistentLoDataPK implements Serializable {
+
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 128)
+    @Column(name = "timeStamp", nullable = false)
+    private long utcTimeStamp;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "userID", nullable = false)
+    private Long userId;
 
     /**
      * @return the utcTimeStamp
@@ -48,16 +46,16 @@ public class PersistentLoginDataPK implements Serializable {
     }
 
     /**
-     * @return the username
+     * @return the userId
      */
-    public String getUsername() {
-        return username;
+    public Long getUserId() {
+        return userId;
     }
 
     /**
-     * @param username the username to set
+     * @param userId the userId to set
      */
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
-    }
+}
