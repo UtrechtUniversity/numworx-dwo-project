@@ -143,7 +143,7 @@ public class MapperConstants {
         feedbackMap.put("check.critical: component is not relation", "Geef zowel de naam als de waarde van de kritieke waarde, voor je nakijkt.");
         feedbackMap.put("check.rejectioncritical", "Dit is niet het juiste kritieke gebied.");
         feedbackMap.put("check.rejectioncritical: test mismatch", "Bepaal je een kritiek gebied voor een t-waarde of voor een z-waarde?");
-        feedbackMap.put("check.rejectioncritical: sidedness mismatch", "Past het teken dat je in het kritiek gebruikt bij de richting van de alternatieve hypothese?");
+        feedbackMap.put("check.rejectioncritical: sidedness mismatch", "Past het teken dat je in het kritiek gebied gebruikt bij de richting van de alternatieve hypothese?");
         feedbackMap.put("check.rejectioncritical: Sidedness missing", "Bij welke hypotheses hoort dit kritieke gebied? Stel eerst hypotheses op.");
         feedbackMap.put("check.rejectioncritical: alternative hypotheses missing", "Bij welke hypotheses hoort dit kritieke gebied? Stel eerst hypotheses op.");
         feedbackMap.put("check.rejectioncritical: component is not of type relation", "Bepaal eerst het gehele kritieke gebied, voor je nakijkt.");
