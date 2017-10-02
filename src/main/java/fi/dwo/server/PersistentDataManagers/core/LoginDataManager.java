@@ -1,7 +1,7 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentLogData;
-import fi.dwo.commons.persistence.entities.PersistentLoginDataPK;
+import fi.dwo.commons.persistence.entities.PersistentLoDataPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.ArrayList;
@@ -68,7 +68,7 @@ public class LoginDataManager {
         catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                PersistentLoginDataPK id = submit.getPersistentLoginDataPK();
+                PersistentLoDataPK id = submit.getPersistentLoginDataPK();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentLoginData with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
@@ -88,7 +88,7 @@ public class LoginDataManager {
      *
      * @param id
      */
-    public static void destroy(PersistentLoginDataPK id) throws PersistenceException {
+    public static void destroy(PersistentLoDataPK id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -131,14 +131,15 @@ public class LoginDataManager {
         }
     }
 
-    public static List<PersistentLogData> findEntities(int fromTimeStamp, long toTimeStamp, String username) {
+    public static List<PersistentLogData> findEntities(int fromTimeStamp, long toTimeStamp, Long userId) {
         EntityManager em = getEntityManager();
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentLoginData.findByTimeStampRangeAndUsername");
             q.setParameter("fromTimestamp", fromTimeStamp);
             q.setParameter("toTimestamp", toTimeStamp);
+            q.setParameter("userId", userId);
             List<PersistentLogData> list = q.getResultList();
-            LOG.log(Level.FINE, "PersistentLoginData-manager retrieved {0} PersistentLoginData with timestamps from {1} to {2} and username {3}", new Object[]{list.size(), fromTimeStamp, toTimeStamp, username});
+            LOG.log(Level.FINE, "PersistentLoginData-manager retrieved {0} PersistentLoginData with timestamps from {1} to {2} and userId {3}", new Object[]{list.size(), fromTimeStamp, toTimeStamp, userId});
             return list;
         }
         catch (Exception e) {
@@ -150,7 +151,7 @@ public class LoginDataManager {
         }
     }
 
-    public static PersistentLogData findEntity(PersistentLoginDataPK id) {
+    public static PersistentLogData findEntity(PersistentLoDataPK id) {
         EntityManager em = getEntityManager();
 
         try {
