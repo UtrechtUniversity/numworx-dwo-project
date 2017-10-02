@@ -1138,7 +1138,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	
 	// OK
 	private void addWriteObject() {
-		
+		logger.info("IN ADD WRITEOBJECT");
+
 		ArrayList<Point> newWriteObjectPoints = new ArrayList<Point>();
 		for (int i=0; i<points.size(); i++) {
 			newWriteObjectPoints.add(
@@ -1221,6 +1222,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		//Buiten de DWOplayer:
 		//formuleViewer = new FormuleViewer(parseFormule());
 		eigenaar.writePanelChanged();
+		logger.info("WRITEPANELCHANGED");
+		
 		
 		//Binnen de DWOplayer:
 		//String text = parseFormule();
