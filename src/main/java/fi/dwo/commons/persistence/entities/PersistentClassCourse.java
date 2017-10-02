@@ -6,11 +6,15 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,7 +29,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 /**
  * JPA/EclipseLink entity for the ClassCourses.
  * <p>
- * ClassCourses. Each classCourse links a class to a tree or sub tree in the 
+ * ClassCourses. Each classCourse links a class to a tree or sub tree in the
  * Courses data set.
  * <p>
  * &lt; courseId, classId, type, notBefore, notAfter &gt;
@@ -34,8 +38,10 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * <b>courseId</b> : Unique, non-negative and not null.<br>
  * <b>classId</b> : Unique, non-negative and not null.<br>
  * <b>type</b> : Declares under which conditions a school may access it.<br>
- * <b>notBefore</b> : The referenced course module tree is not visible before notBefore. <br>
- * <b>notAfter</b> : The referenced course module tree is not visible after notAfter.<br>
+ * <b>notBefore</b> : The referenced course module tree is not visible before
+ * notBefore. <br>
+ * <b>notAfter</b> : The referenced course module tree is not visible after
+ * notAfter.<br>
  * <p>
  * @author G.A.J. van der Plas
  */
@@ -76,6 +82,18 @@ public class PersistentClassCourse implements Serializable {
     @NotNull
     @Column(name = "CourseID", nullable = false)
     private long courseID;
+//    @OneToOne(fetch = FetchType.EAGER)
+//    @JoinTable(name = "tblcourse", joinColumns=@JoinColumn(name="CourseID"),
+//    inverseJoinColumns=@JoinColumn(name="CourseID"))
+//    PersistentCourse course;
+//
+//    public PersistentCourse getCourse() {
+//        return course;
+//    }
+//    
+//    public void setCourse(PersistentCourse aCourse) {
+//        course = aCourse;
+//    }
 
     public PersistentClassCourse() {
     }
@@ -176,10 +194,11 @@ public class PersistentClassCourse implements Serializable {
         classCourse.setNotBefore(this.notBefore);
         classCourse.setCourseType(CourseType.values()[this.type]);
     }
-    
-       /** Builds a PersistenceId using this object's data.
-     * 
-     * @return 
+
+    /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
      */
     public PersistenceId buildPersistenceId() {
         return buildPersistenceId(classCourseID);
