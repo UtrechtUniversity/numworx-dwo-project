@@ -23,7 +23,7 @@ import org.json.simple.JSONObject;
 @Table(name = "tblLogData", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "LoginData.findByTimeStampRangeAndUsername", query = "SELECT p FROM PersistentLoginData p WHERE p.username = username and p.utcTimeStamp > :fromTimestamp and p.utcTimeStamp < :toTimestamp "),
+    @NamedQuery(name = "LoginData.findByTimeStampRangeAndUsername", query = "SELECT p FROM PersistentLoginData p WHERE p.userId = :userId and p.utcTimeStamp > :fromTimestamp and p.utcTimeStamp < :toTimestamp "),
     @NamedQuery(name = "LoginData.findByTimeStampRange", query = "SELECT p FROM PersistentLoginData p WHERE p.utcTimeStamp > :fromTimestamp and p.utcTimeStamp < :toTimestamp ")})
 public class PersistentLogData {
     private static final long serialVersionUID = 1L;
