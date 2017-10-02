@@ -7,7 +7,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentLogData;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
-import fi.dwo.commons.persistence.entities.PersistentLoginDataPK;
+import fi.dwo.commons.persistence.entities.PersistentLogDataPK;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
@@ -153,24 +153,24 @@ public class SecuredUserAccountManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
         }
         
-        try {//LoginData may fail, but login should succeed.
-            //register login action
-            PersistentLogData loginData = new PersistentLogData();
-            PersistentLoginDataPK ldKey = new PersistentLoginDataPK();
-            ldKey.setUsername(u.getUsername());
-            ldKey.setUtcTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
-            PersistentSchoolGroup sg = SchoolGroupManager.findEntity(u.getSchoolGroupId());
-            PersistentRole g = RoleManager.findEntity((long) sg.getGroupID());
-            LOG.log(Level.INFO, "Username {0}: Login User with username {1}: uid, sgid {2}, {3}", new Object[]{sc.getUserPrincipal().getName(), u.getUsername(),u.getId(),sg.getSchoolGroupID()});
-
-            loginData.setRole(g.getGroupname());
-            loginData.setMessage(LogType.Login);
-            loginData.setLogLevel(Level.INFO.toString());
-            LoginDataManager.create(loginData);
-        }
-        catch (Exception e) {
-            LOG.log(Level.SEVERE, null, e);
-        }
+//        try {//LoginData may fail, but login should succeed.
+//            //register login action
+//            PersistentLogData loginData = new PersistentLogData();
+//            PersistentLogDataPK ldKey = new PersistentLogDataPK();
+//            ldKey.setUserId(u.getUsername());
+//            ldKey.setUtcTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+//            PersistentSchoolGroup sg = SchoolGroupManager.findEntity(u.getSchoolGroupId());
+//            PersistentRole g = RoleManager.findEntity((long) sg.getGroupID());
+//            LOG.log(Level.INFO, "Username {0}: Login User with username {1}: uid, sgid {2}, {3}", new Object[]{sc.getUserPrincipal().getName(), u.getUsername(),u.getId(),sg.getSchoolGroupID()});
+//
+//            loginData.setRole(g.getGroupname());
+//            loginData.setMessage(LogType.Login);
+//            loginData.setLogLevel(Level.INFO.toString());
+//            LoginDataManager.create(loginData);
+//        }
+//        catch (Exception e) {
+//            LOG.log(Level.SEVERE, null, e);
+//        }
 
             try {
 //                return u.buildDomUserFullwLoginContext(LoginContextUtilManager.reqLoginContextSession(u));
@@ -292,25 +292,25 @@ public class SecuredUserAccountManager {
     @Path("/logout")
     public Boolean logoutUser(@Context SecurityContext sc, RestLoginContext loginContext) {
         PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
-        try {//LoginData may fail, but login should succeed.
-            //register login action
-            PersistentLogData loginData = new PersistentLogData();
-            PersistentLoginDataPK ldKey = new PersistentLoginDataPK();
-            ldKey.setUsername(u.getUsername());
-            ldKey.setUtcTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
-            PersistentSchoolGroup sg = SchoolGroupManager.findEntity(u.getSchoolGroupId());
-            PersistentRole g = RoleManager.findEntity((long) sg.getGroupID());
-
-            loginData.setRole(g.getGroupname());
-            loginData.setMessage(LogType.Logout);
-            loginData.setLogLevel(Level.INFO.toString());
-            LoginDataManager.create(loginData);
-
-        }
-        catch (Exception e) {
-            LOG.log(Level.SEVERE, null, e);
-            //return false;
-        }
+//        try {//LoginData may fail, but login should succeed.
+//            //register login action
+//            PersistentLogData loginData = new PersistentLogData();
+//            PersistentLogDataPK ldKey = new PersistentLogDataPK();
+//            ldKey.setUserId(u.getUsername());
+//            ldKey.setUtcTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+//            PersistentSchoolGroup sg = SchoolGroupManager.findEntity(u.getSchoolGroupId());
+//            PersistentRole g = RoleManager.findEntity((long) sg.getGroupID());
+//
+//            loginData.setRole(g.getGroupname());
+//            loginData.setMessage(LogType.Logout);
+//            loginData.setLogLevel(Level.INFO.toString());
+//            LoginDataManager.create(loginData);
+//
+//        }
+//        catch (Exception e) {
+//            LOG.log(Level.SEVERE, null, e);
+//            //return false;
+//        }
         //erasing PersistentLoginContext only if proper setRegisterTimeStamp
         if (loginContext != null) {
             try {

@@ -3,6 +3,7 @@ package fi.dwo.server.rest;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
+import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import nl.uu.fi.dwo.rest.dom.entities.util.DomHeartBeat;
 
 /**
  * Public server status. Showing health of the service. Under development.
@@ -33,25 +35,25 @@ public class PublicServerStatus {
 
     /**
      * Returns an empty set of of Attributes if not found.
-     * 
+     *
      * @return
      * @throws FileNotFoundException
-     * @throws IOException 
+     * @throws IOException
      */
     Attributes getManifestAttributes() throws FileNotFoundException, IOException {
         Attributes atts;
-        try{
-        InputStream resourceAsStream = context.getResourceAsStream("/META-INF/MANIFEST.MF");
-        Manifest mf = new Manifest();
-        mf.read(resourceAsStream);
-        atts = mf.getMainAttributes();
-        return atts;
-        }catch(NullPointerException ex){
+        try {
+            InputStream resourceAsStream = context.getResourceAsStream("/META-INF/MANIFEST.MF");
+            Manifest mf = new Manifest();
+            mf.read(resourceAsStream);
+            atts = mf.getMainAttributes();
+            return atts;
+        } catch (NullPointerException ex) {
             atts = new Attributes();
             return atts;
         }
     }
-    
+
 //  tests above getManifestAttributes()
 //    @GET
 //    @Produces({"application/json"})
@@ -63,7 +65,6 @@ public class PublicServerStatus {
 //                .entity(manifestAttributes)
 //                .build();
 //    }
-
     public List<PersistentDwoSystemParameters> getDwoSystemParamStatus() {
         List<PersistentDwoSystemParameters> result;
         try {
@@ -124,10 +125,11 @@ public class PublicServerStatus {
     }
 
     /**
-     * Returns server status values. In case no Manifest is found 'null' is returned.
-     * 
+     * Returns server status values. In case no Manifest is found 'null' is
+     * returned.
+     *
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
     @GET
     @Produces({"application/json"})
@@ -137,7 +139,7 @@ public class PublicServerStatus {
         String buildNumber = manifestAttributes.getValue("Implementation-Build");
         String softwareVersion = manifestAttributes.getValue("Implementation-Version");
         String timeStamp = manifestAttributes.getValue("Implementation-Timestamp");
-        
+
         StringBuilder result = new StringBuilder();
         result.append("[");
         result.append("{\"name\":\"projectVersion\", \"value\":\"").append(softwareVersion).append("\"},")
@@ -158,4 +160,27 @@ public class PublicServerStatus {
                 + "\n" + getDwoSystemStatusText();
     }
 
+    /**
+     * A simple heartbeat REST-function. An extended version may yield
+     * the latest versions for our client suite allowing a user to select when
+     * to update to a newer version between work. If possible a relogin should
+     * be avoided.
+     */
+    @GET
+    @Produces({"application/json"})
+    @Path("/getHeartBeat")
+    public DomHeartBeat getHeatBeat() throws Dwo2RestException {
+        DomHeartBeat beat = new DomHeartBeat();
+        beat.setServerTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+        try {
+            Attributes manifestAttributes=null;
+            manifestAttributes = getManifestAttributes();
+            beat.setServerVersion(manifestAttributes.getValue("Implementation-Version"));
+        } catch (IOException ex) {
+            Logger.getLogger(PublicServerStatus.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
+        }
+        
+        return beat;
+    }
 }
