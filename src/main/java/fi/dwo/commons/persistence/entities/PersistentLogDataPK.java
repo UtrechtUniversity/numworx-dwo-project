@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
  * @author Gert van der Plas
  */
 @Embeddable
-public class PersistentLoDataPK implements Serializable {
+public class PersistentLogDataPK implements Serializable {
 
     @Basic(optional = false)
     @NotNull

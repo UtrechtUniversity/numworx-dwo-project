@@ -28,7 +28,7 @@ import org.json.simple.JSONObject;
 public class PersistentLogData {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
-    private PersistentLoDataPK PersistentLoginDataPK;
+    private PersistentLogDataPK PersistentLoginDataPK;
     @Basic(optional = false)
     @NotNull
     @Column(name = "role", nullable = false)
@@ -58,16 +58,16 @@ public class PersistentLogData {
     
 
     /**
-     * @return the PersistentLoDataPK
+     * @return the PersistentLogDataPK
      */
-    public PersistentLoDataPK getPersistentLoginDataPK() {
+    public PersistentLogDataPK getPersistentLoginDataPK() {
         return PersistentLoginDataPK;
     }
 
     /**
-     * @param PersistentLoginDataPK the PersistentLoDataPK to set
+     * @param PersistentLoginDataPK the PersistentLogDataPK to set
      */
-    public void setPersistentLoginDataPK(PersistentLoDataPK PersistentLoginDataPK) {
+    public void setPersistentLoginDataPK(PersistentLogDataPK PersistentLoginDataPK) {
         this.PersistentLoginDataPK = PersistentLoginDataPK;
     }
 
