@@ -217,6 +217,8 @@ public class MapperConstants {
         hintMap.put("component.ha", "Geef aan welke alternatieve hypothese je wil toetsen.");
         hintMap.put("component.hypotheses", "Bepaal hypotheses om te toetsen.");
         hintMap.put("component.hypotheses-conclusion", "Trek een conclusie over je hypotheses.");
+        hintMap.put("component.hypotheses-conclusion-critical", "Trek een conclusie over je hypotheses.");
+        hintMap.put("component.hypotheses-conclusion-pvalue", "Trek een conclusie over je hypotheses.");
         hintMap.put("component.mean", ""); //-- sample or population?
         hintMap.put("component.n", "Bepaal de steekproefgrootte.");
         hintMap.put("component.p-value.t-test", "Bepaal de p-waarde die hoort bij de gevonden toetsingsgrootheid.");
@@ -225,7 +227,10 @@ public class MapperConstants {
         hintMap.put("component.sided", "Bepaal de toetsrichting die past bij de opdracht of je hypotheses.");
         hintMap.put("component.standard-deviation", ""); //-- sample or population?
         hintMap.put("component.standard-error", ""); //-- sample or population?
-        hintMap.put("component.test-statistic", "Bereken de toetsingsgrootheid bij de gekozen toets.");
+        hintMap.put("component.standard-error-sigma", "Bepaal de standaardfout."); //-- sample or population?
+        hintMap.put("component.standard-error-sd", "Bepaal de standaardfout."); //-- sample or population?
+        hintMap.put("component.test-formula", "Bepaal de formule voor de toetsingsgrootheid.");
+        hintMap.put("component.test-value", "Bereken de toetsingsgrootheid bij de gekozen toets.");
         hintMap.put("component.test.t-test", "Bepaal welke toets geschikt is voor deze situatie.");
         hintMap.put("component.test.t-test-paired", "Bepaal welke toets geschikt is voor deze situatie.");
         hintMap.put("component.test.t-test-two", "Bepaal welke toets geschikt is voor deze situatie.");
