@@ -1,7 +1,7 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentLogData;
-import fi.dwo.commons.persistence.entities.PersistentLoDataPK;
+import fi.dwo.commons.persistence.entities.PersistentLogDataPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.ArrayList;
@@ -68,7 +68,7 @@ public class LoginDataManager {
         catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                PersistentLoDataPK id = submit.getPersistentLoginDataPK();
+                PersistentLogDataPK id = submit.getPersistentLoginDataPK();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentLoginData with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
@@ -88,7 +88,7 @@ public class LoginDataManager {
      *
      * @param id
      */
-    public static void destroy(PersistentLoDataPK id) throws PersistenceException {
+    public static void destroy(PersistentLogDataPK id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -151,7 +151,7 @@ public class LoginDataManager {
         }
     }
 
-    public static PersistentLogData findEntity(PersistentLoDataPK id) {
+    public static PersistentLogData findEntity(PersistentLogDataPK id) {
         EntityManager em = getEntityManager();
 
         try {
