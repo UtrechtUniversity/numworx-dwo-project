@@ -118,8 +118,8 @@ public class WriteObject {
 		doublePoints = new ArrayList<DoublePoint>();
 		rawPoints = new ArrayList<DoublePoint>();
 		for(int i = 0 ; i <points.size() ; i++) {
-			logger.info("new Point added -" +i +"- X="+points.get(i).getDoublePoint().getX() +
-					",Y="+points.get(i).getDoublePoint().getY());
+//			logger.info("new Point added -" +i +"- X="+points.get(i).getDoublePoint().getX() +
+//					",Y="+points.get(i).getDoublePoint().getY());
 			doublePoints.add(points.get(i).getDoublePoint());
 			rawPoints.add(points.get(i).getDoublePoint());
 		}
