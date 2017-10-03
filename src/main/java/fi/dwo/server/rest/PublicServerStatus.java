@@ -18,7 +18,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import nl.uu.fi.dwo.rest.dom.entities.util.DomHeartBeat;
+import nl.uu.fi.dwo.rest.dom.entities.DomHeartBeat;
 
 /**
  * Public server status. Showing health of the service. Under development.
@@ -176,6 +176,9 @@ public class PublicServerStatus {
             Attributes manifestAttributes=null;
             manifestAttributes = getManifestAttributes();
             beat.setServerVersion(manifestAttributes.getValue("Implementation-Version"));
+            beat.setJavaClientVersion(manifestAttributes.getValue("JavaClient-Version"));
+            beat.setHtmlClientVersion(manifestAttributes.getValue("HtmlClient-Version"));
+            beat.setServerTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
         } catch (IOException ex) {
             Logger.getLogger(PublicServerStatus.class.getName()).log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
