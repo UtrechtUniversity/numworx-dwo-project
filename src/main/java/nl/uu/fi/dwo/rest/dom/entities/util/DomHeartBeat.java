@@ -14,6 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DomHeartBeat {
      private Long serverTimeStamp;
      private String serverVersion;
+     private String clientVersion;
 
     /**
      * @return the serverTimeStamp
@@ -41,5 +42,19 @@ public class DomHeartBeat {
      */
     public void setServerVersion(String serverVersion) {
         this.serverVersion = serverVersion;
+    }
+
+    /**
+     * @return the clientVersion
+     */
+    public String getClientVersion() {
+        return clientVersion;
+    }
+
+    /**
+     * @param clientVersion the clientVersion to set
+     */
+    public void setClientVersion(String clientVersion) {
+        this.clientVersion = clientVersion;
     }
 }
