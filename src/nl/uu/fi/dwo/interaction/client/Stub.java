@@ -123,7 +123,9 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 			shiftTab: function() {
 				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::shiftTab()();
 			},
-			
+			editorToString: function() {
+				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::editorToString()();
+			},
 			
 		};
 		$wnd.inner.stub = o;
@@ -218,6 +220,10 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	@Override
 	public FormuleEditorIF getEditor() {
 		return editor;
+	}
+	
+	private String editorToString() {
+		return getEditor().toString();
 	}
 	
 	public void clearAll() {
