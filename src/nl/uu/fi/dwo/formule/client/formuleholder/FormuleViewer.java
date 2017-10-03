@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.formule.client.formuleholder;
 
 import java.util.HashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
@@ -68,13 +69,12 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 			currentFormule = "$f" + currentFormule + "@";
 		try
 		{
-			logger.info("currentFormule: "+currentFormule);
+			logger.fine("currentFormule: "+currentFormule);
 			currentFormule = FormuleParser.randomizeString(currentFormule, randomVarNamen, randomVarWaarden);
 		}
 		catch (Exception e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.log(Level.INFO, "currentFormule: " + currentFormule, e);
 		}
 
 		if (currentFormule.substring(0, 2).equalsIgnoreCase("$f"))
