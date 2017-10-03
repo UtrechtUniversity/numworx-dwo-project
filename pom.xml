@@ -328,7 +328,7 @@
                     </deployables>
                     <configfiles>
                         <configfile>
-                            <file>src/test/tomcat/context-ubuntu.xml</file>
+                            <file>src/test/tomcat/context-dwo_devel.xml</file>
                             <todir>${project.build.directory}/apache-tomcat/conf/Catalina/localhost/</todir>
                             <tofile>context.xml.default</tofile>
                         </configfile>     
@@ -368,7 +368,7 @@
                             <type>war</type>    
                             <asWebapp>true</asWebapp> 
                             <contextPath>/dwo</contextPath>
-                            <contextFile>src/test/tomcat/context-ubuntu.xml</contextFile>
+                            <contextFile>src/test/tomcat/context-dwo_devel.xml</contextFile>
                         </webapp>
                         <webapp>
                             <groupId>fi.dwo</groupId>
