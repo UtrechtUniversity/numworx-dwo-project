@@ -45,7 +45,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -224,13 +224,13 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 });
             });
 
-            //fill DomClassCourse List
-            HashMap<PersistenceId, DomClassCourse> domClassCourses = new HashMap<>(classCoursesMap.size());
+            //fill DomClassCourse4Teacher List
+            HashMap<PersistenceId, DomClassCourse4Teacher> domClassCourses = new HashMap<>(classCoursesMap.size());
             classCoursesMap.entrySet().forEach((keyValuePair) -> {
-                DomClassCourse c = keyValuePair.getValue().buildDomClassCourse();
+                DomClassCourse4Teacher c = keyValuePair.getValue().buildDomClassCourse4Teacher();
                 domClassCourses.put(c.getId(), c);
             });
-            List<DomMapEntry<PersistenceId, DomClassCourse>> dccList = new ArrayList<>(domClassCourses.size());
+            List<DomMapEntry<PersistenceId, DomClassCourse4Teacher>> dccList = new ArrayList<>(domClassCourses.size());
             domClassCourses.entrySet().stream().forEach((entry) -> {
                 dccList.add(new DomMapEntry(entry));
             });

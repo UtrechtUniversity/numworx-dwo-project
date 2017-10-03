@@ -42,6 +42,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -102,7 +103,8 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 
         Long profileID = MySQLPersistenceId.getNativeId(dom.getDomDwoProfile());
 
-        List<PersistentClassCourse> listClassCourse = ClassCourseManager.findEntities(schoolClass);
+//        List<PersistentClassCourse> listClassCourse = ClassCourseManager.findEntities(schoolClass);
+        List<PersistentClassCourse> listClassCourse = ClassCourseManager.findVisibleEntities(schoolClass, ViewState.studentsAndTeachers);
 
         Map<PersistenceId, DomClassCourse> classCourseMap = new HashMap<>();
         Map<PersistenceId, DomCourseStudent> courseMap = new HashMap<>();

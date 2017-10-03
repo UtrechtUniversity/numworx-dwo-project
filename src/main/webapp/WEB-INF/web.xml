@@ -88,15 +88,15 @@
         </init-param>
     </filter>
     
-  <filter>
+<!--  <filter>
     <filter-name>JAMonFilter</filter-name>
     <filter-class>com.jamonapi.JAMonFilter</filter-class>
   </filter>
 
-  <filter-mapping> <!-- Wat wil je monitoren?-->
+  <filter-mapping> 
     <filter-name>JAMonFilter</filter-name>
     <url-pattern>/*</url-pattern>
-  </filter-mapping>
+  </filter-mapping>-->
  
     <filter-mapping>
         <filter-name>Remote Address Filter</filter-name>
@@ -255,11 +255,13 @@
         </user-data-constraint>
     </security-constraint>
 
+
     <!-- Required to be directly below the security constraint -->
     <login-config>
         <auth-method>BASIC</auth-method>
         <realm-name>DWO.nl</realm-name>
     </login-config>
+
 
     <!-- Security roles referenced by this web application -->
     <security-role>

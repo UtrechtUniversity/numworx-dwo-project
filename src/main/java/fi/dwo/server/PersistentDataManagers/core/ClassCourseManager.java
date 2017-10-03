@@ -17,6 +17,7 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 
 /**
  * Manages class courses in the persistent storage.
@@ -256,6 +257,21 @@ public class ClassCourseManager {
         }
     }
 
+    public static List<PersistentClassCourse> findVisibleEntities(PersistentSchoolClass c, ViewState viewState) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentClassCourse.findByClassID");
+            q.setParameter("classID", c.getClassID());
+            q.setParameter("viewState", viewState.ordinal());
+            List<PersistentClassCourse> list = q.getResultList();
+            LOG.log(Level.FINE, "ClassCourse-manager retrieved {0} PersistentClassCourse with classid {1}", new Object[]{list.size(), c.getClassID()});
+            return list;
+        }
+        finally {
+            em.close();
+        }
+    }
+    
     public static List<PersistentClassCourse> findEntities(PersistentCourse c) {
         EntityManager em = getEntityManager();
         try {
