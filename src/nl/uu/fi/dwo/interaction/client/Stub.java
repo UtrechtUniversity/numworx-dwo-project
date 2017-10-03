@@ -371,10 +371,16 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		// TODO Auto-generated method stub
 	}
 
+	private static native void setEnterType(String type) /*-{
+		$wnd.setEnterType($wnd.outer)
+	}-*/;
+	
 	@Override
 	public void setEnterType(EnterType type) {
-		// TODO Auto-generated method stub
-		
+		try {
+			setEnterType(type.name());
+		} catch (Exception e) {
+		}
 	}
 
 	@Override
