@@ -378,7 +378,7 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	}
 
 	private static native void setEnterType(String type) /*-{
-		$wnd.setEnterType($wnd.outer)
+		$wnd.setEnterType(type, $wnd.outer)
 	}-*/;
 	
 	@Override
