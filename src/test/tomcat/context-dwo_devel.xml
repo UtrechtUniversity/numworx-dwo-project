@@ -40,7 +40,7 @@
   	username="root"
   	password="E=mc2Dwo"
   	driverClassName="com.mysql.jdbc.Driver"
-  	url="jdbc:mysql://localhost:3306/dwo_productie"
+  	url="jdbc:mysql://localhost:3306/dwo_devel"
         />
 <!--        username="${RDS_USERNAME}"
         password="${RDS_PASSWORD}"
