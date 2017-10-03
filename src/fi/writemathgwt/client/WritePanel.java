@@ -41,7 +41,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
 public class WritePanel extends LayoutPanel { //HorizontalPanel
-	private static Logger logger = Logger.getLogger("WritePanel");
+//	private static Logger logger = Logger.getLogger("WritePanel");
 	
 	private static int cPanelAreaMin = -50000;
 	private static int cPanelAreaMax = 50000;
@@ -168,10 +168,10 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		initContext2d();
 		CssColor rechthoekKleur = CssColor.make(240, 0, 0);
 		FillStrokeStyle oldStyle = g.getStrokeStyle();
-		logger.info("teken rechthoek [" +  (double) (rechthoek.x+panelShiftX) + ", " +
-				                           (double) (rechthoek.y+panelShiftY) + ", " + 
-				                           (double) (rechthoek.width) + ", " + 
-				                           (double) (rechthoek.height) + "]" );
+//		logger.info("teken rechthoek [" +  (double) (rechthoek.x+panelShiftX) + ", " +
+//				                           (double) (rechthoek.y+panelShiftY) + ", " + 
+//				                           (double) (rechthoek.width) + ", " + 
+//				                           (double) (rechthoek.height) + "]" );
 		g.setStrokeStyle(rechthoekKleur);
 		g.rect( (double) (rechthoek.x+panelShiftX), 
 				(double) (rechthoek.y+panelShiftY), 
@@ -1138,7 +1138,6 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	
 	// OK
 	private void addWriteObject() {
-		
 		ArrayList<Point> newWriteObjectPoints = new ArrayList<Point>();
 		for (int i=0; i<points.size(); i++) {
 			newWriteObjectPoints.add(
@@ -1232,7 +1231,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	}
 	
 	protected void addWriteObject(String teken, ArrayList<Point> points) {
-		logger.info("addWriteObject :: "+ teken + ", #Points = "+ points.size());
+//		logger.info("addWriteObject :: "+ teken + ", #Points = "+ points.size());
 		WriteObject wo = new WriteObject(teken, points);
 		lastObject = wo;
 		writeObjects.add(wo);
