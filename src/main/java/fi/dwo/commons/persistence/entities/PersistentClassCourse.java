@@ -6,15 +6,11 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,6 +19,8 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -53,6 +51,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentClassCourse.findAll", query = "SELECT p FROM PersistentClassCourse p"),
     @NamedQuery(name = "PersistentClassCourse.findByClassCourseID", query = "SELECT p FROM PersistentClassCourse p WHERE p.classCourseID = :classCourseID"),
     @NamedQuery(name = "PersistentClassCourse.findByClassID", query = "SELECT p FROM PersistentClassCourse p WHERE p.classID = :classID"),
+    @NamedQuery(name = "PersistentClassCourse.findVisibleByClassID", query = "SELECT p FROM PersistentClassCourse p WHERE p.classID = :classID and p.viewState = :viewState"),
     @NamedQuery(name = "PersistentClassCourse.findByClassIDAndCourseID", query = "SELECT p FROM PersistentClassCourse p WHERE p.classID = :classID and p.courseID = :courseID"),
     @NamedQuery(name = "PersistentClassCourse.findByType", query = "SELECT p FROM PersistentClassCourse p WHERE p.type = :type"),
     @NamedQuery(name = "PersistentClassCourse.findByNotBefore", query = "SELECT p FROM PersistentClassCourse p WHERE p.notBefore = :notBefore"),
@@ -72,6 +71,8 @@ public class PersistentClassCourse implements Serializable {
     private long classID;
     @Column(name = "type") //enum afschermd, normaal, todo beveiligd (safeexamebrowser), chrome
     private Integer type;
+    @Column(name = "viewState") //enum afschermd, normaal, todo beveiligd (safeexamebrowser), chrome
+    private ViewState viewState;
     @Column(name = "notBefore")
     @Temporal(TemporalType.TIMESTAMP)
     private Date notBefore;
@@ -180,6 +181,16 @@ public class PersistentClassCourse implements Serializable {
         return "fi.dwo.server.persistence.PersistentClassCourse[ classCourseID=" + classCourseID + " ]";
     }
 
+    public DomClassCourse4Teacher buildDomClassCourse4Teacher() {
+        DomClassCourse4Teacher classCourse = new DomClassCourse4Teacher();
+        PersistentClassCourse.this.fillDomClassCourse4Teacher(classCourse);
+        return classCourse;
+    }
+    
+    private void fillDomClassCourse4Teacher(DomClassCourse4Teacher classCourse) {
+        fillDomClassCourse(classCourse);
+        classCourse.setViewState(this.viewState);
+    }    
     public DomClassCourse buildDomClassCourse() {
         DomClassCourse classCourse = new DomClassCourse();
         PersistentClassCourse.this.fillDomClassCourse(classCourse);
@@ -215,5 +226,19 @@ public class PersistentClassCourse implements Serializable {
         id.setIdString(String.format("MYSQL;%s;%020d",
                 PersistenceClassType.PersistentClassCourse.name(), aClassCourseId));
         return id;
+    }
+
+    /**
+     * @return the viewState
+     */
+    public ViewState getViewState() {
+        return viewState;
+    }
+
+    /**
+     * @param viewState the viewState to set
+     */
+    public void setViewState(ViewState viewState) {
+        this.viewState = viewState;
     }
 }
