@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
@@ -72,7 +73,12 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	public void onAttachOrDetach(AttachEvent event) {
 		boolean detach = !event.isAttached();
 		if( detach )
+		{
+			if (innerView != null) {
+				getState0(); // last chance to fill lastResort en correct/score
+			}
 			innerView = null;
+		}
 		else 
 			loadhandler = frame.addLoadHandler(this);
 		
@@ -237,6 +243,9 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		return inner.getScore();
 	}-*/ ;
 	
+	private native static String editorToString(Object inner) /*-{
+		return inner.editorToString();
+	}-*/;
 	
 	private native static String getState(Object inner) /*-{
 		return inner.getState();
@@ -377,6 +386,9 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		wnd.removeCBookEventListener = function (registration) {
 			return @nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::removeCBookListener(Lcom/google/web/bindery/event/shared/HandlerRegistration;)(registration)
 		}
+		wnd.setEnterType = function(type, viewer) {
+			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::setEnterType(Ljava/lang/String;)(type)
+		}
 		
 		return wnd.inner;
 	}-*/;
@@ -389,6 +401,15 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			comRoot.getKeyboard().softFocus(); 
 		else 
 			comRoot.getKeyboard().blur();
+	}
+	
+	private void setEnterType(String type) {
+		try {
+			EnterType e = EnterType.valueOf(type);
+			comRoot.getKeyboard().setEnterType(e);
+		} catch (Exception e) {
+			GWT.log("setEnterType " + type, e);
+		}
 	}
 	
 	private void fireJSEvent(JavaScriptObject jso) {
@@ -816,6 +837,15 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		}
 	}
 
+	@Override 
+	public String toString() {
+		if(innerView != null) 
+			try {
+				return editorToString(innerView);
+			} catch(Throwable e) {GWT.log("toString", e);}
+		return "";
+	}
+	
 	public ObjectMap getConfiguration() {
 		if(comRoot!=this && comRoot!=null)
 			return comRoot.getConfiguration();

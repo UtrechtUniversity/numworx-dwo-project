@@ -361,6 +361,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	{
 		if(facade.hasState()) {
 			HashMap<String, Object> state = facade.getState();
+			if(state == null) state = new HashMap<>();
 			state.put("nagekeken", Boolean.valueOf(nagekeken));	// deze kan veranderen als de popup dicht is
 			return state;
 		}
