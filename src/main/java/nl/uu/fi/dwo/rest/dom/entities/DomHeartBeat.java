@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.rest.dom.entities.util;
+package nl.uu.fi.dwo.rest.dom.entities;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
