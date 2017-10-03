@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -28,7 +27,7 @@ public class DomResultsPerTeacher {
     private List<DomMapEntry<PersistenceId, DomStudent>> students;
     private List<DomMapEntry<PersistenceId, DomStudentOfClass>> studentsOfClasses;
     private List<DomMapEntry<PersistenceId, DomSchoolClass>> schoolClasses;
-    private List<DomMapEntry<PersistenceId, DomClassCourse>> classCourses;
+    private List<DomMapEntry<PersistenceId, DomClassCourse4Teacher>> classCourses;
     private List<DomMapEntry<PersistenceId, DomCourse>> courses;
     private List<DomMapEntry<PersistenceId, DomScoContext>> scoContexts;
     private List<DomMapEntry<PersistenceId, DomStudentScoContext>> studentScoContexts;
@@ -161,14 +160,14 @@ public class DomResultsPerTeacher {
      *
      * @return the classCourses
      */
-    public List<DomMapEntry<PersistenceId, DomClassCourse>> getClassCourses() {
+    public List<DomMapEntry<PersistenceId, DomClassCourse4Teacher>> getClassCourses() {
         return classCourses;
     }
 
     /**
      * @param aClassCourses the classCourses to set
      */
-    public void setClassCourses(List<DomMapEntry<PersistenceId, DomClassCourse>> aClassCourses) {
+    public void setClassCourses(List<DomMapEntry<PersistenceId, DomClassCourse4Teacher>> aClassCourses) {
         this.classCourses = aClassCourses;
     }
 

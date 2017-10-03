@@ -10,18 +10,11 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
-import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  *
  * Client side class, not meant to be transported.
- *
- * The information in the DomResultsPerTeacher class is inserted client-side
- * into this simplified kd-range tree. The kd-tree has a search range of 1 and
- * has a node type from courseTree to leave a sequence of: DomTeacher,
- * DomSchoolClass, DomClassCourse referred DomCourse,DomCourse, ..., DomCourse.
- * A leave of the kd-tree is by definition a course-leave.
  *
  * @author G.A.J. van der Plas email: G.A.J.vanderPlas@uu.nl
  */

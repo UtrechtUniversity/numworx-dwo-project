@@ -13,9 +13,6 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  */
 @XmlRootElement
 public class DomClassCourse {
-
-
-
     private static final Logger LOG = Logger.getLogger(DomClassCourse.class.getName());
 
     private PersistenceId id;

@@ -27,7 +27,7 @@ public class DomMappedResultsPerTeacher {
     private Map<PersistenceId, DomStudent> students;
     private Map<PersistenceId, DomStudentOfClass> studentsOfClasses;
     private Map<PersistenceId, DomSchoolClass> schoolClasses;
-    private Map<PersistenceId, DomClassCourse> classCourses;
+    private Map<PersistenceId, DomClassCourse4Teacher> classCourses;
     private Map<PersistenceId, DomCourse> courses;
     private Map<PersistenceId, DomScoContext> scoContexts;
     private Map<PersistenceId, DomStudentScoContext> studentScoContexts;
@@ -75,12 +75,12 @@ public class DomMappedResultsPerTeacher {
             schoolClasses = new HashMap<PersistenceId, DomSchoolClass>();
         }
         if (results.getClassCourses() != null) {
-            classCourses = new HashMap<PersistenceId, DomClassCourse>(results.getClassCourses().size());
-            for (DomMapEntry<PersistenceId, DomClassCourse> cc : results.getClassCourses()) {
+            classCourses = new HashMap<PersistenceId, DomClassCourse4Teacher>(results.getClassCourses().size());
+            for (DomMapEntry<PersistenceId, DomClassCourse4Teacher> cc : results.getClassCourses()) {
                 classCourses.put(cc.getKey(), cc.getValue());
             }
         }else{
-            classCourses = new HashMap<PersistenceId, DomClassCourse>();
+            classCourses = new HashMap<PersistenceId, DomClassCourse4Teacher>();
         }
         if (results.getCourses() != null) {
             courses = new HashMap<PersistenceId, DomCourse>(results.getCourses().size());
@@ -234,14 +234,14 @@ public class DomMappedResultsPerTeacher {
      *
      * @return the classCourses
      */
-    public Map<PersistenceId, DomClassCourse> getClassCourses() {
+    public Map<PersistenceId, DomClassCourse4Teacher> getClassCourses() {
         return classCourses;
     }
 
     /**
      * @param classCourses the classCourses to set
      */
-    public void setClassCourses(Map<PersistenceId, DomClassCourse> classCourses) {
+    public void setClassCourses(Map<PersistenceId, DomClassCourse4Teacher> classCourses) {
         this.classCourses = classCourses;
     }
 

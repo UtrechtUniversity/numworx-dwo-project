@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
@@ -19,6 +18,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -131,40 +131,42 @@ public class DomResultTree {
         //assume flat trees, therefore children are sco's.
         for (PersistenceId key : resultData.getClassCourses().keySet()) {
             //build the subtrees
-            DomClassCourse cc = resultData.getClassCourses().get(key);
-            DomResultCourse resultCourse = new DomResultCourse(resultData.getCourses().get(cc.getCourseId()));
-            //attach to class
-            schoolClasses.get(cc.getClassId()).getChildren().put(cc.getCourseId(), resultCourse); //add course to parent
-            resultCourse.setParent(schoolClasses.get(cc.getClassId())); //add parent to course
-            //attach sco-type children to it
-            for (DomScoContext sco : scoParentIndex.get(resultCourse.getCourse().getId())) {
-                DomResultScoContext resultSco = new DomResultScoContext(sco);
-                resultCourse.getChildren().put(sco.getId(), resultSco);//add sco to parent
-                resultSco.setParent(resultCourse);//set parent in sco
-                //find studentsco's to sco if present in the same school class
-                DomResultScore ancestor = resultSco;
-                do {
-                    ancestor = ancestor.getParent();
-                } while (!(ancestor instanceof DomResultSchoolClass));
+            DomClassCourse4Teacher cc = resultData.getClassCourses().get(key);
+            if (cc.getViewState() == ViewState.studentsAndTeachers) {
+                DomResultCourse resultCourse = new DomResultCourse(resultData.getCourses().get(cc.getCourseId()));
+                //attach to class
+                schoolClasses.get(cc.getClassId()).getChildren().put(cc.getCourseId(), resultCourse); //add course to parent
+                resultCourse.setParent(schoolClasses.get(cc.getClassId())); //add parent to course
+                //attach sco-type children to it
+                for (DomScoContext sco : scoParentIndex.get(resultCourse.getCourse().getId())) {
+                    DomResultScoContext resultSco = new DomResultScoContext(sco);
+                    resultCourse.getChildren().put(sco.getId(), resultSco);//add sco to parent
+                    resultSco.setParent(resultCourse);//set parent in sco
+                    //find studentsco's to sco if present in the same school class
+                    DomResultScore ancestor = resultSco;
+                    do {
+                        ancestor = ancestor.getParent();
+                    } while (!(ancestor instanceof DomResultSchoolClass));
 
-                DomResultSchoolClass curSchoolClass = (DomResultSchoolClass) ancestor;
+                    DomResultSchoolClass curSchoolClass = (DomResultSchoolClass) ancestor;
 
-                //add studentSco to Sco in subtree                
-                if (ssParentIndex.containsKey(sco.getId())) {
-                    for (DomStudentScoContext ss : ssParentIndex.get(sco.getId())) {
-                        DomStudent student = resultData.getStudents().get(ss.getUserID());
-                        if (student != null && studentClasses.containsKey(curSchoolClass.getSchoolClass().getId())
-                                && studentClasses.get(curSchoolClass.getSchoolClass().getId()).getChildren().containsKey(student.getId())) {
-                            resultSco.getChildren().put(ss.getId(), new DomResultStudentScoContext(ss, student));
+                    //add studentSco to Sco in subtree                
+                    if (ssParentIndex.containsKey(sco.getId())) {
+                        for (DomStudentScoContext ss : ssParentIndex.get(sco.getId())) {
+                            DomStudent student = resultData.getStudents().get(ss.getUserID());
+                            if (student != null && studentClasses.containsKey(curSchoolClass.getSchoolClass().getId())
+                                    && studentClasses.get(curSchoolClass.getSchoolClass().getId()).getChildren().containsKey(student.getId())) {
+                                resultSco.getChildren().put(ss.getId(), new DomResultStudentScoContext(ss, student));
+                            }
                         }
                     }
                 }
             }
         }
-        for(DomResultSchoolClass sc : schoolClasses.values()){
+        for (DomResultSchoolClass sc : schoolClasses.values()) {
             sc.calculateSumOfSubtreeScore(studentTree.getChildren().get(sc.getSchoolClass().getId()).getChildren().size());
         }
-               
+
     }
 
     /**
