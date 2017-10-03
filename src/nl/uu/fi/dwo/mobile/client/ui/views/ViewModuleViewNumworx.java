@@ -1,28 +1,29 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.place.shared.Place;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.ToggleButton;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
@@ -79,7 +80,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 //	@UiField ToggleButton fullBtn;
 	@UiField Label title;
 	@UiField TreeModuleViewNumworxCss t;
-	@UiField HTML kruimels;
+	@UiField FlowPanel kruimels;
 	
 	ViewModuleViewImpl delegate;
 
@@ -104,6 +105,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	}
 
 	public void close() {
+		clearKruimels();
 		delegate.close();
 	}
 
@@ -170,19 +172,30 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		m.addStyleName(t.menuItem());
 	}
 
+	List<HandlerRegistration> register = new LinkedList<>();
+	
 	@Override
 	public void setTrail(List<SelectModuleItem> trail) {
-		SafeHtmlBuilder builder = new SafeHtmlBuilder();
 		ListIterator<SelectModuleItem> iter = trail.listIterator(Math.min(trail.size(),3));
+		clearKruimels();
 		while (iter.hasPrevious()) {
 			SelectModuleItem selectModuleItem = (SelectModuleItem) iter.previous();
 			String title = selectModuleItem.getName();
 			String id = selectModuleItem.getID().toString();
-			builder.appendHtmlConstant("<a href='#TreeModulePlace:" + id + "'>");
-			builder.appendEscaped(title);
-			builder.appendHtmlConstant("</a> &gt; ");			
+			final TreeModulePlace place = new TreeModulePlace(id);
+			InlineLabel a = new InlineLabel(title);
+			a.setStyleName(t.kruimelpad());
+			kruimels.add(a);
+			register.add(a.addClickHandler(new ClickHandler() {
+				
+				@Override
+				public void onClick(ClickEvent event) {
+					goTo(place);
+					
+				}
+			}));
+			kruimels.add(new InlineLabel(" > "));
 		}
-		kruimels.setHTML(builder.toSafeHtml());
 
 		if(!trail.isEmpty())
 			upId = trail.get(0).getID();
@@ -190,6 +203,16 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 			upId = null;
 	}
 	
+	private void clearKruimels() {
+		Iterator<HandlerRegistration> iter = register.iterator();
+		while (iter.hasNext()) {
+			HandlerRegistration type = iter.next();
+			iter.remove();
+			type.removeHandler();
+		}
+		kruimels.clear();
+	}
+
 	@UiHandler("homeBtn")
 	void onHomeBtn(ClickEvent ev) {
 		goTo(new TreeModulePlace());

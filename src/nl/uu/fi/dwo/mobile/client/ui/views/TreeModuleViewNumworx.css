@@ -305,3 +305,11 @@
 	font-size: 13px;
 	font-family: Ubuntu;
 }
+
+.kruimelpad {
+	cursor: pointer;
+}
+
+.kruimelpad:hover {
+	text-decoration: underline;
+}
