@@ -83,7 +83,7 @@
             <artifactId>jamon</artifactId>
             <version>2.80</version> 
             <!--comment scope for elastic beanstalk-->
-            <scope>provided</scope>
+            <!--<scope>provided</scope>-->
         </dependency>        
         <dependency>
             <groupId>junit</groupId>
