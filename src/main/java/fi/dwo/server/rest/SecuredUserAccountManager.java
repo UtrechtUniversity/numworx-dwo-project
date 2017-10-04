@@ -22,7 +22,7 @@ import nl.uu.fi.dwo.rest.entities.RestLoginContext;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
-import fi.dwo.server.PersistentDataManagers.core.LoginDataManager;
+import fi.dwo.server.PersistentDataManagers.core.LogDataManager;
 import fi.dwo.server.PersistentDataManagers.core.RoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
@@ -166,7 +166,7 @@ public class SecuredUserAccountManager {
 //            loginData.setRole(g.getGroupname());
 //            loginData.setMessage(LogType.Login);
 //            loginData.setLogLevel(Level.INFO.toString());
-//            LoginDataManager.create(loginData);
+//            LogDataManager.create(loginData);
 //        }
 //        catch (Exception e) {
 //            LOG.log(Level.SEVERE, null, e);
@@ -304,7 +304,7 @@ public class SecuredUserAccountManager {
 //            loginData.setRole(g.getGroupname());
 //            loginData.setMessage(LogType.Logout);
 //            loginData.setLogLevel(Level.INFO.toString());
-//            LoginDataManager.create(loginData);
+//            LogDataManager.create(loginData);
 //
 //        }
 //        catch (Exception e) {

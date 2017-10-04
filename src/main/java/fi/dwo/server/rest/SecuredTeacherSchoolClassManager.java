@@ -75,6 +75,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewFrom;
@@ -1072,109 +1073,54 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @Produces({"application/json"})
     @Path("/attachCourseToClass")
     public Boolean attachCourseToClass(@Context SecurityContext sc, RestSchoolClassCourseAndProfile rest) throws Dwo2Exception {
-        //init
-        PersistentHasRole phr = null;
-        PersistentHasRolePK phrPK = MySQLPersistenceId.getNativeId(rest.getRestContext().getDomHasRole());
-        PersistentSchool school = null;
-        PersistentSchoolClass schoolClass = null;
-        PersistentCourse course = null;
-        DomDwoProfile domProfile = rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile();
-        final PersistentDwoProfile profile;
-        //check if user has matching hasRole
+        //secure builder to detach course by setting it invisible.
         try {
-            PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
-            if (!u.getId().equals(phrPK.getUserID())) {
-                throw new Dwo2Exception();
-            }
-            phr = HasRoleManager.findEntity(phrPK);
-            school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            profile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(domProfile));
-            if (profile == null) {
-                LOG.log(Level.SEVERE, "Username {0}: ILLEGAL USER-OPERATION: Using unknown profileId {1}.", new Object[]{sc.getUserPrincipal().getName(), domProfile.getId()});
-                throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
-            }
-        } catch (Dwo2Exception ex) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
-        } catch (Exception e) {
-            //in case use disappeared and such
-            LOG.log(Level.WARNING, "Username {0}: Internal error.", new Object[]{sc.getUserPrincipal().getName()});
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Internal error.");
-        }
+            //fail if invalid parameters, fill build if valid
+            CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
+                    .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
+                    .addSchoolClass(rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass())
+                    .addProfile(rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile())
+                    .addCourse(rest.getDomSchoolClassCourseAndProfile().getCourse());            
 
-        //fetch schoolclass from parameter
-        Long classID = MySQLPersistenceId.getNativeId(rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass());
-        schoolClass = SchoolClassManager.findEntity(classID);
-        if (schoolClass == null) {
-            String msg = MessageFormat.format("Username {0}: Given schoolclass with id {1} can not be found.", new Object[]{sc.getUserPrincipal().getName(), classID});
-            LOG.log(Level.WARNING, msg);
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_SchoolclassDoesNotExist, msg);
-        }
-        //verify if user is in class
-        PersistentTeacherOfClassPK key = new PersistentTeacherOfClassPK();
-        key.setClassID(schoolClass.getClassID());
-        key.setSchoolGroupID(phr.getPersistentHasRolePK().getSchoolGroupID());
-        key.setUserID(phr.getPersistentHasRolePK().getUserID());
-        PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(key);
-        if (toc == null) {
-            String msg = MessageFormat.format("Username {0} is not a teacher of schoolclass {1}.", new Object[]{sc.getUserPrincipal().getName(), classID});
-            LOG.log(Level.WARNING, msg);
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, msg);
-        }
-        //verify if schoolClass is in school
-        if (!schoolClass.getSchoolID().equals(school.getSchoolID())) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Active schoolClass {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), (schoolClass != null) ? schoolClass.getClassID() : null});
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
-        }
+            //Loop up the course tree and find the tree path
+            Stack<PersistentCourse> treePath = new Stack<>();
+            PersistentCourse curCourse = build.getCourse();
+            treePath.add(curCourse);
+            while (curCourse.getParentID() != 0) {
+                curCourse = CourseManager.findEntity(curCourse.getParentID());
+                //if no classCourse addPrincipalUser to stack
+                if (ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse()).isEmpty()) {
+                    treePath.push(curCourse);
+                } else {
+                    break; // Someone might erase an existing classcourse in the background, yet this failure will be visible after a tree refresh.
+                }
+            }// stop when added course with parentid = 0;
 
-        Long courseId = MySQLPersistenceId.getNativeId(rest.getDomSchoolClassCourseAndProfile().getCourse());
-        course = CourseManager.findEntity(courseId);
-        //verify if course is in school
-        if (course == null || (course.getSchoolID() != null && !course.getSchoolID().equals(school.getSchoolID()))) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), (course != null) ? course.getCourseID() : null});
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
-        }
-
-        if (course.getDwoProfileID() == null || !course.getDwoProfileID().equals(profile.getDwoProfileID())) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {1} is from a different profile than requested with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), (course != null) ? course.getCourseID() : null});
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
-        }
-        // end verification		
-
-        //Loop up the course tree
-        Stack<PersistentCourse> treePath = new Stack<>();
-        PersistentCourse curCourse = course;
-        treePath.add(curCourse);
-        while (curCourse.getParentID() != 0) {
-            curCourse = CourseManager.findEntity(curCourse.getParentID());
-            //if no classCourse addPrincipalUser to stack
-            if (ClassCourseManager.findEntities(schoolClass, course).isEmpty()) {
-                treePath.push(curCourse);
-            } else {
-                break; // Someone might erase an existing classcourse in the background, yet this failure will be visible after a tree refresh.
-            }
-        }// stop when added course with parentid = 0;
-
-        //Loop the treepath list  from top  to down and addPrincipalUser classCourses, ignore if it already exists.   
-        while (!treePath.empty()) {
-            curCourse = treePath.pop();
-            if (ClassCourseManager.findEntities(schoolClass, course).isEmpty()) {
-                PersistentClassCourse pcc = new PersistentClassCourse();
-                pcc.setClassID(schoolClass.getClassID());
-                pcc.setCourseID(curCourse.getCourseID());
-                pcc.setNotAfter(null);
-                pcc.setNotBefore(null);
-                pcc.setType(CourseType.normal.ordinal());
-                try {
-                    pcc = ClassCourseManager.create(pcc);
-                    LOG.log(Level.FINE, "User {3} adds a ClassCourse {0} for Course {1} and Class {2}", new Object[]{pcc.getClassCourseID(), pcc.getCourseID(), pcc.getClassID(), sc.getUserPrincipal().getName()});
-                } catch (PersistenceException e) {
-                    // ignore as it might already exist.
+            //Walk the treepath list from top to bottom and add classCourses idempotently (ignore if it already exists).   
+            while (!treePath.empty()) {
+                curCourse = treePath.pop();
+                List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse());
+                if (pcc.isEmpty()) { //create new 
+                    PersistentClassCourse cc = new PersistentClassCourse();
+                    cc.setClassID(build.getSchoolClass().getClassID());
+                    cc.setCourseID(curCourse.getCourseID());
+                    cc.setNotAfter(null);
+                    cc.setNotBefore(null);
+                    cc.setType(CourseType.normal.ordinal());
+                    cc.setViewState(ViewState.studentsAndTeachers);
+                    try {
+                        cc = ClassCourseManager.create(cc);
+                        LOG.log(Level.FINE, "User {3} adds a ClassCourse {0} for Course {1} and Class {2}", new Object[]{cc.getClassCourseID(), cc.getCourseID(), cc.getClassID(), sc.getUserPrincipal().getName()});
+                    } catch (PersistenceException e) {
+                        // ignore as it might already exist.
+                    }
+                }else{//switch to visible.
+                    ClassCourseManager.editViewState(pcc.get(0).getClassCourseID(), ViewState.invisible);
                 }
             }
-        }
-
-        //commit
+        } catch (Dwo2Exception e) {
+            throw new Dwo2RestException(e);
+        }        
         return true;
     }
 
@@ -1190,184 +1136,183 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @Produces({"application/json"})
     @Path("/detachCourseFromClass")
     public Boolean detachCourseFromClass(@Context SecurityContext sc, RestSchoolClassCourseAndProfile rest) throws Dwo2Exception {
-////secure builder to detach course by setting it invisible.
-//        try {
-//            CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
-//                    .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
-//                    .addSchoolClass(rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass())
-//                    .addProfile(rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile())
-//                    .addCourse(rest.getDomSchoolClassCourseAndProfile().getCourse());
-//            List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse());
-//            if (pcc.size() > 0) {
-//                //update type.
-//                ClassCourseManager.editType(pcc.get(0).getClassCourseID(), CourseType.invisible);
-//                return true;
-//            }
-//        } catch (Dwo2Exception e) {
-//            throw new Dwo2RestException(e);
-//        }
-//        return false;
-//    
+//secure builder to detach course by setting it invisible.
+        try {
+            CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
+                    .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
+                    .addSchoolClass(rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass())
+                    .addProfile(rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile())
+                    .addCourse(rest.getDomSchoolClassCourseAndProfile().getCourse());
+            List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse());
+            if (pcc.size() > 0) {
+                //update type.
+                ClassCourseManager.editViewState(pcc.get(0).getClassCourseID(), ViewState.invisible);
+                return true;
+            }
+        } catch (Dwo2Exception e) {
+            throw new Dwo2RestException(e);
+        }
+        return false;
+
 // old code that destroys the classcourse entry, keep as example or for revert.    
 //init
-    PersistentHasRole phr = null;
-    PersistentHasRolePK phrPK = MySQLPersistenceId.getNativeId(rest.getRestContext().getDomHasRole());
-    PersistentSchool school = null;
-    PersistentSchoolClass schoolClass = null;
-    PersistentCourse course = null;
-    DomDwoProfile domProfile = rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile();
-    final PersistentDwoProfile profile;
-    //check if user has matching hasRole
-
-    
-        try {
-            PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
-        if (!u.getId().equals(phrPK.getUserID())) {
-            throw new Dwo2Exception();
-        }
-        phr = HasRoleManager.findEntity(phrPK);
-        school = HasRoleUtilManager.getSchoolforHasRole(phr);
-        profile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(domProfile));
-        if (profile == null) {
-            LOG.log(Level.SEVERE, "Username {0}: ILLEGAL USER-OPERATION: Using unknown profileId {1}.", new Object[]{sc.getUserPrincipal().getName(), domProfile.getId()});
-            throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
-        }
-    }
-    catch (Dwo2Exception ex
-
-    
-        ) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-        throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
-    }
-    catch (Exception e
-
-    
-        ) {
-            //in case use disappeared and such
-            LOG.log(Level.WARNING, "Username {0}: Internal error.", new Object[]{sc.getUserPrincipal().getName()});
-        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Internal error.");
-    }
-
-    //fetch schoolclass from parameter
-    Long classID = MySQLPersistenceId.getNativeId(rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass());
-    schoolClass  = SchoolClassManager.findEntity(classID);
-    if (schoolClass
-
-    
-        == null) {
-            String msg = MessageFormat.format("Username {0}: Given schoolclass with id {1} can not be found.", new Object[]{sc.getUserPrincipal().getName(), classID});
-        LOG.log(Level.WARNING, msg);
-        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_SchoolclassDoesNotExist, msg);
-    }
-    //verify if user is in class
-    PersistentTeacherOfClassPK key = new PersistentTeacherOfClassPK();
-
-    key.setClassID (schoolClass.getClassID
-
-    ());
-    key.setSchoolGroupID (phr.getPersistentHasRolePK
-
-    ().getSchoolGroupID());
-    key.setUserID (phr.getPersistentHasRolePK
-    ().getUserID());
-        PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(key);
-    if (toc
-
-    
-        == null) {
-            String msg = MessageFormat.format("Username {0} is not a teacher of schoolclass {1}.", new Object[]{sc.getUserPrincipal().getName(), classID});
-        LOG.log(Level.WARNING, msg);
-        throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, msg);
-    }
-    //verify if schoolClass is in school
-    if (schoolClass
-
-    == null || !schoolClass.getSchoolID () 
-        .equals(school.getSchoolID())) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Active schoolClass {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), (schoolClass != null) ? schoolClass.getClassID() : null});
-        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
-    }
-
-    Long courseId = MySQLPersistenceId.getNativeId(rest.getDomSchoolClassCourseAndProfile().getCourse());
-    course  = CourseManager.findEntity(courseId);
-    //verify if course is in school
-    if (course
-
-    == null || (course.getSchoolID () 
-        != null && !course.getSchoolID().equals(school.getSchoolID()))) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), (course != null) ? course.getCourseID() : null});
-        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
-    }
-
-    if (course.isWithChildren () 
-        ) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is not a leaf in the course tree of school {1} for usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), (course != null) ? course.getCourseID() : null});
-        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Internal error using usercode " + sc.getUserPrincipal().getName() + ".");
-    }
-
-    if (course.getDwoProfileID () 
-        == null || !course.getDwoProfileID().equals(profile.getDwoProfileID())) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {1} is from a different profile than requested with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), (course != null) ? course.getCourseID() : null});
-        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
-    }
-    // end verification		
-
-    //detach leaf course
-    List<PersistentClassCourse> ccResult = ClassCourseManager.findEntities(schoolClass, course);
-    for (PersistentClassCourse cc : ccResult
-
-    
-        ) {
-            try {
-            ClassCourseManager.destroy(cc.getClassCourseID());
-        } catch (PersistenceException e) {
-            // ignore as it might be destroyed already;
-        }
-    }
-    //Loop up the course tree and detach required maps
-    LinkedList<PersistentCourse> treePath = new LinkedList<>();
-    PersistentCourse curCourse = course;
-
-    while (curCourse.getParentID () 
-        != 0) {
-            curCourse = CourseManager.findEntity(curCourse.getParentID());
-        //if no classCourse addPrincipalUser to stack
-        treePath.addLast(curCourse);
-    }// stop when added course with parentid = 0;
-
-    //Loop the treepath list  from top  to down and addPrincipalUser classCourses, ignore if it already exists.   
-    while (!treePath.isEmpty () 
-        ) {
-            curCourse = treePath.pollFirst();
-        //check if a class course exists for current course 
-        ccResult = ClassCourseManager.findEntities(schoolClass, curCourse);
-        int cSize = ccResult.size();
-        if (cSize != 0 && curCourse.getCourseID() != 0) {// not empty, asynchroneous may allow for more than one classcourse
-            List<PersistentCourse> kids = CourseManager.findChildrenOf(curCourse);
-            int count = 0;
-            // count the siblings of curCourse that own one or more class courses.
-            for (PersistentCourse pc : kids) {
-                if (ClassCourseManager.findEntities(schoolClass, pc).size() > 0) {
-                    count++;
-                }
-            }
-            if (count > 0) {
-                break;
-            }
-            for (PersistentClassCourse pcc : ccResult) {
-                try {
-                    ClassCourseManager.destroy(pcc.getClassCourseID());
-                    LOG.log(Level.FINE, "User {3} deletes a ClassCourse {0} for Course {1} and Class {2}", new Object[]{pcc.getClassCourseID(), pcc.getCourseID(), pcc.getClassID(), sc.getUserPrincipal().getName()});
-                } catch (PersistenceException e) {
-                    // ignore as it might be destroyed already;
-                }
-            }
-        }
-    }
-    //commit
-
-return true;
+//    PersistentHasRole phr = null;
+//    PersistentHasRolePK phrPK = MySQLPersistenceId.getNativeId(rest.getRestContext().getDomHasRole());
+//    PersistentSchool school = null;
+//    PersistentSchoolClass schoolClass = null;
+//    PersistentCourse course = null;
+//    DomDwoProfile domProfile = rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile();
+//    final PersistentDwoProfile profile;
+//    //check if user has matching hasRole
+//
+//    
+//        try {
+//            PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
+//        if (!u.getId().equals(phrPK.getUserID())) {
+//            throw new Dwo2Exception();
+//        }
+//        phr = HasRoleManager.findEntity(phrPK);
+//        school = HasRoleUtilManager.getSchoolforHasRole(phr);
+//        profile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(domProfile));
+//        if (profile == null) {
+//            LOG.log(Level.SEVERE, "Username {0}: ILLEGAL USER-OPERATION: Using unknown profileId {1}.", new Object[]{sc.getUserPrincipal().getName(), domProfile.getId()});
+//            throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+//        }
+//    }
+//    catch (Dwo2Exception ex
+//
+//    
+//        ) {
+//            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
+//        throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+//    }
+//    catch (Exception e
+//
+//    
+//        ) {
+//            //in case use disappeared and such
+//            LOG.log(Level.WARNING, "Username {0}: Internal error.", new Object[]{sc.getUserPrincipal().getName()});
+//        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Internal error.");
+//    }
+//
+//    //fetch schoolclass from parameter
+//    Long classID = MySQLPersistenceId.getNativeId(rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass());
+//    schoolClass  = SchoolClassManager.findEntity(classID);
+//    if (schoolClass
+//
+//    
+//        == null) {
+//            String msg = MessageFormat.format("Username {0}: Given schoolclass with id {1} can not be found.", new Object[]{sc.getUserPrincipal().getName(), classID});
+//        LOG.log(Level.WARNING, msg);
+//        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_SchoolclassDoesNotExist, msg);
+//    }
+//    //verify if user is in class
+//    PersistentTeacherOfClassPK key = new PersistentTeacherOfClassPK();
+//
+//    key.setClassID (schoolClass.getClassID
+//
+//    ());
+//    key.setSchoolGroupID (phr.getPersistentHasRolePK
+//
+//    ().getSchoolGroupID());
+//    key.setUserID (phr.getPersistentHasRolePK
+//    ().getUserID());
+//        PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(key);
+//    if (toc
+//
+//    
+//        == null) {
+//            String msg = MessageFormat.format("Username {0} is not a teacher of schoolclass {1}.", new Object[]{sc.getUserPrincipal().getName(), classID});
+//        LOG.log(Level.WARNING, msg);
+//        throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, msg);
+//    }
+//    //verify if schoolClass is in school
+//    if (schoolClass
+//
+//    == null || !schoolClass.getSchoolID () 
+//        .equals(school.getSchoolID())) {
+//            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Active schoolClass {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), (schoolClass != null) ? schoolClass.getClassID() : null});
+//        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
+//    }
+//
+//    Long courseId = MySQLPersistenceId.getNativeId(rest.getDomSchoolClassCourseAndProfile().getCourse());
+//    course  = CourseManager.findEntity(courseId);
+//    //verify if course is in school
+//    if (course
+//
+//    == null || (course.getSchoolID () 
+//        != null && !course.getSchoolID().equals(school.getSchoolID()))) {
+//            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), (course != null) ? course.getCourseID() : null});
+//        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
+//    }
+//
+//    if (course.isWithChildren () 
+//        ) {
+//            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is not a leaf in the course tree of school {1} for usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), (course != null) ? course.getCourseID() : null});
+//        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Internal error using usercode " + sc.getUserPrincipal().getName() + ".");
+//    }
+//
+//    if (course.getDwoProfileID () 
+//        == null || !course.getDwoProfileID().equals(profile.getDwoProfileID())) {
+//            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {1} is from a different profile than requested with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), (course != null) ? course.getCourseID() : null});
+//        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
+//    }
+//    // end verification		
+//
+//    //detach leaf course
+//    List<PersistentClassCourse> ccResult = ClassCourseManager.findEntities(schoolClass, course);
+//    for (PersistentClassCourse cc : ccResult
+//
+//    
+//        ) {
+//            try {
+//            ClassCourseManager.destroy(cc.getClassCourseID());
+//        } catch (PersistenceException e) {
+//            // ignore as it might be destroyed already;
+//        }
+//    }
+//    //Loop up the course tree and detach required maps
+//    LinkedList<PersistentCourse> treePath = new LinkedList<>();
+//    PersistentCourse curCourse = course;
+//
+//    while (curCourse.getParentID () 
+//        != 0) {
+//            curCourse = CourseManager.findEntity(curCourse.getParentID());
+//        //if no classCourse addPrincipalUser to stack
+//        treePath.addLast(curCourse);
+//    }// stop when added course with parentid = 0;
+//
+//    //Loop the treepath list  from top  to down and addPrincipalUser classCourses, ignore if it already exists.   
+//    while (!treePath.isEmpty () 
+//        ) {
+//            curCourse = treePath.pollFirst();
+//        //check if a class course exists for current course 
+//        ccResult = ClassCourseManager.findEntities(schoolClass, curCourse);
+//        int cSize = ccResult.size();
+//        if (cSize != 0 && curCourse.getCourseID() != 0) {// not empty, asynchroneous may allow for more than one classcourse
+//            List<PersistentCourse> kids = CourseManager.findChildrenOf(curCourse);
+//            int count = 0;
+//            // count the siblings of curCourse that own one or more class courses.
+//            for (PersistentCourse pc : kids) {
+//                if (ClassCourseManager.findEntities(schoolClass, pc).size() > 0) {
+//                    count++;
+//                }
+//            }
+//            if (count > 0) {
+//                break;
+//            }
+//            for (PersistentClassCourse pcc : ccResult) {
+//                try {
+//                    ClassCourseManager.destroy(pcc.getClassCourseID());
+//                    LOG.log(Level.FINE, "User {3} deletes a ClassCourse {0} for Course {1} and Class {2}", new Object[]{pcc.getClassCourseID(), pcc.getCourseID(), pcc.getClassID(), sc.getUserPrincipal().getName()});
+//                } catch (PersistenceException e) {
+//                    // ignore as it might be destroyed already;
+//                }
+//            }
+//        }
+//    }
+        //commit
+//        return true;
     }
 
     /**
@@ -1379,9 +1324,9 @@ return true;
      * @throws Dwo2Exception
      */
     @PUT
-        @Produces({"application/json"})
-        @Path("/setFromDateClassCourse")
-        public Boolean setFromDateClassCourse(@Context SecurityContext sc, RestSchoolClassCourseProfilewFrom rest) throws Dwo2Exception {
+    @Produces({"application/json"})
+    @Path("/setFromDateClassCourse")
+    public Boolean setFromDateClassCourse(@Context SecurityContext sc, RestSchoolClassCourseProfilewFrom rest) throws Dwo2Exception {
         //secure builder
         CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
                 .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
@@ -1406,9 +1351,9 @@ return true;
      * @throws Dwo2Exception
      */
     @PUT
-        @Produces({"application/json"})
-        @Path("/setToDateClassCourse")
-        public Boolean setToDateClassCourse(@Context SecurityContext sc, RestSchoolClassCourseProfilewTo rest) throws Dwo2Exception {
+    @Produces({"application/json"})
+    @Path("/setToDateClassCourse")
+    public Boolean setToDateClassCourse(@Context SecurityContext sc, RestSchoolClassCourseProfilewTo rest) throws Dwo2Exception {
         //secure builder
         CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
                 .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
@@ -1433,9 +1378,9 @@ return true;
      * @throws Dwo2Exception
      */
     @PUT
-        @Produces({"application/json"})
-        @Path("/setClassCourseType")
-        public Boolean setClassCourseType(@Context SecurityContext sc, RestSchoolClassCourseProfilewType rest) throws Dwo2RestException {
+    @Produces({"application/json"})
+    @Path("/setClassCourseType")
+    public Boolean setClassCourseType(@Context SecurityContext sc, RestSchoolClassCourseProfilewType rest) throws Dwo2RestException {
         //secure builder
         try {
             CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())

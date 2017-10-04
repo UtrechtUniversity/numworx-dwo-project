@@ -77,7 +77,8 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     private static final Logger LOG = Logger.getLogger(SecuredTeacherResultsManager.class.getName());
 
     /**
-     * Returns the school data to be displayed. note
+     * Returns the all the schoolclass/student results of a teacher within a school. This includes 
+     * the invisible data with ViewState none.
      *
      * @param sc
      * @param aProfile

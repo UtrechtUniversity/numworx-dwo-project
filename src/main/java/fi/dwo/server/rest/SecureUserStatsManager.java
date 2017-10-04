@@ -2,7 +2,7 @@ package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.entities.PersistentLogData;
 import fi.dwo.commons.util.DwoDateUtilities;
-import fi.dwo.server.PersistentDataManagers.core.LoginDataManager;
+import fi.dwo.server.PersistentDataManagers.core.LogDataManager;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -31,8 +31,8 @@ public class SecureUserStatsManager {
         Date today = DwoDateUtilities.getCurrentDwoDate();
         long fromTimeStamp = DwoDateUtilities.getTimeStampForStartOfDay();
         long toTimeStamp = DwoDateUtilities.getTimeStampForEndOfDay();
-        List<PersistentLogData> data = LoginDataManager.findEntities(fromTimeStamp, toTimeStamp);        
-//        LoginDataManager.findEntities(fromTimeStamp, toTimeStamp);
+        List<PersistentLogData> data = LogDataManager.findEntities(fromTimeStamp, toTimeStamp);        
+//        LogDataManager.findEntities(fromTimeStamp, toTimeStamp);
         return data;
     }
 
