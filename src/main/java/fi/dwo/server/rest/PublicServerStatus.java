@@ -17,8 +17,11 @@ import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import nl.uu.fi.dwo.rest.dom.entities.DomHeartBeat;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * Public server status. Showing health of the service. Under development.
@@ -186,4 +189,20 @@ public class PublicServerStatus {
         
         return beat;
     }
+ 
+ // test procedures voor genereren stacktraces in log   
+    @GET
+    @Produces({MediaType.TEXT_HTML})
+    @Path("/exception")
+    public String throwException() {
+    	throw new IllegalArgumentException("exception on purpose");
+    }
+    @GET
+    @Produces({MediaType.TEXT_HTML})
+    @Path("/webException")
+    public String throwWebException() {
+    	Response r = Response.status(403).build();
+    	throw new WebApplicationException("Forbidden", r);
+    }
+
 }
