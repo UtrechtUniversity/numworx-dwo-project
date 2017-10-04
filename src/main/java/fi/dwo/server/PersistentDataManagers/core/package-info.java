@@ -19,6 +19,19 @@
  * <p> Caching is to be configured 'selectively' and enabled for PersistentUsers, 
  * PersistentSchools and PersistentHasRoles,assuming a single tomcat/servlet. </p>
  * 
+ * <ul>
+ * <li> javax.persistence.EntityExistsException
+ * <li> javax.persistence.EntityNotFoundException
+ * <li> javax.persistence.LockTimeoutException
+ * <li> javax.persistence.NonUniqueResultException
+ * <li> javax.persistence.NoResultException
+ * <li> javax.persistence.OptimisticLockException
+ * <li> javax.persistence.PessimisticLockException
+ * <li> javax.persistence.QueryTimeoutException
+ * <li> javax.persistence.RollbackException
+ * <li> javax.persistence.TransactionRequiredException
+ * </ul>
+ * 
  * @author G.A.J. van der Plas
  */
 package fi.dwo.server.PersistentDataManagers.core;
