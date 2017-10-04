@@ -133,10 +133,13 @@ public class RoleManager {
         }
     }
 
-    public static PersistentRole findEntity(Long id) {
+    public static PersistentRole findEntity(Long id) throws PersistenceException{
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentRole.class, id);
+        } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentRole with " + id + " was not found.", e);
+            throw e;
         } finally {
             em.close();
         }

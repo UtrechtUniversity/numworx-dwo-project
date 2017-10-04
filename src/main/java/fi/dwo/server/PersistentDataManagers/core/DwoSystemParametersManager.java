@@ -6,6 +6,8 @@ import fi.dwo.server.persistence.exceptions.NonexistentEntityException;
 import fi.dwo.server.persistence.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -21,7 +23,7 @@ import javax.persistence.criteria.Root;
  */
 public class DwoSystemParametersManager implements Serializable {
 
-   // private static final Logger LOG = Logger.getLogger(DwoSystemParametersManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(DwoSystemParametersManager.class.getName());
 
     private static EntityManager getEntityManager() {
         EntityManager em = DwoEmfFactory.getEntityManager();
@@ -115,11 +117,14 @@ public class DwoSystemParametersManager implements Serializable {
         }
     }
 
-    public static PersistentDwoSystemParameters findEntity(String id) {
+    public static PersistentDwoSystemParameters findEntity(String id) throws PersistenceException{
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentDwoSystemParameters.class, id);
-        } finally {
+         } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentDwoSystemParameters with " + id + " was not found.", e);
+            throw e;
+         } finally {
             em.close();
         }
     }

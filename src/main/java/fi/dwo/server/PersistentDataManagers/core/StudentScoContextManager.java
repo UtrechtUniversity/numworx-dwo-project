@@ -196,10 +196,13 @@ public class StudentScoContextManager {
         }
     }
 
-    public static PersistentStudentScoContext findEntity(Long id) {
+    public static PersistentStudentScoContext findEntity(Long id)  throws PersistenceException{
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentStudentScoContext.class, id);
+        } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentStudentScoContext with " + id + " was not found.", e);
+            throw e;       
         } finally {
             em.close();
         }

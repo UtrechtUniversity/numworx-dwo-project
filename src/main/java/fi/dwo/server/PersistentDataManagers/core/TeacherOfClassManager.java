@@ -169,10 +169,13 @@ public class TeacherOfClassManager {
         }
     }        
  
-    public static PersistentTeacherOfClass findEntity(PersistentTeacherOfClassPK id) {
+    public static PersistentTeacherOfClass findEntity(PersistentTeacherOfClassPK id) throws PersistenceException{
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentTeacherOfClass.class, id);
+        } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentTeacherOfClass with " + id + " was not found.", e);
+            throw e;
         } finally {
             em.close();
         }

@@ -5,9 +5,6 @@
  */
 package fi.dwo.server.PersistentDataManagers.core;
 
-import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
-import fi.dwo.commons.persistence.entities.PersistentScoContext;
-import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
@@ -21,8 +18,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 /**
- * Manages student sco data in the persistent storage. As this data will be detached
- * from the main transactional database it is considered separate data to be retrieved.
+ * Manages student sco data in the persistent storage. As this data will be
+ * detached from the main transactional database it is considered separate data
+ * to be retrieved.
  *
  * @author G.A.J. van der Plas
  */
@@ -138,17 +136,22 @@ public class StudentScoDataManager {
         }
     }
 
-    public static PersistentStudentScoData findEntity(Long id) {
+    public static PersistentStudentScoData findEntity(Long id) throws PersistenceException {
         EntityManager em = getEntityManager();
         try {
-        	em.getTransaction().begin();
+            em.getTransaction().begin();
             PersistentStudentScoData o = em.find(PersistentStudentScoData.class, id);
-            if(o != null) em.refresh(o);
+            if (o != null) {
+                em.refresh(o);
+            }
             em.getTransaction().commit();
-			return o;
-        } catch(RuntimeException e) {
-        	LOG.log(Level.SEVERE, "", e);
-        	throw e;
+            return o;
+        } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentStudentScoData with " + id + " was not found.", e);
+            throw e;
+        } catch (RuntimeException r) {
+            LOG.log(Level.FINE, "The PersistentStudentScoData with " + id + " had a serious error.", r);
+            throw r;
         } finally {
             em.close();
         }

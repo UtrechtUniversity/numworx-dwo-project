@@ -146,11 +146,14 @@ public class FromToManager {
         }
     }    
 
-    public static PersistentFromTo findEntity(PersistentFromToPK id) {
+    public static PersistentFromTo findEntity(PersistentFromToPK id) throws PersistenceException {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentFromTo.class, id);
-        } finally {
+         } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentFromTo with " + id + " was not found.", e);
+            throw e;       
+         } finally {
             em.close();
         }
     }

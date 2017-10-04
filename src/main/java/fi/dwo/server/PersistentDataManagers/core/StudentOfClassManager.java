@@ -173,10 +173,13 @@ public class StudentOfClassManager {
         }
     }    
     
-    public static PersistentStudentOfClass findEntity(PersistentStudentOfClassPK id) {
+    public static PersistentStudentOfClass findEntity(PersistentStudentOfClassPK id) throws PersistenceException{
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentStudentOfClass.class, id);
+        } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentStudentOfClass with " + id + " was not found.", e);
+            throw e;
         } finally {
             em.close();
         }

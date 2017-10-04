@@ -49,7 +49,7 @@ public class UserManager {
             em.getTransaction().begin();
             em.persist(persistentUser);
             em.getTransaction().commit();
-        }catch (EntityExistsException ex){
+        } catch (EntityExistsException ex) {
             LOG.log(Level.SEVERE, "Can't create the PersistentUser.", ex);
             throw ex;
         } catch (Exception e) {
@@ -117,7 +117,7 @@ public class UserManager {
             }
         }
     }
-  
+
     public static List<PersistentUser> findEntities() {
         return findEntities(true, -1, -1);
     }
@@ -143,8 +143,6 @@ public class UserManager {
         }
     }
 
-
-
     public static List<PersistentUser> findEntities(PersistentSchoolGroup sg) {
         EntityManager em = DwoEmfFactory.getEntityManager();
         List<PersistentUser> userList = null;
@@ -153,21 +151,23 @@ public class UserManager {
             q.setParameter("schoolGroupID", sg.getSchoolGroupID());
             userList = (List<PersistentUser>) q.getResultList();
             LOG.log(Level.FINE, "PersistentUser-manager retrieved {0} user with schoolGroupId {1}", new Object[]{userList.size(), sg.getGroupID()});
-        }catch(NoResultException e){
+        } catch (NoResultException e) {
             return null;
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new PersistenceException(e);
-        }finally {
+        } finally {
             em.close();
         }
         return userList;
     }
-    
-    
-    public static PersistentUser findEntity(Long id) {
+
+    public static PersistentUser findEntity(Long id) throws PersistenceException {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentUser.class, id);
+        } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentUser with " + id + " was not found.", e);
+            throw e;
         } finally {
             em.close();
         }
@@ -176,12 +176,11 @@ public class UserManager {
     public static PersistentUser findEntity(PersistentHasRolePK key) {
         return findEntity(key.getUserID());
     }
-    
-    
+
     public static PersistentUser findEntity(PersistentStudentOfClassPK key) {
         return findEntity(key.getUserID());
     }
-    
+
     public static int getEntityCount() {
         EntityManager em = getEntityManager();
         try {
@@ -197,9 +196,9 @@ public class UserManager {
 
     /**
      * returns null if no user with that name was found.
-     * 
+     *
      * @param userName
-     * @return 
+     * @return
      */
     public static PersistentUser findByUserName(String userName) {
         EntityManager em = DwoEmfFactory.getEntityManager();
@@ -209,11 +208,11 @@ public class UserManager {
             q.setParameter("username", userName);
             user = (PersistentUser) q.getSingleResult();
             LOG.log(Level.FINE, "PersistentUser-manager retrieved user with username {0}", new Object[]{user.getUsername()});
-        }catch(NoResultException e){
+        } catch (NoResultException e) {
             return null;
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new PersistenceException(e);
-        }finally {
+        } finally {
             em.close();
         }
         return user;
@@ -224,7 +223,7 @@ public class UserManager {
      *
      * @param userName
      * @param passwd
-     * @return 
+     * @return
      */
     public static PersistentUser login(String userName, String passwd) {
         PersistentUser user = null;
@@ -238,9 +237,8 @@ public class UserManager {
             }
             LOG.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{userName});
         } catch (NoResultException noresult) {
-        	return null;
-        }
-        finally {
+            return null;
+        } finally {
             em.close();
         }
         return user;

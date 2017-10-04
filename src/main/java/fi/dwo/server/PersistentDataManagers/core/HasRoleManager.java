@@ -205,10 +205,13 @@ public class HasRoleManager {
         }
     }
 
-    public static PersistentHasRole findEntity(PersistentHasRolePK id) {
+    public static PersistentHasRole findEntity(PersistentHasRolePK id) throws PersistenceException{
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentHasRole.class, id);
+         } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentHasRole with " + id + " was not found.", e);
+            throw e;       
         }
         finally {
             em.close();

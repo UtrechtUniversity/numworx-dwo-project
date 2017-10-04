@@ -134,7 +134,10 @@ public class ScoDataManager {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentScoData.class, id);
-        } finally {
+         } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentScoData with " + id + " was not found.", e);
+            throw e;
+         } finally {
             em.close();
         }
     }

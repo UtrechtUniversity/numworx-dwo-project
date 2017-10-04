@@ -151,12 +151,14 @@ public class LogDataManager {
         }
     }
 
-    public static PersistentLogData findEntity(PersistentLogDataPK id) {
+    public static PersistentLogData findEntity(PersistentLogDataPK id) throws PersistenceException{
         EntityManager em = getEntityManager();
 
         try {
             return em.find(PersistentLogData.class, id);
-        }
+         } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentLogData with " + id + " was not found.", e);
+            throw e;            }
         finally {
             em.close();
         }

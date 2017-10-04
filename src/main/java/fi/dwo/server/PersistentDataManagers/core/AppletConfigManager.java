@@ -13,7 +13,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 /**
- * Manages applet configs in the persistent storage. 
+ * Manages applet configs in the persistent storage.
  *
  * @author G.A.J. van der Plas
  */
@@ -128,10 +128,13 @@ public class AppletConfigManager {
         }
     }
 
-    public static PersistentAppletConfig findEntity(Long id) {
+    public static PersistentAppletConfig findEntity(Long id) throws PersistenceException{
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentAppletConfig.class, id);
+        } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentAppletConfig with " + id + " was not found.", e);
+            throw e;
         } finally {
             em.close();
         }
@@ -149,6 +152,5 @@ public class AppletConfigManager {
             em.close();
         }
     }
-
 
 }

@@ -40,12 +40,10 @@ public class SchoolClassManager {
             em.getTransaction().begin();
             em.persist(entity);
             em.getTransaction().commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentSchoolClass.", e);
             throw new PersistenceException(e);
-        }
-        finally {
+        } finally {
             if (em != null) {
                 em.close();
             }
@@ -64,8 +62,7 @@ public class SchoolClassManager {
             em.getTransaction().begin();
             entity = em.merge(entity);
             em.getTransaction().commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Long id = entity.getClassID();
@@ -75,8 +72,7 @@ public class SchoolClassManager {
                 }
             }
             throw new PersistenceException(e);
-        }
-        finally {
+        } finally {
             if (em != null) {
                 em.close();
             }
@@ -97,15 +93,13 @@ public class SchoolClassManager {
             try {
                 entity = em.getReference(PersistentSchoolClass.class, id);
                 entity.getClassID();
-            }
-            catch (EntityNotFoundException e) {
+            } catch (EntityNotFoundException e) {
                 LOG.log(Level.FINE, "The PersistentSchoolClass with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
             em.remove(entity);
             em.getTransaction().commit();
-        }
-        finally {
+        } finally {
             if (em != null) {
                 em.close();
             }
@@ -131,8 +125,7 @@ public class SchoolClassManager {
                 q.setFirstResult(firstResult);
             }
             return q.getResultList();
-        }
-        finally {
+        } finally {
             em.close();
         }
     }
@@ -145,8 +138,7 @@ public class SchoolClassManager {
             List<PersistentSchoolClass> list = q.getResultList();
             LOG.log(Level.FINE, "SchoolClass-manager retrieved {0} PersistentSchoolClass with schoolid {1}", new Object[]{list.size(), school.getSchoolID()});
             return list;
-        }
-        finally {
+        } finally {
             em.close();
         }
     }
@@ -155,8 +147,10 @@ public class SchoolClassManager {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentSchoolClass.class, id);
-        }
-        finally {
+        } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentSchoolClass with " + id + " was not found.", e);
+            throw e;
+        } finally {
             em.close();
         }
     }
@@ -170,10 +164,9 @@ public class SchoolClassManager {
             PersistentSchoolClass r = (PersistentSchoolClass) q.getSingleResult();
             LOG.log(Level.FINE, "SchoolClass-manager retrieved PersistentSchoolClass with schoolid {1} and classname {0}", new Object[]{className, school.getSchoolID()});
             return r;
-        }catch(NoResultException e){
+        } catch (NoResultException e) {
             return null;
-        }
-        finally {
+        } finally {
             em.close();
         }
     }
@@ -187,8 +180,7 @@ public class SchoolClassManager {
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
-        }
-        finally {
+        } finally {
             em.close();
         }
     }

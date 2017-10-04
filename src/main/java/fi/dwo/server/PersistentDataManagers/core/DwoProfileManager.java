@@ -133,10 +133,13 @@ public class DwoProfileManager {
         }
     }
 
-    public static PersistentDwoProfile findEntity(Long id) {
+    public static PersistentDwoProfile findEntity(Long id) throws PersistenceException{
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentDwoProfile.class, id);
+         } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentDwoProfile with " + id + " was not found.", e);
+            throw e;
         } finally {
             em.close();
         }

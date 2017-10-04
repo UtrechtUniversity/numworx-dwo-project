@@ -47,18 +47,16 @@ public class ClassCourseManager {
 //            em.flush();
             em.getTransaction().commit();
             return classCourse;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentClassCourse.", e);
             throw new PersistenceException(e);
-        }
-        finally {
+        } finally {
             if (em != null) {
                 em.close();
             }
         }
     }
-    
+
     /**
      * Update
      *
@@ -71,8 +69,7 @@ public class ClassCourseManager {
             em.getTransaction().begin();
             classCourse = em.merge(classCourse);
             em.getTransaction().commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Long id = classCourse.getClassCourseID();
@@ -82,22 +79,21 @@ public class ClassCourseManager {
                 }
             }
             throw new PersistenceException(e);
-        }
-        finally {
+        } finally {
             if (em != null) {
                 em.close();
             }
         }
     }
 
-/**
+    /**
      * Updates the CourseType.
      *
      * @param classCourse
      */
     public static void editViewState(Long id, ViewState state) throws PersistenceException {
         EntityManager em = null;
-        PersistentClassCourse cc=null;
+        PersistentClassCourse cc = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
@@ -105,8 +101,7 @@ public class ClassCourseManager {
             cc.setViewState(state);
             cc = em.merge(cc);
             em.getTransaction().commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 if (cc == null) {
@@ -115,22 +110,21 @@ public class ClassCourseManager {
                 }
             }
             throw new PersistenceException(e);
-        }
-        finally {
+        } finally {
             if (em != null) {
                 em.close();
             }
         }
     }
-    
-/**
+
+    /**
      * Updates the CourseType.
      *
      * @param classCourse
      */
     public static void editType(Long id, CourseType type) throws PersistenceException {
         EntityManager em = null;
-        PersistentClassCourse cc=null;
+        PersistentClassCourse cc = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
@@ -138,8 +132,7 @@ public class ClassCourseManager {
             cc.setType(type.ordinal());
             cc = em.merge(cc);
             em.getTransaction().commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 if (cc == null) {
@@ -148,22 +141,21 @@ public class ClassCourseManager {
                 }
             }
             throw new PersistenceException(e);
-        }
-        finally {
+        } finally {
             if (em != null) {
                 em.close();
             }
         }
     }
 
-/**
+    /**
      * Updates the CourseType.
      *
      * @param classCourse
      */
     public static void editFrom(Long id, Date date) throws PersistenceException {
         EntityManager em = null;
-        PersistentClassCourse cc=null;
+        PersistentClassCourse cc = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
@@ -171,8 +163,7 @@ public class ClassCourseManager {
             cc.setNotBefore(date);
             cc = em.merge(cc);
             em.getTransaction().commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 if (cc == null) {
@@ -181,22 +172,21 @@ public class ClassCourseManager {
                 }
             }
             throw new PersistenceException(e);
-        }
-        finally {
+        } finally {
             if (em != null) {
                 em.close();
             }
         }
     }
-    
-/**
+
+    /**
      * Updates the CourseType.
      *
      * @param classCourse
      */
     public static void editTo(Long id, Date date) throws PersistenceException {
         EntityManager em = null;
-        PersistentClassCourse cc=null;
+        PersistentClassCourse cc = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
@@ -204,8 +194,7 @@ public class ClassCourseManager {
             cc.setNotAfter(date);
             cc = em.merge(cc);
             em.getTransaction().commit();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 if (cc == null) {
@@ -214,14 +203,13 @@ public class ClassCourseManager {
                 }
             }
             throw new PersistenceException(e);
-        }
-        finally {
+        } finally {
             if (em != null) {
                 em.close();
             }
         }
     }
-    
+
     /**
      * Removes a user from the persistent store.
      *
@@ -236,15 +224,13 @@ public class ClassCourseManager {
             try {
                 classCourse = em.getReference(PersistentClassCourse.class, id);
                 classCourse.getClassCourseID();
-            }
-            catch (EntityNotFoundException e) {
+            } catch (EntityNotFoundException e) {
                 LOG.log(Level.FINE, "The PersistentClassCourse with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
             em.remove(classCourse);
             em.getTransaction().commit();
-        }
-        finally {
+        } finally {
             if (em != null) {
                 em.close();
             }
@@ -270,8 +256,7 @@ public class ClassCourseManager {
                 q.setFirstResult(firstResult);
             }
             return q.getResultList();
-        }
-        finally {
+        } finally {
             em.close();
         }
     }
@@ -284,8 +269,7 @@ public class ClassCourseManager {
             List<PersistentClassCourse> list = q.getResultList();
             LOG.log(Level.FINE, "ClassCourse-manager retrieved {0} PersistentClassCourse with classid {1}", new Object[]{list.size(), c.getClassID()});
             return list;
-        }
-        finally {
+        } finally {
             em.close();
         }
     }
@@ -299,12 +283,11 @@ public class ClassCourseManager {
             List<PersistentClassCourse> list = q.getResultList();
             LOG.log(Level.FINE, "ClassCourse-manager retrieved {0} PersistentClassCourse with classid {1}", new Object[]{list.size(), c.getClassID()});
             return list;
-        }
-        finally {
+        } finally {
             em.close();
         }
     }
-    
+
     public static List<PersistentClassCourse> findEntities(PersistentCourse c) {
         EntityManager em = getEntityManager();
         try {
@@ -313,8 +296,7 @@ public class ClassCourseManager {
             List<PersistentClassCourse> list = q.getResultList();
             LOG.log(Level.FINE, "ClassCourse-manager retrieved {0} PersistentClassCourse with courseid {1}", new Object[]{list.size(), c.getCourseID()});
             return list;
-        }
-        finally {
+        } finally {
             em.close();
         }
     }
@@ -328,19 +310,19 @@ public class ClassCourseManager {
             List<PersistentClassCourse> list = q.getResultList();
             LOG.log(Level.FINE, "ClassCourse-manager retrieved {0} PersistentClassCourse with courseid {1} and classId {2}", new Object[]{list.size(), course.getCourseID(), schoolClass.getClassID()});
             return list;
-        }
-        finally {
+        } finally {
             em.close();
         }
-    }    
-    
-    
-    public static PersistentClassCourse findEntity(Long id) {
+    }
+
+    public static PersistentClassCourse findEntity(Long id) throws PersistenceException {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentClassCourse.class, id);
-        }
-        finally {
+        } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentClassCourse with " + id + " was not found.", e);
+            throw e;
+        } finally {
             em.close();
         }
     }
@@ -353,8 +335,7 @@ public class ClassCourseManager {
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
-        }
-        finally {
+        } finally {
             em.close();
         }
     }

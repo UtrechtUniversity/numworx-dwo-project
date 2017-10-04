@@ -156,10 +156,13 @@ public class ScoContextManager {
         }
     }
         
-    public static PersistentScoContext findEntity(Long id) {
+    public static PersistentScoContext findEntity(Long id) throws PersistenceException{
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentScoContext.class, id);
+        } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentScoContext with " + id + " was not found.", e);
+            throw e;
         } finally {
             em.close();
         }

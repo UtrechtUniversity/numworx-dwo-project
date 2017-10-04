@@ -69,7 +69,7 @@ public class CourseManager {
             if (msg == null || msg.length() == 0) {
                 Long id = course.getCourseID();
                 if (findEntity(id) == null) {
-                    LOG.log(Level.FINE, "The PersistentCourse with " + id + " no longer exists.", e);
+                    LOG.log(Level.INFO, "The PersistentCourse with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
                 }
             }
@@ -216,11 +216,14 @@ public class CourseManager {
         }
     }
 
-    public static PersistentCourse findEntity(Long id) {
+    public static PersistentCourse findEntity(Long id) throws PersistenceException {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentCourse.class, id);
-        } finally {
+         } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentCourse with " + id + " was not found.", e);
+            throw e;
+       } finally {
             em.close();
         }
     }

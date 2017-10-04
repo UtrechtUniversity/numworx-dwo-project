@@ -94,7 +94,7 @@ public class SchoolManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-                PersistentSchool school = null;
+            PersistentSchool school = null;
             try {
                 school = em.getReference(PersistentSchool.class, id);
                 school.getSchoolID();
@@ -135,12 +135,13 @@ public class SchoolManager {
         }
     }
 
-    public static PersistentSchool findEntity(Long id) {
+    public static PersistentSchool findEntity(Long id) throws PersistenceException{
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentSchool.class, id);
-        }catch(NoResultException e){
-            return null;
+        } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentSchool with " + id + " was not found.", e);
+            throw e;
         } finally {
             em.close();
         }
@@ -159,7 +160,6 @@ public class SchoolManager {
         }
     }
 
-
     public static PersistentSchool findBySchoolLogin(String schoolLogin) {
         EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentSchool school = null;
@@ -168,13 +168,12 @@ public class SchoolManager {
             q.setParameter("schoolLogin", schoolLogin);
             school = (PersistentSchool) q.getSingleResult();
             LOG.log(Level.FINE, "PersistentSchool-manager retrieved school with school {0}", new Object[]{school.getSchoolName()});
-        }catch(NoResultException e){
+        } catch (NoResultException e) {
             return null;
         } finally {
             em.close();
         }
         return school;
     }
-    
 
 }

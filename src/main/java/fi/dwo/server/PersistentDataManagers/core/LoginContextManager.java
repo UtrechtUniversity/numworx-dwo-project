@@ -16,9 +16,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 /**
- * Manages LoginContext in the persistent storage. Sample UserManager for building more
- * code. Also useful as it is being reused. The registered timestamp is null if no session
- * is active.
+ * Manages LoginContext in the persistent storage. Sample UserManager for
+ * building more code. Also useful as it is being reused. The registered
+ * timestamp is null if no session is active.
  *
  * @author G.A.J. van der Plas
  */
@@ -43,7 +43,7 @@ public class LoginContextManager {
             em.getTransaction().begin();
             em.persist(loginContext);
             em.getTransaction().commit();
-        }catch (EntityExistsException ex){
+        } catch (EntityExistsException ex) {
             LOG.log(Level.SEVERE, "Can't create the PersistentLoginContext.", ex);
             throw ex;
         } catch (Exception e) {
@@ -56,7 +56,6 @@ public class LoginContextManager {
         }
     }
 
-    
     /**
      * Update
      *
@@ -137,8 +136,6 @@ public class LoginContextManager {
         }
     }
 
-
-
     public static List<PersistentLoginContext> findEntities(Long userId) {
         EntityManager em = DwoEmfFactory.getEntityManager();
         List<PersistentLoginContext> loginContextList = null;
@@ -147,21 +144,23 @@ public class LoginContextManager {
             q.setParameter("userID", userId);
             loginContextList = (List<PersistentLoginContext>) q.getResultList();
             LOG.log(Level.FINE, "PersistentUser-manager retrieved {0} user with schoolGroupId {1}", new Object[]{loginContextList.size(), userId});
-        }catch(NoResultException e){
+        } catch (NoResultException e) {
             return null;
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new PersistenceException(e);
-        }finally {
+        } finally {
             em.close();
         }
         return loginContextList;
     }
-    
-    
-    public static PersistentLoginContext findEntity(Long id) {
+
+    public static PersistentLoginContext findEntity(Long id) throws PersistenceException {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentLoginContext.class, id);
+        } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentLoginContext with " + id + " was not found.", e);
+            throw e;
         } finally {
             em.close();
         }

@@ -144,11 +144,14 @@ public class CourseSequenceManager {
         }
     }    
     
-    public static PersistentCourseSequence findEntity(Long id) {
+    public static PersistentCourseSequence findEntity(Long id) throws PersistenceException{
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentCourseSequence.class, id);
-        } finally {
+         } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentCourseSequence with " + id + " was not found.", e);
+            throw e;
+         } finally {
             em.close();
         }
     }

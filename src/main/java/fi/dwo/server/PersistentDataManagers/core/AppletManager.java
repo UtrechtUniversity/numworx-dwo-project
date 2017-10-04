@@ -129,10 +129,13 @@ public class AppletManager {
         }
     }
 
-    public static PersistentApplet findEntity(Long id) {
+    public static PersistentApplet findEntity(Long id) throws PersistenceException{
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentApplet.class, id);
+        } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentAppletConfig with " + id + " was not found.", e);
+            throw e;
         } finally {
             em.close();
         }

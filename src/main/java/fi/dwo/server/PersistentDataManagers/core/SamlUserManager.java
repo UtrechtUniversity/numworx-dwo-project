@@ -147,10 +147,13 @@ public class SamlUserManager {
         }
     }    
 
-    public static PersistentSamlUser findEntity(Long id) {
+    public static PersistentSamlUser findEntity(Long id) throws PersistenceException {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentSamlUser.class, id);
+        } catch (PersistenceException e) {
+            LOG.log(Level.FINE, "The PersistentSamlUser with " + id + " was not found.", e);
+            throw e; 
         } finally {
             em.close();
         }
