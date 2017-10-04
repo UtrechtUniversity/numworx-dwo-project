@@ -19,15 +19,15 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class LoginDataManager {
+public class LogDataManager {
 
-    private static final Logger LOG = Logger.getLogger(LoginDataManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(LogDataManager.class.getName());
 
     private static EntityManager getEntityManager() {
         EntityManager em = DwoEmfFactory.getEntityManager();
         return em;
     }
-
+    
     /**
      * Create.
      *
