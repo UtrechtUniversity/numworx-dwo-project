@@ -58,7 +58,7 @@ public class ClassCourseManager {
             }
         }
     }
-
+    
     /**
      * Update
      *
@@ -90,6 +90,39 @@ public class ClassCourseManager {
         }
     }
 
+/**
+     * Updates the CourseType.
+     *
+     * @param classCourse
+     */
+    public static void editViewState(Long id, ViewState state) throws PersistenceException {
+        EntityManager em = null;
+        PersistentClassCourse cc=null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            cc = findEntity(id);
+            cc.setViewState(state);
+            cc = em.merge(cc);
+            em.getTransaction().commit();
+        }
+        catch (Exception e) {
+            String msg = e.getLocalizedMessage();
+            if (msg == null || msg.length() == 0) {
+                if (cc == null) {
+                    LOG.log(Level.FINE, "The PersistentClassCourse with " + id + " no longer exists.", e);
+                    throw new PersistenceException(e);
+                }
+            }
+            throw new PersistenceException(e);
+        }
+        finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+    
 /**
      * Updates the CourseType.
      *
