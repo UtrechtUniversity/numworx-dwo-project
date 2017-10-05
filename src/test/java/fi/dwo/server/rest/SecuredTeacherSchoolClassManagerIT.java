@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
@@ -27,6 +28,9 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
+import fi.dwo.server.PersistentDataManagers.core.CourseManager;
+import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
@@ -49,6 +53,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.core.SecurityContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -92,8 +100,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         dbInstance.ClearDatabase();
     }
 
-    
-        /**
+    /**
      * Test of getTeachersSchoolClasses method, of class
      * SecuredTeacherSchoolClassManager.
      */
@@ -108,7 +115,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         restSchoolClass.setDomSchoolClass(domSchoolClass);
         domSchoolClass.setId(id);
         DomSchoolClassFull result = instance.getFullSchoolClass(sc, restSchoolClass);
-        PersistentSchoolClass schoolClass=null;
+        PersistentSchoolClass schoolClass = null;
         try {
             schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(domSchoolClass));
         } catch (Dwo2Exception ex) {
@@ -184,7 +191,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         RestSchoolClass restSchoolClass = new RestSchoolClass();
         DomSchoolClass domSchoolClass = new DomSchoolClass();
-         restSchoolClass.setDomSchoolClass(domSchoolClass);
+        restSchoolClass.setDomSchoolClass(domSchoolClass);
         PersistenceId id = PersistentSchoolClass.buildPersistenceId(2L);
         domSchoolClass.setId(id);
         domSchoolClass.setSchoolClassName("The worm wil eat you.");
@@ -248,7 +255,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         Boolean expResult = true;
         Boolean result = instance.removeSchoolClass(sc, restSchoolClass);
         assertEquals("remove returned false", expResult, result);
-        PersistentSchoolClass schoolClass=null;
+        PersistentSchoolClass schoolClass = null;
         try {
             schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(restSchoolClass.getDomSchoolClass()));
         } catch (Dwo2Exception ex) {
@@ -265,8 +272,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         try {
             result = instance.removeSchoolClass(sc, restSchoolClass);
             assertNotEquals("remove returned false", expResult, result);
-        }
-        catch (Dwo2RestException e) {
+        } catch (Dwo2RestException e) {
             //succes
         }
         try {
@@ -341,7 +347,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         restSubmitStudentToSchoolClass.getDomSubmitStudentToSchoolClass().setSchoolClassFrom(domFromSchoolClass);
         restSubmitStudentToSchoolClass.getDomSubmitStudentToSchoolClass().setSchoolClassTo(domToSchoolClass);
         restSubmitStudentToSchoolClass.getDomSubmitStudentToSchoolClass().setStudent(domStudent);
-        
+
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;
         Boolean result = instance.SubmitStudentToSchoolClass(sc, restSubmitStudentToSchoolClass);
@@ -403,8 +409,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         try {
             result = instance.removeTeacherFromSchoolClass(sc, restRemoveTeacherFromSchoolClass);
             assertEquals("Teacher removed while this should not occur.", false, result);
-        }
-        catch (Dwo2RestException e) {
+        } catch (Dwo2RestException e) {
             //success
         }
     }
@@ -465,7 +470,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean result = instance.UpdateSchoolClass(sc, restSchoolClass);
         assertEquals("Update action threw false", true, result);
-        PersistentSchoolClass schoolClass=null;
+        PersistentSchoolClass schoolClass = null;
         try {
             schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(domSchoolClass));
         } catch (Dwo2Exception ex) {
@@ -489,7 +494,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         RestSingleSchoolStudent nssStudent = new RestSingleSchoolStudent();
         DomSingleSchoolStudent dssStudent = new DomSingleSchoolStudent();
         nssStudent.setDomSingleSchoolStudent(dssStudent);
-        
+
         dssStudent.setId(PersistentUser.buildPersistenceId(11L));
         dssStudent.setUserName("user04"); //changing is not allowed.
         dssStudent.setGivenName("User");
@@ -519,17 +524,15 @@ public class SecuredTeacherSchoolClassManagerIT {
         try {
             result = instance.updateSingleSchoolStudent(sc, nssStudent);
             assertEquals(expResult, result);
-        }
-        catch (Dwo2RestException e) {
+        } catch (Dwo2RestException e) {
             //success
         }
     }
 
-
     /**
      * Test of SubmitSingleSchoolStudent method, of class
      * SecuredSchoolAdminSchoolClassManager. Tests if a single student student
-     * can be added. Tests only for a proper request. 
+     * can be added. Tests only for a proper request.
      */
     @Test
     public void testSubmitSingleSchoolStudent() {
@@ -548,7 +551,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         dss.setEmail("a@b.cd");
         dss.setPassword("pwd");
         dss.setSingleSchool(true);
-        
+
 //        PersistenceId id = MySQLPersistenceId.createPersistenceId(2, PersistenceClassType.PersistentSchoolClass);
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(2L);
         nss.setDomSchoolClass(schoolClass.buildDomSchoolClass());
@@ -568,10 +571,62 @@ public class SecuredTeacherSchoolClassManagerIT {
         try {
             //check for hasRole
             PersistentHasRole hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, (PersistentSchool) SchoolManager.findEntity(3L), RoleType.STUDENT);
-        }
-        catch (Dwo2Exception ex) {
+        } catch (Dwo2Exception ex) {
             Logger.getLogger(PublicUserManagerIT.class.getName()).log(Level.SEVERE, "", ex);
             fail("Could not find created user's hasRole");
         }
-    }    
+    }
+
+    @Test
+    public void testAttachCourseToClass() {
+        PersistentSchool school = SchoolManager.findEntity(03L);
+        PersistentUser user = UserManager.findByUserName("user03");
+        SecurityContext sc = new TestSecurityContext(user.getUsername(), RoleType.TEACHER);//school01
+        RestSchoolClassCourseAndProfile submit = new RestSchoolClassCourseAndProfile();
+        
+        DomContext context = new DomContext();        
+        DomSchoolClassCourseAndProfile data = new DomSchoolClassCourseAndProfile();
+        
+        try {
+            DomHasRole hr = HasRoleUtilManager.getHasRole(user.getId(), RoleType.TEACHER, school).buildDomHasRole();
+            context.setDomHasRole(hr);
+            submit.setRestContext(context);
+            data.setCourse(CourseManager.findEntity(6L).buildDomCourse());
+            data.setDomDwoProfile(DwoProfileManager.findEntity(1L).buildDomDwoProfile());
+            data.setDomSchoolClass(SchoolClassManager.findEntity(2L).buildDomSchoolClass());
+            submit.setDomSchoolClassCourseAndProfile(data);
+        } catch (Dwo2Exception e) {
+            LOG.log(Level.SEVERE, "Internal error", e);
+            fail("internal error");
+        }
+        SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
+
+        //recreate with double class/course id
+        try {
+            instance.attachCourseToClass(sc, submit);
+        } catch (Exception e) {
+            fail("Internal error"); //unless nosql
+            //success
+        }
+
+        try {
+            DomHasRole hr = HasRoleUtilManager.getHasRole(user.getId(), RoleType.TEACHER, school).buildDomHasRole();
+            context.setDomHasRole(hr);
+            submit.setRestContext(context);
+            data.setCourse(CourseManager.findEntity(7L).buildDomCourse());
+            data.setDomDwoProfile(DwoProfileManager.findEntity(1L).buildDomDwoProfile());
+            data.setDomSchoolClass(SchoolClassManager.findEntity(1L).buildDomSchoolClass());
+            submit.setDomSchoolClassCourseAndProfile(data);
+        } catch (Dwo2Exception e) {
+            LOG.log(Level.SEVERE, "Internal error", e);
+            fail("internal error");
+        }
+        
+        //create
+        try {
+            instance.attachCourseToClass(sc, submit);
+        } catch (Exception e) {
+            fail("Failed to create legit classcourse.");
+        }
+    }
 }

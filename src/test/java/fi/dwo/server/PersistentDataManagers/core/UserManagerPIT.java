@@ -1,13 +1,13 @@
 /**
  * Copyrighted Sep 18, 2015
  */
-package fi.dwo.server.PersistentEntityManagers;
+package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DwoDateUtilities;
-import static fi.dwo.server.PersistentEntityManagers.SchoolManagerPIT.instance;
+import static fi.dwo.server.PersistentDataManagers.core.SchoolManagerPIT.instance;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.Date;

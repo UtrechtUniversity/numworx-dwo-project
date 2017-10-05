@@ -1,7 +1,7 @@
 /**
  * Copyrighted Sep 17, 2015
  */
-package fi.dwo.server.PersistentEntityManagers;
+package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;

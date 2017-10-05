@@ -1,4 +1,4 @@
-package fi.dwo.server.PersistentEntityManagers;
+package fi.dwo.server.PersistentDataManagers.core;
 
 /**
  * Superficial and partial testing of the PersistentEntityManagers.

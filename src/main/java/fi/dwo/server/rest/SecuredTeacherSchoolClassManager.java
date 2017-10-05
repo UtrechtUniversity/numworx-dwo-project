@@ -1115,7 +1115,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                         // ignore as it might already exist.
                     }
                 }else{//switch to visible.
-                    ClassCourseManager.editViewState(pcc.get(0).getClassCourseID(), ViewState.invisible);
+                    ClassCourseManager.editViewState(pcc.get(0).getClassCourseID(), ViewState.studentsAndTeachers);
                 }
             }
         } catch (Dwo2Exception e) {
