@@ -6,11 +6,13 @@ import java.util.Map;
 
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.google.gwt.core.client.GWT;
 
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserCourseResultsRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -47,6 +49,13 @@ public class SecuredUserResultsManager implements UserResultsManager {
 				return result;
 			}
 		});
+	}
+
+	@Override
+	public Promise<DomResultsPerStudentCourse> getCourseResults(DomContext context, DomClassCourse classCourse,
+			DomDwoProfile profile) {
+		// TODO Auto-generated method stub
+		return Promises.failed(new IllegalArgumentException());
 	}
 
 }
