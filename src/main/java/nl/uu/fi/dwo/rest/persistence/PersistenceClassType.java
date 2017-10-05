@@ -14,6 +14,7 @@ public enum PersistenceClassType {
     PersistentApplet,
     PersistentAppletConfig,
     PersistentClassCourse,
+    PersistentCourseInClass,
     PersistentCourse,
     PersistentCourseSequence,
     PersistentDwoProfile,
