@@ -583,10 +583,10 @@ public class SecuredTeacherSchoolClassManagerIT {
         PersistentUser user = UserManager.findByUserName("user03");
         SecurityContext sc = new TestSecurityContext(user.getUsername(), RoleType.TEACHER);//school01
         RestSchoolClassCourseAndProfile submit = new RestSchoolClassCourseAndProfile();
-        
-        DomContext context = new DomContext();        
+
+        DomContext context = new DomContext();
         DomSchoolClassCourseAndProfile data = new DomSchoolClassCourseAndProfile();
-        
+
         try {
             DomHasRole hr = HasRoleUtilManager.getHasRole(user.getId(), RoleType.TEACHER, school).buildDomHasRole();
             context.setDomHasRole(hr);
@@ -604,6 +604,10 @@ public class SecuredTeacherSchoolClassManagerIT {
         //recreate with double class/course id
         try {
             instance.attachCourseToClass(sc, submit);
+            List<PersistentClassCourse> cc = ClassCourseManager.findEntities(SchoolClassManager.findEntity(2L), CourseManager.findEntity(6L));
+            if (cc.size() != 1) {
+                fail("Too many or too few classcourses in mysql db."); //unless nosql
+            }
         } catch (Exception e) {
             fail("Internal error"); //unless nosql
             //success
@@ -613,18 +617,83 @@ public class SecuredTeacherSchoolClassManagerIT {
             DomHasRole hr = HasRoleUtilManager.getHasRole(user.getId(), RoleType.TEACHER, school).buildDomHasRole();
             context.setDomHasRole(hr);
             submit.setRestContext(context);
-            data.setCourse(CourseManager.findEntity(7L).buildDomCourse());
+            data.setCourse(CourseManager.findEntity(3L).buildDomCourse());
             data.setDomDwoProfile(DwoProfileManager.findEntity(1L).buildDomDwoProfile());
-            data.setDomSchoolClass(SchoolClassManager.findEntity(1L).buildDomSchoolClass());
+            data.setDomSchoolClass(SchoolClassManager.findEntity(2L).buildDomSchoolClass());
             submit.setDomSchoolClassCourseAndProfile(data);
         } catch (Dwo2Exception e) {
             LOG.log(Level.SEVERE, "Internal error", e);
             fail("internal error");
         }
-        
+
         //create
         try {
             instance.attachCourseToClass(sc, submit);
+            List<PersistentClassCourse> cc = ClassCourseManager.findEntities(SchoolClassManager.findEntity(2L), CourseManager.findEntity(3L));
+            if (cc.size() != 1) {
+                fail("Too many or too few classcourses in mysql db."); //unless nosql
+            }
+        } catch (Exception e) {
+            fail("Failed to create legit classcourse.");
+        }
+    }
+
+    @Test
+    public void testDetachCourseFromClass() {
+        PersistentSchool school = SchoolManager.findEntity(03L);
+        PersistentUser user = UserManager.findByUserName("user03");
+        SecurityContext sc = new TestSecurityContext(user.getUsername(), RoleType.TEACHER);//school01
+        RestSchoolClassCourseAndProfile submit = new RestSchoolClassCourseAndProfile();
+
+        DomContext context = new DomContext();
+        DomSchoolClassCourseAndProfile data = new DomSchoolClassCourseAndProfile();
+
+        try {
+            DomHasRole hr = HasRoleUtilManager.getHasRole(user.getId(), RoleType.TEACHER, school).buildDomHasRole();
+            context.setDomHasRole(hr);
+            submit.setRestContext(context);
+            data.setCourse(CourseManager.findEntity(6L).buildDomCourse());
+            data.setDomDwoProfile(DwoProfileManager.findEntity(1L).buildDomDwoProfile());
+            data.setDomSchoolClass(SchoolClassManager.findEntity(2L).buildDomSchoolClass());
+            submit.setDomSchoolClassCourseAndProfile(data);
+        } catch (Dwo2Exception e) {
+            LOG.log(Level.SEVERE, "Internal error", e);
+            fail("internal error");
+        }
+        SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
+
+        //recreate with double class/course id
+        try {
+            instance.detachCourseFromClass(sc, submit);
+            List<PersistentClassCourse> cc = ClassCourseManager.findEntities(SchoolClassManager.findEntity(2L), CourseManager.findEntity(6L));
+            if (cc.size() != 0) {
+                fail("Detach failed."); //unless nosql
+            }
+        } catch (Exception e) {
+            fail("Internal error"); //unless nosql
+            //success
+        }
+
+        try {
+            DomHasRole hr = HasRoleUtilManager.getHasRole(user.getId(), RoleType.TEACHER, school).buildDomHasRole();
+            context.setDomHasRole(hr);
+            submit.setRestContext(context);
+            data.setCourse(CourseManager.findEntity(3L).buildDomCourse());
+            data.setDomDwoProfile(DwoProfileManager.findEntity(1L).buildDomDwoProfile());
+            data.setDomSchoolClass(SchoolClassManager.findEntity(2L).buildDomSchoolClass());
+            submit.setDomSchoolClassCourseAndProfile(data);
+        } catch (Dwo2Exception e) {
+            LOG.log(Level.SEVERE, "Internal error", e);
+            fail("internal error");
+        }
+
+        //create
+        try {
+            instance.detachCourseFromClass(sc, submit);
+            List<PersistentClassCourse> cc = ClassCourseManager.findEntities(SchoolClassManager.findEntity(2L), CourseManager.findEntity(3L));
+            if (cc.size() != 0) {
+                fail("Detach failed."); //unless nosql
+            }
         } catch (Exception e) {
             fail("Failed to create legit classcourse.");
         }
