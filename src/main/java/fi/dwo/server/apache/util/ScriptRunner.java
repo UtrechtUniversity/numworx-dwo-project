@@ -54,7 +54,7 @@ public class ScriptRunner {
     private final boolean autoCommit;
 
     @SuppressWarnings("UseOfSystemOutOrSystemErr")
-    private PrintWriter logWriter = new PrintWriter(System.out);
+    private PrintWriter logWriter = null;//new PrintWriter(System.out);
     @SuppressWarnings("UseOfSystemOutOrSystemErr")
     private PrintWriter errorLogWriter = new PrintWriter(System.err);
 

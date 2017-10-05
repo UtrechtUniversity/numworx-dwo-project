@@ -56,6 +56,7 @@ import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -662,12 +663,14 @@ public class SecuredTeacherSchoolClassManagerIT {
         }
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
 
-        //recreate with double class/course id
         try {
             instance.detachCourseFromClass(sc, submit);
             List<PersistentClassCourse> cc = ClassCourseManager.findEntities(SchoolClassManager.findEntity(2L), CourseManager.findEntity(6L));
-            if (cc.size() != 0) {
-                fail("Detach failed."); //unless nosql
+            if (cc.size() != 1) {
+                fail("Wrong number of classcourses."); //unless nosql
+            }
+            if (cc.get(0).getViewState() != ViewState.invisible) {
+                fail("ClassCourse not invisible."); //unless nosql
             }
         } catch (Exception e) {
             fail("Internal error"); //unless nosql

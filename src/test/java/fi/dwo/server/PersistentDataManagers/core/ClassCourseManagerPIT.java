@@ -6,7 +6,6 @@ package fi.dwo.server.PersistentDataManagers.core;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.util.DwoDateUtilities;
-import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.Date;
