@@ -22,6 +22,8 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import fi.wiskopdr.text.Text;
+
 public class SCORM_DWO3 extends SCORM_guest {
 
 	public SCORM_DWO3() {
@@ -91,11 +93,14 @@ log("setScoID " + scoID);
 			logger.log(Level.SEVERE, "Commit failed: "+ caught, caught);
 			if(caught instanceof FailedResponseException) {
 				FailedResponseException f= (FailedResponseException)caught;
-				log("Failed statuscode = " + f.getStatusCode());
+				int code = f.getStatusCode();
+				log("Failed statuscode = " + code);
 				log("Failed response = " + f.getResponse().getHeadersAsString());
 // FIXME betere foutmelding, message voor cancel?
-				if(!Window.confirm("Saving got error response " + f.getStatusCode() + "\n" + f.getResponse().getStatusText() + 
-						"\nContinue retry?"))
+				if(!Window.confirm(
+						(code == 0 ? Text.constants.noInternet() : Text.constants.serverError() ) +
+						"\nCode " + code + " " + f.getResponse().getStatusText()  + "\n"
+						+ Text.constants.opnieuwKnopLabel()))
 				{
 					deferred.fail(caught);
 					return;

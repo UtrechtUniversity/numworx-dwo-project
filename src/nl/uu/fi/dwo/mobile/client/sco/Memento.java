@@ -613,6 +613,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		logger.fine("memento flush");
 		try
 		{
+			setSessionTimes();
 //			if(this == _instance) // API break?
 				DWOplayer.clientfactory.addBarrier(api.Commit());
 //			else 

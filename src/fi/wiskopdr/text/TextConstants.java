@@ -160,8 +160,10 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	@DefaultStringValue("Oplossingen")
 	String oplossingenLabel();
 	
-
-	
+	@DefaultStringValue("Je hebt momenteel geen internetverbindig. Je werk kan niet worden opgeslagen")
+	String noInternet();
+	@DefaultStringValue("De server geeft een fout terug. Je werk kan niet worden opgeslagen")
+	String serverError();
 	
 // enzovoort
 }

@@ -78,6 +78,12 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			getUserResultsHelper(courseID, userID, schoolGroupID, getUserResultsCallback);
 		}
 
+		@Override
+		public Promise<Void> logout() {
+			// TODO Auto-generated method stub
+			return super.logout();
+		}
+
 	}
 
 
