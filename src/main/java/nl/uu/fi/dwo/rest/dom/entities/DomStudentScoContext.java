@@ -13,6 +13,7 @@ public class DomStudentScoContext {
     private PersistenceId scoID;
     private PersistenceId userID;
     private PersistenceId schoolGroupID;
+    private PersistenceId schoolClassID;
     private double score;
 
     /**
@@ -84,5 +85,19 @@ public class DomStudentScoContext {
     public void setScore(double score) {
         this.score = score;
     }
+
+	/**
+	 * @return the schoolClassID
+	 */
+	public PersistenceId getSchoolClassID() {
+		return schoolClassID;
+	}
+
+	/**
+	 * @param schoolClassID the schoolClassID to set
+	 */
+	public void setSchoolClassID(PersistenceId schoolClassID) {
+		this.schoolClassID = schoolClassID;
+	}
 
 }
