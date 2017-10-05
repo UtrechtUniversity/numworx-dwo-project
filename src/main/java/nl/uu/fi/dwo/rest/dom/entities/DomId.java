@@ -1,7 +1,11 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
-
+/**
+ * 
+ * @author Wim van Velthoven
+ *
+ */
 abstract class DomId {
 	PersistenceId id;
 
