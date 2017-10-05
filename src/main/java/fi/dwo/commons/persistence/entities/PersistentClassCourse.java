@@ -1,6 +1,7 @@
 /* Copyrighted 2015. */
 package fi.dwo.commons.persistence.entities;
 
+import fi.dwo.commons.util.DwoDateUtilities;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -181,16 +182,46 @@ public class PersistentClassCourse implements Serializable {
         return "fi.dwo.server.persistence.PersistentClassCourse[ classCourseID=" + classCourseID + " ]";
     }
 
+    /**
+     * Builds a PersistentClassCourse
+     *
+     * @return
+     */
+    public static PersistentClassCourse buildEmptyPersistentClassCourse() {
+        PersistentClassCourse result = new PersistentClassCourse();
+        result.setViewState(ViewState.invisible);
+
+        return result;
+    }
+
+    /**
+     * Builds a PersistentClassCourse
+     *
+     * @return
+     */
+    public static PersistentClassCourse buildFilledPersistentClassCourse() {
+        PersistentClassCourse result = new PersistentClassCourse();
+        result.setClassCourseID(01);
+        result.setClassID(02);
+        result.setCourseID(03);
+        result.setNotBefore(DwoDateUtilities.getStartOfDay());
+        result.setNotAfter(DwoDateUtilities.getEndOfDay());
+        result.setType(CourseType.normal.ordinal());
+        result.setViewState(ViewState.invisible);
+        return result;
+    }
+
     public DomClassCourse4Teacher buildDomClassCourse4Teacher() {
         DomClassCourse4Teacher classCourse = new DomClassCourse4Teacher();
         PersistentClassCourse.this.fillDomClassCourse4Teacher(classCourse);
         return classCourse;
     }
-    
+
     private void fillDomClassCourse4Teacher(DomClassCourse4Teacher classCourse) {
         fillDomClassCourse(classCourse);
         classCourse.setViewState(this.viewState);
-    }    
+    }
+
     public DomClassCourse buildDomClassCourse() {
         DomClassCourse classCourse = new DomClassCourse();
         PersistentClassCourse.this.fillDomClassCourse(classCourse);
