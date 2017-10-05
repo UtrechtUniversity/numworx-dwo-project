@@ -23,7 +23,6 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
-import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.dom.entities.util.DomCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
@@ -58,11 +57,11 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentCourseInClass.findByClassCourseID", query = "SELECT p FROM PersistentCourseInClass p WHERE p.classCourseID = :classCourseID"),
     @NamedQuery(name = "PersistentCourseInClass.findByClassID", query = "SELECT p FROM PersistentCourseInClass p WHERE p.classID = :classID"),
     @NamedQuery(name = "PersistentCourseInClass.findVisibleByClassID", query = "SELECT p FROM PersistentCourseInClass p WHERE p.classID = :classID and p.viewState = :viewState"),
-    @NamedQuery(name = "PersistentCourseInClass.findByClassIDAndCourseID", query = "SELECT p FROM PersistentCourseInClass p WHERE p.classID = :classID and p.course.courseID = :courseID"),
+    @NamedQuery(name = "PersistentCourseInClass.findByClassIDAndCourseID", query = "SELECT p FROM PersistentCourseInClass p WHERE p.classID = :classID and p.course = :course"),
     @NamedQuery(name = "PersistentCourseInClass.findByType", query = "SELECT p FROM PersistentCourseInClass p WHERE p.type = :type"),
     @NamedQuery(name = "PersistentCourseInClass.findByNotBefore", query = "SELECT p FROM PersistentCourseInClass p WHERE p.notBefore = :notBefore"),
     @NamedQuery(name = "PersistentCourseInClass.findByNotAfter", query = "SELECT p FROM PersistentCourseInClass p WHERE p.notAfter = :notAfter"),
-    @NamedQuery(name = "PersistentCourseInClass.findByCourseID", query = "SELECT p FROM PersistentCourseInClass p WHERE p.course.courseID = :courseID")})
+    @NamedQuery(name = "PersistentCourseInClass.findByCourseID", query = "SELECT p FROM PersistentCourseInClass p WHERE p.course = :course")})
 public class PersistentCourseInClass implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -90,8 +89,8 @@ public class PersistentCourseInClass implements Serializable {
     @Column(name = "CourseID", nullable = false)
 //    private long courseID;
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinTable(name = "tblcourse", joinColumns=@JoinColumn(name="CourseID"),
-    inverseJoinColumns=@JoinColumn(name="CourseID"))
+    @JoinTable(name = "tblcourse", joinColumns=@JoinColumn(name="courseID"),
+    inverseJoinColumns=@JoinColumn(name="courseID"))
     PersistentCourse course;
 
     public PersistentCourse getCourse() {
