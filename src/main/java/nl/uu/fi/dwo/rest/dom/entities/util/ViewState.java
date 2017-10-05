@@ -7,7 +7,7 @@ package nl.uu.fi.dwo.rest.dom.entities.util;
  * @author Gert van der Plas
  */
 public enum ViewState {
-    none,
+    invisible,
     students,
     teachers,
     studentsAndTeachers 
