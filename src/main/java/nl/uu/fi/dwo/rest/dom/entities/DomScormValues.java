@@ -7,7 +7,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class DomScormValues {
 	private List<DomMapEntry<String,String>> values;
 	private DomScoContext scoContext;
-	private PersistenceId schoolClassID;
+	private DomSchoolClassId schoolClassID;
 	/**
 	 * @return the values
 	 */
@@ -39,14 +39,14 @@ public class DomScormValues {
 	/**
 	 * @return the schoolClassID
 	 */
-	public PersistenceId getSchoolClassID() {
+	public DomSchoolClassId getSchoolClassID() {
 		return schoolClassID;
 	}
 
 	/**
 	 * @param schoolClassID the schoolClassID to set
 	 */
-	public void setSchoolClassID(PersistenceId schoolClassID) {
+	public void setSchoolClassID(DomSchoolClassId schoolClassID) {
 		this.schoolClassID = schoolClassID;
 	}
 	

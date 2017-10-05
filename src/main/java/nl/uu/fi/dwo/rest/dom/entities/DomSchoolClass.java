@@ -12,10 +12,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class DomSchoolClass implements Cloneable {
+public class DomSchoolClass extends DomSchoolClassId implements Cloneable {
     private static final Logger LOG = Logger.getLogger(DomSchoolClass.class.getName());
 
-    private PersistenceId id;
     private String schoolClassName;
     private Boolean hasRegKey;
     private Boolean iconizer = Boolean.FALSE;
@@ -40,20 +39,6 @@ public class DomSchoolClass implements Cloneable {
         sc.hasRegKey = this.getHasRegKey().equals(true); //ensuring cloned stuff
         sc.iconizer = this.getIconizer();
         return sc;
-    }
-
-    /**
-     * @return the id
-     */
-    public PersistenceId getId() {
-        return id;
-    }
-
-    /**
-     * @param classId the id to set
-     */
-    public void setId(PersistenceId classId) {
-        this.id = classId;
     }
 
     /**
