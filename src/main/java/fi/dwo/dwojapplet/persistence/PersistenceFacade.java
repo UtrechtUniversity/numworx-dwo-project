@@ -607,6 +607,8 @@ public class PersistenceFacade {
                 if (e.code != 0) {
                     throw (ScoException) getException(e, e.code);
                 } else {
+                	if(e.getMessage().contains("PacketTooBigException"))
+                		throw new ScoException(ScoException.SE_TOO_BIG, e);
                     throw new ScoException(ScoException.EX_XML_RPC, e);
                 }
             }

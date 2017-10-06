@@ -496,11 +496,13 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             instance.setWait();
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             sco.setLaunchdata(tmp);
-            instance.updateSco(sco);
+            boolean b = instance.updateSco(sco);
+            result = b ? JOptionPane.YES_OPTION : JOptionPane.CANCEL_OPTION;
+            if(!b) sco.setLaunchdata(old);
             //MapperCreator.instance(Applet.class).removeObject(sco.getAppletID());
             instance.setReady();
             setCursor(Cursor.getDefaultCursor());
-            return JOptionPane.YES_OPTION;
+            return result;
         }
         forcepaint();
         return result; // NO, CANCEL, CLOSED
