@@ -23,7 +23,7 @@ import javax.sql.DataSource;
 
 import org.apache.xmlrpc.XmlRpc;
 
-import com.jamonapi.proxy.MonProxyFactory;
+//import com.jamonapi.proxy.MonProxyFactory;
 
 import fi.beans.jdbc.DbConnectIF;
 import fi.beans.xmlrpc.Servlet;
@@ -138,7 +138,7 @@ public class DataSourceAccessServlet extends Servlet {
             Connection c = super.getConnection();
             if (c != his || mine == null) {
                 his = c;
-                mine = MonProxyFactory.monitor(c);
+                mine = /*MonProxyFactory.monitor*/(c);
                 ++count;
                 if (count > 10) {
                     LOG.log(Level.INFO, " dwo access connect {0}", count);
@@ -255,7 +255,7 @@ public class DataSourceAccessServlet extends Servlet {
 			else 
 			{
 				if(monitor)
-					dbaccess = (DbAccessIF) MonProxyFactory.monitor(new MonitorDataSourceAccess(ds));
+					dbaccess = /*(DbAccessIF) MonProxyFactory.monitor*/(new MonitorDataSourceAccess(ds));
 				else
 					dbaccess = new DataSourceAccess(ds);
 			}
