@@ -7,11 +7,14 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityResult;
+import javax.persistence.FieldResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -45,6 +48,33 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * @author G.A.J. van der Plas
  */
 @Entity
+@SqlResultSetMapping(
+        name = "CourseInClassMapping",
+        entities = {
+            @EntityResult(entityClass = PersistentCourse.class, // note the @FieldResult's are not required in case the mapping is straightforward.
+                    fields = {
+                    @FieldResult(name = "courseID", column = "courseID"),
+                    @FieldResult(name = "schoolID", column = "schoolID"),
+                    @FieldResult(name = "name", column = "name"),
+                    @FieldResult(name = "description", column = "description"),
+                    @FieldResult(name = "image", column = "image"),
+                    @FieldResult(name = "dwoProfileID", column = "dwoProfileID"),
+                    @FieldResult(name = "imageData", column = "imageData"),
+                    @FieldResult(name = "export", column = "export"),
+                    @FieldResult(name = "withChildren", column = "withChildren"),
+                    @FieldResult(name = "parentID", column = "parentID")
+                    }),
+            @EntityResult(entityClass = PersistentClassCourse.class, 
+                    fields = {
+                        @FieldResult(name = "ClassCourseID", column = "ClassCourseID"),
+                        @FieldResult(name = "ClassID", column = "ClassID"),
+                        @FieldResult(name = "type", column = "type"),
+                        @FieldResult(name = "viewState", column = "viewState"),
+                        @FieldResult(name = "notBefore", column = "notBefore"),
+                        @FieldResult(name = "notAfter", column = "notAfter"),
+                        @FieldResult(name = "courseID", column = "CourseID")
+                    })
+        })
 @Table(name = "tblclasscourse", schema = "", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"ClassID", "CourseID"})})
 @XmlRootElement
