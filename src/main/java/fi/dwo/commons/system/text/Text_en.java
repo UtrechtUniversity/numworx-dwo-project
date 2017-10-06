@@ -129,6 +129,8 @@ public class Text_en extends ListResourceBundle {
 			{ TextMapper.EXS_SCO_EXISTS,
 					"The specified Activity already exists" },
 			{ TextMapper.EXS_NO_APPLET, "Applet not found" },
+			{ TextMapper.EXS_TOO_BIG, "The activity is too big. It can't be saved" },
+
 			{ TextMapper.GUI_WAIT_A_MOMENT, "One moment please" },
 			/* Reauthenticate Panel */
 			{

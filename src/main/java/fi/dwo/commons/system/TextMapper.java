@@ -551,6 +551,8 @@ public abstract class TextMapper {
 	// templates
 	public static final String GUIC_DELETE_APPLETCONFIG = "GUIC_DELETE_APPLETCONFIG";
 	public static final String GUIC_MSG_DELETE_APPLETCONFIG = "GUIC_MSG_DELETE_APPLETCONFIG";
+
+	public static final String EXS_TOO_BIG = "EXS_TOO_BIG";
 	
 	/**
      *

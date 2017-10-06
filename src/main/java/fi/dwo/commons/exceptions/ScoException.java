@@ -16,6 +16,7 @@ public class ScoException extends Exception {
 
     public final static int SE_SCO_EXISTS = 1;
     public final static int SE_NO_APPLET = 2;
+    public final static int SE_TOO_BIG = 3;
 
     /**
      * @param exception
@@ -37,6 +38,9 @@ public class ScoException extends Exception {
             case (SE_NO_APPLET):
                 result = TextMapper.getText(TextMapper.EXS_NO_APPLET);
                 break;
+            case (SE_TOO_BIG): 
+            	result = TextMapper.getText(TextMapper.EXS_TOO_BIG);
+            	break;
             default:
                 result = TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR);
                 break;

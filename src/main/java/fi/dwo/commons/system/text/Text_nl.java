@@ -130,6 +130,7 @@ public class Text_nl extends ListResourceBundle {
 			{ TextMapper.EXS_SCO_EXISTS,
 					"Er bestaat al een activiteit met de opgegeven naam" },
 			{ TextMapper.EXS_NO_APPLET, "Applet niet gevonden" },
+			{ TextMapper.EXS_TOO_BIG, "De activiteit is te groot om te worden opgeslagen" },
 			{ TextMapper.GUI_WAIT_A_MOMENT, "Een moment geduld aub" },
 			/* Reauthenticate Panel */
 			{
