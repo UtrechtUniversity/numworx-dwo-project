@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import org.osgi.util.promise.Failure;
@@ -198,7 +199,8 @@ public class CoursesOfSchoolclassPresenter {
 
     public ClassCourseItem getNode(String key) {
         DomTree<DomCourseOfClass> c = tree.getNode(key);
-        if (c.getObject().getClassCourse() == null) {
+        if (c.getObject().getClassCourse() == null 
+                ) {
             ClassCourseItem item = new ClassCourseItem(null, c.getObject().getCourse().getName());
             item.setHasStudentData(false);
             if (c.getChildren() == null || c.getChildren().size() == 0) {
@@ -209,7 +211,7 @@ public class CoursesOfSchoolclassPresenter {
 //            /String aKey, CourseItem aParent, List<CourseItem> myChildren, String aName, Boolean hasData, String aType, Date aFrom, Date aTo
             ClassCourseItem item = new ClassCourseItem(key,
                     c.getObject().getCourse().getName(),
-                    true,
+                    (c.getObject().getClassCourse().getViewState()!=ViewState.invisible),
                     c.getObject().getClassCourse().getCourseType().name(),
                     c.getObject().getClassCourse().getNotBefore(),
                     c.getObject().getClassCourse().getNotAfter()
@@ -219,7 +221,6 @@ public class CoursesOfSchoolclassPresenter {
             }
             return item;
         }
-
     }
 
     public List<ClassCourseItem> getNodeChildren(String key) {
@@ -232,7 +233,7 @@ public class CoursesOfSchoolclassPresenter {
         for (DomTree<DomCourseOfClass> coc : c.getChildren().values()) {
             ClassCourseItem item = new ClassCourseItem(coc.getObject().getCourse().getId().getIdString(), coc.getObject().getCourse().getName());
             if (coc.getObject().getClassCourse() != null) {
-                item.setHasStudentData(true);
+                item.setHasStudentData((c.getObject().getClassCourse().getViewState()!=ViewState.invisible));
             } else {
                 item.setHasStudentData(false);
             }
