@@ -1,10 +1,10 @@
-CREATE DATABASE  IF NOT EXISTS `dwojunittest` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
+CREATE DATABASE  IF NOT EXISTS `dwojunittest` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `dwojunittest`;
--- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.19, for Linux (x86_64)
 --
 -- Host: localhost    Database: dwojunittest
 -- ------------------------------------------------------
--- Server version	5.7.19
+-- Server version	5.7.19-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -144,7 +144,7 @@ CREATE TABLE `tblclasscourse` (
 
 LOCK TABLES `tblclasscourse` WRITE;
 /*!40000 ALTER TABLE `tblclasscourse` DISABLE KEYS */;
-INSERT INTO `tblclasscourse` VALUES (1,1,NULL,'1970-01-01 00:00:01','1970-01-01 00:00:01',1,0,0,0,2),(2,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',2,0,0,0,2),(3,1,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',8,0,0,0,2),(4,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',7,0,0,0,2),(5,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',5,0,0,0,2),(6,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',6,0,0,0,0);
+INSERT INTO `tblclasscourse` VALUES (1,1,NULL,'1970-01-01 00:00:01','1970-01-01 00:00:01',1,0,0,0,3),(2,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',2,0,0,0,3),(3,1,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',8,0,0,0,3),(4,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',7,0,0,0,3),(5,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',5,0,0,0,3),(6,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',6,0,0,0,0);
 /*!40000 ALTER TABLE `tblclasscourse` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -862,4 +862,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-10-09  7:18:06
+-- Dump completed on 2017-10-09  9:07:20

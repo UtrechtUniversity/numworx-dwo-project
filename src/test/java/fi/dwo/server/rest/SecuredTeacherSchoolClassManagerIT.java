@@ -634,6 +634,10 @@ public class SecuredTeacherSchoolClassManagerIT {
             if (cc.size() != 1) {
                 fail("Too many or too few classcourses in mysql db."); //unless nosql
             }
+            cc = ClassCourseManager.findEntities(SchoolClassManager.findEntity(2L), CourseManager.findEntity(1L));
+            if (cc.size() != 1) {
+                fail("Too many or too few classcourses in mysql db."); //unless nosql
+            }
         } catch (Exception e) {
             fail("Failed to create legit classcourse.");
         }
@@ -669,7 +673,7 @@ public class SecuredTeacherSchoolClassManagerIT {
             if (cc.size() != 1) {
                 fail("Target leaf classcourse was deleted, not made invisible."); //unless nosql
             }
-            if (cc.get(0).getViewState() != ViewState.studentsAndTeachers) {
+            if (cc.get(0).getViewState() != ViewState.invisible) {
                 fail("ClassCourse not invisible."); //unless nosql
             }
             cc = ClassCourseManager.findEntities(SchoolClassManager.findEntity(2L), CourseManager.findEntity(2L));
@@ -694,14 +698,14 @@ public class SecuredTeacherSchoolClassManagerIT {
             fail("internal error");
         }
 
-//        try {
-//            instance.detachCourseFromClass(sc, submit);
-//            List<PersistentClassCourse> cc = ClassCourseManager.findEntities(SchoolClassManager.findEntity(2L), CourseManager.findEntity(3L));
-//            if (cc.size() != 0) {
-//                fail("Detach failed."); //unless nosql
-//            }
-//        } catch (Exception e) {
-//            fail("Failed to create legit classcourse.");
-//        }
+        try {
+            instance.detachCourseFromClass(sc, submit);
+            List<PersistentClassCourse> cc = ClassCourseManager.findEntities(SchoolClassManager.findEntity(2L), CourseManager.findEntity(3L));
+            if (cc.size() != 0) {
+                fail("Detach added classcourse."); //unless nosql
+            }
+        } catch (Exception e) {
+            fail("Failed to create legit classcourse.");
+        }
     }
 }
