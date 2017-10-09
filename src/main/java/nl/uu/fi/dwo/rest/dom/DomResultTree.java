@@ -132,7 +132,7 @@ public class DomResultTree {
         for (PersistenceId key : resultData.getClassCourses().keySet()) {
             //build the subtrees
             DomClassCourse4Teacher cc = resultData.getClassCourses().get(key);
-            if (cc.getViewState() == ViewState.studentsAndTeachers) {
+            if (cc.getViewState() == ViewState.studentsAndTeachers || cc.getViewState() == ViewState.teachers) {
                 DomResultCourse resultCourse = new DomResultCourse(resultData.getCourses().get(cc.getCourseId()));
                 //attach to class
                 schoolClasses.get(cc.getClassId()).getChildren().put(cc.getCourseId(), resultCourse); //add course to parent

@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DomCourseOfClass {
     //not extended from DomCourse because of some issues wil occur with initalization.
     private static Logger LOG = Logger.getLogger(DomCourseOfClass.class.getName());
-    private DomClassCourse classCourse;
+    private DomClassCourse4Teacher classCourse;
     private DomCourse course;
 
     public DomCourseOfClass(){
@@ -23,7 +23,7 @@ public class DomCourseOfClass {
         course = aCourse;
     }
     
-    public DomCourseOfClass(DomCourse aCourse, DomClassCourse aClassCourse){
+    public DomCourseOfClass(DomCourse aCourse, DomClassCourse4Teacher aClassCourse){
         course = aCourse;
         classCourse = aClassCourse;
     }
@@ -31,14 +31,14 @@ public class DomCourseOfClass {
     /**
      * @return the classCourse
      */
-    public DomClassCourse getClassCourse() {
+    public DomClassCourse4Teacher getClassCourse() {
         return classCourse;
     }
 
     /**
      * @param classCourse the classCourse to set
      */
-    public void setClassCourse(DomClassCourse classCourse) {
+    public void setClassCourse(DomClassCourse4Teacher classCourse) {
         this.classCourse = classCourse;
     }
 

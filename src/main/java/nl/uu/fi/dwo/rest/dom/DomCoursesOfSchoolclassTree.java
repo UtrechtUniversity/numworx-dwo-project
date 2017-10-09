@@ -5,11 +5,13 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -34,14 +36,14 @@ public class DomCoursesOfSchoolclassTree {
     private DomTree<DomCourseOfClass> buildCourseTree(DomSchool school, DomCoursesOfSchoolClass4Teacher resultData) {
         //built hashmaps for classcourses and courses from lists
         cocMap = new HashMap<String, DomTree>(resultData.getCourses().size());
-        Map<String, DomClassCourse> classCourseMap = new HashMap<String, DomClassCourse>(resultData.getClassCourses().size());
+        Map<String, DomClassCourse4Teacher> classCourseMap = new HashMap<String, DomClassCourse4Teacher>(resultData.getClassCourses().size());
 
         for (DomMapEntry<PersistenceId, DomCourse> courseEntry : resultData.getCourses()) {
 
             cocMap.put(courseEntry.getKey().getIdString(), new DomTree<DomCourseOfClass>(new DomCourseOfClass(courseEntry.getValue())));
         }
 
-        for (DomMapEntry<PersistenceId, DomClassCourse> ccEntry : resultData.getClassCourses()) {
+        for (DomMapEntry<PersistenceId, DomClassCourse4Teacher> ccEntry : resultData.getClassCourses()) {
             classCourseMap.put(ccEntry.getValue().getCourseId().getIdString(), ccEntry.getValue());
         }
 
@@ -76,7 +78,7 @@ public class DomCoursesOfSchoolclassTree {
             //attach classCourse to DomTree<DomCourseOfClass> n if it exists
             //LOG.log(Level.FINE, " id, parent id " + n.getObject().getCourse().getId() + ", " + n.getObject().getCourse().getParentID());
             if (classCourseMap.containsKey(n.getObject().getCourse().getId().getIdString())
-  //              && classCourseMap.get(n.getObject().getCourse().getId().getIdString()).getCourseType()!=CourseType.invisible
+               && classCourseMap.get(n.getObject().getCourse().getId().getIdString()).getViewState()!=ViewState.invisible
                     ){
                 n.getObject().setClassCourse(classCourseMap.get(n.getObject().getCourse().getId().getIdString()));
             }
