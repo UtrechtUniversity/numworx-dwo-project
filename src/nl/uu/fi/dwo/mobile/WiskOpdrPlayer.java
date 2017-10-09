@@ -65,6 +65,9 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		DWOplayer.clientfactory = dummyClientFactory;
 		
 		MGWTsetup();
+		
+		DWOplayer.DWO_BUNDLE.dwoplayercss().ensureInjected();
+		
 		view = createEntryVlew();
 
 		dummyClientFactory.setEntryView(view);
