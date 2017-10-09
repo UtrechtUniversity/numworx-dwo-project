@@ -56,16 +56,20 @@ public class SqlResultSetMappingIT {
     /**
      * Test of getRoles method, of class PublicRoleManager. Tests for one-to-one
      * of RoleTypes mapping between persistent store and enum class. SqlResultSetMapping
-     * allows for query accelleration.
+     * allows for query acceleration.
      */
     @Test
     public void testSqlResultSetMapping() {
         System.out.println("testResultMap");
         EntityManager em = DwoEmfFactory.getEntityManager();
+//      requires class with @sqlResultSetMapping        
 //        List<PersistentCourseInClass> results = em.createNativeQuery("SELECT a.* ,b.* FROM tblclasscourse a join tblcourse b using (courseid)", "CourseInClassMapping").getResultList();
-        List<Object[]> results = em.createNativeQuery("SELECT a.ClassCourseID, a.CourseID, a.ClassID, a.type, a.viewState, "
-                + "a.notBefore, a.notAfter, a.CourseID, b.schoolID, b.name, b.description, b.image, b.dwoProfileID, b.imageData, b.export, "
-                + "b.withChildren, b.parentID FROM tblclasscourse a join tblcourse b using (courseid)", "CourseInClassMapping").getResultList();
+//        Allows multiple resultmappings and picking which goes where
+//        List<Object[]> results = em.createNativeQuery("SELECT a.ClassCourseID, a.CourseID, a.ClassID, a.type, a.viewState, "
+//                + "a.notBefore, a.notAfter, a.CourseID, b.schoolID, b.name, b.description, b.image, b.dwoProfileID, b.imageData, b.export, "
+//                + "b.withChildren, b.parentID FROM tblclasscourse a join tblcourse b using (courseid)", "CourseInClassMapping").getResultList();
+//      which courseId is assigned to what entitity is unknown. Any may be picked.
+        List<Object[]> results = em.createQuery("SELECT a, b FROM PersistentClassCourse a, PersistentCourse b where a.courseID = b.courseID").getResultList();
         if(!(results.get(0)[0] instanceof PersistentCourse)){
         fail("wrong class type");
     }

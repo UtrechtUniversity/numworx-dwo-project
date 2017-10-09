@@ -59,6 +59,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -343,16 +344,18 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     @Produces({"application/json"})
     @Path("/clearStudentResults")
     public Boolean clearStudentResults(@Context SecurityContext sc, RestClearStudentDataForScoAndClass rest) throws Dwo2RestException {
-        //secure builder
+        //clear results
         try {
             CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SCO_SG_U build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
                     .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
                     .addSchoolClass(rest.getClearStudentDataForScoAndClass().getDomSchoolClass())
                     .addProfile(rest.getClearStudentDataForScoAndClass().getDomProfile())
                     .addScoContext(rest.getClearStudentDataForScoAndClass().getDomScoContext());
-            return build.removeStudentScoforClassAndCourse();
+            boolean result = build.removeStudentScoWithClassCourse();
+            //TODO clear all excess classcourses.
         } catch (Dwo2Exception e) {
             throw new Dwo2RestException(e);
         }
+        return false;
     }
 }

@@ -70,6 +70,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -1030,7 +1031,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
 
         List<PersistentClassCourse> listClassCourse = ClassCourseManager.findEntities(schoolClass);
 
-        Map<PersistenceId, DomClassCourse> classCourseMap = new HashMap<>();
+        Map<PersistenceId, DomClassCourse4Teacher> classCourseMap = new HashMap<>();
         Map<PersistenceId, DomCourse> courseMap = new HashMap<>();
 
         listClassCourse.stream().forEach(
@@ -1040,7 +1041,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                     if (course == null) {
                         LOG.log(Level.SEVERE, "course null for courseid = " + courseID + " sccid = " + scc.getClassCourseID());
                     } else if (profileID.equals(course.getDwoProfileID())) {
-                        DomClassCourse dcc = scc.buildDomClassCourse();
+                        DomClassCourse4Teacher dcc = scc.buildDomClassCourse4Teacher();
                         classCourseMap.put(dcc.getId(), dcc);
                         DomCourse dcs = course.buildDomCourse();
                         courseMap.put(dcs.getId(), dcs);
@@ -1050,7 +1051,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         result.setSchoolClass(schoolClass.buildDomSchoolClass());
         result.setClassCourses(classCourseMap.entrySet()
                 .stream()
-                .map((e) -> new DomMapEntry<PersistenceId, DomClassCourse>(e))
+                .map((e) -> new DomMapEntry<PersistenceId, DomClassCourse4Teacher>(e))
                 .collect(Collectors.toList()));
 //        result.setCourses(courseMap.entrySet()
 //                .stream()

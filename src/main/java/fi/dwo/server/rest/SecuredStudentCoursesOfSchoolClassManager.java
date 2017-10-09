@@ -110,8 +110,8 @@ public class SecuredStudentCoursesOfSchoolClassManager {
         Map<PersistenceId, DomCourseStudent> courseMap = new HashMap<>();
         Date NOW = new Date();
         listClassCourse.stream().forEach(
-                (scc) -> {
-//                	if (INVISIBLE.equals( scc.getType())) 
+                (scc) -> {                    
+//                	if (scc.getViewState().equals(ViewState.invisible)) 
 //                			return;
 // FIXME after and before
                 	if (scc.getNotAfter() != null) {

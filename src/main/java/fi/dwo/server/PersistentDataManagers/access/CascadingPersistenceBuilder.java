@@ -41,6 +41,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
@@ -305,6 +306,8 @@ public class CascadingPersistenceBuilder {
         PersistentScoContext getScoContext();
 
         Boolean removeStudentScoforClassAndCourse() throws Dwo2Exception;
+
+        Boolean removeStudentScoWithClassCourse() throws Dwo2Exception;
 
         PersistentScoData getScoData() throws Dwo2Exception;
     }
@@ -619,6 +622,34 @@ public class CascadingPersistenceBuilder {
             return true;
         }
 
+        /**
+         * Removes StudentSco and corresponding ClassCourses. 
+         * 
+         * @return
+         * @throws Dwo2Exception 
+         */
+        @Override
+        public Boolean removeStudentScoWithClassCourse() throws Dwo2Exception {
+            List<PersistentStudentOfClass> socList = StudentOfClassManager.findEntities(instance.context.schoolClass);
+            //detach classcourse to ensure no new results occur.
+            //TODO mark marked for deleted in the future.
+            ClassCourseManager.editViewState(this.getClassCourse().getClassCourseID(), ViewState.invisible);
+            //clean all existing results
+            for (PersistentStudentOfClass soc : socList) {
+                PersistentHasRolePK key = new PersistentHasRolePK(soc.getPersistentStudentOfClassPK().getUserID(), soc.getPersistentStudentOfClassPK().getSchoolGroupID());
+                List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(instance.context.scoContext, key);
+                for (PersistentStudentScoContext ssc : sscList) {
+                    String msg = MessageFormat.format("Username {0} is learing studentSco id {1} for userid  {2} schoolgroupid {3} and course {4} {5}.", new Object[]{instance.context.user.getUsername(), ssc.getScoID(), ssc.getPersistentHasRolePK().getUserID(), ssc.getPersistentHasRolePK().getSchoolGroupID(), instance.context.course.getCourseID(), instance.context.course.getName()});
+                    LOG.log(Level.INFO, msg);
+                    StudentScoDataManager.destroy(ssc.getStudentSco());
+                    StudentScoContextManager.destroy(ssc.getStudentSco());
+                }
+            }
+            //remove classcourse to ensure no new attachments occur.
+            ClassCourseManager.destroy(this.getClassCourse().getClassCourseID());
+            return true;
+        }
+        
         @Override
         public PersistentScoData getScoData() throws Dwo2Exception {
             if (instance.context.scoContext != null) {
