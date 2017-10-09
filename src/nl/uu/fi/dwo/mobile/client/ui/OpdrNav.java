@@ -744,7 +744,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 * 
 	 * @return
 	 */
-	private boolean scoresVisible()
+	public boolean scoresVisible()
 	{
 		boolean visible = false;
 		
