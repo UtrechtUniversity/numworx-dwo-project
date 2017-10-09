@@ -10,13 +10,14 @@ import fi.dwo.server.persistence.DwoEmfFactory;
 import static fi.dwo.server.rest.PublicUserManagerIT.instance;
 import java.util.List;
 import javax.persistence.EntityManager;
-import static nl.uu.fi.dwo.rest.persistence.PersistenceClassType.PersistentClassCourse;
+import javax.persistence.SqlResultSetMapping;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.junit.Assert.fail;
 
 /**
  * Tests bi-implication of roles in RoleType and the database.
@@ -24,9 +25,9 @@ import org.junit.Test;
  * 
  * @author Gert van der Plas
  */
-public class ResultMapManagerIT {
+public class SqlResultSetMappingIT {
 
-    public ResultMapManagerIT() {
+    public SqlResultSetMappingIT() {
       //  Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
     }
 
@@ -54,10 +55,11 @@ public class ResultMapManagerIT {
 
     /**
      * Test of getRoles method, of class PublicRoleManager. Tests for one-to-one
-     * of RoleTypes mapping between persistent store and enum class.
+     * of RoleTypes mapping between persistent store and enum class. SqlResultSetMapping
+     * allows for query accelleration.
      */
     @Test
-    public void testResultMap() {
+    public void testSqlResultSetMapping() {
         System.out.println("testResultMap");
         EntityManager em = DwoEmfFactory.getEntityManager();
 //        List<PersistentCourseInClass> results = em.createNativeQuery("SELECT a.* ,b.* FROM tblclasscourse a join tblcourse b using (courseid)", "CourseInClassMapping").getResultList();
