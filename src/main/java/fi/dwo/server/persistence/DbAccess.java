@@ -206,12 +206,12 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     private final static String QRY_SELECT_COURSES_CLASS = "SELECT tblCourse.*, tblClassCourse.* "
             + "FROM tblCourse,tblClassCourse "
             + "WHERE (tblCourse.CourseID = tblClassCourse.CourseID) "
-            + "AND (tblClassCourse.ClassID = ?) " + "ORDER BY name ";
+            + "AND (tblClassCourse.ClassID = ?) AND (tblClassCourse.viewType = 3) " + "ORDER BY name ";
 
     private final static String QRY_SELECT_COURSES_CLASS_NOMAP = "SELECT tblCourse.*, tblClassCourse.* "
             + "FROM tblCourse,tblClassCourse "
             + "WHERE (tblCourse.CourseID = tblClassCourse.CourseID) "
-            + "AND (tblCourse.withChildren = 0) "
+            + "AND (tblCourse.withChildren = 0) AND (tblClassCourse.viewType = 3) "
             + "AND (tblClassCourse.ClassID = ?) " + "ORDER BY name ";
 
     private final static String QRY_INSERT_CLASS_COURSE = "INSERT INTO tblClassCourse(classID, courseID) "
