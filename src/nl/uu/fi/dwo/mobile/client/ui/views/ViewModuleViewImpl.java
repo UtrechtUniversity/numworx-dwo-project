@@ -246,9 +246,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				sb.addNavPanel(onp);
 			}
 			
-			if (mode != OpdrNav.OEFENEN) // alleen voor oefenen mag score zichtbaar uit staan
+			if (mode != OpdrNav.OEFENEN) // alleen voor oefenen mag de optie 'score zichtbaar' uit staan
 				scoresZichtbaar = true;
-			if (scoresZichtbaar)
+			if (scoresZichtbaar && on.scoresVisible()) // ook nog even kijken of de score getoond mag worden, bijv. in eindtoets
 			{
 				Label score = scoreNav.getTotaalScoreLabel();
 				score.getElement().getStyle().setFloat(Style.Float.LEFT);
