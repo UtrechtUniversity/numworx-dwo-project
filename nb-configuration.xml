@@ -14,9 +14,11 @@
     </properties>
     <config-data xmlns="http://www.netbeans.org/ns/maven-config-data/1">
         <configurations>
+            <configuration id="aws-dev" profiles=""/>
             <configuration id="macbook-app.dwo.nl" profiles=""/>
             <configuration id="macbook-app.dwo.nl_clone" profiles=""/>
             <configuration id="ubuntu-dev" profiles="dev"/>
+            <configuration id="ubuntu-app.dwo.nl" profiles=""/>
         </configurations>
     </config-data>
 </project-shared-configuration>
