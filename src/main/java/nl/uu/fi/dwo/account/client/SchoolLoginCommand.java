@@ -45,7 +45,7 @@ public class SchoolLoginCommand implements Command {
             //popup.setSize("500", "400");
             SchoolLoginPanel panel = new SchoolLoginPanel(resetLogin, DwoGlobalVars.instance().getCurrentUser());
             panel.setPopup(popup);
-            panel.setPixelSize(300, 200);
+            panel.setPixelSize(500, 200);
             popup.add(panel);
             popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
                 @Override

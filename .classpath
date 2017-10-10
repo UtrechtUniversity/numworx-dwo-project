@@ -29,5 +29,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
-	<classpathentry kind="output" path="target/Account-trunk/WEB-INF/classes"/>
+	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

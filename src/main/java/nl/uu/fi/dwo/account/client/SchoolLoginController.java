@@ -1,7 +1,19 @@
 package nl.uu.fi.dwo.account.client;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
+import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManager;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
@@ -10,11 +22,19 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 import java.util.logging.Logger;
 
+import org.osgi.util.function.Function;
+import org.osgi.util.function.Predicate;
+import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+import org.osgi.util.promise.Success;
 
 /**
  *
@@ -27,6 +47,8 @@ public class SchoolLoginController {
     private SchoolLoginPanel view = null;
     private SecuredUserSchoolLoginManager manager = new SecuredUserSchoolLoginManager();
     private DomSchoolsRolesAndClassesV2 srcs;
+
+	private HandlerRegistration registration;
 
     /**
      *
@@ -82,10 +104,29 @@ public class SchoolLoginController {
      * @param sc
      * @return
      */
-    public Promise<DomSchoolRoleAndClassV2> switchToSchoolLogin(DomSchoolRoleAndClassV2 sc) {
-    	PromiseCallback<DomSchoolRoleAndClassV2> cb = new PromiseCallback<DomSchoolRoleAndClassV2>();
-    	manager.switchToSchoolLogin(sc, cb);
-    	return cb.getPromise();
+    public Promise<DomSchoolRoleAndClassV2> switchToSchoolLogin(final DomSchoolRoleAndClassV2 sc) {
+    	try {
+    		switch(RoleType.valueOf(sc.getRole().getRoleName())) {
+    		case SCHOOLADMIN:
+    		case ADMIN:
+    			return inputPassword().then(new Success<String, DomSchoolRoleAndClassV2>() {
+
+					@Override
+					public Promise<DomSchoolRoleAndClassV2> call(Promise<String> t) {
+		    		    return manager.switchToSchoolLogin(sc);
+					}
+				});
+    			
+    		default: // no password
+    		    return manager.switchToSchoolLogin(sc);
+
+    		}
+    		
+    	} catch (Exception e) {
+    		return Promises.failed(e);
+    	}
+    	
+    	
     	
     }
 
@@ -94,11 +135,64 @@ public class SchoolLoginController {
      * @param reqSrac
      * @return
      */
-    public Promise<Boolean> removeASchoolLogin(DomSchoolRoleAndClassV2 reqSrac) {
-    	PromiseCallback<Boolean> cb = new PromiseCallback<Boolean>();
-        manager.removeASchoolLogin(reqSrac, cb);
-        return cb.getPromise();
+    public Promise<Boolean> removeASchoolLogin(final DomSchoolRoleAndClassV2 reqSrac) {
+		return	inputPassword().then(new Success<String, Boolean>() {
+
+					@Override
+					public Promise<Boolean> call(Promise<String> t) {
+							return manager.removeASchoolLogin(reqSrac);
+					}
+				});
     }
+
+    // FIXME USE POPUP
+	private Promise<String> inputPassword() {
+		return inputPassword0()
+				
+		.filter(new Predicate<String>() {
+
+			@Override
+			public boolean test(String t) {
+    			return  DwoGlobalVars.instance().getCurrentUser().getPassword().equals(t);
+			}
+		});
+	}
+
+	private Promise<String> inputPassword0() {
+		FlowPanel p = new FlowPanel();
+		p.add(new InlineLabel(DwoLocalesForGWT.instance.GUI_Label_Password()));
+		final PasswordTextBox txt = new PasswordTextBox();
+		p.add(txt);
+		final Button btn = new Button("Ok");
+		p.add(btn);
+		final PopupPanel popup = new PopupPanel(false, true);
+		popup.setStyleName("numworx-popup");
+		popup.setWidget(p);
+		popup.setPixelSize(300, -1);
+		final Deferred<String> d = new Deferred<String>();
+		registration = btn.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				String password = txt.getText();
+				if(password != null) password = MD5.md5(password);
+				popup.hide();
+				registration.removeHandler();
+				d.resolve(password);
+			}});
+		
+		popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+			
+			@Override
+			public void setPosition(int offsetWidth, int offsetHeight) {
+                int left = (Window.getClientWidth() - offsetWidth) / 3 + 30;
+                int top = (Window.getClientHeight() - offsetHeight) / 3 + 20;
+                popup.setPopupPosition(left, top);
+			}
+		});
+		Promise<String> resolved = d.getPromise();
+		return resolved;
+	}
 
     /**
      *

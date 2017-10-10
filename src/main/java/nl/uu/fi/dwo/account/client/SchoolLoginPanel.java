@@ -9,20 +9,25 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.cell.client.ImageResourceCell;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.HasDirection.Direction;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.view.client.CellPreviewEvent;
 import com.google.gwt.view.client.ListDataProvider;
 
@@ -32,6 +37,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  *
@@ -73,7 +79,6 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
      *
      */
     PopupPanel popup;
-    private Button delBtn;
     private Button addBtn;
     private Button closeBtn;
 
@@ -135,7 +140,9 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
         TextColumn<DomSchoolRoleAndClassV2> roleColumn = new TextColumn<DomSchoolRoleAndClassV2>() {
             @Override
             public String getValue(DomSchoolRoleAndClassV2 data) {
-                return data.getRole().getRoleName();
+                return 
+                		DwoLocalesForGWT.instance.getString(data.getRole().getRoleName())
+                		;
             }
         };
 
@@ -145,6 +152,8 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
                 = new Column<DomSchoolRoleAndClassV2, ImageResource>(new ImageResourceCell()) {
             @Override
             public ImageResource getValue(DomSchoolRoleAndClassV2 object) {
+            	if(isCurrent(object))
+            		return null;
                 return AccountImageBundle.instance.student();
             }
         };
@@ -152,6 +161,8 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
                 = new Column<DomSchoolRoleAndClassV2, ImageResource>(new ImageResourceCell()) {
             @Override
             public ImageResource getValue(DomSchoolRoleAndClassV2 object) {
+            	if(isCurrent(object))
+            		return null;
                 return AccountImageBundle.instance.delete();
             }
         };                
@@ -171,8 +182,8 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
                         //                       && columnIndex == 0 // klik op rijnummer doet selectie
                         && button == NativeEvent.BUTTON_LEFT) {
                     LOG.log(Level.INFO, "x,y:" + rowIndex + "," + columnIndex + ":" + event.getSource());
-                    DomSchoolRoleAndClassV2 sc = dataProvider.getList().get(rowIndex);
-                    switch (rowIndex) {
+                    DomSchoolRoleAndClassV2 sc = event.getValue();
+                    switch (columnIndex) {
                         case 2: //relogin with schoolclass set...
                         	control.switchToSchoolLogin(sc)
                         		.then(new HideAndReset<DomSchoolRoleAndClassV2>(), new RestFailure());
@@ -197,11 +208,42 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
         table.addColumn(deleteColumn, DwoLocalesForGWT.instance.GUI_Delete());
         dataProvider.addDataDisplay(table);
 
-        VerticalPanel vPanel = new VerticalPanel();
-        vPanel.add(table);               
-    }
+        add(table); 
+        SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
+        SimplePager pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
+        pager.setDisplay(table);
+        pager.setPageSize(table.getPageSize());
+        add(pager);
+        
+        HorizontalPanel hPanel = new HorizontalPanel();
+        setHorizontalAlignment(HorizontalAlignmentConstant.endOf(Direction.DEFAULT));
+        hPanel.setHorizontalAlignment(HorizontalAlignmentConstant.endOf(Direction.DEFAULT));
+//            hPanel.getElement().getStyle().setPadding(20, Unit.PX);
+        closeBtn = new Button("Close");
+        closeBtn.addClickHandler(this);
 
-    @Override
+        addBtn = new Button("Add");
+        if (false) {
+            addBtn.setVisible(true);
+        } else {
+            addBtn.setVisible(false);
+        }
+
+        addBtn.addClickHandler(this);
+        addBtn.addStyleName("paddedHorizontalPanel");
+        hPanel.add(addBtn);
+        closeBtn.addStyleName("paddedHorizontalPanel");
+        hPanel.add(closeBtn);
+        add(hPanel);
+     }
+
+    protected boolean isCurrent(DomSchoolRoleAndClassV2 object) {
+		PersistenceId id = object.getHasRole().getId();
+		PersistenceId current = DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole().getId();
+		return current.equals(id);
+	}
+
+	@Override
     public void onClick(ClickEvent event) {
         //logger.log(Level.INFO, "object {0}", new Object[]{event.getSource()});
         if (event.getSource() == this.closeBtn) {

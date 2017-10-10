@@ -184,6 +184,12 @@
         	<version>${gwtVersion}</version>
         	<scope>test</scope>
         </dependency>
+		<dependency>
+			<groupId>org.mitre.dsmiley.httpproxy</groupId>
+			<artifactId>smiley-http-proxy-servlet</artifactId>
+			<version>1.7</version>
+			<scope>runtime</scope>
+		</dependency>
     </dependencies>
     <description>Gebruiker: profiel en klas panels</description>
     <parent>
