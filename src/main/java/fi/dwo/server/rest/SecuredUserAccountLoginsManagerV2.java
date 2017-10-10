@@ -255,7 +255,7 @@ public class SecuredUserAccountLoginsManagerV2 {
             UserManager.edit(u);
 
             PersistentHasRole hr = HasRoleManager.findEntity(new PersistentHasRolePK(user.getId(), MySQLPersistenceId.getNativeId(sarc.getDomSchoolRoleAndClass().getHasRole()).getSchoolGroupID()));
-            if (sarc.getDomSchoolRoleAndClass().getSchoolClass().getId() != null) {
+            if (sarc.getDomSchoolRoleAndClass().getSchoolClass()!=null && sarc.getDomSchoolRoleAndClass().getSchoolClass().getId() != null) {
                 hr.setClassID(MySQLPersistenceId.getNativeId(sarc.getDomSchoolRoleAndClass().getSchoolClass()));
             }
             HasRoleManager.edit(hr);
