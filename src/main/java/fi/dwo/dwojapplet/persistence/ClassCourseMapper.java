@@ -66,6 +66,7 @@ class ClassCourseMapper extends XmlRpcMapper {
         cc.setClassID(((Integer) data.get("ClassID")).intValue());
         cc.setCourseID(((Integer) data.get("CourseID")).intValue());
         cc.setType(((Integer) data.get("type")).intValue());
+        cc.setViewState(((Integer) data.get("viewState")).intValue());
         Object o = data.get("notAfter");
         if (o instanceof Date) // string or null 
         {

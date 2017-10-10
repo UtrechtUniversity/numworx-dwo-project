@@ -1209,6 +1209,7 @@ public class PersistenceFacade {
      * @param type
      * @throws PersistenceException
      */
+    @Deprecated //broken    ?
     public void selectCoursesForClass(int classID, int courseID, int type, Date van, Date tot)
             throws PersistenceException {
         if (van == null) {
@@ -1245,6 +1246,7 @@ public class PersistenceFacade {
      * @param courseID The course to deselect.
      * @throws PersistenceException
      */
+    @Deprecated //broken ?
     public void deSelectCoursesForClass(int classID, int courseID)
             throws PersistenceException {
         try {
@@ -2682,6 +2684,7 @@ public class PersistenceFacade {
             if (deze.getNotBefore() != null && deze.getNotBefore().getTime() > DATE_OFFSET) {
                 h.put("notBefore", deze.getNotBefore());
             }
+            h.put("viewState", new Integer(deze.getViewState()));
             v.add(h);
         }
 // insert dwoProfileID.

@@ -16,6 +16,7 @@ public class ClassCourse {
     /**
      * Enum
      */
+    private int viewState;
     private int type;
     private Date notBefore;
     private Date notAfter;
@@ -148,6 +149,20 @@ public class ClassCourse {
             LOG.log(Level.SEVERE,null,e);
         }
 
+    }
+
+    /**
+     * @return the viewState
+     */
+    public int getViewState() {
+        return viewState;
+    }
+
+    /**
+     * @param viewState the viewState to set
+     */
+    public void setViewState(int viewState) {
+        this.viewState = viewState;
     }
 
 }
