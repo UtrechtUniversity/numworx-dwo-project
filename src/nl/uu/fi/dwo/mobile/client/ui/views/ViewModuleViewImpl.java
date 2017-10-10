@@ -248,7 +248,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			
 			if (mode != OpdrNav.OEFENEN) // alleen voor oefenen mag de optie 'score zichtbaar' uit staan
 				scoresZichtbaar = true;
-			if (scoresZichtbaar && on.scoresVisible()) // ook nog even kijken of de score getoond mag worden, bijv. in eindtoets
+			if (scoresZichtbaar && (!(on.getMode() == OpdrNav.EINDTOETS) || on.scoresVisible()))// niet tonen in niet-verzegelde eindtoets
 			{
 				Label score = scoreNav.getTotaalScoreLabel();
 				score.getElement().getStyle().setFloat(Style.Float.LEFT);
