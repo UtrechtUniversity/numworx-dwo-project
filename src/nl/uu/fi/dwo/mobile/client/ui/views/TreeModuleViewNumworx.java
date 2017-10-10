@@ -662,7 +662,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			if(!single)
 			{
 				Command cmd = null;
-				//cmd = new nl.uu.fi.dwo.account.client.SchoolLoginCommand(this);			
+				cmd = new nl.uu.fi.dwo.account.client.SchoolLoginCommand(this);			
 				m=items.addItem(DwoLocalesForGWT.instance.GUI_MySchoolLogins(), cmd);
 				m.addStyleName(style.menuItem());
 			}
