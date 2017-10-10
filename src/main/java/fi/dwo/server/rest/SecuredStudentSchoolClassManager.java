@@ -252,7 +252,7 @@ public class SecuredStudentSchoolClassManager {
                     PersistentSchoolClass s = SchoolClassManager.findEntity(toc.getPersistentStudentOfClassPK().getClassID());
                     domSchoolClasses.add(s.buildDomSchoolClass());
                 }
-                LOG.log(Level.FINER, "Fetched all {0} schoolClasses of student {1]. ", new Object[]{domSchoolClasses.size(), phr.getPersistentHasRolePK().getUserID()});
+                LOG.log(Level.FINER, "Fetched all {0} schoolClasses of student {1}. ", new Object[]{domSchoolClasses.size(), phr.getPersistentHasRolePK().getUserID()});
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schoolclasses.");
