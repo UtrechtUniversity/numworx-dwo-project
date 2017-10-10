@@ -83,10 +83,21 @@
                 <RDS_PORT>3306</RDS_PORT>
                 
                 
-                <RDS_DB_NAME>dwo_devel_v1_4</RDS_DB_NAME>
+                <RDS_DB_NAME>dwo_devel</RDS_DB_NAME>
             </properties>
             <activatedProfiles>
                 <activatedProfile>dev</activatedProfile>
             </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-tomcat7:run (debug)</actionName>
+            <displayName>tomcat7:run (debug)</displayName>
+            <goals>
+                <goal>tomcat7:run</goal>
+            </goals>
+            <properties>
+                <gwt.style>PRETTY</gwt.style>
+                <jpda.listen>maven</jpda.listen>
+            </properties>
         </action>
     </actions>

@@ -391,8 +391,8 @@
                         <url>${tomcat.local.deploy.url}</url>-->
                         <path>/dwo</path>
                         <warFile>target/${project.artifactId}-${project.version}.war</warFile>
-                        <!--<contextFile>src/test/tomcat/context.xml</contextFile>-->
-                            <contextFile>src/test/tomcat/${context.xml}</contextFile>
+                        <contextFile>src/test/tomcat/context-dwo_devel.xml</contextFile>
+                            <!--<contextFile>src/test/tomcat/${context.xml}</contextFile>-->
                             <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
                     </configuration>
                     <dependencies>
@@ -550,7 +550,7 @@
                 <junit.test>false</junit.test>
             </properties>
         </profile>
-        <profile>
+<!--        <profile>
             <id>dev</id>
             <activation>
                 <property>
@@ -567,7 +567,7 @@
             <build>
                 <plugins>
                     <plugin>
-                        <!-- tomcat target for running against a loaded junit test-database -->
+                         tomcat target for running against a loaded junit test-database 
                         <groupId>org.apache.tomcat.maven</groupId>
                         <artifactId>tomcat7-maven-plugin</artifactId>
                         <version>2.2</version>
@@ -575,7 +575,7 @@
                             <server>TomcatServer</server>
                             <path>/dwo</path>
                             <warFile>target/${project.artifactId}-${project.version}.war</warFile>
-                            <contextFile>src/test/tomcat/${context.xml}</contextFile>
+                            <contextFile>src/test/tomcat/context-dwo_devel.xml</contextFile>
                             <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
                         </configuration>
                         <dependencies>
@@ -593,6 +593,6 @@
                     </plugin>                 
                 </plugins>
             </build>
-        </profile>
+        </profile>-->
     </profiles> 
 </project>

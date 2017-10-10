@@ -65,7 +65,7 @@
     RDS_PASSWORD=MyRDSSecret
     RDS_HOSTNAME=127.0.0.1
     RDS_PORT=3306
-    RDS_DB_NAME=dwo_devel_v1_4
+    RDS_DB_NAME=dwo_devel
 -->
   <!--  tomcat 7 configuration -->
   <Resource abandonWhenPercentageFull="50" auth="Container" 

@@ -215,10 +215,14 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             + "AND (tblClassCourse.ClassID = ?) " + "ORDER BY name ";
 
     private final static String QRY_INSERT_CLASS_COURSE = "INSERT INTO tblClassCourse(classID, courseID) "
-            + "VALUES(?, ?) ";
+            + "VALUES(?, ?) ON DUPLICATE KEY UPDATE";
 
-    private final static String QRY_INSERT_CLASS_COURSE2 = "INSERT INTO tblClassCourse(classID, courseID, type, notBefore, notAfter) "
-            + "VALUES(?,?,?,?,?) ";
+    private final static String QRY_INSERT_CLASS_COURSE2 = "INSERT INTO tblClassCourse(classID, courseID, type, notBefore, notAfter, viewState) "
+            + "VALUES(?,?,?,?,?,3) ON DUPLICATE KEY UPDATE classID = values(classID), courseID = values(courseID), "
+            + "type=VALUES(type), notBefore=VALUES(notBefore), notAfter=VALUES(notAfter), viewState = 3 ";
+
+//    private final static String QRY_INSERT_CLASS_COURSE2 = "INSERT INTO tblClassCourse(classID, courseID, type, notBefore, notAfter) "
+//            + "VALUES(?,?,?,?,?) ";
 
     private final static String QRY_DELETE_CLASS_COURSE = "DELETE FROM tblClassCourse "
             + "WHERE (classID = ?) " + "AND (courseID = ?) ";
@@ -4374,20 +4378,22 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
                     map = getRecord("tblCourse", "courseID", ((Number) map.get("courseID")).intValue());
                     profileID = map.get("dwoProfileID");
                 }
-                ps = c.prepareStatement("DELETE FROM tblClassCourse WHERE classID = ? and courseID in (SELECT courseID from tblCourse where dwoProfileID = ?)");
+                ps = c.prepareStatement("UPDATE tblClassCourse SET viewState = 0 WHERE classID = ? and courseID in (SELECT courseID from tblCourse where dwoProfileID = ?)");
+//                ps = c.prepareStatement("DELETE FROM tblClassCourse WHERE classID = ? and courseID in (SELECT courseID from tblCourse where dwoProfileID = ?)");
                 ps.setInt(1, id);
                 ps.setObject(2, profileID);
                 int r = ps.executeUpdate();
-                System.out.println(r + " deletes from classcourse " + id + " and " + profileID);
+                System.out.println(r + " invisible from classcourse " + id + " and " + profileID);
                 ps.close();
                 if (!map.containsKey("courseID")) {
                     v.remove(0);
                 }
 
             } else {
-                ps = c.prepareStatement("DELETE FROM tblClassCourse WHERE classID = ?");
+                ps = c.prepareStatement("UPDATE tblClassCourse SET viewState = 0 WHERE classID = ?");
+//                ps = c.prepareStatement("DELETE FROM tblClassCourse WHERE classID = ?");
                 ps.setInt(1, id);
-                System.out.println(ps.executeUpdate() + " deletes from classcourse " + id);
+                System.out.println(ps.executeUpdate() + " invisible from classcourse " + id);
                 ps.close();
             }
             ps = getStatement(QRY_INSERT_CLASS_COURSE2);
