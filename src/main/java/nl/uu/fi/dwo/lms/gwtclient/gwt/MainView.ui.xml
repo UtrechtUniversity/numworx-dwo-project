@@ -1,13 +1,14 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui" 
->
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+             <!--xmlns:svg="org.vectomatic.dom.svg.ui" -->
     <ui:style field="dwoStyle" src="css/dwostyle.css" />    
     <ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
     <ui:with type="nl.uu.fi.dwo.lms.gwtclient.gwt.icons.AccountImageBundle" field="icons" />
     <g:HeaderPanel addStyleNames='{dwoStyle.dwoAppPanel}'>
         <g:FlowPanel  height='51px'>
         <g:FlowPanel addStyleNames='{dwoStyle.dwoAppHeaderPanel}' ui:field='headerView'>
+                <!--<svg:SVGImage  ui:field="dwoLogo" resource="{icons.dwoLogo}" />-->
             <g:Image addStyleNames='{dwoStyle.headerLogoBox}' height='90%' width='auto' ui:field="dwoLogo" resource="{icons.dwoLogo}" />
             <g:Label addStyleNames='{dwoStyle.leftHalfBox}' ui:field='activeDeckWidgetLabel'><ui:text from='{rb.GUI_View_LOGIN}'/></g:Label>
             <g:PushButton addStyleNames='{dwoStyle.dwoAppMenuButton}'  ui:field="menuButton">
@@ -53,9 +54,9 @@
         </g:LayoutPanel>
         <!--</g:FlowPanel>-->
         <!--</g:FlowPanel>-->
-        <g:FlowPanel addStyleNames='{dwoStyle.dwoAppStatusPanel}' ui:field='statusView' >
+<!--        <g:FlowPanel addStyleNames='{dwoStyle.dwoAppStatusPanel}' ui:field='statusView' >
             <g:CheckBox  addStyleNames='{dwoStyle.dwoAppStatusMsgBox}' ui:field='autoUpdateResults' checked="false">autoUpdate</g:CheckBox>
             <g:Label addStyleNames='{dwoStyle.dwoAppStatusMsgBox}'  ui:field="statusMsg"></g:Label>
-        </g:FlowPanel>
+        </g:FlowPanel> -->
     </g:HeaderPanel>            
-</ui:UiBinder> 
+</ui:UiBinder>

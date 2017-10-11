@@ -84,14 +84,14 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     LayoutPanel layout;
     @UiField
     Image dwoLogo;
-    @UiField
-    Label statusMsg;
-    @UiField
-    CheckBox autoUpdateResults;
+//    @UiField
+//    Label statusMsg;
+//    @UiField
+//    CheckBox autoUpdateResults;
     @UiField
     FlowPanel headerView;
-    @UiField
-    FlowPanel statusView;
+//    @UiField
+//    FlowPanel statusView;
     @UiField
     FlowPanel menuView;
     @UiField
@@ -164,6 +164,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         logoutLabel.addClickHandler(this);
         classesLabel.addClickHandler(this);
         accountLabel.addClickHandler(this);
+        dwoLogo.setTitle(BUILD.version+"-"+BUILD.buildNumber);
     }
 
     @Override

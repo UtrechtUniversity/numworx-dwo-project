@@ -15,7 +15,7 @@ DWO-overrides
     padding: 0px;
     margin: 0px;
     border: 0px;
-
+    color: #7297c7;
 }
 .dwoAppPanel{
     position: absolute;
@@ -39,7 +39,8 @@ DWO-overrides
     margin: 0px;
     padding: 5px;
     border: 0px;
-    background-color: lightgrey;
+    color: #7297c7;
+    background-color: #314770;
     vertical-align: bottom;     
     border-bottom: 1px solid #999999;
 }
@@ -52,7 +53,8 @@ DWO-overrides
     height:50px;
     margin: 0px;
     padding: 0px;
-    background-color: lightgrey;
+    color: #7297c7;    
+    background-color: #314770;
     border-top: 1px solid #999999;
 }
 
@@ -68,14 +70,14 @@ DWO-overrides
     top: 0px;
     left: 0px;
     right: 0px;
-    bottom:31px;
+    bottom:0px;
     min-height: 500px;
     min-width: 800px;
     overflow: auto;
     padding: 0px;
     border: 0px;
     margin:0px;
-    background-color: #f4f7f9;
+    background-color: #8ebee5;
     align-content: center;
 }
 
@@ -88,7 +90,7 @@ DWO-overrides
     right: 0px;
     padding: 8px;
     margin:8px;
-    background-color: #f4f7f9;
+    background-color: #8ebee5;
     align-content: center;
 }
 
@@ -99,7 +101,7 @@ DWO-overrides
     width:auto;
     padding: inherit;
     margin: inherit;
-    background-color: #f4f7f9;
+    background-color: #8ebee5;
     vertical-align: middle;
 }
 
@@ -114,7 +116,7 @@ DWO-overrides
     right: 10px;
     padding: 8px;
     margin:8px;
-    background-color: #f4f7f9;
+    background-color: #8ebee5;
     /*    border-radius: 4px;   
         border-style: solid;*/
     align-content: center;
@@ -129,7 +131,8 @@ DWO-overrides
     border: 1px;
     border-style: solid;
     border-color: black;
-    background-color: #fefefe;
+    color: #314770;
+    background-color: #dde0e3;
 }
 
 .dwoDataGridPanel{
@@ -143,7 +146,8 @@ DWO-overrides
     border-style: solid;
     border-width: 1px;
     border-color: black;
-    background-color: #fefefe;
+    background-color: #dde0e3;
+    color: #314770;
 }
 
 .dwoDataGridWidget{
@@ -163,7 +167,8 @@ DWO-overrides
     border-style: solid;
     border-width: 1px;
     border-color: black;
-    background-color: #fefefe;
+    background-color: #dde0e3;
+    color: #314770;    
 }
 
 /*.dwoDataGridWidget{
@@ -177,7 +182,8 @@ DWO-overrides
     border-style: solid;
     border-width: 1px;
     border-color: black;
-    background-color: #fefefe;
+    background-color: #dde0e3;
+    color: #314770;
 }*/
 
 .dwoDataGridWidget th{
@@ -191,7 +197,7 @@ DWO-overrides
 
 .dwoWidgetPanel {
     position: inherit;
-    background-color: #f4f7f9;
+    background-color: #8ebee5;
     margin: 0px;
     padding:0px;
     border:0px;
@@ -212,7 +218,8 @@ DWO-overrides
     border: 1px;
     border-style: solid;
     border-color: black;
-    background-color: #fefefe;    
+    background-color: #dde0e3;    
+    color: #314770;    
 }
 
 .dwoMinWidth{
@@ -409,7 +416,8 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
     border: 1px solid #555555;
     /*border-radius: 5px;*/   
     horizontal-align: middle;
-    background-color: #fefefe;
+    background-color: #dde0e3;
+    color: #314770;    
     width: 100%;
     height: auto;    
 }
@@ -508,7 +516,8 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
     border: 1px;
     border-style: solid;
     border-color: black;
-    background-color: #fefefe;
+    background-color: #dde0e3;
+    color: #314770;
     vertical-align: middle;
 }
 
@@ -521,7 +530,8 @@ tr:nth-child(odd) {background-color: #c7d4ea}*/
     border: 1px;
     border-style: solid;
     border-color: black;
-    background-color: #fefefe;
+    background-color: #dde0e3;
+    color: #314770;
 }
 
 .hidden{visibility: hidden}
