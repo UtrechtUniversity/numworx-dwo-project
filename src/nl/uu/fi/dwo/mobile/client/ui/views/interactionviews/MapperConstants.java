@@ -120,7 +120,6 @@ public class MapperConstants {
         feedbackMap.put("check.ha: sign mismatch", "De richting van je alternatieve hypothese past niet bij de claim uit de opdracht.");
         feedbackMap.put("check.ha: component is not of type relation", "Vul eerst de gehele alternatieve hypothese in, voor je nakijkt.");
         feedbackMap.put("check.sided", "Deze toetsrichting past niet bij de hypotheses of claim uit de opdracht.");
-        feedbackMap.put("check.sided: Alternative hypothesis missing", "Bepaal eerst hypotheses voor je specificeert of je toets linkszijdig, rechtszijdig of tweezijdig is.");
         feedbackMap.put("check.test", "Je hebt niet de meest geschikte toets gekozen.");
         feedbackMap.put("check.test-formula", "De formule van de toetsingsgrootheid is niet correct.");
         feedbackMap.put("check.test-formula: component is not of type relation", "Bepaal eerst beide kanten van de formule, voor je nakijkt.");
@@ -145,13 +144,13 @@ public class MapperConstants {
         feedbackMap.put("check.rejectioncritical: test mismatch", "Bepaal je een kritiek gebied voor een t-waarde of voor een z-waarde?");
         feedbackMap.put("check.rejectioncritical: sidedness mismatch", "Past het teken dat je in het kritiek gebied gebruikt bij de richting van de alternatieve hypothese?");
         feedbackMap.put("check.rejectioncritical: Sidedness missing", "Bij welke hypotheses hoort dit kritieke gebied? Stel eerst hypotheses op.");
-        feedbackMap.put("check.rejectioncritical: alternative hypotheses missing", "Bij welke hypotheses hoort dit kritieke gebied? Stel eerst hypotheses op.");
+        feedbackMap.put("check.rejectioncritical: alternative hypothesis missing", "Bij welke hypotheses hoort dit kritieke gebied? Stel eerst hypotheses op.");
         feedbackMap.put("check.rejectioncritical: component is not of type relation", "Bepaal eerst het gehele kritieke gebied, voor je nakijkt.");
         feedbackMap.put("check.p-value", "Dit is niet de juiste p-waarde bij de toetsingsgrootheid.");
         feedbackMap.put("check.p-value: TestValue missing", "Om een p-waarde te bepalen, moet je eerst de toetsingsgrootheid berekenen.");
         //feedbackMap.put("check.p-value: Df missing", "Voor het bepalen van de p-waarde bij een t-toets, heb je het aantal vrijheidsgraden nodig. Geef eerst het aantal vrijheidsgraden.");
         feedbackMap.put("check.p-value: Sidedness missing", "Bij welke hypotheses hoort deze p-waarde? Stel eerst hypotheses op.");
-        feedbackMap.put("check.p-value: Alternative hypothesis missing", "Bij welke hypotheses hoort deze p-waarde? Stel eerst hypotheses op.");
+        feedbackMap.put("check.p-value: alternative hypothesis missing", "Bij welke hypotheses hoort deze p-waarde? Stel eerst hypotheses op.");
         feedbackMap.put("check.p-value: value not a probability", "De p-waarde is de overschrijdingskans. Heb je inderdaad een kans (een getal tussen 0 en 1) bepaald?");
         feedbackMap.put("check.conclusion.p-value", "Je bewering over de p-waarde en het significantieniveau klopt niet.");
         feedbackMap.put("check.conclusion.p-value: PValue missing", "Geef eerst een schatting van de p-waarde zelf, voordat je deze vergelijkt met het significantieniveau.");
