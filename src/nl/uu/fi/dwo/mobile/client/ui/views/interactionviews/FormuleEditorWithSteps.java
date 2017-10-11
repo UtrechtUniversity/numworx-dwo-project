@@ -3013,6 +3013,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			return true;
 		if (stapNr == 0)
 			return true;
+		if (pijlVakken.size() < stapNr) // pijlen te weinig? Komt voor!
+			return true; 
 		String op = pijlVakken.get(stapNr - 1).geefOperator();
 		Expressie en = FormuleParser.geefExpressie("$f" + pijlVakken.get(stapNr - 1).geefExpressieString() + "@");
 		if (op.equals("implicatie") || op.equals("abc") || en == null)
