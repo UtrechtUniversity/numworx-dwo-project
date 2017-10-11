@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
+import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -163,7 +164,7 @@ public class AddStudentsPresenter implements SchoolClassDialogEventHandler {
                 student.setGivenName(item.givenName);
                 student.setInsertion(item.insertion);
                 student.setFamilyName(item.familyName);
-                student.setPassword(item.password);
+                student.setPassword(MD5.md5(item.password));
                 student.setUserName(item.usercode);
                 student.setEmail(item.email);
                 student.setSingleSchool(true);
