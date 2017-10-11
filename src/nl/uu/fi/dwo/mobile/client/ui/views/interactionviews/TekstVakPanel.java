@@ -1647,8 +1647,16 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			stapNr = map.getInt("stapNr");
 		if(stappen!=null)
 		{
+			//Fix for steps that have been saved, but are outside range of tekstVakken
+			stapNr = Math.min(stapNr, tekstVakken.length);
+			for(int i = stappen.size() - 1; i >= stapNr; i--)
+			{
+				stappen.remove(i);
+			}
+			
 			for(int i = 0; i < stapNr; i++)
-			{	TekstVakPanel tvp = new TekstVakPanel((HashMap<String, Object>) stappen.get(i), null, null);
+			{	
+				TekstVakPanel tvp = new TekstVakPanel((HashMap<String, Object>) stappen.get(i), null, null);
 				tvp.setParent(tekstVakken[i][breedtes.size() - 1]);
 				tvp.zetInstellingen(instellingen);
 				tvp.setKeyboard(kb);
@@ -1671,6 +1679,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 				tekstVakken[i][breedtes.size() - 1].zetOpdrachtObjects(list);
 				tekstVakken[i][breedtes.size() - 1].setObjects(list);
 			}
+			
 		}
 		//Feedback laatste stap hypothesetoetsen terugzetten
 		if(h.containsKey("goedHalfFoutStatistiek"))
@@ -3969,6 +3978,8 @@ private Object CamelCase(String name) {
 					ObjectMap contentMap = objectMap.getObjectMap("content");
 					if(stappen.size() > stapNr)
 						stappen.remove(stapNr);
+					if(stapNr >= tekstVakken.length)
+						return;
 					stappen.add(contentMap);
 					stapNr++;
 					
