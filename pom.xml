@@ -192,13 +192,13 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
 			<artifactId>formule</artifactId>
-			<version>0.0.6-SNAPSHOT</version>
+			<version>0.0.6</version>
 		</dependency>
 	</dependencies>
 	<parent>
 		<groupId>fi.parentgwt</groupId>
 		<artifactId>ParentGWT</artifactId>
-		<version>0.0.3</version>
+		<version>0.0.4</version>
 		<relativePath>../ParentGWT</relativePath>
 	</parent>
 	<properties>
@@ -208,7 +208,7 @@
 		<runTarget>${project.artifactId}.html</runTarget>
 		<warClassifier />
 		<gwt.copyWebapp>true</gwt.copyWebapp>
-		<accountVersion>0.0.12</accountVersion>
+		<accountVersion>0.0.13</accountVersion>
 	</properties>
 	<profiles>
 		<profile>

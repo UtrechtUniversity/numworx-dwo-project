@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
 public class ReloginActivity extends MGWTAbstractActivity {
 
@@ -67,17 +68,23 @@ public class ReloginActivity extends MGWTAbstractActivity {
 	};
 
 	@Override
-	public void start(AcceptsOneWidget panel, EventBus eventBus)
+	public void start(final AcceptsOneWidget panel, EventBus eventBus)
 	{
-		SelectModuleItemHolder.destroy();
 		password = DwoGlobalVars.instance().getCurrentUser().getPassword();
 		username = DwoGlobalVars.instance().getCurrentUser().getUserName();
-		clientFactory.logout();
-		panel.setWidget(new Label());
-		clientFactory.getRPCHandler().loginMD5(getUsername(), getPassword())
-			.then(LoginActivity.LOGIN_STAP1)
-			.then(LoginActivity.LOGIN_STAP2, FAILURE1)
-			.then(LOGIN_STAP3);
+		clientFactory.logout()
+		.then(new Success<Void, DomUserFullwLoginContext>() {
+
+			@Override
+			public Promise<DomUserFullwLoginContext> call(Promise<Void> resolved) throws Exception {
+				SelectModuleItemHolder.destroy();
+				panel.setWidget(new Label());
+				return clientFactory.getRPCHandler().loginMD5(getUsername(), getPassword());
+			}
+		})
+		.then(LoginActivity.LOGIN_STAP1)
+		.then(LoginActivity.LOGIN_STAP2, FAILURE1)
+		.then(LOGIN_STAP3);
 	}
 
 	private String getUsername() {

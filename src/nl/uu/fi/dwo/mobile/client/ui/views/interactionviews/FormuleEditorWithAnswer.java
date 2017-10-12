@@ -1947,6 +1947,20 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void plak(FormuleClipboardIF clip)
 	{
 		super.plak(clip);
+		
+		resetimg();
+		
+		if (isNagekeken())
+			zetIsVeranderdNaNakijken(true);
+		
+		if (this.fews != null) 
+		{
+			this.fews.resetimg();
+			
+			if (this.fews.isNagekeken())
+				this.fews.zetIsVeranderdNaNakijken(true);
+		}
+		
 		resize();
 	}
 

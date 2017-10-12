@@ -461,6 +461,11 @@ public class PijlVak extends LayoutPanel
 		//formuleVak.vulVak("$f" + s + "@");
 	}
 	
+	public void zetOperator(String s)
+	{
+		this.operator = s;
+	}
+
 	public void zetMaat()
 	{
 		int b = (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText(MARGE_VOOR + operator + "   ").getWidth();
@@ -608,7 +613,7 @@ public class PijlVak extends LayoutPanel
 				}
 				fe.maakBewerkingStap();
 				Expressie exp = FormuleParser.parse(editor.toString());
-		 		if (exp!=null && Algebra.geefTermen(exp,new Vector()).size()>1)
+		 		if (exp!=null && Algebra.geefTermen(exp, new Vector()).size()>1)
 		 		{
 		 			editor.insert("$h" + exp.toString() + "@");
 		 		}

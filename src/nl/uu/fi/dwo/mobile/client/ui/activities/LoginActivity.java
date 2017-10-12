@@ -119,6 +119,7 @@ public class LoginActivity extends MGWTAbstractActivity
 					DomSchoolsRolesAndClassesV2 value = promise.getValue();
 					if(value != null) {
 						instance.setSchoolLogins(value);
+						instance.setActiveSchoolRoleAndClass(value.getActiveSchoolRoleAndClass());
 						if(value.getActiveSchoolRoleAndClass() != null)
 							instance.setCurrentSchoolClass(value.getActiveSchoolRoleAndClass().getSchoolClass());
 						else
