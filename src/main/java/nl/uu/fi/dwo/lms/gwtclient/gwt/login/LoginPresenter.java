@@ -49,7 +49,7 @@ public class LoginPresenter {
                 @Override
                 public Promise<Void> call(Promise<DwoGlobalVars.DwoGlobalVarsState> resolved) throws Exception {
                     if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
-                        boolean switchR = switchRole;
+                        boolean switchR = true;
                         LOG.log(Level.INFO, "login succeeded for user:" + dwoGlobalVars.getCurrentUser().getUniqueDisplayName());
                         try {
                             if (dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())) {
@@ -58,7 +58,7 @@ public class LoginPresenter {
                         } catch (Exception e) {
                             switchR = true;
                         }
-                        if (switchR) {
+                        if (switchR || switchRole) {
                             eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS));
                         } else {
                             eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_SCHOOLCLASSES));
