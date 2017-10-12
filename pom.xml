@@ -172,7 +172,7 @@
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
 									<artifactId>DWOJClient</artifactId>
-									<version>2.1.20.a</version>
+									<version>2.1.20-a</version>
 									<classifier>jar-with-dependencies</classifier>
 									<overWrite>true</overWrite>
 									<destFileName>dwo/DWOJApplet.jar</destFileName>
@@ -312,5 +312,5 @@
 		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO/tags/EBServer-2.1.20</developerConnection>
 		<connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO/tags/EBServer-2.1.20</connection>
 	</scm>
-	<version>2.1.20.a</version>
+	<version>2.1.20-a</version>
 </project>
