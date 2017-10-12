@@ -24,7 +24,7 @@ public ImageResource empty();
 public ImageResource student();
 
 
-@Source("DWO_logo_full.png")
+@Source("numworx-logo-wit-1.png")
 public ImageResource dwoLogo();
 //@Source("logo-Numworx-grijs2.svg")
 //public SVGResource dwoLogo();
