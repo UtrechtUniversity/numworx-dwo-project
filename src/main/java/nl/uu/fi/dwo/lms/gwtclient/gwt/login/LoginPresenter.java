@@ -23,8 +23,11 @@ public class LoginPresenter {
     public interface Display extends IsWidget {
 
         Widget asWidget();
+
         void clear();
+
         public void setUsername(String username);
+
         public void setPassword(String password);
     }
 
@@ -48,12 +51,12 @@ public class LoginPresenter {
                     if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
                         boolean switchR = switchRole;
                         LOG.log(Level.INFO, "login succeeded for user:" + dwoGlobalVars.getCurrentUser().getUniqueDisplayName());
-                        try{
-                        if(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())){
-                            switchR = false;
-                        }
-                        }catch(Exception e){
-                            switchR=true;
+                        try {
+                            if (dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())) {
+                                switchR = false;
+                            }
+                        } catch (Exception e) {
+                            switchR = true;
                         }
                         if (switchR) {
                             eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS));
@@ -61,9 +64,9 @@ public class LoginPresenter {
                             eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_SCHOOLCLASSES));
                         }
                         LOG.log(Level.INFO, "login succeeded. Firing Login success event.");
-                    } else {                        
-//                        dwoGlobalVars.clearCurrentUser();
-                        eventBus.fireEvent(new DialogEvent(("Login failed, unknown usercode and password combination.") ));
+                    } else {
+                        dwoGlobalVars.clearCurrentUser();
+                        eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Wrong login state.")));
                         // TODO fix login stuff
 //                        Window.Location.assign("");
                         LOG.log(Level.INFO, "login failed. Firing Login fail event.");
@@ -82,22 +85,14 @@ public class LoginPresenter {
                         //that might break the running thread.
                         eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
                         eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
-                  } else {
+                    } else {
                         LOG.log(Level.SEVERE, fail.getMessage());
-                        eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError,fail.getMessage())));
-                        // TODO fix login stuff
-//                        Window.Location.assign("");
-//                        eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-                        //throw directly
+                        eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, fail.getMessage())));
+                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
                     }
                 }
             }
-            ); //                    .onResolve(new Runnable() {
-                    //                public void run() {
-                    //                    System.out.println("Need tot test onResolve and fill data here! Calling stuff to get results promise here!");
-                    //                }
-                    //            }
-//         );
+            );
         } catch (Dwo2Exception ex) {
             Logger.getLogger(LoginPresenter.class.getName()).log(Level.SEVERE, null, ex);
             eventBus.fireEvent(new DialogEvent(ex));

@@ -213,6 +213,7 @@ public class DwoGlobalVars {
      * @throws Dwo2Exception
      */
     public Promise<DwoGlobalVarsState> initUser(String usercode, String password) throws Dwo2Exception {
+        GwtRestVars.getInstance().setCredentials(usercode, password);
         if (state != DwoGlobalVarsState.NotLoggedIn) {
             //if not in proper state throw an exception.
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Trying to initialize a user while in the wrong state");
@@ -262,10 +263,12 @@ public class DwoGlobalVars {
             public Promise<DwoGlobalVarsState> call(Promise<DomSchoolsRolesAndClassesV2> resolved) throws Exception {
                 schoolLogins = (resolved.getValue());
                 setActiveSchoolRoleAndClass(schoolLogins.getActiveSchoolRoleAndClass());
-                state = DwoGlobalVarsState.LoggedIn;
-                if (statePromise.getValue().equals(state)) {
+                //state = DwoGlobalVarsState.LoggedIn;
+                if (statePromise.getValue().equals( DwoGlobalVarsState.LoggedIn)) {
                     statePromise.resolve(state);
                 } else {
+                    clearCurrentUser();
+                    state = DwoGlobalVarsState.NotLoggedIn;
                     statePromise.fail(new Dwo2Exception());
                 }
                 return statePromise.getPromise();
