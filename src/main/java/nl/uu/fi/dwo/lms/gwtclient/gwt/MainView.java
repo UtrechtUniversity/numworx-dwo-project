@@ -79,7 +79,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     @UiField
     Label userRole;
     @UiField
-    PushButton menuButton;
+    Label menuButton;
     @UiField
     LayoutPanel layout;
     @UiField

@@ -1,11 +1,14 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
+import com.google.gwt.core.client.GWT;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
  * Handler for BootPanel actions.
@@ -13,7 +16,7 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
  * @author Gert van der Plas
  */
 public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler {
-
+    private static final DwoLocalesForGWT rb = GWT.create(DwoLocalesForGWT.class);
     private static final Logger LOG = Logger.getLogger(MainPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
@@ -125,7 +128,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
             display.hideMenuButton();
             display.hidePostLoginWidgets();
             //display.showMenuButton();
-        } else if (selectedView == selectedView.SWITCHSCHOOL) {
+        } else {//if (selectedView == selectedView.SWITCHSCHOOL) {
             try {
                 display.setSchoolName(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
                 display.setPresentationName(dwoGlobalVars.getCurrentUser().getDisplayName());
@@ -137,7 +140,24 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
             if (dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())) {
                 display.showMenuButton();
             }
-            display.setUserRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
+            RoleType rt = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
+            switch(rt){
+                case STUDENT:
+                    display.setUserRole(rb.TEACHER());
+                    break;
+                case ADMIN:
+                    display.setUserRole(rb.ADMIN());
+                    break;
+                case SCHOOLADMIN:
+                    display.setUserRole(rb.SCHOOLADMIN());
+                    break;
+                case TEACHER:
+                    display.setUserRole(rb.TEACHER());
+                    break;
+                default:
+                    LOG.log(Level.SEVERE,"unknown role type to display.");
+            }
+            //display.setUserRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
         } catch (Exception e) {
 
         }
