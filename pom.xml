@@ -172,7 +172,7 @@
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
 									<artifactId>DWOJClient</artifactId>
-									<version>2.1.20-a</version>
+									<version>2.1.20</version>
 									<classifier>jar-with-dependencies</classifier>
 									<overWrite>true</overWrite>
 									<destFileName>dwo/DWOJApplet.jar</destFileName>
