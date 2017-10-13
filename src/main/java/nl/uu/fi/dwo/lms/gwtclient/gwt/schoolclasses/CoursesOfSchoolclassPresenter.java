@@ -233,7 +233,7 @@ public class CoursesOfSchoolclassPresenter {
         for (DomTree<DomCourseOfClass> coc : c.getChildren().values()) {
             ClassCourseItem item = new ClassCourseItem(coc.getObject().getCourse().getId().getIdString(), coc.getObject().getCourse().getName());
             if (coc.getObject().getClassCourse() != null) {
-                item.setHasStudentData((c.getObject().getClassCourse().getViewState()!=ViewState.invisible));
+                item.setHasStudentData((coc.getObject().getClassCourse().getViewState()!=ViewState.invisible));
             } else {
                 item.setHasStudentData(false);
             }
