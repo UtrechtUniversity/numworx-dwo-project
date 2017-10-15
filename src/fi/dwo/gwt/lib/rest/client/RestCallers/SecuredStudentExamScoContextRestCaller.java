@@ -12,14 +12,14 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 
-public interface PublicScoContextRestCaller extends RestService, ScoContextRestCaller {
+public interface SecuredStudentExamScoContextRestCaller extends RestService, ScoContextRestCaller {
 
 	@PUT
-    @Path("/public/scoContext/get")
+    @Path("/secure/student/exam/scoContext/get")
     public void get(RestScoContext restScoContext, MethodCallback<DomScoContext> callback);
 
 	@PUT
-	@Path("/public/scoContext/getScos")
+	@Path("/secure/student/exam/scoContext/getScos")
 	public void getScos(RestCourse restCourse, MethodCallback<List<DomScoContext>> callback);
-	
+
 }

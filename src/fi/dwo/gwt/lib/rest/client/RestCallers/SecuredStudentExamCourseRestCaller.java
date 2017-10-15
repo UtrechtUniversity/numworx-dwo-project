@@ -9,8 +9,8 @@ import org.fusesource.restygwt.client.RestService;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 
-public interface SecuredStudentCourseRestCaller extends RestService, CoursesOfSchoolRestCaller {
+public interface SecuredStudentExamCourseRestCaller extends RestService, CoursesOfSchoolRestCaller {
     @PUT
-    @Path("/secure/student/coursesofschoolclass/get")
+    @Path("/secure/student/exam/coursesofschoolclass/get")
     void getCoursesClass(RestSchoolClassAndProfile rest, MethodCallback<DomCoursesOfSchoolClass> callback);
 }

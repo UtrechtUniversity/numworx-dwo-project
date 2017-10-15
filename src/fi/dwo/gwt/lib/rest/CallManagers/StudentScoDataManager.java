@@ -5,6 +5,7 @@ import java.util.Map;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 
 import org.osgi.util.promise.Promise;
@@ -13,11 +14,11 @@ import com.google.gwt.json.client.JSONValue;
 
 public interface StudentScoDataManager {
 
-	public abstract Promise<Map<String, String>> getValues(DomScoContext sco,
+	public abstract Promise<Map<String, String>> getValues(DomScoContext sco, DomSchoolClassId schoolClassID, 
 			DomContext domContext, Collection<String> keys);
 
-	public abstract Promise<?> setValues(DomScoContext sco, DomContext domContext,
+	public abstract Promise<?> setValues(DomScoContext sco, DomSchoolClassId schoolClassID, DomContext domContext,
 			Map<String, String> map);
 
-	Promise<JSONValue> getJSONLaunchDataBytes(DomScoContext id, DomDwoProfile value, DomContext context);
+	Promise<JSONValue> getJSONLaunchDataBytes(DomScoContext id, DomDwoProfile value, DomSchoolClassId schoolClassID, DomContext context);
 }

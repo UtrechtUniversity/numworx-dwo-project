@@ -2,15 +2,14 @@ package fi.dwo.gwt.lib.rest.CallManagers;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
-import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScormValues;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
@@ -18,27 +17,42 @@ import nl.uu.fi.dwo.rest.entities.RestScormValues;
 
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
-
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.json.client.JSONValue;
 
+import fi.dwo.gwt.lib.rest.client.RestCallers.ScoDataRestCaller;
+import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentExamScoDataRestCaller;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentScoDataRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 
 public class SecuredStudentScoDataManager implements StudentScoDataManager {
 	
-	private SecuredStudentScoDataRestCaller service = GWT.create(SecuredStudentScoDataRestCaller.class);
+	private final ScoDataRestCaller service;
 
+	public SecuredStudentScoDataManager(ScoDataRestCaller caller) {
+		service = caller;
+	}
+	
+	public SecuredStudentScoDataManager() {
+		this(GWT.<ScoDataRestCaller>create(SecuredStudentScoDataRestCaller.class));
+	}
+	public SecuredStudentScoDataManager(boolean safe) {
+		this(safe 
+				? GWT.<ScoDataRestCaller>create(SecuredStudentExamScoDataRestCaller.class)
+				: GWT.<ScoDataRestCaller>create(SecuredStudentScoDataRestCaller.class));
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see fi.dwo.gwt.lib.rest.CallManagers.ScoDataManager#getValues(nl.uu.fi.dwo.rest.dom.entities.DomScoContext, nl.uu.fi.dwo.rest.dom.entities.DomHasRole, java.util.Collection)
 	 */
 	@Override
-	public Promise<Map<String,String>> getValues(DomScoContext sco, DomContext context, Collection<String> keys) {
+	public Promise<Map<String,String>> getValues(DomScoContext sco, DomSchoolClassId schoolClassID, DomContext context, Collection<String> keys) {
 		PromiseCallback<DomScormValues> defer = new PromiseCallback<DomScormValues>();
 		RestScormValues restScormValues = new RestScormValues();
 		restScormValues.setRestContext(context);
 		DomScormValues values = new DomScormValues();
+		values.setSchoolClassID(schoolClassID);
 		values.setScoContext(sco);
 		List<DomMapEntry<String, String>> list = new ArrayList<DomMapEntry<String,String>>(keys.size());
 		for(String key: keys) {
@@ -68,12 +82,13 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 	 * @see fi.dwo.gwt.lib.rest.CallManagers.ScoDataManager#setValues(nl.uu.fi.dwo.rest.dom.entities.DomScoContext, nl.uu.fi.dwo.rest.dom.entities.DomHasRole, java.util.Map)
 	 */
 	@Override
-	public Promise<?> setValues(DomScoContext sco, DomContext context, Map<String,String> map) {
+	public Promise<?> setValues(DomScoContext sco, DomSchoolClassId schoolClassID, DomContext context, Map<String,String> map) {
 		RestScormValues rest = new RestScormValues();
 		DomScormValues values = new DomScormValues();
 		rest.setDomScormValues(values);
 		rest.setRestContext(context);
 		values.setScoContext(sco);
+		values.setSchoolClassID(schoolClassID);
 		ArrayList<DomMapEntry<String,String>> list = new ArrayList<DomMapEntry<String,String>>(map.size());
 		for(Map.Entry<String, String> entry: map.entrySet()) {
 			list.add(new DomMapEntry<String,String>(entry));
@@ -86,11 +101,12 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 
 	@Override
 	public Promise<JSONValue> getJSONLaunchDataBytes(DomScoContext id,
-			DomDwoProfile value, DomContext context) {
+			DomDwoProfile value, DomSchoolClassId schoolClassID, DomContext context) {
 		PromiseCallback<JSONValue> defer = new PromiseCallback<JSONValue>();
 		RestScoContext rest = new RestScoContext();
 		rest.setDomDwoProfile(value);
 		rest.setDomScoContext(id);
+		rest.setSchoolClassID(schoolClassID);
 		rest.setRestContext(context);
 		service.getJSONLaunchDataBytes(rest, defer);
 		return defer.getPromise();

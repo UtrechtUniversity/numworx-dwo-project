@@ -6,6 +6,7 @@ import java.util.Map;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 
 import org.osgi.util.promise.Deferred;
@@ -25,7 +26,7 @@ import fi.dwo.gwt.lib.rest.GwtRestVars;
 public class PublicStudentScoDataManager implements StudentScoDataManager {
 
 	@Override
-	public Promise<Map<String, String>> getValues(DomScoContext sco,
+	public Promise<Map<String, String>> getValues(DomScoContext sco, DomSchoolClassId schoolClassID, 
 			DomContext context, Collection<String> keys) {
 		Map<String, String> map = new HashMap<String, String>();
 		for(String key: keys) {
@@ -35,14 +36,14 @@ public class PublicStudentScoDataManager implements StudentScoDataManager {
 	}
 
 	@Override
-	public Promise<?> setValues(DomScoContext sco, DomContext context,
+	public Promise<?> setValues(DomScoContext sco, DomSchoolClassId schoolClassID, DomContext context,
 			Map<String, String> map) {
 		return Promises.failed(new IllegalArgumentException());
 	}
 
 	@Override
 	public Promise<JSONValue> getJSONLaunchDataBytes(DomScoContext id,
-			DomDwoProfile value, DomContext context) {
+			DomDwoProfile value, DomSchoolClassId schoolClassID, DomContext context) {
 		final Deferred<JSONValue> defer = new Deferred<JSONValue>();
 		String scoID = id.getId().getIdString();
 		int komma = scoID.lastIndexOf(';'); // XXX ons kent ons

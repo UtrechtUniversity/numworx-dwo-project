@@ -4,7 +4,9 @@ import org.osgi.util.promise.Promise;
 
 import com.google.gwt.core.shared.GWT;
 
+import fi.dwo.gwt.lib.rest.client.RestCallers.CoursesOfSchoolRestCaller;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentCourseRestCaller;
+import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentExamCourseRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
@@ -14,11 +16,17 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 
 public class SecuredStudentCoursesOfSchoolClassManager implements CoursesOfSchoolClassManager {
 	
-	private SecuredStudentCourseRestCaller service;
+	private final CoursesOfSchoolRestCaller service;
 	
 	public SecuredStudentCoursesOfSchoolClassManager() {
 		service = GWT.create(SecuredStudentCourseRestCaller.class);
 	}
+	public SecuredStudentCoursesOfSchoolClassManager(boolean secure) {
+		service = secure
+				? GWT.<SecuredStudentExamCourseRestCaller>create(SecuredStudentExamCourseRestCaller.class)
+				: GWT.<SecuredStudentCourseRestCaller>create(SecuredStudentCourseRestCaller.class);			
+	}
+	
 
 	@Override
 	public Promise<DomCoursesOfSchoolClass> getCoursesClass(DomContext context, DomSchoolClass schoolClass, DomDwoProfile profile) {

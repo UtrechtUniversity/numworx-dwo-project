@@ -12,16 +12,16 @@ import org.fusesource.restygwt.client.RestService;
 
 import com.google.gwt.json.client.JSONValue;
 
-public interface SecuredStudentScoDataRestCaller extends RestService, ScoDataRestCaller {
+public interface SecuredStudentExamScoDataRestCaller extends RestService, ScoDataRestCaller {
 	@PUT
-    @Path("/secure/user/scoData/getValues")
+    @Path("/secure/student/exam/scoData/getValues")
     public void getValues(RestScormValues restScormValues, MethodCallback<DomScormValues> callback);
 
 	@PUT
-	@Path("/secure/user/scoData/setValues")
+	@Path("/secure/student/exam/scoData/setValues")
 	public void setValues(RestScormValues restScormValues, MethodCallback<Boolean> callback);
 
 	@PUT
-	@Path("secure/user/scoData/getJSONLaunchDataBytes")
+	@Path("secure/student/exam/scoData/getJSONLaunchDataBytes")
 	public void getJSONLaunchDataBytes(RestScoContext rest, MethodCallback<JSONValue> callback);
 }
