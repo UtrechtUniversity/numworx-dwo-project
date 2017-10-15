@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 
 /**
  * RestCourse contains a minimal DwoCourse info.
@@ -17,6 +18,7 @@ public class RestCourse {
 	private DomContext restContext;
 	private DomCourse domCourse;
 	private DomDwoProfile domDwoProfile; // context parameter
+	private DomSchoolClassId schoolClassID;
 	/**
 	 * @return the restContext
 	 */
@@ -52,5 +54,11 @@ public class RestCourse {
 	 */
 	public void setDomDwoProfile(DomDwoProfile domDwoProfile) {
 		this.domDwoProfile = domDwoProfile;
+	}
+	public DomSchoolClassId getSchoolClassID() {
+		return schoolClassID;
+	}
+	public void setSchoolClassID(DomSchoolClassId schoolClassID) {
+		this.schoolClassID = schoolClassID;
 	}
 }

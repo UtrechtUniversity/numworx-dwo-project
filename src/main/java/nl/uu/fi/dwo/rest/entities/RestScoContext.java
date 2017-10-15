@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 
 @XmlRootElement
@@ -11,6 +12,7 @@ public class RestScoContext {
 	private DomContext restContext;
 	private DomDwoProfile domDwoProfile;
 	private DomScoContext domScoContext;
+	private DomSchoolClassId schoolClassID;
 
 	public DomContext getRestContext() {
 		return restContext;
@@ -29,6 +31,18 @@ public class RestScoContext {
 	}
 	public void setDomScoContext(DomScoContext domScoContext) {
 		this.domScoContext = domScoContext;
+	}
+	/**
+	 * @return the schoolClassID
+	 */
+	public DomSchoolClassId getSchoolClassID() {
+		return schoolClassID;
+	}
+	/**
+	 * @param schoolClassID the schoolClassID to set
+	 */
+	public void setSchoolClassID(DomSchoolClassId schoolClassID) {
+		this.schoolClassID = schoolClassID;
 	}
 	
 }
