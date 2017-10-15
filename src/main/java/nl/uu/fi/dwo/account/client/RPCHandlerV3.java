@@ -54,9 +54,9 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	protected Promise<DomDwoProfileFull> profile;
 	
 	
-	public RPCHandlerV3(String server, int profile) {
+	public RPCHandlerV3(String server, int profile, boolean secure) {
 		super(server, profile);
-		
+		this.secure = secure;
 		scoManager = new PublicScoContextManager();
 		courseManager = new PublicCourseManager();
 		profileManager = new PublicProfileManager();
@@ -176,6 +176,11 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		return profile;
 	}
 
+	DomSchoolClass getSchoolClass() {
+		return DwoGlobalVars.instance().getCurrentSchoolClass();
+	}
+	
+	
 	@Override
 	public Promise<List<DomScoContext>> getScos(Object id) {
 		final DomCourse parent = toCourse(id);
@@ -184,7 +189,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			@Override
 			public Promise<List<DomScoContext>> call(
 					Promise<DomDwoProfile> resolved) throws Exception {
-				return scoManager.getScos(parent, resolved.getValue(), getContext());
+				return scoManager.getScos(parent, resolved.getValue(), getSchoolClass(), getContext());
 			}
 			});
 	}
@@ -201,7 +206,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			@Override
 			public Promise<DomScoContext> call(Promise<DomDwoProfile> resolved)
 					throws Exception {
-				return scoManager.getSco(dummy, resolved.getValue(), getContext());
+				return scoManager.getSco(dummy, resolved.getValue(), getSchoolClass(), getContext());
 			}
 			
 		});
@@ -215,7 +220,9 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	}
 
 	private DomContext context = new DomContext();
-
+	private boolean secure = false;
+	
+	
 	@Override
 	public Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins() {
 		return super.getSchoolLogins().then(new Success<DomSchoolsRolesAndClassesV2, DomSchoolsRolesAndClassesV2>() {
@@ -226,11 +233,11 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 				
 				DomHasRole hasRole = resolved.getValue().getActiveSchoolRoleAndClass().getHasRole();
 				context.setDomHasRole(hasRole);
-				scoManager = new SecuredUserScoContextManager();
+				scoManager = new SecuredUserScoContextManager(secure);
 				courseManager = new SecuredUserCourseManager();
-				studentManager = new SecuredStudentCoursesOfSchoolClassManager();
+				studentManager = new SecuredStudentCoursesOfSchoolClassManager(secure);
 				resultManager = new SecuredUserResultsManager();
-				scormApi = new SecuredStudentScoDataManager();
+				scormApi = new SecuredStudentScoDataManager(secure);
 				return resolved;
 			}
 		});
@@ -265,13 +272,13 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	public Promise<Map<String, String>> getValues(Object scoID,
 			Collection<String> keys) {
 		DomScoContext sco = toScoContext(scoID);
-		return scormApi.getValues(sco, getContext(), keys);
+		return scormApi.getValues(sco, getSchoolClass(), getContext(), keys);
 	}
 
 	@Override
 	public Promise<?> setValues(Object scoID, Map<String, String> values) {
 		DomScoContext sco = toScoContext(scoID);
-		return scormApi.setValues(sco, getContext(), values);
+		return scormApi.setValues(sco, getSchoolClass(), getContext(), values);
 	}
 
 	@Override
@@ -283,7 +290,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			@Override
 			public Promise<JSONValue> apply(DomDwoProfile resolved)
 		    {
-				return scormApi.getJSONLaunchDataBytes(id, resolved, getContext());
+				return scormApi.getJSONLaunchDataBytes(id, resolved, getSchoolClass(), getContext());
 			}
 			
 		};
