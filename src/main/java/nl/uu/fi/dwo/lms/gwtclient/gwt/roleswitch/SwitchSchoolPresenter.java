@@ -103,7 +103,7 @@ public class SwitchSchoolPresenter {
         DomSchoolRoleAndClassV2 srac = dwoGlobalVars.getActiveSchoolRoleAndClass();
         dwoGlobalVars.getSchoolLogins().setActiveSchoolRoleAndClass(srac);
         manager.switchToSchoolLogin(srac);
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
     }
 
 }
