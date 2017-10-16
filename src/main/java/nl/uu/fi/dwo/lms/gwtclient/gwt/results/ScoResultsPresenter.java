@@ -44,6 +44,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
@@ -215,7 +216,7 @@ public class ScoResultsPresenter {
         context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
         DomDwoProfile profile = dwoGlobalVars.getProfile().getValue();
         aantalOpdrachten = null;
-        launchData = manager.getJSONLaunchDataBytes(scoContext.getScoContext(), profile, context).map(new Function<JSONValue, String>() {
+        launchData = manager.getJSONLaunchDataBytes(scoContext.getScoContext(), profile, aSchoolClass, context).map(new Function<JSONValue, String>() {
 
             @Override
             public String apply(JSONValue t) {
