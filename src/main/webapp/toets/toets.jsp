@@ -20,6 +20,7 @@
     <meta name="gwt:property" content="locale=nl" >
     <script>
     	DWO_PROFILE_ID = 77
+    	SECURE_MODE="SEB" // possibly others
     </script>
     <title>Save Exam Browser</title>
     
