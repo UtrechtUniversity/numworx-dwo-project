@@ -345,7 +345,7 @@
 	<key>proxySettingsPolicy</key>
 	<integer>0</integer>
 	<key>quitURL</key>
-	<string>https://test.dwo.nl/toets/logout.html</string>
+	<string>https://app.dwo.nl/toets/logout.html</string>
 	<key>removeBrowserProfile</key>
 	<true/>
 	<key>removeLocalStorage</key>
@@ -383,7 +383,7 @@
 	<key>showTime</key>
 	<true/>
 	<key>startURL</key>
-    <string>http://localhost:8080/toets/toets.jsp</string>
+    <string>https://app.dwo.nl/toets/toets.jsp</string>
 	<key>taskBarHeight</key>
 	<integer>40</integer>
 	<key>touchOptimized</key>

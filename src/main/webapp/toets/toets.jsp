@@ -5,7 +5,14 @@
 <!-- browser's rendering engine into                -->
 <!-- "Standards Mode". Replacing this declaration   -->
 <!-- with a "Quirks Mode" doctype is not supported. -->
-
+<%
+	String requestHash = request.getHeader("X-SafeExamBrowser-RequestHash");
+	if(requestHash == null)
+	{
+		response.sendError(HttpServletResponse.SC_NOT_FOUND);
+		return;
+	}
+%>
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -25,7 +32,7 @@
   <body id="main">
     <pre>
     	requestURL <%= request.getRequestURI() %>
-    	HASH <%= request.getHeader("X-SafeExamBrowser-RequestHash") %>
+    	HASH <%= requestHash %>
     </pre>
 
     <!-- OPTIONAL: include this if you want history support -->
