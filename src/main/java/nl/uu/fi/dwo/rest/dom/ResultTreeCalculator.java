@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -38,6 +39,14 @@ public class ResultTreeCalculator {
         }
         resultScore.setScore(score / cnt);
     }
+    
+    private static boolean isVisibleForTeacher(ViewState state){
+        if(state == ViewState.studentsAndTeachers || state == ViewState.teachers){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     /**
      * Score per school class per leaf course. Every sco that has no work has
@@ -53,7 +62,7 @@ public class ResultTreeCalculator {
         DomResultSchoolClass[] classes;// = new DomResultSchoolClass[tree.getResultTree().getChildren().size()];
         classes = tree.getResultTree().getChildren().values().toArray(new DomResultSchoolClass[0]);
 
-        //crawl and collect course leaves.
+        //crawl and collect course leaves not invisible
         Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
         tree.getResultTree().collectCourseLeaves(courseLeaves);
         DomResultCourse[] courses;

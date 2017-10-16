@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.util.HashMap;
 import java.util.Map;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -108,6 +109,10 @@ public abstract class DomResultScore<T extends DomResultScore> {
         this.studentScoCount = studentScoCount;
     }
 
+    private boolean isVisibleForTeachers(ViewState state) {
+        return (state == ViewState.studentsAndTeachers || state == ViewState.teachers);
+    }
+
     public void collectActivities(Map<PersistenceId, DomResultScoContext> activities) {
         if (this.children.isEmpty()) {
             return;
@@ -121,7 +126,9 @@ public abstract class DomResultScore<T extends DomResultScore> {
             return;
         }
         for (DomResultScore s : this.getChildren().values()) {
-            s.collectActivities(activities);
+            if (!(s instanceof DomResultCourse) || ((s instanceof DomResultCourse) && isVisibleForTeachers(((DomResultCourse) s).getViewState()))) {
+                s.collectActivities(activities);
+            }
         }
     }
 
@@ -136,7 +143,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
             return;
         }
         //deepest level, most objects, no recursion
-        if (this instanceof DomResultCourse) {
+        if (this instanceof DomResultCourse && isVisibleForTeachers(((DomResultCourse) this).getViewState())) {
             DomResultCourse course = (DomResultCourse) this;
             if (!course.getCourse().getWithChildren()) {
                 courseLeaves.put(((DomResultCourse) this).getCourse().getId(), (DomResultCourse) this);
@@ -144,7 +151,9 @@ public abstract class DomResultScore<T extends DomResultScore> {
             return;
         }
         for (DomResultScore s : this.getChildren().values()) {
-            s.collectCourseLeaves(courseLeaves);
+            if (!(s instanceof DomResultCourse) || ((s instanceof DomResultCourse) && isVisibleForTeachers(((DomResultCourse) s).getViewState()))) {
+                s.collectCourseLeaves(courseLeaves);
+            }
         }
     }
 
@@ -159,7 +168,9 @@ public abstract class DomResultScore<T extends DomResultScore> {
             return;
         }
         for (DomResultScore s : this.getChildren().values()) {
-            s.collectCourseLeaves(courseLeaves);
+            if (!(s instanceof DomResultCourse) || ((s instanceof DomResultCourse) && isVisibleForTeachers(((DomResultCourse) s).getViewState()))) {
+                s.collectCourseLeaves(courseLeaves);
+            }
         }
     }
 
@@ -172,7 +183,12 @@ public abstract class DomResultScore<T extends DomResultScore> {
      */
     public void calculateSumOfSubtreeScore() {
         //verified code.
-
+        if (this instanceof DomResultCourse && !isVisibleForTeachers(((DomResultCourse) this).getViewState())) {
+            this.setScore(0.0);
+            this.setScoCount(0);
+            this.setStudentScoCount(0.0);
+            return;
+        }
         //deepest level, most objects, no recursion
         if (this instanceof DomResultStudentScoContext) {
             DomResultStudentScoContext ss = (DomResultStudentScoContext) this;
@@ -195,7 +211,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
         }
 
         //case course leave set scoCount
-        if (this instanceof DomResultCourse) {
+        if (this instanceof DomResultCourse && isVisibleForTeachers(((DomResultCourse) this).getViewState())) {
             DomResultCourse course = (DomResultCourse) this;
             this.setScore(0.0);
             this.setScoCount(0.0);
@@ -229,11 +245,13 @@ public abstract class DomResultScore<T extends DomResultScore> {
         this.setScoCount(0.0);
         this.setStudentScoCount(0.0);
         for (DomResultScore s : this.getChildren().values()) {
-            s.calculateSumOfSubtreeScore();
-            //add score from children and set cnt
-            this.setScore(this.getScore() + s.getScore());
-            this.setScoCount(this.getScoCount() + s.getScoCount());
-            this.setStudentScoCount(this.getStudentScoCount() + s.getStudentScoCount());
+            if (!(s instanceof DomResultCourse) || ((s instanceof DomResultCourse) && isVisibleForTeachers(((DomResultCourse) s).getViewState()))) {
+                s.calculateSumOfSubtreeScore();
+                //add score from children and set cnt
+                this.setScore(this.getScore() + s.getScore());
+                this.setScoCount(this.getScoCount() + s.getScoCount());
+                this.setStudentScoCount(this.getStudentScoCount() + s.getStudentScoCount());
+            }
         }
     }
 
@@ -273,7 +291,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
         }
 
         //case course leave set scoCount
-        if (this instanceof DomResultCourse) {
+        if (this instanceof DomResultCourse && isVisibleForTeachers(((DomResultCourse) this).getViewState())) {
             DomResultCourse course = (DomResultCourse) this;
             this.setScore(0.0);
             this.setScoCount(0.0);
@@ -308,17 +326,19 @@ public abstract class DomResultScore<T extends DomResultScore> {
         this.setScoCount(0.0);
         this.setStudentScoCount(0.0);
         for (DomResultScore s : this.getChildren().values()) {
-            s.calculateSumOfSubtreeScore(studentsInClass);
-            //add score from children and set cnt
-            this.setScore(this.getScore() + s.getScore());
-            this.setScoCount(this.getScoCount() + s.getScoCount());
-            this.setStudentScoCount(this.getStudentScoCount() + s.getStudentScoCount());
+            if (!(s instanceof DomResultCourse) || ((s instanceof DomResultCourse) && isVisibleForTeachers(((DomResultCourse) s).getViewState()))) {
+                s.calculateSumOfSubtreeScore(studentsInClass);
+                //add score from children and set cnt
+                this.setScore(this.getScore() + s.getScore());
+                this.setScoCount(this.getScoCount() + s.getScoCount());
+                this.setStudentScoCount(this.getStudentScoCount() + s.getStudentScoCount());
+            }
         }
         this.setScore(this.getScore() / this.getChildren().size());
     }
 
     /**
-     *
+     * Flat mapping of scores per course per schoolclass.
      *
      *
      * @param schoolClass
@@ -328,6 +348,12 @@ public abstract class DomResultScore<T extends DomResultScore> {
      */
     public void collectScoresPerCourseOverSchoolClass(DomResultSchoolClass schoolClass, int nStudents, Map<PersistenceId, DomResultCourse> courseLeaves, Map<PersistenceId, Map<PersistenceId, DomResultCourse>> sparseMatrix) {
         if (this.children.isEmpty()) {
+            return;
+        }
+        if (this instanceof DomResultCourse && !isVisibleForTeachers(((DomResultCourse) this).getViewState())) {
+            this.setScore(0.0);
+            this.setScoCount(0);
+            this.setStudentScoCount(0.0);
             return;
         }
         if (this instanceof DomResultSchoolClass) {
@@ -344,7 +370,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
             return;
         }
         Object[] kids = this.getChildren().values().toArray();
-        if (kids[0] instanceof DomResultScoContext) {
+        if (kids[0] instanceof DomResultScoContext && isVisibleForTeachers(((DomResultCourse) this).getViewState())) {
             //add course to horizontal header
             courseLeaves.put(((DomResultCourse) this).getCourse().getId(), (DomResultCourse) this);
             //add course score to sparse matrix
@@ -358,11 +384,14 @@ public abstract class DomResultScore<T extends DomResultScore> {
             this.setScoCount(0.0);
             this.setStudentScoCount(0.0);
             for (DomResultScore s : this.getChildren().values()) {
-                s.collectScoresPerCourseOverSchoolClass(schoolClass, nStudents, courseLeaves, sparseMatrix);
-                this.setScore(this.getScore() + s.getScore());
-                this.setScoCount(this.getScoCount() + s.getScoCount());
-                this.setStudentScoCount(this.getStudentScoCount() + s.getStudentScoCount());
+                if (!(s instanceof DomResultCourse) || ((s instanceof DomResultCourse) && isVisibleForTeachers(((DomResultCourse) s).getViewState()))) {
+                    s.collectScoresPerCourseOverSchoolClass(schoolClass, nStudents, courseLeaves, sparseMatrix);
+                    this.setScore(this.getScore() + s.getScore());
+                    this.setScoCount(this.getScoCount() + s.getScoCount());
+                    this.setStudentScoCount(this.getStudentScoCount() + s.getStudentScoCount());
+                }
             }
+
         }
     }
 
@@ -387,24 +416,23 @@ public abstract class DomResultScore<T extends DomResultScore> {
             return;
         } else {
             for (DomResultScore s : this.getChildren().values()) {
-                s.getStudentCollectedAverageSubtreeScore(studentScores);
+                if (!(s instanceof DomResultCourse) || ((s instanceof DomResultCourse) && isVisibleForTeachers(((DomResultCourse) s).getViewState()))) {
+                    s.getStudentCollectedAverageSubtreeScore(studentScores);
+                }
             }
-
         }
 
     }
-    
-    public DomResultSchoolClass getAncestralSchoolClass(){
-        if(this instanceof DomResultSchoolClass){
+
+    public DomResultSchoolClass getAncestralSchoolClass() {
+        if (this instanceof DomResultSchoolClass) {
             return (DomResultSchoolClass) this;
-        }else{
-            if(this.parent!=null){
-                return this.parent.getAncestralSchoolClass();                
-            }else{
-                return null;
-            }
+        } else if (this.parent != null) {
+            return this.parent.getAncestralSchoolClass();
+        } else {
+            return null;
         }
-        
+
     }
 
 }
