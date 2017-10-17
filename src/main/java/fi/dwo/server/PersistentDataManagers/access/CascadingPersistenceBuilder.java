@@ -556,7 +556,7 @@ public class CascadingPersistenceBuilder {
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + this.instance.context.user.getUsername() + ".");
             }
             //verify if course is in school
-            if ( (course.getSchoolID() != null && !course.getSchoolID().equals(instance.context.school.getSchoolID()))) {
+            if (course.getSchoolID() != null && !course.getSchoolID().equals(instance.context.school.getSchoolID())) {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{this.instance.context.user.getUsername(), instance.context.school.getSchoolID(), (course != null) ? course.getSchoolID() : "course==null"});
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + this.instance.context.user.getUsername() + ".");
             }
