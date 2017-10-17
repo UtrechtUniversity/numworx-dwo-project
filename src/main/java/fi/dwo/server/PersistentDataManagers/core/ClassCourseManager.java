@@ -279,7 +279,7 @@ public class ClassCourseManager {
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentClassCourse.findVisibleByClassID");
             q.setParameter("classID", c.getClassID());
-            q.setParameter("viewState", viewState.ordinal());
+            q.setParameter("viewState", viewState);
             List<PersistentClassCourse> list = q.getResultList();
             LOG.log(Level.FINE, "ClassCourse-manager retrieved {0} PersistentClassCourse with classid {1}", new Object[]{list.size(), c.getClassID()});
             return list;
