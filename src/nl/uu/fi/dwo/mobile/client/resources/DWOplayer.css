@@ -91,7 +91,7 @@ div.insert_formule {padding-right:5px; padding-left:5px;}
 
 .StubView_readonly {
 	pointer-events: none !important;
-	background-color: #EEEEEE;
+	background-color: rgba(0,0,0,0.125);
 }
 
 .textEditor_nowrap {
