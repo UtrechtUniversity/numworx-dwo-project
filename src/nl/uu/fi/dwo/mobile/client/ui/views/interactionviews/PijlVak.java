@@ -243,6 +243,14 @@ public class PijlVak extends LayoutPanel
 		zetMaat();
 	}
 	
+	/**
+	 * Voeg een editor toe.
+	 */
+	public void addEditor()
+	{
+		addNewEditor(this);
+	}
+	
 	public void setPijlVisible(boolean b)
 	{
 		if (!b && (operator.equals("implicatie") || operator.equals("")) && geefExpressieString().length() < 1)
