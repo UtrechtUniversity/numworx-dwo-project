@@ -5,6 +5,7 @@
 	<ui:with type="java.lang.String" field="build" />
 	<ui:with type="java.lang.String" field="back" />
 	<ui:with type="java.lang.String" field="pfx" />
+	<ui:with type="java.lang.String" field='for_students' />
 	<ui:style field='style' type='nl.uu.fi.dwo.mobile.client.ui.views.Login3ViewImpl.Login3ViewImplCSS'>
 	@def regular 400;
 	@def medium 500;
@@ -184,7 +185,7 @@
 		</g:HTML>
 		<g:HTML ui:field='logoPanel' styleName='{style.logotekst}'>
 			<img src='{pfx}images/numworx/logo-Numworx-wit-blauw3.svg' />
-			<p><ui:text from='{rb.for_students}'/></p>
+			<p><ui:text from='{for_students}'/></p>
 		</g:HTML>
 		<g:Frame ui:field='messagePanel' styleName='{style.messages}' />
 		<g:FlowPanel ui:field='loginPanel' styleName='{style.login}' addStyleNames='{style.loginError}'>

@@ -183,4 +183,9 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	public String getCDN() {
 		return getHost();
 	}
+
+	@Override
+	public SecureMode getSecureMode() {
+		return SecureMode.NORMAL;
+	}
 }

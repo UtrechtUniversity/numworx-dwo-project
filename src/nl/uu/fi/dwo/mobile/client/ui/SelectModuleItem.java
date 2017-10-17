@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 //import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
@@ -55,7 +56,7 @@ public class SelectModuleItem
 	private boolean showScore, fromSchool;
 	private int sequencenr;
 	private String image;
-	
+	private CourseType courseType = CourseType.normal;
 	private Type type = Type.ROOT;
 	private Promise<List<SelectModuleItem>> childrenAsync;
 	private Object parent;
@@ -66,7 +67,6 @@ public class SelectModuleItem
 		return notAfter;
 	}
 
-	//private CourseType toetsType;
 
 	public SelectModuleItem(Object id, String name, String file)
 	{
@@ -116,7 +116,7 @@ public class SelectModuleItem
 					SelectModuleItem parent = getParent();
 					this.notAfter = parent.notAfter;
 					this.notBefore = parent.notBefore;
-					//this.toetsType = parent.toetsType;
+					this.courseType = parent.courseType;
 				}
 			}
 			break;
@@ -181,6 +181,7 @@ public class SelectModuleItem
 			notAfter = domClassCourse.getNotAfter();
 			notBefore = domClassCourse.getNotBefore();
 			//toetsType = domClassCourse.getEnumType();
+			courseType = domClassCourse.getCourseType();
 		}
 		image = course.getImage();
 		if("".equals(image)) image = null;
@@ -246,6 +247,10 @@ public class SelectModuleItem
 		this.type = type;
 	}
 
+	public CourseType getCourseType() {
+		return courseType;
+	}
+	
 	/**
 	 * Niet async safe.
 	 * @return children

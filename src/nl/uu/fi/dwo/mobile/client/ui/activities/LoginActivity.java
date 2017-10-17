@@ -13,6 +13,7 @@ import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -193,7 +194,13 @@ public class LoginActivity extends MGWTAbstractActivity
 				//		user_id = "292832126";
 				//		org_id = "\"lti:385\"";
 				Promise<DomUserFullwLoginContext> promise;
-				if (user_id != null && org_id != null) {
+				if(logout && isSeb())
+				{
+					panel.setWidget(new Label());
+					logout();
+					return;
+				} 
+				if ((user_id != null && org_id != null)) {
 
 					if (logout) {
 						panel.setWidget(new Label());
@@ -260,6 +267,10 @@ public class LoginActivity extends MGWTAbstractActivity
 				}
 				Logger.getLogger("DWOplayer").log(Level.FINE, "Done with panel");
 				rearm(promise);
+			}
+
+			private boolean isSeb() {
+				return SecureMode.SEB == DWOplayer.PARAMETERS.getSecureMode();
 			}
 		}
 		);

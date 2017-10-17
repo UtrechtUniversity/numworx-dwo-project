@@ -68,4 +68,5 @@ public interface DWOplayerParameters {
 	String getCourseDescription();
 	Text   getTextBundle();
 	String getCDN();
+	SecureMode getSecureMode();
 }

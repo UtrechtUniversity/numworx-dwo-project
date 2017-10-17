@@ -47,4 +47,12 @@ public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstant
 		return "cdn.dwo.nl";
 	}
 
+	private SecureMode secureMode = SecureMode.NORMAL;
+	//{ secureMode = SecureMode.SEB; }
+	
+	@Override
+	public SecureMode getSecureMode() {
+		return secureMode;
+	}
+
 }

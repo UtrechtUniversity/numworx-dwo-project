@@ -5,6 +5,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import nl.uu.fi.dwo.mobile.BUILD;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 
 import com.google.gwt.core.client.GWT;
@@ -54,6 +55,7 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	@UiField Login3ViewImplCSS style;
 	@UiField(provided=true) String back;
 	@UiField(provided=true) String build;
+	@UiField(provided=true) String for_students;
 	
 	@UiField HTML logoPanel;
 	@UiField Widget loginPanel;
@@ -62,7 +64,7 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	@UiField Button loginBtn;
 	@UiField TextBox username;
 	@UiField PasswordTextBox password;
-	@UiField Text rb = Text.constants;
+	@UiField(provided=true) Text rb = Text.constants;
 	@UiField(provided=true) String pfx;
 
 	/**
@@ -80,9 +82,15 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 		back = URL.encodePathSegment(Window.Location.getHref());
 		build = "Version " + BUILD.version + "." + BUILD.buildNumber;
 		pfx = DWOplayer.PARAMETERS.getResource("");
+		for_students = rb.for_students();
+		if(kiosk)
+			for_students = //rb.kiosk_mode
+				"Beveiligde Toets Omgeving";
 
 		return uiBinder.createAndBindUi(this);
 	}
+	
+	private boolean kiosk = DWOplayer.PARAMETERS.getSecureMode() != SecureMode.NORMAL;
 	
 	public Login3ViewImpl() {
 		initWidget(createAndBindUi());
@@ -91,10 +99,19 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 		username.getElement().setAttribute("autocapitalize", "off");
 		password.getElement().setPropertyString("placeholder", rb.wachtwoord());
 		password.getElement().setAttribute("autocapitalize", "off");
-		password.getElement().setAttribute("autocomplete", "off");		
-		messagePanel.setUrl("//cdn.dwo.nl/resources/alert_"
+		password.getElement().setAttribute("autocomplete", "off");
+		
+		if(!kiosk)
+		{		
+			messagePanel.setUrl("//cdn.dwo.nl/resources/alert_"
 				+ Text.constants.language()
 				+ ".html");
+		} else {
+			messagePanel.removeFromParent();
+			linksPanel.removeFromParent();
+			allowGuest(false);
+		}
+		
 	}
 	
 	@Override
@@ -105,10 +122,10 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	public String getPassword() {
 		return password.getText();
 	}
-	boolean allow = true;
+	boolean allow = !kiosk;
 	@Override
 	public void allowGuest(boolean allow) {
-		this.allow = allow;
+		this.allow = allow && !kiosk;
 	}
 	@Override
 	public void setupModule() {
@@ -159,7 +176,7 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 		KeyUpHandler up;
 		@Override
 		public void fireEvent(GwtEvent<?> event) {
-			if(up != null)
+			if(up != null && !username.getText().isEmpty())
 				up.onKeyUp((KeyUpEvent) event);
 			
 		}
