@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
@@ -133,7 +133,7 @@ public class DomResultTree {
             //build the subtrees
             DomClassCourse4Teacher cc = resultData.getClassCourses().get(key);
             if (cc.getViewState() == ViewState.invisible || cc.getViewState() == ViewState.studentsAndTeachers || cc.getViewState() == ViewState.teachers) {
-                DomResultCourse resultCourse = new DomResultCourse(resultData.getCourses().get(cc.getCourseId()),cc.getViewState());
+                DomResultCourseInClass resultCourse = new DomResultCourseInClass(resultData.getCourses().get(cc.getCourseId()),cc.getViewState());
                 //attach to class
                 schoolClasses.get(cc.getClassId()).getChildren().put(cc.getCourseId(), resultCourse); //add course to parent
                 resultCourse.setParent(schoolClasses.get(cc.getClassId())); //add parent to course

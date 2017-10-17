@@ -3,7 +3,7 @@ package nl.uu.fi.dwo.rest.dom;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
@@ -63,10 +63,10 @@ public class ResultTreeCalculator {
         classes = tree.getResultTree().getChildren().values().toArray(new DomResultSchoolClass[0]);
 
         //crawl and collect course leaves not invisible
-        Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
+        Map<PersistenceId, DomResultCourseInClass> courseLeaves = new HashMap<PersistenceId, DomResultCourseInClass>();
         tree.getResultTree().collectCourseLeaves(courseLeaves);
-        DomResultCourse[] courses;
-        courses = courseLeaves.values().toArray(new DomResultCourse[0]);
+        DomResultCourseInClass[] courses;
+        courses = courseLeaves.values().toArray(new DomResultCourseInClass[0]);
 
         DomResultPlotMatrix result = new DomResultPlotMatrix(classes, courses);
         for (int i = 0; i < classes.length; i++) {
@@ -75,7 +75,7 @@ public class ResultTreeCalculator {
             resultClass.calculateSumOfSubtreeScore(tree.getStudentTree().getChildren().get(classes[i].getSchoolClass().getId()).getChildren().size());
             //assuming single threaded access to all variables.
             for (int j = 0; j < courses.length; j++) {
-                DomResultScore fieldScore = (DomResultCourse) resultClass.getChildren().get(courses[j].getCourse().getId());
+                DomResultScore fieldScore = (DomResultCourseInClass) resultClass.getChildren().get(courses[j].getCourse().getId());
                 result.setMarks(i, j, fieldScore);
             }
         }
@@ -98,7 +98,7 @@ public class ResultTreeCalculator {
         resultClass = tree.getResultTree().getChildren().get(resultClass.getSchoolClass().getId()); //ensure up-to-date just in case.
         DomResultPlotMatrix result = null;
         //collect leave courses in schoolClass
-        Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
+        Map<PersistenceId, DomResultCourseInClass> courseLeaves = new HashMap<PersistenceId, DomResultCourseInClass>();
         //collect courseLeaves in class
         resultClass.collectCourseLeaves(courseLeaves);
         DomResultScore[] courses;
@@ -140,7 +140,7 @@ public class ResultTreeCalculator {
      * @param resultClass
      * @return
      */
-    public static DomResultPlotMatrix GetScoreOfTeacherClassesByActivitiesOfCourse(DomResultTree tree, DomResultCourse resultCourse) {
+    public static DomResultPlotMatrix GetScoreOfTeacherClassesByActivitiesOfCourse(DomResultTree tree, DomResultCourseInClass resultCourse) {
         //collect classes
         DomResultSchoolClass[] classes;// = new DomResultSchoolClass[tree.getResultTree().getChildren().size()];
         classes = tree.getResultTree().getChildren().values().toArray(new DomResultSchoolClass[0]);
@@ -148,9 +148,9 @@ public class ResultTreeCalculator {
         Map<PersistenceId, DomResultScoContext> activityMap = new HashMap<PersistenceId, DomResultScoContext>();
         for (int i = 0; i < classes.length; i++) {
             //collect course leaves in class
-            Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
+            Map<PersistenceId, DomResultCourseInClass> courseLeaves = new HashMap<PersistenceId, DomResultCourseInClass>();
             classes[i].collectCourseLeaves(courseLeaves);
-            DomResultCourse aResultCourse = courseLeaves.get(resultCourse.getCourse().getId());
+            DomResultCourseInClass aResultCourse = courseLeaves.get(resultCourse.getCourse().getId());
             if (aResultCourse != null) {
                 //aResultCourse.collectActivities(activityMap);
                 activityMap = aResultCourse.getChildren();
@@ -162,9 +162,9 @@ public class ResultTreeCalculator {
         DomResultPlotMatrix result = new DomResultPlotMatrix(classes, activities);
         for (int i = 0; i < classes.length; i++) {
             //collect course leaves in class
-            Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
+            Map<PersistenceId, DomResultCourseInClass> courseLeaves = new HashMap<PersistenceId, DomResultCourseInClass>();
             classes[i].collectCourseLeaves(courseLeaves);
-            DomResultCourse aResultCourse = courseLeaves.get(resultCourse.getCourse().getId());
+            DomResultCourseInClass aResultCourse = courseLeaves.get(resultCourse.getCourse().getId());
 
             //calculate
             if (aResultCourse != null && tree.getStudentTree().getChildren() != null
@@ -205,7 +205,7 @@ public class ResultTreeCalculator {
      * @param resultClass
      * @return
      */
-    public static DomResultPlotMatrix GetScoreOfActivitiesOfCourseByStudentsInClass(DomResultTree tree, DomResultCourse resultCourse, DomResultSchoolClass resultClass) {
+    public static DomResultPlotMatrix GetScoreOfActivitiesOfCourseByStudentsInClass(DomResultTree tree, DomResultCourseInClass resultCourse, DomResultSchoolClass resultClass) {
         DomResultPlotMatrix result = null;
 
         DomResultSchoolClass studentClass;
@@ -220,9 +220,9 @@ public class ResultTreeCalculator {
         }
 
         //getCourseLeaves in class
-        Map<PersistenceId, DomResultCourse> courseLeaves = new HashMap<PersistenceId, DomResultCourse>();
+        Map<PersistenceId, DomResultCourseInClass> courseLeaves = new HashMap<PersistenceId, DomResultCourseInClass>();
         resultClass.collectCourseLeaves(courseLeaves);
-        DomResultCourse aResultCourse = courseLeaves.get(resultCourse.getCourse().getId());
+        DomResultCourseInClass aResultCourse = courseLeaves.get(resultCourse.getCourse().getId());
         //collect activities
         DomResultScoContext[] activities;
 

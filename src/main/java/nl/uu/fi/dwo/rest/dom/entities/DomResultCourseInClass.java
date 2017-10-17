@@ -7,11 +7,11 @@ import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
  * @author G.A.J. van der Plas  email: G.A.J.vanderPlas@uu.nl
  * @param <T>
  */
-public class DomResultCourse <T extends DomResultScore> extends DomResultScore<T> {
+public class DomResultCourseInClass <T extends DomResultScore> extends DomResultScore<T> {
     private DomCourse course;
     private ViewState viewState;
 
-    public DomResultCourse(DomCourse aCourse, ViewState aState){
+    public DomResultCourseInClass(DomCourse aCourse, ViewState aState){
         course = aCourse;
         viewState = aState;
         super.setLabel(course.getName());
