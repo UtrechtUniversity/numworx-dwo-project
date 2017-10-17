@@ -277,7 +277,7 @@ public class ClassCourseManager {
     public static List<PersistentClassCourse> findVisibleEntities(PersistentSchoolClass c, ViewState viewState) {
         EntityManager em = getEntityManager();
         try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentClassCourse.findByClassID");
+            javax.persistence.Query q = em.createNamedQuery("PersistentClassCourse.findVisibleByClassID");
             q.setParameter("classID", c.getClassID());
             q.setParameter("viewState", viewState.ordinal());
             List<PersistentClassCourse> list = q.getResultList();
