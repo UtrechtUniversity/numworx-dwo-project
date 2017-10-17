@@ -251,11 +251,13 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			if (scoresZichtbaar && (!(on.getMode() == OpdrNav.EINDTOETS) || on.scoresVisible()))// niet tonen in niet-verzegelde eindtoets
 			{
 				Label score = scoreNav.getTotaalScoreLabel();
-				score.getElement().getStyle().setFloat(Style.Float.LEFT);
-				sb.addLabel(score);
-				onp.removeFromParent();
-				// addKnop() voegt een widget toe 
-				sb.addKnop(onp, false);
+				if(score != null) { // Bij NOORDHOFF is deze null
+					score.getElement().getStyle().setFloat(Style.Float.LEFT);
+					sb.addLabel(score);
+					onp.removeFromParent();
+					// addKnop() voegt een widget toe 
+					sb.addKnop(onp, false);
+				}
 			}
 			
 			if (wrap != null && wrap.containsKey("itemOpnieuw"))
@@ -321,7 +323,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			{	final Deferred<Void> defer = new Deferred<Void>();
 				DWOplayer.clientfactory.addBarrier(defer.getPromise());
 				p();
-				Scheduler.get().scheduleDeferred(new ScheduledCommand()
+				OpdrNav.defer(new ScheduledCommand()
 				{
 
 					@Override
@@ -452,12 +454,17 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				// toon popup met scores
 				final PopupPanel panel = new PopupPanel(true);
 				panel.add(getScorePanel());
-				panel.setPopupPositionAndShow(new PositionCallback() {
-					
-					@Override
-					public void setPosition(int offsetWidth, int offsetHeight) {
-						panel.setPopupPosition(zelftoetsGeschiedenisKnop.getAbsoluteLeft(), 
-								zelftoetsGeschiedenisKnop.getAbsoluteTop() - offsetHeight);						
+				OpdrNav.defer( // defer want het vullen van het scorepanel is deferred
+				new ScheduledCommand() {
+					public void execute() {
+						panel.setPopupPositionAndShow(new PositionCallback() {
+
+							@Override
+							public void setPosition(int offsetWidth, int offsetHeight) {
+								panel.setPopupPosition(zelftoetsGeschiedenisKnop.getAbsoluteLeft(),
+										zelftoetsGeschiedenisKnop.getAbsoluteTop() - offsetHeight);
+							}
+						});
 					}
 				});
 
