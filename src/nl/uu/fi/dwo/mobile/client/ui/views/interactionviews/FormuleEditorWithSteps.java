@@ -139,6 +139,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	private FormuleButton ontbindKnop, splitsKnop, wortelBewerkKnop;
 	private boolean abcVisible, subVisible, subExtra;
 	private boolean bewerkingKnoppen, bewerkingKnoppenExtra;
+	/**
+	 * Geeft aan in welke stap de formule-editor met stappen zit.
+	 * Begint bij 0, dus als de gebruiker op de eerste regel werkt,
+	 * is stapNr 0.
+	 */
 	private int stapNr = 0;
 	protected HashMap<String, Object> h = null;
 	protected static String[] randomVarNamen = null;
@@ -155,6 +160,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	 * t.b.v. weghalen en zetten pijlvakken bij nakijken zelftoets. 
 	 */
 	private List<String> pijlVakOperatorenArray = new ArrayList<>();
+	private boolean openstaandePijl = false;
 	
 	private ArrayList<Image> imagesStappen = new ArrayList<Image>();
 	protected Image checkimg;
@@ -878,6 +884,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 
 	public void copyStep()
 	{
+		if (nagekeken)
+			isVeranderdNaNakijken = true;
+
 		if (correct != Boolean.TRUE || isToets()) // FIXME copystep in mode 2 of 3
 		{
 			String currentTekst = "";
@@ -891,6 +900,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			if (stapNr > 0)
 			{
 				editor.getMainRegel().deleteAll();
+				if (linOefenVersie && !pijlVak.geefExpressieString().equals("")) // voor strategie-oefenversie met een pijl met een bewerking is niet duidelijk of de stap goed is
+					editor.resetimg();
 				currentTekst = viewers.get(stapNr - 1).toString();
 				if (hasPrefix)
 					currentTekst = removePrefix(currentTekst);
@@ -964,6 +975,13 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{
 		nagekeken = false;
 		correct = Boolean.FALSE;
+		
+		if (stapNr > stepPanels.size() - 1)
+		{
+			// hier is iets mis; in linoefenversie een pijl teveel en een niet-editable lege editor
+			stapNr--;
+		}
+		
 		LayoutPanel current = stepPanels.get(stapNr);
 		//deze wordt null als je in een pijlvak zit. 
 		
@@ -1576,7 +1594,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable) return;
+				if(!editable)
+					return;
 				maakStap("+");
 			}
 		});
@@ -1587,7 +1606,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable) return;
+				if(!editable)
+					return;
 				maakStap("-");
 			}
 		});
@@ -1598,7 +1618,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable) return;
+				if(!editable)
+					return;
 				maakStap("*");
 			}
 		});
@@ -1609,7 +1630,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable) return;
+				if(!editable)
+					return;
 				maakStap(":");
 			}
 		});
@@ -1620,7 +1642,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	
-				if(!editable) return;
+				if(!editable)
+					return;
 				maakStap("haakjes");
 				maakBewerkingStap();
 			}
@@ -1632,7 +1655,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable) return;
+				if(!editable)
+					return;
 				maakStap("herleid");
 				maakBewerkingStap();
 			}
@@ -1644,7 +1668,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	
-				if(!editable) return;
+				if(!editable)
+					return;
 				maakStap("ontbind");
 				maakBewerkingStap();
 			}
@@ -1652,11 +1677,14 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	}
 	
 	private void addSplitsButtonHandler(final TouchButton tb)
-	{	tb.addTouchStartHandler(new TouchStartHandler()
-		{	@Override
+	{
+		tb.addTouchStartHandler(new TouchStartHandler()
+		{	
+			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable) return;
+				if(!editable)
+					return;
 				maakStap("splits");
 				maakBewerkingStap();
 			}
@@ -1664,11 +1692,13 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	}
 	
 	private void addWortelButtonHandler(final TouchButton tb)
-	{	tb.addTouchStartHandler(new TouchStartHandler()
+	{
+		tb.addTouchStartHandler(new TouchStartHandler()
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable) return;
+				if(!editable)
+					return;
 				maakStap("wortel");
 				maakBewerkingStap();
 			}
@@ -1703,7 +1733,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable) return;
+				if(!editable)
+					return;
 				copyStep();
 			}
 		});
@@ -1899,10 +1930,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				formuleVakInhouden[i] = "$f@";
 			}
 		}
-		
-		pijlVakInhouden = new String[stapNr];
-		pijlVakOperatoren = new String[stapNr];
-		for (int i = 0; i < stapNr && pijlVakken.size() > i; i++) 
+	
+		pijlVakInhouden = new String[pijlVakken.size()]; // als een pijlvak is toegevoegd, maar nog niet is ingevuld, dan is stapNr nog niet bijgewerkt
+		pijlVakOperatoren = new String[pijlVakken.size()];
+		for (int i = 0; i < pijlVakken.size(); i++) 
 		{
 			pijlVakInhouden[i] = pijlVakken.get(i).geefExpressieString();
 			pijlVakOperatoren[i] = pijlVakken.get(i).geefOperator();
@@ -2029,7 +2060,15 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			// workaroud... FIXME Waarom is de laatste formuleVakInhouden null (strategiemodus)?
 			if (formuleVakInhouden[formuleVakInhouden.length - 1] == null)
 			{
-				formuleVakInhouden = partArray(formuleVakInhouden, formuleVakInhouden.length - 1);
+				int size = formuleVakInhouden.length - 1;
+				if ((formuleVakInhouden.length >= 2) && (formuleVakInhouden[formuleVakInhouden.length - 2] == null)) // twee nulls op het eind is foute boel
+				{
+					size = formuleVakInhouden.length - 2;
+					// moet stapNr een verlaagd worden?
+					stapNr = size;
+				}
+				
+				formuleVakInhouden = partArray(formuleVakInhouden, size); // laatste null(s) weghalen
 			}
 			
 			for (int i = 0; i < formuleVakInhouden.length; i++) 
@@ -2070,7 +2109,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		this.isVeranderdNaNakijken = isVeranderdNaNakijken;
 		this.errorCount = errorCount;
 		this.eigenOpdr = eigenOpdr;
-		if(gebruikersSubstitutiesVak != null)
+		if (gebruikersSubstitutiesVak != null)
 			gebruikersSubstitutiesVak.zetRegels(gebruikersSubStrings);
 		
 		if (!substitutieString.equals(""))
@@ -2086,11 +2125,18 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			{	
 				if (i < stapNr)
 				{	
-					if(linStrategieVersie || linOefenVersie || bordjesMethode || !(pijlVakOperatoren[i] == null || pijlVakOperatoren[i].equals("")))
+					if (linStrategieVersie || linOefenVersie || bordjesMethode || !(pijlVakOperatoren[i] == null || pijlVakOperatoren[i].equals("")))
 					{	
-						zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2);
+						zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2, true);
 					}
 					i++; // sla de eerste over
+				}
+				else if ((linStrategieVersie || linOefenVersie) && (pijlVakOperatoren.length == viewers.size())) // er staat nog een laatste in te vullen pijl
+				{
+					openstaandePijl = true;
+					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2, false);
+					pijlVak.getEditor().requestFocus();
+					scrollToBottom();
 				}
 				else //in dit geval is stapNr 0. 
 				{	
@@ -2169,7 +2215,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
 				
 				if (i < stapNr)
-					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + hoogteStepPanelMetEditor()/2);
+					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + hoogteStepPanelMetEditor()/2, true);
 			}
 			else
 			{
@@ -2179,7 +2225,14 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, fv.getHeightWithImage(), Style.Unit.PX);
 				
 				if (i < stapNr)
-					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + fv.getHeightWithImage()/2);
+					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + fv.getHeightWithImage()/2, true);
+				else if ((linStrategieVersie || linOefenVersie) && (i == stapNr) && (pijlVakOperatoren.length == viewers.size())) // er staat nog een laatste in te vullen pijl
+				{
+					openstaandePijl = true;
+					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + fv.getHeightWithImage()/2, false);
+					pijlVak.getEditor().requestFocus();
+					scrollToBottom();
+				}
 					
 				if (bordjesMethode)
 				{	
@@ -2235,7 +2288,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				}
 				else if (i == stapNr && editor != null)
 				{
-					if (editor.toString().equals("") && (i > 1 || (!hasStartString && i > 0)))
+					if (editor.toString().equals("") && (i > 1 || (!hasStartString && i > 0)) && !linOefenVersie) // voor strategieoefenversie kun je eindigen met een lege editor die je nog moet invullen
 					{
 						//stap terug doen en die nakijken, zodat de feedback goed kan worden bepaald. Alleen nodig bij oefenmodi.
 						stepPanel.remove(editor);
@@ -2270,11 +2323,11 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 						editor.kijkNa(true);
 					}
 				}
-				else if (i == stapNr && (linOefenVersie))
+				else if (i == stapNr && ((i > 0) || !hasStartString) && (linOefenVersie))
 				{
 					fv.showResult(FormuleViewer.ALMOSTCORRECT);
 				}
-				else if (i == stapNr && !linStrategieVersie)
+				else if (i == stapNr && ((i > 0) || !hasStartString) && !linStrategieVersie)
 				{
 					//nu: editor = null. 
 					viewers.remove(fv);
@@ -2284,7 +2337,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					editor.kijkNa(true);
 					//maakNakijkenAf(false);
 				}
-				else if (i == stapNr - 1 && !nagekeken && !linStrategieVersie && !substitutieVak && !isBordjesMethode()) // waar is dit voor? ook niet voor bordjesmethode!
+				else if (i == stapNr - 1 && !nagekeken && !linStrategieVersie && !linOefenVersie && !substitutieVak && !isBordjesMethode()) // waar is dit voor? ook niet voor bordjesmethode! Ook niet voor strategie-oefenversie
 					fv.showResult(FormuleViewer.ALMOSTCORRECT);
 				else
 					fv.showResult(FormuleViewer.NONE);
@@ -2597,8 +2650,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	 * @param pijlVakInhouden
 	 * @param i
 	 * @param h
+	 * @param setState Als setState true wordt een niet-editable pijl neergezet, als false dan een editable pijl
 	 */
-	public void zetPijlVakNeer(String[] pijlVakOperatoren, String[] pijlVakInhouden, int i, int h)
+	public void zetPijlVakNeer(String[] pijlVakOperatoren, String[] pijlVakInhouden, int i, int h, boolean setState)
 	{
 		if (pijlVakken.size() > i && pijlVakken.get(i) != null)
 		{
@@ -2610,7 +2664,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		if (pijlVakOperatoren != null && pijlVakOperatoren.length > i && pijlVakOperatoren[i] != null)
 		{
-			pijlVak = new PijlVak(pijlVakOperatoren[i], this, true);
+			pijlVak = new PijlVak(pijlVakOperatoren[i], this, setState);
 			pijlVak.setFont(font);
 			pijlVak.paintComponent();
 		}
@@ -3037,6 +3091,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			vergNieuw = verg.bewerkVergelijking(op, en);
 
 		VergelijkingMeerv vergAntwoord = FormuleParser.parseVergelijking("$f" + editor.toString() + "@");
+		if (vergAntwoord == null)
+			return false;
+		
 		if (op.equals("sub"))
 		{
 			if (isVergelijkingVak)
@@ -3164,6 +3221,21 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	private void maakStap(String operator)
 	{
 		nagekeken = false;
+		
+		// bij een lege editor update je de operator van de vorige pijl
+		if (editor != null && editor.toString().equals(""))
+		{
+			// werk de administratie bij
+			
+			if ((pijlVakOperatorenArray.size() > 0) && (pijlVakOperatorenArray.size() == pijlVakken.size())) 
+				// als pijlVakOperatorenArray.size kleiner dan aantal pijlvakken, dan moet hij gewoon toegevoegd worden en niet overschreven
+			{
+				openstaandePijl = true;
+				setPijlVakOperatoren(pijlVakOperatorenArray.size() - 1, operator);
+				setPijlVakInhouden(pijlVakInhoudenArray.size() - 1, "");
+			}
+		}
+		
 		if (stapNr == 0 && editor != null && editor.toString().equals("")) 
 			return;
 		if (!isStapOk() && editor != null && !editor.toString().equals(""))
@@ -3420,6 +3492,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		Expressie en = FormuleParser.geefExpressie("$f" + expressie + "@");
 		VergelijkingMeerv verg = FormuleParser.parseVergelijking("$f" + latest_answer_viewer.toString() + "@");
 		VergelijkingMeerv vergNieuw = null;
+		
+		if (verg == null) // iets is misgegaan
+			return;
 
 		if (linOefenVersie || linStrategieVersie)
 		{
@@ -3436,9 +3511,18 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			}
 			if (vergNieuw == null)
 				vergNieuw = verg.bewerkVergelijking(operator, en);
-			
-			addPijlVakOperatoren(operator);
-			addPijlVakInhouden(expressie);
+
+			if (!openstaandePijl)
+			{
+				addPijlVakOperatoren(operator);
+				addPijlVakInhouden(expressie);
+			}
+			else
+			{
+				openstaandePijl = false;
+				setPijlVakOperatoren(pijlVakOperatorenArray.size() - 1, operator);
+				setPijlVakInhouden(pijlVakInhoudenArray.size() - 1, expressie);
+			}
 		}
 		else
 			vergNieuw = verg.bewerkVergelijking(operator, en);
@@ -4035,5 +4119,27 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	private void addPijlVakOperatoren(String operator)
 	{
 		pijlVakOperatorenArray.add(operator);
+	}
+
+	/**
+	 * Zet de gegeven string op plek index in de array pijlVakInhouden.
+	 * 
+	 * @param index
+	 * @param s
+	 */
+	public void setPijlVakInhouden(int index, String s)
+	{
+		pijlVakInhoudenArray.set(index, s);
+	}
+	
+	/**
+	 * Zet de gegeven operator op plek index in de array pijlVakOperatoren.
+	 * 
+	 * @param index
+	 * @param operator
+	 */
+	private void setPijlVakOperatoren(int index, String operator)
+	{
+		pijlVakOperatorenArray.set(index, operator);
 	}
 }
