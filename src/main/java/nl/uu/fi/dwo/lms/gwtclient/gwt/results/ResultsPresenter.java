@@ -12,7 +12,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
@@ -40,7 +40,7 @@ public class ResultsPresenter {
     //model
     private DomResultTree resultTree;
     private DomResultPlotMatrix resultMatrix;
-    private DomResultCourse course = null; //null means all courses.
+    private DomResultCourseInClass course = null; //null means all courses.
     private DomResultSchoolClass schoolClass = null; //null means all classes.
 
     public interface Display {
@@ -192,7 +192,7 @@ public class ResultsPresenter {
                 break;
             default:
                 if (course == null) {
-                    course = (DomResultCourse) resultMatrix.gethIndex(col - 1);
+                    course = (DomResultCourseInClass) resultMatrix.gethIndex(col - 1);
                 } else {
                     course = null;
                 }
@@ -226,7 +226,7 @@ public class ResultsPresenter {
             return;
 //        }else{
 //        //if(col!=0 && select schoolclass and course
-//            course = (DomResultCourse) resultMatrix.gethIndex(col - 1);
+//            course = (DomResultCourseInClass) resultMatrix.gethIndex(col - 1);
 //            schoolClass = (DomResultSchoolClass) resultMatrix.getvIndex(row);
         }
         resultMatrix = calculateResults(course, schoolClass);
@@ -286,7 +286,7 @@ public class ResultsPresenter {
         return resultMatrix;
     }
 
-    private DomResultPlotMatrix calculateResults(DomResultCourse aCourse, DomResultSchoolClass aClass) {
+    private DomResultPlotMatrix calculateResults(DomResultCourseInClass aCourse, DomResultSchoolClass aClass) {
         DomResultPlotMatrix result = null;
         if (resultTree != null) {
             if (aCourse == null && aClass == null) {
