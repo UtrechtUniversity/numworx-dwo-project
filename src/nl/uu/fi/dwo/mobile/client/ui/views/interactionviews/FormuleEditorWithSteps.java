@@ -1034,7 +1034,14 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			}
 			
 			if (stapNr > 1 || (stapNr > 0 && !hasStartString))
-			{	
+			{
+				if (viewers.size() == 0)
+				{
+					// something went wrong!
+					stapNr--;
+					return;
+				}
+				
 				String currentTekst = viewers.get(viewers.size() - 1).toString();
 				if (hasPrefix)
 				{	
@@ -1976,6 +1983,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		h.put("substitutieString", substitutieString);
 		h.put("gebruikersSubStrings", gebruikersSubStrings);
 		h.put("eigenOpdr", eigenOpdr);
+		h.put("stapOk", stapOk);
 		
 		if (dwologger!= null) 
 		{
@@ -2030,6 +2038,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	private void setState0(Map<String, Object>h) 
 	{
 		int stapNr = 0;
+		boolean stapOk = true;
 		String[] formuleVakInhouden = null;
 		String[] pijlVakInhouden = null;
 		String[] pijlVakOperatoren = null;
@@ -2045,6 +2054,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		PopupFacade.showReview(h, this);
 		if (h.get("stapNr") != null)
 			stapNr = ((Number) h.get("stapNr")).intValue();
+		if (h.get("stapOk") != null)
+			stapOk = (Boolean) h.get("stapOk");
 		if (h.get("ingevuld") != null)
 			ingevuld = (Boolean) h.get("ingevuld");
 		if (h.get("nagekeken") != null)
@@ -2104,6 +2115,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 
 
 		this.stapNr = stapNr;
+		this.stapOk = stapOk;
 		this.ingevuld = ingevuld;
 		this.nagekeken = nagekeken;
 		this.isVeranderdNaNakijken = isVeranderdNaNakijken;
@@ -2351,9 +2363,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					score = 0;
 				
 			} // if !toets
-			else if ((i == stapNr) && (editor == null))
+			else if ((i == stapNr) && (editor == null) && !((linOefenVersie || linStrategieVersie) && openstaandePijl))
 			{
-				// de laatste stap moet een editor zijn
+				// de laatste stap moet een editor zijn; maar niet voor strategie(oefen)versie met een openstaand pijlvak
 				viewers.remove(fv);
 				stepPanel.remove(fv.getAsPanel());
 				editor = addNewEditor(stepPanel);
