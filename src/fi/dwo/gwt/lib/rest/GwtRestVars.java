@@ -3,10 +3,13 @@ package fi.dwo.gwt.lib.rest;
 import com.google.gwt.user.client.Window;
 
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionMapper;
+import fi.dwo.gwt.lib.rest.util.HeadersFilter;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -59,8 +62,13 @@ public class GwtRestVars {
 //    }
 
     private RestAuthenticator authenticator = RestAuthenticator.instance;
+    private Map<String,String> customHeaders = Collections.emptyMap();
 
-    //properties
+    public Map<String, String> getCustomHeaders() {
+		return customHeaders;
+	}
+
+	//properties
     private static String server;
 
     /**
@@ -105,8 +113,8 @@ public class GwtRestVars {
         Defaults.setDispatcher(DefaultFilterawareDispatcher.singleton());
         Defaults.setExceptionMapper(new Dwo2ExceptionMapper());
         setAuthenticator(RestAuthenticator.instance);
-//        DefaultFilterawareDispatcher.singleton().addFilter(this.getAuthenticator());
-//            restService = GWT.create(DWO2RestCaller.class);
+        customHeaders = HeadersFilter.instance.getHeaders();
+        customHeaders.clear();
         LOG.log(Level.INFO, "Done initObjects():");
     }
 
