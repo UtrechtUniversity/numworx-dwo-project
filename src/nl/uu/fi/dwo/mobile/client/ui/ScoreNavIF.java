@@ -5,6 +5,7 @@ import org.osgi.util.promise.Promise;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -88,7 +89,7 @@ public interface ScoreNavIF {
 	void setVorigeVisible(boolean visible);
 
 	void setButtonEnabled(int opdrNr, boolean b);
-	SlidingPopup getPopup();
+	PopupPanel getPopup();
 
 	void showScore();
 

@@ -3,29 +3,21 @@ package nl.uu.fi.dwo.mobile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
-import nl.uu.fi.dwo.mobile.client.ui.DummyClientFactory;
-import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
-import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
-import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
-
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.logging.client.HasWidgetsLogHandler;
-import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
+
+import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
+import nl.uu.fi.dwo.mobile.client.ui.DummyClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 
 public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 
@@ -75,9 +67,9 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		zetMaat();
 		
 		Scorm2004IF api = view.getApi();
-		RootPanel.get().add(view);
+		RootLayoutPanel.get().add(view);
 		
-		History.addValueChangeHandler(this);
+		//History.addValueChangeHandler(this);
 		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 
 			@Override
@@ -87,7 +79,10 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 
 			@Override
 			public void onSuccess(Void result) {
-				String target = History.getToken();		
+				String target 
+				= Window.Location.getHash();
+				if(target.startsWith("#")) target = target.substring(1);
+				//target = History.getToken();		
 				ValueChangeEvent<String> event = new InitialValueChangeEvent(target);
 				onValueChange(event);
 			}
@@ -172,7 +167,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		while( path.startsWith("//")) // XXX Noordhoff path begint met 1 slash teveel
 			path = path.substring(1);
 		// strip basename
-		int slash = path.lastIndexOf('/');
+		//int slash = path.lastIndexOf('/');
 		//if (slash >= 0)
 		//	path = path.substring(slash + 1);
 		// strip extension

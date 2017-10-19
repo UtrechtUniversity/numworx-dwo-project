@@ -195,9 +195,9 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 	private Label[] vraagPunten;
 	private int[] scoreMax;
 	private int currentOpdracht;
-	private SlidingPopup popup;
+	private PopupPanel popup;
 	ScrollPanel  sp;
-	public SlidingPopup getPopup() {
+	public PopupPanel getPopup() {
 		return popup;
 	}
 

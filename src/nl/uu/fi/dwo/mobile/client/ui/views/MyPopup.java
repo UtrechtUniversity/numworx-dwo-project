@@ -1,9 +1,11 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
-import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
-import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
+import com.google.gwt.user.client.ui.PopupPanel;
 
-public class MyPopup extends SlidingPopup {
+import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
+//import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
+
+public class MyPopup extends PopupPanel {
     private ScoreNavPanel w;
 
 	public MyPopup(ScoreNavPanel w) {
@@ -12,7 +14,6 @@ public class MyPopup extends SlidingPopup {
         // clicks outside of it.
         super(true);
         setGlassEnabled(true);
-        setAnimationEnabled(true);
         // PopupPanel is a SimplePanel, so you have to set it's widget property to
         // whatever you want its contents to be.
         this.w = w;

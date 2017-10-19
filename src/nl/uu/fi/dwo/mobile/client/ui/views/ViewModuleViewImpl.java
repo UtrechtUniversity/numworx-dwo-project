@@ -68,9 +68,12 @@ import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -82,6 +85,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
@@ -113,9 +117,31 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	static Logger logger = Logger.getLogger("ViewModuleViewImpl");
 	private boolean standalone = false;
 
+	private static ViewModuleViewImplUiBinder uiBinder = GWT.create(ViewModuleViewImplUiBinder.class);
+
+	interface ViewModuleViewImplUiBinder extends UiBinder<DockLayoutPanel, ViewModuleViewImpl> {
+	}
+
+	private DockLayoutPanel createAndBindUI() {
+		return uiBinder.createAndBindUi(this);
+	}
+	
+	
 	OpdrNav on;
-	private FocusPanel mainPanel;
-	LayoutPanel contentScrollPanel = null;
+	private Widget mainPanel;
+	@UiField(provided=true) ScrollPanel contentScrollPanel = new ScrollPanel() { 
+		@Override
+		public void setAlwaysShowScrollBars(boolean alwaysShow) {
+			getScrollableElement().getStyle().setOverflowX(Overflow.HIDDEN);
+			getScrollableElement().getStyle().setOverflowY(alwaysShow ? Overflow.SCROLL : Overflow.AUTO);
+		}
+
+		@Override
+		public boolean setTouchScrollingDisabled(boolean isDisabled) {
+			return super.setTouchScrollingDisabled(isDisabled);
+		}
+		
+	};
 	private Panel tekst = null;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private double zoom = 1;
@@ -180,8 +206,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public void removeTitle() {
 		hp.removeFromParent();
 		setWindowTop(0);
-		int h = mainPanel.getOffsetHeight();
-		sb.setScrollPanel(this, h);
+//		int h = mainPanel.getOffsetHeight();
+//		sb.setScrollPanel(this, h);
 	}
 	
 	
@@ -284,7 +310,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 							"<img id=\"helper\" data-toggle=\"popover\" title=\"Feedback\" data-placement=\"auto\" data-trigger=\"focus\" data-content=\"I have nothing to tell you right now\"  src=\"http://hansen.dcs.bbk.ac.uk/authELO/public_html/img/glasses_owl.png\" alt=\"Helper\" />");
 					w.getElement().getStyle().setPosition(Position.ABSOLUTE);
 					w.getElement().getStyle().setTop(0, Unit.PX);
-					fp.add(w);
+					RootPanel.get().add(w);
 				}
 			}
 		}
@@ -1577,15 +1603,15 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 //		}
 //	}
 
-	final class Resizer implements ResizeHandler {
-		@Override
-		public void onResize(ResizeEvent event) {
-			int h = event.getHeight() - extraHeight;
-			//logger.info("resize event " +  h);
-			sb.setScrollPanel(ViewModuleViewImpl.this, h);
-			
-		}
-	}
+//	final class Resizer implements ResizeHandler {
+//		@Override
+//		public void onResize(ResizeEvent event) {
+//			int h = event.getHeight() - extraHeight;
+//			//logger.info("resize event " +  h);
+//			sb.setScrollPanel(ViewModuleViewImpl.this, h);
+//			
+//		}
+//	}
 
 	class MyAnchorContext implements AnchorContext {
 
@@ -1607,9 +1633,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public ViewModuleViewImpl initialize()
 	{
 		api = GWT.create(Scorm2004IF.class);
-		fp = new FlowPanel(); 
-		mainPanel = FocusOnTouch.wrap(fp, true);
-		mainPanel.setStylePrimaryName("mainPanel");
+		fp = createAndBindUI(); 
+		mainPanel = fp; // FocusOnTouch.wrap(fp, true);
+		FocusOnTouch.wrap(focusPanel);
+//		mainPanel.setStylePrimaryName("mainPanel");
 		mainPanel.addStyleDependentName(DWOplayer.PARAMETERS.keyboardStyle());
 		mainPanel.setStyleDependentName("standalone", standalone);
 // nu in stylesheet DWOplayer.css		
@@ -1626,7 +1653,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		scoreNav.setStatusBar(sb);
 		if(!standalone) setWindowTop(0);
-
 		FocusOnTouch.installKeyboard(kb, cb);
 		FormuleHolder.installKeyboard(kb);
 		
@@ -1645,17 +1671,20 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			hb = new HeaderButton(DWOplayer.PARAMETERS.headercss());
 			hb.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.menuIcon().getSafeUri().asString() + "')");
 			hp.setLeftWidget(hb);
-			fp.add(hp);
+			headerView.setWidget(hp);
+			setWindowTop(extraHeight);
 		}
-		contentScrollPanel = new LayoutPanel();
-		contentScrollPanel.addStyleName("contentScrollPanel");
-		contentScrollPanel.setWidth("100%");
-		contentScrollPanel.setHeight("100%");
-		contentScrollPanel.getElement().getStyle().setOverflowY(Overflow.HIDDEN);
-		contentScrollPanel.getElement().getStyle().setOverflowX(Overflow.HIDDEN);
+//		contentScrollPanel = new LayoutPanel();
+//		contentScrollPanel.addStyleName("contentScrollPanel");
+//		contentScrollPanel.setWidth("100%");
+//		contentScrollPanel.setHeight("100%");
+//		contentScrollPanel.getElement().getStyle().setOverflowY(Overflow.HIDDEN);
+//		contentScrollPanel.getElement().getStyle().setOverflowX(Overflow.HIDDEN);
+		contentScrollPanel.setAlwaysShowScrollBars(false);
 //
-		contentPanel = new FlowPanel();contentPanel.setStylePrimaryName("contentPanel");
-		contentPanel.getElement().getStyle().setProperty("display", "inline-block");
+//		contentPanel = new FlowPanel();contentPanel.setStylePrimaryName("contentPanel");
+//		contentPanel.getElement().getStyle().setProperty("display", "inline-block");
+		contentPanel = content;
 // smooth scroll on ios devices:
 		setWebkitScrolling(true);
 		//contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
@@ -1664,7 +1693,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 // FIXME Hier moeten we een gesture recognizer maken:
 
 		if(TouchEvent.isSupported()) {
-			TouchDelegate touchDelegate = new TouchDelegate(contentPanel);
+			TouchDelegate touchDelegate = new TouchDelegate(contentScrollPanel);
 			//touchDelegate.addPinchHandler(new PinchContent());
 			
 			touchDelegate.addSwipeEndHandler(new SwipeEndHandler() {
@@ -1683,14 +1712,14 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		//ipv addContentPanelTouchListener(contentPanel);
 
-		contentScrollPanel.add(contentPanel);
-		contentPanel.getElement().getStyle().setOverflowY(Overflow.AUTO);
-		contentPanel.getElement().getStyle().setOverflowX(Overflow.HIDDEN);
+//		contentScrollPanel.add(contentPanel);
+//		contentPanel.getElement().getStyle().setOverflowY(Overflow.AUTO);
+//		contentPanel.getElement().getStyle().setOverflowX(Overflow.HIDDEN);
 		
-		fp.add(contentScrollPanel);
+//		fp.add(contentScrollPanel);
 
 		Widget kbp = sb.asWidget();
-		fp.add(kbp);
+		statusView.setWidget(kbp);
 
 // POPUP of floating in ????
 		if(hb != null && POPUP != null)
@@ -1728,13 +1757,13 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	}
 
 	//private ScoreNavPanel scoreNavPanel = new ScoreNavPanel();
-    SlidingPopup POPUP;
+    PopupPanel POPUP;
     
     public ScoreNavIF scoreNav; 
     
     protected void popupNavPanel() {
-		 final SlidingPopup popup = POPUP;
-	        popup.setPopupPositionAndShow(new SlidingPopup.PositionCallback() {
+		 final PopupPanel popup = POPUP;
+	        popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 	          public void setPosition(int offsetWidth, int offsetHeight) {
 	            int left = (Window.getClientWidth() - offsetWidth) / 3;
 	            int top = (Window.getClientHeight() - offsetHeight) / 3;
@@ -1754,12 +1783,13 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		//mainPanel.setHeight("426px");
 		//mainPanel.setWidth("886px");
 		extraHeight = 40;
+		fp.setWidgetSize(headerView, extraHeight);
 		//fp.setHeight("428px");
 		//fp.setWidth("886px");
 		//if(!standalone) fp.add(hp);
 		//final int contentHeight = 426 - 40; // 40 = hoogte headerpanel.
-		int contentHeight = Window.getClientHeight() - extraHeight;
-		Window.addResizeHandler(new Resizer());
+//		int contentHeight = Window.getClientHeight() - extraHeight;
+		//Window.addResizeHandler(new Resizer());
 		//contentScrollPanel.setPixelSize(886, contentHeight ); 
 		//contentScrollPanel.setHeight("100%");
 		//fp.add(contentScrollPanel);
@@ -1770,13 +1800,15 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 //		Panel kbp = kb.getAsPanel();
 //		kbp.setWidth("886px");
 		sb.zetMaat();
-		sb.setScrollPanel(this, contentHeight);
+		int size = sb.getStatusBarHeight();
+		sb.setScrollPanel(this, -size);
+		
 		//fp.add(kbp);
 
 	}
 	
-	protected int extraHeight = (MGWT.getOsDetection().isAndroid() ? 52:41) // header height in android 50+2 			
-			+ 44 /*KeyBoardTabPanel.KEYB_STATIC_HEIGHT*/;
+	protected int extraHeight = (MGWT.getOsDetection().isAndroid() ? 52:41); // header height in android 50+2 			
+			
 	private String unitId = "scoViewNr";
 	
 	public void setUnitId(String unitId) {
@@ -1785,7 +1817,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	}
 
 	public void setWindowTop(int top) {
-		extraHeight = top + sb.getStatusBarHeight();
+		if(!standalone) top = 0; // force 0
+		extraHeight = top;
+		fp.setWidgetSize(headerView, top);
 	}
 	
 	
@@ -1798,10 +1832,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		hp.setRightWidget(null);
 		
 		///contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
-		int contentHeight = Window.getClientHeight() - extraHeight;
-		Window.addResizeHandler(new Resizer());
+		//int contentHeight = Window.getClientHeight() - extraHeight;
+		//Window.addResizeHandler(new Resizer());
 		sb.zetMaat();
-		sb.setScrollPanel(this, contentHeight);
+		sb.setScrollPanel(this, -sb.getStatusBarHeight());
 
 	}
 	
@@ -2048,7 +2082,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	// WaitScreen management: p(); .....; v();
 	private int sema;
 	private Deferred<Void> sema2;
-	private FlowPanel fp;
+	private DockLayoutPanel fp;
+	@UiField SimplePanel headerView;
+	@UiField SimplePanel statusView;
+	@UiField FlowPanel content;
+	@UiField FocusPanel focusPanel;
+	
 	public void p() {
 		if( sema++ == 0) {
 			sema2 = new Deferred<Void>();
@@ -2072,7 +2111,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	@Override
 	public void setHeight(int px) {
 		setWebkitScrolling(false);
-		contentScrollPanel.setPixelSize(-1, px);
+		//contentScrollPanel.setPixelSize(-1, px);
+		double size = Math.abs(px); // FIXME berekening.....
+		fp.setWidgetSize(statusView, size);
+		fp.animate(300);
 		setWebkitScrolling(true);
 	}
 

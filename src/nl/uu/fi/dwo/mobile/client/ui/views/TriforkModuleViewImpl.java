@@ -17,7 +17,7 @@ public class TriforkModuleViewImpl extends ViewModuleViewImpl implements
 	
 	public void zetMaat() {
 		int contentHeight = Window.getClientHeight() - extraHeight;
-		Window.addResizeHandler(new Resizer());
+		//Window.addResizeHandler(new Resizer());
 		sb.zetMaat();
 		sb.setScrollPanel(this, contentHeight);	
 	}

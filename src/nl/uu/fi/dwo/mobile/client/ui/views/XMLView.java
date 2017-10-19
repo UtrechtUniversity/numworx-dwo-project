@@ -129,7 +129,7 @@ public abstract class XMLView {
 	
 	
 	TekstVakPanel hoofdPanel;
-	protected FlowPanel contentPanel = null;
+	protected FlowPanel contentPanel;
 
 	protected void setupView(HashMap<String, Object> launchData)
 	{

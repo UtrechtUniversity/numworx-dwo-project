@@ -18,6 +18,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -399,7 +400,7 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 	}
 
 	@Override
-	public SlidingPopup getPopup() {
+	public PopupPanel getPopup() {
 		// TODO Auto-generated method stub
 		return null;
 	}
