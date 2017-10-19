@@ -56,22 +56,13 @@
                 <artifactId>gwt-maven-plugin</artifactId>
                 <version>${gwtVersion}</version>
                 <configuration>
-                    <module>nl.uu.fi.dwo.account.boot</module>
+                    <module>nl.uu.fi.dwo.account.Account</module>
                     
-                    <runTarget>boot.html</runTarget>
+                    <runTarget>Account.html</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <warSourceDirectory>war</warSourceDirectory>
                     <extraJvmArgs>-Xms768m -Xmx1024m</extraJvmArgs>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>  
-                    <compileSourcesArtifacts> 
-                        <!--                        <compileSourcesArtifact>nl.uu.fi.dwo.rest:DWO-rest-lib</compileSourcesArtifact> -->
-                        <!--                        <compileSourcesArtifact>nl.uu.fi.dwo.rest:DWO-gwt-lib</compileSourcesArtifact> -->
-                    </compileSourcesArtifacts> 
-                    <i18nConstantsWithLookupBundles>
-                        <i18nConstantsWithLookupBundle>nl.uu.fi.dwo.rest.locale.Dwo2Exceptions</i18nConstantsWithLookupBundle>                          
-                    </i18nConstantsWithLookupBundles>
-                    <!-- generate in generated sources, why not? -->
-                    <generateDirectory>${basedir}/src/main/java</generateDirectory> 
                 </configuration>
                 <executions>
                     <execution>
