@@ -56,15 +56,16 @@ public class SelectModuleItem
 	private boolean showScore, fromSchool;
 	private int sequencenr;
 	private String image;
-	private CourseType courseType = CourseType.normal;
 	private Type type = Type.ROOT;
 	private Promise<List<SelectModuleItem>> childrenAsync;
 	private Object parent;
-	private Date notBefore, notAfter;
 	private boolean showChildren = true;
+	private DomClassCourse classCourse;
 
 	public Date getNotAfter() {
-		return notAfter;
+		if(classCourse != null) 
+			return classCourse.getNotAfter();
+		return null;
 	}
 
 
@@ -97,9 +98,15 @@ public class SelectModuleItem
 			}
 			this.showScore = false;
 // Alleen als de "classcourse" data ge-piggybacked is.
-			this.notAfter = toDate(map.get("notAfter"));
-			this.notBefore = toDate(map.get("notBefore"));
-			//this.toetsType = (Number) map.get("type"); FIXME legacy code
+			if(map.containsKey("type"))
+			{
+				classCourse = new DomClassCourse();
+				classCourse.setNotAfter(toDate(map.get("notAfter")));
+				classCourse.setNotBefore ( toDate(map.get("notBefore")));
+				classCourse.setCourseType( CourseType.values()[(((Number) map.get("type")).intValue())]);
+			}
+			else
+				classCourse = null;
 			break;
 		case SCO:
 			this.type = type;
@@ -114,9 +121,7 @@ public class SelectModuleItem
 				this.parent = parentID;
 				if(getParent() != null) {
 					SelectModuleItem parent = getParent();
-					this.notAfter = parent.notAfter;
-					this.notBefore = parent.notBefore;
-					this.courseType = parent.courseType;
+					classCourse = parent.classCourse;
 				}
 			}
 			break;
@@ -177,12 +182,7 @@ public class SelectModuleItem
 		sequencenr = sequence != null ? sequence.intValue() : Integer.MAX_VALUE;
 		showScore = false;
 		showChildren(!course.isNotVisible());
-		if (domClassCourse!=null) {
-			notAfter = domClassCourse.getNotAfter();
-			notBefore = domClassCourse.getNotBefore();
-			//toetsType = domClassCourse.getEnumType();
-			courseType = domClassCourse.getCourseType();
-		}
+		classCourse = domClassCourse;
 		image = course.getImage();
 		if("".equals(image)) image = null;
 	}
@@ -200,9 +200,7 @@ public class SelectModuleItem
 		if(parent != null) {
 			if(getParent() != null) {
 				SelectModuleItem parent = getParent();
-				this.notAfter = parent.notAfter;
-				this.notBefore = parent.notBefore;
-				//this.toetsType = parent.toetsType;
+				classCourse = parent.classCourse;
 			}
 		}
 	}
@@ -248,7 +246,9 @@ public class SelectModuleItem
 	}
 
 	public CourseType getCourseType() {
-		return courseType;
+		if(classCourse != null)
+			return classCourse.getCourseType();
+		return CourseType.normal;
 	}
 	
 	/**
@@ -362,6 +362,16 @@ public class SelectModuleItem
 
 	public String getImage() {
 		return image;
+	}
+
+
+	public boolean isExam() {
+		return CourseType.assesment == getCourseType();
+	}
+
+
+	public DomClassCourse getClassCourse() {
+		return classCourse;
 	}
 	
 }

@@ -5,15 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -22,16 +19,11 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerStudentCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
-import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
@@ -50,26 +42,9 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModu
 		this.item = i;
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public void start(final AcceptsOneWidget panel, final EventBus eventBus)
 	{
-		if(item.getCourseType() == CourseType.assesment)
-		{
-			if(SecureMode.NORMAL == DWOplayer.PARAMETERS.getSecureMode()) {
-				Widget w = new HTML(
-						"<h1>Dit is een toets</h1>"
-						+ "Ga naar de <a href='/toets/'>beveiligde toets omgeving</a>"
-						+ " als je deze toets wilt maken"
-						);
-				panel.setWidget(w);
-				return;
-			} else {
-				// ask password 
-			}
-		}
-		
-		
 		view = clientFactory.getTreeModuleView();
 		//if(true)
 		view.setMenuWidget(clientFactory.getMenuWidget());

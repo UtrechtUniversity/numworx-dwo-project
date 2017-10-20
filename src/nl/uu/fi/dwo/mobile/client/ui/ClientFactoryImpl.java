@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import javax.inject.Provider;
+
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
@@ -14,6 +16,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewNumworx;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -39,7 +42,6 @@ import com.googlecode.mgwt.ui.client.OsDetection;
  */
 public class ClientFactoryImpl implements ClientFactory
 {
-	interface Provider<T> { T get(); }
 	
 	final static Provider<ViewModuleView> NORMAL = new Provider<ViewModuleView>() {
 
@@ -269,6 +271,12 @@ public class ClientFactoryImpl implements ClientFactory
 
 	@Override
 	public void addBarrier(Promise<?> p) {
+	}
+
+	@Override
+	public void startExam(DomClassCourse classCourse, String password) {
+		getRPCHandler().startExam(classCourse.getId().toString(), password);
+		
 	}
 	
 }

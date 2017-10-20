@@ -6,6 +6,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -143,6 +144,12 @@ public class DummyClientFactory implements ClientFactory {
 
 	@Override
 	public void addBarrier(Promise<?> p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void startExam(DomClassCourse classCourse, String password) {
 		// TODO Auto-generated method stub
 		
 	}

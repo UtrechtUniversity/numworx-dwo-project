@@ -15,5 +15,9 @@ public class RPCHandler extends RPCHandlerV1 implements nl.uu.fi.dwo.mobile.clie
 	public RPCHandler() {
 		super(Window.Location.getProtocol() +  "//" + DWOplayer.PARAMETERS.getHost() + "/DWOmAccess/dbaccess", DWOplayer.PROFILE_ID);
 	}
+
+	@Override
+	public void startExam(String id, String password) {
+	}
 	
 }

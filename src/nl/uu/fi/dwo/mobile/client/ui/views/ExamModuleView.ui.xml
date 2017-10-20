@@ -1,0 +1,19 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel>
+	  <div>
+		<p>examen password:
+			<g:TextBox ui:field='textView' />
+		</p>
+		<p> 
+			<g:Button ui:field='ok'>OK</g:Button>
+			<g:Button ui:field='cancel'>Cancel</g:Button>
+		</p>
+		<g:Label ui:field='message' />
+	  </div>	
+	</g:HTMLPanel>
+</ui:UiBinder> 

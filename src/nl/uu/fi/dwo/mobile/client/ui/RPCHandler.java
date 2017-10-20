@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
 import org.osgi.util.promise.Promise;
+
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.google.gwt.json.client.JSONValue;
 
@@ -59,4 +60,6 @@ public interface RPCHandler {
 	Promise<Map<String,String>> getValues(Object scoID, Collection<String> keys);
 	Promise<?> setValues(Object scoID, Map<String, String> values);
 	Promise<JSONValue> getJSONLaunchDataBytes(Object scoID);
+// V4 stuff
+	void startExam(String id, String password);
 }

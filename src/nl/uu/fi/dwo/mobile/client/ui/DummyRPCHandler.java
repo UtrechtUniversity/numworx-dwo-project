@@ -191,4 +191,10 @@ class DummyRPCHandler implements RPCHandler {
 			}});
 	}
 
+@Override
+public void startExam(String id, String password) {
+	// TODO Auto-generated method stub
+	
+}
+
 }

@@ -48,7 +48,8 @@ public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstant
 	}
 
 	private SecureMode secureMode = SecureMode.NORMAL;
-	//{ secureMode = SecureMode.SEB; }
+	//
+	{ secureMode = SecureMode.SEB; }
 	
 	@Override
 	public SecureMode getSecureMode() {

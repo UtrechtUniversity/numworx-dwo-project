@@ -27,7 +27,6 @@ import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.account.client.UserBar;
-import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO2;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO3;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
@@ -82,6 +81,12 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		public Promise<Void> logout() {
 			// TODO Auto-generated method stub
 			return super.logout();
+		}
+
+		@Override
+		public void startExam(String id, String password) {
+			// TODO Auto-generated method stub
+			// super.startExam(id, password);
 		}
 
 	}

@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.activities.CourseActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.ExamModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.FlatModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.GuestActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
@@ -107,7 +108,10 @@ public class TabletActivityMapper implements ActivityMapper
 			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
 			if(item == null)
 				return new LoginActivity(clientFactory);
-			return new TreeModuleActivity(clientFactory, item); // Anders geen activity reset action;
+			return 
+				item.isExam()
+					? new ExamModuleActivity(clientFactory, item)
+					: new TreeModuleActivity(clientFactory, item); // Anders geen activity reset action;
 		}
 		if (place instanceof SearchPlace) {
 			SearchPlace tmp = (SearchPlace) place;
