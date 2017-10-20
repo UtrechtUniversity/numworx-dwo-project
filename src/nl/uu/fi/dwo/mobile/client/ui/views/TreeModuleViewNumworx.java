@@ -966,8 +966,14 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			if(item.getChildren() != null)
 				initTree(item.getChildren(), treeItem, true);
 		}
-		if(standardMap.getChildCount() != 0) tree.addItem(standardMap);
-		if(schoolMap.getChildCount() != 0) tree.addItem(schoolMap);
+		if(standardMap.getChildCount() != 0) {
+			standardMap.setState(true);
+			tree.addItem(standardMap);
+		}
+		if(schoolMap.getChildCount() != 0) {
+			schoolMap.setState(true);
+			tree.addItem(schoolMap);
+		}
 	}
 
 	private SafeHtml toSafeHTML(String string) {
