@@ -286,6 +286,8 @@ public class SelectModuleItem
 	}
 
 	public void setDescription(String description) {
+		if(description == null)
+			description = ""; //  NEVER null
 		this.description = description;
 	}
 

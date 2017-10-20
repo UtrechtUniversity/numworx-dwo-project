@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.place.shared.PlaceController;
@@ -138,8 +139,7 @@ public class DummyClientFactory implements ClientFactory {
 
 	@Override
 	public Promise<Void> barrier() {
-		// TODO Auto-generated method stub
-		return null;
+		return Promises.resolved(null);
 	}
 
 	@Override
@@ -149,8 +149,7 @@ public class DummyClientFactory implements ClientFactory {
 	}
 
 	@Override
-	public void startExam(DomClassCourse classCourse, String password) {
-		// TODO Auto-generated method stub
-		
+	public Promise<Void> startExam(DomClassCourse classCourse, String password) {
+		return barrier();
 	}
 }

@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.google.gwt.http.client.Request;
@@ -191,10 +192,9 @@ class DummyRPCHandler implements RPCHandler {
 			}});
 	}
 
-@Override
-public void startExam(String id, String password) {
-	// TODO Auto-generated method stub
-	
-}
+	@Override
+	public Promise<Void> startExam(String id, String password) {
+		return Promises.resolved(null);
+	}
 
 }

@@ -70,7 +70,7 @@ public interface ClientFactory
 	Object getUserID();
 //	Object getSchoolName();
 
-	void startExam(DomClassCourse classCourse, String password);
+	Promise<Void> startExam(DomClassCourse classCourse, String password);
 
 // High level functions
 /*	Full varianten?

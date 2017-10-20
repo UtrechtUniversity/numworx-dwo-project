@@ -61,5 +61,5 @@ public interface RPCHandler {
 	Promise<?> setValues(Object scoID, Map<String, String> values);
 	Promise<JSONValue> getJSONLaunchDataBytes(Object scoID);
 // V4 stuff
-	void startExam(String id, String password);
+	Promise<Void> startExam(String id, String password);
 }

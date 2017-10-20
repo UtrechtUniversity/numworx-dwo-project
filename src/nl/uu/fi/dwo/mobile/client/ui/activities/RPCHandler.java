@@ -1,5 +1,8 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+
 import nl.uu.fi.dwo.account.client.RPCHandlerV1;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 
@@ -17,7 +20,8 @@ public class RPCHandler extends RPCHandlerV1 implements nl.uu.fi.dwo.mobile.clie
 	}
 
 	@Override
-	public void startExam(String id, String password) {
+	public Promise<Void> startExam(String id, String password) {
+		return Promises.resolved(null);
 	}
 	
 }

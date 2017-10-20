@@ -112,9 +112,8 @@ public class MC2LMS extends DWOplayer implements EntryPoint
 		}
 
 		@Override
-		public void startExam(String id, String password) {
-			// TODO Auto-generated method stub
-			
+		public Promise<Void> startExam(String id, String password) {
+			return Promises.resolved(null);
 		}
 		
 	}

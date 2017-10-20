@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
+import org.osgi.util.promise.Success;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceController;
@@ -274,8 +275,17 @@ public class ClientFactoryImpl implements ClientFactory
 	}
 
 	@Override
-	public void startExam(DomClassCourse classCourse, String password) {
-		getRPCHandler().startExam(classCourse.getId().toString(), password);
+	public Promise<Void> startExam(final DomClassCourse classCourse, final String password) {
+		return 
+				barrier().then(new Success<Void, Void>() {
+
+					@Override
+					public Promise<Void> call(Promise<Void> resolved)
+							throws Exception {
+						return getRPCHandler().startExam(classCourse.getId().toString(), password);
+					}
+		});
+		
 		
 	}
 	

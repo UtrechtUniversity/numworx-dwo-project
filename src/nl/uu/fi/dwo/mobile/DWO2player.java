@@ -84,9 +84,10 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		}
 
 		@Override
-		public void startExam(String id, String password) {
+		public Promise<Void> startExam(String id, String password) {
 			// TODO Auto-generated method stub
 			// super.startExam(id, password);
+			return Promises.resolved(null);
 		}
 
 	}

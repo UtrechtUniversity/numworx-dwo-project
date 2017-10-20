@@ -23,7 +23,7 @@
   <inherits name="nl.uu.fi.dwo.interaction.Interaction" />
   <inherits name="nl.uu.fi.dwo.formule.Formule" />
   <inherits name="nl.uu.fi.dwo.ideas.Ideas"/>
-  
+  <inherits name='javax.inject.Inject' />
   <inherits name="fi.writemathgwt.WriteMathGWT-DWO" />
    
     <!--<inherits name="fi.kladjegwt.KladjeGWT-DWO" />-->

@@ -193,7 +193,6 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			    String description = value.getDescription();
 			    Type typeof = value.getType();
 				if(true || description.isEmpty()||description.startsWith(DescriptionView.GZIPPREFIX)) {
-					//flip = ( flip  ) % 5+1;
 					sb.appendHtmlConstant("<span class='" + style.tileBodySpan() + "'>");
 					switch(typeof) {
 			    	case MODULE:
@@ -219,14 +218,6 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			    		}
 			    		break;
 			    	case SCO:
-//			    		if(flip != 1)
-//			    		sb.appendHtmlConstant("<img style='margin: auto auto' src='"
-//			    				+ r("images/courses/"
-//			    						+ flip
-//			    						+ ".png")
-//			    				+ "' class='" + style.tileBodyImg()
-//			    				+ "' />");
-//			    		else 
 			    			sb.appendHtmlConstant("<img style='height: 85px' src='"
 			    				+ r("images/numworx/activiteit_numworx.svg")
 			    				+ "' class='" + style.tileBodyImg()
@@ -829,9 +820,10 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				centerPanel.setStyleName(style.folderBackground(), !hasImage);
 				if(item.showChildren())
 				{	TreeItem parent = inverseMap.get(item);
-					getScosPromise(item)
-					.then(new ProvideTreeItems(parent))
-					.then(new ProvideCells());
+					Promise<List<SelectModuleItem>> p = getScosPromise(item);
+					if(!item.isExam())
+						p.then(new ProvideTreeItems(parent));
+					p.then(new ProvideCells());
 				}
 				favIcon.getParent().setStyleName(style.faviconOFF(), !isLabel(item));
 				title.getParent().setStyleName(style.titlePanelFULL(), !isLabel(item));
