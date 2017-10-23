@@ -2,6 +2,9 @@ package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -27,17 +30,31 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 
 	private ClientFactory clientFactory;
 	private SelectModuleItem item;
-	private TreeModuleActivity delegate;
+	private Activity delegate;
+	private Provider<? extends Activity> provider;
 	private AcceptsOneWidget panel;
 	private EventBus bus;
 
-
-	public ExamModuleActivity(ClientFactory clientFactory, SelectModuleItem i)
+	@Inject
+	public ExamModuleActivity(ClientFactory clientFactory, SelectModuleItem i, Provider<? extends Activity> provider)
 	{
 		this.clientFactory = clientFactory;
 		this.item = i;
+		this.provider = provider;
 	}
+	
+	public ExamModuleActivity(ClientFactory factory, SelectModuleItem i) {
+		this(factory, i, null);
+		provider = new Provider<Activity>() {
 
+			@Override
+			public Activity get() {
+				return new TreeModuleActivity(clientFactory, item);
+			}
+		};
+	}
+	
+	
 	
 	@Override
 	public void start(final AcceptsOneWidget panel, EventBus eventBus) {
@@ -53,10 +70,16 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 		} else {
 			this.panel = panel;
 			this.bus = eventBus;
-			ExamModuleView view = new ExamModuleView();
-			view.selectItem(item);
-			view.setPresenter(this);
-			panel.setWidget(view);
+			if(clientFactory.inExam(item.getClassCourse()))
+			{
+				delegate = provider.get();
+				delegate.start(panel, eventBus);
+			} else {
+				ExamModuleView view = new ExamModuleView();
+				view.selectItem(item);
+				view.setPresenter(this);
+				panel.setWidget(view);
+			}
 		}
 	}
 
@@ -78,7 +101,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 			@Override
 			public Promise<Void> call(Promise<Object> resolved)
 					throws Exception {
-				delegate = new TreeModuleActivity(clientFactory, item);
+				delegate = provider.get();
 				delegate.start(panel, bus);
 				return null;
 			}

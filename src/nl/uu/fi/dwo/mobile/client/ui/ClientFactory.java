@@ -72,6 +72,8 @@ public interface ClientFactory
 
 	Promise<Void> startExam(DomClassCourse classCourse, String password);
 
+	boolean inExam(DomClassCourse classCourse);
+
 // High level functions
 /*	Full varianten?
 	DomUserFull getUser();

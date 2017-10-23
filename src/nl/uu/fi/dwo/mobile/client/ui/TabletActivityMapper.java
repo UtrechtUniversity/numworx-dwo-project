@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import javax.inject.Provider;
+
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.activities.CourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamModuleActivity;
@@ -90,7 +92,18 @@ public class TabletActivityMapper implements ActivityMapper
 			SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
 			if(item == null)
 				return new LoginActivity(clientFactory);
-			return new ViewModuleActivity(clientFactory, item);
+			final ViewModuleActivity viewModuleActivity = new ViewModuleActivity(clientFactory, item);
+			Provider<Activity> provider = new Provider<Activity>() {
+				
+				@Override
+				public Activity get() {
+					return viewModuleActivity;
+				}
+			};
+			return 
+					item.isExam()
+					? new ExamModuleActivity(clientFactory, item, provider)					
+					viewModuleActivity;
 		}
 		if (place instanceof LoginPlace)
 			return new LoginActivity(clientFactory, ((LoginPlace) place).getPlace());

@@ -133,7 +133,6 @@ public class DummyClientFactory implements ClientFactory {
 
 	@Override
 	public DomSchoolClass getSchoolClass() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -144,12 +143,15 @@ public class DummyClientFactory implements ClientFactory {
 
 	@Override
 	public void addBarrier(Promise<?> p) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public Promise<Void> startExam(DomClassCourse classCourse, String password) {
 		return barrier();
+	}
+
+	@Override
+	public boolean inExam(DomClassCourse classCourse) {
+		return true;
 	}
 }

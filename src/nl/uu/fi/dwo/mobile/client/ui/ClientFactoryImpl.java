@@ -274,19 +274,36 @@ public class ClientFactoryImpl implements ClientFactory
 	public void addBarrier(Promise<?> p) {
 	}
 
+	private DomClassCourse exam;
+	
+	
 	@Override
 	public Promise<Void> startExam(final DomClassCourse classCourse, final String password) {
-		return 
-				barrier().then(new Success<Void, Void>() {
+		Promise<Void> p = barrier()
+			.then(new Success<Void, Void>() {
 
 					@Override
 					public Promise<Void> call(Promise<Void> resolved)
 							throws Exception {
 						return getRPCHandler().startExam(classCourse.getId().toString(), password);
 					}
-		});
-		
-		
+			})
+			.then(new Success<Void, Void>() {
+
+				@Override
+				public Promise<Void> call(Promise<Void> resolved)
+						throws Exception {
+					exam = classCourse;
+					return null;
+				}
+			});
+		addBarrier(p); // 
+		return p;
+	}
+	
+	public boolean inExam(DomClassCourse classCourse) {
+		return (exam != null) &&
+			exam.getId().equals(classCourse.getId());
 	}
 	
 }

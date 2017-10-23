@@ -1,18 +1,11 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
-import java.util.List;
-
-import org.osgi.util.promise.Promise;
-
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
-import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx.ProvideCells;
-import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx.ProvideTreeItems;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -30,7 +23,6 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ExamModuleView extends Composite {
