@@ -29,6 +29,10 @@ div.mainPanel {
 	background-color: rgb(255, 255, 255);
 }
 
+div.contentPanel {
+	overflow-x: hidden;
+}
+
 div.mainPanel-dwo {
 	/*box-shadow: 3px 3px 3px #b0b4c0 inset;*/
 }
