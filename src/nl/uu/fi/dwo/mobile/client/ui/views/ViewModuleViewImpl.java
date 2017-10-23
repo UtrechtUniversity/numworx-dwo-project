@@ -153,27 +153,27 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	OpdrNav on;
 	private Widget mainPanel;
-	@UiField(provided=true) FocusPanel contentScrollPanel = 
-		new FocusPanel() {
-		{
-			Style st = getElement().getStyle();
-			st.setOverflowX(Overflow.HIDDEN);
-			st.setOverflowY(Overflow.AUTO);
-			}
-	};
-//		new ScrollPanel() { 
-//		@Override
-//		public void setAlwaysShowScrollBars(boolean alwaysShow) {
-//			getScrollableElement().getStyle().setOverflowX(Overflow.HIDDEN);
-//			getScrollableElement().getStyle().setOverflowY(alwaysShow ? Overflow.SCROLL : Overflow.AUTO);
-//		}
-//
-//		@Override
-//		public boolean setTouchScrollingDisabled(boolean isDisabled) {
-//			return super.setTouchScrollingDisabled(isDisabled);
-//		}
-//		
+	@UiField(provided=true) ScrollPanel contentScrollPanel = 
+//		new FocusPanel() {
+//		{
+//			Style st = getElement().getStyle();
+//			st.setOverflowX(Overflow.HIDDEN);
+//			st.setOverflowY(Overflow.AUTO);
+//			}
 //	};
+		new ScrollPanel() { 
+		@Override
+		public void setAlwaysShowScrollBars(boolean alwaysShow) {
+			getScrollableElement().getStyle().setOverflowX(Overflow.HIDDEN);
+			getScrollableElement().getStyle().setOverflowY(alwaysShow ? Overflow.SCROLL : Overflow.AUTO);
+		}
+
+		@Override
+		public boolean setTouchScrollingDisabled(boolean isDisabled) {
+			return super.setTouchScrollingDisabled(isDisabled);
+		}
+		
+	};
 	private Panel tekst = null;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private double zoom = 1;
@@ -1671,12 +1671,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		mainPanel.addStyleDependentName(DWOplayer.PARAMETERS.keyboardStyle());
 		mainPanel.setStyleDependentName("standalone", standalone);
 
-//		focusPanel = new ResizeFocusPanel(mainPanel); // wrap focuspanel
+		focusPanel = new ResizeFocusPanel(mainPanel); // wrap focuspanel
 //		focusPanel = new FocusPanel();focusPanel.add(mainPanel);
 
-		FocusOnTouch.wrap(contentScrollPanel);
-//		mainPanel = focusPanel;
-//		mainPanel.setStylePrimaryName("mainPanel");
+		FocusOnTouch.wrap(focusPanel);
+		mainPanel = focusPanel;
+		mainPanel.setStylePrimaryName("mainPanel");
 // nu in stylesheet DWOplayer.css		
 //		mainPanel.setHeight("100%");
 //		mainPanel.setWidth("100%");
@@ -2122,7 +2122,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	@UiField SimplePanel headerView;
 	@UiField SimplePanel statusView;
 	@UiField FlowPanel content;
-	private ScrollPanel focusPanel;
+	private FocusPanel focusPanel;
 	
 	public void p() {
 		if( sema++ == 0) {
