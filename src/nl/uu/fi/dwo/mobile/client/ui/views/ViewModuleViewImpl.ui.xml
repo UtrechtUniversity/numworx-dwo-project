@@ -8,7 +8,7 @@
 		outline-style: none;
 	}
 	</ui:style>
-	<g:DockLayoutPanel unit='PX' stylePrimaryName="mainPanel">
+	<g:DockLayoutPanel ui:field='fp' unit='PX' >
 		<g:north size="40">
 			<g:SimplePanel ui:field='headerView'/>
 		</g:north>
@@ -16,14 +16,12 @@
 			<g:SimplePanel ui:field='statusView' />
 		</g:south>
 		<g:center>
-			<g:ScrollPanel stylePrimaryName="contentScrollPanel" ui:field='contentScrollPanel'>
-			  <g:FocusPanel ui:field='focusPanel' styleName='{style.nooutline}'>
+			<g:FocusPanel stylePrimaryName="contentScrollPanel" ui:field='contentScrollPanel'>
 				<g:FlowPanel
 					stylePrimaryName="contentPanel"
 					ui:field="content"
 				 />
-				</g:FocusPanel>
-			</g:ScrollPanel>
+			</g:FocusPanel>
 		</g:center>
 	</g:DockLayoutPanel>
 </ui:UiBinder> 

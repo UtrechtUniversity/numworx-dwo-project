@@ -83,7 +83,10 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
+import com.google.gwt.user.client.ui.ProvidesResize;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.RequiresResize;
+import com.google.gwt.user.client.ui.ResizeLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -109,6 +112,27 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
  */
 public class ViewModuleViewImpl extends XMLView implements ViewModuleView, EntryPoint, NextPrevHandler, ObjectivesHandler, MisconceptionsHandler, HasHeight
 {
+	public class ResizeFocusPanel extends FocusPanel implements RequiresResize, ProvidesResize {
+
+		@Override
+		public void onResize() {
+			Widget w = getWidget();
+			if(w instanceof RequiresResize)
+				((RequiresResize) w).onResize();
+		}
+
+		public ResizeFocusPanel(Widget child) {
+			super(child);
+		}
+
+//		@Override
+//		protected void onAttach() {
+//			// TODO Auto-generated method stub
+//			super.onAttach();
+//			fp.forceLayout();
+//		}
+
+	}
 	private static final String RANDOM_VAR_WAARDEN = "RandomVarWaarden";
 	private static final String RANDOM_VAR_NAMEN = "RandomVarNamen";
 	private static final String KEYBOARD = "keyboardNr";
@@ -119,29 +143,37 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	private static ViewModuleViewImplUiBinder uiBinder = GWT.create(ViewModuleViewImplUiBinder.class);
 
-	interface ViewModuleViewImplUiBinder extends UiBinder<DockLayoutPanel, ViewModuleViewImpl> {
+	interface ViewModuleViewImplUiBinder extends UiBinder<Widget, ViewModuleViewImpl> {
 	}
 
-	private DockLayoutPanel createAndBindUI() {
+	private Widget createAndBindUI() {
 		return uiBinder.createAndBindUi(this);
 	}
 	
 	
 	OpdrNav on;
 	private Widget mainPanel;
-	@UiField(provided=true) ScrollPanel contentScrollPanel = new ScrollPanel() { 
-		@Override
-		public void setAlwaysShowScrollBars(boolean alwaysShow) {
-			getScrollableElement().getStyle().setOverflowX(Overflow.HIDDEN);
-			getScrollableElement().getStyle().setOverflowY(alwaysShow ? Overflow.SCROLL : Overflow.AUTO);
-		}
-
-		@Override
-		public boolean setTouchScrollingDisabled(boolean isDisabled) {
-			return super.setTouchScrollingDisabled(isDisabled);
-		}
-		
+	@UiField(provided=true) FocusPanel contentScrollPanel = 
+		new FocusPanel() {
+		{
+			Style st = getElement().getStyle();
+			st.setOverflowX(Overflow.HIDDEN);
+			st.setOverflowY(Overflow.AUTO);
+			}
 	};
+//		new ScrollPanel() { 
+//		@Override
+//		public void setAlwaysShowScrollBars(boolean alwaysShow) {
+//			getScrollableElement().getStyle().setOverflowX(Overflow.HIDDEN);
+//			getScrollableElement().getStyle().setOverflowY(alwaysShow ? Overflow.SCROLL : Overflow.AUTO);
+//		}
+//
+//		@Override
+//		public boolean setTouchScrollingDisabled(boolean isDisabled) {
+//			return super.setTouchScrollingDisabled(isDisabled);
+//		}
+//		
+//	};
 	private Panel tekst = null;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private double zoom = 1;
@@ -1633,18 +1665,23 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public ViewModuleViewImpl initialize()
 	{
 		api = GWT.create(Scorm2004IF.class);
-		fp = createAndBindUI(); 
-		mainPanel = fp; // FocusOnTouch.wrap(fp, true);
-		FocusOnTouch.wrap(focusPanel);
-//		mainPanel.setStylePrimaryName("mainPanel");
+		mainPanel = createAndBindUI();
+		//mainPanel = FocusOnTouch.wrap(mainPanel);
+		mainPanel.setStylePrimaryName("mainPanel");
 		mainPanel.addStyleDependentName(DWOplayer.PARAMETERS.keyboardStyle());
 		mainPanel.setStyleDependentName("standalone", standalone);
+
+//		focusPanel = new ResizeFocusPanel(mainPanel); // wrap focuspanel
+//		focusPanel = new FocusPanel();focusPanel.add(mainPanel);
+
+		FocusOnTouch.wrap(contentScrollPanel);
+//		mainPanel = focusPanel;
+//		mainPanel.setStylePrimaryName("mainPanel");
 // nu in stylesheet DWOplayer.css		
 //		mainPanel.setHeight("100%");
 //		mainPanel.setWidth("100%");
-//		mainPanel.getElement().getStyle().setBackgroundColor("#FFFFFF");
-		//fp.setHeight("428px");
-		//fp.setWidth("886px");
+
+		
 		sb = DWOplayer.PARAMETERS.getStatusBar(); // new nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard();
 		kb = sb.getFormuleKeyboard();
 		cb = sb.getFormuleClipboard();
@@ -1680,7 +1717,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 //		contentScrollPanel.setHeight("100%");
 //		contentScrollPanel.getElement().getStyle().setOverflowY(Overflow.HIDDEN);
 //		contentScrollPanel.getElement().getStyle().setOverflowX(Overflow.HIDDEN);
-		contentScrollPanel.setAlwaysShowScrollBars(false);
+//		contentScrollPanel.setAlwaysShowScrollBars(false);
 //
 //		contentPanel = new FlowPanel();contentPanel.setStylePrimaryName("contentPanel");
 //		contentPanel.getElement().getStyle().setProperty("display", "inline-block");
@@ -1688,8 +1725,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 // smooth scroll on ios devices:
 		setWebkitScrolling(true);
 		//contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
-		contentPanel.setWidth("100%"); // hoeveel is 100% - 30px ?
-		contentPanel.setHeight("100%");
+//		contentPanel.setWidth("100%"); // hoeveel is 100% - 30px ?
+//		contentPanel.setHeight("100%");
 // FIXME Hier moeten we een gesture recognizer maken:
 
 		if(TouchEvent.isSupported()) {
@@ -1738,7 +1775,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		//initWidget(mainPanel);
 		
 		disableScreen.getElement().getStyle().setBackgroundColor("transparent");
-		
 		return this;
 
 	}
@@ -2082,11 +2118,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	// WaitScreen management: p(); .....; v();
 	private int sema;
 	private Deferred<Void> sema2;
-	private DockLayoutPanel fp;
+	@UiField DockLayoutPanel fp;
 	@UiField SimplePanel headerView;
 	@UiField SimplePanel statusView;
 	@UiField FlowPanel content;
-	@UiField FocusPanel focusPanel;
+	private ScrollPanel focusPanel;
 	
 	public void p() {
 		if( sema++ == 0) {
@@ -2108,13 +2144,17 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		return cb;
 	}
 
+	private double lastSize = -1;
 	@Override
 	public void setHeight(int px) {
 		setWebkitScrolling(false);
 		//contentScrollPanel.setPixelSize(-1, px);
 		double size = Math.abs(px); // FIXME berekening.....
-		fp.setWidgetSize(statusView, size);
-		fp.animate(300);
+		if(size != lastSize) {
+			fp.setWidgetSize(statusView, size);
+			lastSize = size;
+			fp.animate(300);
+		}
 		setWebkitScrolling(true);
 	}
 

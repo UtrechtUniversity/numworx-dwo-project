@@ -117,8 +117,8 @@
 			</g:FlowPanel>
 		</g:north>
 		<g:center>
-			<g:SimplePanel ui:field='center' styleName='{style.centerPanel}'>
-			</g:SimplePanel>
+			<g:ResizeLayoutPanel ui:field='center' styleName='{style.centerPanel}'>
+			</g:ResizeLayoutPanel>
 		</g:center>
 		
 	</g:DockLayoutPanel>
