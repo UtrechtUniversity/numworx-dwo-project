@@ -56,7 +56,7 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 		style.setPosition(Style.Position.ABSOLUTE);
 		style.setBottom(0, Style.Unit.PX);
 		style.setRight(0, Style.Unit.PX);
-		style.setLeft(10, Style.Unit.PX);
+		style.setLeft(0, Style.Unit.PX);
 		style.setBackgroundColor("rgb(229,231,233)");
 		
 		

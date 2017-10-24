@@ -2369,4 +2369,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	{
 		return scoresZichtbaar;
 	}
+
+	@Override
+	public void setPresenter(Presenter p) {
+		// TODO Auto-generated method stub
+		
+	}
 }

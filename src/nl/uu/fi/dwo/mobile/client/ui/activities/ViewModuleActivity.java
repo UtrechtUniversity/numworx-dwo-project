@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -35,13 +36,24 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
  * @author Danny Hendrix
  * 
  */
-public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorContext
+public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorContext, ViewModuleView.Presenter
 {
 	private ClientFactory clientFactory;
 	private ViewModuleView view;
 	private AnchorContext defaultContext;
 	private SelectModuleItem sco;
 	private Timer tm;
+	private boolean started;
+	
+	
+	
+	@Override
+	public String mayStop() {
+		if (started)
+			return Text.constants.maybe_lost_data();
+		return super.mayStop();
+	}
+
 	public ViewModuleActivity(ClientFactory clientFactory, SelectModuleItem sco)
 	{
 		this.clientFactory = clientFactory;
@@ -57,6 +69,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 		Date notAfter = sco.getNotAfter();
 		if(notAfter != null && notAfter.getTime() < System.currentTimeMillis() + DWOplayer.timezone)
 		{
+			started = false;
 			panel.setWidget(new Label("Activiteit verlopen"));
 			History.back();
 			view = null;
@@ -70,6 +83,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 				@Override
 				public void run() {
 					tm = null;
+					started = false;
 					History.back();
 				}};
 			tm.schedule((int)timeToGo); 
@@ -78,7 +92,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 		
 		
 		
-		
+		started = true;
 		view = clientFactory.getEntryView();
 		{
 			final String id = sco.getID().toString();
@@ -90,6 +104,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 			}
 			view.setTrail(trail);
 			view.setTitle(sco.getName());
+			view.setPresenter(this);
 			
 			defaultContext = view.getAnchorContext();
 			view.setAnchorContext(this);
@@ -101,6 +116,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 			public void onFailure(Throwable caught) {
 				Logger.getLogger("ViewModuleActivity").log(Level.SEVERE, "initialize()", caught);
 				Window.alert(caught.getMessage());
+				started = false;
 				History.back();
 				//view.setupModule(sco.getName(), sco.getFile());
 				view = null;
@@ -120,6 +136,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 				@Override
 				public void onTap(TapEvent event)
 				{
+					started = false;
 					History.back();
 				}
 			}));
@@ -142,6 +159,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 	
 	@Override
 	public void onCancel() {
+		started = false;
 		if(tm!=null) {
 			tm.cancel();
 			tm=null;
@@ -154,7 +172,10 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 
 	@Override
 	public void gotoUrl(String href) {
-		if("goto:0".equals(href)) History.back();
+		if("goto:0".equals(href)) {
+			started = false;
+			History.back();
+		}
 		else if(href.startsWith("goto:.")) defaultContext.gotoUrl(href);
 		else if(href.startsWith("goto:")){
 			href = href.substring(5);
@@ -179,8 +200,16 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 			SelectModuleItem item = list.get(sconr);
 			Object scoid = item.getID();
 			if(item != sco )
-				clientFactory.getPlaceController().goTo(new ViewModulePlace(scoid));
+			{	
+				goTo(new ViewModulePlace(scoid));
+			}
 		}
+	}
+
+	@Override
+	public void goTo(Place place) {
+		started = false;
+		clientFactory.getPlaceController().goTo(place);
 	}
 	
 }

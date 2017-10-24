@@ -142,7 +142,10 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	}
 	
 	void goTo(Place place) {
-		DWOplayer.clientfactory.getPlaceController().goTo(place);
+		if(presenter == null)
+			DWOplayer.clientfactory.getPlaceController().goTo(place);
+		else
+			presenter.goTo(place);
 	}
 	
 	
@@ -219,6 +222,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	}
 	
 	private Object upId;
+	private Presenter presenter;
 	@UiHandler("upBtn")
 	void onUpBtn(ClickEvent ev) {
 		Object parent = upId;
@@ -229,5 +233,12 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	@Override
 	public Scorm2004IF getApi() {
 		return delegate.getApi();
+	}
+	
+	@Override
+	public void setPresenter(Presenter p) {
+		this.presenter = p;
+		if(delegate != null)
+			delegate.setPresenter(p);
 	}
 }

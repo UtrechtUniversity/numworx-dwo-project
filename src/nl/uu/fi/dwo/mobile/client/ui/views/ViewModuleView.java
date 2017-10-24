@@ -6,6 +6,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 
@@ -16,7 +17,11 @@ import com.googlecode.mgwt.ui.client.widget.HeaderButton;
  */
 public interface ViewModuleView extends IsWidget
 {
-
+	interface Presenter {
+		void goTo(Place place);
+	}
+	
+	
 	void setTitle(String title);
 	void setupModule(String name, String file);
 
@@ -42,4 +47,6 @@ public interface ViewModuleView extends IsWidget
 	boolean isReadonly();
 	void setTrail(List<SelectModuleItem> trail);
 	Scorm2004IF getApi();
+	
+	void setPresenter(Presenter p);
 }
