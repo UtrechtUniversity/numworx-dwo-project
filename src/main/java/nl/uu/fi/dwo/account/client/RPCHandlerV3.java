@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.account.client;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
@@ -20,11 +22,13 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.CallManagers.CourseManager;
 import fi.dwo.gwt.lib.rest.CallManagers.CoursesOfSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicCourseManager;
@@ -249,6 +253,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 
 			@Override
 			public Promise<Void> call(Promise<Void> resolved) throws Exception {
+				GwtRestVars.instance().getCustomHeaders().clear();
 				context.setDomHasRole(null);
 				scoManager = new PublicScoContextManager();
 				courseManager = new PublicCourseManager();
@@ -316,4 +321,32 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		return profile.flatMap(t);
 	}
 
+	static native String btoa(String bytes) /*-{
+		return btoa(bytes)
+	}-*/;
+	
+	private static final Logger LOG = Logger.getLogger("RPCHandlerV3");
+	@SuppressWarnings("deprecation")
+	public Promise<Void> startExam(String key, String value) {
+		GwtRestVars vars = GwtRestVars.getInstance();
+		Map<String,String> headers = vars.getCustomHeaders();
+		headers.put("X-ClassCourseID", btoa(key));
+		headers.put("X-TOTP", "PLAIN "+btoa(value));
+		return accountManager.verifyTOTP().then(new Success<JSONValue, Void>() {
+
+			@Override
+			public Promise<Void> call(Promise<JSONValue> resolved) throws Exception {
+				LOG.info("verifyTOTP:" + resolved.getValue());
+				return null;
+			}
+		})
+		.recoverWith(new Function<Promise<?>, Promise<? extends Void>>() {
+
+			@Override
+			public Promise<Void> apply(Promise<?> t) {
+				LOG.log(Level.SEVERE, "verifyTOTP recovery",t.getFailure());
+				return Promises.resolved(null);
+			}})
+		;
+	}
 }
