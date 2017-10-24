@@ -19,6 +19,8 @@ public class RestAuthenticator implements DispatcherFilter {
 		boolean haspassword = username != null && password != null;
 		if(haspassword)builder.setPassword(password);
 		if(haspassword)builder.setUser(username);
+		if(haspassword)
+			builder.setHeader("Authorization", "Basic " + Base64.btoa(username + ":" + password));
 		builder.setIncludeCredentials(haspassword);
 		return true;
 	}

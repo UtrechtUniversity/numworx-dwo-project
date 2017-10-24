@@ -6,6 +6,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import fi.dwo.gwt.lib.rest.GwtRestVars;
@@ -382,4 +383,11 @@ public class SecuredUserAccountManager {
             }
         });
     }
+    
+    public Promise<JSONValue> verifyTOTP() {
+    	PromiseCallback<JSONValue> callback = new PromiseCallback<JSONValue>();
+    	service.verifyTOTP(callback);
+    	return callback.getPromise();
+    }
+    
 }

@@ -27,7 +27,7 @@ public class HeadersFilter implements DispatcherFilter {
 		for(Map.Entry<String, String> entry: headers.entrySet()) {
 			builder.setHeader(entry.getKey(), entry.getValue());
 		}
-		return false;
+		return true;
 	}
 
 	public Map<String, String> getHeaders() {

@@ -1,6 +1,7 @@
 package fi.dwo.gwt.lib.rest.client.RestCallers;
 
 import fi.dwo.gwt.lib.rest.CallManagers.Callback;
+import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 
 import javax.ws.rs.FormParam;
@@ -11,6 +12,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
+
+import com.google.gwt.json.client.JSONValue;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
@@ -63,4 +66,8 @@ public interface SecuredUserAccountRestCaller extends RestService {
     @POST
     @Path("/secure/user/account/loginUser")
     public void loginUserWithPOST( @FormParam("user") String user, MethodCallback<DomUserFullwLoginContext> restcallback);
+
+    @GET
+    @Path("/secure/user/account/verifyTOTP")
+    public void verifyTOTP(PromiseCallback<JSONValue> callback);
 }
