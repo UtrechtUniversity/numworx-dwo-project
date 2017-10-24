@@ -100,7 +100,7 @@ log("setScoID " + scoID);
 				if(!Window.confirm(
 						(code == 0 ? Text.constants.noInternet() : Text.constants.serverError() ) +
 						"\nCode " + code + " " + f.getResponse().getStatusText()  + "\n"
-						+ Text.constants.opnieuwKnopLabel()))
+						+ Text.constants.opnieuwKnopLabel() +"?"))
 				{
 					deferred.fail(caught);
 					return;
