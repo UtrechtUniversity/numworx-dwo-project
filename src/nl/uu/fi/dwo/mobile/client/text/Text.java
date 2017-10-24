@@ -101,4 +101,7 @@ public interface Text extends Constants {
 	String LESSTOF();
 	@DefaultStringValue("ZELFTOETS")
 	String ZELFTOETS();
+	
+	@DefaultStringValue("Wil je niet eerst uitloggen? De gegevens kunnen verloren gaan!")
+	String maybe_lost_data();
 }
