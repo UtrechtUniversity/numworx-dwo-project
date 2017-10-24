@@ -1,26 +1,30 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
-             <!--xmlns:svg="org.vectomatic.dom.svg.ui" -->
+    <!--xmlns:svg="org.vectomatic.dom.svg.ui" -->
     <ui:style field="dwoStyle" src="css/dwostyle.css" />    
     <ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
     <ui:with type="nl.uu.fi.dwo.lms.gwtclient.gwt.icons.AccountImageBundle" field="icons" />
     <g:HeaderPanel addStyleNames='{dwoStyle.dwoAppPanel}'>
         <g:FlowPanel  height='51px'>
-        <g:FlowPanel addStyleNames='{dwoStyle.dwoAppHeaderPanel}' ui:field='headerView'>
+            <g:FlowPanel addStyleNames='{dwoStyle.dwoAppHeaderPanel}' ui:field='headerView'>
                 <!--<svg:SVGImage  ui:field="dwoLogo" resource="{icons.dwoLogo}" />-->
-            <g:Image addStyleNames='{dwoStyle.headerLogoBox}' height='90%' width='auto' ui:field="dwoLogo" resource="{icons.dwoLogo}" />
-            <g:Label addStyleNames='{dwoStyle.leftFullBox}' ui:field='activeDeckWidgetLabel'><ui:text from='{rb.GUI_View_LOGIN}'/></g:Label>
-            <g:Label addStyleNames='{dwoStyle.dwoAppMenuButton}'  ui:field="menuButton">
+                <g:Image addStyleNames='{dwoStyle.headerLogoBox}' height='90%' width='auto' ui:field="dwoLogo" resource="{icons.dwoLogo}" />
+                <g:Label addStyleNames='{dwoStyle.leftFullBox}' ui:field='activeDeckWidgetLabel'>
+                    <ui:text from='{rb.GUI_View_LOGIN}'/>
+                </g:Label>
+                <g:Label addStyleNames='{dwoStyle.dwoAppMenuButton}'  ui:field="menuButton">
                 &#9660;
-            </g:Label>            
-            <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}'>&nbsp;</g:Label>
-            <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}' height='90%' ui:field="presentationName"></g:Label>
-            <!--<g:Label addStyleNames='{dwoStyle.leftFullBox}' ui:field="roleLabel">rol:</g:Label>-->
-            <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}' ui:field="userRole"></g:Label>
-            <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}' ui:field="schoolName"></g:Label>
-            <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}' ui:field="schoolLabel"><ui:text from='{rb.GUI_Label_SchoolName}'/></g:Label>
-        </g:FlowPanel>
+                </g:Label>            
+                <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}'>&nbsp;</g:Label>
+                <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}' height='90%' ui:field="presentationName"></g:Label>
+                <!--<g:Label addStyleNames='{dwoStyle.leftFullBox}' ui:field="roleLabel">rol:</g:Label>-->
+                <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}' ui:field="userRole"></g:Label>
+                <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}' ui:field="schoolName"></g:Label>
+                <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}' ui:field="schoolLabel">
+                    <ui:text from='{rb.GUI_Label_SchoolName}'/>
+                </g:Label>
+            </g:FlowPanel>
         </g:FlowPanel>
         <g:LayoutPanel ui:field="layout" addStyleNames='{dwoStyle.dwoAppMainPanel}'>
             <g:layer>      
@@ -41,20 +45,45 @@
                 </g:DeckPanel>
             </g:layer>     
             <g:layer right="8px" top="8px" left="8px" bottom="8px">              
-                <g:FlowPanel addStyleNames='{dwoStyle.dwoAppMenuPanel}' ui:field="menuView" >
-                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="accountLabel"><ui:text from='{rb.GUI_View_ACCOUNT}'/></g:Label>
-                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="switchRoleLabel"><ui:text from='{rb.GUI_View_SWITCHSCHOOL}'/></g:Label>
-                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="classesLabel"><ui:text from='{rb.GUI_View_SCHOOLCLASSES}'/></g:Label>
-                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="resultsLabel"><ui:text from='{rb.GUI_View_ACTIVERESULTS}'/></g:Label>
-                    <g:Label addStyleNames='{dwoStyle.dwoMenuLabel}' ui:field="logoutLabel"><ui:text from='{rb.GUI_View_LOGOUT}'/></g:Label>
-               </g:FlowPanel>
-<!--            </g:layer>     
+                <g:FlowPanel addStyleNames='{dwoStyle.dwoAppMenuPanel}' ui:field="menuView"  >
+                    <g:FlowPanel addStyleNames='{dwoStyle.dwoMenuLabel}' >
+                        <g:Image ui:field="accountImage" height='90%' width='auto' resource="{icons.settingMenuIcon}" />
+                        <g:Label ui:field="accountLabel">
+                            <ui:text from='{rb.GUI_View_ACCOUNT}'/>
+                        </g:Label>
+                    </g:FlowPanel>
+                    <g:FlowPanel addStyleNames='{dwoStyle.dwoMenuLabel}' >
+                        <g:Image ui:field="switchRoleImage" height='90%' width='auto' resource="{icons.settingMenuIcon}" />
+                        <g:Label ui:field="switchRoleLabel" >
+                            <ui:text from='{rb.GUI_View_SWITCHSCHOOL}'/>
+                        </g:Label>
+                    </g:FlowPanel>
+                    <g:FlowPanel addStyleNames='{dwoStyle.dwoMenuLabel}' >
+                        <g:Image ui:field="classesImage" height='90%' width='auto' resource="{icons.settingMenuIcon}" />
+                        <g:Label  ui:field="classesLabel" >
+                            <ui:text from='{rb.GUI_View_SCHOOLCLASSES}'/>
+                        </g:Label>
+                    </g:FlowPanel>
+                    <g:FlowPanel addStyleNames='{dwoStyle.dwoMenuLabel}' >
+                        <g:Image ui:field="resultsImage" height='90%' width='auto' resource="{icons.settingMenuIcon}" />
+                        <g:Label ui:field="resultsLabel" >
+                            <ui:text from='{rb.GUI_View_ACTIVERESULTS}'/>
+                        </g:Label>
+                    </g:FlowPanel>
+                    <g:FlowPanel addStyleNames='{dwoStyle.dwoMenuLabel}' >
+                        <g:Image ui:field="logoutImage" height='90%' width='auto' resource="{icons.settingMenuIcon}" />
+                        <g:Label ui:field="logoutLabel" >
+                            <ui:text from='{rb.GUI_View_LOGOUT}'/>
+                        </g:Label>
+                    </g:FlowPanel>
+                </g:FlowPanel>
+            <!--            </g:layer>     
             <g:layer  addStyleNames='{dwoStyle.dwoDeckWidget}'>  -->
             </g:layer>
         </g:LayoutPanel>
         <!--</g:FlowPanel>-->
         <!--</g:FlowPanel>-->
-<!--        <g:FlowPanel addStyleNames='{dwoStyle.dwoAppStatusPanel}' ui:field='statusView' >
+        <!--        <g:FlowPanel addStyleNames='{dwoStyle.dwoAppStatusPanel}' ui:field='statusView' >
             <g:CheckBox  addStyleNames='{dwoStyle.dwoAppStatusMsgBox}' ui:field='autoUpdateResults' checked="false">autoUpdate</g:CheckBox>
             <g:Label addStyleNames='{dwoStyle.dwoAppStatusMsgBox}'  ui:field="statusMsg"></g:Label>
         </g:FlowPanel> -->

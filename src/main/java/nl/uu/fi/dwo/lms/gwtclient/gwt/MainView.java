@@ -122,14 +122,24 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
 
     @UiField(provided = true)
     Label accountLabel = new MenuLabel();
+    @UiField
+    Image accountImage = new Image();
     @UiField(provided = true)
     Label switchRoleLabel = new MenuLabel();
+    @UiField
+    Image switchRoleImage = new Image();
     @UiField(provided = true)
     Label classesLabel = new MenuLabel();
+    @UiField
+    Image classesImage = new Image();
     @UiField(provided = true)
     Label resultsLabel = new MenuLabel();
+    @UiField
+    Image resultsImage = new Image();
     @UiField(provided = true)
     Label logoutLabel = new MenuLabel();
+    @UiField
+    Image logoutImage = new Image();
 
     boolean showMenu = false;
 
@@ -160,10 +170,17 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         menuButton.addClickHandler(this);
         hideMenuView();
         switchRoleLabel.addClickHandler(this);
-        resultsLabel.addClickHandler(this);
-        logoutLabel.addClickHandler(this);
-        classesLabel.addClickHandler(this);
+        switchRoleImage.addClickHandler(this);
         accountLabel.addClickHandler(this);
+        accountImage.addClickHandler(this);
+        logoutLabel.addClickHandler(this);
+        logoutImage.addClickHandler(this);
+        classesLabel.addClickHandler(this);
+        classesImage.addClickHandler(this);
+        accountLabel.addClickHandler(this);
+        accountImage.addClickHandler(this);
+        resultsLabel.addClickHandler(this);
+        resultsImage.addClickHandler(this);
         dwoLogo.setTitle(BUILD.version+"-"+BUILD.buildNumber);
     }
 
@@ -378,19 +395,19 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
                 showMenu = false;
             }
             //handler.logoutClicked();
-        } else if (event.getSource() == accountLabel) {
+        } else if (event.getSource() == accountLabel || event.getSource() == accountImage) {
             hideMenuView();
             mainPresenter.selectView(SwitchViewEvent.SelectedView.ACCOUNT);
-        } else if (event.getSource() == switchRoleLabel) {
+        } else if (event.getSource() == switchRoleLabel || event.getSource() == switchRoleImage) {
             hideMenuView();
             mainPresenter.selectView(SwitchViewEvent.SelectedView.SWITCHSCHOOL);
-        } else if (event.getSource() == resultsLabel) {
+        } else if (event.getSource() == resultsLabel || event.getSource() == resultsImage) {
             hideMenuView();
             mainPresenter.selectView(SwitchViewEvent.SelectedView.RESULTS);
-        } else if (event.getSource() == logoutLabel) {
+        } else if (event.getSource() == logoutLabel || event.getSource() == logoutImage) {
             hideMenuView();
             Window.Location.replace(Window.Location.getHref());
-        } else if (event.getSource() == classesLabel) {
+        } else if (event.getSource() == classesLabel || event.getSource() == classesImage) {
             hideMenuView();
             mainPresenter.selectView(SwitchViewEvent.SelectedView.SCHOOLCLASSES);
         }

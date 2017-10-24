@@ -11,21 +11,22 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface AccountImageBundle extends ClientBundle {
 
-public AccountImageBundle instance = GWT.create(AccountImageBundle.class);    
+    public AccountImageBundle instance = GWT.create(AccountImageBundle.class);
 
-@Source("delete.gif")
-public ImageResource delete();
-    
+    @Source("delete.gif")
+    public ImageResource delete();
 
-@Source("empty.gif")
-public ImageResource empty();
-    
-@Source("student.png")
-public ImageResource student();
+    @Source("empty.gif")
+    public ImageResource empty();
 
+    @Source("student.png")
+    public ImageResource student();
 
-@Source("numworx-logo-wit-1.png")
-public ImageResource dwoLogo();
+    @Source("numworx-logo-wit-1.png")
+    public ImageResource dwoLogo();
 //@Source("logo-Numworx-grijs2.svg")
 //public SVGResource dwoLogo();
+
+    @Source("settings.png")
+    public ImageResource settingMenuIcon();
 }

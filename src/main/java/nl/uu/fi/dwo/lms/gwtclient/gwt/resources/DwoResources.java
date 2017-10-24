@@ -50,4 +50,8 @@ public interface DwoResources extends ClientBundle{
    
    @Source("drillDown.gif")
    public ImageResource drillDownIcon();
+
+   @Source("settings.png")
+   public ImageResource settingMenuIcon();
+   
 }
