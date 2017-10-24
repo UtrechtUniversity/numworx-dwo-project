@@ -14,10 +14,10 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  */
 @XmlRootElement
 public class DomCoursesOfSchoolClass extends DomClassCoursesOfSchoolClass {
-    private static Logger LOG = Logger.getLogger(DomCoursesOfSchoolClass.class.getName());
 
     private List<DomMapEntry<PersistenceId, DomCourseStudent>> courses;
-
+    private List<DomMapEntry<PersistenceId, DomScoContext>> scoContexts;
+    
     /**
      * @return the courses
      */
@@ -31,6 +31,20 @@ public class DomCoursesOfSchoolClass extends DomClassCoursesOfSchoolClass {
     public void setCourses(List<DomMapEntry<PersistenceId, DomCourseStudent>> courses) {
         this.courses = courses;
     }
+
+	/**
+	 * @return the scoContexts
+	 */
+	public List<DomMapEntry<PersistenceId, DomScoContext>> getScoContexts() {
+		return scoContexts;
+	}
+
+	/**
+	 * @param scoContexts the scoContexts to set
+	 */
+	public void setScoContexts(List<DomMapEntry<PersistenceId, DomScoContext>> scoContexts) {
+		this.scoContexts = scoContexts;
+	}
 
     
 }

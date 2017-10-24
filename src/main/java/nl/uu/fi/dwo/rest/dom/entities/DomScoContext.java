@@ -6,27 +6,13 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * 
  * @author Gert van der Plas
  */
-public class DomScoContext {
-    private PersistenceId id;
+public class DomScoContext extends DomScoContextId {
     private PersistenceId courseId;
     private PersistenceId AppletId;
     private String scoName;
     private Boolean showScore;
     private Long sequencenr;
-
-    /**
-     * @return the id
-     */
-    public PersistenceId getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(PersistenceId id) {
-        this.id = id;
-    }
+    private String image; // zie DomCourseStudent
 
     /**
      * @return the courseId
@@ -97,4 +83,18 @@ public class DomScoContext {
     public void setSequencenr(Long sequencenr) {
         this.sequencenr = sequencenr;
     }
+
+	/**
+	 * @return the image
+	 */
+	public String getImage() {
+		return image;
+	}
+
+	/**
+	 * @param image the image to set
+	 */
+	public void setImage(String image) {
+		this.image = image;
+	}
 }
