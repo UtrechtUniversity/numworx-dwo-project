@@ -434,6 +434,9 @@ public class TekstBuffer
 		case 54:
 			return x(map, new StubView("WebLogoGWT.html",currentVakGegevens, randomVarNamen, randomVarWaarden));
 			//return new PopupFacade(map, new fi.weblogogwt.client.WebLogoGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+		case 58:
+			return x(map, new StubView("WebLogo3dGWT.html",currentVakGegevens, randomVarNamen, randomVarWaarden));
+			//return new PopupFacade(map, new fi.weblogo3dgwt.client.WebLogo3dGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 38:
 			return new StubView("Grafiek3DGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(map, new fi.grafiek3dgwt.client.Grafiek3DGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
