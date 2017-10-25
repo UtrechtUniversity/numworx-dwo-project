@@ -95,7 +95,7 @@ public class DatabaseManager {
     }
 
     private void RunScript(String script) {
-        ScriptRunner runner = new ScriptRunner(con, false, false);
+        ScriptRunner runner = new ScriptRunner(con, false, true);
         try {
             runner.runScript(new BufferedReader(new InputStreamReader(
                     getClass().getResourceAsStream(script))));

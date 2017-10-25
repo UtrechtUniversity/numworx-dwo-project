@@ -56,8 +56,11 @@ import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewAccessKey;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewAccessKey;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -708,4 +711,40 @@ public class SecuredTeacherSchoolClassManagerIT {
             fail("Failed to create legit classcourse.");
         }
     }
+
+    @Test
+    public void testSetAccessKeyCourseFromClass() throws Dwo2Exception {
+        PersistentSchool school = SchoolManager.findEntity(03L);
+        PersistentUser user = UserManager.findByUserName("user03");
+        SecurityContext sc = new TestSecurityContext(user.getUsername(), RoleType.TEACHER);//school01
+        RestSchoolClassCourseProfilewAccessKey submit = new RestSchoolClassCourseProfilewAccessKey();
+
+        DomContext context = new DomContext();
+        DomSchoolClassCourseProfilewAccessKey data = new DomSchoolClassCourseProfilewAccessKey();
+
+        try {
+            DomHasRole hr = HasRoleUtilManager.getHasRole(user.getId(), RoleType.TEACHER, school).buildDomHasRole();
+            context.setDomHasRole(hr);
+            submit.setRestContext(context);
+            data.setCourse(CourseManager.findEntity(6L).buildDomCourse());
+            data.setDomDwoProfile(DwoProfileManager.findEntity(1L).buildDomDwoProfile());
+            data.setDomSchoolClass(SchoolClassManager.findEntity(2L).buildDomSchoolClass());
+            data.setAccessKey("secret");
+            submit.setDomSchoolClassCourseProfilewAccessKey(data);
+        } catch (Dwo2Exception e) {
+            LOG.log(Level.SEVERE, "Internal error", e);
+            fail("internal error");
+        }
+        SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
+
+            instance.setAccessKeyClassCourse(sc, submit);
+            List<PersistentClassCourse> cc = ClassCourseManager.findEntities(SchoolClassManager.findEntity(2L), CourseManager.findEntity(6L));
+            assertEquals("accessKey set to 'secret'", cc.get(0).getAccessKey(), "secret");
+ 
+     }
+
+
+
+
+
 }

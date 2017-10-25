@@ -14,8 +14,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 
@@ -61,14 +63,16 @@ public class ClassCourseManager {
      * Update
      *
      * @param classCourse
+     * @return 
      */
-    public static void edit(PersistentClassCourse classCourse) throws PersistenceException {
+    public static PersistentClassCourse edit(PersistentClassCourse classCourse) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             classCourse = em.merge(classCourse);
             em.getTransaction().commit();
+            return classCourse;
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
@@ -330,13 +334,39 @@ public class ClassCourseManager {
     public static int getEntityCount() {
         EntityManager em = getEntityManager();
         try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            CriteriaQuery<Long> cq = em.getCriteriaBuilder().createQuery(Long.class);
             Root<PersistentClassCourse> rt = cq.from(PersistentClassCourse.class);
             cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
-            return ((Long) q.getSingleResult()).intValue();
+            TypedQuery<Long> q = em.createQuery(cq);
+            return (q.getSingleResult()).intValue();
         } finally {
             em.close();
         }
     }
+
+	public static void editAccessKey(Long id, String accessKey) {
+        EntityManager em = null;
+        PersistentClassCourse cc = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            cc = findEntity(id);
+            cc.setAccessKey(accessKey);
+            cc = em.merge(cc);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            String msg = e.getLocalizedMessage();
+            if (msg == null || msg.length() == 0) {
+                if (cc == null) {
+                    LOG.log(Level.FINE, "The PersistentClassCourse with " + id + " no longer exists.", e);
+                    throw new PersistenceException(e);
+                }
+            }
+            throw new PersistenceException(e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+	}
 }

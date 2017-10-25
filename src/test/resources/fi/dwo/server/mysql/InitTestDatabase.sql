@@ -123,13 +123,14 @@ CREATE TABLE `tblclasscourse` (
   `ClassCourseID` int(11) NOT NULL AUTO_INCREMENT,
   `ClassID` int(11) NOT NULL DEFAULT '0',
   `type` int(11) DEFAULT '0',
-  `notBefore` datetime DEFAULT '0000-00-00 00:00:00',
-  `notAfter` datetime DEFAULT '0000-00-00 00:00:00',
+  `notBefore` datetime DEFAULT '1970-01-01 00:00:01',
+  `notAfter` datetime DEFAULT '1970-01-01 00:00:01',
   `CourseID` int(11) NOT NULL DEFAULT '0',
   `optlock` int(11) DEFAULT '0',
   `lastChangeTimeStamp` bigint(20) DEFAULT '0',
   `del` tinyint(4) NOT NULL DEFAULT '0',
   `viewState` tinyint(4) NOT NULL DEFAULT '0',
+  `accessKey` varchar(135) DEFAULT NULL,
   PRIMARY KEY (`ClassCourseID`),
   UNIQUE KEY `AK_ClassID_CourseID` (`ClassID`,`CourseID`),
   KEY `index_course` (`CourseID`),
@@ -144,7 +145,7 @@ CREATE TABLE `tblclasscourse` (
 
 LOCK TABLES `tblclasscourse` WRITE;
 /*!40000 ALTER TABLE `tblclasscourse` DISABLE KEYS */;
-INSERT INTO `tblclasscourse` VALUES (1,1,NULL,'1970-01-01 00:00:01','1970-01-01 00:00:01',1,0,0,0,3),(2,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',2,0,0,0,3),(3,1,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',8,0,0,0,3),(4,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',7,0,0,0,3),(5,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',5,0,0,0,3),(6,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',6,0,0,0,0);
+INSERT INTO `tblclasscourse` VALUES (1,1,NULL,'1970-01-01 00:00:01','1970-01-01 00:00:01',1,0,0,0,3,NULL),(2,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',2,0,0,0,3,NULL),(3,1,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',8,0,0,0,3,NULL),(4,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',7,0,0,0,3,NULL),(5,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',5,0,0,0,3,NULL),(6,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',6,0,0,0,0,NULL);
 /*!40000 ALTER TABLE `tblclasscourse` ENABLE KEYS */;
 UNLOCK TABLES;
 

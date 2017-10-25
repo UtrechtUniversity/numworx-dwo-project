@@ -143,6 +143,27 @@ public class ClassCourseManagerPIT {
      * Test of edit method, of class CourseInClassManager.
      */
     @Test
+    public void testEditAccessKey() {
+        System.out.println("edit");
+        Long id = 1L;
+        PersistentClassCourse cc = ClassCourseManager.findEntity(id);
+        cc.setAccessKey("secret");
+        
+        ClassCourseManager.edit(cc);
+        PersistentClassCourse result = ClassCourseManager.findEntity(id);
+        assertEquals(result.getType(), cc.getType());
+        assertEquals(result.getViewState(), ViewState.studentsAndTeachers);
+        assertEquals(result.getNotBefore().toString(), cc.getNotBefore().toString());
+        assertEquals(result.getNotAfter().toString(), cc.getNotAfter().toString());
+        assertEquals(result.getAccessKey(), cc.getAccessKey());
+    }
+    
+    
+    
+    /**
+     * Test of edit method, of class CourseInClassManager.
+     */
+    @Test
     public void testEditType() {
         System.out.println("edit");
         Long id = 1L;

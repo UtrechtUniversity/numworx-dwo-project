@@ -36,6 +36,7 @@ import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder;
+import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
@@ -79,6 +80,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewAccessKey;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewFrom;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewTo;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewType;
@@ -1369,7 +1371,32 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         }
         return false;
     }
-
+    
+    @PUT
+    @Produces({"application/json"})
+    @Path("/setAccessKeyClassCourse")
+    public Boolean setAccessKeyClassCourse(@Context SecurityContext sc, RestSchoolClassCourseProfilewAccessKey rest) throws Dwo2Exception {
+    	State_C_CC_HR_P_R_S_SC_SG_U build = CascadingPersistenceBuilder
+    	.user(sc.getUserPrincipal().getName())
+    	.addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
+    	.addSchoolClass(rest.getDomSchoolClassCourseProfilewAccessKey().getDomSchoolClass())
+    	.addProfile(rest.getDomSchoolClassCourseProfilewAccessKey().getDomDwoProfile())
+    	.addCourse(rest.getDomSchoolClassCourseProfilewAccessKey().getCourse());
+        List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse());
+        if (pcc.size() > 0) {
+            //update type.
+            ClassCourseManager.editAccessKey(pcc.get(0).getClassCourseID(), rest.getDomSchoolClassCourseProfilewAccessKey().getAccessKey());
+            return true;
+        }
+        return false;
+    	
+    }
+    
+    
+    
+    
+    
+    
     /**
      * Updates the type of a class-course of a class in a school.
      *
