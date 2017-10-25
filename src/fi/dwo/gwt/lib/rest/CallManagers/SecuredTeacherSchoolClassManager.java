@@ -28,6 +28,7 @@ import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewAccessKey;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewFrom;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewTo;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewType;
@@ -335,6 +336,12 @@ public class SecuredTeacherSchoolClassManager {
     }
     
     private void setClassCourseType(RestSchoolClassCourseProfilewType restData, MethodCallback<Boolean> callBack) {
-        service.setClassCourseType(restData, (callBack));
-    }            
+    	service.setClassCourseType(restData, (callBack));
+    }
+
+	public Promise<Boolean> setAccessKeyClassCourse(RestSchoolClassCourseProfilewAccessKey rest) {
+        PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
+        service.setAccessKeyClassCourse(rest, (defer));
+        return defer.getPromise();
+	}            
 }

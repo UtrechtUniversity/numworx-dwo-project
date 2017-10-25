@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewAccessKey;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewFrom;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewTo;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewType;
@@ -127,4 +128,9 @@ public interface SecuredTeacherSchoolClassRestCaller extends RestService {
     @PUT
     @Path("/secure/teacher/schoolclass/setClassCourseType")
     public void setClassCourseType(RestSchoolClassCourseProfilewType submit, MethodCallback<Boolean> callback);
+
+    @PUT
+    @Path("/secure/teacher/schoolclass/setAccessKeyClassCourse")
+	public void setAccessKeyClassCourse(RestSchoolClassCourseProfilewAccessKey rest,
+			MethodCallback<Boolean> promiseCallback);
 }
