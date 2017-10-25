@@ -14,16 +14,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -127,6 +131,22 @@ public class PersistentClassCourse implements Serializable {
 //        course = aCourse;
 //    }
 
+    /**
+     * @since 1.5.0
+     */
+    @Column(name = "accessKey")
+    private String accessKey;
+    @Column(name = "optlock")
+    @Version int optlock;
+    @Column(name = "lastChangeTimeStamp")
+    long lastChangeTimeStamp;
+    
+    @PrePersist
+    @PreUpdate
+    void changeTimestamp() {
+    	lastChangeTimeStamp = System.currentTimeMillis();
+    }
+    
     public PersistentClassCourse() {
     }
 
@@ -247,11 +267,25 @@ public class PersistentClassCourse implements Serializable {
         return classCourse;
     }
 
+    public DomClassCourseFull buildDomClassCourseFull() {
+        DomClassCourseFull classCourse = new DomClassCourseFull();
+        fillDomClassCourseFull(classCourse);
+        return classCourse;
+    }
+
     private void fillDomClassCourse4Teacher(DomClassCourse4Teacher classCourse) {
         fillDomClassCourse(classCourse);
         classCourse.setViewState(this.viewState);
     }
 
+    private void fillDomClassCourseFull(DomClassCourseFull classCourse) {
+    	fillDomClassCourse4Teacher(classCourse);
+        classCourse.setAccessKey(accessKey);
+        classCourse.setOptlock(optlock);
+        classCourse.setLastChangeTimeStamp(lastChangeTimeStamp);
+    	
+    }
+    
     public DomClassCourse buildDomClassCourse() {
         DomClassCourse classCourse = new DomClassCourse();
         PersistentClassCourse.this.fillDomClassCourse(classCourse);
@@ -302,4 +336,29 @@ public class PersistentClassCourse implements Serializable {
     public void setViewState(ViewState viewState) {
         this.viewState = viewState;
     }
+
+	public String getAccessKey() {
+		return accessKey;
+	}
+
+	public void setAccessKey(String accessKey) {
+		this.accessKey = accessKey;
+	}
+
+	public int getOptlock() {
+		return optlock;
+	}
+
+	public void setOptlock(int optlock) {
+		this.optlock = optlock;
+	}
+
+	public long getLastChangeTimeStamp() {
+		return lastChangeTimeStamp;
+	}
+
+	public void setLastChangeTimeStamp(long lastChangeTimestamp) {
+		this.lastChangeTimeStamp = lastChangeTimestamp;
+	}
+    
 }
