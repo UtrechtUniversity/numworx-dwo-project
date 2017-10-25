@@ -19,6 +19,7 @@ public class LoginPresenter {
     private static final Logger LOG = Logger.getLogger(LoginPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
+    
 
     public interface Display extends IsWidget {
 
@@ -31,14 +32,35 @@ public class LoginPresenter {
         public void setPassword(String password);
     }
 
+        private native static void setDWO(DwoGlobalVars gv, LoginPresenter p) /*-{
+    	var api = {
+    			"loginTest" : function() {
+    				return p.@nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter::loginClickedJS(Ljava/lang/String;Ljava/lang/String;)("gert_project", "passw")
+                        },
+    			"loginClicked" : function(user, password) {
+    				return p.@nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter::loginClickedJS(Ljava/lang/String;Ljava/lang/String;)(user, password)
+                        },
+    			"getServer" : function() {
+    				return gv.@nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars::getServer()
+                        }
+    		};
+    	$wnd.DWO = api;
+    }-*/;
+                
     public LoginPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+        this.setDWO(dwoGlobalVars,this);
         init();
     }
 
+    
     final public void init() {
-
+    }
+    
+    public String loginClickedJS(String user, String password) {
+        this.loginClicked(user, password, true);
+        return "done";
     }
 
     public void loginClicked(String user, String password, final Boolean switchRole) {

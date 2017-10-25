@@ -159,6 +159,12 @@
             <version>2.1.21-SNAPSHOT</version>
             <scope>runtime</scope>
         </dependency>
+<!-- https://mvnrepository.com/artifact/com.google.jsinterop/jsinterop-annotations -->
+<dependency>
+    <groupId>com.google.jsinterop</groupId>
+    <artifactId>jsinterop-annotations</artifactId>
+    <version>1.0.0</version>
+</dependency>        
     </dependencies>
     
     <build>
@@ -227,6 +233,15 @@
                 <executions>
                     <execution>
                         <configuration>
+                            <sourceLevel>1.8</sourceLevel>
+<!--                            <compilerArg>
+                                <arg>-XjsInteropMode</arg>
+                                <arg>JS</arg>
+                            </compilerArg>
+                            <codeserverArgs>
+                                <arg>-XjsInteropMode</arg>
+                                <arg>JS</arg>
+                            </codeserverArgs>-->
                             <module>nl.uu.fi.dwo.lms.gwtclient.gwtclient</module>
                             <i18nConstantsBundles>
                                 <i18nConstantsBundle>nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages</i18nConstantsBundle>

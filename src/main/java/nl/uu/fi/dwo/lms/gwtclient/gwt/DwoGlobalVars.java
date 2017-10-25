@@ -391,5 +391,7 @@ public class DwoGlobalVars {
     public void setProfile(Promise<DomDwoProfileFull> profile) {
         this.profile = profile;
     }
-
+    public String cloneMsg(String msg){
+        return msg;
+    }
 }
