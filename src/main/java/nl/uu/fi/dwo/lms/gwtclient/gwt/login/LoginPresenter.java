@@ -32,6 +32,7 @@ public class LoginPresenter {
         public void setPassword(String password);
     }
 
+    //** should become part of the PresenterFactories ie. DWO.LoginPresenter.loginClicked.
         private native static void setDWO(DwoGlobalVars gv, LoginPresenter p) /*-{
     	var api = {
     			"loginTest" : function() {
