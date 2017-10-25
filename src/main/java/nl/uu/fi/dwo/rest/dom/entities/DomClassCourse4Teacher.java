@@ -13,6 +13,21 @@ import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 public class DomClassCourse4Teacher extends DomClassCourse{
     private static final Logger LOG = Logger.getLogger(DomClassCourse4Teacher.class.getName());
     private ViewState viewState;
+	private String accessKey;
+
+	/**
+	 * @return the accessKey
+	 */
+	public String getAccessKey() {
+		return accessKey;
+	}
+
+	/**
+	 * @param accessKey the accessKey to set
+	 */
+	public void setAccessKey(String accessKey) {
+		this.accessKey = accessKey;
+	}
 
     /**
      * @return the viewState
