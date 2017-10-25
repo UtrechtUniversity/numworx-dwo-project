@@ -49,6 +49,7 @@ public class DwoDateUtilities {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DATE);
+        calendar.clear();
         calendar.set(year, month, day, 0, 0, 0);
         return calendar.getTime();
     }
@@ -62,6 +63,7 @@ public class DwoDateUtilities {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DATE);
+        calendar.clear();
         calendar.set(year, month, day, 23, 59, 59);
         return calendar.getTime();
     }
