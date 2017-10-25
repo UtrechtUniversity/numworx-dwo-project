@@ -276,11 +276,11 @@ public class PersistentClassCourse implements Serializable {
     private void fillDomClassCourse4Teacher(DomClassCourse4Teacher classCourse) {
         fillDomClassCourse(classCourse);
         classCourse.setViewState(this.viewState);
+        classCourse.setAccessKey(this.accessKey);
     }
 
     private void fillDomClassCourseFull(DomClassCourseFull classCourse) {
     	fillDomClassCourse4Teacher(classCourse);
-        classCourse.setAccessKey(accessKey);
         classCourse.setOptlock(optlock);
         classCourse.setLastChangeTimeStamp(lastChangeTimeStamp);
     	
