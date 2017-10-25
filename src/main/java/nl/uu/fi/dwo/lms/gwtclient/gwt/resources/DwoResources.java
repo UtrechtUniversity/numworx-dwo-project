@@ -1,7 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.resources;
 
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -10,7 +10,7 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface DwoResources extends ClientBundle{
    @Source("/css/Style.css")
-   Style style();
+   CssResource style();
 
    @Source("DWO_logo_full.png")
    public ImageResource logoIcon();

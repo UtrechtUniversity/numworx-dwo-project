@@ -13,11 +13,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewAccessKey;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewFrom;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewTo;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewType;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewAccessKey;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewFrom;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewTo;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewType;
@@ -148,11 +150,7 @@ class CoursesOfSchoolclassService {
         DomContext context = new DomContext();
         context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
 
-        return dwoGlobalVars.getProfile().then(new Success<DomDwoProfile, Boolean>() {
-
-            @Override
-            public Promise<Boolean> call(
-                    Promise<DomDwoProfile> resolved) throws Exception {
+        return dwoGlobalVars.getProfile().then(( resolved) -> {
                 DomSchoolClassCourseProfilewTo sap = new DomSchoolClassCourseProfilewTo();
                 sap.setDomDwoProfile(resolved.getValue());
                 sap.setDomSchoolClass(sc);
@@ -163,6 +161,25 @@ class CoursesOfSchoolclassService {
                 rest.setDomSchoolClassCourseProfilewTo(sap);
                 return manager.setToDateClassCourse(rest);
             }
+        );
+    }
+
+public Promise<Boolean> setAccessKey(DomSchoolClass sc, DomCourse course, String accessKey) {
+    DomContext context = new DomContext();
+    context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
+
+    return dwoGlobalVars.getProfile().then( (resolved) -> {
+            DomSchoolClassCourseProfilewAccessKey sap = new DomSchoolClassCourseProfilewAccessKey();
+            sap.setDomDwoProfile(resolved.getValue());
+            sap.setDomSchoolClass(sc);
+            sap.setCourse(course);
+            sap.setAccessKey(accessKey);
+            RestSchoolClassCourseProfilewAccessKey rest = new RestSchoolClassCourseProfilewAccessKey();
+            rest.setRestContext(context);
+            rest.setDomSchoolClassCourseProfilewAccessKey(sap);
+            return manager.setAccessKeyClassCourse(rest);
         });
-    }    
+
+	
+}    
 }

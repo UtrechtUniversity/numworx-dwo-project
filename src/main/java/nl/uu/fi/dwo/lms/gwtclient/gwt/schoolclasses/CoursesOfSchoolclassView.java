@@ -386,6 +386,37 @@ public class CoursesOfSchoolclassView extends Composite implements ClickHandler,
                 .appendHtmlConstant("</div>");
 
         dataGrid.addColumn(dateColumn, builder.toSafeHtml());
+
+        // accessKey
+        
+        builder = new SafeHtmlBuilder();
+        builder.appendHtmlConstant("<div title=\"Accesskey for assessments.\">")
+                .appendHtmlConstant(rb.GUI_Label_Password())
+                .appendHtmlConstant("</div>");
+        textCell = new EditTextCell();
+        Column<ClassCourseItem, String> accessKeyColumn = new Column<ClassCourseItem, String>(textCell) {
+
+            @Override
+            public String getValue(ClassCourseItem object) {
+            	String key = object.getAccessKey();
+                return (key == null) ? "" : key;
+            }
+
+        };
+        accessKeyColumn.setFieldUpdater(new FieldUpdater<ClassCourseItem, String>() {
+
+            @Override
+            public void update(int index, ClassCourseItem t, String value) {
+            	
+                coursesOfSchoolclassPresenter.setAccessKey(t.getKey(), value);
+                dataProvider.refresh();
+            }
+        });
+        
+        
+        
+        dataGrid.addColumn(accessKeyColumn, builder.toSafeHtml());
+        
         dataGrid.setEmptyTableWidget(new Label("empty"));
         dataGrid.setRowData(0, data);
         dataGrid.setRowCount(data.size(), true);

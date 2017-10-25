@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.DomTree;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -37,7 +38,7 @@ public class CoursesOfSchoolclassPresenter {
     private EventBus eventBus;
     private CoursesOfSchoolclassService service;
 
-    private String[] tableHeaders = {"module name", "assigned", "type", "from [?]", "to [?]"};
+    private String[] tableHeaders = {"module name", "assigned", "type", "from [?]", "to [?]", "password"};
     private DomSchoolClass schoolClass;
     private DomCoursesOfSchoolclassTree tree;
     private Display view;
@@ -190,7 +191,8 @@ public class CoursesOfSchoolclassPresenter {
                     false,
                     c.getObject().getClassCourse().getCourseType().name(),
                     c.getObject().getClassCourse().getNotBefore(),
-                    c.getObject().getClassCourse().getNotAfter()
+                    c.getObject().getClassCourse().getNotAfter(),
+                    c.getObject().getClassCourse().getAccessKey()
             );
             return item;
         }
@@ -214,7 +216,8 @@ public class CoursesOfSchoolclassPresenter {
                     (c.getObject().getClassCourse().getViewState()!=ViewState.invisible),
                     c.getObject().getClassCourse().getCourseType().name(),
                     c.getObject().getClassCourse().getNotBefore(),
-                    c.getObject().getClassCourse().getNotAfter()
+                    c.getObject().getClassCourse().getNotAfter(),
+                    c.getObject().getClassCourse().getAccessKey()
             );
             if (c.getChildren() == null || c.getChildren().size() == 0) {
                 item.setIsLeaf(true);
@@ -275,6 +278,7 @@ public class CoursesOfSchoolclassPresenter {
                         cc.setType(coc.getObject().getClassCourse().getCourseType().name());
                         cc.setFrom(coc.getObject().getClassCourse().getNotBefore());
                         cc.setTo(coc.getObject().getClassCourse().getNotAfter());
+                        cc.setAccessKey(coc.getObject().getClassCourse().getAccessKey());
                         cc.setHasStudentData(true);
                     }
                     cc.setIsLeaf(coc.getObject().getCourse().getWithChildren());
@@ -354,4 +358,15 @@ public class CoursesOfSchoolclassPresenter {
             return;
         }
     }
+
+	public void setAccessKey(String key, String accessKey) {
+		DomTree<DomCourseOfClass> c = tree.getNode(key);
+		DomClassCourse4Teacher cc = c.getObject().getClassCourse();
+		if(accessKey == null) accessKey = "";
+		
+		if( ! accessKey.equals(cc.getAccessKey()) ) {
+			service.setAccessKey(schoolClass, c.getObject().getCourse(), accessKey);
+		} 
+		
+	}
 }

@@ -13,6 +13,7 @@ public class ClassCourseItem extends CourseItem {
         private Date from;
         private Date to;
         private String school;
+        private String accessKey;
 
    public ClassCourseItem (){
         
@@ -22,13 +23,14 @@ public class ClassCourseItem extends CourseItem {
         super(aKey,aName);
        
    }
-    public ClassCourseItem (String aKey, String aName, Boolean hasData, String aType, Date aFrom, Date aTo){
+    public ClassCourseItem (String aKey, String aName, Boolean hasData, String aType, Date aFrom, Date aTo, String accessKey){
         super(aKey,aName);
         
         hasStudentData = hasData;
         type = aType;
         from = aFrom;
         to = aTo;
+        this.accessKey = accessKey;
     }        
         
     /**
@@ -86,5 +88,19 @@ public class ClassCourseItem extends CourseItem {
     public void setTo(Date to) {
         this.to = to;
     }
+
+	/**
+	 * @return the accessKey
+	 */
+	public String getAccessKey() {
+		return accessKey;
+	}
+
+	/**
+	 * @param accessKey the accessKey to set
+	 */
+	public void setAccessKey(String accessKey) {
+		this.accessKey = accessKey;
+	}
 
 }
