@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.domain;
 
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +21,7 @@ public class ClassCourse {
     private int type;
     private Date notBefore;
     private Date notAfter;
+    private String accessKey;
 
     protected SchoolClass schoolClass;
     protected Course course;
@@ -164,5 +166,16 @@ public class ClassCourse {
     public void setViewState(int viewState) {
         this.viewState = viewState;
     }
+
+	public String getAccessKey() {
+		return accessKey;
+	}
+
+	/**
+	 * @param accessKey the accessKey to set
+	 */
+	public void setAccessKey(String accessKey) {
+		this.accessKey = accessKey;
+	}
 
 }

@@ -2685,6 +2685,9 @@ public class PersistenceFacade {
                 h.put("notBefore", deze.getNotBefore());
             }
             h.put("viewState", new Integer(deze.getViewState()));
+            String accessKey = deze.getAccessKey();
+			if(accessKey != null) 
+				h.put("accessKey", accessKey);
             v.add(h);
         }
 // insert dwoProfileID.

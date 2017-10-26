@@ -89,6 +89,7 @@ class CourseData implements CourseMap {
             van = course.link.getNotBefore();
             tot = course.link.getNotAfter();
             type = course.link.getType();
+            accessKey = course.link.getAccessKey();
             //FIXME Wim wn 
             if(type == 2) 
             	type = 0;
@@ -127,6 +128,7 @@ class CourseData implements CourseMap {
 
     CourseData[] children;
     public int type;
+	public String accessKey;
 
     public void addChild(Course c) {
     }
@@ -384,6 +386,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                     return cd[rowIndex].van;
                 case 5:
                     return cd[rowIndex].tot;
+                case 6: 
+                	return cd[rowIndex].accessKey;
             }
             return null;
         }
@@ -399,6 +403,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             if (columnIndex >= 4 && columnIndex <= 5) {
                 return Date.class;
             }
+            if (columnIndex == 6)
+            	return String.class;
             return super.getColumnClass(columnIndex);
         }
 
@@ -411,6 +417,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                     return TextMapper.getText(TextMapper.GUICDLG_VANAF);
                 case 5:
                     return TextMapper.getText(TextMapper.GUICDLG_TOTAAN);
+                case 6: 
+                	return TextMapper.getText(TextMapper.LBL_PASSWORD);
                 case 0:
                     return "";
                 case 1:
@@ -427,6 +435,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                 case COURSE_TYPE:
                 case 4:
                 case 5:
+                case 6:
                     return Boolean.TRUE.equals(cd[rowIndex].select);
                 case 0:
                     return !cd[rowIndex].course.isWithChildren();
@@ -469,6 +478,9 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                     break;
                 case 5:
                     cd[rowIndex].tot = (Date) aValue;
+                    break;
+                case 6:
+                	cd[rowIndex].accessKey = (String) aValue;
 
             }
             fireTableCellUpdated(rowIndex, columnIndex);
@@ -802,7 +814,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         contentPane.setLayout(new BorderLayout());
         contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
         setBackground(GuiConstants.MAIN_BACKGROUND);
-        setSize(cnt == 2 ? 600 : 800, 310);
+        setSize(cnt == 2 ? 600 : 900, 310);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
 
         cd = new CourseData[allCourses.length];
@@ -1112,6 +1124,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                     link.setNotAfter(cds[i].tot);
                     link.setNotBefore(cds[i].van);
                     link.setType(cds[i].type);
+                    link.setAccessKey(cds[i].accessKey);
                 }
                 vector.addElement(course);
                 addParent(vector, course);
@@ -1190,7 +1203,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                 = GuiCreator.instance().dwo.sequence(allCourses, sc);
         int cnt = 3; // 2 voor select course voor resultaat. 3+3 voor selectcourse voor klas.       
         if (CenterPanel.isIconizer()) {
-            cnt += 3; // VAN en TOT en AFGESCHERMD
+            cnt += 4; // VAN en TOT en AFGESCHERMD, accessKey
         }
         final SelectCoursesDialog scd = new SelectCoursesDialog(parent, title, true, allCourses, selectedCourses, cnt);
         scd.sc = sc;
