@@ -7,6 +7,8 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jsinterop.annotations.JsMethod;
+import jsinterop.annotations.JsType;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
@@ -16,6 +18,7 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
  * @author Gert van der Plas
  */
 public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler {
+
     private static final DwoLocalesForGWT rb = GWT.create(DwoLocalesForGWT.class);
     private static final Logger LOG = Logger.getLogger(MainPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
@@ -67,7 +70,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
         public void showMenuButton();
 
         public void hideMenuButton();
-        
+
         public void currentDeckWidgetName(String panel);
 
         public void showMenuView();
@@ -88,11 +91,45 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
         dwoGlobalVars = aDwoGlobalVars;
         eventBus.addHandler(SwitchViewEvent.TYPE, this);
         eventBus.addHandler(LoginEvent.TYPE, this);
+        setDWO(this);
     }
 
     public void init() {
         display.showLoginView();
 
+    }
+
+    //** should become part of the PresenterFactories ie. DWO.LoginPresenter.loginClicked.
+    private native static void setDWO(MainPresenter p) /*-{
+    	var mainApi = {
+    			"showResultsViewJS" : function() {
+    				return p.@nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter::showResultsViewJS()
+                        }
+                        ,
+    			"showSchoolclassesView" : function() {
+    				p.@nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter::showSchoolclassesViewJS()
+                        },
+    			"showAccountView" : function() {
+    				p.@nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter::showAccountViewJS()                        
+                        }
+    		};
+    	$wnd.DwoMainPresenter = mainApi;
+    }-*/;
+
+    @JsMethod
+    public String showResultsViewJS() {
+        this.selectView(SwitchViewEvent.SelectedView.RESULTS);
+        return "true";
+    }
+
+    @JsMethod
+    public void showSchoolclassesViewJS() {
+        display.showSchoolclassesView();
+    }
+
+    @JsMethod
+    public void showAccountViewJS() {
+        display.showAccountView();;
     }
 
     /**
@@ -141,7 +178,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
                 display.showMenuButton();
             }
             RoleType rt = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
-            switch(rt){
+            switch (rt) {
                 case STUDENT:
                     display.setUserRole(rb.TEACHER());
                     break;
@@ -155,7 +192,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
                     display.setUserRole(rb.TEACHER());
                     break;
                 default:
-                    LOG.log(Level.SEVERE,"unknown role type to display.");
+                    LOG.log(Level.SEVERE, "unknown role type to display.");
             }
             //display.setUserRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
         } catch (Exception e) {
@@ -164,7 +201,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 
         switch (selectedView) {
             case ACCOUNT:
-                display.showAccountView();      
+                display.showAccountView();
 
                 break;
             case LOGIN:

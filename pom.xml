@@ -234,14 +234,15 @@
                     <execution>
                         <configuration>
                             <sourceLevel>1.8</sourceLevel>
-<!--                            <compilerArg>
+                            <compilerArg>
                                 <arg>-XjsInteropMode</arg>
                                 <arg>JS</arg>
                             </compilerArg>
                             <codeserverArgs>
                                 <arg>-XjsInteropMode</arg>
                                 <arg>JS</arg>
-                            </codeserverArgs>-->
+                            </codeserverArgs>
+                            <generateJsInteropExports>true</generateJsInteropExports>
                             <module>nl.uu.fi.dwo.lms.gwtclient.gwtclient</module>
                             <i18nConstantsBundles>
                                 <i18nConstantsBundle>nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages</i18nConstantsBundle>
