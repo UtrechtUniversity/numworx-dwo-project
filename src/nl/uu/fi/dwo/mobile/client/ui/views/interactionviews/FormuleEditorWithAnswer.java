@@ -739,6 +739,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			
 			if (this.fews.isNagekeken())
 				this.fews.zetIsVeranderdNaNakijken(true);
+			
+			this.fews.setStapOk(true);
 		}
 
 		resize();
@@ -1300,12 +1302,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
 			score = Math.max(0, score - errorCount * foutStraf);
 		//System.out.println("score = " + score);
-		if (hasFeedback || correct == null || !correct)
-		{	
-			this.feedback = (String) checkResults.get("feedback");
-		}
-		else
-			this.feedback = "";
+		this.feedback = (String) checkResults.get("feedback");
+
 		if (!ingevuld)
 			return;
 		
@@ -1959,6 +1957,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			
 			if (this.fews.isNagekeken())
 				this.fews.zetIsVeranderdNaNakijken(true);
+			
+			if (!this.toString().isEmpty())
+				this.fews.setStapOk(true);
 		}
 		
 		resize();
