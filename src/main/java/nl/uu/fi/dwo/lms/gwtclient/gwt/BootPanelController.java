@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
-
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
@@ -40,6 +39,7 @@ class BootPanelController {
     private ViewFactory viewFactory;
     private PresenterFactory presenterFactory;
     private DwoGlobalVars dwoGlobalVars;
+    private boolean hideGwtGui;
 
     static {
         //Initialize an Exception translator.
@@ -54,20 +54,24 @@ class BootPanelController {
         this.eventBus = eventBus;
     }
 
+    public static native String getHideGwtGuiString()/*-{
+        return  $wnd.hideGwtGui;
+    }-*/;
+
     public void go(RootLayoutPanel rootPanel) {
-        
+        hideGwtGui = Boolean.parseBoolean(getHideGwtGuiString());
         //intialize our global and environmental variables instance.
-        try{
-        dwoGlobalVars = new DwoGlobalVars();
-        }catch(Dwo2Exception e){
+        try {
+            dwoGlobalVars = new DwoGlobalVars();
+        } catch (Dwo2Exception e) {
             //ugly emergency code in case server fails.
-            String msg = "Fatal server error! "+e.getDwo2Message();
-            LOG.log(Level.INFO,e.getDwo2Message());
+            String msg = "Fatal server error! " + e.getDwo2Message();
+            LOG.log(Level.INFO, e.getDwo2Message());
             DialogBox dialogBox = new DialogBox();
-            Label label=new Label();
+            Label label = new Label();
             label.setText(msg);
             dialogBox.add(label);
-            dialogBox.add(new Button ("OK"));
+            dialogBox.add(new Button("OK"));
             dialogBox.setModal(true);
             dialogBox.setAutoHideEnabled(false);
             dialogBox.setGlassEnabled(true);
@@ -80,9 +84,9 @@ class BootPanelController {
         //parse profile if it exists.
         String value = com.google.gwt.user.client.Window.Location.getParameter("profile");
         if (value == null || value.isEmpty()) {
-        	value = "77";
-        }	
-        	
+            value = "77";
+        }
+
         Promise<DomDwoProfileFull> profile = new PublicProfileManager().get(value);
         dwoGlobalVars.setProfile(profile);
         LOG.log(Level.INFO, "Parsed and set profile id to " + value + ".");
@@ -182,8 +186,12 @@ class BootPanelController {
 
         MainPresenter.Display mainView = viewFactory.getMainView();
         mainView.init(viewFactory);
-        this.rootPanel.add(mainView.asWidget());
-        LOG.log(Level.INFO, "Intiated Main view.");
+        if (!hideGwtGui) {
+            LOG.log(Level.INFO, "Intiated Main view.");
+            this.rootPanel.add(mainView.asWidget());
+        } else {
+            LOG.log(Level.INFO, "not showing Main view." + getHideGwtGuiString());
+        }
         MainPresenter mainPresenter = presenterFactory.getMainPresenter();
         LOG.log(Level.INFO, "Intiating Main presenter. Showing login screen.");
         mainPresenter.init();
