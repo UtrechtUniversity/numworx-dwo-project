@@ -45,6 +45,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserResultsManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserScoContextManager;
 import fi.dwo.gwt.lib.rest.CallManagers.StudentScoDataManager;
 import fi.dwo.gwt.lib.rest.CallManagers.UserResultsManager;
+import fi.dwo.gwt.lib.rest.util.Base64;
 
 public class RPCHandlerV3 extends RPCHandlerV2 {
 
@@ -320,18 +321,14 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		
 		return profile.flatMap(t);
 	}
-
-	static native String btoa(String bytes) /*-{
-		return btoa(bytes)
-	}-*/;
 	
 	private static final Logger LOG = Logger.getLogger("RPCHandlerV3");
 	@SuppressWarnings("deprecation")
 	public Promise<Void> startExam(String key, String value) {
 		GwtRestVars vars = GwtRestVars.getInstance();
 		Map<String,String> headers = vars.getCustomHeaders();
-		headers.put("X-ClassCourseID", btoa(key));
-		headers.put("X-TOTP", "PLAIN "+btoa(value));
+		headers.put("X-ClassCourseID", Base64.btoa(key));
+		headers.put("X-TOTP", "PLAIN "+Base64.btoa(value));
 		return accountManager.verifyTOTP().then(new Success<JSONValue, Void>() {
 
 			@Override
