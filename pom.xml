@@ -179,14 +179,19 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>${project.groupId}</groupId>
+                                    <artifactId>DWOJClient</artifactId>
+                                    <version>${project.version}</version>
+                                    <classifier>jar-with-dependencies</classifier>
+                                    <type>jar.pack.gz</type>
+                                    <overWrite>true</overWrite>
+                                    <destFileName>dwo/DWOJApplet.jar.pack.gz</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
                                     <artifactId>dwo1compat</artifactId>
                                     <version>2.1.11</version>
                                     <destFileName>dwo/dwo1compat.jar</destFileName>
                                 </artifactItem>
-                                <!-- <artifactItem> <groupId>${project.groupId}</groupId> <artifactId>DWOJClient</artifactId> 
-                                <version>${project.version}</version> <classifier>jar-with-dependencies</classifier> 
-                                <type>jar.pack.gz</type> <overWrite>true</overWrite> <destFileName>DWOJApplet.jar.pack.gz</destFileName> 
-                                </artifactItem> -->
                             </artifactItems>
                             <outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
                             <overWriteReleases>false</overWriteReleases>
