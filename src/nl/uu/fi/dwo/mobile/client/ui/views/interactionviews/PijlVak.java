@@ -626,6 +626,10 @@ public class PijlVak extends LayoutPanel
 		 			editor.insert("$h" + exp.toString() + "@");
 		 		}
 			}
+			
+			// openstaande pijl afsluiten
+			fe.setOpenstaandePijl(false);
+			
 			if (!aanpasbaar)
 				vervangEditorDoorViewer();
 		}
