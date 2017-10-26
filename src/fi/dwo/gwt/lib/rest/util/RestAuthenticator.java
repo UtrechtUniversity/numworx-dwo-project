@@ -17,11 +17,13 @@ public class RestAuthenticator implements DispatcherFilter {
 	@Override
 	public boolean filter(Method method, RequestBuilder builder) {
 		boolean haspassword = username != null && password != null;
-		if(haspassword)builder.setPassword(password);
-		if(haspassword)builder.setUser(username);
+//		if(haspassword)builder.setPassword(password);
+//		if(haspassword)builder.setUser(username);
 		if(haspassword)
+		{
 			builder.setHeader("Authorization", "Basic " + Base64.btoa(username + ":" + password));
-		builder.setIncludeCredentials(haspassword);
+		}
+//		builder.setIncludeCredentials(haspassword);
 		return true;
 	}
     public void setCredentials(String aUsername, String aPassword){
