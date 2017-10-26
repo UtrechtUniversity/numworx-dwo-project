@@ -5,7 +5,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jsinterop.annotations.JsType;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -15,7 +14,6 @@ import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
-@JsType
 public class LoginPresenter {
 
     private static final Logger LOG = Logger.getLogger(LoginPresenter.class.getName());
@@ -61,11 +59,11 @@ public class LoginPresenter {
     final public void init() {
     }
     
-    public String loginClickedJS(String user, String password) {
+public String loginClickedJS(String user, String password) {
         this.loginClicked(user, password, true);
         return "done";
     }
-
+ 
     public void loginClicked(String user, String password, final Boolean switchRole) {
         Promise<DwoGlobalVars.DwoGlobalVarsState> loginUser;
         try {

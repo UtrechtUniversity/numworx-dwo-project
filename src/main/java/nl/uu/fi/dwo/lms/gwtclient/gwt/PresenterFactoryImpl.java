@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import com.google.gwt.event.shared.EventBus;
+import jsinterop.annotations.JsType;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentsPresenter;
@@ -23,6 +24,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresent
  *
  * @author G.A.J. van der Plas
  */
+//@JsType
 public class PresenterFactoryImpl implements PresenterFactory {
 
     private final DwoGlobalVars dwoGlobalVars;

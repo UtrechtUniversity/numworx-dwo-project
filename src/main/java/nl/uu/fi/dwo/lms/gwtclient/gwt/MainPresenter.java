@@ -101,7 +101,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 
     //** should become part of the PresenterFactories ie. DWO.LoginPresenter.loginClicked.
     private native static void setDWO(MainPresenter p) /*-{
-    	var mainApi = {
+    	var api = {
     			"showResultsViewJS" : function() {
     				return p.@nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter::showResultsViewJS()
                         }
@@ -113,21 +113,18 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
     				p.@nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter::showAccountViewJS()                        
                         }
     		};
-    	$wnd.DwoMainPresenter = mainApi;
+    	$wnd.DwoMainPresenter = api;
     }-*/;
 
-    @JsMethod
     public String showResultsViewJS() {
         this.selectView(SwitchViewEvent.SelectedView.RESULTS);
         return "true";
     }
 
-    @JsMethod
     public void showSchoolclassesViewJS() {
         display.showSchoolclassesView();
     }
 
-    @JsMethod
     public void showAccountViewJS() {
         display.showAccountView();;
     }
