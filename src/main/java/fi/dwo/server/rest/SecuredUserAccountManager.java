@@ -1,9 +1,11 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.LogType;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentLogData;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
@@ -15,11 +17,13 @@ import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DwoDateUtilities;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.entities.RestLoginContext;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
+import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.LogDataManager;
@@ -34,6 +38,7 @@ import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,6 +47,7 @@ import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -51,7 +57,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+
+import org.glassfish.jersey.internal.util.Base64;
+
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * Operations for the GUI Component that manages the User Profile.
@@ -417,6 +427,41 @@ public class SecuredUserAccountManager {
         }
         //Ready to remove User
         UserManager.destroy(u.getId());
-        return new Boolean(true);
+        return Boolean.TRUE;
+    }
+    
+    enum TotpType {
+    	PLAIN
+    }
+    
+    @GET
+    @Produces("application/json")
+    @Path("/verifyTOTP")
+    public String verifyTOTP(@HeaderParam("X-ClassCourseID") String ccid, @HeaderParam("X-TOTP") String totp) {
+    	try {
+    		LOG.info("ccid = " + ccid);
+    		LOG.info("totp = " + totp);
+    		ccid = Base64.decodeAsString(ccid);
+			DomClassCourse id = new DomClassCourse(); id.setId(new PersistenceId(ccid));
+			Long nativeId = MySQLPersistenceId.getNativeId(id);
+			PersistentClassCourse pcc = ClassCourseManager.findEntity(nativeId);
+			String accessKey = pcc.getAccessKey();
+
+			StringTokenizer st = new StringTokenizer(totp);
+    		switch(TotpType.valueOf(st.nextToken())) {
+    		case PLAIN:
+    			totp = Base64.decodeAsString(st.nextToken());
+    			return String.valueOf(accessKey == null || accessKey.isEmpty() || accessKey.equals(totp)); 
+    		default: 
+    			throw new IllegalArgumentException("not implemented");
+    		}
+    		
+    	} catch(RuntimeException e) {
+    		LOG.log(Level.SEVERE, "verifyTOTP failed", e);
+    		return "false";
+    	} catch (Dwo2Exception e) {
+    		LOG.log(Level.SEVERE, "verifyTOTP failed", e);
+    		return "false";
+		} 
     }
 }

@@ -217,9 +217,9 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     private final static String QRY_INSERT_CLASS_COURSE = "INSERT INTO tblClassCourse(classID, courseID) "
             + "VALUES(?, ?) ON DUPLICATE KEY UPDATE";
 
-    private final static String QRY_INSERT_CLASS_COURSE2 = "INSERT INTO tblClassCourse(classID, courseID, type, notBefore, notAfter, viewState) "
-            + "VALUES(?,?,?,?,?,3) ON DUPLICATE KEY UPDATE classID = values(classID), courseID = values(courseID), "
-            + "type=VALUES(type), notBefore=VALUES(notBefore), notAfter=VALUES(notAfter), viewState = 3 ";
+    private final static String QRY_INSERT_CLASS_COURSE2 = "INSERT INTO tblClassCourse(classID, courseID, type, notBefore, notAfter, viewState, accessKey) "
+            + "VALUES(?,?,?,?,?,3,?) ON DUPLICATE KEY UPDATE classID = values(classID), courseID = values(courseID), "
+            + "type=VALUES(type), notBefore=VALUES(notBefore), notAfter=VALUES(notAfter), viewState = 3, accessKey=VALUES(accessKey) ";
 
 //    private final static String QRY_INSERT_CLASS_COURSE2 = "INSERT INTO tblClassCourse(classID, courseID, type, notBefore, notAfter) "
 //            + "VALUES(?,?,?,?,?) ";
@@ -2032,6 +2032,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws SQLException
      */
     @Override
+    @Deprecated
     public boolean selectCoursesForClass(int classID, int courseID, int type,
             Date van, Date tot) throws IOException, XmlRpcException,
             SQLException {
@@ -2052,12 +2053,14 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             } else {
                 ps.setTimestamp(5, new java.sql.Timestamp(tot.getTime()));
             }
+            ps.setNull(6, Types.VARCHAR);
         }
         ps.execute();
         return true;
     }
 
     @Override
+    @Deprecated
     public boolean selectCoursesForClass(int classID, int courseID)
             throws IOException, XmlRpcException, SQLException {
         close(); //for lazy connection
@@ -2072,6 +2075,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     }
 
     @Override
+    @Deprecated
     public boolean deSelectCoursesForClass(int classID, int courseID)
             throws IOException, XmlRpcException, SQLException {
         close(); //for lazy connection
@@ -4419,6 +4423,13 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
                 } else {
                     ps.setTimestamp(5, new java.sql.Timestamp(tot.getTime()));
                 }
+                String accessKey = (String) map.get("accessKey");
+                if(accessKey == null) {
+                	ps.setNull(6, Types.VARCHAR);
+                } else {
+                	ps.setString(6, accessKey);
+                }
+                
                 ps.executeUpdate();
             }
             ps.close();
