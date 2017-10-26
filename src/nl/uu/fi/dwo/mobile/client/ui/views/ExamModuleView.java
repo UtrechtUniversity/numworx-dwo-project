@@ -6,9 +6,12 @@ import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -74,13 +77,21 @@ public class ExamModuleView extends Composite {
 		this.presenter = presenter;
 	}
 
-	@UiHandler({"ok","textView"})
+	@UiHandler({"ok"})
 	void onOk(ClickEvent ev) {
 		String password = textView.getValue();
 		if(!password.isEmpty())
 			presenter.onOk(password, this);
 		else
 			message.setText("Vul je code in");
+	}
+	
+	@UiHandler("textView")
+	void onEnter(KeyUpEvent ev) {
+		if(ev.getNativeKeyCode() == KeyCodes.KEY_ENTER)
+		{
+			onOk(null);
+		}
 	}
 	
 	@UiHandler("cancel")
