@@ -18,6 +18,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 import org.osgi.util.function.Function;
@@ -25,6 +27,7 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -334,16 +337,19 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			@Override
 			public Promise<Void> call(Promise<JSONValue> resolved) throws Exception {
 				LOG.info("verifyTOTP:" + resolved.getValue());
-				return null;
+				JSONBoolean ok = resolved.getValue().isBoolean();
+				if(ok != null && ok.booleanValue())
+					return null;
+				throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "verification failed: " + resolved.getValue());
 			}
 		})
-		.recoverWith(new Function<Promise<?>, Promise<? extends Void>>() {
-
-			@Override
-			public Promise<Void> apply(Promise<?> t) {
-				LOG.log(Level.SEVERE, "verifyTOTP recovery",t.getFailure());
-				return Promises.resolved(null);
-			}})
+//		.recoverWith(new Function<Promise<?>, Promise<? extends Void>>() {
+//
+//			@Override
+//			public Promise<Void> apply(Promise<?> t) {
+//				LOG.log(Level.SEVERE, "verifyTOTP recovery",t.getFailure());
+//				return Promises.resolved(null);
+//			}})
 		;
 	}
 }
