@@ -49,7 +49,7 @@ import fi.dwo.server.rest.util.CourseBuilder;
  */
 @Path("/public/course")
 public class PublicCourseManager {
-	private static final boolean SECURITY = false;
+	private static final boolean SECURITY = true;
     private static final Logger LOG = Logger.getLogger(PublicCourseManager.class.getName());
 
     /**
@@ -88,15 +88,14 @@ public class PublicCourseManager {
    // TODO NPE tests 		    		
     		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
    // test for honest people
-    		if (domDwoProfile.getDwoProfileRights() != null && 
-    				domDwoProfile.getDwoProfileRights().contains(LIMITED))
-    			return Collections.emptyList();
    // Security, only non limited profiles are public 		
-    		long id = MySQLPersistenceId.getNativeId(domDwoProfile);
+    		Long id = MySQLPersistenceId.getNativeId(domDwoProfile);
     		PersistentDwoProfile profile = DwoProfileManager.findEntity(id);
 if(SECURITY)
     		if ( profile.getDwoProfileRights().contains(LIMITED))
-    			return Collections.emptyList();
+    		{
+    			throwLoginNeeded();
+    		}
     		
     		PersistentSchool school = new PersistentSchool(null);
     		List<PersistentCourse> courses = CourseManager.findChildrenOf(profile, school);
@@ -113,6 +112,10 @@ if(SECURITY)
     		throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the modules.");	
     	}
     }
+
+	private void throwLoginNeeded() {
+		throw new Dwo2RestException(Dwo2ExceptionCode.Rest_LoginNeeded, "Login needed");
+	}
     
     @PUT
     @Path("/getChildren")
@@ -126,12 +129,12 @@ if(SECURITY)
     		PersistentDwoProfile profile = DwoProfileManager.findEntity(parent.getDwoProfileID());
 if(SECURITY)
     		if ( parent.getSchoolID() != null || 
-    			 ! parent.isWithChildren()	||
+//   			 ! parent.isWithChildren()	||
     			 profile.getDwoProfileRights().contains(LIMITED)
 // Verify context: profile matches...
-    			|| !rest.getDomDwoProfile().getId().equals(profile.buildPersistenceId())
+//    			|| !rest.getDomDwoProfile().getId().equals(profile.buildPersistenceId())
     		)
-    			return Collections.emptyList();
+    			throwLoginNeeded();
     			
     		List<PersistentCourse> courses = CourseManager.findChildrenOf(parent); 
     		final String PFX = info.getRequestUri().resolve("getImage").toString();
@@ -151,14 +154,14 @@ if(SECURITY)
     public DomCourseStudent getCourse(RestCourse rest) {
     	try {
     		DomCourse course = rest.getDomCourse();
-    		long id = MySQLPersistenceId.getNativeId(course);
+    		Long id = MySQLPersistenceId.getNativeId(course);
     		PersistentCourse parent = CourseManager.findEntity(id);
 // Verify parent is public and profile is not limited
     		PersistentDwoProfile profile = DwoProfileManager.findEntity(parent.getDwoProfileID());
 if(SECURITY) 
     		if ( parent.getSchoolID() != null || 
     			 profile.getDwoProfileRights().contains(LIMITED))
-    			return null;
+    			throwLoginNeeded();
 // TODO Verify context: profile matches...
     		if (!SECURITY || rest.getDomDwoProfile().getId().equals(profile.buildPersistenceId()))    		
     			return parent.buildDomCourseStudent();
@@ -174,10 +177,10 @@ if(SECURITY)
     @GET
     @Path("/getImage")
     @Produces({"image/png"})
-    public Response getImage(@QueryParam("courseId") Long courseId) {
+    public Response getImage(@QueryParam("courseId") Long courseId, @QueryParam("hasRoleId") String hasRoleId) {
     	try {
     		PersistentCourse course = CourseManager.findEntity(courseId);
-    		if(SECURITY) {
+    		if(SECURITY && hasRoleId == null) {
         		PersistentDwoProfile profile = DwoProfileManager.findEntity(course.getDwoProfileID());
         		if(
         				course.getSchoolID() != null ||

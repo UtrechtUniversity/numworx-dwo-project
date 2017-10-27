@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -38,15 +39,19 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.rest.util.CourseBuilder;
@@ -239,12 +244,27 @@ public class SecuredUserCourseManager {
     	try {
 // TODO NPE tests 		    		
     		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
+    		DomSchoolClassId schoolClassId = rest.getSchoolClassID();
     		DomHasRole    hasRole = rest.getRestContext().getDomHasRole();
     		PersistentUser user = getUserFromContext(sc);		
 // TODO hasRole is correct    		
     		DomCourse course = rest.getDomCourse();
     		Long id = MySQLPersistenceId.getNativeId(course);
     		PersistentCourse parent = CourseManager.findEntity(id);
+    		if(schoolClassId != null) {
+    			id = MySQLPersistenceId.getNativeId(schoolClassId);
+    			PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(id);
+    			List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(schoolClass, parent);
+    			if(pcc.isEmpty()) 
+    				throwLoginNeeded();
+    			PersistentClassCourse pcc1 = pcc.get(0);
+    			if(pcc1.getType().intValue() == 1) {
+    				throwLoginNeeded();
+    			}
+    			
+    		} else {
+    			// FIXME SECURITY 
+    		}
 // TODO Verify parent is public and profile is not limited OR user.school matches course.school
     		PersistentDwoProfile profile = DwoProfileManager.findEntity(parent.getDwoProfileID());
 //    		if ( parent.getSchoolID() != null || 
@@ -263,7 +283,13 @@ public class SecuredUserCourseManager {
     	//return null;
     }
  
-    @GET
+    private void throwLoginNeeded() {
+		throw new Dwo2RestException(Dwo2ExceptionCode.Rest_LoginNeeded, "Not allowed");
+	}
+
+
+
+	@GET
     @Path("/getImage")
     @Produces({"image/png"})
     public Response getImage(@Context SecurityContext sc, @QueryParam("courseId") Long courseId, @QueryParam("hasRoleId") String hasRoleId) {
