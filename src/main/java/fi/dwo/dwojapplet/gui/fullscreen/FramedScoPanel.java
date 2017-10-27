@@ -16,8 +16,10 @@ import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
@@ -31,6 +33,7 @@ public class FramedScoPanel extends JPanel implements CenterSubPanel, ActionList
 	private ClassCourse link;
 	private Timer timer;
 	protected FullScreenDWO screen;
+	private JTextField accessKeyField;
 	public FramedScoPanel(CenterSubPanel csp, Sco sco) {
 		super();
 		this.csp = csp;
@@ -38,6 +41,14 @@ public class FramedScoPanel extends JPanel implements CenterSubPanel, ActionList
 		this.link = sco.getCourse().link;
 		btn = new JButton(TextMapper.getText(TextMapper.FSD_START));
 		btn.addActionListener(this);
+		accessKeyField = new JTextField();
+		String accessKey = link.getAccessKey();
+		if(accessKey != null && !accessKey.isEmpty()) {
+			accessKeyField.setColumns(20);
+			accessKeyField.addActionListener(this);
+			add(new JLabel(TextMapper.getText(TextMapper.LBL_PASSWORD)));
+			add(accessKeyField);
+		}
 		add(btn);
 		Date notAfter = link.getNotAfter();
 		if( notAfter != null ) {
@@ -82,6 +93,11 @@ public class FramedScoPanel extends JPanel implements CenterSubPanel, ActionList
     }
 
     public void actionPerformed(ActionEvent e) {
+    	String password = accessKeyField.getText();
+    	String accessKey = link.getAccessKey();
+    	boolean ok = (accessKey == null || accessKey.isEmpty() || accessKey.equals(password));
+    	if(!ok) return;
+    	
 		btn.setEnabled(false); // one shot?
 		if(e.getSource() == timer)
 		{
