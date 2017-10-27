@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 
@@ -69,12 +70,13 @@ public class PublicCourseManager implements CourseManager {
 	 * @see fi.dwo.gwt.lib.rest.CallManagers.CourseManager#getCourse(nl.uu.fi.dwo.rest.dom.entities.DomCourse, nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile)
 	 */
 	@Override
-	public Promise<DomCourseStudent> getCourse(DomCourse course, DomDwoProfile profile, DomContext context) {
+	public Promise<DomCourseStudent> getCourse(DomCourse course, DomDwoProfile profile, DomSchoolClassId notused, DomContext context) {
 		PromiseCallback<DomCourseStudent> result = new PromiseCallback<DomCourseStudent>();
 		RestCourse rest = new RestCourse();
 		rest.setDomDwoProfile(profile);
 		rest.setRestContext(createContext());
 		rest.setDomCourse(course);
+		rest.setSchoolClassID(notused);
 		service.getCourse(rest, result);
 		return result.getPromise();
 	}

@@ -6,6 +6,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 
 import org.osgi.util.promise.Promise;
 
@@ -19,7 +20,7 @@ public interface CourseManager {
 			DomDwoProfile profile, DomContext context);
 
 	public Promise<DomCourseStudent> getCourse(DomCourse course,
-			DomDwoProfile profile, DomContext context);
+			DomDwoProfile profile, DomSchoolClassId schoolClass, DomContext context);
 
 	public Promise<List<DomCourseStudent>> getCoursesSchool(DomDwoProfile profile, DomContext context);
 
