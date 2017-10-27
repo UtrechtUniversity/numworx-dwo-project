@@ -342,11 +342,11 @@ public class SecuredUserAccountManager {
         service.logout(restcontext, new Callback<Dwo2Exception>(callback));
     }
 
-   public Promise<DomLoginContext> logout() {
-        PromiseCallback<DomLoginContext> defer = new PromiseCallback<DomLoginContext>();
-        this.getLoginContext(defer);
-        return defer.getPromise();
-    }
+//   public Promise<DomLoginContext> logout() {
+//        PromiseCallback<DomLoginContext> defer = new PromiseCallback<DomLoginContext>();
+//        this.getLoginContext(defer);
+//        return defer.getPromise();
+//    }
 
        public Promise<DomLoginContext> getLoginContext() {
         PromiseCallback<DomLoginContext> defer = new PromiseCallback<DomLoginContext>();
