@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
@@ -10,13 +12,18 @@ import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
+import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.activity.shared.Activity;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
@@ -28,10 +35,12 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 
 	private ClientFactory clientFactory;
 	private SelectModuleItem item;
+	@Inject PlaceController placeController;
 
 	public CourseActivity(ClientFactory clientFactory, SelectModuleItem item) {
 		this.clientFactory = clientFactory;
 		this.item = item;
+		placeController = clientFactory.getPlaceController();
 	}
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
@@ -43,7 +52,7 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 		view.setLogout(true); // terug of logout
 		final Place next = 
 				new LoginPlace(
-						clientFactory.getPlaceController().getWhere());
+						placeController.getWhere());
 		
 		addHandlerRegistration(view.getList().addCellSelectedHandler(new CellSelectedHandler()
 		{
@@ -51,24 +60,50 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 			public void onCellSelected(CellSelectedEvent event)
 			{
 				final SelectModuleItem id = view.getItems().get(event.getIndex());
-				clientFactory.getPlaceController().goTo(new ViewModulePlace(id.getID()));
+				placeController.goTo(new ViewModulePlace(id.getID()));
 			}
 		}));
 		addHandlerRegistration(view.getBackBtn().addTapHandler(new TapHandler() {		
 			@Override
 			public void onTap(TapEvent event) {
-				clientFactory.getPlaceController().goTo(next);			
+				placeController.goTo(next);			
 			}
 		}));
 		
 		if(item.getName() == null) {
 			item.setName("#c:" + item.getID());
+			final Failure failure = new Failure() {
+				
+				@Override
+				public void fail(Promise<?> resolved) throws Exception {
+					Throwable t = resolved.getFailure();
+					if(t instanceof Dwo2Exception) {
+						Dwo2Exception e = (Dwo2Exception) t;
+						if( e.getDwo2Code() == Dwo2ExceptionCode.Rest_LoginNeeded)
+						{
+							placeController.goTo(next);
+							return;
+						}
+					}
+					GWT.log("failure", t);
+				}
+			};
 
 			Promise<List<SelectModuleItem>> promise = item.getChildrenAsync();
 // Start downloading sco's
 			if(promise == null || (promise.isDone() && promise.getFailure() != null)) {
-				promise = DWOplayer.clientfactory.getRPCHandler().getScos(item.getID())
-						.map(new SCO_TO_MODULEITEM(item));
+				Success<List<SelectModuleItem>, List<SelectModuleItem>> success = 
+						new Success<List<SelectModuleItem>, List<SelectModuleItem>>() {
+
+							@Override
+							public Promise<List<SelectModuleItem>> call(
+									Promise<List<SelectModuleItem>> resolved)
+									throws Exception {
+								return resolved;
+							}
+				};
+				promise = clientFactory.getRPCHandler().getScos(item.getID())
+						.map(new SCO_TO_MODULEITEM(item)).then(success , failure);
 				item.setChildrenAsync(promise);
 			}
 // start downloading description/name/attributes
@@ -86,7 +121,7 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 					view.render(item);
 					return null;
 				}
-			});
+			}, failure);
 		} else {
 			view.render(item);
 			
