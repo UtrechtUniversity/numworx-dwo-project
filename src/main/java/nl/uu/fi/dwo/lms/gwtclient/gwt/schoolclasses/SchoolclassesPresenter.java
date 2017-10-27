@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogPromise;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -68,9 +69,21 @@ public class SchoolclassesPresenter {
         }
     }
 
+    //** should become part of the PresenterFactories ie. DWO.LoginPresenter.loginClicked.
+    private native static void setDWO(SchoolclassesPresenter q) /*-{
+
+    	var apis = {
+    			"addSchoolClass" : function() {
+    				return q.@nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter::addSchoolClass()()
+                        }
+    		};
+    	$wnd.DwoSchoolclassesPresenter = apis;
+    }-*/;
+
     public SchoolclassesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+        setDWO(this);
     }
 
     public void init() {
@@ -190,12 +203,11 @@ public class SchoolclassesPresenter {
         });
     }
 
-
-/**
- * @param item
- * @param op
- */
-public void selectItem(ClassItem item, int op) {
+    /**
+     * @param item
+     * @param op
+     */
+    public void selectItem(ClassItem item, int op) {
         switch (op) {
             case 1:
                 editSchoolClass(item);
@@ -213,16 +225,16 @@ public void selectItem(ClassItem item, int op) {
                 removeSchoolClass(schoolClassMap.get(item.key));
                 break;
             default:
-                throw new UnsupportedOperationException("Not supported yet."); 
+                throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 
     void addSchoolClass() {
-         eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.AddSchoolClass, new DomSchoolClass()));
+        eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.AddSchoolClass, new DomSchoolClass()));
     }
 
     void editSchoolClass(ClassItem item) {
-         eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.EditSchoolClass, schoolClassMap.get(item.key)));
+        eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.EditSchoolClass, schoolClassMap.get(item.key)));
     }
 
     void editStudents(ClassItem item) {

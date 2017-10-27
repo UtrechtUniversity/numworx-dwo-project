@@ -7,8 +7,6 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jsinterop.annotations.JsMethod;
-import jsinterop.annotations.JsType;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
@@ -89,36 +87,44 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
     MainPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+                setDWO(this);
         eventBus.addHandler(SwitchViewEvent.TYPE, this);
         eventBus.addHandler(LoginEvent.TYPE, this);
-        setDWO(this);
     }
 
     public void init() {
         display.showLoginView();
 
+
     }
 
     //** should become part of the PresenterFactories ie. DWO.LoginPresenter.loginClicked.
-    private native static void setDWO(MainPresenter p) /*-{
-    	var api = {
-    			"showResultsViewJS" : function() {
-    				return p.@nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter::showResultsViewJS()
-                        }
-                        ,
+    private native static void setDWO(MainPresenter q) /*-{
+    	var apis = {
+    			"showResultsView" : function() {
+    				return q.@nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter::showResultsViewJS()()
+                        },
     			"showSchoolclassesView" : function() {
-    				p.@nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter::showSchoolclassesViewJS()
+    				return q.@nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter::showSchoolclassesViewJS()()
+                        },
+    			"jstest" : function() {
+    				return q.@nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter::getjstest()()
                         },
     			"showAccountView" : function() {
-    				p.@nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter::showAccountViewJS()                        
+    				return q.@nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter::showAccountViewJS()()                      
                         }
     		};
-    	$wnd.DwoMainPresenter = api;
+    	$wnd.DwoMainPresenter = apis;
+
     }-*/;
 
     public String showResultsViewJS() {
         this.selectView(SwitchViewEvent.SelectedView.RESULTS);
         return "true";
+    }
+    
+    public jstest getjstest(){
+        return new jstest();
     }
 
     public void showSchoolclassesViewJS() {
