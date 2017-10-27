@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
@@ -220,7 +221,6 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 			@Override
 			public Promise<Void> call(Promise<Void> resolved) throws Exception {
 				if(DwoGlobalVars.instance().getCurrentUser() != null) {
-					Promise<Void> resolved2 = Promises.resolved(null);
 					resolved = accountManager.logout(DwoGlobalVars.instance().getCurrentLoginContext())
 						.then(new Success<Dwo2Exception, Void>() {
 
@@ -228,7 +228,15 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 							public Promise<Void> call(Promise<Dwo2Exception> resolved) throws Exception {
 								Window.alert(String.valueOf(resolved.getValue()));
 								return null;
-							}}).fallbackTo(resolved2);
+							}})
+							.recoverWith(new Function<Promise<?>,Promise<? extends Void>>() {
+
+								@Override
+								public Promise<? extends Void> apply(
+										Promise<?> t) {
+									DwoGlobalVars.instance().clearCurrentUser();
+									return Promises.<Void>resolved(null);
+								}});
 				}
 				return resolved;
 			}});

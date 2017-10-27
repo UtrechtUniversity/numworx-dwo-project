@@ -258,6 +258,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			@Override
 			public Promise<Void> call(Promise<Void> resolved) throws Exception {
 				GwtRestVars.instance().getCustomHeaders().clear();
+				DwoGlobalVars.instance().clearCurrentUser();
 				context.setDomHasRole(null);
 				scoManager = new PublicScoContextManager();
 				courseManager = new PublicCourseManager();
