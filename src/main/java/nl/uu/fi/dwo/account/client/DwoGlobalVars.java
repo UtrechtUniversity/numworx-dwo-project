@@ -357,7 +357,9 @@ public class DwoGlobalVars {
      * @return
      */
     public DomSchoolClass getCurrentSchoolClass() {
-        return schoolLogins.getActiveSchoolRoleAndClass().getSchoolClass();
+        if(activeSchoolRoleAndClass != null)
+        	return activeSchoolRoleAndClass.getSchoolClass();
+		return null;
     }
 
     /**

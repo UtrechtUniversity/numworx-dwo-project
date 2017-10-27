@@ -174,7 +174,9 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			@Override
 			public Promise<DomCourseStudent> call(
 					Promise<DomDwoProfile> resolved) throws Exception {
-				return courseManager.getCourse(course, resolved.getValue(),context);
+				return courseManager.getCourse(course, resolved.getValue(), 
+						getSchoolClass(),
+						context);
 			}
 		});
 	}
