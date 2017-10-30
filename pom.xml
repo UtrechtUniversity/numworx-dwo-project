@@ -129,7 +129,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.keyboard</groupId>
 			<artifactId>KeyboardGWT</artifactId>
-			<version>2.1.22-SNAPSHOT</version>
+			<version>2.1.22</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fredhat.gwt.xmlrpc</groupId>
@@ -219,7 +219,7 @@
 		<runTarget>${project.artifactId}.html</runTarget>
 		<warClassifier />
 		<gwt.copyWebapp>true</gwt.copyWebapp>
-		<accountVersion>0.0.13</accountVersion>
+		<accountVersion>0.0.14</accountVersion>
 	</properties>
 	<profiles>
 		<profile>
@@ -298,7 +298,7 @@
 			</properties>
 		</profile>
 	</profiles>
-	<version>2.1.22-SNAPSHOT</version>
+	<version>2.1.22</version>
 	<scm>
 		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DwoPlayer/GWT/DWOplayer</developerConnection>
 	</scm>

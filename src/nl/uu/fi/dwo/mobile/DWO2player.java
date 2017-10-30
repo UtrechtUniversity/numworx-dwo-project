@@ -67,7 +67,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 	
 	private final class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandlerV3 implements RPCHandler{
 		private DWO2RPCHandler(String server, int profile) {
-			super(server, profile);
+			super(server, profile, false);
 		}
 
 		@Override
@@ -87,7 +87,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		public Promise<Void> startExam(String id, String password) {
 			// TODO Auto-generated method stub
 			// super.startExam(id, password);
-			return Promises.resolved(null);
+			return super.startExam(id, password);
 		}
 
 	}
