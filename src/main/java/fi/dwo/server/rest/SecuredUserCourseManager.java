@@ -64,7 +64,8 @@ import fi.dwo.server.rest.util.CourseBuilder;
 @Path("/secure/user/course")
 public class SecuredUserCourseManager {
 
-    private static final Logger LOG = Logger.getLogger(SecuredUserCourseManager.class.getName());
+    private static final String PUBLIC_COURSE_GET_IMAGE = "../../../public/course/getImage";
+	private static final Logger LOG = Logger.getLogger(SecuredUserCourseManager.class.getName());
 
     /**
      * Returns the Course description of a course. This method uses MySQL-based
@@ -122,7 +123,7 @@ public class SecuredUserCourseManager {
 		PersistentSchool school = HasRoleUtilManager.getSchoolforHasRole(hr);
 		List<PersistentCourse> courses = CourseManager.findChildrenOf(profile, school);		
 		Stream<PersistentCourse> stream = courses.stream();
-		String pfx = info.getRequestUri().resolve("getImage").toString();
+		String pfx = info.getRequestUri().resolve(PUBLIC_COURSE_GET_IMAGE).toString();
 		Stream<DomCourseStudent> map = stream.map(new CourseBuilder(pfx, hasRole));
 		map = map.sorted(DomCourseStudentComparator.INSTANCE);
 		return map.collect(Collectors.toList());
@@ -159,7 +160,7 @@ public class SecuredUserCourseManager {
     		
     		PersistentSchool school = new PersistentSchool(null);
     		List<PersistentCourse> courses = CourseManager.findChildrenOf(profile, school);
-    		String pfx = info.getRequestUri().resolve("getImage").toString();
+    		String pfx = info.getRequestUri().resolve(PUBLIC_COURSE_GET_IMAGE).toString();
     		Stream<PersistentCourse> stream = courses.stream();
 			Stream<DomCourseStudent> map = stream.map(new CourseBuilder(pfx,hasRole));
 			map = map.sorted(DomCourseStudentComparator.INSTANCE);
@@ -211,7 +212,7 @@ public class SecuredUserCourseManager {
     		}
     			
     		List<PersistentCourse> courses = CourseManager.findChildrenOf(parent);
-    		String pfx = info.getRequestUri().resolve("getImage").toString();
+    		String pfx = info.getRequestUri().resolve(PUBLIC_COURSE_GET_IMAGE).toString();
     		return courses.stream()
     				.map( new CourseBuilder(pfx, hasRole) )
     				.sorted(DomCourseStudentComparator.INSTANCE)
