@@ -47,6 +47,9 @@ public class PersistentLoginContext implements Serializable {
     @Column(name = "userID", nullable = false)
     private Long userID;
     @Basic(optional = false)
+    @Column(name = "schoolGroupID", nullable = false)
+    private Long schoolGroupID;
+    @Basic(optional = false)
     @Column(name = "registerTimeStamp", nullable = true)
 //    @Temporal(TemporalType.DATE)
     private Long registerTimeStamp;
@@ -130,6 +133,9 @@ public class PersistentLoginContext implements Serializable {
         if (this.id != null) {
             loginContext.setId(buildPersistenceId());
         }
+        if (this.schoolGroupID != null) {
+            loginContext.setSchoolGroupId(PersistentSchoolGroup.buildPersistenceId(schoolGroupID));
+        }
         loginContext.setLastLoginTimeStamp(lastLoginTimeStamp);
         loginContext.setRegisterTimeStamp(registerTimeStamp);
         loginContext.setUserId(PersistentUser.buildPersistenceId(userID));
@@ -155,5 +161,19 @@ public class PersistentLoginContext implements Serializable {
         tmpId.setIdString(String.format("MYSQL;%s;%020d",
                 PersistenceClassType.PersistentLoginContext.name(), aId));
         return tmpId;
+    }
+
+    /**
+     * @return the schoolGroupID
+     */
+    public Long getSchoolGroupId() {
+        return schoolGroupID;
+    }
+
+    /**
+     * @param schoolGroupID the schoolGroupID to set
+     */
+    public void setSchoolGroupId(Long schoolGroupID) {
+        this.schoolGroupID = schoolGroupID;
     }
 }
