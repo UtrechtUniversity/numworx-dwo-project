@@ -21,6 +21,9 @@
     <script>
     	DWO_PROFILE_ID = 77
     	SECURE_MODE="SEB" // possibly others
+    	function logout() {
+    		window.location = "https://app.dwo.nl/toets/logout.html"
+    	}
     </script>
     <title>Save Exam Browser</title>
     
