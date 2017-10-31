@@ -434,7 +434,10 @@
         </listener-class>
     </listener>
     
-    
+    <mime-mapping>
+    	<extension>seb</extension>
+    	<mime-type>application/seb</mime-type>
+    </mime-mapping>    
     <welcome-file-list>
     	<welcome-file>index.html</welcome-file>
     	<welcome-file>index.jsp</welcome-file>
