@@ -7,27 +7,30 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentCourseInClass;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentInClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder;
-import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
-import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.PersistentDataManagers.util.CourseInClassManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
+import fi.dwo.server.PersistentDataManagers.util.StudentScoInClassManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,7 +62,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
-import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -78,8 +80,8 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     private static final Logger LOG = Logger.getLogger(SecuredTeacherResultsManager.class.getName());
 
     /**
-     * Returns the all the schoolclass/student results of a teacher within a school. This includes 
-     * the invisible data with ViewState none.
+     * Returns the all the schoolclass/student results of a teacher within a
+     * school. This includes the invisible data with ViewState none.
      *
      * @param sc
      * @param aProfile
@@ -89,7 +91,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     @Produces({"application/json"})
     @Path("/getTeachersResults")
     public DomResultsPerTeacher getTeachersResults(@Context SecurityContext sc, RestDwoProfile aProfile) {
-
+        long curTime = DwoDateUtilities.getCurrentDwoUnixTimeStamp();
         DomDwoProfile domProfile = aProfile.getDomDwoProfile();
         DomContext context = aProfile.getRestContext();
         DomHasRole domHasRole = context.getDomHasRole();
@@ -131,6 +133,10 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 
         //fetch Profile
         if (phr != null && school != null) {
+            long prevTime = curTime;
+            curTime = DwoDateUtilities.getCurrentDwoUnixTimeStamp();
+            LOG.log(Level.INFO, "security fetch: " + (curTime - prevTime));
+
             DomResultsPerTeacher results = new DomResultsPerTeacher();
             results.setFetchTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
             // DomResultsPerTeacher requires a fetchTimeStamp, teacher, schoolclasses, 
@@ -152,23 +158,30 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 domSchoolClasses.putIfAbsent(s.getId(), s);
                 return schoolClass;
             }).forEach((schoolClass) -> {
-                //And while at it, for each schoolClass fill the set of studentsOf and students
-//                try {
-                for (PersistentStudentOfClass soc : StudentOfClassManager.findEntities(schoolClass)) {
-                    //add studentOf to set socMap
-                    socMap.putIfAbsent(soc.getPersistentStudentOfClassPK(), soc);
-                    //add user to set studentMap
-                    PersistentUser user = UserManager.findEntity(soc.getPersistentStudentOfClassPK());
-                    studentMap.putIfAbsent(user.getId(), user);
+                List<PersistentStudentInClass> cicList = StudentInClassManager.findEntities(schoolClass);
+                for (PersistentStudentInClass sic : cicList) {
+                    socMap.putIfAbsent(sic.getStudentOfClass().getPersistentStudentOfClassPK(), sic.getStudentOfClass());
+                    studentMap.putIfAbsent(sic.getUser().getId(), sic.getUser());
                 }
-                //TODO optimize: remove the multiple user fetches.
-//                    for (PersistentUser user : UserUtilManager.getUsersforStudentsInSchoolClass(schoolClass)) {
-//                        studentMap.putIfAbsent(user.getId(), user);
-//                    }
-//                } catch (Dwo2Exception ex) {
-//                    Logger.getLogger(SecuredTeacherResultsManager.class.getName()).log(Level.SEVERE, null, ex);
+                
+//                
+//                //And while at it, for each schoolClass fill the set of studentsOf and students
+////                try {
+//                for (PersistentStudentOfClass soc : StudentOfClassManager.findEntities(schoolClass)) {
+//                    //add studentOf to set socMap
+//                    socMap.putIfAbsent(soc.getPersistentStudentOfClassPK(), soc);
+//                    //add user to set studentMap
+//                    PersistentUser user = UserManager.findEntity(soc.getPersistentStudentOfClassPK());
+//                    studentMap.putIfAbsent(user.getId(), user);
 //                }
-            });
+//                //TODO optimize: remove the multiple user fetches.
+////                    for (PersistentUser user : UserUtilManager.getUsersforStudentsInSchoolClass(schoolClass)) {
+////                        studentMap.putIfAbsent(user.getId(), user);
+////                    }
+////                } catch (Dwo2Exception ex) {
+////                    Logger.getLogger(SecuredTeacherResultsManager.class.getName()).log(Level.SEVERE, null, ex);
+////                }
+            });            
             List<DomMapEntry<PersistenceId, DomSchoolClass>> scList = new ArrayList<>(domSchoolClasses.size());
             domSchoolClasses.entrySet().stream().forEach((entry) -> {
                 scList.add(new DomMapEntry(entry));
@@ -202,28 +215,37 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             });
             results.setStudentsOfClasses(socsList);
 
+            prevTime = curTime;
+            curTime = DwoDateUtilities.getCurrentDwoUnixTimeStamp();
+            LOG.log(Level.INFO, "student in class fetch and convert: " + (curTime - prevTime));
+            
             //Fetch courses for all classes ClassCourses. No filtering occurs on
             //CourseType, notBefore and notAfter for results. Filtering of Courses
             //occurs on Profile.
             HashMap<Long, PersistentClassCourse> classCoursesMap = new HashMap<>();
             HashMap<Long, PersistentCourse> coursesMap = new HashMap<>();
             schoolClasses.stream().forEach((schoolClass) -> {
-                List<PersistentClassCourse> ccList = ClassCourseManager.findEntities(schoolClass);
-                ccList.forEach((classCourse) -> {
-                    //fetch course and check profile
-                    //TODO optimize and fetch only leaves for the current profile and set the parent node to 0?
-                    //PersistentCourse course = classCourse.getCourse();
-                    //if(course!=null) course.setCourseID(classCourse.getCourseID());
-                    PersistentCourse course = CourseManager.findEntity(classCourse.getCourseID());
-                    //note currently one class course per higher tree node
-                    if (course != null && !course.isWithChildren()
-                            && course.getDwoProfileID().equals(profile.getDwoProfileID())) {
-                        //push to classCourses 
-                        classCoursesMap.putIfAbsent(classCourse.getClassCourseID(), classCourse);
-                        //push to courses map for recursive collection
-                        coursesMap.putIfAbsent(course.getCourseID(), course);
-                    }
-                });
+                List<PersistentCourseInClass> cicList = CourseInClassManager.findEntities(schoolClass, profile);
+                for (PersistentCourseInClass cic : cicList) {
+                    classCoursesMap.putIfAbsent(cic.getClassCourse().getClassCourseID(), cic.getClassCourse());
+                    coursesMap.putIfAbsent(cic.getCourse().getCourseID(), cic.getCourse());
+                }
+//                List<PersistentClassCourse> ccList = ClassCourseManager.findEntities(schoolClass);
+//                ccList.forEach((classCourse) -> {
+//                    //fetch course and check profile
+//                    //TODO optimize and fetch only leaves for the current profile and set the parent node to 0?
+//                    //PersistentCourse course = classCourse.getCourse();
+//                    //if(course!=null) course.setCourseID(classCourse.getCourseID());
+//                    PersistentCourse course = CourseManager.findEntity(classCourse.getCourseID());
+//                    //note currently one class course per higher tree node
+//                    if (course != null && !course.isWithChildren()
+//                            && course.getDwoProfileID().equals(profile.getDwoProfileID())) {
+//                        //push to classCourses 
+//                        classCoursesMap.putIfAbsent(classCourse.getClassCourseID(), classCourse);
+//                        //push to courses map for recursive collection
+//                        coursesMap.putIfAbsent(course.getCourseID(), course);
+//                    }
+//                });
             });
 
             //fill DomClassCourse4Teacher List
@@ -274,6 +296,10 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             });
             results.setCourses(dcList);
 
+            prevTime = curTime;
+            curTime = DwoDateUtilities.getCurrentDwoUnixTimeStamp();
+            LOG.log(Level.INFO, "course in class fetch and convert: " + (curTime - prevTime));
+            
             //process leaves and fill hashmap scoContext
             HashMap<Long, PersistentScoContext> scosMap = new HashMap<>();
             leaves.entrySet().stream().forEach((keyValuePair) -> {
@@ -294,6 +320,10 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             });
             results.setScoContexts(dscList);
 
+            prevTime = curTime;
+            curTime = DwoDateUtilities.getCurrentDwoUnixTimeStamp();
+            LOG.log(Level.INFO, "scocontext fetch and convert: " + (curTime - prevTime));
+
             //fill hashmap studentSco for each student x sco
 //            HashMap<Long, PersistentStudentScoContext> studentScosMap = new HashMap<>();
 //            scosMap.entrySet().forEach((sco) -> {
@@ -303,15 +333,20 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 //                });
 //            });
             HashMap<Long, PersistentStudentScoContext> studentScosMap = new HashMap<>();
-            for (PersistentScoContext sco : scosMap.values()) {
-                for (PersistentHasRolePK hasRoleKey : studentHasRoleSet) {
-                    //TODO optimize
-                    List<PersistentStudentScoContext> studentScos = StudentScoContextManager.findEntities(sco, hasRoleKey);
-                    studentScos.forEach((studentSco) -> {
-                        studentScosMap.putIfAbsent(studentSco.getStudentSco(), studentSco);
-                    });
-                }
-            }
+ //           schoolClasses.forEach((cc) -> { -> {
+            classCoursesMap.values().forEach((cc) -> {
+                List<PersistentStudentScoContext> ssList = StudentScoInClassManager.findEntities(cc);
+                ssList.forEach((ss) -> {studentScosMap.putIfAbsent(ss.getStudentSco(), ss);}) ;
+            });
+//            for (PersistentScoContext sco : scosMap.values()) {
+//                for (PersistentHasRolePK hasRoleKey : studentHasRoleSet) {
+//                    //TODO optimize
+//                    List<PersistentStudentScoContext> studentScos = StudentScoContextManager.findEntities(sco, hasRoleKey);
+//                    studentScos.forEach((studentSco) -> {
+//                        studentScosMap.putIfAbsent(studentSco.getStudentSco(), studentSco);
+//                    });
+//                }
+//            }
 
             HashMap<PersistenceId, DomStudentScoContext> domStudentScoContexts = new HashMap<>(studentScosMap.size());
             studentScosMap.entrySet().stream().forEach((keyValuePair) -> {
@@ -325,6 +360,9 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             });
 
             results.setStudentScoContexts(sscList);
+            prevTime = curTime;
+            curTime = DwoDateUtilities.getCurrentDwoUnixTimeStamp();
+            LOG.log(Level.INFO, "studentscocontext fetch and convert: " + (curTime - prevTime));
 
             return results;
             // recurse here using Java queue
