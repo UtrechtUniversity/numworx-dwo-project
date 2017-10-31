@@ -51,8 +51,8 @@ public class LoginContextUtilManager {
     }
 
     /**
-     * return a valid LoginContext when a new session is set, returns null if
-     * one exists.
+     * return a valid LoginContext when a new session is set, returns a {@Link Dwo2Eception}
+     * of type {@link Dwo2ExceptionCode#Rest_LoginContext_exists} if one exists.
      *
      * @param user
      * @return
@@ -101,6 +101,7 @@ public class LoginContextUtilManager {
                 case 0:
                     //none yet
                     loginContext.setUserId(user.getId());
+                    loginContext.setSchoolGroupId(user.getSchoolGroupId());
                     loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
                     loginContext.setRegisterTimeStamp(user.getRegisterDate().getTime());
                     //loginContextList.add(loginContext);

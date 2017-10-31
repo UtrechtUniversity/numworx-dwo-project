@@ -107,8 +107,8 @@ public class SecuredUserAccountManager {
     }
 
     /**
-     * Returns the currentUser. The information is extracted from the security
-     * context.
+     * Returns the current LoginContext. The information is retrieved from the
+     * data store.
      *
      * @param sc
      * @return Returns null if there was an error.
