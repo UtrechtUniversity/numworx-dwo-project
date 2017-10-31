@@ -74,13 +74,13 @@
             <!-- "provided" so that we don't deploy -->
             <scope>provided</scope>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-dev</artifactId>
             <version>${gwt.version}</version>
-            <!-- "provided" so that we don't deploy -->
+             "provided" so that we don't deploy 
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
 
         <!-- Unit tests -->
         <dependency>
