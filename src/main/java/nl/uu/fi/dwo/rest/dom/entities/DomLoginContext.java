@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DomLoginContext {
     private PersistenceId id;
     private PersistenceId userId;
+    private PersistenceId schoolGroupId;
     private Long registerTimeStamp;
     private Long lastLoginTimeStamp;
 
@@ -73,6 +74,20 @@ public class DomLoginContext {
      */
     public void setRegisterTimeStamp(Long registerTimeStamp) {
         this.registerTimeStamp = registerTimeStamp;
+    }
+
+    /**
+     * @return the schoolGroupId
+     */
+    public PersistenceId getSchoolGroupId() {
+        return schoolGroupId;
+    }
+
+    /**
+     * @param schoolGroupId the schoolGroupId to set
+     */
+    public void setSchoolGroupId(PersistenceId schoolGroupId) {
+        this.schoolGroupId = schoolGroupId;
     }
     
 }
