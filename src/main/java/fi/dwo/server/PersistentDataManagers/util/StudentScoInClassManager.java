@@ -1,11 +1,9 @@
 package fi.dwo.server.PersistentDataManagers.util;
 
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
-import fi.dwo.commons.persistence.entities.PersistentCourse;
-import fi.dwo.commons.persistence.entities.PersistentCourseInClass;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.server.persistence.DwoEmfFactory;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,4 +37,17 @@ public class StudentScoInClassManager {
         }
     }       
     
+    public static List<PersistentStudentScoContext> findEntities(PersistentSchoolClass schoolClass){
+         EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createQuery("SELECT ss FROM PersistentStudentScoContext ss, PersistentScoContext s, PersistentClassCourse cc "
+                    + "where  s.courseID=cc.courseID and ss.scoID = s.scoID and cc.classID = :classID");
+            q.setParameter("classID", schoolClass.getClassID());
+            List<PersistentStudentScoContext> list = q.getResultList();
+            LOG.log(Level.FINE, "StudentScoInClassManager retrieved {0} PersistentStudentScoContext for classId {1}", new Object[]{list.size(), schoolClass.getClassID()});
+            return list;
+        } finally {
+            em.close();
+        }
+    }       
 }

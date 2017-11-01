@@ -333,8 +333,8 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 //                });
 //            });
             HashMap<Long, PersistentStudentScoContext> studentScosMap = new HashMap<>();
- //           schoolClasses.forEach((cc) -> { -> {
-            classCoursesMap.values().forEach((cc) -> {
+            schoolClasses.forEach((cc) -> { 
+ //           classCoursesMap.values().forEach((cc) -> {
                 List<PersistentStudentScoContext> ssList = StudentScoInClassManager.findEntities(cc);
                 ssList.forEach((ss) -> {studentScosMap.putIfAbsent(ss.getStudentSco(), ss);}) ;
             });
