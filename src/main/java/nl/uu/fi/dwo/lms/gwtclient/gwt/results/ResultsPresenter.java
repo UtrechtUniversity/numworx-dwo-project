@@ -311,18 +311,17 @@ public class ResultsPresenter {
         //set column headers
         ResultItem[] hHeaders = new ResultItem[matrix.gethSize() + 1];
         List<ResultItem> colHeaders = new ArrayList<ResultItem>(matrix.gethSize() + 1);
-        colHeaders.add(null);
-        hHeaders[0] = (schoolClass == null) ? new ResultItem(-1,"schoolclasses", null) : new ResultItem(-1,schoolClass.getLabel(), null);
+        hHeaders[0] = (schoolClass == null) ? new ResultItem(0,"schoolclasses", null) : new ResultItem(0,schoolClass.getLabel(), null);
+        colHeaders.add(hHeaders[0]);
         for (int i = 0; i < matrix.gethSize(); i++) {
             DomResultScore score = matrix.gethIndex(i);
-            hHeaders[i + 1] = new ResultItem(-1,score.getLabel(), score.getScore());
-            colHeaders.add(new ResultItem(-1, score.getLabel(), score.getScore()));
+            hHeaders[i + 1] = new ResultItem(0,score.getLabel(), score.getScore());
+            colHeaders.add(new ResultItem(0, score.getLabel(), score.getScore()));
         }
         data.sethIndex(hHeaders);
 
         ResultItem[] vHeaders = new ResultItem[matrix.getvSize()];
-        List<ResultItem> rowHeaders = new ArrayList<ResultItem>(matrix.getvSize() + 1);
-        rowHeaders.add(null);
+        List<ResultItem> rowHeaders = new ArrayList<ResultItem>(matrix.getvSize());
         for (int i = 0; i < matrix.getvSize(); i++) {
             DomResultScore score = matrix.getvIndex(i);
             ResultItem item = new ResultItem(i,score.getLabel(), score.getScore());
@@ -342,7 +341,7 @@ public class ResultsPresenter {
             marks.add(new ArrayList<ResultItem>(matrix.gethSize()));
             for (int j = 0; j < matrix.gethSize(); j++) {
                 if (j == 0) {
-                    marks.get(i).add(rowHeaders.get(i + 1));
+                    marks.get(i).add(rowHeaders.get(i));
                 }
                 DomResultScore score = matrix.getMark(i, j); //row, col
                 if (score == null) {
@@ -352,7 +351,6 @@ public class ResultsPresenter {
                 }
             }
         }
-        int s = marks.size();
         data.setMarks(marks);
         return data;
     }

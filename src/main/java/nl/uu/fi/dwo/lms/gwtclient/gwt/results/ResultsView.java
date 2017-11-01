@@ -20,7 +20,6 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.ColumnSortList;
 import com.google.gwt.user.cellview.client.ColumnSortList.ColumnSortInfo;
-import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.Header;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextHeader;
@@ -179,10 +178,15 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
                 dynValue = new Column<List<ResultsPresenter.ResultItem>, String>(cell) {
                     @Override
                     public String getValue(List<ResultsPresenter.ResultItem> object) {
-                        return object.get(colVal).label;
-                    }
+                        if(object.size()!=0){
+                        int r = object.get(colVal).row;
+                            return data.getvIndex()[r].label;
+                        }else{
+                            return "";
+                        }
+                    }                    
                 };
-            } else {
+                } else {
                 dynValue = new Column<List<ResultsPresenter.ResultItem>, String>(scoreCell) {
                     @Override
                     public String getValue(List<ResultsPresenter.ResultItem> object) {
@@ -195,65 +199,62 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
                     }
                 };
             }
-            dynValue.setHorizontalAlignment((colVal == 0) ? HasHorizontalAlignment.ALIGN_LOCALE_START : HasHorizontalAlignment.ALIGN_LOCALE_END);
-            dynValue.setSortable(true);
-            dynValue.setCellStyleNames("flexTableHeader");
-            Comparator<List<ResultsPresenter.ResultItem>> comp = new Comparator<List<ResultsPresenter.ResultItem>>() {
-                public int compare(List<ResultsPresenter.ResultItem> o1, List<ResultsPresenter.ResultItem> o2) {
-                    if (o1.get(colVal) == o2.get(colVal)) {
-                        return 0;
-                    }
+                dynValue.setHorizontalAlignment((colVal == 0) ? HasHorizontalAlignment.ALIGN_LOCALE_START : HasHorizontalAlignment.ALIGN_LOCALE_END);
+                dynValue.setSortable(true);
+                dynValue.setCellStyleNames("flexTableHeader");
+                Comparator<List<ResultsPresenter.ResultItem>> comp = new Comparator<List<ResultsPresenter.ResultItem>>() {
+                    public int compare(List<ResultsPresenter.ResultItem> o1, List<ResultsPresenter.ResultItem> o2) {
+                        if (o1.get(colVal) == o2.get(colVal)) {
+                            return 0;
+                        }
 
-                    // Compare the name columns.
-                    if (o1.get(colVal) != null) {
-                        if (colVal == 0) {
-                            return (o2.get(colVal) != null) ? o1.get(colVal).label.compareTo(o2.get(colVal).label) : 1;
-                        } else {
-                            return (o2.get(colVal) != null) ? Double.compare(o1.get(colVal).score.doubleValue(), o2.get(colVal).score.doubleValue()) : 1;
+                        // Compare the name columns.
+                        if (o1.get(colVal) != null) {
+                            if (colVal == 0) {
+                                return (o2.get(colVal) != null) ? o1.get(colVal).label.compareTo(o2.get(colVal).label) : 1;
+                            } else {
+                                return (o2.get(colVal) != null) ? Double.compare(o1.get(colVal).score.doubleValue(), o2.get(colVal).score.doubleValue()) : 1;
+                            }
+                        }
+                        return -1;
+                    }
+                };
+                columnSortHandler.setComparator(dynValue, comp);
+                dataGrid.setColumnWidth(dynValue, "200PX");
+                dynValue.setDataStoreName(data.gethIndex()[i].label);
+
+                if (i == 0) {
+                    dataGrid.addColumn(dynValue, rb.GUI_Table_Schoolclasses());
+                    dataGrid.getColumnSortList().push(dynValue);
+                } else {
+                    dataGrid.addColumn(dynValue, data.gethIndex()[i].label);
+                }
+                LOG.log(Level.INFO, "adding column " + data.gethIndex()[i].label);
+                dataGrid.addColumnSortHandler(columnSortHandler);
+            }
+            dataGrid.setHeaderBuilder(new CustomResultHeaderBuilder(dataGrid, false));
+            Element elem = this.getElement();//DOM.getElementById("resultCol1");
+            DOM.sinkEvents(elem, Event.ONCLICK | Event.ONMOUSEOUT | Event.ONMOUSEOVER);
+            DOM.setEventListener(elem, new EventListener() {
+                @Override
+                public void onBrowserEvent(Event event) {
+                    if (Event.ONCLICK == event.getTypeInt()) {
+                        LOG.log(Level.INFO, " " + Element.as(event.getEventTarget()).getId());
+                        int col;
+                        String colId = Element.as(event.getEventTarget()).getId();
+                        if (!colId.isEmpty()) {
+                            col = Integer.parseInt(colId.substring("resultCol".length()));
+                            resultsPresenter.selectColumnZoom(col);
                         }
                     }
-                    return -1;
                 }
-            };
-            columnSortHandler.setComparator(dynValue, comp);
-            dataGrid.setColumnWidth(dynValue, "200PX");
-            dynValue.setDataStoreName(data.gethIndex()[i].label);
-            
-            if (i == 0) {
-                dataGrid.addColumn(dynValue, rb.GUI_Table_Schoolclasses());
-                dataGrid.getColumnSortList().push(dynValue);
-            }else{
-                dataGrid.addColumn(dynValue, data.gethIndex()[i].label);
-            }
-            LOG.log(Level.INFO, "adding column " + data.gethIndex()[i].label);
-            dataGrid.addColumnSortHandler(columnSortHandler);
-        }
-        dataGrid.setHeaderBuilder(new CustomResultHeaderBuilder(dataGrid, false));
-        Element elem = this.getElement();//DOM.getElementById("resultCol1");
-        DOM.sinkEvents(elem, Event.ONCLICK | Event.ONMOUSEOUT | Event.ONMOUSEOVER);
-        DOM.setEventListener(elem, new EventListener() {
-            @Override
-            public void onBrowserEvent(Event event) {
-                if (Event.ONCLICK == event.getTypeInt()) {
-                    LOG.log(Level.INFO, " " + Element.as(event.getEventTarget()).getId());
-                    int col;
-                    String colId = Element.as(event.getEventTarget()).getId();
-                    if (!colId.isEmpty()) {
-                        col = Integer.parseInt(colId.substring("resultCol".length()));
-                        resultsPresenter.selectColumnZoom(col);
-                    }
-                }
-            }
-        });
-//        if(zoomedClass && zoomedCourse){
-//            dataGrid.setSelectionModel(null);
-//        }else{
-//            dataGrid.setSelectionModel(selectionModel);
-//        }
-        ColumnSortEvent.fire(dataGrid, dataGrid.getColumnSortList());
-        dataGrid.redraw();
+            });
+            ColumnSortEvent.fire(dataGrid, dataGrid.getColumnSortList());
+            dataGrid.redraw();
 
-    }
+        }
+
+    
 
     public void setEmptyTableMessage() {
         dataGrid.setEmptyTableWidget(emptyImage);
@@ -296,35 +297,10 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
             ColumnSortInfo sortedInfo = (sortList.size() == 0) ? null : sortList.get(0);
             Column<?, ?> sortedColumn = (sortedInfo == null) ? null : sortedInfo.getColumn();
             boolean isSortAscending = (sortedInfo == null) ? false : sortedInfo.isAscending();
-//            StringBuilder classesBuilder = new StringBuilder(style.header());
-//            if (isFirst) {
-//                classesBuilder.append(" " + style.firstColumnHeader());
-//            }
-//            if (isLast) {
-//                classesBuilder.append(" " + style.lastColumnHeader());
-//            }
-//            if (column.isSortable()) {
-//                classesBuilder.append(" " + style.sortableHeader());
-//            }
-//            if (isSorted) {
-//                classesBuilder.append(" "
-//                        + (isSortAscending ? style.sortedHeaderAscending() : style.sortedHeaderDescending()));
-//            }
-
-            // Create the table cell.
-//            TableCellBuilder th = out.startTH().className(classesBuilder.toString());
-//
-//            // Associate the cell with the column to enable sorting of the column.
-//            enableColumnHandlers(th, column);
             row = startRow();
             for (int col = 0; col < cols; col++) {
                 Column column = dataGrid.getColumn(col);
                 th = row.startTH();
-//                if (col == 0) {
-//                    StringBuilder classesBuilder = new StringBuilder(style.header());
-//                    th.className(classesBuilder.toString());
-//                }
-
                 div = th.startDiv();
                 //get rid this and add a cell row that has buttons below the header
                 String imageUrl;
@@ -337,8 +313,6 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
                 div.end();
 
                 th.endTH();
-//                row.endTR();
-//                row.startTR();
             }
             row.endTR();
 
@@ -368,13 +342,6 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
                 renderSortableHeader(th, context, header, isSorted, isSortAscending);
                 th.endTH();
             }
-//            th = row.startTH();
-//
-//            div = th.startDiv();
-//            div.html(SafeHtmlUtils.fromTrustedString(this.getTable().getColumn(cols - 1).getDataStoreName()));
-//            div.end();
-////            th.draggable(Element.DRAGGABLE_TRUE);
-//            th.endTH();
             row.endTR();
 
             return true;
