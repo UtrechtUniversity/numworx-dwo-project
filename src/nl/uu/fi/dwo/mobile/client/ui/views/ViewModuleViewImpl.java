@@ -184,7 +184,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private HeaderButton hb;
 	private HeaderPanel hp;
 	private WaitScreen waitscreen = WaitScreen.instance();
-	Label disableScreen = new Label("");
 	
 	private PopupPanel timerPanel;
 	private Label timerMessage;
@@ -399,7 +398,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 						v();
 						
 						// focus weghalen uit antwoordvak als afdekpanel
-						if(disableScreen.isAttached())
+						if (isDisabled())
 						{
 							getKeyboard().setEditor(null);
 							getKeyboard().blur();
@@ -498,6 +497,21 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 			zetAfdekPanelTempotoets(tempotoetsLocked, isAllCorrect());
 		}
+	}
+
+	/**
+	 * True als de activiteit disabled is (verlopen tempotoets
+	 * of zelftoets niet je niet mag corrigeren).
+	 * 
+	 * @return
+	 */
+	private boolean isDisabled()
+	{
+		String disabled = DWOplayer.DWO_BUNDLE.dwoplayercss().disabled();
+		if (contentPanel.getStyleName().contains(disabled))
+			return true;
+		else
+			return false;
 	}
 
 	private PushButton getZelftoetsGeschiedenisButton()
@@ -651,7 +665,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		zetAfdekPanelTempotoets(false, false);
 		timeLimitSecondsLeft = timeLimitSeconds;
 		tempotoetsLocked = false;
-		timerTempoToets.cancel();
+		if (timerTempoToets != null)
+			timerTempoToets.cancel();
 		paintTimer();
 		scheduleTimerPainting();
 	}
@@ -938,7 +953,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		int actNr = on.getCurrentActiviteit();
 		
 		if ((eerderGeenCorr && bezocht[actNr][opdrNr])
-			|| (getZelftoetsNagekeken() && zelftoetsGeenCorr))
+			|| (getZelftoetsNagekeken() && zelftoetsGeenCorr)
+			|| isVerlopenTempotoets())
 		{
 			zetAfdekPanel(true);
 		}
@@ -1086,10 +1102,27 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		
 		zetVorigeKnoppenEnabled(opdrNr > 0);
 		zetNakijkKnopEnabled();
-		if (!disableScreen.isAttached() && isDesktop())
+		if (!isDisabled() && isDesktop())
 			hoofdPanel.tabFocus(null, false);
 	}
 	
+	/**
+	 * True als de timer van de tempotoets is verlopen,
+	 * anders false.
+	 * 
+	 */
+	private boolean isVerlopenTempotoets()
+	{
+		boolean verlopen = false;
+		
+		if (isTempotoets() && getTimeLimitSecondsLeft() == 0)
+		{
+			verlopen = true;
+		}
+
+		return verlopen;
+	}
+
 	private static boolean isDesktop() {
 		return MGWT.getOsDetection().isDesktop();
 	}
@@ -1105,13 +1138,18 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	 */
 	private void zetAfdekPanelTempotoets(boolean locked, Boolean allCorrect)
 	{
+		String disabled = DWOplayer.DWO_BUNDLE.dwoplayercss().disabled();
+		contentPanel.setStyleName(disabled, locked);
+		
 		if (locked)
 		{
-			contentScrollPanel.remove(disableScreen);
-			contentScrollPanel.add(disableScreen);
+			// geen keyboard
+			getKeyboard().blur();
+			// geen focus in editor
+			getKeyboard().setEditor(null);
+			// geen popups
+			PopupFacade.hide();
 			
-			//contentScrollPanel.remove(timerMessage);
-
 			if (allCorrect != null && allCorrect.booleanValue())
 			{
 				if (timerMessage != null && timerMessagePopupPanel != null)
@@ -1135,7 +1173,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		else
 		{
-			contentScrollPanel.remove(disableScreen);
 			if (timerMessagePopupPanel != null)
 			{
 				timerMessagePopupPanel.hide();
@@ -1393,14 +1430,17 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	public void zetAfdekPanel(boolean b)
 	{
-		if (b)
+		String disabled = DWOplayer.DWO_BUNDLE.dwoplayercss().disabled();
+		contentPanel.setStyleName(disabled, b);
+		
+		if(b)
 		{
-			contentScrollPanel.remove(disableScreen);
-			contentScrollPanel.add(disableScreen);
-		}
-		else
-		{
-			contentScrollPanel.remove(disableScreen);
+			// geen keyboard
+			getKeyboard().blur();
+			// geen focus in editor
+			getKeyboard().setEditor(null);
+			// geen popups
+			PopupFacade.hide();
 		}
 	}
 	
@@ -1774,7 +1814,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		//initWidget(mainPanel);
 		
-		disableScreen.getElement().getStyle().setBackgroundColor("transparent");
 		return this;
 
 	}
