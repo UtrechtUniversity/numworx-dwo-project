@@ -25,7 +25,6 @@ import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
-import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.CourseInClassManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
@@ -230,22 +229,6 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                     classCoursesMap.putIfAbsent(cic.getClassCourse().getClassCourseID(), cic.getClassCourse());
                     coursesMap.putIfAbsent(cic.getCourse().getCourseID(), cic.getCourse());
                 }
-//                List<PersistentClassCourse> ccList = ClassCourseManager.findEntities(schoolClass);
-//                ccList.forEach((classCourse) -> {
-//                    //fetch course and check profile
-//                    //TODO optimize and fetch only leaves for the current profile and set the parent node to 0?
-//                    //PersistentCourse course = classCourse.getCourse();
-//                    //if(course!=null) course.setCourseID(classCourse.getCourseID());
-//                    PersistentCourse course = CourseManager.findEntity(classCourse.getCourseID());
-//                    //note currently one class course per higher tree node
-//                    if (course != null && !course.isWithChildren()
-//                            && course.getDwoProfileID().equals(profile.getDwoProfileID())) {
-//                        //push to classCourses 
-//                        classCoursesMap.putIfAbsent(classCourse.getClassCourseID(), classCourse);
-//                        //push to courses map for recursive collection
-//                        coursesMap.putIfAbsent(course.getCourseID(), course);
-//                    }
-//                });
             });
 
             //fill DomClassCourse4Teacher List
