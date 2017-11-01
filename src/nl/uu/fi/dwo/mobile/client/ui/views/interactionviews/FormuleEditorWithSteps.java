@@ -2197,7 +2197,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			{	
 				if (i < stapNr)
 				{	
-					if (linStrategieVersie || linOefenVersie || bordjesMethode || !(pijlVakOperatoren[i] == null || pijlVakOperatoren[i].equals("")))
+					if (linStrategieVersie || linOefenVersie || bordjesMethode 
+						|| ((pijlVakOperatoren.length - 1 >= i) && !(pijlVakOperatoren[i] == null || pijlVakOperatoren[i].equals(""))))
 					{	
 						zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2, true);
 					}
