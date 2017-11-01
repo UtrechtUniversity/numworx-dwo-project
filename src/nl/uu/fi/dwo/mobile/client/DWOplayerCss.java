@@ -30,4 +30,5 @@ public interface DWOplayerCss extends CssResource {
 	@ClassName("cbg-RP")
 	String cbg_RP();
 	
+	String disabled();
 }
