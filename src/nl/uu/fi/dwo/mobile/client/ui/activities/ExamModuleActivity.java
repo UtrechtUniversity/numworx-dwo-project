@@ -34,17 +34,19 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 	private Provider<? extends Activity> provider;
 	private AcceptsOneWidget panel;
 	private EventBus bus;
+	final private boolean skipPassword;
 
 	@Inject
-	public ExamModuleActivity(ClientFactory clientFactory, SelectModuleItem i, Provider<? extends Activity> provider)
+	public ExamModuleActivity(ClientFactory clientFactory, SelectModuleItem i, Provider<? extends Activity> provider, boolean b)
 	{
 		this.clientFactory = clientFactory;
 		this.item = i;
 		this.provider = provider;
+		this.skipPassword = b;
 	}
 	
 	public ExamModuleActivity(ClientFactory factory, SelectModuleItem i) {
-		this(factory, i, null);
+		this(factory, i, null, false);
 		provider = new Provider<Activity>() {
 
 			@Override
@@ -70,7 +72,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 		} else {
 			this.panel = panel;
 			this.bus = eventBus;
-			if(clientFactory.inExam(item.getClassCourse()))
+			if(skipPassword && clientFactory.inExam(item.getClassCourse()))
 			{
 				delegate = provider.get();
 				delegate.start(panel, eventBus);

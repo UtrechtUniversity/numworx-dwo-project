@@ -35,6 +35,7 @@ import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.ResizeLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
@@ -285,7 +286,7 @@ public class DWOplayer implements EntryPoint
 //		
 //		display.asWidget().addStyleName("RootPanel");
 		
-		SimplePanel display = new ResizeLayoutPanel();
+		SimplePanel display = new SimpleLayoutPanel();
 		TabletActivityMapper appActivityMapper = new TabletActivityMapper(clientfactory);
 		ActivityManager activityMapper = new ActivityManager(appActivityMapper, clientfactory.getEventBus());
 		activityMapper.setDisplay(display);

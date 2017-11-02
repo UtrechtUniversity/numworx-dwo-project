@@ -102,7 +102,7 @@ public class TabletActivityMapper implements ActivityMapper
 			};
 			return 
 					item.isExam()
-					? new ExamModuleActivity(clientFactory, item, provider)				
+					? new ExamModuleActivity(clientFactory, item, provider, true)				
 					: viewModuleActivity;
 		}
 		if (place instanceof LoginPlace)

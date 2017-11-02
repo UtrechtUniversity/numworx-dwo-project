@@ -27,6 +27,7 @@ import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.account.client.UserBar;
+import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO3;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
@@ -49,6 +50,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -407,6 +409,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 						timezone += serverNow.longValue() - now;
 						now = serverNow.longValue();
 					}
+					boolean inExam = PARAMETERS.getSecureMode() != SecureMode.NORMAL;
 					Map<PersistenceId, DomCourseStudent> courses = map(t.getCourses());
 					Collection<DomClassCourse> classcourses = sort(t.getClassCourses(),t);
 					List<SelectModuleItem> result = new ArrayList<SelectModuleItem>(classcourses.size());
@@ -427,7 +430,10 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 						DomCourseStudent course = courses.get(domClassCourse.getCourseId());
 						SelectModuleItem item = new SelectModuleItem(course, domClassCourse);
 						if(item.getType() == SelectModuleItem.Type.FOLDER)
-							item.setChildren(new ArrayList<SelectModuleItem>());							
+							item.setChildren(new ArrayList<SelectModuleItem>());
+						else
+							if(inExam && item.getCourseType() == CourseType.normal)
+								continue;
 						result.add(item);
 					}
 					return result;

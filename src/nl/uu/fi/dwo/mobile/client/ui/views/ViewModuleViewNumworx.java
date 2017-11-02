@@ -29,6 +29,7 @@ import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -63,6 +64,10 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		delegate.setWindowTop(90); // 90 pixels header
 		delegate.zetMaat();
 		center.setWidget(delegate);
+		if(DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB) {
+			homeBtn.removeFromParent();
+			upBtn.removeFromParent();
+		}
 		root.forceLayout();
 	}
 
@@ -179,6 +184,9 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	
 	@Override
 	public void setTrail(List<SelectModuleItem> trail) {
+		if(DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB)
+			trail.clear();
+
 		ListIterator<SelectModuleItem> iter = trail.listIterator(Math.min(trail.size(),3));
 		clearKruimels();
 		while (iter.hasPrevious()) {

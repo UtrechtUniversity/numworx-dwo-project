@@ -33,6 +33,7 @@ import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
@@ -197,6 +198,7 @@ public class LoginActivity extends MGWTAbstractActivity
 				if(logout && isSeb())
 				{
 					panel.setWidget(new Label());
+					RootLayoutPanel.get().setVisible(false);
 					logout();
 					return;
 				} 
