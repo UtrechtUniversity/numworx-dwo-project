@@ -82,6 +82,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private static final String ONS_STATE = "onsState";
 	private static final String LOG_STATE = "log";
 	private static final String AANTAL_NAKIJKEN = "aantalNakijken";
+	private static final String AANTAL_SESSIES = "aantalSessies";
 
 	static final String SUSPEND_DATA = "cmi.suspend_data";
 	static final String SCORE_RAW = "cmi.score.raw";
@@ -147,6 +148,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private JSONBoolean zelftoetsNagekeken, zelftoetsGeenCorr;
 	private JSONBoolean tempotoetsLocked;
 	private JSONNumber tempotoetsSecondsLeft;
+	private JSONNumber aantalSessies;
 
 	private String scoreRaw;
 	private Date startDate = new Date();
@@ -177,7 +179,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		}
 		
 		
-		String reviewData = null; 
+		String reviewData = null;
 		if (eindtoetsVerzegeld || cmi_mode == CmiMode.review)
 			reviewData = getValue(REVIEW_DATA);
 		try
@@ -222,9 +224,23 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			shareMap = null;
 		}
 
+		incAantalSessies();
+		
 		instalOnBeforeUnload();
 		
 		ShareFacade.setSharedState(shareMap);
+	}
+
+	private void incAantalSessies() {
+		if(isEindtoetsVerzegeld()||isReview()) return;
+		onsState.put(AANTAL_SESSIES, new JSONNumber(getAantalSessies() + 1));
+	}
+	
+	public int getAantalSessies() {
+		JSONNumber aantalSessies = (JSONNumber) onsState.get(AANTAL_SESSIES);
+		if(aantalSessies == null)
+			return 0;
+		return (int) aantalSessies.doubleValue();
 	}
 
 	private JSONArray mergeReviewData(JSONArray opdrContStates, String reviewData) {

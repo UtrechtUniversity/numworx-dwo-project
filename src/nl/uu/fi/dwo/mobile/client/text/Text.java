@@ -104,4 +104,7 @@ public interface Text extends Constants {
 	
 	@DefaultStringValue("Wil je niet eerst uitloggen? De gegevens kunnen verloren gaan!")
 	String maybe_lost_data();
+
+	@DefaultStringValue("Attempts: ")
+	String attemps();
 }

@@ -2548,4 +2548,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	{
 		return zelftoetsHighScore;
 	}
+
+	public int getAantalSessies() {
+		return memento.getAantalSessies();
+	}
 }

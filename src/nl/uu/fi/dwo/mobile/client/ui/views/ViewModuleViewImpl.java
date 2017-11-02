@@ -439,6 +439,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		if ( on.isVerzegeld()) {
 			sb.addLabel(new Label(Text.constants.lockToetsLabel()));
 		}
+
+		if ( on.isReview()) {
+			sb.addLabel(new Label(Text.constants.attemps() + on.getAantalSessies()));
+		}
 		
 		scoreNav.started();
 	
