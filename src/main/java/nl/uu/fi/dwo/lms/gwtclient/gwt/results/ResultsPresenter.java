@@ -8,7 +8,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
@@ -116,6 +115,7 @@ public class ResultsPresenter {
     }
 
     public class ResultItem {
+
         public int row;
         public String label; //unique
         public String toolTip;
@@ -138,9 +138,8 @@ public class ResultsPresenter {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         resultService = new ResultsService(dwoGlobalVars);
-       
-    }
 
+    }
 
     public void init() {
         view.clear();
@@ -311,11 +310,11 @@ public class ResultsPresenter {
         //set column headers
         ResultItem[] hHeaders = new ResultItem[matrix.gethSize() + 1];
         List<ResultItem> colHeaders = new ArrayList<ResultItem>(matrix.gethSize() + 1);
-        hHeaders[0] = (schoolClass == null) ? new ResultItem(0,"schoolclasses", null) : new ResultItem(0,schoolClass.getLabel(), null);
+        hHeaders[0] = (schoolClass == null) ? new ResultItem(0, "schoolclasses", null) : new ResultItem(0, schoolClass.getLabel(), null);
         colHeaders.add(hHeaders[0]);
         for (int i = 0; i < matrix.gethSize(); i++) {
             DomResultScore score = matrix.gethIndex(i);
-            hHeaders[i + 1] = new ResultItem(0,score.getLabel(), score.getScore());
+            hHeaders[i + 1] = new ResultItem(0, score.getLabel(), score.getScore());
             colHeaders.add(new ResultItem(0, score.getLabel(), score.getScore()));
         }
         data.sethIndex(hHeaders);
@@ -324,7 +323,7 @@ public class ResultsPresenter {
         List<ResultItem> rowHeaders = new ArrayList<ResultItem>(matrix.getvSize());
         for (int i = 0; i < matrix.getvSize(); i++) {
             DomResultScore score = matrix.getvIndex(i);
-            ResultItem item = new ResultItem(i,score.getLabel(), score.getScore());
+            ResultItem item = new ResultItem(i, score.getLabel(), score.getScore());
             if (score instanceof DomResultStudent) {
                 String toolTip = ((DomResultStudent) score).getStudent().getUserName();
                 item.toolTip = toolTip;
@@ -338,38 +337,60 @@ public class ResultsPresenter {
         List<List<ResultItem>> marks = new ArrayList<List<ResultItem>>(matrix.getvSize());
         //    marks.add(colHeaders);
         for (int i = 0; i < matrix.getvSize(); i++) {
-            marks.add(new ArrayList<ResultItem>(matrix.gethSize()));
+            marks.add(new ArrayList<ResultItem>(matrix.gethSize() + 1));
+            marks.get(i).add(data.vIndex[i]);
             for (int j = 0; j < matrix.gethSize(); j++) {
                 if (j == 0) {
                     marks.get(i).add(rowHeaders.get(i));
                 }
                 DomResultScore score = matrix.getMark(i, j); //row, col
-                if (score == null) {
-                    marks.get(i).add(null);
+                if (score == null || score.getScore().isNaN()) {
+                    marks.get(i).add(new ResultItem(i, "0", 0.0));
                 } else {
                     marks.get(i).add(new ResultItem(i, score.getLabel(), score.getScore()));
                 }
             }
         }
         data.setMarks(marks);
+        StringBuilder sb = new StringBuilder();
+        for (ResultItem hItem : data.hIndex) {
+            sb.append('\t');
+            sb.append(hItem.label);
+        }
+        sb.append('\n');
+        for (int r = 0; r < data.vIndex.length; r++) {
+            sb.append(data.vIndex[r].label);
+            for (int c = 0; c < data.hIndex.length - 1; c++) {
+                sb.append('\t');
+                ResultItem item = data.marks.get(r).get(c);
+                if (item != null && item.score != null && !item.score.isNaN()) {
+                    sb.append(item.score);
+                } else {
+                    sb.append("0");
+                }
+            }
+            sb.append('\n');
+
+        }
+        LOG.log(Level.INFO, sb.toString());
         return data;
     }
 
-    String getExportString() {
+    public String getExportString() {
         ResultPlot plot = buildPlotMatrix(resultMatrix);
         StringBuilder sb = new StringBuilder();
         sb.append("index");
         for (ResultItem hItem : plot.hIndex) {
-        sb.append('\t');
+            sb.append('\t');
             sb.append(hItem.label);
         }
         sb.append('\n');
         for (int r = 0; r < plot.vIndex.length; r++) {
             sb.append(plot.vIndex[r].label);
             for (int c = 0; c < plot.hIndex.length; c++) {
-            sb.append('\t');
+                sb.append('\t');
                 ResultItem item = plot.marks.get(r).get(c);
-                if (item != null && item.score != null) {
+                if (item != null && item.score != null && !item.score.isNaN()) {
                     sb.append(item.score);
                 } else {
                     sb.append("0");
@@ -382,7 +403,7 @@ public class ResultsPresenter {
         return sb.toString();
     }
 
-    void finnishedExport(){
+    void finnishedExport() {
         eventBus.fireEvent(new DialogEvent("Exported tab separated values to clipboard."));
     }
 }

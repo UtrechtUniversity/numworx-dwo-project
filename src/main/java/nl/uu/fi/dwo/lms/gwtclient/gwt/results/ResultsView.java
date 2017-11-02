@@ -182,7 +182,7 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
                         int r = object.get(colVal).row;
                             return data.getvIndex()[r].label;
                         }else{
-                            return "";
+                            return " ";
                         }
                     }                    
                 };
@@ -190,7 +190,8 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
                 dynValue = new Column<List<ResultsPresenter.ResultItem>, String>(scoreCell) {
                     @Override
                     public String getValue(List<ResultsPresenter.ResultItem> object) {
-                        if (object.get(colVal) != null && object.get(colVal).score != null) {
+                        if (object.get(colVal) != null && object.get(colVal).score != null 
+                                && !object.get(colVal).score.isNaN()) {
                             String formattedScore = NumberFormat.getFormat("0").format(object.get(colVal).score);
                             return formattedScore;
                         } else {
