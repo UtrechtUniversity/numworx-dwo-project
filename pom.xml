@@ -284,12 +284,55 @@
                     <warSourceDirectory>war</warSourceDirectory>
                     <attachClasses>true</attachClasses>
                     <webappDirectory>${webappDirectory}</webappDirectory> 
+                    <!-- exclude angular 2 dir: /src/main/ngapp -->
+                    <exclude>ngapp/**</exclude>                
                 </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
+                <configuration>
+                    <!-- exclude angular 2 dir: /src/main/ngapp -->
+                    <exclude>ngapp/**</exclude>                
+                </configuration>
+
             </plugin>
+<!--            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.5.0</version>
+                <executions>
+                    <execution>
+                        <id>exec-npm-install</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <workingDirectory>${project.basedir}/src/main/ngapp</workingDirectory>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>install</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>exec-npm-ng-build</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <workingDirectory>${project.basedir}/src/main/ngapp</workingDirectory>
+                            <executable>ng</executable>
+                            <arguments>
+                                <argument>build</argument>
+                                <argument> - -base-href=/myangularapp/</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>            -->
             <plugin>
                 <groupId>org.codehaus.cargo</groupId>
                 <artifactId>cargo-maven2-plugin</artifactId>
@@ -422,7 +465,7 @@
                 </configuration>    
             </plugin>
             <!-- sample version for with mysql building -->
-            <!--            <plugin>  docker test configuration om gwtclient in een docker image te starten 
+<!--                        <plugin>  docker test configuration om gwtclient in een docker image te starten 
                 <groupId>io.fabric8</groupId>
                 <artifactId>fabric8-maven-plugin</artifactId> 
                 <version>3.2.28</version>

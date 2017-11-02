@@ -1,7 +1,9 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
+import com.google.gwt.dom.client.Element;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -42,7 +44,7 @@ class BootPanelController {
     private boolean hideGwtGui;
 
     static {
-        //Initialize an Exception translator.
+        //Initialize an Exception translator.imply removing all DOM elements can cause issues with other elements in the page.
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
         Dwo2LocaleMessageTranslator.setTranslator(new Dwo2LocaleMessageGWTTranslator());
     }
@@ -96,102 +98,105 @@ class BootPanelController {
 
         //create client factories
         presenterFactory = new PresenterFactoryImpl(eventBus, dwoGlobalVars);
-        viewFactory = new ViewFactoryImpl(presenterFactory);
 
-        //handle login events
-        eventBus.addHandler(LoginEvent.TYPE, new LoginEventHandler() {
-            @Override
-            public void onLoginEvent(LoginEvent loginEvent) {
-                switch (loginEvent.getState()) {
-                    case SUCCESS_RESULTS:
-                        LOG.log(Level.INFO, "Login succeeded. Showing results view.");
-                        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
+        if (!hideGwtGui) {
+            viewFactory = new ViewFactoryImpl(presenterFactory);
+
+            //handle login events
+            eventBus.addHandler(LoginEvent.TYPE, new LoginEventHandler() {
+                @Override
+                public void onLoginEvent(LoginEvent loginEvent) {
+                    switch (loginEvent.getState()) {
+                        case SUCCESS_RESULTS:
+                            LOG.log(Level.INFO, "Login succeeded. Showing results view.");
+                            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
 //                        viewFactory.getMainView().showMenuButton();
-                        viewFactory.getMainView().showPostLoginWidgets();
-                        //presenterFactory.getResultsPresenter().init();
-                        break;
-                    case SUCCESS_SCHOOLCLASSES:
-                        LOG.log(Level.INFO, "Login succeeded. Showing schoolclasses view.");
-                        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+                            viewFactory.getMainView().showPostLoginWidgets();
+                            //presenterFactory.getResultsPresenter().init();
+                            break;
+                        case SUCCESS_SCHOOLCLASSES:
+                            LOG.log(Level.INFO, "Login succeeded. Showing schoolclasses view.");
+                            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
 //                        viewFactory.getMainView().showMenuButton();
-                        viewFactory.getMainView().showPostLoginWidgets();
-                        //presenterFactory.getResultsPresenter().init();
-                        break;
-                    case SUCCESS:
-                        LOG.log(Level.INFO, "Login succeeded. Showing switch role view.");
-                        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SWITCHSCHOOL));
+                            viewFactory.getMainView().showPostLoginWidgets();
+                            //presenterFactory.getResultsPresenter().init();
+                            break;
+                        case SUCCESS:
+                            LOG.log(Level.INFO, "Login succeeded. Showing switch role view.");
+                            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SWITCHSCHOOL));
 //                        viewFactory.getMainView().showMenuButton();
 //                        viewFactory.getMainView().showPostLoginWidgets();
-                        presenterFactory.getSwitchSchoolPresenter().init();
-                        break;
-                    case FAIL:
-                        eventBus.fireEvent(new DialogEvent("Login failed."));
-                        Window.Location.replace(Window.Location.getHref());
-                        break;
-                    case LOGOUT:
-                        LOG.log(Level.INFO, "Login succeeded. Showing switch role view.");
-                        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SWITCHSCHOOL));
-                        viewFactory.getMainView().hideMenuButton();
-                        dwoGlobalVars.clearCurrentUser();
-                        presenterFactory.getMainPresenter().onSwitchViewEvent(new SwitchViewEvent(SwitchViewEvent.eventValue.LOGIN));
-                    default:
-                        LOG.log(Level.INFO, "Login fail in app controller.");
+                            presenterFactory.getSwitchSchoolPresenter().init();
+                            break;
+                        case FAIL:
+                            eventBus.fireEvent(new DialogEvent("Login failed."));
+                            Window.Location.replace(Window.Location.getHref());
+                            break;
+                        case LOGOUT:
+                            LOG.log(Level.INFO, "Login succeeded. Showing switch role view.");
+                            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SWITCHSCHOOL));
+                            viewFactory.getMainView().hideMenuButton();
+                            dwoGlobalVars.clearCurrentUser();
+                            presenterFactory.getMainPresenter().onSwitchViewEvent(new SwitchViewEvent(SwitchViewEvent.eventValue.LOGIN));
+                        default:
+                            LOG.log(Level.INFO, "Login fail in app controller.");
+                    }
                 }
-            }
-        });
+            });
 
-        //handle switch deckpanel events.
-        eventBus.addHandler(SwitchViewEvent.TYPE, new SwitchViewEventHandler() {
-            @Override
-            public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
-                switch (switchViewEvent.getEventValue()) {
-                    case ACCOUNT:
-                        presenterFactory.getAccountPresenter().init();
-                        break;
-                    case LOGIN:
-                        presenterFactory.getLoginPresenter().init();
-                        break;
-                    case SWITCHSCHOOL:
-                        presenterFactory.getSwitchSchoolPresenter().init();
-                        break;
-                    case ACTIVERESULTS:
-                        //do nothing presenterFactory.getResultsPresenter().init();
-                        break;
-                    case RESULTS:
-                        presenterFactory.getResultsPresenter().init();
-                        break;
-                    case SCHOOLCLASSES:
-                        presenterFactory.getSchoolclassesPresenter().init();
-                        break;
-                    case COURSESOFSCHOOLCLASS:
-                        presenterFactory.getCoursesOfSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
-                        break;
-                    case STUDENTSINSCHOOLCLASS:
-                        presenterFactory.getStudentsInSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
-                        break;
-                    case ADDSTUDENTS:
-                        presenterFactory.getAddStudentsPresenter().init(switchViewEvent.getSchoolClass());
-                        break;
-                    case TEACHERSINSCHOOLCLASS:
-                        presenterFactory.getTeachersInSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
-                        break;
-                    case SCORESULTS:
-                        presenterFactory.getScoResultsPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultScoContext(), switchViewEvent.getResultStudent(), switchViewEvent.getSchoolClass());
-                        break;
-                    default:
-                        LOG.log(Level.INFO, "Switch fail in app controller.");
+            //handle switch deckpanel events.
+            eventBus.addHandler(SwitchViewEvent.TYPE, new SwitchViewEventHandler() {
+                @Override
+                public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
+                    switch (switchViewEvent.getEventValue()) {
+                        case ACCOUNT:
+                            presenterFactory.getAccountPresenter().init();
+                            break;
+                        case LOGIN:
+                            presenterFactory.getLoginPresenter().init();
+                            break;
+                        case SWITCHSCHOOL:
+                            presenterFactory.getSwitchSchoolPresenter().init();
+                            break;
+                        case ACTIVERESULTS:
+                            //do nothing presenterFactory.getResultsPresenter().init();
+                            break;
+                        case RESULTS:
+                            presenterFactory.getResultsPresenter().init();
+                            break;
+                        case SCHOOLCLASSES:
+                            presenterFactory.getSchoolclassesPresenter().init();
+                            break;
+                        case COURSESOFSCHOOLCLASS:
+                            presenterFactory.getCoursesOfSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
+                            break;
+                        case STUDENTSINSCHOOLCLASS:
+                            presenterFactory.getStudentsInSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
+                            break;
+                        case ADDSTUDENTS:
+                            presenterFactory.getAddStudentsPresenter().init(switchViewEvent.getSchoolClass());
+                            break;
+                        case TEACHERSINSCHOOLCLASS:
+                            presenterFactory.getTeachersInSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
+                            break;
+                        case SCORESULTS:
+                            presenterFactory.getScoResultsPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultScoContext(), switchViewEvent.getResultStudent(), switchViewEvent.getSchoolClass());
+                            break;
+                        default:
+                            LOG.log(Level.INFO, "Switch fail in app controller.");
+                    }
                 }
-            }
-        });
-
-        MainPresenter.Display mainView = viewFactory.getMainView();
-        mainView.init(viewFactory);
-        if (!hideGwtGui) {
+            });
             LOG.log(Level.INFO, "Intiated Main view.");
+            MainPresenter.Display mainView = viewFactory.getMainView();
+            mainView.init(viewFactory);
             this.rootPanel.add(mainView.asWidget());
         } else {
             LOG.log(Level.INFO, "not showing Main view." + getHideGwtGuiString());
         }
+        Element elem = rootPanel.getElement();//DOM.getElementById("resultCol1");
+        rootPanel.setVisible(false);
+            DOM.sinkEvents(elem, Integer.MAX_VALUE);
         MainPresenter mainPresenter = presenterFactory.getMainPresenter();
         LOG.log(Level.INFO, "Intiating Main presenter. Showing login screen.");
         mainPresenter.init();
