@@ -37,7 +37,7 @@
 	<key>allowUserSwitching</key>
 	<true/>
 	<key>allowVirtualMachine</key>
-	<true/>
+	<false/>
 	<key>allowWLAN</key>
 	<false/>
 	<key>allowedDisplayBuiltin</key>

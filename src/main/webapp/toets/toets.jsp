@@ -1,3 +1,4 @@
+<%@page import="java.util.logging.Logger"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!doctype html>
@@ -12,6 +13,20 @@
 		response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		return;
 	}
+	Logger.getLogger("toets.jsp").severe("hash = " + requestHash);
+	boolean failed = true;
+	String[] hashes = { "ccbb7f46b416704eeecfd7cb96c0a51c517c311ca232150ec4411968795053f3", // mac 2.1.2
+						"6d2b53bcb6cae8826b8c5fd71afeb97c2b8c4e7f5d75526ca17066b96461c904"  // win 2.1.7
+				};
+	for(String hash : hashes) {
+		if(hash.equals(requestHash)) failed = false;
+	}
+	if(failed)
+	{
+		response.sendError(HttpServletResponse.SC_FORBIDDEN);
+		return;
+	}
+	
 %>
 <html>
   <head>
@@ -34,11 +49,7 @@
     <script type="text/javascript" language="javascript" src="/dwo/tablet/DWOplayer/DWOplayer.nocache.js"></script>
   </head>
   <body id="main">
-    <pre>
-    	requestURL <%= request.getRequestURI() %>
-    	HASH <%= requestHash %>
-    </pre>
-
+  	<a href='/toets/' >Terug</a> naar startscherm
     <!-- OPTIONAL: include this if you want history support -->
     <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
     

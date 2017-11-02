@@ -364,15 +364,26 @@
                     <tagBase>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/tags/</tagBase>
                 </configuration>            
             </plugin>            
-<!--            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <goals>deploy</goals>
-                </configuration>
-            </plugin>-->
+			<plugin>
+				<groupId>biz.aQute.bnd</groupId>
+				<artifactId>bnd-indexer-maven-plugin</artifactId>
+				<version>3.3.0</version>
+				<executions>
+					<execution>
+						<id>local-index</id>
+						<goals>
+							<goal>local-index</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<inputDir>target/${project.build.finalName}/dwo</inputDir>
+							<outputFile>target/${project.build.finalName}/dwo/index.xml</outputFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
         </plugins>
     </build>
     <properties>

@@ -7,11 +7,12 @@
 <body>
 <h1>Starten</h1>
 <p>
-<a href='sebs://test.dwo.nl/toets/leerling.seb'>Start de veilige <strong>leerling</strong> omgeving</a>
-<br>of <a href='leerling.seb'>eerst downloaden</a>
+<a href='sebs://app.dwo.nl/toets/leerling.seb'>Start de beveiligde <strong>toets</strong> omgeving</a>
 
 <h1>Installeren</h1>
-<p>Hier komen <em>Instructies</em> voor het installeren van de SEB browser.<br>
-Zie <a href='https://safeexambrowser.org/download_en.html'>Safe Exam Browser download</a> (engels)
+<ul>
+	<li><a href='https://www.dwo.nl/downloads/SafeExamBrowserInstaller.exe'>Safe Exam Browser Windows (2.1.7)</a></li>
+	<li><a href='https://www.dwo.nl/downloads/SafeExamBrowser-2.1.2.dmg'>Safe Exam Browser MacOs (2.1.2)</a></li>
+</ul>
 </body>
 </html>
