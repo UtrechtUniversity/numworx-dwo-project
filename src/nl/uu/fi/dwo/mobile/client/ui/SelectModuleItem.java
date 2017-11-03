@@ -203,6 +203,7 @@ public class SelectModuleItem
 				classCourse = parent.classCourse;
 			}
 		}
+		image = sco.getImage();
 	}
 
 	public String getName()
