@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.login;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -24,9 +26,10 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
  *
  * @author G.A.J. van der Plas
  */
-public class LoginView extends Composite implements ClickHandler, LoginPresenter.Display {
+public class LoginView extends Composite implements ClickHandler, KeyPressHandler, LoginPresenter.Display {
 
     private static final Logger LOG = Logger.getLogger(LoginView.class.getName());
+
 
     interface MyUiBinder extends UiBinder<Widget, LoginView> {
     }
@@ -58,6 +61,8 @@ public class LoginView extends Composite implements ClickHandler, LoginPresenter
         loginPresenter = lp;
         //controller must be before clicks occur
         loginBtn.addClickHandler(this);
+        usernameText.addKeyPressHandler(this);
+        passwordTextBox.addKeyPressHandler(this);
         //parse test if it exists.
         String testString = com.google.gwt.user.client.Window.Location.getParameter("test");
         Boolean test = false;
@@ -68,6 +73,15 @@ public class LoginView extends Composite implements ClickHandler, LoginPresenter
                 
     }
 
+    @Override
+    public void onKeyPress(KeyPressEvent event) {
+        if (event.getSource() == usernameText) {
+            passwordTextBox.setFocus(true);
+        }else if(event.getSource()==passwordTextBox){
+            loginBtn.setFocus(true);
+        }
+    }
+    
     public void onClick(ClickEvent event) {
         if (event.getSource() == loginBtn) {
             LOG.log(Level.INFO, "Login button clicked.");
