@@ -28,11 +28,6 @@
             <version>5.1.34</version>
         </dependency>
         <dependency>
-            <groupId>com.jamonapi</groupId>
-            <artifactId>jamon</artifactId>
-            <version>${jamonVersion}</version>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
@@ -228,22 +223,6 @@
                                     <outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/register</outputDirectory>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>com.jamonapi</groupId>
-                                    <artifactId>jamon_war</artifactId>
-                                    <version>${jamonVersion}</version>
-                                    <type>war</type>
-                                    <excludes>WEB-INF/lib/**</excludes>
-                                    <outputDirectory>${project.build.directory}/${project.build.finalName}/jamon</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.jamonapi</groupId>
-                                    <artifactId>jamon_war</artifactId>
-                                    <version>${jamonVersion}</version>
-                                    <type>war</type>
-                                    <outputDirectory>${project.build.directory}/${project.build.finalName}</outputDirectory>
-                                    <includes>WEB-INF/lib/**</includes>
-                                </artifactItem>
-                                <artifactItem>
                                     <groupId>fi.servlet</groupId>
                                     <artifactId>DWOmAccess</artifactId>
                                     <version>${DWOmAccessVersion}</version>
@@ -287,11 +266,6 @@
                             <artifactId>mysql-connector-java</artifactId>
                             <version>5.1.34</version>
                         </dependency>
-                        <dependency>
-                            <groupId>com.jamonapi</groupId>
-                            <artifactId>jamon</artifactId>
-                            <version>2.80</version>
-                        </dependency>        
                     </dependencies>           
                     <configuration>
                         <type>standalone</type>            
@@ -391,7 +365,6 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <DWOplayerVersion>2.1.22</DWOplayerVersion>
         <DWOmAccessVersion>0.0.9</DWOmAccessVersion>
-        <jamonVersion>2.80</jamonVersion>
         <RegisterVersion>2.1.16</RegisterVersion>
         <DWOGwtClientVersion>0.10.4-SNAPSHOT</DWOGwtClientVersion>
     </properties>
