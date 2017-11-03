@@ -58,6 +58,7 @@ public class LoginView extends Composite implements ClickHandler, KeyPressHandle
         usernameText.getElement().setAttribute("autocapitalize", "off");
         passwordTextBox.getElement().setAttribute("autocomplete", "off");
         passwordTextBox.getElement().setAttribute("autocapitalize", "off");
+        switchSchoolBox.setVisible(false);
         loginPresenter = lp;
         //controller must be before clicks occur
         loginBtn.addClickHandler(this);

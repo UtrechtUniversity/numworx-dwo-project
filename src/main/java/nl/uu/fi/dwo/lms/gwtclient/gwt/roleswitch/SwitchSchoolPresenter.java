@@ -6,11 +6,17 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import org.osgi.util.promise.Failure;
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Success;
 
 /**
  * Handler for for Login actions.
@@ -102,8 +108,30 @@ public class SwitchSchoolPresenter {
         dwoGlobalVars.setActiveSchoolRoleAndClass(sracData.get(selectedItem.key));
         DomSchoolRoleAndClassV2 srac = dwoGlobalVars.getActiveSchoolRoleAndClass();
         dwoGlobalVars.getSchoolLogins().setActiveSchoolRoleAndClass(srac);
-        manager.switchToSchoolLogin(srac);
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
-    }
+        Promise<DomSchoolRoleAndClassV2> promise = manager.switchToSchoolLogin(srac);
+        
+        promise.then(new Success<DomSchoolRoleAndClassV2,Void>() {
+            @Override
+            public Promise<Void> call(Promise<DomSchoolRoleAndClassV2> resolved) throws Exception {
+                //flip back to schoolclasses screen 
+                eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+                return null;
+            }
 
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        });
+    }      
 }
