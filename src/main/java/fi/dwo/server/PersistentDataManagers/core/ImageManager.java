@@ -1,15 +1,19 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentCourseSequence;
+import fi.dwo.commons.persistence.entities.PersistentImage;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
@@ -17,11 +21,10 @@ import javax.persistence.criteria.Root;
  * Manages courseSequence sequences in the persistent storage. 
  *
  * @author G.A.J. van der Plas
- * @deprecated
  */
-public class CourseSequenceManager {
+public class ImageManager {
 
-    private static final Logger LOG = Logger.getLogger(CourseSequenceManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(ImageManager.class.getName());
 
     private static EntityManager getEntityManager() {
         EntityManager em = DwoEmfFactory.getEntityManager();
@@ -31,17 +34,17 @@ public class CourseSequenceManager {
     /**
      * Create.
      *
-     * @param courseSequence
+     * @param image
      */
-    public static void create(PersistentCourseSequence courseSequence) throws PersistenceException {
+    public static void create(PersistentImage image) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(courseSequence);
+            em.persist(image);
             em.getTransaction().commit();
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentCourseSequence.", e);
+            LOG.log(Level.SEVERE, "Can't create the PersistentImage.", e);
             throw new PersistenceException(e);
         } finally {
             if (em != null) {
@@ -53,22 +56,23 @@ public class CourseSequenceManager {
     /**
      * Update
      *
-     * @param courseSequence
+     * @param image
      * @throws Exception
      */
-    public static void edit(PersistentCourseSequence courseSequence) throws PersistenceException, Exception {
+    public static PersistentImage edit(PersistentImage image) throws PersistenceException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            courseSequence = em.merge(courseSequence);
+            image = em.merge(image);
             em.getTransaction().commit();
+            return image;
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Long id = courseSequence.getCourseID();
+                Long id = image.getCourseID();
                 if (findEntity(id) == null) {
-                    LOG.log(Level.FINE, "The PersistentCourseSequence with " + id + " no longer exists.", e);
+                    LOG.log(Level.FINE, "The PersistentImage with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
                 }
             }
@@ -90,15 +94,15 @@ public class CourseSequenceManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            PersistentCourseSequence courseSequence = null;
+            PersistentImage image = null;
             try {
-                courseSequence = em.getReference(PersistentCourseSequence.class, id);
-                courseSequence.getCourseID();
+                image = em.getReference(PersistentImage.class, id);
+                image.getCourseID();
             } catch (EntityNotFoundException e) {
-                LOG.log(Level.FINE, "The PersistentCourseSequence with " + id + " no longer exists.", e);
+                LOG.log(Level.FINE, "The PersistentImage with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
-            em.remove(courseSequence);
+            em.remove(image);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -107,15 +111,15 @@ public class CourseSequenceManager {
         }
     }
 
-    public static List<PersistentCourseSequence> findEntities() {
+    public static List<PersistentImage> findEntities() {
         return findEntities(true, -1, -1);
     }
 
-    public static List<PersistentCourseSequence> findEntities(int maxResults, int firstResult) {
+    public static List<PersistentImage> findEntities(int maxResults, int firstResult) {
         return findEntities(false, maxResults, firstResult);
     }
 
-    private static List<PersistentCourseSequence> findEntities(boolean all, int maxResults, int firstResult) {
+    private static List<PersistentImage> findEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
@@ -130,27 +134,13 @@ public class CourseSequenceManager {
             em.close();
         }
     }
-
-    public static List<PersistentCourseSequence> findEntities(PersistentSchool school) {
-        EntityManager em = getEntityManager();
-        try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentCourseSequence.findBySchoolID");
-            q.setParameter("schoolID", school.getSchoolID());
-            List<PersistentCourseSequence> list = q.getResultList();
-            LOG.log(Level.FINE, "CourseSequence-manager retrieved {0} PersistentCourseSequence with schoolid {1}", new Object[]{list.size(), school.getSchoolID()});
-            return list;
-        }
-        finally {
-            em.close();
-        }
-    }    
     
-    public static PersistentCourseSequence findEntity(Long id) throws PersistenceException{
+    public static PersistentImage findEntity(Long id) throws PersistenceException{
         EntityManager em = getEntityManager();
         try {
-            return em.find(PersistentCourseSequence.class, id);
+            return em.find(PersistentImage.class, id);
          } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentCourseSequence with " + id + " was not found.", e);
+            LOG.log(Level.FINE, "The PersistentImage with " + id + " was not found.", e);
             throw e;
          } finally {
             em.close();
@@ -160,11 +150,11 @@ public class CourseSequenceManager {
     public static int getEntityCount() {
         EntityManager em = getEntityManager();
         try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<PersistentCourseSequence> rt = cq.from(PersistentCourseSequence.class);
+            CriteriaQuery<Long> cq = em.getCriteriaBuilder().createQuery(Long.class);
+            Root<PersistentImage> rt = cq.from(PersistentImage.class);
             cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
-            return ((Long) q.getSingleResult()).intValue();
+            TypedQuery<Long> q = em.createQuery(cq);
+            return q.getSingleResult().intValue();
         } finally {
             em.close();
         }

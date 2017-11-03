@@ -1,30 +1,47 @@
 package fi.dwo.server.rest;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javax.imageio.ImageIO;
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.Status;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
+import fi.dwo.commons.persistence.entities.PersistentImage;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
+import fi.dwo.server.PersistentDataManagers.core.ImageManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 
 @Path("/public/scoContext")
 public class PublicScoContextManager {
 
 	private static final boolean SECURITY=false;
+    private static final Logger LOG = Logger.getLogger(PublicScoContextManager.class.getName());
 
 	private String LIMITED = "l";
 	
@@ -35,59 +52,110 @@ public class PublicScoContextManager {
     @PUT
     @Path("/getScos")
     @Produces({"application/json"})
-    public List<DomScoContext> getScos(RestCourse rest) throws Dwo2Exception {
+    public List<DomScoContext> getScos(RestCourse rest, @Context UriInfo info) throws Dwo2Exception {
 // TODO NPE tests 		    		
 		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
-// test for honest people 
-if(SECURITY) {
-		if (domDwoProfile.getDwoProfileRights() != null && 
-				domDwoProfile.getDwoProfileRights().contains(LIMITED))
-			return Collections.emptyList();
-// Security, only non limited profiles are public 		
-}
-		long pid = MySQLPersistenceId.getNativeId(domDwoProfile);
-		PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
-		if ( SECURITY && profile.getDwoProfileRights().contains(LIMITED))
-			return Collections.emptyList();
-		long cid = MySQLPersistenceId.getNativeId(rest.getDomCourse());
+		Long dompid = MySQLPersistenceId.getNativeId(domDwoProfile);
+		Long cid = MySQLPersistenceId.getNativeId(rest.getDomCourse());
 		PersistentCourse parent = CourseManager.findEntity(cid);
-if(SECURITY)		
-		if ( pid != parent.getDwoProfileID().longValue()				// match profile and public school
-				|| parent.getSchoolID() != null)
+
+// Security, only non limited profiles are public 		
+		Long pid = parent.getDwoProfileID();
+		PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
+		if ( profile.getDwoProfileRights().contains(LIMITED))
+			throwLoginNeeded();
+// only public courses
+		if ( parent.getSchoolID() != null)
+			throwLoginNeeded();
+// match course and profile
+		if ( ! pid.equals(dompid))
+		{	LOG.log(Level.SEVERE, "getScos profile mismatch: " + pid + "<>" + dompid);
 			return Collections.emptyList();
+		}
 		
 		List<PersistentScoContext> list = ScoContextManager.findEntities(parent);	
-		return list.stream().map((s)->s.buildDomScoContext()).sorted(new DomScoContextComparator()).collect(Collectors.toList());    	
+		return list.stream().map((s)->builder(s,parent, info)).sorted(new DomScoContextComparator()).collect(Collectors.toList());    	
     }
 
+    private DomScoContext builder(PersistentScoContext s, PersistentCourse parent, UriInfo info) {
+    	DomScoContext build = s.buildDomScoContext();
+    	String pfx = info.getRequestUri().resolve("getImage").toString();
+    	PersistentImage img = ImageManager.findEntity(s.getScoID());
+    	
+		if(parent.getImageData() != null || img != null) {
+			String hasRoleId = "";
+			build.setImage(pfx + "?scoId=" + s.getScoID() + hasRoleId);
+		} else if (!"" .equals(parent.getImage()))
+			build.setImage(parent.getImage());
+		
+		return build;
+    }
+    
+    
     @PUT
     @Path("/get")
     @Produces({"application/json"})
     public DomScoContext get(RestScoContext rest) throws Dwo2Exception {
 // TODO NPE tests 		    		
 		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
-		long pid = MySQLPersistenceId.getNativeId(domDwoProfile);
-if(SECURITY) {
-// test for honest people
-		if (domDwoProfile.getDwoProfileRights() != null && 
-				domDwoProfile.getDwoProfileRights().contains(LIMITED))
-			return null;
+		Long pid = MySQLPersistenceId.getNativeId(domDwoProfile);
+		{
 // Security, only non limited profiles are public 		
 		PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
 		if ( profile.getDwoProfileRights().contains(LIMITED))
-			return null;
-}
-		long id = MySQLPersistenceId.getNativeId(rest.getDomScoContext());
+			throwLoginNeeded();
+		}
+		Long id = MySQLPersistenceId.getNativeId(rest.getDomScoContext());
 		PersistentScoContext scoContext = ScoContextManager.findEntity(id);
 		id = scoContext.getCourseID();
 		PersistentCourse parent = CourseManager.findEntity(id);
-if(SECURITY)
-		if ( pid != parent.getDwoProfileID().longValue()				// match profile and public school
-				|| parent.getSchoolID() != null)
+		if ( parent.getSchoolID() != null)
+			throwLoginNeeded();
+		if ( !parent.getDwoProfileID().equals(pid))	// match profile and public school
+		{
+			LOG.log(Level.SEVERE, "get profile mismatch: " + pid + "<>" + parent.getDwoProfileID());
 			return null;
+		}
 	
 		return scoContext.buildDomScoContext();
     	
     }
-    
+
+    @GET
+    @Path("/getImage")
+    @Produces({"image/png"})
+    public Response getImage(@QueryParam("scoId") Long scoId, @QueryParam("hasRoleId") String hasRoleId) {
+    	try {
+    		PersistentScoContext sco = ScoContextManager.findEntity(scoId);
+    		PersistentImage pimage = ImageManager.findEntity(scoId);
+    		PersistentCourse course =  CourseManager.findEntity(sco.getCourseID());
+    		if(hasRoleId == null) {
+        		PersistentDwoProfile profile = DwoProfileManager.findEntity(course.getDwoProfileID());
+        		if(
+        				course.getSchoolID() != null ||
+        				profile.getDwoProfileRights().contains(LIMITED))
+        		{
+        			LOG.log(Level.WARNING, "Illegal access to " + scoId);
+        			return Response.status(Status.NOT_FOUND).build();
+        		}
+    		
+    		}
+    		byte[] imageData = 
+    				pimage != null ? pimage.getImage() :
+    				course.getImageData();
+    		BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageData));
+    		ByteArrayOutputStream out = new ByteArrayOutputStream();
+    		ImageIO.write(image, "png", out);
+    		imageData = out.toByteArray();
+    		return Response.ok(imageData, "image/png").build();    		
+    	} catch(Exception e) {
+    		LOG.log(Level.SEVERE, "getImage error", e);
+    	}
+    	return Response.status(Status.NOT_FOUND).build();
+    }    
+
+    private void throwLoginNeeded() {
+		throw new Dwo2RestException(Dwo2ExceptionCode.Rest_LoginNeeded, "Login needed");
+	}
+
 }
