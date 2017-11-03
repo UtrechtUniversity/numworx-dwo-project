@@ -2,7 +2,9 @@
 package fi.dwo.commons.persistence.entities;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+
 import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,13 +13,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
+import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -65,6 +73,39 @@ public class PersistentScoContext implements Serializable {
     @Column(name = "sequencenr", nullable = false)
     private Long sequencenr;
 
+    /**
+     * @since 1.5
+     */
+    @Column(name = "optlock")
+    @Version int optlock;
+    @Column(name = "lastChangeTimeStamp")
+    long lastChangeTimeStamp;
+    @Column(name="del")
+    private DelState delState;
+    @Column(name="publishState")
+    private PublishState publishState;
+   
+    /**
+     * Last author. for ACL and publishState.
+     */
+    @Column(name="userID")
+    private Long userID;
+
+    /**
+     * if set, this is a private copy for a schoolclass.
+     */
+    @Column(name="classID")
+    private Long classID; 
+    
+//    @Column(name="urnID")
+//    private Long urnID;
+ 
+    @PrePersist
+    @PreUpdate
+    void changeTimestamp() {
+    	lastChangeTimeStamp = System.currentTimeMillis();
+    }
+   
     public PersistentScoContext() {
     }
 
