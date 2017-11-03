@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -13,6 +14,7 @@ public class DomScoContext extends DomScoContextId {
     private Boolean showScore;
     private Long sequencenr;
     private String image; // zie DomCourseStudent
+    private ScoType scoType;
 
     /**
      * @return the courseId
@@ -96,5 +98,15 @@ public class DomScoContext extends DomScoContextId {
 	 */
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public ScoType getScoType() {
+		if(scoType == null)
+			return ScoType.normal;
+		return scoType;
+	}
+
+	public void setScoType(ScoType scoType) {
+		this.scoType = scoType;
 	}
 }

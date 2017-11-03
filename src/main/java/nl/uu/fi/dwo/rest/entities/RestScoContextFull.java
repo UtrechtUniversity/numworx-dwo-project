@@ -3,21 +3,18 @@ package nl.uu.fi.dwo.rest.entities;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomScoDataFull;
 
 /**
- * RestCourse contains a minimal DwoCourse info.
+ * RestScoContextFull contains a DomScoContextFull info.
  * 
  * @author W.P.G. van Velthoven
  */
 @XmlRootElement
-public class RestScoFull {
+public class RestScoContextFull {
 
 	private DomContext restContext;
 	private DomScoContextFull domScoContext;
-	private DomScoDataFull domScoData;
 	/**
 	 * @return the restContext
 	 */
@@ -29,5 +26,12 @@ public class RestScoFull {
 	 */
 	public void setRestContext(DomContext restContext) {
 		this.restContext = restContext;
+	}
+	public DomScoContextFull getDomScoContext() {
+		return domScoContext;
+	}
+
+	public void setDomScoContext(DomScoContextFull domScoContext) {
+		this.domScoContext = domScoContext;
 	}
 }
