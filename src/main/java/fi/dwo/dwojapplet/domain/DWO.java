@@ -12,6 +12,7 @@ import fi.dwo.commons.exceptions.CourseException;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.PersistenceException;
@@ -21,12 +22,14 @@ import fi.dwo.commons.exceptions.ScoException;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.BUILD;
 import fi.dwo.dwojapplet.domain.rest.PublicProfileManager;
 import fi.dwo.dwojapplet.domain.rest.PublicUserManager;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import fi.dwo.dwojapplet.domain.rest.SecuredTeacherCourseManager;
+import fi.dwo.dwojapplet.domain.rest.SecuredTeacherScoContextManager;
 import fi.dwo.dwojapplet.domain.utils.CheckEmail;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
@@ -2035,6 +2038,21 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * 
      */
     public boolean updateSco(Sco sco) {
+		DomScoContextFull scoContext = new DomScoContextFull();
+    	if(sco.getImageData() != null) {
+    		scoContext.setId(PersistentScoContext.buildPersistenceId((long)sco.getScoID()));
+    		scoContext.setImageData(sco.getImageData());
+    	}
+    	
+    	if (scoContext.getId() != null) {
+    		try {
+				SecuredTeacherScoContextManager.update(scoContext);
+				sco.setImageData(null);
+			} catch (Dwo2Exception e) {
+	            JOptionPane.showMessageDialog(this, e.getMessage());
+			}
+    	}
+    	
         try {
             return PersistenceFacade.instance().updateSco(sco);
         } catch (ScoException e) {

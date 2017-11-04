@@ -6,7 +6,10 @@ import fi.dwo.dwojapplet.domain.AppletConfig;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
+
 import java.awt.Component;
+
+import javax.swing.JButton;
 
 /**
  * This is a dialog for editing the SCO name and description.
@@ -133,6 +136,8 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
         CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper
                 .getText(TextMapper.GUISDLG_TTL_ADD_SCO), 0, appletConfig.getName(), "", TextMapper.GUISDLG_SCO_NAME, TextMapper.GUISDLG_SCO_DESCRIPTION);
         cnd.setShowScore(true);
+        JButton logobtn = cnd.addLogoBtn();
+        logobtn.setAction(new LogoIconAction());
         cnd.show();
         if (cnd.isConfirmed()) {
             //System.out.println("voor hij wordt aangemaakt: " + appletConfig.getLaunchdata() + "; " + appletConfig.getAppletID());
@@ -163,6 +168,10 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
                 .getText(TextMapper.GUISDLG_TTL_EDIT_SCO), sco.getScoID(), sco.getScoName(),
                 sco.getDescription(), TextMapper.GUISDLG_SCO_NAME, TextMapper.GUISDLG_SCO_DESCRIPTION);
         cnd.setShowScore(sco.isShowScore());
+        JButton logobtn = cnd.addLogoBtn();
+        LogoIconAction logoAction = new LogoIconAction(sco);
+		logobtn.setAction(logoAction);
+        
         cnd.show();
         if (cnd.isConfirmed()) {
             String oldName = sco.getScoName();
@@ -178,7 +187,14 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
             } else {
                 sco.setShowScore(Boolean.FALSE);
             }
-
+// pass ImageData to updateSco in persistenceFacade.
+            if(logoAction.isUpdate())
+            {
+            	sco.setImageData(logoAction.getImageData());
+            } else
+            	sco.setImageData(null);
+            
+            
             boolean result = GuiCreator.instance().updateSco(sco);
             if (!result) { //something went wrong. Reset the data and reshow the dialog.
                 sco.setName(oldName);

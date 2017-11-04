@@ -76,7 +76,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
 
     private Applet applet;
     private Boolean showScore;
-
+    private byte[] imageData; // part of DomScoContextFull
     private int sequencenr;
 
     private boolean initialized;
@@ -817,5 +817,19 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
     public Sco unwrap() {
         return this;
     }
+
+	/**
+	 * @return the imageData
+	 */
+	public byte[] getImageData() {
+		return imageData;
+	}
+
+	/**
+	 * @param imageData the imageData to set
+	 */
+	public void setImageData(byte[] imageData) {
+		this.imageData = imageData;
+	}
 
 }

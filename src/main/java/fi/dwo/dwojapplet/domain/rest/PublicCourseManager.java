@@ -31,7 +31,7 @@ public class PublicCourseManager {
 		RestDwoProfile rest = new RestDwoProfile();
 		rest.setDomDwoProfile(profile);
 		rest.setRestContext(new DomContext());
-		List<DomCourseStudent> result = StoredRestManager.getInstance().getPutList("/public/course/getRoot", RestListClassTypes.DomCourseStudent, rest);
+		List<DomCourseStudent> result = StoredRestManager.getInstance().getPutList("rest/public/course/getRoot", RestListClassTypes.DomCourseStudent, rest);
 		
 		return result;
 		
@@ -51,7 +51,7 @@ public class PublicCourseManager {
 		rest.setRestContext(new DomContext());
 		rest.setDomCourse(course);
 		// select * from tblCourse where id = $%id, profile = %profile and school = NULL
-		DomCourseStudent result = StoredRestManager.getInstance().put("/public/course/get", DomCourseStudent.class, rest);
+		DomCourseStudent result = StoredRestManager.getInstance().put("rest/public/course/get", DomCourseStudent.class, rest);
 		return result;
 	}
 	
@@ -70,7 +70,7 @@ public class PublicCourseManager {
 		rest.setDomDwoProfile(profile);
 		rest.setDomCourse(course);
 		rest.setRestContext(new DomContext());
-		List<DomCourseStudent> result = StoredRestManager.getInstance().getPutList("/public/course/getChildren", RestListClassTypes.DomCourseStudent, rest);
+		List<DomCourseStudent> result = StoredRestManager.getInstance().getPutList("rest/public/course/getChildren", RestListClassTypes.DomCourseStudent, rest);
 		
 		return result;
 	}

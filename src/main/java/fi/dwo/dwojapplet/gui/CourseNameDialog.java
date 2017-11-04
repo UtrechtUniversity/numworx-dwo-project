@@ -286,4 +286,12 @@ public class CourseNameDialog extends JDialog implements ActionListener {
         }
         return c;
     }
+
+	public JButton addLogoBtn() {
+		JButton btn = new JButton();
+		getContentPane().add(btn);
+		FontMetrics fm = btn.getFontMetrics(GuiConstants.NORMAL_TEXT);
+		btn.setBounds(10, 55 + fm.getHeight() + 10, 64, 64);
+		return btn;
+	}
 }
