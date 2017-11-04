@@ -24,6 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
@@ -209,6 +210,9 @@ public class PersistentScoContext implements Serializable {
         scoContext.setShowScore(showscore);
     }
 
+    public void fillDomScoContextFull(DomScoContextFull scoContext) {
+    	fillDomScoContext(scoContext);
+    }
        /**
      * Builds a PersistenceId using this object's data.
      *
