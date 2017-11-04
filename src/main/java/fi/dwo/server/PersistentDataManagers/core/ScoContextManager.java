@@ -58,15 +58,17 @@ public class ScoContextManager {
      * Update
      *
      * @param sc
+     * @return 
      * @throws Exception
      */
-    public static void edit(PersistentScoContext sc) throws PersistenceException, Exception {
+    public static PersistentScoContext edit(PersistentScoContext sc) throws PersistenceException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             sc = em.merge(sc);
             em.getTransaction().commit();
+            return sc;
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {

@@ -95,7 +95,7 @@ public class PublicScoContextManager {
     @PUT
     @Path("/get")
     @Produces({"application/json"})
-    public DomScoContext get(RestScoContext rest) throws Dwo2Exception {
+    public DomScoContext get(RestScoContext rest, @Context UriInfo info) throws Dwo2Exception {
 // TODO NPE tests 		    		
 		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
 		Long pid = MySQLPersistenceId.getNativeId(domDwoProfile);
@@ -117,7 +117,7 @@ public class PublicScoContextManager {
 			return null;
 		}
 	
-		return scoContext.buildDomScoContext();
+		return builder(scoContext, parent, info);
     	
     }
 

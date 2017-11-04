@@ -53,15 +53,17 @@ public class ScoDataManager {
      * Update
      *
      * @param sd studentScoData
+     * @return 
      * @throws Exception
      */
-    public static void edit(PersistentScoData sd) throws PersistenceException, Exception {
+    public static PersistentScoData edit(PersistentScoData sd) throws PersistenceException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             sd = em.merge(sd);
             em.getTransaction().commit();
+            return sd;
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
