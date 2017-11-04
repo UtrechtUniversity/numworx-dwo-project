@@ -6,7 +6,8 @@ package nl.uu.fi.dwo.rest.dom.entities;
  */
 public class DomScoContextFull extends DomScoContext {
 
-	private byte[] imageData;
+	private byte[] imageData; // from urn/image
+	private String description; // from scoData;
 
 	public byte[] getImageData() {
 		return imageData;
@@ -14,6 +15,14 @@ public class DomScoContextFull extends DomScoContext {
 
 	public void setImageData(byte[] imageData) {
 		this.imageData = imageData;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 }
