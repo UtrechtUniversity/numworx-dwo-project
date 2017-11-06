@@ -1,22 +1,46 @@
 package fi.dwo.dwojapplet.domain.rest;
 
-import java.util.Collections;
 import java.util.List;
 
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+
 import fi.dwo.dwojapplet.REST.StoredRestManager;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import nl.numworx.async.Async;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
-public class PublicScoContextManager {
+public class PublicScoContextManager implements ScoContextManager {
 
+	public static ScoContextManager instance = new PublicScoContextManager();
+	private PublicScoContextManager() {};
+	static final Async async = new Async();
+	static ScoContextManager mediate = async.mediate(instance, ScoContextManager.class);
+	
+	public static Promise<DomScoContext> getAsync(DomScoContext domScoId, DomDwoProfile profile) {
+		try {
+			return async.call(mediate.get(domScoId, profile));
+		} catch (Dwo2Exception e) {
+			return Promises.failed(e);
+		}
+	}
+	
+	public static Promise<List<DomScoContext>> getScosAsync(DomCourse parent, DomDwoProfile profile) {
+		try {
+			return async.call(mediate.getScos(parent, profile));
+		} catch (Dwo2Exception e) {
+			return Promises.failed(e);
+		}
+	}
+		
 	/**
 	 * Retrieve a deeplink sco.
 	 * Only public scos from a non-limited profile.
@@ -24,14 +48,38 @@ public class PublicScoContextManager {
 	 * @return
 	 * @throws Dwo2Exception
 	 */
-	public static DomScoContext get(DomScoContext domScoId, DomDwoProfile profile) throws Dwo2Exception
+	public DomScoContext get(DomScoContext domScoId, DomDwoProfile profile) throws Dwo2Exception
 	{
 		RestScoContext rest = new RestScoContext();
-		rest.setRestContext(new DomContext());
+		rest.setRestContext(getContext());
 		rest.setDomDwoProfile(profile);
 		rest.setDomScoContext(domScoId);
-		DomScoContext result = StoredRestManager.getInstance().put("rest/public/scoContext/get", DomScoContext.class, rest);
+		rest.setSchoolClassID(getActiveSchoolClass());
+		DomScoContext result = StoredRestManager.getInstance().put(pfx()+"/scoContext/get", DomScoContext.class, rest);
 		return result;
+	}
+
+	private DomContext getContext() {
+		DomContext context = new DomContext();
+		try {
+			context.setDomHasRole(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
+		} catch (Exception e) {
+		}
+		return context;
+	}
+
+	private String pfx() {
+		if(StoredRestManager.getBasicAuthString() != null)
+			return "rest/secure/user";
+		return "rest/public";
+	}
+
+	private DomSchoolClassId getActiveSchoolClass() {
+		try {
+			return DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolClass();
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	
 	/** 
@@ -42,15 +90,14 @@ public class PublicScoContextManager {
 	 * @throws Dwo2Exception
 	 */
 	
-	public static List<DomScoContext> getScos(DomCourse course, DomDwoProfile profile) throws Dwo2Exception
+	public  List<DomScoContext> getScos(DomCourse course, DomDwoProfile profile) throws Dwo2Exception
 	{
-		// Als een profiel "L"imited is, dan is er geen guest access mogelijk.
-		if(profile.getDwoProfileRights().contains("l")) return Collections.EMPTY_LIST;
 		RestCourse rest = new RestCourse();
 		rest.setDomDwoProfile(profile);
 		rest.setDomCourse(course);
-		rest.setRestContext(new DomContext());
-		List<DomScoContext> result = StoredRestManager.getInstance().getPutList("rest/public/scoContext/getScos", RestListClassTypes.DomScoContext, rest);
+		rest.setRestContext(getContext());
+		rest.setSchoolClassID(getActiveSchoolClass());
+		List<DomScoContext> result = StoredRestManager.getInstance().getPutList(pfx()+"/scoContext/getScos", RestListClassTypes.DomScoContext, rest);
 		return result;
 	}
 	

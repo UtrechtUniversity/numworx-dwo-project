@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -21,6 +22,9 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.SwingUtilities;
+
+import org.osgi.util.promise.Promise;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
@@ -68,16 +72,18 @@ public class LogoIconAction extends AbstractAction implements Action {
 		PersistenceId id = PersistentScoContext.buildPersistenceId(Long.valueOf(sco.getScoID()));
 		DomScoContext domScoId = new DomScoContext();
 		domScoId.setId(id);
-// FIXME testing, need SecureScoContextManager
+		Promise<DomScoContext> p = PublicScoContextManager.getAsync(domScoId, DWO.getDwoProfile());
 		try {
-			domScoId = PublicScoContextManager.get(domScoId, DWO.getDwoProfile());
+			domScoId = p.getValue();
 			String u = domScoId.getImage();
 			if( u != null) {
-				Image img = Toolkit.getDefaultToolkit().getImage(new URL(u));
+				final URL url = new URL(u);
+				SwingUtilities.invokeLater( () -> {
+				Image img = Toolkit.getDefaultToolkit().getImage(url);
 				ReducedImageIcon icon = new ReducedImageIcon(img);
 		        setIcon(icon);
-		    }
-		} catch (Dwo2Exception | MalformedURLException e) {
+				})}}
+		} catch (MalformedURLException | InvocationTargetException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			LOG.log(Level.INFO, "image failed", e);
 		}
