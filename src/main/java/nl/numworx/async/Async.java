@@ -21,7 +21,7 @@ public class Async {
 	}
 
 	@SuppressWarnings("unchecked")
-	<T> T mediate(T object, Class<T> clz) {		
+	public <T> T mediate(T object, Class<T> clz) {		
 		ClassLoader loader = object.getClass().getClassLoader(); // ???
 		InvocationHandler h = new AsyncMediator(this, object);
 		Class<?>[] interfaces = new Class<?>[] { clz };
