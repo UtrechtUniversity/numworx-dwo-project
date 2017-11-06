@@ -11,18 +11,21 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentImage;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.ImageManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
@@ -41,7 +44,8 @@ public class SecuredUserScoContextManager {
     private static final Logger LOG = Logger.getLogger(SecuredUserScoContextManager.class.getName());
 	
 	private String LIMITED = "l";
-	
+    private static final String PUBLIC_SCO_GET_IMAGE = "../../../public/scoContext/getImage";
+
 	/** get scos of a course.
 	 * @param sc context
 	 * @param rest a courseid and profileid
@@ -51,7 +55,7 @@ public class SecuredUserScoContextManager {
     @PUT
     @Path("/getScos")
     @Produces({"application/json"})
-    public List<DomScoContext> getScos(@Context SecurityContext sc, RestCourse rest) throws Dwo2Exception {
+    public List<DomScoContext> getScos(@Context SecurityContext sc, RestCourse rest, @Context UriInfo info) throws Dwo2Exception {
 // TODO NPE tests 		    		
 		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
 		DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
@@ -101,9 +105,22 @@ public class SecuredUserScoContextManager {
 		}
 
 		List<PersistentScoContext> list = ScoContextManager.findEntities(parent);
-		return list.stream().map((s)->s.buildDomScoContext()).sorted(new DomScoContextComparator()).collect(Collectors.toList());    	
+		String hasRoleId = phr.buildPersistenceId().getIdString();
+		return list.stream().map((s)->builder(s,parent,info,hasRoleId)).sorted(new DomScoContextComparator()).collect(Collectors.toList());    	
     }
 
+    private DomScoContext builder(PersistentScoContext s, PersistentCourse parent, UriInfo info, String hasRoleId) {
+    	DomScoContext build = s.buildDomScoContext();
+    	hasRoleId = "&hasRoleId=" + hasRoleId;
+    	String pfx = info.getRequestUri().resolve(PUBLIC_SCO_GET_IMAGE).toString();
+ 
+    	PersistentImage img = ImageManager.findEntity(s.getScoID());
+    	
+		if(img != null) {
+			build.setImage(pfx + "?scoId=" + s.getScoID() + hasRoleId);
+		}
+		return build;
+    }
     /**
      * get ScoContext from this scoid.
      * Check profile, must match, check school, must match hasrole
@@ -115,7 +132,7 @@ public class SecuredUserScoContextManager {
     @PUT
     @Path("/get")
     @Produces({"application/json"})
-    public DomScoContext get(@Context SecurityContext sc, RestScoContext rest) throws Dwo2Exception {
+    public DomScoContext get(@Context SecurityContext sc, RestScoContext rest, @Context UriInfo info) throws Dwo2Exception {
 // TODO NPE tests 		    		
 		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
 		DomHasRole    domHasRole = rest.getRestContext().getDomHasRole();
@@ -165,8 +182,8 @@ public class SecuredUserScoContextManager {
             LOG.log(Level.SEVERE, "user mismatch " + sc.getUserPrincipal().getName() );
 			//return null;
 		}
-		
-		return scoContext.buildDomScoContext();    	
+		String hasRoleId = phr.buildPersistenceId().getIdString();
+		return builder(scoContext, parent, info, hasRoleId);    	
     }
     
 }

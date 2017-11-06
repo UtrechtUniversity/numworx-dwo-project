@@ -80,14 +80,12 @@ public class PublicScoContextManager {
     private DomScoContext builder(PersistentScoContext s, PersistentCourse parent, UriInfo info) {
     	DomScoContext build = s.buildDomScoContext();
     	String pfx = info.getRequestUri().resolve("getImage").toString();
+
     	PersistentImage img = ImageManager.findEntity(s.getScoID());
     	
-		if(parent.getImageData() != null || img != null) {
-			String hasRoleId = "";
-			build.setImage(pfx + "?scoId=" + s.getScoID() + hasRoleId);
-		} else if (!"" .equals(parent.getImage()))
-			build.setImage(parent.getImage());
-		
+		if (img != null) {
+			build.setImage(pfx + "?scoId=" + s.getScoID());
+		} 
 		return build;
     }
     
