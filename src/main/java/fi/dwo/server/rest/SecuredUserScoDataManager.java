@@ -44,6 +44,7 @@ import fi.dwo.server.persistence.CmiConvert;
 import fi.dwo.server.persistence.DbAccess;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScormValues;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScormValues;
@@ -299,6 +300,8 @@ public class SecuredUserScoDataManager {
 		PersistentStudentScoContext pssc = null;
 		PersistentStudentScoData pssd = null;
 		PersistentScoContext scoContext = null;
+		DomSchoolClassId domClassID = rest.getDomScormValues().getSchoolClassID();
+		Long classID = MySQLPersistenceId.getNativeId(domClassID);
 		try {
 			scoContext = ScoContextManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomScormValues().getScoContext()));
      	LOG.log(Level.INFO, "setValues starts " + sc.getUserPrincipal().getName() + " " + scoContext.getScoID());
@@ -316,7 +319,9 @@ public class SecuredUserScoDataManager {
 			list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
 			pssc = list.get(0);
 			LOG.fine("studentsco2 = " + pssc.getStudentSco());
-			
+// NIEUW
+//			pssc.setClassID(MySQLPersistenceId.getNativeId(classID));
+
 			
 		} else {
 			pssc = list.get(0);
@@ -325,7 +330,10 @@ public class SecuredUserScoDataManager {
 				LOG.warning("data is readonly "+ sc.getUserPrincipal().getName() + " " + scoContext.getScoID());
 				return Boolean.FALSE;
 			}
+// Niet nieuw: check if <> then null
+		
 		}
+		
 		for(DomMapEntry<String,String> entry: rest.getDomScormValues().getValues()) {
 			logEntry("set", entry, pssc.getPersistentHasRolePK().getUserID(), pssc.getScoID());
 			ScormKey key = ScormKey.getKey(entry.getKey());
