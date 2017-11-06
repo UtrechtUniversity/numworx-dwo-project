@@ -72,21 +72,24 @@ public class LogoIconAction extends AbstractAction implements Action {
 		PersistenceId id = PersistentScoContext.buildPersistenceId(Long.valueOf(sco.getScoID()));
 		DomScoContext domScoId = new DomScoContext();
 		domScoId.setId(id);
-		Promise<DomScoContext> p = PublicScoContextManager.getAsync(domScoId, DWO.getDwoProfile());
-		try {
-			domScoId = p.getValue();
-			String u = domScoId.getImage();
+		PublicScoContextManager.getAsync(domScoId, DWO.getDwoProfile())
+		.then(p ->
+		{
+			String u = p.getValue().getImage();
 			if( u != null) {
 				final URL url = new URL(u);
 				SwingUtilities.invokeLater( () -> {
 				Image img = Toolkit.getDefaultToolkit().getImage(url);
 				ReducedImageIcon icon = new ReducedImageIcon(img);
 		        setIcon(icon);
-				})}}
-		} catch (MalformedURLException | InvocationTargetException | InterruptedException e) {
-			// TODO Auto-generated catch block
-			LOG.log(Level.INFO, "image failed", e);
-		}
+				}
+				);
+			}
+			return null;
+		} ,
+		 p ->
+			LOG.log(Level.INFO, "image failed", p.getFailure())
+		);
 	
 	}
 

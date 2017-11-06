@@ -19,6 +19,7 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.CourseManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
+import fi.dwo.dwojapplet.gui.fullscreen.FramedScoPanel;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -389,6 +390,16 @@ public class GuiCreatorTeacher extends GuiCreator {
         return dwo.previewSco(sco);
     }
 
+    public CenterSubPanel getScoPanel(Sco sco) {
+        dwo.setWait();
+        try {
+            CenterSubPanel csp = dwo.loadSco(sco);
+            return csp;
+        }
+        finally {
+            dwo.setReady();
+        }
+    }
     /**
      * @param course
      * @param name
