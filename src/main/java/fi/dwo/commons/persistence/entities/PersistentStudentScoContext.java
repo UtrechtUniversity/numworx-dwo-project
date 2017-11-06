@@ -13,14 +13,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContextFull;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -87,6 +91,25 @@ public class PersistentStudentScoContext implements Serializable {
     private String completionStatus;
     @Column(name = "location")
     private String location;
+//alter table tblstudentscocontext add classID int(11) DEFAULT NULL, add optlock int(11) DEFAULT 0, add lastChangeTimeStamp bigint(20) DEFAULT 0, add `del` tinyint(4) NOT NULL DEFAULT 0;
+    /**
+     * @since 1.5.0
+     */
+    @Column(name="classID")
+    private Long classID;
+    @Column(name = "optlock")
+    @Version private int optlock;
+    @Column(name = "lastChangeTimeStamp")
+    private long lastChangeTimeStamp;
+    @Column(name = "del")
+    private DelState delState;
+    
+    
+    @PrePersist
+    @PreUpdate
+    void changeTimestamp() {
+    	lastChangeTimeStamp = System.currentTimeMillis();
+    }
 
     public PersistentStudentScoContext() {
     }
@@ -253,6 +276,7 @@ public class PersistentStudentScoContext implements Serializable {
         studentSco.setUserID(PersistentUser.buildPersistenceId(this.persistentHasRolePK.getUserID()));
         studentSco.setScore(score);
         studentSco.setScoID(PersistentScoContext.buildPersistenceId(this.scoID));
+        studentSco.setSchoolClassID(PersistentSchoolClass.buildPersistenceId(classID));
     }
 
     public void fillDomStudentScoContextFull(DomStudentScoContextFull studentSco) {
@@ -283,5 +307,13 @@ public class PersistentStudentScoContext implements Serializable {
         id.setIdString(String.format("MYSQL;%s;%020d",
                 PersistenceClassType.PersistentStudentScoContext.name(), aStudentScoId));
         return id;
-    }    
+    }
+
+	public Long getClassID() {
+		return classID;
+	}
+
+	public void setClassID(Long classID) {
+		this.classID = classID;
+	}    
 }

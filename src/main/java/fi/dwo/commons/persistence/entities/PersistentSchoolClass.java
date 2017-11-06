@@ -201,10 +201,11 @@ public class PersistentSchoolClass implements Serializable {
     /**
      * Builds a persistenceId from the parameters given.
      *
-     * @param aSchoolClassId
+     * @param aSchoolClassId (may be null)
      * @return
      */
     public static PersistenceId buildPersistenceId(Long aSchoolClassId) {
+    	if(aSchoolClassId==null) return null;
         PersistenceId id = new PersistenceId();
         id.setIdString(String.format("MYSQL;%s;%020d",
                 PersistenceClassType.PersistentSchoolClass.name(), aSchoolClassId));

@@ -175,6 +175,7 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
 //        return getSingleNativeId(o.getId().getIdString());
 //    }
     public static Long getNativeId(DomSchoolClassId o) throws Dwo2Exception {
+    	if(o == null) return null; // nullable
         return getSingleNativeId(o.getId().getIdString(), PersistenceClassType.PersistentSchoolClass);
     }
 
