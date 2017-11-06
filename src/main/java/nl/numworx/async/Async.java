@@ -34,8 +34,9 @@ public class Async {
 	
 	@SuppressWarnings("unchecked")
 	public <T> Promise<T> call(T noresult) {
-		executor.execute(getRunner());
-		return (Promise<T>) getRunner().getPromise();
+		final AsyncRunner run = getRunner();
+		executor.execute(run);
+		return (Promise<T>) run.getPromise();
 	}
 
 	@SuppressWarnings("unchecked")
