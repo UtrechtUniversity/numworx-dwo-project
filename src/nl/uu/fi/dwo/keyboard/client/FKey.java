@@ -6,25 +6,30 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasAllTouchHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasMouseUpHandlers;
 import com.google.gwt.event.dom.client.HasTouchEndHandlers;
 import com.google.gwt.event.dom.client.HasTouchStartHandlers;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.TouchEndEvent;
 import com.google.gwt.event.dom.client.TouchEndHandler;
 import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.LegacyHandlerWrapper;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.Image;
+import com.google.web.bindery.event.shared.HandlerRegistrations;
 
-public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseOverHandler, MouseOutHandler, ClickHandler, HasTouchStartHandlers, HasTouchEndHandlers, TouchEndHandler {
+public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseOverHandler, MouseOutHandler, ClickHandler, HasTouchStartHandlers, HasTouchEndHandlers, TouchEndHandler, MouseUpHandler {
 
 	static class MyClickEvent extends ClickEvent {
 
@@ -50,12 +55,14 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseO
 	Image image;
 	HasClickHandlers click;
 	HasAllTouchHandlers touches;
+	HasMouseUpHandlers mouses;
 	
 	@UiConstructor
 	public FKey() {
 		panel = new HTML();
 		click = panel;
 		touches = panel;
+		mouses = panel;
 		initWidget(panel);
 		setStyleName("kbd-Key");
 		panel.addMouseOverHandler(this);
@@ -72,6 +79,7 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseO
 		image = new Image(resource);
 		click = image;
 		touches = image;
+		mouses = image;
 		initWidget(image);
 		image.addMouseOverHandler(this);
 		image.addMouseOutHandler(this);
@@ -111,7 +119,11 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseO
 		if(TouchEvent.isSupported())
 		{   listener = handler;
 			event = new MyClickEvent(touches);
-			return touches.addTouchEndHandler(this);
+			return 
+					new LegacyHandlerWrapper(HandlerRegistrations.compose(
+							touches.addTouchEndHandler(this),
+							mouses.addMouseUpHandler(this)
+					));
 			
 		}
 		return click.addClickHandler(handler);
@@ -147,6 +159,14 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseO
 		if(listener != null) {
 			listener.onClick(this.event);
 		}
+	}
+
+	@Override
+	public void onMouseUp(MouseUpEvent event) {
+		if(listener != null) {
+			listener.onClick(this.event);
+		}
+		
 	}
 
 }
