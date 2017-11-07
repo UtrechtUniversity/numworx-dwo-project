@@ -19,6 +19,7 @@ import javax.ws.rs.core.SecurityContext;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.entities.RestCourseFull;
 
@@ -99,6 +100,67 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
     	
     	return course;
     }
+ 
+    @PUT
+    @Path("add")
+    @Produces({"application/json"})
+    public DomCourseFull add(@Context SecurityContext sc, RestCourseFull rest) {
+		DomCourseFull course = rest.getDomCourse();
+    	try {
+// Security...
+			PersistentCourse pc = new PersistentCourse();
+			DomDwoProfile profile = new DomDwoProfile();
+			profile.setId(course.getDwoProfileId());			
+			pc.setDwoProfileID(MySQLPersistenceId.getNativeId(profile));
+// editable fields?
+			if(course.getName() != null) pc.setName(course.getName());
+			if(course.getDescription() != null) pc.setDescription(course.getDescription());
+			if(course.getImage() != null) pc.setImage(course.getImage());
+			if(course.getImageData()!=null) pc.setImageData(course.getImageData());
+			pc.setNotVisible(course.isNotVisible());
+			if(course.getExport() != null)
+				pc.setExport(course.getExport().booleanValue());
+			if(course.getSequenceNr() != null)
+				pc.setSequencenr(course.getSequenceNr());
+// SCHOOL:
+			Long schoolId = null;
+			if(course.getSchoolId() != null) {
+				DomSchool ds = new DomSchool(); ds.setId(course.getSchoolId());
+				schoolId = MySQLPersistenceId.getNativeId(ds);
+				if(schoolId.longValue() == 0L) schoolId = null;
+			}			
+			pc.setSchoolID(schoolId);
+//			if(schoolId != null && ! schoolId.equals(schoolID_pc) ) {
+//	            Dwo2RestException exception = new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+//	            LOG.log(Level.WARNING, "Assume profileadmin or dwoadmin? " + schoolID_pc + " " + schoolId, exception);
+//	            throw exception;
+//			} else
+// parent within the same school
+			if(course.getParentID() != null) {		
+				DomCourse parent = new DomCourse();
+				parent.setId(course.getParentID());
+				Long parentID = MySQLPersistenceId.getNativeId(parent);
+				if(parentID.longValue() != 0L) {
+					PersistentCourse parentcourse = CourseManager.findEntity(parentID);
+					if ( !parentcourse.isWithChildren()) {
+			            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Wrong parent using usercode " + sc.getUserPrincipal().getName() + ".");
+					}
+				}
+// verify parent exists OR parentID = 0 has "haschildren"
+				
+				pc.setParentID(parentID);
+			} else
+				pc.setParentID(0L);
+			CourseManager.create(pc);
+			course = pc.buildDomCourseFull();
+		} catch (Dwo2Exception e) {
+			throw new Dwo2RestException(e);
+		}
+    	
+    	return course;
+    }
+    
+    
     
 // needs get, update, delete, etc...
     
