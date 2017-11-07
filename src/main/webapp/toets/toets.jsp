@@ -15,8 +15,11 @@
 	}
 	boolean failed = true;
 	String[] hashes = { "ccbb7f46b416704eeecfd7cb96c0a51c517c311ca232150ec4411968795053f3", // mac 2.1.2
-						"6d2b53bcb6cae8826b8c5fd71afeb97c2b8c4e7f5d75526ca17066b96461c904"  // win 2.1.7
-				};
+						"6d2b53bcb6cae8826b8c5fd71afeb97c2b8c4e7f5d75526ca17066b96461c904",  // win 2.1.7
+						System.getProperty("SEB_TOETS_MAC", ""),
+						System.getProperty("SEB_TOETS_WIN", "")
+	
+	};
 	for(String hash : hashes) {
 		if(hash.equals(requestHash)) failed = false;
 	}
