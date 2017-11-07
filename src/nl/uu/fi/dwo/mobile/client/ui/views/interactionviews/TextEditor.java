@@ -73,338 +73,22 @@ import nl.uu.fi.dwo.mobile.utils.Logging;
 public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont {
 	
 	private static final int EXECUTE_HEIGHT = 30;
-	private boolean editable = true;
 	private static final Logger LOGGER = Logger.getLogger("TextEditor");
 	private static DWOplayerCss css = DWOplayer.DWO_BUNDLE.dwoplayercss();
-	private int lineHeight = 20;
 	
 	private final static String CIRCA = "\u2248";
 	private final static String EXACT = "=";
 	
-	class FormuleTapper implements ClickHandler {
-
-		private FormuleEditor deze;
-		private Widget widget;
-		@Override
-		public void onClick(ClickEvent event) {
-			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
-//			keyboard.setEditor(deze);
-			keyboard.setEnterType(EnterType.APPLY);
-//			keyboard.focus();
-//			deze.requestFocus();
-			setCursorWidget(widget);removeCursor(); // cursor is in formule editor
-			event.stopPropagation();
-		}
-		public FormuleTapper(FormuleEditor deze, Widget widget) {
-			super();
-			this.deze = deze;
-			this.widget = widget;
-		}
-		
-	}
-	
-	
-	
-	class Tapper implements ClickHandler {
-		private FormuleEditorIF deze;
-		private Element target;
-		
-
-		public Tapper(FormuleEditorIF deze, Element target) {
-			this.deze = deze;
-			this.target = target;
-		}
-
-		@Override
-		public void onClick(ClickEvent event) {
-//			Element targetElement = event.getTargetElement();
-//			if(targetElement == null || targetElement == target || targetElement.getParentElement() == target)
-			{	FormuleKeyboardIF keyboard = comRoot.getKeyboard();
-				keyboard.setEditor(deze);
-				keyboard.setEnterType(EnterType.ENTER);
-				keyboard.softFocus();
-				hbox.removeStyleName(css.textEditor_empty());
-				int flowTop = flow.getAbsoluteTop();
-				int y = event.getClientY() - flowTop;
-				int w;
-				int i = 0;
-				int max = flow.getWidgetCount()-1;
-				if(i == max) i-=1;
-				Widget widget;
-				do {
-					widget = flow.getWidget(++i);
-					w = widget.getAbsoluteTop()-flowTop;
-				} while ( i < max && w < y);
-				LOGGER.fine("widget " + i + " at "  + w + " mouse at " + y + " c=" + cursor + " m=" + max);
-				setCursorWidget(widget);
-				if(cursor != max || w >= y) cursorToLeft(); // 1 terug
-			}
-		}
-
-	}
-	
-	class TapForFocus implements TouchStartHandler, ClickHandler {
-		private Widget cursorWidget;
-		private HandlerRegistration registration;
-
-		/**
-		 * @param cursorWidget
-		 */
-		TapForFocus(Widget cursorWidget) {
-			this.cursorWidget = cursorWidget;
-			TouchDelegate wrap = new TouchDelegate(cursorWidget);
-			registration = wrap.addTouchStartHandler(this);
-		}
-
-		TapForFocus(Widget cursorWidget, HasClickHandlers w) {
-			this.cursorWidget = cursorWidget;
-			registration = w.addClickHandler(this);
-		}
-
-		public void finalize() {
-			registration.removeHandler();
-			registration = null;
-			cursorWidget = null;
-		}
-		
-		@Override
-		public void onTouchStart(TouchStartEvent event) {
-			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
-			keyboard.setEditor(TextEditor.this);
-			keyboard.setEnterType(EnterType.ENTER);
-			shown = true;
-			setCursorWidget(cursorWidget);
-			hbox.removeStyleName(css.textEditor_empty());
-			keyboard.softFocus();
-			event.stopPropagation();
-			event.preventDefault();
-		}
-
-		@Override
-		public void onClick(ClickEvent event) {
-			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
-			keyboard.setEditor(TextEditor.this);
-			shown = true;
-			setCursorWidget(cursorWidget);
-			keyboard.setEnterType(EnterType.ENTER);
-			keyboard.softFocus();
-			hbox.removeStyleName(css.textEditor_empty());
-			event.stopPropagation();
-			event.preventDefault();
-			
-		}
-		
-	}
-
 	private static final char Σ = 'Σ';
 	private static final char KWADRAAT = '²';
 	private static final char WORTEL = '√';
 	private static final char INTEGRAAL = '∫';
 
+	private static final String ACTION_NOT_EDITIABLE = "action.setNotEditable";
+	private static final String TEXT = "text";
 	
-	private class FormulaVak extends Composite implements HasText {
-
-		
-		@Override
-		public String getText() {
-			return "$f" + editor.toString() + "@";
-		}
-
-		@Override
-		public void setText(String text) {
-			if(!editable) return;
-			editor.clearMain();
-			editor.insert(text.substring(2, text.length()-1));
-		}
-		
-		private FormuleEditor editor;
-		final Panel panel;
-
-		private void setFont(FormuleFont font) {
-			editor.setFont(font);
-			editor.setDefaultFont(font);
-		}
-		
-		
-		private FormulaVak() {
-			editor = new FormuleEditor() {
-
-				@Override
-				public void resize() {
-					int h = editor.getHeight();
-					int a = editor.getMainRegel().getAsHoogte();
-					panel.getElement().getStyle().setVerticalAlign(a-h, Unit.PX);
-				}
-				@Override
-				public void enter() {
-					FormuleKeyboardIF keyboard = comRoot.getKeyboard();
-					setCurrentElementRepaint();
-					keyboard.blur();
-					TextEditor.this.cursorToRight();
-					keyboard.setEnterType(EnterType.ENTER);
-					TextEditor.this.requestFocus();
-				}
-			};
-			editor.setFormuleToolBijFocus(true);
-			setFont(defaultfont);
-			//editor.insert();
-			panel = editor.getAsPanel();
-			//comRoot.getKeyboard().setEditor(editor);
-			TouchDelegate wrap = new TouchDelegate(panel);
-			panel.addDomHandler(new FormuleTapper(editor, this), ClickEvent.getType());
-			FormuleEditorTouchHandler h = new FormuleEditorTouchHandler(editor) {
-
-				@Override
-				public void onTouchEnd(TouchEndEvent event) {
-					super.onTouchEnd(event);
-					setCursorWidget(FormulaVak.this);
-				} 
-			};
-			wrap.addTouchHandler(h);
-			editor.resize();
-			initWidget(panel);
-		}
-
-		private void start() {
-			editor.clearSelection();
-			editor.startSelection(0, 0);
-			editor.endSelection(0, 0);
-		}
-	}
-	
-	private class CalculatorVak extends Composite implements HasText, ClickHandler {
-
-		@Override
-		public String getText() {
-			return "$R" + editor.toString() + "@";
-		}
-
-		@Override
-		public void setText(String text) {
-			editor.clearMain();
-			editor.insert(text.substring(2, text.length()-1));
-			onClick(null);
-		}		
-		private FormuleEditor editor;
-		private FormuleViewer viewer;
-		private Button btn;
-		private boolean op3;
-
-		public CalculatorVak() {
-			editor = new FormuleEditor() {
-
-				@Override
-				public void enter() {
-					calculate();
-				} };
-			editor.setFormuleToolBijFocus(true);
-			editor.insert('0');
-			HorizontalPanel hbox = new HorizontalPanel();
-			hbox.setStyleName(css.insert_calculator());
-			Panel panel = editor.getAsPanel();
-			TouchDelegate wrap = new TouchDelegate(panel);
-			FormuleEditorTouchHandler h = new FormuleEditorTouchHandler(editor) {
-
-				@Override
-				public void onTouchEnd(TouchEndEvent event) {
-					super.onTouchEnd(event);
-					setCursorWidget(CalculatorVak.this);
-				} 
-			};
-			wrap.addTouchHandler(h);
-			hbox.addDomHandler(new FormuleTapper(editor, this), ClickEvent.getType());
-			hbox.add(panel);
-			btn = new Button("=");
-			btn.addClickHandler(this);
-			hbox.add(btn);
-			viewer = new FormuleViewer("0");
-			hbox.add(viewer.getAsPanel());
-			initWidget(hbox);
-		}
-
-		@Override
-		public void onClick(ClickEvent event) {
-			calculate();
-			editor.requestFocus();
-		}
-
-		static final double E_MAX = 1.0E7;
-		static final double E_MIN = 1.0E-3;
-		static final double MARGE = 0.00000000000000001;
-		
-		private void calculate() {
-			op3 = !op3;
-			String x = editor.toString();
-			Expressie antwoord = FormuleParser.geefExpressie("$f" + x + "@");
-			viewer.getAsPanel().removeFromParent();
-			x="";
-			if(antwoord != null) 
-			{
-				double waarde = antwoord.geefWaarde();
-				double afgerond = new DecRound(new BasisExpressie(waarde), new BasisExpressie(3)).geefWaarde();
-				boolean afgerondOp3 = 
-						! Algebra.isGelijkDouble(waarde, afgerond, MARGE);
-				if(Double.isNaN(waarde))
-				{	x = "?";
-					btn.setText(EXACT);
-				} else
-				{ 
-					btn.setText(afgerondOp3 ? CIRCA : EXACT);
-					if(op3)
-					{
-						x = Expressie.df3.format(waarde);
-					}
-					else 
-					{	double abs = Math.abs(waarde);
-						if( abs < E_MIN || abs >= E_MAX) 
-						{
-							x = Expressie.dfe.format(waarde);						
-							x = x.replace("E", "*10$m") + "@";
-						} else {
-							x = Expressie.df.format(waarde);
-						}
-					}
-				}
-				//x = String.valueOf(antwoord.geefWaarde());
-			} 
-			viewer = new FormuleViewer(x);
-			((Panel) getWidget()).add(viewer.getAsPanel());
-		}
-		
-		
-	}
-	
-	
-	
-	public class FXHandler implements ClickHandler {
-
-		@Override
-		public void onClick(ClickEvent event) {
-			if(!editable) return;
-			if(comRoot.getKeyboard().getEditor() != TextEditor.this) return;
-			FormulaVak panel = new FormulaVak();
-			panel.start();
-			//sb.insert(cursor, '@');
-			flow.insert(panel, cursor++);
-			//comRoot.getKeyboard().setEditor(panel.editor);
-			panel.editor.requestFocus();
-			//FocusOnTouch.focus();
-		}
-	}
-	
-	class CalcHandler implements ClickHandler {
-		@Override
-		public void onClick(ClickEvent event) {
-			if (!editable) return;
-			CalculatorVak panel = new CalculatorVak();
-			//sb.insert(cursor, '@');
-			flow.insert(panel, cursor++);
-			panel.editor.requestFocus();;
-		}
-		
-	}
-
-	//StringBuilder sb = new StringBuilder();
+	private boolean editable = true;
+	private int lineHeight = 20;
 	
 	private int width;
 	private int height;
@@ -419,6 +103,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private Widget menubar, content;
 	FlowPanel hbox;
 	
+	private Widget cursorWidget;
+	private Widget widget;
+	private boolean shown;
+	
 	private boolean boxMetRand;
 	private int boxsize;
 	int menuheight = 0;
@@ -427,7 +115,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	Logging logging;
 	private String lastAttempt;
 	
-	TextEditor(int breedte, int hoogte, boolean boxMetRand) { // voor checktextantwoordvak
+	TextEditor(int breedte, int hoogte, boolean boxMetRand)
+	{
+		// voor checktextantwoordvak
 		this.width = breedte;
 		this.height = hoogte;
 		this.boxMetRand = boxMetRand;
@@ -440,7 +130,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		initWidget(hbox);
 		menubar = null;
 		content = getContent(null);
-		content.setPixelSize(width-boxsize-padding, 13); // altijd 13 pixels? font is 12px, klopt dat?
+		content.setPixelSize(width-boxsize-padding, 13); // altijd 13 pixels? font is 12px, klopt dat? Hij moet blijbaar 1 of 2 pixels groter, anders past het niet...
 		Style style = content.getElement().getStyle();
 		style.setPadding(padding/2, Unit.PX);
 		int top = (height-menuheight-boxsize-padding-13)/2;
@@ -450,14 +140,15 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		hbox.add(content);
 		//hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
 		hbox.setPixelSize(width-boxsize, height-boxsize);
-		if(boxMetRand)
+		if (boxMetRand)
 			hbox.getElement().getStyle().setProperty("border", "1px solid gray");
 		logging = null;
 		//shown = true;
 	}
 	
 	public TextEditor(HashMap<String, Object> currentVakGegevens,
-			String[] randomVarNamen, HashMap<String, Number> randomVarWaarden) {
+			String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
+	{
 		ObjectMap h = JSONUtilities.wrapMap(currentVakGegevens);
 		ObjectMap launchdata = h.getObjectMap("interactiePanelLaunchState");
 		width = h.getInt("breedte");
@@ -470,7 +161,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		initWidget(hbox);
 		
 		menubar = getMenuBar(launchdata);
-		if(menubar != null) {
+		if (menubar != null)
+		{
 			menuheight = 30;
 			menubar.setPixelSize(width-boxsize, menuheight);
 			hbox.add(menubar);
@@ -485,13 +177,16 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		hbox.add(content);
 		//hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
 		hbox.setPixelSize(width-boxsize, height-boxsize);
-		if(boxMetRand)
+		if (boxMetRand)
 			hbox.getElement().getStyle().setProperty("border", "1px solid gray");
-		else {
+		else
+		{
 			updateEmpty();
 		}
+		
 		boolean logOption = launchdata.getBoolean("logOption", false);
-		if(logOption) {
+		if (logOption)
+		{
 			String logID = launchdata.getString("logID");
 			DWOLogger dwologger = new DWOLogger();
 			dwologger.setClassName("fi.wiskopdr.tekstobjects.TekstEditor");
@@ -501,31 +196,38 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		//shown = true;
 	}
 
-	private void updateEmpty() {
-		if (!boxMetRand) {
+	private void updateEmpty()
+	{
+		if (!boxMetRand)
+		{
 			hbox.setStyleName(css.textEditor_empty(), isContentEmpty());
 		}
 	}
 	
 	
-	private boolean isContentEmpty() {
+	private boolean isContentEmpty()
+	{
 		return flow.getWidgetCount() < 2;
 	}
 
-	protected void requestFocus() {
+	protected void requestFocus()
+	{
 		comRoot.getKeyboard().setEditor(this);
 		FocusOnTouch.focus();
-		//shown = true; // mag dat hier al? nee dus
+		shown = true; // mag dat hier al? nee dus. -- Syl: Waarom niet? Waar dan wel?
 		setCursorWidget(cursorWidget);
 		hbox.removeStyleName(css.textEditor_empty());
 	}
 
-	private void setState(ObjectMap h) { // h kan null zijn!
+	private void setState(ObjectMap h)
+	{
+		// h kan null zijn!
 		editable = true;
 		shown = false;
 		String tekst = h == null ? "" : h.getString("tekst");
-		if(tekst == null) tekst = "";
-		else if(tekst.endsWith("\n"))
+		if (tekst == null)
+			tekst = "";
+		else if (tekst.endsWith("\n"))
 			tekst = tekst.substring(0, tekst.length()-1);
 		//sb.setLength(0);
 		clearAll();
@@ -533,15 +235,14 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		lastAttempt = tekst;
 		removeCursor();
 		editable = h == null || h.getBoolean("editable", true);
-		if(!editable) setReadonly();
+		if (!editable)
+			setReadonly();
 		//shown = true;
 		updateEmpty();
 	}
 
-	private Widget cursorWidget;
-	private Widget widget;
-	
-	private Widget getContent(ObjectMap launchdata) {
+	private Widget getContent(ObjectMap launchdata)
+	{
 		FlowPanel touch = new FlowPanel();
 		touch.addDomHandler(new Tapper(this,touch.getElement()), ClickEvent.getType());
 		flow = touch; // XXX voorlopig ok
@@ -549,7 +250,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		return touch;
 	}
 
-	private Widget setCursorWidget(Widget widget) {
+	private Widget setCursorWidget(Widget widget)
+	{
 		if(widget == null) return cursorWidget;
 		removeCursor();
 		widget.setStyleName(css.textEditor_cursor(), true);
@@ -561,7 +263,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		return widget;
 	}
 
-	private Widget getMenuBar(ObjectMap launchdata) {
+	private Widget getMenuBar(ObjectMap launchdata)
+	{
 		boolean balkZichtbaar = true;
 		if(launchdata.containsKey("balkZichtbaar")) balkZichtbaar = launchdata.getBoolean("balkZichtbaar");
 		if(!balkZichtbaar) return null;
@@ -621,9 +324,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 	
 	public void zetVolledigeBreedte(int breedte)
-	{	if(volledigeBreedte)
-		{	this.width = breedte;
-			if(menubar != null)
+	{
+		if(volledigeBreedte)
+		{
+			this.width = breedte;
+			if (menubar != null)
 				menubar.setPixelSize(width-boxsize, menuheight);
 			content.setPixelSize(width-boxsize-padding, height-menuheight-boxsize-padding);
 			hbox.setPixelSize(width-boxsize, height-boxsize);
@@ -709,9 +414,6 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		
 	}
 	
-	private static final String ACTION_NOT_EDITIABLE = "action.setNotEditable";
-	private static final String TEXT = "text";
-	
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
@@ -757,35 +459,45 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 
 	@Override
-	public void insert(String text) {
-		if(!editable) return;
+	public void insert(String text)
+	{
+		if (!editable)
+			return;
+		
 		char[] chars = text.toCharArray();
 		int next = 1;
-		for (int i = 0; i < chars.length; i+=next) {
+		for (int i = 0; i < chars.length; i += next)
+		{
 			next = 1;
 			switch (chars[i])
-			{
-			case '\n': enter(); break;
-			default: insert(chars[i]); break;
-			case '$' : 
-				next = findAt(chars, i, chars.length);
-				String string = new String(chars, i, next);
-				if(chars[i+1] == 'f')
-				{		
+				{
+				case '\n':
+					enter();
+					break;
+				default:
+					insert(chars[i]);
+					break;
+				case '$':
+					next = findAt(chars, i, chars.length);
+					String string = new String(chars, i, next);
+					if (chars[i + 1] == 'f')
+					{
 						FormulaVak fv = new FormulaVak();
-						fv.setText(string);fv.editor.setCurrentElementRepaint(); // no cursor here!
-//						sb.insert(cursor, '@');
-						flow.insert(fv,cursor++);
+						fv.setText(string);
+						fv.editor.setCurrentElementRepaint(); // no cursor here!
+						// sb.insert(cursor, '@');
+						flow.insert(fv, cursor++);
 						break;
-				}
-				if (chars[i+1] == 'R') {
+					}
+					if (chars[i + 1] == 'R')
+					{
 						CalculatorVak cv = new CalculatorVak();
 						cv.setText(string);
-//						sb.insert(cursor, '@');
+						// sb.insert(cursor, '@');
 						flow.insert(cv, cursor++);
+					}
+					break;
 				}
-				break;
-			}
 		}
 		showCursor();
 	}
@@ -808,31 +520,27 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 
 	@Override
-	public void setFont(FormuleFont font) {
+	public void setFont(FormuleFont font)
+	{
 		this.font = font;
 	}
 
 	@Override // loose focus
-	public void setCurrentElementRepaint() {
+	public void setCurrentElementRepaint()
+	{
 		removeCursor();
 		setAttempt();
-		if(comRoot != null)
+		if (comRoot != null)
 			comRoot.getKeyboard().setEnterType(EnterType.APPLY);
 		updateEmpty();
 	}
 
-	private void removeCursor() {
-		if(cursorWidget != null)
+	private void removeCursor()
+	{
+		if (cursorWidget != null)
 			cursorWidget.setStyleName(css.textEditor_cursor(), false);
 	}
 
-	private class Enter extends InlineHTML implements HasText {
-		private Enter() {
-			super("<br>");
-		}
-		public String getText() { return "\n"; }
-	}
-	
 	@Override
 	public void enter() {
 		if(!editable) return;
@@ -911,8 +619,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	
 	
 	@Override
-	public void insert(char charAt) {
-		if(!editable) return;
+	public void insert(char charAt)
+	{
+		if (!editable)
+			return;
 		SafeHtml html;
 		SafeHtmlBuilder builder = new SafeHtmlBuilder();
 		builder.append(charAt);
@@ -924,9 +634,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		showCursor();
 	}
 
-	private boolean shown;
-	private void showCursor() {
-		if(shown)
+	private void showCursor()
+	{
+		if (shown)
 			cursorWidget.getElement().scrollIntoView();
 	}
 
@@ -1072,13 +782,24 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 	
 	@Override
-	public void setFontSize(int font_size) {
+	public void setFontSize(int font_size)
+	{
 		widget.getElement().getStyle().setFontSize(font_size, Unit.PX);
+		
+		// maak passend
+		content.setPixelSize(width-boxsize-padding, font_size + 2);
+		content.getElement().getStyle().setFontSize(font_size, Unit.PX);
+		
+		Style style = content.getElement().getStyle();
+		int top = (height-menuheight-boxsize-padding - (font_size + 2)) / 2;
+		style.setMarginTop(top, Unit.PX);
 	}
 
 	@Override
-	public void setFontName(String name) {
-		widget.getElement().getStyle().setProperty("fontFamily", name);	
+	public void setFontName(String name)
+	{
+		widget.getElement().getStyle().setProperty("fontFamily", name);
+		content.getElement().getStyle().setProperty("fontFamily", name);
 	}
 
 	@Override
@@ -1086,7 +807,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 
 	@Override
-	public void setParentRegel(TekstRegel regel) {
+	public void setParentRegel(TekstRegel regel)
+	{
 		font = regel.getFont();
 		defaultfont = font;
 	}
@@ -1106,22 +828,389 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 
 	@Override
-	public void shiftTab() {
+	public void shiftTab()
+	{
 		Widget parent = asWidget();
 		while (parent != null && !(parent instanceof TekstRegel))
 		{
 			parent = parent.getParent();
 		}
 		
-		if(parent != null && parent instanceof TekstRegel)
+		if (parent != null && parent instanceof TekstRegel)
 		{
 			((TekstRegel) parent).getTekstVak().shiftTabFocus(this, true);
 		}
 	}
 
-	String getText() {
+	String getText()
+	{
 		return getAllText().toString();
 	}
 
 
+	class FormuleTapper implements ClickHandler {
+
+		private FormuleEditor deze;
+		private Widget widget;
+		@Override
+		public void onClick(ClickEvent event)
+		{
+			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
+//			keyboard.setEditor(deze);
+			keyboard.setEnterType(EnterType.APPLY);
+//			keyboard.focus();
+//			deze.requestFocus();
+			setCursorWidget(widget);
+			removeCursor(); // cursor is in formule editor
+			event.stopPropagation();
+		}
+		public FormuleTapper(FormuleEditor deze, Widget widget) {
+			super();
+			this.deze = deze;
+			this.widget = widget;
+		}
+		
+	}
+	
+	
+	
+	class Tapper implements ClickHandler {
+		private FormuleEditorIF deze;
+		private Element target;
+		
+
+		public Tapper(FormuleEditorIF deze, Element target) {
+			this.deze = deze;
+			this.target = target;
+		}
+
+		@Override
+		public void onClick(ClickEvent event)
+		{
+//			Element targetElement = event.getTargetElement();
+//			if(targetElement == null || targetElement == target || targetElement.getParentElement() == target)
+			{
+				FormuleKeyboardIF keyboard = comRoot.getKeyboard();
+				keyboard.setEditor(deze);
+				keyboard.setEnterType(EnterType.ENTER);
+				keyboard.softFocus();
+				hbox.removeStyleName(css.textEditor_empty());
+				int flowTop = flow.getAbsoluteTop();
+				int y = event.getClientY() - flowTop;
+				int w;
+				int i = 0;
+				int max = flow.getWidgetCount() - 1;
+				if (i == max)
+					i -= 1;
+				Widget widget;
+				do
+				{
+					widget = flow.getWidget(++i);
+					w = widget.getAbsoluteTop()-flowTop;
+				} while ( i < max && w < y);
+				
+				LOGGER.fine("widget " + i + " at "  + w + " mouse at " + y + " c=" + cursor + " m=" + max);
+				setCursorWidget(widget);
+				if (cursor != max || w >= y)
+					cursorToLeft(); // 1 terug
+			}
+		}
+
+	}
+	
+	class TapForFocus implements TouchStartHandler, ClickHandler
+	{
+		private Widget cursorWidget;
+		private HandlerRegistration registration;
+
+		/**
+		 * @param cursorWidget
+		 */
+		TapForFocus(Widget cursorWidget)
+		{
+			this.cursorWidget = cursorWidget;
+			TouchDelegate wrap = new TouchDelegate(cursorWidget);
+			registration = wrap.addTouchStartHandler(this);
+		}
+
+		TapForFocus(Widget cursorWidget, HasClickHandlers w)
+		{
+			this.cursorWidget = cursorWidget;
+			registration = w.addClickHandler(this);
+		}
+
+		public void finalize()
+		{
+			registration.removeHandler();
+			registration = null;
+			cursorWidget = null;
+		}
+		
+		@Override
+		public void onTouchStart(TouchStartEvent event)
+		{
+			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
+			keyboard.setEditor(TextEditor.this);
+			keyboard.setEnterType(EnterType.ENTER);
+			shown = true;
+			setCursorWidget(cursorWidget);
+			hbox.removeStyleName(css.textEditor_empty());
+			keyboard.softFocus();
+			event.stopPropagation();
+			event.preventDefault();
+		}
+
+		@Override
+		public void onClick(ClickEvent event)
+		{
+			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
+			keyboard.setEditor(TextEditor.this);
+			shown = true;
+			setCursorWidget(cursorWidget);
+			keyboard.setEnterType(EnterType.ENTER);
+			keyboard.softFocus();
+			hbox.removeStyleName(css.textEditor_empty());
+			event.stopPropagation();
+			event.preventDefault();
+		}
+	}
+	
+	private class FormulaVak extends Composite implements HasText
+	{
+		private FormuleEditor editor;
+		final Panel panel;
+
+		private FormulaVak()
+		{
+			editor = new FormuleEditor() {
+
+				@Override
+				public void resize()
+				{
+					int h = editor.getHeight();
+					int a = editor.getMainRegel().getAsHoogte();
+					panel.getElement().getStyle().setVerticalAlign(a-h, Unit.PX);
+				}
+				
+				@Override
+				public void enter()
+				{
+					FormuleKeyboardIF keyboard = comRoot.getKeyboard();
+					setCurrentElementRepaint();
+					keyboard.blur();
+					TextEditor.this.cursorToRight();
+					keyboard.setEnterType(EnterType.ENTER);
+					TextEditor.this.requestFocus();
+				}
+			};
+			editor.setFormuleToolBijFocus(true);
+			setFont(defaultfont);
+			//editor.insert();
+			panel = editor.getAsPanel();
+			//comRoot.getKeyboard().setEditor(editor);
+			TouchDelegate wrap = new TouchDelegate(panel);
+			panel.addDomHandler(new FormuleTapper(editor, this), ClickEvent.getType());
+			FormuleEditorTouchHandler h = new FormuleEditorTouchHandler(editor) {
+
+				@Override
+				public void onTouchEnd(TouchEndEvent event) {
+					super.onTouchEnd(event);
+					setCursorWidget(FormulaVak.this);
+				} 
+			};
+			wrap.addTouchHandler(h);
+			editor.resize();
+			initWidget(panel);
+		}
+
+		@Override
+		public String getText()
+		{
+			return "$f" + editor.toString() + "@";
+		}
+
+		@Override
+		public void setText(String text)
+		{
+			if (!editable) 
+				return;
+			editor.clearMain();
+			editor.insert(text.substring(2, text.length() - 1));
+		}
+		
+		private void setFont(FormuleFont font)
+		{
+			editor.setFont(font);
+			editor.setDefaultFont(font);
+		}
+		
+		private void start()
+		{
+			editor.clearSelection();
+			editor.startSelection(0, 0);
+			editor.endSelection(0, 0);
+		}
+	}
+	
+	private class CalculatorVak extends Composite implements HasText, ClickHandler
+	{
+		static final double E_MAX = 1.0E7;
+		static final double E_MIN = 1.0E-3;
+		static final double MARGE = 0.00000000000000001;
+
+		private FormuleEditor editor;
+		private FormuleViewer viewer;
+		private Button btn;
+		private boolean op3;
+
+		public CalculatorVak()
+		{
+			editor = new FormuleEditor()
+			{
+				@Override
+				public void enter()
+				{
+					calculate();
+				}
+			};
+			editor.setFormuleToolBijFocus(true);
+			editor.insert('0');
+			HorizontalPanel hbox = new HorizontalPanel();
+			hbox.setStyleName(css.insert_calculator());
+			Panel panel = editor.getAsPanel();
+			TouchDelegate wrap = new TouchDelegate(panel);
+			FormuleEditorTouchHandler h = new FormuleEditorTouchHandler(editor)
+			{
+				@Override
+				public void onTouchEnd(TouchEndEvent event)
+				{
+					super.onTouchEnd(event);
+					setCursorWidget(CalculatorVak.this);
+				} 
+			};
+			wrap.addTouchHandler(h);
+			hbox.addDomHandler(new FormuleTapper(editor, this), ClickEvent.getType());
+			hbox.add(panel);
+			btn = new Button("=");
+			btn.addClickHandler(this);
+			hbox.add(btn);
+			viewer = new FormuleViewer("0");
+			hbox.add(viewer.getAsPanel());
+			initWidget(hbox);
+		}
+
+		@Override
+		public String getText()
+		{
+			return "$R" + editor.toString() + "@";
+		}
+
+		@Override
+		public void setText(String text)
+		{
+			editor.clearMain();
+			editor.insert(text.substring(2, text.length()-1));
+			onClick(null);
+		}		
+
+		@Override
+		public void onClick(ClickEvent event)
+		{
+			calculate();
+			editor.requestFocus();
+		}
+		
+		private void calculate()
+		{
+			op3 = !op3;
+			String x = editor.toString();
+			Expressie antwoord = FormuleParser.geefExpressie("$f" + x + "@");
+			viewer.getAsPanel().removeFromParent();
+			x = "";
+			if (antwoord != null) 
+			{
+				double waarde = antwoord.geefWaarde();
+				double afgerond = new DecRound(new BasisExpressie(waarde), new BasisExpressie(3)).geefWaarde();
+				boolean afgerondOp3 = 
+						! Algebra.isGelijkDouble(waarde, afgerond, MARGE);
+				if (Double.isNaN(waarde))
+				{	x = "?";
+					btn.setText(EXACT);
+				}
+				else
+				{ 
+					btn.setText(afgerondOp3 ? CIRCA : EXACT);
+					if (op3)
+					{
+						x = Expressie.df3.format(waarde);
+					}
+					else 
+					{
+						double abs = Math.abs(waarde);
+						if (abs < E_MIN || abs >= E_MAX) 
+						{
+							x = Expressie.dfe.format(waarde);						
+							x = x.replace("E", "*10$m") + "@";
+						}
+						else
+						{
+							x = Expressie.df.format(waarde);
+						}
+					}
+				}
+				//x = String.valueOf(antwoord.geefWaarde());
+			}
+			
+			viewer = new FormuleViewer(x);
+			((Panel) getWidget()).add(viewer.getAsPanel());
+		}
+	}// class CalculatorVak
+	
+	public class FXHandler implements ClickHandler
+	{
+		@Override
+		public void onClick(ClickEvent event)
+		{
+			if (!editable)
+				return;
+			if (comRoot.getKeyboard().getEditor() != TextEditor.this)
+				return;
+			FormulaVak panel = new FormulaVak();
+			panel.start();
+			//sb.insert(cursor, '@');
+			flow.insert(panel, cursor++);
+			//comRoot.getKeyboard().setEditor(panel.editor);
+			panel.editor.requestFocus();
+			//FocusOnTouch.focus();
+		}
+	}
+	
+	class CalcHandler implements ClickHandler
+	{
+		@Override
+		public void onClick(ClickEvent event)
+		{
+			if (!editable)
+				return;
+			CalculatorVak panel = new CalculatorVak();
+			// sb.insert(cursor, '@');
+			flow.insert(panel, cursor++);
+			panel.editor.requestFocus();
+		}
+		
+	}
+
+	private class Enter extends InlineHTML implements HasText
+	{
+		private Enter()
+		{
+			super("<br>");
+		}
+		
+		public String getText()
+		{
+			return "\n";
+		}
+	}
+	
 }
