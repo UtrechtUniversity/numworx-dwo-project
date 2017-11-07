@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.AntwoordTekstVak2;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
@@ -182,6 +183,7 @@ public abstract class XMLView {
 				FormuleEditorWithAnswer.zetFontOverervingForm(wrap.getBoolean("fontOverervingForm"));
 				FormuleEditorWithSteps.zetFontOverervingForm(wrap.getBoolean("fontOverervingForm"));
 				StelselOplossingenVak.zetFontOverervingForm(wrap.getBoolean("fontOverervingForm"));
+				AntwoordTekstVak2.zetFontOverervingForm(wrap.getBoolean("fontOverervingForm"));
 			}
 			if(wrap.containsKey("scoresZichtbaar"))
 				scoresZichtbaar = wrap.getBoolean("scoresZichtbaar");
