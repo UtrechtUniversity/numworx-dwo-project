@@ -379,10 +379,11 @@ public class PersistentCourse implements Serializable {
     /**
      * Builds a persistenceId from the parameters given.
      *
-     * @param aCourseId
+     * @param aCourseId nullable
      * @return
      */
     public static PersistenceId buildPersistenceId(Long aCourseId) {
+    	if(aCourseId == null) return null;
         PersistenceId id = new PersistenceId();
         id.setIdString(String.format("MYSQL;%s;%020d",
                 PersistenceClassType.PersistentCourse.name(), aCourseId));
