@@ -1965,13 +1965,43 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * 
      */
     public Course addCourse(String name, String description, Course parent, boolean isMap) {
-        try {
-            return PersistenceFacade.instance().addCourse(DwoHelper.getCurrentFacadeUser().getSchool(), name,
-                    description, getDwoProfileID(), parent, isMap);
-        } catch (CourseException e) {
+//        try {
+//            return PersistenceFacade.instance().addCourse(DwoHelper.getCurrentFacadeUser().getSchool(), name,
+//                    description, getDwoProfileID(), parent, isMap);
+//        } catch (CourseException e) {
+//            JOptionPane.showMessageDialog(this, e.getMessage());
+//            return null;
+//        }
+    	PersistentCourse pc = new PersistentCourse();
+    	try {
+// if Course extends persistentCourse
+    		pc.setName(name);
+    		pc.setWithChildren(Boolean.valueOf(isMap));
+    		pc.setDescription(description);    		
+    		pc.setDwoProfileID(Long.valueOf(getDwoProfileID()));
+// defaults:
+    		
+// special cases...
+    		pc.setParentID(parent == null ? 0L : parent.getID()); // NPE?
+    		pc.setSchoolID(parent == null ? 
+    				MySQLPersistenceId.getNativeId(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool()) :
+    				Long.valueOf(parent.getSchoolID()));
+    		if(parent != null && parent.getChildren() != null)
+    			pc.setSequencenr(Long.valueOf(parent.getChildren().length));
+    		else 
+    			; // TODO from root
+    		
+    		DomCourseFull edit = pc.buildDomCourseFull();
+			edit = SecuredTeacherCourseManager.add(edit);
+// legacy
+			int pid = MySQLPersistenceId.getNativeId(edit).intValue();
+			Course c = (Course) PersistenceFacade.instance().get(pid, Course.class);
+			return c;
+    	} catch(Exception e) {
+    		LOG.log(Level.SEVERE, "add course", e);
             JOptionPane.showMessageDialog(this, e.getMessage());
-            return null;
-        }
+    		return null;
+    	}
     }
 
     /*
@@ -1992,22 +2022,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     	try {
  // if Course extends persistentCourse
     		pc.setCourseID(Long.valueOf(course.getID()));
-    		pc.setDescription(course.getDescription());
-    		pc.setName(course.getName());
-    		pc.setDwoProfileID(Long.valueOf(getDwoProfileID()));
-    		pc.setExport(course.isExport());
-    		pc.setImage(course.getImageUrl());
-    		pc.setImageData(course.getImageData());
-    		pc.setParentID(Long.valueOf(course.getParentID()));
-    		pc.setSchoolID(Long.valueOf(course.getSchoolID()));
-    		pc.setNotVisible(course.isNotVisible());
-    		if(course.sequencenr != null)
-    			pc.setSequencenr(Long.valueOf(course.sequencenr.longValue()));
-    		else 
-    			pc.setSequencenr(null);
-
-    		pc.setTreeIndex(null);
-    		pc.setWithChildren(null); // not updatable
+    		buildPersistentCourse(course, pc);
  // should work with DomCourseFull
     		DomCourseFull edit = pc.buildDomCourseFull();
 			edit = SecuredTeacherCourseManager.update(edit);
@@ -2018,6 +2033,25 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     		return false;
     	}
     }
+
+	private void buildPersistentCourse(Course course, PersistentCourse pc) {
+		pc.setDescription(course.getDescription());
+		pc.setName(course.getName());
+		pc.setDwoProfileID(Long.valueOf(getDwoProfileID()));
+		pc.setExport(course.isExport());
+		pc.setImage(course.getImageUrl());
+		pc.setImageData(course.getImageData());
+		pc.setParentID(Long.valueOf(course.getParentID()));
+		pc.setSchoolID(Long.valueOf(course.getSchoolID()));
+		pc.setNotVisible(course.isNotVisible());
+		if(course.sequencenr != null)
+			pc.setSequencenr(Long.valueOf(course.sequencenr.longValue()));
+		else 
+			pc.setSequencenr(null);
+
+		pc.setTreeIndex(null);
+		pc.setWithChildren(null); // not updatable
+	}
     
     
     /*

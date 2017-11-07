@@ -33,4 +33,16 @@ public class SecuredTeacherCourseManager {
         LOG.log(Level.FINE, "Updated course for the teacher with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId()});
         return result;
     }
+
+    public static DomCourseFull add(DomCourseFull edit) throws Dwo2Exception {
+    	RestCourseFull rest = new RestCourseFull();
+    	DomContext context = new DomContext();
+// XXX is dit wel de goede plaats?
+    	context.setDomHasRole(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
+    	rest.setDomCourse(edit);
+    	rest.setRestContext(context);
+        DomCourseFull result = StoredRestManager.getInstance().put("rest/secure/teacher/course/add",DomCourseFull.class, rest);
+        LOG.log(Level.FINE, "Updated course for the teacher with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId()});
+        return result;
+    }
 }
