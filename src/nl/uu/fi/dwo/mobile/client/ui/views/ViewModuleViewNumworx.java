@@ -65,10 +65,14 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		delegate.zetMaat();
 		center.setWidget(delegate);
 		if(DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB) {
-			homeBtn.removeFromParent();
-			upBtn.removeFromParent();
+			removeBtns();
 		}
 		root.forceLayout();
+	}
+
+	public void removeBtns() {
+		homeBtn.removeFromParent();
+		upBtn.removeFromParent();
 	}
 
 	@UiField

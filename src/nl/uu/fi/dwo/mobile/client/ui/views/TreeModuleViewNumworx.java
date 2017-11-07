@@ -184,14 +184,18 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 						</g:FlowPanel>					
 					</g:FlowPanel>
 */			
+		    Type typeof = value.getType();
 			sb.appendHtmlConstant("<div class='"+style.tile()+"'>");
 			  sb.appendHtmlConstant("<div class='" + style.tileHeader() + "'><span class='" + style.tileSpan() + "'>");
-			    sb.appendEscaped(value.getName());
+			  if(typeof == Type.SCO)
+			  {
+				  sb.append(value.getSequencenr()).appendHtmlConstant(". ");
+			  }
+			  sb.appendEscaped(value.getName());
 			  sb.appendHtmlConstant("</span></div>");
 
 			  sb.appendHtmlConstant("<div class='" + style.tileBody() + "'>");
 			    String description = value.getDescription();
-			    Type typeof = value.getType();
 				if(true || description.isEmpty()||description.startsWith(DescriptionView.GZIPPREFIX)) {
 					sb.appendHtmlConstant("<span class='" + style.tileBodySpan() + "'>");
 					switch(typeof) {

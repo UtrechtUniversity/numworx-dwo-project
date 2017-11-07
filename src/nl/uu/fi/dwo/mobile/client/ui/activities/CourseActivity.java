@@ -42,6 +42,7 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 		this.item = item;
 		placeController = clientFactory.getPlaceController();
 	}
+
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{

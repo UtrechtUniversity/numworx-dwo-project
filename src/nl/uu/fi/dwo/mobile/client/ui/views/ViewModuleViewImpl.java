@@ -166,10 +166,18 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			getScrollableElement().getStyle().setOverflowX(Overflow.HIDDEN);
 			getScrollableElement().getStyle().setOverflowY(alwaysShow ? Overflow.SCROLL : Overflow.AUTO);
 		}
-
+// NO TOUCH SCROLLING
 		@Override
 		public boolean setTouchScrollingDisabled(boolean isDisabled) {
-			return super.setTouchScrollingDisabled(isDisabled);
+			return super.setTouchScrollingDisabled(true);
+		}
+		/* (non-Javadoc)
+		 * @see com.google.gwt.user.client.ui.ScrollPanel#onResize()
+		 */
+		@Override
+		public void onResize() {
+			logger.info("On Resize h=" + getOffsetHeight());
+			super.onResize();
 		}
 		
 	};
@@ -2414,6 +2422,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	@Override
 	public void setPresenter(Presenter p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeBtns() {
 		// TODO Auto-generated method stub
 		
 	}

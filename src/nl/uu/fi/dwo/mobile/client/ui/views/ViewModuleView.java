@@ -21,7 +21,7 @@ public interface ViewModuleView extends IsWidget
 		void goTo(Place place);
 	}
 	
-	
+	void removeBtns();
 	void setTitle(String title);
 	void setupModule(String name, String file);
 
