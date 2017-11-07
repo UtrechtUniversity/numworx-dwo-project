@@ -56,126 +56,8 @@ import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.repr.ContentMathML;
 
 
-public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElementWithFont, CBookEventListener {
-
-	private final class FormuleEditorVak extends FormuleEditor implements IsWidget {
-
-		public Widget asWidget() {
-			return getMainRegel().getCanvas();
-		}
-
-		void setEditable(boolean editable) {
-			AntwoordTekstVak2.this.editable = editable;
-			if(editable) {
-				asWidget().getParent().getElement().getStyle().clearProperty("pointerEvents");
-			} else {
-				asWidget().getParent().getElement().getStyle().setProperty("pointerEvents", "none");
-
-				// zorg dat de formule editor geen focus heeft
-				if (getKeyboard() != null)
-				{
-					getKeyboard().setEditor(null);
-					getKeyboard().blur();
-				}
-
-			}
-		}
-		
-		@Override
-		public void enter()
-		{
-			AntwoordTekstVak2.this.enter();
-		}
-
-		@Override
-		public void addElement(FormuleElement e)
-		{
-			super.addElement(e);
-			changed = true;
-			resize();
-			resetimg();
-			
-			if (nagekeken)
-				zetIsVeranderdNaNakijken(true);
-		}
-
-		@Override
-		public void removeCurrentElement()
-		{
-			super.removeCurrentElement();
-			changed = true;
-			resize();
-			resetimg();
-			
-			if (nagekeken)
-				zetIsVeranderdNaNakijken(true);
-		}
-
-		@Override
-		public void removeNextElement()
-		{
-			super.removeNextElement();
-			changed = true;
-			resize();
-			resetimg();
-			
-			if (nagekeken)
-				zetIsVeranderdNaNakijken(true);
-		}
-
-		@Override
-		public void insert(String text)
-		{
-			super.insert(text);
-			changed = true;
-			resize();
-			resetimg();
-		}
-
-		@Override
-		public boolean isInputNeeded() {
-			return false;
-		}
-
-		public void resize()
-		{
-			if(!formuleMode)
-				return;
-			
-			breedte = formuleVak.getMainRegel().getWidth() + 18;
-			hoogte = formuleVak.getMainRegel().getHeight() + 4;
-			//System.out.println("nieuwe breedte: " + breedte);
-			//System.out.println("nieuwe hoogte: " + hoogte);
-			//nog zorgen dat hoogte altijd minimaal 24 is?
-			basisPanel.setSize((breedte) + "px", (hoogte) + "px");
-			ashoogte = formuleVak.getMainRegel().getAsHoogte() + 3;
-			if(parentRegel != null)
-				parentRegel.resize();
-		}
-
-		/* (non-Javadoc)
-		 * @see nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor#setCurrentElementRepaint()
-		 */
-		@Override
-		public void setCurrentElementRepaint() {
-			super.setCurrentElementRepaint();
-			fireText();
-		}
-
-		@Override
-		public void tab()
-		{
-			tabAntwoordTekstVak();
-		}
-
-		@Override
-		public void shiftTab()
-		{
-			shiftTabAntwoordTekstVak();
-		}
-	}
-
-
+public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElementWithFont, CBookEventListener
+{
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
 	public static final String ACTION_FALSE2 = "action.false_2";
@@ -270,37 +152,43 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	
 	private TekstRegel parentRegel;
 	
+	private static boolean fontOvererving = false;
+	private FormuleFont font;
+
 
 	public AntwoordTekstVak2(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
-		if(h != null)
-		{	ObjectMap map = JSONUtilities.wrapMap(h);
-			if(map.containsKey("breedte"))
+		font = FormuleFont.createFromFontSize(XMLView.getDefaultFontSize());
+
+		if (h != null)
+		{
+			ObjectMap map = JSONUtilities.wrapMap(h);
+			if (map.containsKey("breedte"))
 				breedte = map.getInt("breedte");
-			if(map.containsKey("hoogte"))
+			if (map.containsKey("hoogte"))
 				hoogte = map.getInt("hoogte");
-			if(map.containsKey("volledigeBreedte"))
+			if (map.containsKey("volledigeBreedte"))
 				volledigeBreedte = map.getBoolean("volledigeBreedte");
-			if(h.containsKey("interactiePanelLaunchState"))
+			if (h.containsKey("interactiePanelLaunchState"))
 				launchState = map.getMap("interactiePanelLaunchState");
 		}
+
 		facade = new PopupFacade(h);
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
 		init(breedte, hoogte, launchState, randomVarWaarden);
 		initialize(h, randomVarNamen, randomVarWaarden);
-		
-		
 	}
 	
 	
 	public void init(int width, int height, Map<String, Object> launchData,
-			Map<String, Number> values) {
+			Map<String, Number> values)
+	{
 		breedte = width;
 		hoogte = height;
 		
 		ObjectMap map = JSONUtilities.wrapMap(launchData);
-		if(map != null)
+		if (map != null)
 		{	
 			if (map.containsKey("antwoordString"))
 				antwoordString = map.getString("antwoordString");
@@ -334,12 +222,13 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 				logOption = map.getBoolean("logOption");
 			if (map.containsKey("logID"))
 				logID = map.getString("logID");
-			if(logOption) {
+			if (logOption)
+			{
 				DWOLogger dwologger = new DWOLogger();
 				dwologger.setMaxScore(scoreMax);
 				dwologger.setClassName("fi.wiskopdr.AntwoordTekstVak");
 				dwologger.setLogID(logID);
-				if(map.containsKey("logIDLabel"))
+				if (map.containsKey("logIDLabel"))
 					dwologger.setLogIDLabel(map.getString("logIDLabel"));
 				dwologger.setLogObjectives(logObjectives);
 				dwologger.setTeltMee(teltMee);
@@ -347,11 +236,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			}
 			if (map.containsKey("boxMetRand"))
 				boxMetRand = map.getBoolean("boxMetRand");
-			
 		}
-		
-		
-
 	}
 	
 	private void initialize(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
@@ -365,6 +250,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		catch (Exception e)
 		{
 		}
+		
 		if (!formuleMode)
 			antwoordString = StringUtils.replaceStr(antwoordString, "@", "");
 		if (!formuleMode)
@@ -375,11 +261,11 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		basisPanel.setStylePrimaryName("antwoordtekstvak");
 		basisPanel.setPixelSize(breedte - 2, hoogte - 3);
 		//basisPanel.getElement().getStyle().setProperty("border", "1px solid gray");
-		//basisPanel.getElement().getStyle().setBackgroundColor(CssColor.make(255, 255, 255).toString());
+		//basisPanel.getElement().getStyle().setBackgroundColor(CssColor.make(0, 0, 255).toString());
 		//basisPanel.getElement().getStyle().setProperty("border", "1px solid gray");
 		
-		antwoordTF = new TextEditor(breedte-2, hoogte-3, boxMetRand) {
-
+		antwoordTF = new TextEditor(breedte-2, hoogte-3, boxMetRand)
+		{
 			@Override
 			public void enter()
 			{
@@ -428,6 +314,11 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 					zetIsVeranderdNaNakijken(true);
 			}
 		};
+		antwoordTF.setFont(font);
+		antwoordTF.setFontName(font.getFont());
+		antwoordTF.setFontSize(font.getFontSize());
+		
+		
 //		if(boxMetRand)
 //			antwoordTF.getElement().getStyle().setProperty("border", "1px solid gray");
 //		else 
@@ -502,14 +393,20 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		//formuleVak.addActionListener(this);
 		//formuleVak.setLocation(4, 4);
 		//addMouseListener(this);
+		formuleVak.setFont(font);
+		formuleVak.setDefaultFont(font);
 		
 		if (formuleMode) 
-		{	//basisPanel.setSize(Math.max(minBreedte, formuleVak.getSize().width + 24), formuleVak.getSize().height + 8);
+		{
+			//basisPanel.setSize(Math.max(minBreedte, formuleVak.getSize().width + 24), formuleVak.getSize().height + 8);
 			achtergrondPanel = new TouchPanel();
-			if(boxMetRand) {
+			if (boxMetRand)
+			{
 				achtergrondPanel.getElement().getStyle().setBackgroundColor("white");
 				achtergrondPanel.getElement().getStyle().setProperty("border", "1px solid gray");
-			} else {
+			}
+			else
+			{
 				achtergrondPanel.getElement().getStyle().setBackgroundColor("transparant");
 				achtergrondPanel.getElement().getStyle().setProperty("border", "none");
 			}
@@ -529,7 +426,8 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			ashoogte = formuleVak.getMainRegel().getAsHoogte() + 3;
 		}
 		else
-		{	//basisPanel.setSize(Math.max(minBreedte, antwoordTF.getSize().width + 2), antwoordTF.getSize().height + 4);
+		{
+			//basisPanel.setSize(Math.max(minBreedte, antwoordTF.getSize().width + 2), antwoordTF.getSize().height + 4);
 			basisPanel.add(antwoordTF);
 			basisPanel.setWidgetLeftRight(antwoordTF, 0, Style.Unit.PX, 0, Style.Unit.PX);
 			basisPanel.setWidgetTopBottom(antwoordTF, 0, Style.Unit.PX, 0, Style.Unit.PX);
@@ -565,8 +463,8 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		
 		feedbackTekst = new TekstVak();
 		feedbackTekst.setSize(200, 50);
-		feedbackTekst.setFontSize(XMLView.getDefaultFontSize());
-		feedbackTekst.setFontName(XMLView.getDefaultFontName());
+		feedbackTekst.setFontSize(font.getFontSize());
+		feedbackTekst.setFontName(font.getFont());
 		feedbackTekst.setColor(CssColor.make("black"));
 		feedbackTekst.setCentering(false, true);
 		feedbackTekst.setPasHoogteBreedteAan(true, false);
@@ -598,9 +496,9 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		feedbackSluitKnop.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		feedbackSluitKnop.getElement().getStyle().setProperty("verticalAlign", "top");
 		voegFeedbackSluitKnopToe();
-		
-		
-		feedbackSluitKnop.addDomHandler(new ClickHandler(){
+
+		feedbackSluitKnop.addDomHandler(new ClickHandler()
+		{
 			public void onClick(ClickEvent e)
 			{
 				feedbackPanel.hide();
@@ -608,7 +506,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		}, ClickEvent.getType());
 					
 		feedbackLabel = new Label("?");
-		feedbackLabel.getElement().getStyle().setFontSize(11, Style.Unit.PX);
+		feedbackLabel.getElement().getStyle().setFontSize(font.getFontSize(), Style.Unit.PX);
 		feedbackLabel.getElement().getStyle().setFontWeight(FontWeight.BOLD);
 		feedbackLabel.getElement().getStyle().setPadding(0, Style.Unit.PX);
 		feedbackLabel.getElement().getStyle().setMarginTop(0, Style.Unit.PX);
@@ -620,7 +518,8 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		feedbackLabel.setWidth(10 + "px");
 		feedbackLabel.setVisible(false);
 		
-		feedbackLabel.addDomHandler(new ClickHandler(){
+		feedbackLabel.addDomHandler(new ClickHandler()
+		{
 			public void onClick(ClickEvent e)
 			{
 				feedbackPanel.setPopupPosition(asWidget().getAbsoluteLeft() + 10, asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10);
@@ -630,12 +529,11 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		basisPanel.add(feedbackLabel);
 		basisPanel.setWidgetRightWidth(feedbackLabel, 2, Style.Unit.PX, 15, Style.Unit.PX);
 		basisPanel.setWidgetBottomHeight(feedbackLabel, 1, Style.Unit.PX, 10, Style.Unit.PX);
-		
-		
 	}
 	
 	
-	public String getText() {
+	public String getText()
+	{
 		return formuleMode ? ("$f" + formuleVak.toString() + "@") : antwoordTF.getText();
 	}
 	
@@ -681,7 +579,6 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 				feedback = h.getString("feedback");
 			if (h.containsKey("goedHalfFout"))
 				goedHalfFout = h.getInt("goedHalfFout");
-
 		}
 		try
 		{
@@ -722,7 +619,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	
 	public void requestFocus()
 	{
-		if(formuleMode)
+		if (formuleMode)
 			formuleVak.requestFocus();
 		else
 			antwoordTF.requestFocus(); //setFocus(true);
@@ -751,7 +648,8 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		attemptsCount = this.attemptsCount;
 		errorCount = this.errorCount;
 
-		if(logging instanceof DWOLogger) {
+		if (logging instanceof DWOLogger)
+		{
 			((DWOLogger) logging).updateLog(buildLogParameters());
 		}
 		HashMap<String, Object> h = new HashMap<String, Object>();
@@ -769,7 +667,8 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	
 	public void setState(HashMap<String, Object> h)
 	{
-		if(h == null) return; // setStateNull();
+		if (h == null)
+			return; // setStateNull();
 		boolean ingevuld = false;
 		boolean nagekeken = false;
 		boolean isVeranderdNaNakijken = false;
@@ -805,28 +704,35 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 
 		setText(antwoord);
 
-		if (ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)))
+		if (ingevuld 
+			&& (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)))
 			kijkNa(true, false);
 		this.editable = map.getBoolean("editable", true);
-		if(!editable) {
-			if(formuleMode) {
+		if (!editable)
+		{
+			if (formuleMode)
+			{
 				formuleVak.setEditable(editable);
-			} else {
+			}
+			else
+			{
 				antwoordTF.acceptCBookEvent(EVENT_READONLY);
 			}
 		}
 	}
 
 
-	public void setText(String antwoord) {
+	public void setText(String antwoord)
+	{
 		if (formuleMode)
 		{
-			if(antwoord.startsWith("$f") && antwoord.endsWith("@")) // vanaf nu altijd!
+			if (antwoord.startsWith("$f") && antwoord.endsWith("@")) // vanaf nu altijd!
 				antwoord = antwoord.substring(2, antwoord.length()-1);
 			formuleVak.clearAll();
 			formuleVak.insert(antwoord);
 		}
-		else {
+		else
+		{
 			antwoordTF.clearAll();
 			antwoordTF.insert(antwoord);
 		}
@@ -839,7 +745,8 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 
 	public void setAttempt(boolean start)
 	{
-		if(logOption) {
+		if (logOption)
+		{
 			Map<String, Object> log = buildLogParameters();
 // TODO feedback		
 			logging.log(log);
@@ -888,16 +795,19 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	}
 
 
-	private Map<String, Object> buildLogParameters() {
+	private Map<String, Object> buildLogParameters()
+	{
 		Map<String, Object> log = new HashMap<String, Object>();
-		if(goedKrulImage.isVisible())
+		if (goedKrulImage.isVisible())
 			log.put("success", Boolean.TRUE);
-		else if(foutKruisImage.isVisible())
+		else if (foutKruisImage.isVisible())
 			log.put("success", Boolean.FALSE);
 		String response = "";
-		if(formuleMode) {
+		if (formuleMode)
+		{
 			response = formuleVak.getMainRegel().toMathML();
-		} else
+		}
+		else
 			response = antwoordTF.getText();
 		log.put("response", response);
 		log.put("score", Collections.singletonMap("raw", score));
@@ -920,7 +830,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	
 	public void tabAntwoordTekstVak()
 	{
-		if(parentRegel != null)
+		if (parentRegel != null)
 		{
 			parentRegel.getTekstVak().tabFocus(this, true);
 		}
@@ -928,8 +838,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	
 	public void shiftTabAntwoordTekstVak()
 	{
-		
-		if(parentRegel != null)
+		if (parentRegel != null)
 		{
 			parentRegel.getTekstVak().shiftTabFocus(this, true);
 		}
@@ -981,8 +890,10 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		score = 0;
 
 		if (hasFeedback)
-		{	if (goedHalfFout == 0)
-			{	if (show)
+		{
+			if (goedHalfFout == 0)
+			{
+				if (show)
 					zetGoedFout(GOED);
 				score = puntenFeedback;
 				if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
@@ -990,7 +901,8 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 				correct = Boolean.TRUE;
 			}
 			else if (goedHalfFout == 1)
-			{	if (show)
+			{
+				if (show)
 					zetGoedFout(HALF);
 				score = puntenFeedback;
 				if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
@@ -999,7 +911,8 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 
 			}
 			else if (goedHalfFout == 2)
-			{	if (show)
+			{
+				if (show)
 					zetGoedFout(FOUT);
 				score = puntenFeedback;
 				if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
@@ -1117,7 +1030,6 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 						{
 							basisPanel.remove(feedbackPanel);
 						}
-
 					}
 					break;
 				}
@@ -1142,18 +1054,20 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	}
 	
 	public void setFeedback(String feedback, boolean closeable)
-	{	TekstBuffer b = new TekstBuffer();
-		try{
+	{
+		TekstBuffer b = new TekstBuffer();
+		try
+		{
 			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
 		}
-		catch(Exception e){}
+		catch (Exception e) {}
 		ArrayList<Object> feedbackList = b.convertTekst(feedback, null, false);
 		feedbackTekst.clear();
 		int tekstVakBreedte = 190;
-		for(int i = 0; i < feedbackList.size(); i++)
+		for (int i = 0; i < feedbackList.size(); i++)
 		{
 			Object object = feedbackList.get(i);
-			if(object instanceof TekstElement && ((TekstElement) object).getWidth() > tekstVakBreedte)
+			if (object instanceof TekstElement && ((TekstElement) object).getWidth() > tekstVakBreedte)
 				tekstVakBreedte = ((TekstElement) object).getWidth();
 		}
 		feedbackTekst.setSize(tekstVakBreedte + 10, 50);
@@ -1187,10 +1101,11 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	
 	public void tekenCursor()
 	{
-		if(formuleMode)
+		if (formuleMode)
 		{
-			if(formuleVak.getCurrentElement() == null)
-			{	formuleVak.setCurrentElementRepaint(formuleVak.getMainRegel());
+			if (formuleVak.getCurrentElement() == null)
+			{
+				formuleVak.setCurrentElementRepaint(formuleVak.getMainRegel());
 			}
 		}
 	}
@@ -1224,38 +1139,73 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	}
 
 	@Override
-	public int getScore() {
+	public int getScore()
+	{
 		if (!teltMee)
 			return 0;
 		return score;
 	}
 
-
 	@Override
-	public Boolean isCorrect() {
+	public Boolean isCorrect()
+	{
 		if (!teltMee)
 			return Boolean.TRUE;
 		return correct;
 	}
 
-
-
-	public void setCommunicationRoot(OpdrNavIF comRoot) {
+	public void setCommunicationRoot(OpdrNavIF comRoot)
+	{
 		antwoordTF.comRoot = comRoot; // no actions
 		this.comRoot = comRoot;
 		mode = comRoot.getMode();
-		if(logging != null) logging.setCommunicationRoot(comRoot);
+		if (logging != null)
+			logging.setCommunicationRoot(comRoot);
 		comRoot.addCBookEventListener(TEXT, this);
 		comRoot.addCBookEventListener(ACTION_READONLY, this);
 	}
-
 
 	public void setParentRegel(TekstRegel regel)
 	{
 		parentRegel = regel;
 		//antwoordTF.getElement().getStyle().setFontSize(parentRegel.getFont().getFontSize(), Style.Unit.PX);
+		
+		if (fontOvererving)
+		{
+			FormuleFont font = FormuleFont.createFromFontSize(parentRegel.getFont().getFontSize(), false);
+			if (!FormuleFont.formTimes)
+				font.setFont(parentRegel.getFont().getFont());
+			setFont(parentRegel);
+		}
 	}
 	
+	public void setFont(TekstRegel parentRegel)
+	{
+		//als geen fontOvererving formules, dan hoeft er niets te gebeuren.
+		if (!fontOvererving)
+			return;
+		
+		font = FormuleFont.createFromFontSize(parentRegel.getFont().getFontSize(), false);
+		if (!FormuleFont.formTimes)
+		{
+			font.setFont(parentRegel.getFont().getFont());
+		}
+		
+		formuleVak.setFont(font);
+		formuleVak.setDefaultFont(font);
+	}
+
+	public void setFont(FormuleFont fm)
+	{
+		antwoordTF.setFont(fm);
+		antwoordTF.setFontName(fm.getFont());
+		antwoordTF.setFontSize(fm.getFontSize());
+		formuleVak.setFont(fm);
+		formuleVak.setDefaultFont(fm);
+		feedbackTekst.setFontName(fm.getFont());
+		feedbackTekst.setFontSize(fm.getFontSize());
+	}
+
 	public Panel getAsPanel()
 	{
 		return basisPanel;
@@ -1266,38 +1216,39 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		return achtergrondPanel;
 	}
 
-
 	@Override
-	public int getAsHoogte() {
+	public int getAsHoogte()
+	{
 		return ashoogte;
 	}
 
-
 	@Override
-	public int getHeight() {
+	public int getHeight()
+	{
 		return hoogte; 
 	}
 
-
 	@Override
-	public int getWidth() {
+	public int getWidth()
+	{
 		return breedte;
 	}
 	
 	public void zetVolledigeBreedte(int breedte)
-	{	if(volledigeBreedte)
-		{	this.breedte = breedte;
+	{
+		if (volledigeBreedte)
+		{
+			this.breedte = breedte;
 			basisPanel.setPixelSize(breedte, hoogte - 3);
 			//antwoordTF.setWidth((breedte - 2) + "px");
 		}
 	}
 
-
 	@Override
-	public void setAsHoogte(int ashoogte) {
+	public void setAsHoogte(int ashoogte)
+	{
 		this.ashoogte = ashoogte;
 	}
-
 
 	@Override
 	public Widget asWidget()
@@ -1310,9 +1261,10 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		return facade.isPopup();
 	}
 	
+	@Override
 	public void setFontSize(int size)
 	{
-		if(formuleMode)
+		if (formuleMode)
 		{
 			FormuleFont fnt = FormuleFont.createFromFontSize(size);
 			formuleVak.setFont(fnt);
@@ -1324,18 +1276,18 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			antwoordTF.setFontSize(size);
 	}
 
-
 	@Override
-	public void getResponses(List<String> responses) {
+	public void getResponses(List<String> responses)
+	{
 		String antwoord;
-		if(formuleMode)
+		if (formuleMode)
 		{
 			antwoord = formuleVak.toString();
 			String useranswer = "$f" + antwoord + "@";
 			Expressie expr = FormuleParser.geefExpressie(useranswer);
-			if(expr != null) 
+			if (expr != null) 
 			{
-					antwoord = expr.visit(ContentMathML.INSTANCE).toString();
+				antwoord = expr.visit(ContentMathML.INSTANCE).toString();
 			} // antwoord = "Presentation MathML" ?
 		}
 		else
@@ -1343,53 +1295,190 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		responses.add(antwoord);
 	}
 
-
 	@Override
-	public int[][] getScoreObjectives() {
+	public int[][] getScoreObjectives()
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-
 	@Override
-	public void setFontName(String font_name) {
+	public void setFontName(String font_name)
+	{
 		// TODO Auto-generated method stub
 		
 	}
 
-
 	@Override
-	public void setFontStyle(int font_style) {
+	public void setFontStyle(int font_style)
+	{
 		// TODO Auto-generated method stub
 		
 	}
 
-
 	@Override
-	public void acceptCBookEvent(CBookEvent event) {
-		if(TEXT.equals(event.getCommand())) 
+	public void acceptCBookEvent(CBookEvent event)
+	{
+		if (TEXT.equals(event.getCommand())) 
 		{
 			String content = (String) event.getParameter("content");
 			if(content == null) content = "";
 			setText(content);
-		} else if ( ACTION_READONLY.equals(event.getCommand())) {
+		}
+		else if ( ACTION_READONLY.equals(event.getCommand()))
+		{
 			editable = false;
-			if(formuleMode) {
+			if (formuleMode)
+			{
 				formuleVak.setEditable(false);
-			} else {
+			}
+			else
+			{
 				//antwoordTF
 				antwoordTF.acceptCBookEvent(event);
 			}
 		}
-		
 	}
 
 	/**
 	 * voor tab/shifttab
 	 * @return not editable
 	 */
-	public boolean isReadOnly() {
+	public boolean isReadOnly()
+	{
 		return !editable;
 	}
-	
+
+	/**
+	 * Zet fontovererving formules.
+	 * @param b
+	 */
+	public static void zetFontOverervingForm(boolean b)
+	{
+		fontOvererving = b;
+	}
+
+	private final class FormuleEditorVak extends FormuleEditor implements IsWidget
+	{
+		public Widget asWidget()
+		{
+			return getMainRegel().getCanvas();
+		}
+
+		void setEditable(boolean editable)
+		{
+			AntwoordTekstVak2.this.editable = editable;
+			if (editable)
+			{
+				asWidget().getParent().getElement().getStyle().clearProperty("pointerEvents");
+			}
+			else
+			{
+				asWidget().getParent().getElement().getStyle().setProperty("pointerEvents", "none");
+
+				// zorg dat de formule editor geen focus heeft
+				if (getKeyboard() != null)
+				{
+					getKeyboard().setEditor(null);
+					getKeyboard().blur();
+				}
+			}
+		}
+		
+		@Override
+		public void enter()
+		{
+			AntwoordTekstVak2.this.enter();
+		}
+
+		@Override
+		public void addElement(FormuleElement e)
+		{
+			super.addElement(e);
+			changed = true;
+			resize();
+			resetimg();
+			
+			if (nagekeken)
+				zetIsVeranderdNaNakijken(true);
+		}
+
+		@Override
+		public void removeCurrentElement()
+		{
+			super.removeCurrentElement();
+			changed = true;
+			resize();
+			resetimg();
+			
+			if (nagekeken)
+				zetIsVeranderdNaNakijken(true);
+		}
+
+		@Override
+		public void removeNextElement()
+		{
+			super.removeNextElement();
+			changed = true;
+			resize();
+			resetimg();
+			
+			if (nagekeken)
+				zetIsVeranderdNaNakijken(true);
+		}
+
+		@Override
+		public void insert(String text)
+		{
+			super.insert(text);
+			changed = true;
+			resize();
+			resetimg();
+		}
+
+		@Override
+		public boolean isInputNeeded() {
+			return false;
+		}
+
+		public void resize()
+		{
+			if (!formuleMode)
+				return;
+			
+			breedte = formuleVak.getMainRegel().getWidth() + 18;
+			hoogte = formuleVak.getMainRegel().getHeight() + 4;
+			//System.out.println("nieuwe breedte: " + breedte);
+			//System.out.println("nieuwe hoogte: " + hoogte);
+			//nog zorgen dat hoogte altijd minimaal 24 is?
+			basisPanel.setSize((breedte) + "px", (hoogte) + "px");
+			ashoogte = formuleVak.getMainRegel().getAsHoogte() + 3;
+			if (parentRegel != null)
+				parentRegel.resize();
+		}
+
+		/* (non-Javadoc)
+		 * @see nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor#setCurrentElementRepaint()
+		 */
+		@Override
+		public void setCurrentElementRepaint()
+		{
+			super.setCurrentElementRepaint();
+			fireText();
+		}
+
+		@Override
+		public void tab()
+		{
+			tabAntwoordTekstVak();
+		}
+
+		@Override
+		public void shiftTab()
+		{
+			shiftTabAntwoordTekstVak();
+		}
+		
+	} // class FormuleEditorVak
+
 }
