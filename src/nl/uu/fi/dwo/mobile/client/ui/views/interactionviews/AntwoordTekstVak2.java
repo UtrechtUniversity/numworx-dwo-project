@@ -35,6 +35,7 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.canvas.dom.client.TextMetrics;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Display;
@@ -551,6 +552,9 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		}
 	}
 
+	/**
+	 * Voeg feedbacksluitknop toe aan feedbacktekst.
+	 */
 	public void voegFeedbackSluitKnopToe()
 	{
 		feedbackTekst.add(feedbackSluitKnop);
@@ -1204,6 +1208,8 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		formuleVak.setDefaultFont(fm);
 		feedbackTekst.setFontName(fm.getFont());
 		feedbackTekst.setFontSize(fm.getFontSize());
+		feedbackLabel.getElement().getStyle().setFontSize(fm.getFontSize(), Style.Unit.PX);
+		basisPanel.setWidgetBottomHeight(feedbackLabel, 1, Style.Unit.PX, feedbackLabel.getOffsetHeight(), Style.Unit.PX);
 	}
 
 	public Panel getAsPanel()
@@ -1274,6 +1280,13 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		//	antwoordTF.getElement().getStyle().setFontSize(size, Style.Unit.PX);
 		else 
 			antwoordTF.setFontSize(size);
+		
+		feedbackLabel.getElement().getStyle().setFontSize(size, Style.Unit.PX);
+		String startString = "?";
+		TextMetrics tm = gIm.measureText(startString);
+		double width = tm.getWidth() + 10; // extra voor padding en marge
+		basisPanel.setWidgetRightWidth(feedbackLabel, 2, Style.Unit.PX, width, Style.Unit.PX);
+		basisPanel.setWidgetBottomHeight(feedbackLabel, 1, Style.Unit.PX, size, Style.Unit.PX);
 	}
 
 	@Override
