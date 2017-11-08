@@ -92,9 +92,9 @@ public class AccountView extends Composite implements ClickHandler, AccountPrese
             passwordTextBox.setText("");
             newPasswordTextBox.setText("");
             newPasswordAgainTextBox.setText("");
-            accountPresenter.updateUserData();
+            accountPresenter.updateUserDataInView();
         } else if (event.getSource() == updateBtn) {
-            accountPresenter.updateUser(
+            accountPresenter.saveUser(
                     firstNameText.getText(),
                     insertionText.getText(),
                     familyNameText.getText(),

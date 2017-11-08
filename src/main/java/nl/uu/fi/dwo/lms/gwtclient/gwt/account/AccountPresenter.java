@@ -6,6 +6,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
@@ -64,10 +65,11 @@ public class AccountPresenter {
     }
 
     public void init() {
-        updateUserData();
+        updateUserDataInView();
     }
 
-    public void updateUserData() {
+    @JsMethod
+    public void updateUserDataInView() {
         Promise<DomUserFull> userPromise;
         userPromise = service.getUserData();
         // onSuccess calculate results and show.
@@ -108,7 +110,8 @@ public class AccountPresenter {
         }
     }
 
-    public void updateUser(String givenName, String insertion, String familyName, String email, String curPassword, String newPassword, String newPasswordAgain) {
+    @JsMethod
+    public void saveUser(String givenName, String insertion, String familyName, String email, String curPassword, String newPassword, String newPasswordAgain) {
         if (!MD5.md5(curPassword).equals(dwoGlobalVars.getCurrentUser().getPassword())) {
             eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven)));
             //DwoViewer.showMessage(Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven);

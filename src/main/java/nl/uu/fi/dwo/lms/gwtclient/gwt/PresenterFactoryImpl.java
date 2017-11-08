@@ -84,6 +84,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
     /**
      * @return the mainPresenter
      */
+    @JsMethod
     public MainPresenter getMainPresenter() {
         return mainPresenter;
     }
@@ -106,6 +107,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
     /**
      * @return the switchSchoolPresenter
      */
+    @JsMethod
     public SwitchSchoolPresenter getSwitchSchoolPresenter() {
         return switchSchoolPresenter;
     }
@@ -132,6 +134,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
     /**
      * @return the accountPresenter
      */
+    @JsMethod
     public AccountPresenter getAccountPresenter() {
         return accountPresenter;
     }

@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.BootPanel;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
@@ -50,6 +51,7 @@ public class LoginView extends Composite implements ClickHandler, KeyPressHandle
     DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
 
     private BootPanel parent;
+    private MainPresenter.Display display;
 
     public LoginView(LoginPresenter lp){
     	LOG.fine(rb.GUI_NewPasswordAgain());
@@ -76,11 +78,11 @@ public class LoginView extends Composite implements ClickHandler, KeyPressHandle
 
     @Override
     public void onKeyPress(KeyPressEvent event) {
-        if (event.getSource() == usernameText) {
-            passwordTextBox.setFocus(true);
-        }else if(event.getSource()==passwordTextBox){
-            loginBtn.setFocus(true);
-        }
+//        if (event.getSource() == usernameText) {
+//            passwordTextBox.setFocus(true);
+//        }else if(event.getSource()==passwordTextBox && event.getCharCode()=){
+//            loginBtn.setFocus(true);
+//        }
     }
     
     public void onClick(ClickEvent event) {
@@ -124,4 +126,18 @@ public class LoginView extends Composite implements ClickHandler, KeyPressHandle
     public void setPassword(String password) {
         passwordTextBox.setText(password);
     }    
+
+    /**
+     * @return the display
+     */
+    public MainPresenter.Display getDisplay() {
+        return display;
+    }
+
+    /**
+     * @param display the display to set
+     */
+    public void setDisplay(MainPresenter.Display display) {
+        this.display = display;
+    }
 }

@@ -14,7 +14,11 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
-
+/**
+ * Login Presenter. 
+ * 
+ * @author G.A.J. van der Plas
+ */
 public class LoginPresenter {
 
     private static final Logger LOG = Logger.getLogger(LoginPresenter.class.getName());
@@ -32,27 +36,27 @@ public class LoginPresenter {
 
         public void setPassword(String password);
     }
-
-    //** should become part of the PresenterFactories ie. DWO.LoginPresenter.loginClicked.
-        private native static void setDWO(DwoGlobalVars gv, LoginPresenter p) /*-{
-    	var api = {
-    			"loginTest" : function() {
-    				return p.@nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter::loginClickedJS(Ljava/lang/String;Ljava/lang/String;)("gert_project", "passw")
-                        },
-    			"loginClicked" : function(user, password) {
-    				return p.@nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter::loginClickedJS(Ljava/lang/String;Ljava/lang/String;)(user, password)
-                        },
-    			"getServer" : function() {
-    				return gv.@nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars::getServer()
-                        }
-    		};
-    	$wnd.DwoLoginPresenter = api;
-    }-*/;
+//
+//    //** should become part of the PresenterFactories ie. DWO.LoginPresenter.loginClicked.
+//        private native static void setDWO(DwoGlobalVars gv, LoginPresenter p) /*-{
+//    	var api = {
+//    			"loginTest" : function() {
+//    				return p.@nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter::loginClickedJS(Ljava/lang/String;Ljava/lang/String;)("gert_project", "passw")
+//                        },
+//    			"loginClicked" : function(user, password) {
+//    				return p.@nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter::loginClickedJS(Ljava/lang/String;Ljava/lang/String;)(user, password)
+//                        },
+//    			"getServer" : function() {
+//    				return gv.@nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars::getServer()
+//                        }
+//    		};
+//    	$wnd.DwoLoginPresenter = api;
+//    }-*/;
                 
     public LoginPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-        this.setDWO(dwoGlobalVars,this);
+//        this.setDWO(dwoGlobalVars,this);
         init();
     }
 
@@ -60,11 +64,18 @@ public class LoginPresenter {
     final public void init() {
     }
     
-public String loginClickedJS(String user, String password) {
-        this.loginClicked(user, password, false);
-        return "done";
-    }
+//public String loginClickedJS(String user, String password) {
+//        this.loginClicked(user, password, false);
+//        return "done";
+//    }
  
+/**
+ * User login call. A login function is called.
+ * 
+ * @param user usernme
+ * @param password cleartext password.
+ * @param switchRole In case a roleSwitch is desired, generally the value is false.
+ */
     @JsMethod
     public void loginClicked(String user, String password, final Boolean switchRole) {
         Promise<DwoGlobalVars.DwoGlobalVarsState> loginUser;

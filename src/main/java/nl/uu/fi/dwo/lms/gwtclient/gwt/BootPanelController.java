@@ -60,9 +60,15 @@ class BootPanelController {
         return  $wnd.hideGwtGui;
     }-*/;
 
+    public static native Object getDwoDisplay()/*-{
+        return  $wnd.dwoDisplay;
+    }-*/;
+
+
     public void go(RootLayoutPanel rootPanel) {
         
         hideGwtGui = Boolean.parseBoolean(getHideGwtGuiString());
+        
         //intialize our global and environmental variables instance.
         try {
             dwoGlobalVars = new DwoGlobalVars();
