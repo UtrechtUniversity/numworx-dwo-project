@@ -8,7 +8,7 @@
 #-libraryjars C:\Program Files\Java\jdk1.7.0_67\jre\lib\jfxrt.jar
 #-libraryjars C:\Program Files\Java\jdk1.7.0_67\jre\lib\jsse.jar
 
--target 1.6
+-target 1.8
 
 -forceprocessing
 
