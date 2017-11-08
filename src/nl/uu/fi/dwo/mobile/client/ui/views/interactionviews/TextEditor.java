@@ -130,16 +130,16 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		initWidget(hbox);
 		menubar = null;
 		content = getContent(null);
-		content.setPixelSize(width-boxsize-padding, 13); // altijd 13 pixels? font is 12px, klopt dat? Hij moet blijbaar 1 of 2 pixels groter, anders past het niet...
+		content.setPixelSize(width - boxsize - padding, 13);
 		Style style = content.getElement().getStyle();
-		style.setPadding(padding/2, Unit.PX);
-		int top = (height-menuheight-boxsize-padding-13)/2;
+		style.setPadding(padding / 2, Unit.PX);
+		int top = (height - menuheight - boxsize - padding - 13) / 2;
 		style.setMarginTop(top, Unit.PX);
 		//style.setBackgroundColor("white");
 		style.setOverflow(Overflow.HIDDEN);
 		hbox.add(content);
 		//hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
-		hbox.setPixelSize(width-boxsize, height-boxsize);
+		hbox.setPixelSize(width - boxsize, height - boxsize);
 		if (boxMetRand)
 			hbox.getElement().getStyle().setProperty("border", "1px solid gray");
 		logging = null;
@@ -785,14 +785,6 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	public void setFontSize(int font_size)
 	{
 		widget.getElement().getStyle().setFontSize(font_size, Unit.PX);
-		
-		// maak passend
-		content.setPixelSize(width-boxsize-padding, font_size + 2);
-		content.getElement().getStyle().setFontSize(font_size, Unit.PX);
-		
-		Style style = content.getElement().getStyle();
-		int top = (height-menuheight-boxsize-padding - (font_size + 2)) / 2;
-		style.setMarginTop(top, Unit.PX);
 	}
 
 	@Override
@@ -847,6 +839,21 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		return getAllText().toString();
 	}
 
+	/**
+	 * Zet de hoogte van de content.
+	 * Gebruikt door AntwoordTekstVak2.
+	 * 
+	 * @param h
+	 */
+	void setSize(int h)
+	{
+		content.setPixelSize(width-boxsize-padding, h + 2);
+		content.getElement().getStyle().setFontSize(h, Unit.PX);
+		
+		Style style = content.getElement().getStyle();
+		int top = Math.max((this.height - menuheight - boxsize - padding - (h + 2)) / 2, 0); // niet kleiner dan 0
+		style.setMarginTop(top, Unit.PX);
+	}
 
 	class FormuleTapper implements ClickHandler {
 
