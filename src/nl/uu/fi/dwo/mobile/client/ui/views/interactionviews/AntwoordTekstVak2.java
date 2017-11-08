@@ -511,7 +511,6 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		feedbackLabel.getElement().getStyle().setFontWeight(FontWeight.BOLD);
 		feedbackLabel.getElement().getStyle().setPadding(0, Style.Unit.PX);
 		feedbackLabel.getElement().getStyle().setMarginTop(0, Style.Unit.PX);
-		feedbackLabel.getElement().getStyle().setMarginLeft(3, Style.Unit.PX);
 		feedbackLabel.getElement().getStyle().setPaddingLeft(4, Style.Unit.PX);
 		feedbackLabel.getElement().getStyle().setBackgroundColor(CssColor.make(230, 230, 230).toString());
 		feedbackLabel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
@@ -1276,16 +1275,15 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			formuleVak.setFont(fnt);
 			formuleVak.setDefaultFont(fnt);
 		}
-		//else
-		//	antwoordTF.getElement().getStyle().setFontSize(size, Style.Unit.PX);
-		else 
+		else
+		{
 			antwoordTF.setFontSize(size);
+			antwoordTF.setSize(size);
+		}
 		
 		feedbackLabel.getElement().getStyle().setFontSize(size, Style.Unit.PX);
-		String startString = "?";
-		TextMetrics tm = gIm.measureText(startString);
-		double width = tm.getWidth() + 10; // extra voor padding en marge
-		basisPanel.setWidgetRightWidth(feedbackLabel, 2, Style.Unit.PX, width, Style.Unit.PX);
+		feedbackLabel.setWidth(size + "px");
+		basisPanel.setWidgetRightWidth(feedbackLabel, 2, Style.Unit.PX, size, Style.Unit.PX);
 		basisPanel.setWidgetBottomHeight(feedbackLabel, 1, Style.Unit.PX, size, Style.Unit.PX);
 	}
 
