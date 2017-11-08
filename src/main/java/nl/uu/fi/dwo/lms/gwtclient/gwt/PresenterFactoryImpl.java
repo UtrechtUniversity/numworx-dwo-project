@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import com.google.gwt.event.shared.EventBus;
+import jsinterop.annotations.JsMethod;
 import jsinterop.annotations.JsType;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
@@ -24,7 +25,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresent
  *
  * @author G.A.J. van der Plas
  */
-//@JsType
 public class PresenterFactoryImpl implements PresenterFactory {
 
     private final DwoGlobalVars dwoGlobalVars;
@@ -46,7 +46,6 @@ public class PresenterFactoryImpl implements PresenterFactory {
     private final MsgDialogPresenter msgDialogPresenter;
     private final MsgConfirmDialogPresenter msgConfirmDialogPresenter;
     private final FileUploadStudentsPresenter fileUploadStudentsPresenter;
-    
 
     public PresenterFactoryImpl(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         dwoGlobalVars = aDwoGlobalVars;
@@ -92,6 +91,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
     /**
      * @return the loginPresenter
      */
+    @JsMethod
     public LoginPresenter getLoginPresenter() {
         return loginPresenter;
     }
@@ -116,16 +116,16 @@ public class PresenterFactoryImpl implements PresenterFactory {
     public ScoResultsPresenter getScoResultsPresenter() {
         return scoResultsPresenter;
     }
-    
-    public SchoolclassesPresenter getSchoolclassesPresenter(){
+
+    public SchoolclassesPresenter getSchoolclassesPresenter() {
         return schoolclassesPresenter;
     }
 
-    public CoursesOfSchoolclassPresenter getCoursesOfSchoolclassPresenter(){
+    public CoursesOfSchoolclassPresenter getCoursesOfSchoolclassPresenter() {
         return coursesOfSchoolclassPresenter;
     }
-    
-    public StudentsInSchoolclassPresenter getStudentsInSchoolclassPresenter(){
+
+    public StudentsInSchoolclassPresenter getStudentsInSchoolclassPresenter() {
         return studentsInSchoolclassPresenter;
     }
 
@@ -135,8 +135,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
     public AccountPresenter getAccountPresenter() {
         return accountPresenter;
     }
-    
-    
+
     /**
      * @return the addSchoolclassPresenter
      */

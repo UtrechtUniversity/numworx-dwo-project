@@ -61,6 +61,7 @@ class BootPanelController {
     }-*/;
 
     public void go(RootLayoutPanel rootPanel) {
+        
         hideGwtGui = Boolean.parseBoolean(getHideGwtGuiString());
         //intialize our global and environmental variables instance.
         try {
@@ -97,7 +98,8 @@ class BootPanelController {
         this.rootPanel = rootPanel;
 
         //create client factories
-        presenterFactory = new PresenterFactoryImpl(eventBus, dwoGlobalVars);
+        DwoPresenterFactory fac = new DwoPresenterFactory(new PresenterFactoryImpl(eventBus, dwoGlobalVars));
+        presenterFactory = fac.getFac();
 
         viewFactory = new ViewFactoryImpl(presenterFactory);
 

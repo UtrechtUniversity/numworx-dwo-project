@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -60,10 +61,11 @@ public class LoginPresenter {
     }
     
 public String loginClickedJS(String user, String password) {
-        this.loginClicked(user, password, true);
+        this.loginClicked(user, password, false);
         return "done";
     }
  
+    @JsMethod
     public void loginClicked(String user, String password, final Boolean switchRole) {
         Promise<DwoGlobalVars.DwoGlobalVarsState> loginUser;
         try {
