@@ -148,14 +148,9 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
             startY += scoListHeader.getSize().height + 10;
         }
         Image courseLogo = course.getCourseLogo();
-        MediaTracker tr = new MediaTracker(this);
-        tr.addImage(courseLogo, 0);
-        try {
-            tr.waitForAll();
-        } catch (Exception e) {
-        }
-        ip = new JLabel(new ReducedImageIcon(courseLogo));
-        ip.setSize(courseLogo.getWidth(null), courseLogo.getHeight(null));
+        final ReducedImageIcon image = new ReducedImageIcon(courseLogo);
+		ip = new JLabel(image);
+        ip.setSize(image.getIconWidth(), image.getIconHeight());
         ip.setLocation(this.getSize().width - ip.getSize().width - 50, startY);
         if (!htmlMode) {
             add(ip);
