@@ -120,10 +120,11 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseO
 		{   listener = handler;
 			event = new MyClickEvent(touches);
 			return 
-					new LegacyHandlerWrapper(HandlerRegistrations.compose(
-							touches.addTouchEndHandler(this),
-							mouses.addMouseUpHandler(this)
-					));
+//					new LegacyHandlerWrapper(HandlerRegistrations.compose(
+//							touches.addTouchEndHandler(this),
+//							mouses.addMouseUpHandler(this)
+//					));
+					mouses.addMouseUpHandler(this); // you always get mouseup events.
 			
 		}
 		return click.addClickHandler(handler);

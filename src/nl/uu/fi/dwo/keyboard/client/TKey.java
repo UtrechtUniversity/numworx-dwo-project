@@ -141,7 +141,7 @@ public class TKey extends Composite implements HasHTML, HasClickHandlers, HasLon
 
 			@Override
 			public void onLongTap(LongTapEvent event) {
-				fine("LongTab");
+				fine("LongTap");
 				fire = false;
 				handler.onLongTap(event);
 				
