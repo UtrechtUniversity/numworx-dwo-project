@@ -3,10 +3,14 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.login;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -27,7 +31,7 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
  *
  * @author G.A.J. van der Plas
  */
-public class LoginView extends Composite implements ClickHandler, KeyPressHandler, LoginPresenter.Display {
+public class LoginView extends Composite implements ClickHandler, KeyUpHandler, LoginPresenter.Display {
 
     private static final Logger LOG = Logger.getLogger(LoginView.class.getName());
 
@@ -63,9 +67,9 @@ public class LoginView extends Composite implements ClickHandler, KeyPressHandle
         switchSchoolBox.setVisible(false);
         loginPresenter = lp;
         //controller must be before clicks occur
-        loginBtn.addClickHandler(this);
-        usernameText.addKeyPressHandler(this);
-        passwordTextBox.addKeyPressHandler(this);
+//        loginBtn.addClickHandler(this);
+//        usernameText.addKeyUpHandler(this);
+//        passwordTextBox.addKeyUpHandler(this);
         //parse test if it exists.
         String testString = com.google.gwt.user.client.Window.Location.getParameter("test");
         Boolean test = false;
@@ -76,22 +80,29 @@ public class LoginView extends Composite implements ClickHandler, KeyPressHandle
                 
     }
 
-    @Override
-    public void onKeyPress(KeyPressEvent event) {
-//        if (event.getSource() == usernameText) {
-//            passwordTextBox.setFocus(true);
-//        }else if(event.getSource()==passwordTextBox && event.getCharCode()=){
-//            loginBtn.setFocus(true);
-//        }
+
+    @UiHandler({"usernameText", "passwordTextBox"})
+    public void onKeyUp(KeyUpEvent event) {
+        if (event.getSource() == usernameText && event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+            passwordTextBox.setFocus(true);
+        }else if(event.getSource()==passwordTextBox && event.getNativeKeyCode() == KeyCodes.KEY_ENTER){
+            loginBtn.setFocus(true);
+        	doLogin();
+        }
     }
     
+    @UiHandler("loginBtn")
     public void onClick(ClickEvent event) {
         if (event.getSource() == loginBtn) {
             LOG.log(Level.INFO, "Login button clicked.");
-            loginPresenter.loginClicked(this.usernameText.getText(), this.passwordTextBox.getText(), switchSchoolBox.getValue());
+            doLogin();
             //            curUser.setPassword("passw"); //md5Hash = d79096188b670c2f81b7001f73801117 
         }
     }
+
+	private void doLogin() {
+		loginPresenter.loginClicked(this.usernameText.getText(), this.passwordTextBox.getText(), switchSchoolBox.getValue());
+	}
 
     /**
      * Called from handler after successful login.
