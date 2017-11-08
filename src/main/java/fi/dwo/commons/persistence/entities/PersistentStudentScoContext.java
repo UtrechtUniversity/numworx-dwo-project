@@ -101,8 +101,9 @@ public class PersistentStudentScoContext implements Serializable {
     @Version private int optlock;
     @Column(name = "lastChangeTimeStamp")
     private long lastChangeTimeStamp;
-    @Column(name = "del")
-    private DelState delState;
+    @NotNull
+    @Column(name = "del", nullable=false)
+    private DelState delState = DelState.not;
     
     
     @PrePersist
