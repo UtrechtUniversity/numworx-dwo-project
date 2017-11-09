@@ -169,7 +169,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 // NO TOUCH SCROLLING
 		@Override
 		public boolean setTouchScrollingDisabled(boolean isDisabled) {
-			return super.setTouchScrollingDisabled(true);
+			return super.setTouchScrollingDisabled(isDisabled);
 		}
 		/* (non-Javadoc)
 		 * @see com.google.gwt.user.client.ui.ScrollPanel#onResize()
