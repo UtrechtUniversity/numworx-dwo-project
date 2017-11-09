@@ -11,7 +11,7 @@ import jsinterop.annotations.JsType;
 public class DwoPresenterFactory {
 
     private static DwoPresenterFactory factory;
-    private PresenterFactoryGwt fac;
+    private static PresenterFactoryGwt fac;
 
     public static DwoPresenterFactory getDwoPresenterFactory() {
         return factory;

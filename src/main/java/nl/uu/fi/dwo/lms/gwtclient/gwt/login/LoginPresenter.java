@@ -67,8 +67,8 @@ public class LoginPresenter {
     }
 
     final public void init() {
-        getView().setUsername(defaultUsername);
-        getView().setPassword(defaultPassword);
+//        getView().setUsername(defaultUsername);
+//        getView().setPassword(defaultPassword);
     }
 
 //public String loginClickedJS(String user, String password) {
