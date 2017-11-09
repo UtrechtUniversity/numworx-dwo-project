@@ -48,7 +48,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     private static final Logger LOG = Logger.getLogger(MainView.class.getName());
 
     @Override
-    public MainView getViewInstance() {
+    public void clear() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -147,10 +147,10 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
 
     public MainView(MainPresenter lp) {
         mainPresenter = lp;
-        mainPresenter.setDisplay(this);
+        mainPresenter.setView(this);
     }
 
-    @Override
+//    @Override
     public void init(ViewFactory clientFactory) {
         this.clientFactory = clientFactory;
         loginView = (LoginView) clientFactory.getLoginView();
@@ -195,11 +195,6 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     }
 
     @Override
-    public void clear() {
-        this.clear();
-    }
-
-    @Override
     public Iterator<Widget> iterator() {
         return this.iterator();
     }
@@ -241,42 +236,38 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     }
 
     @Override
-    public void setStatusMsg(String statusMsg) {
-        this.setStatusMsg(statusMsg);
-    }
-
-    @Override
     public void showAccountView() {
-        currentDeckWidgetName(rb.GUI_View_ACCOUNT());
+        setCurrentPanelName(rb.GUI_View_ACCOUNT());
         int index = mainDeckPanel.getWidgetIndex(accountView);
         mainDeckPanel.showWidget(index);
     }
 
     @Override
     public void showLoginView() {
-        currentDeckWidgetName(rb.GUI_View_LOGIN());
-        int index = mainDeckPanel.getWidgetIndex(loginView);
-        mainDeckPanel.showWidget(index);
+        setCurrentPanelName(rb.GUI_View_LOGIN());
+        //TODO revert
+ //       int index = mainDeckPanel.getWidgetIndex(loginView);
+ //       mainDeckPanel.showWidget(index);
         //    showMessageDialog("hello world");
     }
 
     @Override
     public void showSwitchSchoolView() {
-        currentDeckWidgetName(rb.GUI_View_SWITCHSCHOOL());
+        setCurrentPanelName(rb.GUI_View_SWITCHSCHOOL());
         int index = mainDeckPanel.getWidgetIndex(switchSchoolView.asWidget());
         mainDeckPanel.showWidget(index);
     }
 
     @Override
     public void showResultsView() {
-        currentDeckWidgetName(rb.GUI_View_RESULTS());
+        setCurrentPanelName(rb.GUI_View_RESULTS());
         int index = mainDeckPanel.getWidgetIndex(resultsView.asWidget());
         mainDeckPanel.showWidget(index);
     }
 
     @Override
     public void showScoResultsView() {
-        currentDeckWidgetName(rb.GUI_View_SCORESULTS());
+        setCurrentPanelName(rb.GUI_View_SCORESULTS());
         int index = mainDeckPanel.getWidgetIndex(scoResultsView);
         mainDeckPanel.showWidget(index);
 
@@ -284,35 +275,35 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
 
     @Override
     public void showSchoolclassesView() {
-        currentDeckWidgetName(rb.GUI_View_SCHOOLCLASSES());
+        setCurrentPanelName(rb.GUI_View_SCHOOLCLASSES());
         int index = mainDeckPanel.getWidgetIndex(schoolclassesView.asWidget());
         mainDeckPanel.showWidget(index);
     }
 
     @Override
     public void showCoursesOfSchoolclassView() {
-        currentDeckWidgetName(rb.GUI_View_COURSESOFSCHOOLCLASS());
-        int index = mainDeckPanel.getWidgetIndex(coursesOfSchoolclassView.asWidget());
+        setCurrentPanelName(rb.GUI_View_COURSESOFSCHOOLCLASS());
+        int index = mainDeckPanel.getWidgetIndex(coursesOfSchoolclassView.asWidget());        
         mainDeckPanel.showWidget(index);
     }
 
     @Override
     public void showStudentsInSchoolclassView() {
-        currentDeckWidgetName(rb.GUI_View_STUDENTSINSCHOOLCLASS());
+        setCurrentPanelName(rb.GUI_View_STUDENTSINSCHOOLCLASS());
         int index = mainDeckPanel.getWidgetIndex(studentsInSchoolclassView.asWidget());
         mainDeckPanel.showWidget(index);
     }
 
     @Override
     public void showAddStudentsView() {
-        currentDeckWidgetName(rb.GUI_View_ADDSTUDENTS());
+        setCurrentPanelName(rb.GUI_View_ADDSTUDENTS());
         int index = mainDeckPanel.getWidgetIndex(addStudentsView.asWidget());
         mainDeckPanel.showWidget(index);
     }
 
     @Override
     public void showTeachersInSchoolclassView() {
-        currentDeckWidgetName(rb.GUI_View_TEACHERSINSCHOOLCLASS());
+        setCurrentPanelName(rb.GUI_View_TEACHERSINSCHOOLCLASS());
         int index = mainDeckPanel.getWidgetIndex(teachersInSchoolclassView.asWidget());
         mainDeckPanel.showWidget(index);
     }
@@ -341,37 +332,37 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     }
     
     @Override
-    public void currentDeckWidgetName(String panel){
+    public void setCurrentPanelName(String panel){
         activeDeckWidgetLabel.setText(panel);
     }
 
-    @Override
-    public void showMessageDialog(String msg) {
-        final DialogBox dialogBox = new DialogBox();
-        MainMessageView msgView = new MainMessageView();
-        msgView.setMsg(msg);
-        ClickHandler okHandler = new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                dialogBox.hide();
-            }
-        };
-        msgView.addOkClickHandler(okHandler);
-        dialogBox.add(msgView.asWidget());
-        dialogBox.setModal(true);
-        dialogBox.setAutoHideEnabled(true);
-        dialogBox.setGlassEnabled(true);
-        dialogBox.setAnimationEnabled(true);
-        dialogBox.center();
-        dialogBox.show();
-    }
+//    @Override
+//    public void showMessageDialog(String msg) {
+//        final DialogBox dialogBox = new DialogBox();
+//        MainMessageView msgView = new MainMessageView();
+//        msgView.setMsg(msg);
+//        ClickHandler okHandler = new ClickHandler() {
+//            public void onClick(ClickEvent event) {
+//                dialogBox.hide();
+//            }
+//        };
+//        msgView.addOkClickHandler(okHandler);
+//        dialogBox.add(msgView.asWidget());
+//        dialogBox.setModal(true);
+//        dialogBox.setAutoHideEnabled(true);
+//        dialogBox.setGlassEnabled(true);
+//        dialogBox.setAnimationEnabled(true);
+//        dialogBox.center();
+//        dialogBox.show();
+//    }
+//
+//    @Override
+//    public void showErrorDialog(String errMsg) {
+//        Window.alert(errMsg);
+//    }
 
     @Override
-    public void showErrorDialog(String errMsg) {
-        Window.alert(errMsg);
-    }
-
-    @Override
-    public boolean menuVisible() {
+    public boolean isMenuVisible() {
         return showMenu;
     }
 

@@ -4,11 +4,9 @@ import com.google.gwt.core.client.GWT;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMainDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
@@ -26,11 +24,11 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 
     public interface Display {
 
-        public void init(ViewFactory clientFactory);
+        //public void init(ViewFactory clientFactory);
 
-        public Widget asWidget();
+//        public Widget asWidget();
 
-        public MainView getViewInstance();
+//        public MainView getViewInstance();
 
 //        public HasClickHandlers getMenuButton(); // handle clicking on button
         public void showPostLoginWidgets();
@@ -42,10 +40,6 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
         public void setUserRole(String userRole);
 
         public void setPresentationName(String presentationName);
-
-        public void setStatusMsg(String statusMsg);
-
-        void clear();
 
         public void showAccountView();
 
@@ -71,17 +65,17 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 
         public void hideMenuButton();
 
-        public void currentDeckWidgetName(String panel);
+        public void setCurrentPanelName(String panel);
 
         public void showMenuView();
 
         public void hideMenuView();
-
-        public void showMessageDialog(String msg);
-
-        public void showErrorDialog(String msg);
-
-        public boolean menuVisible();
+//
+//        public void showMessageDialog(String msg);
+//
+//        public void showErrorDialog(String msg);
+//
+        public boolean isMenuVisible();
     }
 
     private MainPresenter.Display display;
@@ -94,61 +88,15 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
         eventBus.addHandler(LoginEvent.TYPE, this);
     }
 
-    private native static void jsShowLoginView() /*-{
-            $wnd.dwo.isMenuVisible();
-            }-*/;
     
     public void init() {
         display.showLoginView();
-        jsShowLoginView();
-        LOG.log(Level.INFO,"menu visible from java "+JsMainDisplay.isMenuVisible());
-        JsMainDisplay.hideMenu();
-        LOG.log(Level.INFO,"menu visible from java "+JsMainDisplay.isMenuVisible());
-
-
     }
-//
-//    //** should become part of the PresenterFactories ie. DWO.LoginPresenter.loginClicked.
-//    private native static void setDWO(MainPresenter q) /*-{
-//    	var apis = {
-//    			"showResultsView" : function() {
-//    				return q.@nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter::showResultsViewJS()()
-//                        },
-//    			"showSchoolclassesView" : function() {
-//    				return q.@nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter::showSchoolclassesViewJS()()
-//                        },
-//    			"jstest" : function() {
-//    				return q.@nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter::getjstest()()
-//                        },
-//    			"showAccountView" : function() {
-//    				return q.@nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter::showAccountViewJS()()                      
-//                        }
-//    		};
-//    	$wnd.DwoMainPresenter = apis;
-//
-//    }-*/;
-//
-//    public String showResultsViewJS() {
-//        this.selectView(SwitchViewEvent.SelectedView.RESULTS);
-//        return "true";
-//    }
-//    
-//    public jstest getjstest(){
-//        return new jstest();
-//    }
-//
-//    public void showSchoolclassesViewJS() {
-//        display.showSchoolclassesView();
-//    }
-//
-//    public void showAccountViewJS() {
-//        display.showAccountView();;
-//    }
 
     /**
      * @param display the display to set
      */
-    public void setDisplay(MainPresenter.Display display) {
+    public void setView(MainPresenter.Display display) {
         this.display = display;
     }
 //
@@ -158,13 +106,19 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 
     @JsMethod    
     public void menuButtonClicked() {
-        if (display.menuVisible()) {
+        if (display.isMenuVisible()) {
             display.hideMenuView();
         } else {
             display.showMenuView();
         }
     }
 
+    @JsMethod
+    public void selectView(String selectedView) {
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.valueOf(selectedView)));
+    }
+    
+    
     public void selectView(SwitchViewEvent.SelectedView selectedView) {
         eventBus.fireEvent(new SwitchViewEvent(selectedView));
     }

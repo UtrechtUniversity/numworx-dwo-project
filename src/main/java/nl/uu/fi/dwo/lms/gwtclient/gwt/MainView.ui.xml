@@ -81,11 +81,5 @@
             <g:layer  addStyleNames='{dwoStyle.dwoDeckWidget}'>  -->
             </g:layer>
         </g:LayoutPanel>
-        <!--</g:FlowPanel>-->
-        <!--</g:FlowPanel>-->
-        <!--        <g:FlowPanel addStyleNames='{dwoStyle.dwoAppStatusPanel}' ui:field='statusView' >
-            <g:CheckBox  addStyleNames='{dwoStyle.dwoAppStatusMsgBox}' ui:field='autoUpdateResults' checked="false">autoUpdate</g:CheckBox>
-            <g:Label addStyleNames='{dwoStyle.dwoAppStatusMsgBox}'  ui:field="statusMsg"></g:Label>
-        </g:FlowPanel> -->
     </g:HeaderPanel>            
 </ui:UiBinder>

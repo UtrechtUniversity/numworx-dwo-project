@@ -9,7 +9,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import com.google.gwt.event.shared.EventBus;
 import jsinterop.annotations.JsMethod;
-import jsinterop.annotations.JsType;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentsPresenter;
@@ -25,7 +24,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresent
  *
  * @author G.A.J. van der Plas
  */
-public class PresenterFactoryImpl implements PresenterFactory {
+public class PresenterFactoryGwt implements PresenterFactory {
 
     private final DwoGlobalVars dwoGlobalVars;
     private final EventBus eventBus;
@@ -47,7 +46,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
     private final MsgConfirmDialogPresenter msgConfirmDialogPresenter;
     private final FileUploadStudentsPresenter fileUploadStudentsPresenter;
 
-    public PresenterFactoryImpl(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    public PresenterFactoryGwt(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         dwoGlobalVars = aDwoGlobalVars;
         eventBus = anEventBus;
         mainPresenter = new MainPresenter(eventBus, dwoGlobalVars);
@@ -69,6 +68,27 @@ public class PresenterFactoryImpl implements PresenterFactory {
         msgConfirmDialogPresenter = new MsgConfirmDialogPresenter(eventBus, dwoGlobalVars);
     }
 
+    @Override
+    public void bindViewFactory(ViewFactory viewFactory) {
+        mainPresenter.setView(viewFactory.getMainView());
+        loginPresenter.setView(viewFactory.getLoginView());
+        resultsPresenter.setView(viewFactory.getResultsView());
+        switchSchoolPresenter.setView(viewFactory.getSwitchSchoolView());
+        scoResultsPresenter.setView(viewFactory.getScoResultsView());
+        schoolclassesPresenter.setView(viewFactory.getSchoolclassesView());
+        coursesOfSchoolclassPresenter.setView(viewFactory.getCoursesOfSchoolclassView());
+        studentsInSchoolclassPresenter.setView(viewFactory.getStudentsInSchoolclassView());
+        teachersInSchoolclassPresenter.setView(viewFactory.getTeachersInSchoolclassView());
+        accountPresenter.setView(viewFactory.getAccountView());
+        addSchoolclassPresenter.setView(viewFactory.getAddSchoolclassView());
+        editSchoolclassPresenter.setView(viewFactory.getEditSchoolclassView());
+        editStudentPresenter.setView(viewFactory.getEditStudentView());
+        addStudentsPresenter.setView(viewFactory.getAddStudentsView());
+        msgDialogPresenter.setView(viewFactory.getMsgDialogView());
+        fileUploadStudentsPresenter.setView(viewFactory.getFileUploadStudentsView());
+        msgConfirmDialogPresenter.setView(viewFactory.getMsgConfirmDialogView());
+    }
+    
     @Override
     public EventBus getEventBus() {
         return eventBus;
@@ -107,7 +127,6 @@ public class PresenterFactoryImpl implements PresenterFactory {
     /**
      * @return the switchSchoolPresenter
      */
-    @JsMethod
     public SwitchSchoolPresenter getSwitchSchoolPresenter() {
         return switchSchoolPresenter;
     }
@@ -194,4 +213,5 @@ public class PresenterFactoryImpl implements PresenterFactory {
     public FileUploadStudentsPresenter getFileUploadStudentsPresenter() {
         return fileUploadStudentsPresenter;
     }
+
 }

@@ -1,15 +1,14 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
-import com.google.gwt.dom.client.Element;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
 
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
@@ -41,7 +40,9 @@ class BootPanelController {
     private ViewFactory viewFactory;
     private PresenterFactory presenterFactory;
     private DwoGlobalVars dwoGlobalVars;
+    private int profile;
     private boolean hideGwtGui;
+    private boolean testIsOn;
 
     static {
         //Initialize an Exception translator.imply removing all DOM elements can cause issues with other elements in the page.
@@ -54,6 +55,10 @@ class BootPanelController {
 
     BootPanelController(EventBus eventBus) {
         this.eventBus = eventBus;
+        testIsOn = false;
+        hideGwtGui = false;
+        profile = 77;
+
     }
 
     public static native String getHideGwtGuiString()/*-{
@@ -64,14 +69,36 @@ class BootPanelController {
         return  $wnd.dwoDisplay;
     }-*/;
 
+    private void parseGwtParam() {
+        hideGwtGui = Boolean.parseBoolean(getHideGwtGuiString());
+    }
+
+    private void parseUrlParam() {
+        //parse profile if it exists.
+        String value = com.google.gwt.user.client.Window.Location.getParameter("profile");
+        try {
+            profile = Integer.parseInt(value);
+        } catch (Exception e) {
+            profile = 77;
+        }
+        value = com.google.gwt.user.client.Window.Location.getParameter("test");
+        if (value != null && value.matches("on")) {
+            testIsOn = true;
+        }
+    }
 
     public void go(RootLayoutPanel rootPanel) {
-        
-        hideGwtGui = Boolean.parseBoolean(getHideGwtGuiString());
-        
+        parseUrlParam();
+        LOG.log(Level.INFO, "profile=" + profile + ".");
+        LOG.log(Level.INFO, "testIsOn=" + testIsOn + ".");
+        parseGwtParam();
+        LOG.log(Level.INFO, "HideGwt=" + hideGwtGui + ".");
+
         //intialize our global and environmental variables instance.
         try {
             dwoGlobalVars = new DwoGlobalVars();
+            Promise<DomDwoProfileFull> promise = new PublicProfileManager().get(profile);
+            dwoGlobalVars.setProfile(promise);
         } catch (Dwo2Exception e) {
             //ugly emergency code in case server fails.
             String msg = "Fatal server error! " + e.getDwo2Message();
@@ -90,24 +117,22 @@ class BootPanelController {
             return;
         }
 
-        //parse profile if it exists.
-        String value = com.google.gwt.user.client.Window.Location.getParameter("profile");
-        if (value == null || value.isEmpty()) {
-            value = "77";
-        }
-
-        Promise<DomDwoProfileFull> profile = new PublicProfileManager().get(value);
-        dwoGlobalVars.setProfile(profile);
-        LOG.log(Level.INFO, "Parsed and set profile id to " + value + ".");
-
         //show main panel
         this.rootPanel = rootPanel;
 
         //create client factories
-        DwoPresenterFactory fac = new DwoPresenterFactory(new PresenterFactoryImpl(eventBus, dwoGlobalVars));
+        DwoPresenterFactory fac = new DwoPresenterFactory(new PresenterFactoryGwt(eventBus, dwoGlobalVars));
         presenterFactory = fac.getFac();
 
-        viewFactory = new ViewFactoryImpl(presenterFactory);
+        ViewFactoryGwt gwtView=null;
+        if (hideGwtGui) {
+            viewFactory = new ViewFactoryTeuniz(presenterFactory);
+        } else {
+            gwtView = new ViewFactoryGwt(presenterFactory);
+            viewFactory = gwtView;
+        }
+
+        presenterFactory.bindViewFactory(viewFactory);
 
         //handle login events
         eventBus.addHandler(LoginEvent.TYPE, new LoginEventHandler() {
@@ -146,7 +171,7 @@ class BootPanelController {
                         dwoGlobalVars.clearCurrentUser();
                         presenterFactory.getMainPresenter().onSwitchViewEvent(new SwitchViewEvent(SwitchViewEvent.eventValue.LOGIN));
                     default:
-                        LOG.log(Level.INFO, "Login fail in app controller.");
+                        LOG.log(Level.SEVERE, "Login handling failed in app controller.");
                 }
             }
         });
@@ -190,24 +215,23 @@ class BootPanelController {
                         presenterFactory.getScoResultsPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultScoContext(), switchViewEvent.getResultStudent(), switchViewEvent.getSchoolClass());
                         break;
                     default:
-                        LOG.log(Level.INFO, "Switch fail in app controller.");
+                        LOG.log(Level.SEVERE, "Switch panel failed in app controller.");
                 }
             }
         });
-        LOG.log(Level.INFO, "Intiated Main view.");
+        LOG.log(Level.FINE, "Intiating Main view.");
         MainPresenter.Display mainView = viewFactory.getMainView();
-        mainView.init(viewFactory);
-        this.rootPanel.add(mainView.asWidget());
-        Element elem = rootPanel.getElement();//DOM.getElementById("resultCol1");
         if (hideGwtGui) {
             rootPanel.setVisible(false);
-            LOG.log(Level.INFO, "not showing Main view." + getHideGwtGuiString());
+            LOG.log(Level.INFO, "Not showing GwtGui. HideGwt = " + getHideGwtGuiString());
+        } else {
+            this.rootPanel.add(gwtView.asWidget());
+            LOG.log(Level.INFO, "Showing GwtGui. HideGwtGUI = " + getHideGwtGuiString());
         }
-        DOM.sinkEvents(elem, Integer.MAX_VALUE);
         MainPresenter mainPresenter = presenterFactory.getMainPresenter();
-        LOG.log(Level.INFO, "Intiating Main presenter. Showing login screen.");
+        LOG.log(Level.FINE, "Intiating Main presenter. Showing login screen.");
         mainPresenter.init();
-        LOG.log(Level.INFO, "Initiated Main presenter.");
+        LOG.log(Level.FINE, "Initiated Main presenter.");
     }
 //
 //    public Promise<DomLoginContext> logout() {

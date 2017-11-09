@@ -1,22 +1,22 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.login;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsLoginView;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
+
 /**
- * Login Presenter. 
- * 
+ * Login Presenter.
+ *
  * @author G.A.J. van der Plas
  */
 public class LoginPresenter {
@@ -24,58 +24,65 @@ public class LoginPresenter {
     private static final Logger LOG = Logger.getLogger(LoginPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
-    
+    private Display view;
+    private String defaultUsername = "";
+    private String defaultPassword = "";
 
-    public interface Display extends IsWidget {
+    /**
+     * @return the view
+     */
+    public Display getView() {
+        return view;
+    }
 
-        Widget asWidget();
+    /**
+     * @param view the view to set
+     */
+    public void setView(Display view) {
+        this.view = view;
+    }
 
-        void clear();
+    public interface Display {
 
+        /**
+         * Clears the username and password in the ui.
+         */
+        public void clear();
+
+        /**
+         * Sets the username in the ui box.
+         */
         public void setUsername(String username);
 
+        /**
+         * Sets the password in the ui box.
+         */
         public void setPassword(String password);
     }
-//
-//    //** should become part of the PresenterFactories ie. DWO.LoginPresenter.loginClicked.
-//        private native static void setDWO(DwoGlobalVars gv, LoginPresenter p) /*-{
-//    	var api = {
-//    			"loginTest" : function() {
-//    				return p.@nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter::loginClickedJS(Ljava/lang/String;Ljava/lang/String;)("gert_project", "passw")
-//                        },
-//    			"loginClicked" : function(user, password) {
-//    				return p.@nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter::loginClickedJS(Ljava/lang/String;Ljava/lang/String;)(user, password)
-//                        },
-//    			"getServer" : function() {
-//    				return gv.@nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars::getServer()
-//                        }
-//    		};
-//    	$wnd.DwoLoginPresenter = api;
-//    }-*/;
-                
+
     public LoginPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-//        this.setDWO(dwoGlobalVars,this);
         init();
     }
 
-    
     final public void init() {
+        getView().setUsername(defaultUsername);
+        getView().setPassword(defaultPassword);
     }
-    
+
 //public String loginClickedJS(String user, String password) {
 //        this.loginClicked(user, password, false);
 //        return "done";
 //    }
- 
-/**
- * User login call. A login function is called.
- * 
- * @param user usernme
- * @param password cleartext password.
- * @param switchRole In case a roleSwitch is desired, generally the value is false.
- */
+    /**
+     * User login call. A login function is called.
+     *
+     * @param user usernme
+     * @param password cleartext password.
+     * @param switchRole In case a roleSwitch is desired, generally the value is
+     * false.
+     */
     @JsMethod
     public void loginClicked(String user, String password, final Boolean switchRole) {
         Promise<DwoGlobalVars.DwoGlobalVarsState> loginUser;
@@ -133,6 +140,17 @@ public class LoginPresenter {
             Logger.getLogger(LoginPresenter.class.getName()).log(Level.SEVERE, null, ex);
             eventBus.fireEvent(new DialogEvent(ex));
         }
+    }
+
+    /**
+     * Sets the default username and password in the login ui.
+     *
+     * @param u
+     * @param pw
+     */
+    public void setDefaultLogin(String u, String pw) {
+        defaultUsername = u;
+        defaultPassword = pw;
     }
 
 }

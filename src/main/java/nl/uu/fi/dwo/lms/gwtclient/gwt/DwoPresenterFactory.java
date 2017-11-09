@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
-import jsinterop.annotations.JsIgnore;
 import jsinterop.annotations.JsMethod;
 import jsinterop.annotations.JsType;
 
@@ -12,29 +11,23 @@ import jsinterop.annotations.JsType;
 public class DwoPresenterFactory {
 
     private static DwoPresenterFactory factory;
-    private PresenterFactoryImpl fac;
-    private jstest2 test;
+    private PresenterFactoryGwt fac;
 
     public static DwoPresenterFactory getDwoPresenterFactory() {
         return factory;
     }
     
-    public DwoPresenterFactory(PresenterFactoryImpl impl) {
+    public DwoPresenterFactory(PresenterFactoryGwt impl) {
         fac = impl;
-        test = new jstest2();
         factory = this;
     }
 
-    @JsIgnore
-    public jstest2 getJsTest() {
-        return test;
-    }
 
     /**
      * @return the fac
      */
     @JsMethod
-    public PresenterFactoryImpl getFac() {
+    public PresenterFactoryGwt getFac() {
         return fac;
     }
 
@@ -42,7 +35,7 @@ public class DwoPresenterFactory {
      * @param fac the fac to set
      */
     @JsMethod
-    public void setFac(PresenterFactoryImpl fac) {
+    public void setFac(PresenterFactoryGwt fac) {
         this.fac = fac;
     }
 }

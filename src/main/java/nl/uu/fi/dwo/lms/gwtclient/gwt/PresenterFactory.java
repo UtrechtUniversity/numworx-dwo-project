@@ -43,4 +43,5 @@ public interface PresenterFactory {
     public MsgDialogPresenter getMsgDialogPresenter();
     public MsgConfirmDialogPresenter getMsgConfirmDialogPresenter();
     public FileUploadStudentsPresenter getFileUploadStudentsPresenter();
+    public void bindViewFactory(ViewFactory viewFactory);
 }

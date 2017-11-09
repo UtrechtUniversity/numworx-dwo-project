@@ -4,12 +4,14 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.MsgConfirmDialogView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.MsgConfirmDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.MsgDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.MsgDialogView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsAccountView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsLoginView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMainView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesView;
@@ -38,7 +40,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassView;
  *
  * @author G.A.J. van der Plas
  */
-public class ViewFactoryImpl implements ViewFactory {
+public class ViewFactoryTeuniz implements ViewFactory {
 
     private final MainPresenter.Display mainView;
     private final LoginPresenter.Display loginView;
@@ -58,13 +60,13 @@ public class ViewFactoryImpl implements ViewFactory {
     private final AddStudentsPresenter.Display addStudentsView;
     private final FileUploadStudentsPresenter.Display fileUploadStudentsView;
 
-    public ViewFactoryImpl(PresenterFactory pf) {
-        mainView = new MainView(pf.getMainPresenter());
-        loginView = new LoginView(pf.getLoginPresenter());
+    public ViewFactoryTeuniz(PresenterFactory pf) {
+        mainView = new JsMainView();
+        loginView = new JsLoginView();
         resultsView = new ResultsView(pf.getResultsPresenter());
         switchSchoolView = new SwitchSchoolView(pf.getSwitchSchoolPresenter());
         scoResultsView = new ScoResultsView(pf.getScoResultsPresenter());
-        accountView = new AccountView(pf.getAccountPresenter());
+        accountView = new JsAccountView();
         //ordered!
         schoolclassesView = new SchoolclassesView(pf.getSchoolclassesPresenter(), this);
         addSchoolclassView = new AddSchoolclassView(pf.getAddSchoolclassPresenter());
