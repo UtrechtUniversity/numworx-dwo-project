@@ -94,6 +94,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 		
 		started = true;
 		view = clientFactory.getEntryView();
+		panel.setWidget(view); // terug naar af. problemen met gekke scrolls
 		{
 			final String id = sco.getID().toString();
 			List<SelectModuleItem> trail = new ArrayList<SelectModuleItem>();
@@ -125,7 +126,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 			@Override
 			public void onSuccess(Void result) {
 				view.setupModule(sco.getName(), sco.getFile());
-				panel.setWidget(view);
+				//panel.setWidget(view);
 			}
 		};
 		view.getApi().Initialize(callback);
