@@ -16,12 +16,12 @@
 			<g:SimplePanel ui:field='statusView' />
 		</g:south>
 		<g:center>
-			<g:ScrollPanel stylePrimaryName="contentScrollPanel" ui:field='contentScrollPanel'>		 
+			<g:SimplePanel stylePrimaryName="contentScrollPanel" ui:field='contentScrollPanel'>		 
 				<g:FlowPanel
 					stylePrimaryName="contentPanel"
 					ui:field="content"
 				 />
-			</g:ScrollPanel>
+			</g:SimplePanel>
 		</g:center>
 	</g:DockLayoutPanel>
 </ui:UiBinder> 
