@@ -25,11 +25,8 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
     public interface Display {
 
         //public void init(ViewFactory clientFactory);
-
 //        public Widget asWidget();
-
 //        public MainView getViewInstance();
-
 //        public HasClickHandlers getMenuButton(); // handle clicking on button
         public void showPostLoginWidgets();
 
@@ -77,6 +74,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 //
 //        public void showErrorDialog(String msg);
 //
+
         public boolean isMenuVisible();
     }
 
@@ -90,9 +88,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
         eventBus.addHandler(LoginEvent.TYPE, this);
     }
 
-    
     public void init() {
-        display.showLoginView();
     }
 
     /**
@@ -106,7 +102,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 //        display.showLoginView();
 //    }
 
-    @JsMethod    
+    @JsMethod
     public void menuButtonClicked() {
         if (display.isMenuVisible()) {
             display.hideMenuView();
@@ -119,8 +115,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
     public void selectView(String selectedView) {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.valueOf(selectedView)));
     }
-    
-    
+
     public void selectView(SwitchViewEvent.SelectedView selectedView) {
         eventBus.fireEvent(new SwitchViewEvent(selectedView));
     }

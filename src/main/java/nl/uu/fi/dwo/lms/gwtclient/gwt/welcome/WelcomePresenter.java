@@ -40,6 +40,7 @@ public class WelcomePresenter {
      */
     public void setView(Display view) {
         this.view = view;
+        this.init();
     }
 
     /**
@@ -57,18 +58,20 @@ public class WelcomePresenter {
     }
 
     public interface Display {
-
+        public void clear();
+        public void setWelcomeText(String html);
     }
 
     public WelcomePresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-        init();
     }
 
     final public void init() {
-//        getView().setUsername(defaultUsername);
-//        getView().setPassword(defaultPassword);
+        view.clear();
+        view.setWelcomeText("<h1>Welkome Page</h1>\n"
+                + "            \n"
+                + "            <p>Welkom text voor de welkom pagina.</p>");
     }
 
     /**
@@ -78,7 +81,7 @@ public class WelcomePresenter {
      * @return
      */
     public String getWelcomeText() {
-        return "<h1>Welkome Page</h1>\n"
+        return "<h1>Welcome Page</h1>\n"
                 + "            \n"
                 + "            <p>Welkom text voor de welkom pagina.</p>";
     }

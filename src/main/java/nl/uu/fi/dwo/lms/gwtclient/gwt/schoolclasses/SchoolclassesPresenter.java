@@ -1,7 +1,8 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import java.util.HashMap;
 import java.util.List;
@@ -40,8 +41,6 @@ public class SchoolclassesPresenter {
 
     public interface Display {
 
-        Widget asWidget();
-
         void clear();
 
         void init();
@@ -52,7 +51,7 @@ public class SchoolclassesPresenter {
     public class ClassItem {
 
         public String key; //unique
-        public String schoolclassName;
+        private String schoolclassName;
 
         public ClassItem(String aKey, String value) {
             key = aKey;
@@ -65,6 +64,20 @@ public class SchoolclassesPresenter {
 
         public void setKey(String aKey) {
             key = aKey;
+        }
+
+        /**
+         * @return the schoolclassName
+         */
+        public String getSchoolclassName() {
+            return schoolclassName;
+        }
+
+        /**
+         * @param schoolclassName the schoolclassName to set
+         */
+        public void setSchoolclassName(String schoolclassName) {
+            this.schoolclassName = schoolclassName;
         }
     }
 
@@ -111,10 +124,13 @@ public class SchoolclassesPresenter {
                 //flip back to schoolclasses screen 
                 schoolClassMap = new HashMap<String, DomSchoolClass>();
                 viewData = new HashMap(schoolClassMap.size());
+//                JSONObject json = new JSONObject();
                 for (DomSchoolClass sc : resolved.getValue()) {
                     schoolClassMap.put(sc.getId().getIdString(), sc);
                     viewData.put(sc.getId().getIdString(), new ClassItem(sc.getId().getIdString(), sc.getSchoolClassName()));
+//                    json.put(sc.getId().getIdString(), new JSONString (sc.getSchoolClassName()));
                 }
+//                view.updateJSView(json.getJavaScriptObject());
                 view.updateView(viewData);
                 return null;
             }

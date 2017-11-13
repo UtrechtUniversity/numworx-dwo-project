@@ -29,5 +29,4 @@ public class JsLoginDisplay{
     public static native void setPassword(String password);
     /** Returns the password field value. */
     public static native String getPassword();
-
 }

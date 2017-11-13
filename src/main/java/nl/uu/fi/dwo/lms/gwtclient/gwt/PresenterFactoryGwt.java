@@ -73,7 +73,6 @@ public class PresenterFactoryGwt implements PresenterFactory {
 
     @Override
     public void bindViewFactory(ViewFactory viewFactory) {
-        mainPresenter.setView(viewFactory.getMainView());
         loginPresenter.setView(viewFactory.getLoginView());
         resultsPresenter.setView(viewFactory.getResultsView());
         switchSchoolPresenter.setView(viewFactory.getSwitchSchoolView());
@@ -90,6 +89,8 @@ public class PresenterFactoryGwt implements PresenterFactory {
         msgDialogPresenter.setView(viewFactory.getMsgDialogView());
         fileUploadStudentsPresenter.setView(viewFactory.getFileUploadStudentsView());
         msgConfirmDialogPresenter.setView(viewFactory.getMsgConfirmDialogView());
+        //last!
+        mainPresenter.setView(viewFactory.getMainView());
     }
     
     @Override

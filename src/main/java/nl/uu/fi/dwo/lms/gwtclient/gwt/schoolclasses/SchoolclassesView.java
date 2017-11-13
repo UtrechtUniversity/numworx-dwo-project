@@ -120,7 +120,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, Select
         Column<SchoolclassesPresenter.ClassItem, String> value = new Column<SchoolclassesPresenter.ClassItem, String>(cell) {
             @Override
             public String getValue(SchoolclassesPresenter.ClassItem object) {
-                return object.schoolclassName;
+                return object.getSchoolclassName();
             }
         };
         value.setSortable(true);
@@ -135,7 +135,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, Select
 
                 // Compare the name columns.
                 if (o1 != null) {
-                    return (o2 != null) ? o1.schoolclassName.compareTo(o2.schoolclassName) : 1;
+                    return (o2 != null) ? o1.getSchoolclassName().compareTo(o2.getSchoolclassName()) : 1;
                 }
                 return -1;
             }
@@ -251,22 +251,6 @@ public class SchoolclassesView extends Composite implements ClickHandler, Select
 
     public void onClick(ClickEvent event) {
         if (event.getSource() == addBtn) {
-//            ClickHandler okHandler = new ClickHandler() {
-//                public void onClick(ClickEvent event) {
-//                    dialogBox.hide();
-//                }
-//            };
-//            if (dialogBox.getWidget() == null) {
-//                addSchoolclassView.clear();
-//                dialogBox.add(addSchoolclassView.asWidget());
-//                dialogBox.setModal(true);
-//                dialogBox.setAutoHideEnabled(true);
-//                dialogBox.setGlassEnabled(true);
-//                dialogBox.setAnimationEnabled(true);
-//                dialogBox.center();
-//            }
-//            dialogBox.show();
-
             schoolclassesPresenter.addSchoolClass();
         }
     }
@@ -278,7 +262,7 @@ public class SchoolclassesView extends Composite implements ClickHandler, Select
     }
 
     private void cellSelected(int row, int column) {
-        LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataProvider.getList().get(row).schoolclassName + " " + dataGrid.getHeader(column).getValue());
+        LOG.log(Level.FINE, "Clicked row x col " + row + "x" + column + " " + dataProvider.getList().get(row).getSchoolclassName() + " " + dataGrid.getHeader(column).getValue());
         dataGrid.getHeader(column);
         schoolclassesPresenter.selectItem((SchoolclassesPresenter.ClassItem) dataProvider.getList().get(row), column);
     }

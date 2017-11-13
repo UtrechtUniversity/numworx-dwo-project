@@ -11,6 +11,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsAccountView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsLoginView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMainView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsSchoolClassesDisplay;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsSchoolClasssesView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesView;
@@ -71,7 +73,7 @@ public class ViewFactoryTeuniz implements ViewFactory {
         accountView = new JsAccountView();
         welcomeView = new WelcomeView(pf.getWelcomePresenter());
         //ordered!
-        schoolclassesView = new SchoolclassesView(pf.getSchoolclassesPresenter(), this);
+        schoolclassesView = new JsSchoolClasssesView();
         addSchoolclassView = new AddSchoolclassView(pf.getAddSchoolclassPresenter());
         coursesOfSchoolclassView = new CoursesOfSchoolclassView(pf.getCoursesOfSchoolclassPresenter());
         studentsInSchoolclassView = new StudentsInSchoolclassView(pf.getStudentsInSchoolclassPresenter());
