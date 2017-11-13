@@ -38,6 +38,7 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
 
     public enum SelectedView {
         LOGIN,
+        WELCOME,
         ACCOUNT,
         SWITCHSCHOOL,
         RESULTS,

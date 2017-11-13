@@ -8,7 +8,6 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
 
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
@@ -19,7 +18,6 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.FAIL;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.LOGOUT;
-import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.SUCCESS;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.SUCCESS_RESULTS;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
@@ -27,6 +25,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 import org.osgi.util.promise.Promise;
+import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.SUCCESS_ROLE;
 
 /**
  * Controller for Login.
@@ -139,25 +138,25 @@ class BootPanelController {
             @Override
             public void onLoginEvent(LoginEvent loginEvent) {
                 switch (loginEvent.getState()) {
+                    case SUCCESS_WELCOME:
+                        LOG.log(Level.INFO, "Login succeeded. Showing welcome view.");
+                        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.WELCOME));
+                        viewFactory.getMainView().showPostLoginWidgets();
+                        break;
                     case SUCCESS_RESULTS:
                         LOG.log(Level.INFO, "Login succeeded. Showing results view.");
                         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
-//                        viewFactory.getMainView().showMenuButton();
                         viewFactory.getMainView().showPostLoginWidgets();
-                        //presenterFactory.getResultsPresenter().init();
-                        break;
-                    case SUCCESS_SCHOOLCLASSES:
-                        LOG.log(Level.INFO, "Login succeeded. Showing schoolclasses view.");
-                        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
-//                        viewFactory.getMainView().showMenuButton();
-                        viewFactory.getMainView().showPostLoginWidgets();
-                        //presenterFactory.getResultsPresenter().init();
                         break;
                     case SUCCESS:
+                    case SUCCESS_SCHOOLCLASSES:
+                        LOG.log(Level.INFO, "Login succeeded. Showing schoolclasses view.");
+                        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+                        viewFactory.getMainView().showPostLoginWidgets();
+                        break;
+                    case SUCCESS_ROLE:
                         LOG.log(Level.INFO, "Login succeeded. Showing switch role view.");
                         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SWITCHSCHOOL));
-//                        viewFactory.getMainView().showMenuButton();
-//                        viewFactory.getMainView().showPostLoginWidgets();
                         presenterFactory.getSwitchSchoolPresenter().init();
                         break;
                     case FAIL:

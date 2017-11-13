@@ -119,9 +119,9 @@ public class LoginPresenter {
                             switchR = true;
                         }
                         if (switchR || switchRole) {
-                            eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS));
+                            eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_ROLE));
                         } else {
-                            eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_SCHOOLCLASSES));
+                            eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_WELCOME));
                         }
                         LOG.log(Level.INFO, "login succeeded. Firing Login success event.");
                     } else {

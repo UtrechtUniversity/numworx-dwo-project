@@ -10,10 +10,12 @@ import com.google.gwt.event.shared.GwtEvent;
 public class LoginEvent extends GwtEvent<LoginEventHandler> {
     public enum State {
         FAIL,
-        SUCCESS,
-        SUCCESS_RESULTS,
-        SUCCESS_SCHOOLCLASSES,
-        LOGOUT
+        SUCCESS, // default post login panel should always be implemented. By default the welcome panel
+        SUCCESS_ROLE, // role panel
+        SUCCESS_WELCOME, // welcome panel
+        SUCCESS_RESULTS, // result panel
+        SUCCESS_SCHOOLCLASSES, //schoolclass panel
+        LOGOUT 
     }
     
     public static Type<LoginEventHandler> TYPE = new Type<LoginEventHandler>();

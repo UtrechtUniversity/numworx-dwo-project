@@ -344,31 +344,6 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         activeDeckWidgetLabel.setText(panel);
     }
 
-//    @Override
-//    public void showMessageDialog(String msg) {
-//        final DialogBox dialogBox = new DialogBox();
-//        MainMessageView msgView = new MainMessageView();
-//        msgView.setMsg(msg);
-//        ClickHandler okHandler = new ClickHandler() {
-//            public void onClick(ClickEvent event) {
-//                dialogBox.hide();
-//            }
-//        };
-//        msgView.addOkClickHandler(okHandler);
-//        dialogBox.add(msgView.asWidget());
-//        dialogBox.setModal(true);
-//        dialogBox.setAutoHideEnabled(true);
-//        dialogBox.setGlassEnabled(true);
-//        dialogBox.setAnimationEnabled(true);
-//        dialogBox.center();
-//        dialogBox.show();
-//    }
-//
-//    @Override
-//    public void showErrorDialog(String errMsg) {
-//        Window.alert(errMsg);
-//    }
-
     @Override
     public boolean isMenuVisible() {
         return showMenu;
@@ -409,6 +384,8 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
         } else if (event.getSource() == classesLabel || event.getSource() == classesImage) {
             hideMenuView();
             mainPresenter.selectView(SwitchViewEvent.SelectedView.SCHOOLCLASSES);
+        } else if (event.getSource() == dwoLogo){
+            mainPresenter.selectView(SwitchViewEvent.SelectedView.WELCOME);
         }
     }
 

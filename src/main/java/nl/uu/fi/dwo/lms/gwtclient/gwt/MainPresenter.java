@@ -172,7 +172,9 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
         switch (selectedView) {
             case ACCOUNT:
                 display.showAccountView();
-
+                break;
+            case WELCOME:
+                display.showWelcomeView();
                 break;
             case LOGIN:
                 display.showLoginView();
