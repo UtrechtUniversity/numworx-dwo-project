@@ -6,10 +6,10 @@ import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsLoginView;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -27,6 +27,8 @@ public class LoginPresenter {
     private Display view;
     private String defaultUsername = "";
     private String defaultPassword = "";
+    
+    private DwoLocalesForGWT resourceBindings = DwoLocalesForGWT.instance;
 
     /**
      * @return the view
@@ -40,6 +42,21 @@ public class LoginPresenter {
      */
     public void setView(Display view) {
         this.view = view;
+    }
+
+    /**
+     * @return the resourceBindings
+     */
+    @JsMethod
+    public DwoLocalesForGWT getResourceBindings() {
+        return resourceBindings;
+    }
+
+    /**
+     * @param resourceBindings the resourceBindings to set
+     */
+    public void setResourceBindings(DwoLocalesForGWT resourceBindings) {
+        this.resourceBindings = resourceBindings;
     }
 
     public interface Display {

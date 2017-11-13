@@ -41,6 +41,8 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 
         public void setPresentationName(String presentationName);
 
+        public void showWelcomeView();
+
         public void showAccountView();
 
         public void showLoginView();

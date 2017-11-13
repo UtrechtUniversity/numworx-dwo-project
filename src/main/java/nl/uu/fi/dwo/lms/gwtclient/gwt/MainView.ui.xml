@@ -32,6 +32,7 @@
                 <!--<g:FlowPanel>-->
                 <g:DeckPanel addStyleNames='{dwoStyle.dwoDeckPanel}' ui:field="mainDeckPanel" >
                     <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="loginView" />
+                    <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="welcomeView" />
                     <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="accountView" />
                     <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="switchSchoolView" />
                     <g:Widget addStyleNames='{dwoStyle.dwoDeckWidget}' ui:field="schoolclassesView"/>

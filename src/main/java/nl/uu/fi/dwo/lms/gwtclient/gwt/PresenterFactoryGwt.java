@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
  * Local ViewFactory implementation class.
@@ -38,6 +39,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     private final StudentsInSchoolclassPresenter studentsInSchoolclassPresenter;
     private final TeachersInSchoolclassPresenter teachersInSchoolclassPresenter;
     private final AccountPresenter accountPresenter;
+    private final WelcomePresenter welcomePresenter;
     private final AddSchoolclassPresenter addSchoolclassPresenter;
     private final EditSchoolclassPresenter editSchoolclassPresenter;
     private final EditStudentPresenter editStudentPresenter;
@@ -59,6 +61,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         studentsInSchoolclassPresenter = new StudentsInSchoolclassPresenter(eventBus, dwoGlobalVars);
         teachersInSchoolclassPresenter = new TeachersInSchoolclassPresenter(eventBus, dwoGlobalVars);
         accountPresenter = new AccountPresenter(eventBus, dwoGlobalVars);
+        welcomePresenter = new WelcomePresenter(eventBus, dwoGlobalVars);
         addSchoolclassPresenter = new AddSchoolclassPresenter(eventBus, dwoGlobalVars);
         editSchoolclassPresenter = new EditSchoolclassPresenter(eventBus, dwoGlobalVars);
         editStudentPresenter = new EditStudentPresenter(eventBus, dwoGlobalVars);
@@ -158,6 +161,13 @@ public class PresenterFactoryGwt implements PresenterFactory {
         return accountPresenter;
     }
 
+    /**
+     * @return the addSchoolclassPresenter
+     */
+    public WelcomePresenter getWelcomePresenter() {
+        return welcomePresenter;
+    }
+    
     /**
      * @return the addSchoolclassPresenter
      */

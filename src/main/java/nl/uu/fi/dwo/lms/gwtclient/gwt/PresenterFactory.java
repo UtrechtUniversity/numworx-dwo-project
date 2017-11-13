@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
  * Client factory interface for GWT app.
@@ -36,6 +37,7 @@ public interface PresenterFactory {
     public StudentsInSchoolclassPresenter getStudentsInSchoolclassPresenter();
     public TeachersInSchoolclassPresenter getTeachersInSchoolclassPresenter();
     public AccountPresenter getAccountPresenter();
+    public WelcomePresenter getWelcomePresenter();
     public AddSchoolclassPresenter getAddSchoolclassPresenter();
     public EditSchoolclassPresenter getEditSchoolclassPresenter();
     public EditStudentPresenter getEditStudentPresenter();

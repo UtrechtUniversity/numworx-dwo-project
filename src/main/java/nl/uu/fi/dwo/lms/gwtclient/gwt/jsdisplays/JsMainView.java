@@ -39,6 +39,11 @@ public class JsMainView implements MainPresenter.Display{
     }
 
     @Override
+    public void showWelcomeView() {
+        JsMainDisplay.showWelcomeView();
+    }
+
+    @Override
     public void showLoginView() {
         JsMainDisplay.showLoginView();
     }

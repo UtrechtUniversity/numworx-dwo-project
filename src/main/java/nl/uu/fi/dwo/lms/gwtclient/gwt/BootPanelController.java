@@ -148,7 +148,7 @@ class BootPanelController {
                         break;
                     case SUCCESS_SCHOOLCLASSES:
                         LOG.log(Level.INFO, "Login succeeded. Showing schoolclasses view.");
-                        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+                        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
 //                        viewFactory.getMainView().showMenuButton();
                         viewFactory.getMainView().showPostLoginWidgets();
                         //presenterFactory.getResultsPresenter().init();

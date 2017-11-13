@@ -7,7 +7,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.MsgDialogView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsAccountView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsLoginView;
@@ -34,6 +33,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresent
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomeView;
 
 /**
  * Local ViewFactory implementation class.
@@ -49,6 +50,7 @@ public class ViewFactoryTeuniz implements ViewFactory {
     private final ScoResultsPresenter.Display scoResultsView;
     private final SchoolclassesPresenter.Display schoolclassesView;
     private final AccountPresenter.Display accountView;
+    private final WelcomePresenter.Display welcomeView;
     private final AddSchoolclassPresenter.Display addSchoolclassView;
     private final CoursesOfSchoolclassPresenter.Display coursesOfSchoolclassView;
     private final StudentsInSchoolclassPresenter.Display studentsInSchoolclassView;
@@ -67,6 +69,7 @@ public class ViewFactoryTeuniz implements ViewFactory {
         switchSchoolView = new SwitchSchoolView(pf.getSwitchSchoolPresenter());
         scoResultsView = new ScoResultsView(pf.getScoResultsPresenter());
         accountView = new JsAccountView();
+        welcomeView = new WelcomeView(pf.getWelcomePresenter());
         //ordered!
         schoolclassesView = new SchoolclassesView(pf.getSchoolclassesPresenter(), this);
         addSchoolclassView = new AddSchoolclassView(pf.getAddSchoolclassPresenter());
@@ -114,6 +117,11 @@ public class ViewFactoryTeuniz implements ViewFactory {
     @Override
     public AccountPresenter.Display getAccountView() {
         return accountView;
+    }
+
+    @Override
+    public WelcomePresenter.Display getWelcomeView() {
+        return welcomeView;
     }
 
     @Override

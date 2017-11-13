@@ -13,16 +13,13 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
@@ -36,6 +33,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CoursesOfSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomeView;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
@@ -97,6 +95,8 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     @UiField
     DeckPanel mainDeckPanel = new DeckPanel();
     @UiField(provided = true)
+    WelcomeView welcomeView;
+    @UiField(provided = true)
     AccountView accountView;
     @UiField(provided = true)
     LoginView loginView;
@@ -154,6 +154,7 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     public void init(ViewFactory clientFactory) {
         this.clientFactory = clientFactory;
         loginView = (LoginView) clientFactory.getLoginView();
+        welcomeView = (WelcomeView) clientFactory.getWelcomeView();
         accountView = (AccountView) clientFactory.getAccountView();
         resultsView = (ResultsView) clientFactory.getResultsView();
         switchSchoolView = (SwitchSchoolView) clientFactory.getSwitchSchoolView();
@@ -239,6 +240,13 @@ public class MainView extends Composite implements HasWidgets, ClickHandler, Mai
     public void showAccountView() {
         setCurrentPanelName(rb.GUI_View_ACCOUNT());
         int index = mainDeckPanel.getWidgetIndex(accountView);
+        mainDeckPanel.showWidget(index);
+    }
+
+    @Override
+    public void showWelcomeView() {
+        setCurrentPanelName(rb.GUI_View_ACCOUNT());
+        int index = mainDeckPanel.getWidgetIndex(welcomeView);
         mainDeckPanel.showWidget(index);
     }
 
