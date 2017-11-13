@@ -4,7 +4,7 @@
     <ui:style field="dwoStyle" src="../css/dwostyle.css" />
  	<ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
     <g:FlowPanel addStyleNames='{dwoStyle.dwoWidgetPanel}'>
-        <<g:HTMLPanel ui:field="welcomeText">
+        <g:HTMLPanel ui:field="welcomePanel">
             loading...
         </g:HTMLPanel>
     </g:FlowPanel>

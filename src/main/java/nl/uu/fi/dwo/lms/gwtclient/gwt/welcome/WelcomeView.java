@@ -27,7 +27,7 @@ public class WelcomeView extends Composite implements WelcomePresenter.Display {
     private WelcomePresenter welcomePresenter;
 
     @UiField
-    HTMLPanel welcomeText;
+    HTMLPanel welcomePanel;
     DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
 
 

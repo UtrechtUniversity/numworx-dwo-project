@@ -45,7 +45,6 @@ public class WelcomePresenter {
     /**
      * @return the resourceBindings
      */
-    @JsMethod
     public DwoLocalesForGWT getResourceBindings() {
         return resourceBindings;
     }
