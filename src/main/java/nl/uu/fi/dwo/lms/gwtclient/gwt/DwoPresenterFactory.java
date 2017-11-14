@@ -13,6 +13,8 @@ public class DwoPresenterFactory {
     private static DwoPresenterFactory factory;
     private static PresenterFactoryGwt fac;
 
+    
+    
     public static DwoPresenterFactory getDwoPresenterFactory() {
         return factory;
     }
