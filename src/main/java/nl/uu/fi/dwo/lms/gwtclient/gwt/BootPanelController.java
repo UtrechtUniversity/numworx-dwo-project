@@ -138,6 +138,7 @@ class BootPanelController {
             @Override
             public void onLoginEvent(LoginEvent loginEvent) {
                 switch (loginEvent.getState()) {
+                    case SUCCESS:
                     case SUCCESS_WELCOME:
                         LOG.log(Level.INFO, "Login succeeded. Showing welcome view.");
                         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.WELCOME));
@@ -148,7 +149,6 @@ class BootPanelController {
                         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
                         viewFactory.getMainView().showPostLoginWidgets();
                         break;
-                    case SUCCESS:
                     case SUCCESS_SCHOOLCLASSES:
                         LOG.log(Level.INFO, "Login succeeded. Showing schoolclasses view.");
                         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));

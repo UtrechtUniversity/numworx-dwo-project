@@ -11,11 +11,10 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsAccountView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsLoginView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMainView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsSchoolClassesDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsSchoolClasssesView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsWelcomeView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsView;
@@ -36,7 +35,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomeView;
 
 /**
  * Local ViewFactory implementation class.
@@ -71,7 +69,7 @@ public class ViewFactoryTeuniz implements ViewFactory {
         switchSchoolView = new SwitchSchoolView(pf.getSwitchSchoolPresenter());
         scoResultsView = new ScoResultsView(pf.getScoResultsPresenter());
         accountView = new JsAccountView();
-        welcomeView = new WelcomeView(pf.getWelcomePresenter());
+        welcomeView = new JsWelcomeView();
         //ordered!
         schoolclassesView = new JsSchoolClasssesView();
         addSchoolclassView = new AddSchoolclassView(pf.getAddSchoolclassPresenter());
