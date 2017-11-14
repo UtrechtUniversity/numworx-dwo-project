@@ -89,6 +89,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         msgDialogPresenter.setView(viewFactory.getMsgDialogView());
         fileUploadStudentsPresenter.setView(viewFactory.getFileUploadStudentsView());
         msgConfirmDialogPresenter.setView(viewFactory.getMsgConfirmDialogView());
+        welcomePresenter.setView(viewFactory.getWelcomeView());
         //last!
         mainPresenter.setView(viewFactory.getMainView());
     }
@@ -124,6 +125,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the resultsPresenter
      */
+    @JsMethod    
     public ResultsPresenter getResultsPresenter() {
         return resultsPresenter;
     }
@@ -131,6 +133,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the switchSchoolPresenter
      */
+    @JsMethod    
     public SwitchSchoolPresenter getSwitchSchoolPresenter() {
         return switchSchoolPresenter;
     }
@@ -138,18 +141,22 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the scoResultsPresenter
      */
+    @JsMethod    
     public ScoResultsPresenter getScoResultsPresenter() {
         return scoResultsPresenter;
     }
 
+    @JsMethod    
     public SchoolclassesPresenter getSchoolclassesPresenter() {
         return schoolclassesPresenter;
     }
 
+    @JsMethod    
     public CoursesOfSchoolclassPresenter getCoursesOfSchoolclassPresenter() {
         return coursesOfSchoolclassPresenter;
     }
 
+    @JsMethod    
     public StudentsInSchoolclassPresenter getStudentsInSchoolclassPresenter() {
         return studentsInSchoolclassPresenter;
     }
@@ -165,6 +172,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the addSchoolclassPresenter
      */
+    @JsMethod    
     public WelcomePresenter getWelcomePresenter() {
         return welcomePresenter;
     }
@@ -172,6 +180,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the addSchoolclassPresenter
      */
+    @JsMethod    
     public AddSchoolclassPresenter getAddSchoolclassPresenter() {
         return addSchoolclassPresenter;
     }
@@ -179,6 +188,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the addSchoolclassPresenter
      */
+    @JsMethod    
     public EditSchoolclassPresenter getEditSchoolclassPresenter() {
         return editSchoolclassPresenter;
     }
@@ -186,6 +196,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the editStudentPresenter
      */
+    @JsMethod    
     public EditStudentPresenter getEditStudentPresenter() {
         return editStudentPresenter;
     }
@@ -193,6 +204,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the msgDialogPresenter
      */
+    @JsMethod    
     public MsgDialogPresenter getMsgDialogPresenter() {
         return msgDialogPresenter;
     }
@@ -200,6 +212,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the msgDialogPresenter
      */
+    @JsMethod    
     public MsgConfirmDialogPresenter getMsgConfirmDialogPresenter() {
         return msgConfirmDialogPresenter;
     }
@@ -207,6 +220,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the teachersInSchoolclassPresenter
      */
+    @JsMethod    
     public TeachersInSchoolclassPresenter getTeachersInSchoolclassPresenter() {
         return teachersInSchoolclassPresenter;
     }
@@ -214,6 +228,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the addStudentsPresenter
      */
+    @JsMethod    
     public AddStudentsPresenter getAddStudentsPresenter() {
         return addStudentsPresenter;
     }
@@ -221,6 +236,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the fileUploadStudentsPresenter
      */
+    @JsMethod    
     public FileUploadStudentsPresenter getFileUploadStudentsPresenter() {
         return fileUploadStudentsPresenter;
     }

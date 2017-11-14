@@ -125,8 +125,10 @@ class BootPanelController {
 
         ViewFactoryGwt gwtView=null;
         if (hideGwtGui) {
+             LOG.log(Level.INFO, "ViewFactoryTeuniz assigned.");
             viewFactory = new ViewFactoryTeuniz(presenterFactory);
         } else {
+             LOG.log(Level.INFO, "ViewFactoryGwt assigned.");
             gwtView = new ViewFactoryGwt(presenterFactory);
             viewFactory = gwtView;
         }
@@ -222,13 +224,13 @@ class BootPanelController {
             }
         });
         LOG.log(Level.FINE, "Intiating Main view.");
-        MainPresenter.Display mainView = viewFactory.getMainView();
+        //MainPresenter.Display mainView = viewFactory.getMainView();
         if (hideGwtGui) {
             rootPanel.setVisible(false);
-            LOG.log(Level.INFO, "Not showing GwtGui. HideGwt = " + getHideGwtGuiString());
+            LOG.log(Level.INFO, "Not showing GwtGui. hideGwtGui = " + getHideGwtGuiString());
         } else {
             this.rootPanel.add(gwtView.asWidget());
-            LOG.log(Level.INFO, "Showing GwtGui. HideGwtGUI = " + getHideGwtGuiString());
+            LOG.log(Level.INFO, "Showing GwtGui. hideGwtGui = " + getHideGwtGuiString());
         }
         MainPresenter mainPresenter = presenterFactory.getMainPresenter();
         LOG.log(Level.FINE, "Intiating Main presenter. Showing login screen.");
