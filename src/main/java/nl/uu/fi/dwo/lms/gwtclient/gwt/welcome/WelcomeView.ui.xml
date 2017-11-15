@@ -5,7 +5,6 @@
  	<ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
     <g:FlowPanel addStyleNames='{dwoStyle.dwoWidgetPanel}'>
         <g:HTMLPanel ui:field="welcomePanel">
-            loading...
         </g:HTMLPanel>
     </g:FlowPanel>
 </ui:UiBinder> 
