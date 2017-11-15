@@ -50,6 +50,8 @@ public class SchoolLoginController {
 
 	private HandlerRegistration registration;
 
+	private AddSchoolLoginPanel addSchoolPanel;
+
     /**
      *
      * @return
@@ -202,4 +204,22 @@ public class SchoolLoginController {
     public void addASchoolLogin(DomNewSchoolLogin reqSrac, AsyncCallback<Boolean> callBack){
         manager.addASchoolLogin(reqSrac, callBack);
     }
+
+	public void setAddSchoolLoginPanel(AddSchoolLoginPanel addSchoolLoginPanel) {
+		addSchoolPanel = addSchoolLoginPanel;
+		
+	}
+
+	public void addASchoolLogin(DomNewSchoolLogin request) {
+		PromiseCallback<Boolean> df = new PromiseCallback<>();
+		addASchoolLogin(request, df);
+		df.getPromise()
+		.filter(p -> p.booleanValue()) // must be true
+		.then(p -> {
+			addSchoolPanel.hide();
+			init(DwoGlobalVars.instance().getCurrentUser());
+			return null;
+		}, p -> addSchoolPanel.enable()).then(null, view.new RestFailure());
+		
+	}
 }

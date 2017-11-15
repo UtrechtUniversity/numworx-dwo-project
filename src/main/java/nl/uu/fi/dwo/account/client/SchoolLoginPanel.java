@@ -54,7 +54,7 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
 		}
 	}
 
-    private final class RestFailure implements Failure {
+    final class RestFailure implements Failure {
 
 		@Override
 		public void fail(Promise<?> resolved) throws Exception {
@@ -223,7 +223,7 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
         closeBtn.addClickHandler(this);
 
         addBtn = new Button("Add");
-        if (false) {
+        if (true) {
             addBtn.setVisible(true);
         } else {
             addBtn.setVisible(false);
@@ -249,8 +249,9 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
         if (event.getSource() == this.closeBtn) {
             popup.hide();
         } else if (event.getSource() == this.addBtn) {
-            Window.alert("ADD!");
-            //popup.hide();
+        	PopupPanel popup2 = new PopupPanel(true);
+            popup2.setStyleName("numworx-popup");
+            new AddSchoolLoginPanel(control, popup2).show();
         }
     }
 
