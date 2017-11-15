@@ -34,5 +34,6 @@ public enum PersistenceClassType {
     PersistentStudentScoContext,
     PersistentStudentScoData,
     PersistentTeacherOfClass,
+    PersistentUrnResource,
     PersistentUser,
 }

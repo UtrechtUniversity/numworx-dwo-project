@@ -102,7 +102,7 @@ public class DomScoContext extends DomScoContextId {
 
 	public ScoType getScoType() {
 		if(scoType == null)
-			return ScoType.normal;
+			return ScoType.OEFENEN;
 		return scoType;
 	}
 
