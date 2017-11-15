@@ -193,39 +193,6 @@ INSERT INTO `tblcourse` VALUES (1,NULL,'course01','Course01 Description',NULL,1,
 UNLOCK TABLES;
 
 --
--- Table structure for table `tblcoursesequence`
---
-
-DROP TABLE IF EXISTS `tblcoursesequence`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tblcoursesequence` (
-  `coursesequenceID` int(11) NOT NULL AUTO_INCREMENT,
-  `courseID` int(11) NOT NULL DEFAULT '0',
-  `schoolID` int(11) NOT NULL DEFAULT '0',
-  `classID` int(11) DEFAULT '0',
-  `parent` int(11) DEFAULT '0',
-  `profileID` int(11) NOT NULL DEFAULT '0',
-  `sequencenr` int(11) NOT NULL DEFAULT '0',
-  `optlock` int(11) DEFAULT '0',
-  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
-  `del` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`coursesequenceID`),
-  KEY `schoolID` (`schoolID`),
-  CONSTRAINT `tblcoursesequence_ibfk_1` FOREIGN KEY (`schoolID`) REFERENCES `tblschool` (`schoolID`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tblcoursesequence`
---
-
-LOCK TABLES `tblcoursesequence` WRITE;
-/*!40000 ALTER TABLE `tblcoursesequence` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tblcoursesequence` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `tbldwoprofile`
 --
 
@@ -402,30 +369,6 @@ LOCK TABLES `tblimage` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tbljars`
---
-
-DROP TABLE IF EXISTS `tbljars`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbljars` (
-  `key` varchar(100) NOT NULL DEFAULT '',
-  `jarname` varchar(128) NOT NULL DEFAULT '',
-  `lastdate` date NOT NULL DEFAULT '0000-00-00',
-  PRIMARY KEY (`key`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tbljars`
---
-
-LOCK TABLES `tbljars` WRITE;
-/*!40000 ALTER TABLE `tbljars` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tbljars` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `tbllogincontext`
 --
 
@@ -597,6 +540,10 @@ CREATE TABLE `tblscocontext` (
   `lastChangeTimeStamp` bigint(20) DEFAULT '0',
   `del` tinyint(4) NOT NULL DEFAULT '0',
   `publishState` tinyint(4) NOT NULL DEFAULT '0',
+  `classID` int(11) NULL,
+  `urnID` int(11) NULL,
+  `scoType` tinyint(4) DEFAULT '0',
+  `userID` int(11) NULL,
   PRIMARY KEY (`scoID`),
   UNIQUE KEY `AK_IDENTIFIER_1` (`sconame`,`courseID`),
   KEY `SCO_APPLET_FK` (`appletID`),
@@ -610,7 +557,7 @@ CREATE TABLE `tblscocontext` (
 
 LOCK TABLES `tblscocontext` WRITE;
 /*!40000 ALTER TABLE `tblscocontext` DISABLE KEYS */;
-INSERT INTO `tblscocontext` VALUES (1,5,17,'Optellen en aftrekken',0,1,0,0,0,0),(2,6,17,'Drie getallen optellen en aftrekken',0,2,0,0,0,0);
+INSERT INTO `tblscocontext` VALUES (1,5,17,'Optellen en aftrekken',0,1,0,0,0,0, NULL, NULL, 1, NULL),(2,6,17,'Drie getallen optellen en aftrekken',0,2,0,0,0,0, NULL, NULL, 1,NULL);
 /*!40000 ALTER TABLE `tblscocontext` ENABLE KEYS */;
 UNLOCK TABLES;
 

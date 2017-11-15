@@ -27,6 +27,7 @@
     <class>fi.dwo.commons.persistence.entities.PersistentStudentScoContext</class>
     <class>fi.dwo.commons.persistence.entities.PersistentStudentScoData</class>
     <class>fi.dwo.commons.persistence.entities.PersistentTeacherOfClass</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentUrnResource</class>
     <class>fi.dwo.commons.persistence.entities.PersistentUser</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>NONE</shared-cache-mode>
