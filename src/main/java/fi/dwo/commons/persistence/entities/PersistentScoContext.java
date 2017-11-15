@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
+import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -85,7 +86,15 @@ public class PersistentScoContext implements Serializable {
     private DelState delState;
     @Column(name="publishState")
     private PublishState publishState;
-   
+    /** 
+     * @since 1.5.0 (was al in 1.5 besteld);
+     */
+    
+    @Column(name="urnID")
+    private Long urnID;
+    @Column(name="scoType")
+    private ScoType scoType;
+    
     /**
      * Last author. for ACL and publishState.
      */
@@ -97,10 +106,7 @@ public class PersistentScoContext implements Serializable {
      */
     @Column(name="classID")
     private Long classID; 
-    
-//    @Column(name="urnID")
-//    private Long urnID;
- 
+     
     @PrePersist
     @PreUpdate
     void changeTimestamp() {
@@ -208,6 +214,7 @@ public class PersistentScoContext implements Serializable {
         scoContext.setScoName(sconame);
         scoContext.setSequencenr(sequencenr);
         scoContext.setShowScore(showscore);
+        scoContext.setScoType(scoType);
     }
 
     public void fillDomScoContextFull(DomScoContextFull scoContext) {
@@ -234,4 +241,20 @@ public class PersistentScoContext implements Serializable {
                 PersistenceClassType.PersistentScoContext.name(), aScoId));
         return id;
     }
+
+	public Long getUrnID() {
+		return urnID;
+	}
+
+	public void setUrnID(Long urnID) {
+		this.urnID = urnID;
+	}
+
+	public ScoType getScoType() {
+		return scoType;
+	}
+
+	public void setScoType(ScoType scoType) {
+		this.scoType = scoType;
+	}
 }
