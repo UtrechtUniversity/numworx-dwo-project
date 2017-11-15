@@ -63,12 +63,12 @@ public class WelcomePresenter {
         view.clear();
         view.setWelcomeText("<h1>Welkom</h1>\n"
                 + "            \n"
-                + "            <p>Rechtsboven vind u een menu knop achter uw naam. In het menu vind u de volgende opties:</p> "
+                + "            <p>Rechtsboven vind u een menu knop achter uw naam. In het menu vind u de volgende opties:</p>"
                 + "<ul><li>In <b>account-settings</b> kunt u uw naam, email-adres en wachtwoord"
                 + " wijzigen.</li><li> In <b>docentrollen</b> kunt u van school veranderen.</li><li> In <b>mijn "
                 + "klassen</b> kunt klassen, studenten, docenten en modules beheren.</liliul>"
                 + "<li>In de <b>resultatenbrowser</b> vind u het overzicht van de resultaten "
-                + "van de klassen voor toegekende modules.</li></ul>.");
+                + "van de klassen voor toegekende modules.</li></ul>");
     }
 
 }

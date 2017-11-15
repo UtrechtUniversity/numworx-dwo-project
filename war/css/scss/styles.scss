@@ -1,0 +1,247 @@
+@import "reset.scss";
+@import "_mixins.scss";
+@import "_vars.scss";
+
+html {
+	height: 100%;
+}
+body {
+	height: 100%;
+	
+	font-family: 'Ubuntu', sans-serif;
+	font-size: 16px;
+}
+
+.panel {
+	background-color: $primaryLight;
+	width: 100%;
+	
+	display: none;
+	
+	&::before { 
+		/* Adds min-height on before element
+		   because IE11 issues with min-height */
+		 
+	    content: "\00a0";
+	    display: block;
+	    height: 100%;
+	    //visibility: hidden;
+	}
+}
+
+.block {
+	width: 86%;
+	padding: 7%;
+	
+	&.blue {
+		background-color: $primaryDark;
+		border-radius: 5px;
+		//color: $white;	
+	}
+}
+
+
+/*
+ * LOGIN PANEL  
+ */
+
+#loginDisplayPanel {
+	@include flex;
+	@include align-items(center);
+	@include justify-content(center);
+	
+	min-height: 100%;
+	
+	.container {
+		max-width: 100%;
+		width: 580px;
+		position: relative;
+		
+		background: transparent url(../images/login-containerBackground.jpg) no-repeat top left; // TODO: replace by def image
+		background-size: contain;
+	}
+	
+	#loginBox {
+		position: relative;
+		width: 310 / 580 * 100%;
+		left: 270 / 580 * 100%;
+
+		margin-top: 123px;
+		
+		color: $primaryLight;
+		
+		form {
+			display: block;
+			width: 100%;
+			
+			input[type="text"], input[type="password"] {
+				background: $primary;
+				width: 94%;
+				color: $white;
+				padding: 3%;
+				margin-bottom: 8px;
+				
+				font-family: 'Ubuntu', sans-serif;
+				font-size: 1em;
+				
+				@include placeholder {
+					color: $white;
+					font-family: 'Ubuntu', sans-serif;
+					font-size: 1em;					
+				}
+			}
+			input[type="submit"] {
+				@include resetButton;
+				position: relative;
+				left: 50%;
+				width: 50%;
+				margin-top: 8px;
+				padding: 4px;
+				background-color: $primary;
+				color: $white;
+
+				font-family: 'Ubuntu', sans-serif;
+				font-size: 14/16 * 1em;
+				font-weight: bold;
+				text-transform: uppercase;
+			}
+		}
+		
+		p {
+			margin: 8px 0;
+			font-size: 14 / 16 * 1em;
+			line-height: 1.3em;
+		}
+		
+		ul {
+			font-size: 14 / 16 * 1em;
+			line-height: 1.8em;
+			margin-top: 16px;
+		}
+		
+		a {
+			color: $white;
+		}
+	}
+}
+
+/*
+ * MAIN PANEL
+ */
+
+#mainPanel {
+	background-color: $primaryLight;
+	min-height: 100%;
+	width: 100%;
+	
+	header {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		width: 100%;
+		//height: 3em;
+		z-index: 200;
+		
+		@include box-shadow(0px,3px,10px,0px,$shadow);
+	
+		background-color: $primaryDark;		
+		
+		#logo {
+			display: block;
+			margin: 1em 2%;
+		}
+		#accountBox {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			background-color: $primary;
+			color: $white;
+			padding: 10px;
+			border: 1px $black solid;
+
+			@include box-shadow(0px,0px,10px,0px,$shadow);
+			
+			#presentationName, #schoolName {
+				display: block;
+				color: $grey;
+				padding: 5px 0;
+			}
+		}
+	}
+	
+	nav {
+		position: fixed;
+		left: 0;
+		top: 3em;
+		bottom: 0;
+		height: 100%;
+		width: 20%;
+
+		z-index: 100;
+		
+		@include box-shadow(3px,0px,10px,0px,$shadow);
+		
+		background-color: $greyLight;
+		color: $grey;
+		
+		ul {
+			margin-top: 100px;
+			li {
+				padding: 0.5em 5%;
+				line-height: 2em;
+				a {
+					color: $grey;
+					
+					.icon {
+						float: left;
+						margin-right: 0.5em;
+						width: 2em;
+						height: 2em;
+						background-color: $grey;
+						border-radius: 2px;
+					}
+					
+					&:hover {
+						color: $primary;
+						text-decoration: none;
+						
+						.icon {
+							background-color: $primary;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	.panel {
+		position: absolute;
+		
+		width: 80%;
+		left: 20%;
+		top: 3em;
+		
+		z-index: 50;
+		//background-color: #ff0000;
+		
+		overflow-y: scroll;
+		
+		.content {
+			width: 96%;
+			margin: 2em 2%;
+		}
+	}
+	
+}
+
+
+
+
+/*
+ * WELCOME PANEL 
+ */
+
+#welcomeDisplayPanel {
+	
+}

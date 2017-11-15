@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="gwt:property" content="locale=nl" >
+    <title>DWOGwtClient</title>
+		
+    <script>
+    	var API_1484_11;
+    	var API;
+        var DwoMainPresenter;
+        <!-- set to false in order to show the default user-interface -->
+        var hideGwtGui="true";
+        </script>
+    <script type="text/javascript" language="javascript" src="/gwtclient/gwtclient/gwtclient.nocache.js"></script>
+	
+	<!-- TODO: decide whether to add Google fonts locally (consider licence) -->
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700" rel="stylesheet">
+	
+	<!-- Load styles AFTER GWT, because GWT outputs styles too -->
+	<link rel="stylesheet" href="css/styles.css" type="text/css" media="screen">
+	
+	<script src="js/jquery-3.2.1.min.js" type="text/javascript" language="javascript"></script>
+	
+	<!-- Seperate script for each view, could be combined and minified in future -->
+	<script src="js/MainDisplay.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/LoginDisplay.js" type="text/javascript" charset="utf-8"></script>	
+	<script src="js/AccountDisplay.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/WelcomeDisplay.js" type="text/javascript" charset="utf-8"></script>
+	
+	<!-- Main script, should handle basic menu flow -->
+	<script src="js/MainApp.js" type="text/javascript" charset="utf-8"></script>
+	
+  </head>
+
+  <body>
+    <!-- OPTIONAL: include this if you want history support -->
+    <!-- <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>-->
+  
+	<section id="loginDisplayPanel" class="panel">
+		<div class="container">
+			<div id="loginBox">
+				<div class="block blue">			
+					<form id="formLogin" action="javascript: void(0);" method="POST">
+						<input type="text" name="username" placeholder="Gebruikersnaam" />
+						<input type="password" name="password" placeholder="Wachtwoord" />
+						<input type="submit" name="submit" value="Aanmelden" />
+					</form>
+					<p>U kunt ook inloggen als gast. Uw werk wordt dan niet opgeslagen.</p>
+					<form id="formLogin" action="javascript: void(0);" method="POST">
+						<input type="hidden" name="username" value="gast" />
+						<input type="hidden" name="password" password="" />
+						<input type="submit" name="submit" value="Log in als gast" />
+					</form>
+				</div>
+			
+				<ul>
+					<li><a href="#">Wachtwoord vergeten?</a></li>
+					<li><a href="#">Nog geen account?</a></li>
+					<li><a href="#">Meer informatie over Numworx</a></li>
+				</ul>
+			</div>
+		</div>
+	</section>
+	
+	
+	<main id="mainPanel" class="panel">
+		<header>
+			<a href="#" id="logo"><img src="images/header-logoNumworxDocent.png"></a>
+			<div id="accountBox">
+				<span id="presentationName"></span>
+				<span id="schoolName"></span>
+			</div>
+		</header>
+		
+		<nav>
+			<ul>
+				<li><a href="javascript: app.showAccountView();"><span class="icon"></span><span class="name">Resultaten</span></a></li>
+				<li><a href="javascript: app.showAccountView();"><span class="icon"></span><span class="name">Personen</span></a></li>
+				<li><a href="javascript: app.showAccountView();"><span class="icon"></span><span class="name">Klassen</span></a></li>
+				<li><a href="javascript: app.showAccountView();"><span class="icon"></span><span class="name">Modules</span></a></li>
+				<li><a href="javascript: app.showAccountView();"><span class="icon"></span><span class="name">Organisatie</span></a></li>
+			</ul>
+		</nav>
+		
+		<section id="welcomeDisplayPanel" class="panel">
+			<div class="content">
+				<p>Welkomsttekst</p>
+			</div>
+		</section>
+		<section id="accountDisplayPanel" class="panel">
+			<h1>Account</h1>
+		</section>
+	</main>
+
+  </body>
+</html>
+

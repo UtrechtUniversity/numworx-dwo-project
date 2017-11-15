@@ -1,8 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import java.util.HashMap;
 import java.util.List;
