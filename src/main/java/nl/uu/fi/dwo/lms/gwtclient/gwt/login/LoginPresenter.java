@@ -44,13 +44,13 @@ public class LoginPresenter {
         this.view = view;
     }
 
-    /**
-     * @return the resourceBindings
-     */
-    @JsMethod
-    public DwoLocalesForGWT getResourceBindings() {
-        return resourceBindings;
-    }
+//    /**
+//     * @return the resourceBindings
+//     */
+//    @JsMethod
+//    public DwoLocalesForGWT getResourceBindings() {
+//        return resourceBindings;
+//    }
 
     /**
      * @param resourceBindings the resourceBindings to set

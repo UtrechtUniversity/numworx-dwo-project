@@ -1,3 +1,4 @@
+var jsWelcomeDisplay;
 function WelcomeDisplay() {
     var text = "default..";
 
@@ -11,7 +12,7 @@ function WelcomeDisplay() {
         console.log("Welcome text set to: "+text);
     }
 }
-var jsWelcomeDisplay = new WelcomeDisplay();
+jsWelcomeDisplay = new WelcomeDisplay();
 console.log("constructed jsWelcomeDisplay");
 
 

@@ -1,9 +1,8 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays;
 
-import java.util.Map;
+import com.google.gwt.core.client.JavaScriptObject;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 
 /**
  * WelcomeDisplay UI interface. the interface should be
@@ -24,5 +23,6 @@ public class JsSchoolClassesDisplay{
      * with a string as a key, and an object 'ClassItem'. ClassItem contains two string values
      * key and schoolclassName.
      * @param data a map with a string as key and value ClassItem. */
-    public static native void updateView(Map<String, SchoolclassesPresenter.ClassItem> data);    
+//    public static native void updateView(Map<String, SchoolclassesPresenter.ClassItem> data);    
+    public static native void updateView(JavaScriptObject data);    
 }

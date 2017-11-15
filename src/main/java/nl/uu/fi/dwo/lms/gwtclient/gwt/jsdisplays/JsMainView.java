@@ -34,6 +34,37 @@ public class JsMainView implements MainPresenter.Display{
     }
 
     @Override
+    public void showMenuButton() {
+        JsMainDisplay.showSchoolclassesView();
+    }
+
+    @Override
+    public void hideMenuButton() {
+        JsMainDisplay.showSchoolclassesView();
+    }
+
+    @Override
+    public void showMenuView() {
+        JsMainDisplay.showMenuView();
+    }
+
+    @Override
+    public void hideMenuView() {
+       JsMainDisplay.hideMenuView();
+    }
+    @Override
+    public void setCurrentPanelName(String panel) {
+        JsMainDisplay.setCurrentPanelName();
+    }
+
+
+    @Override
+    public boolean isMenuVisible() {
+        return JsMainDisplay.isMenuVisible();
+    }
+    
+
+    @Override
     public void showAccountView() {
         JsMainDisplay.showAccountView();
     }
@@ -86,35 +117,5 @@ public class JsMainView implements MainPresenter.Display{
     @Override
     public void showScoResultsView() {
         JsMainDisplay.showSchoolclassesView();
-    }
-
-    @Override
-    public void showMenuButton() {
-        JsMainDisplay.showSchoolclassesView();
-    }
-
-    @Override
-    public void hideMenuButton() {
-        JsMainDisplay.showSchoolclassesView();
-    }
-
-    @Override
-    public void setCurrentPanelName(String panel) {
-        JsMainDisplay.setCurrentPanelName();
-    }
-
-    @Override
-    public void showMenuView() {
-        JsMainDisplay.showMenuView();
-    }
-
-    @Override
-    public void hideMenuView() {
-       JsMainDisplay.hideMenuView();
-    }
-
-    @Override
-    public boolean isMenuVisible() {
-        return JsMainDisplay.isMenuVisible();
-    }
+    }    
 }

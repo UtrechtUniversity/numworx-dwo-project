@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays;
 
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import java.util.Map;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 
@@ -21,7 +23,11 @@ public class JsSchoolClasssesView implements SchoolclassesPresenter.Display{
 
     @Override
     public void updateView(Map<String, SchoolclassesPresenter.ClassItem> data) {
-        JsSchoolClassesDisplay.updateView(data);
+        JSONObject object = new JSONObject();
+        for(SchoolclassesPresenter.ClassItem item : data.values()){
+            object.put(item.getKey(), new JSONString(item.getSchoolclassName()));
+        }
+        JsSchoolClassesDisplay.updateView(object.getJavaScriptObject());
     }
 
 

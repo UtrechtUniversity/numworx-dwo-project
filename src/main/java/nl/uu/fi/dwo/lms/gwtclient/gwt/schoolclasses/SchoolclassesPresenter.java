@@ -40,12 +40,10 @@ public class SchoolclassesPresenter {
     private Display view;
 
     public interface Display {
-
         void clear();
-
         void init();
-
         void updateView(Map<String, SchoolclassesPresenter.ClassItem> data);
+//        void updateJSView(JSONObject object);
     }
 
     public class ClassItem {
@@ -128,7 +126,7 @@ public class SchoolclassesPresenter {
                 for (DomSchoolClass sc : resolved.getValue()) {
                     schoolClassMap.put(sc.getId().getIdString(), sc);
                     viewData.put(sc.getId().getIdString(), new ClassItem(sc.getId().getIdString(), sc.getSchoolClassName()));
-//                    json.put(sc.getId().getIdString(), new JSONString (sc.getSchoolClassName()));
+  //                  json.put(sc.getId().getIdString(), new JSONString (sc.getSchoolClassName()));
                 }
 //                view.updateJSView(json.getJavaScriptObject());
                 view.updateView(viewData);
