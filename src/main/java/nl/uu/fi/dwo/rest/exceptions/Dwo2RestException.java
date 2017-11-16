@@ -35,7 +35,8 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
      */
     @Override
     public Dwo2ExceptionCode getDwo2Code() {
-        return Dwo2ExceptionTranslator.decodeCodeInJSON(super.getMessage());
+    	if(code != null) return code;
+        return code = Dwo2ExceptionTranslator.decodeCodeInJSON(super.getMessage());
     }
 
     /**
@@ -49,7 +50,8 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
      */
     @Override
     public String getDwo2Message() {
-        return Dwo2ExceptionTranslator.decodeMessageInJSON(super.getMessage());
+    	if(message != null) return message;
+        return message = Dwo2ExceptionTranslator.decodeMessageInJSON(super.getMessage());
     }
 
 
