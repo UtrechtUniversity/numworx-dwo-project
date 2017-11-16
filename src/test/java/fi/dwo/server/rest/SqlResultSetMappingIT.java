@@ -70,10 +70,10 @@ public class SqlResultSetMappingIT {
 //                + "b.withChildren, b.parentID FROM tblclasscourse a join tblcourse b using (courseid)", "CourseInClassMapping").getResultList();
 //      which courseId is assigned to what entitity is unknown. Any may be picked.
         List<Object[]> results = em.createQuery("SELECT a, b FROM PersistentClassCourse a, PersistentCourse b where a.courseID = b.courseID").getResultList();
-        if(!(results.get(0)[0] instanceof PersistentCourse)){
+        if(!(results.get(0)[1] instanceof PersistentCourse)){
         fail("wrong class type");
     }
-        if(!(results.get(0)[1] instanceof PersistentClassCourse)){
+        if(!(results.get(0)[0] instanceof PersistentClassCourse)){
         fail("wrong class type");
     }
 

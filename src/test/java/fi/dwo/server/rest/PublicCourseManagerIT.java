@@ -10,6 +10,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
@@ -72,13 +74,15 @@ public class PublicCourseManagerIT {
 	@Test
 	public void testLimitedProfile3() {
 		RestDwoProfile rest = new RestDwoProfile();
-		rest.setDomDwoProfile(new DomDwoProfile());
-		
+		rest.setDomDwoProfile(new DomDwoProfile());		
 		PersistenceId id = PersistentDwoProfile.buildPersistenceId(Long.valueOf(3));
 		rest.getDomDwoProfile().setId(id);
-		List<?> result = manager.getCourses(rest, new TestUriInfo());
-		assertNotNull(result);
-		assertTrue(result.isEmpty());
+		try {
+			List<?> result = manager.getCourses(rest, new TestUriInfo());
+			fail("should fail, limited profile");
+		} catch (Dwo2RestException  okay) {
+			assertEquals("login needed", Dwo2ExceptionCode.Rest_LoginNeeded, okay.getDwo2Code());
+		}
 	}
 
 	@Test

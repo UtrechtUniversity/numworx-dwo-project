@@ -32,7 +32,6 @@ import nl.uu.fi.dwo.rest.entities.RestSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
-import fi.dwo.server.PersistentDataManagers.core.CourseSequenceManager;
 import fi.dwo.server.PersistentDataManagers.core.FromToManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
@@ -312,13 +311,14 @@ public class SecuredDwoAdminSchoolManager {
                     FromToManager.destroy(ft.getPersistentFromToPK());
                 }
 
-                //Loop CourseSequences in School
+/* OBSOLETE 
+ *               //Loop CourseSequences in School
                 List<PersistentCourseSequence> csList = CourseSequenceManager.findEntities(school);
                 for (PersistentCourseSequence cs : csList) {
                     //Remove CourseSequence
                     CourseSequenceManager.destroy(cs.getCoursesequenceID());
                 }
-
+*/
                 //Loop SchoolGroups in School
                 List<PersistentSchoolGroup> sgList = SchoolGroupManager.findEntities(school);
                 for (PersistentSchoolGroup sg : sgList) {
