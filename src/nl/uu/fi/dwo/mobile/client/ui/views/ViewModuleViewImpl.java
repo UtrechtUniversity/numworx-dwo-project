@@ -152,7 +152,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	OpdrNav on;
 	private Widget mainPanel;
-	@UiField SimplePanel contentScrollPanel;
+	@UiField(provided=true) SimplePanel contentScrollPanel =
 //		new FocusPanel() {
 //		{
 //			Style st = getElement().getStyle();
@@ -160,27 +160,26 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 //			st.setOverflowY(Overflow.AUTO);
 //			}
 //	};
-//		new ScrollPanel() { 
-//		@Override
-//		public void setAlwaysShowScrollBars(boolean alwaysShow) {
-//			getScrollableElement().getStyle().setOverflowX(Overflow.HIDDEN);
-//			getScrollableElement().getStyle().setOverflowY(alwaysShow ? Overflow.SCROLL : Overflow.AUTO);
-//		}
-//// NO TOUCH SCROLLING
-//		@Override
-//		public boolean setTouchScrollingDisabled(boolean isDisabled) {
-//			return super.setTouchScrollingDisabled(isDisabled);
-//		}
-//		/* (non-Javadoc)
-//		 * @see com.google.gwt.user.client.ui.ScrollPanel#onResize()
-//		 */
+		new ScrollPanel() { 
+		@Override
+		public void setAlwaysShowScrollBars(boolean alwaysShow) {
+			getScrollableElement().getStyle().setOverflowX(Overflow.HIDDEN);
+			getScrollableElement().getStyle().setOverflowY(alwaysShow ? Overflow.SCROLL : Overflow.AUTO);
+		}
+// WITH TOUCH SCROLLING
+		@Override
+		public boolean setTouchScrollingDisabled(boolean isDisabled) {
+			return super.setTouchScrollingDisabled(isDisabled);
+		}
+		/* (non-Javadoc)
+		 * @see com.google.gwt.user.client.ui.ScrollPanel#onResize()
+		 */
 //		@Override
 //		public void onResize() {
 //			logger.info("On Resize h=" + getOffsetHeight());
 //			super.onResize();
 //		}
-//		
-//	};
+	};
 	private Panel tekst = null;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private double zoom = 1;
@@ -1722,9 +1721,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		mainPanel.addStyleDependentName(DWOplayer.PARAMETERS.keyboardStyle());
 		mainPanel.setStyleDependentName("standalone", standalone);
 
-		Style contentStyle = contentScrollPanel.getElement().getStyle();
-		contentStyle.setOverflowX(Overflow.HIDDEN);
-		contentStyle.setOverflowY(Overflow.AUTO);
+//		Style contentStyle = contentScrollPanel.getElement().getStyle();
+//		contentStyle.setOverflowX(Overflow.HIDDEN);
+//		contentStyle.setOverflowY(Overflow.AUTO);
 		
 		focusPanel = new ResizeFocusPanel(mainPanel); // wrap focuspanel
 //		focusPanel = new FocusPanel();focusPanel.add(mainPanel);
