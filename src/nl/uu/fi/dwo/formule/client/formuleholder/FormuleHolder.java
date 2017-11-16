@@ -27,7 +27,7 @@ import fi.wiskopdr.text.Text;
  * @author Danny Hendrix
  * 
  */
-public abstract class FormuleHolder implements TekstElement, FormuleEditorIF
+public class FormuleHolder implements TekstElement, FormuleEditorIF
 {
 	public static void installKeyboard(FormuleKeyboardIF keyb) {
 		kb = keyb;
@@ -162,14 +162,14 @@ public abstract class FormuleHolder implements TekstElement, FormuleEditorIF
 		defaultFont = fm;
 	}
 
-	public abstract Panel getAsPanel();
+	//public abstract Panel getAsPanel();
 	
-//	public TouchPanel getTouchPanel()
-//	{
-//		TouchPanel tp = new TouchPanel();
-//		tp.add(this.main);
-//		return tp;
-//	}
+	public Panel getAsPanel()
+	{
+		TouchPanel tp = new TouchPanel();
+		tp.add(this.main);
+		return tp;
+	}
 //
 //	public Panel getPanel()
 //	{

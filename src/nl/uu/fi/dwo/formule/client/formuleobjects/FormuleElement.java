@@ -6,6 +6,13 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
 
+import org.vectomatic.dom.svg.OMDocument;
+import org.vectomatic.dom.svg.OMSVGDocument;
+import org.vectomatic.dom.svg.OMSVGLength;
+import org.vectomatic.dom.svg.OMSVGSVGElement;
+import org.vectomatic.dom.svg.OMSVGTextElement;
+import org.vectomatic.dom.svg.utils.SVGConstants;
+
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -554,5 +561,6 @@ public abstract class FormuleElement implements TekstElement
 	{
 		return 0;
 	}
+
 
 }

@@ -49,7 +49,7 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 		checkimg.getElement().getStyle().setMarginRight(10, Unit.PX);
 		checkimg.setVisible(false);
 		sp.add(checkimg);
-		sp.add(this.getMainRegel().getCanvas());
+		sp.add(this.getCanvas());
 		sp.addTouchHandler(new FormuleEditorTouchHandler(this));
 		setCurrentRegel(getMainRegel());
 		
@@ -86,7 +86,7 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 		sp = new TouchPanel();
 		checkimg = new Image(FORMULE_BUNDLE.goedkrul().getSafeUri());
 		checkimg.setVisible(false);
-		sp.add(this.getMainRegel().getCanvas());
+		sp.add(this.getCanvas());
 		sp.add(checkimg);
 		sp.addTouchHandler(new FormuleEditorTouchHandler(this));
 		setCurrentRegel(getMainRegel());

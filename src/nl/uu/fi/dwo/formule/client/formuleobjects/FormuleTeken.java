@@ -4,9 +4,19 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
+import java.awt.Font;
+
+import org.vectomatic.dom.svg.OMSVGLength;
+import org.vectomatic.dom.svg.OMSVGRectElement;
+import org.vectomatic.dom.svg.OMSVGSVGElement;
+import org.vectomatic.dom.svg.OMSVGTextElement;
+
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.Context2d.TextAlign;
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.dom.client.Style.FontStyle;
+import com.google.gwt.dom.client.Style.Unit;
+
 import fi.wiskopdr.Letter;
 import fi.wiskopdr.FormuleParser;
 
@@ -508,4 +518,24 @@ public class FormuleTeken extends FormuleElement
 		if(combined) return teken;
 		return String.valueOf(this.character);
 	}
+	
+	public void draw(OMSVGSVGElement svg, Context2d ctx) {
+		if(teken != null) {
+			if(isSelected()) {
+				OMSVGRectElement r = new OMSVGRectElement(x, y, width, height, 0, 0);
+				r.getStyle().setSVGProperty("fill","#AAAAFF");
+				svg.appendChild(r);
+			}
+			OMSVGTextElement t = new OMSVGTextElement(x, y+getAsHoogte(), OMSVGLength.SVG_LENGTHTYPE_NUMBER, teken);
+// Experiment...
+			t.getStyle().setFontSize(fm.getFontSize(), Unit.PX);
+			t.getStyle().setFontStyle(fm.isItalic() ? FontStyle.ITALIC: FontStyle.NORMAL);
+			t.getStyle().setSVGProperty("fontFamily", fm.getFont());
+			t.getStyle().setSVGProperty("fill",(selected ? "white" : color));
+			svg.appendChild(t);
+		} else
+			draw(ctx);
+		
+	}
+
 }

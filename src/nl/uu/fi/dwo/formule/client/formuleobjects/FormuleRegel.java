@@ -44,10 +44,10 @@ public class FormuleRegel extends FormuleElement
 	private int defaultwidth;
 	private int defaultheight;
 
-	private int currentPosition = -1;
+	protected int currentPosition = -1;
 
 	private int selectionDragStart = -1;
-	private int selectionStart = -1;
+	protected int selectionStart = -1;
 	private int selectionStartx;
 
 	//TODO: implement non editable lines
@@ -62,7 +62,7 @@ public class FormuleRegel extends FormuleElement
 //	private int[] selectioncords =
 //	{ 0, 0, 0, 0 };
 	
-	private boolean stippels;
+	protected boolean stippels;
 
 	public FormuleRegel(FormuleHolder holder)
 	{
