@@ -7,7 +7,7 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
  * Bug with MGWT Button, use this button instead
  * 
  * @author Danny Hendrix
- * 
+ * @deprecated use normal button
  */
 
 public class TouchButton extends TouchPanel

@@ -1,12 +1,12 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects;
 
-import junit.framework.TestCase;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.user.client.ui.Panel;
 
 public class RegelTest extends GWTTestCase {
 
@@ -26,6 +26,11 @@ public class RegelTest extends GWTTestCase {
 				String string) {
 
 			return f.getFontSize() * string.length();
+		}
+
+		@Override
+		public Panel getAsPanel() {
+			return null;
 		}
 	}
 

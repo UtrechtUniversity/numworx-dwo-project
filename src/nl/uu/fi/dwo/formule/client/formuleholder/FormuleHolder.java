@@ -14,6 +14,7 @@ import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.wiskopdr.FormuleParser;
@@ -26,7 +27,7 @@ import fi.wiskopdr.text.Text;
  * @author Danny Hendrix
  * 
  */
-public class FormuleHolder implements TekstElement, FormuleEditorIF
+public abstract class FormuleHolder implements TekstElement, FormuleEditorIF
 {
 	public static void installKeyboard(FormuleKeyboardIF keyb) {
 		kb = keyb;
@@ -49,7 +50,7 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	//protected static String clipboard = "";
 	public static final FormuleClientBundle FORMULE_BUNDLE = GWT.create(FormuleClientBundle.class);
 	
-	private FormuleRegel main = null;
+	private final MainFormuleRegel main;
 
 	private FormuleFont font = FormuleFont.createFromFontSize(16);
 	private FormuleFont defaultFont = FormuleFont.createFromFontSize(16);
@@ -75,7 +76,7 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	{
 		defaultFont = defaultActiviteitFont;
 		//main regel
-		FormuleRegel regel = new FormuleRegel(this);
+		MainFormuleRegel regel = new MainFormuleRegel(this);
 		//GWT.log("Font size:" + defaultfont.getFontStyle());
 		main = regel;
 		ashoogte = main.getAsHoogte();//+(main.getFont().getAscent() - 1)/2 + 1;
@@ -86,7 +87,7 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 		defaultFont = font;
 		this.font = font;
 		this.color = color.toString();
-		main = new FormuleRegel(this);
+		main = new MainFormuleRegel(this);
 		ashoogte = main.getAsHoogte();
 	}
 	
@@ -161,31 +162,23 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 		defaultFont = fm;
 	}
 
-	public Panel getAsPanel()
-	{
-		//FocusPanel sp = new FocusPanel();
-		sp = new FlowPanel();
-		TouchPanel tp = new TouchPanel();
-		tp.add(this.main.getCanvas());
-		sp.add(tp);
-		return sp;
-	}
+	public abstract Panel getAsPanel();
 	
-	public TouchPanel getTouchPanel()
-	{
-		TouchPanel tp = new TouchPanel();
-		tp.add(this.main.getCanvas());
-		return tp;
-	}
+//	public TouchPanel getTouchPanel()
+//	{
+//		TouchPanel tp = new TouchPanel();
+//		tp.add(this.main);
+//		return tp;
+//	}
+//
+//	public Panel getPanel()
+//	{
+//		return sp;
+//	}
 
-	public Panel getPanel()
+	public Widget getCanvas()
 	{
-		return sp;
-	}
-
-	public Canvas getCanvas()
-	{
-		return this.main.getCanvas();
+		return this.main.asWidget();
 	}
 	
 	/**

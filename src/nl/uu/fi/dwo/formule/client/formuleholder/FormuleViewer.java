@@ -155,7 +155,7 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 //		showResult(WRONG);
 //	}
 
-	@Override
+//	@Override
 	public Panel getAsPanel()
 	{
 
