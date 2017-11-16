@@ -42,6 +42,13 @@ import fi.wiskopdr.text.Text;
  */
 public class GeogebraView implements InteractionView, LoadHandler, CBookEventListener
 {
+	public static final String ACTION_CORRECT = "action.correct";
+	public static final String ACTION_FALSE = "action.false";
+	public static final String ACTION_FALSE2 = "action.false_2";
+
+	private static final CBookEvent EVENT_CORRECT = new CBookEvent(ACTION_CORRECT); 
+	private static final CBookEvent EVENT_FALSE = new CBookEvent(ACTION_FALSE); 
+	private static final CBookEvent EVENT_FALSE2 = new CBookEvent(ACTION_FALSE2); 
 
 	private static final String KIJK_NA = "<span>" + Text.constants.nakijkKnopLabel() + "\u00A0</span>";
 	private static final int KIJK_NA_HEIGHT = 30;
@@ -220,9 +227,16 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 
 	}
 	
-/**
- * Bepaal ggb string en barheight.
- */
+	private void fireEvent(CBookEvent event) 
+	{
+		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
+		if (this.comRoot != null)
+			this.comRoot.fireEvent(event);
+	}
+
+	/**
+	 * Bepaal ggb string en barheight.
+	 */
 	private void createGgbParams() {
 	// normal		
 		if(!bigdata)
@@ -509,9 +523,19 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
  				double val = getValue(ggbApplet, "checkDWO");
  				setCorrect(val == 1.0);
 			}
-//			nagekeken = true;				
+//			nagekeken = true;
 		}
-		
+
+		if (feedback)
+		{
+			// cross widget communicatie
+			if (correct)
+				fireEvent(EVENT_CORRECT);
+			else if (!correct && errorCount > 1)
+	    		fireEvent(EVENT_FALSE2);
+			else if (!correct)
+	    		fireEvent(EVENT_FALSE);
+		}
 	}
 
 	private void setCorrect(Boolean b) {
