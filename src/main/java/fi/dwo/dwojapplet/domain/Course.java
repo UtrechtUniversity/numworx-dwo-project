@@ -7,12 +7,15 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.CoursePanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+
 import java.awt.Image;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -541,7 +544,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
     public Set getChildNames() {
         CourseMap[] lclChildren = getChildren();
         if (lclChildren == null) {
-            return null;
+            return Collections.emptySet();
         }
         int offset = lclChildren.length;
         Set names = new HashSet();
