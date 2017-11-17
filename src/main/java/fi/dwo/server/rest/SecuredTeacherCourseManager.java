@@ -122,6 +122,9 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 				pc.setExport(course.getExport().booleanValue());
 			if(course.getSequenceNr() != null)
 				pc.setSequencenr(course.getSequenceNr());
+// Missing
+			if((course.getWithChildren()!= null))
+				pc.setWithChildren(course.getWithChildren());
 // SCHOOL:
 			Long schoolId = null;
 			if(course.getSchoolId() != null) {
