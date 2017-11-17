@@ -1642,6 +1642,8 @@ public class FormuleRegel extends FormuleElement
 				transform.setTranslate(x, y);
 				g.getTransform().getBaseVal().appendItem(transform);
 			}
+		} else {
+			svg.removeChild(g);
 		}
 	}
 
