@@ -564,7 +564,13 @@ public abstract class FormuleElement implements TekstElement
 		return 0;
 	}
 
-	public void draw(OMSVGElement svg, Context2d ctx2) {
+	protected static OMSVGSVGElement getSVGSVGElement(OMSVGElement child) {
+		if ( child instanceof OMSVGSVGElement)
+			return (OMSVGSVGElement) child;
+		return child.getOwnerSVGElement();	
+	}
+	
+	public void draw(OMSVGElement svg) {
 		String data = canvas.toDataUrl();
 		OMSVGImageElement image;
 		image = new OMSVGImageElement(x, y, width, height, data);

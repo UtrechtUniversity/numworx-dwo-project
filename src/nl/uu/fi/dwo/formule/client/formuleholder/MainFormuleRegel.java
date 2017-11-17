@@ -52,7 +52,7 @@ class MainFormuleRegel extends FormuleRegel implements IsWidget {
 		}
 		for (FormuleElement e : children) {
 			if (holder instanceof FormuleViewer) {
-				e.draw(svg, ctx);
+				e.draw(svg);
 			} else
 				e.draw(ctx);
 		}

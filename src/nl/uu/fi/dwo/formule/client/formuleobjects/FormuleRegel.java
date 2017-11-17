@@ -1627,23 +1627,21 @@ public class FormuleRegel extends FormuleElement
 	 * @see nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement#draw(org.vectomatic.dom.svg.OMSVGElement, com.google.gwt.canvas.dom.client.Context2d)
 	 */
 	@Override
-	public void draw(OMSVGElement svg, Context2d ctx2) {
+	public void draw(OMSVGElement svg) {
 		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+
 		for(FormuleElement c: children) {
-			c.draw(g, ctx2);
+			c.draw(g);
 		}
 		int n = g.getChildNodes().getLength();
 		if(n > 0)
 		{
-			OMSVGImageElement image;
-			image = new OMSVGImageElement(x, y, width, height, canvas.toDataUrl());
-			svg.appendChild(image);
-			OMSVGTransform transform = svg.getOwnerSVGElement().createSVGTransform();
-			transform.setTranslate(x, y);
-			g.getTransform().getBaseVal().appendItem(transform);
-			svg.appendChild(g);
-		} else {
-		    super.draw(svg, ctx2);
+			if(x != 0 || y != 0) {
+				OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+				transform.setTranslate(x, y);
+				g.getTransform().getBaseVal().appendItem(transform);
+			}
 		}
 	}
 

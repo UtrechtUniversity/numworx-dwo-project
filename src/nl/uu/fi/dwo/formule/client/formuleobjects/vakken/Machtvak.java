@@ -2,7 +2,9 @@ package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
 import org.vectomatic.dom.svg.OMSVGElement;
 import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGRectElement;
 import org.vectomatic.dom.svg.OMSVGTransform;
+import org.vectomatic.dom.svg.utils.SVGConstants;
 
 import com.google.gwt.canvas.dom.client.Context2d;
 
@@ -95,17 +97,25 @@ public class Machtvak extends FormuleElementWithChildren
 	 * @see nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement#draw(org.vectomatic.dom.svg.OMSVGElement, com.google.gwt.canvas.dom.client.Context2d)
 	 */
 	@Override
-	public void draw(OMSVGElement svg, Context2d ctx2) {		
+	public void draw(OMSVGElement svg) {		
 		OMSVGGElement g = new OMSVGGElement();
-		getChild().draw(g, ctx2);		
+		svg.appendChild(g);
+		getChild().draw(g);		
 		int n = g.getChildNodes().getLength();
 		if(n > 0)
-		{ 	OMSVGTransform transform = svg.getOwnerSVGElement().createSVGTransform();
-			transform.setTranslate(x, y);
-			g.getTransform().getBaseVal().appendItem(transform);
-			svg.appendChild(g);
-		} else
-			super.draw(ctx2);
+		{ 	
+			if( x != 0 || y != 0)
+			{
+				OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+				transform.setTranslate(x, y);
+				g.getTransform().getBaseVal().appendItem(transform);
+			}
+			if (isSelected()) {
+				OMSVGRectElement r = new OMSVGRectElement(x, y, width, height, 0, 0);
+				r.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY,"#AAAAFF");
+				svg.insertBefore(r, g);
+			}
+		}
 	}
 
 	
