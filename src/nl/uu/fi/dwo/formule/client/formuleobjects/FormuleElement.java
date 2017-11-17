@@ -8,6 +8,8 @@ import nl.uu.fi.dwo.interaction.client.TekstElement;
 
 import org.vectomatic.dom.svg.OMDocument;
 import org.vectomatic.dom.svg.OMSVGDocument;
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGImageElement;
 import org.vectomatic.dom.svg.OMSVGLength;
 import org.vectomatic.dom.svg.OMSVGSVGElement;
 import org.vectomatic.dom.svg.OMSVGTextElement;
@@ -560,6 +562,13 @@ public abstract class FormuleElement implements TekstElement
 	public int getCorrectieRechts()
 	{
 		return 0;
+	}
+
+	public void draw(OMSVGElement svg, Context2d ctx2) {
+		String data = canvas.toDataUrl();
+		OMSVGImageElement image;
+		image = new OMSVGImageElement(x, y, width, height, data);
+		svg.appendChild(image);
 	}
 
 

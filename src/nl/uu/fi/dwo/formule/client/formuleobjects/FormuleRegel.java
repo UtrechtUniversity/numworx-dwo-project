@@ -3,6 +3,11 @@ package nl.uu.fi.dwo.formule.client.formuleobjects;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGImageElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.BinVak;
@@ -372,13 +377,6 @@ public class FormuleRegel extends FormuleElement
 				{
 					//draw square if line is empty
 					ctx.setStrokeStyle("#888");
-//					ctx.beginPath();
-//					ctx.moveTo(0, 0);
-//					ctx.lineTo(width, 0);
-//					ctx.lineTo(width, height);
-//					ctx.lineTo(0, height);
-//					ctx.lineTo(0, 0);
-//					ctx.stroke();
 					ctx.strokeRect(0, 0, width, height);
 				}
 	}
@@ -1625,10 +1623,29 @@ public class FormuleRegel extends FormuleElement
 		this.setChanged(true);
 	}
 
-	/*
+	/* (non-Javadoc)
+	 * @see nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement#draw(org.vectomatic.dom.svg.OMSVGElement, com.google.gwt.canvas.dom.client.Context2d)
+	 */
 	@Override
-	public void setAsHoogte(int ashoogte) {
-		super.setAsHoogte(ashoogte);
+	public void draw(OMSVGElement svg, Context2d ctx2) {
+		OMSVGGElement g = new OMSVGGElement();
+		for(FormuleElement c: children) {
+			c.draw(g, ctx2);
+		}
+		int n = g.getChildNodes().getLength();
+		if(n > 0)
+		{
+			OMSVGImageElement image;
+			image = new OMSVGImageElement(x, y, width, height, canvas.toDataUrl());
+			svg.appendChild(image);
+			OMSVGTransform transform = svg.getOwnerSVGElement().createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+			svg.appendChild(g);
+		} else {
+		    super.draw(svg, ctx2);
+		}
 	}
-*/
+
+	
 }

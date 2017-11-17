@@ -100,19 +100,19 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 		{
 		case NONE:
 			checkimg.setVisible(false);
-			this.getMainRegel().getCanvas().getElement().getStyle().setMarginLeft(23, Unit.PX);
+			getCanvas().getElement().getStyle().setMarginLeft(23, Unit.PX);
 			break;
 		case ALMOSTCORRECT:
 			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
-			this.getMainRegel().getCanvas().getElement().getStyle().setMarginLeft(0, Unit.PX);
+			getCanvas().getElement().getStyle().setMarginLeft(0, Unit.PX);
 			break;
 		case CORRECT:
 			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
-			this.getMainRegel().getCanvas().getElement().getStyle().setMarginLeft(0, Unit.PX);
+			getCanvas().getElement().getStyle().setMarginLeft(0, Unit.PX);
 			break;
 		case WRONG:
 			checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
-			this.getMainRegel().getCanvas().getElement().getStyle().setMarginLeft(0, Unit.PX);
+			getCanvas().getElement().getStyle().setMarginLeft(0, Unit.PX);
 			break;
 		}
 	}

@@ -6,6 +6,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 import java.awt.Font;
 
+import org.vectomatic.dom.svg.OMSVGElement;
 import org.vectomatic.dom.svg.OMSVGLength;
 import org.vectomatic.dom.svg.OMSVGRectElement;
 import org.vectomatic.dom.svg.OMSVGSVGElement;
@@ -519,23 +520,40 @@ public class FormuleTeken extends FormuleElement
 		return String.valueOf(this.character);
 	}
 	
-	public void draw(OMSVGSVGElement svg, Context2d ctx) {
+	@Override
+	public void draw(OMSVGElement svg, Context2d ctx) {
 		if(teken != null) {
 			if(isSelected()) {
 				OMSVGRectElement r = new OMSVGRectElement(x, y, width, height, 0, 0);
 				r.getStyle().setSVGProperty("fill","#AAAAFF");
 				svg.appendChild(r);
 			}
-			OMSVGTextElement t = new OMSVGTextElement(x, y+getAsHoogte(), OMSVGLength.SVG_LENGTHTYPE_NUMBER, teken);
+			int dx = x;
+			int dy = y+getAsHoogte();
+			int fs = fm.getFontSize();
+// times f offset 4
+			if(FormuleFont.formTimes && teken.equals("f"))
+				dx += 4;
+// times j offset 3
+			else if(FormuleFont.formTimes && teken.equals("j")) 
+				dx += 3;
+// gewone j, times p of times y
+			else if(teken.equals("j") || (FormuleFont.formTimes && (teken.equals("p") || teken.equals("y"))))
+				dx += 2;
+			else if(teken.equals("\u221e"))
+			{
+				fs += INFINITY_BONUS;
+				dy += 3;
+			}			
+			OMSVGTextElement t = new OMSVGTextElement(dx, dy, OMSVGLength.SVG_LENGTHTYPE_NUMBER, teken);
 // Experiment...
-			t.getStyle().setFontSize(fm.getFontSize(), Unit.PX);
+			t.getStyle().setFontSize(fs , Unit.PX);
 			t.getStyle().setFontStyle(fm.isItalic() ? FontStyle.ITALIC: FontStyle.NORMAL);
 			t.getStyle().setSVGProperty("fontFamily", fm.getFont());
 			t.getStyle().setSVGProperty("fill",(selected ? "white" : color));
 			svg.appendChild(t);
 		} else
-			draw(ctx);
-		
+			draw(ctx);		
 	}
 
 }

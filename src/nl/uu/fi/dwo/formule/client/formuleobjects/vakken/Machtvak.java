@@ -1,5 +1,9 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+
 import com.google.gwt.canvas.dom.client.Context2d;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -24,10 +28,6 @@ public class Machtvak extends FormuleElementWithChildren
 		fc.setSmallText(FormuleFontChanges.TRUE);
 
 		this.setFontChanges(fc);
-
-//		getChild().setPosition(0, 0);
-//
-//		this.setChanged(true);
 	}
 
 	@Override
@@ -91,4 +91,24 @@ public class Machtvak extends FormuleElementWithChildren
 		return getChild().toMathML();
 	}
 
+	/* (non-Javadoc)
+	 * @see nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement#draw(org.vectomatic.dom.svg.OMSVGElement, com.google.gwt.canvas.dom.client.Context2d)
+	 */
+	@Override
+	public void draw(OMSVGElement svg, Context2d ctx2) {		
+		OMSVGGElement g = new OMSVGGElement();
+		getChild().draw(g, ctx2);		
+		int n = g.getChildNodes().getLength();
+		if(n > 0)
+		{ 	OMSVGTransform transform = svg.getOwnerSVGElement().createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+			svg.appendChild(g);
+		} else
+			super.draw(ctx2);
+	}
+
+	
+	
+	
 }

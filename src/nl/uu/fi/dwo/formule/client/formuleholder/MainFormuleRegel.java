@@ -51,11 +51,9 @@ class MainFormuleRegel extends FormuleRegel implements IsWidget {
 			svg.removeChild(svg.getLastChild());
 		}
 		for (FormuleElement e : children) {
-			if (e instanceof FormuleTeken && holder instanceof FormuleViewer) {
-				FormuleTeken ft = (FormuleTeken) e;
-				ft.draw(svg, ctx);
+			if (holder instanceof FormuleViewer) {
+				e.draw(svg, ctx);
 			} else
-
 				e.draw(ctx);
 		}
 
