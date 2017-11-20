@@ -172,7 +172,8 @@ public class SelectModuleItem
 	}
 
 	public SelectModuleItem(DomCourseStudent course, DomClassCourse domClassCourse) {
-		type = course.getWithChildren() ? Type.FOLDER : Type.MODULE;
+		Boolean withChildren = course.getWithChildren();
+		type = withChildren != null && withChildren.booleanValue() ? Type.FOLDER : Type.MODULE;
 		description = course.getDescription();
 		fromSchool = course.getSchoolId() != null;
 		id = PersistenceIdDecoderInterface.instance.idOf(course.getId(), PersistenceClassType.PersistentCourse);
