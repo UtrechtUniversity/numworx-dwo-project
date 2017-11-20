@@ -1,0 +1,48 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb"></ui:with>
+	<ui:style>
+	.left {
+		width: 150px;
+		display: inline-block;
+	}
+	.panel h1 {
+		color: red;
+		font-size: 12px;
+	}
+	.panel h2 {
+		color: red;
+		font-size: 10px;
+		margin-bottom: 5px;
+	}
+	.panel p {
+		margin-bottom: 5px;
+	}
+	
+	.ok {
+		float: right;
+		margin-right: 10px;
+	}
+	.cancel {
+		float: left;
+		margin-left: 10px;
+		margin-bottom: 10px;
+	}
+	
+	.panel {
+		margin: 10px;
+	}
+	
+	</ui:style>
+	
+	<g:HTMLPanel styleName="{style.panel}">
+		<h1>Schoolgegevens:</h1>
+		<h2><ui:text from='{rb.GUIR_MSG_PROVIDED_SCHOOL}' /></h2>
+		<p><g:InlineLabel addStyleNames="{style.left}">Schoollogin:</g:InlineLabel><g:TextBox ui:field='schoolLoginBox'/></p>
+		<p><g:InlineLabel addStyleNames="{style.left}">Ik ben:</g:InlineLabel><g:ListBox ui:field='roleBox'/></p>
+		<p><g:InlineLabel addStyleNames="{style.left}">Sleutelcode:</g:InlineLabel><g:PasswordTextBox ui:field='passwordBox'/></p>
+		<br/>
+		<p><g:Button addStyleNames='{style.cancel}' ui:field='cancel' >Annuleren</g:Button> <g:Button addStyleNames='{style.ok}' ui:field='ok'>Aanmelden</g:Button></p>
+	</g:HTMLPanel>
+</ui:UiBinder> 

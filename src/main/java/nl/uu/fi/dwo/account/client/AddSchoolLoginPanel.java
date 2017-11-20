@@ -1,7 +1,11 @@
 package nl.uu.fi.dwo.account.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -16,16 +20,31 @@ import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class AddSchoolLoginPanel extends Composite implements ClickHandler {
 
-	
-	
+	private static AddSchoolLoginPanelUiBinder uiBinder = GWT.create(AddSchoolLoginPanelUiBinder.class);
+
+	interface AddSchoolLoginPanelUiBinder extends UiBinder<Widget, AddSchoolLoginPanel> {
+	}
+
+	static RoleType[] roles = { RoleType.STUDENT, RoleType.TEACHER, RoleType.SCHOOLADMIN, RoleType.ADMIN };
+	private void construct() {
+		initWidget(uiBinder.createAndBindUi(this));
+		for(String type: roleStrs) {
+			roleBox.addItem(type);
+		}
+	}
+
+	@UiField
 	Button ok, cancel;
-	TextBox schoolLoginBox;
-	PasswordTextBox passwordBox;
-	ListBox roleBox;
-	
+	@UiField TextBox schoolLoginBox;
+	@UiField PasswordTextBox passwordBox;
+	@UiField ListBox roleBox;
+
+	@UiField(provided=true) DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
+	String[] roleStrs = {rb.STUDENT(), rb.TEACHER(), rb.SCHOOLADMIN(), rb.ADMIN() };
 	
 	final SchoolLoginController control;
 	final PopupPanel popup;
@@ -49,8 +68,9 @@ public class AddSchoolLoginPanel extends Composite implements ClickHandler {
 	public AddSchoolLoginPanel(SchoolLoginController control, PopupPanel popup) {
 		this.control = control;
 		this.popup = popup;
-		initWidget(createWidget());
-
+		//initWidget(createWidget());
+		construct();
+		
 		control.setAddSchoolLoginPanel(this);
 		popup.setWidget(this);
 	}
@@ -87,6 +107,7 @@ public class AddSchoolLoginPanel extends Composite implements ClickHandler {
 	}
 
 	@Override
+	@UiHandler({"ok","cancel"})
 	public void onClick(ClickEvent event) {
 		Object source = event.getSource();
 		if(source == ok) {
@@ -96,7 +117,7 @@ public class AddSchoolLoginPanel extends Composite implements ClickHandler {
 			String password = schoolLoginBox.getText();
 			int index = roleBox.getSelectedIndex();
 			DomNewSchoolLogin dom = new DomNewSchoolLogin();
-			dom.setRole(RoleType.values()[index]);
+			dom.setRole(roles[index]);
 			dom.setSchoolCode(password);
 			dom.setSchoolLogin(schoolLogin);
 			control.addASchoolLogin(dom);
