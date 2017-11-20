@@ -5,6 +5,7 @@
     <ui:style field="dwoStyle" src="css/dwostyle.css" />    
     <ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
     <ui:with type="nl.uu.fi.dwo.lms.gwtclient.gwt.icons.AccountImageBundle" field="icons" />
+    <ui:with type="nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources" field="dwoIcons" />
     <g:HeaderPanel addStyleNames='{dwoStyle.dwoAppPanel}'>
         <g:FlowPanel  height='51px'>
             <g:FlowPanel addStyleNames='{dwoStyle.dwoAppHeaderPanel}' ui:field='headerView'>
@@ -14,7 +15,7 @@
                     <ui:text from='{rb.GUI_View_LOGIN}'/>
                 </g:Label>
                 <g:Label addStyleNames='{dwoStyle.dwoAppMenuButton}'  ui:field="menuButton">
-                &#9660;
+                &#9776;
                 </g:Label>            
                 <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}'>&nbsp;</g:Label>
                 <g:Label addStyleNames='{dwoStyle.rightHalfBox} {dwoStyle.hidden}' height='90%' ui:field="presentationName"></g:Label>
@@ -48,31 +49,31 @@
             <g:layer right="8px" top="8px" left="8px" bottom="8px">              
                 <g:FlowPanel addStyleNames='{dwoStyle.dwoAppMenuPanel}' ui:field="menuView"  >
                     <g:FlowPanel addStyleNames='{dwoStyle.dwoMenuLabel}' >
-                        <g:Image ui:field="accountImage" height='90%' width='auto' resource="{icons.settingMenuIcon}" />
+                        <g:Image ui:field="accountImage" height='90%' width='auto' resource="{dwoIcons.numAccountIcon}" />
                         <g:Label ui:field="accountLabel">
                             <ui:text from='{rb.GUI_View_ACCOUNT}'/>
                         </g:Label>
                     </g:FlowPanel>
                     <g:FlowPanel addStyleNames='{dwoStyle.dwoMenuLabel}' >
-                        <g:Image ui:field="switchRoleImage" height='90%' width='auto' resource="{icons.settingMenuIcon}" />
+                        <g:Image ui:field="switchRoleImage" height='90%' width='auto' resource="{dwoIcons.numRoleIcon}" />
                         <g:Label ui:field="switchRoleLabel" >
                             <ui:text from='{rb.GUI_View_SWITCHSCHOOL}'/>
                         </g:Label>
                     </g:FlowPanel>
                     <g:FlowPanel addStyleNames='{dwoStyle.dwoMenuLabel}' >
-                        <g:Image ui:field="classesImage" height='90%' width='auto' resource="{icons.settingMenuIcon}" />
+                        <g:Image ui:field="classesImage" height='90%' width='auto' resource="{dwoIcons.numClassIcon}" />
                         <g:Label  ui:field="classesLabel" >
                             <ui:text from='{rb.GUI_View_SCHOOLCLASSES}'/>
                         </g:Label>
                     </g:FlowPanel>
                     <g:FlowPanel addStyleNames='{dwoStyle.dwoMenuLabel}' >
-                        <g:Image ui:field="resultsImage" height='90%' width='auto' resource="{icons.settingMenuIcon}" />
+                        <g:Image ui:field="resultsImage" height='90%' width='auto' resource="{dwoIcons.numResultsIcon}" />
                         <g:Label ui:field="resultsLabel" >
                             <ui:text from='{rb.GUI_View_ACTIVERESULTS}'/>
                         </g:Label>
                     </g:FlowPanel>
                     <g:FlowPanel addStyleNames='{dwoStyle.dwoMenuLabel}' >
-                        <g:Image ui:field="logoutImage" height='90%' width='auto' resource="{icons.settingMenuIcon}" />
+                        <g:Image ui:field="logoutImage" height='90%' width='auto' resource="{dwoIcons.numLogoutIcon}" />
                         <g:Label ui:field="logoutLabel" >
                             <ui:text from='{rb.GUI_View_LOGOUT}'/>
                         </g:Label>

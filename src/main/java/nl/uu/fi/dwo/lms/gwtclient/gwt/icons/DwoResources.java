@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.icons;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
@@ -9,6 +10,22 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface DwoResources extends ClientBundle{
 
+   public DwoResources instance = GWT.create(DwoResources.class);
+    
+   @Source("num-results.png")
+   public ImageResource numResultsIcon();
+   @Source("num-class.png")
+   public ImageResource numClassIcon();
+   @Source("num-role.png")
+   public ImageResource numRoleIcon();
+   @Source("num-account.png")
+   public ImageResource numAccountIcon();
+   @Source("num-menu.png")
+   public ImageResource numMenuIcon();
+   @Source("num-logout.png")
+   public ImageResource numLogoutIcon();
+    
+    
    @Source("docent.png")
    public ImageResource teacherIcon();
 

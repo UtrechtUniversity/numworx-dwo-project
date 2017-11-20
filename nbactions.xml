@@ -8,7 +8,11 @@
                 
             </goals>
             <properties>
-                <gwt.style>PRETTY</gwt.style>
+                <gwt.style>DETAILED</gwt.style>
+                <gwt.compiler.generateJsInteropExports>true</gwt.compiler.generateJsInteropExports>
+                <gwt.compiler.incremental>false</gwt.compiler.incremental>
+                <gwt.compiler.precompile>false</gwt.compiler.precompile>
+                <gwt.codeserver.generateJsInteropExports>true</gwt.codeserver.generateJsInteropExports>
             </properties>
         </action>
         <action>
@@ -26,20 +30,9 @@
                 <goal>gwt:i18n</goal>
             </goals>
             <properties>
-                <gwt.style>PRETTY</gwt.style>
+                <gwt.style>DETAILED</gwt.style>
                 
                 
-            </properties>
-        </action>
-        <action>
-            <actionName>CUSTOM-pretty</actionName>
-            <displayName>pretty</displayName>
-            <goals>
-                <goal>clean</goal>
-                <goal>package</goal>
-            </goals>
-            <properties>
-                <gwt.style>PRETTY</gwt.style>
             </properties>
         </action>
         <action>
@@ -50,7 +43,7 @@
                 <goal>tomcat7:run</goal>
             </goals>
             <properties>
-                <gwt.style>PRETTY</gwt.style>
+                <gwt.style>DETAILED</gwt.style>
                 
                 
                 
@@ -98,6 +91,8 @@
             <actionName>build</actionName>
             <packagings>
                 <packaging>*</packaging>
+                
+                
             </packagings>
             <goals>
                 <goal>install</goal>
@@ -116,6 +111,8 @@
                 <goal>install</goal>
             </goals>
         </action>
+        
+        
         
         
         
