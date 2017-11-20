@@ -1,20 +1,21 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import jsinterop.annotations.JsMethod;
+import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
 /**
  *
  * @author Gert van der Plas
  */
-@JsType(name="DwoPresenterFactory")//, namespace = JsPackage.GLOBAL)
+@JsType(name="DwoPresenterFactory", namespace = JsPackage.GLOBAL)
 public class DwoPresenterFactory {
 
     private static DwoPresenterFactory factory;
     private static PresenterFactoryGwt fac;
 
     
-    
+     @JsMethod
     public static DwoPresenterFactory getDwoPresenterFactory() {
         return factory;
     }
@@ -24,7 +25,14 @@ public class DwoPresenterFactory {
         factory = this;
     }
 
-
+    /**
+     * @return the fac
+     */
+    @JsMethod
+    public static String getTest() {
+        return "toast";
+    }
+    
     /**
      * @return the fac
      */

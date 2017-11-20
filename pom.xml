@@ -38,7 +38,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <daggerVersion>2.11</daggerVersion>
-        <gwtVersion>2.8.1</gwtVersion>
+        <!--<gwtVersion>2.8.1</gwtVersion>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <gwt.style>PRETTY</gwt.style>
@@ -74,13 +74,20 @@
             <!-- "provided" so that we don't deploy -->
             <scope>provided</scope>
         </dependency>
-        <!--        <dependency>
+        <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-dev</artifactId>
             <version>${gwt.version}</version>
-             "provided" so that we don't deploy 
+            <!-- "provided" so that we don't deploy -->
             <scope>provided</scope>
-        </dependency>-->
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-codeserver</artifactId>
+            <version>${gwt.version}</version>
+            <!-- "provided" so that we don't deploy -->
+            <scope>provided</scope>
+        </dependency>
 
         <!-- Unit tests -->
         <dependency>
@@ -165,7 +172,7 @@
             <artifactId>jsinterop-annotations</artifactId>
             <version>1.0.0</version>
         </dependency>        -->
-<!-- code injection at compile time -->
+        <!-- code injection at compile time -->
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
@@ -242,23 +249,31 @@
                     </execution>
                 </executions>
             </plugin>     
-            <!-- GWT Maven Plugin-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
                 <version>${gwt.version}</version>
                 <executions>
                     <execution>
+                        <!-- gwt:run-codeserver with options
+                        -Dgwt.compiler.generateJsInteropExports=true 
+                        -Dgwt.compiler.incremental=false 
+                        -Dgwt.compiler.precompile=false 
+                        -Dgwt.codeserver.generateJsInteropExports=true - -debug -->
                         <configuration>
+                            <incremental>false</incremental>
+                            <precompile>false</precompile>
                             <jsInteropMode>JS_RC</jsInteropMode>
+                            <generateJsInteropExports>true</generateJsInteropExports>
+                            <includeJsInteropExports>true</includeJsInteropExports>
+                            <superDevMode>true</superDevMode>
                             <sourceLevel>1.8</sourceLevel>
-                            <!--                            <compilerArg>
-                            </compilerArg>-->
-                            <!--                            <generateJsInteropExports>true</generateJsInteropExports>
+                            <compilerArg>
+                            </compilerArg>
+                            <generateJsInteropExports>true</generateJsInteropExports>
                             <codeserverArgs>
-                            <generateJsInteropExports>true</generateJsInteropExports>
-                            </codeserverArgs>-->
-                            <generateJsInteropExports>true</generateJsInteropExports>
+                                <generateJsInteropExports>true</generateJsInteropExports>
+                            </codeserverArgs>
                             <module>nl.uu.fi.dwo.lms.gwtclient.gwtclient</module>
                             <i18nConstantsBundles>
                                 <i18nConstantsBundle>nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages</i18nConstantsBundle>
