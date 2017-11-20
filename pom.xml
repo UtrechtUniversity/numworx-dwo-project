@@ -39,6 +39,10 @@
     
     <properties>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+        <gwtVersion>2.8.1</gwtVersion>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <restyVersion>2.2.0</restyVersion>
     </properties>
     
     <scm>
@@ -190,18 +194,23 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
-            <version>2.6.0</version>
+            <version>${gwtVersion}</version>
             <scope>provided</scope>
         </dependency>
+		<dependency> <!-- deze is 2.8.1 compatibel -->
+			<groupId>com.github.nmorel.gwtjackson</groupId>
+  			<artifactId>gwt-jackson</artifactId>
+  			<version>0.14.2</version>
+		</dependency>
         <dependency>
             <groupId>org.fusesource.restygwt</groupId>
             <artifactId>restygwt</artifactId>
-            <version>2.2.0</version>
+            <version>${restyVersion}</version>
         </dependency>
         <dependency>
             <groupId>org.fusesource.restygwt</groupId>
             <artifactId>restygwt</artifactId>
-            <version>2.2.0</version>
+            <version>${restyVersion}</version>
             <classifier>sources</classifier>
         </dependency>
         <dependency>
@@ -221,10 +230,4 @@
             <classifier>sources</classifier>
         </dependency>        
     </dependencies>
-    <!--    <parent>
-        <groupId>fi.parentgwt</groupId>
-        <artifactId>ParentGWT</artifactId>
-        <version>0.0.1</version>
-        <relativePath>../ParentGWT</relativePath>
-    </parent>-->
 </project>
