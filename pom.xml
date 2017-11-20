@@ -255,11 +255,18 @@
                 <version>${gwt.version}</version>
                 <executions>
                     <execution>
-                        <!-- gwt:run-codeserver with options
+                        <!-- gwt:run-codeserver with options, cmdline options needed
                         -Dgwt.compiler.generateJsInteropExports=true 
                         -Dgwt.compiler.incremental=false 
                         -Dgwt.compiler.precompile=false 
                         -Dgwt.codeserver.generateJsInteropExports=true - -debug -->
+<!-- Paste into netbeans config window.
+gwt.style=DETAILED
+gwt.compiler.generateJsInteropExports=true
+gwt.compiler.incremental=false
+gwt.compiler.precompile=false
+gwt.codeserver.generateJsInteropExports=true
+-->
                         <configuration>
                             <incremental>false</incremental>
                             <precompile>false</precompile>
