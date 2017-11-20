@@ -101,12 +101,11 @@ public class DomScoContext extends DomScoContextId {
 	}
 
 	public ScoType getScoType() {
-		if(scoType == null)
-			return ScoType.OEFENEN;
 		return scoType;
 	}
 
 	public void setScoType(ScoType scoType) {
+		if (scoType == ScoType.normal) scoType = ScoType.OEFENEN; // Backwards compatibility
 		this.scoType = scoType;
 	}
 }

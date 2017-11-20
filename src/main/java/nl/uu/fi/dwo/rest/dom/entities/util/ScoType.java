@@ -12,4 +12,9 @@ public enum ScoType {
 	OEFENEN_STRAFPUNTEN, // met strafpunten
 	ZELFTOETS, // zelftoets
 	EINDTOETS, // toets
+/**
+ * overblijfsel van 2.1.23
+ */
+	@Deprecated
+	normal,
 }
