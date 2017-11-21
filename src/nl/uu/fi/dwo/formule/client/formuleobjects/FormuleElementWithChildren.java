@@ -2,6 +2,10 @@ package nl.uu.fi.dwo.formule.client.formuleobjects;
 
 import java.util.Vector;
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGRectElement;
+import org.vectomatic.dom.svg.utils.SVGConstants;
+
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.shared.GWT;
@@ -236,6 +240,15 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 			ctx.fillRect(0, 0, width, height);
 		}		
 	}
+	
+	protected void paintComponent(OMSVGElement svg) {
+		if (isSelected()) {
+			OMSVGRectElement rect = new OMSVGRectElement(x,y,width,height,0, 0);
+			rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "AAAAFF");
+			svg.appendChild(rect);
+		}
+	}
+	
 
 	@Override
 	public String toString() {
