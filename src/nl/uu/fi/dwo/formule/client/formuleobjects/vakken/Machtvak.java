@@ -98,6 +98,7 @@ public class Machtvak extends FormuleElementWithChildren
 	 */
 	@Override
 	public void draw(OMSVGElement svg) {		
+		paintComponent(svg);
 		OMSVGGElement g = new OMSVGGElement();
 		svg.appendChild(g);
 		getChild().draw(g);		
@@ -109,11 +110,6 @@ public class Machtvak extends FormuleElementWithChildren
 				OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
 				transform.setTranslate(x, y);
 				g.getTransform().getBaseVal().appendItem(transform);
-			}
-			if (isSelected()) {
-				OMSVGRectElement r = new OMSVGRectElement(x, y, width, height, 0, 0);
-				r.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY,"#AAAAFF");
-				svg.insertBefore(r, g);
 			}
 		}
 	}

@@ -1,5 +1,9 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
@@ -83,4 +87,19 @@ public class SubscriptVak extends FormuleElementWithChildren
 	public String toMathML() {
 		return getChild().toMathML();
 	}
+
+	@Override
+	public void draw(OMSVGElement svg) {		
+		paintComponent(svg);
+		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+		getChild().draw(g);		
+		if( x != 0 || y != 0)
+		{
+			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+		}
+	}
+
 }

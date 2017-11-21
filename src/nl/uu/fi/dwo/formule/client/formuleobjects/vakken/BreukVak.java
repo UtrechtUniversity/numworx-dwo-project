@@ -1,5 +1,11 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGLineElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+import org.vectomatic.dom.svg.utils.SVGConstants;
+
 import com.google.gwt.canvas.dom.client.Context2d;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
@@ -85,6 +91,18 @@ public class BreukVak extends FormuleElementWithChildren
 		ctx.lineTo(this.width - (fm.getAscent() / 8), this.getAsHoogte() - 7*fm.getAscent() / 16 - 1);
 		ctx.stroke();
 		
+	}
+	protected void paintComponent(OMSVGElement svg) {
+		super.paintComponent(svg);
+		float x1,y1,x2,y2;
+		x1 = fm.getAscent() / 8;
+		y1 = this.getAsHoogte() - 7*fm.getAscent() / 16 - 1;
+		x2 = this.width - (fm.getAscent() / 8);
+		y2 = y1;
+		OMSVGLineElement line = new OMSVGLineElement(x1,y1,x2,y2);
+		line.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, color);
+		line.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, String.valueOf(fm.getStrokeWidth()));		
+		svg.appendChild(line);
 	}
 
 	@Override
@@ -177,6 +195,19 @@ public class BreukVak extends FormuleElementWithChildren
 
 	public String toMathML() {
 		return "<mfrac>" + getChild(0).toMathML() + getChild(1).toMathML() + "</mfrac>";
+	}
+	@Override
+	public void draw(OMSVGElement svg) {
+		paintComponent(svg);
+		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+		if(x != 0 || y != 0) {
+			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+		}
+		getChild(0).draw(g);
+		getChild(1).draw(g);
 	}
 
 }

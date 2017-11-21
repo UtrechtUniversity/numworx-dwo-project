@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.formule.client.formuleholder;
 
 import org.vectomatic.dom.svg.OMSVGDocument;
-import org.vectomatic.dom.svg.OMSVGImageElement;
 import org.vectomatic.dom.svg.OMSVGSVGElement;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.utils.OMSVGParser;
@@ -13,27 +12,24 @@ import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
-import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleTeken;
 
 class MainFormuleRegel extends FormuleRegel implements IsWidget {
 
 	private SVGImage svgImage;
 	private OMSVGSVGElement svg;
-	// private OMSVGDocument document;
-	private OMSVGImageElement svgcanvas;
+	private final boolean isEditor;
 
 	MainFormuleRegel(FormuleHolder holder) {
 		super(holder);
+		isEditor = holder instanceof FormuleEditor;
 		OMSVGDocument document = OMSVGParser.currentDocument();
 		svg = document.createSVGSVGElement();
 		svgImage = new SVGImage(svg);
-		svgcanvas = document.createSVGImageElement();
-		svg.appendChild(svgcanvas);
 	}
 
 	@Override
 	public Widget asWidget() {
-		return svgImage;
+		return isEditor ? getCanvas() : svgImage;
 	}
 
 	@Override
@@ -46,12 +42,13 @@ class MainFormuleRegel extends FormuleRegel implements IsWidget {
 		Context2d ctx = this.ctx;
 
 		paintComponent(ctx);
-		// Keep canvas.
-		while (svg.getChildNodes().getLength() > 1) {
+		// Keep defs?.
+		while (svg.getChildNodes().getLength() > 0) {
 			svg.removeChild(svg.getLastChild());
 		}
+			
 		for (FormuleElement e : children) {
-			if (holder instanceof FormuleViewer) {
+			if (!isEditor) {
 				e.draw(svg);
 			} else
 				e.draw(ctx);
@@ -83,17 +80,13 @@ class MainFormuleRegel extends FormuleRegel implements IsWidget {
 	public void paint() {
 		if (!isChanged())
 			return;
-		// paint to canvas
+		// paint to canvas and svg
 		super.paint();
 		// copy canvas to svg
-		svgcanvas.getWidth().getBaseVal().setValue(width);
-		svgcanvas.getHeight().getBaseVal().setValue(height);
-		svgcanvas.getHref().setBaseVal(canvas.toDataUrl());
 		svgImage.setPixelSize(width, height);
 		svg.setHeight(Unit.PX, height);
 		svg.setWidth(Unit.PX, width);
 		svg.setViewBox(0, 0, width, height);
-
 	}
 
 }

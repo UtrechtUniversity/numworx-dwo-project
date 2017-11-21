@@ -244,7 +244,7 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 	protected void paintComponent(OMSVGElement svg) {
 		if (isSelected()) {
 			OMSVGRectElement rect = new OMSVGRectElement(x,y,width,height,0, 0);
-			rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "AAAAFF");
+			rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "#AAAAFF");
 			svg.appendChild(rect);
 		}
 	}
