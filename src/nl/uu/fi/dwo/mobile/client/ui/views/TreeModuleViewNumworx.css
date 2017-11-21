@@ -313,3 +313,10 @@
 .kruimelpad:hover {
 	text-decoration: underline;
 }
+
+.lesstof .toets {
+	display:none;
+}
+.toets .lesstof {
+	display:none;
+}

@@ -81,6 +81,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplDesktop.TreeAnchorContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext, Command, Comparator<SelectModuleItem> {
@@ -268,8 +269,10 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 			  	{
 				  	sb.appendHtmlConstant("<span class='"+style.tileType()+ "'>");
 				  	String lesstof = "lesstof";
-				  	if(value.getName().contains("oets"))
+// TODO wat is het juiste antwoord?
+				  	if(value.getScoType() == ScoType.EINDTOETS || value.getScoType() == ScoType.ZELFTOETS)
 				  		lesstof = "zelftoets";
+				  	
 					sb.appendHtmlConstant("<img height='18' src='"+r("images/numworx/"
 				  			+ lesstof
 				  			+ "-numworx.svg")+"'/>");

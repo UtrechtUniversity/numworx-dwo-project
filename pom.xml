@@ -192,7 +192,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
 			<artifactId>formule</artifactId>
-			<version>0.0.6</version>
+			<version>0.0.7-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.inject</groupId>
@@ -209,7 +209,7 @@
 	<parent>
 		<groupId>fi.parentgwt</groupId>
 		<artifactId>ParentGWT</artifactId>
-		<version>0.0.4</version>
+		<version>0.0.5</version>
 		<relativePath>../ParentGWT</relativePath>
 	</parent>
 	<properties>
@@ -219,7 +219,7 @@
 		<runTarget>${project.artifactId}.html</runTarget>
 		<warClassifier />
 		<gwt.copyWebapp>true</gwt.copyWebapp>
-		<accountVersion>0.0.14</accountVersion>
+		<accountVersion>0.0.15-SNAPSHOT</accountVersion>
 		<gwtVersion>2.8.1</gwtVersion>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -301,7 +301,7 @@
 			</properties>
 		</profile>
 	</profiles>
-	<version>2.1.23</version>
+	<version>2.1.24-SNAPSHOT</version>
 	<scm>
 		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DwoPlayer/GWT/DWOplayer</developerConnection>
 	</scm>

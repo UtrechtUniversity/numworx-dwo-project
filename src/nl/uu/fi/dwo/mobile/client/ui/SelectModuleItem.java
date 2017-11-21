@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 //import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
@@ -42,7 +43,7 @@ public class SelectModuleItem
 		SCO, MODULE, FOLDER, ROOT, SEPARATOR, SEARCH
 	}
 
-	public static final SelectModuleItem ROOT = new SelectModuleItem(null, SelectModuleItem.Type.ROOT);
+	public static final SelectModuleItem ROOT = new SelectModuleItem();
 	static {
 		ROOT.setName("Standaard DWO Modules");
 		ROOT.setDescription("<html><body><b>DWO-modules</b><br>In de DWO is veel oefenmateriaal beschikbaar.  Naast dit oefenmateriaal zijn er ook diverse volledige lessen en lessenseries beschikbaar, die kunnen worden gebruikt als aanvulling op of zelfs vervanging van het reguliere boek. In de etalage kunt u een indruk krijgen van de mogelijkheden die de DWO biedt voor de wiskundeles.</body></html>");
@@ -61,14 +62,24 @@ public class SelectModuleItem
 	private Object parent;
 	private boolean showChildren = true;
 	private DomClassCourse classCourse;
+	private ScoType scoType;
 
+	public ScoType getScoType() {
+		if (getCourseType() == CourseType.assesment)
+			return ScoType.EINDTOETS;
+		if(scoType == null)
+			return ScoType.OEFENEN;
+		return scoType;
+	}
+	
 	public Date getNotAfter() {
 		if(classCourse != null) 
 			return classCourse.getNotAfter();
 		return null;
 	}
 
-
+	private SelectModuleItem() {}
+	
 	public SelectModuleItem(Object id, String name, String file)
 	{
 		this.id = id;
@@ -205,6 +216,11 @@ public class SelectModuleItem
 			}
 		}
 		image = sco.getImage();
+		scoType = sco.getScoType();
+// fake...
+		if(scoType == null && name .contains("oets")) {
+			scoType = ScoType.ZELFTOETS;
+		}
 	}
 
 	public String getName()

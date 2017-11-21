@@ -107,4 +107,7 @@ public interface Text extends Constants {
 
 	@DefaultStringValue("Attempts: ")
 	String attemps();
+
+	@DefaultStringValue("TOETS")
+	String EINDTOETS();
 }

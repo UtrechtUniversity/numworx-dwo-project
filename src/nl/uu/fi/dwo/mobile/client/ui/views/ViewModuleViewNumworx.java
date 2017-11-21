@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -36,6 +37,7 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
 public class ViewModuleViewNumworx extends ResizeComposite implements ViewModuleView {
 
@@ -75,6 +77,25 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		upBtn.removeFromParent();
 	}
 
+	public void setScoType(ScoType type) {
+		boolean toets = false;
+		switch(type) {
+		case ZELFTOETS:
+			toets = true;
+			scoType.setText(rb.ZELFTOETS()); break;
+		case EINDTOETS:
+			toets = true;
+			scoType.setText(rb.EINDTOETS()); break;
+		default:
+			scoType.setText(rb.LESSTOF());
+			break;
+		}
+		headerBottom.setStyleName(t.toets(), toets);
+		headerBottom.setStyleName(t.lesstof(), !toets);
+		delegate.setScoType(type);
+	}
+	
+	
 	@UiField
 	SimplePanel center;
 	@UiField(provided=true)
@@ -90,6 +111,9 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	@UiField Label title;
 	@UiField TreeModuleViewNumworxCss t;
 	@UiField FlowPanel kruimels;
+	@UiField FlowPanel headerBottom;
+	@UiField HasText scoType;
+	@UiField nl.uu.fi.dwo.mobile.client.text.Text rb;
 	
 	ViewModuleViewImpl delegate;
 

@@ -84,6 +84,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 				public Promise<String> call(Promise<DomScoContext> resolved) throws Exception {
 					name = resolved.getValue().getScoName();
 					item.setName(name);
+					view.setScoType(resolved.getValue().getScoType());
 					view.setTitle(name);
 					return Promises.resolved(name);
 				}

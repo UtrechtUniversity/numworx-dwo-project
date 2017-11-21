@@ -25,4 +25,7 @@ interface TreeModuleViewNumworxCss extends CssResource {
 	String titlePanelFULL();
 	String navTitle();
 	String kruimelpad();
+
+	String lesstof();
+	String toets();
 }

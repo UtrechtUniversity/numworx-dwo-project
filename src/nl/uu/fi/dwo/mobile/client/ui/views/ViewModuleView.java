@@ -5,6 +5,7 @@ import java.util.List;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -22,6 +23,7 @@ public interface ViewModuleView extends IsWidget
 	}
 	
 	void removeBtns();
+	void setScoType(ScoType type);
 	void setTitle(String title);
 	void setupModule(String name, String file);
 

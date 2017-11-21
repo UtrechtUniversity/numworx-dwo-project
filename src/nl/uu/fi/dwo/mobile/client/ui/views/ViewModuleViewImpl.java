@@ -46,6 +46,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionViewWithM
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
+import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -2431,6 +2432,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	@Override
 	public void removeBtns() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setScoType(ScoType type) {
 		// TODO Auto-generated method stub
 		
 	}

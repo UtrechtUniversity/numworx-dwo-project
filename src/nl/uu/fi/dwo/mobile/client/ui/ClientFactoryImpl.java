@@ -160,8 +160,6 @@ public class ClientFactoryImpl implements ClientFactory
 
 	@Override
 	public RPCHandler getRPCHandler() {
-		if(this.handler == null)
-			this.handler = new nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler();
 		return this.handler;
 	}
 

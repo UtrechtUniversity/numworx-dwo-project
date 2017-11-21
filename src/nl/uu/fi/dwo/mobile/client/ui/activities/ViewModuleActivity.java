@@ -105,6 +105,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 			}
 			view.setTrail(trail);
 			view.setTitle(sco.getName());
+			view.setScoType(sco.getScoType());
 			view.setPresenter(this);
 			
 			defaultContext = view.getAnchorContext();
