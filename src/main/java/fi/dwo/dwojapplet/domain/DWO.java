@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
+import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.PersistenceException;
@@ -69,6 +70,7 @@ import java.net.URLDecoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.jar.Manifest;
@@ -2073,10 +2075,23 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      */
     public boolean updateSco(Sco sco) {
 		DomScoContextFull scoContext = new DomScoContextFull();
-    	if(sco.getImageData() != null) {
+    	if (sco.getImageData() != null) {
     		scoContext.setId(PersistentScoContext.buildPersistenceId((long)sco.getScoID()));
     		scoContext.setImageData(sco.getImageData());
     	}
+    	if (sco.isDataChanged()) {
+   		try {
+			@SuppressWarnings("unchecked")
+			Map<String, Object> m = sco.getLaunchdata();
+			Object mode = m.get("mode");
+			int value = Integer.parseInt(mode.toString());
+			scoContext.setScoType(ScoType.values()[value]);
+			scoContext.setId(PersistentScoContext.buildPersistenceId((long)sco.getScoID()));
+		} catch (Exception e) {
+			LOG.log(Level.WARNING, "incompatibel", e);
+		}
+    	}
+    	
     	
     	if (scoContext.getId() != null) {
     		try {
