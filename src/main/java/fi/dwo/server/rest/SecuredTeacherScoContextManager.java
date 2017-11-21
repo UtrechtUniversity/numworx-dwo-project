@@ -77,19 +77,22 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 				sd.setDescription(scoContext.getDescription());
 				sd = ScoDataManager.edit(sd);
 			}
+			if(scoContext.getScoType() != null) {
+				pc.setScoType(scoContext.getScoType());
+			}
 			pc=ScoContextManager.edit(pc);
 			pc.fillDomScoContextFull(scoContext);
 			sd.fillDomScoContextFull(scoContext);
 			
-			} catch (Dwo2Exception e) {
+		} catch (Dwo2Exception e) {
 			throw new Dwo2RestException(e);
 		} catch (PersistenceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			LOG.log(Level.SEVERE, "", e);
+			throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+		} catch (Exception e) {
+			LOG.log(Level.SEVERE, "", e);
+			throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+		}
     	
     	return scoContext;
     }

@@ -309,45 +309,7 @@
                             </archive>
                         </configuration>
             </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.10</version>
-        <executions>
-          <execution>
-            <id>copy</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>${project.groupId}</groupId>              
-                  <artifactId>DWOJClient</artifactId>
-                  <version>${project.version}</version>
-                  <classifier>jar-with-dependencies</classifier>
-                  <overWrite>true</overWrite>
-                  <destFileName>DWOJApplet.jar</destFileName>
-                </artifactItem>
-<!--                <artifactItem>
-                  <groupId>${project.groupId}</groupId>              
-                  <artifactId>DWOJClient</artifactId>
-                  <version>${project.version}</version>
-                  <classifier>jar-with-dependencies</classifier>
-                  <type>jar.pack.gz</type>
-                  <overWrite>true</overWrite>
-                  <destFileName>DWOJApplet.jar.pack.gz</destFileName>
-                </artifactItem>-->
-              </artifactItems>
-              <outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
-              <overWriteReleases>false</overWriteReleases>
-              <overWriteSnapshots>true</overWriteSnapshots>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-            <plugin>
+           <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.6</version>
