@@ -33,7 +33,7 @@
     </developers>
     <properties>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <context.xml>junittest-context.xml</context.xml>
+        <context.xml>context.xml</context.xml>
     </properties>
 
     <!-- update the https path for a different branch or tag! -->
@@ -539,6 +539,33 @@
             </properties>
         </profile>
         <profile>
+            <id>nojunittests</id>
+            <properties>
+                <junit.test>false</junit.test>
+            </properties>
+        </profile>
+        <profile>
+            <id>dwodevel-db</id>
+            <properties>
+                <junit.test>false</junit.test>
+                <context.xml>context-dwo_devel.xml</context.xml>
+            </properties>
+        </profile>
+        <profile>
+            <id>junit-db</id>
+            <properties>
+                <junit.test>false</junit.test>
+                <context.xml>context-junittest.xml</context.xml>
+            </properties>
+        </profile>
+        <profile>
+            <id>dummytwo-db</id>
+            <properties>
+                <junit.test>false</junit.test>
+                <context.xml>context-dummytwo.xml</context.xml>
+            </properties>
+        </profile>
+        <profile>
             <id>test</id>
             <activation>
                 <property>
@@ -550,6 +577,7 @@
                 <junit.test>false</junit.test>
             </properties>
         </profile>
+        
 <!--        <profile>
             <id>dev</id>
             <activation>
