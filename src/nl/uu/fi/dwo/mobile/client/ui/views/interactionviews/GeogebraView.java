@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
@@ -13,6 +12,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.ImageTextButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
@@ -52,13 +52,17 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 
 	private static final String KIJK_NA = "<span>" + Text.constants.nakijkKnopLabel() + "\u00A0</span>";
 	private static final int KIJK_NA_HEIGHT = 30;
+
+	private static DWOplayerCss css = DWOplayer.DWO_BUNDLE.dwoplayercss();
+
 	private SimplePanel mainPanel;
 	private Object ggbApplet;
 	private Frame frame;
 	private Button btn;
 	private String ggb;
 	private Boolean correct;
-	private boolean bewaarOptie, nakijken,check;
+	private boolean bewaarOptie, nakijken, check;
+	private boolean checkExternal;
 	private boolean border;
 	private int score, scoreMax;
 	private PopupFacade facade;
@@ -70,7 +74,14 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	private boolean nagekeken;
 	private String pendingState;
 	private ObjectMap randomVars;
+	/**
+	 * De nakijkknop. Plaatje wordt niet meer op de knop getoond.
+	 */
 	private ImageTextButton checkBtn;
+	/**
+	 * Het panel waar de nakijkknop op komt en feedback-vinkjes/kruisje.
+	 */
+	VerticalPanel kijkNaPanel;
 	private HTML checkLbl;
 	private String kijkNa = KIJK_NA;
 	private HasHTML checkWidget;
@@ -89,6 +100,10 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	private Map<String, Object> geogebraParams = new HashMap<String,Object>();
 	private int attemptsCount;
 	private int errorCount;
+	/**
+	 * Houdt bij of er iets veranderd is, t.b.v. errorCount.
+	 */
+	private boolean changed = false;
 	
 	public native static Object getGgbWindow(Element frame) /*-{
 		return frame.contentWindow;
@@ -109,9 +124,14 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	}
 
 	private void ggbLog(String action, String name, String definition,
-			String value, String type) {
-		// nagekeken = false; // FIXME haal vinkje weg als er iets verandert?
-		if (dwologger != null) {
+			String value, String type)
+	{
+		changed = true;
+		// er is iets veranderd, dus vinkje/kruis weg
+		setVisibleFeedbackImages(false, false, false);
+		
+		if (dwologger != null)
+		{
 			Map<String, Object> result = new HashMap<String, Object>();
 			result.put("event", action);
 			result.put("id", name);
@@ -178,33 +198,33 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		}
 		bewaarOptie = ggbMap.containsKey("bewaarOptie") && ggbMap.getBoolean("bewaarOptie");
 		nakijken    = ggbMap.containsKey("nakijken") &&  ggbMap.getBoolean("nakijken");
+		checkExternal = ggbMap.containsKey("checkExternal") &&  ggbMap.getBoolean("checkExternal");
 		border 		= ggbMap.containsKey("border") && ggbMap.getBoolean("border");
 		check       = (!ggbMap.containsKey("check")) || ggbMap.getBoolean("check"); // default is true
 		nakijkenGemaakteObjecten = ggbMap.containsKey("nakijkenGemaakteObjecten") && ggbMap.getBoolean("nakijkenGemaakteObjecten");
-		if(ggbMap.containsKey("geogebraCheckObjects"))
+		if (ggbMap.containsKey("geogebraCheckObjects"))
 			geogebraCheckObjects = ggbMap.getStringArray("geogebraCheckObjects");
-		if(ggbMap.containsKey("geogebraCheckScores"))
+		if (ggbMap.containsKey("geogebraCheckScores"))
 			geogebraCheckScores  = ggbMap.getIntArray("geogebraCheckScores");		
 		
-		if(ggbMap.containsKey("scoreMax")) 
+		if (ggbMap.containsKey("scoreMax")) 
 			scoreMax = ggbMap.getInt("scoreMax");
 				
 		frame = new Frame(DWOplayer.PARAMETERS.getStubView() + "GeoGebra.html?locale=" + StubView.getLocale());
 		frame.setStylePrimaryName("StubView");
 		frame.addStyleDependentName("borderless");
 		
-		if(bigdata)
+		if (bigdata)
 			filename = ggbMap.getString("fileUrl");
-		
 		
 		createGgbParams();
 
 		barHeight = 0;
-		if("true".equals(geogebraParams.get("showMenuBar")))
+		if ("true".equals(geogebraParams.get("showMenuBar")))
 			barHeight += 33;
-		if("true".equals(geogebraParams.get("showToolBar")))
+		if ("true".equals(geogebraParams.get("showToolBar")))
 			barHeight += 9; //57;
-		if("true".equals(geogebraParams.get("showAlgebraInput")))
+		if ("true".equals(geogebraParams.get("showAlgebraInput")))
 			barHeight += 25 + 8 /*mac*/;
 		width = 400;
 		if (json.containsKey("breedte"))
@@ -216,7 +236,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		
 		//if(!volledigeBreedte) //als volledigeBreedte dan wordt initFrame gedaan in zetVolledigeBreedte.
 		//initFrame();
-		if(ggbMap.getBoolean("logOption", false))
+		if (ggbMap.getBoolean("logOption", false))
 		{
 			dwologger = new DWOLogger();
 			dwologger.setClassName("fi.wiskopdr.Geogebra4Panel");
@@ -270,13 +290,13 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		frame.addLoadHandler(this);
 		
 		
-		if(border)
+		if (border)
 		{	mainPanel.getElement().getStyle().setBorderColor("gray");
 			mainPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 			mainPanel.getElement().getStyle().setBorderWidth(1, Unit.PX);
 		}
 		
-		if(nakijken)
+		if (nakijken)
 		{
 			checkBtn = new ImageTextButton(KIJK_NA, new ClickHandler() {
 
@@ -291,35 +311,42 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 			AbsolutePanel hp = new AbsolutePanel();
 			hp.setPixelSize(this.width, this.height);
 			hp.add(frame, 0, 0);
-			VerticalPanel vp = new VerticalPanel();
-			vp.setPixelSize(this.width, KIJK_NA_HEIGHT);
-			vp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-			vp.add(checkBtn);
-			vp.add(checkLbl); checkLbl.setVisible(false);
-			if(comRoot != null && comRoot.getMode() > 1) 
+			kijkNaPanel = new VerticalPanel();
+			kijkNaPanel.setPixelSize(100, KIJK_NA_HEIGHT);
+			kijkNaPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+			if (!checkExternal)
+			{
+				kijkNaPanel.add(checkBtn);
+			}
+			kijkNaPanel.add(checkLbl);
+			checkLbl.setVisible(false);
+			if (comRoot != null && comRoot.getMode() > 1) 
 			{
 				checkBtn.removeFromParent();
 				checkWidget = checkLbl;
 				checkLbl.setVisible(true);
 				kijkNa = "\u00A0";
-			} 
-			hp.add(vp, 0, this.height-KIJK_NA_HEIGHT);
+			}
+			hp.add(kijkNaPanel, (width - 70) / 2, this.height - KIJK_NA_HEIGHT);
+			
+			kijkNaPanel.setStylePrimaryName(css.kijknapanel());
 			mainPanel.setWidget(hp);
+			
+			setVisibleFeedbackImages(false, false, false);
 		}
 		else 
 			mainPanel.setWidget(frame);
 	}
 
-	void onCheck() {
-		if (!editable) return;
-		kijkNa(true);  // Feedback in view
-		setCheckImg(); // FeedBack on button
-		attemptsCount ++;
-		if(Boolean.FALSE.equals(correct))
-			errorCount++;
+	void onCheck()
+	{
+		if (!editable)
+			return;
+		kijkNa(true); // Feedback in view
+		attemptsCount++;
 		setAttempt();
-		comRoot.setChanged(Boolean.FALSE.equals(correct));
-		
+		comRoot.setChanged(Boolean.FALSE.equals(correct)); // deze roept een ggbLog aan die img reset
+		setCheckImg(); // set feedBack vinkje/kruis
 	}
 
 	private DWOLogger dwologger;
@@ -337,66 +364,64 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	}
 
 	/**
-	 * Kijk na button met en zonder rood kruisje/groen vinke
+	 * Toon rood kruisje/groen vinkje.
 	 */
-	private void setCheckImg() {
-		if(checkWidget == null) return;
+	private void setCheckImg()
+	{
+		if (checkWidget == null)
+			return;
 		
-		if(Boolean.TRUE.equals(correct))
-			checkWidget.setHTML(kijkNa +
-					"<img style='vertical-align: top' src='" +
-				FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri().asString() +
-				"' >"
-//					"<i class='fa fa-check' style='color: green' ></i>"
-					
-					);
-		else if(Boolean.FALSE.equals(correct))
-			checkWidget.setHTML(kijkNa +
-					"<img style='vertical-align: top' src='" +
-				FormuleHolder.FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri().asString() +
-				"' >"
-//			"<i class='fa fa-times' style='color: red' ></i>"
-					);
-		else if(nagekeken)
+		if (Boolean.TRUE.equals(correct))
 		{
-			checkWidget.setHTML(kijkNa +
-					"<img style='vertical-align: top' src='" +
-				FormuleHolder.FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri().asString() +
-				"' >"
-//					"<i class='fa fa-check' style='color: yellow' ></i>"
-					);
-		
-		} else
+			setVisibleFeedbackImages(true, false, false);
+		}
+		else if (Boolean.FALSE.equals(correct))
+		{
+			setVisibleFeedbackImages(false, false, true);
+		}
+		else if (nagekeken)
+		{
+			setVisibleFeedbackImages(false, true, false);
+		}
+		else
+		{
 			checkWidget.setHTML(kijkNa);
+			setVisibleFeedbackImages(false, false, false);
+		}
 	}
 
 	@Override
 	public HashMap<String, Object> getState()
 	{
-		if(facade.hasState()) {
+		if (facade.hasState())
+		{
 			HashMap<String, Object> state = facade.getState();
-			if(state == null) state = new HashMap<>();
-			state.put("nagekeken", Boolean.valueOf(nagekeken));	// deze kan veranderen als de popup dicht is
+			if (state == null)
+				state = new HashMap<>();
+			state.put("nagekeken", Boolean.valueOf(nagekeken)); // deze kan
+																// veranderen
+																// als de popup
+																// dicht is
 			return state;
 		}
 		boolean feedback;
-// bij zelftoets nooit feedback, bij oefenen altijd en bij  eindtoets alleen als nagekeken.		
-		feedback = 
-				mode == OpdrNavIF.OEFENEN ||
-				mode == OpdrNavIF.OEFENEN_STRAFPUNTEN ||
-				( mode == OpdrNavIF.EINDTOETS && nagekeken);
+		// bij zelftoets nooit feedback, bij oefenen altijd en bij eindtoets
+		// alleen als nagekeken.
+		feedback = mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN
+			|| (mode == OpdrNavIF.EINDTOETS && nagekeken);
 		kijkNa(feedback);
-		HashMap<String,Object> map = new HashMap<String,Object>();
-		if(bewaarOptie && pendingState != null)
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		if (bewaarOptie && pendingState != null)
 			map.put("state", pendingState);
-		if(bewaarOptie && ggbApplet != null) {
+		if (bewaarOptie && ggbApplet != null)
+		{
 			map.put("state", getXML(ggbApplet));
 		}
 		map.put("nagekeken", Boolean.valueOf(nagekeken));
 		map.put("ingevuld", Boolean.valueOf(ingevuld));
 		map.put("attemptsCount", Integer.valueOf(attemptsCount));
 		map.put("errorCount", Integer.valueOf(errorCount));
-		
+
 		return wrap(map);
 	}
 
@@ -421,110 +446,173 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	public void setState(HashMap<String, Object> h)
 	{
 		facade.setPopupState(h);
-		if(h == null)
-			h = new HashMap<String, Object>(); // Never NULL, komt voor! setStateNull()
-		if(h.containsKey("STUBVIEW_score"))
+		if (h == null)
+			h = new HashMap<String, Object>(); // Never NULL, komt voor!
+												// setStateNull()
+		if (h.containsKey("STUBVIEW_score"))
 			score = Integer.parseInt(h.get("STUBVIEW_score").toString());
-		if(h.containsKey("STUBVIEW_correct"))
+		if (h.containsKey("STUBVIEW_correct"))
 			correct = StubView.toBoolean(h.get("STUBVIEW_correct").toString());
 		String xml = (String) h.get("state");
-		if(bewaarOptie && xml != null)
+		if (bewaarOptie && xml != null)
 		{
 			if (ggbApplet != null)
-			{	pendingState = null;
+			{
+				pendingState = null;
 				setXML(ggbApplet, xml);
 			}
 			else
 				this.pendingState = xml;
-		} else {
+		}
+		else
+		{
 			this.pendingState = null;
 		}
 		PopupFacade.showReview(h, this);
 		ObjectMap wrap = JSONUtilities.wrapMap(h);
 		ingevuld = wrap.getBoolean("ingevuld", false);
 		nagekeken = wrap.getBoolean("nagekeken", false);
-		if(wrap.containsKey("attempsCount")) attemptsCount = wrap.getInt("attemptsCount");
-		if(wrap.containsKey("errorCount")) errorCount = wrap.getInt("errorCount");
-		
-		boolean feedback = 
-				mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || nagekeken;
+		if (wrap.containsKey("attempsCount"))
+			attemptsCount = wrap.getInt("attemptsCount");
+		if (wrap.containsKey("errorCount"))
+			errorCount = wrap.getInt("errorCount");
+
+		boolean feedback = mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || nagekeken;
 		if (feedback)
-			setCheckImg(); // geen Kijkna nodig, want we hebben alle variabelen hersteld, behalve de groene elementen.
+			setCheckImg(); // geen Kijkna nodig, want we hebben alle variabelen
+							// hersteld, behalve de groene elementen.
 		else if (checkWidget != null)
-			checkWidget.setHTML(kijkNa); // clear feedback
+		{
+			setVisibleFeedbackImages(false, false, false);
+		}
 	}
 
 	/**
-	 * wordt aangeroepen bij zelftoets.
+	 * Wordt aangeroepen bij zelftoets en extern nakijken met checkbutton.
 	 */
-	public void kijkNa() {
-		 
-		kijkNa(true); 
+	public void kijkNa()
+	{
+		kijkNa(true);
+		
 		nagekeken = true;
-		setCheckImg(); // set feedback. inclusief vinkje.
+		
+		attemptsCount++;
+		setAttempt();
+
+		comRoot.setChanged(Boolean.FALSE.equals(correct)); // deze roept een ggbLog aan die img reset
+
+		setCheckImg(); // set feedback vinkje/kruis
+	}
+
+	/**
+	 * Verhoog de error count als er iets veranderd is.
+	 * 
+	 */
+	void verhoogErrorCount()
+	{
+		if (isChanged())
+			errorCount++;
+		setChanged(false);
 	}
 	
+	private boolean isChanged()
+	{
+		return changed;
+	}
+
+	private void setChanged(boolean b)
+	{
+		changed = b;
+	}
+
 	private void kijkNa(boolean feedback) // getState/kijkna
 	{
-		if(nakijken && ggbApplet != null)
+		if (nakijken && ggbApplet != null)
 		{
-			if(nakijkenGemaakteObjecten)
+			if (nakijkenGemaakteObjecten)
 			{
 				int length = getObjectNumber(ggbApplet) - aantalExistingObjects;
-				if( length <= 0 ) 
+				if (length <= 0)
 				{
 					setCorrect(false);
 					return;
 				}
 				int checkLength = geogebraCheckObjects.length;
-				int checkStart  = 0;
+				int checkStart = 0;
 				String[] checkObjects = new String[checkLength];
 				System.arraycopy(geogebraCheckObjects, 0, checkObjects, 0, checkLength);
 				score = 0;
 				int matches = 0;
-				for(int i = 0; i < length; i++) {
-					String objectName = getObjectName(ggbApplet, i+aantalExistingObjects);
+				for (int i = 0; i < length; i++)
+				{
+					String objectName = getObjectName(ggbApplet, i + aantalExistingObjects);
 					String valueString = getValueString(ggbApplet, objectName);
 					String objectString;
-					objectString = valueString.replace(objectName +"(x)", "");
+					objectString = valueString.replace(objectName + "(x)", "");
 					objectString = objectString.replace(objectName, "");
 					objectString = objectString.replace(" ", "");
 					objectString = objectString.substring(1);
 					boolean match = false;
-					for(int j = checkStart ; j < checkLength; j ++ )
+
+					for (int j = checkStart; j < checkLength; j++)
 					{
-						if(checkObjects[j] == null) continue;
+						if (checkObjects[j] == null)
+							continue;
 						match = checkObjects[j].equals(objectString);
-						if(!match && ! "boolean".equals(getObjectType(ggbApplet, objectName))) {
-							evalCommand(ggbApplet, "checkDWO=" + checkObjects[j] + "==" + objectName);
+						if (!match && !"boolean".equals(getObjectType(ggbApplet, objectName)))
+						{
+							// keep changed value
+							boolean oldChanged = changed;
+							boolean[] oldSettingsImage = {false, false, false};
+							if (!changed)
+							{
+								// keep the state of the feedback images
+								oldSettingsImage = getOldSettingsImage();
+							}
+							evalCommand(ggbApplet, "checkDWO=" + checkObjects[j] + "==" + objectName); // dit zorgt voor een ggbLog die changed true zet...
+							changed = oldChanged;
+							setVisibleFeedbackImages(oldSettingsImage[0], oldSettingsImage[1], oldSettingsImage[2]);
 							match = 1.0 == getValue(ggbApplet, "checkDWO");
 						}
-						if(match) {
-							if(feedback)
-								setColor(ggbApplet, objectName, 0, 180, 0); // feedback alleen in oefenen of (toets + nagekeken).
+						if (match)
+						{
+							if (feedback)
+							{
+								// feedback alleen in oefenen of (toets + nagekeken).
+								setColor(ggbApplet, objectName, 0, 180, 0); // groen, zorgt ook voor een ggbLog die vinkje weghaalt...
+								setVisibleFeedbackImages(true, false, false);
+							}
 							score += geogebraCheckScores[j];
 							checkObjects[j] = null; // used!
-							matches ++;
-	// Optimalisatie, maak checkObjects array kleiner als mogelijk, maar met behoud van indexen.
-							if(j == checkStart) checkStart++;
-							else if(j == checkLength-1) checkLength = j;
+							matches++;
+							// Optimalisatie, maak checkObjects array kleiner
+							// als mogelijk, maar met behoud van indexen.
+							if (j == checkStart)
+								checkStart++;
+							else if (j == checkLength - 1)
+								checkLength = j;
 							break;
-						}						
+						}
 					}
 				}
-				if(matches > 0 && matches < checkObjects.length)
+				if (matches > 0 && matches < checkObjects.length)
 				{
 					setCorrect(null);
 				}
 				else
 					setCorrect(matches != 0);
-			
-			} else {
- 				double val = getValue(ggbApplet, "checkDWO");
- 				setCorrect(val == 1.0);
+
 			}
-//			nagekeken = true;
+			else
+			{
+				double val = getValue(ggbApplet, "checkDWO");
+				setCorrect(val == 1.0);
+			}
+			// nagekeken = true;
 		}
+		
+		if (!correct)
+			verhoogErrorCount();
 
 		if (feedback)
 		{
@@ -532,22 +620,45 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 			if (correct)
 				fireEvent(EVENT_CORRECT);
 			else if (!correct && errorCount > 1)
-	    		fireEvent(EVENT_FALSE2);
+				fireEvent(EVENT_FALSE2);
 			else if (!correct)
-	    		fireEvent(EVENT_FALSE);
+				fireEvent(EVENT_FALSE);
 		}
 	}
 
-	private void setCorrect(Boolean b) {
-		if(b == null)
-		{	// score = 0; // score is gezet door KijkNa(boolean)
+	/**
+	 * Get array of booleans indicating whether 
+	 * goed, half or fout feedback image is showing.
+	 * 
+	 * @return
+	 */
+	private boolean[] getOldSettingsImage()
+	{
+		boolean[] array = {false, false, false};
+		
+		if (kijkNaPanel.getStyleName().contains(css.goed()))
+			array[0] = true;
+		if (kijkNaPanel.getStyleName().contains(css.half()))
+			array[1] = true;
+		if (kijkNaPanel.getStyleName().contains(css.fout()))
+			array[2] = true;
+		
+		return array;
+	}
+
+	private void setCorrect(Boolean b)
+	{
+		if (b == null)
+		{ // score = 0; // score is gezet door KijkNa(boolean)
 			correct = null;
 		}
-		else if( b)
+		else if (b)
 		{
 			score = scoreMax;
 			correct = Boolean.TRUE;
-		} else {
+		}
+		else
+		{
 			score = 0;
 			correct = Boolean.FALSE;
 		}
@@ -568,7 +679,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	@Override
 	public Boolean isCorrect()
 	{
-		if(nakijken)
+		if (nakijken)
 			return correct;
 		return Boolean.TRUE;
 	}
@@ -585,17 +696,18 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		dir = comRoot.getUUID();
 		if(dir != null) dir = dir.replace('-', '/')+'/'; else dir ="";
 		mode = comRoot.getMode();
-		if(nakijken & mode > 1 && checkBtn != null) {
+		if (nakijken & mode > 1 && checkBtn != null) {
 			// haal checkbutton weg, insert een label
 			checkBtn.removeFromParent();
 			checkWidget = checkLbl;
 			checkLbl.setVisible(true);
 			kijkNa = "\u00A0";
 		}
-		if(bigdata) {
+		if (bigdata)
+		{
 			createGgbParams();
 		}
-		if(dwologger != null)
+		if (dwologger != null)
 			dwologger.setCommunicationRoot(comRoot);
 	}
 
@@ -715,4 +827,17 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		
 	}
 
+	/**
+	 * Zet de feedback images zichtbaar adhv de meegegeven booleans.
+	 * 
+	 * @param vinkjeGroen
+	 * @param vinkjeGeel
+	 * @param kruisRood
+	 */
+	void setVisibleFeedbackImages(boolean vinkjeGroen, boolean vinkjeGeel, boolean kruisRood)
+	{
+		kijkNaPanel.setStyleName(css.goed(), vinkjeGroen);
+		kijkNaPanel.setStyleName(css.half(), vinkjeGeel);
+		kijkNaPanel.setStyleName(css.fout(), kruisRood);
+	}
 }
