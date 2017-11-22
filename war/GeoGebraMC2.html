@@ -33,33 +33,33 @@
   <!-- to create a completely dynamic UI.        -->
   <!--                                           -->
   <body style="margin: 0; overflow: hidden" >
-<script type='text/javascript' language='javascript' src='https://app.dwo.nl/apps/geogebra/4.4/web/web.nocache.js' ></script>	  
+<script type='text/javascript' language='javascript' src='https://cdn.dwo.nl/apps/geogebra/4.4/web/web.nocache.js' ></script>	  
 <script type="text/javascript">
 
-// 	function ggbLog(viewer, cmd, label, definition, value, type) {
-// 		console.log("GGB: " , cmd , 
-// 				" o: " , label , 
-// 				" d: " , definition , 
-// 				" v: " , value,
-// 				" t: " , type
-// 		);
-// 	}
+//  	function ggbLog(viewer, cmd, label, definition, value, type) {
+//  		console.log("GGB: " , cmd , 
+//  				" o: " , label , 
+//  				" d: " , definition , 
+//  				" v: " , value,
+//  				" t: " , type
+//  		);
+//  	}
 
 
 	function addListener(obj) {
-		ggblog( window.viewer,
+		ggbLog( window.viewer,
 				"add", obj, 
 				ggbApplet.getDefinitionString(obj),
 				ggbApplet.getValueString(obj), 
 				ggbApplet.getObjectType(obj))}
 	function removeListener(obj) {
-		ggbLog("remove", obj, 
+		ggbLog(window.viewer,"remove", obj, 
 				ggbApplet.getDefinitionString(obj),
 				ggbApplet.getValueString(obj), 
 				ggbApplet.getObjectType(obj))}
 //	function clearListener()  {ggbLog("clear", null, null, null, null, null)}
 	function renameListener(from,to) {
-		ggbLog("rename", from,
+		ggbLog(window.viewer,"rename", from,
 				to,
 				ggbApplet.getValueString(to), 
 				ggbApplet.getObjectType(to))}
