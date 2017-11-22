@@ -157,3 +157,27 @@ div.insert_formule {padding-right:5px; padding-left:5px;}
 	
 }
 
+/* tbv panel om vinkje/kruis te tonen na nakijken */
+.kijknapanel {
+	background-repeat: no-repeat;
+	background-position: right top;
+	background-color: transparent;
+}
+
+/* achtergrondplaatje groen vinkje */
+@sprite .goed {
+	gwt-image: 'goed';
+	background-position: right top;
+}
+
+/* achtergrondplaatje geel vinkje */
+@sprite .half {
+	gwt-image: 'half';
+	background-position: right top;
+}
+
+/* achtergrondplaatje rood kruis */
+@sprite .fout {
+	gwt-image: 'fout';
+	background-position: right top;
+}
