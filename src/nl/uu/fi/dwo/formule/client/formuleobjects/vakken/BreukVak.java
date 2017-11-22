@@ -95,9 +95,9 @@ public class BreukVak extends FormuleElementWithChildren
 	protected void paintComponent(OMSVGElement svg) {
 		super.paintComponent(svg);
 		float x1,y1,x2,y2;
-		x1 = fm.getAscent() / 8;
-		y1 = this.getAsHoogte() - 7*fm.getAscent() / 16 - 1;
-		x2 = this.width - (fm.getAscent() / 8);
+		x1 = x + fm.getAscent() / 8;
+		y1 = y + this.getAsHoogte() - 7*fm.getAscent() / 16 - 1;
+		x2 = x + this.width - (fm.getAscent() / 8);
 		y2 = y1;
 		OMSVGLineElement line = new OMSVGLineElement(x1,y1,x2,y2);
 		line.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, color);

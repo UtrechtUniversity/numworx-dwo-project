@@ -1,5 +1,13 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGPoint;
+import org.vectomatic.dom.svg.OMSVGPointList;
+import org.vectomatic.dom.svg.OMSVGPolylineElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+import org.vectomatic.dom.svg.utils.SVGConstants;
+
 import com.google.gwt.canvas.dom.client.Context2d;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
@@ -74,6 +82,37 @@ public class WortelVak extends FormuleElementWithChildren
 		ctx.stroke();
 		ctx.setLineWidth(fm.getStrokeWidth());
 	}
+	
+	protected void paintComponent(OMSVGElement svg) {
+		super.paintComponent(svg);
+		OMSVGPolylineElement line = new OMSVGPolylineElement();
+		svg.appendChild(line);
+		OMSVGPointList list = line.getPoints();
+		float x, y;
+		OMSVGPoint item;
+		x = 0; y = 2*height/3;
+		item = getSVGSVGElement(svg).createSVGPoint(x+this.x, y+this.y);
+		list.appendItem(item);
+		x = fm.getAscent()/3; y = height;
+		item = getSVGSVGElement(svg).createSVGPoint(x+this.x, y+this.y);
+		list.appendItem(item);
+		x = 1; y = 2*height/3;
+		item = getSVGSVGElement(svg).createSVGPoint(x+this.x, y+this.y);
+		list.appendItem(item);
+		x = fm.getAscent()/3-1; y = height+1;
+		item = getSVGSVGElement(svg).createSVGPoint(x+this.x, y+this.y);
+		list.appendItem(item);
+		x= 2 * fm.getAscent() / 3 - 1; y =fm.getAscent() / 8 + 1;
+		item = getSVGSVGElement(svg).createSVGPoint(x+this.x, y+this.y);
+		list.appendItem(item);
+		x = width; y =  fm.getAscent() / 8  +1;
+		item = getSVGSVGElement(svg).createSVGPoint(x+this.x, y+this.y);
+		list.appendItem(item);
+		line.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, String.valueOf(0.6*fm.getStrokeWidth()));		
+		line.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, color);
+		line.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "none");
+	}
+	
 
 	@Override
 	public FormuleElement setCurrentElementAt(int x, int y)
@@ -120,6 +159,19 @@ public class WortelVak extends FormuleElementWithChildren
 	public String toMathML() 
 	{
 		return "<msqrt>" + getChild().toMathML() + "</msqrt>";
+	}
+
+	@Override
+	public void draw(OMSVGElement svg) {
+		paintComponent(svg);
+		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+		if(x != 0 || y != 0) {
+			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+		}
+		getChild().draw(g);
 	}
 
 }
