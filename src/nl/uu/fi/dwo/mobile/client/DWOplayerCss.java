@@ -31,4 +31,12 @@ public interface DWOplayerCss extends CssResource {
 	String cbg_RP();
 	
 	String disabled();
+	
+	String kijknapanel();
+	
+	String goed();
+	
+	String half();
+	
+	String fout();
 }
