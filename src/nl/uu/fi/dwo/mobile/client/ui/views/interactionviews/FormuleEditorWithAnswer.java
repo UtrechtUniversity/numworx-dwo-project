@@ -1119,13 +1119,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	/**
 	 * Deze methode wordt aangeroepen door een klik op de nakijkenknop
-	 * in een zelftoets.
+	 * in een zelftoets, en bij extern nakijken.
 	 * 
-	 * Waar nog meer...?
 	 */
 	public void kijkNa()
 	{
-		if(formuleEditorPopup != null) {
+		if (formuleEditorPopup != null) {
 			formuleEditorPopup.transfer = true;
 			transferToFEWS();
 			formuleEditorPopup.kijkNa();
