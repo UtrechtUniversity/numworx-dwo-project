@@ -1,5 +1,9 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+
 import com.google.gwt.canvas.dom.client.Context2d;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -18,6 +22,10 @@ public class BinVak extends FormuleElementWithChildren
 	@Override
 	public void paintComponent(Context2d ctx) {
 		super.paintComponent(ctx);
+		build(new CanvasBuilder(ctx));		
+	}
+
+	protected void build(PathBuilder ctx) {
 		int h =3*fm.getAscent()/2;
 		int hh = h/2;
 		int b = h/6;
@@ -44,7 +52,7 @@ public class BinVak extends FormuleElementWithChildren
 		ctx.lineTo(width-1-c, height-hh+b-d);
 		ctx.lineTo(width-b+bb-1-c, height-bb-d);
 		ctx.lineTo(width-b-1-c, height-d);
-		ctx.stroke();		
+		ctx.stroke();
 	}
 
 	public void paintObject()
@@ -81,6 +89,27 @@ public class BinVak extends FormuleElementWithChildren
 	}
 	public String toMathML() {
 		return "<mfrac linethickness='0'>" + getChild(0).toMathML() + getChild(1).toMathML() + "</mfrac>";
+	}
+
+	@Override
+	protected void paintComponent(OMSVGElement svg) {
+		super.paintComponent(svg);
+		SvgBuilder builder = new SvgBuilder(svg, x, y);
+		build(builder);
+	}
+
+	@Override
+	public void draw(OMSVGElement svg) {
+		paintComponent(svg);
+		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+		if(x != 0 || y != 0) {
+			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+		}
+		getChild(0).draw(g);
+		getChild(1).draw(g);
 	}
 
 }

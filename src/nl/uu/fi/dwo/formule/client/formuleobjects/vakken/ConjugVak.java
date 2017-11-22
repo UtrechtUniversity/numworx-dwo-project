@@ -2,6 +2,10 @@ package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
 
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+
 import com.google.gwt.canvas.dom.client.Context2d;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -32,6 +36,10 @@ public class ConjugVak extends FormuleElementWithChildren
 	@Override
 	public void paintComponent(Context2d ctx) {
 		super.paintComponent(ctx);
+		build(new CanvasBuilder(ctx));
+	}
+
+	protected void build(PathBuilder ctx) {
 		ctx.setStrokeStyle(color);
 		ctx.setLineWidth(0.6 * fm.getStrokeWidth());
 
@@ -65,6 +73,26 @@ public class ConjugVak extends FormuleElementWithChildren
 /* geen idee welke van de twee de meest gesupporte is */
 		//return "<menclose notation='top' >" + getChild().toMathML() + "</menclose>";
 		return "<mover>" + getChild().toMathML() + "<mo>\u00AF</mo></mover>";
+	}
+
+	@Override
+	protected void paintComponent(OMSVGElement svg) {
+		super.paintComponent(svg);
+		SvgBuilder builder = new SvgBuilder(svg, x, y);
+		build(builder);
+	}
+
+	@Override
+	public void draw(OMSVGElement svg) {
+		paintComponent(svg);
+		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+		if(x != 0 || y != 0) {
+			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+		}
+		getChild().draw(g);
 	}
 
 }

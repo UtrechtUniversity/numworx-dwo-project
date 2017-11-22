@@ -1,5 +1,9 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+
 import com.google.gwt.canvas.dom.client.Context2d;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
@@ -54,6 +58,10 @@ public class NdeWortelVak extends FormuleElementWithChildren
 	public void paintComponent(Context2d ctx) {
 		super.paintComponent(ctx);
 		
+		build(new CanvasBuilder(ctx));
+	}
+
+	protected void build(PathBuilder ctx) {
 		ctx.setStrokeStyle(color);
 //		ctx.setFillStyle(color);
 		
@@ -128,6 +136,26 @@ public class NdeWortelVak extends FormuleElementWithChildren
 	public String toMathML()
 	{
 		return "<mroot>" + getChild(0).toMathML() + getChild(1).toMathML() + "</mroot>";
+	}
+	@Override
+	protected void paintComponent(OMSVGElement svg) {
+		super.paintComponent(svg);
+		SvgBuilder builder = new SvgBuilder(svg, x, y);
+		build(builder);
+	}
+
+	@Override
+	public void draw(OMSVGElement svg) {
+		paintComponent(svg);
+		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+		if(x != 0 || y != 0) {
+			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+		}
+		getChild(0).draw(g);
+		getChild(1).draw(g);
 	}
 
 }

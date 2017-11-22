@@ -4,6 +4,10 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.user.client.Window;
 
@@ -38,7 +42,11 @@ public class Haakjesvak extends FormuleElementWithChildren
 	@Override
 	public void paintComponent(Context2d ctx) {
 		super.paintComponent(ctx);
+		CanvasBuilder builder = new CanvasBuilder(ctx);
+		build(builder);
+	}
 
+	protected void build(PathBuilder ctx) {
 		int h = 3 * fm.getAscent() / 2;
 		int hh = h / 2;
 		int b = h / 6;
@@ -123,6 +131,26 @@ public class Haakjesvak extends FormuleElementWithChildren
 	public String toMathML() 
 	{
 		return "<mfenced>" + getChild().toMathML() + "</mfenced>";
+	}
+	
+	@Override
+	protected void paintComponent(OMSVGElement svg) {
+		super.paintComponent(svg);
+		SvgBuilder builder = new SvgBuilder(svg, x, y);
+		build(builder);
+	}
+
+	@Override
+	public void draw(OMSVGElement svg) {
+		paintComponent(svg);
+		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+		if(x != 0 || y != 0) {
+			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+		}
+		getChild().draw(g);
 	}
 
 }
