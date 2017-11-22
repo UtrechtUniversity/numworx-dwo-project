@@ -75,4 +75,13 @@ public interface DWOplayerClientBundle extends ClientBundle {
 
 	@Source("nl/uu/fi/dwo/mobile/client/resources/DWOplayer.css")
 	DWOplayerCss dwoplayercss();
+
+	@Source("nl/uu/fi/dwo/mobile/client/resources/knop-indicatie-goed.png")
+	ImageResource goed();
+
+	@Source("nl/uu/fi/dwo/mobile/client/resources/knop-indicatie-magdoor.png")
+	ImageResource half();
+
+	@Source("nl/uu/fi/dwo/mobile/client/resources/knop-indicatie-fout.png")
+	ImageResource fout();
 }
