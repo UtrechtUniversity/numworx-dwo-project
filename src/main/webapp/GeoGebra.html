@@ -36,12 +36,48 @@
   <body style="margin: 0; overflow: hidden" >
 <script type="text/javascript">
 
+	function addListener(obj) {
+		ggbLog( window.viewer,
+				"add", obj, 
+				ggbApplet.getDefinitionString(obj),
+				ggbApplet.getValueString(obj), 
+				ggbApplet.getObjectType(obj))}
+	function removeListener(obj) {
+		ggbLog(window.viewer,"remove", obj, 
+				ggbApplet.getDefinitionString(obj),
+				ggbApplet.getValueString(obj), 
+				ggbApplet.getObjectType(obj))}
+	//function clearListener()  {ggbLog("clear", null, null, null, null, null)}
+	function renameListener(from,to) {
+		ggbLog(window.viewer,"rename", from,
+				to,
+				ggbApplet.getValueString(to), 
+				ggbApplet.getObjectType(to))}
+				
+	function updateListener(obj) {
+		ggbLog( window.viewer,
+				"update", 
+				obj, 
+				ggbApplet.getDefinitionString(obj),
+				ggbApplet.getValueString(obj),
+				ggbApplet.getObjectType(obj)
+		)}
+	//function updateObjectListener(obj) {ggbLog("updateObject", obj, obj)}
+	
+	
 	function ggbOnInit() {
 		//===Js code starts here===//
-		var applet = document.ggbApplet;		
+		var applet = document.ggbApplet;
 		window.ggbApplet = applet;
 		try { 
 			window.install(applet, window.viewer)
+			if ( window.ggbLog ) {
+				applet.registerAddListener("addListener")
+				applet.registerRemoveListener("removeListener")
+				applet.registerUpdateListener("updateListener")
+				//applet.registerClearListener("clearListener")
+				applet.registerRenameListener("renameListener")
+			}
 		} catch(err) {
 
 		}
@@ -49,7 +85,7 @@
 	
 	function writeGGB() {
 		article_pre = "<article class='geogebraweb' style='border:0px solid black; display:inline-block; margin: 0px;' "
-		article_post = "></article>"	
+		article_post = "></article>"
 		result = window.install(null, window.viewer)
 		document.getElementById('hiero').innerHTML =  ( article_pre + result + article_post );
 		web.succeeded = web()
