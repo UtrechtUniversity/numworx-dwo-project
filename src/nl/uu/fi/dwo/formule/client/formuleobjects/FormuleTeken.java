@@ -2,6 +2,9 @@ package nl.uu.fi.dwo.formule.client.formuleobjects;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.CanvasBuilder;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PathBuilder;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SvgBuilder;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 import java.awt.Font;
@@ -75,6 +78,9 @@ public class FormuleTeken extends FormuleElement
 		case ']':
 		case '\u2220':
 			teken = null; 
+			break;
+		case ' ':
+			teken = "\u00A0";
 			break;
 		default:
 		
@@ -274,35 +280,34 @@ public class FormuleTeken extends FormuleElement
 			}
 			else
 				ctx.fillText(teken, 0, this.getAsHoogte());
-			
-			
-		} else switch(character) {
+		} else
+			buildChar(new CanvasBuilder(ctx));
+
+	}
+
+	protected void buildChar(PathBuilder ctx) {
+		switch(character) {
 		case '*':
 		case '\u00d7':
 			drawKeer(ctx); break;
 		case '-':
 			drawMin(ctx); break;
 		case ':': // FIXME not used?
-			drawDubbelePunt(ctx); break;
-			
+			drawDubbelePunt(ctx); break;			
 		case '\u3008':
 			{
 				int x = this.width / 2 - 3 / 2 - fm.getAscent() / 4;
-				//x = this.width/2 - (3*fm.getAscent() / 8 /2)/2;
-//				this.drawline(ctx, x + 3 * fm.getAscent() / 8, 0,                                    x + fm.getAscent() / 8, 0 + (fm.getAscent() / 2 + fm.getDescent() / 2));
-//				this.drawline(ctx, x + 3 * fm.getAscent() / 8, 0 + fm.getAscent() + fm.getDescent(), x + fm.getAscent() / 8, 0 + (fm.getAscent() / 2 + fm.getDescent() / 2));
 				ctx.beginPath();
 				ctx.moveTo(x + 3 * fm.getAscent() / 8, 0);
 				ctx.lineTo(x + fm.getAscent() / 8, 0 + (fm.getAscent() / 2 + fm.getDescent() / 2));
 				ctx.lineTo(x + 3 * fm.getAscent() / 8, 0 + fm.getAscent() + fm.getDescent());
-				ctx.stroke();
-			
+				ctx.stroke();			
 			} break;
 		case '\u3009':
 			{				
 				int x = this.width / 2 - 3 / 2 - fm.getAscent() / 4;
-				this.drawline(ctx, x + fm.getAscent() / 8, 0, x + 3 * fm.getAscent() / 8, 0 + (fm.getAscent() / 2 + fm.getDescent() / 2));
-				this.drawline(ctx, x + fm.getAscent() / 8, 0 + fm.getAscent() + fm.getDescent(), x + 3 * fm.getAscent() / 8, 0 + (fm.getAscent() / 2 + fm.getDescent() / 2));
+				ctx.drawline(x + fm.getAscent() / 8, 0, x + 3 * fm.getAscent() / 8, 0 + (fm.getAscent() / 2 + fm.getDescent() / 2));
+				ctx.drawline(x + fm.getAscent() / 8, 0 + fm.getAscent() + fm.getDescent(), x + 3 * fm.getAscent() / 8, 0 + (fm.getAscent() / 2 + fm.getDescent() / 2));
 			} break;
 		case '[':
 			{
@@ -334,35 +339,7 @@ public class FormuleTeken extends FormuleElement
 				ctx.lineTo(fm.getAscent() / 4 + fm.getAscent() / 2, 4 * fm.getAscent() / 8);
 				ctx.stroke();
 			} break;
-// FIXME not used?			
-		case 'z':
-			{
-				//TODO: remove the italic?
-				fm = fm.createCopy();
-				fm.setItalic(true);
-				ctx.setFont(fm.getFontStyle());
-				ctx.setTextAlign(TextAlign.CENTER);
-				ctx.fillText("z", this.width / 2, height);
-			} break;	
 		}
-
-		/*
-		 * else if(character=='2') { g.drawString("2", x,y+fm.getAscent());
-		 * g.drawLine
-		 * (x+1,y+fm.getAscent()-1,x+1+fm.getAscent()/5,y+fm.getAscent(
-		 * )-2-fm.getAscent()/5); }
-		 */
-
-		/*
-		else if (character == 'y')
-		{
-			ctx.fillText("y", this.width / 2, 0);
-			
-			boolean b = getFont().getSize() == 12 && (getFont().getName().equals("SansSerif") || getFont().getName().equals("Arial"));
-			if (b)
-				g.drawLine(x + fm.getAscent() / 3 - 1, y + fm.getAscent() - 2, x + 1, y + fm.getAscent() - 2 - fm.getAscent() / 3);
-				
-		}*/
 	}
 
 	
@@ -393,27 +370,14 @@ public class FormuleTeken extends FormuleElement
 	public boolean setColor(CssColor c)
 	{	
 		if(super.setColor(c) == false)
-			return false;
-		
+			return false;		
 		color = c.toString();
-		//ctx.setFillStyle(c);
-		//ctx.setStrokeStyle(c);
 		return true;
 		
 	}
 
-	private void drawKeer(Context2d ctx)
+	private void drawKeer(PathBuilder ctx)
 	{
-
-//		//dit is veel te veel als de keer als punt wordt getekend. Kijken hoe de breedte in wiskOpdr wordt bepaald. 
-//		if(maalteken)
-//			this.width = fm.getAscent() / 2 + 7;
-//		else
-//			this.width = fm.getAscent() / 2 + 2;
-//		//this.width = fm.getAscent();
-//
-//		this.setSize(width, height);
-
 		ctx.setLineWidth(fm.getStrokeWidth());
 
 		if (maalteken)
@@ -436,13 +400,8 @@ public class FormuleTeken extends FormuleElement
 		}
 	}
 
-	private void drawMin(Context2d ctx)
+	private void drawMin(PathBuilder ctx)
 	{
-//		this.width = fm.getAscent();
-//		
-//		//is dit nodig?
-//		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
-//		this.setSize(width, height);
 		ctx.setLineWidth(0.6 * fm.getStrokeWidth());
 		
 		ctx.beginPath();
@@ -458,16 +417,16 @@ public class FormuleTeken extends FormuleElement
 		ctx.setLineWidth(fm.getStrokeWidth());
 	}
 
-	private void drawDubbelePunt(Context2d ctx) //FIXME not used?
+	private void drawDubbelePunt(PathBuilder ctx) //FIXME not used?
 	{
 		int x = 0;
 		int y = 0;
 		x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4 + 5;
 		ctx.setLineWidth(fm.getStrokeWidth());
-		this.drawline(ctx, x + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8 - 2, x + fm.getAscent() / 2 + 1, y + 5 * fm.getAscent() / 8 - 2);
-		this.drawline(ctx, x + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8 - 1, x + fm.getAscent() / 2 + 1, y + 5 * fm.getAscent() / 8 - 1);
-		this.drawline(ctx, x + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8 + 4, x + fm.getAscent() / 2 + 1, y + 5 * fm.getAscent() / 8 + 4);
-		this.drawline(ctx, x + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8 + 5, x + fm.getAscent() / 2 + 1, y + 5 * fm.getAscent() / 8 + 5);
+		ctx.drawline( x + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8 - 2, x + fm.getAscent() / 2 + 1, y + 5 * fm.getAscent() / 8 - 2);
+		ctx.drawline( x + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8 - 1, x + fm.getAscent() / 2 + 1, y + 5 * fm.getAscent() / 8 - 1);
+		ctx.drawline( x + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8 + 4, x + fm.getAscent() / 2 + 1, y + 5 * fm.getAscent() / 8 + 4);
+		ctx.drawline( x + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8 + 5, x + fm.getAscent() / 2 + 1, y + 5 * fm.getAscent() / 8 + 5);
 	}
 
 	public char geefChar()
@@ -524,12 +483,12 @@ public class FormuleTeken extends FormuleElement
 	
 	@Override
 	public void draw(OMSVGElement svg) {
+		if(isSelected()) {
+			OMSVGRectElement r = new OMSVGRectElement(x, y, width, height, 0, 0);
+			r.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY,"#AAAAFF");
+			svg.appendChild(r);
+		}
 		if(teken != null) {
-			if(isSelected()) {
-				OMSVGRectElement r = new OMSVGRectElement(x, y, width, height, 0, 0);
-				r.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY,"#AAAAFF");
-				svg.appendChild(r);
-			}
 			int dx = x;
 			int dy = y+getAsHoogte();
 			int fs = fm.getFontSize();
@@ -554,7 +513,7 @@ public class FormuleTeken extends FormuleElement
 			t.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY,(selected ? "white" : color));
 			svg.appendChild(t);
 		} else {
-			super.draw(svg);
+			buildChar(new SvgBuilder(svg, x, y));
 		}
 	}
 

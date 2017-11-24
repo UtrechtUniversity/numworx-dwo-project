@@ -4,6 +4,10 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.core.client.GWT;
 
@@ -39,6 +43,10 @@ public class IntegraalVak extends FormuleElementWithChildren
 	@Override
 	public void paintComponent(Context2d ctx) {
 		super.paintComponent(ctx);
+		build(new CanvasBuilder(ctx));
+	}
+
+	protected void build(PathBuilder ctx) {
 		int asc = fm.getAscent();
 
 		int tx = Math.max(1, getChild(1).width - asc / 2);
@@ -51,16 +59,16 @@ public class IntegraalVak extends FormuleElementWithChildren
 		ctx.setFillStyle(color);
 				
 		ctx.beginPath();
-        ctx.arc(tx + asc/2, ty + asc/6,  asc/6, 0, Math.PI, true);
-        ctx.lineTo(tx + asc/3, ty + th - asc/6);
-        ctx.arc(tx + asc/6, ty + th - asc/6, asc/6, 0, Math.PI, false);
+        ctx.arc(tx + asc/2f, ty + asc/6f,  asc/6f, 0, Math.PI, true);
+        ctx.lineTo(tx + asc/3f, ty + th - asc/6f);
+        ctx.arc(tx + asc/6f, ty + th - asc/6f, asc/6f, 0, Math.PI, false);
         ctx.stroke();
         
         //ctx.setTextAlign(TextAlign.CENTER);
 		//ctx.setTextBaseline(TextBaseline.BOTTOM);
         boolean italic = fm.isItalic();
 		fm.setItalic(false);
-		ctx.setFont(fm.getFontStyle());
+		ctx.setFont(fm);
 		ctx.fillText("d", tx + asc + getChild(0).width + asc / 5 - 2, ashoogte);		
 		fm.setItalic(italic);
 	}
@@ -144,6 +152,28 @@ public class IntegraalVak extends FormuleElementWithChildren
 	}
 	public String toMathML() {
 		return "<mrow><msubsup><mo>\u222b</mo>"+ getChild(1).toMathML()+ getChild(2).toMathML() + "</msubsup>" + getChild(0).toMathML() +"<mo>d</mo>" + getChild(3).toMathML()+"</mrow>" ;
+	}
+	@Override
+	protected void paintComponent(OMSVGElement svg) {
+		super.paintComponent(svg);
+		SvgBuilder builder = new SvgBuilder(svg, x, y);
+		build(builder);
+	}
+
+	@Override
+	public void draw(OMSVGElement svg) {
+		paintComponent(svg);
+		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+		if(x != 0 || y != 0) {
+			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+		}
+		getChild(0).draw(g);
+		getChild(1).draw(g);
+		getChild(2).draw(g);
+		getChild(3).draw(g);
 	}
 
 }

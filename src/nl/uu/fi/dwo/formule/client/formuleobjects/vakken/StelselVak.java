@@ -2,6 +2,10 @@ package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
 import java.util.Vector;
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.core.shared.GWT;
 
@@ -22,36 +26,26 @@ public class StelselVak extends FormuleElementWithChildren
 	//Vector<FormuleRegel> kinderen;
 	public StelselVak(FormuleElement editor)
 	{
-		super(editor, 1);
-		//kinderen = new Vector<FormuleRegel>();
-		//new formuleRegel
-
-		//setSize(4 * fm.getAscent() / 3, 5 * fm.getAscent() / 4 + fm.getDescent());
-
-		//ind1.setLocation(5 * fm.getAscent() / 7 - 1, fm.getAscent() / 4);
-		//this.setSize(5 * fm.getAscent() / 6 + getChild().width, fm.getAscent() / 4 + getChild().height);
-		
-		//getChild().setPosition(5 * fm.getAscent() / 7 - 1, fm.getAscent() / 4);
-		//this.paint();
-//		this.setChanged(true);
-		//this.setAsHoogte(3 * fm.getAscent() / 4);
-		
+		super(editor, 1);		
 	}
 
 	@Override
 	public void paintComponent(Context2d ctx) {
 		super.paintComponent(ctx);
 
+		build(new CanvasBuilder(ctx));
+	}
+
+	protected void build(PathBuilder ctx) {
 		ctx.setStrokeStyle(color);
-//		ctx.setFillStyle(color);
 		ctx.setLineWidth(fm.getStrokeWidth());
 		
 		ctx.beginPath();
 		//ctx.moveTo(x, y);
 		ctx.arc(10, 6, 5, 3 * Math.PI / 2, Math.PI, true);
 		ctx.lineTo(5, height / 2 - 3);
-		ctx.arc(1, height / 2 - 4, 4, 0, Math.PI / 2);
-		ctx.arc(1, height / 2 + 4, 4, 3 * Math.PI / 2, 0);
+		ctx.arc(1, height / 2 - 4, 4, 0, Math.PI / 2, false);
+		ctx.arc(1, height / 2 + 4, 4, 3 * Math.PI / 2, 0, false);
 		ctx.lineTo(5, height - 6);
 		ctx.arc(10, height - 7, 5, Math.PI, Math.PI / 2, true);
 		ctx.stroke();
@@ -254,6 +248,26 @@ public class StelselVak extends FormuleElementWithChildren
 		}
 		return string + "@";
 	}
-	
+
+	@Override
+	protected void paintComponent(OMSVGElement svg) {
+		super.paintComponent(svg);
+		SvgBuilder builder = new SvgBuilder(svg, x, y);
+		build(builder);
+	}
+
+	@Override
+	public void draw(OMSVGElement svg) {
+		paintComponent(svg);
+		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+		if(x != 0 || y != 0) {
+			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+		}
+		for(FormuleRegel c: children) c.draw(g);
+	}
+
 
 }

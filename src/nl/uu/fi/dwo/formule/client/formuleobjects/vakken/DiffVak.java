@@ -1,5 +1,9 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+
 import com.google.gwt.canvas.dom.client.Context2d;
 
 import fi.wiskopdr.Letter;
@@ -7,14 +11,13 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
-import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 public class DiffVak extends FormuleElementWithChildren
 
 {		
 	private boolean diffBreuk;
-	private double asc;
-	private double desc;
+	private float asc;
+	private float desc;
 	
 	public DiffVak(FormuleElement editor)
 	{
@@ -33,7 +36,6 @@ public class DiffVak extends FormuleElementWithChildren
         {	getChild(0).setPosition(fm.getAscent()/2 -1, 0);
         
         }
-        
         getChild(1).setPosition(fm.getAscent()/8 + fm.getAscent()/2 - 2, 
         		(height - (2*(fm.getAscent() + fm.getDescent()) + fm.getAscent()/4))/2 + fm.getAscent() + fm.getDescent() + fm.getAscent()/8);
         setAsHoogte(getChild(1).y + 3*fm.getAscent()/8);
@@ -44,28 +46,14 @@ public class DiffVak extends FormuleElementWithChildren
         
         setSize(width, height);
     }
-	
-//	public int getAsHoogte()
-//	{
-//		
-//		if(diffBreuk)
-//        	//return getChild(0).height - fm.getAscent()/8 - 1;
-//			return getChild(0).height + 3 * fm.getAscent()/8;
-//		else
-//			//return getChild(1).y - fm.getAscent()/8 - 2;
-//			return getChild(1).y - fm.getAscent()/8 - 1;
-//        
-//	}
-	
+		
 	@Override
 	public void paintObject()
 	{
-		
 		this.getChild(0).paint();
 		this.getChild(1).paint();
 		zetMaat();
         paintComponent(ctx);
-	
 		this.getChild(0).draw(ctx);
 		this.getChild(1).draw(ctx);
 		this.drawCursor();
@@ -78,13 +66,17 @@ public class DiffVak extends FormuleElementWithChildren
 	public void paintComponent(Context2d ctx) {
 		super.paintComponent(ctx);
 	
+		build(new CanvasBuilder(ctx));
+	}
+
+	protected void build(PathBuilder ctx) {
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
 		
 		String dString = "d";
 		boolean italic = fm.isItalic();
 		fm.setItalic(false);
-		ctx.setFont(fm.getFontStyle());
+		ctx.setFont(fm);
 		
 		ctx.beginPath();
 		ctx.moveTo(fm.getAscent()/8, getAsHoogte() - 3*asc/8 + 1);
@@ -118,9 +110,7 @@ public class DiffVak extends FormuleElementWithChildren
 			ctx.lineTo(locx+c, locy+hoogte-hh+b-d);
 			ctx.lineTo(locx+c+b-bb, locy+hoogte-bb-d);
 			ctx.lineTo(locx+c+b, locy+hoogte-d);
-//			ctx.stroke();
-//			
-//			ctx.beginPath();
+
 			ctx.moveTo(breedte-b-1-c, locy+d);
 			ctx.lineTo(breedte-b+bb-1-c, locy+d+bb);
 			ctx.lineTo(breedte-1-c, locy+d+hh-b);
@@ -129,7 +119,6 @@ public class DiffVak extends FormuleElementWithChildren
 			ctx.lineTo(breedte-b-1-c, locy+hoogte-d);
 			ctx.stroke();
 		}
-
 	}
 
 	/* (non-Javadoc)
@@ -190,14 +179,6 @@ public class DiffVak extends FormuleElementWithChildren
 		return this;
 	}
 	
-//	@Override
-//	public boolean setFont(FormuleFont fm)
-//	{
-//		if (super.setFont(fm) == false)
-//			return false;
-//		//getChild().setPosition(5 * fm.getAscent() / 7 - 1, fm.getAscent() / 4);
-//		return true;
-//	}
 	
 	@Override
 	public String toString()
@@ -210,6 +191,26 @@ public class DiffVak extends FormuleElementWithChildren
 		return "<mfrac><mrow><mo>d</mo>" + getChild(0).toMathML() + "</mrow><mrow><mo>d</mo>" + getChild(1).toMathML() + "</mrow></mfrac>";
 	}
 
+	@Override
+	protected void paintComponent(OMSVGElement svg) {
+		super.paintComponent(svg);
+		SvgBuilder builder = new SvgBuilder(svg, x, y);
+		build(builder);
+	}
+
+	@Override
+	public void draw(OMSVGElement svg) {
+		paintComponent(svg);
+		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+		if(x != 0 || y != 0) {
+			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+		}
+		getChild(0).draw(g);
+		getChild(1).draw(g);
+	}
 }
 
 

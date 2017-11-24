@@ -1,6 +1,10 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+
 import com.google.gwt.canvas.dom.client.Context2d;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -31,6 +35,10 @@ public class LimietVak extends FormuleElementWithChildren{
 	@Override
 	public void paintComponent(Context2d ctx) {
 		super.paintComponent(ctx);
+		build(new CanvasBuilder(ctx));
+	}
+
+	protected void build(PathBuilder ctx) {
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
 		
@@ -38,7 +46,7 @@ public class LimietVak extends FormuleElementWithChildren{
 		//ctx.setTextBaseline(TextBaseline.BOTTOM);
 		boolean italic = fm.isItalic();
 		fm.setItalic(false);
-		ctx.setFont(fm.getFontStyle());
+		ctx.setFont(fm);
 		//niet italic maken.
 		//ctx.fillText("lim", getChild(1).x+getChild(1).width/2,getChild(2).y);
 		ctx.fillText("lim", getChild(1).x + getChild(1).width / 2, getChild(2).y);
@@ -158,6 +166,27 @@ public class LimietVak extends FormuleElementWithChildren{
 		else if("1".equals(k.toString()))
 			x = '\u2193';
 		return "<mo>"+ x + "</mo>";
+	}
+	@Override
+	protected void paintComponent(OMSVGElement svg) {
+		super.paintComponent(svg);
+		SvgBuilder builder = new SvgBuilder(svg, x, y);
+		build(builder);
+	}
+
+	@Override
+	public void draw(OMSVGElement svg) {
+		paintComponent(svg);
+		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+		if(x != 0 || y != 0) {
+			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+		}
+		getChild(0).draw(g);
+		getChild(1).draw(g);
+		getChild(2).draw(g);
 	}
 
 }

@@ -1,5 +1,9 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+
 import com.google.gwt.canvas.dom.client.Context2d;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
@@ -68,6 +72,10 @@ public class NdeLogVak extends FormuleElementWithChildren
 		// TODO Auto-generated method stub
 		super.paintComponent(ctx);
 
+		build(new CanvasBuilder(ctx));
+	}
+
+	protected void build(PathBuilder ctx) {
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
 		
@@ -79,9 +87,9 @@ public class NdeLogVak extends FormuleElementWithChildren
 		FormuleFont fmLog = fm.createCopy();
 		fmLog.setItalic(false);
 		
-		ctx.setFont(fmLog.getFontStyle());
+		ctx.setFont(fmLog);
 		ctx.fillText("log", 5 + getChild(1).width, getAsHoogte());// + fm.getAscent()/2 + fm.getAscent()/12);
-		ctx.setFont(fm.getFontStyle());
+		ctx.setFont(fm);
 		int hoogte = getChild(0).height;
 		int breedte = width;
 		int h =3*fm.getAscent()/2;
@@ -172,14 +180,6 @@ public class NdeLogVak extends FormuleElementWithChildren
 		return this;
 	}
 
-//	@Override
-//	public boolean setFont(FormuleFont fm)
-//	{
-//		if (super.setFont(fm) == false)
-//			return false;
-//		return true;
-//	}
-
 	@Override
 	public String toString()
 	{
@@ -196,6 +196,27 @@ public class NdeLogVak extends FormuleElementWithChildren
 			return "<mrow><msub><mi>log</mi>" + getChild(1).toMathML() + "</msub><mfenced>" + getChild(0).toMathML() + "</mfenced></mrow>";
 		}
 		return "<mrow><mmultiscripts><mi>log</mi><mprescripts /><none />" + getChild(1).toMathML() + "</mmultiscripts><mfenced>" + getChild(0).toMathML() + "</mfenced></mrow>";
+	}
+
+	@Override
+	protected void paintComponent(OMSVGElement svg) {
+		super.paintComponent(svg);
+		SvgBuilder builder = new SvgBuilder(svg, x, y);
+		build(builder);
+	}
+
+	@Override
+	public void draw(OMSVGElement svg) {
+		paintComponent(svg);
+		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+		if(x != 0 || y != 0) {
+			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+		}
+		getChild(0).draw(g);
+		getChild(1).draw(g);
 	}
 
 }

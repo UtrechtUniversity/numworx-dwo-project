@@ -1,5 +1,9 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+
 import com.google.gwt.canvas.dom.client.Context2d;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -30,6 +34,10 @@ public class SigmaVak extends FormuleElementWithChildren{
 	@Override
 	public void paintComponent(Context2d ctx) {
 		super.paintComponent(ctx);
+		build(new CanvasBuilder(ctx));
+	}
+
+	protected void build(PathBuilder ctx) {
 		FormuleFontChanges changes0 = new FormuleFontChanges();
 		changes0.setItalic(FormuleFontChanges.FALSE);
 		changes0.setRelativeSize(150);
@@ -37,34 +45,18 @@ public class SigmaVak extends FormuleElementWithChildren{
 				
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
-		//int fontSize = fm.getFontSize();
-		//fm.setFontSize(3*fontSize/2);
-		//fm.setItalic(false);
-		ctx.setFont(f0.getFontStyle());
-		//Font font0 = new Font(f.getName(), f.getStyle(), f.getSize()*3/2);
-		//g.setFont(font0);
-		//FontMetrics fm0 = getFontMetrics(font0);
-		//ctx.setTextBaseline(TextBaseline.BOTTOM);
-		//ctx.setTextAlign(TextAlign.CENTER);
+		ctx.setFont(f0);
 		
 		int sigmaW = (int) ctx.measureText("\u03A3").getWidth();//fm0.stringWidth("\u03A3");
-		//ctx.fillText("\u03A3", getChild(3).x+(getChild(3).width-sigmaW)/2,Math.min(getChild(1).y, getChild(2).y));
 		ctx.fillText("\u03A3", this.getChild(3).x +(this.getChild(3).width-sigmaW)/2,Math.min(this.getChild(1).y, this.getChild(2).y));
-		//fm.setFontSize(2*fontSize/3);
 		
 		FormuleFontChanges changes1 = new FormuleFontChanges();
 		changes1.setSmallText(FormuleFontChanges.TRUE);
 		changes1.setItalic(FormuleFontChanges.FALSE);
 		FormuleFont f1 = FormuleFont.createFromChanges(fm, changes1);
-		//f = fm2.getFont();
-		//g.setFont(f);
-		ctx.setFont(f1.getFontStyle());
+
+		ctx.setFont(f1);
 		ctx.fillText("=", getChild(1).x + getChild(1).width, getChild(1).y + getChild(1).getAsHoogte());
-		//font weer terugzetten naar normaal..
-		//FormuleFontChanges changes2 = new FormuleFontChanges();
-		//changes2.setSmallText(FormuleFontChanges.FALSE);
-		//setFontChanges(changes2);
-		//fm.setFontSize(fontSize);
 	}
 
 	public void paintObject()
@@ -125,6 +117,29 @@ public class SigmaVak extends FormuleElementWithChildren{
 
 	public String toMathML() {
 		return "<mrow><munderover><mo>\u03a3</mo><mrow>"+ getChild(1).toMathML()+ "<mo>=</mo>"+ getChild(2).toMathML() + "</mrow>"+ getChild(3).toMathML() + "</munderover>" + getChild(0).toMathML() +"</mrow>" ;
+	}
+
+	@Override
+	protected void paintComponent(OMSVGElement svg) {
+		super.paintComponent(svg);
+		SvgBuilder builder = new SvgBuilder(svg, x, y);
+		build(builder);
+	}
+
+	@Override
+	public void draw(OMSVGElement svg) {
+		paintComponent(svg);
+		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+		if(x != 0 || y != 0) {
+			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+		}
+		getChild(0).draw(g);
+		getChild(1).draw(g);
+		getChild(2).draw(g);
+		getChild(3).draw(g);
 	}
 
 }
