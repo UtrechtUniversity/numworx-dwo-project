@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
+import nl.uu.fi.dwo.formule.client.formuleholder.SVGTekstComponent;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
@@ -249,7 +250,7 @@ public class TekstRegel extends LayoutPanel
 			if(currentObject instanceof String)
 			{
 				
-				TekstComponent tekst = new TekstComponent(fm, currentObject.toString(), objectBreedte, objectHoogte);
+				SVGTekstComponent tekst = new SVGTekstComponent(fm, currentObject.toString(), objectBreedte, objectHoogte);
 				tekst.setColor(fgColor);
 				tekst.paint();
 				
