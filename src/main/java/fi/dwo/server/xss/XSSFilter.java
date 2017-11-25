@@ -45,10 +45,15 @@ public class XSSFilter implements Filter {
             res.setHeader("Access-Control-Allow-Credentials", "true");
             // ensure there is never any caching for now
             boolean rest = req.getRequestURI().contains("/rest/");
-            if(rest) {
+            boolean nocache = req.getRequestURI().contains(".nocache.");
+            boolean cache = req.getRequestURI().contains(".cache.");
+            if(rest || nocache) {
             	res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
             	res.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-            	res.setHeader("Expires", "0"); // Proxies.
+            	res.setDateHeader("Expires", 0L); // Proxies.
+            }
+            if (cache) {
+            	res.setDateHeader("Expires", System.currentTimeMillis() + 1000*60*60 );
             }
             res.setCharacterEncoding("UTF-8");
         }
