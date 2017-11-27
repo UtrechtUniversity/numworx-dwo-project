@@ -85,7 +85,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<version>0.0.8-SNAPSHOT</version>
+	<version>0.0.8</version>
 	<properties>
 		<maven.test.skip>true</maven.test.skip>
 		<gwtVersion>2.8.1</gwtVersion>
