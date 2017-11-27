@@ -17,7 +17,7 @@ public interface Text extends Constants {
 	@DefaultStringValue("Login")
 	String login();
 	
-	@DefaultStringValue("Login als gast")
+	@DefaultStringValue("LOG IN ALS GAST")
 	String loginAlsGast();
 	
 	@DefaultStringValue("Digitale Wiskunde Omgeving")
@@ -110,4 +110,10 @@ public interface Text extends Constants {
 
 	@DefaultStringValue("TOETS")
 	String EINDTOETS();
+	
+	@DefaultStringValue("U kunt ook inloggen als gast. Uw werk wordt dan NIET opgeslagen.")
+	String guestLoginWarning();
+	
+	@DefaultStringValue("Niet ingelogd")
+	String guest();
 }

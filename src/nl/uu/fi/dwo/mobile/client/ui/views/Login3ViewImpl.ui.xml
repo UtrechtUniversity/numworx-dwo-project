@@ -42,7 +42,28 @@
 		font-family: Ubuntu;
 		font-weight: regular;
 	}
+	.warning {
+		width: 252px;
+		left: 20px;
+		right: 20px;
+		position: absolute;
+		top: 175px;
+		height: 30px;
+		font-family: Ubuntu;
+		font-weight: medium;
+		font-size: 13px;
+		color: #AAC1DC;
+	}
 	
+	.loginError .warning { 
+		display: none;
+	}
+	.loginError .guestButton {
+		display: none;
+	}
+	.loginError .nologin {
+		display: block;
+	}
 	
 	.messages {
 		top: 306px;
@@ -54,7 +75,7 @@
 	.login {
 		top: 306px;
 		width: 306px;
-		height: 180px;
+		height: 260px;
 		left: 462px;
 		background-color: #314770;
 		position: absolute;
@@ -116,8 +137,25 @@
 		-moz-border-radius: 3px;
 		border-radius: 3px;
 	}
+	
+	.guestButton {
+		color: white;
+		background-color: #1B75BB;
+		height: 26px;
+		width: 126px;
+		right: 25px;
+		top: 220px;
+		position: absolute;
+		font-size: 12px;
+		font-family: Ubuntu;
+		font-weight: bold;
+		letter-spacing: 0px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
+	}
 	.links {
-		top: 496px;
+		top: 576px;
 		width: 306px;
 		left: 462px;
 		position: absolute;
@@ -150,6 +188,7 @@
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
 		border-radius: 3px;
+		display:none;
 	}
 	
 	
@@ -193,6 +232,8 @@
 			<g:PasswordTextBox ui:field='password' styleName='{style.password}' ></g:PasswordTextBox>
 			<g:Button  ui:field='loginBtn' styleName='{style.button}' ><ui:text from='{rb.AANMELDEN}'/></g:Button>
 			<g:Label styleName='{style.nologin}'><ui:text from='{rb.inloggen_mislukt}'/></g:Label>
+			<g:Label styleName='{style.warning}'><ui:text from='{rb.guestLoginWarning}' /></g:Label>
+			<g:Button ui:field='guestBtn' styleName='{style.guestButton}' ><ui:text from='{rb.loginAlsGast}' /></g:Button>
 		</g:FlowPanel>
 		<g:HTML ui:field='linksPanel' styleName='{style.links}' addStyleNames='{style.linksError}'>
 			<p><a href="/dwo/rest/public/user/requestNewPassword?language={rb.locale}&amp;back={back}"><ui:text from='{rb.vergeten}'/></a></p>
