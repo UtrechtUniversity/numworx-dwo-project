@@ -126,6 +126,8 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	private void ggbLog(String action, String name, String definition,
 			String value, String type)
 	{
+		//if(changed) return; TODO uitzoeken of dit okay is (Sylvia)
+		
 		changed = true;
 		// er is iets veranderd, dus vinkje/kruis weg
 		setVisibleFeedbackImages(false, false, false);
@@ -836,8 +838,11 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	 */
 	void setVisibleFeedbackImages(boolean vinkjeGroen, boolean vinkjeGeel, boolean kruisRood)
 	{
-		kijkNaPanel.setStyleName(css.goed(), vinkjeGroen);
-		kijkNaPanel.setStyleName(css.half(), vinkjeGeel);
-		kijkNaPanel.setStyleName(css.fout(), kruisRood);
+		if(nakijken && kijkNaPanel != null)
+		{
+			kijkNaPanel.setStyleName(css.goed(), vinkjeGroen);
+			kijkNaPanel.setStyleName(css.half(), vinkjeGeel);
+			kijkNaPanel.setStyleName(css.fout(), kruisRood);
+		}
 	}
 }

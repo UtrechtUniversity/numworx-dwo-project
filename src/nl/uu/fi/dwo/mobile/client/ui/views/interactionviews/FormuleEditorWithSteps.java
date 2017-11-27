@@ -581,7 +581,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			f.setFont(font);
 			// zet ook default font, want FormuleEditor.requestFocus() zorgt ervoor dat teruggevallen wordt op default font 
 			f.setDefaultFont(font);
-			f.getMainRegel().getCanvas().getElement().getStyle().setMarginLeft(23, Unit.PX);
+			f.getCanvas().getElement().getStyle().setMarginLeft(23, Unit.PX);
 
 			viewers.add(f);
 			latest_answer_viewer = f;
@@ -1253,7 +1253,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			FormuleViewer viewer = new FormuleViewer(fv.toString());
 			viewer.setFont(font);
 			viewer.setDefaultFont(font);
-			viewer.getMainRegel().getCanvas().getElement().getStyle().setMarginLeft(23, Unit.PX);
+			viewer.getCanvas().getElement().getStyle().setMarginLeft(23, Unit.PX);
 			viewers.add(viewer);
 			addFormuleViewer(viewer, stepPanel);
 		}
