@@ -256,7 +256,7 @@ public class TekstRegel extends LayoutPanel
 				
 				if(horPositie == 0 && Letter.isLetter(currentObject.toString().charAt(0)))
 					horPositie = 2;
-				Widget w = tekst.getAsPanel();
+				Widget w = tekst.asWidget();
 				
 				this.add(w);
 				this.setWidgetLeftWidth(w, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
