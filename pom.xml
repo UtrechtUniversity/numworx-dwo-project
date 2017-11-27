@@ -256,21 +256,6 @@
 				<gwt.copyWebapp>false</gwt.copyWebapp>
 			</properties>
 		</profile>
-		<!-- MC Squared profiles -->
-		<profile>
-			<id>MC2Player</id>
-			<properties>
-				<finalName>MC2Player</finalName>
-				<gwtModule>${project.groupId}.MC2Player</gwtModule>
-			</properties>
-		</profile>
-		<profile>
-			<id>MC2LMS</id>
-			<properties>
-				<finalName>MC2LMS</finalName>
-				<gwtModule>${project.groupId}.MC2LMS</gwtModule>
-			</properties>
-		</profile>
 		<profile>
 			<id>DWO2player</id>
 			<properties>
@@ -281,7 +266,7 @@
 				<gwt.copyWebapp>false</gwt.copyWebapp>
 <!-- 				<gwt.style>PRETTY</gwt.style> -->
 				<gwt.compiler.force>true</gwt.compiler.force>
-				<gwt.compiler.localWorkers>1</gwt.compiler.localWorkers>	
+				<gwt.compiler.localWorkers>2</gwt.compiler.localWorkers>	
 			</properties>
 		</profile>
 		<profile> <!-- gebruik deze voor gwt:run -->

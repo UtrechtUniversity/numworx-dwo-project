@@ -49,7 +49,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 	
 	@Override
 	public String mayStop() {
-		if (started)
+		if (started && clientFactory.withUser())
 			return Text.constants.maybe_lost_data();
 		return super.mayStop();
 	}

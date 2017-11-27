@@ -41,7 +41,7 @@ import com.googlecode.mgwt.ui.client.OsDetection;
  * @author Danny Hendrix
  * 
  */
-public class ClientFactoryImpl implements ClientFactory
+public abstract class ClientFactoryImpl implements ClientFactory
 {
 	
 	final static Provider<ViewModuleView> NORMAL = new Provider<ViewModuleView>() {
@@ -198,39 +198,9 @@ public class ClientFactoryImpl implements ClientFactory
 	
 	@Override
 	public Promise<Void> logout() {
-		DWOplayer.profiledata = null;
 		return Promises.resolved(null);
 	}
-
-	public boolean withUser() {
-		return DWOplayer.profiledata != null;
-	}
-	
-	// NOT NULL, "" als null
-	@SuppressWarnings("deprecation")
-	public Object getSchoolID() {
-		return DWOplayer.profiledata.get("schoolID");
-	}
-
-	public DomSchool getSchool() {
-		if (getSchoolID() == null || getSchoolID() .equals("")) return null;
-		DomSchool school = new DomSchool();
-		school.setId(idOf(getSchoolID(), PersistenceClassType.PersistentSchool));
-		school.setSchoolName((String)getSchoolName());
-		return school;
-	}
-	
-	public Object getClassID() {
-		return DWOplayer.profiledata.get("classID");
-	}
-	
-	public DomSchoolClass getSchoolClass() {
-		if(getClassID() == null) return null;
-		DomSchoolClass cls = new DomSchoolClass();
-		cls.setId(idOf(getClass(), PersistenceClassType.PersistentSchoolClass));
-		return cls;
-	}
-	
+		
 	protected static PersistenceId idOf(Object object, PersistenceClassType type) {
 		if(object == null || "".equals(object))
 				return null;
@@ -239,29 +209,6 @@ public class ClientFactoryImpl implements ClientFactory
 		return id;
 	}
 
-
-	@Override
-	public boolean isIconizer() {
-		return Boolean.TRUE.equals(DWOplayer.profiledata.get("iconizer"));
-	}
-
-	@Override
-	public RoleType getRoleType() {
-		try {
-			return RoleType.valueOf((String)DWOplayer.profiledata.get("groupname"));
-		} catch (Exception e) {
-			return RoleType.NONE;
-		}
-	}
-
-	@Override
-	public Object getUserID() {
-		return DWOplayer.profiledata.get("userID");
-	}
-
-	public Object getSchoolName() {
-		return DWOplayer.profiledata.get("schoolName");
-	}
 
 	@Override
 	public Promise<Void> barrier() {

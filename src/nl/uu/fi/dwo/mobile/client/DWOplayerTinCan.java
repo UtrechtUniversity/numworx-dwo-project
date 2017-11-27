@@ -1,17 +1,17 @@
 package nl.uu.fi.dwo.mobile.client;
 
+import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
+
+import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
+import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
+import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
+
 public class DWOplayerTinCan extends WiskOpdrDefaults {
 
 	public DWOplayerTinCan() {
 		super(null);
 	}
-
-//	@Override
-//	public String getResource(String resource) {
-//		//return "http://www.fisme.science.uu.nl/dwo/apps/noordhoff/" + resource;
-//		//return "http://cdplogica.toegang.nu/noordhoff/vo/fi/dwo/2014_v1_0/" + resource;
-//		return GWT.getModuleBaseURL() + "../" + resource;
-//	}
 
 	@Override
 	public String getStubView() {
@@ -29,6 +29,25 @@ public class DWOplayerTinCan extends WiskOpdrDefaults {
 	@Override
 	public String getCDN() {
 		return getHost();
+	}
+
+	@Override
+	public String keyboardStyle() {
+		return "noordhoff";
+	}
+
+	@Override
+	public StatusBarIF getStatusBar() {
+		return new nl.uu.fi.dwo.mobile.client.ui.noordhoffkb.NoordhoffKeyboard();
+	}
+	@Override
+	public ScoreNavIF getScoreNav() {
+		return new ScoreNavPanel();
+	}
+
+	@Override
+	public HeaderCss headercss() {
+		return  DWOplayer.DWO_BUNDLE.headercss();
 	}
 
 }

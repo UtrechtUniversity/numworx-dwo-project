@@ -67,43 +67,12 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 //		
 //	}
 	
-	private final class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandlerV3 implements RPCHandler{
+	private final class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandlerV3 implements RPCHandler {
 		private DWO2RPCHandler(String server, int profile) {
 			super(server, profile, false);
 		}
-
-		@Override
-		public void getUserResults(Object courseID, Object userID,
-				AsyncCallback<List<Map<String,Object>>> getUserResultsCallback) {
-			Object schoolGroupID = getSchoolGroupID();
-			getUserResultsHelper(courseID, userID, schoolGroupID, getUserResultsCallback);
-		}
-
-		@Override
-		public Promise<Void> logout() {
-			// TODO Auto-generated method stub
-			return super.logout();
-		}
-
-		@Override
-		public Promise<Void> startExam(String id, String password) {
-			// TODO Auto-generated method stub
-			// super.startExam(id, password);
-			return super.startExam(id, password);
-		}
-
 	}
 
-
-	private Object getSchoolGroupID() {
-		Object sgID;
-		try {
-			sgID = PersistenceIdDecoderInterface.instance.idOf(
-					DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole().getSchoolGroupId(),
-					PersistenceClassType.PersistentSchoolGroup);
-		} catch (Exception ignore) {/*NPE*/ sgID = null;}
-		return sgID;
-	}
 
 	public DWO2player() {
         //Initialize an Exception translator.
@@ -202,10 +171,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 				if(!withUser()) {
 					api = new SCORM_guest();
 					menuWidget = null;
-				} else {
-					Object userID = getUserID();
-					Object sgID = getSchoolGroupID();
-					
+				} else {					
 					api = new SCORM_DWO3();
 					menuWidget = getUserBar();
 					
@@ -220,16 +186,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 				return DwoGlobalVars.instance().getCurrentUser() != null;
 			}
 
-			@Override
-			public Object getSchoolID() {
-				try {
-					PersistenceId id = clientfactory.getSchool().getId();
-					return PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentSchool);
-				} catch (Exception e) {
-					return "";
-				}
-			}
-
+			
 			@Override
 			public DomSchool getSchool() {
 				try {
@@ -239,15 +196,6 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 				}
 			}
 			
-			@Override
-			public Object getClassID() {
-				try {
-					PersistenceId id = getSchoolClass().getId();
-					return PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentSchoolClass);
-				} catch (Exception e) {
-					return "";
-				}
-			}
 			@Override
 			public DomSchoolClass getSchoolClass() {
 				return DwoGlobalVars.instance().getCurrentSchoolClass();
@@ -278,16 +226,6 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 				PersistenceId id = DwoGlobalVars.instance().getCurrentUser().getId();
 				return PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentUser);
 			}
-
-			@Override
-			public Object getSchoolName() {
-				try {
-					return getSchool().getSchoolName();
-				} catch (Exception e) {
-					return "school";
-				}
-			}
-
 
 		};
 		String host = PARAMETERS.getHost();

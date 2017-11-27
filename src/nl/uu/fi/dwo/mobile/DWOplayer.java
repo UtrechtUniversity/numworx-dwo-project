@@ -205,9 +205,6 @@ public class DWOplayer implements EntryPoint
 	
 	//public static Locale language = new Locale ("nl", "");
 	public static Text_nl rb = new Text_nl();
-
-	@Deprecated /* moves to clientfactory dwov1, removed in dwov2 */
-	public static Map<String, Object> profiledata = null;
 	
 	public static boolean withUser() {
 		return clientfactory.withUser();
@@ -273,7 +270,7 @@ public class DWOplayer implements EntryPoint
 	}
 
 	protected ClientFactory createClientFactory() {
-		return new ClientFactoryImpl();
+		return null; //new ClientFactoryImpl();
 	}
 
 	private void createTabletDisplay(ClientFactory clientfactory)
