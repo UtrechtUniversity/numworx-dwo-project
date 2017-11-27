@@ -50,6 +50,7 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	interface Login3ViewImplCSS extends CssResource {
 		String loginError();
 		String linksError();
+		String noGuestAllowed();
 	}
 	
 	@UiField Login3ViewImplCSS style;
@@ -122,10 +123,13 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	public String getPassword() {
 		return password.getText();
 	}
+	
 	boolean allow = !kiosk;
+
 	@Override
 	public void allowGuest(boolean allow) {
 		this.allow = allow && !kiosk;
+		loginPanel.setStyleName(style.noGuestAllowed(), !this.allow);
 	}
 	@Override
 	public void setupModule() {
@@ -212,4 +216,9 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 		h.fireEvent(up);
 	}
 	
+	@UiHandler({"guestBtn"}) 
+	void onGuestBtn(ClickEvent e) {
+		if (allow && guestHandler != null) 
+			guestHandler.onTap(null);	
+	}
 }

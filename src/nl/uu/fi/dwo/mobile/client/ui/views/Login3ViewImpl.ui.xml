@@ -55,12 +55,14 @@
 		color: #AAC1DC;
 	}
 	
-	.loginError .warning { 
+	.loginError .warning, 
+	.loginError .guestButton, 	
+	.noGuestAllowed .warning, 
+	.noGuestAllows .guestButton
+	{ 
 		display: none;
 	}
-	.loginError .guestButton {
-		display: none;
-	}
+	
 	.loginError .nologin {
 		display: block;
 	}
@@ -86,12 +88,16 @@
 		-moz-border-radius: 3px;
 		border-radius: 3px;
 	}
+	.noGuestAllowed {
+		height: 180px;
+	}
+
 	.loginError {
-		height: 240px;
+		height: 240px !important;
 		z-index: 1;
 	}
 	
-	
+		
 	.username {
 		width: 252px;
 		height: 30px;
