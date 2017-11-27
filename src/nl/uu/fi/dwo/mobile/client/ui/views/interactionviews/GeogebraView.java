@@ -610,11 +610,11 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 			}
 			// nagekeken = true;
 		}
-		
-		if (!correct)
+	
+		if (!isCorrect())
 			verhoogErrorCount();
 
-		if (feedback)
+		if (feedback && nakijken)
 		{
 			// cross widget communicatie
 			if (correct)
