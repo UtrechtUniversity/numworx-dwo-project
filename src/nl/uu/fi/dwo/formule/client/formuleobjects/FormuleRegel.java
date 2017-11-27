@@ -134,7 +134,7 @@ public class FormuleRegel extends FormuleElement
 		if (smalltext == true)
 			fc.setSmallText(FormuleFontChanges.TRUE);
 		else
-			fc.setSmallText(FormuleFontChanges.FALSE);
+			fc.setSmallText(FormuleFontChanges.NOT_SET);
 
 		
 		this.setFontChanges(fc);

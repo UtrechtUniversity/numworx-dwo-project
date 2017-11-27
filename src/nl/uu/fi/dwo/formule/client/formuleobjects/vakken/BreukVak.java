@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 
 /**
@@ -21,26 +22,26 @@ import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
  */
 public class BreukVak extends FormuleElementWithChildren
 {
+	
 	public BreukVak(FormuleElement holder)
 	{
-		super(holder);
+		super(holder,2);
+//		FormuleFontChanges changes = new FormuleFontChanges();
+//		changes.setSmallText(FormuleFontChanges.FALSE);
+//		this.setFontChanges(changes);
 
-		FormuleFontChanges changes = new FormuleFontChanges();
-		changes.setSmallText(FormuleFontChanges.FALSE);
-		this.setFontChanges(changes);
+//		this.createChildren(2);
 
-		this.createChildren(2);
-
-		//new formuleRegel
-
-		setSize(3 * fm.getAscent() / 4, 5 * fm.getAscent() / 2 + 2 * fm.getDescent());
-
-		getChild(0).setPosition(fm.getAscent() / 3, 0);
-		getChild(1).setPosition(fm.getAscent() / 3, 6 * fm.getAscent() / 4 + fm.getDescent());
-
-		//this.setAsHoogte(getChild(0).height - fm.getAscent() / 8);
-		this.setAsHoogte(getChild(0).height + 5 * fm.getAscent() / 8);
-		this.setChanged(true);
+//		//new formuleRegel
+//
+//		setSize(3 * fm.getAscent() / 4, 5 * fm.getAscent() / 2 + 2 * fm.getDescent());
+//
+//		getChild(0).setPosition(fm.getAscent() / 3, 0);
+//		getChild(1).setPosition(fm.getAscent() / 3, 6 * fm.getAscent() / 4 + fm.getDescent());
+//
+//		//this.setAsHoogte(getChild(0).height - fm.getAscent() / 8);
+//		this.setAsHoogte(getChild(0).height + 5 * fm.getAscent() / 8);
+//		this.setChanged(true);
 	}
 	
 	private boolean onlyDigits(String s)
@@ -60,8 +61,8 @@ public class BreukVak extends FormuleElementWithChildren
 		}
 		else
 		{
-			getChild(0).setSmallText(false);
-			getChild(1).setSmallText(false);
+			getChild(0).setSmallText(false);getChild(0).setFont(fm);
+			getChild(1).setSmallText(false);getChild(1).setFont(fm);
 		}
 		this.getChild(0).paint();
 		this.getChild(1).paint();
@@ -80,13 +81,9 @@ public class BreukVak extends FormuleElementWithChildren
 		super.paintComponent(ctx);
 
 		ctx.setStrokeStyle(color);
-//		ctx.setFillStyle(color);
-
 		ctx.setLineWidth(fm.getStrokeWidth());
 		
 		ctx.beginPath();
-		//ctx.moveTo(fm.getAscent() / 8, getChild(0).height + fm.getAscent() / 8);
-		//ctx.lineTo(this.width - (fm.getAscent() / 8), getChild(0).height + fm.getAscent() / 8);
 		ctx.moveTo(fm.getAscent() / 8, this.getAsHoogte() - 7*fm.getAscent() / 16 - 1);
 		ctx.lineTo(this.width - (fm.getAscent() / 8), this.getAsHoogte() - 7*fm.getAscent() / 16 - 1);
 		ctx.stroke();
@@ -109,8 +106,8 @@ public class BreukVak extends FormuleElementWithChildren
 	public void validate() {
 		if(sizechanged) {
 			boolean onlyDigits = onlyDigits(getChild(0).toString()) && onlyDigits(getChild(1).toString());
-			getChild(0).setSmallText(onlyDigits);
-			getChild(1).setSmallText(onlyDigits);
+			getChild(0).setSmallText(onlyDigits);if(!onlyDigits) getChild(0).setFont(fm);
+			getChild(1).setSmallText(onlyDigits);if(!onlyDigits) getChild(1).setFont(fm);
 		}
 		super.validate();
 	}

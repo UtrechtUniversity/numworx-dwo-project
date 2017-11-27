@@ -100,6 +100,7 @@ public class SvgBuilder implements PathBuilder {
 	@Override
 	public void fillText(String data, float x, float y) {
 		OMSVGTextElement t = text(data, x+offx, y+offy);
+		t.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, fill);
 		svg.appendChild(t);
 	}
 

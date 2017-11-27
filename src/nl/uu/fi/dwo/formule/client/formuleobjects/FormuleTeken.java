@@ -21,6 +21,7 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.Context2d.TextAlign;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style.FontStyle;
+import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Unit;
 
 import fi.wiskopdr.Letter;
@@ -286,6 +287,7 @@ public class FormuleTeken extends FormuleElement
 	}
 
 	protected void buildChar(PathBuilder ctx) {
+		ctx.setStrokeStyle(selected?"white":color);
 		switch(character) {
 		case '*':
 		case '\u00d7':
@@ -297,6 +299,7 @@ public class FormuleTeken extends FormuleElement
 		case '\u3008':
 			{
 				int x = this.width / 2 - 3 / 2 - fm.getAscent() / 4;
+				ctx.setStrokeStyle(selected?"white":color);
 				ctx.beginPath();
 				ctx.moveTo(x + 3 * fm.getAscent() / 8, 0);
 				ctx.lineTo(x + fm.getAscent() / 8, 0 + (fm.getAscent() / 2 + fm.getDescent() / 2));
@@ -379,7 +382,6 @@ public class FormuleTeken extends FormuleElement
 	private void drawKeer(PathBuilder ctx)
 	{
 		ctx.setLineWidth(fm.getStrokeWidth());
-
 		if (maalteken)
 		{
 			ctx.beginPath();
@@ -403,7 +405,6 @@ public class FormuleTeken extends FormuleElement
 	private void drawMin(PathBuilder ctx)
 	{
 		ctx.setLineWidth(0.6 * fm.getStrokeWidth());
-		
 		ctx.beginPath();
 		ctx.moveTo(fm.getAscent() / 4, 5 * fm.getAscent()/8 + 1);
 		ctx.lineTo(fm.getAscent()/4 + fm.getAscent()/2, 5 * fm.getAscent()/8 + 1);// + fm.getAscent() / 6);
@@ -511,6 +512,7 @@ public class FormuleTeken extends FormuleElement
 			t.getStyle().setFontStyle(fm.isItalic() ? FontStyle.ITALIC: FontStyle.NORMAL);
 			t.getStyle().setSVGProperty(SVGConstants.CSS_FONT_FAMILY_PROPERTY, fm.getFont());
 			t.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY,(selected ? "white" : color));
+			t.getStyle().setFontWeight(fm.isBold() ? FontWeight.BOLD : FontWeight.NORMAL);
 			svg.appendChild(t);
 		} else {
 			buildChar(new SvgBuilder(svg, x, y));
