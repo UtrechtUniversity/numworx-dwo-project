@@ -99,5 +99,8 @@
                 <gwt.style>PRETTY</gwt.style>
                 <jpda.listen>maven</jpda.listen>
             </properties>
+            <activatedProfiles>
+                <activatedProfile>dwodevel-db</activatedProfile>
+            </activatedProfiles>
         </action>
     </actions>
