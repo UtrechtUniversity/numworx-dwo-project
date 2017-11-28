@@ -16,6 +16,7 @@ public class Text_fr extends ListResourceBundle {
         {TextMapper.BTN_OK, "OK"},
         {TextMapper.BTN_YES, "Oui"},
         {TextMapper.BTN_CLOSE, "Fermer"},
+		{TextMapper.BTN_BACK, "Retour" },
         {TextMapper.DLG_CONFIRM, "Confirmer"},
         {TextMapper.DLG_ENTER_INPUT, "Entrer donnée"},
         {TextMapper.DLG_MESSAGE, "Message"},
@@ -313,7 +314,17 @@ public class Text_fr extends ListResourceBundle {
             + "Les modules sélectionnés sont copiés  sur votre propre aperçu module <br>"
             + "et peuvent être utilisés par votre propre école."},
         {TextMapper.GUIEID_MSG2, "<html>Je souhaite participer à cette façon de partager et apparaître comme école dans les  listes"},
-        {TextMapper.GUIEID_MSG3, "<html>(1) Sélectionner modules<br>(2) Sélectionner écoles<br><br>Les modules sélectionnés sont disponibles<br>pour l’école selectionné."},};
+        {TextMapper.GUIEID_MSG3, "<html>(1) Sélectionner modules<br>(2) Sélectionner écoles<br><br>Les modules sélectionnés sont disponibles<br>pour l’école selectionné."},
+        
+        {TextMapper.LBL_USERNAME, "Nom d'utilisateur"},
+        {TextMapper.LBL_EMAIL, "Adresse mail"},
+        {TextMapper.LBL_REQUEST_NEW_PASSWORD, "Entrez votre nom d'utilisateur et votre email configuré comme validation\npour recevoir un code d'authentification et des instructions par email\npour changer votre mot de passe."},
+        {TextMapper.LBL_UNKNOWN_COMBINATION, "Cette combinaison est inconnue et vos actions ont été enregistrées."},
+        {TextMapper.LBL_ENTER_AUTHCODE_FOR_NEW_PASSWORD, "Entrez votre code d'authentification et un nouveau mot de passe pour le changer."},
+        {TextMapper.LBL_ILLEGAL_AUTHCODE, "Le code d'authentification est invalide, il est possible qu'il ait expiré."},
+        {TextMapper.LBL_EMAIL_WITH_AUTHCODE_SENT, "Un email avec le code d'authentification vous a été envoyé."},
+    
+    };
 
     public Text_fr() {
 
