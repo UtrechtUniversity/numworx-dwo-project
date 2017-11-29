@@ -47,6 +47,7 @@
     </developers>
     <properties>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+        <jpda.address>8000</jpda.address>
     </properties>
 
     <!-- update the https path for a different branch or tag! -->
@@ -227,7 +228,6 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
-            
 <!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -396,11 +396,74 @@
         </profile>-->
         <profile>
             <id>dev</id>
+            <!-- profile for running with default/internal configuration -->
             <activation>
                 <property>
                     <name>dev</name>
                 </property>
             </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.2.1</version>
+                        <configuration>
+                            <mainClass>fi.dwo.dwojapplet.domain.DWO</mainClass>
+                            <workingDirectory>DWOJClient</workingDirectory>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <!-- profile for running against localhost  -->
+            <id>dev-localhost</id>
+            <activation>
+                <property>
+                    <name>dev-localhost</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>2.5</version>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/exec</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${basedir}/src/test/resources/run-configs/localhost</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>                    
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-classpath</argument> 
+                                <classpath/>
+                                <argument>-agentlib:jdwp=transport=dt_socket,server=y,address=8000</argument>
+                                <argument>fi.dwo.dwojapplet.domain.DWO</argument>
+                            </arguments>
+                            <mainClass>fi.dwo.dwojapplet.domain.DWO</mainClass>
+                            <workingDirectory>${project.build.directory}/exec</workingDirectory>
+                        </configuration>
+                    </plugin>                    
+                </plugins>
+            </build>
         </profile>
         <profile>
             <id>dwo-pack-sign-obfuscate</id>
