@@ -2994,7 +2994,9 @@ private Object CamelCase(String name) {
 				{
 					focusVerlegd = tekstVakken[i][j].tabFocus(this, false);
 					if(focusVerlegd)
+					{	doorzochtDoorTab = false;
 						return true;
+					}
 				}
 			}
 			return false;

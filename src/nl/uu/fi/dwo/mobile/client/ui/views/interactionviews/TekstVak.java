@@ -755,6 +755,10 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	{
 		int start = 0;
 		boolean focusVerlegd = false;
+		
+		//if tekstVak is invisible, do not move focus to anything inside tekstVak
+		if(!isVisible())
+			return false;
 		//if source outside TekstVak: start searching at 0.
 		//if source inside TekstVak: start searching at next OpdrachtObject
 		if(up)
@@ -886,6 +890,11 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	{
 		int start = opdrachtObjects.size() - 1;
 		boolean focusVerlegd = false;
+		
+		//if tekstVak is invisible, do not move focus to anything inside tekstVak
+		if(!isVisible())
+			return false;
+				
 		//if source outside TekstVak: start searching at 0.
 		//if source inside TekstVak: start searching at next OpdrachtObject
 		if(up)
