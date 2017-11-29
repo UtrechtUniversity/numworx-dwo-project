@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
@@ -67,6 +68,7 @@ import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 
@@ -214,7 +216,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	{
 		comRoot.getKeyboard().setEditor(this);
 		FocusOnTouch.focus();
-		shown = true; // mag dat hier al? nee dus. -- Syl: Waarom niet? Waar dan wel?
+		shown = true; // mag dat hier al? nee dus. -- Syl: Waarom niet? Waar dan wel? deze wordt tevroeg aangeroepen, als de teksteditor nog niet in de div-tree zit
 		setCursorWidget(cursorWidget);
 		hbox.removeStyleName(css.textEditor_empty());
 	}
@@ -636,8 +638,23 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	private void showCursor()
 	{
-		if (shown)
-			cursorWidget.getElement().scrollIntoView();
+		if (shown && visibleChain())
+			OpdrNav.defer(()->cursorWidget.getElement().scrollIntoView());
+			
+			;
+	}
+
+	private boolean visibleChain() {
+		if ( widget.isAttached() ) {
+			Widget w = widget;
+			Widget root = RootLayoutPanel.get();
+			while (w != root) {
+				if (!w.isVisible()) return false;
+				w = w.getParent();
+			}
+			return true;
+		} 
+		return false;
 	}
 
 	@Override
