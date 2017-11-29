@@ -47,11 +47,11 @@ public class AbsVak extends FormuleElementWithChildren
 		int d = fm.getAscent()/8;
 		float x1 = c, y1 = d;
 		float x2 = c, y2 = height-d;
-		OMSVGLineElement line = new OMSVGLineElement(x1,y1,x2,y2);
+		OMSVGLineElement line = new OMSVGLineElement(x1+x,y1+y,x2+x,y2+y);
 		line.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, color);
 		svg.appendChild(line);
 		x1 = x2 = width-1-c;
-		line = new OMSVGLineElement(x1,y1,x2,y2);
+		line = new OMSVGLineElement(x1+x,y1+y,x2+x,y2+y);
 		line.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, color);
 		svg.appendChild(line);
 	}
