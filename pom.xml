@@ -39,7 +39,7 @@
 	<parent>
 		<groupId>fi.parentgwt</groupId>
 		<artifactId>ParentGWT</artifactId>
-		<version>0.0.4</version>
+		<version>0.0.5</version>
 		<relativePath>../ParentGWT</relativePath>
 	</parent>
 	<dependencies>
@@ -85,11 +85,8 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<version>0.0.8</version>
+	<version>0.0.9-SNAPSHOT</version>
 	<properties>
 		<maven.test.skip>true</maven.test.skip>
-		<gwtVersion>2.8.1</gwtVersion>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 </project>
