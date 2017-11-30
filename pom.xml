@@ -47,7 +47,6 @@
     </developers>
     <properties>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <jpda.address>8000</jpda.address>
     </properties>
 
     <!-- update the https path for a different branch or tag! -->
@@ -455,10 +454,10 @@
                             <arguments>
                                 <argument>-classpath</argument> 
                                 <classpath/>
-                                <argument>-agentlib:jdwp=transport=dt_socket,server=y,address=8000</argument>
+                                <!--<argument>-agentlib:jdwp=transport=dt_socket,server=y,address=${jpda.address}</argument>-->
                                 <argument>fi.dwo.dwojapplet.domain.DWO</argument>
                             </arguments>
-                            <mainClass>fi.dwo.dwojapplet.domain.DWO</mainClass>
+                            <!--<mainClass>fi.dwo.dwojapplet.domain.DWO</mainClass>-->
                             <workingDirectory>${project.build.directory}/exec</workingDirectory>
                         </configuration>
                     </plugin>                    
