@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
+import nl.uu.fi.dwo.rest.dom.entities.DomAppletId;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -127,9 +128,9 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
         return Long.valueOf(strList[2]);
     }
 
-//    public static Long getNativeId(DomApplet o) throws Dwo2Exception{
-//        return getSingleNativeId(o.getId().getIdString());
-//    }
+    public static Long getNativeId(DomAppletId o) throws Dwo2Exception{
+        return getSingleNativeId(o.getId().getIdString(), PersistenceClassType.PersistentApplet);
+    }
     public static Long getNativeId(DomAppletConfig o) throws Dwo2Exception {
         return getSingleNativeId(o.getId().getIdString(), PersistenceClassType.PersistentAppletConfig);
     }
