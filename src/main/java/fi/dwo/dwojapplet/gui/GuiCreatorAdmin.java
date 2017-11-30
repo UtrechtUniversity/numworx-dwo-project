@@ -237,8 +237,8 @@ public class GuiCreatorAdmin extends GuiCreator {
      * @return fi.dwo.client.domain.Sco
      */
     @Override
-    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore) {
-        return dwo.addSco(course, appletConfig, name, description, showScore);
+    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore, byte[] imageData) {
+        return dwo.addSco(course, appletConfig, name, description, showScore, imageData);
     }
 
     /* (non-Javadoc)

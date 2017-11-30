@@ -937,7 +937,7 @@ public class GuiCreator {
      * @param b
      * @return fi.dwo.client.domain.Sco
      */
-    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean b) {
+    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean b, byte[] imageData) {
         return null;
     }
 

@@ -409,8 +409,8 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @return fi.dwo.client.domain.Sco
      */
     @Override
-    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore) {
-        Sco result = dwo.addSco(course, appletConfig, name, description, showScore);
+    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore, byte[] imageData) {
+        Sco result = dwo.addSco(course, appletConfig, name, description, showScore, imageData);
         if (result != null) {
             getMainPanel().getCenter().updateCourse(course);
         }

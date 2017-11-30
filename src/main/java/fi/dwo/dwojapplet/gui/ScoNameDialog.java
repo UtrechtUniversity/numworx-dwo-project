@@ -137,12 +137,20 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
                 .getText(TextMapper.GUISDLG_TTL_ADD_SCO), 0, appletConfig.getName(), "", TextMapper.GUISDLG_SCO_NAME, TextMapper.GUISDLG_SCO_DESCRIPTION);
         cnd.setShowScore(true);
         JButton logobtn = cnd.addLogoBtn();
-        logobtn.setAction(new LogoIconAction());
+        LogoIconAction logoAction = new LogoIconAction();
+		logobtn.setAction(logoAction);
         cnd.show();
         if (cnd.isConfirmed()) {
-            //System.out.println("voor hij wordt aangemaakt: " + appletConfig.getLaunchdata() + "; " + appletConfig.getAppletID());
+        		
+            byte[] imageData = null;
+            if(logoAction.isUpdate())
+            {
+               imageData = logoAction.getImageData();
+            } 
+
+			//System.out.println("voor hij wordt aangemaakt: " + appletConfig.getLaunchdata() + "; " + appletConfig.getAppletID());
             Sco s = GuiCreator.instance().addSco(course, appletConfig, cnd.getScoName(),
-                    cnd.getScoDescription(), cnd.isShowScore());
+                    cnd.getScoDescription(), cnd.isShowScore(), imageData);
             if (s == null) { //something went wrong, reshow the dialog
                 s = addSco(owner, course, appletConfig);
             }

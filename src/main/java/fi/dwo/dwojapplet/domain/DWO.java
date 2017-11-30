@@ -2062,10 +2062,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * (non-Javadoc)
      * 
      */
-    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore) {
+    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore, byte[] imageData) {
     		DomScoContextFull scoContext = new DomScoContextFull();
     		DomScoData scoData = new DomScoData();
-    		scoContext.setImageData(appletConfig.getImageData());
+    		scoContext.setImageData(imageData);
     		scoContext.setScoName(name);
     		scoContext.setDescription(description);
     		scoContext.setShowScore(showScore);
@@ -2091,6 +2091,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 			int scoid = MySQLPersistenceId.getNativeId(scoContext).intValue();
 			sco = (Sco) PersistenceFacade.instance().get(scoid, Sco.class);
 			return sco;
+		} catch (Dwo2Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), null, JOptionPane.ERROR_MESSAGE);
+            return null;
 		} catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
