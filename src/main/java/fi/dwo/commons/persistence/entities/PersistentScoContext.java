@@ -82,18 +82,20 @@ public class PersistentScoContext implements Serializable {
     @Version int optlock;
     @Column(name = "lastChangeTimeStamp")
     long lastChangeTimeStamp;
-    @Column(name="del")
-    private DelState delState;
-    @Column(name="publishState")
-    private PublishState publishState;
+    @NotNull
+    @Column(name="del",nullable = false)
+    private DelState delState = DelState.not;
+    @NotNull
+    @Column(name="publishState", nullable = false)
+    private PublishState publishState = PublishState.published;
     /** 
      * @since 1.5.0 (was al in 1.5 besteld);
      */
     
     @Column(name="urnID")
     private Long urnID;
-    @Column(name="scoType")
-    private ScoType scoType;
+    @Column(name="scoType", nullable = false)
+    private ScoType scoType = ScoType.OEFENEN;
     
     /**
      * Last author. for ACL and publishState.

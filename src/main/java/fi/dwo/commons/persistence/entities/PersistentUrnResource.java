@@ -36,7 +36,7 @@ public class PersistentUrnResource {
 	@Column(name = "lastChangeTimeStamp")
 	long lastChangeTimeStamp;
 	@Column(name = "del")
-	private DelState delState;
+	private DelState delState = DelState.not;
 
 	@PrePersist
 	@PreUpdate
