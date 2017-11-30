@@ -126,19 +126,23 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 		pc.setScoType(scoType);
 		Boolean showscore = scoContext.getShowScore();
 		pc.setShowscore(showscore);
+		pc.setUrnID(null); // XXX als images in UrnResource staan.
+		
 		ScoContextManager.create(pc);
 		PersistentScoData sd = new PersistentScoData(pc.getScoID(), scoContext.getDescription());
 		if(rest.getDomScoData() != null) {
 			DomScoData data = rest.getDomScoData();
-			sd.setLaunchdata(data.getLauchdata);
+			sd.setLaunchdata(data.getLaunchdata());
 			sd.setLaunchdatabytes(data.getLaunchdatabytes());
 		}
+		ScoDataManager.create(sd);
 		sd.fillDomScoContextFull(scoContext);
 		if(scoContext.getImageData() != null) {
 			PersistentImage image = new PersistentImage(pc.getScoID(), scoContext.getImageData());
 			ImageManager.create(image);
 			scoContext.setImageData(null);
 		}
+		
 		pc.fillDomScoContextFull(scoContext);
 		return scoContext;
     }
