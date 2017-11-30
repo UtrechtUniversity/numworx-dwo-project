@@ -280,6 +280,7 @@ public class GuiCreatorTeacher extends GuiCreator {
         config.setAppletID(aid);
         config.setAppletConfigID(-sid); // HACK HACK negatief = scoid
         config.setName(name);
+        config.setImageData(sco.getImageData());
         return config;
     }
 

@@ -21,6 +21,7 @@ public class AppletConfig {
     private String launchdata;
     private String name;
     private String language = "nl";
+    private byte[] imageData;
 
     /**
      * @return the language
@@ -92,4 +93,12 @@ public class AppletConfig {
     public void setAppletConfigID(int appletConfigID) {
         this.appletConfigID = appletConfigID;
     }
+
+	public byte[] getImageData() {
+		return imageData;
+	}
+
+	public void setImageData(byte[] imageData) {
+		this.imageData = imageData;
+	}
 }

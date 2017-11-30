@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
@@ -22,6 +23,7 @@ import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.exceptions.ScoException;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentApplet;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.system.TextMapper;
@@ -2061,12 +2063,46 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * 
      */
     public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore) {
-        try {
-            return PersistenceFacade.instance().addSco(course, appletConfig, name, description, showScore);
-        } catch (ScoException e) {
+    		DomScoContextFull scoContext = new DomScoContextFull();
+    		DomScoData scoData = new DomScoData();
+    		scoContext.setImageData(appletConfig.getImageData());
+    		scoContext.setScoName(name);
+    		scoContext.setDescription(description);
+    		scoContext.setShowScore(showScore);
+    		scoContext.setAppletId(PersistentApplet.buildPersistenceId((long)appletConfig.getAppletID()));
+    		scoContext.setCourseId(PersistentCourse.buildPersistenceId((long)course.getID()));
+    		scoContext.setSequencenr((long)course.getScoList().length);
+// scodata
+    		final String launchdata = appletConfig.getLaunchdata();
+    		Sco sco = new Sco();
+    		sco.setAppletID(appletConfig.getAppletID());
+    		sco.setLaunchdataString(launchdata);
+    		sco.loadApplet();
+    		Map<?, ?> m = sco.getLaunchdata();
+		Object mode = m.get("mode");
+		int value = mode == null ? 0 : Integer.parseInt(mode.toString());
+		scoContext.setScoType(ScoType.values()[value]);
+  		scoData.setLaunchdata(launchdata);
+  		if (sco.hasFeature(Sco.JSON_OUT))
+  			scoData.setLaunchdatabytes(sco.getLaunchdataBytes());
+		try {
+			scoContext = SecuredTeacherScoContextManager.add(scoContext, scoData);
+// legacy
+			int scoid = MySQLPersistenceId.getNativeId(scoContext).intValue();
+			sco = (Sco) PersistenceFacade.instance().get(scoid, Sco.class);
+			return sco;
+		} catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
-        }
+		}
+    	
+    	
+//    	try {
+//            return PersistenceFacade.instance().addSco(course, appletConfig, name, description, showScore);
+//        } catch (ScoException e) {
+//            JOptionPane.showMessageDialog(this, e.getMessage());
+//            return null;
+//        }
     }
 
     /*
@@ -2075,6 +2111,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      */
     public boolean updateSco(Sco sco) {
 		DomScoContextFull scoContext = new DomScoContextFull();
+		DomScoData scoData = null;
     	if (sco.getImageData() != null) {
     		scoContext.setId(PersistentScoContext.buildPersistenceId((long)sco.getScoID()));
     		scoContext.setImageData(sco.getImageData());
@@ -2084,9 +2121,13 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 			@SuppressWarnings("unchecked")
 			Map<String, Object> m = sco.getLaunchdata();
 			Object mode = m.get("mode");
-			int value = Integer.parseInt(mode.toString());
+			int value = mode == null ? 0 : Integer.parseInt(mode.toString());
 			scoContext.setScoType(ScoType.values()[value]);
 			scoContext.setId(PersistentScoContext.buildPersistenceId((long)sco.getScoID()));
+			scoData = new DomScoData();
+			scoData.setLaunchdata(sco.getLaunchdataString());
+	  		if (sco.hasFeature(Sco.JSON_OUT))
+	  			scoData.setLaunchdatabytes(sco.getLaunchdataBytes());
 		} catch (Exception e) {
 			LOG.log(Level.WARNING, "incompatibel", e);
 		}
@@ -2095,7 +2136,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     	
     	if (scoContext.getId() != null) {
     		try {
-				SecuredTeacherScoContextManager.update(scoContext);
+				SecuredTeacherScoContextManager.update(scoContext, scoData);
 				sco.setImageData(null);
 			} catch (Dwo2Exception e) {
 	            JOptionPane.showMessageDialog(this, e.getMessage());
