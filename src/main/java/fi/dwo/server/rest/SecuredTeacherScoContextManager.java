@@ -4,10 +4,12 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentApplet;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentImage;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
+import fi.dwo.server.PersistentDataManagers.core.AppletManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.ImageManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
@@ -24,10 +26,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomAppletId;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
+import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.entities.RestCourseFull;
 import nl.uu.fi.dwo.rest.entities.RestScoContextFull;
 
@@ -95,6 +100,47 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 		}
     	
     	return scoContext;
+    }
+    
+    @PUT
+    @Path("add")
+    @Produces({"application/json"})
+    public DomScoContextFull add(@Context SecurityContext sc, RestScoContextFull rest) throws Dwo2Exception {
+		DomScoContextFull scoContext = rest.getDomScoContext();
+		PersistentScoContext pc = new PersistentScoContext();
+		DomAppletId applet = new DomAppletId(scoContext.getAppletId());
+		Long appletID = MySQLPersistenceId.getNativeId(applet);
+		PersistentApplet a = AppletManager.findEntity(appletID); assert a != null;
+		pc.setAppletID(appletID);
+		DomCourse course = new DomCourse();course.setId(scoContext.getCourseId());
+		Long courseID = MySQLPersistenceId.getNativeId(course);
+		PersistentCourse c = CourseManager.findEntity(courseID); assert c != null;
+// assert school of course = school of user, 
+// assert profile of rest = profile of course.
+		pc.setCourseID(courseID);
+		String sconame = scoContext.getScoName();
+		pc.setSconame(sconame);
+		Long sequencenr = scoContext.getSequencenr();
+		pc.setSequencenr(sequencenr);
+		ScoType scoType = scoContext.getScoType();
+		pc.setScoType(scoType);
+		Boolean showscore = scoContext.getShowScore();
+		pc.setShowscore(showscore);
+		ScoContextManager.create(pc);
+		PersistentScoData sd = new PersistentScoData(pc.getScoID(), scoContext.getDescription());
+		if(rest.getDomScoData() != null) {
+			DomScoData data = rest.getDomScoData();
+			sd.setLaunchdata(data.getLauchdata);
+			sd.setLaunchdatabytes(data.getLaunchdatabytes());
+		}
+		sd.fillDomScoContextFull(scoContext);
+		if(scoContext.getImageData() != null) {
+			PersistentImage image = new PersistentImage(pc.getScoID(), scoContext.getImageData());
+			ImageManager.create(image);
+			scoContext.setImageData(null);
+		}
+		pc.fillDomScoContextFull(scoContext);
+		return scoContext;
     }
     
 // needs get, update, delete, etc...
