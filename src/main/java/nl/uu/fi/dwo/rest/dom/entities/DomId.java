@@ -9,6 +9,15 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 abstract class DomId {
 	PersistenceId id;
 
+	DomId(PersistenceId id) {
+		super();
+		this.id = id;
+	}
+
+	DomId() {
+		super();
+	}
+
 	/**
 	 * @return the id
 	 */
