@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.security.PermitAll;
 import javax.persistence.PersistenceException;
+import javax.persistence.RollbackException;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -105,46 +106,58 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
     @PUT
     @Path("add")
     @Produces({"application/json"})
-    public DomScoContextFull add(@Context SecurityContext sc, RestScoContextFull rest) throws Dwo2Exception {
-		DomScoContextFull scoContext = rest.getDomScoContext();
-		PersistentScoContext pc = new PersistentScoContext();
-		DomAppletId applet = new DomAppletId(scoContext.getAppletId());
-		Long appletID = MySQLPersistenceId.getNativeId(applet);
-		PersistentApplet a = AppletManager.findEntity(appletID); assert a != null;
-		pc.setAppletID(appletID);
-		DomCourse course = new DomCourse();course.setId(scoContext.getCourseId());
-		Long courseID = MySQLPersistenceId.getNativeId(course);
-		PersistentCourse c = CourseManager.findEntity(courseID); assert c != null;
+    public DomScoContextFull add(@Context SecurityContext sc, RestScoContextFull rest) {
+		try {
+			DomScoContextFull scoContext = rest.getDomScoContext();
+			PersistentScoContext pc = new PersistentScoContext();
+			DomAppletId applet = new DomAppletId(scoContext.getAppletId());
+			Long appletID = MySQLPersistenceId.getNativeId(applet);
+			PersistentApplet a = AppletManager.findEntity(appletID); assert a != null;
+			pc.setAppletID(appletID);
+			DomCourse course = new DomCourse();course.setId(scoContext.getCourseId());
+			Long courseID = MySQLPersistenceId.getNativeId(course);
+			PersistentCourse c = CourseManager.findEntity(courseID); assert c != null;
 // assert school of course = school of user, 
 // assert profile of rest = profile of course.
-		pc.setCourseID(courseID);
-		String sconame = scoContext.getScoName();
-		pc.setSconame(sconame);
-		Long sequencenr = scoContext.getSequencenr();
-		pc.setSequencenr(sequencenr);
-		ScoType scoType = scoContext.getScoType();
-		pc.setScoType(scoType);
-		Boolean showscore = scoContext.getShowScore();
-		pc.setShowscore(showscore);
-		pc.setUrnID(null); // XXX als images in UrnResource staan.
-		
-		ScoContextManager.create(pc);
-		PersistentScoData sd = new PersistentScoData(pc.getScoID(), scoContext.getDescription());
-		if(rest.getDomScoData() != null) {
-			DomScoData data = rest.getDomScoData();
-			sd.setLaunchdata(data.getLaunchdata());
-			sd.setLaunchdatabytes(data.getLaunchdatabytes());
+			pc.setCourseID(courseID);
+			String sconame = scoContext.getScoName();
+			pc.setSconame(sconame);
+			Long sequencenr = scoContext.getSequencenr();
+			pc.setSequencenr(sequencenr);
+			ScoType scoType = scoContext.getScoType();
+			pc.setScoType(scoType);
+			Boolean showscore = scoContext.getShowScore();
+			pc.setShowscore(showscore);
+			pc.setUrnID(null); // XXX als images in UrnResource staan.
+			
+			ScoContextManager.create(pc);
+			PersistentScoData sd = new PersistentScoData(pc.getScoID(), scoContext.getDescription());
+			if(rest.getDomScoData() != null) {
+				DomScoData data = rest.getDomScoData();
+				sd.setLaunchdata(data.getLaunchdata());
+				sd.setLaunchdatabytes(data.getLaunchdatabytes());
+			}
+			ScoDataManager.create(sd);
+			sd.fillDomScoContextFull(scoContext);
+			if(scoContext.getImageData() != null) {
+				PersistentImage image = new PersistentImage(pc.getScoID(), scoContext.getImageData());
+				ImageManager.create(image);
+				scoContext.setImageData(null);
+			}
+			
+			pc.fillDomScoContextFull(scoContext);
+			return scoContext;
+		} catch (RollbackException e)  {
+			throw new Dwo2RestException(Dwo2ExceptionCode.Rest_ScoNameExists, e.getMessage());
+		} catch (Dwo2Exception e) {
+			throw new Dwo2RestException(e);
+		} catch (PersistenceException e) {
+			LOG.log(Level.SEVERE, "", e);
+			throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+		} catch (Exception e) {
+			LOG.log(Level.SEVERE, "", e);
+			throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
 		}
-		ScoDataManager.create(sd);
-		sd.fillDomScoContextFull(scoContext);
-		if(scoContext.getImageData() != null) {
-			PersistentImage image = new PersistentImage(pc.getScoID(), scoContext.getImageData());
-			ImageManager.create(image);
-			scoContext.setImageData(null);
-		}
-		
-		pc.fillDomScoContextFull(scoContext);
-		return scoContext;
     }
     
 // needs get, update, delete, etc...

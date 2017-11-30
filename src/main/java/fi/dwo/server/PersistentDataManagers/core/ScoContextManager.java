@@ -44,8 +44,11 @@ public class ScoContextManager {
             em.getTransaction().begin();
             em.persist(sc);
             em.getTransaction().commit();
+        } catch (PersistenceException e) {
+        		LOG.log(Level.SEVERE, "Can't create the PersistentScoContext.", e);
+        		throw e;
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentScoContext.", e);
+            LOG.log(Level.SEVERE, "Can't create the PersistentScoContext, wrap", e);
             throw new PersistenceException(e);
         } finally {
             if (em != null) {
