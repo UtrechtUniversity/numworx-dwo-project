@@ -1,6 +1,7 @@
 package fi.dwo.server.rest;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Formatter;
@@ -15,6 +16,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
@@ -74,38 +76,40 @@ public class PublicRestTestManager {
     }
 
     @GET
-    @Produces({"application/json"})
-    @Path("/VerifyBrowserExamKey/json")
-    public Response verifyBrowserExamKey(@Context UriInfo uriInfo, @HeaderParam("X-SafeExamBrowser-RequestHash") String headerHash, @QueryParam("key") String rawKey, @QueryParam("salt") String salt) {
+    @Produces({MediaType.TEXT_HTML})
+    @Path("/VerifyBrowserExamKey/html")
+    public Response verifyBrowserExamKey(@Context UriInfo uriInfo, @HeaderParam("X-SafeExamBrowser-RequestHash") String headerHash, @QueryParam("key") String rawKey) {
         Boolean result = false;
-        rawKey = "test";
-        salt = "bla";
-        String serverHash = rawKey + uriInfo.getAbsolutePath().toString();// + salt;
+        String serverHash = uriInfo.getAbsolutePath().toString() + rawKey;
         //hash serverHash with SHA-256
         MessageDigest md = null;
+        byte[] hash = null;
         try {
             md = MessageDigest.getInstance("SHA-256");
-            md.digest(serverHash.getBytes("UTF-8"));
+            hash = md.digest(serverHash.getBytes(StandardCharsets.UTF_8));
+
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             Logger.getLogger(PublicRestTestManager.class.getName()).log(Level.SEVERE, null, e);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(PublicRestTestManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        md.toString();
         // Convert the byte to hex format
-        Formatter formatter = new Formatter();
-            for (final byte b : md.digest()) {
-                formatter.format("%02x", b);
-            }
+        StringBuffer hexString = new StringBuffer();
 
-            LOG.log(Level.INFO, "serverHash = {0}", new Object[]{formatter.toString()});
-            LOG.log(Level.INFO, "headerHash = {0}", new Object[]{headerHash});
-            if (serverHash.equals(headerHash)) {
-                result = true;
+        for (int i = 0; i < hash.length; i++) {
+            String hex = Integer.toHexString(0xff & hash[i]);
+            if (hex.length() == 1) {
+                hexString.append('0');
             }
-            Response r = Response.status(200).entity(result).build();
-            return r;
+            hexString.append(hex);
         }
 
+        LOG.log(Level.INFO, "serverHash = {0}", new Object[]{hexString.toString()});
+        LOG.log(Level.INFO, "headerHash = {0}", new Object[]{headerHash});
+        if (hexString.toString().equals(headerHash)) {
+            result = true;
+        }
+        Response r = Response.status(200).entity(result.toString()).build();
+        return r;
     }
+
+}
