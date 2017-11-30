@@ -15,6 +15,7 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 
 /**
  * Manages the school roles and classes registered in HasRole.
@@ -79,7 +80,7 @@ public class SecureDwoAdminSchoolManager {
         LOG.log(Level.FINE, "Retrieved list of teachers and hasRoles in the school {1} for the dwoadmin with id {0}.", new Object[]{DwoHelper.getCurrentUser().getId(), domSchool.getId()});
         return result;
     }
-
+        
     public static Boolean updateHasRoleRights(DomHasRole hr) throws Dwo2Exception {
         RestHasRole sts = new RestHasRole();
         sts.setRestContext(new DomContext());
