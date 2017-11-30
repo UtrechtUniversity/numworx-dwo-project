@@ -80,11 +80,11 @@ public class PublicRestTestManager {
         Boolean result = false;
         rawKey = "test";
         salt = "bla";
-        String serverHash = rawKey + uriInfo.getAbsolutePath().toString() + salt;
-        //hash serverHash with SHA-1
+        String serverHash = rawKey + uriInfo.getAbsolutePath().toString();// + salt;
+        //hash serverHash with SHA-256
         MessageDigest md = null;
         try {
-            md = MessageDigest.getInstance("SHA-1");
+            md = MessageDigest.getInstance("SHA-256");
             md.digest(serverHash.getBytes("UTF-8"));
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
