@@ -51,7 +51,7 @@ public class Sigma extends Expressie
 	}
 	
 	public Expressie vervangDifferentialen(String var)
-	{	return new Sigma(kind1.vervangDifferentialen(var), kind2.vervangDifferentialen(var), kind2.vervangDifferentialen(var), kind4.vervangDifferentialen(var));
+	{	return new Sigma(kind1.vervangDifferentialen(var), kind2.vervangDifferentialen(var), kind3.vervangDifferentialen(var), kind4.vervangDifferentialen(var));
 	}
 	
 	public Expressie vervangDiffs(Expressie subst, String var)
