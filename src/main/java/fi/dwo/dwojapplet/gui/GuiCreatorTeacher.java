@@ -6,6 +6,7 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.beans.private_base64code.StringCodeObject;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.AppletConfig;
@@ -280,7 +281,7 @@ public class GuiCreatorTeacher extends GuiCreator {
         config.setAppletID(aid);
         config.setAppletConfigID(-sid); // HACK HACK negatief = scoid
         config.setName(name);
-        config.setImageData(sco.getImageData());
+        config.setImageSource(PersistentScoContext.buildPersistenceId((long)sco.getID()));
         return config;
     }
 

@@ -2072,6 +2072,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     		scoContext.setAppletId(PersistentApplet.buildPersistenceId((long)appletConfig.getAppletID()));
     		scoContext.setCourseId(PersistentCourse.buildPersistenceId((long)course.getID()));
     		scoContext.setSequencenr((long)course.getScoList().length);
+    		scoContext.setUrnId(appletConfig.getImageSource());
 // scodata
     		final String launchdata = appletConfig.getLaunchdata();
     		Sco sco = new Sco();

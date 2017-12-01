@@ -1,6 +1,8 @@
 // Source file: C:\\parameters\\fi\\dwo\\client\\domain\\AppletConfig.java
 package fi.dwo.dwojapplet.domain;
 
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
 /**
  * This class is responsible for containing the data of the AppletConfig.<br>
  * <br>
@@ -21,7 +23,7 @@ public class AppletConfig {
     private String launchdata;
     private String name;
     private String language = "nl";
-    private byte[] imageData;
+    private PersistenceId imageSource;
 
     /**
      * @return the language
@@ -94,11 +96,18 @@ public class AppletConfig {
         this.appletConfigID = appletConfigID;
     }
 
-	public byte[] getImageData() {
-		return imageData;
+	/**
+	 * @return the imageSource
+	 */
+	public PersistenceId getImageSource() {
+		return imageSource;
 	}
 
-	public void setImageData(byte[] imageData) {
-		this.imageData = imageData;
+	/**
+	 * @param imageSource the imageSource to set
+	 */
+	public void setImageSource(PersistenceId imageSource) {
+		this.imageSource = imageSource;
 	}
+
 }
