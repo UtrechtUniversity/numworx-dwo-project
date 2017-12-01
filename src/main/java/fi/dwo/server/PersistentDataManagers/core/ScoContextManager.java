@@ -72,7 +72,10 @@ public class ScoContextManager {
             sc = em.merge(sc);
             em.getTransaction().commit();
             return sc;
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
+    		LOG.log(Level.SEVERE, "Can't edit the PersistentScoContext.", e);
+    		throw e;
+       } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Long id = sc.getScoID();

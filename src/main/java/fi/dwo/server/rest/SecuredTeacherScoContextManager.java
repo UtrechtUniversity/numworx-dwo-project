@@ -3,6 +3,7 @@ package fi.dwo.server.rest;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentApplet;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
@@ -32,6 +33,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.entities.RestCourseFull;
@@ -78,18 +80,31 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 					image = ImageManager.edit(image);
 				}
 				scoContext.setImageData(null);
-			}
-			if(scoContext.getDescription() != null) {
-				sd.setDescription(scoContext.getDescription());
-				sd = ScoDataManager.edit(sd);
+			} else if (scoContext.getUrnId() != null) {
+				PersistenceId id = scoContext.getUrnId();
+				switch (id.getType()) {
+				case PersistentScoContext:
+					if (id.equals(scoContext.getId()))
+						break;
+					// TODO Zie "add"
+				default: throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "unsupported " + id);
+
+				}
 			}
 			if(scoContext.getScoType() != null) {
 				pc.setScoType(scoContext.getScoType());
 			}
 			pc=ScoContextManager.edit(pc);
+// if edit fails skip this.
+			if(scoContext.getDescription() != null) {
+				sd.setDescription(scoContext.getDescription());
+				sd = ScoDataManager.edit(sd);
+			}
 			pc.fillDomScoContextFull(scoContext);
 			sd.fillDomScoContextFull(scoContext);
 			
+		} catch (RollbackException e)  {
+			throw new Dwo2RestException(Dwo2ExceptionCode.Rest_ScoNameExists, e.getMessage());
 		} catch (Dwo2Exception e) {
 			throw new Dwo2RestException(e);
 		} catch (PersistenceException e) {
@@ -120,18 +135,21 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 // assert school of course = school of user, 
 // assert profile of rest = profile of course.
 			pc.setCourseID(courseID);
-			String sconame = scoContext.getScoName();
+			String sconame = scoContext.getScoName(); assert sconame != null && ! sconame.isEmpty();
 			pc.setSconame(sconame);
-			Long sequencenr = scoContext.getSequencenr();
+			Long sequencenr = scoContext.getSequencenr(); if( sequencenr == null) {
+				sequencenr = Long.valueOf( ScoContextManager.findEntities(c).size() );
+			}
 			pc.setSequencenr(sequencenr);
-			ScoType scoType = scoContext.getScoType();
+			ScoType scoType = scoContext.getScoType(); if(scoType == null) scoType = ScoType.OEFENEN; // NotNull!
 			pc.setScoType(scoType);
-			Boolean showscore = scoContext.getShowScore();
+			Boolean showscore = scoContext.getShowScore(); if(showscore == null) showscore = Boolean.TRUE; // notnull?
 			pc.setShowscore(showscore);
 			pc.setUrnID(null); // XXX als images in UrnResource staan.
 			
 			ScoContextManager.create(pc);
 			PersistentScoData sd = new PersistentScoData(pc.getScoID(), scoContext.getDescription());
+			if( sd.getDescription() == null) sd.setDescription("");
 			if(rest.getDomScoData() != null) {
 				DomScoData data = rest.getDomScoData();
 				sd.setLaunchdata(data.getLaunchdata());
@@ -143,6 +161,21 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 				PersistentImage image = new PersistentImage(pc.getScoID(), scoContext.getImageData());
 				ImageManager.create(image);
 				scoContext.setImageData(null);
+			} else if ( scoContext.getUrnId()!= null ) {
+				PersistenceId id = scoContext.getUrnId();
+				switch(id.getType()) {
+				case PersistentScoContext: 
+					DomScoContextId scid = new DomScoContextId();
+					scid.setId(id);
+					Long imageid = MySQLPersistenceId.getNativeId(scid);
+					PersistentImage img = ImageManager.findEntity(imageid);
+					if(img != null) {
+						img.setCourseID(pc.getScoID());
+						ImageManager.create(img);
+					}
+					break;
+				default: throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "unsupported " + id);
+				}
 			}
 			
 			pc.fillDomScoContextFull(scoContext);
