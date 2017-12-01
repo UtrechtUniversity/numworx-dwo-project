@@ -16,11 +16,13 @@ public enum PersistenceClassType {
     PersistentClassCourse,
     PersistentCourseInClass,
     PersistentCourse,
+    @Deprecated
     PersistentCourseSequence,
     PersistentDwoProfile,
     PersistentDwoSystemParameters,
     PersistentHasRole,
     PersistentImage,
+    @Deprecated
     PersistentJars,
     PersistentLoginContext,
     PersistentRole,
