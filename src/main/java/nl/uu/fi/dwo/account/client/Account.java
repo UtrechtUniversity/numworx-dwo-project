@@ -12,6 +12,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -19,11 +20,19 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
+import fi.dwo.gwt.lib.rest.css.DwoStyle;
+import fi.dwo.gwt.lib.rest.ui.DialogEvent;
+import fi.dwo.gwt.lib.rest.ui.DialogEventHandler;
+import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
+import fi.dwo.gwt.lib.rest.ui.MsgDialogView;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
+import nl.uu.fi.dwo.account.client.Account.AccountBundle;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
@@ -41,7 +50,34 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
  */
 public class Account implements EntryPoint, ClickHandler {
 
-    private static final Logger LOG = Logger.getLogger(Account.class.getName());
+    interface AccountBundle extends ClientBundle {
+    	@Source("dwostyle.css")
+    	DwoStyle style();
+
+	}
+
+	private static final Logger LOG = Logger.getLogger(Account.class.getName());
+
+    EventBus bus = new SimpleEventBus();
+    
+    private final Failure SHOW_FAILURE = new Failure() {
+
+		@Override
+		public void fail(Promise<?> resolved) {
+			Throwable t = resolved.getFailure();
+			LOG.log(Level.WARNING, "fail ", t);
+			DialogEvent ev;
+			if(t instanceof Dwo2Exception ) 
+			{	Dwo2Exception e = (Dwo2Exception) t;
+				ev = new DialogEvent(e);
+			} else {
+				Dwo2Exception e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, t.getMessage());
+				e.initCause(t);
+				ev = new DialogEvent(e);
+			}
+			bus.fireEvent(ev);
+			
+		}};
     private DomUserFull user = null;
     private SecuredUserAccountManager handler = new SecuredUserAccountManager();
     private LoginStatusPanel loginStatusPanel = new LoginStatusPanel();
@@ -63,9 +99,18 @@ public class Account implements EntryPoint, ClickHandler {
             @Override
             public void onUncaughtException(Throwable e) {
                 LOG.log(Level.SEVERE, "UncaughtException:", e);
+                try {
+					SHOW_FAILURE.fail(Promises.failed(e));
+				} catch (Exception e1) {
+					// should not happen!
+				}
             }
         });
 
+        MsgDialogPresenter mdp = new MsgDialogPresenter(bus);
+        DwoStyle style = GWT.<AccountBundle>create(AccountBundle.class).style();
+        style.ensureInjected();
+        MsgDialogView mdv = new MsgDialogView(mdp, style);
         //create Constants 
 //        Dwo2Exceptions exceptions = (Dwo2Exceptions) GWT.create(Dwo2Exceptions.class);
 //        LOG.log(Level.INFO,exceptions.Dwo2ExceptionCode_GUI_NoUserIsSignedIn());
@@ -127,7 +172,7 @@ public class Account implements EntryPoint, ClickHandler {
 		                    SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
 		                    return loginManager.getSchoolLogins();
 						}}
-            )
+            , SHOW_FAILURE)
             .then(
             		new Success<DomSchoolsRolesAndClassesV2, DomSchoolClass>() {
 
@@ -165,7 +210,8 @@ public class Account implements EntryPoint, ClickHandler {
                   }
 				  return null;
 				}
-			})
+			}
+            		)
             .then(new Success<DomSchoolClass, Void>() {
 
 				@Override
