@@ -1,0 +1,18 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+>
+    <ui:with field="dwoStyle" type='fi.dwo.gwt.lib.rest.css.DwoStyle' />
+	<ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
+    <g:FlowPanel addStyleNames='{dwoStyle.dwoDialogPanel}'>                
+                        <g:HTML ui:field="htmlText" > </g:HTML>
+                    <g:HorizontalPanel width='90%'>
+                        <g:cell addStyleNames='{dwoStyle.floatRight}'>
+                    <g:Button  addStyleNames="{dwoStyle.dwoButton}"  ui:field="cancelButton"><ui:text from="{rb.GUI_Button_Cancel}" /></g:Button>
+                    </g:cell>
+                        <g:cell addStyleNames="{dwoStyle.floatRight}">
+                    <g:Button addStyleNames="{dwoStyle.dwoButton}"  ui:field="okButton"><ui:text from="{rb.GUI_Button_Ok}" /></g:Button>
+                    </g:cell>
+                    </g:HorizontalPanel>
+    </g:FlowPanel>
+</ui:UiBinder> 

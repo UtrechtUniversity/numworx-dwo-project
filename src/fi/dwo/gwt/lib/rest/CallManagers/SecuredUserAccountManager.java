@@ -23,6 +23,7 @@ import nl.uu.fi.dwo.rest.entities.RestLoginContext;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -169,7 +170,7 @@ public class SecuredUserAccountManager {
                                             if (result.booleanValue()) {
                                                 getDomUserFullwLoginContext(name, callback);
                                             } else {
-                                                callback.onFailure(new RuntimeException("Cancelled"));
+                                                callback.onFailure(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError,"Cancelled"));
                                             }
                                         }
                                     });
@@ -184,7 +185,7 @@ public class SecuredUserAccountManager {
                     }
 
                 } else {
-                    callback.onFailure(new RuntimeException("LoginException"));
+                    callback.onFailure(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "LoginException"));
                 }
             }
 
