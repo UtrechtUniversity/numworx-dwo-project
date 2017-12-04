@@ -1,13 +1,18 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
-import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.MsgConfirmDialogView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.MsgConfirmDialogPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.MsgDialogPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.MsgDialogView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.resources.DwoStyle;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolView;
+
+import com.google.gwt.core.client.GWT;
+
+import fi.dwo.gwt.lib.rest.ui.MsgConfirmDialogPresenter;
+import fi.dwo.gwt.lib.rest.ui.MsgConfirmDialogView;
+import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
+import fi.dwo.gwt.lib.rest.ui.MsgDialogView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsAccountView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsLoginView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMainView;
@@ -79,8 +84,11 @@ public class ViewFactoryTeuniz implements ViewFactory {
         editSchoolclassView = new EditSchoolclassView(pf.getEditSchoolclassPresenter());
         editStudentView = new EditStudentView(pf.getEditStudentPresenter());
         addStudentsView = new AddStudentsView(pf.getAddStudentsPresenter());
-        msgDialogView = new MsgDialogView(pf.getMsgDialogPresenter());
-        msgConfirmDialogView = new MsgConfirmDialogView(pf.getMsgConfirmDialogPresenter());
+        nl.uu.fi.dwo.lms.gwtclient.gwt.resources.DwoResources resources = GWT.create(DwoResources.class);
+        DwoStyle style = resources.style();
+        style.ensureInjected();
+        msgDialogView = new MsgDialogView(pf.getMsgDialogPresenter(),style);
+        msgConfirmDialogView = new MsgConfirmDialogView(pf.getMsgConfirmDialogPresenter(),style);
         fileUploadStudentsView = new FileUploadStudentsView(pf.getFileUploadStudentsPresenter());
     }
 

@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
-import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
@@ -9,7 +8,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
-
+import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.Dwo2LocaleMessageGWTTranslator;
 import java.util.logging.Level;

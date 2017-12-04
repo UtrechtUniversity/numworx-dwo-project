@@ -11,6 +11,9 @@ import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentScoDataManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherScormValuesManager;
 import fi.dwo.gwt.lib.rest.CallManagers.StudentScoDataManager;
+import fi.dwo.gwt.lib.rest.ui.ConfirmDialogEvent;
+import fi.dwo.gwt.lib.rest.ui.ConfirmDialogPromise;
+import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogEvent;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogPromise;
 
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Failure;
@@ -30,7 +31,6 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
-import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter.StudentItem;

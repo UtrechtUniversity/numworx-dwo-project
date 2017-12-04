@@ -3,15 +3,17 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
+import fi.dwo.gwt.lib.rest.ui.ConfirmDialogEvent;
+import fi.dwo.gwt.lib.rest.ui.ConfirmDialogPromise;
+import fi.dwo.gwt.lib.rest.ui.DialogEvent;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogEvent;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ConfirmDialogPromise;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DialogEvent;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
