@@ -26,6 +26,11 @@ import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 public class GwtRestVars {
 
     private static final Logger LOG = Logger.getLogger(GwtRestVars.class.getName());
+    //Runtime Variabes
+    DomUserFull currentUser;
+    private RestAuthenticator authenticator = RestAuthenticator.instance;
+    private Map<String,String> customHeaders = Collections.emptyMap();
+
 
     private static volatile GwtRestVars instance;
 
@@ -61,8 +66,6 @@ public class GwtRestVars {
 //        dwoLocale = aDwoLocale;
 //    }
 
-    private RestAuthenticator authenticator = RestAuthenticator.instance;
-    private Map<String,String> customHeaders = Collections.emptyMap();
 
     public Map<String, String> getCustomHeaders() {
 		return customHeaders;
@@ -84,9 +87,6 @@ public class GwtRestVars {
         }
         return instance;
     }
-
-    //Runtime Variabes
-    DomUserFull currentUser;
 
     public GwtRestVars() throws Dwo2Exception {
         initProperties();
