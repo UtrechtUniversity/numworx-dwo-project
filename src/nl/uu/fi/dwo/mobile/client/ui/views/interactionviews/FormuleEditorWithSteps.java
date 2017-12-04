@@ -2208,7 +2208,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				{
 					// i == stapNr == 0
 					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2, false);
-					pijlVak.getEditor().requestFocus();
+					if (pijlVak != null) // er is iets misgegaan...
+						pijlVak.getEditor().requestFocus();
 					scrollToBottom();
 					
 					// voor sub en abc staat er een steppanel teveel, er komt geen lege editor achter de openstaande pijl
