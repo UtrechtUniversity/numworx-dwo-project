@@ -87,7 +87,9 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 					if (id.equals(scoContext.getId()))
 						break;
 					// TODO Zie "add"
-				default: throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "unsupported " + id);
+				default: 
+					LOG.log(Level.SEVERE, scoContext.getId() + ": unsupported " + id);	
+					throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "unsupported " + id);
 
 				}
 			}
@@ -161,6 +163,7 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 				PersistentImage image = new PersistentImage(pc.getScoID(), scoContext.getImageData());
 				ImageManager.create(image);
 				scoContext.setImageData(null);
+				scoContext.setUrnId(scoContext.getId());
 			} else if ( scoContext.getUrnId()!= null ) {
 				PersistenceId id = scoContext.getUrnId();
 				switch(id.getType()) {
@@ -172,9 +175,12 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 					if(img != null) {
 						img.setCourseID(pc.getScoID());
 						ImageManager.create(img);
+						scoContext.setUrnId(scoContext.getId());
+					} else {
+						scoContext.setUrnId(null);
 					}
 					break;
-				default: throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "unsupported " + id);
+				default: throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "unsupported " + id);
 				}
 			}
 			
