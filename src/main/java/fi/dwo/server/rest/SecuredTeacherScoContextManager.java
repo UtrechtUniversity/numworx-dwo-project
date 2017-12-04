@@ -158,6 +158,7 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 				sd.setLaunchdatabytes(data.getLaunchdatabytes());
 			}
 			ScoDataManager.create(sd);
+			pc.fillDomScoContextFull(scoContext);
 			sd.fillDomScoContextFull(scoContext);
 			if(scoContext.getImageData() != null) {
 				PersistentImage image = new PersistentImage(pc.getScoID(), scoContext.getImageData());
@@ -184,7 +185,6 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 				}
 			}
 			
-			pc.fillDomScoContextFull(scoContext);
 			return scoContext;
 		} catch (RollbackException e)  {
 			throw new Dwo2RestException(Dwo2ExceptionCode.Rest_ScoNameExists, e.getMessage());
