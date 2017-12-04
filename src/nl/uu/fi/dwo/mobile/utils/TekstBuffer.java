@@ -4,25 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
-
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.ShareFacade;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.IFrameView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.AntwoordKeuzeVak;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.AntwoordTekstVak;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.AntwoordTekstVak2;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckSelectieUnit;
@@ -32,7 +24,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAns
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GetallenlijnSprongPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View;
+// Deprecated import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.SymboolPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GeogebraView;
@@ -329,7 +321,6 @@ public class TekstBuffer
 	{
 		Object result = null;
 		HashMap<String, Object> currentVakGegevens = null;
-		ObjectMap map;
 		// ik denk dat het +5 is en niet +1
 		if (opdrachtGegevens.size() > index + 5) // FIXME size() = 6, index = 0 get(0)= null
 			currentVakGegevens = (HashMap<String, Object>) opdrachtGegevens.get(index + 5);
@@ -352,11 +343,11 @@ public class TekstBuffer
 
 		switch (soortVak)
 		{
-		case -2:
-// copy classname to inner, so that MCSquared.jsp can read it.
-			mc2FixInner(currentVakGegevens);
-			
-			return x(map, new MC2View(currentVakGegevens, randomVarNamen, randomVarWaarden));
+//		case -2:
+//// copy classname to inner, so that MCSquared.jsp can read it.
+//			mc2FixInner(currentVakGegevens);
+//			
+//			return x(map, new MC2View(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 4: 
 			return x(map, new PopupFacadeWithFont(map, new TextEditor( currentVakGegevens, randomVarNamen, randomVarWaarden )));
 		
@@ -596,54 +587,54 @@ public class TekstBuffer
 
 	
 	
-	private HashMap<String, Object> mc2FixInner(HashMap<String, Object> currentVakGegevens) {
-		ObjectMap launchdata = JSONUtilities.wrapMap(currentVakGegevens);
-		@SuppressWarnings("unchecked")
-		HashMap<String,Object> inner = (HashMap<String,Object>)currentVakGegevens.get("interactiePanelLaunchState");
-		String className = currentVakGegevens.get("soortInteractiePanelClass").toString();
-		int haak = className.indexOf('[');
-		if(haak > 0 ) className = className.substring(0,haak);
-		Object value = currentVakGegevens.get(CROSS_WIDGET_ID);
-		inner.put(CROSS_WIDGET_ID, value);
-		inner.put("className", className);
-		String subscriptions = "{}"; // TODO vullen uit currentVakGegevens.
-		if(launchdata.containsKey("subscriptions"))
-		{
-			// FIXME !!!!
-			String fix = DWOplayer.clientfactory.getEntryView().getOpdrNav().getUUID();
-			int last = fix.lastIndexOf('-');
-			fix = fix.substring(0,last+1);
-			
-			ObjectMap o = launchdata.getObjectMap("subscriptions");
-			JSONObject output = new JSONObject();
-			Set<String> keys = o.keySet();
-			for (String key : keys) {
-				JSONArray array = new JSONArray();
-				ObjectList list = o.getObjectList(key);
-				int size = list.size();
-				for (int i = 0; i < size; i++) {
-					ObjectMap map = list.getObjectMap(i);
-					String xwid = map.keySet().iterator().next();
-					String command = map.getString(xwid);
-					//JSONObject oo = new JSONObject(); oo.put(fix + xwid, new JSONString(command));
-					JSONString oo = new JSONString( fix + xwid + "." + command);
-					array.set(array.size(), oo);
-				}
-				output.put(key, array);
-			}
-			
-			subscriptions = output.toString();
-		}
-		inner.put("subscriptions", subscriptions);
-		return currentVakGegevens;
-	}
+//	private HashMap<String, Object> mc2FixInner(HashMap<String, Object> currentVakGegevens) {
+//		ObjectMap launchdata = JSONUtilities.wrapMap(currentVakGegevens);
+//		@SuppressWarnings("unchecked")
+//		HashMap<String,Object> inner = (HashMap<String,Object>)currentVakGegevens.get("interactiePanelLaunchState");
+//		String className = currentVakGegevens.get("soortInteractiePanelClass").toString();
+//		int haak = className.indexOf('[');
+//		if(haak > 0 ) className = className.substring(0,haak);
+//		Object value = currentVakGegevens.get(CROSS_WIDGET_ID);
+//		inner.put(CROSS_WIDGET_ID, value);
+//		inner.put("className", className);
+//		String subscriptions = "{}"; // TODO vullen uit currentVakGegevens.
+//		if(launchdata.containsKey("subscriptions"))
+//		{
+//			// FIXME !!!!
+//			String fix = DWOplayer.clientfactory.getEntryView().getOpdrNav().getUUID();
+//			int last = fix.lastIndexOf('-');
+//			fix = fix.substring(0,last+1);
+//			
+//			ObjectMap o = launchdata.getObjectMap("subscriptions");
+//			JSONObject output = new JSONObject();
+//			Set<String> keys = o.keySet();
+//			for (String key : keys) {
+//				JSONArray array = new JSONArray();
+//				ObjectList list = o.getObjectList(key);
+//				int size = list.size();
+//				for (int i = 0; i < size; i++) {
+//					ObjectMap map = list.getObjectMap(i);
+//					String xwid = map.keySet().iterator().next();
+//					String command = map.getString(xwid);
+//					//JSONObject oo = new JSONObject(); oo.put(fix + xwid, new JSONString(command));
+//					JSONString oo = new JSONString( fix + xwid + "." + command);
+//					array.set(array.size(), oo);
+//				}
+//				output.put(key, array);
+//			}
+//			
+//			subscriptions = output.toString();
+//		}
+//		inner.put("subscriptions", subscriptions);
+//		return currentVakGegevens;
+//	}
 
 	public String[] getVarNamen()
 	{
 		return randomVarNamen;
 	}
 
-	public HashMap getVarWaarden()
+	public HashMap<String,Number> getVarWaarden()
 	{
 		return randomVarWaarden;
 	}
