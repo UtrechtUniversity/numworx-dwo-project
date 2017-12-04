@@ -10,7 +10,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.rest.SecureStudentSchoolClassManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureStudentSchoolClassManager;
 import java.awt.event.MouseEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;

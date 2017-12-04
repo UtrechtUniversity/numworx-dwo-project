@@ -29,6 +29,7 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
  * This class implements Admin-specific methods of the GuiCreator. These methods
@@ -98,7 +99,12 @@ public class GuiCreatorAdmin extends GuiCreator {
      *
      */
     public CenterSubPanel getSchoolUsersPanel(SchoolClass c) {
-        return null; //new ClassUsersPanel(c);
+        try {
+            return new UsersDwoAdminPanel();
+        } catch (Dwo2Exception ex) {
+            Logger.getLogger(GuiCreatorAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     /**

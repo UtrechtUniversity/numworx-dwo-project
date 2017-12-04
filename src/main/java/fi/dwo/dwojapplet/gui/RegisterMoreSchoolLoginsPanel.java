@@ -5,7 +5,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 
 /**
  * <p>
@@ -245,6 +246,8 @@ public class RegisterMoreSchoolLoginsPanel extends JPanel implements ActionListe
                     nur.setSchoolCode(schoolpassword.getText());
                     SecureUserAccountLoginsManager.addASchoolLogin(nur); //throws Dwo2RestException.
                     GuiCreator.instance().ShowMessageDialog(this, TextMapper.getText(TextMapper.DLG_CONFIRM));
+                    DomSchoolsRolesAndClassesV2 srcs = SecureUserAccountLoginsManager.getSchoolLogins();
+                    DwoHelper.setSchoolLogins(srcs);                    
 //                    center.loadCenter(new RegisterMoreSchoolLoginsPanel());
                     this.getParent().getParent().getParent().getParent().setVisible(false);
                 }

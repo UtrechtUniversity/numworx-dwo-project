@@ -14,7 +14,7 @@ import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.UserGroup;
 import fi.dwo.dwojapplet.domain.UserResultList;
-import fi.dwo.dwojapplet.domain.rest.SecuredTeacherResultsManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherResultsManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;

@@ -7,7 +7,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.dwojapplet.domain.rest.SecureSchoolAdminSchoolClassManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolClassManager;
 import java.util.List;
 import java.util.logging.Logger;
 

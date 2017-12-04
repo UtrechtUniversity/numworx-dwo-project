@@ -13,7 +13,7 @@ import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
@@ -37,6 +37,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 import netscape.javascript.JSObject;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 
 /**
  * Static Helper class for the DWO. The DwoHelper has two startup phases. During
@@ -163,7 +164,10 @@ public final class DwoHelper {
         //Fetch all the login roles from the server for the current roles
         try {
             if (aCurrentUser != null) {
-                SecureUserAccountLoginsManager.getSchoolLogins();//updates DwoHelper
+                RestAuthenticator.getInstance().setUsername(aCurrentUser.getUserName());
+                RestAuthenticator.getInstance().setPassword(aCurrentUser.getPassword());
+                DomSchoolsRolesAndClassesV2 srcs = SecureUserAccountLoginsManager.getSchoolLogins();//update DwoHelper
+                DwoHelper.setSchoolLogins(srcs);
 //                nullSchool = SecureUserAccountManager.getNullSchool();
             } else {
                 schoolLogins = null;
@@ -515,7 +519,7 @@ public final class DwoHelper {
      * @param aServerUrlPath
      */
     public static void setServerUrlPath(URL aServerUrlPath) {
-        serverUrlPath = aServerUrlPath;
+        RestAuthenticator.setServerUrlPath(aServerUrlPath);
     }
 
    /**
@@ -523,7 +527,7 @@ public final class DwoHelper {
      *
      * @return
      */    public static URL getServerUrlPath() {
-        return serverUrlPath;
+        return RestAuthenticator.getServerUrlPath();
     }
 
      /**
@@ -589,6 +593,8 @@ public final class DwoHelper {
     public static void setCurrentUser(DomUserFull aCurrentUser) throws Dwo2Exception {
         userInit(aCurrentUser);
         if (aCurrentUser != null) {
+            RestAuthenticator.getInstance().setUsername(aCurrentUser.getUserName());
+            RestAuthenticator.getInstance().setPassword(aCurrentUser.getPassword());
             try {
                 GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getNativeId(aCurrentUser).intValue());
                 currentFacadeUser = (User) PersistenceFacade.instance().login(aCurrentUser.getUserName());

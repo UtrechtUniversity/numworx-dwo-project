@@ -8,7 +8,7 @@ import nl.uu.fi.dwo.rest.entities.RestNewSchoolLogin;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
-import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -25,6 +25,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 
 /**
  * <p>
@@ -353,6 +355,8 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
                     nur.setRole(RoleType.STUDENT);
                     SecureUserAccountLoginsManager.addASchoolLogin(nur);
                     JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                    DomSchoolsRolesAndClassesV2 srcs = SecureUserAccountLoginsManager.getSchoolLogins();
+                    DwoHelper.setSchoolLogins(srcs);                    
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }
                 catch (Dwo2Exception ex) {
@@ -368,6 +372,8 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
                     nur.setSchoolCode(schoolpassword.getText());
                     SecureUserAccountLoginsManager.addASchoolLogin(nur); //throws Dwo2RestException.
                     JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                    DomSchoolsRolesAndClassesV2 srcs = SecureUserAccountLoginsManager.getSchoolLogins();
+                    DwoHelper.setSchoolLogins(srcs);                    
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }
                 catch (Dwo2Exception ex) {

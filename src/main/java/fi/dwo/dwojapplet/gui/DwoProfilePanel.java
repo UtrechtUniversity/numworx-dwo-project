@@ -27,7 +27,7 @@ import javax.swing.table.TableColumn;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.rest.SecureDwoAdminProfileManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminProfileManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 

@@ -3,7 +3,7 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.dwojapplet.domain.rest.SecureDwoAdminUserManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminUserManager;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import java.util.List;
 import java.util.logging.Logger;

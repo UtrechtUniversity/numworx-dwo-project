@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 public class AdminMenuPanel extends UserMenuPanel {
 
     private MenuPanelButton courseManagementButton;
+    private MenuPanelButton userManagementButton;
      
      private MenuPanelButton profileManagementButton;
 
@@ -34,6 +35,7 @@ public class AdminMenuPanel extends UserMenuPanel {
         createGap();
         /* Add SchoolManagement button */
         schoolManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_SCHOOL_MANAGEMENT));
+        userManagementButton = new MenuPanelButton(TextMapper.getText("USER"));
 //        fm = schoolManagementButton.getFontMetrics(schoolManagementButton.getFont());
 //        schoolManagementButton.setSize(this.getSize().width - 20, fm.getHeight() + 10);
 //        schoolManagementButton.setLocation(10, 70);
@@ -88,6 +90,11 @@ public class AdminMenuPanel extends UserMenuPanel {
         } else if (e.getSource() == schoolManagementButton) {
             GuiCreator.instance().setWait();
             CenterSubPanel cp = GuiCreator.instance().getSchoolPanel();
+            center.loadCenter(cp);
+            GuiCreator.instance().setReady();
+        } else if (e.getSource() == userManagementButton) {
+            GuiCreator.instance().setWait();
+            CenterSubPanel cp = GuiCreator.instance().getUserManagementPanel();
             center.loadCenter(cp);
             GuiCreator.instance().setReady();
         }

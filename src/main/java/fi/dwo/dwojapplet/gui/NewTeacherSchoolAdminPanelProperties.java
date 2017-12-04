@@ -3,7 +3,7 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.dwojapplet.domain.rest.SecureSchoolAdminSchoolManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;

@@ -76,6 +76,12 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>nl.uu.fi.dwo.rest</groupId>
+            <artifactId>DWO-jclient-lib</artifactId>
+            <version> 2.1.24-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
@@ -454,7 +460,7 @@
                             <arguments>
                                 <argument>-classpath</argument> 
                                 <classpath/>
-                                <!--<argument>-agentlib:jdwp=transport=dt_socket,server=y,address=${jpda.address}</argument>-->
+                                <argument>-agentlib:jdwp=transport=dt_socket,server=y,address=${jpda.address}</argument>
                                 <argument>fi.dwo.dwojapplet.domain.DWO</argument>
                             </arguments>
                             <!--<mainClass>fi.dwo.dwojapplet.domain.DWO</mainClass>-->

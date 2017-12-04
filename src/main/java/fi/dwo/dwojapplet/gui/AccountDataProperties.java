@@ -1,13 +1,13 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.dwojapplet.REST.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import java.util.Base64;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 
 /**
  * Panel property and state class.
@@ -53,6 +53,7 @@ public class AccountDataProperties {
             authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
             StoredRestManager.setBasicAuthString(authString);
             DwoHelper.updateCurrentUser(user);
+            DwoHelper.setCurrentUser(user);
             //TODO above method currently updates the login date, this should not occur for this function.
             
     }

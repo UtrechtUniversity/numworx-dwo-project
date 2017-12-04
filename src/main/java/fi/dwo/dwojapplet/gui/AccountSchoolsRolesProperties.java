@@ -1,15 +1,17 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager.getSchoolLogins;
 
 /**
  *
@@ -25,12 +27,12 @@ public class AccountSchoolsRolesProperties {
 
     public void init() throws Dwo2Exception {
         try {
-            srcs = SecureUserAccountLoginsManager.getSchoolLogins();
-            setNullSchool(srcs.getNullSchool());
-            selectedSrc = srcs.getActiveSchoolRoleAndClass();
+            srcs = SecureUserAccountLoginsManager.getSchoolLogins();            
+            DwoHelper.setSchoolLogins(srcs);
+            setNullSchool(srcs.getNullSchool());            
+            selectedSrc = srcs.getActiveSchoolRoleAndClass();            
         }
         catch (Dwo2Exception ex) {
-
             LOG.log(Level.SEVERE, ex.getMessage());
             srcs = new DomSchoolsRolesAndClassesV2();
             selectedSrc = null;
@@ -52,6 +54,7 @@ public class AccountSchoolsRolesProperties {
     public void setActiveSchoolRoleAndClass() throws Dwo2Exception {
             DomSchoolRoleAndClassV2 src = SecureUserAccountLoginsManager.switchToSchoolLogin(getSelectedSchoolRoleAndClass());
             srcs.setActiveSchoolRoleAndClass(src);
+            DwoHelper.getSchoolLogins().setActiveSchoolRoleAndClass(src);        
     }
 
     /**
@@ -78,6 +81,8 @@ public class AccountSchoolsRolesProperties {
     public Boolean RemoveSchoolRoleAndClass(DomSchoolRoleAndClassV2 selectedSrac) throws Dwo2Exception {
         Boolean result;
         result = SecureUserAccountLoginsManager.removeASchoolLogin(selectedSrac);
+//        DomSchoolsRolesAndClassesV2 srcs = getSchoolLogins(); //calls and sets DwoHelper
+//        DwoHelper.setSchoolLogins(srcs);
         init();
         return result;
     }

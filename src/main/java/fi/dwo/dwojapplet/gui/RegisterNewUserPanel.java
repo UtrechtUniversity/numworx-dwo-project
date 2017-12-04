@@ -8,7 +8,7 @@ import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
-import fi.dwo.dwojapplet.domain.rest.PublicUserManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicUserManager;
 
 import java.awt.Color;
 import java.awt.FontMetrics;

@@ -23,7 +23,7 @@ import fi.dwo.dwojapplet.domain.SchoolPasswdMap;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.domain.rest.LoginManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.LoginManager;
 import fi.dwo.dwojapplet.gui.fullscreen.FramedScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
 /**
  * This Class is responsible for creating some GUI elements and to communicate
@@ -140,7 +141,9 @@ public class GuiCreator {
         dwo.setWait();
         try {
             DwoHelper.setContact(false);
-            LoginManager.basicLogin(username, MD5.getHashString(String.valueOf(password)));
+            DomUserFullwLoginContext user = LoginManager.basicLogin(username, MD5.getHashString(String.valueOf(password)));
+            DwoHelper.setCurrentUser(user.getDomUserFull());
+            DwoHelper.setCurrentLoginContext(user.getDomLoginContext());
 //            Code underdevelopment to do digest.
 //            PublicUserManager.digestLogin(username, password);
 
@@ -181,7 +184,9 @@ public class GuiCreator {
         dwo.setWait();
         try {
             DwoHelper.setContact(false);
-            LoginManager.basicLogin(username, password);
+            DomUserFullwLoginContext user = LoginManager.basicLogin(username, password);
+            DwoHelper.setCurrentUser(user.getDomUserFull());
+            DwoHelper.setCurrentLoginContext(user.getDomLoginContext());
 //          Code under development for digest.
 //            PublicUserManager.digestLogin(username, password);
 
@@ -964,7 +969,6 @@ public class GuiCreator {
     }
 
     public CenterSubPanel getUserManagementPanel() {
-
         return null;
     }
 
