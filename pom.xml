@@ -43,17 +43,12 @@
 
     <!-- update the https path for a different branch or tag! -->
     <scm>
-        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-rest-lib/trunk</connection>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-rest-lib/trunk</developerConnection>
-        <url>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-rest-lib/trunk</url>
+        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-jclient-lib/trunk</connection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-jclient-lib/trunk</developerConnection>
+        <url>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-jclient-lib/trunk</url>
     </scm>
   
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
         <plugins>
             <!-- Order is important ! Execution follows the declaration order -->
             <plugin>
@@ -182,37 +177,19 @@
                 </configuration>            
             </plugin> 
 
-                <!--            <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>-->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>gwt-maven-plugin</artifactId>
-                <version>2.8.1</version>
-                <configuration>
-                    <i18nConstantsWithLookupBundles>
-                        <i18nConstantsWithLookupBundle>nl.uu.fi.dwo.rest.locale.Dwo2ExceptionMessages</i18nConstantsWithLookupBundle>
-                        <i18nConstantsWithLookupBundle>nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages</i18nConstantsWithLookupBundle>
-                    </i18nConstantsWithLookupBundles>
-                </configuration>
+            <!--            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>attach-sources</id>
+                        <phase>package</phase>
                         <goals>
-                            <goal>i18n</goal>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
         <finalName>${project.artifactId}-${project.version}</finalName>
     </build>
@@ -223,35 +200,29 @@
     required depencies. Document if missing.    -->    
     <dependencies>
         <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>2.17</version>
-            <scope>provided</scope>
-        </dependency>
+            <groupId>nl.uu.fi.dwo.rest</groupId>
+            <artifactId>DWO-rest-lib</artifactId>
+            <version> 2.1.24-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency> 
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>            
+        </dependency>          
         <dependency>
             <groupId>com.owlike</groupId>
             <artifactId>genson</artifactId>
             <version>1.3</version>
-            <scope>provided</scope>
-        </dependency> 
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>2.8.1</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-        
+        </dependency>          
     </dependencies>
     
-    <!--    <distributionManagement>
-        <repository>
-            <id>snapshots</id>
-            <name>libs-snapshot</name>
-            <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>    
-        </repository>
-    </distributionManagement>    -->
-        
     <reporting>
         <plugins>
             <plugin>
