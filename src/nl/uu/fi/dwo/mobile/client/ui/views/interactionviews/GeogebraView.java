@@ -381,7 +381,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		{
 			setVisibleFeedbackImages(false, false, true);
 		}
-		else if (nagekeken)
+		else if (nagekeken) // correct is dan null; eigenlijk merkwaardig en niet consistent met andere widgets... 
 		{
 			setVisibleFeedbackImages(false, true, false);
 		}
@@ -599,7 +599,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 				}
 				if (matches > 0 && matches < checkObjects.length)
 				{
-					setCorrect(null);
+					setCorrect(null); // waarom? niet volledig goed, maar eigenlijk dus halfgoed, gele vink
 				}
 				else
 					setCorrect(matches != 0);
@@ -613,10 +613,10 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 			// nagekeken = true;
 		}
 	
-		if (!isCorrect())
+		if (isCorrect() != null && !isCorrect())
 			verhoogErrorCount();
 
-		if (feedback && nakijken)
+		if (feedback && nakijken && correct != null)
 		{
 			// cross widget communicatie
 			if (correct)
@@ -820,13 +820,14 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	}
 
 	@Override
-	public void acceptCBookEvent(CBookEvent event) {
-		if("action.setNotEditable".equals(event.getCommand())) {
+	public void acceptCBookEvent(CBookEvent event)
+	{
+		if ("action.setNotEditable".equals(event.getCommand()))
+		{
 			editable = true;
 			mainPanel.setStyleDependentName("readonly", !editable);
 			frame.setStyleDependentName("readonly", !editable);
 		}
-		
 	}
 
 	/**
@@ -838,7 +839,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	 */
 	void setVisibleFeedbackImages(boolean vinkjeGroen, boolean vinkjeGeel, boolean kruisRood)
 	{
-		if(nakijken && kijkNaPanel != null)
+		if (nakijken && kijkNaPanel != null)
 		{
 			kijkNaPanel.setStyleName(css.goed(), vinkjeGroen);
 			kijkNaPanel.setStyleName(css.half(), vinkjeGeel);
