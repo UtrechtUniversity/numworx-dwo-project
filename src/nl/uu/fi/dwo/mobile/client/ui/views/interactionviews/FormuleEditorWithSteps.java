@@ -2204,7 +2204,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					}
 					i++; // sla de eerste over
 				}
-				else if ((linStrategieVersie || linOefenVersie || subVisible || abcVisible) && openstaandePijl) // er staat nog een laatste in te vullen pijl; kan ook bij substitutie en abc
+				else if ((linStrategieVersie || linOefenVersie || subVisible || abcVisible) && openstaandePijl && pijlVakOperatoren.length == 1) 
+					// er staat nog een laatste in te vullen pijl; kan ook bij substitutie en abc
+					// Als pijlVakOperatoren leeg is, is er ten onrechte een openstaande pijl geadministreerd, dan niet verder...
 				{
 					// i == stapNr == 0
 					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2, false);
