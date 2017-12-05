@@ -53,7 +53,7 @@ class UsersDwoAdminPanelTableModel extends AbstractTableModel {
             data[j][2] = u.getInsertion();
             data[j][3] = u.getFamilyName();
             data[j][4] = editImage;
-            data[j][5] = removeImage;
+            data[j][5] = emptyImage;
             data[j][6] = u;
             j++;
         }

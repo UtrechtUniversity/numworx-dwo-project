@@ -6,7 +6,6 @@ package fi.dwo.dwojapplet.gui;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -123,35 +122,35 @@ public class UsersDwoAdminPanel extends JPanel implements CenterSubPanel, Action
             this.fireEditingStopped();
 //            final GuiCreator instance = GuiCreator.instance();
             if (value == editImage) {
-//                try {
-//                    DomStudent student = (DomStudent) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
-//                    DomGetSingleSchoolStudent getStudent = new DomGetSingleSchoolStudent();
-//                    getStudent.setDomStudent(student);
-//                    DomSingleSchoolStudent user = prop.getUserList(getStudent);
+                try {
+                    DomUser user = (DomUser) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
 //                    AccountDataFullStudentJPanel panel = new AccountDataFullStudentJPanel();
 //                    panel.setUser(user);
 //                    panel.setVisible(true);
 //                    int result = JOptionPane.showConfirmDialog(GuiCreator.instance().mainPanel, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
 //                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-//                    //case OK persist returned values
-//                    //user = new DomSingleSchoolStudent(panel.getUser()); superfluous.
+
+                    //case OK persist returned values
+                    //user = new DomSingleSchoolStudent(panel.getUser()); superfluous.
 //                    if (result == JOptionPane.OK_OPTION) {
-//                        //persist returned values
-//                        user = new DomSingleSchoolStudent(panel.getUser());
-//                        prop.updateSingleSchoolStudent(user);
-//                        tableModel.init(prop.getStudentsInSchool(), removeImage, studentImage, editImage, emptyImage);
-//                        tableModel.fireTableDataChanged();
+                        //persist returned values
+                        //prop.updateUser(user);
+                        GuiCreator.instance().ShowMessageDialog(center, "Under Construction");
+
+                        tableModel.init(prop, removeImage, studentImage, editImage, emptyImage);
+                        tableModel.fireTableDataChanged();
 //                    }
-//                } catch (Dwo2Exception ex) {
-//                    LOG.log(Level.FINE, "", ex);
-//                    JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-//                } finally {
-//                    fireEditingStopped();
-//                }
+                } catch (Dwo2Exception ex) {
+                    LOG.log(Level.FINE, "", ex);
+                    JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                } finally {
+                    fireEditingStopped();
+                }
             } else if (value == removeImage) {
                 try {
                     DomUser user = (DomUser) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                     //prop.removeUser();
+                    GuiCreator.instance().ShowMessageDialog(center, "Under Construction");
                     tableModel.init(prop, removeImage, studentImage, editImage, emptyImage);
                 } catch (Dwo2Exception ex) {
                     LOG.log(Level.FINE, "", ex);
