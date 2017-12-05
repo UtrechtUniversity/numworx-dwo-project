@@ -233,20 +233,21 @@ public class CheckButton implements InteractionStub, CBookEventListener
 			{
 				imWidth = imageView.getWidth();
 				imHeight = imageView.getHeight();
+			
+	       		LoadHandler handler = new LoadHandler() {
+	
+					@Override
+					public void onLoad(LoadEvent event) {
+						int width = knopImage.getWidth();
+						int height = knopImage.getHeight();
+						logger.fine("onLoad checkbutton image " + width + "x" + height);
+						basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, width, Style.Unit.PX);
+						basisPanel.setWidgetTopHeight(checkButton, 5, Style.Unit.PX, height, Style.Unit.PX);
+						
+					}
+				};
+				knopImage.addLoadHandler(handler);
 			}
-       		LoadHandler handler = new LoadHandler() {
-
-				@Override
-				public void onLoad(LoadEvent event) {
-					int width = knopImage.getWidth();
-					int height = knopImage.getHeight();
-					logger.fine("onLoad checkbutton image " + width + "x" + height);
-					basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, width, Style.Unit.PX);
-					basisPanel.setWidgetTopHeight(checkButton, 5, Style.Unit.PX, height, Style.Unit.PX);
-					
-				}
-			};
-			knopImage.addLoadHandler(handler);
 		}
 		if(knopImage != null)
 		{	checkButton = new PushButton(knopImage);
