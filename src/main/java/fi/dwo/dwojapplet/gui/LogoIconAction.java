@@ -26,6 +26,7 @@ import javax.swing.SwingUtilities;
 
 import org.osgi.util.promise.Promise;
 
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicScoContextManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -34,8 +35,8 @@ import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DWO;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
-import fi.dwo.dwojapplet.persistence.rest.PublicScoContextManager;
 import fi.dwo.dwojapplet.gui.ScoManagementPanel.IconDialog;
 
 public class LogoIconAction extends AbstractAction implements Action {
@@ -72,7 +73,7 @@ public class LogoIconAction extends AbstractAction implements Action {
 		PersistenceId id = PersistentScoContext.buildPersistenceId(Long.valueOf(sco.getScoID()));
 		DomScoContext domScoId = new DomScoContext();
 		domScoId.setId(id);
-		PublicScoContextManager.getAsync(domScoId, DWO.getDwoProfile())
+		PublicScoContextManager.getAsync(domScoId, DWO.getDwoProfile(), null)
 		.then(p ->
 		{
 			String u = p.getValue().getImage();

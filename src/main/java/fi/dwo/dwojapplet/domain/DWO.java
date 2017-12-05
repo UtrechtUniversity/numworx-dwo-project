@@ -32,7 +32,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicUserManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
-import fi.dwo.dwojapplet.persistence.rest.SecuredTeacherScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherScoContextManager;
 import fi.dwo.dwojapplet.domain.utils.CheckEmail;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
@@ -2088,7 +2088,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
   		if (sco.hasFeature(Sco.JSON_OUT))
   			scoData.setLaunchdatabytes(sco.getLaunchdataBytes());
 		try {
-			scoContext = SecuredTeacherScoContextManager.add(scoContext, scoData);
+			scoContext = SecuredTeacherScoContextManager.add(scoContext, scoData, getDwoProfile());
 // legacy
 			int scoid = MySQLPersistenceId.getNativeId(scoContext).intValue();
 			sco = (Sco) PersistenceFacade.instance().get(scoid, Sco.class);
@@ -2141,7 +2141,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     	
     	if (scoContext.getId() != null) {
     		try {
-				SecuredTeacherScoContextManager.update(scoContext, scoData);
+				SecuredTeacherScoContextManager.update(scoContext, scoData, getDwoProfile());
 				sco.setImageData(null);
 			} catch (Dwo2Exception e) {
 	            JOptionPane.showMessageDialog(this, e.getMessage());
