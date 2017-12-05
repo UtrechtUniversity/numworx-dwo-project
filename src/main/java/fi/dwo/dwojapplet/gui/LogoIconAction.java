@@ -35,7 +35,7 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.Sco;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicScoContextManager;
+import fi.dwo.dwojapplet.persistence.rest.PublicScoContextManager;
 import fi.dwo.dwojapplet.gui.ScoManagementPanel.IconDialog;
 
 public class LogoIconAction extends AbstractAction implements Action {

@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
+package fi.dwo.dwojapplet.persistence.rest;
 
 import java.util.List;
 
@@ -8,6 +8,7 @@ import org.osgi.util.promise.Promises;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.numworx.async.Async;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.ScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;

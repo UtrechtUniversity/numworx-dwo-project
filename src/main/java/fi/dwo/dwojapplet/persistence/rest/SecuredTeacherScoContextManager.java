@@ -1,10 +1,10 @@
-package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
+package fi.dwo.dwojapplet.persistence.rest;
 
+import fi.dwo.dwojapplet.domain.DWO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
-import fi.dwo.dwojapplet.domain.DWO;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;

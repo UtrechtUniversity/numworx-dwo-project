@@ -32,7 +32,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicUserManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherScoContextManager;
+import fi.dwo.dwojapplet.persistence.rest.SecuredTeacherScoContextManager;
 import fi.dwo.dwojapplet.domain.utils.CheckEmail;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
@@ -89,6 +89,7 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.plaf.ColorUIResource;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
 import org.apache.xmlrpc.applet.MySimpleXmlRpcClient;
 
@@ -2416,7 +2417,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 
         if (samlUserID != null && samlOrgID != null) {
             try {
-                DwoHelper.setCurrentUser(PublicUserManager.samlLogin(samlUserID, samlOrgID, authToken));
+                DomUserFullwLoginContext user = PublicUserManager.samlLogin(samlUserID, samlOrgID, authToken);
+                DwoHelper.setCurrentUser(user.getDomUserFull());
+                DwoHelper.setCurrentLoginContext(user.getDomLoginContext());
                 return DwoHelper.getCurrentFacadeUser();
             } catch (Dwo2Exception e) {
                 //TODO LOG.log(...)
