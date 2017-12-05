@@ -340,5 +340,18 @@ public class GuiCreatorAdmin extends GuiCreator {
 		AppletConfigPanel panel = new AppletConfigPanel();
 		return panel;
 	}
-	
+
+        
+    @Override
+    public CenterSubPanel getUserManagementPanel() {
+        UsersDwoAdminPanel panel;
+        try {
+            panel = new UsersDwoAdminPanel();
+		return panel;
+        } catch (Dwo2Exception ex) {
+            Logger.getLogger(GuiCreatorAdmin.class.getName()).log(Level.SEVERE, null, ex);
+            ShowErrorDialog(null,ex);
+        }
+        return null;
+    }
 }

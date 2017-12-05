@@ -27,10 +27,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 
@@ -57,9 +60,15 @@ public class UsersDwoAdminPanel extends JPanel implements CenterSubPanel, Action
     private Image studentImage;
     private Image teacherImage;
     private Image removeImage;
+    private Image searchImage;
+    private Image clearImage;
+
+    private JTextField zoekField;
+    private JButton zoekBtn, clrBtn;
 
     private JPanel jtbl;
     private TableRowSorter rowSorter;
+    private RowFilter<SchoolDwoAdminPanelTableModel, Object> tableFilter;
 
     private JTable jtable;
 
@@ -90,6 +99,7 @@ public class UsersDwoAdminPanel extends JPanel implements CenterSubPanel, Action
             TableCellEditor, ActionListener {
 
         Object value;
+        UsersDwoAdminPanelTableModel model;
         int row;
 
         @Override
@@ -99,7 +109,7 @@ public class UsersDwoAdminPanel extends JPanel implements CenterSubPanel, Action
             JButton button = new JButton(new ImageIcon((Image) value));
             button.addActionListener(this);
             this.row = row;
-            //model = (ClassTeacherPanelTableModel) table.getModel();
+            model = (UsersDwoAdminPanelTableModel) table.getModel();
             return button;
         }
 
@@ -141,9 +151,8 @@ public class UsersDwoAdminPanel extends JPanel implements CenterSubPanel, Action
             } else if (value == removeImage) {
                 try {
                     DomUser user = (DomUser) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
-//                                prop.removeUser(user);
-
-                    tableModel.init(prop.getUserList(), removeImage, studentImage, editImage, emptyImage);
+                    //prop.removeUser();
+                    tableModel.init(prop, removeImage, studentImage, editImage, emptyImage);
                 } catch (Dwo2Exception ex) {
                     LOG.log(Level.FINE, "", ex);
                     JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
@@ -160,7 +169,7 @@ public class UsersDwoAdminPanel extends JPanel implements CenterSubPanel, Action
             jtbl = null;
         }
         jtbl = new JPanel();
-        jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.PAGE_AXIS));
+//        jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.PAGE_AXIS));
 
         jtable = new JTable();
         jtable.getTableHeader().setReorderingAllowed(false);
@@ -173,43 +182,61 @@ public class UsersDwoAdminPanel extends JPanel implements CenterSubPanel, Action
         tableModel = new UsersDwoAdminPanelTableModel();
         List userList = null;
         Image image = emptyImage;
-        tableModel.init(userList, removeImage, image, editImage, emptyImage);
+        tableModel.init(prop, removeImage, image, editImage, emptyImage);
         jtable.setModel(tableModel);
         rowSorter = new TableRowSorter(tableModel);
+        tableFilter = RowFilter.regexFilter(".*", 0);
+        rowSorter.setRowFilter(tableFilter);
         rowSorter.toggleSortOrder(3);//
         jtable.setRowSorter(rowSorter);
-
-        if (jtable.getRowCount() > 0) {
-            jtable.setRowSelectionInterval(0, 0);
-        }
-        jtable.setRowSelectionAllowed(false);
-        jtable.setColumnSelectionAllowed(false);
-        jtable.setCellSelectionEnabled(false);
-        jtable
-                .setDefaultRenderer(Image.class, new UsersDwoAdminPanel.ImageRenderer());
-        jtable
-                .setDefaultEditor(Image.class, new UsersDwoAdminPanel.ImageButtonEditor());
-        jtable.setBackground(GuiConstants.CELL_BACKGROUND);
-        jtable.setGridColor(Color.white);
-        jtable.setRowMargin(8);
-        jtable.getColumnModel().setColumnMargin(2);
-        jtable.setBorder(null);
-
+        TableUtil.setDefaults(jtable, true, new UsersDwoAdminPanel.ImageRenderer(), new UsersDwoAdminPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
-        TableUtil.setBorder(jtable);
-        jtbl.add(jtable);
-        jtbl.setVisible(false);
-//        JScrollPane scrollPane = new JScrollPane();
-//        jtable.setSize(100, 100);
-////        scrollPane.getViewport().add(jtable);
-//        scrollPane.setVisible(true);
-//        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-//        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-//        this.add(scrollPane,BorderLayout.NORTH);
-//        jtbl.add(Box.createVerticalGlue());
+                TableColumnModel m = jtable.getColumnModel();
+        jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
+        for (int i = 0; i < jtable.getColumnCount(); i++) {
+            m.getColumn(i).setMinWidth(70);
+            m.getColumn(i).setMaxWidth(150);
+        }
+        jtable.setSize(jtable.getPreferredSize());
 
-        this.add(jtbl);
-        jtbl.setVisible(true);
+        jtbl.add(jtable.getTableHeader());
+        jtbl.add(jtable);
+        jtbl.add(Box.createVerticalGlue());
+        //TableUtil.setBorder(table);
+//        int h = addSchoolButton.getSize().height + addSchoolButton.getLocation().y + 5;
+        //jtbl.setBounds(5, h, 627 - 5 , 492 - h - 5);
+        jtbl.validate();
+//        if (jtable.getRowCount() > 0) {
+//            jtable.setRowSelectionInterval(0, 0);
+//        }
+//        jtable.setRowSelectionAllowed(false);
+//        jtable.setColumnSelectionAllowed(false);
+//        jtable.setCellSelectionEnabled(false);
+//        jtable
+//                .setDefaultRenderer(Image.class, new UsersDwoAdminPanel.ImageRenderer());
+//        jtable
+//                .setDefaultEditor(Image.class, new UsersDwoAdminPanel.ImageButtonEditor());
+//        jtable.setBackground(GuiConstants.CELL_BACKGROUND);
+//        jtable.setGridColor(Color.white);
+//        jtable.setRowMargin(8);
+//        jtable.getColumnModel().setColumnMargin(2);
+//        jtable.setBorder(null);
+//
+//        TableUtil.setJTableSizes(jtable);
+//        TableUtil.setBorder(jtable);
+//        jtbl.add(jtable);
+//        jtbl.setVisible(false);
+////        JScrollPane scrollPane = new JScrollPane();
+////        jtable.setSize(100, 100);
+//////        scrollPane.getViewport().add(jtable);
+////        scrollPane.setVisible(true);
+////        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+////        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+////        this.add(scrollPane,BorderLayout.NORTH);
+////        jtbl.add(Box.createVerticalGlue());
+//
+//        this.add(jtbl);
+//        jtbl.setVisible(true);
 
     }
 
@@ -236,16 +263,55 @@ public class UsersDwoAdminPanel extends JPanel implements CenterSubPanel, Action
         MediaTracker tr = new MediaTracker(this);
         editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_CLASS_IMAGE);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
+        searchImage = DwoHelper.getResourceImage(GuiConstants.SEARCH_IMAGE);
+        clearImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
         tr.addImage(editImage, 0);
         tr.addImage(emptyImage, 1);
         tr.addImage(studentImage, 2);
         tr.addImage(removeImage, 4);
+        
 
         try {
             tr.waitForAll();
         } catch (Exception e) {
         }
-        buildJTable();
+        Box header = Box.createHorizontalBox();
+//        header.add(Box.createHorizontalStrut(25));
+        zoekField = new JTextField();
+        zoekField.setToolTipText("Zoek school");
+        zoekField.addActionListener(this);
+        zoekField.setColumns(8);
+        zoekField.setMinimumSize(zoekField.getPreferredSize());
+        header.add(zoekField);
+        zoekBtn = new JButton(new ImageIcon(searchImage));
+        zoekBtn.setBorderPainted(false);
+        zoekBtn.setContentAreaFilled(false);
+        zoekBtn.addActionListener(this);
+        zoekBtn.setSize(zoekBtn.getPreferredSize());
+        header.add(zoekBtn);
+        header.add(Box.createHorizontalStrut(5));
+        clrBtn = new JButton(new ImageIcon(clearImage));
+        clrBtn.setBorderPainted(false);
+        clrBtn.setContentAreaFilled(false);
+        clrBtn.addActionListener(this);
+        clrBtn.setSize(clrBtn.getPreferredSize());
+        header.add(clrBtn);
+        header.add(Box.createHorizontalStrut(5));
+        header.add(Box.createHorizontalGlue());
+        header.add(Box.createRigidArea(new Dimension(10, 0)));
+//        header.setPreferredSize(header.getMinimumSize());
+        header.setMaximumSize(header.getMinimumSize());
+        this.add(header);
+
+        this.add(Box.createVerticalStrut(15));
+        try {
+            buildJTable();
+        }
+        catch (Dwo2Exception ex) {
+            GuiCreator.instance().ShowErrorDialog(this, ex);
+            LOG.log(Level.SEVERE, "", ex);
+        }
+        this.add(jtbl);
 
     }
 

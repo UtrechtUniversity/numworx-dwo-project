@@ -18,9 +18,7 @@ public class AdminMenuPanel extends UserMenuPanel {
 
     private MenuPanelButton courseManagementButton;
     private MenuPanelButton userManagementButton;
-     
-     private MenuPanelButton profileManagementButton;
-
+    private MenuPanelButton profileManagementButton;
     private MenuPanelButton schoolManagementButton;
 
     /* (non-Javadoc)
@@ -35,20 +33,17 @@ public class AdminMenuPanel extends UserMenuPanel {
         createGap();
         /* Add SchoolManagement button */
         schoolManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_SCHOOL_MANAGEMENT));
-        userManagementButton = new MenuPanelButton(TextMapper.getText("USER"));
-//        fm = schoolManagementButton.getFontMetrics(schoolManagementButton.getFont());
-//        schoolManagementButton.setSize(this.getSize().width - 20, fm.getHeight() + 10);
-//        schoolManagementButton.setLocation(10, 70);
         schoolManagementButton.addActionListener(this);
-//        schoolManagementButton.setVisible(false);
         this.add(schoolManagementButton);
-//       schoolManagementButton.setVisible(true);
+        userManagementButton = new MenuPanelButton(TextMapper.getText("USER"));
+        userManagementButton.addActionListener(this);
+        this.add(userManagementButton);
         createGap();
-        profileManagementButton  = new MenuPanelButton(new DwoProfileAction());
+        profileManagementButton = new MenuPanelButton(new DwoProfileAction());
         this.add(profileManagementButton);
         this.add(new MenuPanelButton(new AppletConfigAction()));
         createGap();
-        
+
         /* Add CourseManagement Button */
         if (CenterPanel.isIconizer()) {
             return;
@@ -64,8 +59,9 @@ public class AdminMenuPanel extends UserMenuPanel {
     }
 
     /**
-     * Creates a new StudentMenuPanel for the user. It contains the parent items (from
- StudentMenuPanel) and buttons to show the reult of students, and to add a class.
+     * Creates a new StudentMenuPanel for the user. It contains the parent items
+     * (from StudentMenuPanel) and buttons to show the reult of students, and to
+     * add a class.
      */
     public AdminMenuPanel() {
         super();
