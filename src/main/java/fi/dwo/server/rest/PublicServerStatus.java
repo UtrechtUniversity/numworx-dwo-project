@@ -18,6 +18,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Context;
 import nl.uu.fi.dwo.rest.dom.entities.DomHeartBeat;
 import javax.ws.rs.core.MediaType;
@@ -171,8 +172,8 @@ public class PublicServerStatus {
      */
     @GET
     @Produces({"application/json"})
-    @Path("/getHeartBeat")
-    public DomHeartBeat getHeatBeat() throws Dwo2RestException {
+    @Path("/getSoftwareVersions")
+    public DomHeartBeat getSoftwareVersions() throws Dwo2RestException {
         DomHeartBeat beat = new DomHeartBeat();
         beat.setServerTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
         try {
@@ -205,4 +206,15 @@ public class PublicServerStatus {
     	throw new WebApplicationException("Forbidden", r);
     }
 
+    
+    @GET
+    @Produces({"application/json"})
+    @Path("/getHealth")
+    public String getHealth() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Self-Monitoring Results\n\n");
+        sb.append(getDwoSystemParamStatus());
+        return sb.toString();
+    }
+    
 }
