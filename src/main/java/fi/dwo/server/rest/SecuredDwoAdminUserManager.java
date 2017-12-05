@@ -77,7 +77,7 @@ public class SecuredDwoAdminUserManager {
     @PUT
     @Produces({"application/json"})
     @Path("/update")
-    public Boolean updateUser(@Context SecurityContext sc, RestUserFull restUser) {
+    public DomUserFull updateUser(@Context SecurityContext sc, RestUserFull restUser) {
         if (restUser == null || restUser.getDomUserFull() == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
@@ -120,7 +120,7 @@ public class SecuredDwoAdminUserManager {
                 LOG.log(Level.SEVERE, "", ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user " + sc.getUserPrincipal().getName() + ".");
             }
-            return true;
+            return user.buildDomUserFull();
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to change a user with username {1} by dwoadmin {0}.", new Object[]{sc.getUserPrincipal().getName(), domUser.getUserName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
