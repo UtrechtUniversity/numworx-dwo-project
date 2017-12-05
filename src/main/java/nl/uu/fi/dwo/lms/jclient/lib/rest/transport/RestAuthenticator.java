@@ -61,6 +61,10 @@ public class RestAuthenticator extends Authenticator {
         return password;
     }
 
+    public boolean isAuthenticated() {
+    		return password != null && username != null;
+    }
+ 
     /**
      * @param password the password to set
      */

@@ -12,12 +12,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Authenticator;
+import java.net.ConnectException;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 
@@ -87,13 +89,11 @@ public class LoginManager {
             return user;
         } catch (MalformedURLException e) {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
-
+        } catch (ConnectException e) {
+        		LOG.log(Level.WARNING, "basicLogin", e); // Komt voor!
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ConnectionTimeout, e.getMessage());
         } catch (IOException e) {
-            if(e.getClass().equals(java.net.ConnectException.class)){
-                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ConnectionTimeout, e.getMessage());
-            }else{
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
-            }
         }
     }
 
