@@ -3,9 +3,19 @@ package fi.dwo.dwojapplet.form;
 import fi.dwo.commons.exceptions.CourseException;
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentApplet;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import fi.dwo.dwojapplet.persistence.StoreCreator;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherScoContextManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
+import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +23,7 @@ import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -240,18 +251,20 @@ class ManifestFile {
 		return result;
 	}
 	
-	int addCourse(Hashtable course, int dwoProfile, int schoolID, int parent) throws DwoXmlRpcException, SQLException, IOException, XmlRpcException, PersistenceException, CourseException
+	int addCourse(Hashtable course, int dwoProfile, int schoolID, int parent) throws DwoXmlRpcException, SQLException, IOException, XmlRpcException, PersistenceException, CourseException, Dwo2Exception
 	{
 		String name;
 		String description;
 		name = (String) course.get(COURSE_TITLE);
 		description = (String) course.get(DESCRIPTION);
 		int courseID = PersistenceFacade.instance().addCourse(schoolID, notnull(name), notnull(description), dwoProfile, parent, false);
-		appendCourse(courseID, 0, course);
+		DomDwoProfile p = new DomDwoProfile();
+		p.setId(PersistentDwoProfile.buildPersistenceId((long)dwoProfile));
+		appendCourse(courseID, 0, course,p);
 		return courseID;
 	}
 	
-	void appendCourse(int courseID, int offset, Hashtable course) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException, PersistenceException
+	void appendCourse(int courseID, int offset, Hashtable course, DomDwoProfile profile) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException, PersistenceException, Dwo2Exception
 	{
 		Vector items = (Vector) course.get(SCO_ITEMS);
 		Iterator i = items.iterator();
@@ -262,15 +275,50 @@ class ManifestFile {
 			int sequencenr = ((Number)sco.get(SEQUENCE_NR)).intValue();
 			String description = (String) sco.get(DESCRIPTION);
 			String launchdata = (String) sco.get(LAUNCHDATA);
-			int sconr = PersistenceFacade.instance().addSco(courseID, notnull(name), notnull(description), appletID, notnull(launchdata), sequencenr+offset);
-	
-			Sco newsco = (Sco) PersistenceFacade.instance().get(sconr, Sco.class);
-        	if(newsco.hasFeature(Sco.JSON_OUT))
-        	{	byte[] launchdataBytes = newsco.getLaunchdataBytes();
-        		System.out.println("JSON launchdata " + newsco.getID() + " " + launchdataBytes.length + " bytes");
-				StoreCreator.instance().changeSco(newsco.getID(), newsco.getScoName(), newsco.getDescription(), 
-				        true, launchdataBytes, newsco.getShowScore());
-        	}
+			//GuiCreator.instance().getDWO().addScoWithExceptions(course, appletConfig, name, description, showScore, imageData)
+			
+			
+			Sco addsco = new Sco();
+    			DomScoContextFull scoContext = new DomScoContextFull();
+    			DomScoData scoData = new DomScoData();
+    			scoContext.setImageData(null);
+    			scoContext.setScoName(notnull(name));
+    			scoContext.setDescription(notnull(description));
+    			scoContext.setShowScore(Boolean.TRUE);
+    			scoContext.setAppletId(PersistentApplet.buildPersistenceId((long)appletID));
+    			scoContext.setCourseId(PersistentCourse.buildPersistenceId((long)courseID));
+    			scoContext.setSequencenr((long)sequencenr+offset);
+    			scoContext.setUrnId(null);
+// scodata
+    			addsco.setAppletID(appletID);
+    			addsco.setLaunchdataString(launchdata);
+    			addsco.getApplet();
+    			Map<?, ?> m = addsco.getLaunchdata();
+    			Object mode = m.get("mode");
+    			int value = mode == null ? 0 : Integer.parseInt(mode.toString());
+    			scoContext.setScoType(ScoType.values()[value]);
+    			scoData.setLaunchdata(launchdata);
+    			if (addsco.hasFeature(Sco.JSON_OUT))
+    				scoData.setLaunchdatabytes(addsco.getLaunchdataBytes());
+     			
+			scoContext = SecuredTeacherScoContextManager.add(scoContext, scoData, profile);
+// legacy?
+    			int scoid = MySQLPersistenceId.getNativeId(scoContext).intValue();
+    			Sco newsco = (Sco) PersistenceFacade.instance().get(scoid, Sco.class);
+   
+			
+			
+			
+			
+//			int sconr = PersistenceFacade.instance().addSco(courseID, notnull(name), notnull(description), appletID, notnull(launchdata), sequencenr+offset);
+//	
+//			Sco newsco = (Sco) PersistenceFacade.instance().get(sconr, Sco.class);
+//        	if(newsco.hasFeature(Sco.JSON_OUT))
+//        	{	byte[] launchdataBytes = newsco.getLaunchdataBytes();
+//        		System.out.println("JSON launchdata " + newsco.getID() + " " + launchdataBytes.length + " bytes");
+//				StoreCreator.instance().changeSco(newsco.getID(), newsco.getScoName(), newsco.getDescription(), 
+//				        true, launchdataBytes, newsco.getShowScore());
+//        	}
 	
 		
 		

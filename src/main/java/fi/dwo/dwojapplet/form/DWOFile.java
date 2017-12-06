@@ -3,6 +3,8 @@ package fi.dwo.dwojapplet.form;
 import fi.dwo.commons.exceptions.CourseException;
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,11 +66,12 @@ public class DWOFile {
 	 * @throws XmlRpcException
 	 * @throws PersistenceException 
 	 * @throws CourseException 
+	 * @throws Dwo2Exception 
 	 * @see fi.dwo.server.form.ManifestFile#addCourse(java.util.Hashtable, int, int)
 	 */
 	public int addCourse(Hashtable course, int dwoProfile, int schoolID, int parent)
 			throws DwoXmlRpcException, SQLException, IOException,
-			XmlRpcException, PersistenceException, CourseException {
+			XmlRpcException, PersistenceException, CourseException, Dwo2Exception {
 		return m.addCourse(course, dwoProfile, schoolID, parent);
 	}
 
@@ -93,8 +96,8 @@ public class DWOFile {
         return m.inputIMSManifest(input);
     }
 
-	public void appendCourse(int courseID, int offset, Hashtable course) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException, PersistenceException
+	public void appendCourse(int courseID, int offset, Hashtable course, DomDwoProfile profile) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException, PersistenceException, Dwo2Exception
 	{
-		m.appendCourse(courseID, offset, course);
+		m.appendCourse(courseID, offset, course, profile);
 	}
 }

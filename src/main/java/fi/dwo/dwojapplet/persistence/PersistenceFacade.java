@@ -440,9 +440,10 @@ public class PersistenceFacade {
      * SCO FUNCTIONALITY
      * =============================================================================
      * @param sequencenr
-     * @throws PersistenceException 
+     * @throws PersistenceException
+     * @deprecated
      */
-    public int addSco(int courseID, String name, String description, int appletID, String launchdata, int sequencenr) throws PersistenceException {
+    private int addSco(int courseID, String name, String description, int appletID, String launchdata, int sequencenr) throws PersistenceException {
     	try {
 			return DbAccessCreator.instance().addSco(courseID, name, description, appletID, launchdata, sequencenr);
 		} catch (DwoXmlRpcException e) {
@@ -485,8 +486,9 @@ public class PersistenceFacade {
      * @param showScore
      * @return The new sco. If an exception occurs, null was returned.
      * @throws ScoException
+     * @deprecated
      */
-    public Sco addSco(Course course, AppletConfig appletConfig, String name,
+    private Sco addSco(Course course, AppletConfig appletConfig, String name,
             String description, boolean showScore) throws ScoException {
         DbAccessIF dbAccess = DbAccessCreator.instance();
         try {

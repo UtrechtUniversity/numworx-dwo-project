@@ -3,22 +3,18 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.beans.appletutil.AppletUtil;
 import fi.dwo.commons.exceptions.CourseException;
 import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
-import fi.dwo.dwojapplet.domain.DWO;
-import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.ResultsModuleIF;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.GuiCreatorTeacher.LazyAppletConfig;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import java.applet.AppletContext;
-import java.applet.AppletStub;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;
@@ -34,7 +30,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -215,7 +210,9 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                 config.setAppletID(aid);
                 config.setAppletConfigID(-sid); // HACK HACK negatief = scoid
                 config.setName(name);
-                Sco news = PersistenceFacade.instance().addSco(course, config, name, description, sco.isShowScore());
+                config.setImageSource(PersistentScoContext.buildPersistenceId((long)sco.getID()));
+ // we willen exceptions, geen user dialogs here.
+                Sco news = GuiCreator.instance().dwo.addScoWithExceptions(course, config, name, description, sco.isShowScore(), sco.getImageData());
 // TODO common code?		
                 news.setSequencenr(sco.getSequencenr()); // TODO noop?
                 Sco[] oldsa = course.getScoList();

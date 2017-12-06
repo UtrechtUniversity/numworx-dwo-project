@@ -17,10 +17,7 @@ import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.MapperIF;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-
-
-
-
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 //import fi.dwo.dwojapplet.persistence.MapperCreator;
 //import fi.dwo.dwojapplet.persistence.MapperIF;
@@ -125,7 +122,7 @@ public class ImportModuleAction extends GuiAction {
 
     }
 
-    private void importScos(Course course) throws ParserConfigurationException, SAXException, IOException, DwoXmlRpcException, XmlRpcException, SQLException, PersistenceException {
+    private void importScos(Course course) throws ParserConfigurationException, SAXException, IOException, DwoXmlRpcException, XmlRpcException, SQLException, PersistenceException, Dwo2Exception {
         String naam;
         openDial.setTitle(getToolTipText());
         openDial.show();
@@ -148,7 +145,7 @@ public class ImportModuleAction extends GuiAction {
                 names.add(title);
                 sco.put("sconame", title);
             }
-            zipper.appendCourse(course.getID(), offset, result);
+            zipper.appendCourse(course.getID(), offset, result, DWO.getDwoProfile());
             course.loadScos();
             getCenter().updateCourse(course);
         }
@@ -190,10 +187,11 @@ public class ImportModuleAction extends GuiAction {
  * @throws XmlRpcException
  * @throws PersistenceException 
  * @throws CourseException 
+ * @throws Dwo2Exception 
  */
 	static void importModule(CourseMap parent, InputStream input, DWOFile zipper)
 			throws ParserConfigurationException, SAXException, IOException,
-			DwoXmlRpcException, SQLException, XmlRpcException, PersistenceException, CourseException {
+			DwoXmlRpcException, SQLException, XmlRpcException, PersistenceException, CourseException, Dwo2Exception {
 		Hashtable result = zipper.inputIMSManifest(input);
 		Set names = parent.getChildNames();
 		String title = (String)result.get("name");

@@ -2064,35 +2064,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * 
      */
     public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore, byte[] imageData) {
-    		DomScoContextFull scoContext = new DomScoContextFull();
-    		DomScoData scoData = new DomScoData();
-    		scoContext.setImageData(imageData);
-    		scoContext.setScoName(name);
-    		scoContext.setDescription(description);
-    		scoContext.setShowScore(showScore);
-    		scoContext.setAppletId(PersistentApplet.buildPersistenceId((long)appletConfig.getAppletID()));
-    		scoContext.setCourseId(PersistentCourse.buildPersistenceId((long)course.getID()));
-    		scoContext.setSequencenr((long)course.getScoList().length);
-    		scoContext.setUrnId(appletConfig.getImageSource());
-// scodata
-    		final String launchdata = appletConfig.getLaunchdata();
-    		Sco sco = new Sco();
-    		sco.setAppletID(appletConfig.getAppletID());
-    		sco.setLaunchdataString(launchdata);
-    		sco.loadApplet();
-    		Map<?, ?> m = sco.getLaunchdata();
-		Object mode = m.get("mode");
-		int value = mode == null ? 0 : Integer.parseInt(mode.toString());
-		scoContext.setScoType(ScoType.values()[value]);
-  		scoData.setLaunchdata(launchdata);
-  		if (sco.hasFeature(Sco.JSON_OUT))
-  			scoData.setLaunchdatabytes(sco.getLaunchdataBytes());
 		try {
-			scoContext = SecuredTeacherScoContextManager.add(scoContext, scoData, getDwoProfile());
-// legacy
-			int scoid = MySQLPersistenceId.getNativeId(scoContext).intValue();
-			sco = (Sco) PersistenceFacade.instance().get(scoid, Sco.class);
-			return sco;
+    		return addScoWithExceptions(course, appletConfig, name, description, showScore, imageData);
 		} catch (Dwo2Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), null, JOptionPane.ERROR_MESSAGE);
             return null;
@@ -2101,14 +2074,39 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
             return null;
 		}
     	
-    	
-//    	try {
-//            return PersistenceFacade.instance().addSco(course, appletConfig, name, description, showScore);
-//        } catch (ScoException e) {
-//            JOptionPane.showMessageDialog(this, e.getMessage());
-//            return null;
-//        }
     }
+
+	public Sco addScoWithExceptions(Course course, AppletConfig appletConfig, String name, String description,
+			boolean showScore, byte[] imageData) throws Dwo2Exception, PersistenceException {
+		DomScoContextFull scoContext = new DomScoContextFull();
+		DomScoData scoData = new DomScoData();
+		scoContext.setImageData(imageData);
+		scoContext.setScoName(name);
+		scoContext.setDescription(description);
+		scoContext.setShowScore(showScore);
+		scoContext.setAppletId(PersistentApplet.buildPersistenceId((long)appletConfig.getAppletID()));
+		scoContext.setCourseId(PersistentCourse.buildPersistenceId((long)course.getID()));
+		scoContext.setSequencenr((long)course.getScoList().length);
+		scoContext.setUrnId(appletConfig.getImageSource());
+// scodata
+		final String launchdata = appletConfig.getLaunchdata();
+		Sco sco = new Sco();
+		sco.setAppletID(appletConfig.getAppletID());
+		sco.setLaunchdataString(launchdata);
+		sco.loadApplet();
+		Map<?, ?> m = sco.getLaunchdata();
+		Object mode = m.get("mode");
+		int value = mode == null ? 0 : Integer.parseInt(mode.toString());
+		scoContext.setScoType(ScoType.values()[value]);
+		scoData.setLaunchdata(launchdata);
+		if (sco.hasFeature(Sco.JSON_OUT))
+			scoData.setLaunchdatabytes(sco.getLaunchdataBytes());
+		scoContext = SecuredTeacherScoContextManager.add(scoContext, scoData, getDwoProfile());
+// legacy
+		int scoid = MySQLPersistenceId.getNativeId(scoContext).intValue();
+		sco = (Sco) PersistenceFacade.instance().get(scoid, Sco.class);
+		return sco;
+	}
 
     /*
      * (non-Javadoc)
