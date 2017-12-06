@@ -200,6 +200,7 @@ public class Text_nl extends ListResourceBundle {
 			{ TextMapper.GUIMNU_CLASS_RESULTS, "Resultaten van klas" },
 			{ TextMapper.GUIMNU_RESULTS, "Resultaten bekijken" },
 			{ TextMapper.GUIMNU_CLASS_MANAGEMENT, "Mijn klassen" },
+			{ TextMapper.GUIMNU_USER_MANAGEMENT, "gebruikers beheren" },
 			{ TextMapper.GUIMNU_SCHOOL_MANAGEMENT, "Scholen beheren" },
 			{ TextMapper.GUIMNU_COURSE_MANAGEMENT, "Modules beheren" },
 			{ TextMapper.GUIMNU_MSG_ADD_CLASS,

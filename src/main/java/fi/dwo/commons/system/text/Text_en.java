@@ -200,6 +200,7 @@ public class Text_en extends ListResourceBundle {
 			{ TextMapper.GUIMNU_RESULTS, "Look at results" },
 			{ TextMapper.GUIMNU_CLASS_MANAGEMENT, "My classes" },
 			{ TextMapper.GUIMNU_SCHOOL_MANAGEMENT, "School management" },
+			{ TextMapper.GUIMNU_USER_MANAGEMENT, "User management" },
 			{ TextMapper.GUIMNU_COURSE_MANAGEMENT, "Module management" },
 			{ TextMapper.GUIMNU_MSG_ADD_CLASS, "Name of the new class" },
 			{ TextMapper.GUIMNU_MSG_ADD_CLASS_TITLE, "Add new class" },

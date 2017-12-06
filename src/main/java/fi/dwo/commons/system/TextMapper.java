@@ -244,6 +244,7 @@ public abstract class TextMapper {
 	public final static String GUIMNU_CLASS_MANAGEMENT = "GUIMNU_CLASS_MANAGEMENT";
 	public final static String GUIMNU_SCHOOL_MANAGEMENT = "GUIMNU_SCHOOL_MANAGEMENT";
 	public final static String GUIMNU_COURSE_MANAGEMENT = "GUIMNU_COURSE_MANAGEMENT";
+	public final static String GUIMNU_USER_MANAGEMENT = "GUIMNU_USER_MANAGEMENT";
 	public final static String GUIMNU_MSG_ADD_CLASS = "GUIMNU_MSG_ADD_CLASS";
 	public final static String GUIMNU_MSG_ADD_CLASS_TITLE = "GUIMNU_MSG_ADD_CLASS_TITLE";
 	public final static String GUIMNU_MSG_ADD_SCHOOL = "GUIMNU_MSG_ADD_SCHOOL";
