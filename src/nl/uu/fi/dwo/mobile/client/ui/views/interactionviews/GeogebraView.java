@@ -348,6 +348,10 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		attemptsCount++;
 		setAttempt();
 		comRoot.setChanged(Boolean.FALSE.equals(correct)); // deze roept een ggbLog aan die img reset
+		
+		// moet hier ook, anders komt het gele vinkje niet...
+		zetNagekeken(true);
+		
 		setCheckImg(); // set feedBack vinkje/kruis
 	}
 
@@ -381,7 +385,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		{
 			setVisibleFeedbackImages(false, false, true);
 		}
-		else if (nagekeken) // correct is dan null; eigenlijk merkwaardig en niet consistent met andere widgets... 
+		else if (nagekeken) // correct is dan null; by design! 
 		{
 			setVisibleFeedbackImages(false, true, false);
 		}
@@ -496,7 +500,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	{
 		kijkNa(true);
 		
-		nagekeken = true;
+		zetNagekeken(true);
 		
 		attemptsCount++;
 		setAttempt();
@@ -582,7 +586,6 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 							{
 								// feedback alleen in oefenen of (toets + nagekeken).
 								setColor(ggbApplet, objectName, 0, 180, 0); // groen, zorgt ook voor een ggbLog die vinkje weghaalt...
-								setVisibleFeedbackImages(true, false, false);
 							}
 							score += geogebraCheckScores[j];
 							checkObjects[j] = null; // used!
@@ -597,13 +600,19 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 						}
 					}
 				}
+
 				if (matches > 0 && matches < checkObjects.length)
 				{
-					setCorrect(null); // waarom? niet volledig goed, maar eigenlijk dus halfgoed, gele vink
+					setCorrect(null); // halfgoed, gele vink
 				}
 				else
 					setCorrect(matches != 0);
 
+				if (feedback)
+				{
+					// feedback alleen in oefenen of (toets + nagekeken).
+					setVisibleFeedbackImages();
+				}
 			}
 			else
 			{
@@ -613,18 +622,28 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 			// nagekeken = true;
 		}
 	
-		if (isCorrect() != null && !isCorrect())
+		if (isCorrect() == null || !isCorrect()) // halfgoed of fout
 			verhoogErrorCount();
 
-		if (feedback && nakijken && correct != null)
+		if (feedback && nakijken)
 		{
 			// cross widget communicatie
-			if (correct)
-				fireEvent(EVENT_CORRECT);
-			else if (!correct && errorCount > 1)
-				fireEvent(EVENT_FALSE2);
-			else if (!correct)
-				fireEvent(EVENT_FALSE);
+			if (correct == null) // halfgoed
+			{
+				if (errorCount > 1)
+					fireEvent(EVENT_FALSE2);
+				else
+					fireEvent(EVENT_FALSE);
+			}
+			else
+			{
+				if (correct)
+					fireEvent(EVENT_CORRECT);
+				else if (!correct && errorCount > 1)
+					fireEvent(EVENT_FALSE2);
+				else if (!correct)
+					fireEvent(EVENT_FALSE);
+			}
 		}
 	}
 
@@ -678,6 +697,12 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		return null;
 	}
 
+	/* 
+	 * Retourneert
+	 * - true: als correct of als niet moet worden nagekeken 
+	 * - false: als fout
+	 * - null: als halfgoed
+	 */
 	@Override
 	public Boolean isCorrect()
 	{
@@ -841,6 +866,23 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	{
 		if (nakijken && kijkNaPanel != null)
 		{
+			kijkNaPanel.setStyleName(css.goed(), vinkjeGroen);
+			kijkNaPanel.setStyleName(css.half(), vinkjeGeel);
+			kijkNaPanel.setStyleName(css.fout(), kruisRood);
+		}
+	}
+
+	/**
+	 * Zet de feedback images zichtbaar adhv de waarde van correct.
+	 */
+	void setVisibleFeedbackImages()
+	{
+		if (nakijken && kijkNaPanel != null)
+		{
+			boolean vinkjeGroen = correct != null && isCorrect();
+			boolean vinkjeGeel = correct == null;
+			boolean kruisRood = correct != null && !isCorrect();
+			
 			kijkNaPanel.setStyleName(css.goed(), vinkjeGroen);
 			kijkNaPanel.setStyleName(css.half(), vinkjeGeel);
 			kijkNaPanel.setStyleName(css.fout(), kruisRood);
