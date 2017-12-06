@@ -34,7 +34,6 @@
     </dependency>
   </dependencies>
   <build>
-    <finalName>dwo#register</finalName>
     <outputDirectory>target/${project.build.finalName}/WEB-INF/classes</outputDirectory>
 	<plugins>
 		<plugin>
