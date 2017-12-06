@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import java.util.List;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 
 /**
  *
@@ -23,6 +24,12 @@ public class UsersDwoAdminPanelProperties {
 
     public List<DomUser> getUserList() throws Dwo2Exception {
         return SecureDwoAdminUserManager.getUserList();
+    }
+    public DomUserFull get(DomUser user) throws Dwo2Exception {
+        return SecureDwoAdminUserManager.get(user);
+    }
+    public DomUserFull update(DomUserFull user) throws Dwo2Exception {
+        return SecureDwoAdminUserManager.update(user);
     }
     
 }

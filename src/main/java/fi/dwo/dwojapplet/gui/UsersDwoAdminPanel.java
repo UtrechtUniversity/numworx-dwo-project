@@ -34,7 +34,9 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
+import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 
 /**
  * Panel that displays a list of users of a type selected by a radio button. The
@@ -124,22 +126,21 @@ public class UsersDwoAdminPanel extends JPanel implements CenterSubPanel, Action
             if (value == editImage) {
                 try {
                     DomUser user = (DomUser) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
-//                    AccountDataFullStudentJPanel panel = new AccountDataFullStudentJPanel();
-//                    panel.setUser(user);
-//                    panel.setVisible(true);
-//                    int result = JOptionPane.showConfirmDialog(GuiCreator.instance().mainPanel, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
-//                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
+                    DomUserFull fullUser = prop.get(user);
+                    AccountDataFullStudentJPanel panel = new AccountDataFullStudentJPanel();
+                    panel.setUser(fullUser);
+                    panel.setVisible(true);
+                    int result = JOptionPane.showConfirmDialog(GuiCreator.instance().mainPanel, panel, TextMapper.getText(TextMapper.GUIP_ACCOUNTANDCONTACTINFO),
+                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                     //case OK persist returned values
                     //user = new DomSingleSchoolStudent(panel.getUser()); superfluous.
-//                    if (result == JOptionPane.OK_OPTION) {
+                    if (result == JOptionPane.OK_OPTION) {
                         //persist returned values
-                        //prop.updateUser(user);
-                        GuiCreator.instance().ShowMessageDialog(center, "Under Construction");
-
+                        fullUser = panel.getUser();
+                        prop.update(fullUser);
                         tableModel.init(prop, removeImage, studentImage, editImage, emptyImage);
                         tableModel.fireTableDataChanged();
-//                    }
+                    }
                 } catch (Dwo2Exception ex) {
                     LOG.log(Level.FINE, "", ex);
                     JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
@@ -351,6 +352,22 @@ public class UsersDwoAdminPanel extends JPanel implements CenterSubPanel, Action
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+       Object source = e.getSource();
+        if (zoekField == source || zoekBtn == source) {
+            //zoek(zoekField.getText().trim().toLowerCase());
+            tableFilter = RowFilter.regexFilter(zoekField.getText().trim(), 0);
+            rowSorter.setRowFilter(tableFilter);
+            //table.setRowSorter(rowSorter);
+
+            return;
+        } else if (clrBtn == source) {
+            zoekField.setText("");
+            tableFilter = RowFilter.regexFilter(".*", 0);
+            rowSorter.setRowFilter(tableFilter);
+            //table.setRowSorter(rowSorter);
+
+            return;
+        } 
     }
 
     /**
