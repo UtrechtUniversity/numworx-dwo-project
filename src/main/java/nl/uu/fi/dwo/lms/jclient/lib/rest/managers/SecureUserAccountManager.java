@@ -99,8 +99,7 @@ public class SecureUserAccountManager {
         }
             
 
-    }
-        
+    }        
         
 //    /**
 //     * Login for a user. Registers service that the user is logging in. As the

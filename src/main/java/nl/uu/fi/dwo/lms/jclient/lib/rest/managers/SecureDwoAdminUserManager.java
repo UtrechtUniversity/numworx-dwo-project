@@ -8,6 +8,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.entities.RestUser;
+import nl.uu.fi.dwo.rest.entities.RestUserFull;
 
 /**
  * Manages the users in the DWO.
@@ -25,4 +28,23 @@ public class SecureDwoAdminUserManager {
         return src;
     }
 
+    public static DomUserFull get(DomUser user) throws Dwo2Exception {
+        RestUser restUser = new RestUser();
+        restUser.setRestContext(RestAuthenticator.getInstance().getContext());
+        restUser.setDomUser(user);
+
+        DomUserFull result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/user/get", DomUserFull.class, restUser);
+        LOG.log(Level.FINE, "Retrieved userdata of user {1} for the dwoadmin with username {0}.", new Object[]{RestAuthenticator.getInstance().getUsername(), restUser.getDomUser().getUserName()});
+        return result;
+    }
+
+    public static DomUserFull update(DomUserFull user) throws Dwo2Exception {
+        RestUserFull restUser = new RestUserFull();
+        restUser.setRestContext(RestAuthenticator.getInstance().getContext());
+        restUser.setDomUserFull(user);
+
+        DomUserFull result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/user/update", DomUserFull.class, restUser);
+        LOG.log(Level.FINE, "Retrieved userdata of user {1} for the dwoadmin with username {0}.", new Object[]{RestAuthenticator.getInstance().getUsername(), restUser.getDomUserFull().getUserName()});
+        return result;
+    }
 }
