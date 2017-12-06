@@ -98,13 +98,13 @@ class UsersDwoAdminPanelTableModel extends AbstractTableModel {
      */
     @Override
     public boolean isCellEditable(int row, int col) {
-        //Note that the data/cell address is constant,
-        //no matter where the cell appears onscreen.
-        if (col < 1) {
-            return false;
-        } else {
+//        //Note that the data/cell address is constant,
+//        //no matter where the cell appears onscreen.
+//        if (col < 1) {
+//            return false;
+//        } else {
             return true;
-        }
+//        }
     }
 
 

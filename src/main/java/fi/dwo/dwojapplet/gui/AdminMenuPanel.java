@@ -35,7 +35,7 @@ public class AdminMenuPanel extends UserMenuPanel {
         schoolManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_SCHOOL_MANAGEMENT));
         schoolManagementButton.addActionListener(this);
         this.add(schoolManagementButton);
-        userManagementButton = new MenuPanelButton(TextMapper.getText("USER"));
+        userManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_USER_MANAGEMENT));
         userManagementButton.addActionListener(this);
         this.add(userManagementButton);
         createGap();
