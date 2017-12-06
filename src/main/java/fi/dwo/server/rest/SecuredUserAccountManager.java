@@ -1,22 +1,16 @@
 package fi.dwo.server.rest;
 
-import fi.dwo.commons.persistence.LogType;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
-import fi.dwo.commons.persistence.entities.PersistentLogData;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
-import fi.dwo.commons.persistence.entities.PersistentLogDataPK;
-import fi.dwo.commons.persistence.entities.PersistentRole;
-import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.util.DwoDateUtilities;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
@@ -26,9 +20,6 @@ import nl.uu.fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
-import fi.dwo.server.PersistentDataManagers.core.LogDataManager;
-import fi.dwo.server.PersistentDataManagers.core.RoleManager;
-import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
@@ -95,12 +86,10 @@ public class SecuredUserAccountManager {
         try {
             user = UserManager.findByUserName(sc.getUserPrincipal().getName());
             LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
-        }
-        finally {
+        } finally {
             em.close();
         }
         return user.buildDomUserFull();
@@ -133,8 +122,7 @@ public class SecuredUserAccountManager {
                 LoginContextManager.create(loginContext);
             }
             LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
         }
@@ -157,12 +145,11 @@ public class SecuredUserAccountManager {
         try {
             u = UserManager.findByUserName(sc.getUserPrincipal().getName());
             LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), u.getUsername()});
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
         }
-        
+
 //        try {//LoginData may fail, but login should succeed.
 //            //register login action
 //            PersistentLogData loginData = new PersistentLogData();
@@ -181,16 +168,15 @@ public class SecuredUserAccountManager {
 //        catch (Exception e) {
 //            LOG.log(Level.SEVERE, null, e);
 //        }
-
-            try {
+        try {
 //                return u.buildDomUserFullwLoginContext(LoginContextUtilManager.reqLoginContextSession(u));
-                //loginDataUtilManager should use the returndata to log any statistical stuff needed for OLAP Warehousing.
-                return u.buildDomUserFullwLoginContext(LoginContextUtilManager.forceNewLoginContextSession(u));
-            } catch (Dwo2Exception ex) {
-                Logger.getLogger(PublicUserManager.class.getName()).log(Level.SEVERE, "Invalid software state, this should not have happened.", ex);
-                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Invalid software state. This should not have happened.");
-            }
-        
+            //loginDataUtilManager should use the returndata to log any statistical stuff needed for OLAP Warehousing.
+            return u.buildDomUserFullwLoginContext(LoginContextUtilManager.forceNewLoginContextSession(u));
+        } catch (Dwo2Exception ex) {
+            Logger.getLogger(PublicUserManager.class.getName()).log(Level.SEVERE, "Invalid software state, this should not have happened.", ex);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Invalid software state. This should not have happened.");
+        }
+
     }
 
 //	public static DomUserFullwLoginContext createUserFullwLoginContext(PersistentUser u) {
@@ -230,7 +216,6 @@ public class SecuredUserAccountManager {
 //        result.setDomUserFull(u.buildDomUserFull());
 //        return result;
 //	}
-
     @PUT
     @Produces({"application/json"})
     @Path("/basicAuthLogout")
@@ -248,33 +233,33 @@ public class SecuredUserAccountManager {
 
     /**
      * Returns the DomUserFull if the form parameter equals the security context
-     * user name otherwise a 401.
-     * Necessary for stubborn browsers that keep authorization to long in cache.
-     * POST to relax jamon resources.
+     * user name otherwise a 401. Necessary for stubborn browsers that keep
+     * authorization to long in cache. POST to relax jamon resources.
+     *
      * @param sc security context
      * @param user us
-     * @return 
+     * @return
      */
     @POST
     @Path("/loginUser")
     public Response loginUserWithPOST(@Context SecurityContext sc, @FormParam("user") String user) {
-    	return loginUser(sc, user);
+        return loginUser(sc, user);
     }
-    
+
     /**
      * Returns the DomUserFull if the path parameter equals the security context
      * user name otherwise a 401.
      *
      * @param sc security context
      * @param user us
-     * @return 
+     * @return
      */
     @Deprecated
     @GET
     @Path("/loginUser/{user}")
     public Response loginUser(@Context SecurityContext sc, @PathParam("user") String user) {
         Response result;
-        
+
         DomUserFullwLoginContext domUser = loginUser(sc);
         String domUserName = domUser.getDomUserFull().getUserName();
         if (domUserName.equalsIgnoreCase(user)) {
@@ -335,8 +320,7 @@ public class SecuredUserAccountManager {
                     LOG.log(Level.FINE, "Logging out by user {0} while user has never logged in.", u.getId());
 
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOG.log(Level.SEVERE, null, e);
             }
         }
@@ -365,6 +349,9 @@ public class SecuredUserAccountManager {
         if (!ValidUserFieldsChecker.isValidUserName(user.getDomUserFull().getUserName())) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
         }
+        if (!ValidUserFieldsChecker.isValidPassword(user.getDomUserFull().getPassword())) {
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Password_Invalid, "The password is not correctly formatted.");
+        }
 
         if (user.getDomUserFull().getUserName().equals(sc.getUserPrincipal().getName())) {
             try {
@@ -378,8 +365,7 @@ public class SecuredUserAccountManager {
                 UserManager.edit(dbUser);
                 PersistentUser pUser = UserManager.findByUserName(user.getDomUserFull().getUserName());
                 return pUser.buildDomUserFull();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to update user id " + sc.getUserPrincipal().getName() + " .");
             }
@@ -429,39 +415,40 @@ public class SecuredUserAccountManager {
         UserManager.destroy(u.getId());
         return Boolean.TRUE;
     }
-    
+
     enum TotpType {
-    	PLAIN
+        PLAIN
     }
-    
+
     @GET
     @Produces("application/json")
     @Path("/verifyTOTP")
     public String verifyTOTP(@HeaderParam("X-ClassCourseID") String ccid, @HeaderParam("X-TOTP") String totp) {
-    	try {
-    		LOG.info("ccid = " + ccid);
-    		LOG.info("totp = " + totp);
-    		ccid = Base64.decodeAsString(ccid);
-			DomClassCourse id = new DomClassCourse(); id.setId(new PersistenceId(ccid));
-			Long nativeId = MySQLPersistenceId.getNativeId(id);
-			PersistentClassCourse pcc = ClassCourseManager.findEntity(nativeId);
-			String accessKey = pcc.getAccessKey();
+        try {
+            LOG.info("ccid = " + ccid);
+            LOG.info("totp = " + totp);
+            ccid = Base64.decodeAsString(ccid);
+            DomClassCourse id = new DomClassCourse();
+            id.setId(new PersistenceId(ccid));
+            Long nativeId = MySQLPersistenceId.getNativeId(id);
+            PersistentClassCourse pcc = ClassCourseManager.findEntity(nativeId);
+            String accessKey = pcc.getAccessKey();
 
-			StringTokenizer st = new StringTokenizer(totp);
-    		switch(TotpType.valueOf(st.nextToken())) {
-    		case PLAIN:
-    			totp = Base64.decodeAsString(st.nextToken());
-    			return String.valueOf(accessKey == null || accessKey.isEmpty() || accessKey.equals(totp)); 
-    		default: 
-    			throw new IllegalArgumentException("not implemented");
-    		}
-    		
-    	} catch(RuntimeException e) {
-    		LOG.log(Level.SEVERE, "verifyTOTP failed", e);
-    		return "false";
-    	} catch (Dwo2Exception e) {
-    		LOG.log(Level.SEVERE, "verifyTOTP failed", e);
-    		return "false";
-		} 
+            StringTokenizer st = new StringTokenizer(totp);
+            switch (TotpType.valueOf(st.nextToken())) {
+                case PLAIN:
+                    totp = Base64.decodeAsString(st.nextToken());
+                    return String.valueOf(accessKey == null || accessKey.isEmpty() || accessKey.equals(totp));
+                default:
+                    throw new IllegalArgumentException("not implemented");
+            }
+
+        } catch (RuntimeException e) {
+            LOG.log(Level.SEVERE, "verifyTOTP failed", e);
+            return "false";
+        } catch (Dwo2Exception e) {
+            LOG.log(Level.SEVERE, "verifyTOTP failed", e);
+            return "false";
+        }
     }
 }

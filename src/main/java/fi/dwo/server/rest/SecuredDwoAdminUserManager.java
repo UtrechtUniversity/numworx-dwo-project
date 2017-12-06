@@ -24,6 +24,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
+import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
+import nl.uu.fi.dwo.rest.entities.RestUser;
 
 /**
  * Operations for the GUI Component that manages the User Profile.
@@ -66,7 +68,46 @@ public class SecuredDwoAdminUserManager {
 
         return domUsers;
     }
+    
+    /**
+     * Edits a singleSchoolStudent.
+     *
+     * @param sc
+     * @param user
+     * @return
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/get")
+    public DomUserFull getUser(@Context SecurityContext sc, RestUser restUser) {
+        if (restUser == null || restUser.getDomUser() == null) {
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
+        DomUser domUser = restUser.getDomUser();
+        PersistentHasRole phr = null;
+        try {
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access dwoadmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
+            LOG.log(Level.SEVERE, "", ex);
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
 
+        if (phr != null) {
+            PersistentUser user;
+            try {
+                user = UserManager.findEntity(MySQLPersistenceId.getNativeId(domUser));
+            } catch (Dwo2Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+            }
+            return user.buildDomUserFull();
+        } else {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to change a user with username {1} by dwoadmin {0}.", new Object[]{sc.getUserPrincipal().getName(), domUser.getUserName()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
+    }
+    
     /**
      * Edits a singleSchoolStudent.
      *
@@ -82,11 +123,23 @@ public class SecuredDwoAdminUserManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         DomUserFull domUser = restUser.getDomUserFull();
+        
+        //passwords are already hashed.
+        if (!ValidUserFieldsChecker.isValidEmail(domUser.getEmail())) {
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, "The email address does not  conform with RFC 5322.");
+        }
+        if (!ValidUserFieldsChecker.isValidUserName(domUser.getUserName())) {
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
+        }
+        if (!ValidUserFieldsChecker.isValidPassword(domUser.getPassword())) {
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Password_Invalid, "The password is not correctly formatted.");
+        }
+        
         PersistentHasRole phr = null;
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         } catch (Dwo2Exception ex) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access admin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
