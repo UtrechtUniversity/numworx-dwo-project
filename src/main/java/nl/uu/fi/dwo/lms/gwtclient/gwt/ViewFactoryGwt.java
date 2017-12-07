@@ -13,7 +13,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter;
@@ -84,7 +83,7 @@ public class ViewFactoryGwt implements ViewFactory {
         editSchoolclassView = new EditSchoolclassView(pf.getEditSchoolclassPresenter());
         editStudentView = new EditStudentView(pf.getEditStudentPresenter());
         addStudentsView = new AddStudentsView(pf.getAddStudentsPresenter());
-        nl.uu.fi.dwo.lms.gwtclient.gwt.resources.DwoResources resources = GWT.create(DwoResources.class);
+        nl.uu.fi.dwo.lms.gwtclient.gwt.resources.DwoResources resources = GWT.create(nl.uu.fi.dwo.lms.gwtclient.gwt.resources.DwoResources.class);
         DwoStyle style = resources.style();
         style.ensureInjected();
         msgDialogView = new MsgDialogView(pf.getMsgDialogPresenter(),style);
