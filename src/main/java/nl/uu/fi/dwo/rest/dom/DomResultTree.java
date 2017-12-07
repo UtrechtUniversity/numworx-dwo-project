@@ -67,8 +67,7 @@ public class DomResultTree {
         /* build tree from results collection
            create the treeroot a DomResultTeacher, Attach the DomResultSchoolclass
            objects, create the subtrees of the DomCourse objects, attach them 
-           to the DomResultSchoolClasses, add the Students per schoolclass
-
+           to the DomResultSchoolClasses, add the Students per schoolclass.
          */
 
         //set the resultTree teacher
