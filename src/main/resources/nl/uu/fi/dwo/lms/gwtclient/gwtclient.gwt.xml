@@ -37,4 +37,6 @@
 <set-configuration-property name="devModeRedirectEnabled" value="true"/>
 <!--  chrome only -->
 <set-property name="user.agent" value="safari" />
+<!--<extend-property name="user.agent" values="ie8" />
+<extend-property name="user.agent" values="ie9" fallback-value="ie8" />-->
 </module>

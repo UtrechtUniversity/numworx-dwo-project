@@ -236,10 +236,4 @@ class BootPanelController {
         mainPresenter.init();
         LOG.log(Level.FINE, "Initiated Main presenter.");
     }
-//
-//    public Promise<DomLoginContext> logout() {
-//        return accountManager.logout();
-//    }
-
-    //add 
 }
