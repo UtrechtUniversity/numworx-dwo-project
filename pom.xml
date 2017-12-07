@@ -421,9 +421,33 @@
                 </plugins>
             </build>
         </profile>
+         <profile>
+            <!-- mvn exec:java -Pdefaultserver -->
+            <id>defaultserver</id>
+            <!-- profile for running with default/internal configuration -->
+            <activation>
+                <property>
+                    <name>defaultserver</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.2.1</version>
+                        <configuration>
+                            <mainClass>fi.dwo.dwojapplet.domain.DWO</mainClass>
+                            <workingDirectory>DWOJClient</workingDirectory>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
-            <!-- profile for running against localhost  -->
+            <!-- mvn exec:exec -Pdev-localhost -->
             <id>dev-localhost</id>
+            <!-- profile for running against localhost with debug enabled -->
             <activation>
                 <property>
                     <name>dev-localhost</name>
