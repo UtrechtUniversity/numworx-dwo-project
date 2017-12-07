@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
-import nl.uu.fi.dwo.lms.gwtclient.gwt.resources.DwoStyle;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolView;
@@ -84,7 +83,7 @@ public class ViewFactoryTeuniz implements ViewFactory {
         editStudentView = new EditStudentView(pf.getEditStudentPresenter());
         addStudentsView = new AddStudentsView(pf.getAddStudentsPresenter());
         nl.uu.fi.dwo.lms.gwtclient.gwt.resources.DwoResources resources = GWT.create(nl.uu.fi.dwo.lms.gwtclient.gwt.resources.DwoResources.class);
-        DwoStyle style = resources.style();
+        nl.uu.fi.dwo.lms.gwtclient.gwt.resources.DwoStyle style = resources.style();
         style.ensureInjected();
         msgDialogView = new MsgDialogView(pf.getMsgDialogPresenter(),style);
         msgConfirmDialogView = new MsgConfirmDialogView(pf.getMsgConfirmDialogPresenter(),style);
