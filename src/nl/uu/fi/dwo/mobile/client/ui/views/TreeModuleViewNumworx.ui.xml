@@ -2,31 +2,14 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget"
 	xmlns:cl="urn:import:com.google.gwt.user.cellview.client"
+	xmlns:v="urn:import:nl.uu.fi.dwo.mobile.client.ui.views"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:with field='pfx' type='java.lang.String'/>
 	<ui:with field='rb'  type='nl.uu.fi.dwo.mobile.client.text.Text' />
 	<ui:style field='style' src="TreeModuleViewNumworx.css" type='nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworxCss'/>	
 	<g:DockLayoutPanel unit='PX' ui:field='root' styleName='{style.rootPanel}'>
 		<g:north size="50">
-			<g:FlowPanel styleName='{style.headerPanel}'>
-			  	<g:FlowPanel styleName='{style.numworx}'><g:Image url="{pfx}images/numworx/logo-Numworx-grijs2.svg"></g:Image></g:FlowPanel>
-				<g:TextBox ui:field='searchInput' styleName='{style.search-input}'></g:TextBox>
-				<g:InlineHTML ui:field='searchBtn' styleName='{style.search}'><img src='{pfx}images/numworx/search-numworx.svg'/></g:InlineHTML>
-
-				<g:MenuBar addStyleNames='{style.menu}'>
-					<g:MenuItem ui:field='user' addStyleNames='{style.menuItem}' />
-				</g:MenuBar>
-				<g:Label ui:field='loginLabel' styleName='{style.loginname}'>Jolanda van den Berg</g:Label>
-<!-- 				<g:ToggleButton ui:field='fullBtn' styleName='{style.nav}'> -->
-<!-- 					<g:upFace><img src='{pfx}images/numworx/fullscreen-numworx.svg'/></g:upFace> -->
-<!-- 					<g:downFace><img src='{pfx}images/numworx/borderdscreen-numworx.svg'/></g:downFace> -->
-<!-- 				</g:ToggleButton> -->
-<!-- 				<g:FocusPanel styleName='{style.nav}'><g:Image url='{pfx}images/numworx/ster-grijs-numworx.svg'/></g:FocusPanel> -->
-				<g:FocusPanel ui:field='upBtn' styleName='{style.nav}'>
-					<g:InlineHTML><i style='color:#798291' class='fa fa-2x fa-arrow-up' ></i></g:InlineHTML>
-				</g:FocusPanel>
-				<g:FocusPanel ui:field='homeBtn' styleName='{style.nav}'><g:Image url='{pfx}images/numworx/home-numworx.svg'/></g:FocusPanel>
-			</g:FlowPanel>
+			<v:HeaderViewNumworx ui:field='header' />
 		</g:north>
 		<g:west size="192">
 		    <g:DockLayoutPanel unit='PX' styleName='{style.navPanel}' ui:field='westPanel'>

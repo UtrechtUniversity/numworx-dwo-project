@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
+import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerStudentCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
@@ -28,7 +29,7 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 
-public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModuleView.Presenter//, Comparator<SelectModuleItem>
+public class TreeModuleActivity extends MGWTAbstractActivity implements GotoController
 {
 
 	ClientFactory clientFactory;

@@ -17,10 +17,10 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
-import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView.Presenter;
 
-public class SearchActivity extends MGWTAbstractActivity implements Activity, Presenter {
+public class SearchActivity extends MGWTAbstractActivity implements Activity, GotoController {
 
 	private ClientFactory clientFactory;
 	private long id;

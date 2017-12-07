@@ -76,7 +76,7 @@ public class TreeModuleViewImplTablet  extends TreeModuleBase implements ViewMod
 	private List<SelectModuleItem> cellItems;
 	private List<SelectModuleItem> model;
 	private SelectModuleItem selected;
-	private Presenter presenter;
+	private GotoController presenter;
 	private Timer tm;
 	
 	class TreeAnchorContext implements AnchorView.AnchorContext {
@@ -632,7 +632,7 @@ public class TreeModuleViewImplTablet  extends TreeModuleBase implements ViewMod
 
 	
 	@Override
-	public void setPresenter(Presenter presenter) {
+	public void setPresenter(GotoController presenter) {
 		this.presenter = presenter;
 	}
 	

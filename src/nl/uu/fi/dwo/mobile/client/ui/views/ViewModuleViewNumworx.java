@@ -123,7 +123,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	}
 
 	public void setupModule(String name, String file) {
-		String login = DWOplayer.withUser()? DwoGlobalVars.instance().getCurrentUser().getDisplayName() : "GUEST";
+		String login = DWOplayer.withUser()? DwoGlobalVars.instance().getCurrentUser().getDisplayName() : rb.guest();
 		loginLabel.setText(login);
 		setupMenu(items);
 		delegate.setupModule(name, file);

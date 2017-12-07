@@ -100,7 +100,7 @@ public class ExamModuleView extends Composite {
 	}
 	
 	public void selectItem(SelectModuleItem item) {
-		String login = DWOplayer.withUser()? DwoGlobalVars.instance().getCurrentUser().getDisplayName() : "GUEST";
+		String login = DWOplayer.withUser()? DwoGlobalVars.instance().getCurrentUser().getDisplayName() : rb.guest();
 		loginLabel.setText(login);
 		message.setText("");
 		title.setText(item.getName());

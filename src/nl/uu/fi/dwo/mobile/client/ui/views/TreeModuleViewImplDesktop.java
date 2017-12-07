@@ -160,7 +160,7 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 	private HashMap<SelectModuleItem, TreeItem> inverseMap = new HashMap<SelectModuleItem, TreeItem>();
 	private List<SelectModuleItem> model, standardModel, schoolModel;
 	private SelectModuleItem selected;
-	private Presenter presenter;
+	private GotoController presenter;
 	private String SCHOOL_MODULES;
 	private Timer tm;
 	
@@ -368,7 +368,7 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 	}
 	
 	@Override
-	public void setPresenter(Presenter presenter) {
+	public void setPresenter(GotoController presenter) {
 		this.presenter = presenter;
 	}
 	
