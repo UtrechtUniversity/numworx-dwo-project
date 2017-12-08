@@ -21,8 +21,8 @@ class UsersDwoAdminPanelTableModel extends AbstractTableModel {
         TextMapper.getText(TextMapper.TBL_GIVENNAME),
         TextMapper.getText(TextMapper.TBL_INSERTION),
         TextMapper.getText(TextMapper.TBL_FAMILYNAME),
-        TextMapper.getText(TextMapper.TBL_EDIT),
-        TextMapper.getText(TextMapper.TBL_DELETE)
+        TextMapper.getText(TextMapper.TBL_DB_KEY),
+//        TextMapper.getText(TextMapper.TBL_EDIT),
 //            TextMapper.getText(TextMapper.TBL_SELECT)
     };
 
@@ -52,9 +52,10 @@ class UsersDwoAdminPanelTableModel extends AbstractTableModel {
             data[j][1] = u.getGivenName();
             data[j][2] = u.getInsertion();
             data[j][3] = u.getFamilyName();
-            data[j][4] = editImage;
-            data[j][5] = emptyImage;
-            data[j][6] = u;
+            data[j][4] = u.getId().getIdString();
+//            data[j][4] = editImage;
+//            data[j][5] = emptyImage;
+            data[j][5] = u;
             j++;
         }
         fireTableDataChanged();
@@ -98,12 +99,12 @@ class UsersDwoAdminPanelTableModel extends AbstractTableModel {
      */
     @Override
     public boolean isCellEditable(int row, int col) {
-//        //Note that the data/cell address is constant,
-//        //no matter where the cell appears onscreen.
-//        if (col < 1) {
-//            return false;
+        //Note that the data/cell address is constant,
+        //no matter where the cell appears onscreen.
+//        if (col < 3) {
+            return false;
 //        } else {
-            return true;
+//            return true;
 //        }
     }
 

@@ -193,12 +193,12 @@ public class UsersDwoAdminPanel extends JPanel implements CenterSubPanel, Action
         TableUtil.setJTableSizes(jtable);
                 TableColumnModel m = jtable.getColumnModel();
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
-        for (int i = 0; i < jtable.getColumnCount(); i++) {
+        for (int i = 0; i < jtable.getColumnCount()-1; i++) {
             m.getColumn(i).setMinWidth(70);
-            m.getColumn(i).setMaxWidth(150);
+            m.getColumn(i).setMaxWidth(100);
         }
+        m.getColumn(jtable.getColumnCount()-1).setMinWidth(150);
         jtable.setSize(jtable.getPreferredSize());
-
         jtbl.add(jtable.getTableHeader());
         jtbl.add(jtable);
         jtbl.add(Box.createVerticalGlue());
