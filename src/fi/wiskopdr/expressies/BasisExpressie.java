@@ -251,6 +251,7 @@ public class BasisExpressie extends Expressie
 	{
 		String basisStringUit = basisString;
 		basisStringUit = basisStringUit.replace("?(", "$s");
+		basisStringUit = basisStringUit.replace("conjug(", "$c");
 		basisStringUit = basisStringUit.replace(")", "@");
 		//String basisStringUit = StringUtils.replaceStr(basisString, "?(", "$s");
 		//basisStringUit = StringUtils.replaceStr(basisStringUit, ")", "@");
@@ -300,6 +301,7 @@ public class BasisExpressie extends Expressie
 	public String toStringStrikt()
 	{
 		String basisStringUit = basisString.replace("?(", "$s");
+		basisStringUit = basisStringUit.replace("conjug(", "$c");
 		basisStringUit = basisStringUit.replace(")", "@");
 
 		if (!Double.isNaN(waarde) && (!Algebra.withinLongRange((long) waarde) || basisString.indexOf('E') > -1))

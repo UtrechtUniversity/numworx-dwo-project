@@ -19,20 +19,20 @@ public class MapperConstants {
 		testMap.put("z-toets", "ztest"); 
 		testMap.put("z-test", "ztest"); 
 		testMap.put("t-toets voor één steekproef", "ttestone"); 
-		testMap.put("t-test for one sample", "ttestone"); 
+		testMap.put("t-test for one group", "ttestone"); 
 		testMap.put("t-toets voor afhankelijke groepen", "ttestpaired"); 
-		testMap.put("t-test for two dependent samples", "ttestpaired"); 
+		testMap.put("t-test for dependent groups", "ttestpaired"); 
 		testMap.put("t-toets voor onafhankelijke groepen", "ttesttwo"); 
-		testMap.put("t-test for two independent samples", "ttesttwo"); 
+		testMap.put("t-test for independent groups", "ttesttwo"); 
 	
 		Map sidedMap = new HashMap<String, String>();
         constants.put("sided", sidedMap);
         sidedMap.put("linkszijdig", "leftsided");
-        sidedMap.put("left-sided", "leftsided");
+        sidedMap.put("one sided, left tail", "leftsided");
         sidedMap.put("rechtszijdig", "rightsided");
-        sidedMap.put("right-sided", "rightsided");
+        sidedMap.put("one sided, right tail", "rightsided");
         sidedMap.put("tweezijdig", "twosided");
-        sidedMap.put("two-sided", "twosided");
+        sidedMap.put("two sided", "twosided");
         
         Map rejectioncriticalMap = new HashMap<String, String>();
         constants.put("rejectioncritical", rejectioncriticalMap);
@@ -70,7 +70,7 @@ public class MapperConstants {
         
         Map feedbackMap = new HashMap<String, String>();
         constants.put("feedback", feedbackMap);
-        //componenents: the mentioned rule (adding a component) was recognized to be carried out correctly
+        //components: the mentioned rule (adding a component) was recognized to be performed correctly
         feedbackMap.put("component.alpha", "Dit is een geschikt significantieniveau.");
         feedbackMap.put("component.conclusion.p-value", "Dit is de juiste conclusie over deze p-waarde.");
         feedbackMap.put("component.critical-conclusion", "Dit is de juiste conclusie over deze toetsingsgrootheid en kritiek gebied.");
@@ -128,12 +128,12 @@ public class MapperConstants {
         feedbackMap.put("check.test-formula: no match", "De formule van de toetsingsgrootheid is niet correct.");
         feedbackMap.put("check.test-formula: test mismatch", "Bepaal je een t-waarde of een z-waarde?");
         feedbackMap.put("check.test-value", "Dit is niet de juiste waarde van de toetsingsgrootheid.");
+        feedbackMap.put("check.test-value: no match", "Dit is niet de juiste waarde van de toetsingsgrootheid.");
         feedbackMap.put("check.test-value: test mismatch", "Bereken je een t-waarde of een z-waarde?");
         feedbackMap.put("check.test-value: component is not relation", "Bepaal zowel de variabelenaam als de waarde van de toetsingsgrootheid voor je nakijkt.");
         feedbackMap.put("check.df", "Het aantal vrijheidsgraden is niet correct.");
         //feedbackMap.put("check.df: TestChoice missing", "Wat voor toets ga je uitvoeren? Specificeer dit eerst, voordat je het aantal vrijheidsgraden bepaalt.");
         feedbackMap.put("check.critical", "Dit is niet de juiste kritieke waarde.");
-        feedbackMap.put("check.critical: Sidedness missing", "Bij welke hypotheses hoort deze kritieke waarde? Stel eerst hypotheses op.");
         feedbackMap.put("check.critical: alternative hypothesis missing", "Bij welke hypotheses hoort deze kritieke waarde? Stel eerst hypotheses op.");
         //feedbackMap.put("check.critical: TestChoice missing", "Wat voor toets ga je uitvoeren? Specificeer dit eerst, voordat je de kritieke waarde gaat bepalen.");
         //feedbackMap.put("check.critical: SignificanceLevel missing", "Voor welk significantieniveau bepaal je de kritieke waarde? Geef eerst het significantieniveau.");
@@ -143,14 +143,13 @@ public class MapperConstants {
         feedbackMap.put("check.rejectioncritical", "Dit is niet het juiste kritieke gebied.");
         feedbackMap.put("check.rejectioncritical: test mismatch", "Bepaal je een kritiek gebied voor een t-waarde of voor een z-waarde?");
         feedbackMap.put("check.rejectioncritical: sidedness mismatch", "Past het teken dat je in het kritiek gebied gebruikt bij de richting van de alternatieve hypothese?");
-        feedbackMap.put("check.rejectioncritical: Sidedness missing", "Bij welke hypotheses hoort dit kritieke gebied? Stel eerst hypotheses op.");
         feedbackMap.put("check.rejectioncritical: alternative hypothesis missing", "Bij welke hypotheses hoort dit kritieke gebied? Stel eerst hypotheses op.");
         feedbackMap.put("check.rejectioncritical: component is not of type relation", "Bepaal eerst het gehele kritieke gebied, voor je nakijkt.");
         feedbackMap.put("check.p-value", "Dit is niet de juiste p-waarde bij de toetsingsgrootheid.");
         feedbackMap.put("check.p-value: TestValue missing", "Om een p-waarde te bepalen, moet je eerst de toetsingsgrootheid berekenen.");
         //feedbackMap.put("check.p-value: Df missing", "Voor het bepalen van de p-waarde bij een t-toets, heb je het aantal vrijheidsgraden nodig. Geef eerst het aantal vrijheidsgraden.");
-        feedbackMap.put("check.p-value: Sidedness missing", "Bij welke hypotheses hoort deze p-waarde? Stel eerst hypotheses op.");
         feedbackMap.put("check.p-value: alternative hypothesis missing", "Bij welke hypotheses hoort deze p-waarde? Stel eerst hypotheses op.");
+        feedbackMap.put("check.p-value: component is not of type relation", "Er is iets fout gegaan met de p-waarde. Vul deze nogmaals in."); //TODO: kijken wat hier goede feedbacktekst is. 
         feedbackMap.put("check.p-value: value not a probability", "De p-waarde is de overschrijdingskans. Heb je inderdaad een kans (een getal tussen 0 en 1) bepaald?");
         feedbackMap.put("check.conclusion.p-value", "Je bewering over de p-waarde en het significantieniveau klopt niet.");
         feedbackMap.put("check.conclusion.p-value: PValue missing", "Geef eerst een schatting van de p-waarde zelf, voordat je deze vergelijkt met het significantieniveau.");

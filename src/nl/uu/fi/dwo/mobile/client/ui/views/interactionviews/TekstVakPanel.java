@@ -2276,10 +2276,17 @@ GWT.log("prefix = " + prefix);
 	}
 
 private Object deGreek(String value) {
+	
+	System.out.println("deGreek: " + value);
+	
 	return value
 		.replace(",", ".")
 		.replace("$sD@", "")
+		.replace("$cx@", "M")
 		.replace("σ$sM@", "sigmaM")
+		.replace("σ$sx@", "sigmaM")
+		.replace("$pμ$n0@@", "mu")
+		.replace("μ$sX@", "mu")
 		.replace("μ", "mu")
 		.replace("σ", "sigma")
 		.replace("z$sc*r*i*t@", "zcrit")
@@ -2291,8 +2298,10 @@ private Object deGreek(String value) {
 		.replace("wel", "true")
 		.replace("niet", "false")
 		.replace("$vS$nE$sM@@@", "SEM")
+		.replace("$vS$nE$sx@@@", "SEM")
 		.replace("s$sM@", "SEM")
 		.replace("$vS$nD@@", "s")
+		.replace("s$sx@", "s")
 		.replace("vS$n$bD$n$wn@@", "bs$n$wn") // vervang "SD/sqrt(n)" door "s/sqrt(n)"
 		.replace("S$n$bD", "s$n$b1")// vervang "SD/iets" door "s*1/iets"
 	;	
