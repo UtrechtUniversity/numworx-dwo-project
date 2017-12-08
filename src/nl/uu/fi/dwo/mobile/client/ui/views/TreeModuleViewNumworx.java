@@ -368,7 +368,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	@UiField ScrollPanel centerPanel;
 	@UiField DockLayoutPanel westPanel;
 	
-	@UiField HeaderViewNumworx header;	
+	@UiField HeaderView header;	
 	
 
 	@UiHandler("tree")

@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.inject.Singleton;
+
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -49,7 +51,8 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
  * @author peterboon
  *
  */
-public class HeaderViewNumworx extends Composite implements HasText, Command {
+@Singleton
+public class HeaderViewNumworx extends Composite implements HasText, Command, HeaderView {
 	
 	private static HeaderViewNumworxUiBinder uiBinder = GWT.create(HeaderViewNumworxUiBinder.class);
 

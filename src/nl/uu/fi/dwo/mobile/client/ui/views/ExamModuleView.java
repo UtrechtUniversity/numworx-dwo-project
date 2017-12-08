@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ExamModuleView extends Composite {
+public class ExamModuleView extends Composite implements GotoController {
 
 	public interface Presenter {
 		void onKO();
@@ -39,18 +39,12 @@ public class ExamModuleView extends Composite {
 	@UiField TextBox textView;
 	@UiField Label message;
 	@UiField HTML title;
-	@UiField(provided=true) String pfx;
-	@UiField HasText loginLabel;
 	@UiField Image favIcon;
 	@UiField TreeModuleViewNumworxCss style;
 	@UiField SimplePanel description;
 	@UiField ScrollPanel centerPanel;
 	@UiField Text rb;
-
-	@UiField(provided=true) MenuItem user;
-	private MenuBar items = new MenuBar(true);
-
-	private Object upId;
+	@UiField HeaderView header;
 
 	private static ExamModuleViewUiBinder uiBinder = GWT
 			.create(ExamModuleViewUiBinder.class);
@@ -59,16 +53,6 @@ public class ExamModuleView extends Composite {
 	}
 
 	public ExamModuleView() {
-		pfx=DWOplayer.PARAMETERS.getResource("");
-        final int correctie = 10; // width popup 
-		user = new MenuItem("<i class='fa fa-caret-down fa-2x'></i>", true, items) {
-            @Override
-            public int getAbsoluteLeft() {
-                int w1 = items.getOffsetWidth();
-                int w2 = this.getOffsetWidth();
-                return super.getAbsoluteLeft() - w1 + w2 - correctie;
-            }
-		};
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
@@ -100,8 +84,7 @@ public class ExamModuleView extends Composite {
 	}
 	
 	public void selectItem(SelectModuleItem item) {
-		String login = DWOplayer.withUser()? DwoGlobalVars.instance().getCurrentUser().getDisplayName() : rb.guest();
-		loginLabel.setText(login);
+		header.setUserAndRole(DwoGlobalVars.instance().getCurrentUser(), DWOplayer.clientfactory.getRoleType());
 		message.setText("");
 		title.setText(item.getName());
 		description.setWidget(getLabel(item));
@@ -113,16 +96,10 @@ public class ExamModuleView extends Composite {
 		centerPanel.setStyleName(style.folderBackground(), !hasImage);
 		favIcon.getParent().setStyleName(style.faviconOFF(), !isLabel(item));
 		title.getParent().setStyleName(style.titlePanelFULL(), !isLabel(item));
-		upId = item.getParentID();
-
-		items.clearItems();
-		items.addItem(rb.logout(), new ScheduledCommand() {
-			
-			@Override
-			public void execute() {
-				goTo(new LoginPlace());					
-			}
-		}).addStyleName(style.menuItem());		
+		Object parent = item.getParentID();
+		if (parent == null) parent = "0"; // wrong place?
+		header.setUpPlace(new TreeModulePlace(parent));
+	
 	}
 	private boolean isLabel(SelectModuleItem item) {
 		String description = item.getDescription();
@@ -153,20 +130,9 @@ public class ExamModuleView extends Composite {
 	public void showFailure(Throwable failure) {
 		message.setText(String.valueOf(failure));
 	}
-	@UiHandler("homeBtn")
-	void onHomeBtn(ClickEvent ev) {
-		goTo(new TreeModulePlace());
-	}
 
-	private void goTo(Place place) {
+	public void goTo(Place place) {
 		DWOplayer.clientfactory.getPlaceController().goTo(place);
-	}
-
-	@UiHandler("upBtn")
-	void onUpBtn(ClickEvent ev) {
-		Object parent = upId;
-		if (parent == null) parent = "0"; // wrong place?
-		goTo(new TreeModulePlace(parent));
 	}
 
 }
