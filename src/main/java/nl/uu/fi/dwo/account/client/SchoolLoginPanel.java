@@ -48,8 +48,10 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
     private final class HideAndReset<T> implements Success<T, Void> {
 		@Override
 		public Promise<Void> call(Promise<T> notused) throws Exception {
-			popup.hide();
-			resetLogin.execute();;
+			if(notused.getValue() != null) // null = cancelled
+			{ 	popup.hide();
+				resetLogin.execute();;
+			}
 			return null;
 		}
 	}
@@ -183,13 +185,17 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
                         && button == NativeEvent.BUTTON_LEFT) {
                     LOG.log(Level.INFO, "x,y:" + rowIndex + "," + columnIndex + ":" + event.getSource());
                     DomSchoolRoleAndClassV2 sc = event.getValue();
+                    if(isCurrent(sc)) return; // no click in current school
                     switch (columnIndex) {
                         case 2: //relogin with schoolclass set...
                         	control.switchToSchoolLogin(sc)
                         		.then(new HideAndReset<DomSchoolRoleAndClassV2>(), new RestFailure());
                         	
                               break;
-                        case 3:     //remove school and relogin if it was the active schoolclass.
+                        case 3: 
+                        	
+                        	
+                        	//remove school and relogin if it was the active schoolclass.
 //                            if (sc.getId().equals(DwoGlobalVars.instance().getCurrentSchoolClass().getId())) {
                             control.removeASchoolLogin(sc)
                     			.then(new HideAndReset<Boolean>(), new RestFailure());

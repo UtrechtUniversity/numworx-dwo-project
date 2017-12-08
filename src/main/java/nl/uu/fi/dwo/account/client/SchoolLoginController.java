@@ -115,7 +115,9 @@ public class SchoolLoginController {
 
 					@Override
 					public Promise<DomSchoolRoleAndClassV2> call(Promise<String> t) {
-		    		    return manager.switchToSchoolLogin(sc);
+		    		    if (t.getValue() == null || t.getValue().isEmpty())
+		    		    	return null;
+						return manager.switchToSchoolLogin(sc);
 					}
 				});
     			
@@ -142,6 +144,8 @@ public class SchoolLoginController {
 
 					@Override
 					public Promise<Boolean> call(Promise<String> t) {
+							if(t.getValue() == null || t.getValue().isEmpty()) // if empty password cancel
+								return null;
 							return manager.removeASchoolLogin(reqSrac);
 					}
 				});
@@ -155,6 +159,7 @@ public class SchoolLoginController {
 
 			@Override
 			public boolean test(String t) {
+				if(t == null || t.isEmpty()) return true;
     			return  DwoGlobalVars.instance().getCurrentUser().getPassword().equals(t);
 			}
 		});
@@ -177,7 +182,10 @@ public class SchoolLoginController {
 			@Override
 			public void onClick(ClickEvent event) {
 				String password = txt.getText();
-				if(password != null) password = MD5.md5(password);
+				if(password == null)
+					password = "";
+				if(!password.isEmpty())
+					password = MD5.md5(password);
 				popup.hide();
 				registration.removeHandler();
 				d.resolve(password);

@@ -114,7 +114,7 @@ public class AddSchoolLoginPanel extends Composite implements ClickHandler {
 			ok.setEnabled(false);
 			cancel.setEnabled(false);
 			String schoolLogin = schoolLoginBox.getText();
-			String password = schoolLoginBox.getText();
+			String password = passwordBox.getText();
 			int index = roleBox.getSelectedIndex();
 			DomNewSchoolLogin dom = new DomNewSchoolLogin();
 			dom.setRole(roles[index]);
