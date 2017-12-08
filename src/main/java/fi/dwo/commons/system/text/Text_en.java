@@ -63,6 +63,7 @@ public class Text_en extends ListResourceBundle {
 			{ TextMapper.TBL_DELETE, "Delete" },
 			{ TextMapper.TBL_EDIT, "Edit" },
 			{ TextMapper.TBL_SELECT, "Select" },
+			{ TextMapper.TBL_DB_KEY, "DB Key" },
 			{ TextMapper.TBL_GIVENNAME, "Given name" },
 			{ TextMapper.TBL_INSERTION, "Insertion" },
 			{ TextMapper.TBL_FAMILYNAME, "Family name" },

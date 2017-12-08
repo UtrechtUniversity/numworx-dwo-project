@@ -59,6 +59,7 @@ public class Text_nl extends ListResourceBundle {
 			{ TextMapper.TBL_DELETE, "Verwijder" },
 			{ TextMapper.TBL_EDIT, "Bewerk" },
 			{ TextMapper.TBL_SELECT, "Select" },
+			{ TextMapper.TBL_DB_KEY, "DB Key" },
 			{ TextMapper.TBL_GIVENNAME, "Voornaam" },
 			{ TextMapper.TBL_INSERTION, "Tussenvoegsels" },
 			{ TextMapper.TBL_FAMILYNAME, "Achternaam" },

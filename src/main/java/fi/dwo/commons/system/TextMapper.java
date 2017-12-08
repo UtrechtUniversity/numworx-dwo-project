@@ -75,6 +75,7 @@ public abstract class TextMapper {
 	public static final String TBL_EDIT = "TBL_EDIT";
 	public static final String TBL_SELECT = "TBL_SELECT";
 
+	public static final String TBL_DB_KEY = "DB KEY";
 	public static final String TBL_GIVENNAME = "TBL_GIVENNAME";
 	public static final String TBL_INSERTION = "TBL_INSERTION";
 	public static final String TBL_FAMILYNAME = "TBL_FAMILYNAME";
