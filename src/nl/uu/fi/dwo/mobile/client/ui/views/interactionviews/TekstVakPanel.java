@@ -2010,26 +2010,25 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		//lastAnswers should always be a subset of newAnswers
 		//but if steps are removed, or if a student has corrected steps, this is not the case. 
 		//Therefore: remove all Tupels from lastAnswers that are not in newAnswers
-		//Moreover, remove last answer in newAnswers from lastAnswers, to ensure that the two are different 
-		//and the domain reasoner can provide sensible feedback 
+		
 		if(lastAnswers != null)
 		{
 			//Find last tupel with value from newAnswers:
-			Tupel lastTupel = null;
-			ListIterator<Tupel> iterNew = newAnswers.listIterator(newAnswers.size());
-			while(iterNew.hasPrevious())
-			{	Tupel t = iterNew.previous();
-				if(t.value != null && !t.value.isEmpty())
-				{
-					lastTupel = t;
-					break;
-				}
-			}
-			ListIterator<Tupel> iter2 = lastAnswers.listIterator(lastAnswers.size());
+//			Tupel lastTupel = null;
+//			ListIterator<Tupel> iterNew = newAnswers.listIterator(newAnswers.size());
+//			while(iterNew.hasPrevious())
+//			{	Tupel t = iterNew.previous();
+//				if(t.value != null && !t.value.isEmpty())
+//				{
+//					lastTupel = t;
+//					break;
+//				}
+//			}
 			
+			ListIterator<Tupel> iter2 = lastAnswers.listIterator(lastAnswers.size());
 			while(iter2.hasPrevious()) {
 				Tupel t = iter2.previous();
-				if(!newAnswers.contains(t) || (lastTupel != null && t.equals(lastTupel)))
+				if(!newAnswers.contains(t))// || (lastTupel != null && t.equals(lastTupel)))
 					iter2.remove();
 			}
 		}
@@ -2276,8 +2275,6 @@ GWT.log("prefix = " + prefix);
 	}
 
 private Object deGreek(String value) {
-	
-	System.out.println("deGreek: " + value);
 	
 	return value
 		.replace(",", ".")
