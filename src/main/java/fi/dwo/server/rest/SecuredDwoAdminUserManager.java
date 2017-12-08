@@ -80,6 +80,8 @@ public class SecuredDwoAdminUserManager {
     @Produces({"application/json"})
     @Path("/get")
     public DomUserFull getUser(@Context SecurityContext sc, RestUser restUser) {
+        if(0==0)             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+
         if (restUser == null || restUser.getDomUser() == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
