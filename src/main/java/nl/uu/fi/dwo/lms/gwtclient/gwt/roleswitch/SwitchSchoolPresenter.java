@@ -49,16 +49,43 @@ public class SwitchSchoolPresenter {
     }
     
     public class SchoolItem{
-        public String key; //unique
-        public String schoolName;
+        private String key; //unique
+        private String schoolName;
         public SchoolItem(String aKey, String value){
             key = aKey;
             schoolName = value;
         }
+
+        /**
+         * @return the key
+         */
+        public String getKey() {
+            return key;
+        }
+
+        /**
+         * @param key the key to set
+         */
+        public void setKey(String key) {
+            this.key = key;
+        }
+
+        /**
+         * @return the schoolName
+         */
+        public String getSchoolName() {
+            return schoolName;
+        }
+
+        /**
+         * @param schoolName the schoolName to set
+         */
+        public void setSchoolName(String schoolName) {
+            this.schoolName = schoolName;
+        }
     }
 
     public interface Display {
-        Widget asWidget();
         void clear();
         void init();
         void updateView(Map<String,SwitchSchoolPresenter.SchoolItem>  data, SwitchSchoolPresenter.SchoolItem selected);
@@ -89,7 +116,7 @@ public class SwitchSchoolPresenter {
                 selectedItem =  new SchoolItem(srac.getHasRole().getId().getIdString(), srac.getSchool().getSchoolName());
             }
             SchoolItem item = selectedItem;
-            data.put(item.key,item);
+            data.put(item.getKey(),item);
         }
         view.init();
         view.updateView(data, selectedItem);
@@ -106,7 +133,7 @@ public class SwitchSchoolPresenter {
     }
 
     public void switchSchool() {
-        dwoGlobalVars.setActiveSchoolRoleAndClass(sracData.get(selectedItem.key));
+        dwoGlobalVars.setActiveSchoolRoleAndClass(sracData.get(selectedItem.getKey()));
         DomSchoolRoleAndClassV2 srac = dwoGlobalVars.getActiveSchoolRoleAndClass();
         dwoGlobalVars.getSchoolLogins().setActiveSchoolRoleAndClass(srac);
         Promise<DomSchoolRoleAndClassV2> promise = manager.switchToSchoolLogin(srac);

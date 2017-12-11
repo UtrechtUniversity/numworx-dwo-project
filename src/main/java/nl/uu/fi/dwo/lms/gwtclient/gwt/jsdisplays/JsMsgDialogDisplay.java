@@ -9,7 +9,7 @@ import jsinterop.annotations.JsType;
  * There are no call-backs from the display. The dialog has an
  * OK-button, that when clicked calls the hide() function in the 
  * presenter. Desired state changes are executed after which
- * hideDialog is called. Localization of the text is done in the Presenter
+ * hideDialog() is called. Localization of the text is done in the Presenter
  * calling the View.
  * 
  * @author G.A.J. van der Plas

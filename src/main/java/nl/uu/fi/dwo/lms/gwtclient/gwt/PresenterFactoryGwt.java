@@ -126,7 +126,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the resultsPresenter
      */
-    @JsMethod    
+//    @JsMethod    
     public ResultsPresenter getResultsPresenter() {
         return resultsPresenter;
     }
@@ -134,7 +134,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the switchSchoolPresenter
      */
-    @JsMethod    
+//    @JsMethod    
     public SwitchSchoolPresenter getSwitchSchoolPresenter() {
         return switchSchoolPresenter;
     }
@@ -142,7 +142,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the scoResultsPresenter
      */
-    @JsMethod    
+//    @JsMethod    
     public ScoResultsPresenter getScoResultsPresenter() {
         return scoResultsPresenter;
     }
@@ -152,12 +152,12 @@ public class PresenterFactoryGwt implements PresenterFactory {
         return schoolclassesPresenter;
     }
 
-    @JsMethod    
+//    @JsMethod    
     public CoursesOfSchoolclassPresenter getCoursesOfSchoolclassPresenter() {
         return coursesOfSchoolclassPresenter;
     }
 
-    @JsMethod    
+//    @JsMethod    
     public StudentsInSchoolclassPresenter getStudentsInSchoolclassPresenter() {
         return studentsInSchoolclassPresenter;
     }
@@ -165,7 +165,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the accountPresenter
      */
-    @JsMethod
+//    @JsMethod
     public AccountPresenter getAccountPresenter() {
         return accountPresenter;
     }
@@ -173,7 +173,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the addSchoolclassPresenter
      */
-    @JsMethod    
+//    @JsMethod    
     public WelcomePresenter getWelcomePresenter() {
         return welcomePresenter;
     }
@@ -181,7 +181,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the addSchoolclassPresenter
      */
-    @JsMethod    
+//    @JsMethod    
     public AddSchoolclassPresenter getAddSchoolclassPresenter() {
         return addSchoolclassPresenter;
     }
@@ -189,7 +189,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the addSchoolclassPresenter
      */
-    @JsMethod    
+//    @JsMethod    
     public EditSchoolclassPresenter getEditSchoolclassPresenter() {
         return editSchoolclassPresenter;
     }
@@ -197,7 +197,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the editStudentPresenter
      */
-    @JsMethod    
+//    @JsMethod    
     public EditStudentPresenter getEditStudentPresenter() {
         return editStudentPresenter;
     }
@@ -205,7 +205,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the msgDialogPresenter
      */
-    @JsMethod    
+//    @JsMethod    
     public MsgDialogPresenter getMsgDialogPresenter() {
         return msgDialogPresenter;
     }
@@ -213,7 +213,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the msgDialogPresenter
      */
-    @JsMethod    
+//    @JsMethod    
     public MsgConfirmDialogPresenter getMsgConfirmDialogPresenter() {
         return msgConfirmDialogPresenter;
     }
@@ -221,7 +221,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the teachersInSchoolclassPresenter
      */
-    @JsMethod    
+//    @JsMethod    
     public TeachersInSchoolclassPresenter getTeachersInSchoolclassPresenter() {
         return teachersInSchoolclassPresenter;
     }
@@ -229,7 +229,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the addStudentsPresenter
      */
-    @JsMethod    
+//    @JsMethod    
     public AddStudentsPresenter getAddStudentsPresenter() {
         return addStudentsPresenter;
     }
@@ -237,7 +237,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the fileUploadStudentsPresenter
      */
-    @JsMethod    
+//    @JsMethod    
     public FileUploadStudentsPresenter getFileUploadStudentsPresenter() {
         return fileUploadStudentsPresenter;
     }

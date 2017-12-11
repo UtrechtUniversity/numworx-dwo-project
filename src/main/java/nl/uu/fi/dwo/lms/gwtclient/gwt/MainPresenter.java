@@ -208,4 +208,8 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
         display.showPostLoginWidgets();
     }
 
+    @JsMethod
+    public String getTranslation(String key){
+        return rb.getString(key);
+    }
 }

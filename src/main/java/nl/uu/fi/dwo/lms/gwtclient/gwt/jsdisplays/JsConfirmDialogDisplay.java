@@ -4,17 +4,20 @@ import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
 /**
- * MsgDialogDisplay UI interface. the interface should be
- * available as a JavaScript object named "jsMsgDialogDisplay".
+ * JsConfirmDialogDisplay UI interface. the interface should be
+ * available as a JavaScript object named "jsConfirmDialogDisplay".
  * There are no call-backs from the display. The dialog has an
  * OK and CANCEL-button, that when clicked calls the hide() function in the 
  * presenter. Desired state changes are executed after which
  * hideDialog is called. Localization of the text is done in the Presenter
  * calling the View.
  * 
+ * The viewer calls MsgConfirmDialogPresenter.cancel() on CANCEL and
+ * MsgConfirmDialogPresenter.confirm() on OK.
+ * 
  * @author G.A.J. van der Plas
  */
-@JsType(isNative = true, name = "jsMsgDialogDisplay", namespace = JsPackage.GLOBAL)
+@JsType(isNative = true, name = "jsConfirmDialogDisplay", namespace = JsPackage.GLOBAL)
 //@JsType(isNative = false, namespace = JsPackage.GLOBAL)
 public class JsConfirmDialogDisplay{
     /** clear the state of the dialog **/

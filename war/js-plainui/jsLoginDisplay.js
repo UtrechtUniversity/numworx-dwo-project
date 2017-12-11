@@ -24,9 +24,10 @@ function LoginDisplay() {
         return password;
         console.log("password set to " + password);
     };
-//    this.callLoginClicked = function (user, password, switchRole){
-//                console.log("call..todo. ");
-//    }
+    this.callLoginClicked = function (){
+        dwoAPI.loginPresenter.loginClicked(username, password, false);
+//                console.log("dwoAPI.f.loginPresenter.loginClicked("gert_project","passw", false);. ");
+    }
 }
 var jsLoginDisplay = new LoginDisplay();
 console.log("constructed jsLoginDisplay");

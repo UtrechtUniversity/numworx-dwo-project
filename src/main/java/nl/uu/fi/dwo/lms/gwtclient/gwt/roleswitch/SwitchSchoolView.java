@@ -71,7 +71,7 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
             TextColumn<SwitchSchoolPresenter.SchoolItem> value = new TextColumn<SwitchSchoolPresenter.SchoolItem>() {
                 @Override
                 public String getValue(SwitchSchoolPresenter.SchoolItem object) {
-                    return object.schoolName;
+                    return object.getSchoolName();
                 }
             };
             value.setSortable(true);
@@ -86,7 +86,7 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
 
                     // Compare the name columns.
                     if (o1 != null) {
-                        return (o2 != null) ? o1.schoolName.compareTo(o2.schoolName) : 1;
+                        return (o2 != null) ? o1.getSchoolName().compareTo(o2.getSchoolName()) : 1;
                     }
                     return -1;
                 }
@@ -109,7 +109,7 @@ public class SwitchSchoolView extends Composite implements ClickHandler, SwitchS
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             public void onSelectionChange(SelectionChangeEvent event) {
                 selected = selectionModel.getSelectedObject();
-                LOG.log(Level.INFO, "selection key: " + selectionModel.getSelectedObject().key);
+                LOG.log(Level.INFO, "selection key: " + selectionModel.getSelectedObject().getKey());
             }
         });
         ColumnSortEvent.fire(cellTable, cellTable.getColumnSortList());
