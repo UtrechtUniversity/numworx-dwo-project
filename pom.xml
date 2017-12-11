@@ -374,7 +374,7 @@
         <DWOplayerVersion>2.1.25</DWOplayerVersion>
         <DWOmAccessVersion>0.0.9</DWOmAccessVersion>
         <RegisterVersion>2.1.23</RegisterVersion>
-        <DWOGwtClientVersion>0.10.5</DWOGwtClientVersion>
+        <DWOGwtClientVersion>0.10.6</DWOGwtClientVersion>
     </properties>
     <scm>
         <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/tags/EBServer-2.1.24</developerConnection>
