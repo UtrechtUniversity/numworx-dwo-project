@@ -4,6 +4,25 @@ mvn gwt:i18n
 
 this updates nl.uu.fi.dwo.rest.local.Dwo2Exceptions.java for GWT-localization.
 
-'mvn tomcat7:run' to run the application and start a dwo-player in a tomcat7 
-environment then run 'mvn gwt:run-codeserver'
+RUN 
+
+run 'mvn tomcat7:run' to run the application and start a DWOServer in a tomcat7.
+
+run 'mvn tomcat7:run' to run the application and start a debugged DWOServer in a tomcat7.
+
+gwt.style=DETAILED
+jpda.listen=maven
+
+jpda.listen is pickupped by Netbeans.
+
+
+CODE-SERVER IN SUPERDEV
+
+run 'mvn gwt:run-codeserver' with properties:
+
+gwt.style=DETAILED
+gwt.compiler.generateJsInteropExports=true
+gwt.compiler.incremental=false
+gwt.compiler.precompile=false
+gwt.codeserver.generateJsInteropExports=true
 
