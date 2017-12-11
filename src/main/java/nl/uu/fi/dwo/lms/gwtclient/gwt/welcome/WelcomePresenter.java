@@ -58,7 +58,7 @@ public class WelcomePresenter {
         dwoGlobalVars = aDwoGlobalVars;
     }
 
-    @JsMethod
+//    @JsMethod not required unless testing stuff.
     public void init() {
         view.clear();
         view.setWelcomeText("<h1>Welkom</h1>\n"

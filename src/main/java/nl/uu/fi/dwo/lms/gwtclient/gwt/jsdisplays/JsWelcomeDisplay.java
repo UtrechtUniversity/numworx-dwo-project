@@ -8,6 +8,7 @@ import jsinterop.annotations.JsType;
  * available as a JavaScript object named "jsWelcomeDisplay".
  * There are no call-backs from the display.
  * 
+ * 
  * @author G.A.J. van der Plas
  */
 @JsType(isNative = true, name = "jsWelcomeDisplay", namespace = JsPackage.GLOBAL)

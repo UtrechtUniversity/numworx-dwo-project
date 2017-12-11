@@ -79,21 +79,21 @@ public class SchoolclassesPresenter {
         }
     }
 
-    //** should become part of the PresenterFactories ie. DWO.LoginPresenter.loginClicked.
-    private native static void setDWO(SchoolclassesPresenter q) /*-{
-
-    	var apis = {
-    			"addSchoolClass" : function() {
-    				return q.@nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter::addSchoolClass()()
-                        }
-    		};
-    	$wnd.DwoSchoolclassesPresenter = apis;
-    }-*/;
+//    //** should become part of the PresenterFactories ie. DWO.LoginPresenter.loginClicked.
+//    private native static void setDWO(SchoolclassesPresenter q) /*-{
+//
+//    	var apis = {
+//    			"addSchoolClass" : function() {
+//    				return q.@nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter::addSchoolClass()()
+//                        }
+//    		};
+//    	$wnd.DwoSchoolclassesPresenter = apis;
+//    }-*/;
 
     public SchoolclassesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-        setDWO(this);
+//        setDWO(this);
     }
 
     public void init() {

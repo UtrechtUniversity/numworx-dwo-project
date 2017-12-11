@@ -134,7 +134,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the switchSchoolPresenter
      */
-//    @JsMethod    
+    @JsMethod    
     public SwitchSchoolPresenter getSwitchSchoolPresenter() {
         return switchSchoolPresenter;
     }
@@ -165,7 +165,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the accountPresenter
      */
-//    @JsMethod
+    @JsMethod
     public AccountPresenter getAccountPresenter() {
         return accountPresenter;
     }
@@ -173,7 +173,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the addSchoolclassPresenter
      */
-//    @JsMethod    
+    @JsMethod    
     public WelcomePresenter getWelcomePresenter() {
         return welcomePresenter;
     }
@@ -205,7 +205,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the msgDialogPresenter
      */
-//    @JsMethod    
+    @JsMethod    
     public MsgDialogPresenter getMsgDialogPresenter() {
         return msgDialogPresenter;
     }
@@ -213,7 +213,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the msgDialogPresenter
      */
-//    @JsMethod    
+    @JsMethod    
     public MsgConfirmDialogPresenter getMsgConfirmDialogPresenter() {
         return msgConfirmDialogPresenter;
     }

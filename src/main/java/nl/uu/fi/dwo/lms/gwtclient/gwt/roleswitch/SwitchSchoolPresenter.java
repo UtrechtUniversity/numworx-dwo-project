@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
@@ -125,6 +126,7 @@ public class SwitchSchoolPresenter {
     /**
      * @param row the course to set
      */
+    @JsMethod
     public void select(SchoolItem item) {
         if (item != null) {
             selectedItem = item;
@@ -132,6 +134,7 @@ public class SwitchSchoolPresenter {
         }
     }
 
+    @JsMethod
     public void switchSchool() {
         dwoGlobalVars.setActiveSchoolRoleAndClass(sracData.get(selectedItem.getKey()));
         DomSchoolRoleAndClassV2 srac = dwoGlobalVars.getActiveSchoolRoleAndClass();
