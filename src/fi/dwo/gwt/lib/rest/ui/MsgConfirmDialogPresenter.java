@@ -21,7 +21,8 @@ public class MsgConfirmDialogPresenter implements ConfirmDialogEventHandler {
         Widget asWidget();
         void clear();
         void init();
-        void showConfirmDialog(String text);
+        void showDialog(String text);
+        void hideDialog();
     }
 
     public MsgConfirmDialogPresenter(EventBus anEventBus) {
@@ -34,7 +35,7 @@ public class MsgConfirmDialogPresenter implements ConfirmDialogEventHandler {
     public void onDialogEvent(ConfirmDialogEvent dialogEvent) {
         if (dialogEvent.getEventValue()==ConfirmDialogEvent.EventType.ConfirmDialog){
             promise = dialogEvent.getPromise();
-            view.showConfirmDialog(promise.getMsg());
+            view.showDialog(promise.getMsg());
         }
     }
     public void init() {
@@ -49,10 +50,12 @@ public class MsgConfirmDialogPresenter implements ConfirmDialogEventHandler {
     }
     
     public void confirm(){
+        view.hideDialog();
         promise.resolve(Boolean.TRUE);
     }
 
     public void cancel(){
+        view.hideDialog();
         promise.resolve(Boolean.FALSE);       
     }
 

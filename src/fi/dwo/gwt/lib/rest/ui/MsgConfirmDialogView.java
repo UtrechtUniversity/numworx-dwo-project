@@ -56,7 +56,6 @@ public class MsgConfirmDialogView extends Composite implements MsgConfirmDialogP
             dialogBox.hide();
         } else if (event.getSource() == cancelButton) {
             msgConfirmDialogPresenter.cancel();
-            dialogBox.hide();
         }
     }
 
@@ -70,7 +69,12 @@ public class MsgConfirmDialogView extends Composite implements MsgConfirmDialogP
     }
 
     @Override
-    public void showConfirmDialog(String msg) {
+    public void hideDialog(){
+        dialogBox.hide();
+    }
+    
+    @Override
+    public void showDialog(String msg) {
         htmlText.setText(msg);
         if (dialogBox.getWidget() == null) {
             dialogBox.add(this.asWidget());

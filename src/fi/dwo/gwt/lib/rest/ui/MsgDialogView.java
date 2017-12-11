@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.dwo.gwt.lib.rest.css.DwoStyle;

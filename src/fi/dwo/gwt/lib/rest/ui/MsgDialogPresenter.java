@@ -17,9 +17,6 @@ public class MsgDialogPresenter implements DialogEventHandler {
     private Display view;
 
     public interface Display {
-
-        Widget asWidget();
-
         void clear();
 
         void init();
