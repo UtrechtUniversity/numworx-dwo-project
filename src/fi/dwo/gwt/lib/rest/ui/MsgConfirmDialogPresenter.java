@@ -1,7 +1,6 @@
 package fi.dwo.gwt.lib.rest.ui;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.ui.Widget;
 import java.util.logging.Logger;
 
 /**
@@ -18,7 +17,6 @@ public class MsgConfirmDialogPresenter implements ConfirmDialogEventHandler {
 
     public interface Display {
 
-        Widget asWidget();
         void clear();
         void init();
         void showDialog(String text);
