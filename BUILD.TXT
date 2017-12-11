@@ -6,14 +6,14 @@ this updates nl.uu.fi.dwo.rest.local.Dwo2Exceptions.java for GWT-localization.
 
 RUN 
 
-run 'mvn tomcat7:run' to run the application and start a DWOServer in a tomcat7.
+run 'mvn tomcat7:run' to run the application and start a DWOServer in a tomcat7 container.
 
-run 'mvn tomcat7:run' to run the application and start a debugged DWOServer in a tomcat7.
+run 'mvn tomcat7:run' to run the application and start a debugged DWOServer in a tomcat7 container.
 
 gwt.style=DETAILED
 jpda.listen=maven
 
-jpda.listen is pickupped by Netbeans.
+jpda.listen is pickupped by Netbeans. Eclipse may have other settings.
 
 
 CODE-SERVER IN SUPERDEV
@@ -25,4 +25,6 @@ gwt.compiler.generateJsInteropExports=true
 gwt.compiler.incremental=false
 gwt.compiler.precompile=false
 gwt.codeserver.generateJsInteropExports=true
+
+The above properties ensure that the proper methods are exposed to javascript.
 
