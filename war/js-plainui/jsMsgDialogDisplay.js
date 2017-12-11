@@ -1,7 +1,5 @@
 function MsgDialogDisplay() {
-    var username = "";
-    var password = "";
-
+ 
     this.clear = function () {
         console.log("cleared MsgDialogDisplay dialog text");
     };
@@ -11,7 +9,7 @@ function MsgDialogDisplay() {
     };
  
     this.showDialog = function (msg) {
-        console.log("showing MsgDialogDisplay with text: "+text);
+        console.log("showing MsgDialogDisplay with text: "+msg);
     };
 
     this.hideDialog = function () {

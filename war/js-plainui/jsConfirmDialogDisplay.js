@@ -1,7 +1,5 @@
-function MsgDialogDisplay() {
-    var username = "";
-    var password = "";
-
+function ConfirmDialogDisplay() {
+ 
     this.clear = function () {
         console.log("cleared MsgDialogDisplay dialog text");
     };
@@ -18,7 +16,7 @@ function MsgDialogDisplay() {
         console.log("hiding MsgDialogDisplay");
     };
 }
-var jsMsgDialogDisplay = new MsgDialogDisplay();
-console.log("constructed jsMsgDialogDisplay");
+var jsConfirmDialogDisplay = new ConfirmDialogDisplay();
+console.log("constructed jsConfirmDialogDisplay");
 
 
