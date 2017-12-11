@@ -1045,6 +1045,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			wrap.addTouchHandler(h);
 			editor.resize();
 			initWidget(panel);
+			setStyleName(css.insert_formule());
+
 		}
 
 		@Override
@@ -1102,6 +1104,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			HorizontalPanel hbox = new HorizontalPanel();
 			hbox.setStyleName(css.insert_calculator());
 			Panel panel = editor.getAsPanel();
+			panel.setStyleName(css.insert_formule());
 			TouchDelegate wrap = new TouchDelegate(panel);
 			FormuleEditorTouchHandler h = new FormuleEditorTouchHandler(editor)
 			{
