@@ -1,32 +1,32 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays;
 
-import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
+import fi.dwo.gwt.lib.rest.ui.MsgConfirmDialogPresenter;
 
 /**
  * Mapper to allow java interface implementation.
  *
  * @author G.A.J. van der Plas
  */
-public class JsConfirmDialogView implements MsgDialogPresenter.Display {
+public class JsConfirmDialogView implements MsgConfirmDialogPresenter.Display {
 
     @Override
     public void clear() {
-        JsMsgDialogDisplay.clear();
+        JsConfirmDialogDisplay.clear();
     }
 
     @Override
     public void init() {
-        JsMsgDialogDisplay.init();
+        JsConfirmDialogDisplay.init();
     }
 
     @Override
     public void showDialog(String text) {
-        JsMsgDialogDisplay.showDialog(text);
+        JsConfirmDialogDisplay.showDialog(text);
     }
 
     @Override
     public void hideDialog() {
-        JsMsgDialogDisplay.hideDialog();
+        JsConfirmDialogDisplay.hideDialog();
     }
 
 }

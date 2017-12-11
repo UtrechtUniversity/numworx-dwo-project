@@ -2,19 +2,18 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolView;
 
-import com.google.gwt.core.client.GWT;
 
 import fi.dwo.gwt.lib.rest.ui.MsgConfirmDialogPresenter;
-import fi.dwo.gwt.lib.rest.ui.MsgConfirmDialogView;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
-import fi.dwo.gwt.lib.rest.ui.MsgDialogView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsAccountView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsConfirmDialogView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsLoginView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMainView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMsgDialogView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsSchoolClasssesView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsSwitchSchoolView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsWelcomeView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter;
@@ -69,7 +68,7 @@ public class ViewFactoryTeuniz implements ViewFactory {
         mainView = new JsMainView();
         loginView = new JsLoginView();
         resultsView = new ResultsView(pf.getResultsPresenter());
-        switchSchoolView = new SwitchSchoolView(pf.getSwitchSchoolPresenter());
+        switchSchoolView = new JsSwitchSchoolView();
         scoResultsView = new ScoResultsView(pf.getScoResultsPresenter());
         accountView = new JsAccountView();
         welcomeView = new JsWelcomeView();
@@ -82,12 +81,8 @@ public class ViewFactoryTeuniz implements ViewFactory {
         editSchoolclassView = new EditSchoolclassView(pf.getEditSchoolclassPresenter());
         editStudentView = new EditStudentView(pf.getEditStudentPresenter());
         addStudentsView = new AddStudentsView(pf.getAddStudentsPresenter());
-        nl.uu.fi.dwo.lms.gwtclient.gwt.resources.DwoResources resources = GWT.create(nl.uu.fi.dwo.lms.gwtclient.gwt.resources.DwoResources.class);
-        nl.uu.fi.dwo.lms.gwtclient.gwt.resources.DwoStyle style = resources.style();
-        style.ensureInjected();
-        msgDialogView = new MsgDialogView(pf.getMsgDialogPresenter(),style);
-        msgConfirmDialogView = new MsgConfirmDialogView(pf.getMsgConfirmDialogPresenter(),style);
- 
+        msgDialogView = new JsMsgDialogView();
+        msgConfirmDialogView = new JsConfirmDialogView();
         fileUploadStudentsView = new FileUploadStudentsView(pf.getFileUploadStudentsPresenter());
     }
 
