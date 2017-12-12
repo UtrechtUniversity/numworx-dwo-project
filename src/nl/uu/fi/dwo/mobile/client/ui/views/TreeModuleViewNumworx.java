@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
@@ -62,27 +64,17 @@ import com.google.gwt.view.client.SetSelectionModel;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.googlecode.mgwt.ui.client.MGWT;
 
-import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import nl.uu.fi.dwo.account.client.ProfileCommand;
-import nl.uu.fi.dwo.account.client.SchoolClassStudentCommand;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
-import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
-import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
-import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.SearchPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
-import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplDesktop.TreeAnchorContext;
-import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
-import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext, Command, Comparator<SelectModuleItem> {
 
@@ -368,7 +360,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	@UiField ScrollPanel centerPanel;
 	@UiField DockLayoutPanel westPanel;
 	
-	@UiField HeaderView header;	
+	HeaderView header;	
 	
 
 	@UiHandler("tree")
@@ -461,7 +453,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	interface TreeModuleViewNumworxUiBinder extends UiBinder<Widget, TreeModuleViewNumworx> {
 	}
 
-	public TreeModuleViewNumworx() {
+	@Inject
+	public TreeModuleViewNumworx(HeaderView headerView) {
 		HorizontalCellListResources cellResources;
 		cellResources = GWT.create(HorizontalCellListResources.class);
 		cells = new CellList<SelectModuleItem>(new NavCell(), cellResources);
@@ -474,7 +467,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		SingleSelectionModel<SelectModuleItem> model = new SingleSelectionModel<SelectModuleItem>(keyprovider);
 		tiles.setSelectionModel(model);
 		pfx = r("");
-		//scrollpanel.setAlwaysShowScrollBars(true);
+		header = headerView;
 		
 		initWidget(uiBinder.createAndBindUi(this));
 		root.forceLayout();
@@ -550,7 +543,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	@Override
 	public void render(List<SelectModuleItem> currentModel) {
 		
-		
+		header.show();		
 		boolean nieuw = this.list != currentModel;
 		
 		
@@ -558,8 +551,6 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		this.list = currentModel;
 		cells.setRowData(massage(list));
 		cells.redraw();
-// wrong place!!
-		header.setUserAndRole(DwoGlobalVars.instance().getCurrentUser(), DWOplayer.clientfactory.getRoleType());
 		
 		//Scheduler.get().scheduleDeferred(cmd);
 		// Slow get all stuff;
@@ -754,7 +745,6 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	@Override
 	public void setPresenter(GotoController presenter) {
 		this.presenter = presenter;
-		header.setPresenter(presenter);
 	}
 
 	@Override

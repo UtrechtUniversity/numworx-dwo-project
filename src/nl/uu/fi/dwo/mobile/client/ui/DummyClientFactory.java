@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
@@ -153,5 +154,11 @@ public class DummyClientFactory implements ClientFactory {
 	@Override
 	public boolean inExam(DomClassCourse classCourse) {
 		return true;
+	}
+
+	@Override
+	public HeaderView getHeaderView() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

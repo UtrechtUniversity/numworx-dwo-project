@@ -93,6 +93,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 		
 		
 		started = true;
+		clientFactory.getHeaderView().hide();
 		view = clientFactory.getEntryView();
 		panel.setWidget(view); // terug naar af. problemen met gekke scrolls
 		{

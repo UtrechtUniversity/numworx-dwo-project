@@ -18,6 +18,7 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -27,8 +28,10 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -117,6 +120,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 
 	Place upPlace = new TreeModulePlace();
 	Place homePlace = new TreeModulePlace();
+	private Widget root;
 
 	@UiHandler("upBtn")
 	void onUpBtn(ClickEvent ev) {		
@@ -246,6 +250,27 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	@Override
 	public void execute() {
 		presenter.goTo(new ReloginPlace());		
+	}
+
+	@Override
+	public void hide() {
+		LayoutPanel p = RootLayoutPanel.get(); // parent of header
+		p.setWidgetVisible(this, false);
+		p.setWidgetTopBottom(root, 0, Unit.PX, 0, Unit.PX);
+		
+	}
+
+	@Override
+	public void show() {
+		LayoutPanel p = RootLayoutPanel.get(); // parent of header
+		p.setWidgetVisible(this, true);
+		p.setWidgetTopBottom(root, 50, Unit.PX, 0, Unit.PX);
+	}
+
+	@Override
+	public void setDisplay(Widget display) {
+		root = display;
+		RootLayoutPanel.get().setWidgetTopBottom(this, 0, Unit.PX, 50, Unit.PX);
 	}
 
 

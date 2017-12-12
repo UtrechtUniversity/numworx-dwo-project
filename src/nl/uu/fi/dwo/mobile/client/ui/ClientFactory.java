@@ -5,6 +5,7 @@ import java.util.Map;
 import org.osgi.util.promise.Promise;
 
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
@@ -37,6 +38,7 @@ public interface ClientFactory
 	LoginView getLoginView();
 
 	TreeModuleView getTreeModuleView();
+	HeaderView getHeaderView();
 	
 	RPCHandler getRPCHandler();
 	

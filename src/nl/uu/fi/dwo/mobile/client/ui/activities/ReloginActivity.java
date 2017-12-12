@@ -34,18 +34,6 @@ public class ReloginActivity extends MGWTAbstractActivity {
 		this.next = next;
 	}
 
-	private final Success<Void, Void> LOGIN_STAP3 = new Success<Void, Void>() {
-
-		@Override
-		public Promise<Void> call(Promise<Void> resolved) throws Exception {
-			if(next == null) {
-				DWOplayer.gotoCourses();
-			} else
-				clientFactory.getPlaceController().goTo(next);
-			return null;
-
-		}
-	};
 
 	public static final Failure FAILURE1 = new Failure() {
 		
@@ -84,7 +72,7 @@ public class ReloginActivity extends MGWTAbstractActivity {
 		})
 		.then(LoginActivity.LOGIN_STAP1)
 		.then(LoginActivity.LOGIN_STAP2, FAILURE1)
-		.then(LOGIN_STAP3);
+		.then(new Login_Stap3(clientFactory, next));
 	}
 
 	private String getUsername() {

@@ -5,6 +5,9 @@ import javax.inject.Provider;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
+import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
@@ -28,6 +31,7 @@ import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -41,7 +45,7 @@ import com.googlecode.mgwt.ui.client.OsDetection;
  * @author Danny Hendrix
  * 
  */
-public abstract class ClientFactoryImpl implements ClientFactory
+public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 {
 	
 	final static Provider<ViewModuleView> NORMAL = new Provider<ViewModuleView>() {
@@ -78,7 +82,18 @@ public abstract class ClientFactoryImpl implements ClientFactory
 		
 	}
 		
-	
+	// singleton pattern.
+	final Provider<HeaderView> headerView = new Provider<HeaderView>() {
+
+		HeaderViewNumworx impl = new HeaderViewNumworx();
+		{
+			impl.setPresenter(ClientFactoryImpl.this);
+		}
+		@Override
+		public HeaderView get() {
+			return impl;
+		}
+	};
 	private final EventBus eventBus = new SimpleEventBus();
 	private final PlaceController placeController = new PlaceController(eventBus);
 	private Provider<ViewModuleView> entryView = NORMAL;
@@ -122,6 +137,12 @@ public abstract class ClientFactoryImpl implements ClientFactory
 		return selectModuleView;
 	}
 
+	@Override 
+	public HeaderView getHeaderView() {
+		return headerView.get();
+	}
+	
+	
 	@Override
 	public LoginView getLoginView()
 	{
@@ -138,7 +159,7 @@ public abstract class ClientFactoryImpl implements ClientFactory
 			{
 				
 				entryView = NUMWORX_VIEW;				
-				return this.treeModuleView = new TreeModuleViewNumworx();
+				return this.treeModuleView = new TreeModuleViewNumworx(getHeaderView());
 			}
 			
 			
@@ -249,6 +270,11 @@ public abstract class ClientFactoryImpl implements ClientFactory
 	public boolean inExam(DomClassCourse classCourse) {
 		return (exam != null) &&
 			exam.getId().equals(classCourse.getId());
+	}
+
+	@Override
+	public void goTo(Place place) {
+		placeController.goTo(place);
 	}
 	
 }

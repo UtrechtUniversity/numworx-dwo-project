@@ -1,20 +1,19 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import javax.inject.Inject;
+
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.place.shared.Place;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
-import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 
-public class UnSafeModuleView extends Composite implements GotoController {
+public class UnSafeModuleView extends Composite {
 
 	private static UnSafeModuleViewUiBinder uiBinder = GWT
 			.create(UnSafeModuleViewUiBinder.class);
@@ -22,27 +21,25 @@ public class UnSafeModuleView extends Composite implements GotoController {
 	@UiField HTML title;
 	@UiField Text rb;
 	@UiField TreeModuleViewNumworxCss style;
-	@UiField HeaderView header;
+	HeaderView header;
 	
 	interface UnSafeModuleViewUiBinder extends
 			UiBinder<Widget, UnSafeModuleView> {
 	}
 
-	public UnSafeModuleView() {
+	@Inject public UnSafeModuleView(HeaderView headerView) {
+		header = headerView;
 		initWidget(uiBinder.createAndBindUi(this));
-		header.setPresenter(this);
 	}
 
 	public void selectItem(SelectModuleItem item) {
-		header.setUserAndRole(DwoGlobalVars.instance().getCurrentUser(), DWOplayer.clientfactory.getRoleType());
+		header.show();
 		title.setText(item.getName());
 		Object upId = item.getParentID();
-		if (upId == null) upId = "0"; // wrong place?
-		header.setUpPlace(new TreeModulePlace(upId));
-	}
-
-	public void goTo(Place place) {
-		DWOplayer.clientfactory.getPlaceController().goTo(place);
+		if (upId == null) 
+			header.setUpPlace(header.getHomePlace());
+		else
+			header.setUpPlace(new TreeModulePlace(upId));
 	}
 
 }

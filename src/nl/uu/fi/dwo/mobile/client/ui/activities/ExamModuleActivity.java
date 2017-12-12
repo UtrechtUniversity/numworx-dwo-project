@@ -61,7 +61,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 	@Override
 	public void start(final AcceptsOneWidget panel, EventBus eventBus) {
 		if(SecureMode.NORMAL == DWOplayer.PARAMETERS.getSecureMode()) {
-			final UnSafeModuleView w = new UnSafeModuleView();
+			final UnSafeModuleView w = new UnSafeModuleView(clientFactory.getHeaderView());
 			w.selectItem(item);
 			clientFactory.barrier().onResolve(		
 			new Runnable() {
@@ -77,7 +77,7 @@ public class ExamModuleActivity implements Activity, ExamModuleView.Presenter {
 				delegate = provider.get();
 				delegate.start(panel, eventBus);
 			} else {
-				ExamModuleView view = new ExamModuleView();
+				ExamModuleView view = new ExamModuleView(clientFactory.getHeaderView());
 				view.selectItem(item);
 				view.setPresenter(this);
 				panel.setWidget(view);

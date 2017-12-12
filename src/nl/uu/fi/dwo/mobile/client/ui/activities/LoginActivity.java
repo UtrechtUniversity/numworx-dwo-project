@@ -131,21 +131,6 @@ public class LoginActivity extends MGWTAbstractActivity
 				}
 			};
 
-	private final Success<Void, Void> LOGIN_STAP3 = new Success<Void, Void>() {
-
-		@Override
-		public Promise<Void> call(Promise<Void> resolved) throws Exception {
-			if(next == null)
-			{
-				DWOplayer.gotoCourses();
-			}
-			else
-				clientFactory.getPlaceController().goTo(next);
-			return null;
-
-		}
-	};
-
     static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
 	static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
 	
@@ -171,6 +156,7 @@ public class LoginActivity extends MGWTAbstractActivity
 	{
 		final boolean logout = DWOplayer.withUser();
 		WaitScreen.instance().w();
+		clientFactory.getHeaderView().hide();
 		clientFactory.logout().onResolve (
 		
 		new Runnable() {
@@ -283,7 +269,7 @@ public class LoginActivity extends MGWTAbstractActivity
 		.then(LOGIN_STAP1)
 		.filter(LOGIN_LIMITED)
 		.then(LOGIN_STAP2, FAILURE1)
-		.then(LOGIN_STAP3, FAILURE2);
+		.then(new Login_Stap3(clientFactory, next), FAILURE2);
 	}
 
 	private void resolve() {

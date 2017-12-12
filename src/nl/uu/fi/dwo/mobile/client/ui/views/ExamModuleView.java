@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ExamModuleView extends Composite implements GotoController {
+public class ExamModuleView extends Composite {
 
 	public interface Presenter {
 		void onKO();
@@ -44,7 +44,7 @@ public class ExamModuleView extends Composite implements GotoController {
 	@UiField SimplePanel description;
 	@UiField ScrollPanel centerPanel;
 	@UiField Text rb;
-	@UiField HeaderView header;
+	HeaderView header;
 
 	private static ExamModuleViewUiBinder uiBinder = GWT
 			.create(ExamModuleViewUiBinder.class);
@@ -52,10 +52,10 @@ public class ExamModuleView extends Composite implements GotoController {
 	interface ExamModuleViewUiBinder extends UiBinder<Widget, ExamModuleView> {
 	}
 
-	public ExamModuleView() {
+	public ExamModuleView(HeaderView headerView) {
+		header = headerView;
 		initWidget(uiBinder.createAndBindUi(this));
 	}
-
 
 	public void setPresenter(Presenter presenter) {
 		this.presenter = presenter;
@@ -84,7 +84,6 @@ public class ExamModuleView extends Composite implements GotoController {
 	}
 	
 	public void selectItem(SelectModuleItem item) {
-		header.setUserAndRole(DwoGlobalVars.instance().getCurrentUser(), DWOplayer.clientfactory.getRoleType());
 		message.setText("");
 		title.setText(item.getName());
 		description.setWidget(getLabel(item));
@@ -129,10 +128,6 @@ public class ExamModuleView extends Composite implements GotoController {
 
 	public void showFailure(Throwable failure) {
 		message.setText(String.valueOf(failure));
-	}
-
-	public void goTo(Place place) {
-		DWOplayer.clientfactory.getPlaceController().goTo(place);
 	}
 
 }

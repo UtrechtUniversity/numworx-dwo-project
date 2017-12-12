@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 public class GuestActivity extends MGWTAbstractActivity implements Activity {
 
@@ -47,6 +48,7 @@ public class GuestActivity extends MGWTAbstractActivity implements Activity {
 					instance.setCurrentLoginContext(null);
 					instance.setCurrentUser(null);
 					instance.setCurrentSchoolClass(null);
+					clientFactory.getHeaderView().setUserAndRole(null, RoleType.STUDENT);
 					DWOplayer.gotoCourses();
 					return null;
 				}
