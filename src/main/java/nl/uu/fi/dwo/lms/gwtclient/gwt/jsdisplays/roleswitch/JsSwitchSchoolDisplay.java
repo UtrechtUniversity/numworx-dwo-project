@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.roleswitch;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import jsinterop.annotations.JsPackage;

@@ -1,5 +1,6 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.roleswitch;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsSchoolClassesDisplay;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import java.util.Map;

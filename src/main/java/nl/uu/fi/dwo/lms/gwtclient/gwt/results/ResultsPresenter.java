@@ -47,9 +47,6 @@ public class ResultsPresenter {
     private DomResultSchoolClass schoolClass = null; //null means all classes.
 
     public interface Display {
-
-        Widget asWidget();
-
         void clear();
 
         void plot(ResultPlot data, boolean zoomedClass, boolean zoomedCourse);
@@ -74,6 +71,8 @@ public class ResultsPresenter {
         private ResultItem[] hIndex; //uses label property for display    
 
         /**
+         * Retrieves the marks in row, column order.
+         * 
          * @return the marks
          */
         public List<List<ResultItem>> getMarks() {
@@ -81,6 +80,8 @@ public class ResultsPresenter {
         }
 
         /**
+         * Sets the marks in row, column order.
+         * 
          * @param marks the marks to set
          */
         public void setMarks(List<List<ResultItem>> aMarks) {

@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui;
 
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
 

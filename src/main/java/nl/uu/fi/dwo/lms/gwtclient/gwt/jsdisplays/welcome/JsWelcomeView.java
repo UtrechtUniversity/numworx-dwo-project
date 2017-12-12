@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.welcome;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 

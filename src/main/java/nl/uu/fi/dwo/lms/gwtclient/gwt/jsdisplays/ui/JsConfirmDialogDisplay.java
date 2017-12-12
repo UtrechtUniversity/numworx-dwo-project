@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui;
 
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
