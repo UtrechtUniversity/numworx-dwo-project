@@ -300,8 +300,9 @@ drop view tblsco;
 create view `tblsco` AS select `tblscocontext`.`scoID` AS `scoID`,`tblscocontext`.`courseID` AS `courseID`,`tblscocontext`.`appletID` AS `appletID`,`tblscocontext`.`sconame` AS `sconame`,`tblscocontext`.`showscore` AS `showscore`,`tblscocontext`.`sequencenr` AS `sequencenr`,`tblscodata`.`description` AS `description`,`tblscodata`.`launchdata` AS `launchdata`,`tblscodata`.`launchdatabytes` AS `launchdatabytes` from (`tblscocontext` join `tblscodata` on((`tblscocontext`.`scoID` = `tblscodata`.`scoID`)));
 drop view tblscoview;
 create view `tblscoview` AS select `tblscocontext`.`scoID` AS `scoID`,`tblscocontext`.`courseID` AS `courseID`,`tblscocontext`.`appletID` AS `appletID`,`tblscocontext`.`sconame` AS `sconame`,`tblscocontext`.`showscore` AS `showscore`,`tblscocontext`.`sequencenr` AS `sequencenr`,`tblscodata`.`description` AS `description`,`tblscodata`.`launchdata` AS `launchdata`,`tblscodata`.`launchdatabytes` AS `launchdatabytes` from (`tblscocontext` join `tblscodata` on((`tblscocontext`.`scoID` = `tblscodata`.`scoID`)));
-
+drop view tomcat_user_view;
 CREATE VIEW tomcat_user_view AS SELECT username, passwd FROM tblUser;
+drop view tomcat_roles_view;
 CREATE VIEW tomcat_roles_view AS select u.username, g.groupname from tblUser u  join tblhasrole h using (userid) join tblschoolgroup sg on (h.schoolGroupID =  sg.schoolGroupID) join tblgroup g using (groupID);
 
 Alter TABLE `tblsamluser` add COLUMN `authtoken` VARCHAR(16) DEFAULT NULL;
