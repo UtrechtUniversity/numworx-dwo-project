@@ -49,7 +49,9 @@ public class WelcomePresenter {
     }
 
     public interface Display {
+
         public void clear();
+
         public void setWelcomeText(String html);
     }
 

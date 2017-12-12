@@ -47,6 +47,20 @@ public class CoursesOfSchoolclassPresenter {
     private Display view;
     private int requests = 0;
 
+    public interface Display {
+
+        void clear();
+
+        void init();
+
+        void updateTable(List<ClassCourseItem> item);
+
+        void setTree(ClassCourseItem item);
+        
+        void setEmptyTableMessage();
+        void setLoadingTableMessage();
+    }
+
     void detachItemFromSchoolClass(ClassCourseItem classCourseItem) {
         Promise<Boolean> promise;
         promise = service.detachCourseFromClass(schoolClass, tree.getNode(classCourseItem.getKey()).getObject().getCourse());
@@ -101,22 +115,6 @@ public class CoursesOfSchoolclassPresenter {
                 }
             }
         });
-    }
-
-    public interface Display {
-
-        Widget asWidget();
-
-        void clear();
-
-        void init();
-
-        void updateTable(List<ClassCourseItem> item);
-
-        void setTree(ClassCourseItem item);
-        
-        void setEmptyTableMessage();
-        void setLoadingTableMessage();
     }
 
 //    public CourseItem getRoot(){

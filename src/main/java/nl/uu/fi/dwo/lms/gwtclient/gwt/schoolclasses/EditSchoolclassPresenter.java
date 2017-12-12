@@ -34,8 +34,6 @@ public class EditSchoolclassPresenter implements SchoolClassDialogEventHandler {
 
     public interface Display {
 
-        Widget asWidget();
-
         void clear();
 
         void init();

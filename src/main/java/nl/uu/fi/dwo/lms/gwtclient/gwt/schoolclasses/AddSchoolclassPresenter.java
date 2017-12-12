@@ -32,8 +32,6 @@ public class AddSchoolclassPresenter {
 
     public interface Display {
 
-        Widget asWidget();
-
         void clear();
 
         void init();

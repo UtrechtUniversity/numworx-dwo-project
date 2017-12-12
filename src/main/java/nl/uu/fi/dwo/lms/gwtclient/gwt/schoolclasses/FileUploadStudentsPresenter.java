@@ -32,12 +32,15 @@ public class FileUploadStudentsPresenter implements SchoolClassDialogEventHandle
     private Display view;
     private DomSchoolClass schoolClass;
     private String[][] importData;
-    
+
     public interface Display {
-        Widget asWidget();
+
         void clear();
+
         void init();
+
         void showDialog();
+
         void enableImport();
     }
 
@@ -50,7 +53,7 @@ public class FileUploadStudentsPresenter implements SchoolClassDialogEventHandle
     @Override
     public void onDialogEvent(SchoolClassDialogEvent dialogEvent) {
         if (dialogEvent.getEventValue() == SchoolClassDialogEvent.Dialogs.LoadStudentFile) {
-            importData=null;
+            importData = null;
             view.showDialog();
 //            schoolClass = (DomSchoolClass) dialogEvent.getSchoolClass();
 //            Promise<DomSchoolClassFull> promise;
@@ -83,7 +86,7 @@ public class FileUploadStudentsPresenter implements SchoolClassDialogEventHandle
     }
 
     public void init() {
-        importData=null;
+        importData = null;
     }
 
     /**
@@ -131,13 +134,13 @@ public class FileUploadStudentsPresenter implements SchoolClassDialogEventHandle
         });
     }
 
-    public void loadFile(String file) {        
+    public void loadFile(String file) {
         String[] lines = file.split("\n");
         LOG.log(Level.INFO, "Read " + lines.length + " lines.");
         importData = new String[lines.length][];
-        for (int i=0;i<lines.length; i++) {
+        for (int i = 0; i < lines.length; i++) {
             String[] cols = lines[i].split("\t");
-            importData[i]= cols;
+            importData[i] = cols;
             LOG.log(Level.INFO, "Read " + cols.length + " columns.");
             if (cols.length != 6) {
                 eventBus.fireEvent(new DialogEvent("Invalid format"));
@@ -152,6 +155,6 @@ public class FileUploadStudentsPresenter implements SchoolClassDialogEventHandle
     }
 
     public void importData() {
-        eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.ImportStudentData,importData));
+        eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.ImportStudentData, importData));
     }
 }

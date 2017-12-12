@@ -48,8 +48,6 @@ public class TeachersInSchoolclassPresenter {
 
     public interface Display {
 
-        Widget asWidget();
-
         void clear();
 
         void init();

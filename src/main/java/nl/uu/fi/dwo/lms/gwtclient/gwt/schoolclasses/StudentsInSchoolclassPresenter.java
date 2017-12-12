@@ -49,8 +49,6 @@ public class StudentsInSchoolclassPresenter {
 
     public interface Display {
 
-        Widget asWidget();
-
         void clear();
 
         void init();
