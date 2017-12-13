@@ -144,9 +144,6 @@ public class ScoResultsPresenter {
     }
 
     public interface Display {
-
-        Widget asWidget();
-
         void clear();
 
         void init();
