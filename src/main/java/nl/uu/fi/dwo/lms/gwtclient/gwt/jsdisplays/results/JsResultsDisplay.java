@@ -1,13 +1,12 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results;
 
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.*;
 import com.google.gwt.core.client.JavaScriptObject;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
 /**
  * WelcomeDisplay UI interface. the interface should be
- * available as a JavaScript object named "jsSwitchSchoolDisplay". Calls the
+ * available as a JavaScript object named "jsResultsDisplay". Calls the
  * presenter function with select(key) to select a school and switchSchool()
  * to switch to that school.
  * 
@@ -15,7 +14,7 @@ import jsinterop.annotations.JsType;
  * 
  * @author G.A.J. van der Plas
  */
-@JsType(isNative = true, name = "jsSwitchSchoolDisplay", namespace = JsPackage.GLOBAL)
+@JsType(isNative = true, name = "jsResultsDisplay", namespace = JsPackage.GLOBAL)
 //@JsType(isNative = false, namespace = JsPackage.GLOBAL)
 public class JsResultsDisplay{
     /** Clears the results in the ui. */
