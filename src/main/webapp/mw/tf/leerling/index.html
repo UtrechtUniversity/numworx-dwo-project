@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
 		<meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,8 +15,17 @@
                 position:absolute; left: 0; right: 0; bottom: 0; top: 0px; 
             }
         </style>
+		<script type="text/javascript">
+	 		function load() {
+	      		var id = document.location.hash;
+	          	if (id) {
+	        			var element = document.getElementsByTagName("iframe")[0];
+	                  element.setAttribute("src", "player.html"+id);
+				}
+		    }
+		</script>
     </head>
-    <body>
+    <body onload ="load()">
         <div id="content">
             <iframe width="100%" height="100%" frameborder="0" src="player.html" />
         </div>
