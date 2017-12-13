@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.ui.Widget;
 
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 
@@ -9,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
@@ -191,6 +191,7 @@ public class ResultsPresenter {
     /**
      * @param row the course to set
      */
+    @JsMethod
     public void selectColumnZoom(int col) {
         switch (col) {
             case 0:
@@ -209,11 +210,12 @@ public class ResultsPresenter {
     }
 
     /**
-     * @param row the course to set
+     * Selects what zoom action to take when clicking on a field.
+     * 
+     * @param row
+     * @param col 
      */
-    /**
-     * @param row the course to set
-     */
+    @JsMethod
     public void selectRowAndCol(int row, int col) {
         //col = 0 indicates clicked in student/class column
         if (col == 0 && schoolClass == null && resultMatrix.getvIndex(row) instanceof DomResultSchoolClass) {
