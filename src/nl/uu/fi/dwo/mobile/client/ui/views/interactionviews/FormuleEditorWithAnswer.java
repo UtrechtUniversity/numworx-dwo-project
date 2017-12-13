@@ -1124,8 +1124,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	 */
 	public void kijkNa()
 	{
-		if (formuleEditorPopup != null) {
+		if (formuleEditorPopup != null)
+		{
 			formuleEditorPopup.transfer = true;
+			getState();
 			transferToFEWS();
 			formuleEditorPopup.kijkNa();
 			formuleEditorPopup.transfer = false;
