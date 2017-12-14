@@ -2,8 +2,9 @@
     <wb-module deploy-name="Account-trunk">
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
         <wb-resource deploy-path="/" source-path="/war" tag="defaultRootSource"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
         <property name="java-output-path" value="/Account/target/classes"/>
         <property name="component.exclusion.patterns" value="*gwt/"/>
         <property name="component.inclusion.patterns" value="*.css,*gwt/**,Account.html"/>

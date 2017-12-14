@@ -308,7 +308,6 @@ public class DwoGlobalVars {
      */
     public void setCurrentUser(DomUserFull aCurUser) {
         currentUser = aCurUser;
-        this.currentUser = aCurUser;
         //notify the gwt-rest interface configuration
         GwtRestVars.getInstance().setCurrentUser(aCurUser);
 
@@ -367,7 +366,12 @@ public class DwoGlobalVars {
      * @param currentSchoolClass
      */
     public void setCurrentSchoolClass(DomSchoolClass currentSchoolClass) {
-        schoolLogins.getActiveSchoolRoleAndClass().setSchoolClass(currentSchoolClass);
+        try {
+			schoolLogins.getActiveSchoolRoleAndClass().setSchoolClass(currentSchoolClass);
+		} catch (NullPointerException e) {
+			if(currentSchoolClass != null)
+				throw e;
+		}
     }
 
 }
