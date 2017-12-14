@@ -339,7 +339,6 @@ public class SecuredUserAccountManager {
     @Produces({"application/json"})
     @Path("/update")
     public DomUserFull updateCurrentUser(@Context SecurityContext sc, RestUserFull user) {
-        if(0==0) throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update usercode " + user.getDomUserFull().getUserName() + ".");
         if (user == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
