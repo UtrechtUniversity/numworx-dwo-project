@@ -125,7 +125,7 @@ class BootPanelController {
         ViewFactoryGwt gwtView=null;
         if (hideGwtGui) {
              LOG.log(Level.INFO, "ViewFactoryTeuniz assigned.");
-            viewFactory = new ViewFactoryTeuniz(presenterFactory);
+            viewFactory = new ViewFactoryJs(presenterFactory);
         } else {
              LOG.log(Level.INFO, "ViewFactoryGwt assigned.");
             gwtView = new ViewFactoryGwt(presenterFactory);

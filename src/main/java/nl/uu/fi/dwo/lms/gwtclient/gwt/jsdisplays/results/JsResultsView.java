@@ -26,8 +26,7 @@ public class JsResultsView implements ResultsPresenter.Display {
             rows.set(0, line);
         for (int y = 1; y < data.getvIndex().length; y++) {
             line = new JSONArray();
-            line.set(0, new JSONString(data.getvIndex()[y].label));
-            for (int x = 1; x < data.gethIndex().length; x++) {
+            for (int x = 0; x < data.gethIndex().length; x++) {
                 line.set(x, new JSONString(data.getMarks().get(y).get(x).label));
             }
             rows.set(y, line);

@@ -1,12 +1,12 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
@@ -53,6 +53,7 @@ public class AddSchoolclassPresenter {
         this.view = view;
     }
 
+    @JsMethod
     public void AddAndBack(String name, Boolean showTree, Boolean hasRegKey, String regKey) {
         Promise<Boolean> promise;
         DomSchoolClassFull schoolClass = new DomSchoolClassFull();
@@ -93,6 +94,7 @@ public class AddSchoolclassPresenter {
     /**
      * Go back to the schoolclasses presentation.
      */
+    @JsMethod
     public void Back() {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS));
     }

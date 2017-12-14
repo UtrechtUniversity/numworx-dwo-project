@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.account.JsAccountView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsConfirmDialogView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.login.JsLoginView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMainView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsMsgDialogView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsSchoolClasssesView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.roleswitch.JsSwitchSchoolView;
@@ -43,7 +44,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
  *
  * @author G.A.J. van der Plas
  */
-public class ViewFactoryTeuniz implements ViewFactory {
+public class ViewFactoryJs implements ViewFactory {
 
     private final MainPresenter.Display mainView;
     private final LoginPresenter.Display loginView;
@@ -64,10 +65,10 @@ public class ViewFactoryTeuniz implements ViewFactory {
     private final AddStudentsPresenter.Display addStudentsView;
     private final FileUploadStudentsPresenter.Display fileUploadStudentsView;
 
-    public ViewFactoryTeuniz(PresenterFactory pf) {
+    public ViewFactoryJs(PresenterFactory pf) {
         mainView = new JsMainView();
         loginView = new JsLoginView();
-        resultsView = new ResultsView(pf.getResultsPresenter());
+        resultsView = new JsResultsView();
         switchSchoolView = new JsSwitchSchoolView();
         scoResultsView = new ScoResultsView(pf.getScoResultsPresenter());
         accountView = new JsAccountView();

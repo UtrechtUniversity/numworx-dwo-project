@@ -146,7 +146,7 @@ public class ResultsPresenter {
     }
 
     public void init() {
-        view.clear();
+        //view.clear();
         LOG.log(Level.INFO, "DwoGlobalVarsState = " + dwoGlobalVars.getState().name());
         course = null;
         schoolClass = null;
