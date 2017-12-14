@@ -5,7 +5,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
  * General interface for exchanging StudentSco data/context AKA ScormValues
- * @author peterboon
+ * @author velth101
  *
  */
 public interface StudentScoDataManager {
