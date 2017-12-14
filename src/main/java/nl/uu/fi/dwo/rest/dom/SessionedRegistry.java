@@ -14,18 +14,18 @@ import java.util.logging.Logger;
  *
  * @author Gert van der Plas
  */
-public class DwoFactoryRegistry {
+public class SessionedRegistry {
 
-    private static final Logger LOG = Logger.getLogger(DwoFactoryRegistry.class.getName());
+    private static final Logger LOG = Logger.getLogger(SessionedRegistry.class.getName());
 
-    private static DwoFactoryRegistry instance;
+    private static SessionedRegistry instance;
     private static int sessionId = 0;
 
     private final List<Registry> sessionedRegistry = new ArrayList<Registry>();
 
-    public static synchronized DwoFactoryRegistry getInstance() {
+    public static synchronized SessionedRegistry getInstance() {
         if (instance == null) {
-            instance = new DwoFactoryRegistry();
+            instance = new SessionedRegistry();
         }
         return instance;
     }

@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  */
 public class Registry {
 
-    private static final Logger LOG = Logger.getLogger(DwoFactoryRegistry.class.getName());
+    private static final Logger LOG = Logger.getLogger(SessionedRegistry.class.getName());
  
   private static Registry instance;
  
