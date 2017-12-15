@@ -97,17 +97,18 @@ public class PersistentScoContext implements Serializable {
     @Column(name="scoType", nullable = false)
     private ScoType scoType = ScoType.OEFENEN;
     
-    /**
-     * Last author. for ACL and publishState.
-     */
-    @Column(name="userID")
-    private Long userID;
-
-    /**
-     * if set, this is a private copy for a schoolclass.
-     */
-    @Column(name="classID")
-    private Long classID; 
+////not supported.
+//    /**
+//     * Last author. for ACL and publishState.
+//     */
+//    @Column(name="userID")
+//    private Long userID;
+//
+//    /**
+//     * if set, this is a private copy for a schoolclass.
+//     */
+//    @Column(name="classID")
+//    private Long classID; 
      
     @PrePersist
     @PreUpdate
