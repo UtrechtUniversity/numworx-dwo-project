@@ -1,8 +1,11 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -73,7 +76,17 @@ log("setScoID " + scoID);
 		inited = true;
 		this.scoID = scoID;
 	}
-
+	
+	static final private int MAX_TIMES = 10;
+	static final private int MAX_CNT = 5;
+	List<Float> times = new LinkedList<>();
+	
+	void addTimes(long ms) {
+		while(times.size() > MAX_TIMES ) times.remove(0);
+		times.add(Float.valueOf(ms/1000.0f));
+	}
+	
+	
 	class Committer implements Failure, Success<Object,Void> {
 
 		private static final double initialRetryDelayInMillis = 1000;
@@ -86,9 +99,22 @@ log("setScoID " + scoID);
  		boolean pending;
 		Map<String,String> dirty, copy;
 		double retry=initialRetryDelayInMillis;//milliseconds never 0
+		long started;
+		int cnt;
+		
+		void addTime() {
+			addTimes(System.currentTimeMillis()-started);
+		}
+		
+		float meanTime() {
+			float sum = 0.0f;
+			for(Float f : times) sum += f.floatValue();
+			return sum / times.size();
+		}
 		
 		@Override
 		public void fail(Promise<?> t) {
+			addTime();
 			Throwable caught = t.getFailure();
 			logger.log(Level.SEVERE, "Commit failed: "+ caught, caught);
 			if(caught instanceof FailedResponseException) {
@@ -96,8 +122,9 @@ log("setScoID " + scoID);
 				int code = f.getStatusCode();
 				log("Failed statuscode = " + code);
 				log("Failed response = " + f.getResponse().getHeadersAsString());
+				log("mean time =" + meanTime());
 // FIXME betere foutmelding, message voor cancel?
-				if(!Window.confirm(
+				if(cnt > MAX_CNT && !Window.confirm(
 						(code == 0 ? Text.constants.noInternet() : Text.constants.serverError() ) +
 						"\nCode " + code + " " + f.getResponse().getStatusText()  + "\n"
 						+ Text.constants.opnieuwKnopLabel() +"?"))
@@ -105,13 +132,13 @@ log("setScoID " + scoID);
 					deferred.fail(caught);
 					return;
 				}
-				
 			}
 			retry+=retry/2;//exponential delay
 			Timer backoff = new Timer() {
 
 				@Override
 				public void run() {
+					cnt += 1;
 					commit();
 				}
 			};
@@ -121,12 +148,14 @@ log("setScoID " + scoID);
 
 		@Override
 		public Promise<Void> call(Promise<Object> t) {
+			addTime();
 			Object result = t.getValue();
 			logger.info("Commit success: " + result);
 			pending = false;
 			retry=initialRetryDelayInMillis;
 			if(!Boolean.TRUE.equals(result)) fail(Promises.resolved(null));
 			else {
+				cnt = 0;
 				copy.clear();
 				if(!dirty.isEmpty()) commit();
 				else deferred.resolve("");
@@ -139,6 +168,7 @@ log("setScoID " + scoID);
 			dirty.clear();
 			pending = true;
 			logger.info("committing " + copy.keySet());
+			started = System.currentTimeMillis();
 			client.setValues(scoID, copy).then(this, this);
 		}
 		
