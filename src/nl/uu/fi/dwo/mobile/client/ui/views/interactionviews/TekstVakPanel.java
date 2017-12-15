@@ -2289,6 +2289,7 @@ private Object deGreek(String value) {
 		.replace("ρ", "rho")
 		.replace("z$sc*r*i*t@", "zcrit")
 		.replace("t$sc*r*i*t@", "tcrit")
+		.replace("r$sc*r*i*t@", "rcrit")
 		.replace("$sA@", "1")
 		.replace("$sB@", "2")
 		.replace("$s1@", "1")

@@ -95,7 +95,7 @@ public class MapperConstants {
         feedbackMap.put("component.standard-error-sd", "Dit is de correcte standaardfout.");
         feedbackMap.put("component.test-formula", "Deze formule voor de toetsingsgrootheid is correct.");
         feedbackMap.put("component.test-value", "Deze waarde van de toetsingsgrootheid is correct.");
-        feedbackMap.put("component.test.t-test", "Een t-toets voor één steekproef is hier inderdaad de meest geschikte toets.");
+        feedbackMap.put("component.test.t-test", "Een t-toets voor één groep is hier inderdaad de meest geschikte toets.");
         feedbackMap.put("component.test.t-test-paired", "Een t-toets voor afhankelijke groepen is hier inderdaad de meest geschikte toets.");
         feedbackMap.put("component.test.t-test-two", "Een t-toets voor onafhankelijke groepen is hier inderdaad de meest geschikte toets.");
         feedbackMap.put("component.test.z-test", "Een z-toets is hier inderdaad de meest geschikte toets.");
@@ -169,14 +169,14 @@ public class MapperConstants {
         feedbackMap.put("buggy.component.df", "Het aantal vrijheidsgraden dat je gebruikt is niet correct.");
         feedbackMap.put("buggy.component.h0", "De nulhypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef.");
         feedbackMap.put("buggy.component.ha", "Deze alternatieve hypothese past niet bij de claim uit de opdracht.");
-        feedbackMap.put("buggy.component.t-test-one-sample.should-be-t-test-paired", "Een t-toets voor één steekproef is geschikt als je maar één steekproef hebt.");
-        feedbackMap.put("buggy.component.t-test-one-sample.should-be-t-test-two-sample", "Een t-toets voor één steekproef is geschikt als je maar één steekproef hebt.");
-        feedbackMap.put("buggy.component.t-test-one-sample.should-be-z-test", "Een t-toets voor één steekproef is geschikt bij kleine steekproefgroottes, wanneer de standaardafwijking van de populatie niet bekend is.");
+        feedbackMap.put("buggy.component.t-test-one-sample.should-be-t-test-paired", "Een t-toets voor één groep is geschikt als je maar één steekproef hebt.");
+        feedbackMap.put("buggy.component.t-test-one-sample.should-be-t-test-two-sample", "Een t-toets voor één groep is geschikt als je maar één steekproef hebt.");
+        feedbackMap.put("buggy.component.t-test-one-sample.should-be-z-test", "Een t-toets voor één groep is geschikt bij kleine steekproefgroottes, wanneer de standaardafwijking van de populatie niet bekend is.");
         feedbackMap.put("buggy.component.t-test-paired.should-be-t-test-one-sample", "Een t-toets voor afhankelijke groepen is geschikt als je twee afhankelijke steekproeven hebt.");
         feedbackMap.put("buggy.component.t-test-paired.should-be-t-test-two-sample", "Een t-toets voor afhankelijke groepen is geschikt als de objecten in de twee steekproeven te koppelen zijn.");
         feedbackMap.put("buggy.component.t-test-paired.should-be-z-test", "Een t-toets voor afhankelijke groepen is geschikt als je twee afhankelijke steekproeven hebt.");
         feedbackMap.put("buggy.component.t-test-two-sample.should-be-t-test-one-sample", "Een t-toets voor onafhankelijke groepen is geschikt als je twee steekproeven hebt.");
-        feedbackMap.put("buggy.component.t-test-two-sample.should-be-t-test-paired", "Een t-toets voor onafhankelijke groepen is geschikt als de objecten in de twee steekproeven niet te koppelen zijn. ");
+        feedbackMap.put("buggy.component.t-test-two-sample.should-be-t-test-paired", "Een t-toets voor onafhankelijke groepen is geschikt als de objecten in de twee steekproeven niet te koppelen zijn.");
         feedbackMap.put("buggy.component.t-test-two-sample.should-be-z-test", "Een t-toets voor onafhankelijke groepen is geschikt als je twee steekproeven hebt.");
         feedbackMap.put("buggy.component.z-test.should-be-t-test-one-sample", "Een z-toets is geschikt bij grote steekproeven, of wanneer de standaardafwijking van de populatie bekend is.");
         feedbackMap.put("buggy.component.z-test.should-be-t-test-paired", "Een z-toets is geschikt als je maar één steekproef hebt.");
@@ -185,7 +185,6 @@ public class MapperConstants {
         feedbackMap.put("buggy.component.test-t-value", "Waar heb je door gedeeld om deze toetsingsgrootheid te berekenen? De standaardafwijking of de standaardfout?");
         feedbackMap.put("buggy.component.critical.t-value-positive", "In welke staart(en) van de verdeling ligt het kritieke gebied in dit geval? Links, rechts, of allebei?");
         feedbackMap.put("buggy.component.critical.z-value-positive", "In welke staart(en) van de verdeling ligt het kritieke gebied in dit geval? Links, rechts, of allebei?");
-        
         feedbackMap.put("buggy.component.accepth0.should-be-dontrejecth0", "In een hypothesetoets accepteren we hypotheses nooit. Als de data niet genoeg aanleiding geven om $fH$s0@@ te verwerpen, dan zeggen we dat we $fH$s0@@ niet verwerpen.");
         feedbackMap.put("buggy.component.accepth0.should-be-rejecth0", "In een hypothesetoets accepteren we hypotheses nooit. Maar geven de data inderdaad aanleiding om te denken dat $fH$s0@@ waar is?");
         feedbackMap.put("buggy.component.rejecth1.should-be-dontrejecth0", "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.");
@@ -194,10 +193,139 @@ public class MapperConstants {
         feedbackMap.put("buggy.component.accepth1.should-be-rejecth0", "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.");
         feedbackMap.put("buggy.component.dontrejecth1.should-be-dontrejecth0", "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.");
         feedbackMap.put("buggy.component.dontrejecth1.should-be-rejecth0", "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.");
-        feedbackMap.put("buggy.component.rejecth0.should-be-dontrejecth0", "Geven de data inderdaad voldoende bewijs om aan te denken dat de nullhypothese niet waar is?");
+        feedbackMap.put("buggy.component.rejecth0.should-be-dontrejecth0", "Geven de data inderdaad voldoende bewijs om aan te denken dat $fH$s0@@ niet waar is?");
         feedbackMap.put("buggy.component.dontrejecth0.should-be-rejecth0", "Geven de data inderdaad voldoende bewijs om te denken dat $fH$s0@@ waar is?");
         
-       
+        /*
+        //English version (for Economics)
+        Map feedbackMap = new HashMap<String, String>();
+        constants.put("feedback", feedbackMap);
+        //components: the mentioned rule (adding a component) was recognized to be performed correctly
+        feedbackMap.put("component.alpha", "This is an appropriate significance level.");
+        feedbackMap.put("component.conclusion.p-value", "This is the correct conclusion about this p-value.");
+        feedbackMap.put("component.critical-conclusion", "This is the correct conclusion about this test statistic and rejection region.");
+        feedbackMap.put("component.critical.t-value", "This is the correct critical t-value.");
+        feedbackMap.put("component.critical.z-value", "This is the correct critical z-value.");
+        feedbackMap.put("component.df", "This number of degrees of freedom is correct.");
+        feedbackMap.put("component.h0", "This is an appropriate null hypothesis.");
+        feedbackMap.put("component.h0-from-ha", "This is an appropriate null hypothesis.");
+        feedbackMap.put("component.h0-from-ha-eq", "This is an appropriate null hypothesis.");
+        feedbackMap.put("component.ha", "This is an appropriate alternative hypothesis.");
+        feedbackMap.put("component.hypotheses", "These are appropriate hypotheses.");
+        feedbackMap.put("component.hypotheses-conclusion-critical", "This is the correct conclusion about these hypotheses; you have completed the hypothesis test correctly.");
+        feedbackMap.put("component.hypotheses-conclusion-pvalue", "This is the correct conclusion about these hypotheses; you have completed the hypothesis test correctly.");
+        feedbackMap.put("component.mean", "This is the correct mean.");
+        feedbackMap.put("component.n", "This is the correct sample size.");
+        feedbackMap.put("component.p-value.t-test", "This is the correct p-value for this test statistic.");
+        feedbackMap.put("component.p-value.z-test", "This is the correct p-value for this test statistic.");
+        feedbackMap.put("component.rejection.critical", "This is the correct rejection region for this test.");
+        feedbackMap.put("component.sided", "This is the correct direction of the test.");
+        feedbackMap.put("component.standard-deviation", "This is the correct standard deviation.");
+        feedbackMap.put("component.standard-error-sigma", "This is the correct standard error.");
+        feedbackMap.put("component.standard-error-sd", "This is the correct standard error.");
+        feedbackMap.put("component.test-formula", "This formula for the test statistic is correct.");
+        feedbackMap.put("component.test-value", "This value of the test statistic is correct.");
+        feedbackMap.put("component.test.t-test", "A t-test for one group indeed is the most appropriate test here.");
+        feedbackMap.put("component.test.t-test-paired", "A t-test for dependent groups indeed is the most appropriate test here.");
+        feedbackMap.put("component.test.t-test-two", "A t-test for independent groups indeed is the most appropriate test here.");
+        feedbackMap.put("component.test.z-test", "A z-test indeed is the most appropriate test here.");
+        feedbackMap.put("component.variance", "This is the correct variance.");
+        feedbackMap.put("expr.substitute", "");
+        feedbackMap.put("noFeedback", "This is a correct step.");
+        
+        //checks: state is not equivalent with previous state; checking of mentioned constraint resulted in error
+        feedbackMap.put("check.samplemean", "The sample mean you have specified is incorrect.");
+        feedbackMap.put("check.populationsdev", "The standard deviation of the variable in the population is incorrect. Also check your notation.");
+        feedbackMap.put("check.samplesdev", "The sample standard deviation of the variable is incorrect. Also check your notation.");
+        feedbackMap.put("check.samplesize", "The sample size you have specified is incorrect.");
+        feedbackMap.put("check.alpha", "The significance level is incorrect.");
+        feedbackMap.put("check.h0", "This null hypothesis does not match the alternative hypothesis or the claim from the task.");
+        feedbackMap.put("check.h0: parameter mismatch", "The null hypothesis should describe parameters in the population, not characteristics of a specific sample.");
+        feedbackMap.put("check.h0: value mismatch", "Reconsider the right hand side of your null hypothesis. Which value should be stated there?");
+        feedbackMap.put("check.h0: sign mismatch", "The direction of your null hypothesis does not match with the direction of the alternative hypothesis.");
+        feedbackMap.put("check.h0: component is not of type relation", "Fill in a complete null hypothesis, before pressing the check button.");
+        feedbackMap.put("check.ha", "This alternative hypothesis does not match with the claim from the task.");
+        feedbackMap.put("check.ha: parameter mismatch", "The alternative hypothesis should describe parameters in the population, not characteristics of a specific sample.");
+        feedbackMap.put("check.ha: value mismatch", "Reconsider the right hand side of your alternative hypothesis. Which value should be stated there?");
+        feedbackMap.put("check.ha: sign mismatch", "The direction of your null hypothesis does not match with the claim from the task.");
+        feedbackMap.put("check.ha: component is not of type relation", "Fill in a complete alternative hypothesis, before pressing the check button.");
+        feedbackMap.put("check.sided", "The test direction does not match with the hypothesis or with the claim from the task.");
+        feedbackMap.put("check.test", "You did not choose the most appropriate test.");
+        feedbackMap.put("check.test-formula", "The formula for the test statistic is incorrect.");
+        feedbackMap.put("check.test-formula: component is not of type relation", "First specify both sides of the formula, before pressing the check button.");
+        //feedbackMap.put("check.test-formula: TestChoice missing", "Which test are you going to carry out? Specify this before calculating a test statistic.");
+        feedbackMap.put("check.test-formula: cannot solve", "Did you define all variables in the formula and did you use common names for the variables?");
+        feedbackMap.put("check.test-formula: no match", "The formula for the test statistic is incorrect.");
+        feedbackMap.put("check.test-formula: test mismatch", "Are you calculating a t-value or a z-value?");
+        feedbackMap.put("check.test-value", "This is not the correct value of the test statistic.");
+        feedbackMap.put("check.test-value: no match", "This is not the correct value of the test statistic.");
+        feedbackMap.put("check.test-value: test mismatch", "Are you calculating a t-value or a z-value?");
+        feedbackMap.put("check.test-value: component is not relation", "Fill in both the name and the value of the test statistic, before pressing the check button. ");
+        feedbackMap.put("check.df", "The number of degrees of freedom is incorrect.");
+        //feedbackMap.put("check.df: TestChoice missing", "Which test are you going to carry out? Specify this before determining the number of degrees of freedom.");
+        feedbackMap.put("check.critical", "The critical value is incorrect.");
+        feedbackMap.put("check.critical: alternative hypothesis missing", "To which hypotheses does this critical value belong? First state hypotheses.");
+        //feedbackMap.put("check.critical: TestChoice missing", "Which test are you going to carry out? Specify this before determining the critical value.")
+        //feedbackMap.put("check.critical: SignificanceLevel missing", "What is the significance level for this critical value? First specify the significance level.");
+        //feedbackMap.put("check.critical: df missing", "What is the number of degrees of freedom for this critical value? First give the number of degrees of freedom.");
+        feedbackMap.put("check.critical: test mismatch", "Are you determining a critical t-value or a critical z-value?");
+        feedbackMap.put("check.critical: component is not relation", "Fill in both the name and the value of the critical value, before pressing the check button.");
+        feedbackMap.put("check.rejectioncritical", "This rejection region is incorrect.");
+        feedbackMap.put("check.rejectioncritical: test mismatch", "Are you specifying a rejection region for a t-value or for a z-value?");
+        feedbackMap.put("check.rejectioncritical: sidedness mismatch", "Does the sign you use in the rejection region match with the direction of the alternative hypothesis?");
+        feedbackMap.put("check.rejectioncritical: alternative hypothesis missing", "To which hypotheses does this rejection region belong? First state hypotheses.");
+        feedbackMap.put("check.rejectioncritical: component is not of type relation", "Fill in a complete rejection region, before pressing the check button.");
+        feedbackMap.put("check.p-value", "This is not the correct p-value for the value of the test statistic.");
+        feedbackMap.put("check.p-value: TestValue missing", "To determine a p-value, you first need to calculate a test statistic.");
+        //feedbackMap.put("check.p-value: Df missing", "To find a p-value in a t-test, you need the number of degrees of freedom. First specify the number of degrees of freedom.");
+        feedbackMap.put("check.p-value: alternative hypothesis missing", "To which hypotheses does this p-value belong? First state hypotheses.");
+        feedbackMap.put("check.p-value: component is not of type relation", "Something went wrong with the p-value. Try filling it in again."); //TODO: kijken wat hier goede feedbacktekst is. 
+        feedbackMap.put("check.p-value: value not a probability", "The p-value is a probability. Did you indeed fill in a probability (a number between 0 and 1)?");
+        feedbackMap.put("check.conclusion.p-value", "Your conclusion about the p-value and the significance level is incorrect.");
+        feedbackMap.put("check.conclusion.p-value: PValue missing", "First give an estimation of the p-value itself, before comparing it with the significance level.");
+        //feedbackMap.put("check.conclusion.p-value: SignificanceLevel missing", "To which significance level do you compare the p-value? First specify the significance level.");
+        feedbackMap.put("check.conclusion-critical", "Your conclusion about the test statistic and the rejection region is incorrect.");
+        feedbackMap.put("check.conclusion-critical: RejectionCritical missing", "What is the rejection region? Before specifying this, it is too early to draw this conclusion.");
+        feedbackMap.put("check.conclusion-critical: no match", "What are the critical value and the test statistic? First specify or calculate them, before trying to compare them.");
+        feedbackMap.put("check.conclusion-hypotheses", "On what base do you draw this conclusion? Can you first say something about the rejection region, or about the p-value that corresponds to the test statistic?");
+        feedbackMap.put("check.conclusion-hypotheses: conclusion mismatch critical", "This conclusion does not match your conclusion about whether or not the test statistic lies inside the rejection region.");
+        feedbackMap.put("check.conclusion-hypotheses: conclusion mismatch pvalue", "This conclusion does not match your conclusion about whether the p-value is larger or smaller than the significance level.");
+        feedbackMap.put("check.standard-error", "This is not the correct value of the standard error.");
+        feedbackMap.put("check.standard-error: component is not of type relation", "Specify both name and value of the standard error, before pressing the check button.");
+        feedbackMap.put("check.standard-error: standard error mismatch", "Can you use the standard deviation from the population, or do you have to estimate it based on the sample? And which notation should you use?");
+               
+        //Buggy: state is not equivalent to previous state; mentioned buggy rule detected
+        feedbackMap.put("buggy.component.alpha", "You did not use the significance level that was specified in the task.");
+        feedbackMap.put("buggy.component.df", "The number of degrees of freedom you use is incorrect.");
+        feedbackMap.put("buggy.component.h0", "The null hypothesis should describe parameters in the population, not characteristics of a specific sample.");
+        feedbackMap.put("buggy.component.ha", "This alternative hypothesis does not match with the claim from the task.");
+        feedbackMap.put("buggy.component.t-test-one-sample.should-be-t-test-paired", "A t-test for one group is appropriate if you only have one sample.");
+        feedbackMap.put("buggy.component.t-test-one-sample.should-be-t-test-two-sample", "A t-test for one group is appropriate if you only have one sample.");
+        feedbackMap.put("buggy.component.t-test-one-sample.should-be-z-test", "A t-test for one group is appropriate for small sample sizes, when the standard deviation in the population is unknown.");
+        feedbackMap.put("buggy.component.t-test-paired.should-be-t-test-one-sample", "A t-test for dependent groups is appropriate if you have two samples.");
+        feedbackMap.put("buggy.component.t-test-paired.should-be-t-test-two-sample", "A t-tes for dependent groups is appropriate if the objects in the two samples can be paired."); 
+        feedbackMap.put("buggy.component.t-test-paired.should-be-z-test", "A t-test for dependent groups is appropriate if you have two samples.");
+        feedbackMap.put("buggy.component.t-test-two-sample.should-be-t-test-one-sample", "A t-test for independent groups is appropriate if you have two samples.");
+        feedbackMap.put("buggy.component.t-test-two-sample.should-be-t-test-paired", "A t-test for independent groups is appropriate if the objects in the two samples cannot be paired.");
+        feedbackMap.put("buggy.component.t-test-two-sample.should-be-z-test", "A t-test for independent groups is appropriate if you have two samples.");
+        feedbackMap.put("buggy.component.z-test.should-be-t-test-one-sample", "A z-test is appropriate for large sample sizes, or when the standard deviation in the population is known.");
+        feedbackMap.put("buggy.component.z-test.should-be-t-test-paired", "A z-test is appropriate if you only have one sample.");
+        feedbackMap.put("buggy.component.z-test.should-be-t-test-two-sample", "A z-test is appropriate if you only have one sample.");
+        feedbackMap.put("buggy.component.test-z-value", "Did you divide by the standard deviation or by the standard error to calculate this tes statistic?");
+        feedbackMap.put("buggy.component.test-t-value", "Did you divide by the standard deviation or by the standard error to calculate this tes statistic?");
+        feedbackMap.put("buggy.component.critical.t-value-positive", "In which tail(s) of the distribution does the rejection region fall in this case? Left, right, or both?");
+        feedbackMap.put("buggy.component.critical.z-value-positive", "In which tail(s) of the distribution does the rejection region fall in this case? Left, right, or both?");
+        feedbackMap.put("buggy.component.accepth0.should-be-dontrejecth0", "In a hypothesis test, we never accept hypotheses. If the data do not provide enough evidence to reject $fH$s0@@, we say that we do not reject $fH$s0@@.");
+        feedbackMap.put("buggy.component.accepth0.should-be-rejecth0", "In a hypothesis test, we never accept hypotheses. But do the data indeed give a reason to think that $fH$s0@@ is true?");
+        feedbackMap.put("buggy.component.rejecth1.should-be-dontrejecth0", "With a hypothesis test you can in the end make a statement about the null hypothesis, not about the alternative hypothesis.");
+        feedbackMap.put("buggy.component.rejecth1.should-be-rejecth0", "With a hypothesis test you can in the end make a statement about the null hypothesis, not about the alternative hypothesis.");
+        feedbackMap.put("buggy.component.accepth1.should-be-dontrejecth0", "With a hypothesis test you can in the end make a statement about the null hypothesis, not about the alternative hypothesis.");
+        feedbackMap.put("buggy.component.accepth1.should-be-rejecth0", "With a hypothesis test you can in the end make a statement about the null hypothesis, not about the alternative hypothesis.");
+        feedbackMap.put("buggy.component.dontrejecth1.should-be-dontrejecth0", "With a hypothesis test you can in the end make a statement about the null hypothesis, not about the alternative hypothesis.");
+        feedbackMap.put("buggy.component.dontrejecth1.should-be-rejecth0", "With a hypothesis test you can in the end make a statement about the null hypothesis, not about the alternative hypothesis.");
+        feedbackMap.put("buggy.component.rejecth0.should-be-dontrejecth0", "Do the data indeed provide enough evidence to think that $fH$s0@@ is not true?");
+        feedbackMap.put("buggy.component.dontrejecth0.should-be-rejecth0", "Do the data indeed provide enough evidence to think that $fH$s0@@ is true?");
+        */ 
         
         Map hintMap = new HashMap<String, String>();
         constants.put("hint", hintMap);
@@ -235,7 +363,43 @@ public class MapperConstants {
         hintMap.put("component.test.z-test", "Bepaal welke toets geschikt is voor deze situatie.");
         hintMap.put("component.variance", ""); //-- sample or population?
 	
-	
+        /*
+        //English version (for economics)
+        Map hintMap = new HashMap<String, String>();
+        constants.put("hint", hintMap);
+        hintMap.put("exception", "Something went wrong.");
+        hintMap.put("component.alpha", "Specify the significance level for the test you are carrying out.");
+        hintMap.put("component.conclusion.p-value", "Draw a conclusion based on the p-value you found.");
+        hintMap.put("component.critical-conclusion", "Draw a conclusion based on the test value and rejection region you found.");
+        hintMap.put("component.critical.t-value", "Find the critical value(s) for this test.");
+        hintMap.put("component.critical.z-value", "Find the critical value(s) for this test.");
+        hintMap.put("component.df", "Find the number of degrees of freedom for this test.");
+        hintMap.put("component.h0", "State a null hypothesis to test.");
+        hintMap.put("component.h0-from-ha", "State a null hypothesis to test.");
+        hintMap.put("component.h0-from-ha-eq", "State a null hypothesis to test.");
+        hintMap.put("component.ha", "State an alternative hypothesis to test.");
+        hintMap.put("component.hypotheses", "State hypotheses to test.");
+        hintMap.put("component.hypotheses-conclusion", "Draw a conclusion about your hypotheses.");
+        hintMap.put("component.hypotheses-conclusion-critical", "Draw a conclusion about your hypotheses.");
+        hintMap.put("component.hypotheses-conclusion-pvalue", "Draw a conclusion about your hypotheses.");
+        hintMap.put("component.mean", ""); //-- sample or population?
+        hintMap.put("component.n", "Specify the sample size.");
+        hintMap.put("component.p-value.t-test", "Find the p-value for the test statistic you found.");
+        hintMap.put("component.p-value.z-test", "Find the p-value for the test statistic you found.");
+        hintMap.put("component.rejection.critical", "Find the rejection region that corresponds with your hypotheses.");
+        hintMap.put("component.sided", "Specify the direction that corresponds with your hypotheses.");
+        hintMap.put("component.standard-deviation", ""); //-- sample or population?
+        hintMap.put("component.standard-error", ""); //-- sample or population?
+        hintMap.put("component.standard-error-sigma", "Find the standard error."); 
+        hintMap.put("component.standard-error-sd", "Find the standard error."); 
+        hintMap.put("component.test-formula", "Specify the formula for calculating the test statistic.");
+        hintMap.put("component.test-value", "Calculate the test statistic for the chosen test.");
+        hintMap.put("component.test.t-test", "Determine which test is appropriate for the given situation.");
+        hintMap.put("component.test.t-test-paired", "Determine which test is appropriate for the given situation.");
+        hintMap.put("component.test.t-test-two", "Determine which test is appropriate for the given situation.");
+        hintMap.put("component.test.z-test", "Determine which test is appropriate for the given situation.");
+        hintMap.put("component.variance", ""); //-- sample or population?
+		*/
 	
 	}
 	
