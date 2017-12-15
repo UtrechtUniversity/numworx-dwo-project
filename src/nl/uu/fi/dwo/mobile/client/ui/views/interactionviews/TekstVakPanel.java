@@ -2286,6 +2286,7 @@ private Object deGreek(String value) {
 		.replace("μ$sX@", "mu")
 		.replace("μ", "mu")
 		.replace("σ", "sigma")
+		.replace("ρ", "rho")
 		.replace("z$sc*r*i*t@", "zcrit")
 		.replace("t$sc*r*i*t@", "tcrit")
 		.replace("$sA@", "1")
@@ -2299,6 +2300,7 @@ private Object deGreek(String value) {
 		.replace("s$sM@", "SEM")
 		.replace("$vS$nD@@", "s")
 		.replace("s$sx@", "s")
+		.replace("s$sy@", "s")
 		.replace("vS$n$bD$n$wn@@", "bs$n$wn") // vervang "SD/sqrt(n)" door "s/sqrt(n)"
 		.replace("S$n$bD", "s$n$b1")// vervang "SD/iets" door "s*1/iets"
 	;	
