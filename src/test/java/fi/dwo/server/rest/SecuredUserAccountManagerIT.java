@@ -32,6 +32,7 @@ import org.junit.Test;
  * @author G.A.J. van der Plas
  */
 public class SecuredUserAccountManagerIT {
+
     private static final Logger LOG = Logger.getLogger(SecuredUserAccountManagerIT.class.getName());
 
     static DatabaseManager instance = null;
@@ -64,7 +65,8 @@ public class SecuredUserAccountManagerIT {
 
     /**
      * Test of getCurrentUser method, of class SecuredUserAccountManager. Should
-     * retrieve the current user if it exists and not if the user does not exists.
+     * retrieve the current user if it exists and not if the user does not
+     * exists.
      */
     @Test
     public void testGetCurrentUser() {
@@ -86,15 +88,15 @@ public class SecuredUserAccountManagerIT {
         try {
             result = instance.getCurrentUser(sc);
             fail("Did not fail fake username with result." + result.getUserName());
-        }
-        catch (Dwo2RestException e) {
+        } catch (Dwo2RestException e) {
             // succeeded
         }
     }
 
     /**
-     * Test of updateCurrentUser method, of class SecuredUserAccountManager. Should
-     * only update given name, insertion and family name, email and password.
+     * Test of updateCurrentUser method, of class SecuredUserAccountManager.
+     * Should only update given name, insertion and family name, email and
+     * password.
      */
     @Test
     public void testUpdateCurrentUser() {
@@ -107,7 +109,7 @@ public class SecuredUserAccountManagerIT {
         user.getDomUserFull().setInsertion("b");
         user.getDomUserFull().setFamilyName("c");
         user.getDomUserFull().setEmail("x@xy.zz");
-        user.getDomUserFull().setPassword("e");
+        user.getDomUserFull().setPassword("e54645");
 
         DomUserFull result = instance.updateCurrentUser(sc, user);
         assertEquals(user.getDomUserFull().getUserName(), result.getUserName());
@@ -122,9 +124,25 @@ public class SecuredUserAccountManagerIT {
         try {
             result = instance.updateCurrentUser(sc, user);
             fail("Did not fail fake username with result." + result.getUserName());
-        }
-        catch (Dwo2RestException e) {
+        } catch (Dwo2RestException e) {
             // succeeded
+            LOG.log(Level.INFO, "{0}", e.getDwo2Message());
+        }
+        try {
+            user.getDomUserFull().setPassword("e");
+            result = instance.updateCurrentUser(sc, user);
+            fail("Did not fail short password with result." + result.getUserName());
+        } catch (Dwo2RestException e) {
+            // succeeded
+            LOG.log(Level.INFO, "{0}", e.getDwo2Message());
+        }
+        try {
+            user.getDomUserFull().setEmail("e");
+            result = instance.updateCurrentUser(sc, user);
+            fail("Did not fail illegal email with result." + result.getUserName());
+        } catch (Dwo2RestException e) {
+            // succeeded
+            LOG.log(Level.INFO, "{0}", e.getDwo2Message());
         }
 
         user.setDomUserFull(UserManager.findByUserName("user01").buildDomUserFull());
@@ -132,8 +150,8 @@ public class SecuredUserAccountManagerIT {
     }
 
     /**
-     * Test of removeCurrentUser method, of class SecuredUserAccountManager. Tests
-     * if user in tblUser was removed.
+     * Test of removeCurrentUser method, of class SecuredUserAccountManager.
+     * Tests if user in tblUser was removed.
      */
     @Test
     public void testRemoveCurrentUser() {
@@ -145,9 +163,10 @@ public class SecuredUserAccountManagerIT {
 
         try {
             PersistentUser user = UserManager.findByUserName("user01");
-            if(user!=null) fail("User was not removed by function.");
-        }
-        catch (Dwo2RestException e) {
+            if (user != null) {
+                fail("User was not removed by function.");
+            }
+        } catch (Dwo2RestException e) {
             // succeeded
         }
 
