@@ -189,6 +189,9 @@ public class ResultsPresenter {
     }
 
     /**
+     * A header in the result table is clicked. Column 0 is the schoolclass/student
+     * column.
+     * 
      * @param row the course to set
      */
     @JsMethod
@@ -210,7 +213,8 @@ public class ResultsPresenter {
     }
 
     /**
-     * Selects what zoom action to take when clicking on a field.
+     * Selects what zoom action to take when clicking on a field. Row 0 is the 
+     * first row that is a student or schoolclass. Column 0 is the schoolclass/student column.
      * 
      * @param row
      * @param col 
@@ -232,13 +236,11 @@ public class ResultsPresenter {
             DomResultScoContext ssc = (DomResultScoContext) resultMatrix.gethIndex(col - 1);
             eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCORESULTS, resultTree, ssc, rs, schoolClass.getSchoolClass()));
             return;
-//        }else{
-//        //if(col!=0 && select schoolclass and course
-//            course = (DomResultCourseInClass) resultMatrix.gethIndex(col - 1);
-//            schoolClass = (DomResultSchoolClass) resultMatrix.getvIndex(row);
+//        }else{ // do nothing
         }
         resultMatrix = calculateResults(course, schoolClass);
         ResultPlot plotData = buildPlotMatrix(resultMatrix);
+        LOG.log(Level.FINE, getExportString());
         view.plot(plotData, (schoolClass != null), (course != null));
     }
 
