@@ -19,11 +19,12 @@ import jsinterop.annotations.JsType;
  * 
  * @author G.A.J. van der Plas
  */
-@JsType(isNative = true, name = "JsAddSchoolclassDisplay", namespace = JsPackage.GLOBAL)
-public class JsAddSchoolclassDisplay{
+@JsType(isNative = true, name = "JsEditSchoolclassDisplay", namespace = JsPackage.GLOBAL)
+public class JsEditSchoolclassDisplay{
     /** Clears all the add schoolclass fields of their values. */
     public static native void clear();
     /** Clears all the add schoolclass  field of its value. */
     public static native void init();
- 
+    /**  Sets the values for the dialog */
+    public static native void showDialog(String name, Boolean showTree, Boolean hasRegKey, String regKey);
 }
