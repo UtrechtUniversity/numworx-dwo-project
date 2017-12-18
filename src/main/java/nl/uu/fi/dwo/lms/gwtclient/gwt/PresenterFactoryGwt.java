@@ -33,7 +33,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     private final MainPresenter mainPresenter;
     private final LoginPresenter loginPresenter;
     private final SwitchSchoolPresenter switchSchoolPresenter;
-    private final ResultsPresenter resultsPresenter;
+    private ResultsPresenter resultsPresenter;
     private final ScoResultsPresenter scoResultsPresenter;
     private final SchoolclassesPresenter schoolclassesPresenter;
     private final CoursesOfSchoolclassPresenter coursesOfSchoolclassPresenter;
@@ -126,7 +126,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the resultsPresenter
      */
-//    @JsMethod    
+    @JsMethod    
     public ResultsPresenter getResultsPresenter() {
         return resultsPresenter;
     }
