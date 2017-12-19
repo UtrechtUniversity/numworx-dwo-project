@@ -289,8 +289,10 @@ public class DWOplayer implements EntryPoint
 		activityMapper.setDisplay(display);
 		display.asWidget().addStyleName("RootPanel");
 		RootLayoutPanel.get().add(clientfactory.getHeaderView());
+		RootLayoutPanel.get().add(clientfactory.getNavigationView());
 		RootLayoutPanel.get().add(display);
-		clientfactory.getHeaderView().setDisplay(display);
+		clientfactory.getNavigationView().setDisplay(display);
+		clientfactory.getHeaderView().setDisplay(display,clientfactory.getNavigationView());
 		clientfactory.getHeaderView().hide();
 	}
 

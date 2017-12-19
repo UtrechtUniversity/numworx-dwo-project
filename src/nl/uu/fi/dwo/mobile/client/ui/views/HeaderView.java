@@ -17,6 +17,6 @@ public interface HeaderView extends IsWidget {
 	
 	void hide();
 	void show();
-	void setDisplay(Widget display);
+	void setDisplay(Widget display, NavigationView navigationView);
 
 }

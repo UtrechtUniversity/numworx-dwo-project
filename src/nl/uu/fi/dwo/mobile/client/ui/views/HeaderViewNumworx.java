@@ -27,6 +27,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -121,6 +122,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	Place upPlace = new TreeModulePlace();
 	Place homePlace = new TreeModulePlace();
 	private Widget root;
+	private NavigationView navigation;
 
 	@UiHandler("upBtn")
 	void onUpBtn(ClickEvent ev) {		
@@ -256,8 +258,8 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	public void hide() {
 		LayoutPanel p = RootLayoutPanel.get(); // parent of header
 		p.setWidgetVisible(this, false);
-		p.setWidgetTopBottom(root, 0, Unit.PX, 0, Unit.PX);
-		
+		navigation.hide();
+		p.setWidgetTopBottom(root, 0, Unit.PX, 0, Unit.PX);		
 	}
 
 	@Override
@@ -265,11 +267,14 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 		LayoutPanel p = RootLayoutPanel.get(); // parent of header
 		p.setWidgetVisible(this, true);
 		p.setWidgetTopBottom(root, 50, Unit.PX, 0, Unit.PX);
+		p.setWidgetTopBottom(navigation, 50, Unit.PX, 0, Unit.PX);
+		navigation.show();
 	}
 
 	@Override
-	public void setDisplay(Widget display) {
+	public void setDisplay(Widget display, NavigationView navigation) {
 		root = display;
+		this.navigation = navigation;
 		RootLayoutPanel.get().setWidgetTopBottom(this, 0, Unit.PX, 50, Unit.PX);
 	}
 

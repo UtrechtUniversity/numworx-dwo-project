@@ -244,7 +244,7 @@
 		<g:HTML ui:field='linksPanel' styleName='{style.links}' addStyleNames='{style.linksError}'>
 			<p><a href="/dwo/rest/public/user/requestNewPassword?language={rb.locale}&amp;back={back}"><ui:text from='{rb.vergeten}'/></a></p>
 			<p><a href="/dwo/register?locale={rb.locale}&amp;next={back}"><ui:text from='{rb.register}'/></a></p>
-			<p><a href='http://www.numworx.nl'><ui:text from='{rb.numworx}'/></a></p>
+			<p><a href='http://www.numworx.nl' target='_top'><ui:text from='{rb.numworx}'/></a></p>
 		</g:HTML>
 	</g:FlowPanel>
 	</g:FlowPanel>

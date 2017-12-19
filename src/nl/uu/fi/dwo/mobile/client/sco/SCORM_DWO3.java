@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 import fi.wiskopdr.text.Text;
 
@@ -33,6 +34,25 @@ public class SCORM_DWO3 extends SCORM_guest {
 		pending = false;
 	}
 
+	enum Status { NORMAL, DIRTY, BUSY, RETRY };
+	Status status = Status.NORMAL;
+	
+	private void setStatus(Status s) {
+		status = s;
+		RootLayoutPanel p = RootLayoutPanel.get();
+		p.setStyleName("status-busy", false);
+		p.setStyleName("status-retry", false);
+		switch(s) {
+		case DIRTY: 
+		case NORMAL: break;
+		case BUSY:
+				p.setStyleName("status-busy", true);
+				break;
+		case RETRY:
+				p.setStyleName("status-retry", true);
+		}
+	}
+	
 
 	static final Logger logger = Logger.getLogger("SCORM_DWO3");
 	private int scoID;
@@ -133,6 +153,7 @@ log("setScoID " + scoID);
 					return;
 				}
 			}
+			setStatus(Status.RETRY);
 			retry+=retry/2;//exponential delay
 			Timer backoff = new Timer() {
 
@@ -158,7 +179,10 @@ log("setScoID " + scoID);
 				cnt = 0;
 				copy.clear();
 				if(!dirty.isEmpty()) commit();
-				else deferred.resolve("");
+				else {
+					setStatus(Status.NORMAL);
+					deferred.resolve("");
+				}
 			}
 			return null;
 		}
@@ -175,6 +199,7 @@ log("setScoID " + scoID);
 		Committer(int scoID, Map<String,String> dirty) {
 			copy = new HashMap<String,String>(dirty);
 			this.dirty = new HashMap<String,String>();
+			setStatus(Status.BUSY);
 			ag(deferred.getPromise());
 		}
 
@@ -230,6 +255,7 @@ log("Commit " + dirty.isEmpty());
 	@Override
 	public String SetValue(String name, String value) {
 log("SetValue " + name);
+		if(status == Status.NORMAL) setStatus(Status.DIRTY);
 		map.put(name, value);
 		dirty.put(name, value);
 		return "true";

@@ -7,6 +7,7 @@ import org.osgi.util.promise.Promise;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
+import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
@@ -18,6 +19,7 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -75,6 +77,8 @@ public interface ClientFactory
 	Promise<Void> startExam(DomClassCourse classCourse, String password);
 
 	boolean inExam(DomClassCourse classCourse);
+
+	NavigationView getNavigationView();
 
 // High level functions
 /*	Full varianten?

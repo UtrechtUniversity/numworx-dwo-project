@@ -10,6 +10,8 @@ import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginViewImpl;
+import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
+import nl.uu.fi.dwo.mobile.client.ui.views.NavigationViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
@@ -94,6 +96,24 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 			return impl;
 		}
 	};
+	
+	final Provider<NavigationViewNumworx> navigationView = new Provider<NavigationViewNumworx>() {
+		NavigationViewNumworx impl = new NavigationViewNumworx();
+		{
+			impl.setPresenter(ClientFactoryImpl.this);
+			
+		}
+		@Override
+		public NavigationViewNumworx get() {
+			return impl;
+		}
+	};
+	
+	public NavigationView getNavigationView() {
+		return navigationView.get();
+	}
+	
+	
 	private final EventBus eventBus = new SimpleEventBus();
 	private final PlaceController placeController = new PlaceController(eventBus);
 	private Provider<ViewModuleView> entryView = NORMAL;
@@ -159,7 +179,7 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 			{
 				
 				entryView = NUMWORX_VIEW;				
-				return this.treeModuleView = new TreeModuleViewNumworx(getHeaderView());
+				return this.treeModuleView = new TreeModuleViewNumworx(getHeaderView(), navigationView.get());
 			}
 			
 			

@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
+import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
@@ -158,6 +159,12 @@ public class DummyClientFactory implements ClientFactory {
 
 	@Override
 	public HeaderView getHeaderView() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public NavigationView getNavigationView() {
 		// TODO Auto-generated method stub
 		return null;
 	}

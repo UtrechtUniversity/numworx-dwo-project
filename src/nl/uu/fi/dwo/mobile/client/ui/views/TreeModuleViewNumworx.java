@@ -3,7 +3,6 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -11,10 +10,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.osgi.util.function.Function;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.cell.client.AbstractCell;
@@ -25,48 +22,29 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.place.shared.Place;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.MenuItem;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.ToggleButton;
-import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.NoSelectionModel;
-import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SetSelectionModel;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.googlecode.mgwt.ui.client.MGWT;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
-import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
@@ -78,19 +56,6 @@ import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
 public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext, Command, Comparator<SelectModuleItem> {
 
-	class ProvideTileKey implements ProvidesKey<SelectModuleItem> {
-
-		List<SelectModuleItem> tiles = Collections.emptyList();
-		
-		@Override
-		public Object getKey(SelectModuleItem item) {
-			if(item != null)
-				return item.getID();
-			return null;
-		}
-		
-	}
-	ProvideTileKey keyprovider = new ProvideTileKey();
 	
 	final class ProvideCells implements Success<List<SelectModuleItem>, Void> {
 		@Override
@@ -99,66 +64,13 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				throws Exception {
 			List<SelectModuleItem> value = resolved.getValue();
 			((SetSelectionModel<?>) tiles.getSelectionModel()).clear();
-			keyprovider.tiles = value;
 			tiles.setRowData(value);
 			tiles.redraw();
 			return null;
 		}
 	}
 	
-	final class ProvideTreeItems implements Success<List<SelectModuleItem>,List<SelectModuleItem>> {
 
-		private TreeItem parent;
-		
-		ProvideTreeItems(TreeItem parent) {
-			this.parent = parent;
-		}
-		
-		@Override
-		public Promise<List<SelectModuleItem>> call(Promise<List<SelectModuleItem>> resolved) throws Exception {
-			if(parent != null)
-			{
-				initTree(resolved.getValue(), parent, true);
-				while((parent = parent.getParentItem()) != null) {
-					parent.setState(true);
-				}
-			}
-			return resolved;
-		}
-		
-	}
-
-	class NavCell extends AbstractCell<SelectModuleItem> {
-
-		@Override
-		public void render(Context context, SelectModuleItem value,
-				SafeHtmlBuilder sb) {
-		    Type type = value.getType();
-			String clazz = style.navItem();
-			if(type == Type.SEPARATOR) clazz = style.navTitle();
-			sb.appendHtmlConstant("<div class='" + clazz +"'>");
-			sb.appendEscaped(value.getName());
-			sb.appendHtmlConstant("</div>");
-		}
-
-		public NavCell() {
-			super("click");
-		}
-
-		@Override
-		public void onBrowserEvent(Context context, Element parent, SelectModuleItem value, NativeEvent event,
-				ValueUpdater<SelectModuleItem> valueUpdater) {
-		    String eventType = event.getType();
-		    Type type = value.getType();
-		    if("click".equals(eventType) && type != Type.SEPARATOR) {
-		    	GWT.log(value.getName());
-		    	presenter.goTo(new TreeModulePlace(value.getID()));
-		    	return;
-		    }
-			super.onBrowserEvent(context, parent, value, event, valueUpdater);
-		}
-
-	}
 
 	//int flip;
 
@@ -328,7 +240,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		    		place = new ViewModulePlace(value.getID());
 		    	else
 		    		place = new TreeModulePlace(value.getID());
-				presenter.goTo(place);
+			presenter.goTo(place);
 		    	return;
 		    }
 			super.onBrowserEvent(context, parent, value, event, valueUpdater);
@@ -342,97 +254,19 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 	@UiField DockLayoutPanel root;
 	@UiField(provided=true)
-	CellList<SelectModuleItem> cells;
-	@UiField
-	Tree tree;
-	@UiField(provided=true)
 	CellList<SelectModuleItem> tiles;
 	@UiField HTML title;
 	@UiField SimplePanel description;
-	//@UiField ScrollPanel scrollpanel;
 	@UiField Image favIcon;
 	@UiField TreeModuleViewNumworxCss style;
-	//@UiField FocusPanel homeBtn, upBtn;
-	//@UiField InlineHTML searchBtn;
-	//@UiField TextBox searchInput;
-	//@UiField ToggleButton fullBtn;
-	//@UiField Label loginLabel;
 	@UiField ScrollPanel centerPanel;
-	@UiField DockLayoutPanel westPanel;
+	NavigationViewNumworx westPanel;
 	
-	HeaderView header;	
-	
-
-	@UiHandler("tree")
-	public void onSelection(final SelectionEvent<TreeItem> event)
-	{
-		final TreeItem item = event.getSelectedItem();
-		final SelectModuleItem o = (SelectModuleItem) item.getUserObject();
-		OpdrNav.defer(
-		new ScheduledCommand() {
-			public void execute() {
-				if (o != null)
-					selectItem(o); // send stop event
-				else {
-//					close();
-//					container.setWidget(module);
-//					SelectModuleItem root = SelectModuleItemHolder
-//							.getItemByID("0");
-//					module.setDescription(root); // Uit het profiel halen!
-//					if (item == schoolMap) {
-//						addChildren(schoolModel);
-//						moduleHeaderLabel.setText(SCHOOL_MODULES);
-//						tree.setSelectedItem(schoolMap, false);
-//						schoolMap.setState(true, false);
-//					} else if (item == standardMap) {
-//						addChildren(standardModel);
-//						moduleHeaderLabel.setText(root.getName());
-//						tree.setSelectedItem(standardMap, false);
-//						standardMap.setState(true, false);
-//					}
-				}
-			}
-		});
-	}
-	
-	private void selectItem(SelectModuleItem o) {
-		Place place = null;
-		switch(o.getType()) {
-		default:
-		case ROOT:
-			place = new TreeModulePlace("0");
-			break;
-		case SCO:
-			place = new ViewModulePlace(o.getID());
-			break;
-		case MODULE:
-			//place = new SelectModulePlace(o.getID());
-			place = new TreeModulePlace(o.getID());
-			break;
-		case FOLDER:
-			place = new TreeModulePlace(o.getID());
-			break;
-		}
-		
-		if (place != null) {
-			this.presenter.goTo(place);
-		}
-	}
-	
-//	@UiHandler("fullBtn")
-//	void onFull(ClickEvent ev) {
-//		System.err.println("Full = "+fullBtn.getValue());
-//		if(fullBtn.getValue())
-//			gwtfullscreen.Fullscreen.requestFullscreen(true);
-//		else 
-//			gwtfullscreen.Fullscreen.exitFullscreen();
-//	}
+	HeaderView header;
 	
 	private List<SelectModuleItem> list;
 
 	@UiField(provided=true) String pfx;
-
-	private TreeItem standardMap;
 	
 	static String getFaviconUrl() {
 		return "url('"+
@@ -454,26 +288,21 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	}
 
 	@Inject
-	public TreeModuleViewNumworx(HeaderView headerView) {
+	public TreeModuleViewNumworx(HeaderView headerView, NavigationViewNumworx navigationView) {
 		HorizontalCellListResources cellResources;
 		cellResources = GWT.create(HorizontalCellListResources.class);
-		cells = new CellList<SelectModuleItem>(new NavCell(), cellResources);
-		cells.setSelectionModel(new SingleSelectionModel<SelectModuleItem>(keyprovider));
-		cells.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
-		cells.addStyleName(cellResources.cellListStyle().navCellList());
 		tiles = new CellList<SelectModuleItem>(new TileCell(), cellResources);
 		tiles.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 		tiles.addStyleName(cellResources.cellListStyle().tileCellList());
-		SingleSelectionModel<SelectModuleItem> model = new SingleSelectionModel<SelectModuleItem>(keyprovider);
-		tiles.setSelectionModel(model);
 		pfx = r("");
 		header = headerView;
-		
+		westPanel = navigationView;
 		initWidget(uiBinder.createAndBindUi(this));
+
+		SingleSelectionModel<SelectModuleItem> model = new SingleSelectionModel<SelectModuleItem>(westPanel.keyprovider);
+		tiles.setSelectionModel(model);
+
 		root.forceLayout();
-// tree stuff		
-		standardMap = new TreeItem(toSafeHTML(Text.constants.standaardModules()));
-		standardMap.setState(true);
 // Strategy stuff desktop/tablet
 		selectStrategy();
 	}
@@ -498,14 +327,14 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	
 	class ListNavStrategy implements NavStrategy {
 		ListNavStrategy() {
-			tree.removeFromParent();
+			westPanel.showCells();
 		}
 	}
 	
 	class TreeNavStrategy implements NavStrategy {
 		TreeNavStrategy() {
-			cells.removeFromParent();
-			root.setWidgetSize(westPanel, 300);
+			westPanel.showTree();
+			//root.setWidgetSize(westPanel, 300);
 		}
 	}
 	
@@ -549,8 +378,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		
 		
 		this.list = currentModel;
-		cells.setRowData(massage(list));
-		cells.redraw();
+		westPanel.cells.setRowData(massage(list));
+		westPanel.cells.redraw();
 		
 		//Scheduler.get().scheduleDeferred(cmd);
 		// Slow get all stuff;
@@ -573,7 +402,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				});
 
 		if(nieuw)
-			initTree();
+			westPanel.initTree(currentModel);
 	}
 
 	Promise<List<SelectModuleItem>> getChildrenPromise(final SelectModuleItem parent) {
@@ -633,21 +462,21 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	public void selectModule(SelectModuleItem item) {
 		this.selection = item;
 		((SetSelectionModel<?>) tiles.getSelectionModel()).clear();
-		keyprovider.tiles = Collections.emptyList();
-		tiles.setRowData(keyprovider.tiles);
+		tiles.setRowData(Collections.emptyList());
 		boolean hasImage = item.getImage() != null;
+		westPanel.selectModule(item);
 		switch(item.getType()) {
 		case ROOT:
 			header.setUpPlace(header.getHomePlace());
 			title.setText(item.getName());
 			description.setWidget(getLabel(item));
-				favIcon.setVisible(false);
-				centerPanel.setStyleName(style.centerBackground(), true);
-				centerPanel.setStyleName(style.folderBackground(), false);
-				((SetSelectionModel<?>) cells.getSelectionModel()).clear();
+			favIcon.setVisible(false);
+			centerPanel.setStyleName(style.centerBackground(), true);
+			centerPanel.setStyleName(style.folderBackground(), false);
+			((SetSelectionModel<?>) westPanel.cells.getSelectionModel()).clear();
 			break;
 		case SEARCH:
-			((SetSelectionModel<?>) cells.getSelectionModel()).clear();
+			((SetSelectionModel<?>) westPanel.cells.getSelectionModel()).clear();
 		case FOLDER:
 				title.setText(item.getName());
 				String url = (hasImage) ? item.getImage(): r("images/courses/2.png");
@@ -658,9 +487,9 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				centerPanel.setStyleName(style.centerBackground(), false);
 				description.setWidget(getLabel(item));
 				if(item.showChildren())
-				{	TreeItem parent = inverseMap.get(item);
+				{	TreeItem parent = westPanel.inverseMap.get(item);
 					getChildrenPromise(item)
-					.then(new ProvideTreeItems(parent))
+					.then(westPanel.new ProvideTreeItems(parent))
 					.then(new ProvideCells());
 				}	
 
@@ -679,10 +508,10 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				centerPanel.setStyleName(style.centerBackground(), false);
 				centerPanel.setStyleName(style.folderBackground(), !hasImage);
 				if(item.showChildren())
-				{	TreeItem parent = inverseMap.get(item);
+				{	TreeItem parent = westPanel.inverseMap.get(item);
 					Promise<List<SelectModuleItem>> p = getScosPromise(item);
 					if(!item.isExam())
-						p.then(new ProvideTreeItems(parent));
+						p.then(westPanel.new ProvideTreeItems(parent));
 					p.then(new ProvideCells());
 				}
 				favIcon.getParent().setStyleName(style.faviconOFF(), !isLabel(item));
@@ -730,6 +559,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		}
 		return w;
 	}
+
 	@Override
 	public void close() {
 		// TODO Auto-generated method stub
@@ -738,13 +568,10 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 	GotoController presenter;
 
-	private String SCHOOL_MODULES;
-	private TreeItem schoolMap;
-	private Map<SelectModuleItem,TreeItem> inverseMap = new HashMap<SelectModuleItem, TreeItem>();
-
 	@Override
 	public void setPresenter(GotoController presenter) {
 		this.presenter = presenter;
+		westPanel.presenter = presenter;
 	}
 
 	@Override
@@ -777,13 +604,13 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 						// try numeric first
 						int sconr = Integer.parseInt(ref)-1;
 						SelectModuleItem is = children.get(sconr);
-						selectItem(is);
+						westPanel.selectItem(is);
 					} catch (Exception ex) {
 						for (Iterator<SelectModuleItem> iterator = children.iterator(); iterator.hasNext();) {
 							SelectModuleItem is = iterator.next();
 							if(is.getName().startsWith(ref))
 							{
-								selectItem(is);
+								westPanel.selectItem(is);
 								break;
 							}
 						}
@@ -798,72 +625,6 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		presenter.goTo(new ReloginPlace());
 	}
 
-	//================================================================================
-    // Init and format the tree and cells
-    //================================================================================
-	
-	private void initTree()
-	{
-		List<SelectModuleItem> model = this.list;
-		ArrayList<SelectModuleItem> schoolModel = new ArrayList<SelectModuleItem>(model.size());
-		ArrayList<SelectModuleItem> standardModel = new ArrayList<SelectModuleItem>(model.size());
-		Object schoolName = "school";
-		if(DWOplayer.withUser() && DWOplayer.clientfactory.getSchool() != null)
-			schoolName = DWOplayer.clientfactory.getSchool().getSchoolName();
-		SCHOOL_MODULES = Text.constants.schoolModules() + schoolName;
-		schoolMap = new TreeItem(toSafeHTML(SCHOOL_MODULES));
-		schoolMap.setState(true);
-		standardMap.removeItems();
-		tree.removeItems();
-		inverseMap.clear();
-		for (SelectModuleItem item : model)
-		{
-			
-			TreeItem treeItem = getTreeItem(item);
-			treeItem.setUserObject(item);
-			inverseMap.put(item, treeItem);
-			(item.isFromSchool() ? schoolModel : standardModel).add(item);
-			(item.isFromSchool() ? schoolMap : standardMap).addItem(treeItem);
-			
-			if(item.getChildren() != null)
-				initTree(item.getChildren(), treeItem, true);
-		}
-		if(standardMap.getChildCount() != 0) {
-			standardMap.setState(true);
-			tree.addItem(standardMap);
-		}
-		if(schoolMap.getChildCount() != 0) {
-			schoolMap.setState(true);
-			tree.addItem(schoolMap);
-		}
-	}
-
-	private SafeHtml toSafeHTML(String string) {
-		return new SafeHtmlBuilder().
-				appendHtmlConstant("<span class='"+style.treeItem()+"'>").
-				appendEscaped(string).
-				appendHtmlConstant("</span>").
-				toSafeHtml();
-	}
-
-	private void initTree(List<SelectModuleItem> model, TreeItem tree, boolean open) {
-//		sort(model);
-		tree.removeItems(); // the tree should be empty, but it is not always. NPE HERE, tree = null?
-		for (SelectModuleItem item : model)
-		{
-			TreeItem treeItem = getTreeItem(item);
-			treeItem.setUserObject(item);
-			inverseMap.put(item, treeItem);
-			tree.addItem(treeItem);	
-			if(item.getChildren() != null)
-				initTree(item.getChildren(), treeItem, false);
-		}
-		tree.setState(open);
-	}
-
-	private TreeItem getTreeItem(SelectModuleItem item) {
-		return new TreeItem(toSafeHTML(item.getName()));
-	}
 
 	public int compare(SelectModuleItem o1, SelectModuleItem o2) {
 		boolean b1 = o1.isFromSchool();
