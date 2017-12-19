@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.ui.ConfirmDialogEvent;
@@ -12,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
@@ -155,55 +155,60 @@ public class AddStudentsPresenter implements SchoolClassDialogEventHandler {
      */
     public void addNewStudents() {
         for (AddStudentsPresenter.StudentItem item : studentItems) {
-            if (item.spare == false) {
-                LOG.log(Level.INFO, "Adding  " + item.usercode + " to targetSchoolClass " + schoolClass.getSchoolClassName());
-                Promise<Boolean> promise;
-                final AddStudentsPresenter.StudentItem fItem = item;
+            addNewStudent(item);
+        }
+    }
 
-                DomSingleSchoolStudent student = new DomSingleSchoolStudent();
-                student.setGivenName(item.givenName);
-                student.setInsertion(item.insertion);
-                student.setFamilyName(item.familyName);
-                student.setPassword(MD5.md5(item.password));
-                student.setUserName(item.usercode);
-                student.setEmail(item.email);
-                student.setSingleSchool(true);
+    @JsMethod
+    public void addNewStudent(AddStudentsPresenter.StudentItem item) {
+        if (item.spare == false) {
+            LOG.log(Level.INFO, "Adding  " + item.usercode + " to targetSchoolClass " + schoolClass.getSchoolClassName());
+            Promise<Boolean> promise;
+            final AddStudentsPresenter.StudentItem fItem = item;
 
-                DomNewSingleSchoolStudent newStudent = new DomNewSingleSchoolStudent();
-                newStudent.setDomSingleSchoolStudent(student);
-                newStudent.setDomSchoolClass(schoolClass);
+            DomSingleSchoolStudent student = new DomSingleSchoolStudent();
+            student.setGivenName(item.givenName);
+            student.setInsertion(item.insertion);
+            student.setFamilyName(item.familyName);
+            student.setPassword(MD5.md5(item.password));
+            student.setUserName(item.usercode);
+            student.setEmail(item.email);
+            student.setSingleSchool(true);
 
-                promise = manager.submitSingleSchoolStudent(newStudent);
-                // onSuccess update view
-                promise.then(new Success<Boolean, Void>() {
-                    @Override
-                    public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                        if (resolved.getValue().booleanValue() == true) {
+            DomNewSingleSchoolStudent newStudent = new DomNewSingleSchoolStudent();
+            newStudent.setDomSingleSchoolStudent(student);
+            newStudent.setDomSchoolClass(schoolClass);
+
+            promise = manager.submitSingleSchoolStudent(newStudent);
+            // onSuccess update view
+            promise.then(new Success<Boolean, Void>() {
+                @Override
+                public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                    if (resolved.getValue().booleanValue() == true) {
 //                        if (index % 10 == 0 || index == cnt) {
-                            studentItems.remove(item);
-                            updateViewData(schoolClass);
+                        studentItems.remove(item);
+                        updateViewData(schoolClass);
 //                        }
-                        } else {
+                    } else {
 //                        studentItems.get(fItem.key).spare = true;
-                        }
-                        return null;
                     }
-                },
-                        new Failure() {
-                    @Override
-                    public void fail(Promise<?> resolved) throws Exception {
-                        Throwable fail = resolved.getFailure();
-                        if (fail instanceof Dwo2Exception) {
-                            LOG.log(Level.SEVERE, fail.getMessage());
-                            eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
-                        } else {
-                            LOG.log(Level.SEVERE, fail.getMessage());
-                            eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-                            //throw directly
-                        }
+                    return null;
+                }
+            },
+                    new Failure() {
+                @Override
+                public void fail(Promise<?> resolved) throws Exception {
+                    Throwable fail = resolved.getFailure();
+                    if (fail instanceof Dwo2Exception) {
+                        LOG.log(Level.SEVERE, fail.getMessage());
+                        eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    } else {
+                        LOG.log(Level.SEVERE, fail.getMessage());
+                        eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                        //throw directly
                     }
-                });
-            }
+                }
+            });
         }
     }
 
