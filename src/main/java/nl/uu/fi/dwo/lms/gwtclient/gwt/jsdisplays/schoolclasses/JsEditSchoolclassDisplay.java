@@ -26,5 +26,5 @@ public class JsEditSchoolclassDisplay{
     /** Clears all the edit schoolclass  field of its value. */
     public static native void init();
     /**  Sets the values for the dialog */
-    public static native void showDialog(String name, Boolean showTree, Boolean hasRegKey, String regKey);
+    public static native void showDialog(String name, boolean showTree, boolean hasRegKey, String regKey);
 }

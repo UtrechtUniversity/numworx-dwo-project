@@ -10,17 +10,17 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 public class JsEditSchoolclassView implements EditSchoolclassPresenter.Display{
     @Override
     public void clear() {
-        JsAddSchoolclassDisplay.clear();
+        JsEditSchoolclassDisplay.clear();
     }
 
     @Override
     public void init() {
-        JsAddSchoolclassDisplay.init();
+        JsEditSchoolclassDisplay.init();
     }
 
     @Override
     public void showDialog(String name, Boolean showTree, Boolean hasRegKey, String regKey, boolean edit) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JsEditSchoolclassDisplay.showDialog(name, true, true, regKey);
     }
 
 }
