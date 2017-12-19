@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
@@ -40,10 +41,15 @@ public class SchoolclassesPresenter {
     private Display view;
 
     public interface Display {
+
         void clear();
+
         void init();
+
         void updateView(Map<String, SchoolclassesPresenter.ClassItem> data);
+
         void setEmptyTableMessage();
+
         void setLoadingTableMessage();
     }
 
@@ -90,7 +96,6 @@ public class SchoolclassesPresenter {
 //    		};
 //    	$wnd.DwoSchoolclassesPresenter = apis;
 //    }-*/;
-
     public SchoolclassesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
@@ -127,7 +132,7 @@ public class SchoolclassesPresenter {
                 for (DomSchoolClass sc : resolved.getValue()) {
                     schoolClassMap.put(sc.getId().getIdString(), sc);
                     viewData.put(sc.getId().getIdString(), new ClassItem(sc.getId().getIdString(), sc.getSchoolClassName()));
-  //                  json.put(sc.getId().getIdString(), new JSONString (sc.getSchoolClassName()));
+                    //                  json.put(sc.getId().getIdString(), new JSONString (sc.getSchoolClassName()));
                 }
 //                view.updateJSView(json.getJavaScriptObject());
                 view.updateView(viewData);
@@ -224,46 +229,55 @@ public class SchoolclassesPresenter {
     public void selectItem(ClassItem item, int op) {
         switch (op) {
             case 1:
-                editSchoolClass(item);
+                editSchoolClass(item.key);
                 break;
             case 2:
-                editModules(item);
+                editModules(item.key);
                 break;
             case 3:
-                editStudents(item);
+                editStudents(item.key);
                 break;
             case 4:
-                editTeachers(item);
+                editTeachers(item.key);
                 break;
             case 5:
-                removeSchoolClass(schoolClassMap.get(item.key));
+                removeSchoolClass(item.key);
                 break;
             default:
                 throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 
-    void addSchoolClass() {
+    @JsMethod
+    public void addSchoolClass() {
         eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.AddSchoolClass, new DomSchoolClass()));
     }
 
-    void editSchoolClass(ClassItem item) {
-        eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.EditSchoolClass, schoolClassMap.get(item.key)));
+    @JsMethod
+    public void editSchoolClass(String key) {
+        eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.EditSchoolClass, schoolClassMap.get(key)));
     }
 
-    void editStudents(ClassItem item) {
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS, schoolClassMap.get(item.key)));
+    @JsMethod
+    public void editStudents(String key) {
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS, schoolClassMap.get(key)));
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    void editTeachers(ClassItem item) {
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.TEACHERSINSCHOOLCLASS, schoolClassMap.get(item.key)));
+    @JsMethod
+    public void editTeachers(String key) {
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.TEACHERSINSCHOOLCLASS, schoolClassMap.get(key)));
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    void editModules(ClassItem item) {
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.COURSESOFSCHOOLCLASS, schoolClassMap.get(item.key)));
+    @JsMethod
+    public void editModules(String key) {
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.COURSESOFSCHOOLCLASS, schoolClassMap.get(key)));
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @JsMethod
+    public void removeSchoolClass(String key) {
+        removeSchoolClass(schoolClassMap.get(key));
+    }
 }

@@ -8,7 +8,13 @@ import jsinterop.annotations.JsType;
  * WelcomeDisplay UI interface. the interface should be
  * available as a JavaScript object named "jsSchoolClassesDisplay".
  * 
- * The callback is
+ * The callbacks are:
+ * 
+ *  public void addSchoolClass(); //switches to addSchoolClass panel
+ *  public void editSchoolClass(String key); switches to the panel.
+ *  public void editStudents(String key); switches to the panel.
+ *  public void editTeachers(String key); switches to the panel.
+ *  public void removeSchoolClass(String key); switches to the panel.
  * 
  * @author G.A.J. van der Plas
  */
