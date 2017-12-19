@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.ui.ConfirmDialogEvent;
 import fi.dwo.gwt.lib.rest.ui.ConfirmDialogPromise;
@@ -13,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
@@ -162,6 +162,7 @@ public class StudentsInSchoolclassPresenter {
 
     }
 
+        @JsMethod
     public void updateSchoolClasses() {
         Promise<List<DomSchoolClass>> promise;
         promise = manager.getTeachersSchoolClasses();
@@ -205,6 +206,7 @@ public class StudentsInSchoolclassPresenter {
      * @param item
      * @param op
      */
+    @JsMethod
     public void selectItem(StudentsInSchoolclassPresenter.StudentItem item, int op) {
         switch (op) {
             case 4:
@@ -222,10 +224,13 @@ public class StudentsInSchoolclassPresenter {
         }
     }
 
+    @JsMethod
+    
     void addStudents() {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDSTUDENTS, schoolClass));
     }
 
+    @JsMethod    
     void goBackToSchoolClasses() {
    eventBus.fireEvent (new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
     }
@@ -235,6 +240,7 @@ public class StudentsInSchoolclassPresenter {
      *
      * @param classKey
      */
+    @JsMethod    
     public void addSelectedToSchoolClass(String classKey) {
         DomSchoolClass targetSchoolClass = schoolClassMap.get(classKey);
         final int cnt;
@@ -293,7 +299,7 @@ public class StudentsInSchoolclassPresenter {
 
     }
 
-    
+    @JsMethod    
     public void removeSelectedFromSchoolClass(){
         ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure, there may be unimported students.");
         p.getPromise().then(new Success<Boolean, Void>() {
@@ -325,7 +331,7 @@ public class StudentsInSchoolclassPresenter {
         eventBus.fireEvent(new ConfirmDialogEvent(ConfirmDialogEvent.EventType.ConfirmDialog, p));
     }
     
-    private void removeStudentsFromSchoolClass() {
+   private void removeStudentsFromSchoolClass() {
         DomSchoolClass targetSchoolClass = schoolClass;
         final int cnt;
         int tmp = 0;
@@ -381,7 +387,7 @@ public class StudentsInSchoolclassPresenter {
         }
     }
 
-    
+    @JsMethod    
     void removeSelectedSingleSchoolStudentsFromSchool() {
         ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure, there may be unimported students.");
         p.getPromise().then(new Success<Boolean, Void>() {
@@ -470,6 +476,7 @@ public class StudentsInSchoolclassPresenter {
         }
     }
     
+    @JsMethod
     public void addNewStudents(){
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDSTUDENTS,schoolClass));
 //        https://svn.science.uu.nl/viewvc/project.fisme.java/StatistiekGWT/trunk/src/fi/statistiekgwt/client/StatTable.java?view=markup

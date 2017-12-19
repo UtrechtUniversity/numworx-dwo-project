@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import java.util.Map;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsResultsDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 
 /**
@@ -10,7 +11,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
  * 
  * @author G.A.J. van der Plas
  */
-public class JsSchoolClasssesView implements SchoolclassesPresenter.Display{
+public class JsSchoolClassesView implements SchoolclassesPresenter.Display{
     @Override
     public void clear() {
         JsSchoolClassesDisplay.clear();
@@ -28,6 +29,16 @@ public class JsSchoolClasssesView implements SchoolclassesPresenter.Display{
             object.put(item.getKey(), new JSONString(item.getSchoolclassName()));
         }
         JsSchoolClassesDisplay.updateView(object.getJavaScriptObject());
+    }
+
+    @Override
+        public void setEmptyTableMessage() {
+        JsResultsDisplay.setEmptyTableMessage();
+    }
+
+    @Override
+        public void setLoadingTableMessage() {
+        JsResultsDisplay.setLoadingTableMessage();
     }
 
 

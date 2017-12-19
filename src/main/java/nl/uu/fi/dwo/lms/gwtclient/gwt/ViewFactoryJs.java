@@ -13,7 +13,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.login.JsLoginView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMainView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsMsgDialogView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsSchoolClasssesView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsSchoolClassesView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.roleswitch.JsSwitchSchoolView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.welcome.JsWelcomeView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView;
@@ -74,7 +74,7 @@ public class ViewFactoryJs implements ViewFactory {
         accountView = new JsAccountView();
         welcomeView = new JsWelcomeView();
         //ordered!
-        schoolclassesView = new JsSchoolClasssesView();
+        schoolclassesView = new JsSchoolClassesView();
         addSchoolclassView = new AddSchoolclassView(pf.getAddSchoolclassPresenter());
         coursesOfSchoolclassView = new CoursesOfSchoolclassView(pf.getCoursesOfSchoolclassPresenter());
         studentsInSchoolclassView = new StudentsInSchoolclassView(pf.getStudentsInSchoolclassPresenter());

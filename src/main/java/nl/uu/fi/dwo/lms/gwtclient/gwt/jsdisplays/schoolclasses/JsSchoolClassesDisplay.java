@@ -25,4 +25,10 @@ public class JsSchoolClassesDisplay{
      * @param data a map with a string as key and value ClassItem. */
 //    public static native void updateView(Map<String, SchoolclassesPresenter.ClassItem> data);    
     public static native void updateView(JavaScriptObject data);    
+        /** setEmptyTableMessage show an indicator that the table is empty.
+     */
+    public static native void setEmptyTableMessage();
+    /** setEmptyTableMessage show an indicator that we are fetching data.
+     */
+    public static native void setLoadingTableMessage();
 }

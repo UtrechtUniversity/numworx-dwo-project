@@ -4,8 +4,8 @@ import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
 /**
- * AddSchoolclassDisplay UI interface. the interface should be
- * available as a JavaScript object named "jsAddSchoolclassDisplay".
+ * EditSchoolclassDisplay UI interface. the interface should be
+ * available as a JavaScript object named "JsEditSchoolclassDisplay".
  * 
  * There are two relevant presenter functions.
  * 
@@ -21,9 +21,9 @@ import jsinterop.annotations.JsType;
  */
 @JsType(isNative = true, name = "JsEditSchoolclassDisplay", namespace = JsPackage.GLOBAL)
 public class JsEditSchoolclassDisplay{
-    /** Clears all the add schoolclass fields of their values. */
+    /** Clears all the edit schoolclass fields of their values. */
     public static native void clear();
-    /** Clears all the add schoolclass  field of its value. */
+    /** Clears all the edit schoolclass  field of its value. */
     public static native void init();
     /**  Sets the values for the dialog */
     public static native void showDialog(String name, Boolean showTree, Boolean hasRegKey, String regKey);

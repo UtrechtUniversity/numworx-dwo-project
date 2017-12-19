@@ -46,6 +46,16 @@ public class SchoolclassesView extends Composite implements ClickHandler, Select
 
     private static final Logger LOG = Logger.getLogger(SchoolclassesView.class.getName());
 
+    @Override
+    public void setEmptyTableMessage() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setLoadingTableMessage() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     interface MyUiBinder extends UiBinder<Widget, SchoolclassesView> {
     }
     private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);

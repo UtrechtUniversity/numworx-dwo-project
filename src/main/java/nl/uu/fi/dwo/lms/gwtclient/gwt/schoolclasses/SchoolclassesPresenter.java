@@ -43,7 +43,8 @@ public class SchoolclassesPresenter {
         void clear();
         void init();
         void updateView(Map<String, SchoolclassesPresenter.ClassItem> data);
-//        void updateJSView(JSONObject object);
+        void setEmptyTableMessage();
+        void setLoadingTableMessage();
     }
 
     public class ClassItem {
