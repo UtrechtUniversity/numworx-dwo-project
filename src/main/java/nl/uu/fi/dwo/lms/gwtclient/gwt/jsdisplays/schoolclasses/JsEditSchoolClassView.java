@@ -7,7 +7,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
  * 
  * @author G.A.J. van der Plas
  */
-public class JsEditSchoolclassView implements EditSchoolclassPresenter.Display{
+public class JsEditSchoolClassView implements EditSchoolclassPresenter.Display{
     @Override
     public void clear() {
         JsEditSchoolclassDisplay.clear();

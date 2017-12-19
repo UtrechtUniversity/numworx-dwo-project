@@ -181,7 +181,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the addSchoolclassPresenter
      */
-//    @JsMethod    
+    @JsMethod    
     public AddSchoolclassPresenter getAddSchoolclassPresenter() {
         return addSchoolclassPresenter;
     }
@@ -189,7 +189,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the addSchoolclassPresenter
      */
-//    @JsMethod    
+    @JsMethod    
     public EditSchoolclassPresenter getEditSchoolclassPresenter() {
         return editSchoolclassPresenter;
     }
@@ -197,7 +197,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the editStudentPresenter
      */
-//    @JsMethod    
+    @JsMethod    
     public EditStudentPresenter getEditStudentPresenter() {
         return editStudentPresenter;
     }
@@ -221,7 +221,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the teachersInSchoolclassPresenter
      */
-//    @JsMethod    
+    @JsMethod    
     public TeachersInSchoolclassPresenter getTeachersInSchoolclassPresenter() {
         return teachersInSchoolclassPresenter;
     }
@@ -229,7 +229,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the addStudentsPresenter
      */
-//    @JsMethod    
+    @JsMethod    
     public AddStudentsPresenter getAddStudentsPresenter() {
         return addStudentsPresenter;
     }

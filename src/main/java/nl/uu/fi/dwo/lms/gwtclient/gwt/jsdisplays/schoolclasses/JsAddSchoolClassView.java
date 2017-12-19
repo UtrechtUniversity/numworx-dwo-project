@@ -7,7 +7,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
  * 
  * @author G.A.J. van der Plas
  */
-public class JsAddSchoolclassView implements AddSchoolclassPresenter.Display{
+public class JsAddSchoolClassView implements AddSchoolclassPresenter.Display{
     @Override
     public void clear() {
         JsAddSchoolclassDisplay.clear();
