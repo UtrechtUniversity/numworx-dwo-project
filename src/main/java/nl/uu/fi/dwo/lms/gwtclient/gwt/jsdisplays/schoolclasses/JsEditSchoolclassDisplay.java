@@ -11,7 +11,7 @@ import jsinterop.annotations.JsType;
  * 
  * To add a new school class:
  * 
- * public void AddAndBack(String name, Boolean showTree, Boolean hasRegKey, String regKey) {
+ * public void updateAndBack(String name, Boolean showTree, Boolean hasRegKey, String regKey)
  * 
  * and to go back without adding a school class.
  * 

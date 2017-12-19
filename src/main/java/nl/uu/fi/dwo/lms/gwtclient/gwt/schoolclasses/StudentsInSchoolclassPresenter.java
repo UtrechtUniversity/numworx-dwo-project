@@ -46,7 +46,6 @@ public class StudentsInSchoolclassPresenter {
     private Display view;
     private int requests = 0;
 
-
     public interface Display {
 
         void clear();
@@ -56,7 +55,9 @@ public class StudentsInSchoolclassPresenter {
         void updateView(Map<String, StudentsInSchoolclassPresenter.StudentItem> data);
 
         void updateSchoolClassList(List<SchoolClassListBoxItem> data);
+
         void setEmptyTableMessage();
+
         void setLoadingTableMessage();
     }
 
@@ -112,6 +113,11 @@ public class StudentsInSchoolclassPresenter {
         updateSchoolClasses();
     }
 
+    @JsMethod
+    public void updateViewData(){
+        updateViewData(schoolClass);
+    }
+    
     private void updateViewData(DomSchoolClass sc) {
         view.clear();
         Promise<List<DomStudent>> promise;
@@ -162,7 +168,7 @@ public class StudentsInSchoolclassPresenter {
 
     }
 
-        @JsMethod
+    @JsMethod
     public void updateSchoolClasses() {
         Promise<List<DomSchoolClass>> promise;
         promise = manager.getTeachersSchoolClasses();
@@ -206,7 +212,6 @@ public class StudentsInSchoolclassPresenter {
      * @param item
      * @param op
      */
-    @JsMethod
     public void selectItem(StudentsInSchoolclassPresenter.StudentItem item, int op) {
         switch (op) {
             case 4:
@@ -225,14 +230,27 @@ public class StudentsInSchoolclassPresenter {
     }
 
     @JsMethod
-    
-    void addStudents() {
+    public void editItem(String key) {
+        StudentsInSchoolclassPresenter.StudentItem item = studentItems.get(key);
+        if (item.singleSchool) {
+            LOG.log(Level.INFO, "editable item " + item.usercode);
+            eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.EditStudent, studentMap.get(item.key), schoolClass));
+        }
+    }
+
+    @JsMethod
+    public void selectItem(String key) {
+        studentItems.get(key).selected = !studentItems.get(key).selected;
+    }
+
+    @JsMethod
+    public void goAddStudents() {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDSTUDENTS, schoolClass));
     }
 
-    @JsMethod    
-    void goBackToSchoolClasses() {
-   eventBus.fireEvent (new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+    @JsMethod
+    public void goBackToSchoolClasses() {
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
     }
 
     /**
@@ -240,7 +258,7 @@ public class StudentsInSchoolclassPresenter {
      *
      * @param classKey
      */
-    @JsMethod    
+    @JsMethod
     public void addSelectedToSchoolClass(String classKey) {
         DomSchoolClass targetSchoolClass = schoolClassMap.get(classKey);
         final int cnt;
@@ -269,7 +287,7 @@ public class StudentsInSchoolclassPresenter {
                 // onSuccess update view
                 promise.then(new Success<Boolean, Void>() {
                     @Override
-        public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                    public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                         if (resolved.getValue().booleanValue() == true) {
                             studentItems.get(fItem.key).selected = false;
                             if (index % 10 == 0 || index == cnt) {
@@ -281,7 +299,7 @@ public class StudentsInSchoolclassPresenter {
                 },
                         new Failure() {
                     @Override
-        public void fail(Promise<?> resolved) throws Exception {
+                    public void fail(Promise<?> resolved) throws Exception {
                         Throwable fail = resolved.getFailure();
                         if (fail instanceof Dwo2Exception) {
                             LOG.log(Level.SEVERE, fail.getMessage());
@@ -299,8 +317,8 @@ public class StudentsInSchoolclassPresenter {
 
     }
 
-    @JsMethod    
-    public void removeSelectedFromSchoolClass(){
+    @JsMethod
+    public void removeSelectedFromSchoolClass() {
         ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure, there may be unimported students.");
         p.getPromise().then(new Success<Boolean, Void>() {
             @Override
@@ -308,7 +326,7 @@ public class StudentsInSchoolclassPresenter {
                 LOG.log(Level.INFO, "returned value" + resolved.getValue());
                 if (resolved.getValue() == true) {
                     removeStudentsFromSchoolClass();
-                }else{
+                } else {
                     //do nothing.
                 }
                 return null;
@@ -327,11 +345,11 @@ public class StudentsInSchoolclassPresenter {
                 }
             }
         }
-        );    
+        );
         eventBus.fireEvent(new ConfirmDialogEvent(ConfirmDialogEvent.EventType.ConfirmDialog, p));
     }
-    
-   private void removeStudentsFromSchoolClass() {
+
+    private void removeStudentsFromSchoolClass() {
         DomSchoolClass targetSchoolClass = schoolClass;
         final int cnt;
         int tmp = 0;
@@ -358,7 +376,7 @@ public class StudentsInSchoolclassPresenter {
                 // onSuccess update view
                 promise.then(new Success<Boolean, Void>() {
                     @Override
-        public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                    public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                         if (resolved.getValue().booleanValue() == true) {
                             studentItems.get(fItem.key).selected = false;
                             if (index % 10 == 0 || index == cnt) {
@@ -370,7 +388,7 @@ public class StudentsInSchoolclassPresenter {
                 },
                         new Failure() {
                     @Override
-        public void fail(Promise<?> resolved) throws Exception {
+                    public void fail(Promise<?> resolved) throws Exception {
                         Throwable fail = resolved.getFailure();
                         if (fail instanceof Dwo2Exception) {
                             LOG.log(Level.SEVERE, fail.getMessage());
@@ -387,7 +405,7 @@ public class StudentsInSchoolclassPresenter {
         }
     }
 
-    @JsMethod    
+    //@JsMethod currently unused.
     void removeSelectedSingleSchoolStudentsFromSchool() {
         ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure, there may be unimported students.");
         p.getPromise().then(new Success<Boolean, Void>() {
@@ -396,7 +414,7 @@ public class StudentsInSchoolclassPresenter {
                 LOG.log(Level.INFO, "returned value" + resolved.getValue());
                 if (resolved.getValue() == true) {
                     removeSingleSchoolStudentsFromSchool();
-                }else{
+                } else {
                     //do nothing.
                 }
                 return null;
@@ -415,10 +433,10 @@ public class StudentsInSchoolclassPresenter {
                 }
             }
         }
-        );    
+        );
         eventBus.fireEvent(new ConfirmDialogEvent(ConfirmDialogEvent.EventType.ConfirmDialog, p));
     }
-    
+
     private void removeSingleSchoolStudentsFromSchool() {
         DomSchoolClass targetSchoolClass = schoolClass;
         final int cnt;
@@ -446,7 +464,7 @@ public class StudentsInSchoolclassPresenter {
                 // onSuccess update view
                 promise.then(new Success<Boolean, Void>() {
                     @Override
-        public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                    public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                         if (resolved.getValue().booleanValue() == true) {
                             studentItems.get(fItem.key).selected = false;
                             if (index % 10 == 0 || index == cnt) {
@@ -458,7 +476,7 @@ public class StudentsInSchoolclassPresenter {
                 },
                         new Failure() {
                     @Override
-        public void fail(Promise<?> resolved) throws Exception {
+                    public void fail(Promise<?> resolved) throws Exception {
                         Throwable fail = resolved.getFailure();
                         if (fail instanceof Dwo2Exception) {
                             LOG.log(Level.SEVERE, fail.getMessage());
@@ -471,15 +489,9 @@ public class StudentsInSchoolclassPresenter {
                     }
                 }
                 );
-            }else{
+            } else {
             }
         }
     }
-    
-    @JsMethod
-    public void addNewStudents(){
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDSTUDENTS,schoolClass));
-//        https://svn.science.uu.nl/viewvc/project.fisme.java/StatistiekGWT/trunk/src/fi/statistiekgwt/client/StatTable.java?view=markup
-//            above code for importing a file.
-    }
+
 }

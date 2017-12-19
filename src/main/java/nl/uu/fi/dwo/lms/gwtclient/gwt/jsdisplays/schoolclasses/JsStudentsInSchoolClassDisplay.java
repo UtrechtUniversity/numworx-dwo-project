@@ -8,7 +8,18 @@ import jsinterop.annotations.JsType;
  * WelcomeDisplay UI interface. the interface should be available as a
  * JavaScript object named "JsStudentsInSchoolClassDisplay".
  *
- * The callback is
+ * The callbacks are:
+ * 
+ *    public void updateViewData();// update the studenttable
+ *    public void updateSchoolClasses(); //update the schoolclasses lists
+ *    public void goAddStudents(); // calls switch to Add Student Panel
+ *    public void goBackToSchoolClasses(); // calls switch to SchoolClasses Panel
+ *    public void addSelectedToSchoolClass(String classKey); //Adds selected 
+ *                                          students to given classKey's class.
+ *    public void removeSelectedFromSchoolClass(); //removes selected students 
+ *                                                    from current schoolclass
+ *    public void editItem(String key); // call Switch to EditStudent and pass Object.
+ *    public void selectItem(String key); //Select/deselect item.
  *
  * @author G.A.J. van der Plas
  */
@@ -35,6 +46,14 @@ public class JsStudentsInSchoolClassDisplay {
      public static native void updateView(JavaScriptObject data);
 
     /**
+     * Fills the list view with the list of teachers. It requires a JSONObject
+     * with each field the item key, and a String for the student name as value.
+     *
+     * @param data a map with a string as key and value the full student name.
+     */
+     public static native void updateSchoolClasses(JavaScriptObject data);
+
+             /**
      * setEmptyTableMessage show an indicator that the table is empty.
      */
     public static native void setEmptyTableMessage();

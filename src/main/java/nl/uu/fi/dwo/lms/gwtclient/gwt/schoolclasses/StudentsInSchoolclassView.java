@@ -358,7 +358,7 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         if (event.getSource() == backBtn) {
             studentsInSchoolclassPresenter.goBackToSchoolClasses();
         } else if (event.getSource() == addStudentsBtn) {
-            studentsInSchoolclassPresenter.addStudents();
+            studentsInSchoolclassPresenter.goAddStudents();
         } else if (event.getSource() == removeSelectedBtn) {
             studentsInSchoolclassPresenter.removeSelectedFromSchoolClass();
         } else if (event.getSource() == addToSchoolClass) {

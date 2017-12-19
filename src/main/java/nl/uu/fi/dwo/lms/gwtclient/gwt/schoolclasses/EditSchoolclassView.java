@@ -58,8 +58,8 @@ public class EditSchoolclassView extends Composite implements EditSchoolclassPre
             dialogBox.hide();
             if(edit){
                 editSchoolClassPresenter.updateAndBack(schoolclassName.getText(), showTree.getValue(), setClassKey.getValue(), classKey.getValue());
-            }else{
-                editSchoolClassPresenter.addAndBack(schoolclassName.getText(), showTree.getValue(), setClassKey.getValue(), classKey.getValue());
+//            }else{
+//                editSchoolClassPresenter.addAndBack(schoolclassName.getText(), showTree.getValue(), setClassKey.getValue(), classKey.getValue());
             }
         } else if (event.getSource() == cancelButton) {
             LOG.log(Level.INFO, "Add schoolclass now");

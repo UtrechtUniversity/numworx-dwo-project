@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.ui.ConfirmDialogEvent;
 import fi.dwo.gwt.lib.rest.ui.ConfirmDialogPromise;
@@ -13,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
@@ -206,6 +206,7 @@ public class TeachersInSchoolclassPresenter {
      * @param item
      * @param op
      */
+    @JsMethod
     public void selectItem(TeachersInSchoolclassPresenter.TeacherItem item, int op) {
         switch (op) {
 //            case 3:
@@ -224,6 +225,7 @@ public class TeachersInSchoolclassPresenter {
         }
     }
 
+    @JsMethod
     void goBackToSchoolClasses() {
         if (teacherItems.size() != 0) {
             eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
@@ -260,6 +262,7 @@ public class TeachersInSchoolclassPresenter {
         }
     }
 
+     @JsMethod
     public void removeSelectedFromSchoolClass() {
         DomSchoolClass targetSchoolClass = schoolClass;
         final int cnt;
@@ -318,6 +321,7 @@ public class TeachersInSchoolclassPresenter {
         }
     }
 
+     @JsMethod
     void addTeacherToSchoolClass(String key) {
         DomTeacher targetTeacher = listBoxMap.get(key);
         DomSchoolClass targetSchoolClass = schoolClass;

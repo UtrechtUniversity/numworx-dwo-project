@@ -87,7 +87,7 @@ public class EditCoursesInSchoolclassPresenter {
         return tableHeaders;
     }
 
-    void goBackToSchoolClasses() {
+    public void goBackToSchoolClasses() {
    eventBus.fireEvent (new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
     }
 

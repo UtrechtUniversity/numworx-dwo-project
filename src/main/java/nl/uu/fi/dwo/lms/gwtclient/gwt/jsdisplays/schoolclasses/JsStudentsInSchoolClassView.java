@@ -41,7 +41,7 @@ public class JsStudentsInSchoolClassView implements StudentsInSchoolclassPresent
         for(SchoolClassListBoxItem item : data){
             object.put(item.getKey(), new JSONString(item.getSchoolclassName()));
         }
-        JsStudentsInSchoolClassDisplay.updateView(object.getJavaScriptObject());
+        JsStudentsInSchoolClassDisplay.updateSchoolClasses(object.getJavaScriptObject());
     }    
 
     @Override
