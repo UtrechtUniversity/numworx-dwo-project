@@ -295,9 +295,9 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_conclusion_critical();
 
   /**
-   * Translated "missing = Wat is het kritieke gebied? Voordat je dit hebt bepaald is het te vroeg om deze conclusie te trekken.".
+   * Translated "Wat is het kritieke gebied? Voordat je dit hebt bepaald is het te vroeg om deze conclusie te trekken.".
    * 
-   * @return translated "missing = Wat is het kritieke gebied? Voordat je dit hebt bepaald is het te vroeg om deze conclusie te trekken."
+   * @return translated "Wat is het kritieke gebied? Voordat je dit hebt bepaald is het te vroeg om deze conclusie te trekken."
    */
   @DefaultStringValue("Wat is het kritieke gebied? Voordat je dit hebt bepaald is het te vroeg om deze conclusie te trekken.")
   @Key("check.conclusion-critical: RejectionCritical missing")
@@ -493,6 +493,42 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_ha__value_mismatch();
 
   /**
+   * Translated "Dit is niet de juiste p-waarde bij de toetsingsgrootheid.".
+   * 
+   * @return translated "Dit is niet de juiste p-waarde bij de toetsingsgrootheid."
+   */
+  @DefaultStringValue("Dit is niet de juiste p-waarde bij de toetsingsgrootheid.")
+  @Key("check.p-value")
+  String check_p_value();
+
+  /**
+   * Translated "Om een p-waarde te bepalen, moet je eerst de toetsingsgrootheid berekenen.".
+   * 
+   * @return translated "Om een p-waarde te bepalen, moet je eerst de toetsingsgrootheid berekenen."
+   */
+  @DefaultStringValue("Om een p-waarde te bepalen, moet je eerst de toetsingsgrootheid berekenen.")
+  @Key("check.p-value: TestValue missing")
+  String check_p_value__TestValue_missing();
+
+  /**
+   * Translated "Bij welke hypotheses hoort deze p-waarde? Stel eerst hypotheses op.".
+   * 
+   * @return translated "Bij welke hypotheses hoort deze p-waarde? Stel eerst hypotheses op."
+   */
+  @DefaultStringValue("Bij welke hypotheses hoort deze p-waarde? Stel eerst hypotheses op.")
+  @Key("check.p-value: alternative hypothesis missing")
+  String check_p_value__alternative_hypothesis_missing();
+
+  /**
+   * Translated "Er is iets fout gegaan met de p-waarde. Vul deze nogmaals in.# TODO: kijken wat hier goede feedbacktekst is. ".
+   * 
+   * @return translated "Er is iets fout gegaan met de p-waarde. Vul deze nogmaals in.# TODO: kijken wat hier goede feedbacktekst is. "
+   */
+  @DefaultStringValue("Er is iets fout gegaan met de p-waarde. Vul deze nogmaals in.# TODO: kijken wat hier goede feedbacktekst is. ")
+  @Key("check.p-value: component is not of type relation")
+  String check_p_value__component_is_not_of_type_relation();
+
+  /**
    * Translated "De p-waarde is de overschrijdingskans. Heb je inderdaad een kans (een getal tussen 0 en 1) bepaald?".
    * 
    * @return translated "De p-waarde is de overschrijdingskans. Heb je inderdaad een kans (een getal tussen 0 en 1) bepaald?"
@@ -628,6 +664,42 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_test();
 
   /**
+   * Translated "De formule van de toetsingsgrootheid is niet correct.".
+   * 
+   * @return translated "De formule van de toetsingsgrootheid is niet correct."
+   */
+  @DefaultStringValue("De formule van de toetsingsgrootheid is niet correct.")
+  @Key("check.test-formula")
+  String check_test_formula();
+
+  /**
+   * Translated "Heb je alle variabelen in de formule gedefinieerd en gebruik je gangbare namen voor de variabelen?".
+   * 
+   * @return translated "Heb je alle variabelen in de formule gedefinieerd en gebruik je gangbare namen voor de variabelen?"
+   */
+  @DefaultStringValue("Heb je alle variabelen in de formule gedefinieerd en gebruik je gangbare namen voor de variabelen?")
+  @Key("check.test-formula: cannot solve")
+  String check_test_formula__cannot_solve();
+
+  /**
+   * Translated "Bepaal eerst beide kanten van de formule, voor je nakijkt.".
+   * 
+   * @return translated "Bepaal eerst beide kanten van de formule, voor je nakijkt."
+   */
+  @DefaultStringValue("Bepaal eerst beide kanten van de formule, voor je nakijkt.")
+  @Key("check.test-formula: component is not of type relation")
+  String check_test_formula__component_is_not_of_type_relation();
+
+  /**
+   * Translated "De formule van de toetsingsgrootheid is niet correct.".
+   * 
+   * @return translated "De formule van de toetsingsgrootheid is niet correct."
+   */
+  @DefaultStringValue("De formule van de toetsingsgrootheid is niet correct.")
+  @Key("check.test-formula: no match")
+  String check_test_formula__no_match();
+
+  /**
    * Translated "Bepaal je een t-waarde of een z-waarde?".
    * 
    * @return translated "Bepaal je een t-waarde of een z-waarde?"
@@ -637,6 +709,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_test_formula__test_mismatch();
 
   /**
+   * Translated "Dit is niet de juiste waarde van de toetsingsgrootheid.".
+   * 
+   * @return translated "Dit is niet de juiste waarde van de toetsingsgrootheid."
+   */
+  @DefaultStringValue("Dit is niet de juiste waarde van de toetsingsgrootheid.")
+  @Key("check.test-value")
+  String check_test_value();
+
+  /**
    * Translated "Bepaal zowel de variabelenaam als de waarde van de toetsingsgrootheid voor je nakijkt.".
    * 
    * @return translated "Bepaal zowel de variabelenaam als de waarde van de toetsingsgrootheid voor je nakijkt."
@@ -644,6 +725,24 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   @DefaultStringValue("Bepaal zowel de variabelenaam als de waarde van de toetsingsgrootheid voor je nakijkt.")
   @Key("check.test-value: component is not of type relation")
   String check_test_value__component_is_not_of_type_relation();
+
+  /**
+   * Translated "Dit is niet de juiste waarde van de toetsingsgrootheid.".
+   * 
+   * @return translated "Dit is niet de juiste waarde van de toetsingsgrootheid."
+   */
+  @DefaultStringValue("Dit is niet de juiste waarde van de toetsingsgrootheid.")
+  @Key("check.test-value: no match")
+  String check_test_value__no_match();
+
+  /**
+   * Translated "Bereken je een t-waarde of een z-waarde?".
+   * 
+   * @return translated "Bereken je een t-waarde of een z-waarde?"
+   */
+  @DefaultStringValue("Bereken je een t-waarde of een z-waarde?")
+  @Key("check.test-value: test mismatch")
+  String check_test_value__test_mismatch();
 
   /**
    * Translated "Dit is een geschikt significantieniveau.".
