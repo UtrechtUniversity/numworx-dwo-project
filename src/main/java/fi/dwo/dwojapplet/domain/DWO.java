@@ -2083,10 +2083,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 		scoContext.setImageData(imageData);
 		scoContext.setScoName(name);
 		scoContext.setDescription(description);
-		scoContext.setShowScore(showScore);
+		scoContext.setShowScore(!showScore); // reverse logic hier, of in de server?
 		scoContext.setAppletId(PersistentApplet.buildPersistenceId((long)appletConfig.getAppletID()));
 		scoContext.setCourseId(PersistentCourse.buildPersistenceId((long)course.getID()));
-		scoContext.setSequencenr((long)course.getScoList().length);
+		scoContext.setSequencenr((long)course.getScoList().length+1); // vanaf 1, niet vanaf 0
 		scoContext.setUrnId(appletConfig.getImageSource());
 // scodata
 		final String launchdata = appletConfig.getLaunchdata();
