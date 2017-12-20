@@ -125,7 +125,15 @@ class ScoMapper extends XmlRpcMapper {
         cachemap.clear();
     }
 
-    /**
+    
+    @Override
+	public Object get(int oid) throws IOException, XmlRpcException, SQLException {
+		if (!objects.containsKey(Integer.valueOf(oid)))
+				cachemap.clear();
+		return super.get(oid);
+	}
+
+	/**
      * @param data
      * @return Object
      * @throws java.io.IOException
