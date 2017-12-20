@@ -93,6 +93,10 @@
 					<warSourceDirectory>war</warSourceDirectory>
 					<extraJvmArgs>-Xms768m -Xmx1024m</extraJvmArgs>
 					<webXml>war/WEB-INF/web.xml</webXml>
+					<i18nConstantsWithLookupBundles>
+						<i18nConstantsWithLookupBundle>nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.mapperconstants.Hint</i18nConstantsWithLookupBundle>
+						<i18nConstantsWithLookupBundle>nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.mapperconstants.Feedback</i18nConstantsWithLookupBundle>
+					</i18nConstantsWithLookupBundles>
 				</configuration>
 				<executions>
 					<execution>

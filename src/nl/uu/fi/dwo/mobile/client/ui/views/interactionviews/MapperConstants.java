@@ -3,12 +3,40 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
+
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.mapperconstants.Feedback;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.mapperconstants.Hint;
+
 public class MapperConstants {
 
 	private Map<String,Map<String,String>> constants;
+	private final Hint hints = GWT.create(Hint.class);
+	private final Feedback feedback = GWT.create(Feedback.class);
 	
 	public Map<String,String> getMap(String label) {
 		return constants.get(label);
+	}
+	
+	public Feedback getFeedback() {
+		return feedback;
+	}
+
+	public String getFeedback(String input) {
+		return getFeedback().getString(massage(input));
+	}
+	
+	public Hint getHints() {
+		return hints;
+	}
+	
+	public String getHint(String hint) {
+		hint = massage(hint);
+		return getHints().getString(hint);
+	}
+
+	private String massage(String hint) {
+		return hint.replace(' ', '_').replace(':', '_').replace('-', '_').replace('.', '_');
 	}
 
 	public MapperConstants() { 
