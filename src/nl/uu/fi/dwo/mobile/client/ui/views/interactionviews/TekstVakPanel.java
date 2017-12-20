@@ -2090,7 +2090,9 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		MapperConstants constants = new MapperConstants();
 		if(feedbackReason.trim().equals(""))
 			feedbackReason = "noFeedback";
-		vulFeedbackPanelEnVoegToe(getFromMap(constants, "feedback", feedbackReason));
+		vulFeedbackPanelEnVoegToe(/*getFromMap(constants, "feedback", feedbackReason)*/
+								constants.getFeedback(feedbackReason)
+				);
 		
 		comRoot.setChanged(goedHalfFoutStatistiek == AntwoordVakChecker.FOUT);
 	}
@@ -3512,7 +3514,7 @@ private Object CamelCase(String name) {
 						String id = t.getId(); // ideas identifier
 						String hint;						 
 
-						hint = getFromMap(constants, "hint", id); // ID to hint tekst
+						hint = constants.getHint(id);//getFromMap(constants, "hint", id); // ID to hint tekst
 // toevoegen: reason/expr/..?
 						return hint;
 					}});

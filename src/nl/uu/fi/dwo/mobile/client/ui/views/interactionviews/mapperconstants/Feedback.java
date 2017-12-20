@@ -299,9 +299,9 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
    * 
    * @return translated "missing = Wat is het kritieke gebied? Voordat je dit hebt bepaald is het te vroeg om deze conclusie te trekken."
    */
-  @DefaultStringValue("missing = Wat is het kritieke gebied? Voordat je dit hebt bepaald is het te vroeg om deze conclusie te trekken.")
-  @Key("check.conclusion-critical: RejectionCritical")
-  String check_conclusion_critical__RejectionCritical();
+  @DefaultStringValue("Wat is het kritieke gebied? Voordat je dit hebt bepaald is het te vroeg om deze conclusie te trekken.")
+  @Key("check.conclusion-critical: RejectionCritical missing")
+  String check_conclusion_critical__RejectionCritical_missing();
 
   /**
    * Translated "Wat zijn de kritieke waarde en de waarde van de toetsingsgrootheid? Bepaal ze eerst, voordat je ze probeert te vergelijken.".
@@ -372,8 +372,8 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
    * @return translated "Bij welke hypotheses hoort deze kritieke waarde? Stel eerst hypotheses op."
    */
   @DefaultStringValue("Bij welke hypotheses hoort deze kritieke waarde? Stel eerst hypotheses op.")
-  @Key("check.critical: alternative hypothesis missing ")
-  String check_critical__alternative_hypothesis_missing_();
+  @Key("check.critical: alternative hypothesis missing")
+  String check_critical__alternative_hypothesis_missing();
 
   /**
    * Translated "Geef zowel de naam als de waarde van de kritieke waarde, voor je nakijkt.".
@@ -381,8 +381,8 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
    * @return translated "Geef zowel de naam als de waarde van de kritieke waarde, voor je nakijkt."
    */
   @DefaultStringValue("Geef zowel de naam als de waarde van de kritieke waarde, voor je nakijkt.")
-  @Key("check.critical: component is not relation")
-  String check_critical__component_is_not_relation();
+  @Key("check.critical: component is not of type relation")
+  String check_critical__component_is_not_of_type_relation();
 
   /**
    * Translated "Bepaal je een kritieke t-waarde of een kritieke z-waarde?".
@@ -493,13 +493,13 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_ha__value_mismatch();
 
   /**
-   * Translated "value not a probability = De p-waarde is de overschrijdingskans. Heb je inderdaad een kans (een getal tussen 0 en 1) bepaald?".
+   * Translated "De p-waarde is de overschrijdingskans. Heb je inderdaad een kans (een getal tussen 0 en 1) bepaald?".
    * 
-   * @return translated "value not a probability = De p-waarde is de overschrijdingskans. Heb je inderdaad een kans (een getal tussen 0 en 1) bepaald?"
+   * @return translated "De p-waarde is de overschrijdingskans. Heb je inderdaad een kans (een getal tussen 0 en 1) bepaald?"
    */
-  @DefaultStringValue("value not a probability = De p-waarde is de overschrijdingskans. Heb je inderdaad een kans (een getal tussen 0 en 1) bepaald?")
-  @Key("check.p-value")
-  String check_p_value();
+  @DefaultStringValue("De p-waarde is de overschrijdingskans. Heb je inderdaad een kans (een getal tussen 0 en 1) bepaald?")
+  @Key("check.p-value: value not a probability")
+  String check_p_value__value_not_a_probability();
 
   /**
    * Translated "Je hebt niet de juiste standaardafwijking van de variabele in de populatie ingevuld. Let ook op de notatie.".
@@ -529,13 +529,13 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_rejectioncritical__alternative_hypothesis_missing();
 
   /**
-   * Translated "is not of type relation = Bepaal eerst het gehele kritieke gebied, voor je nakijkt.".
+   * Translated "Bepaal eerst het gehele kritieke gebied, voor je nakijkt.".
    * 
-   * @return translated "is not of type relation = Bepaal eerst het gehele kritieke gebied, voor je nakijkt."
+   * @return translated "Bepaal eerst het gehele kritieke gebied, voor je nakijkt."
    */
-  @DefaultStringValue("is not of type relation = Bepaal eerst het gehele kritieke gebied, voor je nakijkt.")
-  @Key("check.rejectioncritical: component")
-  String check_rejectioncritical__component();
+  @DefaultStringValue("Bepaal eerst het gehele kritieke gebied, voor je nakijkt.")
+  @Key("check.rejectioncritical: component is not of type relation")
+  String check_rejectioncritical__component_is_not_of_type_relation();
 
   /**
    * Translated "Past het teken dat je in het kritiek gebied gebruikt bij de richting van de alternatieve hypothese?".
@@ -628,22 +628,22 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_test();
 
   /**
-   * Translated "test mismatch = Bepaal je een t-waarde of een z-waarde?".
+   * Translated "Bepaal je een t-waarde of een z-waarde?".
    * 
-   * @return translated "test mismatch = Bepaal je een t-waarde of een z-waarde?"
+   * @return translated "Bepaal je een t-waarde of een z-waarde?"
    */
-  @DefaultStringValue("test mismatch = Bepaal je een t-waarde of een z-waarde?")
-  @Key("check.test-formula")
-  String check_test_formula();
+  @DefaultStringValue("Bepaal je een t-waarde of een z-waarde?")
+  @Key("check.test-formula: test mismatch")
+  String check_test_formula__test_mismatch();
 
   /**
-   * Translated "component is not relation = Bepaal zowel de variabelenaam als de waarde van de toetsingsgrootheid voor je nakijkt.".
+   * Translated "Bepaal zowel de variabelenaam als de waarde van de toetsingsgrootheid voor je nakijkt.".
    * 
-   * @return translated "component is not relation = Bepaal zowel de variabelenaam als de waarde van de toetsingsgrootheid voor je nakijkt."
+   * @return translated "Bepaal zowel de variabelenaam als de waarde van de toetsingsgrootheid voor je nakijkt."
    */
-  @DefaultStringValue("component is not relation = Bepaal zowel de variabelenaam als de waarde van de toetsingsgrootheid voor je nakijkt.")
-  @Key("check.test-value")
-  String check_test_value();
+  @DefaultStringValue("Bepaal zowel de variabelenaam als de waarde van de toetsingsgrootheid voor je nakijkt.")
+  @Key("check.test-value: component is not of type relation")
+  String check_test_value__component_is_not_of_type_relation();
 
   /**
    * Translated "Dit is een geschikt significantieniveau.".

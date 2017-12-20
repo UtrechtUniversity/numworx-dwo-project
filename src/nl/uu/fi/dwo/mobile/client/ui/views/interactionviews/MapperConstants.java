@@ -158,7 +158,7 @@ public class MapperConstants {
         feedbackMap.put("check.test-value", "Dit is niet de juiste waarde van de toetsingsgrootheid.");
         feedbackMap.put("check.test-value: no match", "Dit is niet de juiste waarde van de toetsingsgrootheid.");
         feedbackMap.put("check.test-value: test mismatch", "Bereken je een t-waarde of een z-waarde?");
-        feedbackMap.put("check.test-value: component is not relation", "Bepaal zowel de variabelenaam als de waarde van de toetsingsgrootheid voor je nakijkt.");
+        feedbackMap.put("check.test-value: component is not of type relation", "Bepaal zowel de variabelenaam als de waarde van de toetsingsgrootheid voor je nakijkt.");
         feedbackMap.put("check.df", "Het aantal vrijheidsgraden is niet correct.");
         //feedbackMap.put("check.df: TestChoice missing", "Wat voor toets ga je uitvoeren? Specificeer dit eerst, voordat je het aantal vrijheidsgraden bepaalt.");
         feedbackMap.put("check.critical", "Dit is niet de juiste kritieke waarde.");
@@ -167,7 +167,7 @@ public class MapperConstants {
         //feedbackMap.put("check.critical: SignificanceLevel missing", "Voor welk significantieniveau bepaal je de kritieke waarde? Geef eerst het significantieniveau.");
         //feedbackMap.put("check.critical: df missing", "Voor welk aantal vrijheidsgraden bepaal je de kritieke waarde? Geef eerst het aantal vrijheidsgraden.");
         feedbackMap.put("check.critical: test mismatch", "Bepaal je een kritieke t-waarde of een kritieke z-waarde?");
-        feedbackMap.put("check.critical: component is not relation", "Geef zowel de naam als de waarde van de kritieke waarde, voor je nakijkt.");
+        feedbackMap.put("check.critical: component is not of type relation", "Geef zowel de naam als de waarde van de kritieke waarde, voor je nakijkt.");
         feedbackMap.put("check.rejectioncritical", "Dit is niet het juiste kritieke gebied.");
         feedbackMap.put("check.rejectioncritical: test mismatch", "Bepaal je een kritiek gebied voor een t-waarde of voor een z-waarde?");
         feedbackMap.put("check.rejectioncritical: sidedness mismatch", "Past het teken dat je in het kritiek gebied gebruikt bij de richting van de alternatieve hypothese?");
@@ -288,7 +288,7 @@ public class MapperConstants {
         feedbackMap.put("check.test-value", "This is not the correct value of the test statistic.");
         feedbackMap.put("check.test-value: no match", "This is not the correct value of the test statistic.");
         feedbackMap.put("check.test-value: test mismatch", "Are you calculating a t-value or a z-value?");
-        feedbackMap.put("check.test-value: component is not relation", "Fill in both the name and the value of the test statistic, before pressing the check button. ");
+        feedbackMap.put("check.test-value: component is not of type relation", "Fill in both the name and the value of the test statistic, before pressing the check button. ");
         feedbackMap.put("check.df", "The number of degrees of freedom is incorrect.");
         //feedbackMap.put("check.df: TestChoice missing", "Which test are you going to carry out? Specify this before determining the number of degrees of freedom.");
         feedbackMap.put("check.critical", "The critical value is incorrect.");
@@ -297,7 +297,7 @@ public class MapperConstants {
         //feedbackMap.put("check.critical: SignificanceLevel missing", "What is the significance level for this critical value? First specify the significance level.");
         //feedbackMap.put("check.critical: df missing", "What is the number of degrees of freedom for this critical value? First give the number of degrees of freedom.");
         feedbackMap.put("check.critical: test mismatch", "Are you determining a critical t-value or a critical z-value?");
-        feedbackMap.put("check.critical: component is not relation", "Fill in both the name and the value of the critical value, before pressing the check button.");
+        feedbackMap.put("check.critical: component is not of type relation", "Fill in both the name and the value of the critical value, before pressing the check button.");
         feedbackMap.put("check.rejectioncritical", "This rejection region is incorrect.");
         feedbackMap.put("check.rejectioncritical: test mismatch", "Are you specifying a rejection region for a t-value or for a z-value?");
         feedbackMap.put("check.rejectioncritical: sidedness mismatch", "Does the sign you use in the rejection region match with the direction of the alternative hypothesis?");
