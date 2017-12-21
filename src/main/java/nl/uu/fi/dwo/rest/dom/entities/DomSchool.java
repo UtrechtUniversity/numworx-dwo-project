@@ -3,6 +3,7 @@
  */
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.util.Date;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -16,6 +17,7 @@ public class DomSchool {
     private PersistenceId id;
     private String schoolName;
     private String schoolRights;
+    private Date expire;
 
     public DomSchool(){
         
@@ -66,4 +68,20 @@ public class DomSchool {
     public boolean studentsCanRegisterForSchoolClasses(){
         return schoolRights.contains("c");
     }
+
+
+    /**
+     * @return the expire
+     */
+    public Date getExpire() {
+        return expire;
+    }
+
+    /**
+     * @param expire the expire to set
+     */
+    public void setExpire(Date expire) {
+        this.expire = expire;
+    }
+        
 }

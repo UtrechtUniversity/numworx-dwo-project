@@ -17,7 +17,6 @@ public class DomSchoolFull extends DomSchool{
     private Boolean export;
     private String schoolRights;
     private String image;
-    private Date expire;
 
     /**
      * @return the schoolLogin
@@ -75,18 +74,4 @@ public class DomSchoolFull extends DomSchool{
         this.image = image;
     }
 
-    /**
-     * @return the expire
-     */
-    public Date getExpire() {
-        return expire;
-    }
-
-    /**
-     * @param expire the expire to set
-     */
-    public void setExpire(Date expire) {
-        this.expire = expire;
-    }
-    
 }
