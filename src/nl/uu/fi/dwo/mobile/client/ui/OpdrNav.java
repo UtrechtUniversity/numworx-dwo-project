@@ -96,6 +96,16 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private ViewModuleViewImpl entry;
 	private ListBox lb_activiteiten;
 	private Panel fp_opdrachten;
+	private TouchButton shiftButtonLeft;
+	private Label spaceStart;
+	/**
+	 * Een opdrachtbol. Globaal t.b.v. bepalen breedte.
+	 */
+	private TouchButton opdrachtButton;
+	/**
+	 * De ruimte na de opdrachtbol. Globaal t.b.v. bepalen breedte.
+	 */
+	private Label opdrachtSpace;
 	private Panel mainPanel;
 	private Panel contentPanel;
 	private int aantalActiviteiten;
@@ -624,8 +634,17 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		// kijkNa()
 	}
 
+	/**
+	 * Zet de opdrachtbolletjes en doe de styling voor de activiteit met de gegeven index.
+	 * Niveaus worden niet meer ondersteund, dus dit is nu altijd 0.
+	 * 
+	 * @param index De huidige activiteit
+	 */
 	private void setOpdrachten(int index)
 	{
+		if (!isVisibleCurrentOpdracht())
+			shiftCurrentOpdrachtInBeeld();
+		
 		if (fp_opdrachten != null)
 		{
 			contentPanel.remove(fp_opdrachten);
@@ -639,14 +658,15 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		fp_opdrachten.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		//fp_opdrachten.getElement().addClassName("opdrbutton-container");
 		
-		if(aantalOpdrachten[currentActiviteit]>maxAantalOnBar)
+		if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
 		{	
-			TouchButton shiftButtonLeft = new TouchButton();
+			shiftButtonLeft = new TouchButton();
 			shiftButtonLeft.setStylePrimaryName("shiftBtn");
 			addScrollButtonHandler(shiftButtonLeft,-1);
-			shiftButtonLeft.setText("◀◀");
+//			shiftButtonLeft.setText("◀◀"); // lelijk icoon op ipad
+			shiftButtonLeft.setText("\u27EA"); // <<, dun, hoog
 			fp_opdrachten.add(shiftButtonLeft);
-			Label spaceStart = new Label();
+			spaceStart = new Label();
 			spaceStart.setStylePrimaryName("spaceShiftLabel");
 			spaceStart.setText("...");
 			fp_opdrachten.add(spaceStart);
@@ -661,7 +681,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				setButtonCorrect(buttons.get(j), isCorrect[index][j], j);
 		}
 		
-		if(aantalOpdrachten[currentActiviteit]>maxAantalOnBar)
+		if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
 		{		
 			Label spaceEnd = new Label();
 			spaceEnd.setStylePrimaryName("spaceShiftLabel");
@@ -670,13 +690,51 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			TouchButton shiftButtonRight = new TouchButton();
 			shiftButtonRight.setStylePrimaryName("shiftBtn");
 			addScrollButtonHandler(shiftButtonRight,1);
-			shiftButtonRight.setText("▶▶");
+//			shiftButtonRight.setText("▶▶"); // lelijk icoon op ipad
+			shiftButtonRight.setText("\u27EB"); // >>, dun, hoog
 			fp_opdrachten.add(shiftButtonRight);
 		}
+		
 		fp_opdrachten.getElement().getStyle().setFloat(Style.Float.LEFT);
 		contentPanel.add(fp_opdrachten);
 	}
 
+	/**
+	 * Schuif de opdrachten-scrollbar zodat het bolletje van
+	 * current opdracht in beeld is.
+	 */
+	private void shiftCurrentOpdrachtInBeeld()
+	{
+		if (currentOpdracht > maxAantalOnBar - 2 + currentShift - 1) // - 1 voor de correcte index (telt vanaf 0)
+			// schuif het verschil vooruit
+			currentShift = currentShift + (currentOpdracht - (maxAantalOnBar - 2 + currentShift - 1));
+		else if (currentOpdracht < currentShift)
+			// schuif het verschil terug
+			currentShift = currentShift - (currentShift - currentOpdracht);
+	}
+
+	/**
+	 * True als het bolletje van current opdracht in beeld is,
+	 * false als buiten beeld.
+	 * 
+	 * @return
+	 */
+	private boolean isVisibleCurrentOpdracht()
+	{
+		boolean visible = true;
+
+		if ((currentOpdracht > maxAantalOnBar - 2 + currentShift - 1) // - 1 voor de correcte index (telt vanaf 0)
+			|| (currentOpdracht < currentShift))
+			visible = false;
+		
+		return visible;
+	}
+
+	/**
+	 * Zet button j. Currentshift bepaalt of de button zichtbaar is.
+	 * 
+	 * @param j
+	 */
 	private void setButton(int j)
 	{
 		TouchButton button = new TouchButton();
@@ -711,11 +769,22 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		addButtonHandler(button, j);
 		
 		buttons.add(button);
-		if(aantalOpdrachten[currentActiviteit]>1 && j>currentShift-1 && j<aantalOpdrachten[currentActiviteit] && (j<maxAantalOnBar-2+currentShift || aantalOpdrachten[currentActiviteit]<maxAantalOnBar+1))
+		if (aantalOpdrachten[currentActiviteit] > 1 
+			&& j > currentShift - 1 
+			&& j < aantalOpdrachten[currentActiviteit] 
+			&& (j < maxAantalOnBar - 2 + currentShift || aantalOpdrachten[currentActiviteit] < maxAantalOnBar + 1))
+		{
 			fp_opdrachten.add(button);
-		if(j>currentShift-1 && j<aantalOpdrachten[currentActiviteit]-1 && (j<maxAantalOnBar-3+currentShift || aantalOpdrachten[currentActiviteit]<maxAantalOnBar+1))
-			fp_opdrachten.add(space);
+			opdrachtButton = button; // tbv bepalen breedte; dus uiteindelijk de laatste die is toegevoegd anders is breedte 0 
+		}
 		
+		if (j > currentShift - 1 
+			&& j < aantalOpdrachten[currentActiviteit] - 1 
+			&& (j < maxAantalOnBar - 3 + currentShift || aantalOpdrachten[currentActiviteit] < maxAantalOnBar + 1))
+		{
+			fp_opdrachten.add(space);
+			opdrachtSpace = space; // tbv bepalen breedte
+		}
 	}
 
 	/**
@@ -824,7 +893,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		});
 	}
 	
-	
+	/**
+	 * Voeg de scrollbutton-handler toe.
+	 * 
+	 * @param button
+	 * @param s Waarde is + 1 (shift left) of - 1 (shift right)
+	 */
 	private void addScrollButtonHandler(TouchButton button, int s)
 	{
 		final int shift = s;
@@ -834,17 +908,13 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			public void onTouchStart(TouchStartEvent event)
 			{
 				currentShift+=shift;
-				if(currentShift<0)
+				if (currentShift < 0)
 					currentShift = 0;
-				if(currentShift>aantalOpdrachten[currentActiviteit] - maxAantalOnBar+2)
-					currentShift = aantalOpdrachten[currentActiviteit] - maxAantalOnBar+2;
+				if (currentShift > aantalOpdrachten[currentActiviteit] - maxAantalOnBar + 2)
+					currentShift = aantalOpdrachten[currentActiviteit] - maxAantalOnBar + 2;
 					
-				System.out.println("currentShift"+currentShift);
 				setOpdrachten(currentActiviteit);
-					
-				
 			}
-
 		});
 	}
 
@@ -1556,6 +1626,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 //
 //		}
 
+		// zorg dat de opdrachten-scrollbar bijgewerkt wordt bij het navigeren naar een opdracht
+		// opdat de opdracht in beeld is
+		setOpdrachten(currentActiviteit);
 	}
 
 	public int getCurrentOpdracht()
@@ -2551,5 +2624,64 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	public int getAantalSessies() {
 		return memento.getAantalSessies();
+	}
+
+	/**
+	 * Zet max aantal op bar adhv het gegeven aantal.
+	 * Het aantal dat getoond wordt als er shiftknoppen zijn,
+	 * is aantal - 2. 
+	 * 
+	 * @param aantal
+	 */
+	public void setMaxOnBar(int aantal)
+	{
+		maxAantalOnBar = aantal;
+		
+		// repaint
+		setOpdrachten(currentActiviteit);
+	}
+	
+	/**
+	 * Geef de breedte van de shiftbutton op de opdrachten-bar.
+	 * Heeft pas een waarde na het toevoegen van de opdrachten aan de statusbar.
+	 * 
+	 * @return
+	 */
+	public int getShiftButtonWidth()
+	{
+		return shiftButtonLeft.getOffsetWidth();
+	}
+	
+	/**
+	 * Geef de breedte van het space-label naast de shiftbutton op de opdrachten-bar.
+	 * Heeft pas een waarde na het toevoegen van de opdrachten aan de statusbar.
+	 * 
+	 * @return
+	 */
+	public int getSpaceStartWidth()
+	{
+		return spaceStart.getOffsetWidth();
+	}
+
+	/**
+	 * Geef de breedte van het opdrachtbolletje op de opdrachten-bar.
+	 * Heeft pas een waarde na het toevoegen van de opdrachten aan de statusbar.
+	 * 
+	 * @return
+	 */
+	public int getOpdrachtButtonWidth()
+	{
+		return opdrachtButton.getOffsetWidth();
+	}
+
+	/**
+	 * Geef de breedte van het spacelabel naast een opdrachtbolletje op de opdrachten-bar.
+	 * Heeft pas een waarde na het toevoegen van de opdrachten aan de statusbar.
+	 * 
+	 * @return
+	 */
+	public int getOpdrachtSpaceWidth()
+	{
+		return opdrachtSpace.getOffsetWidth();
 	}
 }
