@@ -233,7 +233,8 @@ public class PersistentSchool implements Serializable {
         school.setSchoolName(this.schoolName);
         //TODO One should filter the rights depending on the security level
         school.setSchoolRights(schoolRights);
-    }
+        school.setExpire(expire);
+   }
 
     public DomSchool4DwoAdmin buildDomSchool4DwoAdmin() {
         DomSchool4DwoAdmin school = new DomSchool4DwoAdmin();
@@ -259,7 +260,6 @@ public class PersistentSchool implements Serializable {
         school.setImage(image);
         //seeing schoolRights moved to DomSchool
         //school.setSchoolRights(schoolRights);
-        school.setExpire(expire);
     }
 
    /**
