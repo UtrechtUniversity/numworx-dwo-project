@@ -4,15 +4,10 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.PushButton;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.OsDetection;
@@ -22,10 +17,9 @@ import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
 import nl.uu.fi.dwo.keyboard.client.DWODesktopKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.DWOTabletKeyboardFactory;
-import nl.uu.fi.dwo.keyboard.client.DesktopKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
-import nl.uu.fi.dwo.keyboard.client.TabletKeyboardFactory;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
@@ -34,12 +28,13 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	KeyboardFactory factory;
 	AbstractKeyboard kb;
 	FlowPanel staticPanel;
+	private static DWOplayerCss dwoplayercss = DWOplayer.DWO_BUNDLE.dwoplayercss();
 	
 	public DWOKeyboard() {
 		setStylePrimaryName("dwo");
 		OsDetection detection = MGWT.getOsDetection();
 		if(detection.isDesktop()
-				//&& false
+				//&& false // voor tablet keyboard deze uitcommentarieren
 				) {
 			factory = new DWODesktopKeyboardFactory();
 		} else {
@@ -178,6 +173,7 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	{
 		if (label == null) return;
 		
+		label.setStyleName(dwoplayercss.navigatiebalkLabel(), true);
 		staticPanel.add(label);
 	}
 
