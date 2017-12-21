@@ -185,7 +185,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
         FontMetrics fm;
         int nextY = startY;
         int i;
-        if (!course.isNotVisible()) {
+        if (!course.isNotVisible() && course.getScoList()!=null) {
             for (i = 0; i < course.getScoList().length; i++) {
                 l = new ScoLinkedLabel(course.getScoList()[i]);
                 l.setForeground(Color.black);
