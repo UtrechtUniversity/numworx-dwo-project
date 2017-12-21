@@ -39,4 +39,10 @@ public interface DWOplayerCss extends CssResource {
 	String half();
 	
 	String fout();
+	
+	String navigatiebalk();
+
+	String navigatiebalkLabel();
+	
+	String opdrachtbollen();
 }
