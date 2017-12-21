@@ -44,7 +44,6 @@ import fi.dwo.server.persistence.DwoEmfFactory;
 
 import java.io.UnsupportedEncodingException;
 
-import static java.lang.Thread.sleep;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -69,7 +68,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.ThreadLocalRandom; //TODO serverside I'd prefere SecureRandom
 
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
@@ -81,9 +80,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
-import org.apache.commons.httpclient.URI.DefaultCharsetChanged;
-
 import static java.lang.Thread.sleep;
 
 /**
