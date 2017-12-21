@@ -138,6 +138,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private static final String KEYBOARD = "keyboardNr";
 	private static final String WRITE_MATH_SET = "writeMathSetNr";
 	private static final CBookEvent ACTION_READONLY = new CBookEvent("action.setNotEditable");
+	
+	private static DWOplayerCss dwoplayercss = DWOplayer.DWO_BUNDLE.dwoplayercss();
+
 	static Logger logger = Logger.getLogger("ViewModuleViewImpl");
 	private boolean standalone = false;
 
@@ -252,6 +255,22 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	public void setupView(HashMap<String, Object> launchData)
 	{
+		// breedte bijhouden van de componenten op de navigatiebalk
+		int width = 0;
+		// margin left and right is 10, set in css
+		int margin = 20;
+		int widthOnp = 0;
+		Label score = null;
+		int widthScore = 0;
+		int widthOpnieuw = 0;
+		int widthAllesOpnieuw = 0;
+		int widthKijkNaKnop = 0;
+		int widthZelftoetsGeschiedenis = 0;
+		int widthVorige = 0;
+		int widthVolgende = 0;
+		int widthKeerNagekeken = 0;
+		int widthVerzegeld = 0;
+		
 		for (int i = 0; i < buttons.size(); i++)
 			contentPanel.remove(buttons.get(i));
 		
@@ -271,6 +290,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				opnieuw = wrap.getBoolean("opnieuw");
 			}
 
+			sb.asWidget().setStyleName(dwoplayercss.navigatiebalk(), true);
+			
 			if (wrap.containsKey(KEYBOARD))
 			{
 				sb.setKeyboard(wrap.getInt(KEYBOARD));
@@ -305,17 +326,22 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			
 			FlowPanel onp = (FlowPanel) on.getAsPanel();
 			
+			onp.setStyleName(dwoplayercss.opdrachtbollen(), true);
+			
 			if (bolletjesZichtbaar)
 			{
 				sb.addNavPanel(onp);
+				widthOnp = onp.getOffsetWidth();
 			}
 			
 			if (mode != OpdrNav.OEFENEN) // alleen voor oefenen mag de optie 'score zichtbaar' uit staan
 				scoresZichtbaar = true;
+			
 			if (scoresZichtbaar && (!(on.getMode() == OpdrNav.EINDTOETS) || on.scoresVisible()))// niet tonen in niet-verzegelde eindtoets
 			{
-				Label score = scoreNav.getTotaalScoreLabel();
-				if(score != null) { // Bij NOORDHOFF is deze null
+				score = scoreNav.getTotaalScoreLabel();
+				if (score != null)
+				{ // Bij NOORDHOFF is deze null
 					score.getElement().getStyle().setFloat(Style.Float.LEFT);
 					sb.addLabel(score);
 					onp.removeFromParent();
@@ -324,11 +350,22 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				}
 			}
 			
+			boolean itemOpnieuw = false;
 			if (wrap != null && wrap.containsKey("itemOpnieuw"))
 			{
-				scoreNav.setItemOpnieuw(wrap.getBoolean("itemOpnieuw"));
+				itemOpnieuw = wrap.getBoolean("itemOpnieuw");
+				scoreNav.setItemOpnieuw(itemOpnieuw);
 			}
 			scoreNav.setOpnieuw(opnieuw || opnieuwMogelijk);
+			
+			if (opnieuw || opnieuwMogelijk) // alles opnieuw
+			{
+				widthAllesOpnieuw = scoreNav.getAllesOpnieuwButton().getOffsetWidth() + margin;
+			}
+			if (itemOpnieuw)
+			{
+				widthOpnieuw = scoreNav.getOpnieuwButton().getOffsetWidth() + margin;
+			}
 
 			// pas vanaf hier toevoegen mogelijk.
 			scoreNav.setBeantwoord(on.getAantalBeantwoord());
@@ -373,11 +410,14 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			scoreNav.setKijkNaEnabled(isKijkNaEnabled());
 			
 			sb.addKnop(scoreNav.getKijkNaButton(), false);
+			widthKijkNaKnop = scoreNav.getKijkNaButton().getOffsetWidth() + margin;
 			
 			if (zelftoetsGeschiedenis)
 			{
 				// voeg geschiedenis-knop toe
-				sb.addKnop(getZelftoetsGeschiedenisButton(), false);
+				PushButton zelftoetsGeschiedenisButton = getZelftoetsGeschiedenisButton();
+				sb.addKnop(zelftoetsGeschiedenisButton, false);
+				widthZelftoetsGeschiedenis = zelftoetsGeschiedenisButton.getOffsetWidth() + margin;
 			}
 		}
 		scoreNav.setKijkNa(new ScoreNavIF.Checker()
@@ -419,7 +459,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		
 		// vorige/volgende knop toevoegen
 		scoreNav.setVorigeVisible(vorigeKnopZichtbaar);
+		if (vorigeKnopZichtbaar)
+			widthVorige = scoreNav.getPrevButton().getOffsetWidth() + margin;
 		scoreNav.setVolgendeVisible(volgendeKnopZichtbaar);
+		if (volgendeKnopZichtbaar)
+			widthVolgende = scoreNav.getNextButton().getOffsetWidth() + margin;
 		
 		scoreNav.setNextPrevHandler(this);
 		scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig()
@@ -433,6 +477,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		if (scoresZichtbaar)
 		{
 			scoreNav.setTotaalScoreLabel((int) on.getScore()); // toon percentagescore
+			// nu de score gezet is kunnen we de breedte bepalen
+			widthScore = score.getOffsetWidth() + margin;
 		}
 		
 		if (mode == OpdrNav.ZELFTOETS)
@@ -442,13 +488,38 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 			// add totaalscore and keer nagekeken labels
 			sb.addLabel(scoreNav.getKeerNagekekenLabel());
+			// laatste label wordt bij te weinig ruimte heel smal gemaakt, pas als hij verdwijnt, is offsetwidth weer de gewenste breedte 
+			widthKeerNagekeken = Math.max(50, scoreNav.getKeerNagekekenLabel().getOffsetWidth());
 		}
-		if ( on.isVerzegeld()) {
-			sb.addLabel(new Label(Text.constants.lockToetsLabel()));
+		if (on.isVerzegeld())
+		{
+			Label verzegeld = new Label(Text.constants.lockToetsLabel());
+			sb.addLabel(verzegeld);
+			widthVerzegeld = Math.max(50, verzegeld.getOffsetWidth());
 		}
 
-		if ( on.isReview()) {
+		if (on.isReview())
+		{
 			sb.addLabel(new Label(Text.constants.attemps() + on.getAantalSessies()));
+		}
+
+		// resize opdrachtbolletjes if necessary
+		int availableWidth = sb.asWidget().getOffsetWidth();
+		width = widthScore + widthOnp + widthOpnieuw + widthAllesOpnieuw + widthKijkNaKnop + widthZelftoetsGeschiedenis + widthVolgende + widthVorige 
+			 + widthKeerNagekeken + widthVerzegeld;
+		if (width > availableWidth)
+		{
+			int newMaxOnBar = 0;
+			int widthOpdrachtBol = on.getOpdrachtButtonWidth();
+			int widthOpdrachtSpace = on.getOpdrachtSpaceWidth();
+			int widthShiftButton = on.getShiftButtonWidth();
+			int widthSpaceStartButton = on.getSpaceStartWidth();
+			int availableForOpdrachtenRij = availableWidth - width + widthOnp; 
+			if (widthOpdrachtBol + widthOpdrachtSpace > 0)
+			{
+				newMaxOnBar = (availableForOpdrachtenRij - 2 * widthShiftButton - widthSpaceStartButton) / (widthOpdrachtBol + widthOpdrachtSpace);
+				on.setMaxOnBar(newMaxOnBar + 2);
+			}
 		}
 		
 		scoreNav.started();
@@ -518,7 +589,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	 */
 	private boolean isDisabled()
 	{
-		String disabled = DWOplayer.DWO_BUNDLE.dwoplayercss().disabled();
+		String disabled = dwoplayercss.disabled();
 		if (contentPanel.getStyleName().contains(disabled))
 			return true;
 		else
@@ -528,8 +599,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private PushButton getZelftoetsGeschiedenisButton()
 	{
 		final PushButton zelftoetsGeschiedenisKnop = new PushButton(fi.wiskopdr.text.Text.constants.zelftoetsGeschiedenisKnopLabel());
-        DWOplayerCss css = DWOplayer.DWO_BUNDLE.dwoplayercss();
-        zelftoetsGeschiedenisKnop.setStylePrimaryName(css.myPushButton());
+        zelftoetsGeschiedenisKnop.setStylePrimaryName(dwoplayercss.myPushButton());
 		zelftoetsGeschiedenisKnop.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
 			{
@@ -1149,7 +1219,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	 */
 	private void zetAfdekPanelTempotoets(boolean locked, Boolean allCorrect)
 	{
-		String disabled = DWOplayer.DWO_BUNDLE.dwoplayercss().disabled();
+		String disabled = dwoplayercss.disabled();
 		contentPanel.setStyleName(disabled, locked);
 		
 		if (locked)
@@ -1441,7 +1511,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	public void zetAfdekPanel(boolean b)
 	{
-		String disabled = DWOplayer.DWO_BUNDLE.dwoplayercss().disabled();
+		String disabled = dwoplayercss.disabled();
 		contentPanel.setStyleName(disabled, b);
 		
 		if(b)
