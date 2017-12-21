@@ -119,10 +119,6 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 		totaalScoreLabel.setStyleName("score");
 		totaalScoreLabel.getElement().getStyle().setPaddingTop(6, Style.Unit.PX);
 		keerNagekekenLabel = new HTML(new SafeHtmlBuilder().appendEscapedLines(0 + Text.constants.nakijkLabel() + "\n" + Text.constants.nakijkLabel2()).toSafeHtml());
-		keerNagekekenLabel.getElement().getStyle().setFontSize(11, Style.Unit.PX);
-		keerNagekekenLabel.getElement().getStyle().setColor("#1D71B8");
-		keerNagekekenLabel.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);
-		keerNagekekenLabel.getElement().getStyle().setPaddingTop(10, Style.Unit.PX);
 	}
 	
 	@Override
@@ -460,6 +456,18 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 	public void acceptCBookEvent(CBookEvent event) {
 		if(checker != null && CheckButton.CHECK.equals(event.getCommand()))
 			checker.checkOpdracht(this);
+	}
+
+	@Override
+	public Widget getOpnieuwButton()
+	{
+		return opnieuwKnop;
+	}
+
+	@Override
+	public Widget getAllesOpnieuwButton()
+	{
+		return allesOpnieuwKnop;
 	}
 
 }
