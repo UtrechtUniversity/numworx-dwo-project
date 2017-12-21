@@ -480,6 +480,20 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 			checker.checkOpdracht(ScoreNavPanel.this);
 	}
 
+	@Override
+	public Widget getOpnieuwButton()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Widget getAllesOpnieuwButton()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
 
 
