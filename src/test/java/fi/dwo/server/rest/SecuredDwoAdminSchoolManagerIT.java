@@ -40,7 +40,7 @@ public class SecuredDwoAdminSchoolManagerIT {
 
     private static final Logger LOG = Logger.getLogger(SecuredDwoAdminSchoolManagerIT.class.getName());
 
-    static DatabaseManager instance = null;
+    private static DatabaseManager instance = null;
 
     public SecuredDwoAdminSchoolManagerIT() {
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());

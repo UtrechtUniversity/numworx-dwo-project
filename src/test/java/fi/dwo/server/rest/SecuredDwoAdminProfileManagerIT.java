@@ -29,7 +29,7 @@ public class SecuredDwoAdminProfileManagerIT {
 
     private static final Logger LOG = Logger.getLogger(SecuredDwoAdminProfileManagerIT.class.getName());
 
-    static DatabaseManager instance = null;
+    private static DatabaseManager instance = null;
     SecuredDwoAdminProfileManager manager;
 
 	

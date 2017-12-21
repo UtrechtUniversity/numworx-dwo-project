@@ -38,7 +38,7 @@ public class PublicScoContextManagerIT {
 	
     private static final Logger LOG = Logger.getLogger(PublicScoContextManagerIT.class.getName());
 
-    static DatabaseManager instance = null;
+    private static DatabaseManager instance = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

@@ -50,7 +50,7 @@ import static org.junit.Assert.*;
 public class PublicUserManagerIT {
     private static final Logger LOG = Logger.getLogger(PublicUserManagerIT.class.getName());
 
-    static DatabaseManager instance = null;
+    private static DatabaseManager instance = null;
     
     public PublicUserManagerIT() {
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());

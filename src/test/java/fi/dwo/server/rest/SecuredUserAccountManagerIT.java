@@ -35,7 +35,7 @@ public class SecuredUserAccountManagerIT {
 
     private static final Logger LOG = Logger.getLogger(SecuredUserAccountManagerIT.class.getName());
 
-    static DatabaseManager instance = null;
+    private static DatabaseManager instance = null;
 
     public SecuredUserAccountManagerIT() {
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());

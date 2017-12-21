@@ -9,8 +9,8 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
-import static fi.dwo.server.rest.PublicUserManagerIT.instance;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.ws.rs.core.SecurityContext;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -27,6 +27,10 @@ import static org.junit.Assert.*;
  */
 public class PublicRoleManagerIT {
 
+    private static final Logger LOG = Logger.getLogger(PublicRoleManagerIT.class.getName());
+
+    private static DatabaseManager instance = null;
+    
     public PublicRoleManagerIT() {
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
     }

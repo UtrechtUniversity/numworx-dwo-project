@@ -32,7 +32,7 @@ public class PublicCourseManagerIT {
 	
     private static final Logger LOG = Logger.getLogger(PublicCourseManagerIT.class.getName());
 
-    static DatabaseManager instance = null;
+    private static DatabaseManager instance = null;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

@@ -42,7 +42,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class SecuredUserScoDataManagerIT {
-    static DatabaseManager instance = null;
+    private static DatabaseManager instance = null;
     SecuredUserScoDataManager manager;
     
 	@BeforeClass

@@ -1,19 +1,17 @@
 /**
  * Copyrighted Sep 18, 2015
  */
-package fi.dwo.server.rest;
+package fi.dwo.server.testutil;
 
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
-import static fi.dwo.server.rest.PublicUserManagerIT.instance;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
-import javax.persistence.SqlResultSetMapping;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -26,6 +24,10 @@ import static org.junit.Assert.fail;
  * @author Gert van der Plas
  */
 public class SqlResultSetMappingIT {
+
+    private static final Logger LOG = Logger.getLogger(SqlResultSetMappingIT.class.getName());
+    
+    private static DatabaseManager instance = null;
 
     public SqlResultSetMappingIT() {
       //  Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());

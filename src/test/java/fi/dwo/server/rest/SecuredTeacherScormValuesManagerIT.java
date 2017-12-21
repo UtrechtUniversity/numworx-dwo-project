@@ -40,7 +40,7 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class SecuredTeacherScormValuesManagerIT {
 
-    static DatabaseManager instance = null;
+    private static DatabaseManager instance = null;
     SecuredTeacherScormValuesManager manager;
     
 	@BeforeClass

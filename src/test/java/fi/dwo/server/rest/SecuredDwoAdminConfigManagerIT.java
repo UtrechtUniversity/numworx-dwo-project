@@ -43,7 +43,7 @@ public class SecuredDwoAdminConfigManagerIT {
 
     private static final Logger LOG = Logger.getLogger(SecuredDwoAdminConfigManagerIT.class.getName());
 
-    static DatabaseManager instance = null;
+    private static DatabaseManager instance = null;
     SecuredDwoAdminConfigManager manager;
 
 	
