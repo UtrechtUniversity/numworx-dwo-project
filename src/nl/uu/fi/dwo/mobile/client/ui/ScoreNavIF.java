@@ -75,6 +75,8 @@ public interface ScoreNavIF {
 	Widget getNextButton();
 	Widget getPrevButton();
 	Widget getEndButton();
+	Widget getOpnieuwButton();
+	Widget getAllesOpnieuwButton();
 	
 	void setObjectivesHandler(ObjectivesHandler objectivesHandler);
 	void setMisconceptionsHandler(MisconceptionsHandler misconceptionsHandler);
