@@ -181,3 +181,25 @@ div.insert_formule {padding-right:5px; padding-left:5px;}
 	gwt-image: 'fout';
 	background-position: right top;
 }
+
+.navigatiebalk {
+/*	min-width: 1300px;*/
+	display: flex; /* using flexbox */
+	flex-wrap: wrap; /* voor dwo-toetsenbord dat mogelijk erboven moet komen */
+}
+
+.navigatiebalkLabel {
+	display: flex;
+	flex-wrap: nowrap;
+	flex-overflow: visible;
+	flex: initial;
+	font-size: 11px;
+	color: #1D71B8;
+	padding-top: 10px;
+}
+
+.opdrachtbollen {
+	display: flex:
+	flex-wrap: nowrap;
+	flex: 1;
+}
