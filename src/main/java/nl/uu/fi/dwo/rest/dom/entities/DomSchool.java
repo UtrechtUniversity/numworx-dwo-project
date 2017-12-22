@@ -3,11 +3,9 @@
  */
 package nl.uu.fi.dwo.rest.dom.entities;
 
-import java.util.Calendar;
 import java.util.Date;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import javax.xml.bind.annotation.XmlRootElement;
-import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  * School transported over the REST interface.
@@ -86,18 +84,4 @@ public class DomSchool {
         this.expire = expire;
     }
     
-    public boolean licenseIsValid() {
-
-        if (getExpire() == null) {
-            return true;
-        } else {
-            Calendar c = DwoDateUtilities.getCurrentDwoDateAsCalendarDate();
-            if (c.after(getExpire())) //compare on UTC calendar.
-            {
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }        
 }
