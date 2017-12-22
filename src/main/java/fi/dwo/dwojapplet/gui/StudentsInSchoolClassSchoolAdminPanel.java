@@ -18,6 +18,7 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Vector;
@@ -44,6 +45,8 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  * The panel which shows the school classes for a teacher.
@@ -81,6 +84,21 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         return schoolClass;
     }
 
+    //Should be in DomSchool
+    public static boolean licenseIsValid(DomSchool s) {
+
+        if (s.getExpire() == null) {
+            return true;
+        } else {
+            Calendar c = DwoDateUtilities.getCurrentDwoDateAsCalendarDate();
+            if (c.after(s.getExpire())) //compare on UTC calendar.
+            {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }    
     /**
      * @param schoolClass the schoolClass to set
      */
@@ -393,7 +411,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         this.add(Box.createRigidArea(new Dimension(0, 30)));
         buildJTable();
         addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
-        addStudentsButton.setEnabled(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid());
+        addStudentsButton.setEnabled(licenseIsValid(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool()));
         addStudentsButton.setSize(addStudentsButton.getPreferredSize());
         addStudentsButton.addActionListener(this);
         deleteFromSchoolButton = new JButton(
