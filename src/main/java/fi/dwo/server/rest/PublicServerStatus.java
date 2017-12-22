@@ -3,7 +3,6 @@ package fi.dwo.server.rest;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
-import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,11 +17,11 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Context;
 import nl.uu.fi.dwo.rest.dom.entities.DomHeartBeat;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  * Public server status. Showing health of the service. Under development.

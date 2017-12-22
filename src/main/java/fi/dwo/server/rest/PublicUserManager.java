@@ -21,7 +21,6 @@ import nl.uu.fi.dwo.rest.entities.RestAuthToken;
 import nl.uu.fi.dwo.rest.entities.RestLoginCheck;
 import nl.uu.fi.dwo.rest.entities.RestNewUser;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
-import fi.dwo.commons.util.DwoDateUtilities;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomToken;
@@ -81,6 +80,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import static java.lang.Thread.sleep;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  * Handles the public registration of new users.

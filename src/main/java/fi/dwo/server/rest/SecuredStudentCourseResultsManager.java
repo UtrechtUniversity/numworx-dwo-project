@@ -17,7 +17,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.util.DwoDateUtilities;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;

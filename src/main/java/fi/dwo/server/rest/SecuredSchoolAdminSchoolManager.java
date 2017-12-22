@@ -23,7 +23,6 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolAdmin;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
-import fi.dwo.commons.util.DwoDateUtilities;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
@@ -46,6 +45,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  * Operations for the GUI Component that manages the User Profile.

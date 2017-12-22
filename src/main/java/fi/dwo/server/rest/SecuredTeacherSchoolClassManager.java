@@ -34,7 +34,7 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
-import fi.dwo.commons.util.DwoDateUtilities;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder;
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;

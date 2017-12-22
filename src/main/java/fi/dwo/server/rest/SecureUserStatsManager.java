@@ -1,7 +1,6 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.entities.PersistentLogData;
-import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.LogDataManager;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +8,7 @@ import java.util.logging.Logger;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  * Supplies stats

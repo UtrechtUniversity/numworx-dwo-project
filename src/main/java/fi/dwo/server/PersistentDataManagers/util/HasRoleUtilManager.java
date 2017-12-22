@@ -14,7 +14,6 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -28,6 +27,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  * Checks if a user is in a certain role context.

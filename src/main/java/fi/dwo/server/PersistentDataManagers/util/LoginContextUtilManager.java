@@ -5,13 +5,13 @@ package fi.dwo.server.PersistentDataManagers.util;
 
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.util.DwoDateUtilities;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  *

@@ -6,7 +6,7 @@ package fi.dwo.server.PersistentDataManagers.core;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.util.DwoDateUtilities;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import static fi.dwo.server.PersistentDataManagers.core.SchoolManagerPIT.instance;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;

@@ -21,7 +21,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.*;
-import fi.dwo.commons.util.DwoDateUtilities;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.entities.RestSchoolRoleAndClassV2;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;

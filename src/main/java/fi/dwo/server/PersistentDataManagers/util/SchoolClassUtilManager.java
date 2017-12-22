@@ -11,7 +11,6 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
-import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
@@ -20,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 public class SchoolClassUtilManager {
 

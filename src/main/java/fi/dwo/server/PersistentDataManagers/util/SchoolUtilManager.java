@@ -13,7 +13,6 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -23,6 +22,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  *

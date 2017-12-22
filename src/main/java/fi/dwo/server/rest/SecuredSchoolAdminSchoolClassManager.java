@@ -27,7 +27,6 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
-import fi.dwo.commons.util.DwoDateUtilities;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -51,6 +50,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  * Operations for the GUI Component that manages the User Profile.
