@@ -1,7 +1,6 @@
 /* Copyrighted 2015. */
 package fi.dwo.commons.persistence.entities;
 
-import fi.dwo.commons.util.DwoDateUtilities;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -31,6 +30,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  * JPA/EclipseLink entity for the ClassCourses.

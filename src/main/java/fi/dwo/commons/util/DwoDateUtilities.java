@@ -14,6 +14,7 @@ import java.util.TimeZone;
  *
  * @author G.A.J. van der Plas
  */
+@Deprecated //remove after 2.1.26
 public class DwoDateUtilities {
 
     /**
