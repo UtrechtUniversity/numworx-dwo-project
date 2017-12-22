@@ -393,6 +393,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         this.add(Box.createRigidArea(new Dimension(0, 10)));
         buildJTable();
         addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
+        addStudentsButton.setEnabled(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid());
         addStudentsButton.setSize(addStudentsButton.getPreferredSize());
         addStudentsButton.addActionListener(this);
         Box footer = Box.createHorizontalBox();

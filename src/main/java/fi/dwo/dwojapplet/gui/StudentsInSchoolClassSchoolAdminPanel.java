@@ -393,6 +393,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         this.add(Box.createRigidArea(new Dimension(0, 30)));
         buildJTable();
         addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
+        addStudentsButton.setEnabled(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid());
         addStudentsButton.setSize(addStudentsButton.getPreferredSize());
         addStudentsButton.addActionListener(this);
         deleteFromSchoolButton = new JButton(
