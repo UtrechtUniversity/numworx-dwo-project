@@ -63,6 +63,8 @@ import javax.ws.rs.core.SecurityContext;
 @Path("/secure/schooladmin/schoolclass")
 public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassManager {
 
+    private static final Logger LOG = Logger.getLogger(SecuredSchoolAdminSchoolClassManager.class.getName());
+
     /**
      * Returns the school data to be displayed.
      *

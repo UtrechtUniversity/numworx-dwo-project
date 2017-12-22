@@ -77,6 +77,11 @@ public class SchoolUtilManager {
             LOG.log(Level.SEVERE, "User not a single school user.");
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");
         }
+        //invariant: have school data and user data
+        if (!school.licenseIsValid()) {
+            LOG.log(Level.INFO, "Registration failde for school {0}, school id {1}, the license expired on {2}.", new Object[]{school.getSchoolName(), school.getSchoolID(), school.getExpire()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "The license expired on " + school.getExpire());
+        } 
 
         Date now = DwoDateUtilities.getCurrentDwoDate();
         //rewrite some user data

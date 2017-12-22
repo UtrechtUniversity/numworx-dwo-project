@@ -918,7 +918,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), MySQLPersistenceId.getNativeId(nssStudent.getDomNewSingleSchoolStudent().getDomSchoolClass()), phr.getPersistentHasRolePK().getSchoolGroupID()));
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, "", ex);
+            LOG.log(Level.WARNING, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
@@ -946,7 +946,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                 StudentOfClassManager.create(toSoc);
             } catch (Dwo2Exception ex) {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-                LOG.log(Level.SEVERE, "", ex);
+                LOG.log(Level.WARNING, "Reason:", ex);
                 throw new Dwo2RestException(ex);
             }
         } else {
