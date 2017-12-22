@@ -52,6 +52,7 @@ public class MapperConstants {
 		testMap.put("t-test for dependent groups", "ttestpaired"); 
 		testMap.put("t-toets voor onafhankelijke groepen", "ttesttwo"); 
 		testMap.put("t-test for independent groups", "ttesttwo"); 
+		testMap.put("ANOVA", "anova");
 	
 		Map sidedMap = new HashMap<String, String>();
         constants.put("sided", sidedMap);
