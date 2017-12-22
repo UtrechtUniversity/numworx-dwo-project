@@ -60,8 +60,7 @@
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-commons-lib</artifactId>
-            <version> 2.1.2226-SNAPSHOT</version>
-            <type>jar</type>
+            <version>2.1.26-SNAPSHOT</version>
             <exclusions>
             	<exclusion>
             		<artifactId>servlet-api</artifactId>
@@ -78,8 +77,7 @@
         <dependency>
             <groupId>nl.uu.fi.dwo.rest</groupId>
             <artifactId>DWO-jclient-lib</artifactId>
-            <version> 2.1.226-SNAPSHOT</version>
-            <type>jar</type>
+            <version>2.1.26-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
