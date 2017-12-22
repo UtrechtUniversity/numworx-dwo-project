@@ -8,6 +8,7 @@ import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -18,6 +19,7 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.rest.DwoLocale;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 
@@ -169,8 +171,18 @@ public final class DwoHelper {
                 DomSchoolsRolesAndClassesV2 srcs = SecureUserAccountLoginsManager.getSchoolLogins();//update DwoHelper
                 DwoHelper.setSchoolLogins(srcs);
 //                nullSchool = SecureUserAccountManager.getNullSchool();
+// XXX Gert, review: hier okay?                
+// initialize the rest authenticator
+                DomContext context = new DomContext();
+                DomSchoolRoleAndClassV2 activeSchoolRoleAndClass = srcs.getActiveSchoolRoleAndClass();
+				if (activeSchoolRoleAndClass != null) 
+					context.setDomHasRole(activeSchoolRoleAndClass.getHasRole());
+				RestAuthenticator.getInstance().setContext(context);
             } else {
                 schoolLogins = null;
+                RestAuthenticator.getInstance().setUsername(null);
+                RestAuthenticator.getInstance().setPassword(null);
+                RestAuthenticator.getInstance().setContext(null);
             }
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
