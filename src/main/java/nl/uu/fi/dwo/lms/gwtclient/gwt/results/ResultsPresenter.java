@@ -159,7 +159,9 @@ public class ResultsPresenter {
                 //calculate tree and call plotting
                 LOG.log(Level.INFO, "DomResults returned.");
                 resultTree = new DomResultTree(resolved.getValue());
-                LOG.log(Level.INFO, "ResultTree obtained.");
+                LOG.log(Level.INFO, "ResultTree obtained.");// plots the result tree.
+                LOG.log(Level.INFO, "Plotting Resulttree.\n\n"+resultTree.getPlottedResultTree());
+
                 resultMatrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(resultTree);
                 LOG.log(Level.INFO, "ResultMatrix obtained.");
                 view.setEmptyTableMessage();
@@ -262,6 +264,7 @@ public class ResultsPresenter {
                 LOG.log(Level.INFO, "DomResults returned.");
                 resultTree = new DomResultTree(resolved.getValue());
                 LOG.log(Level.INFO, "ResultTree obtained.");
+                LOG.log(Level.INFO, "Plotting Resulttree.\n\n"+resultTree.getPlottedResultTree());
                 resultMatrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(resultTree);
                 LOG.log(Level.INFO, "ResultMatrix obtained.");
                 plotResultsEvent();
@@ -327,6 +330,7 @@ public class ResultsPresenter {
         }
         data.sethIndex(hHeaders);
 
+        //set row headers
         ResultItem[] vHeaders = new ResultItem[matrix.getvSize()];
         List<ResultItem> rowHeaders = new ArrayList<ResultItem>(matrix.getvSize());
         for (int i = 0; i < matrix.getvSize(); i++) {
@@ -345,12 +349,9 @@ public class ResultsPresenter {
         List<List<ResultItem>> marks = new ArrayList<List<ResultItem>>(matrix.getvSize());
         //    marks.add(colHeaders);
         for (int i = 0; i < matrix.getvSize(); i++) {
-            marks.add(new ArrayList<ResultItem>(matrix.gethSize() + 1));
+            marks.add(new ArrayList<ResultItem>(matrix.gethSize()));
             marks.get(i).add(data.vIndex[i]);
             for (int j = 0; j < matrix.gethSize(); j++) {
-                if (j == 0) {
-                    marks.get(i).add(rowHeaders.get(i));
-                }
                 DomResultScore score = matrix.getMark(i, j); //row, col
                 if (score == null || score.getScore().isNaN()) {
                     marks.get(i).add(new ResultItem(i, "0", 0.0));
