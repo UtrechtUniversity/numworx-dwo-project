@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.lms.jclient.lib.rest.transport;
 
 import com.owlike.genson.GenericType;
 import com.owlike.genson.Genson;
+import com.owlike.genson.GensonBuilder;
 
 import static nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestManager.getBasicAuthString;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
@@ -32,6 +33,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
@@ -40,12 +43,15 @@ import java.util.logging.Logger;
 /**
  * This is the plain and direct restManager. Please use the
  * {@Link StoredRestManager} to minimize memory use. Note this class methods may
- * be called asynchronous. Therefor methods from RestAuthentiat and others should be
- * handle async calls too.
+ * be called asynchronous. Therefor methods from RestAuthentiat and others
+ * should be handle async calls too.
  *
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
 class RestManager {
+
+    private static final DateFormat yourDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    private final Genson genson = new GensonBuilder().useDateFormat(yourDateFormat).useDateAsTimestamp(false).create();
 
     private static final Logger LOG = Logger.getLogger(RestManager.class.getName());
 
@@ -137,7 +143,6 @@ class RestManager {
             }
             conn.disconnect();
             //decode JSON
-            Genson genson = new Genson();
 //            List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
             LOG.log(Level.FINEST, "Received: {0}", new Object[]{json.toString()});
             T result = genson.deserialize(json.toString(), c);
@@ -209,7 +214,6 @@ class RestManager {
             }
             conn.disconnect();
             //decode JSON
-            Genson genson = new Genson();
             LOG.log(Level.FINEST, "Received: {0}", new Object[]{json.toString()});
             switch (type) {
                 case DomUser:
@@ -288,7 +292,6 @@ class RestManager {
             conn.setDoOutput(true);
             conn.setUseCaches(false);
             outStream = new DataOutputStream(conn.getOutputStream());
-            Genson genson = new Genson();
 //            List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
             String jsonOut = genson.serialize(o);
             LOG.log(Level.FINEST, "Sending: {0}", new Object[]{jsonOut.toString()});
@@ -370,7 +373,6 @@ class RestManager {
             conn.setDoOutput(true);
             conn.setUseCaches(false);
             outStream = new DataOutputStream(conn.getOutputStream());
-            Genson genson = new Genson();
 //            List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
             String jsonOut = genson.serialize(o);
             LOG.log(Level.FINEST, "Sending: {0}", new Object[]{jsonOut.toString()});
