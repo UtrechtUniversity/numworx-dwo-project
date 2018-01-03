@@ -3,15 +3,18 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.login;
 import com.google.gwt.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
+import java.util.Calendar;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -29,7 +32,7 @@ public class LoginPresenter {
     private Display view;
     private String defaultUsername = "";
     private String defaultPassword = "";
-    
+
     private DwoLocalesForGWT resourceBindings = DwoLocalesForGWT.instance;
 
     /**
@@ -53,7 +56,6 @@ public class LoginPresenter {
 //    public DwoLocalesForGWT getResourceBindings() {
 //        return resourceBindings;
 //    }
-
     /**
      * @param resourceBindings the resourceBindings to set
      */
@@ -111,6 +113,9 @@ public class LoginPresenter {
                 @Override
                 public Promise<Void> call(Promise<DwoGlobalVars.DwoGlobalVarsState> resolved) throws Exception {
                     if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
+                        if (!licenseIsValid(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool())) {
+                            eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
+                        };
                         boolean switchR = true;
                         LOG.log(Level.INFO, "login succeeded for user:" + dwoGlobalVars.getCurrentUser().getUniqueDisplayName());
                         try {
@@ -172,4 +177,18 @@ public class LoginPresenter {
         defaultPassword = pw;
     }
 
+    public static boolean licenseIsValid(DomSchool s) {
+
+        if (s.getExpire() == null) {
+            return true;
+        } else {
+            Calendar c = DwoDateUtilities.getCurrentDwoDateAsCalendarDate();
+            if (c.after(s.getExpire())) //compare on UTC calendar.
+            {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
 }
