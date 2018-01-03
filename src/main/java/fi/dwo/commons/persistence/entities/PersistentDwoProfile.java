@@ -177,6 +177,8 @@ public class PersistentDwoProfile implements Serializable {
      * @return
      */
     public static PersistenceId buildPersistenceId(Long aProfileId) {
+    	if (aProfileId == null)
+    		return null;
         PersistenceId id = new PersistenceId();
         id.setIdString(String.format("MYSQL;%s;%020d",
                 PersistenceClassType.PersistentDwoProfile.name(), aProfileId));

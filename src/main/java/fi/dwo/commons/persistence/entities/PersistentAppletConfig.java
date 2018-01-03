@@ -12,6 +12,7 @@ import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -60,7 +61,18 @@ public class PersistentAppletConfig implements Serializable {
     @Size(min = 1, max = 16777215)
     @Column(name = "launchdata", nullable = false, length = 16777215)
     private String launchdata;
-
+    
+    /**
+     * @since 1.5.1
+     */
+    @Transient // not in database yet.
+    private Long dwoProfileID;
+    /**
+     * @since 1.5.1
+     */
+    @Transient // Not in database 
+    private Long appletConfigDataID;
+    
     public PersistentAppletConfig() {
     }
 
@@ -115,7 +127,23 @@ public class PersistentAppletConfig implements Serializable {
         this.launchdata = launchdata;
     }
 
-    @Override
+    public Long getDwoProfileID() {
+		return dwoProfileID;
+	}
+
+	public void setDwoProfileID(Long dwoProfileID) {
+		this.dwoProfileID = dwoProfileID;
+	}
+
+	public Long getAppletConfigDataID() {
+		return appletConfigDataID;
+	}
+
+	public void setAppletConfigDataID(Long appletConfigDataID) {
+		this.appletConfigDataID = appletConfigDataID;
+	}
+
+	@Override
     public int hashCode() {
         int hash = 0;
         hash += (appletConfigID != null ? appletConfigID.hashCode() : 0);
@@ -151,6 +179,8 @@ public class PersistentAppletConfig implements Serializable {
         copy.setLaunchdata(getLaunchdata());
         copy.setName(getName());
         copy.setId(buildPersistenceId());
+        copy.setDwoProfileId(PersistentDwoProfile.buildPersistenceId(dwoProfileID));
+        copy.setAppletConfigDataId(PersistentAppletConfigData.buildPersistenceId(appletConfigDataID));
     }
 
     /** Builds a PersistenceId using this object's data.
