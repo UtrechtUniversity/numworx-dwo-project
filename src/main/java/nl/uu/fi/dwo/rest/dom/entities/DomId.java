@@ -7,7 +7,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  *
  */
 abstract class DomId {
-	PersistenceId id;
+	private PersistenceId id;
 
 	DomId(PersistenceId id) {
 		super();

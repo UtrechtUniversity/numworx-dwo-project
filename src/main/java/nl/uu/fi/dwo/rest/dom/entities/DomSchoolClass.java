@@ -26,7 +26,7 @@ public class DomSchoolClass extends DomSchoolClassId implements Cloneable {
     public DomSchoolClass(DomSchoolClass sc) {
         DomSchoolClass clone=null;
             clone = sc.duplicate();
-        this.id = clone.id;
+        this.setId(clone.getId());
         this.hasRegKey = clone.getHasRegKey();
         this.schoolClassName = clone.getSchoolClassName();
         this.iconizer = clone.getIconizer();
@@ -34,7 +34,7 @@ public class DomSchoolClass extends DomSchoolClassId implements Cloneable {
 
     public DomSchoolClass duplicate() {
         DomSchoolClass sc = new DomSchoolClass();
-        sc.id = (PersistenceId) this.id.duplicate();
+        sc.setId((PersistenceId) this.getId().duplicate());
         sc.schoolClassName = this.getSchoolClassName(); //strings are final
         sc.hasRegKey = this.getHasRegKey().equals(true); //ensuring cloned stuff
         sc.iconizer = this.getIconizer();
@@ -84,7 +84,7 @@ public class DomSchoolClass extends DomSchoolClassId implements Cloneable {
     }
     
     void clearSettings() {
-        id = null;
+        setId(null);
         schoolClassName = "";
         hasRegKey = new Boolean(false);
     }
