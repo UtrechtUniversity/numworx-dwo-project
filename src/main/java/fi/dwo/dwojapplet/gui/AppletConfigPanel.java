@@ -52,7 +52,7 @@ class AppletConfigPanel extends JPanel implements CenterSubPanel, ActionListener
 
 		@Override
 		public int getColumnCount() {
-			return 7;
+			return 8;
 		}
 
 		@Override
@@ -69,9 +69,10 @@ class AppletConfigPanel extends JPanel implements CenterSubPanel, ActionListener
                             case 1: return current.getAppletID();
                             case 2: return current.getName();
                             case 3: return current.getLanguage();
-                            case 4: return current.getLaunchdata();
-                            case 5: return editImage;
-                            case 6: return removeImage;
+                            case 4: return current.getDwoProfileId();
+                            case 5: return current.getLaunchdata();
+                            case 6: return editImage;
+                            case 7: return removeImage;
                         }
                         return null;
                     } catch (Dwo2Exception ex) {
@@ -88,8 +89,8 @@ class AppletConfigPanel extends JPanel implements CenterSubPanel, ActionListener
 		@Override
 		public Class<?> getColumnClass(int col) {
 			switch(col) {
-			case 5:
 			case 6:
+			case 7:
 				return Image.class;
 			default:
 				return super.getColumnClass(col);
@@ -103,7 +104,8 @@ class AppletConfigPanel extends JPanel implements CenterSubPanel, ActionListener
 			case 1: return "applet";
 			case 2: return "naam";
 			case 3: return "taal";
-			case 4: return "launchdata";
+			case 4: return "profiel";
+			case 5: return "launchdata";
 			default: return "";
 			}
 		}
@@ -111,8 +113,8 @@ class AppletConfigPanel extends JPanel implements CenterSubPanel, ActionListener
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
-			case 5:
-			case 6: 
+			case 6:
+			case 7: 
 					return true;
 			}
 			return super.isCellEditable(rowIndex, columnIndex);

@@ -9,6 +9,7 @@ import java.util.Comparator;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -25,10 +26,12 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.AppletConfig;
 import fi.dwo.dwojapplet.domain.AppletData;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.action.ImportScorm;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
 
@@ -98,6 +101,7 @@ class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
 	private JLabel idField;
 	private JTextField nameField;
 	private JTextField langField;
+	private JCheckBox profileField;
 	private JTextArea dataField;
 	private JComboBox<AppletData> appletField;
 
@@ -112,6 +116,14 @@ class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
 		idField   = new JLabel(id);
 		nameField = new JTextField(config.getName());
 		langField = new JTextField(config.getLanguage());
+		profileField = new JCheckBox(DWO.getDwoProfile().getDwoProfileName());
+		if(config.getDwoProfileId() == null) {
+			profileField.setSelected(false);
+			profileField.setEnabled(true);
+		} else {
+			profileField.setEnabled(config.getDwoProfileId().equals(DWO.getDwoProfile().getId()));
+			profileField.setSelected(profileField.isEnabled());
+		}
 		dataField = new JTextArea(config.getLaunchdata(), 2, 30);
 		AppletData[] list = new AppletData[1];
 		list[0] = new AppletData();
@@ -134,6 +146,7 @@ class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
 		add( new JLabel("id"));add(idField);
 		add( new JLabel("naam")); add(nameField);
 		add( new JLabel("taal")); add(langField);
+		add( new JLabel("profiel")); add(profileField);
 		add( new JLabel("applet")); add(appletField);
 		add( new JLabel("launchdata")); add(new JScrollPane(dataField));
 		add( new JLabel("import SCO")); 
@@ -150,6 +163,11 @@ class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
                 getComponentCount() / 2, 2,
                 10, 10, //initX, initY
                 10, 10); //xPad, yPad
+	}
+
+	private String toString(PersistenceId id) {
+		if(id == null) return "";
+		return id.toString();
 	}
 
 	public AppletConfig getSelectedAppletConfig() {
@@ -177,6 +195,7 @@ class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
 		edit.setLaunchdata("");
 		edit.setAppletID(17);
 		edit.setId(null);
+		edit.setDwoProfileId(null);
 		
 		AddConfigDwoAdminJPanel panel = new AddConfigDwoAdminJPanel(edit);
 		int ok = JOptionPane.showConfirmDialog(jtbl, panel, "Nieuw", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -190,7 +209,16 @@ class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
 		config.setLanguage(langField.getText());
 		config.setLaunchdata(dataField.getText());
 		config.setName(nameField.getText());
+		if(profileField.isEnabled())
+			config.setDwoProfileId(fromString(profileField.isSelected()));
 		return config;
+	}
+
+	private PersistenceId fromString(boolean select) {
+		if(select)
+			return DWO.getDwoProfile().getId(); // FIXME
+		else 
+			return  null;
 	}
 
 	@Override
