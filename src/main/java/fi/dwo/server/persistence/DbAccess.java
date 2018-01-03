@@ -785,7 +785,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
                     (
                     hashMap.get("DBVersion Major").matches("1") 
                         && hashMap.get("DBVersion Minor").matches("5") 
-                        && hashMap.get("DBVersion Revision").matches("0")
+                        && hashMap.get("DBVersion Revision").matches("1")
                     )
                     
                     ) {
