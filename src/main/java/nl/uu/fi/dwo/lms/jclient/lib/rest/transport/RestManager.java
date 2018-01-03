@@ -24,6 +24,7 @@ import static nl.uu.fi.dwo.rest.RestListClassTypes.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
+import nl.uu.fi.dwo.rest.util.RestyDateTimeFormat;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -48,10 +49,10 @@ import java.util.logging.Logger;
  *
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
-class RestManager {
+class RestManager extends RestyDateTimeFormat {
 
-    private static final DateFormat yourDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-    private final Genson genson = new GensonBuilder().useDateFormat(yourDateFormat).useDateAsTimestamp(false).create();
+    private static final DateFormat yourDateFormat = new SimpleDateFormat(RESTY_DATETIME_FORMAT);
+    private final Genson genson = new GensonBuilder().useDateFormat(yourDateFormat).useDateAsTimestamp(DATE_AS_TIMESTAMP).create();
 
     private static final Logger LOG = Logger.getLogger(RestManager.class.getName());
 
