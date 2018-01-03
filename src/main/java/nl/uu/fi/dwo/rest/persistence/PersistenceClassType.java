@@ -13,6 +13,7 @@ public enum PersistenceClassType {
     none,
     PersistentApplet,
     PersistentAppletConfig,
+    PersistentAppletConfigData,
     PersistentClassCourse,
     PersistentCourseInClass,
     PersistentCourse,
