@@ -341,6 +341,7 @@ public class StudentsInSchoolclassView extends Composite implements ClickHandler
         backBtn.addClickHandler(this);
         removeSelectedBtn.addClickHandler(this);
         addStudentsBtn.addClickHandler(this);
+        
         addToSchoolClass.addClickHandler(this);
         schoolClassListBox.addChangeHandler(this);
     }

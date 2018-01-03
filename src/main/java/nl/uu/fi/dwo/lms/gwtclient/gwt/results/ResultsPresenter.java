@@ -160,7 +160,7 @@ public class ResultsPresenter {
                 LOG.log(Level.INFO, "DomResults returned.");
                 resultTree = new DomResultTree(resolved.getValue());
                 LOG.log(Level.INFO, "ResultTree obtained.");// plots the result tree.
-                LOG.log(Level.INFO, "Plotting Resulttree.\n\n"+resultTree.getPlottedResultTree());
+                //LOG.log(Level.INFO, "Plotting Resulttree.\n\n"+resultTree.getPlottedResultTree());
 
                 resultMatrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(resultTree);
                 LOG.log(Level.INFO, "ResultMatrix obtained.");
@@ -264,7 +264,7 @@ public class ResultsPresenter {
                 LOG.log(Level.INFO, "DomResults returned.");
                 resultTree = new DomResultTree(resolved.getValue());
                 LOG.log(Level.INFO, "ResultTree obtained.");
-                LOG.log(Level.INFO, "Plotting Resulttree.\n\n"+resultTree.getPlottedResultTree());
+                //LOG.log(Level.INFO, "Plotting Resulttree.\n\n"+resultTree.getPlottedResultTree());
                 resultMatrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(resultTree);
                 LOG.log(Level.INFO, "ResultMatrix obtained.");
                 plotResultsEvent();
