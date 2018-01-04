@@ -65,6 +65,10 @@ public class ResultsPresenter {
     }
 
     public class ResultPlot {
+//     Data contains a horizontal index
+//     including the column label for the row headers. Result data rows contains 
+//     in the first element the row labels and row score. Vertical  index does
+//     does not contain the column label for the row headers.
 
         private List<List<ResultItem>> marks = null; //row, col order.
         private ResultItem[] vIndex; //uses label property for display
