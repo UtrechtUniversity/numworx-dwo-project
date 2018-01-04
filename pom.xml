@@ -374,7 +374,7 @@
         <DWOplayerVersion>2.1.26</DWOplayerVersion>
         <DWOmAccessVersion>0.0.9</DWOmAccessVersion>
         <RegisterVersion>2.1.23</RegisterVersion>
-        <DWOGwtClientVersion>0.10.7</DWOGwtClientVersion>
+        <DWOGwtClientVersion>0.10.8-SNAPSHOT</DWOGwtClientVersion>
     </properties>
     <scm>
         <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</developerConnection>
