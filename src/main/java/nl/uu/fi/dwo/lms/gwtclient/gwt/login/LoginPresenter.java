@@ -3,7 +3,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.login;
 import com.google.gwt.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
-import java.util.Calendar;
+import java.util.Date;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,7 +14,6 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
-import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -182,8 +181,9 @@ public class LoginPresenter {
         if (s.getExpire() == null) {
             return true;
         } else {
-            Calendar c = DwoDateUtilities.getCurrentDwoDateAsCalendarDate();
-            if (c.after(s.getExpire())) //compare on UTC calendar.
+            s.getExpire();
+            Date d = new Date();
+            if (d.after(s.getExpire())) //compare on UTC calendar.
             {
                 return false;
             } else {
