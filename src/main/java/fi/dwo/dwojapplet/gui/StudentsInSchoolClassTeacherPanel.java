@@ -404,6 +404,11 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         this.add(Box.createVerticalGlue());
     }
 
+    /**
+     * True if ValidLicense
+     * @param s
+     * @return 
+     */
     //Should be in DomSchool
     public static boolean licenseIsValid(DomSchool s) {
 
@@ -413,9 +418,9 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
             Calendar c = DwoDateUtilities.getCurrentDwoDateAsCalendarDate();
             if (c.after(s.getExpire())) //compare on UTC calendar.
             {
-                return false;
-            } else {
                 return true;
+            } else {
+                return false;
             }
         }
     }    
@@ -580,5 +585,5 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
     @Override
     public void stateChanged(ChangeEvent e
     ) {
-    }
+    }    
 }

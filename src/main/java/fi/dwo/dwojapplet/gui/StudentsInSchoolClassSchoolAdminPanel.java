@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import static fi.dwo.dwojapplet.gui.StudentsInSchoolClassTeacherPanel.licenseIsValid;
 import fi.dwo.dwojapplet.gui.domutils.DomUserListCellRenderer;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
@@ -414,6 +415,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         addStudentsButton.setEnabled(licenseIsValid(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool()));
         addStudentsButton.setSize(addStudentsButton.getPreferredSize());
         addStudentsButton.addActionListener(this);
+        addStudentsButton.setEnabled(licenseIsValid(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool()));
         deleteFromSchoolButton = new JButton(
                 Dwo2ExceptionTranslator.getLocalizedCodeExplanation(
                         DwoHelper.getLocale(), Dwo2ExceptionCode.GUI_BTN_deleteFromSchool));
