@@ -16,6 +16,15 @@ public class JsResultsView implements ResultsPresenter.Display {
         JsResultsDisplay.clear();
     }
 
+    /** plots ResultPlot data via jsResultsDisplay. Data contains a horizontal index
+     * including the column label for the row headers. Result data rows contains 
+     * in the first element the row labels and row score. Vertical  index does
+     * does not contain the column label for the row headers.
+     * 
+     * @param data
+     * @param zoomedClass
+     * @param zoomedCourse 
+     */
     @Override
     public void plot(ResultsPresenter.ResultPlot data, boolean zoomedClass, boolean zoomedCourse) {
         JSONArray rows = new JSONArray();

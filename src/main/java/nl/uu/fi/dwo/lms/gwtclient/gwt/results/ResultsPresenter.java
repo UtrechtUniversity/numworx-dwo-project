@@ -315,6 +315,15 @@ public class ResultsPresenter {
         return result; // Though in Java 8 return Optional.
     }
 
+    /** 
+     * Generates ResultPlot data. Data contains a horizontal index
+     * including the column label for the row headers. Result data rows contains 
+     * in the first element the row labels and row score. Vertical  index does
+     * does not contain the column label for the row headers.
+     * 
+     * @param matrix
+     * @return 
+     */ 
     public ResultPlot buildPlotMatrix(DomResultPlotMatrix matrix) {
         ResultPlot data = new ResultPlot();
 
