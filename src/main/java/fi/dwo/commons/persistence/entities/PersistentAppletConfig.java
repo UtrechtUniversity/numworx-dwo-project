@@ -11,14 +11,18 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -29,105 +33,119 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @Entity
 @Table(name = "tblappletconfig", schema = "")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "PersistentAppletConfig.findAll", query = "SELECT p FROM PersistentAppletConfig p"),
-    @NamedQuery(name = "PersistentAppletConfig.findByAppletConfigID", query = "SELECT p FROM PersistentAppletConfig p WHERE p.appletConfigID = :appletConfigID"),
-    @NamedQuery(name = "PersistentAppletConfig.findByAppletID", query = "SELECT p FROM PersistentAppletConfig p WHERE p.appletID = :appletID"),
-    @NamedQuery(name = "PersistentAppletConfig.findByName", query = "SELECT p FROM PersistentAppletConfig p WHERE p.name = :name"),
-    @NamedQuery(name = "PersistentAppletConfig.findByLanguage", query = "SELECT p FROM PersistentAppletConfig p WHERE p.language = :language")})
+@NamedQueries({ @NamedQuery(name = "PersistentAppletConfig.findAll", query = "SELECT p FROM PersistentAppletConfig p"),
+		@NamedQuery(name = "PersistentAppletConfig.findByAppletConfigID", query = "SELECT p FROM PersistentAppletConfig p WHERE p.appletConfigID = :appletConfigID"),
+		@NamedQuery(name = "PersistentAppletConfig.findByAppletID", query = "SELECT p FROM PersistentAppletConfig p WHERE p.appletID = :appletID"),
+		@NamedQuery(name = "PersistentAppletConfig.findByName", query = "SELECT p FROM PersistentAppletConfig p WHERE p.name = :name"),
+		@NamedQuery(name = "PersistentAppletConfig.findByLanguage", query = "SELECT p FROM PersistentAppletConfig p WHERE p.language = :language") })
 public class PersistentAppletConfig implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "appletConfigID", nullable = false)
-    private Long appletConfigID;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "appletID", nullable = false)
-    private int appletID;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 128)
-    @Column(name = "name", nullable = false, length = 128)
-    private String name;
-    @Size(max = 5)
-    @Column(name = "language", length = 5)
-    private String language;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
-    @Size(min = 1, max = 16777215)
-    @Column(name = "launchdata", nullable = false, length = 16777215)
-    private String launchdata;
-    
-    /**
-     * @since 1.5.1
-     */
-    @Transient // not in database yet.
-    private Long dwoProfileID;
-    /**
-     * @since 1.5.1
-     */
-    @Transient // Not in database 
-    private Long appletConfigDataID;
-    
-    public PersistentAppletConfig() {
-    }
+	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Basic(optional = false)
+	@Column(name = "appletConfigID", nullable = false)
+	private Long appletConfigID;
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "appletID", nullable = false)
+	private int appletID;
+	@Basic(optional = false)
+	@NotNull
+	@Size(min = 1, max = 128)
+	@Column(name = "name", nullable = false, length = 128)
+	private String name;
+	@Size(max = 5)
+	@Column(name = "language", length = 5)
+	private String language;
+	@Basic(optional = false)
+	@NotNull
+	@Lob
+	@Size(min = 1, max = 16777215)
+	@Column(name = "launchdata", nullable = false, length = 16777215)
+	private String launchdata;
+	/**
+	 * @since 1.5.0
+	 */
+	@Column(name = "optlock")
+	@Version
+	private int optlock;
+	@Column(name = "lastChangeTimeStamp")
+	private long lastChangeTimeStamp;
+	@NotNull
+	@Column(name = "del", nullable = false)
+	private DelState delState = DelState.not;
 
-    public PersistentAppletConfig(Long appletConfigID) {
-        this.appletConfigID = appletConfigID;
-    }
+	/**
+	 * @since 1.5.1
+	 */
+	//@Basic(optional = true)
+	//@Column(name = "dwoProfileID", nullable = true)
+	@Transient
+	private Long dwoProfileID;
+	/**
+	 * @since 1.5.1
+	 */
+	//@Basic(optional = true)
+	//@Column(name = "appletConfigDataID", nullable = true)
+	@Transient
+	private Long appletConfigDataID;
 
-    public PersistentAppletConfig(Long appletConfigID, int appletID, String name, String launchdata) {
-        this.appletConfigID = appletConfigID;
-        this.appletID = appletID;
-        this.name = name;
-        this.launchdata = launchdata;
-    }
+	public PersistentAppletConfig() {
+	}
 
-    public Long getAppletConfigID() {
-        return appletConfigID;
-    }
+	public PersistentAppletConfig(Long appletConfigID) {
+		this.appletConfigID = appletConfigID;
+	}
 
-    public void setAppletConfigID(Long appletConfigID) {
-        this.appletConfigID = appletConfigID;
-    }
+	public PersistentAppletConfig(Long appletConfigID, int appletID, String name, String launchdata) {
+		this.appletConfigID = appletConfigID;
+		this.appletID = appletID;
+		this.name = name;
+		this.launchdata = launchdata;
+	}
 
-    public int getAppletID() {
-        return appletID;
-    }
+	public Long getAppletConfigID() {
+		return appletConfigID;
+	}
 
-    public void setAppletID(int appletID) {
-        this.appletID = appletID;
-    }
+	public void setAppletConfigID(Long appletConfigID) {
+		this.appletConfigID = appletConfigID;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public int getAppletID() {
+		return appletID;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setAppletID(int appletID) {
+		this.appletID = appletID;
+	}
 
-    public String getLanguage() {
-        return language;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setLanguage(String language) {
-        this.language = language;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getLaunchdata() {
-        return launchdata;
-    }
+	public String getLanguage() {
+		return language;
+	}
 
-    public void setLaunchdata(String launchdata) {
-        this.launchdata = launchdata;
-    }
+	public void setLanguage(String language) {
+		this.language = language;
+	}
 
-    public Long getDwoProfileID() {
+	public String getLaunchdata() {
+		return launchdata;
+	}
+
+	public void setLaunchdata(String launchdata) {
+		this.launchdata = launchdata;
+	}
+
+	public Long getDwoProfileID() {
 		return dwoProfileID;
 	}
 
@@ -144,63 +162,72 @@ public class PersistentAppletConfig implements Serializable {
 	}
 
 	@Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (appletConfigID != null ? appletConfigID.hashCode() : 0);
-        return hash;
-    }
+	public int hashCode() {
+		int hash = 0;
+		hash += (appletConfigID != null ? appletConfigID.hashCode() : 0);
+		return hash;
+	}
 
-    @Override
-    public boolean equals(Object object) {
-        if (!(object instanceof PersistentAppletConfig)) {
-            return false;
-        }
-        PersistentAppletConfig other = (PersistentAppletConfig) object;
-        if ((this.appletConfigID == null && other.appletConfigID != null) || (this.appletConfigID != null && !this.appletConfigID.equals(other.appletConfigID))) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof PersistentAppletConfig)) {
+			return false;
+		}
+		PersistentAppletConfig other = (PersistentAppletConfig) object;
+		if ((this.appletConfigID == null && other.appletConfigID != null)
+				|| (this.appletConfigID != null && !this.appletConfigID.equals(other.appletConfigID))) {
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    public String toString() {
-        return "fi.dwo.server.persistence.PersistentAppletConfig[ appletConfigID=" + appletConfigID + " ]";
-    }
+	@Override
+	public String toString() {
+		return "fi.dwo.server.persistence.PersistentAppletConfig[ appletConfigID=" + appletConfigID + " ]";
+	}
 
-    public DomAppletConfig buildDomAppletConfig() {
-        DomAppletConfig copy = new DomAppletConfig();
-        fillDomAppletConfig(copy);
-        return copy;
-    }
+	public DomAppletConfig buildDomAppletConfig() {
+		DomAppletConfig copy = new DomAppletConfig();
+		fillDomAppletConfig(copy);
+		return copy;
+	}
 
-    private void fillDomAppletConfig(DomAppletConfig copy) {
-        copy.setAppletID(getAppletID());
-        copy.setLanguage(getLanguage());
-        copy.setLaunchdata(getLaunchdata());
-        copy.setName(getName());
-        copy.setId(buildPersistenceId());
-        copy.setDwoProfileId(PersistentDwoProfile.buildPersistenceId(dwoProfileID));
-        copy.setAppletConfigDataId(PersistentAppletConfigData.buildPersistenceId(appletConfigDataID));
-    }
+	private void fillDomAppletConfig(DomAppletConfig copy) {
+		copy.setAppletID(getAppletID());
+		copy.setLanguage(getLanguage());
+		copy.setLaunchdata(getLaunchdata());
+		copy.setName(getName());
+		copy.setId(buildPersistenceId());
+		copy.setDwoProfileId(PersistentDwoProfile.buildDomDwoProfileId(dwoProfileID));
+		copy.setAppletConfigDataId(PersistentAppletConfigData.buildAppletConfigDataId(appletConfigDataID));
+	}
 
-    /** Builds a PersistenceId using this object's data.
-     * 
-     * @return 
-     */
-    public PersistenceId buildPersistenceId() {
-        return buildPersistenceId(appletConfigID);
-    }
+	/**
+	 * Builds a PersistenceId using this object's data.
+	 * 
+	 * @return
+	 */
+	public PersistenceId buildPersistenceId() {
+		return buildPersistenceId(appletConfigID);
+	}
 
-    /**
-     * Builds a persistenceId from the parameters given.
-     *
-     * @param classCourseId
-     * @return
-     */
-    public static PersistenceId buildPersistenceId(Long classCourseId) {
-        PersistenceId id = new PersistenceId();
-        id.setIdString(String.format("MYSQL;%s;%020d",
-                PersistenceClassType.PersistentAppletConfig.name(), classCourseId));
-        return id;
-    }
+	/**
+	 * Builds a persistenceId from the parameters given.
+	 *
+	 * @param classCourseId
+	 * @return
+	 */
+	public static PersistenceId buildPersistenceId(Long classCourseId) {
+		PersistenceId id = new PersistenceId();
+		id.setIdString(
+				String.format("MYSQL;%s;%020d", PersistenceClassType.PersistentAppletConfig.name(), classCourseId));
+		return id;
+	}
+
+	@PrePersist
+	@PreUpdate
+	void changeTimestamp() {
+		lastChangeTimeStamp = System.currentTimeMillis();
+	}
+
 }

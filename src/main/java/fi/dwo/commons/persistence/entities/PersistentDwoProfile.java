@@ -19,6 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -137,6 +138,11 @@ public class PersistentDwoProfile implements Serializable {
         return "fi.dwo.server.persistence.PersistentDwoProfile[ dwoProfileID=" + dwoProfileID + " ]";
     }
 
+    public static DomDwoProfileId buildDomDwoProfileId(Long id) {
+    	if (id == null) return null;
+    	return new DomDwoProfileId(buildPersistenceId(id));
+    }
+    
     public DomDwoProfile buildDomDwoProfile() {
         DomDwoProfile profile = new DomDwoProfile();
         PersistentDwoProfile.this.fillDomDwoProfile(profile);

@@ -5,6 +5,7 @@ package fi.dwo.commons.persistence.entities;
 
 import java.io.Serializable;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfigDataId;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -17,7 +18,7 @@ public class PersistentAppletConfigData implements Serializable {
     /**
      * Builds a persistenceId from the parameters given.
      *
-     * @param aProfileId
+     * @param pid
      * @return
      */
     public static PersistenceId buildPersistenceId(Long pid) {
@@ -27,5 +28,10 @@ public class PersistentAppletConfigData implements Serializable {
                 PersistenceClassType.PersistentAppletConfigData.name(), pid));
         return id;
     }
-
+    
+    public static DomAppletConfigDataId buildAppletConfigDataId(Long pid) {
+    	if (pid == null) return null;
+    	return new DomAppletConfigDataId(buildPersistenceId(pid));
+    }
+    
 }
