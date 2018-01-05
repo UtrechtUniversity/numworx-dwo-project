@@ -2,11 +2,17 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\ScoMapper.java
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.dwojapplet.domain.AppletConfig;
+import fi.dwo.dwojapplet.domain.DWO;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Vector;
+
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 class AppletConfigMapper extends XmlRpcMapper {
@@ -80,10 +86,34 @@ class AppletConfigMapper extends XmlRpcMapper {
             Locale locale = (Locale) obj;
             Hashtable map = new Hashtable();
             map.put("language", locale.getLanguage());
-            return super.get(map);
+            return filteredGet(map);
         }
         return super.get();
     }
+
+	private Object[] filteredGet(Hashtable map) throws IOException, XmlRpcException, SQLException {
+		DbAccessIF dbAccess = DbAccessCreator.instance();
+		Vector<Hashtable> data = dbAccess.getTable(getTableName(), map, getOrderbyCol());
+		Iterator<Hashtable> iter = data.iterator();
+// Filter non profile configs
+		while (iter.hasNext()) {
+			Hashtable hashtable = iter.next();
+			Object o = hashtable.get("dwoProfileID");
+			if(o == null) continue;  // not in database
+			if("".equals(o)) continue; // null = global config
+			if(o.equals(Integer.valueOf(DWO.getDwoProfileID())))
+				continue; // local to profile
+			iter.remove();
+		}
+		
+		int i;
+		Object[] oa = createArray(data.size());
+		for (i = 0; i < data.size(); i++) {
+		    oa[i] = getObjectFromReturn((Hashtable) data.elementAt(i));
+		}
+		
+		return oa;
+	}
 
     /*
      * (non-Javadoc)

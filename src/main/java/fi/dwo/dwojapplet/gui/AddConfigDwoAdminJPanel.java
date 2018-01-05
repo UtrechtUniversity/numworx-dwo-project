@@ -31,6 +31,8 @@ import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.action.ImportScorm;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
@@ -121,7 +123,7 @@ class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
 			profileField.setSelected(false);
 			profileField.setEnabled(true);
 		} else {
-			profileField.setEnabled(config.getDwoProfileId().equals(DWO.getDwoProfile().getId()));
+			profileField.setEnabled(config.getDwoProfileId().getId().equals(DWO.getDwoProfile().getId()));
 			profileField.setSelected(profileField.isEnabled());
 		}
 		dataField = new JTextArea(config.getLaunchdata(), 2, 30);
@@ -163,11 +165,6 @@ class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
                 getComponentCount() / 2, 2,
                 10, 10, //initX, initY
                 10, 10); //xPad, yPad
-	}
-
-	private String toString(PersistenceId id) {
-		if(id == null) return "";
-		return id.toString();
 	}
 
 	public AppletConfig getSelectedAppletConfig() {
@@ -214,9 +211,9 @@ class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
 		return config;
 	}
 
-	private PersistenceId fromString(boolean select) {
+	private DomDwoProfileId fromString(boolean select) {
 		if(select)
-			return DWO.getDwoProfile().getId(); // FIXME
+			return DWO.getDwoProfile();
 		else 
 			return  null;
 	}

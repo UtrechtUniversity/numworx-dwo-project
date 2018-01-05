@@ -26,271 +26,296 @@ import javax.swing.table.TableColumn;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminConfigManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 class AppletConfigPanel extends JPanel implements CenterSubPanel, ActionListener {
 
-    private static final Logger LOG = Logger.getLogger(AppletConfigPanel.class.getName());
+  private static final Logger LOG = Logger.getLogger(AppletConfigPanel.class.getName());
 
-	private CenterPanel centerPanel;
-	private Image removeImage;
-	private Image editImage;
-	private JButton addProfileBtn;
-	private JComponent jtbl;
-	
-	class AppletConfigModel extends AbstractTableModel {
+  private CenterPanel centerPanel;
+  private Image removeImage;
+  private Image editImage;
+  private JButton addProfileBtn;
+  private JComponent jtbl;
 
-		private DomAppletConfig[] config;
-		
-		public AppletConfigModel(DomAppletConfig[] config) {
-			super();
-			this.config = config;
-		}
+  class AppletConfigModel extends AbstractTableModel {
 
-		@Override
-		public int getColumnCount() {
-			return 8;
-		}
+    private DomAppletConfig[] config;
 
-		@Override
-		public int getRowCount() {
-			return config.length;
-		}
+    public AppletConfigModel(DomAppletConfig[] config) {
+      super();
+      this.config = config;
+    }
 
-		@Override
-		public Object getValueAt(int row, int col) {
-                    try {
-                        DomAppletConfig current = config[row];
-                        switch(col) {
-                            case 0:	return MySQLPersistenceId.getNativeId(current);
-                            case 1: return current.getAppletID();
-                            case 2: return current.getName();
-                            case 3: return current.getLanguage();
-                            case 4: return current.getDwoProfileId();
-                            case 5: return current.getLaunchdata();
-                            case 6: return editImage;
-                            case 7: return removeImage;
-                        }
-                        return null;
-                    } catch (Dwo2Exception ex) {
-                        Logger.getLogger(AppletConfigPanel.class.getName()).log(Level.SEVERE, null, ex);
-                        return null;
-                    }
-		}
+    @Override
+    public int getColumnCount() {
+      return 8;
+    }
 
-		public void removeRow(int row) {
-			
-			fireTableDataChanged();
-		}
+    @Override
+    public int getRowCount() {
+      return config.length;
+    }
 
-		@Override
-		public Class<?> getColumnClass(int col) {
-			switch(col) {
-			case 6:
-			case 7:
-				return Image.class;
-			default:
-				return super.getColumnClass(col);
-			}
-		}
+    @Override
+    public Object getValueAt(int row, int col) {
+      try {
+        DomAppletConfig current = config[row];
+        switch (col) {
+          case 0:
+            return MySQLPersistenceId.getNativeId(current);
+          case 1:
+            return current.getAppletID();
+          case 2:
+            return current.getName();
+          case 3:
+            return current.getLanguage();
+          case 4:
+            try {
+              DomDwoProfileId dwoProfileId = current.getDwoProfileId();
+              if (dwoProfileId == null) return Boolean.FALSE;
+              if (DWO.getDwoProfile().getId().equals(dwoProfileId.getId())) return Boolean.TRUE;
+            } catch (Exception e) {
+              return Boolean.FALSE;
+            }
+            return null;
+          case 5:
+            return current.getLaunchdata();
+          case 6:
+            return editImage;
+          case 7:
+            return removeImage;
+        }
+        return null;
+      } catch (Dwo2Exception ex) {
+        Logger.getLogger(AppletConfigPanel.class.getName()).log(Level.SEVERE, null, ex);
+        return null;
+      }
+    }
 
-		@Override
-		public String getColumnName(int col) {
-			switch(col) {
-			case 0: return "id";
-			case 1: return "applet";
-			case 2: return "naam";
-			case 3: return "taal";
-			case 4: return "profiel";
-			case 5: return "launchdata";
-			default: return "";
-			}
-		}
+    public void removeRow(int row) {
 
-		@Override
-		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			switch(columnIndex) {
-			case 6:
-			case 7: 
-					return true;
-			}
-			return super.isCellEditable(rowIndex, columnIndex);
-		}
-		
-	}
+      fireTableDataChanged();
+    }
 
-	   public class ImageButtonEditor extends AbstractCellEditor implements
-		TableCellEditor, ActionListener {
+    @Override
+    public Class<?> getColumnClass(int col) {
+      switch (col) {
+        case 4:
+          return Boolean.class;
+        case 6:
+        case 7:
+          return Image.class;
+        default:
+          return super.getColumnClass(col);
+      }
+    }
 
-	    	Object value;
-	    	AppletConfigModel model;
-	    	int row;
+    @Override
+    public String getColumnName(int col) {
+      switch (col) {
+        case 0:
+          return "id";
+        case 1:
+          return "applet";
+        case 2:
+          return "naam";
+        case 3:
+          return "taal";
+        case 4:
+          return DWO.getDwoProfile().getDwoProfileName();
+        case 5:
+          return "launchdata";
+        default:
+          return "";
+      }
+    }
 
-	    	public Component getTableCellEditorComponent(JTable table, Object value,
-	    			boolean arg2, int row, int col) {
-	    		this.value = value;
-	    		JButton button = new JButton(new ImageIcon((Image)value));
-	    		button.addActionListener(this);
-	    		this.row = row;
-	    		model = (AppletConfigModel) table.getModel();
-	    		return button;
-	    	}
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+      switch (columnIndex) {
+        case 6:
+        case 7:
+          return true;
+      }
+      return super.isCellEditable(rowIndex, columnIndex);
+    }
 
-	    	public Object getCellEditorValue() {
-	    		return value;
-	    	}
+  }
 
-	    	public void actionPerformed(ActionEvent event) {
-	            DomAppletConfig sc = model.config[row];
-	    		if (value == editImage) {
-					sc = AddConfigDwoAdminJPanel.editDialog(jtbl, sc.duplicate());
-					if ( sc != null) {
-	                	try {
-							if (SecureDwoAdminConfigManager.updateConfig(sc));
-								model.config[row] = sc;
-						} catch (Dwo2Exception e) {
-							LOG.log(Level.SEVERE, "edit config", e);
-							GuiCreator.instance().ShowErrorDialog(AppletConfigPanel.this, e);
-						}
-	                    model.fireTableCellUpdated(row, 0);
-					}                
+  public class ImageButtonEditor extends AbstractCellEditor
+      implements
+        TableCellEditor,
+        ActionListener {
 
-	    		} else if (value == removeImage) {
-	                /* Delete the course */
-	                if (JOptionPane.showConfirmDialog(AppletConfigPanel.this, TextMapper.getText(TextMapper.GUIC_MSG_DELETE_APPLETCONFIG)
-	                        + "?", TextMapper.getText(TextMapper.GUIC_DELETE_APPLETCONFIG), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-	                    try {
-							SecureDwoAdminConfigManager.removeConfig(sc);
-						} catch (Dwo2Exception e) {
-							LOG.log(Level.SEVERE, "remove config", e);
-							GuiCreator.instance().ShowErrorDialog(AppletConfigPanel.this, e);
-						}
-					    refresh();
-	                }
+    Object value;
+    AppletConfigModel model;
+    int row;
 
-	    		}
-	    		fireEditingStopped();
-	    	}
+    public Component getTableCellEditorComponent(JTable table, Object value, boolean arg2, int row,
+        int col) {
+      this.value = value;
+      JButton button = new JButton(new ImageIcon((Image) value));
+      button.addActionListener(this);
+      this.row = row;
+      model = (AppletConfigModel) table.getModel();
+      return button;
+    }
 
-	}
+    public Object getCellEditorValue() {
+      return value;
+    }
 
-	public AppletConfigPanel() {
-		super(new BorderLayout(10,10));
-		setBackground(GuiConstants.MAIN_BACKGROUND);
-	    setBorder(BorderFactory.createEmptyBorder(10, 5, 0, 10));
-	       
-        removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
-        editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_CLASS_IMAGE);
-        
-        addProfileBtn = new JButton("Template toevoegen");
-        addProfileBtn.addActionListener(this);
-        jtbl = buildJTable();
-// layout
-        add(jtbl, BorderLayout.CENTER);
-        add(addProfileBtn, BorderLayout.SOUTH);
- 	}
+    public void actionPerformed(ActionEvent event) {
+      DomAppletConfig sc = model.config[row];
+      if (value == editImage) {
+        sc = AddConfigDwoAdminJPanel.editDialog(jtbl, sc.duplicate());
+        if (sc != null) {
+          try {
+            if (SecureDwoAdminConfigManager.updateConfig(sc)) ;
+            model.config[row] = sc;
+          } catch (Dwo2Exception e) {
+            LOG.log(Level.SEVERE, "edit config", e);
+            GuiCreator.instance().ShowErrorDialog(AppletConfigPanel.this, e);
+          }
+          model.fireTableCellUpdated(row, 0);
+        }
 
-	private JComponent buildJTable() {
-// TODO build model
-		DomAppletConfig[] profiles;
-		profiles = new DomAppletConfig[0];
-		try {
-			Collection<DomAppletConfig> list;
-			list = SecureDwoAdminConfigManager.getConfigurations(DwoHelper.getAu().getLocale());
-			profiles = list.toArray(profiles);
-		} catch (Dwo2Exception e) {
-			LOG.log(Level.SEVERE, "getProfiles", e);
-		}
-		
-		AppletConfigModel model = new AppletConfigModel(profiles);
-// build table
-		
-		JTable table = new JTable(model);
-		
-    	TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
-        table.setRowMargin(0);
+      } else if (value == removeImage) {
+        /* Delete the course */
+        if (JOptionPane.showConfirmDialog(AppletConfigPanel.this,
+            TextMapper.getText(TextMapper.GUIC_MSG_DELETE_APPLETCONFIG) + "?",
+            TextMapper.getText(TextMapper.GUIC_DELETE_APPLETCONFIG),
+            JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+          try {
+            SecureDwoAdminConfigManager.removeConfig(sc);
+          } catch (Dwo2Exception e) {
+            LOG.log(Level.SEVERE, "remove config", e);
+            GuiCreator.instance().ShowErrorDialog(AppletConfigPanel.this, e);
+          }
+          refresh();
+        }
 
-        ///TableUtil.setJTableSizes(table);
-        int w = new JLabel("0000").getPreferredSize().width;
-// ID column
-        TableColumn column = table.getColumnModel().getColumn(0);
-		column.setPreferredWidth(w);
-        column.setMaxWidth(w);
-// Applet column       
-        w = new JLabel("applet ").getPreferredSize().width;
-        column = table.getColumnModel().getColumn(1);
-		column.setPreferredWidth(w);
-        column.setMaxWidth(w);
-// language column       
-        w = new JLabel("taal ").getPreferredSize().width;
-        column = table.getColumnModel().getColumn(3);
-		column.setPreferredWidth(w);
-        column.setMaxWidth(w);
-// icons
-        w = 32;
-        column = table.getColumnModel().getColumn(5);
-		column.setPreferredWidth(w);
-        column.setMaxWidth(w);
-        column = table.getColumnModel().getColumn(6);
-		column.setPreferredWidth(w);
-        column.setMaxWidth(w);
-        
-        
-        
-        
-        
-		return new JScrollPane(table);
-	}
+      }
+      fireEditingStopped();
+    }
 
-	public void stateChanged(ChangeEvent e) {
-	}
+  }
 
-	public void end() {
-	}
+  public AppletConfigPanel() {
+    super(new BorderLayout(10, 10));
+    setBackground(GuiConstants.MAIN_BACKGROUND);
+    setBorder(BorderFactory.createEmptyBorder(10, 5, 0, 10));
 
-	public Component getHeaderPanel() {
-    	return new HeaderPanel(TextMapper.getText(TextMapper.DWO_PROFILE_ADMIN));
-	}
+    removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
+    editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_CLASS_IMAGE);
 
-	public void setCenterPanel(CenterPanel centerPanel) {
-		this.centerPanel = centerPanel;
-	}
+    addProfileBtn = new JButton("Template toevoegen");
+    addProfileBtn.addActionListener(this);
+    jtbl = buildJTable();
+    // layout
+    add(jtbl, BorderLayout.CENTER);
+    add(addProfileBtn, BorderLayout.SOUTH);
+  }
 
-	public JComponent getComponent() {
-		return this;
-	}
+  private JComponent buildJTable() {
+    // TODO build model
+    DomAppletConfig[] profiles;
+    profiles = new DomAppletConfig[0];
+    try {
+      Collection<DomAppletConfig> list;
+      list = SecureDwoAdminConfigManager.getConfigurations(DwoHelper.getAu().getLocale());
+      profiles = list.toArray(profiles);
+    } catch (Dwo2Exception e) {
+      LOG.log(Level.SEVERE, "getProfiles", e);
+    }
 
-	public Object getUserObject() {
-		return null;
-	}
+    AppletConfigModel model = new AppletConfigModel(profiles);
+    // build table
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		DomAppletConfig nieuw = AddConfigDwoAdminJPanel.addDialog(jtbl);
-		if(nieuw != null) {
-			try {
-				if (SecureDwoAdminConfigManager.submitConfig(nieuw))
-				{
-					refresh();
-				}
-			} catch (Dwo2Exception e) {
-				LOG.log(Level.SEVERE, "add config", e);
-				GuiCreator.instance().ShowErrorDialog(jtbl, e);
-			}
-		}
-		
+    JTable table = new JTable(model);
 
-	}
+    TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
+    table.setRowMargin(0);
 
-	private void refresh() {
-		remove(jtbl);
-		jtbl = buildJTable();
-		add(jtbl, BorderLayout.CENTER);
-	}
+    /// TableUtil.setJTableSizes(table);
+    int w = new JLabel("0000").getPreferredSize().width;
+    // ID column
+    TableColumn column = table.getColumnModel().getColumn(0);
+    column.setPreferredWidth(w);
+    column.setMaxWidth(w);
+    // Applet column
+    w = new JLabel("applet ").getPreferredSize().width;
+    column = table.getColumnModel().getColumn(1);
+    column.setPreferredWidth(w);
+    column.setMaxWidth(w);
+    // language column
+    w = new JLabel("taal ").getPreferredSize().width;
+    column = table.getColumnModel().getColumn(3);
+    column.setPreferredWidth(w);
+    column.setMaxWidth(w);
+    // icons
+    w = 32;
+    column = table.getColumnModel().getColumn(7);
+    column.setPreferredWidth(w);
+    column.setMaxWidth(w);
+    column = table.getColumnModel().getColumn(6);
+    column.setPreferredWidth(w);
+    column.setMaxWidth(w);
 
-	
-	
+
+
+    return new JScrollPane(table);
+  }
+
+  public void stateChanged(ChangeEvent e) {}
+
+  public void end() {}
+
+  public Component getHeaderPanel() {
+    return new HeaderPanel(TextMapper.getText(TextMapper.DWO_PROFILE_ADMIN));
+  }
+
+  public void setCenterPanel(CenterPanel centerPanel) {
+    this.centerPanel = centerPanel;
+  }
+
+  public JComponent getComponent() {
+    return this;
+  }
+
+  public Object getUserObject() {
+    return null;
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent arg0) {
+    DomAppletConfig nieuw = AddConfigDwoAdminJPanel.addDialog(jtbl);
+    if (nieuw != null) {
+      try {
+        if (SecureDwoAdminConfigManager.submitConfig(nieuw)) {
+          refresh();
+        }
+      } catch (Dwo2Exception e) {
+        LOG.log(Level.SEVERE, "add config", e);
+        GuiCreator.instance().ShowErrorDialog(jtbl, e);
+      }
+    }
+
+
+  }
+
+  private void refresh() {
+    remove(jtbl);
+    jtbl = buildJTable();
+    add(jtbl, BorderLayout.CENTER);
+  }
+
+
+
 }
