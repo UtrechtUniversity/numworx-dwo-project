@@ -64,6 +64,8 @@ CREATE TABLE `tblappletconfig` (
   `optlock` int(11) DEFAULT '0',
   `lastChangeTimeStamp` bigint(20) DEFAULT '0',
   `del` tinyint(4) NOT NULL DEFAULT '0',
+  `dwoProfileID` int(11),
+  `appletConfigDataID` int(11),
   PRIMARY KEY (`appletConfigID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
