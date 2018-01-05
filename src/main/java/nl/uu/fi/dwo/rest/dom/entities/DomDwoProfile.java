@@ -10,8 +10,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  *
  */
 @XmlRootElement
-public class DomDwoProfile implements Cloneable {
-    private PersistenceId id;
+public class DomDwoProfile extends DomDwoProfileId implements Cloneable {
 
     private String dwoProfileName;
     private String dwoProfileRights;
@@ -19,7 +18,7 @@ public class DomDwoProfile implements Cloneable {
     public DomDwoProfile() {}
     
     public DomDwoProfile(DomDwoProfile p) {
-    	id = p.id.duplicate();
+    	setId( p.getId().duplicate());
     	dwoProfileName = p.dwoProfileName;
     	dwoProfileRights = p.dwoProfileRights;
     }
@@ -27,14 +26,6 @@ public class DomDwoProfile implements Cloneable {
     public DomDwoProfile duplicate() {
     	return new DomDwoProfile(this);
     }
-
-	public PersistenceId getId() {
-		return id;
-	}
-
-	public void setId(PersistenceId id) {
-		this.id = id;
-	}
 
 	public String getDwoProfileName() {
 		return dwoProfileName;

@@ -13,8 +13,8 @@ public class DomAppletConfig {
 	private String name;
 	private PersistenceId id;
 	
-	private PersistenceId dwoProfileId;
-	private PersistenceId appletConfigDataId;
+	private DomDwoProfileId dwoProfileId;
+	private DomAppletConfigDataId appletConfigDataId;
 
 	public DomAppletConfig(DomAppletConfig domAppletConfig) {
 		appletID = domAppletConfig.appletID;
@@ -62,19 +62,19 @@ public class DomAppletConfig {
 		this.id = id;
 	}
 
-	public PersistenceId getDwoProfileId() {
+	public DomDwoProfileId getDwoProfileId() {
 		return dwoProfileId;
 	}
 
-	public void setDwoProfileId(PersistenceId dwoProfileId) {
+	public void setDwoProfileId(DomDwoProfileId dwoProfileId) {
 		this.dwoProfileId = dwoProfileId;
 	}
 
-	public PersistenceId getAppletConfigDataId() {
+	public DomAppletConfigDataId getAppletConfigDataId() {
 		return appletConfigDataId;
 	}
 
-	public void setAppletConfigDataId(PersistenceId appletConfigDataId) {
+	public void setAppletConfigDataId(DomAppletConfigDataId appletConfigDataId) {
 		this.appletConfigDataId = appletConfigDataId;
 	}
 

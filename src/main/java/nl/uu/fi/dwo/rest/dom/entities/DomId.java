@@ -6,7 +6,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * @author Wim van Velthoven
  *
  */
-abstract class DomId {
+public abstract class DomId {
 	private PersistenceId id;
 
 	DomId(PersistenceId id) {
