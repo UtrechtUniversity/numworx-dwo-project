@@ -1301,6 +1301,13 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         if (!DwoHelper.setApplet(this)) {
             return;
         }
+// remove security manager completely
+        try {
+			System.setSecurityManager(null);
+		} catch (Exception e1) {
+			LOG.log(Level.WARNING, "running with securitymanager",e1);
+		}
+        
         if (DwoHelper.isApplication() == false || isRunningJavaWebStart()) {
             Authenticator.setDefault(null);
         }
