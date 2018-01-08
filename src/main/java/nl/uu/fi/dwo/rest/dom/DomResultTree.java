@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.rest.dom;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,9 +132,9 @@ public class DomResultTree {
         for (PersistenceId key : resultData.getClassCourses().keySet()) {
             //build the subtrees
             DomClassCourse4Teacher cc = resultData.getClassCourses().get(key);
- //           if (cc.getViewState() == ViewState.invisible || cc.getViewState() == ViewState.studentsAndTeachers || cc.getViewState() == ViewState.teachers) {
-            if ( cc.getViewState() == ViewState.studentsAndTeachers || cc.getViewState() == ViewState.teachers) {
-                DomResultCourseInClass resultCourse = new DomResultCourseInClass(resultData.getCourses().get(cc.getCourseId()),cc.getViewState());
+            //           if (cc.getViewState() == ViewState.invisible || cc.getViewState() == ViewState.studentsAndTeachers || cc.getViewState() == ViewState.teachers) {
+            if (cc.getViewState() == ViewState.studentsAndTeachers || cc.getViewState() == ViewState.teachers) {
+                DomResultCourseInClass resultCourse = new DomResultCourseInClass(resultData.getCourses().get(cc.getCourseId()), cc.getViewState());
                 //attach to class
                 schoolClasses.get(cc.getClassId()).getChildren().put(cc.getCourseId(), resultCourse); //add course to parent
                 resultCourse.setParent(schoolClasses.get(cc.getClassId())); //add parent to course
@@ -195,6 +196,50 @@ public class DomResultTree {
      */
     public void setStudentTree(DomResultTeacher studentTree) {
         this.studentTree = studentTree;
+    }
+
+    final String tabs = "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t";
+    /**
+     * Debug test code for logging a ResultTree.
+     * 
+     * @return 
+     */
+    public String getPlottedResultTree() {
+        StringBuilder sb = new StringBuilder();
+
+//       plotSubTree(studentTree);
+//        sb.append("\n");
+//        LOG.log(Level.INFO, sb.toString());
+        plotSubTree(resultTree, 0);
+        sb.append("\n");
+        LOG.log(Level.INFO, sb.toString());
+
+        return sb.toString();
+    }
+
+    /**
+     * used by getPlottedResultTree().
+     * 
+     * @param rt
+     * @param depth 
+     */
+    private void plotSubTree(DomResultScore rt, int depth) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(rt.getLabel());
+        sb.append(":");
+        sb.append(rt.getScore());
+        sb.append("\n");
+        LOG.log(Level.INFO, tabs.substring(0, depth) + sb.toString());
+
+        for (DomResultScore s : (Collection<DomResultScore>) rt.getChildren().values()) {
+            if (rt.getChildren().size() > 0) {
+                
+                plotSubTree(s, depth+1);
+            }
+        }
+
+        
     }
 
 }
