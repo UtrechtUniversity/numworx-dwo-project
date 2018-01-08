@@ -27,9 +27,9 @@ public class DomContext {
         this.domHasRole = domHasRole;
     }
     
-    public static DomContext buildDomContext(DomHasRole aHasRole){
-        DomContext context = new DomContext();
-        context.setDomHasRole(aHasRole);
-        return context;
-    }
+//    public static DomContext buildDomContext(DomHasRole aHasRole){
+//        DomContext context = new DomContext();
+//        context.setDomHasRole(aHasRole);
+//        return context;
+//    }
 }

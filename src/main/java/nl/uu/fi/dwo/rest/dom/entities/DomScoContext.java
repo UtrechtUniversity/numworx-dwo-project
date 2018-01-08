@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -7,6 +9,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * 
  * @author Gert van der Plas
  */
+@XmlRootElement
 public class DomScoContext extends DomScoContextId {
     private PersistenceId courseId;
     private PersistenceId AppletId;

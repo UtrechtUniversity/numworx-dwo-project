@@ -1,20 +1,23 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 /**
  * 
  * @author Wim van Velthoven
  *
  */
+@XmlRootElement
 public abstract class DomId {
 	private PersistenceId id;
 
-	DomId(PersistenceId id) {
+	public DomId(PersistenceId id) {
 		super();
 		this.id = id;
 	}
 
-	DomId() {
+	public DomId() {
 		super();
 	}
 
