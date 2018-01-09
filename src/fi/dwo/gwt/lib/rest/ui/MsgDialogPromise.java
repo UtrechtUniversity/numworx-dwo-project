@@ -17,6 +17,7 @@ import org.osgi.util.promise.Success;
  *
  * @author G.A.J. van der Plas
  */
+@Deprecated //clearly this Promise contains gui code and should be removed with haste.
 public class MsgDialogPromise<T> implements ClickHandler, Success<T,T>, Failure{ //should implement success and fail overload
 
     private T value;
