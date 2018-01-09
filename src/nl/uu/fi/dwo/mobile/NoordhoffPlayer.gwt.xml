@@ -7,6 +7,7 @@
   <set-property name="gwt.logging.popupHandler" value="DISABLED" />
 	<inherits name="nl.uu.fi.dwo.mobile.DWOplayer-module" />
 	<inherits name="nl.uu.fi.dwo.keyboard.KeyboardGWT-DWO" />
+  	<inherits name="nl.uu.fi.dwo.account.Account-DWO" />
 	
 	<add-linker name='xsiframe' />
 	
