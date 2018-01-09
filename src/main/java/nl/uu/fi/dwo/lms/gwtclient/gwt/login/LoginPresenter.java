@@ -3,12 +3,14 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.login;
 import com.google.gwt.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
+import fi.dwo.gwt.lib.rest.ui.MsgDialogPromise;
 import java.util.Date;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -130,12 +132,13 @@ public class LoginPresenter {
                             eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_WELCOME));
                         }
                         LOG.log(Level.INFO, "login succeeded. Firing Login success event.");
-                    } else {
+                    } else {                        
                         dwoGlobalVars.clearCurrentUser();
-                        eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Wrong login state.")));
+                        LOG.log(Level.INFO, "login failed. Firing Login fail event.");
+                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));                        
+//                        eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Wrong login state.")));
                         // TODO fix login stuff
 //                        Window.Location.assign("");
-                        LOG.log(Level.INFO, "login failed. Firing Login fail event.");
 
                     }
                     return null;
@@ -146,15 +149,19 @@ public class LoginPresenter {
                 public void fail(Promise<?> resolved) throws Exception {
                     Throwable fail = resolved.getFailure();
                     if (fail instanceof Dwo2Exception) {
+                        //Login failed
                         LOG.log(Level.SEVERE, fail.getMessage());
                         //note the order of the events in case ofan exception
                         //that might break the running thread.
-                        eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
                         eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
+//                        eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                        dwoGlobalVars.clearCurrentUser();                        
                     } else {
                         LOG.log(Level.SEVERE, fail.getMessage());
-                        eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, fail.getMessage())));
+                        eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                        dwoGlobalVars.clearCurrentUser();                        
                         eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
+//                        eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, fail.getMessage())));
                     }
                 }
             }
