@@ -519,7 +519,7 @@
                             <options>
                                 <option>-verbose</option>
                                 <option>-dontwarn</option> 
-                                <option>-printconfiguration mapping.txt</option>
+                                <option>-printconfiguration ${project.build.directory}/mapping.txt</option>
                             </options>
                             <obfuscate>true</obfuscate>                    
                             <inputDirectory>${project.build.directory}</inputDirectory>
