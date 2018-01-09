@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
+import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPresenter;
+import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogView;
 
 import fi.dwo.gwt.lib.rest.ui.MsgConfirmDialogPresenter;
 import fi.dwo.gwt.lib.rest.ui.MsgConfirmDialogView;
@@ -63,6 +65,7 @@ public class ViewFactoryGwt implements ViewFactory {
     private final EditStudentPresenter.Display editStudentView;
     private final MsgDialogPresenter.Display msgDialogView;
     private final MsgConfirmDialogPresenter.Display msgConfirmDialogView;
+    private final MsgClickedDialogPresenter.Display msgClickedDialogView;
     private final AddStudentsPresenter.Display addStudentsView;
     private final FileUploadStudentsPresenter.Display fileUploadStudentsView;
 
@@ -88,6 +91,7 @@ public class ViewFactoryGwt implements ViewFactory {
         style.ensureInjected();
         msgDialogView = new MsgDialogView(pf.getMsgDialogPresenter(),style);
         msgConfirmDialogView = new MsgConfirmDialogView(pf.getMsgConfirmDialogPresenter(),style);
+        msgClickedDialogView = new MsgClickedDialogView(pf.getMsgClickedDialogPresenter(),style);
         fileUploadStudentsView = new FileUploadStudentsView(pf.getFileUploadStudentsPresenter());
         //bind subpanels
         mainViewAsWidget.init(this);
@@ -198,6 +202,11 @@ public class ViewFactoryGwt implements ViewFactory {
     
     public Widget asWidget(){
         return mainViewAsWidget.asWidget();
+    }
+
+    @Override
+    public MsgClickedDialogPresenter.Display getMsgClickedDialogView() {
+        return msgClickedDialogView;
     }
 
 }

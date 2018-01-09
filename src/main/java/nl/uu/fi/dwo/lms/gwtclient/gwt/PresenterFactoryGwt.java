@@ -6,6 +6,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import com.google.gwt.event.shared.EventBus;
+import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPresenter;
 
 import fi.dwo.gwt.lib.rest.ui.MsgConfirmDialogPresenter;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
@@ -47,6 +48,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     private final AddStudentsPresenter addStudentsPresenter;
     private final MsgDialogPresenter msgDialogPresenter;
     private final MsgConfirmDialogPresenter msgConfirmDialogPresenter;
+    private final MsgClickedDialogPresenter msgClickedDialogPresenter;
     private final FileUploadStudentsPresenter fileUploadStudentsPresenter;
 
     public PresenterFactoryGwt(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -70,6 +72,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         msgDialogPresenter = new MsgDialogPresenter(eventBus);
         fileUploadStudentsPresenter = new FileUploadStudentsPresenter(eventBus, dwoGlobalVars);
         msgConfirmDialogPresenter = new MsgConfirmDialogPresenter(eventBus);
+        msgClickedDialogPresenter = new MsgClickedDialogPresenter(eventBus);
     }
 
     @Override
@@ -90,6 +93,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         msgDialogPresenter.setView(viewFactory.getMsgDialogView());
         fileUploadStudentsPresenter.setView(viewFactory.getFileUploadStudentsView());
         msgConfirmDialogPresenter.setView(viewFactory.getMsgConfirmDialogView());
+        msgClickedDialogPresenter.setView(viewFactory.getMsgClickedDialogView());
         welcomePresenter.setView(viewFactory.getWelcomeView());
         //last!
         mainPresenter.setView(viewFactory.getMainView());
@@ -240,6 +244,11 @@ public class PresenterFactoryGwt implements PresenterFactory {
 //    @JsMethod    
     public FileUploadStudentsPresenter getFileUploadStudentsPresenter() {
         return fileUploadStudentsPresenter;
+    }
+
+    @Override
+    public MsgClickedDialogPresenter getMsgClickedDialogPresenter() {
+        return msgClickedDialogPresenter;
     }
 
 }

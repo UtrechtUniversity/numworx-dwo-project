@@ -213,7 +213,8 @@ public class DwoGlobalVars {
      * @throws Dwo2Exception
      */
     public Promise<DwoGlobalVarsState> initUser(String usercode, String password) throws Dwo2Exception {
-        GwtRestVars.getInstance().setCredentials(usercode, password);
+        RestAuthenticator.instance.setCredentials(usercode, password);
+        GwtRestVars.getInstance().setAuthenticator(RestAuthenticator.instance);
         if (state != DwoGlobalVarsState.NotLoggedIn) {
             //if not in proper state throw an exception.
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Trying to initialize a user while in the wrong state");
@@ -330,6 +331,7 @@ public class DwoGlobalVars {
         currentUser = null;
         //notify the gwt-rest interface configuration
         GwtRestVars.getInstance().setCurrentUser(null);
+        
         state = DwoGlobalVarsState.NotLoggedIn;
 
     }

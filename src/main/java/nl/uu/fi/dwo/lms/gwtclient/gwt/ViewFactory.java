@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
+import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolPresenter;
 import fi.dwo.gwt.lib.rest.ui.MsgConfirmDialogPresenter;
@@ -41,5 +42,6 @@ public interface ViewFactory {
     public AddStudentsPresenter.Display getAddStudentsView();
     public MsgDialogPresenter.Display getMsgDialogView();
     public MsgConfirmDialogPresenter.Display getMsgConfirmDialogView();
+    public MsgClickedDialogPresenter.Display getMsgClickedDialogView();
     public FileUploadStudentsPresenter.Display getFileUploadStudentsView();
 }

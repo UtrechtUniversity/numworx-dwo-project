@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
+import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolPresenter;
 
@@ -61,6 +62,7 @@ public class ViewFactoryJs implements ViewFactory {
     private final EditStudentPresenter.Display editStudentView;
     private final MsgDialogPresenter.Display msgDialogView;
     private final MsgConfirmDialogPresenter.Display msgConfirmDialogView;
+    private final MsgClickedDialogPresenter.Display msgClickedDialogView;
     private final AddStudentsPresenter.Display addStudentsView;
     private final FileUploadStudentsPresenter.Display fileUploadStudentsView;
 
@@ -83,6 +85,7 @@ public class ViewFactoryJs implements ViewFactory {
         addStudentsView = new AddStudentsView(pf.getAddStudentsPresenter());
         msgDialogView = new JsMsgDialogView();
         msgConfirmDialogView = new JsConfirmDialogView();
+        msgClickedDialogView = null;//new JsClickedDialogView();
         fileUploadStudentsView = new FileUploadStudentsView(pf.getFileUploadStudentsPresenter());
     }
 
@@ -186,6 +189,11 @@ public class ViewFactoryJs implements ViewFactory {
      */
     public FileUploadStudentsPresenter.Display getFileUploadStudentsView() {
         return fileUploadStudentsView;
+    }
+
+    @Override
+    public MsgClickedDialogPresenter.Display getMsgClickedDialogView() {
+        return msgClickedDialogView;
     }
 
 }

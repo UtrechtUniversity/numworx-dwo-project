@@ -1,19 +1,19 @@
 function ConfirmDialogDisplay() {
  
     this.clear = function () {
-        console.log("cleared MsgDialogDisplay dialog text");
+        console.log("cleared ConfirmDialogDisplay dialog text");
     };
 
     this.init = function () {
-        console.log("intialized msg of MsgDialogDisplay");
+        console.log("intialized msg of ConfirmDialogDisplay");
     };
  
     this.showDialog = function (msg) {
-        console.log("showing MsgDialogDisplay with text: "+text);
+        console.log("showing ConfirmDialogDisplay with text: "+text);
     };
 
     this.hideDialog = function () {
-        console.log("hiding MsgDialogDisplay");
+        console.log("hiding ConfirmDialogDisplay");
     };
 }
 var jsConfirmDialogDisplay = new ConfirmDialogDisplay();

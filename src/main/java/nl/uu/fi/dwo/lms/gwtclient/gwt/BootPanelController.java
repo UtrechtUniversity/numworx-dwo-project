@@ -8,7 +8,8 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
-import fi.dwo.gwt.lib.rest.ui.DialogEvent;
+import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogEvent;
+import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPromise;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.Dwo2LocaleMessageGWTTranslator;
 import java.util.logging.Level;
@@ -25,6 +26,9 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 import org.osgi.util.promise.Promise;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.SUCCESS_ROLE;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import org.osgi.util.promise.Failure;
+import org.osgi.util.promise.Success;
 
 /**
  * Controller for Login.
@@ -122,12 +126,12 @@ class BootPanelController {
         DwoPresenterFactory fac = new DwoPresenterFactory(new PresenterFactoryGwt(eventBus, dwoGlobalVars));
         presenterFactory = fac.getFac();
 
-        ViewFactoryGwt gwtView=null;
+        ViewFactoryGwt gwtView = null;
         if (hideGwtGui) {
-             LOG.log(Level.INFO, "ViewFactoryTeuniz assigned.");
+            LOG.log(Level.INFO, "ViewFactoryTeuniz assigned.");
             viewFactory = new ViewFactoryJs(presenterFactory);
         } else {
-             LOG.log(Level.INFO, "ViewFactoryGwt assigned.");
+            LOG.log(Level.INFO, "ViewFactoryGwt assigned.");
             gwtView = new ViewFactoryGwt(presenterFactory);
             viewFactory = gwtView;
         }
@@ -161,14 +165,29 @@ class BootPanelController {
                         presenterFactory.getSwitchSchoolPresenter().init();
                         break;
                     case FAIL:
-                        eventBus.fireEvent(new DialogEvent("Login failed."));
-                        Window.Location.replace(Window.Location.getHref());
+                        LOG.log(Level.INFO, "Login failed.");
+//                        /eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Login failed.")));
+                        MsgClickedDialogPromise p = new MsgClickedDialogPromise(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_AuthenticationError));
+                        p.getPromise().then(new Success<Boolean, Void>() {
+                            @Override
+                            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                                LOG.log(Level.INFO, "returned value" + resolved.getValue());
+                                Window.Location.replace(Window.Location.getHref());
+                                return null;
+                            }
+                        }, new Failure() {
+                            @Override
+                            public void fail(Promise<?> resolved) throws Exception {
+                                Window.Location.replace(Window.Location.getHref());
+                            }
+                        }
+                        );
+                        eventBus.fireEvent(new MsgClickedDialogEvent(MsgClickedDialogEvent.EventType.MsgClickedDialog, p));
+                        
                         break;
                     case LOGOUT:
-                        LOG.log(Level.INFO, "Login succeeded. Showing switch role view.");
-                        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SWITCHSCHOOL));
-                        viewFactory.getMainView().hideMenuButton();
                         dwoGlobalVars.clearCurrentUser();
+                        viewFactory.getMainView().hideMenuButton();
                         presenterFactory.getMainPresenter().onSwitchViewEvent(new SwitchViewEvent(SwitchViewEvent.eventValue.LOGIN));
                     default:
                         LOG.log(Level.SEVERE, "Login handling failed in app controller.");
