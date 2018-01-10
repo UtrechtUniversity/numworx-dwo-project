@@ -3,6 +3,7 @@ package fi.dwo.server.rest;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.sql.Date;
 import java.sql.Time;
@@ -14,11 +15,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
 import javax.persistence.PersistenceException;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.EntityTag;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
 
 import fi.beans.dwomaccess.JSONEncoder;
@@ -145,7 +155,7 @@ public class SecuredUserScoDataManager {
     @PUT
     @Produces({"application/json"})
     @Path("/getValues")
-    public DomScormValues getValues(@Context SecurityContext sc, RestScormValues rest) throws Dwo2Exception {
+    public Response getValues(@Context SecurityContext sc, RestScormValues rest) throws Dwo2Exception {
     	DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
     	
     	// Context
@@ -170,7 +180,7 @@ public class SecuredUserScoDataManager {
 		PersistentScoContext scoContext = ScoContextManager.findEntity(scocontextid);
 		List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
 		if(list.isEmpty()) {
-			return rest.getDomScormValues();
+			return Response.ok(rest.getDomScormValues(), MediaType.APPLICATION_JSON_TYPE).build();
 		}
 		List<DomMapEntry<String, String>> entryList = rest.getDomScormValues().getValues();
 		PersistentStudentScoContext pssc = list.get(0);
@@ -178,7 +188,9 @@ public class SecuredUserScoDataManager {
 
     	DomScormValues domScormValues = rest.getDomScormValues();
      	LOG.log(Level.INFO, "getValues done " + sc.getUserPrincipal().getName() + " " + scocontextid);
-		return domScormValues;
+		PersistentStudentScoData pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
+		
+		return Response.ok(domScormValues, MediaType.APPLICATION_JSON_TYPE).tag(buildETag(pssc,pssd)).build();
     }
 
 
@@ -277,12 +289,14 @@ public class SecuredUserScoDataManager {
 	@PUT
     @Produces({"application/json"})
     @Path("/setValues")
-    public Boolean setValues(@Context SecurityContext sc, RestScormValues rest) throws Dwo2Exception {
+    public Response setValues(@Context SecurityContext sc, RestScormValues rest) throws Dwo2Exception {
     	DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
     	
     	// Context
     	PersistentUser user = null;
-    	try {
+	PersistentStudentScoContext pssc = null;
+	PersistentStudentScoData pssd = null;
+   	try {
     		user = UserManager.findByUserName(sc.getUserPrincipal().getName());
     		LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
     	} catch (Exception e) {
@@ -297,8 +311,6 @@ public class SecuredUserScoDataManager {
     		LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Hasrole mismatch");
     		throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "This will be logged.");			
  		}
-		PersistentStudentScoContext pssc = null;
-		PersistentStudentScoData pssd = null;
 		PersistentScoContext scoContext = null;
 		DomSchoolClassId domClassID = rest.getDomScormValues().getSchoolClassID();
 		Long classID = MySQLPersistenceId.getNativeId(domClassID);
@@ -328,7 +340,7 @@ public class SecuredUserScoDataManager {
 			if(COMPLETE.equals(pssc.getCompletionStatus()))
 			{
 				LOG.warning("data is readonly "+ sc.getUserPrincipal().getName() + " " + scoContext.getScoID());
-				return Boolean.FALSE;
+				return Response.ok(Boolean.FALSE, MediaType.APPLICATION_JSON_TYPE).build();
 			}
 // Niet nieuw: check if <> then null
 		
@@ -386,7 +398,6 @@ public class SecuredUserScoDataManager {
 						pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
 						if(pssd == null) {
 							pssd = new PersistentStudentScoData(pssc.getStudentSco(), value);
-							pssd.setSuspendData(value);
 							pssd.setCocd("");
 							StudentScoDataManager.create(pssd);
 						} else {
@@ -419,15 +430,76 @@ public class SecuredUserScoDataManager {
 				pssd.setCocd(xml.toString());
 			}
 			if (pssd != null) {
-				StudentScoDataManager.edit(pssd);
+				pssd = StudentScoDataManager.edit(pssd);
 			}
-			StudentScoContextManager.edit(pssc);
+			pssc = StudentScoContextManager.edit(pssc);
 			LOG.log(Level.INFO, "setValues returns " + sc.getUserPrincipal().getName() + " " + sc.getUserPrincipal().getName() + " " + scoContext.getScoID());
 		} catch (PersistenceException ex) {
             LOG.log(Level.WARNING, "User {0} could not update studentscocontext {1}.", new Object[]{sc.getUserPrincipal().getName(), pssc.getStudentSco()});
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update studentscocontext " + sc.getUserPrincipal().getName() + ".");
 		}
-    	return Boolean.TRUE;
+    	return Response.ok(Boolean.TRUE, MediaType.APPLICATION_JSON_TYPE).tag(buildETag(pssc,pssd)).build();
     }
+	
+	@PUT // @PATCH
+	@Produces("application/json")
+	@Path("/patchValues")
+	public Response patchValues(@Context SecurityContext sc, RestScormValues rest, @HeaderParam("if-match") String match) throws Dwo2Exception {
+		PersistentStudentScoContext ssContext = null;
+		PersistentStudentScoData    ssData = null;
+    		DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
+        PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
+        PersistentScoContext scoContext = ScoContextManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomScormValues().getScoContext()));
+		List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
+		if(!list.isEmpty()) {
+			ssContext = list.get(0);
+			if(COMPLETE.equals(ssContext.getCompletionStatus()))
+			{
+				LOG.warning("data is readonly "+ sc.getUserPrincipal().getName() + " " + scoContext.getScoID());
+				throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "data is readonly");
+			}
+			ssData = StudentScoDataManager.findEntity(ssContext.getStudentSco());
+			if(ssData == null) {
+				ssData = new PersistentStudentScoData(ssContext.getStudentSco(), "{}");
+				ssData.setCocd("");
+				StudentScoDataManager.create(ssData);
+			}
+		}
+       String etag = buildETag(ssContext, ssData);
+        if (!etag.equals(match))
+        		throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Wrong if-match", Response.Status.PRECONDITION_FAILED);
+ // PATCH
+		for(DomMapEntry<String,String> entry: rest.getDomScormValues().getValues()) {
+			logEntry("set", entry, ssContext.getPersistentHasRolePK().getUserID(), ssContext.getScoID());
+			ScormKey key = ScormKey.getKey(entry.getKey());
+			String value = entry.getValue();
+			switch(key) {
+			case SUSPEND_DATA:
+				String oldValue = ssData.getSuspendData();
+				JsonObject oldObject = Json.createParser(new StringReader(oldValue)).getObject();
+				JsonArray  patch     = Json.createParser(new StringReader(value)).getArray();
+				JsonObject newObject = Json.createPatch(patch).apply(oldObject);
+				StringWriter newValue = new StringWriter();
+				Json.createWriter(newValue).write(newObject);
+				ssData.setSuspendData(DbAccess.convertUEsc(newValue.toString()));
+				break;
+			default:
+				throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "wrong key");
+			}
+		}
+        ssContext = StudentScoContextManager.edit(ssContext);
+        ssData = StudentScoDataManager.edit(ssData);
+        etag = buildETag(ssContext, ssData);
+		return Response.ok(Boolean.TRUE, MediaType.APPLICATION_JSON_TYPE)
+				.tag(etag)
+				.build();
+	}
+
+	private String buildETag(PersistentStudentScoContext ssContext, PersistentStudentScoData ssData) {
+		if (ssContext == null | ssData == null)
+			return "";
+		return ssContext.getOptlock() + "+" + ssContext.getLastChangeTimeStamp() + "+" + ssData.getOptlock() + "+"
+				+ ssData.getLastChangeTimeStamp();
+	}
 }

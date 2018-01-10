@@ -59,9 +59,10 @@ public class StudentScoDataManager {
      * Update
      *
      * @param ssd studentScoData
+     * @return merged ssd
      * @throws Exception
      */
-    public static void edit(PersistentStudentScoData ssd) throws PersistenceException {
+    public static PersistentStudentScoData edit(PersistentStudentScoData ssd) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -83,6 +84,7 @@ public class StudentScoDataManager {
                 em.close();
             }
         }
+        return ssd;
     }
 
     /**

@@ -2,10 +2,14 @@ package fi.dwo.server.rest;
 
 import static org.junit.Assert.*;
 
+import java.io.StringWriter;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.json.Json;
+import javax.json.JsonPatchBuilder;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.junit.After;
@@ -129,7 +133,7 @@ public class SecuredUserScoDataManagerIT {
         values.setValues(Collections.singletonList(entry));
         values.setScoContext(sco);
         
-        DomScormValues result = manager.getValues(sc, rest);
+        DomScormValues result = (DomScormValues) manager.getValues(sc, rest).getEntity();
         assertEquals(rest.getDomScormValues().getValues().size(), result.getValues().size());
         assertEquals(key, result.getValues().get(0).getKey());
         assertEquals("0.0", result.getValues().get(0).getValue());
@@ -167,13 +171,65 @@ public class SecuredUserScoDataManagerIT {
         values.setValues(Collections.singletonList(entry));
         values.setScoContext(sco);
         
-        Boolean result = manager.setValues(sc, rest);
+        Object result = manager.setValues(sc, rest).getEntity();
         assertEquals(Boolean.TRUE, result);
         
-        values = manager.getValues(sc, rest);
+        values = (DomScormValues) manager.getValues(sc, rest).getEntity();
         assertEquals(rest.getDomScormValues().getValues().size(), values.getValues().size());
         assertEquals(key, values.getValues().get(0).getKey());
         assertEquals("100.0", values.getValues().get(0).getValue());
+       
+        
+	}
+	@Test
+	public void testPatchValues() throws Dwo2Exception {
+		String key = "cmi.suspend_data";
+		Long scoID = 1L;
+        SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);//school01
+        RestScormValues rest = new RestScormValues();
+        DomContext restContext = new DomContext();
+        DomHasRole domHasRole = null;
+        PersistentUser pUser = UserManager.findByUserName("user02");
+        PersistentSchool pSchool = SchoolManager.findBySchoolLogin("school01");//id =3
+
+        try {
+            PersistentHasRole pHasRole = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, pSchool, RoleType.STUDENT);
+            domHasRole = pHasRole.buildDomHasRole();
+        } catch (Dwo2Exception ex) {
+            Logger.getLogger(SecuredTeacherResultsManagerIT.class.getName()).log(Level.SEVERE, null, ex);
+            fail("Could not find student hasRole");
+        }
+        restContext.setDomHasRole(domHasRole);
+        DomScormValues values = new DomScormValues();
+        rest.setDomScormValues(values);
+        rest.setRestContext(restContext);
+        
+        PersistentScoContext scoContext = ScoContextManager.findEntity(scoID);
+        DomScoContext sco = scoContext.buildDomScoContext();
+        DomMapEntry<String,String> entry = new DomMapEntry<>();
+        entry.setKey(key);
+        entry.setValue("{\"a\": 12345}");
+        values.setValues(Collections.singletonList(entry));
+        values.setScoContext(sco);      
+        Response response = manager.setValues(sc, rest);
+		Object result = response.getEntity();
+		String etag   = response.getEntityTag().getValue();
+        assertEquals(Boolean.TRUE, result);
+        assertNotNull(etag);
+        JsonPatchBuilder builder = Json.createPatchBuilder();
+        builder.add("/b", true);
+        builder.replace("/a", 44321);
+        StringWriter patch = new StringWriter();
+        Json.createWriter(patch).write(builder.build().toJsonArray());
+        entry.setValue(patch.toString());
+        response = manager.patchValues(sc, rest, etag);
+        assertEquals(Response.Status.OK, response.getStatus());
+        values = (DomScormValues) manager.getValues(sc, rest).getEntity();
+        assertEquals(rest.getDomScormValues().getValues().size(), values.getValues().size());
+        assertEquals(key, values.getValues().get(0).getKey());
+        String value = values.getValues().get(0).getValue();
+		assertTrue("44321", value.contains("44321"));
+        assertTrue("true", values.getValues().get(0).getValue().contains("true"));
        
         
 	}
