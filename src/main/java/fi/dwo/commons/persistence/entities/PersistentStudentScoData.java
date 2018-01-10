@@ -13,10 +13,15 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -50,6 +55,20 @@ public class PersistentStudentScoData implements Serializable {
     @Size(max = 65535)
     @Column(name = "cocd", length = 65535)
     private String cocd;
+    @Column(name = "optlock")
+    @Version private int optlock;
+    @Column(name = "lastChangeTimeStamp")
+    private long lastChangeTimeStamp;
+    @NotNull
+    @Column(name = "del", nullable=false)
+    private DelState delState = DelState.not;
+    
+    
+    @PrePersist
+    @PreUpdate
+    void changeTimestamp() {
+    	lastChangeTimeStamp = System.currentTimeMillis();
+    }
 
     public PersistentStudentScoData() {
     }
@@ -87,7 +106,23 @@ public class PersistentStudentScoData implements Serializable {
         this.cocd = cocd;
     }
 
-    @Override
+    public int getOptlock() {
+		return optlock;
+	}
+
+	public void setOptlock(int optlock) {
+		this.optlock = optlock;
+	}
+
+	public long getLastChangeTimeStamp() {
+		return lastChangeTimeStamp;
+	}
+
+	public void setLastChangeTimeStamp(long lastChangeTimeStamp) {
+		this.lastChangeTimeStamp = lastChangeTimeStamp;
+	}
+
+	@Override
     public int hashCode() {
         int hash = 0;
         hash += (studentSco != null ? studentSco.hashCode() : 0);

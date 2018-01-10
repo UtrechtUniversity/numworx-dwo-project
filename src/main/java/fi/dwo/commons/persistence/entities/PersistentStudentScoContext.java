@@ -216,6 +216,22 @@ public class PersistentStudentScoContext implements Serializable {
 		this.persistentHasRolePK = persistentHasRolePK;
 	}
 
+	public int getOptlock() {
+		return optlock;
+	}
+
+	public void setOptlock(int optlock) {
+		this.optlock = optlock;
+	}
+
+	public long getLastChangeTimeStamp() {
+		return lastChangeTimeStamp;
+	}
+
+	public void setLastChangeTimeStamp(long lastChangeTimeStamp) {
+		this.lastChangeTimeStamp = lastChangeTimeStamp;
+	}
+
 	@Override
     public int hashCode() {
         int hash = 0;
