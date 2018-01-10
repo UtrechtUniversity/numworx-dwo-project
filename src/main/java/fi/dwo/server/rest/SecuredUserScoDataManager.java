@@ -18,17 +18,15 @@ import java.util.zip.GZIPInputStream;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
+import javax.json.stream.JsonParser;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
 
 import fi.beans.dwomaccess.JSONEncoder;
@@ -477,9 +475,13 @@ public class SecuredUserScoDataManager {
 			switch(key) {
 			case SUSPEND_DATA:
 				String oldValue = ssData.getSuspendData();
-				JsonObject oldObject = Json.createParser(new StringReader(oldValue)).getObject();
-				JsonArray  patch     = Json.createParser(new StringReader(value)).getArray();
-				JsonObject newObject = Json.createPatch(patch).apply(oldObject);
+				JsonParser parser = Json.createParser(new StringReader(oldValue));
+				parser.next();
+				JsonObject oldObject = parser.getObject();
+				parser = Json.createParser(new StringReader(value));
+				parser.next();
+				JsonArray  patch     = parser.getArray();
+		        JsonObject newObject = Json.createPatch(patch).apply(oldObject);
 				StringWriter newValue = new StringWriter();
 				Json.createWriter(newValue).write(newObject);
 				ssData.setSuspendData(DbAccess.convertUEsc(newValue.toString()));

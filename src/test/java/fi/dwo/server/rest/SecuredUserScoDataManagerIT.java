@@ -9,9 +9,11 @@ import java.util.logging.Logger;
 
 import javax.json.Json;
 import javax.json.JsonPatchBuilder;
+import javax.json.spi.JsonProvider;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.glassfish.json.JsonProviderImpl;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -216,11 +218,16 @@ public class SecuredUserScoDataManagerIT {
 		String etag   = response.getEntityTag().getValue();
         assertEquals(Boolean.TRUE, result);
         assertNotNull(etag);
-        JsonPatchBuilder builder = Json.createPatchBuilder();
+        
+        JsonPatchBuilder builder;
+        JsonProvider provider = new JsonProviderImpl();
+        JsonProvider provider1 = JsonProvider.provider();
+        assertSame(provider.getClass(),provider1.getClass());
+        builder = provider.createPatchBuilder();
         builder.add("/b", true);
         builder.replace("/a", 44321);
         StringWriter patch = new StringWriter();
-        Json.createWriter(patch).write(builder.build().toJsonArray());
+        provider.createWriter(patch).write(builder.build().toJsonArray());
         entry.setValue(patch.toString());
         response = manager.patchValues(sc, rest, etag);
         assertEquals(Response.Status.OK, response.getStatus());
