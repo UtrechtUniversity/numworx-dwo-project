@@ -12,7 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -20,6 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -61,6 +65,23 @@ public class PersistentDwoProfile implements Serializable {
     @Size(max = 100)
     @Column(name = "dwoProfileDescription", length = 100)
     private String dwoProfileDescription;
+	/**
+	 * @since 1.5.0
+	 */
+	@Column(name = "optlock")
+	@Version
+	private int optlock;
+	@Column(name = "lastChangeTimeStamp")
+	private long lastChangeTimeStamp;
+	@NotNull
+	@Column(name = "del", nullable = false)
+	private DelState delState = DelState.not;
+    /**
+     * @since 1.5.1
+     */
+    @Size(max = 5)
+	@Column(name = "language", length = 5)
+	private String language;
 
     public PersistentDwoProfile() {
     }
@@ -112,6 +133,14 @@ public class PersistentDwoProfile implements Serializable {
 
     public void setDwoProfileDescription(String dwoProfileDescription) {
         this.dwoProfileDescription = dwoProfileDescription;
+    }
+
+    public String getLanguage() {
+      return language;
+    }
+
+    public void setLanguage(String language) {
+      this.language = language;
     }
 
     @Override
@@ -190,4 +219,11 @@ public class PersistentDwoProfile implements Serializable {
                 PersistenceClassType.PersistentDwoProfile.name(), aProfileId));
         return id;
     }
+
+    @PrePersist
+	@PreUpdate
+	void changeTimestamp() {
+		lastChangeTimeStamp = System.currentTimeMillis();
+	}
+
 }

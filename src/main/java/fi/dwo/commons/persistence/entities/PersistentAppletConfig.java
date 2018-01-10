@@ -79,16 +79,14 @@ public class PersistentAppletConfig implements Serializable {
 	/**
 	 * @since 1.5.1
 	 */
-	//@Basic(optional = true)
-	//@Column(name = "dwoProfileID", nullable = true)
-	@Transient
+	@Basic(optional = true)
+	@Column(name = "dwoProfileID", nullable = true)
 	private Long dwoProfileID;
 	/**
 	 * @since 1.5.1
 	 */
-	//@Basic(optional = true)
-	//@Column(name = "appletConfigDataID", nullable = true)
-	@Transient
+	@Basic(optional = true)
+	@Column(name = "appletConfigDataID", nullable = true)
 	private Long appletConfigDataID;
 
 	public PersistentAppletConfig() {
