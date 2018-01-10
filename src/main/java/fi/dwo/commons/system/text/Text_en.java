@@ -151,7 +151,7 @@ public class Text_en extends ListResourceBundle {
 			{ TextMapper.GUIW_BTN_REGISTER,
 					"Register for an account or a school" },
 			{ TextMapper.GUIW_ERR_LOGIN, "Incorrect username or password." },
-			{ TextMapper.GUIW_ERR_NEW_SCHOOLLOGIN, "Sorry, you used the wrong credentials." },
+			{ TextMapper.GUIW_ERR_NEW_SCHOOLLOGIN, "Sorry, you used the wrong schoolcredentials." },
 			{ TextMapper.GUIW_ERR_NOROLE, "No role was given" },
 			{ TextMapper.GUIR_REGISTER, "Register" },
 			{ TextMapper.GUIR_REGISTERINFO, "New User registration" },
