@@ -25,7 +25,10 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionInterface;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 import java.util.logging.Logger;
 
@@ -218,6 +221,18 @@ public class SchoolLoginController {
 		
 	}
 
+	void failedAddSchoolLogin(Promise<?> p) throws Exception {
+		Throwable t = p.getFailure();
+		if( t instanceof Dwo2ExceptionInterface) {
+			Dwo2ExceptionInterface e = (Dwo2ExceptionInterface) t;
+			Dwo2ExceptionCode code = e.getDwo2Code();
+			String message = Dwo2ExceptionTranslator.getLocalizedCodeExplanation(null, code);
+			t = (new RuntimeException(message, t));
+		}
+        Window.alert(t.getMessage()); // FIXME betere foutmelding
+	}
+	
+	
 	public void addASchoolLogin(DomNewSchoolLogin request) {
 		PromiseCallback<Boolean> df = new PromiseCallback<>();
 		addASchoolLogin(request, df);
@@ -227,7 +242,7 @@ public class SchoolLoginController {
 			addSchoolPanel.hide();
 			init(DwoGlobalVars.instance().getCurrentUser());
 			return null;
-		}, p -> addSchoolPanel.enable()).then(null, view.new RestFailure());
+		}, p -> addSchoolPanel.enable()).then(null, this::failedAddSchoolLogin);
 		
 	}
 }
