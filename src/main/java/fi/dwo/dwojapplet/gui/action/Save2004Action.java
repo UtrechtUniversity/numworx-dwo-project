@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.gui.action;
 
 import fi.beans.appletutil.AppletUtil;
+import fi.beans.css.StateToCss;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.CourseMap;
@@ -24,6 +25,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -160,8 +162,15 @@ public class Save2004Action extends GuiAction {
 
 		out.putNextEntry(new ZipEntry(id + ".xml"));
 		Map ld = new HashMap(runner.getLaunchData());
-		OutputStreamWriter wr = new OutputStreamWriter(out, ScormParameters.UTF8);
+		Writer wr = new OutputStreamWriter(out, ScormParameters.UTF8);
 		sco.jsonEncode(ld, wr);
+		wr.flush();
+		out.closeEntry();
+// stylesheet
+		out.putNextEntry(new ZipEntry(id + ".css"));
+		wr = new OutputStreamWriter(out,ScormParameters.UTF8);
+		String css = StateToCss.createCssFromInstellingen(runner.getLaunchData(), sco.getApplet().getClass().getClassLoader());
+		wr.write(css);
 		wr.flush();
 		out.closeEntry();
 	}
