@@ -21,6 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 /**
  * <p>
@@ -220,23 +222,6 @@ public class RegisterMoreSchoolLoginsPanel extends JPanel implements ActionListe
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == registerButton) {
-//            if ((groupChoice.getSelectedIndex() == 0) && (schoollogin.getText().equals("")) && (schoolpassword.getText().equals(""))) {
-//                //add nullschool login
-//                try {
-//                    DomNewSchoolLogin nur = new DomNewSchoolLogin();
-//
-//                    nur.setSchoolLogin(null);
-//                    nur.setSchoolCode(null);
-//                    nur.setRole(RoleType.STUDENT);
-//                    SecureUserAccountLoginsManager.addASchoolLogin(nur);
-//                    JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-//                    GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
-//                }
-//                catch (Dwo2Exception ex) {
-//                    LOG.log(Level.WARNING, "Error adding schoollogin.",ex);
-//                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_NEW_SCHOOLLOGIN));
-//                }
-//            } else {
                 RoleType role = null;
                 role = DwoHelper.getRoles()[groupChoice.getSelectedIndex()+1];
                 try {
@@ -253,7 +238,8 @@ public class RegisterMoreSchoolLoginsPanel extends JPanel implements ActionListe
                 }
                 catch (Dwo2Exception ex) {
                     LOG.log(Level.WARNING, "Error adding schoollogin.",ex);
-                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_NEW_SCHOOLLOGIN));
+                    
+                    GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.Rest_Registration_School_authentication_failed));
                 }
 
 //            }
