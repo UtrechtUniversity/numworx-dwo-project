@@ -100,6 +100,8 @@ public class MapperConstants {
         Map feedbackMap = new HashMap<String, String>();
         constants.put("feedback", feedbackMap);
         //components: the mentioned rule (adding a component) was recognized to be performed correctly
+        
+        //Replaced by feedback.java, so this is old and can be removed?
         feedbackMap.put("component.alpha", "Dit is een geschikt significantieniveau.");
         feedbackMap.put("component.conclusion.p-value", "Dit is de juiste conclusie over deze p-waarde.");
         feedbackMap.put("component.critical-conclusion", "Dit is de juiste conclusie over deze toetsingsgrootheid en kritiek gebied.");
@@ -196,7 +198,7 @@ public class MapperConstants {
         //Buggy: state is not equivalent to previous state; mentioned buggy rule detected
         feedbackMap.put("buggy.component.alpha", "Je hebt niet het gevraagde significantieniveau gebruikt.");
         feedbackMap.put("buggy.component.df", "Het aantal vrijheidsgraden dat je gebruikt is niet correct.");
-        feedbackMap.put("buggy.component.h0", "De nulhypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef.");
+        feedbackMap.put("buggy.component.h0-samplemean", "De nulhypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef.");
         feedbackMap.put("buggy.component.ha", "Deze alternatieve hypothese past niet bij de claim uit de opdracht.");
         feedbackMap.put("buggy.component.t-test-one-sample.should-be-t-test-paired", "Een t-toets voor één groep is geschikt als je maar één steekproef hebt.");
         feedbackMap.put("buggy.component.t-test-one-sample.should-be-t-test-two-sample", "Een t-toets voor één groep is geschikt als je maar één steekproef hebt.");

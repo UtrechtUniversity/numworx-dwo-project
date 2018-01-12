@@ -2282,8 +2282,9 @@ private Object deGreek(String value) {
 		//task specific replacements
 		.replace("$b$a$a$cx@$n$cy@@@$nD$s0@@@$n$w$o$b$ps$sx@$n2@@$nn$sx@@@$n$b$ps$sy@$n2@@$nn$sy@@@@@@@@", 
 				"$b$aM1$nM2@@$n$w$o$b$ps1$n2@@$nn1@@$n$b$ps2$n2@@$nn2@@@@@@@")
-		//to do: test or ask Bastiaan whether replacing x by M1 instead of replacing x by M (etc) would lead to problems.
-		//otherwise the above can be replaced by extending the general replacements below. 
+		//TODO (for later, with Bastiaan) enable replacing x by M1 instead of replacing x by M (etc).
+		//Then the above can be replaced by extending the general replacements below. 
+		
 		//general replacements	
 		.replace(",", ".")
 		.replace("$sD@", "")
@@ -2298,6 +2299,7 @@ private Object deGreek(String value) {
 		.replace("z$sc*r*i*t@", "zcrit")
 		.replace("t$sc*r*i*t@", "tcrit")
 		.replace("r$sc*r*i*t@", "rcrit")
+		.replace("F$sc*r*i*t@", "Fcrit")
 		.replace("$sA@", "1")
 		.replace("$sB@", "2")
 		.replace("$s1@", "1")

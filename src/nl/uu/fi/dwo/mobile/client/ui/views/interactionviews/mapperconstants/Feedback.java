@@ -111,7 +111,7 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
    * @return translated "De nulhypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef."
    */
   @DefaultStringValue("De nulhypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef.")
-  @Key("buggy.component.h0")
+  @Key("buggy.component.h0-samplemean")
   String buggy_component_h0();
 
   /**
