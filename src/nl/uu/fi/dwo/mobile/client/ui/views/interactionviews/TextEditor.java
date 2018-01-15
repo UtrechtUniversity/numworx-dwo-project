@@ -802,6 +802,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	public void setFontSize(int font_size)
 	{
 		widget.getElement().getStyle().setFontSize(font_size, Unit.PX);
+		// moet onderstaande of overbodig?
+//		content.setPixelSize(width-boxsize-padding, font_size);
+//		content.getElement().getStyle().setFontSize(font_size, Unit.PX);
 	}
 
 	@Override
@@ -1238,6 +1241,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		{
 			return "\n";
 		}
+	}
+
+	public void setEditable(boolean b)
+	{
+		editable = b;
 	}
 	
 }
