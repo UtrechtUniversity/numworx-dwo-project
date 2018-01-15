@@ -704,13 +704,17 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		this.attempts = new Vector(attempts);
 		this.attemptsCount = attemptsCount;
 		this.errorCount = errorCount;
-
+ 
+		if (!formuleMode)
+			// set editable zodat we in setState altijd het opgeslagen antwoord neer kunnen zetten
+			antwoordTF.setEditable(true);
 		setText(antwoord);
 
 		if (ingevuld 
 			&& (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)))
 			kijkNa(true, false);
 		this.editable = map.getBoolean("editable", true);
+		
 		if (!editable)
 		{
 			if (formuleMode)
@@ -954,14 +958,24 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		
 		// Voorkomen dat door een kijkNa() op de pagina, gevolgd door een comRoot.setChanged() en daarmee getState() van alle interactionviews op de pagina
 		// ook van andere interactionviews de crosswidget-events worden getriggerd, terwijl er nog helemaal geen antwoord is.
-		if (show) // alleen als er feedback moet worden geshowd
+		if (show && check) // alleen als er feedback moet worden geshowd
 		{
-			if (correct) 
-				fireEvent(EVENT_CORRECT);
-			if (!correct && errorCount > 1) 
-				fireEvent(EVENT_FALSE2);
-			if (!correct)
-				fireEvent(EVENT_FALSE);
+			if (correct == null) // halfgoed
+			{
+				if (errorCount > 1)
+					fireEvent(EVENT_FALSE2);
+				else
+					fireEvent(EVENT_FALSE);
+			}
+			else
+			{
+				if (correct) 
+					fireEvent(EVENT_CORRECT);
+				if (!correct && errorCount > 1) 
+					fireEvent(EVENT_FALSE2);
+				if (!correct)
+					fireEvent(EVENT_FALSE);
+			}
 		}
 	}
 
@@ -1336,7 +1350,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			if(content == null) content = "";
 			setText(content);
 		}
-		else if ( ACTION_READONLY.equals(event.getCommand()))
+		else if (ACTION_READONLY.equals(event.getCommand()))
 		{
 			editable = false;
 			if (formuleMode)
