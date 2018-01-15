@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
+import fi.dwo.server.rest.util.HeartBeat;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +22,7 @@ import javax.ws.rs.core.Context;
 import nl.uu.fi.dwo.rest.dom.entities.DomHeartBeat;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
  * Public server status. Showing health of the service. Under development.
@@ -163,49 +164,47 @@ public class PublicServerStatus {
                 + "\n" + getDwoSystemStatusText();
     }
 
-    /**
-     * A simple heartbeat REST-function. An extended version may yield
-     * the latest versions for our client suite allowing a user to select when
-     * to update to a newer version between work. If possible a relogin should
-     * be avoided.
-     */
     @GET
     @Produces({"application/json"})
     @Path("/getSoftwareVersions")
+    @Deprecated
     public DomHeartBeat getSoftwareVersions() throws Dwo2RestException {
-        DomHeartBeat beat = new DomHeartBeat();
-        beat.setServerTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
-        try {
-            Attributes manifestAttributes=null;
-            manifestAttributes = getManifestAttributes();
-            beat.setServerVersion(manifestAttributes.getValue("Implementation-Version"));
-            beat.setJavaClientVersion(manifestAttributes.getValue("JavaClient-Version"));
-            beat.setHtmlClientVersion(manifestAttributes.getValue("HtmlClient-Version"));
-            beat.setServerTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
-        } catch (IOException ex) {
-            Logger.getLogger(PublicServerStatus.class.getName()).log(Level.SEVERE, null, ex);
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
-        }
-        
-        return beat;
+        return getHeartBeat();
     }
- 
- // test procedures voor genereren stacktraces in log   
+
+    /**
+     * A simple heartbeat REST-function. An extended version may yield the
+     * latest versions for our client suite allowing a user to select when to
+     * update to a newer version between work. If possible a relogin should be
+     * avoided.
+     */
+    @GET
+    @Produces({"application/json"})
+    @Path("/getHeartBeat")
+    public DomHeartBeat getHeartBeat() throws Dwo2RestException {
+        try {
+            return HeartBeat.buildDomHeartBeat();
+        } catch (Dwo2Exception ex) {
+            throw new Dwo2RestException(ex);
+        }
+    }
+
+    // test procedures voor genereren stacktraces in log   
     @GET
     @Produces({MediaType.TEXT_HTML})
     @Path("/exception")
     public String throwException() {
-    	throw new IllegalArgumentException("exception on purpose");
+        throw new IllegalArgumentException("exception on purpose");
     }
+
     @GET
     @Produces({MediaType.TEXT_HTML})
     @Path("/webException")
     public String throwWebException() {
-    	Response r = Response.status(403).build();
-    	throw new WebApplicationException("Forbidden", r);
+        Response r = Response.status(403).build();
+        throw new WebApplicationException("Forbidden", r);
     }
 
-    
     @GET
     @Produces({"application/json"})
     @Path("/getHealth")
@@ -215,5 +214,5 @@ public class PublicServerStatus {
         sb.append(getDwoSystemParamStatus());
         return sb.toString();
     }
-    
+
 }

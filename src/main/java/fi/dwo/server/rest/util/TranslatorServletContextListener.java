@@ -1,7 +1,7 @@
 /**
  * Copyrighted Apr 18, 2016
  */
-package fi.dwo.server.rest;
+package fi.dwo.server.rest.util;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
