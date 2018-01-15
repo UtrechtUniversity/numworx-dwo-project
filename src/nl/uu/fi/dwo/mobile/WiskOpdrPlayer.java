@@ -4,6 +4,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
@@ -15,6 +18,7 @@ import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 
+import fi.dwo.gwt.lib.rest.DwoConstants;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.DummyClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
@@ -132,6 +136,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		else
 		{
 			view.setUnitId(value);
+			DWOplayer.insertCSS(value);
 			view.setupModule(value, target);
 		}
 	}
@@ -150,6 +155,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		{
 			if(k > 0) {
 				String target = DWOplayer.PREFIX + value;
+				DWOplayer.insertCSS(value);
 				view.setupModule(value, target);
 			} else
 				setupOldView();
@@ -184,5 +190,6 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		view.setUnitId("scoViewNr");
 		view.preSetupModule(link, url);
 	}
+	
 	
 }

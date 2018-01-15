@@ -11,6 +11,7 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
@@ -62,6 +63,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 		view.getBackButton().setText(nl.uu.fi.dwo.mobile.client.text.Text.constants.login());
 		
 		String scoID = item.getID().toString();
+		DWOplayer.insertCSS(scoID);
 		view.setUnitId(scoID);
 		next = new LoginPlace(placeController.getWhere());
 

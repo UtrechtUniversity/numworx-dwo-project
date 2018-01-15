@@ -30,6 +30,10 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.LinkElement;
+import com.google.gwt.dom.client.Text;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.user.client.Timer;
@@ -42,6 +46,7 @@ import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 
+import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.wiskopdr.text.Text_nl;
 
 /**
@@ -437,4 +442,46 @@ public class DWOplayer implements EntryPoint
 			
 		}
 	}
+	
+	public static void insertCSS(String value) {
+		String href = DwoConstants.constants.server() + 
+				"public/scoData/get/" + value + "/style.css";
+		insertStylesheet(href);
+	}
+
+	public static void insertInlineCss(String data) {
+		removeStyle();
+		LinkElement link = Document.get().createLinkElement();
+		link.setRel("stylesheet");
+		link.setType("text/css");
+		link.setInnerText(data);
+		Element head = getHead();
+		style = link;
+		head.appendChild(link);
+		
+	}
+
+	private static LinkElement style;
+	static void insertStylesheet(String href) {
+		removeStyle();
+		LinkElement link = Document.get().createLinkElement();
+		link.setRel("stylesheet");
+		link.setType("text/css");
+		link.setHref(href);
+		Element head = getHead();
+		style = link;
+		head.appendChild(link);
+	}
+
+	private static Element getHead() {
+		return Document.get().getElementsByTagName("head").getItem(0);
+	}
+	public static void removeStyle() {
+		if(style != null) {
+			LinkElement link = style; style = null;
+			Element head = getHead();
+			head.removeChild(link);
+		}
+	}
+
 }

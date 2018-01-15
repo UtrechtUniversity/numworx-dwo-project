@@ -98,6 +98,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 		panel.setWidget(view); // terug naar af. problemen met gekke scrolls
 		{
 			final String id = sco.getID().toString();
+			DWOplayer.insertCSS(id);
 			List<SelectModuleItem> trail = new ArrayList<SelectModuleItem>();
 			SelectModuleItem parent = sco.getParent();
 			while(parent != null) {
