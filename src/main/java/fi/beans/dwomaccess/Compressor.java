@@ -1,5 +1,6 @@
 package fi.beans.dwomaccess;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -18,23 +19,36 @@ public class Compressor implements Predicate<String> {
 	private static Logger LOG = Logger.getLogger(Compressor.class.getName());
 	
 	
-	@SuppressWarnings("unchecked")
-	Map<String,Object> compress(Map<String,Object> map) {
-		if(skip) return map;
-		keys = new TreeSet<>();
-		images = Collections.EMPTY_MAP;
-		for(Map.Entry<String, Object> entry: map.entrySet()) {
-			if(IMAGES.equals(entry.getKey())) {
-				images = (Map<String, Object>) entry.getValue();
-			} else if(entry.getKey().startsWith("opdracht_")){
-				tag(entry.getValue());
-			}
-		}
-		retainImages();
-		return map;
-	}
+  @SuppressWarnings("unchecked")
+  Map<String, Object> compress(Map<String, Object> map) {
+    if (skip) return map;
+    removeTemplates(map.get("instellingen"));
+    keys = new TreeSet<>();
+    images = Collections.EMPTY_MAP;
+    for (Map.Entry<String, Object> entry : map.entrySet()) {
+      if (IMAGES.equals(entry.getKey())) {
+        images = (Map<String, Object>) entry.getValue();
+      } else if (entry.getKey().startsWith("opdracht_")) {
+        tag(entry.getValue());
+      }
+    }
+    retainImages();
+    return map;
+  }
 
-	private void retainImages() {
+  private static final Collection<String> templateSet =
+      Arrays.asList("TekstVakPanelTemplatePages", "TekstVakPanelTemplateComponents",
+          "TekstVakPanelTemplatePagesKeys", "TekstVakPanelTemplateComponentsKeys");
+
+  private void removeTemplates(Object object) {
+    if (object instanceof Map) {
+      Map<?, ?> map = (Map<?, ?>) object;
+      map.keySet().removeAll(templateSet);
+    }
+
+  }
+
+  private void retainImages() {
 		Set<String> set = images.keySet();
 		int size = set.size();
 		set.removeIf(this);
