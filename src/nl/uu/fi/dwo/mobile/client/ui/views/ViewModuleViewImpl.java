@@ -521,6 +521,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				on.setMaxOnBar(newMaxOnBar + 2);
 			}
 		}
+		else
+		{
+			// als de breedte niet hoeft worden aangepast, dan hier definitief de opdrachtbollen zetten al dan niet met shiftbuttons
+			on.setOpdrachten(on.getCurrentActiviteit());
+		}
 		
 		scoreNav.started();
 	
