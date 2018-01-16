@@ -112,7 +112,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private int[] aantalOpdrachten;
 	private String[] activiteitNamen;
 	private int maxAantalOpdrachten = 50;
-	private int maxAantalOnBar = 15;
+	private int maxAantalOnBar = 25;
 	private int currentShift = 0;
 
 	private boolean[][] buttonsEnabled;
@@ -413,7 +413,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				setNakijkenZelftoetsPending(nakijkenZelftoetsPending);
 		}
 
-		setOpdrachten(currentActiviteit); // kan dat nu al? of anders bij
+		setOpdrachtenInitieel(currentActiviteit); // kan dat nu al? of anders bij
 											// setchanged testen op
 											// buttons.get() != null
 
@@ -565,7 +565,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		}
 
 		contentPanel.add(lb_activiteiten);
-		setOpdrachten(0);
+		setOpdrachtenInitieel(0);
 		return mainPanel;
 	}
 
@@ -635,12 +635,81 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	}
 
 	/**
-	 * Zet de opdrachtbolletjes en doe de styling voor de activiteit met de gegeven index.
+	 * Zet initieel de opdrachtbolletjes (d.w.z. incl. shiftbuttons t.b.v. de maat) 
+	 * en doe de styling voor de activiteit met de gegeven index.
 	 * Niveaus worden niet meer ondersteund, dus dit is nu altijd 0.
 	 * 
 	 * @param index De huidige activiteit
 	 */
-	private void setOpdrachten(int index)
+	private void setOpdrachtenInitieel(int index)
+	{
+		if (!isVisibleCurrentOpdracht())
+			shiftCurrentOpdrachtInBeeld();
+		
+		if (fp_opdrachten != null)
+		{
+			contentPanel.remove(fp_opdrachten);
+		}
+		if (buttons != null)
+		{
+			buttons.clear();
+		}
+
+		fp_opdrachten = new FlowPanel();
+		fp_opdrachten.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+		//fp_opdrachten.getElement().addClassName("opdrbutton-container");
+		
+		//if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
+		// altijd maken omdat ze gebruikt worden om de navigatiebalk op maat te maken
+		{	
+			shiftButtonLeft = new TouchButton();
+			shiftButtonLeft.setStylePrimaryName("shiftBtn");
+			addScrollButtonHandler(shiftButtonLeft,-1);
+//			shiftButtonLeft.setText("◀◀"); // lelijk icoon op ipad
+			shiftButtonLeft.setText("\u27EA"); // <<, dun, hoog
+			//if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar) // niet, anders heeft hij geen maat
+				fp_opdrachten.add(shiftButtonLeft);
+			spaceStart = new Label();
+			spaceStart.setStylePrimaryName("spaceShiftLabel");
+			spaceStart.setText("...");
+			//if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
+				fp_opdrachten.add(spaceStart);
+		}
+		
+		for (int j = 0; j < aantalOpdrachten[index]; j++)
+		{
+			setButton(j);
+			if (mode == ZELFTOETS) 
+				setButtonCorrectZelftoets(buttons.get(j), isCorrectZelftoets[index][j], j);
+			else
+				setButtonCorrect(buttons.get(j), isCorrect[index][j], j);
+		}
+		
+		if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
+		{		
+			Label spaceEnd = new Label();
+			spaceEnd.setStylePrimaryName("spaceShiftLabel");
+			spaceEnd.setText("...");
+			fp_opdrachten.add(spaceEnd);
+			TouchButton shiftButtonRight = new TouchButton();
+			shiftButtonRight.setStylePrimaryName("shiftBtn");
+			addScrollButtonHandler(shiftButtonRight,1);
+//			shiftButtonRight.setText("▶▶"); // lelijk icoon op ipad
+			shiftButtonRight.setText("\u27EB"); // >>, dun, hoog
+			fp_opdrachten.add(shiftButtonRight);
+		}
+		
+		fp_opdrachten.getElement().getStyle().setFloat(Style.Float.LEFT);
+		contentPanel.add(fp_opdrachten);
+	}
+
+	/**
+	 * Zet de opdrachtbolletjes zonodig met shiftbuttons en doe de styling voor de activiteit met de gegeven index.
+	 * Niveaus worden niet meer ondersteund, dus dit is nu altijd 0.
+	 * 
+	 * @param index De huidige activiteit
+	 */
+	public void setOpdrachten(int index)
 	{
 		if (!isVisibleCurrentOpdracht())
 			shiftCurrentOpdrachtInBeeld();
@@ -2649,7 +2718,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 */
 	public int getShiftButtonWidth()
 	{
-		return shiftButtonLeft.getOffsetWidth();
+		if (shiftButtonLeft == null)
+			return 0;
+		else
+			return shiftButtonLeft.getOffsetWidth();
 	}
 	
 	/**
@@ -2660,7 +2732,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 */
 	public int getSpaceStartWidth()
 	{
-		return spaceStart.getOffsetWidth();
+		if (spaceStart == null)
+			return 0;
+		else
+			return spaceStart.getOffsetWidth();
 	}
 
 	/**
