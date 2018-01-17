@@ -104,24 +104,6 @@ public class ResultsView extends Composite implements ClickHandler, SelectedCell
         final SingleSelectionModel<List<ResultsPresenter.ResultItem>> selectionModel = new SingleSelectionModel<List<ResultsPresenter.ResultItem>>();
         dataGrid.setSelectionModel(selectionModel);
         dataGrid.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
-
-//        Timer t = new Timer() {
-//            @Override
-//            public void run() {
-//                timer += 1;
-//                try {
-//                    if (parent.getAutoUpdateResults().getValue()) {
-//                        //handler.updateServerResults();
-//                        parent.setStatus("Server OK, updating results every 60 seconds.");
-//                    } else {
-//                        parent.setStatus("Refresh paused.");
-//                    }
-//                } catch (Exception e) {
-//                    parent.setStatus("Server Offline");
-//                }
-//            }
-//        };
-//        t.scheduleRepeating(60000);
         SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
         pager = new SimplePager(SimplePager.TextLocation.CENTER, pagerResources, false, 0, true);
         pager.setDisplay(dataGrid);
