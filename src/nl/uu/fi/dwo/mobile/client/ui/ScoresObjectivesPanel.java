@@ -72,8 +72,10 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 //	Font theBoldFont;
 //	FontMetrics theBoldFM;
 	
-	CssColor[][] colorArray;
-	CssColor[] categoryColorArray;
+	String[][] colorArray;
+	String[] categoryColorArray;
+	//CssColor[][] colorArray;
+	//CssColor[] categoryColorArray;
 	
 	private boolean colorNeutral;
 	private CssColor cssColorNeutral = CssColor.make(202, 222, 255);
@@ -419,8 +421,10 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	
 	
 	public void zetKleuren()
-	{	categoryColorArray = new CssColor[objectivesForDiagram.length];
-		colorArray = new CssColor[numberOfDiagrams][];
+	{	categoryColorArray = new String[objectivesForDiagram.length]; 
+							//new CssColor[objectivesForDiagram.length];
+		colorArray = new String[numberOfDiagrams][];
+					//new CssColor[numberOfDiagrams][];
 		for(int j = 0; j < numberOfDiagrams; j++)
 		{	int red = 255; 
 			int green = 255;
@@ -428,9 +432,10 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 				green = (int) (green * categoryScoresPercObjectives[j] / 50);
 			else 
 				red -= (int) (red * (categoryScoresPercObjectives[j] - 50)/50);
-			categoryColorArray[j] = CssColor.make(red, green, 0);
+			categoryColorArray[j] = CssColor.make(red, green, 0).toString();
 		
-			colorArray[j] = new CssColor[objectivesForDiagram[j].length];
+			colorArray[j] = new String[objectivesForDiagram[j].length];
+							//new CssColor[objectivesForDiagram[j].length];
 			for(int i = 0; i < objectivesForDiagram[j].length; i++)
 			{	red = 255; 
 				green = 255;
@@ -438,7 +443,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 					green = (int) (green * scoresPercObjectives[j][i] / 50);
 				else 
 					red -= (int) (red * (scoresPercObjectives[j][i] - 50)/50);
-				colorArray[j][i] = CssColor.make(red, green, 0);
+				colorArray[j][i] = CssColor.make(red, green, 0).toString();
 			}	
 		}
 	}
