@@ -428,9 +428,13 @@
         <role-name>ADMIN</role-name>
     </security-role>
 
+        <listener-class>
+            fi.dwo.server.rest.util.TranslatorServletContextListener 
+        </listener-class>
+    </listener>
     <listener>
         <listener-class>
-            fi.dwo.server.rest.TranslatorServletContextListener 
+            fi.dwo.server.rest.util.HeartBeatServletContextListener
         </listener-class>
     </listener>
     
