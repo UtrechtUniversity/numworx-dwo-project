@@ -148,23 +148,11 @@ public class LoginPresenter {
                     Throwable fail = resolved.getFailure();
                     if (fail instanceof Dwo2Exception) {
                         LOG.log(Level.SEVERE, fail.getMessage());
-<<<<<<< 67e3bef28d77ebb521112b64695d14daecf81e50
-                        dwoGlobalVars.clearCurrentUser();                        
-                        //note the order of the events in case ofan exception
-                        //that might break the running thread.
-                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
-//                        eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
-=======
->>>>>>> #LMS-91 Dialogmsg for wrong username/password combo.
                         dwoGlobalVars.clearCurrentUser();                        
                         eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
                     } else {
-<<<<<<< 67e3bef28d77ebb521112b64695d14daecf81e50
-=======
                         LOG.log(Level.SEVERE, fail.getMessage());
->>>>>>> #LMS-91 Dialogmsg for wrong username/password combo.
                         dwoGlobalVars.clearCurrentUser();                        
-                        LOG.log(Level.SEVERE, fail.getMessage());
                         eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
                     }
                 }
