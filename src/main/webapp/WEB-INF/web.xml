@@ -427,7 +427,7 @@
     <security-role>
         <role-name>ADMIN</role-name>
     </security-role>
-
+	<listener>
         <listener-class>
             fi.dwo.server.rest.util.TranslatorServletContextListener 
         </listener-class>
