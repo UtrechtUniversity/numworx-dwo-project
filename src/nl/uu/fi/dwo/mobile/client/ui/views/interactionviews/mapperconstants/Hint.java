@@ -2,7 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.mapperconstants;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'/Users/peterboon/workspace-oxygen/DWOplayer/src/nl/uu/fi/dwo/mobile/client/ui/views/interactionviews/mapperconstants/Hint.properties'.
+ * 	'D:/workspace_oxygen/DWOplayer/src/nl/uu/fi/dwo/mobile/client/ui/views/interactionviews/mapperconstants/Hint.properties'.
  */
 public interface Hint extends com.google.gwt.i18n.client.ConstantsWithLookup {
   

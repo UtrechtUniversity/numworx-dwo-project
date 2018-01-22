@@ -2,46 +2,10 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.mapperconstants;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'/Users/peterboon/workspace-oxygen/DWOplayer/src/nl/uu/fi/dwo/mobile/client/ui/views/interactionviews/mapperconstants/Feedback.properties'.
+ * 	'D:/workspace_oxygen/DWOplayer/src/nl/uu/fi/dwo/mobile/client/ui/views/interactionviews/mapperconstants/Feedback.properties'.
  */
 public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup {
   
-  /**
-   * Translated "In een hypothesetoets accepteren we hypotheses nooit. Als de data niet genoeg aanleiding geven om $fH$s0@@ te verwerpen, dan zeggen we dat we $fH$s0@@ niet verwerpen.".
-   * 
-   * @return translated "In een hypothesetoets accepteren we hypotheses nooit. Als de data niet genoeg aanleiding geven om $fH$s0@@ te verwerpen, dan zeggen we dat we $fH$s0@@ niet verwerpen."
-   */
-  @DefaultStringValue("In een hypothesetoets accepteren we hypotheses nooit. Als de data niet genoeg aanleiding geven om $fH$s0@@ te verwerpen, dan zeggen we dat we $fH$s0@@ niet verwerpen.")
-  @Key("buggy.component.accepth0.should-be-dontrejecth0")
-  String buggy_component_accepth0_should_be_dontrejecth0();
-
-  /**
-   * Translated "In een hypothesetoets accepteren we hypotheses nooit. Maar geven de data inderdaad aanleiding om te denken dat $fH$s0@@ waar is?".
-   * 
-   * @return translated "In een hypothesetoets accepteren we hypotheses nooit. Maar geven de data inderdaad aanleiding om te denken dat $fH$s0@@ waar is?"
-   */
-  @DefaultStringValue("In een hypothesetoets accepteren we hypotheses nooit. Maar geven de data inderdaad aanleiding om te denken dat $fH$s0@@ waar is?")
-  @Key("buggy.component.accepth0.should-be-rejecth0")
-  String buggy_component_accepth0_should_be_rejecth0();
-
-  /**
-   * Translated "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.".
-   * 
-   * @return translated "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese."
-   */
-  @DefaultStringValue("Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.")
-  @Key("buggy.component.accepth1.should-be-dontrejecth0")
-  String buggy_component_accepth1_should_be_dontrejecth0();
-
-  /**
-   * Translated "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.".
-   * 
-   * @return translated "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese."
-   */
-  @DefaultStringValue("Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.")
-  @Key("buggy.component.accepth1.should-be-rejecth0")
-  String buggy_component_accepth1_should_be_rejecth0();
-
   /**
    * Translated "Je hebt niet het gevraagde significantieniveau gebruikt.".
    * 
@@ -52,13 +16,22 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String buggy_component_alpha();
 
   /**
-   * Translated "In welke staart(en) van de verdeling ligt het kritieke gebied in dit geval? Links, rechts, of allebei?".
+   * Translated "Bij welk significantieniveau heb je de kritieke waarde opgezocht?".
    * 
-   * @return translated "In welke staart(en) van de verdeling ligt het kritieke gebied in dit geval? Links, rechts, of allebei?"
+   * @return translated "Bij welk significantieniveau heb je de kritieke waarde opgezocht?"
    */
-  @DefaultStringValue("In welke staart(en) van de verdeling ligt het kritieke gebied in dit geval? Links, rechts, of allebei?")
-  @Key("buggy.component.critical.t-value-positive")
-  String buggy_component_critical_t_value_positive();
+  @DefaultStringValue("Bij welk significantieniveau heb je de kritieke waarde opgezocht?")
+  @Key("buggy.component.critical.r-value.alpha")
+  String buggy_component_critical_r_value_alpha();
+
+  /**
+   * Translated "Bij welk aantal vrijheidsgraden heb je de kritieke waarde opgezocht?".
+   * 
+   * @return translated "Bij welk aantal vrijheidsgraden heb je de kritieke waarde opgezocht?"
+   */
+  @DefaultStringValue("Bij welk aantal vrijheidsgraden heb je de kritieke waarde opgezocht?")
+  @Key("buggy.component.critical.r-value.df")
+  String buggy_component_critical_r_value_df();
 
   /**
    * Translated "In welke staart(en) van de verdeling ligt het kritieke gebied in dit geval? Links, rechts, of allebei?".
@@ -66,8 +39,80 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
    * @return translated "In welke staart(en) van de verdeling ligt het kritieke gebied in dit geval? Links, rechts, of allebei?"
    */
   @DefaultStringValue("In welke staart(en) van de verdeling ligt het kritieke gebied in dit geval? Links, rechts, of allebei?")
-  @Key("buggy.component.critical.z-value-positive")
-  String buggy_component_critical_z_value_positive();
+  @Key("buggy.component.critical.r-value.sided")
+  String buggy_component_critical_r_value_sided();
+
+  /**
+   * Translated "Wat is precies de kritieke waarde en wat is de toetsingsgrootheid?".
+   * 
+   * @return translated "Wat is precies de kritieke waarde en wat is de toetsingsgrootheid?"
+   */
+  @DefaultStringValue("Wat is precies de kritieke waarde en wat is de toetsingsgrootheid?")
+  @Key("buggy.component.critical.r-value.test-value")
+  String buggy_component_critical_r_value_test_value();
+
+  /**
+   * Translated "Bij welk significantieniveau heb je de kritieke waarde opgezocht?".
+   * 
+   * @return translated "Bij welk significantieniveau heb je de kritieke waarde opgezocht?"
+   */
+  @DefaultStringValue("Bij welk significantieniveau heb je de kritieke waarde opgezocht?")
+  @Key("buggy.component.critical.t-value.alpha")
+  String buggy_component_critical_t_value_alpha();
+
+  /**
+   * Translated "Bij welk aantal vrijheidsgraden heb je de kritieke waarde opgezocht?".
+   * 
+   * @return translated "Bij welk aantal vrijheidsgraden heb je de kritieke waarde opgezocht?"
+   */
+  @DefaultStringValue("Bij welk aantal vrijheidsgraden heb je de kritieke waarde opgezocht?")
+  @Key("buggy.component.critical.t-value.df")
+  String buggy_component_critical_t_value_df();
+
+  /**
+   * Translated "In welke staart(en) van de verdeling ligt het kritieke gebied in dit geval? Links, rechts, of allebei?".
+   * 
+   * @return translated "In welke staart(en) van de verdeling ligt het kritieke gebied in dit geval? Links, rechts, of allebei?"
+   */
+  @DefaultStringValue("In welke staart(en) van de verdeling ligt het kritieke gebied in dit geval? Links, rechts, of allebei?")
+  @Key("buggy.component.critical.t-value.sided")
+  String buggy_component_critical_t_value_sided();
+
+  /**
+   * Translated "Wat is precies de kritieke waarde en wat is de toetsingsgrootheid?".
+   * 
+   * @return translated "Wat is precies de kritieke waarde en wat is de toetsingsgrootheid?"
+   */
+  @DefaultStringValue("Wat is precies de kritieke waarde en wat is de toetsingsgrootheid?")
+  @Key("buggy.component.critical.t-value.test-value")
+  String buggy_component_critical_t_value_test_value();
+
+  /**
+   * Translated "Bij welk significantieniveau heb je de kritieke waarde opgezocht?".
+   * 
+   * @return translated "Bij welk significantieniveau heb je de kritieke waarde opgezocht?"
+   */
+  @DefaultStringValue("Bij welk significantieniveau heb je de kritieke waarde opgezocht?")
+  @Key("buggy.component.critical.z-value.alpha")
+  String buggy_component_critical_z_value_alpha();
+
+  /**
+   * Translated "In welke staart(en) van de verdeling ligt het kritieke gebied in dit geval? Links, rechts, of allebei?".
+   * 
+   * @return translated "In welke staart(en) van de verdeling ligt het kritieke gebied in dit geval? Links, rechts, of allebei?"
+   */
+  @DefaultStringValue("In welke staart(en) van de verdeling ligt het kritieke gebied in dit geval? Links, rechts, of allebei?")
+  @Key("buggy.component.critical.z-value.sided")
+  String buggy_component_critical_z_value_sided();
+
+  /**
+   * Translated "Wat is precies de kritieke waarde en wat is de toetsingsgrootheid?".
+   * 
+   * @return translated "Wat is precies de kritieke waarde en wat is de toetsingsgrootheid?"
+   */
+  @DefaultStringValue("Wat is precies de kritieke waarde en wat is de toetsingsgrootheid?")
+  @Key("buggy.component.critical.z-value.test-value")
+  String buggy_component_critical_z_value_test_value();
 
   /**
    * Translated "Het aantal vrijheidsgraden dat je gebruikt is niet correct.".
@@ -79,76 +124,31 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String buggy_component_df();
 
   /**
-   * Translated "Geven de data inderdaad voldoende bewijs om te denken dat $fH$s0@@ waar is?".
-   * 
-   * @return translated "Geven de data inderdaad voldoende bewijs om te denken dat $fH$s0@@ waar is?"
-   */
-  @DefaultStringValue("Geven de data inderdaad voldoende bewijs om te denken dat $fH$s0@@ waar is?")
-  @Key("buggy.component.dontrejecth0.should-be-rejecth0")
-  String buggy_component_dontrejecth0_should_be_rejecth0();
-
-  /**
-   * Translated "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.".
-   * 
-   * @return translated "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese."
-   */
-  @DefaultStringValue("Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.")
-  @Key("buggy.component.dontrejecth1.should-be-dontrejecth0")
-  String buggy_component_dontrejecth1_should_be_dontrejecth0();
-
-  /**
-   * Translated "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.".
-   * 
-   * @return translated "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese."
-   */
-  @DefaultStringValue("Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.")
-  @Key("buggy.component.dontrejecth1.should-be-rejecth0")
-  String buggy_component_dontrejecth1_should_be_rejecth0();
-
-  /**
    * Translated "De nulhypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef.".
    * 
    * @return translated "De nulhypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef."
    */
   @DefaultStringValue("De nulhypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef.")
   @Key("buggy.component.h0-samplemean")
-  String buggy_component_h0();
+  String buggy_component_h0_samplemean();
 
   /**
-   * Translated "Deze alternatieve hypothese past niet bij de claim uit de opdracht.".
+   * Translated "De alternative hypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef.".
    * 
-   * @return translated "Deze alternatieve hypothese past niet bij de claim uit de opdracht."
+   * @return translated "De alternative hypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef."
    */
-  @DefaultStringValue("Deze alternatieve hypothese past niet bij de claim uit de opdracht.")
-  @Key("buggy.component.ha")
-  String buggy_component_ha();
+  @DefaultStringValue("De alternative hypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef.")
+  @Key("buggy.component.ha-samplemean")
+  String buggy_component_ha_samplemean();
 
   /**
-   * Translated "Geven de data inderdaad voldoende bewijs om aan te denken dat $fH$s0@@ niet waar is?".
+   * Translated "De hypotheses moeten gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef.".
    * 
-   * @return translated "Geven de data inderdaad voldoende bewijs om aan te denken dat $fH$s0@@ niet waar is?"
+   * @return translated "De hypotheses moeten gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef."
    */
-  @DefaultStringValue("Geven de data inderdaad voldoende bewijs om aan te denken dat $fH$s0@@ niet waar is?")
-  @Key("buggy.component.rejecth0.should-be-dontrejecth0")
-  String buggy_component_rejecth0_should_be_dontrejecth0();
-
-  /**
-   * Translated "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.".
-   * 
-   * @return translated "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese."
-   */
-  @DefaultStringValue("Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.")
-  @Key("buggy.component.rejecth1.should-be-dontrejecth0")
-  String buggy_component_rejecth1_should_be_dontrejecth0();
-
-  /**
-   * Translated "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.".
-   * 
-   * @return translated "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese."
-   */
-  @DefaultStringValue("Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.")
-  @Key("buggy.component.rejecth1.should-be-rejecth0")
-  String buggy_component_rejecth1_should_be_rejecth0();
+  @DefaultStringValue("De hypotheses moeten gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef.")
+  @Key("buggy.component.hypotheses-samplemean")
+  String buggy_component_hypotheses_samplemean();
 
   /**
    * Translated "Een t-toets voor één groep is geschikt als je maar één steekproef hebt.".
@@ -340,6 +340,24 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_conclusion_hypotheses__conclusion_mismatch_pvalue();
 
   /**
+   * Translated "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over het al dan niet verwerpen van de nulhypothese. We accepteren hypotheses nooit, maar doen wel altijd een uitspraak over $fH$s0@.@ ".
+   * 
+   * @return translated "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over het al dan niet verwerpen van de nulhypothese. We accepteren hypotheses nooit, maar doen wel altijd een uitspraak over $fH$s0@.@ "
+   */
+  @DefaultStringValue("Met een hypothesetoets kun je uiteindelijk een uitspraak doen over het al dan niet verwerpen van de nulhypothese. We accepteren hypotheses nooit, maar doen wel altijd een uitspraak over $fH$s0@.@ ")
+  @Key("check.conclusion-hypotheses: convention DontRejectH0")
+  String check_conclusion_hypotheses__convention_DontRejectH0();
+
+  /**
+   * Translated "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.".
+   * 
+   * @return translated "Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese."
+   */
+  @DefaultStringValue("Met een hypothesetoets kun je uiteindelijk een uitspraak doen over de nulhypothese, niet over de alternatieve hypothese.")
+  @Key("check.conclusion-hypotheses: convention RejectH0")
+  String check_conclusion_hypotheses__convention_RejectH0();
+
+  /**
    * Translated "Je bewering over de p-waarde en het significantieniveau klopt niet.".
    * 
    * @return translated "Je bewering over de p-waarde en het significantieniveau klopt niet."
@@ -385,11 +403,11 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_critical__component_is_not_of_type_relation();
 
   /**
-   * Translated "Bepaal je een kritieke t-waarde of een kritieke z-waarde?".
+   * Translated "Welke variabelenaam hoort bij de toets die je uitvoert? Z, t of nog iets anders?".
    * 
-   * @return translated "Bepaal je een kritieke t-waarde of een kritieke z-waarde?"
+   * @return translated "Welke variabelenaam hoort bij de toets die je uitvoert? Z, t of nog iets anders?"
    */
-  @DefaultStringValue("Bepaal je een kritieke t-waarde of een kritieke z-waarde?")
+  @DefaultStringValue("Welke variabelenaam hoort bij de toets die je uitvoert? Z, t of nog iets anders?")
   @Key("check.critical: test mismatch")
   String check_critical__test_mismatch();
 
@@ -520,11 +538,11 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_p_value__alternative_hypothesis_missing();
 
   /**
-   * Translated "Er is iets fout gegaan met de p-waarde. Vul deze nogmaals in.# TODO: kijken wat hier goede feedbacktekst is. ".
+   * Translated "Er is iets fout gegaan met de p-waarde. Vul deze nogmaals in.".
    * 
-   * @return translated "Er is iets fout gegaan met de p-waarde. Vul deze nogmaals in.# TODO: kijken wat hier goede feedbacktekst is. "
+   * @return translated "Er is iets fout gegaan met de p-waarde. Vul deze nogmaals in."
    */
-  @DefaultStringValue("Er is iets fout gegaan met de p-waarde. Vul deze nogmaals in.# TODO: kijken wat hier goede feedbacktekst is. ")
+  @DefaultStringValue("Er is iets fout gegaan met de p-waarde. Vul deze nogmaals in.")
   @Key("check.p-value: component is not of type relation")
   String check_p_value__component_is_not_of_type_relation();
 
@@ -583,11 +601,11 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_rejectioncritical__sidedness_mismatch();
 
   /**
-   * Translated "Bepaal je een kritiek gebied voor een t-waarde of voor een z-waarde?".
+   * Translated "Welke variabelenaam hoort bij de toets die je uitvoert? Z, t of nog iets anders?".
    * 
-   * @return translated "Bepaal je een kritiek gebied voor een t-waarde of voor een z-waarde?"
+   * @return translated "Welke variabelenaam hoort bij de toets die je uitvoert? Z, t of nog iets anders?"
    */
-  @DefaultStringValue("Bepaal je een kritiek gebied voor een t-waarde of voor een z-waarde?")
+  @DefaultStringValue("Welke variabelenaam hoort bij de toets die je uitvoert? Z, t of nog iets anders?")
   @Key("check.rejectioncritical: test mismatch")
   String check_rejectioncritical__test_mismatch();
 
@@ -700,11 +718,11 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_test_formula__no_match();
 
   /**
-   * Translated "Bepaal je een t-waarde of een z-waarde?".
+   * Translated "Welke variabelenaam hoort bij de toets die je uitvoert? Z, t of nog iets anders?".
    * 
-   * @return translated "Bepaal je een t-waarde of een z-waarde?"
+   * @return translated "Welke variabelenaam hoort bij de toets die je uitvoert? Z, t of nog iets anders?"
    */
-  @DefaultStringValue("Bepaal je een t-waarde of een z-waarde?")
+  @DefaultStringValue("Welke variabelenaam hoort bij de toets die je uitvoert? Z, t of nog iets anders?")
   @Key("check.test-formula: test mismatch")
   String check_test_formula__test_mismatch();
 
@@ -736,11 +754,11 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_test_value__no_match();
 
   /**
-   * Translated "Bereken je een t-waarde of een z-waarde?".
+   * Translated "Welke variabelenaam hoort bij de toets die je uitvoert? Z, t of nog iets anders?".
    * 
-   * @return translated "Bereken je een t-waarde of een z-waarde?"
+   * @return translated "Welke variabelenaam hoort bij de toets die je uitvoert? Z, t of nog iets anders?"
    */
-  @DefaultStringValue("Bereken je een t-waarde of een z-waarde?")
+  @DefaultStringValue("Welke variabelenaam hoort bij de toets die je uitvoert? Z, t of nog iets anders?")
   @Key("check.test-value: test mismatch")
   String check_test_value__test_mismatch();
 
@@ -770,6 +788,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   @DefaultStringValue("Dit is de juiste conclusie over deze toetsingsgrootheid en kritiek gebied.")
   @Key("component.critical-conclusion")
   String component_critical_conclusion();
+
+  /**
+   * Translated "Dit is de juiste kritieke r-waarde.".
+   * 
+   * @return translated "Dit is de juiste kritieke r-waarde."
+   */
+  @DefaultStringValue("Dit is de juiste kritieke r-waarde.")
+  @Key("component.critical.r-value")
+  String component_critical_r_value();
 
   /**
    * Translated "Dit is de juiste kritieke t-waarde.".

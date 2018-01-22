@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.MissingResourceException;
 
 import com.google.gwt.core.client.GWT;
 
@@ -23,7 +24,11 @@ public class MapperConstants {
 	}
 
 	public String getFeedback(String input) {
-		return getFeedback().getString(massage(input));
+		try {
+			return getFeedback().getString(massage(input));
+		} catch (MissingResourceException e) {
+			return input;
+		}
 	}
 	
 	public Hint getHints() {
@@ -32,7 +37,11 @@ public class MapperConstants {
 	
 	public String getHint(String hint) {
 		hint = massage(hint);
-		return getHints().getString(hint);
+		try {
+			return getHints().getString(hint);
+		} catch (MissingResourceException e) {
+			return hint;
+		}
 	}
 
 	private String massage(String hint) {
@@ -53,7 +62,11 @@ public class MapperConstants {
 		testMap.put("t-toets voor onafhankelijke groepen", "ttesttwo"); 
 		testMap.put("t-test for independent groups", "ttesttwo"); 
 		testMap.put("ANOVA", "anova");
-	
+		testMap.put("Pearson correlatietoets", "rpearson");
+		testMap.put("Spearman correlatietoets", "rspearman");
+		testMap.put("Pearson correlation test", "rpearson");
+		testMap.put("Spearman correlation test", "rspearman");
+		
 		Map sidedMap = new HashMap<String, String>();
         constants.put("sided", sidedMap);
         sidedMap.put("linkszijdig", "leftsided");
