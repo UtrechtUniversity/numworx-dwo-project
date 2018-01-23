@@ -8,9 +8,16 @@
 	.pad {
 		float: right;
 	}
-	
+	.duo {
+		line-height: normal !important;
+		font-size: 95% !important;
+	}
+	.hidden {
+		visibility: hidden;
+	}
 	</ui:style>
 	<g:HorizontalPanel addStyleNames="keyboard keyboard-abc is-active" >
+		<my:TabletKeyboardShift ui:field="leestekens" />
 		<g:FlowPanel  styleName="keys">
 			<g:FlowPanel  addStyleNames="row row-1" >
 				<my:FKey addStyleNames="key" ui:field="t1_1" >
@@ -43,6 +50,12 @@
 				<my:FKey addStyleNames="key" ui:field="t1_10" >
 					p
 				</my:FKey>
+				<my:FKey addStyleNames="key bg-purple {style.duo}" ui:field="t1_11" >
+					{<br/>[
+				</my:FKey>
+				<my:FKey addStyleNames="key bg-purple {style.duo}" ui:field="t1_12" >
+					}<br/>]
+				</my:FKey>
 			</g:FlowPanel>
 
 			<g:FlowPanel  addStyleNames="row row-2" >
@@ -73,10 +86,19 @@
 				<my:FKey addStyleNames="key" ui:field="t2_9" >
 					l
 				</my:FKey>
+				<my:FKey addStyleNames="key bg-purple {style.duo}" ui:field="t2_10" >
+					:<br/>;
+				</my:FKey>
+				<my:FKey addStyleNames="key bg-purple {style.duo}" ui:field="t2_11" >
+					"<br/>'
+				</my:FKey>
+				<my:FKey addStyleNames="key bg-purple {style.duo}" ui:field="t2_12" >
+					|<br/>\
+				</my:FKey>
 			</g:FlowPanel>
 		
 			<g:FlowPanel  addStyleNames="row row-3" >
-				<my:FKey addStyleNames="key key-shift" ui:field="t3_1" >
+				<my:FKey addStyleNames="key key-shift {style.hidden}" ui:field="t3_1" >
 					<span class='basis basis-T3-1' ></span>
 				</my:FKey>
 				<my:FKey addStyleNames="key" ui:field="t3_2" >
@@ -103,14 +125,14 @@
 				<my:FKey addStyleNames="key" ui:field="t3_9" >
 					!
 				</my:FKey>
-				<my:FKey addStyleNames="key" ui:field="t3_10" >
-					,
+				<my:FKey addStyleNames="key bg-purple {style.duo}" ui:field="t3_10" >
+					&lt;<br/>,
 				</my:FKey>
-				<my:FKey addStyleNames="key" ui:field="t3_11" >
-					.
+				<my:FKey addStyleNames="key bg-purple {style.duo}" ui:field="t3_11" >
+					&gt;<br/>.
 				</my:FKey>
-				<my:FKey addStyleNames="key" ui:field="t3_12" >
-					?
+				<my:FKey addStyleNames="key bg-purple {style.duo}" ui:field="t3_12" >
+					?<br/>/
 				</my:FKey>
 			</g:FlowPanel>
 

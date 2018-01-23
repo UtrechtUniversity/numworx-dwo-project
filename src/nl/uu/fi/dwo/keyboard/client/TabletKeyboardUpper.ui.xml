@@ -7,9 +7,12 @@
 	.pad {
 		float: right;
 	}
-	
+	.hidden {
+		visibility: hidden;
+	}
 	</ui:style>
 	<g:HorizontalPanel addStyleNames="keyboard keyboard-abc is-active" >
+		<my:TabletKeyboardShift ui:field="leestekens" />
 		<g:FlowPanel  addStyleNames="keys" >
 			<g:FlowPanel  addStyleNames="row row-1" >
 				<my:FKey addStyleNames="key" ui:field="t1_1" >
@@ -42,6 +45,12 @@
 				<my:FKey addStyleNames="key" ui:field="t1_10" >
 					P
 				</my:FKey>
+				<my:FKey addStyleNames=" key bg-purple" ui:field="t1_11" >
+					{
+				</my:FKey>
+				<my:FKey addStyleNames="key bg-purple" ui:field="t1_12" >
+					}
+				</my:FKey>
 			</g:FlowPanel>
 
 			<g:FlowPanel  addStyleNames="row row-2" >
@@ -72,10 +81,19 @@
 				<my:FKey addStyleNames="key" ui:field="t2_9" >
 					L
 				</my:FKey>
+				<my:FKey addStyleNames="key bg-purple" ui:field="t2_10" >
+					:
+				</my:FKey>
+				<my:FKey addStyleNames="key bg-purple" ui:field="t2_11" >
+					"
+				</my:FKey>
+				<my:FKey addStyleNames="key bg-purple" ui:field="t2_12" >
+					|
+				</my:FKey>
 			</g:FlowPanel>
 		
 			<g:FlowPanel  addStyleNames="row row-3" >
-				<my:FKey addStyleNames="key bg-grey" ui:field="t3_1" >
+				<my:FKey addStyleNames="key bg-grey {style.hidden}" ui:field="t3_1" >
 					<span class='basis basis-T3-1' ></span>
 				</my:FKey>
 				<my:FKey addStyleNames="key" ui:field="t3_2" >
@@ -102,13 +120,13 @@
 				<my:FKey addStyleNames="key" ui:field="t3_9" >
 					!
 				</my:FKey>
-				<my:FKey addStyleNames="key" ui:field="t3_10" >
-					,
+				<my:FKey addStyleNames="key bg-purple" ui:field="t3_10" >
+					&lt;
 				</my:FKey>
-				<my:FKey addStyleNames="key" ui:field="t3_11" >
-					.
+				<my:FKey addStyleNames="key bg-purple" ui:field="t3_11" >
+					&gt;
 				</my:FKey>
-				<my:FKey addStyleNames="key" ui:field="t3_12" >
+				<my:FKey addStyleNames="key bg-purple" ui:field="t3_12" >
 					?
 				</my:FKey>
 			</g:FlowPanel>

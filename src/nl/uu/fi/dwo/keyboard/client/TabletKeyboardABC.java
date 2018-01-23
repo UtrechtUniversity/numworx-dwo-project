@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -20,6 +21,7 @@ public class TabletKeyboardABC extends AbstractKeyboard {
 	public void setEditor(FormuleEditorIF formuleEditor) {
 		super.setEditor(formuleEditor);
 		pad.setEditor(formuleEditor);
+		leestekens.setEditor(formuleEditor);
 	}
 
 	private static TabletKeyboardABCUiBinder uiBinder = GWT
@@ -35,15 +37,26 @@ public class TabletKeyboardABC extends AbstractKeyboard {
 		pad.t3_16.addStyleName("is-active");;
 		pad.setDelegate(this);
 		initWidget(uiBinder.createAndBindUi(this));
+		leestekens.addShiftHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				switchUpper();
+			}
+			
+		});
+		leestekens.setDelegate(this);
 	}
 
 	@UiField(provided=true)
 	TabletKeyboardPad pad;
+	@UiField
+	TabletKeyboardShift leestekens;
 	
-	@UiField FKey t1_1,t1_2,t1_3,t1_4,t1_5,t1_6,t1_7,t1_8,t1_9,t1_10;
-	@UiField FKey t2_1,t2_2,t2_3,t2_4,t2_5,t2_6,t2_7,t2_8,t2_9;
-	@UiField FKey t3_1,t3_2,t3_3,t3_4,t3_5,t3_6,t3_7,t3_8,t3_9,t3_10, t3_11, t3_12;
-	@UiField FKey t4_1;
+//	@UiField FKey t1_1,t1_2,t1_3,t1_4,t1_5,t1_6,t1_7,t1_8,t1_9,t1_10;
+//	@UiField FKey t2_1,t2_2,t2_3,t2_4,t2_5,t2_6,t2_7,t2_8,t2_9;
+//	@UiField FKey t3_1,t3_2,t3_3,t3_4,t3_5,t3_6,t3_7,t3_8,t3_9,t3_10, t3_11, t3_12;
+//	@UiField FKey t4_1;
 	
 	@UiHandler("t1_1") void onT1_1(ClickEvent e) {getEditor().insert('q');}
 	@UiHandler("t1_2") void onT1_2(ClickEvent e) {getEditor().insert('w');}
@@ -56,6 +69,9 @@ public class TabletKeyboardABC extends AbstractKeyboard {
 	@UiHandler("t1_9") void onT1_9(ClickEvent e) {getEditor().insert('o');}
 	@UiHandler("t1_10") void onT1_10(ClickEvent e) {getEditor().insert('p');}
 
+	@UiHandler("t1_11") void onT1_11(ClickEvent e) {getEditor().insert('[');}
+	@UiHandler("t1_12") void onT1_12(ClickEvent e) {getEditor().insert(']');}
+
 	@UiHandler("t2_1") void onT2_1(ClickEvent e) {getEditor().insert('a');}
 	@UiHandler("t2_2") void onT2_2(ClickEvent e) {getEditor().insert('s');}
 	@UiHandler("t2_3") void onT2_3(ClickEvent e) {getEditor().insert('d');}
@@ -65,6 +81,10 @@ public class TabletKeyboardABC extends AbstractKeyboard {
 	@UiHandler("t2_7") void onT2_7(ClickEvent e) {getEditor().insert('j');}
 	@UiHandler("t2_8") void onT2_8(ClickEvent e) {getEditor().insert('k');}
 	@UiHandler("t2_9") void onT2_9(ClickEvent e) {getEditor().insert('l');}
+
+	@UiHandler("t2_10") void onT2_10(ClickEvent e) {getEditor().insert(';');}
+	@UiHandler("t2_11") void onT2_11(ClickEvent e) {getEditor().insert('\'');}
+	@UiHandler("t2_12") void onT2_12(ClickEvent e) {getEditor().insert('\\');}
 
 	@UiHandler("t3_1") void onT3_1(ClickEvent e) {switchUpper();}
 	@UiHandler("t3_2") void onT3_2(ClickEvent e) {getEditor().insert('z');}
@@ -77,7 +97,7 @@ public class TabletKeyboardABC extends AbstractKeyboard {
 	@UiHandler("t3_9") void onT3_9(ClickEvent e) {getEditor().insert('!');}
 	@UiHandler("t3_10") void onT3_10(ClickEvent e) {getEditor().insert(',');}
 	@UiHandler("t3_11") void onT3_11(ClickEvent e) {getEditor().insert('.');}
-	@UiHandler("t3_12") void onT3_12(ClickEvent e) {getEditor().insert('?');}
+	@UiHandler("t3_12") void onT3_12(ClickEvent e) {getEditor().insert('/');}
 	
 	@UiHandler("t4_1") void onT4_1(ClickEvent e) {getEditor().insert(' ');}
 

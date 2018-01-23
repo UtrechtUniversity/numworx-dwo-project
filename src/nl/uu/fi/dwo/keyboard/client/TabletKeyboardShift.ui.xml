@@ -1,0 +1,42 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+	
+	</ui:style>
+	<g:FlowPanel styleName='leestekens'>
+		<g:FlowPanel addStyleNames='row row-1'>
+			<my:FKey addStyleNames="key bg-purple" ui:field="t1_1">
+				!
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-purple" ui:field="t1_2">
+				~
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames='row row-2'>
+			<my:FKey addStyleNames="key bg-purple" ui:field="t2_1">
+				#
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-purple" ui:field="t2_2">
+				&amp;
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames='row row-3'>
+			<my:FKey addStyleNames="key bg-purple" ui:field="t3_1">
+				%
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-purple" ui:field="t3_2">
+				^
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames='row row-4'>
+			<my:FKey addStyleNames="key" ui:field="t4_1">
+				⇧
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-purple" ui:field="t4_2">
+				*
+			</my:FKey>
+		</g:FlowPanel>
+		
+	</g:FlowPanel>
+</ui:UiBinder> 
