@@ -358,11 +358,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			}
 			scoreNav.setOpnieuw(opnieuw || opnieuwMogelijk);
 			
-			if (opnieuw || opnieuwMogelijk) // alles opnieuw
+			if ( (opnieuw || opnieuwMogelijk) && scoreNav.getAllesOpnieuwButton() != null) // alles opnieuw
 			{
 				widthAllesOpnieuw = scoreNav.getAllesOpnieuwButton().getOffsetWidth() + margin;
 			}
-			if (itemOpnieuw)
+			if (itemOpnieuw && scoreNav.getOpnieuwButton() != null)
 			{
 				widthOpnieuw = scoreNav.getOpnieuwButton().getOffsetWidth() + margin;
 			}
