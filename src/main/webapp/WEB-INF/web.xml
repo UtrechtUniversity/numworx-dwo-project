@@ -229,7 +229,7 @@
       </init-param>
       <init-param>
          <param-name>ideascgi.hypothesis</param-name>
-         <param-value>http://ideastest.science.uu.nl/cgi-bin/statistics-pilot-oct2017.cgi</param-value>
+         <param-value>http://ideastest.science.uu.nl/cgi-bin/statistics.cgi</param-value>
       </init-param>
       <init-param>
          <param-name>mixedfraction</param-name>
