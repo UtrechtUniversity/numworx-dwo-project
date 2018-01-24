@@ -148,11 +148,11 @@ public class DwoProfileManager {
     public static int getEntityCount() {
         EntityManager em = getEntityManager();
         try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            CriteriaQuery<Long> cq = em.getCriteriaBuilder().createQuery(Long.class);
             Root<PersistentDwoProfile> rt = cq.from(PersistentDwoProfile.class);
             cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
-            return ((Long) q.getSingleResult()).intValue();
+            TypedQuery<Long> q = em.createQuery(cq);
+            return q.getSingleResult().intValue();
         } finally {
             em.close();
         }
