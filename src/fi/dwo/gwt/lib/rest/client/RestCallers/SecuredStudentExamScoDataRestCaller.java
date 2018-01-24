@@ -1,5 +1,6 @@
 package fi.dwo.gwt.lib.rest.client.RestCallers;
 
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
@@ -24,4 +25,10 @@ public interface SecuredStudentExamScoDataRestCaller extends RestService, ScoDat
 	@PUT
 	@Path("secure/student/exam/scoData/getJSONLaunchDataBytes")
 	public void getJSONLaunchDataBytes(RestScoContext rest, MethodCallback<JSONValue> callback);
+
+	@PUT
+	@Path("/secure/student/exam/scoData/patchValues")
+	public void patchValues(@HeaderParam("if-match") String eTag, RestScormValues restScormValues,
+			MethodCallback<Boolean> callback);
+
 }

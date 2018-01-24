@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.google.gwt.json.client.JSONValue;
 
@@ -21,4 +22,9 @@ public interface StudentScoDataManager {
 			Map<String, String> map);
 
 	Promise<JSONValue> getJSONLaunchDataBytes(DomScoContext id, DomDwoProfile value, DomSchoolClassId schoolClassID, DomContext context);
+
+	default Promise<?> patchValues(DomScoContext sco, DomSchoolClassId schoolClassID, DomContext context,
+			Map<String, String> map) {
+		return Promises.failed(new IllegalArgumentException());
+	}
 }
