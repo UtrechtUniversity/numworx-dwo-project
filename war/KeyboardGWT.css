@@ -3,6 +3,20 @@
 	text-align: center;
 }
 
+.keyboard-container.touch .keyboard .leestekens .row .key {
+	float:left;
+	margin-right: 8px;
+	font-weight: normal;
+}
+.keyboard-container.touch .keyboard .leestekens .row  {
+	float:left;
+}
+
+.keyboard .leestekens {
+	width: 100px;
+	
+}
+
 .keyboard-container {
   width: auto;
   display: block;
@@ -33,7 +47,9 @@
     .keyboard-container.computer .key:first-child {
       margin-left: 0; }
   .keyboard-container.touch {
-    height: 166px; }
+    height: 166px;
+    width: 100%;
+     }
     .keyboard-container.touch .keyboard {
       width: 842px;
       padding: 10px 20px;
@@ -62,7 +78,7 @@
         margin-top: 0; }
     .keyboard-container.touch .keyboard-abc .keys {
       height: 144px;
-      width: 740px;
+      width: 660px;
       display: block;
       text-align: center; }
       .keyboard-container.touch .keyboard-abc .keys .row {
@@ -82,9 +98,9 @@
             max-width: 80%;
             margin-top: 3px; }
         .keyboard-container.touch .keyboard-abc .keys .row.row-1, .keyboard-container.touch .keyboard-abc .keys .row.row-3 {
-          padding-left: 90px; }
+          padding-left: 20px; }
         .keyboard-container.touch .keyboard-abc .keys .row.row-2, .keyboard-container.touch .keyboard-abc .keys .row.row-4 {
-          padding-left: 115px; }
+          padding-left: 35px; }
       .keyboard-container.touch .keyboard-abc .keys.caps .row-1 .key, .keyboard-container.touch .keyboard-abc .keys.caps .row-2 .key, .keyboard-container.touch .keyboard-abc .keys.caps .row-3 .key {
         text-transform: uppercase; }
     .keyboard-container.touch .keyboard-abc .clm-16, .keyboard-container.touch .keyboard-abc .clm-17 {
@@ -177,7 +193,7 @@
     .keyboard .bg-ltgrey.key svg *, .bg-ltgrey.key.switch svg * {
       fill: #FFFFFF; }
   .keyboard .bg-purple.key, .bg-purple.key.switch {
-    background-color: #7b99c7;
+    background-color: #00AFD3;
     color: #FFFFFF; }
     .keyboard .bg-purple.key svg *, .bg-purple.key.switch svg * {
       fill: #FFFFFF; }
