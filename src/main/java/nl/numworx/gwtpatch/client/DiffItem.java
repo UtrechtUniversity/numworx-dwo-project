@@ -15,8 +15,7 @@ class DiffItem {
 		Map<String, Object> map = builder.createMap();
 		map.put("op", op);
 		map.put("path", path);
-		if(value != null) 
-			map.put("value", value);
+		map.put("value", value);
 		return builder.toObjectMap(map);
 	}
 	
