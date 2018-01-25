@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
@@ -36,9 +37,11 @@ public class SecuredStudentCoursesOfSchoolClassManager implements CoursesOfSchoo
 	public Promise<DomCoursesOfSchoolClass> getCoursesClass(DomContext context, DomSchoolClass schoolClass, DomDwoProfile profile) {
 		PromiseCallback<DomCoursesOfSchoolClass> callback = new PromiseCallback<DomCoursesOfSchoolClass>();
 		RestSchoolClassAndProfile rest = new RestSchoolClassAndProfile();
+		DomSchoolClassAndProfile  dom  = new DomSchoolClassAndProfile();
 		rest.setRestContext(context);
-		rest.setDomDwoProfile(profile);
-		rest.setDomSchoolClass(schoolClass);
+		rest.setDomSchoolClassAndProfile(dom);
+		dom.setDomDwoProfile(profile);
+		dom.setDomSchoolClass(schoolClass);
 		service.getCoursesClass(rest, callback);
 		return callback.getPromise();
 	}
@@ -52,10 +55,7 @@ public class SecuredStudentCoursesOfSchoolClassManager implements CoursesOfSchoo
 		rest.setDomCourse(course);
 		rest.setDomDwoProfile(profile);
 		rest.setSchoolClassID(schoolClass);
-		
-		
-		callback.fail(new IllegalArgumentException());
-		
+		service.getCoursesClass(rest, callback);	
 		return callback.getPromise();
 	}
 	@Override
@@ -67,9 +67,7 @@ public class SecuredStudentCoursesOfSchoolClassManager implements CoursesOfSchoo
 		rest.setDomDwoProfile(profile);
 		rest.setDomScoContext(sco);
 		rest.setSchoolClassID(schoolClass);		
-		
-		callback.fail(new IllegalArgumentException());
-
+		service.getCoursesClass(rest, callback);
 		return callback.getPromise();
 	}
 
