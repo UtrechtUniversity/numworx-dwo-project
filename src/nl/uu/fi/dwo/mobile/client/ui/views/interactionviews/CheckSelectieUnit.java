@@ -1,16 +1,10 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import com.bouwkamp.gwt.user.client.ui.RoundedPanel;
-import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.TextAlign;
@@ -25,23 +19,11 @@ import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-
-
-
-
-
-
-
-
-import com.googlecode.mgwt.ui.client.widget.RoundPanel;
 
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.RestartException;
-import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
@@ -51,7 +33,6 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
-import nl.uu.fi.dwo.interaction.client.Stub;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;

@@ -19,7 +19,6 @@
 
   <inherits name="com.googlecode.mgwt.MGWTMin"/>
   <inherits name="com.fredhat.gwt.xmlrpc.XMLRPC" />
-  <inherits name="com.bouwkamp.gwt.user.User" />
   <inherits name="nl.uu.fi.dwo.interaction.Interaction" />
   <inherits name="nl.uu.fi.dwo.formule.Formule" />
   <inherits name="nl.uu.fi.dwo.ideas.Ideas"/>
