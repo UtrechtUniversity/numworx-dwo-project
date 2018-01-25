@@ -52,7 +52,7 @@ public class LoginManager {
             //clears any auth data and cookies remaining from a previous session in Java browser-like framework
             Authenticator.setDefault(null);
             CookieManager.setDefault(null);
-            URL url = new URL(RestAuthenticator.getServerUrlPath().toString() + "rest/secure/user/account/login"); //TODO make basicLogin            
+            URL url = new URL(RestAuthenticator.getInstance().getServerUrlPath() , "rest/secure/user/account/login"); //TODO make basicLogin            
             String authString = username + ":" + password;
             authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();

@@ -12,7 +12,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 @Deprecated //Static class use is evil!
 public class RestAuthenticator extends Authenticator {
 
-    private static URL serverUrlPath;
+    private URL serverUrlPath;
     private DomContext context;
     private String username;
     private String password;
@@ -75,14 +75,14 @@ public class RestAuthenticator extends Authenticator {
     /**
      * @return the serverUrlPath
      */
-    public static URL getServerUrlPath() {
+    public URL getServerUrlPath() {
         return serverUrlPath;
     }
 
     /**
      * @param aServerUrlPath the serverUrlPath to set
      */
-    public static void setServerUrlPath(URL aServerUrlPath) {
+    public void setServerUrlPath(URL aServerUrlPath) {
         serverUrlPath = aServerUrlPath;
     }
 

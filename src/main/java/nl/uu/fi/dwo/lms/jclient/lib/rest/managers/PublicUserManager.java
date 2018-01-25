@@ -48,7 +48,7 @@ public class PublicUserManager {
         try {
             DomUserFull user;
             //http://stackoverflow.com/questions/2793150/using-java-net-urlconnection-to-fire-and-handle-http-requests
-            URL url = new URL(RestAuthenticator.getServerUrlPath().toString() + "rest/secure/user/account/get");
+            URL url = new URL(RestAuthenticator.getInstance().getServerUrlPath(), "rest/secure/user/account/get");
             URLConnection conn = url.openConnection();
             conn.setRequestProperty("Accept-Charset", "UTF-8");
             BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -87,7 +87,7 @@ public class PublicUserManager {
         samlRestUser.setDomSamlUser(samlUser);
         samlRestUser.setRestContext(new DomContext());
         try {
-            URL url = new URL(RestAuthenticator.getServerUrlPath().toString() + "rest/public/user/submitSaml"); //TODO make login
+            URL url = new URL(RestAuthenticator.getInstance().getServerUrlPath(), "rest/public/user/submitSaml"); //TODO make login
             DataOutputStream outStream = null;
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("PUT");

@@ -54,7 +54,7 @@ public class SecureUserAccountManager {
             Authenticator.setDefault(null);
             CookieManager.setDefault(null);
             try{
-            URL url = new URL(RestAuthenticator.getServerUrlPath().toString() + "rest/secure/user/account/getLoginContext"); //TODO make basicLogin            
+            URL url = new URL(RestAuthenticator.getInstance().getServerUrlPath().toString() + "rest/secure/user/account/getLoginContext"); //TODO make basicLogin            
             String authString = username + ":" + password;
             authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();

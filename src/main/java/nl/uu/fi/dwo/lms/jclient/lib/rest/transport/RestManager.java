@@ -102,7 +102,7 @@ class RestManager extends RestyDateTimeFormat {
      */
     public <T> T get(String path, Class<T> c) throws Dwo2Exception {
         try {
-            URL url = new URL(RestAuthenticator.getServerUrlPath().toString() + path); //TODO make login
+            URL url = new URL(RestAuthenticator.getInstance().getServerUrlPath(), path); //TODO make login
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -171,7 +171,7 @@ class RestManager extends RestyDateTimeFormat {
      */
     public <T> List<T> getList(String path, RestListClassTypes type) throws Dwo2Exception {
         try {
-            URL url = new URL(RestAuthenticator.getServerUrlPath().toString() + path); //TODO make login
+            URL url = new URL(RestAuthenticator.getInstance().getServerUrlPath().toString() + path); //TODO make login
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -278,7 +278,7 @@ class RestManager extends RestyDateTimeFormat {
      */
     public <T> T put(String path, Class<T> c, Object o) throws Dwo2Exception { //due to genson now c is superflous
         try {
-            URL url = new URL(RestAuthenticator.getServerUrlPath().toString() + path); //TODO make login
+            URL url = new URL(RestAuthenticator.getInstance().getServerUrlPath(), path); //TODO make login
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             DataOutputStream outStream = null;
             conn.setRequestMethod("PUT");
@@ -360,7 +360,7 @@ class RestManager extends RestyDateTimeFormat {
      */
     public <T> List<T> getPutList(String path, RestListClassTypes type, Object o) throws Dwo2Exception {
         try {
-            URL url = new URL(RestAuthenticator.getServerUrlPath().toString() + path); //TODO make login
+            URL url = new URL(RestAuthenticator.getInstance().getServerUrlPath(), path); //TODO make login
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             DataOutputStream outStream = null;
             conn.setRequestMethod("PUT");
