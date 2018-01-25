@@ -37,8 +37,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
@@ -261,7 +263,7 @@ public class CascadingPersistenceBuilder {
 
         PersistentSchoolGroup getSchoolGroup();
 
-        State_HR_R_S_SC_SG_U addSchoolClass(DomSchoolClass s) throws Dwo2Exception;
+        State_HR_R_S_SC_SG_U addSchoolClass(DomSchoolClassId s) throws Dwo2Exception;
     }
 
     public interface State_HR_R_S_SC_SG_U {
@@ -279,7 +281,7 @@ public class CascadingPersistenceBuilder {
 
         PersistentSchoolClass getSchoolClass();
 
-        State_HR_P_R_S_SC_SG_U addProfile(DomDwoProfile p) throws Dwo2Exception;
+        State_HR_P_R_S_SC_SG_U addProfile(DomDwoProfileId profileid) throws Dwo2Exception;
     }
 
     public interface State_C_CC_HR_P_R_S_SC_SCO_SG_U {
@@ -466,7 +468,7 @@ public class CascadingPersistenceBuilder {
          * @throws Dwo2Exception
          */
         @Override
-        public State_HR_R_S_SC_SG_U addSchoolClass(DomSchoolClass s) throws Dwo2Exception {
+        public State_HR_R_S_SC_SG_U addSchoolClass(DomSchoolClassId s) throws Dwo2Exception {
             //fetch school
             PersistentSchool school = HasRoleUtilManager.getSchoolforHasRole(this.instance.context.hasRole);
             if (school == null) {
@@ -526,7 +528,7 @@ public class CascadingPersistenceBuilder {
          * @throws Dwo2Exception
          */
         @Override
-        public State_HR_P_R_S_SC_SG_U addProfile(DomDwoProfile p) throws Dwo2Exception {
+        public State_HR_P_R_S_SC_SG_U addProfile(DomDwoProfileId p) throws Dwo2Exception {
             //fetch profile
             Long profileId = MySQLPersistenceId.getNativeId(p);
             PersistentDwoProfile profile = DwoProfileManager.findEntity(profileId);
@@ -551,7 +553,7 @@ public class CascadingPersistenceBuilder {
         public State_C_CC_HR_P_R_S_SC_SG_U addCourse(DomCourse c) throws Dwo2Exception {
             Long courseId = MySQLPersistenceId.getNativeId(c);
             PersistentCourse course = CourseManager.findEntity(courseId);
-            if (course == null || course.getDwoProfileID() != instance.context.profile.getDwoProfileID()) {
+            if (course == null || course.getDwoProfileID().longValue() != instance.context.profile.getDwoProfileID().longValue()) { // XXX expliciet unboxen
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested course {2} is not available in the profile {1} with usercode {0}.", new Object[]{this.instance.context.user.getUsername(), instance.context.profile.getDwoProfileID(), c.getId()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + this.instance.context.user.getUsername() + ".");
             }
