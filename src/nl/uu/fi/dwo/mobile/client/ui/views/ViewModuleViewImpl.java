@@ -474,7 +474,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		scoreNav.setMisconceptionsHandler(this);
 		//stelNavigatieIn(); // kan weg; gebeurt al in zetOpdracht(); i.v.m. bijhouden bezocht[]
 
-		if (scoresZichtbaar)
+		if (scoresZichtbaar && (!(on.getMode() == OpdrNav.EINDTOETS) || on.scoresVisible()))// scores niet tonen in niet-verzegelde eindtoets
 		{
 			scoreNav.setTotaalScoreLabel((int) on.getScore()); // toon percentagescore
 			// nu de score gezet is kunnen we de breedte bepalen
