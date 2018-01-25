@@ -358,11 +358,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			}
 			scoreNav.setOpnieuw(opnieuw || opnieuwMogelijk);
 			
-			if ( (opnieuw || opnieuwMogelijk) && scoreNav.getAllesOpnieuwButton() != null) // alles opnieuw
+			if ( (opnieuw || opnieuwMogelijk) && scoreNav.getAllesOpnieuwButton() != null) // alles opnieuw; let op: Noordhoff heeft geen 'alles opnieuw'-knop
 			{
 				widthAllesOpnieuw = scoreNav.getAllesOpnieuwButton().getOffsetWidth() + margin;
 			}
-			if (itemOpnieuw && scoreNav.getOpnieuwButton() != null)
+			if (itemOpnieuw && scoreNav.getOpnieuwButton() != null) // item opnieuw; let op: Noordhoff heeft geen 'opnieuw'-knop
 			{
 				widthOpnieuw = scoreNav.getOpnieuwButton().getOffsetWidth() + margin;
 			}
