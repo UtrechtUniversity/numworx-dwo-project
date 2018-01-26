@@ -531,7 +531,7 @@ public final class DwoHelper {
      * @param aServerUrlPath
      */
     public static void setServerUrlPath(URL aServerUrlPath) {
-        RestAuthenticator.setServerUrlPath(aServerUrlPath);
+        RestAuthenticator.getInstance().setServerUrlPath(aServerUrlPath);
     }
 
    /**
@@ -539,7 +539,7 @@ public final class DwoHelper {
      *
      * @return
      */    public static URL getServerUrlPath() {
-        return RestAuthenticator.getServerUrlPath();
+        return RestAuthenticator.getInstance().getServerUrlPath();
     }
 
      /**
