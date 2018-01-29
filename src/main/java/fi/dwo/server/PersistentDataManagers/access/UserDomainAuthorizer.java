@@ -8,6 +8,7 @@ import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import java.text.MessageFormat;
@@ -33,10 +34,11 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
 
     private static final Logger LOG = Logger.getLogger(UserDomainAuthorizer.class.getName());
 
-    private UserPersistentContext context = new UserPersistentContext();
-    private UserActions userActions = new MySQLUserActions();
+    protected UserPersistentContext context;
+    private UserActions userActions;
 
     protected class UserPersistentContext extends AnonPersistentContext {
+
         protected PersistentUser user;
         protected PersistentHasRole hasRole;
         protected RoleType roleType;
@@ -46,10 +48,18 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
 
     protected UserDomainAuthorizer() {
         super();
+        context = new UserPersistentContext();
+        userActions = new MySQLUserActions();
     }
 
-    public static UserState_U user(String username) throws Dwo2Exception {
-        return new UserDomainAuthorizer.Builder(username);
+    protected UserDomainAuthorizer(AnonDomainAuthorizer anon) {
+        super();
+        context = new UserPersistentContext();
+        userActions = new MySQLUserActions();
+    }
+
+    public static UserState_U user(AnonDomainAuthorizer auth, String username) throws Dwo2Exception {
+        return new UserDomainAuthorizer.Builder(auth).setUser(username);
     }
 
     public interface UserState_U {
@@ -77,40 +87,42 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
 
         PersistentSchoolGroup getSchoolGroup();
 
+        SchoolAdminTeacherState_HR_R_S_SG_U setSchoolAdminTeacher() throws Dwo2Exception;
     }
-
-    public interface UserState_HR_R_S_SC_SG_U {
-
-        PersistentUser getUser();
-
-        PersistentHasRole getHasRole();
-
-        RoleType getRoleType();
-
-        PersistentSchool getSchool();
-
-        PersistentSchoolGroup getSchoolGroup();
-
-    }
+//
+//    public interface UserState_HR_R_S_SC_SG_U {
+//
+//        PersistentUser getUser();
+//
+//        PersistentHasRole getHasRole();
+//
+//        RoleType getRoleType();
+//
+//        PersistentSchool getSchool();
+//
+//        PersistentSchoolGroup getSchoolGroup();
+//
+//    }
 
     public interface Build {
+//
+//        PersistentHasRole getHasRole();
+//
+//        PersistentUser getUser();
+//
+//        PersistentSchool getSchool();
+//
+//        RoleType getRoleType();
+//        
 
-        PersistentHasRole getHasRole();
-
-        PersistentUser getUser();
-
-        PersistentSchool getSchool();
-
-        RoleType getRoleType();
     }
 
-    private static class Builder implements UserState_U, UserState_HR_R_S_SG_U, UserState_HR_R_S_SC_SG_U,
+    protected static class Builder implements UserState_U, UserState_HR_R_S_SG_U, //UserState_HR_R_S_SC_SG_U,
             Build {
 
         private UserDomainAuthorizer instance = new UserDomainAuthorizer();
 
-        public Builder(String username) throws Dwo2Exception {
-            this.setUser(username);
+        public Builder(AnonDomainAuthorizer auth) throws Dwo2Exception {
         }
 
         /**
@@ -186,6 +198,7 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
             }
             this.instance.context.hasRole = phr;
+            instance.context.roleType = RoleType.values()[phr.getSchoolGroup().getRole().getGroupID().intValue()];
             return this;
         }
 
@@ -269,15 +282,20 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
             return instance.context.roleType;
         }
 
+        @Override
         public DomUserFull UpdateAccount(DomUserFull user) throws Dwo2Exception {
             if (user.getUserName().matches(instance.context.user.getUsername())) {
-
+                return instance.userActions.UpdateAccount(instance.context.user, user).buildDomUserFull();
             } else {
                 String msg = MessageFormat.format("Trying to change the usercode from {0} to {1}", new Object[]{instance.context.user.getUsername(), user.getUserName()});
-                LOG.log(Level.WARNING,msg);
+                LOG.log(Level.WARNING, msg);
                 throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
             }
-            return instance.userActions.UpdateAccount(instance.context.user, user).buildDomUserFull();
+        }
+
+        @Override
+        public SchoolAdminTeacherState_HR_R_S_SG_U setSchoolAdminTeacher() throws Dwo2Exception {
+            return new SchoolAdminTeacherDomainAuthorizer.Builder(instance).setSchoolAdminTeacher();
         }
     }
 }

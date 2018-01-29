@@ -11,6 +11,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
@@ -402,11 +403,11 @@ public class SecuredUserAccountManager {
         }
 //clear results
         try {            
-            UserDomainAuthorizer.UserState_U build = UserDomainAuthorizer.user(user.getDomUserFull().getUserName());
-            return build.UpdateAccount(user.getDomUserFull());            
+            UserDomainAuthorizer.UserState_U build = AnonDomainAuthorizer.build().setUser(sc.getUserPrincipal().getName());
+            return build.UpdateAccount(user.getDomUserFull());
             //TODO clear all excess classcourses.
         } catch (Dwo2Exception e) {
-            throw new Dwo2RestException(e);
+            throw new Dwo2RestException(e.getDwo2Code(),e.getDwo2Message());
         }
     }
 

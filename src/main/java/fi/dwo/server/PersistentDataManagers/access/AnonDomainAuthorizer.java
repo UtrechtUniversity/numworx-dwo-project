@@ -22,7 +22,7 @@ public class AnonDomainAuthorizer {
 
     private static final Logger LOG = Logger.getLogger(AnonDomainAuthorizer.class.getName());
 
-    private AnonPersistentContext context = new AnonPersistentContext();
+    protected AnonPersistentContext context = new AnonPersistentContext();
 
     public class AnonPersistentContext {
         //currently no context info (although HeaderInfo other REST payload
@@ -62,15 +62,15 @@ public class AnonDomainAuthorizer {
      * @throws Dwo2Exception
      */
     public UserState_U setUser(String username) throws Dwo2Exception {
-        return UserDomainAuthorizer.user(username);
+        return UserDomainAuthorizer.user(instance,username);
     }
 
     public UserState_U setUser(DomUser u) throws Dwo2Exception {
-        return UserDomainAuthorizer.user(u.getUserName());
+        return UserDomainAuthorizer.user(instance,u.getUserName());
     }
 
     protected UserState_U setUser(PersistentUser u) throws Dwo2Exception {
-        return UserDomainAuthorizer.user(u.getUsername());
+        return UserDomainAuthorizer.user(instance,u.getUsername());
     }
     
     public boolean LoginCheck(DomLoginCheck check) throws Dwo2Exception

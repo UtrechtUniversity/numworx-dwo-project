@@ -126,7 +126,7 @@ public class SecuredUserAccountManagerIT {
             fail("Did not fail fake username with result." + result.getUserName());
         } catch (Dwo2RestException e) {
             // succeeded
-            LOG.log(Level.INFO, "{0}", e.getDwo2Message());
+//            LOG.log(Level.INFO, "{0}", e.getDwo2Message());
         }
         try {
             user.getDomUserFull().setPassword("e");
