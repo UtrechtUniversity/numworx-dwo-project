@@ -493,6 +493,24 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_df_anova__df_within();
 
   /**
+   * Translated "Het aantal vrijheidsgraden is niet correct.".
+   * 
+   * @return translated "Het aantal vrijheidsgraden is niet correct."
+   */
+  @DefaultStringValue("Het aantal vrijheidsgraden is niet correct.")
+  @Key("check.df-anova: no match")
+  String check_df_anova__no_match();
+
+  /**
+   * Translated "Het aantal vrijheidsgraden is niet correct.".
+   * 
+   * @return translated "Het aantal vrijheidsgraden is niet correct."
+   */
+  @DefaultStringValue("Het aantal vrijheidsgraden is niet correct.")
+  @Key("check.df: no match")
+  String check_df__no_match();
+
+  /**
    * Translated "Dit is niet het juiste aantal groepen.".
    * 
    * @return translated "Dit is niet het juiste aantal groepen."
@@ -520,11 +538,11 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_h0__component_is_not_of_type_relation();
 
   /**
-   * Translated "De nulhypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef.".
+   * Translated "De nulhypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef. Welke parameter bekijk je?".
    * 
-   * @return translated "De nulhypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef."
+   * @return translated "De nulhypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef. Welke parameter bekijk je?"
    */
-  @DefaultStringValue("De nulhypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef.")
+  @DefaultStringValue("De nulhypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef. Welke parameter bekijk je?")
   @Key("check.h0: parameter mismatch")
   String check_h0__parameter_mismatch();
 
@@ -565,11 +583,11 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_ha__component_is_not_of_type_relation();
 
   /**
-   * Translated "De alternatieve hypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef.".
+   * Translated "De alternatieve hypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef. Welke parameter bekijk je?".
    * 
-   * @return translated "De alternatieve hypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef."
+   * @return translated "De alternatieve hypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef. Welke parameter bekijk je?"
    */
-  @DefaultStringValue("De alternatieve hypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef.")
+  @DefaultStringValue("De alternatieve hypothese moet gaan over parameters in de populatie, niet over eigenschappen van één specifieke steekproef. Welke parameter bekijk je?")
   @Key("check.ha: parameter mismatch")
   String check_ha__parameter_mismatch();
 
@@ -673,6 +691,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_rejectioncritical__alternative_hypothesis_missing();
 
   /**
+   * Translated "Past het teken dat je in het kritiek gebied gebruikt bij de toets die je aan het doen bent?".
+   * 
+   * @return translated "Past het teken dat je in het kritiek gebied gebruikt bij de toets die je aan het doen bent?"
+   */
+  @DefaultStringValue("Past het teken dat je in het kritiek gebied gebruikt bij de toets die je aan het doen bent?")
+  @Key("check.rejectioncritical: anova mismatch")
+  String check_rejectioncritical__anova_mismatch();
+
+  /**
    * Translated "Bepaal eerst het gehele kritieke gebied, voor je nakijkt.".
    * 
    * @return translated "Bepaal eerst het gehele kritieke gebied, voor je nakijkt."
@@ -734,6 +761,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   @DefaultStringValue("Deze toetsrichting past niet bij de hypotheses of claim uit de opdracht.")
   @Key("check.sided")
   String check_sided();
+
+  /**
+   * Translated "Deze toetsrichting past niet bij een ANOVA.".
+   * 
+   * @return translated "Deze toetsrichting past niet bij een ANOVA."
+   */
+  @DefaultStringValue("Deze toetsrichting past niet bij een ANOVA.")
+  @Key("check.sided: anova")
+  String check_sided__anova();
 
   /**
    * Translated "Dit is niet de juiste waarde van de standaardfout.".
