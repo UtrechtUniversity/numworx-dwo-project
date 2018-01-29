@@ -21,6 +21,33 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
    * @return translated "Bij welk significantieniveau heb je de kritieke waarde opgezocht?"
    */
   @DefaultStringValue("Bij welk significantieniveau heb je de kritieke waarde opgezocht?")
+  @Key("buggy.component.critical.f-value.alpha")
+  String buggy_component_critical_f_value_alpha();
+
+  /**
+   * Translated "Bij welk aantal vrijheidsgraden heb je de kritieke waarde opgezocht?".
+   * 
+   * @return translated "Bij welk aantal vrijheidsgraden heb je de kritieke waarde opgezocht?"
+   */
+  @DefaultStringValue("Bij welk aantal vrijheidsgraden heb je de kritieke waarde opgezocht?")
+  @Key("buggy.component.critical.f-value.df")
+  String buggy_component_critical_f_value_df();
+
+  /**
+   * Translated "Wat is precies de kritieke waarde en wat is de toetsingsgrootheid?".
+   * 
+   * @return translated "Wat is precies de kritieke waarde en wat is de toetsingsgrootheid?"
+   */
+  @DefaultStringValue("Wat is precies de kritieke waarde en wat is de toetsingsgrootheid?")
+  @Key("buggy.component.critical.f-value.test-value")
+  String buggy_component_critical_f_value_test_value();
+
+  /**
+   * Translated "Bij welk significantieniveau heb je de kritieke waarde opgezocht?".
+   * 
+   * @return translated "Bij welk significantieniveau heb je de kritieke waarde opgezocht?"
+   */
+  @DefaultStringValue("Bij welk significantieniveau heb je de kritieke waarde opgezocht?")
   @Key("buggy.component.critical.r-value.alpha")
   String buggy_component_critical_r_value_alpha();
 
@@ -241,6 +268,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String buggy_component_test_t_value();
 
   /**
+   * Translated "Wat is precies de toetsingsgrootheid en wat is de kritieke waarde?".
+   * 
+   * @return translated "Wat is precies de toetsingsgrootheid en wat is de kritieke waarde?"
+   */
+  @DefaultStringValue("Wat is precies de toetsingsgrootheid en wat is de kritieke waarde?")
+  @Key("buggy.component.test-value.critical")
+  String buggy_component_test_value_critical();
+
+  /**
    * Translated "Waar heb je door gedeeld om deze toetsingsgrootheid te berekenen? De standaardafwijking of de standaardfout?".
    * 
    * @return translated "Waar heb je door gedeeld om deze toetsingsgrootheid te berekenen? De standaardafwijking of de standaardfout?"
@@ -385,6 +421,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_critical();
 
   /**
+   * Translated "De kritieke waarde is niet correct, maar zit in de buurt. Heb je correct afgerond en op voldoende decimalen?".
+   * 
+   * @return translated "De kritieke waarde is niet correct, maar zit in de buurt. Heb je correct afgerond en op voldoende decimalen?"
+   */
+  @DefaultStringValue("De kritieke waarde is niet correct, maar zit in de buurt. Heb je correct afgerond en op voldoende decimalen?")
+  @Key("check.critical: almost equal")
+  String check_critical__almost_equal();
+
+  /**
    * Translated "Bij welke hypotheses hoort deze kritieke waarde? Stel eerst hypotheses op.".
    * 
    * @return translated "Bij welke hypotheses hoort deze kritieke waarde? Stel eerst hypotheses op."
@@ -419,6 +464,42 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   @DefaultStringValue("Het aantal vrijheidsgraden is niet correct.")
   @Key("check.df")
   String check_df();
+
+  /**
+   * Translated "Het aantal vrijheidsgraden is niet correct.".
+   * 
+   * @return translated "Het aantal vrijheidsgraden is niet correct."
+   */
+  @DefaultStringValue("Het aantal vrijheidsgraden is niet correct.")
+  @Key("check.df-anova")
+  String check_df_anova();
+
+  /**
+   * Translated "Het aantal vrijheidsgraden tussen de groepen is niet correct.".
+   * 
+   * @return translated "Het aantal vrijheidsgraden tussen de groepen is niet correct."
+   */
+  @DefaultStringValue("Het aantal vrijheidsgraden tussen de groepen is niet correct.")
+  @Key("check.df-anova: df-between")
+  String check_df_anova__df_between();
+
+  /**
+   * Translated "Het aantal vrijheidsgraden binnen de groepen is niet correct.".
+   * 
+   * @return translated "Het aantal vrijheidsgraden binnen de groepen is niet correct."
+   */
+  @DefaultStringValue("Het aantal vrijheidsgraden binnen de groepen is niet correct.")
+  @Key("check.df-anova: df-within")
+  String check_df_anova__df_within();
+
+  /**
+   * Translated "Dit is niet het juiste aantal groepen.".
+   * 
+   * @return translated "Dit is niet het juiste aantal groepen."
+   */
+  @DefaultStringValue("Dit is niet het juiste aantal groepen.")
+  @Key("check.groups")
+  String check_groups();
 
   /**
    * Translated "Deze nulhypothese past niet bij de opgestelde alternatieve hypothese of de claim uit de opdracht.".
@@ -527,6 +608,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   @DefaultStringValue("Om een p-waarde te bepalen, moet je eerst de toetsingsgrootheid berekenen.")
   @Key("check.p-value: TestValue missing")
   String check_p_value__TestValue_missing();
+
+  /**
+   * Translated "De p-waarde is niet correct, maar zit in de buurt. Heb je correct afgerond en op voldoende decimalen?".
+   * 
+   * @return translated "De p-waarde is niet correct, maar zit in de buurt. Heb je correct afgerond en op voldoende decimalen?"
+   */
+  @DefaultStringValue("De p-waarde is niet correct, maar zit in de buurt. Heb je correct afgerond en op voldoende decimalen?")
+  @Key("check.p-value: almost equal")
+  String check_p_value__almost_equal();
 
   /**
    * Translated "Bij welke hypotheses hoort deze p-waarde? Stel eerst hypotheses op.".
@@ -655,6 +745,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_standard_error();
 
   /**
+   * Translated "De standaardfout is niet correct, maar zit in de buurt. Heb je correct afgerond en op voldoende decimalen?".
+   * 
+   * @return translated "De standaardfout is niet correct, maar zit in de buurt. Heb je correct afgerond en op voldoende decimalen?"
+   */
+  @DefaultStringValue("De standaardfout is niet correct, maar zit in de buurt. Heb je correct afgerond en op voldoende decimalen?")
+  @Key("check.standard-error: almost equal")
+  String check_standard_error__almost_equal();
+
+  /**
    * Translated "Geef zowel de variabelenaam als de waarde van de standaardfout, voor je nakijkt.".
    * 
    * @return translated "Geef zowel de variabelenaam als de waarde van de standaardfout, voor je nakijkt."
@@ -736,6 +835,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_test_value();
 
   /**
+   * Translated "De waarde van de toetsingsgrootheid is niet correct, maar zit in de buurt. Heb je correct afgerond en op voldoende decimalen?".
+   * 
+   * @return translated "De waarde van de toetsingsgrootheid is niet correct, maar zit in de buurt. Heb je correct afgerond en op voldoende decimalen?"
+   */
+  @DefaultStringValue("De waarde van de toetsingsgrootheid is niet correct, maar zit in de buurt. Heb je correct afgerond en op voldoende decimalen?")
+  @Key("check.test-value: almost equal")
+  String check_test_value__almost_equal();
+
+  /**
    * Translated "Bepaal zowel de variabelenaam als de waarde van de toetsingsgrootheid voor je nakijkt.".
    * 
    * @return translated "Bepaal zowel de variabelenaam als de waarde van de toetsingsgrootheid voor je nakijkt."
@@ -790,6 +898,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String component_critical_conclusion();
 
   /**
+   * Translated "Dit is de juiste kritieke F-waarde.".
+   * 
+   * @return translated "Dit is de juiste kritieke F-waarde."
+   */
+  @DefaultStringValue("Dit is de juiste kritieke F-waarde.")
+  @Key("component.critical.f-value")
+  String component_critical_f_value();
+
+  /**
    * Translated "Dit is de juiste kritieke r-waarde.".
    * 
    * @return translated "Dit is de juiste kritieke r-waarde."
@@ -824,6 +941,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   @DefaultStringValue("Dit aantal vrijheidsgraden is correct.")
   @Key("component.df")
   String component_df();
+
+  /**
+   * Translated "Dit aantal vrijheidsgraden is correct.".
+   * 
+   * @return translated "Dit aantal vrijheidsgraden is correct."
+   */
+  @DefaultStringValue("Dit aantal vrijheidsgraden is correct.")
+  @Key("component.df-anova")
+  String component_df_anova();
 
   /**
    * Translated "Dit is een geschikte nulhypothese.".
@@ -986,6 +1112,24 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   @DefaultStringValue("Deze waarde van de toetsingsgrootheid is correct.")
   @Key("component.test-value")
   String component_test_value();
+
+  /**
+   * Translated "Een ANOVA is hier inderdaad de meest geschikte toets.".
+   * 
+   * @return translated "Een ANOVA is hier inderdaad de meest geschikte toets."
+   */
+  @DefaultStringValue("Een ANOVA is hier inderdaad de meest geschikte toets.")
+  @Key("component.test.anova")
+  String component_test_anova();
+
+  /**
+   * Translated "Een Pearson correlatietoets is hier inderdaad de meest geschikte toets.".
+   * 
+   * @return translated "Een Pearson correlatietoets is hier inderdaad de meest geschikte toets."
+   */
+  @DefaultStringValue("Een Pearson correlatietoets is hier inderdaad de meest geschikte toets.")
+  @Key("component.test.r-pearson")
+  String component_test_r_pearson();
 
   /**
    * Translated "Een t-toets voor één groep is hier inderdaad de meest geschikte toets.".
