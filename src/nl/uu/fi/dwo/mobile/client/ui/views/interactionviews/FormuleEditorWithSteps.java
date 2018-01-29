@@ -1558,7 +1558,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable) return;
+				if (!editable)
+					return;
 				if (nagekeken)
 					zetIsVeranderdNaNakijken(true);
 				
@@ -3130,19 +3131,25 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			String feedback = editor.getFeedback();
 			if (goedHalfFout == AntwoordVakChecker.DOOR)
 			{
-				// TODO dit kan leesbaarder
-				if (backStep || linOefenVersie)
-					setAndAddFeedback(feedback);
-				else
-				{
-					setAndAddFeedback(feedback); // bepaal ook de positie
+				setAndAddFeedback(feedback);
+				if (!backStep && !linOefenVersie)
 					addStep("$f" + editor.toString() + "@", show, setState); // deze regel wordt in 'setState' aangeroepen als je de state terugzet, komt er zomaar een extra regel, why?
-				}
+
+				// groene bol en punten moeten ook hier mogelijk aangepast worden; gebeurt bij GOED in lastStep()
+				if (!setState && !backStep) // anders wordt er bij backStep een nieuwe regel gemaakt
+					comRoot.setChanged(true);
 			}
 			else if (goedHalfFout == AntwoordVakChecker.HALF || goedHalfFout == AntwoordVakChecker.FOUT)
+			{
 				setAndAddFeedback(feedback);
+				
+				// groene bol en punten moeten ook hier mogelijk aangepast worden; gebeurt bij GOED in lastStep() 
+				if (!setState && !backStep)
+					comRoot.setChanged(true);
+			}
 			else if (goedHalfFout == AntwoordVakChecker.GOED)
-			{ 	setFeedback(feedback);
+			{ 
+				setFeedback(feedback);
 				lastStep("$f" + editor.toString() + "@", show, setState);
 			}
 		}
@@ -3150,7 +3157,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	
 	public boolean controleerStap()
 	{
-		if(!linOefenVersie)
+		if (!linOefenVersie)
 			return true;
 		if (stapNr == 0)
 			return true;
