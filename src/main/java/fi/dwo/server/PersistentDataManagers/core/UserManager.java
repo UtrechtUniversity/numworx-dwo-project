@@ -67,7 +67,7 @@ public class UserManager {
      *
      * @param persistentUser
      */
-    public static void edit(PersistentUser persistentUser) throws PersistenceException {
+    public static PersistentUser edit(PersistentUser persistentUser) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -89,6 +89,43 @@ public class UserManager {
                 em.close();
             }
         }
+        return persistentUser;
+    }
+
+    /**
+     * Updates account data for a PersistentUser.
+     *
+     * @param persistentUser
+     */
+    public static PersistentUser updateAccount(PersistentUser persistentUser) throws PersistenceException {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            PersistentUser p = em.find(PersistentUser.class, persistentUser.getId());
+            p.setGivenName(persistentUser.getGivenName());
+            p.setLastname(persistentUser.getLastname());
+            p.setInsertion(persistentUser.getInsertion());
+            p.setEmail(persistentUser.getEmail());
+            p.setPassword(persistentUser.getPassword());
+            persistentUser = em.merge(p);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            String msg = e.getLocalizedMessage();
+            if (msg == null || msg.length() == 0) {
+                Long id = persistentUser.getId();
+                if (findEntity(id) == null) {
+                    LOG.log(Level.FINE, "The PersistentUser with " + id + " no longer exists.", e);
+                    throw new PersistenceException(e);
+                }
+            }
+            throw new PersistenceException(e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        return persistentUser;
     }
 
     /**

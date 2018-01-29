@@ -11,6 +11,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
@@ -326,8 +327,55 @@ public class SecuredUserAccountManager {
         }
         return true;
     }
-
-    /**
+//
+//    /**
+//     * Updates the User data of the current user and returns a copy of the
+//     * updated data.
+//     *
+//     * @param sc
+//     * @param user
+//     * @return
+//     */
+//    @PUT
+//    @Produces({"application/json"})
+//    @Path("/update")
+//    public DomUserFull updateCurrentUser(@Context SecurityContext sc, RestUserFull user) {
+//        if (user == null) {
+//            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+//        }
+//        //passwords are already hashed.
+//        if (!ValidUserFieldsChecker.isValidEmail(user.getDomUserFull().getEmail())) {
+//            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, "The email address does not  conform with RFC 5322.");
+//        }
+//        if (!ValidUserFieldsChecker.isValidUserName(user.getDomUserFull().getUserName())) {
+//            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
+//        }
+//        if (!ValidUserFieldsChecker.isValidPassword(user.getDomUserFull().getPassword())) {
+//            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Password_Invalid, "The password is not correctly formatted.");
+//        }
+//
+//        if (user.getDomUserFull().getUserName().equals(sc.getUserPrincipal().getName())) {
+//            try {
+//                PersistentUser dbUser = UserManager.findByUserName(user.getDomUserFull().getUserName());
+//                dbUser.setGivenName(user.getDomUserFull().getGivenName());
+//                dbUser.setLastname(user.getDomUserFull().getFamilyName());
+//                dbUser.setInsertion(user.getDomUserFull().getInsertion());
+//                dbUser.setEmail(user.getDomUserFull().getEmail());
+//                dbUser.setPassword(user.getDomUserFull().getPassword());
+//                //User to update is logged in user.
+//                UserManager.edit(dbUser);
+//                PersistentUser pUser = UserManager.findByUserName(user.getDomUserFull().getUserName());
+//                return pUser.buildDomUserFull();
+//            } catch (Exception e) {
+//                LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
+//                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to update user id " + sc.getUserPrincipal().getName() + " .");
+//            }
+//        } else {
+//            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the user profile of user id {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getDomUserFull().getUserName()});
+//            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update usercode " + user.getDomUserFull().getUserName() + ".");
+//        }
+//    }
+/**
      * Updates the User data of the current user and returns a copy of the
      * updated data.
      *
@@ -352,26 +400,13 @@ public class SecuredUserAccountManager {
         if (!ValidUserFieldsChecker.isValidPassword(user.getDomUserFull().getPassword())) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Password_Invalid, "The password is not correctly formatted.");
         }
-
-        if (user.getDomUserFull().getUserName().equals(sc.getUserPrincipal().getName())) {
-            try {
-                PersistentUser dbUser = UserManager.findByUserName(user.getDomUserFull().getUserName());
-                dbUser.setGivenName(user.getDomUserFull().getGivenName());
-                dbUser.setLastname(user.getDomUserFull().getFamilyName());
-                dbUser.setInsertion(user.getDomUserFull().getInsertion());
-                dbUser.setEmail(user.getDomUserFull().getEmail());
-                dbUser.setPassword(user.getDomUserFull().getPassword());
-                //User to update is logged in user.
-                UserManager.edit(dbUser);
-                PersistentUser pUser = UserManager.findByUserName(user.getDomUserFull().getUserName());
-                return pUser.buildDomUserFull();
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
-                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to update user id " + sc.getUserPrincipal().getName() + " .");
-            }
-        } else {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the user profile of user id {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getDomUserFull().getUserName()});
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update usercode " + user.getDomUserFull().getUserName() + ".");
+//clear results
+        try {            
+            UserDomainAuthorizer.UserState_U build = UserDomainAuthorizer.user(user.getDomUserFull().getUserName());
+            return build.UpdateAccount(user.getDomUserFull());            
+            //TODO clear all excess classcourses.
+        } catch (Dwo2Exception e) {
+            throw new Dwo2RestException(e);
         }
     }
 

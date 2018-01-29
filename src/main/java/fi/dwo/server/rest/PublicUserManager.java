@@ -17,6 +17,8 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer;
 import nl.uu.fi.dwo.rest.entities.RestAuthToken;
 import nl.uu.fi.dwo.rest.entities.RestLoginCheck;
 import nl.uu.fi.dwo.rest.entities.RestNewUser;
@@ -241,12 +243,14 @@ public class PublicUserManager {
     @Path("/loginCheck")
     public Boolean getLoginCheck(RestLoginCheck loginCheck) {
         DomLoginCheck domCheck = loginCheck.getDomLoginCheck();
-        PersistentUser user = UserManager.login(domCheck.getUsername(), DomLoginCheck.crypt(domCheck.getPassword()));
-
-        //not using sleep in synchronized semaphore resource, using 
-        //<Realm className="org.apache.catalina.realm.LockOutRealm" failureCount="5">
-        //in server.xml of tomcat.
-        return (user != null);
+        try {
+            AnonDomainAuthorizer.AnonState build = AnonDomainAuthorizer.build();
+            return build.LoginCheck(domCheck);
+        } catch (Dwo2Exception e) {
+            throw new Dwo2RestException(e);
+        }
+//        PersistentUser user = UserManager.login(domCheck.getUsername(), DomLoginCheck.crypt(domCheck.getPassword()));
+//        return (user != null);
     }
 
     /**
