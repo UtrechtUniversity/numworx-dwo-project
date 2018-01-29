@@ -9,6 +9,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -21,6 +22,7 @@ import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 import fi.dwo.gwt.lib.rest.DwoConstants;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.DummyClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 
 public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
@@ -150,7 +152,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 			view.setUnitId(value);
 		} else 
 			view.setUnitId("scoViewNr");
-		String launchData = api.GetValue(LAUNCH_DATA);
+		final String launchData = api.GetValue(LAUNCH_DATA);
 		if(launchData == null || launchData.isEmpty() )
 		{
 			if(k > 0) {
@@ -162,7 +164,13 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		}
 		else
 		{
-			view.setupView(launchData);
+			OpdrNav.defer(
+			  new Command() {
+				public void execute() {
+					view.setupView(launchData);
+				}
+			  }
+			);
 		}
 	}
 
