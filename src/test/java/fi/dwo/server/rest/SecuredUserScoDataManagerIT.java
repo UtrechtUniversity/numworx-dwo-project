@@ -230,7 +230,7 @@ public class SecuredUserScoDataManagerIT {
         provider.createWriter(patch).write(builder.build().toJsonArray());
         entry.setValue(patch.toString());
         response = manager.patchValues(sc, rest, etag);
-        assertEquals(Response.Status.OK, response.getStatus());
+        assertEquals(200, response.getStatus());
         values = (DomScormValues) manager.getValues(sc, rest).getEntity();
         assertEquals(rest.getDomScormValues().getValues().size(), values.getValues().size());
         assertEquals(key, values.getValues().get(0).getKey());
