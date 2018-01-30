@@ -51,7 +51,11 @@ public class AccountDataProperties {
             // update local Global storage.
             String authString = user.getUserName() + ":" + user.getPassword();
             authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
-            StoredRestManager.setBasicAuthString(authString);
+ // XXX no information hiding here!
+            StoredRestManager.getInstance().setBasicAuthString(authString);
+            StoredRestManager.getInstance().getAuthenticator().setPassword(user.getPassword());
+            StoredRestManager.getInstance().getAuthenticator().setUsername(user.getUserName());
+ 
             DwoHelper.updateCurrentUser(user);
             DwoHelper.setCurrentUser(user);
             //TODO above method currently updates the login date, this should not occur for this function.
