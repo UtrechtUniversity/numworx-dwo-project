@@ -54,7 +54,7 @@ public class SecureUserAccountManager {
             Authenticator.setDefault(null);
             CookieManager.setDefault(null);
             try{
-            URL url = new URL(RestAuthenticator.getInstance().getServerUrlPath().toString() + "rest/secure/user/account/getLoginContext"); //TODO make basicLogin            
+            URL url = new URL(StoredRestManager.getInstance().getServerUrlPath().toString() + "rest/secure/user/account/getLoginContext"); //TODO make basicLogin            
             String authString = username + ":" + password;
             authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -82,7 +82,7 @@ public class SecureUserAccountManager {
             conn.disconnect();
 //            Authenticator.setDefault(null);
             //decode JSON
-            Genson genson = new Genson();
+            Genson genson = StoredRestManager.getInstance().getGenson();
 
 //          LIST EXAMPLE: List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
             loginContext = genson.deserialize(json.toString(), DomLoginContext.class);        
@@ -126,11 +126,14 @@ public class SecureUserAccountManager {
         RestLoginContext submit = new RestLoginContext();
         submit.setRestContext(new DomContext());
         submit.setDomLoginContext(domLoginContext);
-        result = StoredRestManager.getInstance().put("rest/secure/user/account/logout", Boolean.class, submit);
+        StoredRestManager restManager = StoredRestManager.getInstance();
+		result = restManager.put("rest/secure/user/account/logout", Boolean.class, submit);
         //ensures basic auth data and cookies are wiped from Java Browser-like framework
         Authenticator.setDefault(null);
         CookieManager.setDefault(null);
-        StoredRestManager.setBasicAuthString(null);
+        restManager.setBasicAuthString(null);
+        restManager.getAuthenticator().setUsername(null);
+        restManager.getAuthenticator().setPassword(null);
         return result;
     }
 
@@ -146,11 +149,14 @@ public class SecureUserAccountManager {
         RestLoginContext submit = new RestLoginContext();
         submit.setRestContext(new DomContext());
         submit.setDomLoginContext(domLoginContext);
-        result = StoredRestManager.getInstance().put("rest/secure/user/account/basicAuthLogout", Boolean.class, submit);
+        StoredRestManager restManager = StoredRestManager.getInstance();
+		result = restManager.put("rest/secure/user/account/basicAuthLogout", Boolean.class, submit);
         //ensures basic auth data and cookies are wiped from Java Browser-like framework
         Authenticator.setDefault(null);
         CookieManager.setDefault(null);
-        StoredRestManager.setBasicAuthString(null);
+        restManager.setBasicAuthString(null);
+        restManager.getAuthenticator().setUsername(null);
+        restManager.getAuthenticator().setPassword(null);
         return result;
     }
     
@@ -169,11 +175,14 @@ public class SecureUserAccountManager {
         restUser.setRestContext(new DomContext());
         restUser.setDomUserFull(user);
 
-        user = StoredRestManager.getInstance().put("rest/secure/user/account/update", DomUserFull.class, restUser);
+        StoredRestManager restManager = StoredRestManager.getInstance();
+		user = restManager.put("rest/secure/user/account/update", DomUserFull.class, restUser);
 //        Client client = ClientBuilder.newClient().register(feature);
 //        WebTarget target = client.target(RestAuthenticator.getServerUrlPath().toString());
 //        StoredRestManager.setWebTargetAndCredentials(target);
-        StoredRestManager.setBasicAuthString(null);
+        restManager.setBasicAuthString(null);
+        restManager.getAuthenticator().setPassword(null);
+        restManager.getAuthenticator().setUsername(null);
         LOG.log(Level.FINE, "Updated user profile of username {0}.", new Object[]{restUser.getDomUserFull().getUserName()});
         return user;
     }

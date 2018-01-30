@@ -9,7 +9,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
  *
  * @author Gert van der Plas
  */
-@Deprecated //Static class use is evil!
 public class RestAuthenticator extends Authenticator {
 
     private URL serverUrlPath;
@@ -19,10 +18,12 @@ public class RestAuthenticator extends Authenticator {
 
     private static volatile RestAuthenticator instance;
 
+    @Deprecated //Static class use is evil!
     public static RestAuthenticator getInstance() {
         return instance;
     }
 
+    @Deprecated //Static class use is evil!
     public static void setInstance(RestAuthenticator instance) {
         RestAuthenticator.instance = instance;
     }

@@ -52,7 +52,8 @@ public class LoginManager {
             //clears any auth data and cookies remaining from a previous session in Java browser-like framework
             Authenticator.setDefault(null);
             CookieManager.setDefault(null);
-            URL url = new URL(RestAuthenticator.getInstance().getServerUrlPath() , "rest/secure/user/account/login"); //TODO make basicLogin            
+            StoredRestManager restManager = StoredRestManager.getInstance();
+			URL url = new URL(restManager.getServerUrlPath() , "rest/secure/user/account/login"); //TODO make basicLogin            
             String authString = username + ":" + password;
             authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -80,11 +81,15 @@ public class LoginManager {
             conn.disconnect();
 //            Authenticator.setDefault(null);
             //decode JSON
-            Genson genson = new Genson();
+            Genson genson = restManager.getGenson();
 
 //          LIST EXAMPLE: List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
             user = genson.deserialize(json.toString(), DomUserFullwLoginContext.class);
-            StoredRestManager.setBasicAuthString(authString);
+ // initialize authenticated services
+            restManager.setBasicAuthString(authString);
+ // turn isAuthenticated into true
+            restManager.getAuthenticator().setUsername(username);
+            restManager.getAuthenticator().setPassword(password);
             //Set current user for domain
             return user;
         } catch (MalformedURLException e) {

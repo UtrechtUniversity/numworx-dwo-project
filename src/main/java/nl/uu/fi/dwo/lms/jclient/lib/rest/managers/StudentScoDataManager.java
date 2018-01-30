@@ -10,5 +10,5 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  */
 public interface StudentScoDataManager {
 	DomScormValues getValues(DomScormValues dom) throws Dwo2Exception;
-	DomScormValues setValues(DomScormValues dom) throws Dwo2Exception;
+	Boolean setValues(DomScormValues dom) throws Dwo2Exception;
 }

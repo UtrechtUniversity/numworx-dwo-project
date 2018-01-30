@@ -87,7 +87,8 @@ public class PublicUserManager {
         samlRestUser.setDomSamlUser(samlUser);
         samlRestUser.setRestContext(new DomContext());
         try {
-            URL url = new URL(RestAuthenticator.getInstance().getServerUrlPath(), "rest/public/user/submitSaml"); //TODO make login
+            StoredRestManager restManager = StoredRestManager.getInstance();
+			URL url = new URL(restManager.getServerUrlPath(), "rest/public/user/submitSaml"); //TODO make login
             DataOutputStream outStream = null;
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("PUT");
@@ -97,7 +98,7 @@ public class PublicUserManager {
             conn.setDoOutput(true);
             conn.setUseCaches(false);
             outStream = new DataOutputStream(conn.getOutputStream());
-            Genson genson = new Genson();
+            Genson genson = restManager.getGenson();
             String jsonOut = genson.serialize(samlRestUser);
             LOG.log(Level.FINEST, "Sending: {0}", new Object[]{jsonOut.toString()});
             outStream.write(jsonOut.getBytes("UTF-8"));
@@ -121,10 +122,13 @@ public class PublicUserManager {
             //genson = new Genson();
 
             user = genson.deserialize(json.toString(), DomUserFullwLoginContext.class);
-            String authString = user.getDomUserFull().getUserName() + ":" + user.getDomUserFull().getPassword();
+            String userName = user.getDomUserFull().getUserName();
+			String password = user.getDomUserFull().getPassword();
+			String authString = userName + ":" + password;
             authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
-            StoredRestManager.setBasicAuthString(authString);
-            
+            restManager.setBasicAuthString(authString);
+            restManager.getAuthenticator().setUsername(userName);
+            restManager.getAuthenticator().setPassword(password);
             return user;
         } catch (MalformedURLException e) {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");

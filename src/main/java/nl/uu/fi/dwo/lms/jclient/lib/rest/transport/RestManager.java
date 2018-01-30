@@ -5,7 +5,6 @@ import com.owlike.genson.GenericType;
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 
-import static nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestManager.getBasicAuthString;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
@@ -56,27 +55,39 @@ class RestManager extends RestyDateTimeFormat {
 
     private static final Logger LOG = Logger.getLogger(RestManager.class.getName());
 
-    private static final RestManager instance = new RestManager();
-    private static String basicAuthString;
+    private String basicAuthString;
+    private final RestAuthenticator authenticator;
+    
+    RestManager(RestAuthenticator authenticator) {
+		super();
+		this.authenticator = authenticator;
+		if(authenticator.isAuthenticated())
+			setBasicAuthString(authenticator.getUsername(), authenticator.getPassword());
+	}
 
-    /**
-     * @return the instance
-     */
-    public static RestManager getInstance() {
-        return instance;
-    }
+	public RestAuthenticator getAuthenticator() {
+		return authenticator;
+	}
 
-    /**
+	public URL getServerUrlPath() {
+		return getAuthenticator().getServerUrlPath();
+	}
+	
+	public Genson getGenson() {
+		return genson;
+	}
+
+	/**
      * @return the basicAuthString
      */
-    public static String getBasicAuthString() {
+    public String getBasicAuthString() {
         return basicAuthString;
     }
 
     /**
      * @param data
      */
-    public synchronized static void setBasicAuthString(String data) {
+    public synchronized void setBasicAuthString(String data) {
         // note that reference changes in Java are atomic.
         basicAuthString = data;
     }
@@ -85,7 +96,7 @@ class RestManager extends RestyDateTimeFormat {
      * @param username
      * @param password
      */
-    public synchronized static void setBasicAuthString(String username, String password) {
+    public synchronized void setBasicAuthString(String username, String password) {
         String authString = username + ":" + password;
         // note that reference changes in Java are atomic.
         basicAuthString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
@@ -102,7 +113,7 @@ class RestManager extends RestyDateTimeFormat {
      */
     public <T> T get(String path, Class<T> c) throws Dwo2Exception {
         try {
-            URL url = new URL(RestAuthenticator.getInstance().getServerUrlPath(), path); //TODO make login
+            URL url = new URL(authenticator.getServerUrlPath(), path); //TODO make login
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -171,7 +182,7 @@ class RestManager extends RestyDateTimeFormat {
      */
     public <T> List<T> getList(String path, RestListClassTypes type) throws Dwo2Exception {
         try {
-            URL url = new URL(RestAuthenticator.getInstance().getServerUrlPath().toString() + path); //TODO make login
+            URL url = new URL(authenticator.getServerUrlPath(), path); //TODO make login
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -278,7 +289,7 @@ class RestManager extends RestyDateTimeFormat {
      */
     public <T> T put(String path, Class<T> c, Object o) throws Dwo2Exception { //due to genson now c is superflous
         try {
-            URL url = new URL(RestAuthenticator.getInstance().getServerUrlPath(), path); //TODO make login
+            URL url = new URL(authenticator.getServerUrlPath(), path); //TODO make login
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             DataOutputStream outStream = null;
             conn.setRequestMethod("PUT");
@@ -360,7 +371,7 @@ class RestManager extends RestyDateTimeFormat {
      */
     public <T> List<T> getPutList(String path, RestListClassTypes type, Object o) throws Dwo2Exception {
         try {
-            URL url = new URL(RestAuthenticator.getInstance().getServerUrlPath(), path); //TODO make login
+            URL url = new URL(authenticator.getServerUrlPath(), path); //TODO make login
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             DataOutputStream outStream = null;
             conn.setRequestMethod("PUT");

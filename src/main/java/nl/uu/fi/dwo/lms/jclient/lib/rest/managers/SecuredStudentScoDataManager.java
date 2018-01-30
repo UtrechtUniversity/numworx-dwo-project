@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
@@ -24,9 +26,17 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 	private static final Logger LOG = Logger.getLogger(SecuredStudentScoDataManager.class.getName());
 	private static StudentScoDataManager instance = new SecuredStudentScoDataManager();
 	private static StudentScoDataManager mediate = ASYNC.mediate(instance, StudentScoDataManager.class);
-
-	// public methods.
+	private StoredRestManager restManager;
 	
+	// public methods.
+	@Inject
+	public SecuredStudentScoDataManager(StoredRestManager restManager) {
+		this.restManager = restManager;
+	}
+
+	public SecuredStudentScoDataManager() {
+		this(StoredRestManager.getInstance());
+	}
 	public static DomScormValues get(DomScormValues dom) throws Dwo2Exception {
 		return instance.getValues(dom);
 	}
@@ -38,11 +48,11 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 		}
 	}
 	
-	public static DomScormValues set(DomScormValues dom) throws Dwo2Exception {
+	public static Boolean set(DomScormValues dom) throws Dwo2Exception {
 		return instance.setValues(dom);
 	}
 
-	public static Promise<DomScormValues> setAsync(DomScormValues dom) {
+	public static Promise<Boolean> setAsync(DomScormValues dom) {
 		try {
 			return ASYNC.call(mediate.setValues(dom));
 		} catch(Dwo2Exception e) {
@@ -50,25 +60,23 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 		}
 	}
 	
-	
-	
 	@Override
 	public DomScormValues getValues(DomScormValues dom) throws Dwo2Exception {
 		RestScormValues rest = new RestScormValues();
 		rest.setDomScormValues(dom);
-		rest.setRestContext(RestAuthenticator.getInstance().getContext());
-		DomScormValues result = StoredRestManager.getInstance().put("rest/secure/user/scoData/getValues",DomScormValues.class, rest);
-        LOG.log(Level.FINE, "got scormvalues for the user with username {0}.", new Object[]{RestAuthenticator.getInstance().getUsername()});
+		rest.setRestContext(restManager.getAuthenticator().getContext());
+		DomScormValues result = restManager.put("rest/secure/user/scoData/getValues",DomScormValues.class, rest);
+        LOG.log(Level.FINE, "got scormvalues for the user with username {0}.", new Object[]{restManager.getAuthenticator().getUsername()});
 		return result;
 	}
 
 	@Override
-	public DomScormValues setValues(DomScormValues dom) throws Dwo2Exception {
+	public Boolean setValues(DomScormValues dom) throws Dwo2Exception {
 		RestScormValues rest = new RestScormValues();
 		rest.setDomScormValues(dom);
-		rest.setRestContext(RestAuthenticator.getInstance().getContext());
-		DomScormValues result = StoredRestManager.getInstance().put("rest/secure/user/scoData/setValues",DomScormValues.class, rest);
-        LOG.log(Level.FINE, "updated scormvalues for the user with username {0}.", new Object[]{RestAuthenticator.getInstance().getUsername()});
+		rest.setRestContext(restManager.getAuthenticator().getContext());
+		Boolean result = restManager.put("rest/secure/user/scoData/setValues",Boolean.class, rest);
+        LOG.log(Level.FINE, "updated scormvalues for the user with username {0}.", new Object[]{restManager.getAuthenticator().getUsername()});
 		return result;
 	}
 
