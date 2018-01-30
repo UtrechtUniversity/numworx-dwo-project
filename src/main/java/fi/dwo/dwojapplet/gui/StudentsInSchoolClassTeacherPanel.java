@@ -31,6 +31,7 @@ import java.util.Base64;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -415,13 +416,8 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         if (s.getExpire() == null) {
             return true;
         } else {
-            Calendar c = DwoDateUtilities.getCurrentDwoDateAsCalendarDate();
-            if (c.after(s.getExpire())) //compare on UTC calendar.
-            {
-                return true;
-            } else {
-                return false;
-            }
+            Date now = new Date();
+            return now.before(s.getExpire());
         }
     }    
     /**
