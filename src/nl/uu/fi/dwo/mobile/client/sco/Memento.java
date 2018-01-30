@@ -57,12 +57,12 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	static Memento instance() {
 		return _instance;
 	}
-	
-	static public native void instalOnBeforeUnload() /*-{
-		$wnd.onbeforeunload = @nl.uu.fi.dwo.mobile.client.sco.Memento::unload();
-		$wnd.onunload = @nl.uu.fi.dwo.mobile.client.sco.Memento::unload();
-	}-*/;
-
+// XXX gebruik Window.addClosingEvent()	
+//	static public native void instalOnBeforeUnload() /*-{
+//		$wnd.onbeforeunload = @nl.uu.fi.dwo.mobile.client.sco.Memento::unload();
+//		$wnd.onunload = @nl.uu.fi.dwo.mobile.client.sco.Memento::unload();
+//	}-*/;
+//
 	static void unload()
 	{
 		logger.fine("unload");
@@ -151,8 +151,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private JSONNumber aantalSessies;
 
 	private String scoreRaw;
-	private Date startDate = new Date();
-
+	final private Date startDate = new Date();
+	final private long startTime;
 	private Number score;
 	private JSONArray aantalNakijken;
 	private CmiMode cmi_mode;
@@ -168,7 +168,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		initialize();
 		String value;
 		scoreRaw = getValue(SCORE_RAW);
-		
+		String totalStr = getValue(TOTAL_TIME);
+		startTime = parse(totalStr);
 		value = getValue(COMPLETION_STATUS);
 		eindtoetsVerzegeld = COMPLETED.equals(value);
 		try {
@@ -226,7 +227,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 
 		incAantalSessies();
 		
-		instalOnBeforeUnload();
+		//instalOnBeforeUnload();
 		
 		ShareFacade.setSharedState(shareMap);
 	}
@@ -662,6 +663,14 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			}
 		});
 	}
+	
+	public void almostClose()
+	{	
+		logger.fine("almost closing memento");
+		runner.run();
+		setSessionTimes();
+		DWOplayer.clientfactory.addBarrier(api.Commit());
+	}
 
 	private long parse(String totalStr) {
 		return from2004Time(totalStr);
@@ -780,13 +789,13 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	@Override
 	public void onClose(CloseEvent<Window> event)
 	{
-		close();
+		almostClose();
 	}
 
 	@Override
 	public void onWindowClosing(ClosingEvent event)
 	{
-		close();
+		almostClose();
 	}
 
 	public void setCurrentActiviteit(int currentActiviteit) {
@@ -1279,10 +1288,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 
 	void setSessionTimes() {
 		Date stopDate = new Date();
-		long millis = stopDate.getTime() - startDate.getTime();
-		String totalStr = getValue(TOTAL_TIME);
-		long total = parse(totalStr);
+		long millis = stopDate.getTime() - startDate.getTime();	
 		setValue(SESSION_TIME, format(millis));
-		setValue(TOTAL_TIME, format(total + millis));
+		setValue(TOTAL_TIME, format(startTime + millis));
 	}
 }
