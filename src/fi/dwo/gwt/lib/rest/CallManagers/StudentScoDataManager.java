@@ -18,8 +18,14 @@ public interface StudentScoDataManager {
 	public abstract Promise<Map<String, String>> getValues(DomScoContext sco, DomSchoolClassId schoolClassID, 
 			DomContext domContext, Collection<String> keys);
 
-	public abstract Promise<?> setValues(DomScoContext sco, DomSchoolClassId schoolClassID, DomContext domContext,
+	@Deprecated
+	public abstract Promise<Boolean> setValues(DomScoContext sco, DomSchoolClassId schoolClassID, DomContext domContext,
 			Map<String, String> map);
+
+	default Promise<String> setValuesETag(DomScoContext sco, DomSchoolClassId schoolClassID, DomContext domContext,
+			Map<String, String> map) {
+		return setValues(sco, schoolClassID, domContext, map).map(b -> { if(b) return null; throw new RuntimeException(); });
+	}
 
 	Promise<JSONValue> getJSONLaunchDataBytes(DomScoContext id, DomDwoProfile value, DomSchoolClassId schoolClassID, DomContext context);
 

@@ -36,7 +36,7 @@ public class PublicStudentScoDataManager implements StudentScoDataManager {
 	}
 
 	@Override
-	public Promise<?> setValues(DomScoContext sco, DomSchoolClassId schoolClassID, DomContext context,
+	public Promise<Boolean> setValues(DomScoContext sco, DomSchoolClassId schoolClassID, DomContext context,
 			Map<String, String> map) {
 		return Promises.failed(new IllegalArgumentException());
 	}

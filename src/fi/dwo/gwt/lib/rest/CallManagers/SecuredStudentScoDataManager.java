@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.rest.entities.RestScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
+import org.fusesource.restygwt.client.MethodCallback;
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
@@ -81,24 +82,21 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 				});
 		}
 	
+	@Override
+	public Promise<Boolean> setValues(DomScoContext sco, DomSchoolClassId schoolClassID, DomContext context, Map<String,String> map) {
+		PromiseCallback<Boolean> defer = new PromiseCallback<>();
+		setValuesCommon(sco, schoolClassID, context, map, defer);
+		return defer.getPromise();
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see fi.dwo.gwt.lib.rest.CallManagers.ScoDataManager#setValues(nl.uu.fi.dwo.rest.dom.entities.DomScoContext, nl.uu.fi.dwo.rest.dom.entities.DomHasRole, java.util.Map)
 	 */
 	@Override
-	public Promise<?> setValues(DomScoContext sco, DomSchoolClassId schoolClassID, DomContext context, Map<String,String> map) {
-		RestScormValues rest = new RestScormValues();
-		DomScormValues values = new DomScormValues();
-		rest.setDomScormValues(values);
-		rest.setRestContext(context);
-		values.setScoContext(sco);
-		values.setSchoolClassID(schoolClassID);
-		ArrayList<DomMapEntry<String,String>> list = new ArrayList<DomMapEntry<String,String>>(map.size());
-		for(Map.Entry<String, String> entry: map.entrySet()) {
-			list.add(new DomMapEntry<String,String>(entry));
-		}
-		values.setValues(list);
+	public Promise<String> setValuesETag(DomScoContext sco, DomSchoolClassId schoolClassID, DomContext context, Map<String,String> map) {
  		RestyDeferred<Boolean> defer = new RestyDeferred<Boolean>();
-		service.setValues(rest, defer);
+		setValuesCommon(sco, schoolClassID, context, map, defer);
 		return defer.getPromise().then(
 				p-> {
 					if(p.getValue().value.booleanValue()) 
@@ -115,6 +113,22 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 						throw (Exception) resolved.getFailure().getCause();
 					}}
 				);
+	}
+
+	private void setValuesCommon(DomScoContext sco, DomSchoolClassId schoolClassID, DomContext context,
+			Map<String, String> map, MethodCallback<Boolean> callback) {
+		RestScormValues rest = new RestScormValues();
+		DomScormValues values = new DomScormValues();
+		rest.setDomScormValues(values);
+		rest.setRestContext(context);
+		values.setScoContext(sco);
+		values.setSchoolClassID(schoolClassID);
+		ArrayList<DomMapEntry<String,String>> list = new ArrayList<DomMapEntry<String,String>>(map.size());
+		for(Map.Entry<String, String> entry: map.entrySet()) {
+			list.add(new DomMapEntry<String,String>(entry));
+		}
+		values.setValues(list);
+		service.setValues(rest, callback);
 	}
 
 	@Override
