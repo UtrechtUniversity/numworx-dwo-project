@@ -40,6 +40,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -331,7 +332,7 @@ public class CascadingPersistenceBuilder {
 
         State_C_CC_HR_P_R_S_SC_SG_U addCourse(DomCourse c) throws Dwo2Exception;
 
-        State_C_CC_HR_P_R_S_SC_SCO_SG_U addScoContext(DomScoContext s) throws Dwo2Exception;
+        State_C_CC_HR_P_R_S_SC_SCO_SG_U addScoContext(DomScoContextId scoid) throws Dwo2Exception;
     }
 
     public interface State_C_CC_HR_P_R_S_SC_SG_U {
@@ -355,7 +356,7 @@ public class CascadingPersistenceBuilder {
 
         PersistentClassCourse getClassCourse();
 
-        State_C_CC_HR_P_R_S_SC_SCO_SG_U addScoContext(DomScoContext s) throws Dwo2Exception;
+        State_C_CC_HR_P_R_S_SC_SCO_SG_U addScoContext(DomScoContextId s) throws Dwo2Exception;
     }
 
     public interface Build {
@@ -572,7 +573,7 @@ public class CascadingPersistenceBuilder {
          * @throws Dwo2Exception
          */
         @Override
-        public State_C_CC_HR_P_R_S_SC_SCO_SG_U addScoContext(DomScoContext s) throws Dwo2Exception {
+        public State_C_CC_HR_P_R_S_SC_SCO_SG_U addScoContext(DomScoContextId s) throws Dwo2Exception {
             if (s == null) {
                 String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: ScoContext {1} not set.", new Object[]{instance.context.user.getUsername(), s.getId()});
                 LOG.log(Level.WARNING, msg);

@@ -22,15 +22,13 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder;
+import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SCO_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U;
-import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder.State_HR_P_R_S_SC_SG_U;
-import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder.State_HR_R_S_SC_SG_U;
-import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder.State_HR_R_S_SG_U;
-import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder.State_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
@@ -47,10 +45,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
+import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
@@ -205,6 +206,61 @@ public class SecuredStudentCoursesOfSchoolClassManager {
             new DomMapEntry<PersistenceId, DomCourseStudent>(dcs.getId(), dcs);
         result.setClassCourses(Collections.singletonList(ecc));
         result.setCourses(Collections.singletonList(ecs));
+      }
+
+      result.setSchoolClass(psc.buildDomSchoolClass());
+      result.setFetchTimeStamp(Long.valueOf(NOW.getTime()));
+      return result;
+    } catch (Dwo2Exception e) {
+      throw new Dwo2RestException(e);
+    }
+  }
+
+  @PUT
+  @Path("/getScoContext")
+  public DomCoursesOfSchoolClass getScoContext(@Context SecurityContext sc, RestScoContext rest) {
+    DomCoursesOfSchoolClass result = new DomCoursesOfSchoolClass();
+    try {
+      DomHasRole hr = rest.getRestContext().getDomHasRole();
+      DomSchoolClassId dsc = rest.getSchoolClassID();
+      DomDwoProfileId profile = rest.getDomDwoProfile();
+      DomScoContextId scoid = rest.getDomScoContext();
+      String username = sc.getUserPrincipal().getName();
+      State_C_CC_HR_P_R_S_SC_SCO_SG_U s =
+          CascadingPersistenceBuilder.user(username).addHasRoleIfType(hr, RoleType.STUDENT)
+              .addSchoolClass(dsc).addProfile(profile).addScoContext(scoid);
+      // s contains all data.
+      Date NOW = new Date();
+      PersistentClassCourse pcc = s.getClassCourse();
+      PersistentCourse pc = s.getCourse();
+      PersistentSchoolClass psc = s.getSchoolClass();
+      PersistentScoContext psco = s.getScoContext();
+
+      if (pcc.getNotAfter() != null) {
+        if (NOW.after(pcc.getNotAfter())) pcc = null;
+      }
+      if (pcc != null && pcc.getNotBefore() != null) {
+        if (NOW.before(pcc.getNotBefore())) pcc = null;
+      }
+      if (pcc != null && (pcc.getViewState() != ViewState.studentsAndTeachers)) pcc = null;
+
+      if (pcc == null) {
+        result.setClassCourses(Collections.emptyList());
+        result.setCourses(Collections.emptyList());
+        result.setScoContexts(Collections.emptyList());
+      } else {
+        DomClassCourse dcc = pcc.buildDomClassCourse();
+        DomCourseStudent dcs = pc.buildDomCourseStudent();
+        DomScoContext dsco = psco.buildDomScoContext();
+        DomMapEntry<PersistenceId, DomClassCourse> ecc =
+            new DomMapEntry<>(dcc.getId(), dcc);
+        DomMapEntry<PersistenceId, DomCourseStudent> ecs =
+            new DomMapEntry<>(dcs.getId(), dcs);
+        result.setClassCourses(Collections.singletonList(ecc));
+        result.setCourses(Collections.singletonList(ecs));
+        DomMapEntry<PersistenceId, DomScoContext> scocontext =
+            new DomMapEntry<>(dsco.getId(), dsco);
+        result.setScoContexts(Collections.singletonList(scocontext));
       }
 
       result.setSchoolClass(psc.buildDomSchoolClass());
