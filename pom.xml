@@ -325,6 +325,7 @@
                     <warSourceDirectory>src/main/webapp</warSourceDirectory>
 <!--                    <contextFile>${basedir}/config/tomcat/context.xml</contextFile>                    -->
                     <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
   					<attachClasses>true</attachClasses>
                     <archive>
                         <manifest>
