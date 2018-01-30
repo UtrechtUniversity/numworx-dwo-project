@@ -97,6 +97,8 @@ class RestManager extends RestyDateTimeFormat {
      * @param password
      */
     public synchronized void setBasicAuthString(String username, String password) {
+    		getAuthenticator().setPassword(password);
+    		getAuthenticator().setUsername(username);
         String authString = username + ":" + password;
         // note that reference changes in Java are atomic.
         basicAuthString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
