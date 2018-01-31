@@ -3,20 +3,22 @@ package nl.uu.fi.dwo.rest.dom.entities;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * A simple heartbeat entity class. Containing current server time and version. 
- * An extended version may yield the latest versions for our client suite allowing
- * a user to select when to update to a newer version between work. If possible 
- * a relogin should be avoided. Server time stamp may be signed in the future.
- * 
+ * A simple heartbeat entity class. Containing current server time and version.
+ * An extended version may yield the latest versions for our client suite
+ * allowing a user to select when to update to a newer version between work. If
+ * possible a relogin should be avoided. Server time stamp may be signed in the
+ * future.
+ *
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
 public class DomHeartBeat {
+
     private static final long serialVersionUID = 1L;
-     private Long serverTimeStamp;
-     private String serverVersion;
-     private String javaClientVersion;
-     private String htmlClientVersion;
+    private Long serverTimeStamp;
+    private String serverVersion;
+    private String javaClientVersion;
+    private String htmlClientVersion;
 
     /**
      * @return the serverTimeStamp
