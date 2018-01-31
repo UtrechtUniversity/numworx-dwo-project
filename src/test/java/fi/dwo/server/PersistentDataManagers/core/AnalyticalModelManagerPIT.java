@@ -7,7 +7,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomAnalyticalModelScoreTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomJsonModelScoreNode;
 import nl.uu.fi.dwo.rest.dom.entities.DomAnalyticalModelTemplateTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomJsonModelTemplateNode;
-import fi.dwo.server.rest.genson.GensonMapConverter;
+import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
