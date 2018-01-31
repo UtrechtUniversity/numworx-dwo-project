@@ -16,7 +16,7 @@ import org.json.simple.parser.ParseException;
  *
  * @author Gert van der Plas
  */
-public class JpaConverterEclipseJson implements Converter {
+public class JpaEclipseConverter4JsonObject implements Converter {
 
 //
 //  private final static JsonConverter objectMapper = new JsonConverter();
@@ -54,7 +54,7 @@ public class JpaConverterEclipseJson implements Converter {
             return json;
         }
         catch (ParseException ex) {
-            Logger.getLogger(JpaConverterEclipseJson.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JpaEclipseConverter4JsonObject.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         }
     }

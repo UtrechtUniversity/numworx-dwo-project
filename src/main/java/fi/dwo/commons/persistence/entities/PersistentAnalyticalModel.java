@@ -39,7 +39,7 @@ import org.json.simple.JSONObject;
 
 @Entity
 @Table(name = "tblAnalyticalModel", schema = "")
-@Converter(name = "jsonObjectConverter",converterClass = fi.dwo.commons.persistence.JpaConverterEclipseJson.class)
+@Converter(name = "jsonObjectConverter",converterClass = fi.dwo.commons.persistence.JpaEclipseConverter4JsonObject.class)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PersistentAnalyticalModel.findBySchoolID", query = "SELECT p FROM PersistentAnalyticalModel p WHERE p.schoolID = :schoolID")})
@@ -50,7 +50,7 @@ public class PersistentAnalyticalModel implements Serializable {
     @Basic(optional = false)
     @Column(name = "modelID", nullable = false)
     private Long modelID;
-    @Column(name = "schoolID")
+    @Column(name = "schoolID", nullable = false)
     private Long schoolID;
     @NotNull
     @Column(name = "title", nullable = false)
