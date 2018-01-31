@@ -242,6 +242,8 @@ public class DomResultTree {
     private void plotSubTree(DomResultScore rt, int depth) {
         StringBuilder sb = new StringBuilder();
 
+        sb.append(rt.getNodeId());
+        sb.append(":");
         sb.append(rt.getLabel());
         sb.append(":");
         sb.append(rt.getScore());
