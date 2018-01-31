@@ -53,16 +53,9 @@ public class PersistentAnalyticalModel implements Serializable {
     @Column(name = "schoolID", nullable = false)
     private Long schoolID;
     @NotNull
-    @Column(name = "title", nullable = false)
+    @Column(name = "model", nullable = false)
     @Convert("jsonObjectConverter")
-    private JSONObject title;
-    @Basic(optional = false)
-//    @NotNull
-    @Column(name = "description", nullable = true)
-//    @Convert("jsonObjectConverter")
-    private JSONObject description;
-//    @Convert(converter = JpaConverter4Json.class)
-//    private Map<String, String> description;
+    private JSONObject model;
 
     /**
      * @return the modelID
@@ -95,28 +88,15 @@ public class PersistentAnalyticalModel implements Serializable {
     /**
      * @return the title
      */
-    public JSONObject getTitle() {
-        return title;
+    public JSONObject getModel() {
+        return model;
     }
 
     /**
-     * @param title the title to set
+     * @param aModel the title to set
      */
-    public void setTitle(JSONObject title) {
-        this.title = title;
+    public void setModel(JSONObject aModel) {
+        this.model = aModel;
     }
 
-    /**
-     * @return the description
-     */
-    public JSONObject getDescription() {
-        return description;
-    }
-
-    /**
-     * @param description the description to set
-     */
-    public void setDescription(JSONObject description) {
-        this.description = description;
-    }
 }
