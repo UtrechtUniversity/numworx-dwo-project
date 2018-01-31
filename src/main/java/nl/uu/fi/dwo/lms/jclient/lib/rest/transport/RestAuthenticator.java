@@ -23,10 +23,10 @@ public class RestAuthenticator extends Authenticator {
         return instance;
     }
 
-    @Deprecated //Static class use is evil!
-    public static void setInstance(RestAuthenticator instance) {
-        RestAuthenticator.instance = instance;
-    }
+//    @Deprecated //Static class use is evil!
+//    public static void setInstance(RestAuthenticator instance) {
+//        RestAuthenticator.instance = instance;
+//    }
 
     static {
         instance = new RestAuthenticator();
