@@ -40,6 +40,13 @@ public class DomResultTree {
 
     private DomResultTeacher resultTree;
     private DomResultTeacher studentTree;
+    private int newNodeId = 0;
+    private List<DomResultScore> nodeList = new ArrayList<DomResultScore>();
+    
+    private void addToNodeMap(DomResultScore score){
+        score.setNodeId(nodeList.size());
+        nodeList.add(score);
+    }
 
     public DomResultTree(DomResultsPerTeacher resultData) {
 
@@ -168,6 +175,15 @@ public class DomResultTree {
             sc.calculateSumOfSubtreeScore(studentTree.getChildren().get(sc.getSchoolClass().getId()).getChildren().size());
         }
 
+        assignNodeIds(resultTree);
+        assignNodeIds(studentTree);
+    }
+
+    private void assignNodeIds(DomResultScore score){
+        addToNodeMap(score);
+        for(DomResultScore s: (Collection<DomResultScore>) score.getChildren().values()){
+            assignNodeIds(s);
+        }
     }
 
     /**
@@ -242,4 +258,15 @@ public class DomResultTree {
         
     }
 
+
+    /**
+     * @return the nodeMap
+     */
+    public DomResultCourseInClass getDomCourseInClassFromId(int nodeId) {
+        if(nodeList.get(nodeId) instanceof DomResultCourseInClass){
+            return (DomResultCourseInClass) nodeList.get(nodeId);
+        }else{
+            return null;
+        }
+    }
 }

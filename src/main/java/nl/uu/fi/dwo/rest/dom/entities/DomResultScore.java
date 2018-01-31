@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  */
 public abstract class DomResultScore<T extends DomResultScore> {
 
+    private int nodeId = -1;
     private double score = 0; //unmade work is always score 0.
     private double scoCount = 0;   //count is 0 because scoCount may summarize empty subtree.
     private double studentScoCount = 0;   //count is 0 because studentScoCount may summarize empty subtree.
@@ -433,6 +434,22 @@ public abstract class DomResultScore<T extends DomResultScore> {
             return null;
         }
 
+    }
+
+    /**
+     * A unique id in the tree.
+     * 
+     * @param aNodeId 
+     */
+    public void setNodeId(int aNodeId) {
+        nodeId = aNodeId;
+    }
+
+    /**
+     * @return the nodeId
+     */
+    public int getNodeId() {
+        return nodeId;
     }
 
 }
