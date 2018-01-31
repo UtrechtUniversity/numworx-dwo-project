@@ -48,7 +48,7 @@ public class LZW {
 		int length = data.length;
 		for(int i = 1; i < length; i++) {
 			if(code == 0) {
-				out.append( phrase.length() > 1 ? dict.get(phrase) : phrase.charAt(0));
+				out.append( phrase.length() > 1 ? dict.get(phrase).charValue() : phrase.charAt(0));
 				dict.clear();
 				code = MAX;
 				phrase = String.valueOf(ok(data[i]));
@@ -58,13 +58,13 @@ public class LZW {
 			if( dict.containsKey(phrase+curChar)) {
 				phrase += curChar;
 			} else {
-				out.append( phrase.length() > 1 ? dict.get(phrase) : phrase.charAt(0));
+				out.append( phrase.length() > 1 ? dict.get(phrase).charValue() : phrase.charAt(0));
 				dict.put(phrase + curChar, code);
 				code++;
 				phrase = String.valueOf(curChar);
 			}
 		}
-		out.append(phrase.length()>1 ? dict.get(phrase): phrase.charAt(0));
+		out.append(phrase.length()>1 ? dict.get(phrase).charValue(): phrase.charAt(0));
 		return out.toString();
 	}
 	
