@@ -810,11 +810,11 @@ DROP TABLE IF EXISTS `tblAnalyticalModel`;
 CREATE TABLE `tblAnalyticalModel` (
   `modelID` int(11) NOT NULL AUTO_INCREMENT,
   `schoolID` int(11) NOT NULL,
-  `title` json NOT NULL ,
-  `description` json ,
+  `model` json NOT NULL ,
   PRIMARY KEY (`modelID`),
   UNIQUE KEY `modelID_UNIQUE` (`modelID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

@@ -3,13 +3,17 @@
  */
 package fi.dwo.server.PersistentDataManagers.core;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomAnalyticalModelScoreTree;
+import nl.uu.fi.dwo.rest.dom.entities.DomJsonModelScoreNode;
+import nl.uu.fi.dwo.rest.dom.entities.DomAnalyticalModelTemplateTree;
+import nl.uu.fi.dwo.rest.dom.entities.DomJsonModelTemplateNode;
+import fi.dwo.server.rest.genson.GensonMapConverter;
+import com.owlike.genson.Genson;
+import com.owlike.genson.GensonBuilder;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.entities.PersistentAnalyticalModel;
-import fi.dwo.commons.persistence.entities.PersistentSchool;
-import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
-import java.util.Date;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.json.simple.JSONObject;
 import org.junit.After;
@@ -54,11 +58,11 @@ public class AnalyticalModelManagerPIT {
     public void setUp() {
         JSONObject json = new JSONObject();
         json.put("nl","Model A");
-        modelA.setTitle(json);
+        modelA.setModel(json);
         modelA.setSchoolID(2L);
         json = new JSONObject();
         json.put("nl","Model B");
-        modelB.setTitle(json);
+        modelB.setModel(json);
         modelB.setSchoolID(2L);
         instance.IntializeTestDatabase();
     }
@@ -68,6 +72,58 @@ public class AnalyticalModelManagerPIT {
         instance.ClearDatabase();
     }
    
+     /**
+     * Light testing CRUD and more of class SchoolManager.
+     */
+    @Test
+    public void testDomAnalyticalModelTemplateTree()  {
+        Genson g = new GensonBuilder().withConverters(new GensonMapConverter()).create();
+        DomAnalyticalModelTemplateTree tree = new DomAnalyticalModelTemplateTree("nl","root");
+        DomJsonModelTemplateNode c1 = new DomJsonModelTemplateNode("nl","1");
+        c1.getChildren().add(new DomJsonModelTemplateNode("nl","1.1"));
+        c1.getChildren().add(new DomJsonModelTemplateNode("nl","1.2"));
+        DomJsonModelTemplateNode c2 = new DomJsonModelTemplateNode("nl","2");
+        c2.getChildren().add(new DomJsonModelTemplateNode("nl","2.1"));
+        c2.getChildren().add(new DomJsonModelTemplateNode("nl","2.2"));
+        tree.getChildren().add(c1);
+        tree.getChildren().add(c2);
+        String jsonTree = g.serialize(tree);
+        System.out.println(jsonTree);        
+        DomAnalyticalModelTemplateTree rTree = g.deserialize(jsonTree, DomAnalyticalModelTemplateTree.class);
+        String out = g.serialize(rTree);
+        System.out.println(out);
+        if(out.compareTo(jsonTree)!=0){
+            fail("Marshalling demarshalling is not identical.");
+        }
+    }
+
+     /**
+     * Light testing CRUD and more of class SchoolManager.
+     */
+    @Test
+    public void testDomAnalyticalModelScoreTree()  {
+        Genson g = new GensonBuilder().withConverters(new GensonMapConverter()).create();
+        DomAnalyticalModelScoreTree tree = new DomAnalyticalModelScoreTree("nl","root",0);
+        DomJsonModelScoreNode c1 = new DomJsonModelScoreNode("nl","1",1.0);
+        c1.getChildren().add(new DomJsonModelScoreNode("nl","1.1",1.0));
+        c1.getChildren().add(new DomJsonModelScoreNode("nl","1.2",1.0));
+        DomJsonModelScoreNode c2 = new DomJsonModelScoreNode("nl","2",1.0);
+        c2.getChildren().add(new DomJsonModelScoreNode("nl","2.1",1.0));
+        c2.getChildren().add(new DomJsonModelScoreNode("nl","2.2",1.0));
+        tree.getChildren().add(c1);
+        tree.getChildren().add(c2);
+        String jsonTree = g.serialize(tree);
+        System.out.println(jsonTree);        
+        DomAnalyticalModelScoreTree rTree = g.deserialize(jsonTree, DomAnalyticalModelScoreTree.class);
+        //rTree.reCalculate();     
+        String out = g.serialize(rTree);
+        System.out.println(out);
+        if(out.compareTo(jsonTree)!=0){
+            fail("Marshalling demarshalling is not identical.");
+        }
+    }
+
+    
     /**
      * Light testing CRUD and more of class SchoolManager.
      */
