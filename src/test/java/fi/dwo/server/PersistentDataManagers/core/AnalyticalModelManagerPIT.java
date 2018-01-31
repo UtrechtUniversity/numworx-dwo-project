@@ -85,12 +85,12 @@ public class AnalyticalModelManagerPIT {
         // recreate
         try{
         System.out.println("create model again");
-            //should fail
         AnalyticalModelManager.create(modelA);
-            fail("AnalyticalModelManager.create() did not fail creating a copy of a model.");
+            //should succeed            
         }catch(Exception e){
-            //succeeded
+            fail("AnalyticalModelManager.create() did not fail creating a copy of a model.");
         }
+        
 //        
 //        //read 
 //        AnalyticalModelManager model=null;
