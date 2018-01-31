@@ -804,6 +804,19 @@ LOCK TABLES `tbluser` WRITE;
 INSERT INTO `tbluser` VALUES (1,NULL,1,'John',NULL,'Doe','dwoadmin','d55b2dbcb757e1dc1725798bccda75cd','dwoadmin@dwo.nl','2015-10-13','_','2016-10-31','11:23:26',0,0,0,0),(8,NULL,8,'FirstName01',NULL,'FamiliyName01','user01','d79096188b670c2f81b7001f73801117','user01@dwo.nl','2015-10-13','_',NULL,NULL,0,0,0,0),(9,NULL,2,'FirstName02',NULL,'FamiliyName02','user02','d79096188b670c2f81b7001f73801117','user02@dwo.nl','2015-10-13','_',NULL,NULL,0,0,0,0),(10,NULL,5,'FirstName03',NULL,'FamiliyName03','user03','d79096188b670c2f81b7001f73801117','user03@dwo.nl','2015-10-13','_','2016-10-31','11:26:37',0,0,0,0),(11,NULL,2,'FirstName04',NULL,'FamiliyName04','user04','d79096188b670c2f81b7001f73801117','user04@dwo.nl','2015-10-13','_',NULL,NULL,1,0,0,0),(12,NULL,5,'FirstName05',NULL,'FamiliyName05','user05','d79096188b670c2f81b7001f73801117','user05@dwo.nl','2015-10-13','_',NULL,NULL,1,0,0,0),(13,NULL,4,'FirstName06',NULL,'FamiliyName06','user06','d79096188b670c2f81b7001f73801117','user06@dwo.nl','2015-10-13','_',NULL,NULL,1,0,0,0),(14,NULL,3,'FirstName07',NULL,'FamiliyName07','user07','d79096188b670c2f81b7001f73801117','user07@dwo.nl','2015-10-13','_','2017-04-10','13:13:40',0,0,0,0);
 /*!40000 ALTER TABLE `tbluser` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+DROP TABLE IF EXISTS `tblAnalyticalModel`;
+CREATE TABLE `tblAnalyticalModel` (
+  `modelID` int(11) NOT NULL AUTO_INCREMENT,
+  `schoolID` int(11) NOT NULL,
+  `title` json NOT NULL ,
+  `description` json ,
+  PRIMARY KEY (`modelID`),
+  UNIQUE KEY `modelID_UNIQUE` (`modelID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

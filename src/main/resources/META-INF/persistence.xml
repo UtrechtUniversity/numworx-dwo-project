@@ -29,10 +29,11 @@
     <class>fi.dwo.commons.persistence.entities.PersistentTeacherOfClass</class>
     <class>fi.dwo.commons.persistence.entities.PersistentUrnResource</class>
     <class>fi.dwo.commons.persistence.entities.PersistentUser</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentAnalyticalModel</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>NONE</shared-cache-mode>
     <properties>
-    <!--    Alternative data-nucleus config, required additional and unknown tomcat configs
+      <!--    Alternative data-nucleus config, required additional and unknown tomcat configs
             <provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
             <non-jta-data-source>java:comp/env/jdbc/dwodb</non-jta-data-source>
             <property name="datanucleus.ConnectionUserName" value="dwo"/>
@@ -42,13 +43,13 @@
             <property name="datanucleus.validateConstraints" value="false"/>
             -->
       <property name="eclipselink.cache.shared.default" value="false"/>
-<!--      <property name="eclipselink.weaving" value="static"/>
+      <!--      <property name="eclipselink.weaving" value="static"/>
       <property name="eclipselink.weaving.lazy" value="true"/>-->
       <property name="eclipselink.allow-zero-id" value="true"/>
-<!-- logging all on -->
-      <property name="eclipselink.logging.logger" value="JavaLogger"/>      
+      <!-- logging all on -->
+      <property name="eclipselink.logging.logger" value="JavaLogger"/>
       <property name="eclipselink.logging.level.sql" value="FINE"/>
-	  <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
     </properties>
   </persistence-unit>
 </persistence>
