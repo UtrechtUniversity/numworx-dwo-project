@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
@@ -147,6 +148,24 @@ public class ResultsPresenter {
         dwoGlobalVars = aDwoGlobalVars;
         resultService = new ResultsService(dwoGlobalVars);
 
+    }
+    
+    public DomResultTree getResultTree(){
+        return resultTree;
+    }
+
+//        public void upDateResultTree(String pidNode, String state){
+//        ViewState s = ViewState.valueOf(state);
+//    }
+
+    
+    public void upDateResultTree(DomResultCourseInClass score, String state){
+        ViewState s = ViewState.valueOf(state);
+        upDateResultTree(score, s);
+    }
+    
+    public void upDateResultTree(DomResultCourseInClass score, ViewState state){
+        score.updateViewState(state);
     }
 
     public void init() {
