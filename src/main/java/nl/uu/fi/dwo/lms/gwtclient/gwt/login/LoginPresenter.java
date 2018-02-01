@@ -3,12 +3,14 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.login;
 import com.google.gwt.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
+import fi.dwo.gwt.lib.rest.ui.MsgDialogPromise;
 import java.util.Date;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -147,8 +149,11 @@ public class LoginPresenter {
                 public void fail(Promise<?> resolved) throws Exception {
                     Throwable fail = resolved.getFailure();
                     if (fail instanceof Dwo2Exception) {
+                        //Login failed
                         LOG.log(Level.SEVERE, fail.getMessage());
                         dwoGlobalVars.clearCurrentUser();                        
+                        //note the order of the events in case of an exception
+                        //that might break the running thread.
                         eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
                     } else {
                         LOG.log(Level.SEVERE, fail.getMessage());
