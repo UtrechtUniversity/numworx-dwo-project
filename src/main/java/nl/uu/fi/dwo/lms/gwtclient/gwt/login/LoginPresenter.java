@@ -176,18 +176,11 @@ public class LoginPresenter {
     }
 
     public static boolean licenseIsValid(DomSchool s) {
-
         if (s.getExpire() == null) {
             return true;
         } else {
-            s.getExpire();
-            Date d = new Date();
-            if (d.after(s.getExpire())) //compare on UTC calendar.
-            {
-                return false;
-            } else {
-                return true;
-            }
+            Date now = new Date();
+            return now.before(s.getExpire());
         }
-    }
+    }   
 }
