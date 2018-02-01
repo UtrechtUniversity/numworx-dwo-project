@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.restyutil;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -52,7 +52,7 @@ public class MapSerializerGenerator extends JsonEncoderDecoderClassCreator{
     
     private void generateEncodeMethod() throws UnableToCompleteException {
         p("public " + JSON_VALUE_CLASS + " encode(" + source.getParameterizedQualifiedSourceName() + " value) {").i(1);
-        p("return {test}");
+        p("return \"{test}\";");
          p();
 //        p("public " + JSON_VALUE_CLASS + " encode(" + source.getParameterizedQualifiedSourceName() + " value) {").i(1);
 //            p("if (value == null) {").i(1);
@@ -68,7 +68,7 @@ public class MapSerializerGenerator extends JsonEncoderDecoderClassCreator{
 
     private void generateDecodeMethod() throws UnableToCompleteException {
         p("public " + source.getName() + " decode(" + JSON_VALUE_CLASS + " value) {").i(1);
-        p("return new HashMap<String,String>()");
+        p("return new HashMap<String,String>();");
         p();
 //        p("public " + source.getName() + " decode(" + JSON_VALUE_CLASS + " value) {").i(1);
 //            p("if (value == null || value.isNull() != null ) {").i(1);

@@ -7,8 +7,8 @@
   <inherits name="com.google.gwt.i18n.I18N"/>
   <inherits name="nl.uu.fi.dwo.rest.DWO-rest-lib"/>
   <inherits name="fi.dwo.gwt.lib.rest.DWO-gwt-lib"/>
-  <inherits name='com.google.gwt.user.User'/>
-  <inherits name='com.google.gwt.user.theme.clean.Clean'/>
+  <inherits name="com.google.gwt.user.User"/>
+  <inherits name="com.google.gwt.user.theme.clean.Clean"/>
   <inherits name="nl.uu.fi.dwo.mobile.promise.Promise" /> 
   <inherits name="com.github.nmorel.gwtjackson.GwtJackson" />
   <inherits name="com.google.gwt.resources.Resources" />
@@ -21,7 +21,7 @@
   <source path='gwt'/>
   
   <!-- Specify the app entry point class.                         -->
-  <entry-point class='nl.uu.fi.dwo.lms.gwtclient.gwt.BootPanel'/>
+  <entry-point class="nl.uu.fi.dwo.lms.gwtclient.gwt.BootPanel"/>
   <!-- add entry point for each app in an external jar -->
 
   <!-- Use ClientFactoryImpl by default -->
@@ -35,6 +35,12 @@
 <!--   <set-property-fallback name="locale" value="en"/> -->
   <add-linker name='xsiframe' />
 <set-configuration-property name="devModeRedirectEnabled" value="true"/>
+<!--<extend-configuration-property 
+        name="org.fusesource.restygwt.restyjsonserializergenerator"
+        value="nl.uu.fi.dwo.lms.gwtclient.gwt.restyutil.MapRestySerializerGenerator"/>-->
+<!--    <extend-configuration-property 
+        name="org.fusesource.restygwt.restyjsonserializergenerator"
+        value="com.example.CustomRestySerializerGenerator2"/>-->
 <!--  chrome only -->
 <set-property name="user.agent" value="safari" />
 <!--<extend-property name="user.agent" values="ie8" />

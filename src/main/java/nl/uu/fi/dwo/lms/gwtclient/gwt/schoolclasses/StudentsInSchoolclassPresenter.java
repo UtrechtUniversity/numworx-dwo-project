@@ -319,7 +319,7 @@ public class StudentsInSchoolclassPresenter {
 
     @JsMethod
     public void removeSelectedFromSchoolClass() {
-        ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure, there may be unimported students.");
+        ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure? If this removes a student from all your classes you can not access the student anymore.");
         p.getPromise().then(new Success<Boolean, Void>() {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {

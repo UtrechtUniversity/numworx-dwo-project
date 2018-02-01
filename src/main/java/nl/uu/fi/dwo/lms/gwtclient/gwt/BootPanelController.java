@@ -89,7 +89,25 @@ class BootPanelController {
         }
     }
 
+//    public void testRestyMapConverter() {
+//        RestyMapCodec codec = GWT.create(RestyMapCodec.class);
+//        
+//        Map map = new HashMap<String, String>();
+//        map.put("key", "value");
+//        JSONValue json = codec.encode(map);
+//        System.out.println(json);
+//        // decoding an object to from JSON
+//        Map other = codec.decode(json);
+//        System.out.println(other);
+//    }
+
     public void go(RootLayoutPanel rootPanel) {
+        /**
+         * Testing stuff
+         */
+        
+    //    testRestyMapConverter();
+
         parseUrlParam();
         LOG.log(Level.INFO, "profile=" + profile + ".");
         LOG.log(Level.INFO, "testIsOn=" + testIsOn + ".");
@@ -183,7 +201,7 @@ class BootPanelController {
                         }
                         );
                         eventBus.fireEvent(new MsgClickedDialogEvent(MsgClickedDialogEvent.EventType.MsgClickedDialog, p));
-                        
+
                         break;
                     case LOGOUT:
                         dwoGlobalVars.clearCurrentUser();
