@@ -9,7 +9,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-public class RPCHandlerV1Test extends GWTTestCase {
+public class GwtTestRPCHandlerV1 extends GWTTestCase {
 
 	RPCHandlerV1 handler;
 
@@ -20,7 +20,7 @@ public class RPCHandlerV1Test extends GWTTestCase {
 
 	@Override
 	protected void gwtSetUp() throws Exception {
-		handler = new RPCHandlerV1("http://dummytwo.dwo.nl/dwo/xmlrpc", 1);
+		handler = new RPCHandlerV1("http://app.dwo.nl/dwo/xmlrpc", 1);
 	}
 
 	public void testGetCoursesForClass() {
