@@ -10,7 +10,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DomContext {
-    //TODO Insert hasRole property when legacy code is extinct and we can go stateless.
     private DomHasRole domHasRole; //security
 
     /**
@@ -25,11 +24,5 @@ public class DomContext {
      */
     public void setDomHasRole(DomHasRole domHasRole) {
         this.domHasRole = domHasRole;
-    }
-    
-//    public static DomContext buildDomContext(DomHasRole aHasRole){
-//        DomContext context = new DomContext();
-//        context.setDomHasRole(aHasRole);
-//        return context;
-//    }
+    }    
 }
