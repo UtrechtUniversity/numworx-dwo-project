@@ -65,17 +65,19 @@ public class SCORM_DWO4 extends SCORM_guest {
 	}
 	
 
-	static final Logger logger = Logger.getLogger("SCORM_DWO3");
-	private int scoID;
+	static final Logger logger = Logger.getLogger("SCORM_DWO4");
+	StudentScoDataManager scoDataManager = new SecuredStudentScoDataManager(DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB);
+	private DomSchoolClassId schoolClassID = DWOplayer.clientfactory.getSchoolClass();
+	private DomContext context = new DomContext();
+
+	@Deprecated private int scoID;
+	private DomScoContext sco;
 	private boolean pending;
 	boolean inited;
 
 	private Map<String,String> map = new HashMap<String, String>();
 	private Map<String,String> dirty = new HashMap<String, String>();
-	
-	// Same URL als rpchandler.
-	private RPCHandler client = DWOplayer.clientfactory.getRPCHandler();
-	
+		
 	private <T> Promise<T> ag(Promise<T> p) {
 		DWOplayer.clientfactory.addBarrier(p);
 		return p;
@@ -106,6 +108,11 @@ log("setScoID " + scoID);
 		}
 		inited = true;
 		this.scoID = scoID;
+		sco = new DomScoContext();
+		PersistenceId id = new PersistenceId();
+		PersistenceClassType type = PersistenceClassType.PersistentScoContext;
+		id.setIdString("MYSQL;" + type + ";" + scoID);
+		sco.setId(id);
 	}
 	
 	static final private int MAX_TIMES = 10;
@@ -120,7 +127,7 @@ log("setScoID " + scoID);
 	String lastSuspendData, lastETag;
 	
 	
-	class Committer implements Failure, Success<Object,Void> {
+	class Committer implements Failure, Success<String,Void> {
 
 		private static final double initialRetryDelayInMillis = 1000;
 		Deferred<String> deferred = new Deferred<String>();
@@ -181,35 +188,30 @@ log("setScoID " + scoID);
 		}
 
 		@Override
-		public Promise<Void> call(Promise<Object> t) {
+		public Promise<Void> call(Promise<String> t) {
 			addTime();
-			Object result = t.getValue();
+			String result = t.getValue();
 			if(result instanceof String) {
 				lastETag = result.toString();
 				lastSuspendData = copy.get(Memento.SUSPEND_DATA);
-				result = Boolean.TRUE;
 			} else {
 				lastETag = null;
 			}
 			logger.info("Commit success: " + result);
 			pending = false;
 			retry=initialRetryDelayInMillis;
-			if(!Boolean.TRUE.equals(result)) fail(Promises.resolved(null));
+			cnt = 0;
+			if(copy.containsKey(Memento.SUSPEND_DATA))
+				lastSuspendData = copy.get(Memento.SUSPEND_DATA);
+			copy.clear();
+			if(!dirty.isEmpty()) commit();
 			else {
-				cnt = 0;
-				if(copy.containsKey(Memento.SUSPEND_DATA))
-					lastSuspendData = copy.get(Memento.SUSPEND_DATA);
-				copy.clear();
-				if(!dirty.isEmpty()) commit();
-				else {
-					setStatus(Status.NORMAL);
-					deferred.resolve("");
-				}
+				setStatus(Status.NORMAL);
+				deferred.resolve("");
 			}
 			return null;
 		}
 		
-		StudentScoDataManager scoDataManager = new SecuredStudentScoDataManager(DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB);
 
 		public void commit() {
 			copy.putAll(dirty);
@@ -226,22 +228,14 @@ log("setScoID " + scoID);
 					map.put("ETag", lastETag);
 					map.put(Memento.SUSPEND_DATA, patch);
 					started = System.currentTimeMillis();
-					DomScoContext sco = new DomScoContext();
-					PersistenceId id = new PersistenceId();
-					PersistenceClassType type = PersistenceClassType.PersistentScoContext;
-					id.setIdString("MYSQL;" + type + ";" + scoID);
-					sco.setId(id);
-					DomSchoolClassId schoolClassID = DWOplayer.clientfactory.getSchoolClass();
-					DomContext context = new DomContext();
-					context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
 					scoDataManager.patchValues(sco, schoolClassID, context, patchMap).then(
 							p -> {
 								Map copy2 = new HashMap(copy);
 								copy2.remove(Memento.SUSPEND_DATA);
-								return (Promise<Object>) client.setValues(scoID, copy2);
+								return scoDataManager.setValuesETag(sco, schoolClassID, context, copy2);
 							}
 							)
-							.recoverWith(p->client.setValues(scoID, copy))
+							.recoverWith(p->scoDataManager.setValuesETag(sco, schoolClassID, context, copy))
 							.then(this,this);
 					return;
 					
@@ -255,7 +249,7 @@ log("setScoID " + scoID);
 			
 			
 			started = System.currentTimeMillis();
-			client.setValues(scoID, copy).then(this, this);
+			scoDataManager.setValuesETag(sco, schoolClassID, context, copy).then(this, this);
 		}
 		
 		Committer(int scoID, Map<String,String> dirty) {
@@ -327,6 +321,7 @@ log("SetValue " + name);
 log("Initialize "+ pending);
 		if(!pending) {
 			pending = true;
+			context.setDomHasRole(DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getHasRole());
 			final Failure failure = new Failure() {
 				@Override
 				public void fail(Promise<?> resolved) throws Exception {
@@ -355,7 +350,7 @@ log("initialized " +result.keySet());
 
 				@Override
 				public Promise<Void> call(Promise<Void> resolved) throws Exception {
-					return ag(client.getValues(scoID, KEYS).then(success, failure));
+					return ag(scoDataManager.getValues(sco, schoolClassID, context, KEYS).then(success, failure));
 				}});
 			
 			
