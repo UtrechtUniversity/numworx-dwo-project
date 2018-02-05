@@ -23,6 +23,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -444,7 +445,11 @@ public class SecuredUserScoDataManager {
 	public Response patchValues(@Context SecurityContext sc, RestScormValues rest, @HeaderParam("if-match") String match) throws Dwo2Exception {
 		PersistentStudentScoContext ssContext = null;
 		PersistentStudentScoData    ssData = null;
-    		DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
+		if (match != null) {
+		  EntityTag t = EntityTag.valueOf(match);
+		  match = t.getValue();
+		}
+		DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
         PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
         PersistentScoContext scoContext = ScoContextManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomScormValues().getScoContext()));
 		List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
