@@ -91,13 +91,13 @@ public class MapperConstants {
         conclusionMap.put("Accepteer $fH$s0@.@", "accepth0");
         conclusionMap.put("Accept $fH$s0@.@", "accepth0");
         conclusionMap.put("Verwerp $fH$s0@@ niet.", "dontrejecth0");
-        conclusionMap.put("Don't reject $fH$s0@.@", "dontrejecth0");
+        conclusionMap.put("Do not reject $fH$s0@.@", "dontrejecth0");
         conclusionMap.put("Verwerp $fH$s1@.@", "rejecth1");
         conclusionMap.put("Reject $fH$s1@.@", "rejecth1");
         conclusionMap.put("Accepteer $fH$s1@.@", "accepth1");
         conclusionMap.put("Accept $fH$s1@.@", "accepth1");
         conclusionMap.put("Verwerp $fH$s1@@ niet.", "dontrejecth1");
-        conclusionMap.put("Don't reject $fH$s1@.@", "dontrejecth1");
+        conclusionMap.put("Do not reject $fH$s1@.@", "dontrejecth1");
         conclusionMap.put("wel", "rejection");
         conclusionMap.put("inside", "rejection");
         conclusionMap.put("niet", "norejection");
