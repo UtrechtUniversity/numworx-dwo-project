@@ -119,7 +119,6 @@
                 </configuration>
             </plugin>
         </plugins>
-            <finalName>Account-trunk</finalName>
     </build>
     <dependencies>
         <dependency>
