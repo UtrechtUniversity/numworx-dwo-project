@@ -172,6 +172,13 @@ log("setScoID " + scoID);
 					deferred.fail(caught);
 					return;
 				}
+			} else {
+				log("Failed exception: " + caught);
+				if (!Window.confirm(caught.getMessage() + "\n" + Text.constants.opnieuwKnopLabel() +"?"))
+				{
+					deferred.fail(caught);
+					return;
+				}
 			}
 			setStatus(Status.RETRY);
 			retry+=retry/2;//exponential delay
@@ -193,7 +200,6 @@ log("setScoID " + scoID);
 			String result = t.getValue();
 			if(result instanceof String) {
 				lastETag = result.toString();
-				lastSuspendData = copy.get(Memento.SUSPEND_DATA);
 			} else {
 				lastETag = null;
 			}
@@ -225,8 +231,8 @@ log("setScoID " + scoID);
 					logger.warning("compression: "  + suspendData.length() + " to " + patch.length());
 					
 					Map<String,String> patchMap = new HashMap<String,String>();
-					map.put("ETag", lastETag);
-					map.put(Memento.SUSPEND_DATA, patch);
+					patchMap.put("ETag", lastETag);
+					patchMap.put(Memento.SUSPEND_DATA, patch);
 					started = System.currentTimeMillis();
 					scoDataManager.patchValues(sco, schoolClassID, context, patchMap).then(
 							p -> {
