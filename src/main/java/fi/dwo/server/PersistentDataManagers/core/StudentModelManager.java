@@ -1,6 +1,6 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
-import fi.dwo.commons.persistence.entities.PersistentAnalyticalModel;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -19,9 +19,9 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class AnalyticalModelManager {
+public class StudentModelManager {
 
-    private static final Logger LOG = Logger.getLogger(AnalyticalModelManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(StudentModelManager.class.getName());
 
     private static EntityManager getEntityManager() {
         EntityManager em = DwoEmfFactory.getEntityManager();
@@ -33,7 +33,7 @@ public class AnalyticalModelManager {
      *
      * @param model
      */
-    public static void create(PersistentAnalyticalModel model) throws PersistenceException {
+    public static void create(PersistentStudentModelContext model) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -56,7 +56,7 @@ public class AnalyticalModelManager {
      * @param model
      * @return jpa merged course
      */
-    public static PersistentAnalyticalModel edit(PersistentAnalyticalModel model) throws PersistenceException {
+    public static PersistentStudentModelContext edit(PersistentStudentModelContext model) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -91,9 +91,9 @@ public class AnalyticalModelManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            PersistentAnalyticalModel model = null;
+            PersistentStudentModelContext model = null;
             try {
-                model = em.getReference(PersistentAnalyticalModel.class, id);
+                model = em.getReference(PersistentStudentModelContext.class, id);
                 model.getModelID();
             } catch (EntityNotFoundException e) {
                 LOG.log(Level.FINE, "The PersistentAnalyticalModel with " + id + " no longer exists.", e);
@@ -108,19 +108,19 @@ public class AnalyticalModelManager {
         }
     }
 
-    public static List<PersistentAnalyticalModel> findEntities() {
+    public static List<PersistentStudentModelContext> findEntities() {
         return findEntities(true, -1, -1);
     }
 
-    public static List<PersistentAnalyticalModel> findEntities(int maxResults, int firstResult) {
+    public static List<PersistentStudentModelContext> findEntities(int maxResults, int firstResult) {
         return findEntities(false, maxResults, firstResult);
     }
 
-    private static List<PersistentAnalyticalModel> findEntities(boolean all, int maxResults, int firstResult) {
+    private static List<PersistentStudentModelContext> findEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(PersistentAnalyticalModel.class));
+            cq.select(cq.from(PersistentStudentModelContext.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -147,10 +147,10 @@ public class AnalyticalModelManager {
     }
 
 
-    public static PersistentAnalyticalModel findEntity(Long id) throws PersistenceException {
+    public static PersistentStudentModelContext findEntity(Long id) throws PersistenceException {
         EntityManager em = getEntityManager();
         try {
-            return em.find(PersistentAnalyticalModel.class, id);
+            return em.find(PersistentStudentModelContext.class, id);
          } catch (PersistenceException e) {
             LOG.log(Level.FINE, "The PersistentAnalyticalModel with " + id + " was not found.", e);
             throw e;
@@ -163,7 +163,7 @@ public class AnalyticalModelManager {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<PersistentAnalyticalModel> rt = cq.from(PersistentAnalyticalModel.class);
+            Root<PersistentStudentModelContext> rt = cq.from(PersistentStudentModelContext.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

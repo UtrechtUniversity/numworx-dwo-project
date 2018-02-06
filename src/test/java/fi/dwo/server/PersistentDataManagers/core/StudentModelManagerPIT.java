@@ -11,7 +11,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
-import fi.dwo.commons.persistence.entities.PersistentAnalyticalModel;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -30,14 +30,14 @@ import static org.junit.Assert.*;
  *
  * @author G.A.J. van der Plas
  */
-public class AnalyticalModelManagerPIT {
+public class StudentModelManagerPIT {
 
-    PersistentAnalyticalModel modelA = new PersistentAnalyticalModel();
-    PersistentAnalyticalModel modelB = new PersistentAnalyticalModel();
+    PersistentStudentModelContext modelA = new PersistentStudentModelContext();
+    PersistentStudentModelContext modelB = new PersistentStudentModelContext();
 
     static DatabaseManager instance = null;
     
-    public AnalyticalModelManagerPIT() {
+    public StudentModelManagerPIT() {
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
     }
     
@@ -58,11 +58,11 @@ public class AnalyticalModelManagerPIT {
     public void setUp() {
         JSONObject json = new JSONObject();
         json.put("nl","Model A");
-        modelA.setModel(json);
+        modelA.setModelStructure(json);
         modelA.setSchoolID(2L);
         json = new JSONObject();
         json.put("nl","Model B");
-        modelB.setModel(json);
+        modelB.setModelStructure(json);
         modelB.setSchoolID(2L);
         instance.IntializeTestDatabase();
     }
@@ -132,8 +132,8 @@ public class AnalyticalModelManagerPIT {
         // create
         try{
         System.out.println("create model");
-        AnalyticalModelManager.create(modelA);
-        AnalyticalModelManager.create(modelB);
+        StudentModelManager.create(modelA);
+        StudentModelManager.create(modelB);
         }catch(Exception e){
             fail("AnalyticalModelManager.create() failed.");
         }
@@ -141,7 +141,7 @@ public class AnalyticalModelManagerPIT {
         // recreate
         try{
         System.out.println("create model again");
-        AnalyticalModelManager.create(modelA);
+        StudentModelManager.create(modelA);
             //should succeed            
         }catch(Exception e){
             fail("AnalyticalModelManager.create() did not fail creating a copy of a model.");
@@ -149,7 +149,7 @@ public class AnalyticalModelManagerPIT {
         
 //        
 //        //read 
-//        AnalyticalModelManager model=null;
+//        StudentModelManager model=null;
 //        try{
 //        System.out.println("read school");
 //        }catch(Exception e){
