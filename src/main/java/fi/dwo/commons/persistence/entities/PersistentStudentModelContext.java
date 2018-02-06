@@ -55,17 +55,17 @@ public class PersistentStudentModelContext implements Serializable {
     private Long modelID;
     @Column(name = "schoolID", nullable = false)
     private Long schoolID;
+//    @NotNull
+//    @Column(name = "title", nullable = false)
+//    @Convert("jsonObjectConverter")
+//    private JSONObject title;
+//    @Basic(optional = false)
+////    @NotNull
+//    @Column(name = "description", nullable = true)
+//    @Convert("jsonObjectConverter")
+//    private JSONObject description;
     @NotNull
     @Column(name = "model", nullable = false)
-    @Convert("jsonObjectConverter")
-    private JSONObject title;
-    @Basic(optional = false)
-//    @NotNull
-    @Column(name = "description", nullable = true)
-    @Convert("jsonObjectConverter")
-    private JSONObject description;
-    @NotNull
-    @Column(name = "title", nullable = false)
     @Convert("jsonObjectConverter")
     private JSONObject modelStructure;
     @Column(name = "optlock")
@@ -100,14 +100,6 @@ public class PersistentStudentModelContext implements Serializable {
      */
     public void setSchoolID(Long schoolID) {
         this.schoolID = schoolID;
-    }
-
-
-    /**
-     * @param description the description to set
-     */
-    public void setDescription(JSONObject description) {
-        this.description = description;
     }
 
     /**
