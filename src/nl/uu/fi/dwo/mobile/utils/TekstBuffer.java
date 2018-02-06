@@ -343,6 +343,8 @@ public class TekstBuffer
 
 		switch (soortVak)
 		{
+		case -1:
+			return new SpookVak();
 //		case -2:
 //// copy classname to inner, so that MCSquared.jsp can read it.
 //			mc2FixInner(currentVakGegevens);
