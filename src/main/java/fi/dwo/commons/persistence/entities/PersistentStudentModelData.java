@@ -3,6 +3,7 @@
  */
 package fi.dwo.commons.persistence.entities;
 
+import fi.dwo.commons.persistence.JpaEclipseConverter4JsonObject;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -40,7 +41,7 @@ import org.json.simple.JSONObject;
 
 @Entity
 @Table(name = "tblStudentModelData", schema = "")
-@Converter(name = "jsonObjectConverter",converterClass = fi.dwo.commons.persistence.JpaConverterEclipseJson.class)
+@Converter(name = "jsonObjectConverter",converterClass = JpaEclipseConverter4JsonObject.class)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PersistentStudentModelData.findByModelId", query = "SELECT p FROM PersistentStudentModelData p WHERE p.modelID = :modelID")})
