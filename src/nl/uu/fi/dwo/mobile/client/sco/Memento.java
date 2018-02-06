@@ -61,8 +61,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 //	static public native void instalOnBeforeUnload() /*-{
 //		$wnd.onbeforeunload = @nl.uu.fi.dwo.mobile.client.sco.Memento::unload();
 //		$wnd.onunload = @nl.uu.fi.dwo.mobile.client.sco.Memento::unload();
-//	}-*/;
-//
+//	}-*/;	
+	
 	static void unload()
 	{
 		logger.fine("unload");
