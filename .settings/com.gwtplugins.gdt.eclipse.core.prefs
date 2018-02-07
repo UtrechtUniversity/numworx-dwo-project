@@ -1,6 +1,6 @@
 eclipse.preferences.version=1
 jarsExcludedFromWebInfLib=
-lastWarOutDir=/Users/peterboon/workspace-oxygen/Account/target/Account-trunk
+lastWarOutDir=/Users/peterboon/workspace-oxygen/Account/target/Account-0.0.18-SNAPSHOT
 launchConfigExternalUrlPrefix=
 warSrcDir=war
 warSrcDirIsOutput=false
