@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.account.client.UserBar;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO3;
+import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO4;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
@@ -172,7 +173,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 					api = new SCORM_guest();
 					menuWidget = null;
 				} else {					
-					api = new SCORM_DWO3();
+					api = new SCORM_DWO4();
 					menuWidget = getUserBar();
 					
 					userBar.setRole(getRoleType());
