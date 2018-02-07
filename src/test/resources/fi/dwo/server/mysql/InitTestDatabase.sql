@@ -807,7 +807,7 @@ UNLOCK TABLES;
 
 
 DROP TABLE IF EXISTS `tblStudentModelContext`;
-CREATE TABLE `tblAnalyticalModel` (
+CREATE TABLE `tblStudentModelContext` (
   `modelID` int(11) NOT NULL AUTO_INCREMENT,
   `schoolID` int(11) NOT NULL,
   `model` json NOT NULL ,

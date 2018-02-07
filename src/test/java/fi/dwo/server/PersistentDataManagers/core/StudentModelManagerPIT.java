@@ -16,7 +16,10 @@ import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
+import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -24,6 +27,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 
 /**
  * SchoolManager persistence integration tests (PIT).  <p/>
@@ -52,7 +57,7 @@ public class StudentModelManagerPIT {
 
     @AfterClass
     public static void tearDownClass() {
-        DwoEmfFactory.setDefaultEntityManagerFactory();
+//        DwoEmfFactory.setDefaultEntityManagerFactory();
         instance = null;
     }
 
@@ -94,9 +99,15 @@ public class StudentModelManagerPIT {
         DomAnalyticalModelTemplateTree rTree = g.deserialize(jsonTree, DomAnalyticalModelTemplateTree.class);
         String out = g.serialize(rTree);
         System.out.println(out);
-        if(out.compareTo(jsonTree)!=0){
-            fail("Marshalling demarshalling is not identical.");
+        try {
+            JSONAssert.assertEquals(out, jsonTree, JSONCompareMode.NON_EXTENSIBLE);
+        } catch (JSONException ex) {
+            Logger.getLogger(StudentModelManagerPIT.class.getName()).log(Level.SEVERE, null, ex);
+            fail("Json Exception.");
         }
+//        if(out.compareTo(jsonTree)!=0){
+//            fail("Marshalling demarshalling is not identical.");
+//        }
     }
 
      /**
