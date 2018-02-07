@@ -11,9 +11,11 @@ import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import java.util.List;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.json.simple.JSONObject;
 import org.junit.After;
@@ -147,6 +149,13 @@ public class StudentModelManagerPIT {
             fail("AnalyticalModelManager.create() did not fail creating a copy of a model.");
         }
         
+        // test read
+        PersistentSchool s = new PersistentSchool();
+        s.setSchoolID(2L);
+        List<PersistentStudentModelContext> modelList = StudentModelManager.findEntities(s);
+        if(modelList.size()!=2){
+            fail("Did not find 2 models");
+        }
 //        
 //        //read 
 //        StudentModelManager model=null;

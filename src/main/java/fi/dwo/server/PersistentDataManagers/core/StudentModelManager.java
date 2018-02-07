@@ -1,7 +1,6 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
-import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
@@ -132,12 +131,12 @@ public class StudentModelManager {
         }
     }
         
-    public static List<PersistentCourse> findEntities(PersistentSchool s) {
+    public static List<PersistentStudentModelContext> findEntities(PersistentSchool s) {
         EntityManager em = getEntityManager();
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentAnalyticalModel.findBySchoolID");
             q.setParameter("schoolID", s.getSchoolID());
-            List<PersistentCourse> list = q.getResultList();
+            List<PersistentStudentModelContext> list = q.getResultList();
             LOG.log(Level.FINE, "Course-manager retrieved {0} PersistentAnalyticalModel with schoolid {1}", new Object[]{list.size(), s.getSchoolID()});
             return list;
         }
