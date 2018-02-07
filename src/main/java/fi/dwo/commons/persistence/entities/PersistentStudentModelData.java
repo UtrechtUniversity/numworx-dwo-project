@@ -44,7 +44,7 @@ import org.json.simple.JSONObject;
 @Converter(name = "jsonObjectConverter",converterClass = JpaEclipseConverter4JsonObject.class)
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PersistentStudentModelData.findByModelId", query = "SELECT p FROM PersistentStudentModelData p WHERE p.modelID = :modelID")})
+    @NamedQuery(name = "PersistentStudentModelData.findByModelDataId", query = "SELECT p FROM PersistentStudentModelData p WHERE p.modelDataID = :modelDataID")})
 public class PersistentStudentModelData implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
