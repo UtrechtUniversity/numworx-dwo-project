@@ -12,6 +12,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  * Manages analytical models in the persistent storage. 
@@ -32,15 +33,17 @@ public class StudentModelManager {
      *
      * @param model
      */
-    public static void create(PersistentStudentModelContext model) throws PersistenceException {
+    public static PersistentStudentModelContext create(PersistentStudentModelContext model) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            model.setLastChangeTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
             em.persist(model);
             em.getTransaction().commit();
+            return model;
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentAnalyticalModel.", e);
+            LOG.log(Level.SEVERE, "Can't create the PersistentStudentModelContext.", e);
             throw new PersistenceException(e);
         } finally {
             if (em != null) {
@@ -60,6 +63,7 @@ public class StudentModelManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            model.setLastChangeTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());            
             model = em.merge(model);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -67,7 +71,7 @@ public class StudentModelManager {
             if (msg == null || msg.length() == 0) {
                 Long id = model.getModelID();
                 if (findEntity(id) == null) {
-                    LOG.log(Level.INFO, "The PersistentAnalyticalModel with " + id + " no longer exists.", e);
+                    LOG.log(Level.INFO, "The PersistentStudentModelContext with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
                 }
             }
@@ -95,7 +99,7 @@ public class StudentModelManager {
                 model = em.getReference(PersistentStudentModelContext.class, id);
                 model.getModelID();
             } catch (EntityNotFoundException e) {
-                LOG.log(Level.FINE, "The PersistentAnalyticalModel with " + id + " no longer exists.", e);
+                LOG.log(Level.FINE, "The PersistentStudentModelContext with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
             em.remove(model);
@@ -134,10 +138,10 @@ public class StudentModelManager {
     public static List<PersistentStudentModelContext> findEntities(PersistentSchool s) {
         EntityManager em = getEntityManager();
         try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentAnalyticalModel.findBySchoolID");
+            javax.persistence.Query q = em.createNamedQuery("PersistentStudentModelContext.findBySchoolID");
             q.setParameter("schoolID", s.getSchoolID());
             List<PersistentStudentModelContext> list = q.getResultList();
-            LOG.log(Level.FINE, "Course-manager retrieved {0} PersistentAnalyticalModel with schoolid {1}", new Object[]{list.size(), s.getSchoolID()});
+            LOG.log(Level.FINE, "Course-manager retrieved {0} PersistentStudentModelContext with schoolid {1}", new Object[]{list.size(), s.getSchoolID()});
             return list;
         }
         finally {
@@ -151,7 +155,7 @@ public class StudentModelManager {
         try {
             return em.find(PersistentStudentModelContext.class, id);
          } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentAnalyticalModel with " + id + " was not found.", e);
+            LOG.log(Level.FINE, "The PersistentStudentModelContext with " + id + " was not found.", e);
             throw e;
        } finally {
             em.close();
