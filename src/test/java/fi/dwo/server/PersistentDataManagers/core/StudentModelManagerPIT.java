@@ -83,7 +83,7 @@ public class StudentModelManagerPIT {
      * Light testing CRUD and more of class SchoolManager.
      */
     @Test
-    public void testDomAnalyticalModelTemplateTree()  {
+    public void testDomStudentModelContextTree()  {
         Genson g = new GensonBuilder().withConverters(new GensonMapConverter()).create();
         DomAnalyticalModelTemplateTree tree = new DomAnalyticalModelTemplateTree("nl","root");
         DomJsonModelTemplateNode c1 = new DomJsonModelTemplateNode("nl","1");
@@ -105,16 +105,13 @@ public class StudentModelManagerPIT {
             Logger.getLogger(StudentModelManagerPIT.class.getName()).log(Level.SEVERE, null, ex);
             fail("Json Exception.");
         }
-//        if(out.compareTo(jsonTree)!=0){
-//            fail("Marshalling demarshalling is not identical.");
-//        }
     }
 
      /**
      * Light testing CRUD and more of class SchoolManager.
      */
     @Test
-    public void testDomAnalyticalModelScoreTree()  {
+    public void testDomStudentModelDataTree()  {
         Genson g = new GensonBuilder().withConverters(new GensonMapConverter()).create();
         DomAnalyticalModelScoreTree tree = new DomAnalyticalModelScoreTree("nl","root",0);
         DomJsonModelScoreNode c1 = new DomJsonModelScoreNode("nl","1",1.0);
@@ -131,8 +128,11 @@ public class StudentModelManagerPIT {
         //rTree.reCalculate();     
         String out = g.serialize(rTree);
         System.out.println(out);
-        if(out.compareTo(jsonTree)!=0){
-            fail("Marshalling demarshalling is not identical.");
+        try {
+            JSONAssert.assertEquals(out, jsonTree, JSONCompareMode.NON_EXTENSIBLE);
+        } catch (JSONException ex) {
+            Logger.getLogger(StudentModelManagerPIT.class.getName()).log(Level.SEVERE, null, ex);
+            fail("Json Exception.");
         }
     }
 
