@@ -56,6 +56,11 @@ public class MapperConstants {
 		nullHypothesisMap.put("afhankelijk", "dependent");
 		nullHypothesisMap.put("onafhankelijk", "independent");
 		
+		Map alternativeHypothesisMap = new HashMap<String,String>();
+		constants.put("ha", alternativeHypothesisMap);
+		alternativeHypothesisMap.put("afhankelijk", "dependent");
+		alternativeHypothesisMap.put("onafhankelijk", "independent");
+		
 		Map testMap = new HashMap<String,String>();
 		constants.put("test", testMap);
 		testMap.put("z-toets", "ztest"); 

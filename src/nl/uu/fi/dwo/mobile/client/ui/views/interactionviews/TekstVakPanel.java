@@ -4,7 +4,9 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -1223,8 +1225,86 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			}
 			
 		}
+		//Make lists out of separate list elements
+		ListIterator<Tupel> initIt = initialState.listIterator();
+		ArrayList<Tupel> allListElements = new ArrayList<Tupel>();
+		while(initIt.hasNext())
+		{
+			Tupel t = initIt.next();
+			if(t.name.contains("."))
+			{
+				allListElements.add(t);
+				initIt.remove();
+			}
+		}
+		while(!allListElements.isEmpty())
+		{
+			Tupel firstTupel = allListElements.get(0);
+			String firstName = firstTupel.name.substring(0, firstTupel.name.indexOf("."));
+			ArrayList<Tupel> singleListElements = new ArrayList<Tupel>();
+			ListIterator<Tupel> it = allListElements.listIterator();
+			while(it.hasNext())
+			{
+				Tupel t = it.next();
+				String name = t.name.substring(0, t.name.indexOf("."));
+				if(name.equals(firstName))
+				{
+					singleListElements.add(t);
+					it.remove();
+				}
+			}
+			singleListElements.sort(new NameComparator());
+			String sep = ";";
+			String bracketL = "[";
+			String bracketR = "]";
+					
+			String antwoord = "";
+			if(firstTupel.name.substring(firstTupel.name.indexOf(".") + 1).contains(".")) //two dimensional list
+			{
+				antwoord = bracketL + bracketL;
+				ListIterator<Tupel> singleIt = singleListElements.listIterator();
+				while(singleIt.hasNext())
+				{
+					Tupel t = singleIt.next();
+					String number = t.name.substring(t.name.indexOf(".") + 1);
+					if(number.equals("1.1"))
+						antwoord = antwoord + t.value;
+					else if(number.substring(number.indexOf(".") + 1).equals("1"))
+						antwoord = antwoord + bracketR + sep + bracketL + t.value;
+					else
+						antwoord = antwoord + sep + t.value;
+				}
+				antwoord = antwoord + bracketR + bracketR;
+			}
+			else //one dimensional list
+			{
+				antwoord = bracketL;
+				ListIterator<Tupel> singleIt = singleListElements.listIterator();
+				while(singleIt.hasNext())
+				{
+					Tupel t = singleIt.next();
+					String number = t.name.substring(t.name.indexOf(".") + 1);
+					if(number.equals("1"))
+						antwoord = antwoord + t.value;
+					else
+						antwoord = antwoord + sep + t.value;
+				}
+				antwoord = antwoord + bracketR;
+			}
+			Tupel newTupel = new Tupel(firstTupel.name.substring(0, firstTupel.name.indexOf(".")), firstTupel.type, antwoord);
+			initialState.add(newTupel);
+		}
+		
 		return initialState;
 	}
+	
+	class NameComparator implements Comparator<Tupel> {
+	    @Override
+	    public int compare(Tupel a, Tupel b) {
+	        return a.name.compareToIgnoreCase(b.name);
+	    }
+	}
+
 	
 	private ArrayList<Tupel> getAnswerModels()
 	{
@@ -1277,7 +1357,6 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 								{
 									FormuleEditorWithSteps fews = (FormuleEditorWithSteps) object;
 									logIDLabel = fews.getLogIDLabel();
-									String[] regels = fews.geefRegels();
 									if(fews.isVergelijkingVak())
 									{
 										VergelijkingMeerv vgl = ((AntwoordVergelijkingVakChecker) fews.getAvChecker()).getDesiredSolution();
@@ -1328,7 +1407,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 								}
 								if(!logIDLabel.equals("") && !antwoord.equals(""))
 								{
-									//does answers already contain tupel with same logIDLabel? Then merge answers
+									//Does answers already contain tupel with same logIDLabel? Then merge answers into equation or inequality
 									String lastLabel = "";
 									Tupel lastTupel = null;
 									if(answerModels.size() > 0)
@@ -1354,7 +1433,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 										}
 										
 										lastTupel.value = lastAnswer; // this also adjusts the value in the answers arraylist
-									}							
+									}
 									else			
 										answerModels.add(new Tupel(logIDLabel, type, antwoord));
 								}
@@ -2000,7 +2079,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 
 	public Promise<RuleIF> kijkNaIdeasStatistiek()
 	{
-		final List<Tupel> newAnswers = getAnswers();
+		final List<Tupel> newAnswers = getAllAnswers();
 		ListIterator<Tupel> iter = newAnswers.listIterator(newAnswers.size());
 		while(iter.hasPrevious()) {
 			Tupel t = iter.previous();
@@ -2314,6 +2393,7 @@ private Object deGreek(String value) {
 		.replace("s$sy@", "s")
 		.replace("vS$n$bD$n$wn@@", "bs$n$wn") // vervang "SD/sqrt(n)" door "s/sqrt(n)"
 		.replace("S$n$bD", "s$n$b1")// vervang "SD/iets" door "s*1/iets"
+		.replace(";", ",") //voor ondersteuning lijsten. 
 	;	
 }
 
@@ -2547,7 +2627,7 @@ private Object CamelCase(String name) {
 						}
 						if(!logIDLabel.equals(""))
 						{
-							//does answers already contain tupel with same logIDLabel? Then merge answers
+							//does answers already contain tupel with same logIDLabel? Then merge answers into one equation or inequality
 							String lastLabel = "";
 							Tupel lastTupel = null;
 							if(answers.size() > 0)
@@ -2573,14 +2653,90 @@ private Object CamelCase(String name) {
 								}
 								
 								lastTupel.value = lastAnswer; // this also adjusts the value in the answers arraylist
-							}							
+							}	
 							else			
 								answers.add(new Tupel(logIDLabel, type, antwoord));
 						}
 					}
+					
 				}
 			}
 		}
+		return answers;
+	}
+	
+	public ArrayList<Tupel> getAllAnswers()
+	{
+		ArrayList<Tupel> answers = getAnswers();
+		//Make lists out of separate list elements
+		ListIterator<Tupel> initIt = answers.listIterator();
+		ArrayList<Tupel> allListElements = new ArrayList<Tupel>();
+		while(initIt.hasNext())
+		{
+			Tupel t = initIt.next();
+			if(t.name.contains("."))
+			{
+				allListElements.add(t);
+				initIt.remove();
+			}
+		}
+		while(!allListElements.isEmpty())
+		{
+			Tupel firstTupel = allListElements.get(0);
+			String firstName = firstTupel.name.substring(0, firstTupel.name.indexOf("."));
+			ArrayList<Tupel> singleListElements = new ArrayList<Tupel>();
+			ListIterator<Tupel> it = allListElements.listIterator();
+			while(it.hasNext())
+			{
+				Tupel t = it.next();
+				String name = t.name.substring(0, t.name.indexOf("."));
+				if(name.equals(firstName))
+				{
+					singleListElements.add(t);
+					it.remove();
+				}
+			}
+			singleListElements.sort(new NameComparator());
+			String sep = ";";
+			String bracketL = "[";
+			String bracketR = "]";
+			String antwoord = "";
+			if(firstTupel.name.substring(firstTupel.name.indexOf(".") + 1).contains(".")) //two dimensional list
+			{
+				antwoord = bracketL + bracketL;
+				ListIterator<Tupel> singleIt = singleListElements.listIterator();
+				while(singleIt.hasNext())
+				{
+					Tupel t = singleIt.next();
+					String number = t.name.substring(t.name.indexOf(".") + 1);
+					if(number.equals("1.1"))
+						antwoord = antwoord + t.value;
+					else if(number.substring(number.indexOf(".") + 1).equals("1"))
+						antwoord = antwoord + bracketR + sep + bracketL + t.value;
+					else
+						antwoord = antwoord + sep + t.value;
+				}
+				antwoord = antwoord + bracketR + bracketR;
+			}
+			else //one dimensional list
+			{
+				antwoord = bracketL;
+				ListIterator<Tupel> singleIt = singleListElements.listIterator();
+				while(singleIt.hasNext())
+				{
+					Tupel t = singleIt.next();
+					String number = t.name.substring(t.name.indexOf(".") + 1);
+					if(number.equals("1"))
+						antwoord = antwoord + t.value;
+					else
+						antwoord = antwoord + sep + t.value;
+				}
+				antwoord = antwoord + bracketR;
+			}
+			Tupel newTupel = new Tupel(firstTupel.name.substring(0, firstTupel.name.indexOf(".")), firstTupel.type, antwoord);
+			answers.add(newTupel);
+		}
+		
 		return answers;
 	}
 	
@@ -3509,7 +3665,7 @@ private Object CamelCase(String name) {
 			if(isInIdeasStatistiek() != null)
 			{
 				final TekstVakPanel statPanel = isInIdeasStatistiek();
-				final List<Tupel> newAnswers = statPanel.getAnswers();
+				final List<Tupel> newAnswers = statPanel.getAllAnswers();
 				
 				//TODO: ask for hint based on newAnswers: String hint = ideas.getOneFirst(newAnswers);
 				Promise<String> promise;
