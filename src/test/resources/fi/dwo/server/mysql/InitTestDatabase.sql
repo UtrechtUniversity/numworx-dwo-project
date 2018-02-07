@@ -821,6 +821,7 @@ CREATE TABLE `tblStudentModelContext` (
 DROP TABLE IF EXISTS `tblStudentModelData`;
 CREATE TABLE `tblStudentModelData` (
   `modelDataID` int(11) NOT NULL AUTO_INCREMENT,
+  `modelID` int(11) NOT NULL,
   `scoID` int(11) NOT NULL,
   `modelData` json NOT NULL ,
   `optlock` int(11) DEFAULT '0',
