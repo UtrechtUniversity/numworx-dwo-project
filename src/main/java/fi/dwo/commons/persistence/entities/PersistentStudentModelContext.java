@@ -5,6 +5,7 @@ package fi.dwo.commons.persistence.entities;
 
 import fi.dwo.commons.persistence.JpaEclipseConverter4JsonObject;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -24,13 +27,12 @@ import org.json.simple.JSONObject;
 
 /**
  * <p>
- A set of Analytical models that describing a performance modelStructure for analyzing 
- student performance. Each models contains categories and each category contains 
- at least one (educational) objective. 
- <p>
+ * A set of Analytical models that describing a performance modelStructure for
+ * analyzing student performance. Each models contains categories and each
+ * category contains at least one (educational) objective.
+ * <p>
  * @author Gert van der Plas
  */
-
 //CREATE TABLE `dwo_devel`.`tblanalyticalmodel` (
 //  `schoolID` INT(11) NOT NULL,
 //  `modelID` INT(11) NOT NULL,
@@ -39,14 +41,14 @@ import org.json.simple.JSONObject;
 //  PRIMARY KEY (`modelID`),
 //  UNIQUE INDEX `modelID_UNIQUE` (`modelID` ASC),
 //  UNIQUE INDEX `schoolID_UNIQUE` (`schoolID` ASC));
-
 @Entity
 @Table(name = "tblStudentModelContext", schema = "")
-@Converter(name = "jsonObjectConverter",converterClass = JpaEclipseConverter4JsonObject.class)
+@Converter(name = "jsonObjectConverter", converterClass = JpaEclipseConverter4JsonObject.class)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PersistentStudentModelContext.findBySchoolID", query = "SELECT p FROM PersistentStudentModelContext p WHERE p.schoolID = :schoolID")})
 public class PersistentStudentModelContext implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,12 +71,15 @@ public class PersistentStudentModelContext implements Serializable {
     @Convert("jsonObjectConverter")
     private JSONObject modelStructure;
     @Column(name = "optlock")
-    @Version private int optlock;
+    @Version
+    private int optlock;
     @Column(name = "lastChangeTimeStamp")
     private long lastChangeTimeStamp;
     @NotNull
-    @Column(name="publishState", nullable = false)
-    private PublishState publishState = PublishState.published;    /**
+    @Column(name = "publishState", nullable = false)
+    private PublishState publishState = PublishState.published;
+
+    /**
      * @return the modelID
      */
     public Long getModelID() {
