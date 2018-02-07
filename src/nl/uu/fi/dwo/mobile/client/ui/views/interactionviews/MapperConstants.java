@@ -51,6 +51,11 @@ public class MapperConstants {
 	public MapperConstants() { 
 		constants = new HashMap<String,Map<String,String>>();
 		
+		Map nullHypothesisMap = new HashMap<String,String>();
+		constants.put("h0", nullHypothesisMap);
+		nullHypothesisMap.put("afhankelijk", "dependent");
+		nullHypothesisMap.put("onafhankelijk", "independent");
+		
 		Map testMap = new HashMap<String,String>();
 		constants.put("test", testMap);
 		testMap.put("z-toets", "ztest"); 
@@ -66,6 +71,8 @@ public class MapperConstants {
 		testMap.put("Spearman correlatietoets", "rspearman");
 		testMap.put("Pearson correlation test", "rpearson");
 		testMap.put("Spearman correlation test", "rspearman");
+		testMap.put("Chi-kwadraat", "chisquared");
+		testMap.put("Chi-squard", "chisquared");
 		
 		Map sidedMap = new HashMap<String, String>();
         constants.put("sided", sidedMap);
