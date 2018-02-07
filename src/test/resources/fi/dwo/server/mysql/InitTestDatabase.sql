@@ -806,15 +806,28 @@ INSERT INTO `tbluser` VALUES (1,NULL,1,'John',NULL,'Doe','dwoadmin','d55b2dbcb75
 UNLOCK TABLES;
 
 
-DROP TABLE IF EXISTS `tblAnalyticalModel`;
+DROP TABLE IF EXISTS `tblStudentModelContext`;
 CREATE TABLE `tblAnalyticalModel` (
   `modelID` int(11) NOT NULL AUTO_INCREMENT,
   `schoolID` int(11) NOT NULL,
   `model` json NOT NULL ,
+  `publishState` tinyint(4) NOT NULL DEFAULT '0',
+  `optlock` int(11) DEFAULT '0',
+  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
   PRIMARY KEY (`modelID`),
   UNIQUE KEY `modelID_UNIQUE` (`modelID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+DROP TABLE IF EXISTS `tblStudentModelData`;
+CREATE TABLE `tblStudentModelData` (
+  `modelDataID` int(11) NOT NULL AUTO_INCREMENT,
+  `scoID` int(11) NOT NULL,
+  `modelData` json NOT NULL ,
+  `optlock` int(11) DEFAULT '0',
+  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
+  PRIMARY KEY (`modelID`),
+  UNIQUE KEY `modelID_UNIQUE` (`modelDataID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
