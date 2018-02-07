@@ -173,7 +173,7 @@ public class SecuredUserScoDataManagerIT {
         values.setValues(Collections.singletonList(entry));
         values.setScoContext(sco);
         
-        Object result = manager.setValues(sc, rest).getEntity();
+        Object result = manager.setValues(sc, rest, null).getEntity();
         assertEquals(Boolean.TRUE, result);
         
         values = (DomScormValues) manager.getValues(sc, rest).getEntity();
@@ -213,7 +213,7 @@ public class SecuredUserScoDataManagerIT {
         entry.setValue("{\"a\": 12345}");
         values.setValues(Collections.singletonList(entry));
         values.setScoContext(sco);      
-        Response response = manager.setValues(sc, rest);
+        Response response = manager.setValues(sc, rest,null);
 		Object result = response.getEntity();
 		String etag   = response.getEntityTag().getValue();
         assertEquals(Boolean.TRUE, result);
