@@ -919,7 +919,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			}
 			else if (goedHalfFout == 2)
 			{
-				if (show)
+				if (show && ingevuld)
 					zetGoedFout(FOUT);
 				score = puntenFeedback;
 				if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
