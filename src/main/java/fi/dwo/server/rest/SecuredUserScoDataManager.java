@@ -286,7 +286,7 @@ public class SecuredUserScoDataManager {
 	@PUT
     @Produces({"application/json"})
     @Path("/setValues")
-    public Response setValues(@Context SecurityContext sc, RestScormValues rest) throws Dwo2Exception {
+    public Response setValues(@Context SecurityContext sc, RestScormValues rest, @HeaderParam("if-match") EntityTag match) throws Dwo2Exception {
     	DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
     	
     	// Context
@@ -340,9 +340,15 @@ public class SecuredUserScoDataManager {
 				return Response.ok(Boolean.FALSE, MediaType.APPLICATION_JSON_TYPE).build();
 			}
 // Niet nieuw: check if <> then null
-		
+			pssd = StudentScoDataManager.findEntity(pssc.getStudentSco()); // ALWAYS get context.
 		}
-		
+
+		if(match != null) {
+	      String etag = buildETag(pssc, pssd);
+	        if (!etag.equals(match.getValue()))
+	                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Wrong if-match", Response.Status.PRECONDITION_FAILED);
+	    }
+
 		for(DomMapEntry<String,String> entry: rest.getDomScormValues().getValues()) {
 			logEntry("set", entry, pssc.getPersistentHasRolePK().getUserID(), pssc.getScoID());
 			ScormKey key = ScormKey.getKey(entry.getKey());
@@ -458,7 +464,7 @@ public class SecuredUserScoDataManager {
 			if(COMPLETE.equals(ssContext.getCompletionStatus()))
 			{
 				LOG.warning("data is readonly "+ sc.getUserPrincipal().getName() + " " + scoContext.getScoID());
-				throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "data is readonly");
+                return Response.ok(Boolean.FALSE, MediaType.APPLICATION_JSON_TYPE).build();
 			}
 			ssData = StudentScoDataManager.findEntity(ssContext.getStudentSco());
 			if(ssData == null) {

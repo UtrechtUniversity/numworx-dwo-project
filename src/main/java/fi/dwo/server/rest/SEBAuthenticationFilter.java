@@ -32,7 +32,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
-@SecureExamBrowser
+@RequireSecureExamBrowser
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class SEBAuthenticationFilter implements ContainerRequestFilter {
@@ -75,7 +75,7 @@ public class SEBAuthenticationFilter implements ContainerRequestFilter {
 	}
 
 	private boolean sebHeaderValid(String sebHeader, URI requestUri) {
-		return sebHeader != null;
+		return sebHeader != null; //TODO implement sha-256 verificatie.
 	}
 
 	static class SEBSecurityContext implements SecurityContext {
