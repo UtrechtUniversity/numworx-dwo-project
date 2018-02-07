@@ -988,6 +988,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String component_df_anova();
 
   /**
+   * Translated "De tabel met verwachte frequenties is correct.".
+   * 
+   * @return translated "De tabel met verwachte frequenties is correct."
+   */
+  @DefaultStringValue("De tabel met verwachte frequenties is correct.")
+  @Key("component.expected-frequencies")
+  String component_expected_frequencies();
+
+  /**
    * Translated "Dit is een geschikte nulhypothese.".
    * 
    * @return translated "Dit is een geschikte nulhypothese."
@@ -1033,6 +1042,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String component_hypotheses();
 
   /**
+   * Translated "Dit zijn geschikte hypotheses.".
+   * 
+   * @return translated "Dit zijn geschikte hypotheses."
+   */
+  @DefaultStringValue("Dit zijn geschikte hypotheses.")
+  @Key("component.hypotheses-chi-squared")
+  String component_hypotheses_chi_squared();
+
+  /**
    * Translated "Dit is de correcte conclusie over deze hypotheses; je hebt de toets correct uitgevoerd.".
    * 
    * @return translated "Dit is de correcte conclusie over deze hypotheses; je hebt de toets correct uitgevoerd."
@@ -1067,6 +1085,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   @DefaultStringValue("Dit is de juiste steekproefgrootte.")
   @Key("component.n")
   String component_n();
+
+  /**
+   * Translated "De tabel met geobserveerde frequenties is correct.".
+   * 
+   * @return translated "De tabel met geobserveerde frequenties is correct."
+   */
+  @DefaultStringValue("De tabel met geobserveerde frequenties is correct.")
+  @Key("component.observed-totals")
+  String component_observed_totals();
 
   /**
    * Translated "Dit is de juiste p-waarde bij deze toetsingsgrootheid.".
@@ -1157,6 +1184,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   @DefaultStringValue("Een ANOVA is hier inderdaad de meest geschikte toets.")
   @Key("component.test.anova")
   String component_test_anova();
+
+  /**
+   * Translated "Een Chi-kwadraattoets is hier inderdaad de meest geschikte toets.".
+   * 
+   * @return translated "Een Chi-kwadraattoets is hier inderdaad de meest geschikte toets."
+   */
+  @DefaultStringValue("Een Chi-kwadraattoets is hier inderdaad de meest geschikte toets.")
+  @Key("component.test.chi-squared")
+  String component_test_chi_squared();
 
   /**
    * Translated "Een Pearson correlatietoets is hier inderdaad de meest geschikte toets.".

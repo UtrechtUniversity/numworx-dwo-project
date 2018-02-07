@@ -39,8 +39,35 @@ public interface Hint extends com.google.gwt.i18n.client.ConstantsWithLookup {
    * @return translated "Bepaal de kritieke waarde(n) voor deze toets."
    */
   @DefaultStringValue("Bepaal de kritieke waarde(n) voor deze toets.")
+  @Key("component.critical.f-value")
+  String component_critical_f_value();
+
+  /**
+   * Translated "Bepaal de kritieke waarde(n) voor deze toets.".
+   * 
+   * @return translated "Bepaal de kritieke waarde(n) voor deze toets."
+   */
+  @DefaultStringValue("Bepaal de kritieke waarde(n) voor deze toets.")
+  @Key("component.critical.r-value")
+  String component_critical_r_value();
+
+  /**
+   * Translated "Bepaal de kritieke waarde(n) voor deze toets.".
+   * 
+   * @return translated "Bepaal de kritieke waarde(n) voor deze toets."
+   */
+  @DefaultStringValue("Bepaal de kritieke waarde(n) voor deze toets.")
   @Key("component.critical.t-value")
   String component_critical_t_value();
+
+  /**
+   * Translated "Bepaal de kritieke waarde(n) voor deze toets.".
+   * 
+   * @return translated "Bepaal de kritieke waarde(n) voor deze toets."
+   */
+  @DefaultStringValue("Bepaal de kritieke waarde(n) voor deze toets.")
+  @Key("component.critical.x-value")
+  String component_critical_x_value();
 
   /**
    * Translated "Bepaal de kritieke waarde(n) voor deze toets.".
@@ -59,6 +86,24 @@ public interface Hint extends com.google.gwt.i18n.client.ConstantsWithLookup {
   @DefaultStringValue("Bepaal het aantal vrijheidsgraden in deze toets.")
   @Key("component.df")
   String component_df();
+
+  /**
+   * Translated "Bepaal het aantal vrijheidsgraden in deze toets.".
+   * 
+   * @return translated "Bepaal het aantal vrijheidsgraden in deze toets."
+   */
+  @DefaultStringValue("Bepaal het aantal vrijheidsgraden in deze toets.")
+  @Key("component.df-anova")
+  String component_df_anova();
+
+  /**
+   * Translated "Bepaal de verwachte frequenties onder de nulhypothese bij de geobserveerde frequenties.".
+   * 
+   * @return translated "Bepaal de verwachte frequenties onder de nulhypothese bij de geobserveerde frequenties."
+   */
+  @DefaultStringValue("Bepaal de verwachte frequenties onder de nulhypothese bij de geobserveerde frequenties.")
+  @Key("component.expected-frequencies")
+  String component_expected_frequencies();
 
   /**
    * Translated "Geef aan welke nulhypothese je wil toetsen.".
@@ -106,6 +151,15 @@ public interface Hint extends com.google.gwt.i18n.client.ConstantsWithLookup {
   String component_hypotheses();
 
   /**
+   * Translated "Bepaal hypotheses om te toetsen.".
+   * 
+   * @return translated "Bepaal hypotheses om te toetsen."
+   */
+  @DefaultStringValue("Bepaal hypotheses om te toetsen.")
+  @Key("component.hypotheses-chi-squared")
+  String component_hypotheses_chi_squared();
+
+  /**
    * Translated "Trek een conclusie over je hypotheses.".
    * 
    * @return translated "Trek een conclusie over je hypotheses."
@@ -149,6 +203,15 @@ public interface Hint extends com.google.gwt.i18n.client.ConstantsWithLookup {
   @DefaultStringValue("Bepaal de steekproefgrootte.")
   @Key("component.n")
   String component_n();
+
+  /**
+   * Translated "Bepaal de rij- en kolomtotalen van de geobserveerde frequenties. ".
+   * 
+   * @return translated "Bepaal de rij- en kolomtotalen van de geobserveerde frequenties. "
+   */
+  @DefaultStringValue("Bepaal de rij- en kolomtotalen van de geobserveerde frequenties. ")
+  @Key("component.observed-totals")
+  String component_observed_totals();
 
   /**
    * Translated "Bepaal de p-waarde die hoort bij de gevonden toetsingsgrootheid.".
@@ -239,6 +302,33 @@ public interface Hint extends com.google.gwt.i18n.client.ConstantsWithLookup {
   @DefaultStringValue("Bereken de toetsingsgrootheid bij de gekozen toets.")
   @Key("component.test-value")
   String component_test_value();
+
+  /**
+   * Translated "Bepaal welke toets geschikt is voor deze situatie.".
+   * 
+   * @return translated "Bepaal welke toets geschikt is voor deze situatie."
+   */
+  @DefaultStringValue("Bepaal welke toets geschikt is voor deze situatie.")
+  @Key("component.test.anova")
+  String component_test_anova();
+
+  /**
+   * Translated "Bepaal welke toets geschikt is voor deze situatie.".
+   * 
+   * @return translated "Bepaal welke toets geschikt is voor deze situatie."
+   */
+  @DefaultStringValue("Bepaal welke toets geschikt is voor deze situatie.")
+  @Key("component.test.chi-squared")
+  String component_test_chi_squared();
+
+  /**
+   * Translated "Bepaal welke toets geschikt is voor deze situatie.".
+   * 
+   * @return translated "Bepaal welke toets geschikt is voor deze situatie."
+   */
+  @DefaultStringValue("Bepaal welke toets geschikt is voor deze situatie.")
+  @Key("component.test.r-pearson")
+  String component_test_r_pearson();
 
   /**
    * Translated "Bepaal welke toets geschikt is voor deze situatie.".
