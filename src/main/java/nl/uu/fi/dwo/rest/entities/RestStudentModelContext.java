@@ -3,7 +3,7 @@ package nl.uu.fi.dwo.rest.entities;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 
 /**
  * Profile language version of the StudentModel.
@@ -16,7 +16,7 @@ public class RestStudentModelContext {
     
     private DomContext restContext;
     private DomDwoProfile domDwoProfile;
-    private DomStudentModelContext domStudentModelContext;
+    private DomStudentModelStructure domStudentModelContext;
 
     /**
      * @return the restContext
@@ -35,14 +35,14 @@ public class RestStudentModelContext {
     /**
      * @return the dpmStudentModelContext
      */
-    public DomStudentModelContext getDomStudentModelContext() {
+    public DomStudentModelStructure getDomStudentModelContext() {
         return domStudentModelContext;
     }
 
     /**
      * @param domStudentModelContext the domStudentModelContext to set
      */
-    public void setDomStudentModelContext(DomStudentModelContext domStudentModelContext) {
+    public void setDomStudentModelContext(DomStudentModelStructure domStudentModelContext) {
         this.domStudentModelContext = domStudentModelContext;
     }
 
