@@ -11,22 +11,21 @@ import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
-import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.PersistenceException;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.json.JSONException;
-import org.json.simple.JSONObject;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -149,18 +148,36 @@ public class StudentModelManagerPIT {
     @Test
     public void testDomStudentModelContextSerialization() {
         DomStudentModelStructure model = new DomStudentModelStructure();
-        model.setInfo(new DomStudentModelContextInfo("A model", "descript"));
+        Map<String, String> titleMap = new HashMap<>();
+        Map<String, String> descrMap = new HashMap<>();
+        titleMap.put("nl", "A model");
+        titleMap.put("en", "A model");
+        descrMap.put("nl", "A description");
+        descrMap.put("en", "A description");
+        model.setInfo(new DomStudentModelContextInfo(titleMap, descrMap));
         List<DomStudentModelCategory> catList = new ArrayList<>(3);
         model.setCategories(catList);
         for (int c = 0; c < 3; c++) {
             catList.add(new DomStudentModelCategory());
             List<DomStudentModelObj> objList = new ArrayList<>(2);
             catList.get(c).setObjectives(objList);
-            catList.get(c).setInfo(new DomStudentModelContextInfo("category " + c, "descript"));
+            Map<String, String> catTitle = new HashMap<>();
+            Map<String, String> catDescr = new HashMap<>();
+            catTitle.put("nl", "A cat " + c);
+            catTitle.put("en", "A cat " + c);
+            catDescr.put("nl", "A description");
+            catDescr.put("en", "A description");
+            catList.get(c).setInfo(new DomStudentModelContextInfo(catTitle, catDescr));
             for (int o = 0; o < 2; o++) {
                 {
+                    Map<String, String> objTitle = new HashMap<>();
+                    Map<String, String> objDescr = new HashMap<>();
+                    objTitle.put("nl", "A obj " + o);
+                    objTitle.put("en", "A obj " + o);
+                    objDescr.put("nl", "A description");
+                    objDescr.put("en", "A description");
                     objList.add(new DomStudentModelObj());
-                    objList.get(o).setInfo(new DomStudentModelContextInfo("objective " + o, "descript"));
+                    objList.get(o).setInfo(new DomStudentModelContextInfo(objTitle, objDescr));
                 }
             }
         }
@@ -178,19 +195,19 @@ public class StudentModelManagerPIT {
             Logger.getLogger(StudentModelManagerPIT.class.getName()).log(Level.SEVERE, null, ex);
             fail("Json Exception.");
         }
-        
+
         // create
- PersistentStudentModelContext modelA = new PersistentStudentModelContext();
+        PersistentStudentModelContext modelA = new PersistentStudentModelContext();
         try {
             System.out.println("create model");
-           
+
             modelA.setSchoolID(1L);
             modelA.setModelStructure(model);
             modelA = StudentModelManager.create(modelA);
         } catch (Exception e) {
             fail("AnalyticalModelManager.create() failed.");
-        }        
-    
+        }
+
         //get
         try {
             System.out.println("reading modelA ");
@@ -201,7 +218,7 @@ public class StudentModelManagerPIT {
         } catch (Exception e) {
             Logger.getLogger(StudentModelManagerPIT.class.getName()).log(Level.SEVERE, null, e);
             fail("Fetched model does not match model A.");
-        } 
+        }
     }
 //
 //    /**
