@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.util.Map;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -10,42 +11,42 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DomStudentModelContextInfo {
-    private String title = "";
-    private String description = "";
+    private Map<String,String> title;
+    private Map<String,String> description;
 
     public DomStudentModelContextInfo(){        
        
     }
     
-    public DomStudentModelContextInfo(String aTitle, String aDescription){
+    public DomStudentModelContextInfo(Map<String,String> aTitle, Map<String,String> aDescription){
         title = aTitle;
         description= aDescription;
     }
     /**
      * @return the title
      */
-    public String getTitle() {
+    public Map<String,String> getTitle() {
         return title;
     }
 
     /**
      * @param title the title to set
      */
-    public void setTitle(String title) {
+    public void setTitle(Map<String,String> title) {
         this.title = title;
     }
 
     /**
      * @return the description
      */
-    public String getDescription() {
+    public Map<String,String> getDescription() {
         return description;
     }
 
     /**
      * @param description the description to set
      */
-    public void setDescription(String description) {
+    public void setDescription(Map<String,String> description) {
         this.description = description;
     }
     
