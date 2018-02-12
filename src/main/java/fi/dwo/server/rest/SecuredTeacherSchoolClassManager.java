@@ -1087,8 +1087,8 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                     //.setDefaultHasRole()
                     .setSchoolAdminTeacher()
                     .setTeacher()
-                    .addSchoolClass(rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass())
                     .addProfile(rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile())
+                    .addSchoolClass(rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass())
                     .addCourse(rest.getDomSchoolClassCourseAndProfile().getCourse());            
 
             //Loop up the course tree and find the tree path
@@ -1397,11 +1397,6 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         return false;
     	
     }
-    
-    
-    
-    
-    
     
     /**
      * Updates the type of a class-course of a class in a school.

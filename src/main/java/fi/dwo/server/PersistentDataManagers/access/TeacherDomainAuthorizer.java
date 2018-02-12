@@ -11,6 +11,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
@@ -23,6 +24,7 @@ import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
@@ -34,7 +36,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
-import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -63,19 +64,19 @@ public class TeacherDomainAuthorizer extends SchoolAdminTeacherDomainAuthorizer 
 
     public class TeacherPersistentContext extends SchoolAdminTeacherPersistentContext {
 
-        public TeacherPersistentContext(){
+        public TeacherPersistentContext() {
             super();
         }
-        
-        public TeacherPersistentContext(SchoolAdminTeacherPersistentContext ctx){
+
+        public TeacherPersistentContext(SchoolAdminTeacherPersistentContext ctx) {
             super();
-            this.hasRole=ctx.hasRole;
-            this.roleType=ctx.roleType;
-            this.school=ctx.school;
-            this.schoolGroup=ctx.schoolGroup;
-            this.user=ctx.user;            
+            this.hasRole = ctx.hasRole;
+            this.roleType = ctx.roleType;
+            this.school = ctx.school;
+            this.schoolGroup = ctx.schoolGroup;
+            this.user = ctx.user;
         }
-        
+
         private PersistentSchoolClass schoolClass;
         private PersistentDwoProfile profile;
         private PersistentCourse course;
@@ -94,7 +95,7 @@ public class TeacherDomainAuthorizer extends SchoolAdminTeacherDomainAuthorizer 
         context = new TeacherPersistentContext(tdAuth.context);
         //schoolAdminTeacherActions = new SchoolAdminTeacherActions(tdAuth.schoolAdminTeacherActions);
     }
-    
+
     public interface TeacherState_C_CC_HR_P_R_S_SC_SCO_SG_U {
 
         //Build getContext();
@@ -147,7 +148,7 @@ public class TeacherDomainAuthorizer extends SchoolAdminTeacherDomainAuthorizer 
         TeacherState_C_CC_HR_P_R_S_SC_SCO_SG_U addScoContext(DomScoContext s) throws Dwo2Exception;
     }
 
-    public interface TeacherState_C_CC_HR_P_R_S_SC_SG_U  {
+    public interface TeacherState_C_CC_HR_P_R_S_SC_SG_U {
 
 //        //Build getContext();
 //        PersistentUser getUser();
@@ -184,16 +185,26 @@ public class TeacherDomainAuthorizer extends SchoolAdminTeacherDomainAuthorizer 
         PersistentSchoolGroup getSchoolGroup();
 
         PersistentSchoolClass getSchoolClass();
-
-        TeacherState_HR_P_R_S_SC_SG_U addProfile(DomDwoProfile p) throws Dwo2Exception;
     }
 
     public interface TeacherState_HR_R_S_SG_U {
-        TeacherState_HR_R_S_SC_SG_U addSchoolClass(DomSchoolClass s) throws Dwo2Exception;
+
+        PersistentStudentModelContext addStudentModel(PersistentStudentModelContext model) throws Dwo2Exception;
+
+        TeacherState_HR_P_R_S_SG_U addProfile(DomDwoProfile p) throws Dwo2Exception;
+    }
+
+    public interface TeacherState_HR_P_R_S_SG_U {
+
+        TeacherState_HR_P_R_S_SC_SG_U addSchoolClass(DomSchoolClass s) throws Dwo2Exception;
+
+        List<PersistentStudentModelContext> getStudentModels() throws Dwo2Exception;
+
     }
 
     public interface Build {
-            TeacherState_HR_R_S_SG_U setTeacher() throws Dwo2Exception;
+
+        TeacherState_HR_R_S_SG_U setTeacher() throws Dwo2Exception;
 //
 //        PersistentHasRole getHasRole();
 //
@@ -210,16 +221,17 @@ public class TeacherDomainAuthorizer extends SchoolAdminTeacherDomainAuthorizer 
 //        RoleType getRoleType();
     }
 
-    protected static class Builder implements TeacherState_HR_R_S_SG_U, TeacherState_HR_R_S_SC_SG_U, TeacherState_HR_P_R_S_SC_SG_U, TeacherState_C_CC_HR_P_R_S_SC_SG_U, TeacherState_C_CC_HR_P_R_S_SC_SCO_SG_U, Build {
+    protected static class Builder implements TeacherState_HR_R_S_SG_U, TeacherState_HR_P_R_S_SG_U, TeacherState_HR_R_S_SC_SG_U, TeacherState_HR_P_R_S_SC_SG_U, TeacherState_C_CC_HR_P_R_S_SC_SG_U, TeacherState_C_CC_HR_P_R_S_SC_SCO_SG_U, Build {
 
         private TeacherDomainAuthorizer instance = new TeacherDomainAuthorizer();
 
         public Builder() throws Dwo2Exception {
         }
 
-       public Builder(SchoolAdminTeacherDomainAuthorizer auth) throws Dwo2Exception {
+        public Builder(SchoolAdminTeacherDomainAuthorizer auth) throws Dwo2Exception {
             instance = new TeacherDomainAuthorizer(auth);
-        }        
+        }
+
         /**
          * Verifies the existence of the schoolClass for the data in the context
          * and adds it and the school to the context.
@@ -229,7 +241,7 @@ public class TeacherDomainAuthorizer extends SchoolAdminTeacherDomainAuthorizer 
          * @throws Dwo2Exception
          */
         @Override
-        public TeacherState_HR_R_S_SC_SG_U addSchoolClass(DomSchoolClass s) throws Dwo2Exception {
+        public TeacherState_HR_P_R_S_SC_SG_U addSchoolClass(DomSchoolClass s) throws Dwo2Exception {
             //fetch school
             PersistentSchool school = HasRoleUtilManager.getSchoolforHasRole(this.instance.context.hasRole);
             if (school == null) {
@@ -289,7 +301,7 @@ public class TeacherDomainAuthorizer extends SchoolAdminTeacherDomainAuthorizer 
          * @throws Dwo2Exception
          */
         @Override
-        public TeacherState_HR_P_R_S_SC_SG_U addProfile(DomDwoProfile p) throws Dwo2Exception {
+        public TeacherState_HR_P_R_S_SG_U addProfile(DomDwoProfile p) throws Dwo2Exception {
             //fetch profile
             Long profileId = MySQLPersistenceId.getNativeId(p);
             PersistentDwoProfile profile = DwoProfileManager.findEntity(profileId);
@@ -473,7 +485,7 @@ public class TeacherDomainAuthorizer extends SchoolAdminTeacherDomainAuthorizer 
         public PersistentDwoProfile getDwoProfile() {
             return instance.context.profile;
         }
-        
+
         @Override
         public TeacherState_HR_R_S_SG_U setTeacher() throws Dwo2Exception {
             if (instance.context.roleType == RoleType.TEACHER) {
@@ -481,7 +493,28 @@ public class TeacherDomainAuthorizer extends SchoolAdminTeacherDomainAuthorizer 
             } else {
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Not a teacher");
             }
-        }        
+        }
 
+        @Override
+        public List<PersistentStudentModelContext> getStudentModels() throws Dwo2Exception {
+            return StudentModelManager.findEntities(instance.context.school);
+        }
+
+        @Override
+        public PersistentStudentModelContext addStudentModel(PersistentStudentModelContext model) throws Dwo2Exception {
+            try {
+                if (model.getSchoolID().longValue() == instance.context.school.getSchoolID().longValue()) {
+                    return StudentModelManager.create(model);
+                } else {
+                    String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: wrong school set.", new Object[]{instance.context.user.getUsername()});
+                    LOG.log(Level.WARNING, msg);
+                    throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
+                }
+            } catch (Exception e) {
+                String msg = MessageFormat.format("Username {0}: Internal error: {1}", new Object[]{instance.context.user.getUsername(), e.getMessage()});
+                LOG.log(Level.WARNING, msg, e);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
+            }
+        }
     }
 }
