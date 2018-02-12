@@ -34,7 +34,7 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
 
     private static final Logger LOG = Logger.getLogger(UserDomainAuthorizer.class.getName());
 
-    protected UserPersistentContext context;
+    protected UserPersistentContext userCtx;
     private UserActions userActions;
 
     protected class UserPersistentContext extends AnonPersistentContext {
@@ -44,17 +44,87 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
         protected RoleType roleType;
         protected PersistentSchool school;
         protected PersistentSchoolGroup schoolGroup;
+
+        /**
+         * @return the user
+         */
+        public PersistentUser getUser() {
+            return user;
+        }
+
+        /**
+         * @param user the user to set
+         */
+        public void setUser(PersistentUser user) {
+            this.user = user;
+        }
+
+        /**
+         * @return the hasRole
+         */
+        public PersistentHasRole getHasRole() {
+            return hasRole;
+        }
+
+        /**
+         * @param hasRole the hasRole to set
+         */
+        public void setHasRole(PersistentHasRole hasRole) {
+            this.hasRole = hasRole;
+        }
+
+        /**
+         * @return the roleType
+         */
+        public RoleType getRoleType() {
+            return roleType;
+        }
+
+        /**
+         * @param roleType the roleType to set
+         */
+        public void setRoleType(RoleType roleType) {
+            this.roleType = roleType;
+        }
+
+        /**
+         * @return the school
+         */
+        public PersistentSchool getSchool() {
+            return school;
+        }
+
+        /**
+         * @param school the school to set
+         */
+        public void setSchool(PersistentSchool school) {
+            this.school = school;
+        }
+
+        /**
+         * @return the schoolGroup
+         */
+        public PersistentSchoolGroup getSchoolGroup() {
+            return schoolGroup;
+        }
+
+        /**
+         * @param schoolGroup the schoolGroup to set
+         */
+        public void setSchoolGroup(PersistentSchoolGroup schoolGroup) {
+            this.schoolGroup = schoolGroup;
+        }
     }
 
     protected UserDomainAuthorizer() {
         super();
-        context = new UserPersistentContext();
+        userCtx = new UserPersistentContext();
         userActions = new MySQLUserActions();
     }
 
     protected UserDomainAuthorizer(AnonDomainAuthorizer anon) {
         super();
-        context = new UserPersistentContext();
+        userCtx = new UserPersistentContext();
         userActions = new MySQLUserActions();
     }
 
@@ -122,19 +192,19 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
 
         private UserDomainAuthorizer instance = new UserDomainAuthorizer();
 
-        public Builder(AnonDomainAuthorizer auth) throws Dwo2Exception {
+        private Builder(AnonDomainAuthorizer auth) throws Dwo2Exception {
         }
 
         /**
-         * Verifies and stores the PersistentUser into the context.
+         * Verifies and stores the PersistentUser into the userCtx.
          *
          * @param username
          * @return
          * @throws Dwo2Exception
          */
         UserState_U setUser(String username) throws Dwo2Exception {
-            this.instance.context.user = UserManager.findByUserName(username);
-            if (instance.context.user == null) {
+            this.instance.userCtx.setUser(UserManager.findByUserName(username));
+            if (instance.userCtx.getUser() == null) {
                 LOG.log(Level.WARNING, "Username {0}: Internal error user does not exist.", new Object[]{username});
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Internal error user does not exist.");
             }
@@ -143,7 +213,7 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
 
         /**
          * Verifies the existence of the default hasRole in the PersistentUser
-         * and sets it as the active hasRole into the context.
+ and sets it as the active hasRole into the userCtx.
          *
          * @param hr
          * @param r
@@ -157,8 +227,8 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
             //determine default hasRole.
             PersistentHasRolePK phrPK;
             phrPK = new PersistentHasRolePK(
-                    this.instance.context.user.getId(),
-                    this.instance.context.user.getPersistentSchoolGroup().getSchoolGroupID()
+                    this.instance.userCtx.getUser().getId(),
+                    this.instance.userCtx.getUser().getPersistentSchoolGroup().getSchoolGroupID()
             );
 
             return setHasRole(phrPK);
@@ -166,7 +236,7 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
 
         /**
          * Verifies the existence of the hasRole in the PersistentUser and sets
-         * it as the active hasRole into the context.
+ it as the active hasRole into the userCtx.
          *
          * @param hr
          * @param r
@@ -181,7 +251,7 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
 
         /**
          * Verifies the existence of the hasRole in the PersistentUser and sets
-         * it as the active hasRole into the context.
+ it as the active hasRole into the userCtx.
          *
          * @param hr
          * @param r
@@ -193,18 +263,18 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
             phr = HasRoleManager.findEntity(phrPK);
             if (phr == null) {
                 String msg = MessageFormat.format("Hasrole {1} for userlogin {0} could not be found.",
-                        new Object[]{instance.context.user.getUsername(), this.instance.context.hasRole.getPersistentHasRolePK()});
+                        new Object[]{instance.userCtx.getUser().getUsername(), this.instance.userCtx.getHasRole().getPersistentHasRolePK()});
                 LOG.log(Level.SEVERE, msg);
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
             }
-            this.instance.context.hasRole = phr;
-            instance.context.roleType = RoleType.values()[phr.getSchoolGroup().getRole().getGroupID().intValue()];
+            this.instance.userCtx.setHasRole(phr);
+            instance.userCtx.setRoleType(RoleType.values()[phr.getSchoolGroup().getRole().getGroupID().intValue()]);
             return this;
         }
 
         /**
          * Verifies the existence of the hasRole for the given RoleType and
-         * stores it and the RoleType into the context.
+ stores it and the RoleType into the userCtx.
          *
          * @param hr
          * @param r
@@ -221,7 +291,7 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
 
         /**
          * Verifies the existence of the hasRole for the given RoleType and
-         * stores it and the RoleType into the context.
+ stores it and the RoleType into the userCtx.
          *
          * @param phrPK
          * @param r
@@ -234,7 +304,7 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
             phr = HasRoleManager.findEntity(phrPK);
             if (phr == null) {
                 String msg = MessageFormat.format("Hasrole {1} for userlogin {0} could not be found.",
-                        new Object[]{instance.context.user.getUsername(), this.instance.context.hasRole.getPersistentHasRolePK()});
+                        new Object[]{instance.userCtx.getUser().getUsername(), this.instance.userCtx.getHasRole().getPersistentHasRolePK()});
                 LOG.log(Level.SEVERE, msg);
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
             }
@@ -243,15 +313,15 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
                 roleId = phr.getSchoolGroup().getRole().getGroupID();
             } catch (Exception e) {
                 LOG.log(Level.SEVERE, "RoleId of hasRole {1} for userlogin {0} could not be found.",
-                        new Object[]{instance.context.user.getUsername(), this.instance.context.hasRole.getPersistentHasRolePK()});
+                        new Object[]{instance.userCtx.getUser().getUsername(), this.instance.userCtx.getHasRole().getPersistentHasRolePK()});
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Current Role could not be found.");
             }
             if (roleId.intValue() == r.ordinal()) {
-                this.instance.context.hasRole = phr;
-                this.instance.context.roleType = r;
+                this.instance.userCtx.setHasRole(phr);
+                this.instance.userCtx.setRoleType(r);
                 return this;
             } else {
-                String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Trying to access non-existing role by user with usercode {0}.", new Object[]{instance.context.user.getUsername()});
+                String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Trying to access non-existing role by user with usercode {0}.", new Object[]{instance.userCtx.getUser().getUsername()});
                 LOG.log(Level.WARNING, msg);
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, msg);
             }
@@ -259,35 +329,35 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
 
         @Override
         public PersistentUser getUser() {
-            return instance.context.user;
+            return instance.userCtx.getUser();
         }
 
         @Override
         public PersistentHasRole getHasRole() {
-            return instance.context.hasRole;
+            return instance.userCtx.getHasRole();
         }
 
         @Override
         public PersistentSchool getSchool() {
-            return instance.context.school;
+            return instance.userCtx.getSchool();
         }
 
         @Override
         public PersistentSchoolGroup getSchoolGroup() {
-            return instance.context.schoolGroup;
+            return instance.userCtx.getSchoolGroup();
         }
 
         @Override
         public RoleType getRoleType() {
-            return instance.context.roleType;
+            return instance.userCtx.getRoleType();
         }
 
         @Override
         public DomUserFull UpdateAccount(DomUserFull user) throws Dwo2Exception {
-            if (user.getUserName().matches(instance.context.user.getUsername())) {
-                return instance.userActions.UpdateAccount(instance.context.user, user).buildDomUserFull();
+            if (user.getUserName().matches(instance.userCtx.getUser().getUsername())) {
+                return instance.userActions.UpdateAccount(instance.userCtx.getUser(), user).buildDomUserFull();
             } else {
-                String msg = MessageFormat.format("Trying to change the usercode from {0} to {1}", new Object[]{instance.context.user.getUsername(), user.getUserName()});
+                String msg = MessageFormat.format("Trying to change the usercode from {0} to {1}", new Object[]{instance.userCtx.getUser().getUsername(), user.getUserName()});
                 LOG.log(Level.WARNING, msg);
                 throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
             }

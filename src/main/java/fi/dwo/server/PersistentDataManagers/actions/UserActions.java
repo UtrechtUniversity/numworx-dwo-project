@@ -12,6 +12,6 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  * 
  * @author Gert van der Plas
  */
-public interface UserActions {
+public interface UserActions extends AnonActions{
     PersistentUser UpdateAccount(PersistentUser pUser, DomUserFull dUser) throws Dwo2Exception;
 }

@@ -22,7 +22,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 public class SchoolAdminTeacherDomainAuthorizer extends UserDomainAuthorizer {
 
     private static final Logger LOG = Logger.getLogger(SchoolAdminTeacherDomainAuthorizer.class.getName());
-    protected SchoolAdminTeacherPersistentContext context;
+    protected SchoolAdminTeacherPersistentContext schoolAdminTeacherCtx;
     //private SchoolAdminTeacherActions schoolAdminTeacherActions;
 
     public class SchoolAdminTeacherPersistentContext extends UserPersistentContext {
@@ -51,7 +51,7 @@ public class SchoolAdminTeacherDomainAuthorizer extends UserDomainAuthorizer {
 
     protected SchoolAdminTeacherDomainAuthorizer(UserDomainAuthorizer userAuth) {
         super();
-        context = new SchoolAdminTeacherPersistentContext(userAuth.context);
+        schoolAdminTeacherCtx = new SchoolAdminTeacherPersistentContext(userAuth.userCtx);
         //schoolAdminTeacherActions = new SchoolAdminTeacherActions();
     }
 
@@ -79,32 +79,32 @@ public class SchoolAdminTeacherDomainAuthorizer extends UserDomainAuthorizer {
 
         @Override
         public PersistentUser getUser() {
-            return instance.context.user;
+            return instance.schoolAdminTeacherCtx.user;
         }
 
         @Override
         public PersistentHasRole getHasRole() {
-            return instance.context.hasRole;
+            return instance.schoolAdminTeacherCtx.hasRole;
         }
 
         @Override
         public PersistentSchool getSchool() {
-            return instance.context.school;
+            return instance.schoolAdminTeacherCtx.school;
         }
 
         @Override
         public PersistentSchoolGroup getSchoolGroup() {
-            return instance.context.schoolGroup;
+            return instance.schoolAdminTeacherCtx.schoolGroup;
         }
 
         @Override
         public RoleType getRoleType() {
-            return instance.context.roleType;
+            return instance.schoolAdminTeacherCtx.roleType;
         }
 
         @Override
         public SchoolAdminTeacherState_HR_R_S_SG_U setSchoolAdminTeacher() throws Dwo2Exception {
-            if (instance.context.roleType == RoleType.SCHOOLADMIN || instance.context.roleType == RoleType.TEACHER) {
+            if (instance.schoolAdminTeacherCtx.roleType == RoleType.SCHOOLADMIN || instance.schoolAdminTeacherCtx.roleType == RoleType.TEACHER) {
                 return this;
             } else {
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Not a schooladmin or teacher");

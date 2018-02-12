@@ -11,8 +11,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
-import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
@@ -35,41 +36,24 @@ public class SecuredTeacherStudentModelManager {
      * Returns the list of student models in the school.
      *
      * @param sc
-     * @param restProfile
+     * @param context
      * @return
      */
     @GET
     @Produces({"application/json"})
     @Path("/getList")
-    public List<DomStudentModelStructure> getStudentModels(@Context SecurityContext sc, RestDwoProfile restProfile) {
+    public List<DomStudentModelContext> getStudentModels(@Context SecurityContext sc, RestContext context) {
         try {
             TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().setUser(sc.getUserPrincipal().getName())
-                    .setHasRole(restProfile.getRestContext().getDomHasRole())
-                    //.setDefaultHasRole()
+                    .setHasRole(context.getRestContext().getDomHasRole())
                     .setSchoolAdminTeacher()
                     .setTeacher();
-            //.addProfile(rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile())
-            //return build.getStudentModels();
-            return null;
+            return build.getStudentModels();
+            //return null;
         } catch (Dwo2Exception e) {
             throw new Dwo2RestException(e);
         }
     }
-//    
-//    
-//    /**
-//     * Returns the list of student models in the school.
-//     *
-//     * @param sc
-//     * @return
-//     */
-//    @GET
-//    @Produces({"application/json"})
-//    @Path("/get")
-//    public DomStudentModelContext get(@Context SecurityContext sc, DomStudentModelId modelId) {
-//
-//    }
-//
 
     /**
      * Returns the school data to be displayed.
@@ -81,15 +65,15 @@ public class SecuredTeacherStudentModelManager {
     @PUT
     @Produces({"application/json"})
     @Path("/add")
-    public DomStudentModelStructure add(@Context SecurityContext sc, RestStudentModelContext model) {
+    public DomStudentModelContext addStudentModel(@Context SecurityContext sc, RestStudentModelContext model) {
         try {
             TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().setUser(sc.getUserPrincipal().getName())
                     .setHasRole(model.getRestContext().getDomHasRole())
                     //.setDefaultHasRole()
                     .setSchoolAdminTeacher()
                     .setTeacher();
-            //return build.addModel(model);
-            return null;
+            return build.addStudentModel(model.getDomStudentModelContext());
+            
         } catch (Dwo2Exception e) {
             throw new Dwo2RestException(e);
         }

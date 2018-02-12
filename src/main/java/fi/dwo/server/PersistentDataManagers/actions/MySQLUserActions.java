@@ -14,7 +14,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
  *
  * @author Gert van der Plas
  */
-public class MySQLUserActions implements UserActions {
+public class MySQLUserActions extends MySQLAnonActions implements UserActions {
 
     @Override
     public PersistentUser UpdateAccount(PersistentUser pUser, DomUserFull dUser) throws Dwo2Exception {
