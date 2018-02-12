@@ -3,9 +3,10 @@
  */
 package fi.dwo.commons.persistence.entities;
 
+import com.owlike.genson.Genson;
+import com.owlike.genson.GensonBuilder;
 import fi.dwo.commons.persistence.JpaEclipseConverter4JsonObject;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,12 +16,15 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.Converter;
 import org.json.simple.JSONObject;
@@ -161,5 +165,45 @@ public class PersistentStudentModelContext implements Serializable {
      */
     public void setPublishState(PublishState publishState) {
         this.publishState = publishState;
+    }
+
+    /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(modelID);
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aModelId
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long aModelId) {
+    	if(aModelId == null) return null;
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentStudentModelContext.name(), aModelId));
+        return id;
+    }
+    
+    public DomStudentModelContext buildDomStudentModelContext(){
+        DomStudentModelContext ctx = new DomStudentModelContext();
+        fillDomStudentModelContext(ctx);
+        return ctx;
+    }
+    
+    public void fillDomStudentModelContext(DomStudentModelContext context){
+        context.setId(buildPersistenceId(modelID));
+        Genson genson = new GensonBuilder().withConverters(new GensonMapConverter()).create();
+            String jsonModel = genson.serialize(modelStructure);
+            System.out.println(jsonModel);
+
+        //do genson magic.        
+        DomStudentModelStructure model = genson.deserialize(modelStructure.toJSONString(), DomStudentModelStructure.class);
+        context.setModelStructure(model);
     }
 }
