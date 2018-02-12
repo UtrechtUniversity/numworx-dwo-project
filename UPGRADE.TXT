@@ -1,4 +1,16 @@
 
+=== backup issues MySQL 5.7 == 
+
+Starting MySQL 5.7 there are changes in tghe mysqldump setup.  For dumps with 
+default settings the max_allowed_packet must be set to the maximal value of 
+1073741824 for both the client and the mysql-server. If the server is properly 
+configured, import can be done using:
+
+cmd> mysql --max_allowed_packet=1073741824 -u root -p <dwo2db-20180109-productie.sql
+
+When an export has been done with the --skip-extended-insert a normal import
+could be done depending on the row-sizes of the table. 
+
 Upgrading from DWOServer 2.1.20 to DWOServer 2.1.21
 
 === FROM DWO2DB 1.4.1 to 1.5.0 ===
