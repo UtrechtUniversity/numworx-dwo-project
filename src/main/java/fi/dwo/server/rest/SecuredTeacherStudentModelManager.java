@@ -11,7 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -41,7 +41,7 @@ public class SecuredTeacherStudentModelManager {
     @GET
     @Produces({"application/json"})
     @Path("/getList")
-    public List<DomStudentModelContext> getStudentModels(@Context SecurityContext sc, RestDwoProfile restProfile) {
+    public List<DomStudentModelStructure> getStudentModels(@Context SecurityContext sc, RestDwoProfile restProfile) {
         try {
             TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().setUser(sc.getUserPrincipal().getName())
                     .setHasRole(restProfile.getRestContext().getDomHasRole())
@@ -81,7 +81,7 @@ public class SecuredTeacherStudentModelManager {
     @PUT
     @Produces({"application/json"})
     @Path("/add")
-    public DomStudentModelContext add(@Context SecurityContext sc, RestStudentModelContext model) {
+    public DomStudentModelStructure add(@Context SecurityContext sc, RestStudentModelContext model) {
         try {
             TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().setUser(sc.getUserPrincipal().getName())
                     .setHasRole(model.getRestContext().getDomHasRole())
