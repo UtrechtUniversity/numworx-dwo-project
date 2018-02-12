@@ -18,29 +18,6 @@ import org.json.simple.parser.ParseException;
  */
 public class JpaEclipseConverter4JsonObject implements Converter {
 
-//
-//  private final static JsonConverter objectMapper = new JsonConverter();
-//
-//  @Override
-//  public String convertToDatabaseColumn(Object meta) {
-//    try {
-//      return objectMapper..writeValueAsString(meta);
-//    } catch (JsonProcessingException ex) {
-//      return null;
-//      // or throw an error
-//    }
-//  }
-//
-//  @Override
-//  public Object convertToEntityAttribute(String dbData) {
-//    try {
-//      return objectMapper.readValue(dbData, Object.class);
-//    } catch (IOException ex) {
-//      // logger.error("Unexpected IOEx decoding json from database: " + dbData);
-//      return null;
-//    }
-//  }
-
     @Override
     public Object convertObjectValueToDataValue(Object objectValue, Session session) {
         return ((JSONObject) objectValue).toJSONString();        

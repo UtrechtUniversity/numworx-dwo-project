@@ -5,7 +5,7 @@ package fi.dwo.commons.persistence.entities;
 
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
-import fi.dwo.commons.persistence.JpaEclipseConverter4JsonObject;
+import fi.dwo.commons.persistence.JpaEclipseConverterDomStudentModelStructure;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -47,7 +47,7 @@ import org.json.simple.JSONObject;
 //  UNIQUE INDEX `schoolID_UNIQUE` (`schoolID` ASC));
 @Entity
 @Table(name = "tblStudentModelContext", schema = "")
-@Converter(name = "jsonObjectConverter", converterClass = JpaEclipseConverter4JsonObject.class)
+@Converter(name = "studentModelStructureConverter", converterClass = JpaEclipseConverterDomStudentModelStructure.class)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PersistentStudentModelContext.findBySchoolID", query = "SELECT p FROM PersistentStudentModelContext p WHERE p.schoolID = :schoolID")})
@@ -72,8 +72,8 @@ public class PersistentStudentModelContext implements Serializable {
 //    private JSONObject description;
     @NotNull
     @Column(name = "model", nullable = false)
-    @Convert("jsonObjectConverter")
-    private JSONObject modelStructure;
+    @Convert("studentModelStructureConverter")
+    private DomStudentModelStructure modelStructure;
     @Column(name = "optlock")
     @Version
     private int optlock;
@@ -114,14 +114,14 @@ public class PersistentStudentModelContext implements Serializable {
     /**
      * @return the modelStructure
      */
-    public JSONObject getModelStructure() {
+    public DomStudentModelStructure getModelStructure() {
         return modelStructure;
     }
 
     /**
      * @param modelStructure the modelStructure to set
      */
-    public void setModelStructure(JSONObject modelStructure) {
+    public void setModelStructure(DomStudentModelStructure modelStructure) {
         this.modelStructure = modelStructure;
     }
 
@@ -198,12 +198,13 @@ public class PersistentStudentModelContext implements Serializable {
     
     public void fillDomStudentModelContext(DomStudentModelContext context){
         context.setId(buildPersistenceId(modelID));
-        Genson genson = new GensonBuilder().withConverters(new GensonMapConverter()).create();
-            String jsonModel = genson.serialize(modelStructure);
-            System.out.println(jsonModel);
+//        Genson genson = new GensonBuilder().withConverters(new GensonMapConverter()).create();
+//            String jsonModel = genson.serialize(modelStructure);
+//            System.out.println(jsonModel);
 
         //do genson magic.        
-        DomStudentModelStructure model = genson.deserialize(modelStructure.toJSONString(), DomStudentModelStructure.class);
-        context.setModelStructure(model);
+        //DomStudentModelStructure model = genson.deserialize(modelStructure.toJSONString(), DomStudentModelStructure.class);
+        //context.setModelStructure(model);
+        context.setModelStructure(modelStructure);
     }
 }
