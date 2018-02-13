@@ -261,12 +261,16 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
             PersistentHasRole phr = null;
             //determine default hasRole.
             phr = HasRoleManager.findEntity(phrPK);
-            if (phr == null) {
+            if (phr == null
+                    || phr.getUser().getId().longValue()!=instance.userCtx.user.getId().longValue() //users is valid
+                    || phr.getSchoolGroup().getSchoolGroupID().longValue()!=phrPK.getSchoolGroupID().longValue()  //requested hasRole exists                   
+                    ) {
                 String msg = MessageFormat.format("Hasrole {1} for userlogin {0} could not be found.",
                         new Object[]{instance.userCtx.getUser().getUsername(), this.instance.userCtx.getHasRole().getPersistentHasRolePK()});
                 LOG.log(Level.SEVERE, msg);
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
             }
+            instance.userCtx.school=phr.getSchoolGroup().getSchool();
             this.instance.userCtx.setHasRole(phr);
             instance.userCtx.setRoleType(RoleType.values()[phr.getSchoolGroup().getRole().getGroupID().intValue()]);
             return this;
