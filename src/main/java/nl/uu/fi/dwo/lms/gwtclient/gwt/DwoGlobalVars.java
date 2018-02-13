@@ -230,7 +230,7 @@ public class DwoGlobalVars {
             public Promise<DwoGlobalVarsState> call(Promise<DomUserFullwLoginContext> resolved) throws Exception {
                 LOG.log(Level.INFO, "Login completed setting current user.");
             GwtRestVars.getInstance().setCurrentUser(userwLoginContext.getValue().getDomUserFull());
-
+                 currentLoginContext = userwLoginContext.getValue().getDomLoginContext();
                 initUser(resolved.getValue().getDomUserFull());
                 state = DwoGlobalVarsState.LoggedIn;
                 LOG.log(Level.INFO, "state=LoggedIn. Calling statePromise.getPromise.");
