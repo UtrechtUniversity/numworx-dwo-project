@@ -2379,6 +2379,8 @@ private Object deGreek(String value) {
 		.replace("t$sc*r*i*t@", "tcrit")
 		.replace("r$sc*r*i*t@", "rcrit")
 		.replace("F$sc*r*i*t@", "Fcrit")
+		.replace("$pX$n2@@$sc*r*i*t@", "chicrit")//TO DO: invullen (X^2_crit) -- checken of zo goed geschreven
+		.replace("$pX$n2@@", "chisq")
 		.replace("$sA@", "1")
 		.replace("$sB@", "2")
 		.replace("$s1@", "1")
