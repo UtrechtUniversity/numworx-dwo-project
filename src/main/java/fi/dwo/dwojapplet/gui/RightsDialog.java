@@ -140,6 +140,7 @@ public class RightsDialog extends JDialog implements ActionListener {
         this.school = school;
         theList = SecureDwoAdminSchoolManager.getTeachersAndHasRoleInSchool(school);
         model.setRowCount(theList.size());
+        //#LMS-165  insert role into school
         for (int i = 0; i < theList.size(); i++) {
             model.setValueAt(theList.get(i).getTeacher().getDisplayName()
                     + " (" + theList.get(i).getTeacher().getUserName() + ")", i, 0);
