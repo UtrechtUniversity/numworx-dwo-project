@@ -74,12 +74,14 @@ public class TeacherDomainAuthorizer extends SchoolAdminTeacherDomainAuthorizer 
         }
 
         public TeacherPersistentContext(SchoolAdminTeacherPersistentContext ctx) {
-            super();
-            this.hasRole = ctx.hasRole;
-            this.roleType = ctx.roleType;
-            this.school = ctx.school;
-            this.schoolGroup = ctx.schoolGroup;
-            this.user = ctx.user;
+// set
+//            this.hasRole = ctx.hasRole;
+//            this.roleType = ctx.roleType;
+//            this.school = ctx.school;
+//            this.schoolGroup = ctx.schoolGroup;
+//            this.user = ctx.user;
+            super(ctx);
+// only set new parameters in SchoolAdminTeacherPersistentContext
         }
 
         protected PersistentSchoolClass schoolClass;
