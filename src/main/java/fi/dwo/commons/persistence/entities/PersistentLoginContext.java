@@ -50,22 +50,18 @@ public class PersistentLoginContext implements Serializable {
     @Column(name = "schoolGroupID", nullable = false)
     private Long schoolGroupID;
     @Basic(optional = false)
+    @Column(name = "courseID", nullable = true)
+    protected Long courseID;
+    @Basic(optional = false)
+    @Column(name = "secretKey", nullable = true)
+    protected byte[] secretKey;
+    @Basic(optional = false)
     @Column(name = "registerTimeStamp", nullable = true)
-//    @Temporal(TemporalType.DATE)
     private Long registerTimeStamp;
     @Basic(optional = false)
     @Column(name = "lastLoginTimeStamp", nullable = true)
-//    @Temporal(TemporalType.DATE)
     private Long lastLoginTimeStamp;
-//CREATE TABLE `tbllogincontext` (
-//  `loginid` int(11) NOT NULL AUTO_INCREMENT,
-//  `userID` int(11) NOT NULL,
-//  `registerTimeStamp` bigint(20) DEFAULT NULL,
-//  `lastLoginTimeStamp` bigint(20) DEFAULT NULL,
-//  PRIMARY KEY (`loginID`),
-//  UNIQUE KEY `AK_ID_LOGIN_USER`  (`userID`),
-//  `AK_ID_LOGIN_TIMESTAMP` (`lastLoginTimeStamp`)
-//) ENGINE=InnoDB DEFAULT CHARSET=latin1
+    
 
     /**
      * @return the id
@@ -175,5 +171,33 @@ public class PersistentLoginContext implements Serializable {
      */
     public void setSchoolGroupId(Long schoolGroupID) {
         this.schoolGroupID = schoolGroupID;
+    }
+
+    /**
+     * @return the courseID
+     */
+    public Long getCourseID() {
+        return courseID;
+    }
+
+    /**
+     * @param courseID the courseID to set
+     */
+    public void setCourseID(Long courseID) {
+        this.courseID = courseID;
+    }
+
+    /**
+     * @return the secretKey
+     */
+    public byte[] getSecretKey() {
+        return secretKey;
+    }
+
+    /**
+     * @param secretKey the secretKey to set
+     */
+    public void setSecretKey(byte[] secretKey) {
+        this.secretKey = secretKey;
     }
 }

@@ -2,7 +2,6 @@
 package fi.dwo.commons.persistence.entities;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import java.io.Serializable;
 import java.util.Date;
@@ -59,10 +58,10 @@ public class PersistentHasRole implements Serializable {
     @Column(name = "lastLogin")
     @Temporal(TemporalType.DATE)
     private Date lastLogin;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "schoolGroupID", insertable = false, updatable = false)
     private PersistentSchoolGroup schoolGroup;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userID", insertable = false, updatable = false)
     private PersistentUser user;
 

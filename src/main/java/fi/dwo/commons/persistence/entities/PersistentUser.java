@@ -96,7 +96,7 @@ public class PersistentUser implements Serializable {
     private Date lastLogin;
 //    @OneToMany(mappedBy = "schoolGroupID")
 //    private List<PersistentSchoolGroup> schoolGroups;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn(name = "schoolGroupID")
     private PersistentSchoolGroup schoolGroup;
     @Basic(optional = false)

@@ -50,14 +50,14 @@ public class PersistentSchoolGroup implements Serializable {
     @NotNull
     @Column(name = "groupID", nullable = false)
     private int groupID;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn(name = "groupID")
     private PersistentRole role;
     @Basic(optional = false)
     @NotNull
     @Column(name = "schoolID", nullable = false)
     private int schoolID;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn(name = "schoolID")
     private PersistentSchool school;
     @Basic(optional = false)
