@@ -3,8 +3,6 @@
  */
 package fi.dwo.commons.persistence.entities;
 
-import com.owlike.genson.Genson;
-import com.owlike.genson.GensonBuilder;
 import fi.dwo.commons.persistence.JpaEclipseConverterDomStudentModelStructure;
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -21,13 +19,11 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
-import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.Converter;
-import org.json.simple.JSONObject;
 
 /**
  * <p>
