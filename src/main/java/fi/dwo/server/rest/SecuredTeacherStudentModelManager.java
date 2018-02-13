@@ -12,7 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -27,7 +26,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
  * @author G.A.J. van der Plas
  */
 @PermitAll
-@Path("/secure/teacher/schoolclass")
+@Path("/secure/teacher/studentmodel")
 public class SecuredTeacherStudentModelManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredTeacherStudentModelManager.class.getName());
