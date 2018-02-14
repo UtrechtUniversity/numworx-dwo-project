@@ -12,10 +12,8 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
-import fi.dwo.commons.persistence.entities.PersistentCourseSequence;
 import fi.dwo.commons.persistence.entities.PersistentFromTo;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
-import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -444,7 +442,7 @@ public class SecuredDwoAdminSchoolManager {
             throw new Dwo2RestException(ex);
         }
         school = SchoolManager.findBySchoolLogin(restSchool.getDomSchool4DwoAdmin().getSchoolLogin());
-        if (school == null) {
+        if (phr!=null || school == null) {
             LOG.log(Level.SEVERE, "School with login {0} was not found.", restSchool.getDomSchool4DwoAdmin().getSchoolLogin());
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "School not found.");
         }
