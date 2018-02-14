@@ -69,6 +69,7 @@ public class LoginContextUtilManager {
                 case 0:
                     //none yet
                     loginContext.setUserId(user.getId());
+                    ThreadLocalRandom.current().nextBytes(bytes);
                     loginContext.setSecretKey(bytes);
                     loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
                     loginContext.setRegisterTimeStamp(user.getRegisterDate().getTime());
