@@ -17,6 +17,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.xml.bind.DatatypeConverter;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -136,7 +137,10 @@ public class PersistentLoginContext implements Serializable {
         loginContext.setLastLoginTimeStamp(lastLoginTimeStamp);
         loginContext.setRegisterTimeStamp(registerTimeStamp);
         loginContext.setUserId(PersistentUser.buildPersistenceId(userID));
-        loginContext.setSecretKey(Base64.getEncoder().encodeToString(secretKey));
+        //Use hex-encoding for compatibility with software TOTP-generators
+        String encoded = DatatypeConverter.printHexBinary(secretKey);
+        //decode with         byte result[] = DatatypeConverter.parseHexBinary(encoded);
+        loginContext.setSecretKey(encoded);    
     }
 
     /**
