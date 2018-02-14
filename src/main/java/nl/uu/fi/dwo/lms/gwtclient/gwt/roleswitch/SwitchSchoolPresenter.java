@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
-import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter.licenseIsValid;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -150,7 +149,7 @@ public class SwitchSchoolPresenter {
         promise.then(new Success<DomSchoolRoleAndClassV2, Void>() {
             @Override
             public Promise<Void> call(Promise<DomSchoolRoleAndClassV2> resolved) throws Exception {
-                if (!licenseIsValid(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool())) {
+                if (!dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
                     eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
                 };
 

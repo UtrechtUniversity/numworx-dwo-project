@@ -114,7 +114,7 @@ public class LoginPresenter {
                 @Override
                 public Promise<Void> call(Promise<DwoGlobalVars.DwoGlobalVarsState> resolved) throws Exception {
                     if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
-                        if (!licenseIsValid(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool())) {
+                        if (!dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
                             eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
                         };
                         boolean switchR = true;
