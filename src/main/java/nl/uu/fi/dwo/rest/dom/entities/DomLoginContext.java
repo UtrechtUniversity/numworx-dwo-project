@@ -3,6 +3,7 @@
  */
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.beans.Transient;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -19,6 +20,7 @@ public class DomLoginContext {
     private PersistenceId schoolGroupId;
     private Long registerTimeStamp;
     private Long lastLoginTimeStamp;
+    private String secretKey;
 
     /**
      * @return the lastLoginTimeStamp
@@ -89,5 +91,29 @@ public class DomLoginContext {
     public void setSchoolGroupId(PersistenceId schoolGroupId) {
         this.schoolGroupId = schoolGroupId;
     }
+
+    /**
+     * @return the secretKey
+     */
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    /**
+     * @param secretKey the secretKey to set
+     */
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+    }
+
+
+    @Transient
+    public String generateTOTP(){
+        return "";
+    }
     
+    @Transient
+    public boolean verifyTOTP(){
+        return false;
+    }    
 }
