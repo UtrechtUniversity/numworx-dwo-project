@@ -49,13 +49,4 @@ public class DomUserFullwLoginContext {
         this.domUserFull = domUserFull;
     }
     
-    @Transient
-    public void setValue(Boolean b){
-        
-    }
-    
-    @Transient
-    public Boolean getValue(){
-        return false;
-    }
 }
