@@ -6,6 +6,7 @@ package fi.dwo.commons.persistence.entities;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import java.io.Serializable;
+import java.util.Base64;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -135,6 +136,7 @@ public class PersistentLoginContext implements Serializable {
         loginContext.setLastLoginTimeStamp(lastLoginTimeStamp);
         loginContext.setRegisterTimeStamp(registerTimeStamp);
         loginContext.setUserId(PersistentUser.buildPersistenceId(userID));
+        loginContext.setSecretKey(Base64.getEncoder().encodeToString(secretKey));
     }
 
     /**
