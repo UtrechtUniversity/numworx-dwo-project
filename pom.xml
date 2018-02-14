@@ -366,6 +366,9 @@
                         <password>${tomcat.local.deploy.password}</password>
                         <url>${tomcat.local.deploy.url}</url>-->
                         <path>/dwo</path>
+                        <systemProperties>
+                            <java.util.secureRandomSeed>true</java.util.secureRandomSeed>
+                        </systemProperties>
                         <warFile>target/${project.artifactId}-${project.version}.war</warFile>
 <!--                         <contextFile>src/test/tomcat/context-dwo_devel.xml</contextFile> -->
                             <contextFile>src/test/tomcat/${context.xml}</contextFile>

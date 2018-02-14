@@ -45,6 +45,10 @@ way is to add them to the catalina.properties in the tomcat/conf directory.
 
 in case of a name clash they can be reconfigured by editing the META-INF/context.xml.
 
+For SecureRandomSeed being used for ThreadLocalRandom it is required to set the system-property
+
+    java.util.secureRandomSeed=true
+
 SMTP system properties must be configured for sending email. Again the catalina.properties
 are the recommended place.
    
