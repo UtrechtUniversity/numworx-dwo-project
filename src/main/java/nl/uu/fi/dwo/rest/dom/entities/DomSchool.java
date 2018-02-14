@@ -3,6 +3,7 @@
  */
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.beans.Transient;
 import java.util.Date;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -83,5 +84,16 @@ public class DomSchool {
     public void setExpire(Date expire) {
         this.expire = expire;
     }
+    
+    @Transient
+    public  boolean  licenseIsValid() {
+
+        if (this.getExpire() == null) {
+            return true;
+        } else {
+            Date now = new Date();
+            return now.before(this.getExpire());
+        }
+    }  
     
 }

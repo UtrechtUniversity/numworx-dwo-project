@@ -5,6 +5,7 @@
  */
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.beans.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -48,4 +49,13 @@ public class DomUserFullwLoginContext {
         this.domUserFull = domUserFull;
     }
     
+    @Transient
+    public void setValue(Boolean b){
+        
+    }
+    
+    @Transient
+    public Boolean getValue(){
+        return false;
+    }
 }
