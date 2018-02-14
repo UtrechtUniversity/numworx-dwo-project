@@ -393,7 +393,8 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         this.add(Box.createRigidArea(new Dimension(0, 10)));
         buildJTable();
         addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
-        addStudentsButton.setEnabled(licenseIsValid(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool()));
+        addStudentsButton.setEnabled(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid());
+//        addStudentsButton.setEnabled(licenseIsValid(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool()));
         addStudentsButton.setSize(addStudentsButton.getPreferredSize());
         addStudentsButton.addActionListener(this);
         Box footer = Box.createHorizontalBox();
@@ -405,21 +406,21 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         this.add(Box.createVerticalGlue());
     }
 
-    /**
-     * True if ValidLicense
-     * @param s
-     * @return 
-     */
-    //Should be in DomSchool
-    public static boolean licenseIsValid(DomSchool s) {
-
-        if (s.getExpire() == null) {
-            return true;
-        } else {
-            Date now = new Date();
-            return now.before(s.getExpire());
-        }
-    }    
+//    /**
+//     * True if ValidLicense
+//     * @param s
+//     * @return 
+//     */
+//    //Should be in DomSchool
+//    public static boolean licenseIsValid(DomSchool s) {
+//
+//        if (s.getExpire() == null) {
+//            return true;
+//        } else {
+//            Date now = new Date();
+//            return now.before(s.getExpire());
+//        }
+//    }    
     /**
      * Indicate that another panel is loaded and the connections of this panel
      * must be closed.

@@ -7,7 +7,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import static fi.dwo.dwojapplet.gui.StudentsInSchoolClassTeacherPanel.licenseIsValid;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -392,7 +391,8 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         addButton = new JButton(TextMapper.getText(TextMapper.BTN_CREATE_STUDENTACCOUNTS));        
         addButton.setSize(addButton.getPreferredSize());
         addButton.addActionListener(this);
-        addButton.setEnabled(licenseIsValid(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool()));
+        addButton.setEnabled(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid());
+//        addButton.setEnabled(licenseIsValid(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool()));
 //        if(userType != userType.TEACHER && DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getExpire()){
 //           // 
 //        }
