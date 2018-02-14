@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
@@ -63,10 +64,12 @@ public class LoginContextUtilManager {
         try {
             List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(user.getId());
             loginContext = new PersistentLoginContext();
+            byte bytes[] = new byte[8];
             switch (loginContextList.size()) {
                 case 0:
                     //none yet
                     loginContext.setUserId(user.getId());
+                    loginContext.setSecretKey(bytes);
                     loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
                     loginContext.setRegisterTimeStamp(user.getRegisterDate().getTime());
                     //loginContextList.add(loginContext);
@@ -97,11 +100,14 @@ public class LoginContextUtilManager {
         try {
             List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(user.getId());
             loginContext = new PersistentLoginContext();
+            byte bytes[] = new byte[8];
             switch (loginContextList.size()) {
                 case 0:
                     //none yet
                     loginContext.setUserId(user.getId());
                     loginContext.setSchoolGroupId(user.getSchoolGroupId());
+                    ThreadLocalRandom.current().nextBytes(bytes);
+                    loginContext.setSecretKey(bytes);
                     loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
                     loginContext.setRegisterTimeStamp(user.getRegisterDate().getTime());
                     //loginContextList.add(loginContext);
@@ -110,6 +116,8 @@ public class LoginContextUtilManager {
                 case 1:
                     //update if exists
                     loginContext = loginContextList.get(0);
+                    ThreadLocalRandom.current().nextBytes(bytes);
+                    loginContext.setSecretKey(bytes);
                     loginContext.setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
                     LoginContextManager.edit(loginContext);
                     break;
@@ -121,5 +129,5 @@ public class LoginContextUtilManager {
             throw ex;
         }
         return loginContext;
-    }    
+    }
 }
