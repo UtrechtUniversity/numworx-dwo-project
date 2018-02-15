@@ -4266,6 +4266,9 @@ private Object CamelCase(String name) {
 
 	// visible (default) or hidden.
 	private void setVisibility(boolean b) {
+		boolean visibilityChanged = false;
+		if(visible != b)
+			visibilityChanged = true;
 		visible = b;
 		Element elem = getAsPanel().getElement();
 		Style style = elem.getStyle();
@@ -4300,9 +4303,14 @@ private Object CamelCase(String name) {
 		{	style.setVisibility(Visibility.HIDDEN); 
 			setCurrentSize( 0, 0);
 		}
+		if(visibilityChanged)
+		{
+			//Objects may have to move to next TextRegel, so clear parent and setObjects again. 
+			parent.clear();
+			parent.setObjects(parent.getOpdrachtObjects()); 
+			parent.resize();
+		}
 		resize();
-//		if(parent!=null)
-//			parent.resize();
 	}
 	
 	
