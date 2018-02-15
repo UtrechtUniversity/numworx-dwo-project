@@ -138,7 +138,7 @@ public class PersistentLoginContext implements Serializable {
         loginContext.setRegisterTimeStamp(registerTimeStamp);
         loginContext.setUserId(PersistentUser.buildPersistenceId(userID));
         //Use hex-encoding for compatibility with software TOTP-generators
-        String encoded = DatatypeConverter.printHexBinary(secretKey);
+        String encoded = secretKey==null ? null : DatatypeConverter.printHexBinary(secretKey);
         //decode with         byte result[] = DatatypeConverter.parseHexBinary(encoded);
         loginContext.setSecretKey(encoded);    
     }
