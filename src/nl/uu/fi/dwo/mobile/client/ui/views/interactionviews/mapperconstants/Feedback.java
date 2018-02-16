@@ -2,7 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.mapperconstants;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'D:/workspace_oxygen/DWOplayer/src/nl/uu/fi/dwo/mobile/client/ui/views/interactionviews/mapperconstants/Feedback.properties'.
+ * 	'C:/Users/tacom103/eclipse-workspace/DWOplayer/src/nl/uu/fi/dwo/mobile/client/ui/views/interactionviews/mapperconstants/Feedback.properties'.
  */
 public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup {
   
@@ -745,11 +745,11 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_samplesdev();
 
   /**
-   * Translated "Je hebt niet de juist steekproefgrootte ingevuld.".
+   * Translated "Je hebt niet de juiste steekproefgrootte ingevuld.".
    * 
-   * @return translated "Je hebt niet de juist steekproefgrootte ingevuld."
+   * @return translated "Je hebt niet de juiste steekproefgrootte ingevuld."
    */
-  @DefaultStringValue("Je hebt niet de juist steekproefgrootte ingevuld.")
+  @DefaultStringValue("Je hebt niet de juiste steekproefgrootte ingevuld.")
   @Key("check.samplesize")
   String check_samplesize();
 
@@ -932,6 +932,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   @DefaultStringValue("Dit is de juiste conclusie over deze toetsingsgrootheid en kritiek gebied.")
   @Key("component.critical-conclusion")
   String component_critical_conclusion();
+
+  /**
+   * Translated "Dit is de juiste kritieke waarde.".
+   * 
+   * @return translated "Dit is de juiste kritieke waarde."
+   */
+  @DefaultStringValue("Dit is de juiste kritieke waarde.")
+  @Key("component.critical.chi-value")
+  String component_critical_chi_value();
 
   /**
    * Translated "Dit is de juiste kritieke F-waarde.".

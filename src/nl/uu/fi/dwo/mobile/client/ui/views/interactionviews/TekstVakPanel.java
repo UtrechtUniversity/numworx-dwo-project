@@ -2387,6 +2387,8 @@ private Object deGreek(String value) {
 		.replace("$s2@", "2")
 		.replace("wel", "true")
 		.replace("niet", "false")
+		.replace("inside", "true")
+		.replace("outside", "false")
 		.replace("$vS$nE$sM@@@", "SEM")
 		.replace("$vS$nE$sx@@@", "SEM")
 		.replace("s$sM@", "SEM")

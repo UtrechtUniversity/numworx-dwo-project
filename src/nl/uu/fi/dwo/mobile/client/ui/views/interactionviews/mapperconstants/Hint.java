@@ -2,7 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.mapperconstants;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'D:/workspace_oxygen/DWOplayer/src/nl/uu/fi/dwo/mobile/client/ui/views/interactionviews/mapperconstants/Hint.properties'.
+ * 	'C:/Users/tacom103/eclipse-workspace/DWOplayer/src/nl/uu/fi/dwo/mobile/client/ui/views/interactionviews/mapperconstants/Hint.properties'.
  */
 public interface Hint extends com.google.gwt.i18n.client.ConstantsWithLookup {
   
@@ -39,6 +39,15 @@ public interface Hint extends com.google.gwt.i18n.client.ConstantsWithLookup {
    * @return translated "Bepaal de kritieke waarde(n) voor deze toets."
    */
   @DefaultStringValue("Bepaal de kritieke waarde(n) voor deze toets.")
+  @Key("component.critical.chi-value")
+  String component_critical_chi_value();
+
+  /**
+   * Translated "Bepaal de kritieke waarde(n) voor deze toets.".
+   * 
+   * @return translated "Bepaal de kritieke waarde(n) voor deze toets."
+   */
+  @DefaultStringValue("Bepaal de kritieke waarde(n) voor deze toets.")
   @Key("component.critical.f-value")
   String component_critical_f_value();
 
@@ -59,15 +68,6 @@ public interface Hint extends com.google.gwt.i18n.client.ConstantsWithLookup {
   @DefaultStringValue("Bepaal de kritieke waarde(n) voor deze toets.")
   @Key("component.critical.t-value")
   String component_critical_t_value();
-
-  /**
-   * Translated "Bepaal de kritieke waarde(n) voor deze toets.".
-   * 
-   * @return translated "Bepaal de kritieke waarde(n) voor deze toets."
-   */
-  @DefaultStringValue("Bepaal de kritieke waarde(n) voor deze toets.")
-  @Key("component.critical.x-value")
-  String component_critical_x_value();
 
   /**
    * Translated "Bepaal de kritieke waarde(n) voor deze toets.".
