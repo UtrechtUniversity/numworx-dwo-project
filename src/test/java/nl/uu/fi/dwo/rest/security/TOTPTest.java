@@ -130,7 +130,7 @@ public class TOTPTest {
                 System.out.print("|  " + fmtTime + "  |  " + utcTime
                         + "  | " + steps + " | ");
                 results[i] = TOTP.generateTOTP256(seed, steps, "8");
-                System.out.println(results[i] + "| SHA1   |");
+                System.out.println(results[i] + "| SHA256 |");
 
                 System.out.println(
                         "+--------------+-----------------------+"
@@ -176,7 +176,7 @@ public class TOTPTest {
                 System.out.print("|  " + fmtTime + "  |  " + utcTime
                         + "  | " + steps + " | ");
                 results[i] = TOTP.generateTOTP512(seed, steps, "8");
-                System.out.println(results[i] + "| SHA1   |");
+                System.out.println(results[i] + "| SHA512 |");
 
                 System.out.println(
                         "+--------------+-----------------------+"
