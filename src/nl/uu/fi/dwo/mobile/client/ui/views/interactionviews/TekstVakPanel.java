@@ -2379,7 +2379,7 @@ private Object deGreek(String value) {
 		.replace("t$sc*r*i*t@", "tcrit")
 		.replace("r$sc*r*i*t@", "rcrit")
 		.replace("F$sc*r*i*t@", "Fcrit")
-		.replace("$pX$n2@@$sc*r*i*t@", "chicrit")//TO DO: invullen (X^2_crit) -- checken of zo goed geschreven
+		.replace("$pX$n(2@$sc*r*i*t@@@", "chicrit")//TO DO: invullen (X^2_crit) -- checken of zo goed geschreven
 		.replace("$pX$n2@@", "chisq")
 		.replace("$sA@", "1")
 		.replace("$sB@", "2")
@@ -2396,8 +2396,7 @@ private Object deGreek(String value) {
 		.replace("s$sx@", "s")
 		.replace("s$sy@", "s")
 		.replace("vS$n$bD$n$wn@@", "bs$n$wn") // vervang "SD/sqrt(n)" door "s/sqrt(n)"
-		.replace("S$n$bD", "s$n$b1")// vervang "SD/iets" door "s*1/iets"
-		.replace(";", ",") //voor ondersteuning lijsten. 
+		.replace("S$n$bD", "s$n$b1")// vervang "SD/iets" door "s*1/iets" 
 	;	
 }
 
@@ -2737,8 +2736,11 @@ private Object CamelCase(String name) {
 				}
 				antwoord = antwoord + bracketR;
 			}
-			Tupel newTupel = new Tupel(firstTupel.name.substring(0, firstTupel.name.indexOf(".")), firstTupel.type, antwoord);
-			answers.add(newTupel);
+			if(!antwoord.contains("[;") && !antwoord.contains(";;") && !antwoord.contains(";]")) //make sure it is a complete list
+			{
+				Tupel newTupel = new Tupel(firstTupel.name.substring(0, firstTupel.name.indexOf(".")), firstTupel.type, antwoord);
+				answers.add(newTupel);
+			}
 		}
 		
 		return answers;
