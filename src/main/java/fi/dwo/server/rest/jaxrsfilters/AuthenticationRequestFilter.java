@@ -23,8 +23,9 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.security.TOTP;
 
 /**
- * AuthenticationRequestFilter supports Basic and TOTP authorization against the database. 
- * 
+ * AuthenticationRequestFilter supports Basic and TOTP authorization against the
+ * database.
+ *
  * @author plas0006
  */
 @Provider
@@ -46,40 +47,39 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
             return u.getUsername();
         }
 
-
         public PersistentUser getUser() {
             return u;
         }
     }
-    
-    public static class DwoUserSecurityContext implements SecurityContext{
-                DwoUserPrincipal u;
-                
-                public DwoUserSecurityContext(DwoUserPrincipal user){
-                    u = user;
-                }
-                
-                @Override
-                public Principal getUserPrincipal() {
-                    return u;                    
-                }
 
-                @Override
-                public boolean isUserInRole(String role) {
-                   return false;
-                }
+    public static class DwoUserSecurityContext implements SecurityContext {
 
-                @Override
-                public boolean isSecure() {
-                    return u!=null;
-                }
+        DwoUserPrincipal u;
 
-                @Override
-                public String getAuthenticationScheme() {
-                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                }
-            };
+        public DwoUserSecurityContext(DwoUserPrincipal user) {
+            u = user;
+        }
 
+        @Override
+        public Principal getUserPrincipal() {
+            return u;
+        }
+
+        @Override
+        public boolean isUserInRole(String role) {
+            return false;
+        }
+
+        @Override
+        public boolean isSecure() {
+            return u != null;
+        }
+
+        @Override
+        public String getAuthenticationScheme() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
@@ -87,22 +87,20 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
         final SecurityContext securityContext = requestContext.getSecurityContext();
 // inspect headers, SecurityContext, etc...
         String authHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-        if(authHeader==null)return;
+        if (authHeader == null) {
+            return;
+        }
         //fetch password if matches
 //        if (authHeader.startsWith("totpkey ")) {
         if (authHeader.startsWith("Basic ")) {
             SecurityContext context = validateBasicAuthorization(authHeader.substring("Basic ".length()), securityContext);
             requestContext.setSecurityContext(context);
-        } else if (authHeader.startsWith("TOTPKey ")) {
-            SecurityContext context = validateTOTPToken(authHeader.substring("TOTPKey ".length()), securityContext);
-            requestContext.setSecurityContext(securityContext);
+        } else if (authHeader.startsWith("Bearer ")) {
+            //We use our TOTP with username as the bearer token.
+            SecurityContext context = validateTOTPToken(authHeader.substring("Bearer ".length()), securityContext);
+            requestContext.setSecurityContext(context);
         } else {
             //do nothing
-//            if (requestContext.response instanceof HttpServletResponse) {
-//                HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-//                httpServletResponse
-//                        .setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            }
         }
 
     }
@@ -110,14 +108,14 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
     private SecurityContext validateBasicAuthorization(String authHeader, SecurityContext secCtx) {
 
         byte[] header = Base64.getDecoder().decode(authHeader);
-        String headerString=":";
+        String headerString = ":";
         try {
             headerString = new String(header, "UTF8");
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(AuthenticationRequestFilter.class.getName()).log(Level.SEVERE, null, ex);
         }
         String authFields[] = headerString.trim().split(":");
-        
+
         PersistentUser u = UserManager.findByUserName(authFields[0]);
         if (u.getPassword().equals(authFields[1])) {
             SecurityContext sc = new DwoUserSecurityContext(new DwoUserPrincipal(u));
@@ -130,21 +128,23 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
     private SecurityContext validateTOTPToken(String authHeader, SecurityContext secCtx) {
 
         byte[] header = Base64.getDecoder().decode(authHeader);
-        String authFields[] = header.toString().trim().split(":");
+        String headerString = ":";
+        try {
+            headerString = new String(header, "UTF8");
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(AuthenticationRequestFilter.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String authFields[] = headerString.trim().split(":");
         PersistentUser u = UserManager.findByUserName(authFields[0]);
         List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
         for (PersistentLoginContext l : loginContextList) {
-            System.out.println("test" + DatatypeConverter.printHexBinary(l.getSecretKey()));
-            System.out.println("test" + bytesToHex(l.getSecretKey()));
-            if (TOTP.verifyTOTP(authFields[1], bytesToHex(l.getSecretKey()), "8")) {
-                // found proper hasRole
-
-                break;
+            if (TOTP.verifyTOTP(authFields[1], DatatypeConverter.printHexBinary(l.getSecretKey()), "8")) {                
+                    SecurityContext sc = new DwoUserSecurityContext(new DwoUserPrincipal(u));
+                    return sc;
+                }
             }
-        }
-        //else error
         return null;
-    }
+        }
 
     private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
 

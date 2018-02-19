@@ -50,11 +50,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.xml.bind.DatatypeConverter;
 
 import org.glassfish.jersey.internal.util.Base64;
 
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.security.TOTP;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  * Operations for the GUI Component that manages the User Profile.
@@ -456,6 +459,34 @@ public class SecuredUserAccountManager {
         PLAIN
     }
 
+@GET
+    @Produces("text/plain")
+    @Path("/getBearerToken")
+    public String getBearerToken(@Context SecurityContext sc) {
+          PersistentUser user = null;
+        PersistentLoginContext loginContext = null;
+
+        try {
+            user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+            List<PersistentLoginContext> list = LoginContextManager.findEntities(user.getId());
+            if (list.size() == 1) {
+                loginContext = list.get(0);
+                Long time = DwoDateUtilities.getCurrentDwoUnixTimeStamp() / TOTP.defaultPeriod;
+                String timeString = time.toString();
+                String result = (loginContext.getSecretKey()==null) ? null : TOTP.generateTOTP(DatatypeConverter.printHexBinary(loginContext.getSecretKey()), timeString, "8");
+                result = user.getUsername()+":"+result;
+                byte bytes[] = result.getBytes();
+                return "Bearer "+java.util.Base64.getEncoder().encodeToString(bytes);
+            }else{
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_LoginNeeded, "No login context exists.");
+            }
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
+        }
+        
+    }    
+    
     @GET
     @Produces("application/json")
     @Path("/verifyTOTP")
