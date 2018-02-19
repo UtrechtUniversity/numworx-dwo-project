@@ -4,6 +4,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -185,5 +188,34 @@ public class TOTPTest {
         } catch (final Exception e) {
             System.out.println("Error : " + e);
         }
+    }
+
+    /**
+     * Test of verifyTOTP method, of class TOTP.
+     */
+    @Test
+    public void testVerifyTOTP() {
+        System.out.println("verifyTOTP");
+        Long time = DwoDateUtilities.getCurrentDwoUnixTimeStamp() / TOTP.defaultPeriod;
+        String timeString = time.toString();
+        String expResult = TOTP.generateTOTP(seed, timeString, "8");
+        Boolean result1 = TOTP.verifyTOTP(expResult, seed, "8");
+        assertEquals(result1, true);
+
+
+        time = DwoDateUtilities.getCurrentDwoUnixTimeStamp() / 100;
+        timeString = time.toString();
+        expResult = TOTP.generateTOTP(seed, timeString, "8");
+        result1 = TOTP.verifyTOTP(expResult, seed, "8",100);
+        assertEquals(result1, true);
+        try {
+            Thread.sleep( 200);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(TOTPTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Boolean result2 = TOTP.verifyTOTP(expResult, seed, "8",100);
+        assertNotEquals(result1, result2);
+        // TODO review the generated test code and remove the default call to fail.
+        System.out.println("The test case is a success.");
     }
 }

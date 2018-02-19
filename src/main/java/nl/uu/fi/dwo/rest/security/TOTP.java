@@ -2,13 +2,11 @@ package nl.uu.fi.dwo.rest.security;
 
 import java.lang.reflect.UndeclaredThrowableException;
 import java.security.GeneralSecurityException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.math.BigInteger;
-import java.util.TimeZone;
+import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 //Note according to https://trustee.ietf.org/copyright-faq.html 
 //visited on 15 feb 2018, page published on June 22, 2010 
@@ -29,10 +27,15 @@ import java.util.TimeZone;
  *
  * @author Johan Rydell, PortWise, Inc.
  * 
+ * Adapted 2018-02-15 Gert van der Plas
+ * 
  * https://tools.ietf.org/id/draft-mraihi-totp-timebased-06.html
  * 
  */
 public class TOTP {
+
+    private static final Logger LOG = Logger.getLogger(TOTP.class.getName());
+    public final static long defaultPeriod=30000;//in milliseconds.
 
     private TOTP() {}
 
@@ -106,6 +109,29 @@ public class TOTP {
             String returnDigits)
     {
         return generateTOTP(key, time, returnDigits, "HmacSHA1");
+    }
+
+    public static Boolean verifyTOTP(String totp, String key, 
+            String returnDigits, long periodInMilliSeconds)
+    {
+        Long time = DwoDateUtilities.getCurrentDwoUnixTimeStamp() / periodInMilliSeconds;
+        String timeString = time.toString();
+        String result = generateTOTP(key, timeString, returnDigits, "HmacSHA1");
+        if(result.equals(totp)){
+            return true;
+        }else{
+            time--;
+            timeString = time.toString();
+            result = generateTOTP(key, timeString, returnDigits, "HmacSHA1");
+            return result.equals(totp);
+        }
+    }
+    
+    public static Boolean verifyTOTP(String totp, String key, 
+            String returnDigits)
+    {
+        return verifyTOTP(totp, key, 
+            returnDigits, TOTP.defaultPeriod);
     }
 
 
