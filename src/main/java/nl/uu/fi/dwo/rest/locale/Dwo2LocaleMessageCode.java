@@ -12,6 +12,7 @@ public enum Dwo2LocaleMessageCode {
     GUI_Button_Ok,  
 GUI_Button_Cancel,
 GUI_Button_Update,
+GUI_Button_AddTeachersToClass,
 GUI_Delete,
 GUI_SchoolLogin,
 GUI_Login,
