@@ -60,9 +60,11 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
         createGap();
         /* Add StudentModel Button */
 //        studentModelButton = new MenuPanelButton(Dwo2LocaleMessageTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2LocaleMessageCode.GUI_Button_StudentModels));
+        if(DwoHelper.isTest()){
           studentModelButton = new MenuPanelButton("StudentModels");
         studentModelButton.addActionListener(this);
         this.add(studentModelButton);
+        }
         /* Als dwo in Deeplink mode, geen coursemanagement */
         if (GuiCreator.instance().getDWO().getCourseViewNr() > 0 || !GuiCreator.instance().getDWO().getUser().hasRight(User.MODIFY_MODULES_RIGHT) || CenterPanel.isIconizer()) {
             return;
