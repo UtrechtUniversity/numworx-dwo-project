@@ -84,6 +84,8 @@ public final class DwoHelper {
     private static URL appUrlPath;
     private static URL jarUrlPath;
     private static HttpAuthenticationType httpAuthenticationType;
+    protected static boolean test=false;
+    
     private static DomSchool nullSchool;
 
     /**
@@ -766,5 +768,19 @@ public final class DwoHelper {
 	public static boolean hasProfileRight(char right) {
 	    return rights.indexOf(right) >= 0;
 	}
+
+    /**
+     * @return the test
+     */
+    public static boolean isTest() {
+        return test;
+    }
+
+    /**
+     * @param aTest the test to set
+     */
+    public static void setTest(boolean aTest) {
+        test = aTest;
+    }
 
 }

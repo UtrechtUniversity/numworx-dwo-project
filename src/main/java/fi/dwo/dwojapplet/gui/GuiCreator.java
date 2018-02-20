@@ -1038,4 +1038,8 @@ public class GuiCreator {
 		return null;
 	}
 
+    CenterSubPanel getStudentModelPanel() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

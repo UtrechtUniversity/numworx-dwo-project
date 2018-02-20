@@ -25,6 +25,8 @@ import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
+import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessageCode;
+import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 
 /**
  * Teacher menu panel, adds course-management and overloads class-management functionality
@@ -37,8 +39,8 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
     private static final Border TITLE_BORDER = BorderFactory.createEmptyBorder(0, 10, 0, 0);
     private static final Border CLASS_BORDER = BorderFactory.createEmptyBorder(0, 20, 0, 0);
     private JButton classManagementButton;
-
     private JButton courseManagementButton;
+    private JButton studentModelButton;
 
     private ClassLinkedLabel[] classLinkedList;
 
@@ -55,6 +57,12 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
         classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
         classManagementButton.addActionListener(this);
         this.add(classManagementButton);
+        createGap();
+        /* Add StudentModel Button */
+//        studentModelButton = new MenuPanelButton(Dwo2LocaleMessageTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2LocaleMessageCode.GUI_Button_StudentModels));
+          studentModelButton = new MenuPanelButton("StudentModels");
+        studentModelButton.addActionListener(this);
+        this.add(studentModelButton);
         /* Als dwo in Deeplink mode, geen coursemanagement */
         if (GuiCreator.instance().getDWO().getCourseViewNr() > 0 || !GuiCreator.instance().getDWO().getUser().hasRight(User.MODIFY_MODULES_RIGHT) || CenterPanel.isIconizer()) {
             return;
@@ -179,6 +187,13 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
         } else if (src == courseManagementButton) {
             instance.setWait();
             CenterSubPanel cp = instance.getCourseManagementPanel();
+            center.loadCenter(cp);
+            center.setStrategy(this);
+            instance.setReady();
+            return;
+        } else if (src == studentModelButton) {
+            instance.setWait();
+            CenterSubPanel cp = instance.getStudentModelPanel();
             center.loadCenter(cp);
             center.setStrategy(this);
             instance.setReady();

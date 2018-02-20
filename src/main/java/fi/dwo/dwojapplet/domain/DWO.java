@@ -10,7 +10,6 @@ import fi.beans.scorm.SCORM2004APIInterface;
 import fi.dwo.commons.exceptions.ClassException;
 import fi.dwo.commons.exceptions.CourseException;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
@@ -75,7 +74,6 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
-import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -90,6 +88,8 @@ import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.plaf.ColorUIResource;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages;
+import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 
 import org.apache.xmlrpc.applet.MySimpleXmlRpcClient;
 
@@ -294,6 +294,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{DWO_ENV, dwo_env});
 
         if("test".equals(dwo_env))
+            DwoHelper.setTest(true);
         	Compressor.setSkip(false);
     }
 
