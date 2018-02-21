@@ -39,6 +39,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 
 /**
  * This is the plain and direct restManager. Please use the
@@ -248,6 +249,9 @@ class RestManager extends RestyDateTimeFormat {
                 case DomSchool4DwoAdmin:
                     return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchool4DwoAdmin>>() {
                     });
+                case DomStudentModelContext:
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomStudentModelContext>>() {
+                    });
                 case DomSchoolClass:
                     return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchoolClass>>() {
                     });
@@ -455,6 +459,9 @@ class RestManager extends RestyDateTimeFormat {
                 case DomSchoolsRolesAndClasses:
                     return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchoolsRolesAndClasses>>() {
                     });
+                case DomStudentModelContext:
+                    return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomStudentModelContext>>() {
+                    });                    
                 case DomTeacherAndHasRole:
                     return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomTeacherAndHasRole>>() {
                     });
