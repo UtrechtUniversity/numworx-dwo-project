@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 
 /**
@@ -19,8 +20,9 @@ public class SecureTeacherStudentModelManager {
 
     private static final Logger LOG = Logger.getLogger(SecureTeacherStudentModelManager.class.getName());
     public static List<DomStudentModelContext> getList() throws Dwo2Exception {
-        List<DomStudentModelContext> src;
-        src = StoredRestManager.getInstance().getList("rest/secure/teacher/studentmodel/getList", RestListClassTypes.DomStudentModelContext);
+        RestContext rest = new RestContext();
+        rest.setRestContext(RestAuthenticator.getInstance().getContext());
+        List<DomStudentModelContext> src = StoredRestManager.getInstance().getPutList("rest/secure/teacher/studentmodel/getList",RestListClassTypes.DomStudentModelContext, rest);
         LOG.log(Level.FINE, "Retrieved list of studentmodels of the teacher with username {0}.", new Object[]{RestAuthenticator.getInstance().getUsername()});
         return src;
     }
