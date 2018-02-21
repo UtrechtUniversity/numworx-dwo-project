@@ -2,6 +2,7 @@ package fi.dwo.dwojapplet.gui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -24,23 +25,13 @@ public class TeacherStudentModelPanelProperties {
     public void init() throws Dwo2Exception {
     }
     
-//    
-//    public DomSchoolClassFull getSchoolClass() {
-//        return schoolClass;
-//    }
-//
-//    public void setSchoolClass(DomSchoolClassFull sc) {
-//        this.schoolClass = sc;
-//    }
-    
-    public Boolean addModel(DomStudentModelContext modelContext) throws Dwo2Exception{
-        return null;//return SecureSchoolAdminSchoolClassManager.submitSchoolClass(sc);
+    public DomStudentModelContext addModel(DomStudentModelContext modelContext) throws Dwo2Exception{
+        return SecureTeacherStudentModelManager.addModel(modelContext);
     }
 
 
     public List<DomStudentModelContext> getModelList() throws Dwo2Exception {
-        // can changed to caching. However low frequent operation.
-        return new ArrayList<DomStudentModelContext>();
+        return SecureTeacherStudentModelManager.getList();
     }
 
         
