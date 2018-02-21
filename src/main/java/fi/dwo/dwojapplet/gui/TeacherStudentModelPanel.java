@@ -4,6 +4,7 @@ import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -22,6 +23,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
@@ -47,7 +49,8 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
     private JButton addModelButton;
     private JButton viewButton;
-
+    private JTextArea textArea;
+    
     private JPanel jtbl;
     private TableRowSorter rowSorter;
     
@@ -107,9 +110,9 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                 DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                 Genson g = new GensonBuilder().withConverters(new GensonMapConverter()).useIndentation(true).create();
                 String language = DwoHelper.getLocale().getLocale();
-                String jsonModel = g.serialize(model);
+                String jsonModel = g.serialize(model.getModelStructure());
                 
-                GuiCreator.instance().ShowMessageDialog(center, jsonModel);
+                textArea.setText(jsonModel);
 //                try {
 //                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
 //                    ClassConfigurePanel panel = new ClassConfigurePanel();
@@ -272,6 +275,11 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         //addClassButton.setVisible(true);
         this.add(Box.createVerticalStrut(15));
         buildJTable();
+        textArea = new JTextArea();
+        textArea.setEditable(false);
+        textArea.setBackground(Color.LIGHT_GRAY);
+        this.add(textArea);
+        
     }
 
     /**
