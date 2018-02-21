@@ -82,6 +82,10 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	
 	private DWOLogger dwologger;
 	
+	//display student model as number of stars instead of categories
+	//TODO: set boolean stars from settings attached student model.
+	private boolean stars = false;
+	
 	public ScoresObjectivesPanel(HashMap<String, Object> map, boolean pilot)
 	{
 		this.pilot = pilot;
@@ -457,6 +461,8 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		ctx.setFillStyle("black");
 		ctx.setStrokeStyle("black");
 		int scoreWidth = (int) ctx.measureText(scoreText).getWidth() + margin;
+		if(stars)
+			scoreWidth = 60 + margin;
 		
 		
 		lineHeight = 15 + margin; //TODO nog iets zinvollers van 15 maken; meten mbv canvas?
@@ -488,11 +494,21 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 			{
 				textY += lineHeight;
 				colorY += lineHeight;
-				ctx.setFillStyle(colorArray[0][i]);
-				ctx.fillRect(colorX, colorY, scoreWidth, lineHeight);
+				if(!stars)
+				{
+					ctx.setFillStyle(colorArray[0][i]);
+					ctx.fillRect(colorX, colorY, scoreWidth, lineHeight);
+				}
 				ctx.setFillStyle("black");
 				ctx.fillText(objectivesForDiagram[0][i], labelX, textY);
-				ctx.fillText((int) scoresPercObjectives[0][i]+"%", scoreX, textY);
+				if(stars)
+				{
+					
+				}
+				else
+				{
+					ctx.fillText((int) scoresPercObjectives[0][i]+"%", scoreX, textY);
+				}
 			}
 			int columnHeight = margin;
 			for(int i = 0; i < objectivesForDiagram[0].length + 2; i++)
@@ -542,15 +558,18 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 			
 			for(int j = 0; j < objectivesForDiagram.length; j++)
 			{
-				//dubble line above each category.
+				//double line above each category.
 				ctx.beginPath();
 				ctx.moveTo(margin, columnHeight);
 				ctx.lineTo(tableWidth, columnHeight);
 				ctx.closePath();
 				ctx.stroke();
 				columnHeight += interspace;
-				ctx.setFillStyle(categoryColorArray[j]);
-				ctx.fillRect(tableWidth - scoreWidth, columnHeight, scoreWidth, lineHeight);
+				if(!stars)
+				{
+					ctx.setFillStyle(categoryColorArray[j]);
+					ctx.fillRect(tableWidth - scoreWidth, columnHeight, scoreWidth, lineHeight);
+				}
 				ctx.beginPath();
 				ctx.moveTo(margin, columnHeight);
 				ctx.lineTo(tableWidth, columnHeight);
@@ -570,18 +589,37 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 				this.setWidgetTopHeight(categoryLabels[j], columnHeight + textDifference, Unit.PX, lineHeight, Unit.PX);
 				
 				textDifference += lineHeight - 15;  //label-location and drawString need different y
-				ctx.fillText((int) categoryScoresPercObjectives[j]+"%", scoreX, columnHeight + textDifference);
-			
+				if(stars)
+				{
+					/// drawStars
+					drawStars(categoryScoresPercObjectives[j], scoreX, columnHeight);// + textDifference);
+					
+				}
+				else
+				{
+					ctx.fillText((int) categoryScoresPercObjectives[j]+"%", scoreX, columnHeight + textDifference);
+				}
+				
 				if(categoryFoldedOut[j])
 				{
 					for(int i = 0; i < objectivesForDiagram[j].length; i++)
 					{
 						columnHeight += lineHeight;
-						ctx.setFillStyle(colorArray[j][i]);
-						ctx.fillRect(tableWidth - scoreWidth, columnHeight, scoreWidth, lineHeight);
+						if(!stars)
+						{
+							ctx.setFillStyle(colorArray[j][i]);
+							ctx.fillRect(tableWidth - scoreWidth, columnHeight, scoreWidth, lineHeight);
+						}
 						ctx.setFillStyle("black");
 						ctx.fillText(objectivesForDiagram[j][i], labelX, columnHeight + textDifference);
-						ctx.fillText((int) scoresPercObjectives[j][i]+"%", scoreX, columnHeight + textDifference);
+						if(stars)
+						{
+							//fillstars
+						}
+						else
+						{
+							ctx.fillText((int) scoresPercObjectives[j][i]+"%", scoreX, columnHeight + textDifference);
+						}
 						ctx.beginPath();
 						ctx.moveTo(margin, columnHeight);
 						ctx.lineTo(tableWidth, columnHeight);//textColumnWidth + margin, columnHeight);
@@ -671,6 +709,68 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		ctx.closePath();
 		ctx.stroke();
 		ctx.setLineWidth(1);
+	}
+	
+	public void drawStars(double score, int x, int y)
+	{
+		int numberOfStars = 0;
+		//boundaries for 0, 1, 2 or 3 stars are quite arbitrary at the moment; 
+		//TODO: find appropriate values by looking at student data
+		if(score > 70)
+			numberOfStars = 3;
+		else if (score > 40)
+			numberOfStars = 2;
+		else if (score > 10)
+			numberOfStars = 1;
+		
+		String fillColor = cssColorNeutral.toString();
+		String strokeColor = cssColorNeutral.toString();
+			
+		if(numberOfStars == 3)
+		{	fillColor = "green"; //TODO; use green also used to mark pages green
+			strokeColor = "darkgreen";
+		}
+		drawStar(x + 40, y + 2, fillColor, strokeColor);
+		if(numberOfStars == 2)
+		{
+			fillColor = "yellow";
+			strokeColor = "darkyellow";
+		}
+		drawStar(x + 20, y + 2, fillColor, strokeColor);
+		if(numberOfStars == 1)
+		{
+			fillColor = "orange";
+			strokeColor = "darkorange";
+		}
+		drawStar(x, y + 2, fillColor, strokeColor);
+		
+		//don't forget: if star earned, than also draw a dark border to help the color blind. 
+		ctx.setFillStyle("black");
+		ctx.setStrokeStyle("black");
+		//TODO: call drawStars on all appropriate places. 
+	}
+	
+	public void drawStar(int x, int y, String fillColor, String strokeColor)
+	{
+		
+		
+		ctx.beginPath();
+		ctx.moveTo(x + 9, y + 1);
+		ctx.lineTo(x + 12, y + 7);
+		ctx.lineTo(x + 18, y + 8);
+		ctx.lineTo(x + 13, y + 12);
+		ctx.lineTo(x + 14, y + 18);
+		ctx.lineTo(x + 9, y + 15);
+		ctx.lineTo(x + 4, y + 18);
+		ctx.lineTo(x + 5,  y + 12);
+		ctx.lineTo(x, y + 8);
+		ctx.lineTo(x + 6, y + 7);
+		ctx.closePath();
+		ctx.setFillStyle(fillColor);
+		ctx.setStrokeStyle(strokeColor);
+		ctx.fill();
+		ctx.stroke();
+		
 	}
 	
 	public void paint()
