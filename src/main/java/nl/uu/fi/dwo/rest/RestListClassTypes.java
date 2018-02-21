@@ -36,6 +36,8 @@ public enum RestListClassTypes {
         DomScoContext, 
         DomScoData,
         DomStudent,
+        DomStudentModelContext,
+        DomStudentModelData,
         DomStudentOfClass,
         DomStudentScoContext,
         DomStudentScoData,
