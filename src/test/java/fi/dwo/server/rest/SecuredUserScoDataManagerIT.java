@@ -215,7 +215,7 @@ public class SecuredUserScoDataManagerIT {
         values.setScoContext(sco);      
         Response response = manager.setValues(sc, rest,null);
 		Object result = response.getEntity();
-		String etag   = response.getEntityTag().getValue();
+		String etag   = response.getEntityTag().toString();
         assertEquals(Boolean.TRUE, result);
         assertNotNull(etag);
         
