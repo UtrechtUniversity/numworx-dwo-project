@@ -413,7 +413,7 @@ CREATE TABLE `tbllogincontext` (
   `del` tinyint(4) NOT NULL DEFAULT '0',
   `schoolGroupID` int(11) DEFAULT NULL,
   `courseID` int(11) DEFAULT NULL,
-  `secretKey` varchar(128) DEFAULT NULL,
+  `secretKey` binary(8) DEFAULT NULL,
   PRIMARY KEY (`loginid`),
   UNIQUE KEY `AK_ID_LOGIN_USER` (`userID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
