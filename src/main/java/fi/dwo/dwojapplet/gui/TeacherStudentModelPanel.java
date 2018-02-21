@@ -1,5 +1,7 @@
 package fi.dwo.dwojapplet.gui;
 
+import com.owlike.genson.Genson;
+import com.owlike.genson.GensonBuilder;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Component;
@@ -25,6 +27,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
@@ -100,7 +104,12 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         public void actionPerformed(ActionEvent event) {
 //            final GuiCreator instance = GuiCreator.instance();
             if (value == searchImage) {
-                GuiCreator.instance().ShowMessageDialog(center, "view Model");
+                DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+                Genson g = new GensonBuilder().withConverters(new GensonMapConverter()).useIndentation(true).create();
+                String language = DwoHelper.getLocale().getLocale();
+                String jsonModel = g.serialize(model);
+                
+                GuiCreator.instance().ShowMessageDialog(center, jsonModel);
 //                try {
 //                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
 //                    ClassConfigurePanel panel = new ClassConfigurePanel();

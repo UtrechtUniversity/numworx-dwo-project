@@ -1,5 +1,4 @@
 package fi.dwo.dwojapplet.gui;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;

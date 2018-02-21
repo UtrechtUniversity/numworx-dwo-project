@@ -25,8 +25,6 @@ import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
-import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessageCode;
-import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 
 /**
  * Teacher menu panel, adds course-management and overloads class-management functionality

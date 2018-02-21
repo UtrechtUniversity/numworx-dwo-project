@@ -1036,7 +1036,7 @@ public class GuiCreator {
 		return null;
 	}
 
-    CenterSubPanel getStudentModelPanel() throws Dwo2Exception {
+    CenterSubPanel getStudentModelPanel()  {
         return null;
     }
 

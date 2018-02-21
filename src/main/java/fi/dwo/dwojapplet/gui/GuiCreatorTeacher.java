@@ -501,8 +501,14 @@ public class GuiCreatorTeacher extends GuiCreator {
     }
     
     @Override
-    public CenterSubPanel getStudentModelPanel() throws Dwo2Exception {
-        return new TeacherStudentModelPanel();
+    public CenterSubPanel getStudentModelPanel()  {
+        try {
+            return new TeacherStudentModelPanel();
+        } catch (Dwo2Exception ex) {
+            Logger.getLogger(GuiCreatorTeacher.class.getName()).log(Level.SEVERE, null, ex);
+            this.ShowErrorDialog(welcomePanel, ex);
+            return null;
+        }
     }
     
 }

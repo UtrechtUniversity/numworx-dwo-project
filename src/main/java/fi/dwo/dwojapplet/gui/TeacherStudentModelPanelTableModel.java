@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.gui;
 
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,11 +37,16 @@ class TeacherStudentModelPanelTableModel extends AbstractTableModel {
             rows++; // one for each item in List
         }
 
-        data = new Object[rows][2];
+        data = new Object[rows][3];
         int j = 0;
         for (DomStudentModelContext m : modelList) {
-            data[j][0] = m.getModelStructure().getInfo().getTitle().get("nl");
+            String language = m.getModelStructure().getInfo().getTitle().get(DwoHelper.getLocale().getLocale());
+            if(language ==null) {
+                m.getModelStructure().getInfo().getTitle().get(DwoHelper.getLocale().getDefaultLocale());
+            }
+            data[j][0] = m.getModelStructure().getInfo().getTitle().get(DwoHelper.getLocale().getLocale());
             data[j][1] = searchImage;
+            data[j][2] = m;
             j++;
         }
         fireTableDataChanged();
