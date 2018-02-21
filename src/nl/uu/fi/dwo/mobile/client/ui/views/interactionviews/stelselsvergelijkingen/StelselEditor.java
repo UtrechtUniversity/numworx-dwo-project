@@ -232,7 +232,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 			int xBegin = breedteVergelijkingen + stelselEditor.editor.getWidth()/2;
 			breedteVergelijkingen += stelselEditor.editor.getWidth() + 20; //+20 voor breedte van woordje 'of', moet misschien nog wat preciezer ingesteld.
 			stelselEditor.editor.clearAll();
-			stelselEditor.editor.insert("");
+			stelselEditor.editor.setCurrentElementRepaint();
 			pijlen[i] = new StelselPijl(xBegin, stelselEditor.editor.getWidth()/3); //wat hier op de tweede plek staat maakt niets uit, dat regel je nog in plaatsEditors.
 			hoofdPanel.contentPanel.add(pijlen[i].getCanvas()); //stond nog in: ,0)
 		}
@@ -429,8 +429,10 @@ public class StelselEditor extends FormuleEditorWithSteps
 		for(int i = 0; i < stapNr + 1; i++)
 			formuleVakInhoudenEditor[i] = formuleVakInhouden[formuleTeller + i];
 		//eindOplossingExactGevonden = exactArrays[editorTeller];
-		eindOplossingGevonden = oplossingArrays[editorTeller];
-		eindOplossingGevondenVoorSplits = voorSplitsArrays[editorTeller];
+		zetOplossingen(oplossingen, oplossingArrays[editorTeller], voorSplitsArrays[editorTeller]); //voor nakijken editor al zorgen dat eindOplossingGevonden up to date is
+		//eindOplossingGevonden = oplossingArrays[editorTeller];
+		//eindOplossingGevondenVoorSplits = voorSplitsArrays[editorTeller];
+		
 		//eindOplossingStelselGevonden = stelselArrays[editorTeller];
 		
 		String antwoordString = formuleVakInhoudenEditor[formuleVakInhoudenEditor.length - 1];
@@ -442,6 +444,8 @@ public class StelselEditor extends FormuleEditorWithSteps
 		h.put("antwoordString", antwoordString);
 		super.setState(h);
 		//in setState wordt geen maakNakijkenAf meer gedaan. Daarom mis je het weghalen van het eennalaatste oranje vinkje.
+		//in nakijken editor is mogelijk eindOplossingenGevondenVoorSplits verkeerd aangepast, dus opnieuw zetten:
+		zetOplossingen(oplossingen, oplossingArrays[editorTeller], voorSplitsArrays[editorTeller]); //voor nakijken editor al zorgen dat eindOplossingGevonden up to date is
 		if (editor == null && viewers.size() > 1)
 		{
 			FormuleViewer viewer = viewers.get(viewers.size() - 2);
@@ -863,13 +867,13 @@ public class StelselEditor extends FormuleEditorWithSteps
 			isGelijkwaardig = false;
 		
 		try{
-		if(heeftFocus)
-			splitsOfMaakStap(backStep, show, setState);
-		else 
-		{
-			StelselEditor editorMetFocus = vindKindMetFocus();
-			editorMetFocus.splitsOfMaakStap(backStep, show, setState);
-		}
+			if(heeftFocus)
+				splitsOfMaakStap(backStep, show, setState);
+			else 
+			{
+				StelselEditor editorMetFocus = vindKindMetFocus();
+				editorMetFocus.splitsOfMaakStap(backStep, show, setState);
+			}
 		}
 		catch(RestartException e)
 		{
