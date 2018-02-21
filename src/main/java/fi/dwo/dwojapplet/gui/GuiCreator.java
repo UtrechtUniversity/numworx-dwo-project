@@ -1,5 +1,3 @@
-// Source file:
-// N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\GuiCreator.java
 package fi.dwo.dwojapplet.gui;
 
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -1038,8 +1036,8 @@ public class GuiCreator {
 		return null;
 	}
 
-    CenterSubPanel getStudentModelPanel() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    CenterSubPanel getStudentModelPanel() throws Dwo2Exception {
+        return null;
     }
 
 }

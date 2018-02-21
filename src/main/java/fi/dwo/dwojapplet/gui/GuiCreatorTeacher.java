@@ -499,4 +499,10 @@ public class GuiCreatorTeacher extends GuiCreator {
         if (dwo.updateLogo(c))
 			;
     }
+    
+    @Override
+    public CenterSubPanel getStudentModelPanel() throws Dwo2Exception {
+        return new TeacherStudentModelPanel();
+    }
+    
 }

@@ -1,51 +1,330 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.AbstractCellEditor;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
- *
+ * 
+ * 
  * @author plas0006
  */
 public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, ActionListener {
 
+    private static final Logger LOG = Logger.getLogger(TeacherStudentModelPanel.class.getName());
+
+    private TeacherStudentModelPanelProperties prop = new TeacherStudentModelPanelProperties();
+    private TeacherStudentModelPanelTableModel tableModel;
+
+    private CenterPanel center;
+
+    private JButton addModelButton;
+    private JButton viewButton;
+
+    private JPanel jtbl;
+    private TableRowSorter rowSorter;
+    
+    private Image searchImage;
+
+    public class ImageRenderer extends JLabel implements TableCellRenderer {
+
+        private ImageIcon icon = new ImageIcon();
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table,
+                Object value, boolean selected, boolean hasFocus, int row, int col) {
+            Image image = (Image) value;
+            icon.setImage(image);
+            setIcon(icon);
+            setHorizontalAlignment(SwingConstants.CENTER);
+            setOpaque(true);
+            Object[] arguments = new Object[]{table.getValueAt(row, 0)};
+
+            if (selected) {
+                setBackground(table.getSelectionBackground());
+            } else {
+                setBackground(table.getBackground());
+            }
+            return this;
+        }
+
+    }
+
+    public class ImageButtonEditor extends AbstractCellEditor implements
+            TableCellEditor, ActionListener {
+
+        Object value;
+//        ClassTeacherPanelTableModel model;
+        int row;
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                boolean arg2, int row, int col) {
+            this.value = value;
+            JButton button = new JButton(new ImageIcon((Image) value));
+            button.addActionListener(this);
+            this.row = row;
+            //model = (ClassTeacherPanelTableModel) table.getModel();
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return value;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent event) {
+//            final GuiCreator instance = GuiCreator.instance();
+            if (value == searchImage) {
+                GuiCreator.instance().ShowMessageDialog(center, "view Model");
+//                try {
+//                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+//                    ClassConfigurePanel panel = new ClassConfigurePanel();
+//                    DomSchoolClassFull fullSchoolClass = prop.getFullSchoolClass(sc);
+//                    panel.setSchoolClass(fullSchoolClass);
+//                    int result = JOptionPane.showConfirmDialog(SchoolClassesSchoolAdminPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
+//                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+//                    fullSchoolClass.setSchoolClassName(panel.getClassName());
+//                    fullSchoolClass.setRegistrationKey(panel.getRegistrationKey());
+//                    fullSchoolClass.setIconizer(panel.isIconizer());
+//                    //case OK persist returned values
+//                    if (result == JOptionPane.OK_OPTION) {
+//                        //persist returned values	
+//                        prop.updateSchoolClass(fullSchoolClass);
+//                        tableModel.init(prop, editImage, studentsImage, teachersImage, removeImage);
+//                        tableModel.fireTableDataChanged();
+//                    }
+//                }
+//                catch (Dwo2Exception ex) {
+//                    LOG.log(Level.FINE, "", ex);
+//                    JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+//                }
+//                finally {
+//                    fireEditingStopped();
+//                }
+//            } else if (value == studentsImage) {
+//                try {
+//                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+//                    StudentsInSchoolClassSchoolAdminPanel panel = new StudentsInSchoolClassSchoolAdminPanel(sc);
+//                    center.loadCenter(panel);
+//                }
+//                catch (Dwo2Exception ex) {
+//                    Logger.getLogger(SchoolClassesSchoolAdminPanel.class.getName()).log(Level.SEVERE, "", ex);
+//                }
+//                fireEditingStopped();
+//            } else if (value == teachersImage) {
+//                try {
+//                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+//                    TeachersInSchoolClassSchoolAdminPanel panel = new TeachersInSchoolClassSchoolAdminPanel(sc);
+//                    center.loadCenter(panel);
+//                }
+//                catch (Dwo2Exception ex) {
+//                    LOG.log(Level.SEVERE, "", ex);
+//                }
+//                fireEditingStopped();
+//            } else if (value == removeImage) {
+//                try {
+//                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+//
+//                    String msg = MessageFormat.format(TextMapper.getText(TextMapper.DLG_Q_REMOVE_SCHOOLCLASS_BY_NAME),sc.getSchoolClassName());
+//                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), msg) == JOptionPane.OK_OPTION) {
+//                        //persist returned values	
+//                        prop.removeSchoolClass(sc);
+//                        tableModel.init(prop, editImage, studentsImage, teachersImage, removeImage);
+//                        tableModel.fireTableDataChanged();
+//                    }
+//                }
+//                catch (Dwo2Exception ex) {
+//                    LOG.log(Level.FINE, "", ex);
+//                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
+//                }
+//                finally {
+//                    fireEditingStopped();
+//                }
+//            }
+            }
+        }
+    }
+
+    private void buildJTable() throws Dwo2Exception {
+        if (jtbl != null) {
+            remove(jtbl);
+            jtbl = null;
+        }
+        jtbl = new JPanel();
+
+        JTable jtable = new JTable();
+        jtable.getTableHeader().setReorderingAllowed(false);
+        jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
+        jtbl.add(jtable.getTableHeader());
+        jtbl.add(jtable);
+        jtbl.add(Box.createHorizontalGlue());
+        //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
+        tableModel = new TeacherStudentModelPanelTableModel();
+
+        tableModel.init(prop.getModelList(), searchImage);
+        jtable.setModel(tableModel);
+        rowSorter = new TableRowSorter(tableModel);        
+        rowSorter.toggleSortOrder(0);//
+        jtable.setRowSorter(rowSorter);        
+        
+        if (jtable.getRowCount() > 0) {
+            jtable.setRowSelectionInterval(0, 0);
+        }
+        jtable.setRowSelectionAllowed(false);
+        jtable.setColumnSelectionAllowed(false);
+        jtable.setCellSelectionEnabled(false);
+        TableUtil.setDefaults(jtable, true, new TeacherStudentModelPanel.ImageRenderer(), new TeacherStudentModelPanel.ImageButtonEditor());
+        TableUtil.setJTableSizes(jtable);
+
+//        TableUtil.setDefaults(jtable, false, new ImageRenderer(), new ImageButtonEditor());
+//        TableUtil.setJTableSizes(jtable);
+// TODO shrink to fit heeft 520 als breedte
+//        Dimension size = jtable.getPreferredSize();
+//        if (size.width < 520) {
+//            size.width = 520;
+//        }
+//        jtable.setMaximumSize(size);
+        jtbl.setLocation(30, addModelButton.getSize().height
+                + addModelButton.getLocation().y + 15);
+        TableUtil.setBorder(jtable);
+        //TableUtil.shrinkToFit(table, jtbl, 520, 405);
+        jtbl.setVisible(false);
+        this.add(jtbl);
+        jtbl.setVisible(true);
+
+    }
+
+    /**
+     * Creates a new ClassPanel which shows a list of classes.
+     *
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
+     */
+    public TeacherStudentModelPanel() throws Dwo2Exception {
+        super(null);
+        this.setSize(480, 500);
+
+        //fetch user details.
+        try {
+            prop.init();
+        } catch (Dwo2Exception e) {
+            LOG.log(Level.SEVERE, "Can't retrieve initial user settings.", e);
+            GuiCreator.instance().ShowErrorDialog(this, e);
+        }
+
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+        MediaTracker tr = new MediaTracker(this);
+        searchImage = DwoHelper.getResourceImage(GuiConstants.SEARCH_IMAGE);
+        tr.addImage(searchImage, 0);
+        try {
+            tr.waitForAll();
+        } catch (Exception e) {
+        }
+
+        //FontMetrics fm;
+        addModelButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_CLASS));
+        addModelButton.setSize(addModelButton.getPreferredSize());
+        addModelButton.addActionListener(this);
+        //addClassButton.setLocation(30, 10);
+//        addClassButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
+        Box header = Box.createHorizontalBox();
+        header.add(addModelButton);
+        header.add(Box.createHorizontalGlue());
+//        header.add(addStudentsButton);
+        header.add(Box.createRigidArea(new Dimension(10, 0)));
+        header.setPreferredSize(header.getMinimumSize());
+        this.add(header);
+        //addClassButton.setVisible(true);
+        this.add(Box.createVerticalStrut(15));
+        buildJTable();
+    }
+
+    /**
+     * Indicate that another panel is loaded and the connections of this panel
+     * must be closed.
+     */
     @Override
     public void end() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
-    @Override
-    public Component getHeaderPanel() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    /**
+     * Sets the centerpanel to communicate with.
+     *
+     * @param centerPanel The centerPanel to communicate with.
+     */
     @Override
     public void setCenterPanel(CenterPanel centerPanel) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        center = centerPanel;
     }
 
+    /**
+     * Returns a Panel that can function as a header panel.
+     *
+     * @return A panel that can function as a header panel.
+     * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
+     */
+    @Override
+    public Component getHeaderPanel() {
+        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT));
+    }
+
+    /**
+     * Invoked when an action occurs.
+     *
+     * @param e The ActionEvent.
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == addModelButton) {
+            GuiCreator.instance().ShowMessageDialog(center, "showing AddModelPanel");
+
+        }
+    }
+
+    /**
+     * Returns the current object, as the object to add to a gui.
+     *
+     * @return the current object.
+     * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
+     */
     @Override
     public JComponent getComponent() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this;
     }
 
     @Override
     public Object getUserObject() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }
