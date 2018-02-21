@@ -7,10 +7,14 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentApplet;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherScoContextManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
@@ -25,7 +29,9 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Level;
 
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -251,18 +257,44 @@ class ManifestFile {
 		return result;
 	}
 	
-	int addCourse(Hashtable course, int dwoProfile, int schoolID, int parent) throws DwoXmlRpcException, SQLException, IOException, XmlRpcException, PersistenceException, CourseException, Dwo2Exception
+	int addCourse(Hashtable course, int dwoProfile, int schoolID, int parent, int n) throws DwoXmlRpcException, SQLException, IOException, XmlRpcException, PersistenceException, CourseException, Dwo2Exception
 	{
 		String name;
 		String description;
 		name = (String) course.get(COURSE_TITLE);
 		description = (String) course.get(DESCRIPTION);
-		int courseID = PersistenceFacade.instance().addCourse(schoolID, notnull(name), notnull(description), dwoProfile, parent, false);
+		int courseID = addCourseRest(schoolID, notnull(name), notnull(description), dwoProfile, parent, false, n);
 		DomDwoProfile p = new DomDwoProfile();
 		p.setId(PersistentDwoProfile.buildPersistenceId((long)dwoProfile));
 		appendCourse(courseID, 0, course,p);
 		return courseID;
 	}
+
+	int addCourseRest(long schoolID, String name, String description,long dwoProfile, long parent, boolean isMap, long offset) throws Dwo2Exception {
+    	PersistentCourse pc = new PersistentCourse();
+// if Course extends persistentCourse
+    		pc.setName(name);
+    		pc.setWithChildren(Boolean.valueOf(isMap));
+    		pc.setDescription(description);    		
+    		pc.setDwoProfileID(dwoProfile);
+// defaults:
+    		
+// special cases...
+    		pc.setParentID(parent); // NPE?
+    		pc.setSchoolID(schoolID);
+    		pc.setSequencenr(offset);
+    		
+    		DomCourseFull edit = pc.buildDomCourseFull();
+		edit = SecuredTeacherCourseManager.add(edit);
+// legacy
+		int pid = MySQLPersistenceId.getNativeId(edit).intValue();
+		return pid;
+
+	}
+	
+	
+	
+	
 	
 	void appendCourse(int courseID, int offset, Hashtable course, DomDwoProfile profile) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException, PersistenceException, Dwo2Exception
 	{

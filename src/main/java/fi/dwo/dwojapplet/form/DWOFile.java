@@ -69,10 +69,10 @@ public class DWOFile {
 	 * @throws Dwo2Exception 
 	 * @see fi.dwo.server.form.ManifestFile#addCourse(java.util.Hashtable, int, int)
 	 */
-	public int addCourse(Hashtable course, int dwoProfile, int schoolID, int parent)
+	public int addCourse(Hashtable course, int dwoProfile, int schoolID, int parent, int offset)
 			throws DwoXmlRpcException, SQLException, IOException,
 			XmlRpcException, PersistenceException, CourseException, Dwo2Exception {
-		return m.addCourse(course, dwoProfile, schoolID, parent);
+		return m.addCourse(course, dwoProfile, schoolID, parent, offset);
 	}
 
     /**
