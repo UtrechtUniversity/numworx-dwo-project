@@ -430,9 +430,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
                 languageOveride = args[o + 1];
                 o += 2;
             }else 
-            if (args.length > 1 + o && "-t".equals(args[o])) {
+            if (args.length > o && "-t".equals(args[o])) {
                 DwoHelper.setTest(true);
-                o += 2;
+                o += 1; // no parameter
             }
 //            if (args.length > 1 + o && "-x".equals(args[o])) {
 //                extensionOverride = args[o + 1];
