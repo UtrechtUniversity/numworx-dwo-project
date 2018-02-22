@@ -38,7 +38,7 @@ public class SecuredTeacherStudentModelManager {
      * @param context
      * @return
      */
-    @GET
+    @PUT
     @Produces({"application/json"})
     @Path("/getList")
     public List<DomStudentModelContext> getStudentModels(@Context SecurityContext sc, RestContext context) {
