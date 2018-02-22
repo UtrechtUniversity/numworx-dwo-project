@@ -192,7 +192,7 @@ public class SecuredUserScoDataManager {
 
 
 	static void getScormValues(List<DomMapEntry<String, String>> entryList,
-			PersistentStudentScoContext pssc) {
+			 PersistentStudentScoContext pssc) {
 		if (pssc == null) {
 			return;
 		}
