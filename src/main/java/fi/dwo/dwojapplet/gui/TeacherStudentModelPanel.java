@@ -281,6 +281,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         //addClassButton.setVisible(true);
         this.add(Box.createVerticalStrut(15));
         buildJTable();
+        this.add(Box.createVerticalStrut(15));
         textArea = new JTextArea();
         textArea.setEditable(false);
         textArea.setBackground(Color.LIGHT_GRAY);
