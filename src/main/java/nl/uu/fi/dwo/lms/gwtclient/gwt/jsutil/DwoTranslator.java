@@ -11,40 +11,44 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
  * Translator access for javascript via jsinteropt.
- * 
+ *
  * @author Gert van der Plas
  */
-
-@JsType(name="DwoTranslator", namespace = JsPackage.GLOBAL)
+@JsType(name = "DwoTranslator", namespace = JsPackage.GLOBAL)
 public class DwoTranslator {
+
     private static final DwoLocalesForGWT rb = GWT.create(DwoLocalesForGWT.class);
-    
+
     /**
      * A comfort function to yield an overview of all available translations for
      * the HTML5 developer.
-     * 
-     * @return 
+     *
+     * @return
      */
     @JsMethod
-    public List<String> getTranslationList(){
+    public List<String> getTranslationList() {
         // For Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
-        List<String> result= new ArrayList<>();
+        List<String> result = new ArrayList<>();
         Dwo2LocaleMessageCode codeList[] = Dwo2LocaleMessageCode.values();
-        for(Dwo2LocaleMessageCode code : codeList){
+        for (Dwo2LocaleMessageCode code : codeList) {
             result.add(code.name());
         }
         return result;
     }
 
     /**
-     * translates a string to the local encoding set in the application. 
-     * 
+     * translates a string to the local encoding set in the application.
+     *
      * @param text
-     * @return 
+     * @return
      */
     @JsMethod
-    public String  translate(String text){
-        return rb.getString(text);
+    public String translate(String text) {
+        try {
+            return rb.getString(text);
+        } catch (Exception e) {
+            return text;
+        }
     }
-    
+
 }
