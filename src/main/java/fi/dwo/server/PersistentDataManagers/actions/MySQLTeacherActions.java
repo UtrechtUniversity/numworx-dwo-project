@@ -27,6 +27,7 @@ public class MySQLTeacherActions extends MySQLSchoolAdminTeacherActions implemen
         try {
                 PersistentStudentModelContext pModel = new PersistentStudentModelContext();
                 pModel.setModelStructure(model.getModelStructure());
+                pModel.setSchoolID(model.getSchoolID());
                 pModel.setPublishState(PublishState.published);                
                 return StudentModelManager.create(pModel);
         } catch (Exception e) {
