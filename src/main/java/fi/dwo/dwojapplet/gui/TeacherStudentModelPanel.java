@@ -22,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
@@ -30,12 +31,13 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
- * 
- * 
+ *
+ *
  * @author plas0006
  */
 public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, ActionListener {
@@ -48,13 +50,15 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
     private CenterPanel center;
 
     private JButton addModelButton;
+    private JButton cancelButton;
     private JButton viewButton;
     private JTextArea textArea;
-    
+
     private JPanel jtbl;
     private TableRowSorter rowSorter;
-    
+
     private Image searchImage;
+    int row;
 
     public class ImageRenderer extends JLabel implements TableCellRenderer {
 
@@ -85,15 +89,14 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
         Object value;
 //        ClassTeacherPanelTableModel model;
-        int row;
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value,
-                boolean arg2, int row, int col) {
+                boolean arg2, int aRow, int aCol) {
             this.value = value;
             JButton button = new JButton(new ImageIcon((Image) value));
             button.addActionListener(this);
-            this.row = row;
+            row = aRow;
             //model = (ClassTeacherPanelTableModel) table.getModel();
             return button;
         }
@@ -111,7 +114,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                 Genson g = new GensonBuilder().withConverters(new GensonMapConverter()).useIndentation(true).create();
                 String language = DwoHelper.getLocale().getLocale();
                 String jsonModel = g.serialize(model.getModelStructure());
-                
+
                 textArea.setText(jsonModel);
 //                try {
 //                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
@@ -200,10 +203,10 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
         tableModel.init(prop.getModelList(), searchImage);
         jtable.setModel(tableModel);
-        rowSorter = new TableRowSorter(tableModel);        
+        rowSorter = new TableRowSorter(tableModel);
         rowSorter.toggleSortOrder(0);//
-        jtable.setRowSorter(rowSorter);        
-        
+        jtable.setRowSorter(rowSorter);
+
         if (jtable.getRowCount() > 0) {
             jtable.setRowSelectionInterval(0, 0);
         }
@@ -260,15 +263,18 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         }
 
         //FontMetrics fm;
-        addModelButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_CLASS));
+        addModelButton = new JButton(TextMapper.getText(TextMapper.BTN_ADD));
         addModelButton.setSize(addModelButton.getPreferredSize());
         addModelButton.addActionListener(this);
+        cancelButton = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
+        cancelButton.setSize(addModelButton.getPreferredSize());
+        cancelButton.addActionListener(this);
         //addClassButton.setLocation(30, 10);
 //        addClassButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
         Box header = Box.createHorizontalBox();
         header.add(addModelButton);
         header.add(Box.createHorizontalGlue());
-//        header.add(addStudentsButton);
+        header.add(cancelButton);
         header.add(Box.createRigidArea(new Dimension(10, 0)));
         header.setPreferredSize(header.getMinimumSize());
         this.add(header);
@@ -278,8 +284,9 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         textArea = new JTextArea();
         textArea.setEditable(false);
         textArea.setBackground(Color.LIGHT_GRAY);
-        this.add(textArea);
-        
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        this.add(scrollPane);
+
     }
 
     /**
@@ -320,8 +327,37 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addModelButton) {
-            GuiCreator.instance().ShowMessageDialog(center, "showing AddModelPanel");
+            if (textArea.isEditable()) {
+                //parse and save
+                Genson g = new GensonBuilder().withConverters(new GensonMapConverter()).useIndentation(true).create();
+                //String language = DwoHelper.getLocale().getLocale();
+                try {
+                    DomStudentModelStructure modelStructure = g.deserialize(textArea.getText(), DomStudentModelStructure.class);
+                    DomStudentModelContext model = new DomStudentModelContext();
+                    model.setModelStructure(modelStructure);
+                    //TODO Set and Add schoolId!
+                    prop.addModel(model);
+                } catch (Dwo2Exception ex) {
+                    Logger.getLogger(TeacherStudentModelPanel.class.getName()).log(Level.SEVERE, null, ex);
+                GuiCreator.instance().ShowErrorDialog(center, ex);
+                }
+                //saved, reset ui
+                addModelButton.setText(TextMapper.getText(TextMapper.BTN_ADD));
+                cancelButton.enable(true);
+                textArea.setEditable(false);
+                GuiCreator.instance().ShowMessageDialog(center, "Saving");
 
+            } else {
+                addModelButton.setText(TextMapper.getText(TextMapper.BTN_UPDATE));
+                textArea.setEditable(true);
+            }
+        } else if (e.getSource() == cancelButton) {
+            textArea.setEditable(false);
+            DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+            Genson g = new GensonBuilder().withConverters(new GensonMapConverter()).useIndentation(true).create();
+            //String language = DwoHelper.getLocale().getLocale();
+            String jsonModel = g.serialize(model.getModelStructure());
+            textArea.setText(jsonModel);
         }
     }
 
