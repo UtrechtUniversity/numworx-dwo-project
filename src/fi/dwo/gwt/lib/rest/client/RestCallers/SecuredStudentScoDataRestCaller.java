@@ -23,6 +23,11 @@ public interface SecuredStudentScoDataRestCaller extends RestService, ScoDataRes
 	public void setValues(RestScormValues restScormValues, MethodCallback<Boolean> callback);
 
 	@PUT
+	@Path("/secure/user/scoData/setValues")
+	public void setValuesETag(@HeaderParam("if-match") String eTag, RestScormValues restScormValues,
+			MethodCallback<Boolean> callback);
+	
+	@PUT
 	@Path("/secure/user/scoData/patchValues")
 	public void patchValues(@HeaderParam("if-match") String eTag, RestScormValues restScormValues,
 			MethodCallback<Boolean> callback);

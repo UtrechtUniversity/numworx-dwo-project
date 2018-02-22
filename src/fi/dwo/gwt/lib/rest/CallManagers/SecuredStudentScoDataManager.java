@@ -123,12 +123,17 @@ public class SecuredStudentScoDataManager implements StudentScoDataManager {
 		rest.setRestContext(context);
 		values.setScoContext(sco);
 		values.setSchoolClassID(schoolClassID);
+		String etag = map.get("ETag");
 		ArrayList<DomMapEntry<String,String>> list = new ArrayList<DomMapEntry<String,String>>(map.size());
 		for(Map.Entry<String, String> entry: map.entrySet()) {
-			list.add(new DomMapEntry<String,String>(entry));
+			if(! "ETag".equals(entry.getKey()))
+				list.add(new DomMapEntry<String,String>(entry));
 		}
 		values.setValues(list);
-		service.setValues(rest, callback);
+		if(etag == null)
+			service.setValues(rest, callback);
+		else
+			service.setValuesETag(etag, rest, callback);
 	}
 
 	@Override

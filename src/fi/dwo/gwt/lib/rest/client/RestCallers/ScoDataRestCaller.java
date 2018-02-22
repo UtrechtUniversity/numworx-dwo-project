@@ -16,6 +16,9 @@ public interface ScoDataRestCaller {
 	public void setValues(RestScormValues restScormValues,
 			MethodCallback<Boolean> callback);
 
+	public void setValuesETag(String eTag, RestScormValues restScormValues,
+			MethodCallback<Boolean> callback);
+
 	public void patchValues(String eTag, RestScormValues restScormValues,
 			MethodCallback<Boolean> callback);
 
