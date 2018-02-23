@@ -393,5 +393,13 @@ public class SelectModuleItem
 	public DomClassCourse getClassCourse() {
 		return classCourse;
 	}
+
+	public Boolean getNonPublic() {
+		return Boolean.valueOf(isFromSchool());
+	}
+
+	public void setFromSchool(boolean fromSchool) {
+		this.fromSchool = fromSchool;
+	}
 	
 }

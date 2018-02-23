@@ -16,8 +16,11 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
+import nl.uu.fi.dwo.mobile.client.ui.places.Hash;
+import nl.uu.fi.dwo.mobile.client.ui.places.Hash.Type;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
@@ -162,11 +165,29 @@ public class LoginActivity extends MGWTAbstractActivity
 		new Runnable() {
 			public void run() {
 				WaitScreen.instance().hide();
+// grab before clearing 
+				Boolean nonPublic = null;
+				if(next instanceof Hash) {
+					Hash hash = (Hash) next;
+					String token = hash.getToken();
+					SelectModuleItem item = 
+							hash.getType() == Type.c
+								? SelectModuleItemHolder.getItemByID(token) 
+								: SelectModuleItemHolder.getScoByID(token); // type == Type.s;
+					if(item != null) {
+						nonPublic = item.getNonPublic();
+					}
+				}
 				SelectModuleItemHolder.destroy();
 				String user_id = Cookies.getCookie(DWO_SAML_USER_ID);
 				String org_id = Cookies.getCookie(DWO_SAML_ORGANIZATION_ID);
 				view = clientFactory.getLoginView();
 				view.showError(null);
+				
+				if(Boolean.TRUE.equals(nonPublic)) {
+					view.allowGuest(false);
+				} else {
+					//view.allowGuest(true);
 				DWOplayer.dwoProfile.then(new Success<DomDwoProfile, Void>() {
 
 					@Override
@@ -177,6 +198,7 @@ public class LoginActivity extends MGWTAbstractActivity
 					}
 
 				});
+				}
 				// TESTING		
 				//		user_id = "292832126";
 				//		org_id = "\"lti:385\"";

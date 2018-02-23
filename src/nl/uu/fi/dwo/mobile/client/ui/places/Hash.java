@@ -3,7 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.places;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceTokenizer;
 
-interface Hash {
+public interface Hash {
 	enum Type { c(new c.Tokenizer()), s(new s.Tokenizer());
 		
 		final private PlaceTokenizer<Place> t;
@@ -18,4 +18,5 @@ interface Hash {
 	
 	Type getType();
 	Place getPlace();
+	String getToken();
 }

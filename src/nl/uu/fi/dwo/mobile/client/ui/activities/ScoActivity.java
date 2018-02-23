@@ -12,15 +12,19 @@ import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewNumworx;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
@@ -43,6 +47,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 	private Place next;
 	@Inject PlaceController placeController;
 	@Inject nl.uu.fi.dwo.mobile.client.ui.RPCHandler rpcHandler;
+	private boolean started;
 
 	@Inject ScoActivity() {}
 	
@@ -86,6 +91,13 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 				public Promise<String> call(Promise<DomScoContext> resolved) throws Exception {
 					name = resolved.getValue().getScoName();
 					item.setName(name);
+					PersistenceId courseId = resolved.getValue().getCourseId();
+					DomCourse course = new DomCourse();
+					course.setId(courseId);
+					rpcHandler.getCourse(course)
+					.then(p-> {
+						item.setFromSchool(p.getValue().getSchoolId() != null); return p;
+					});
 					view.setScoType(resolved.getValue().getScoType());
 					view.setTitle(name);
 					return Promises.resolved(name);
@@ -103,7 +115,8 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 				if(t instanceof Dwo2Exception) {
 					Dwo2Exception e = (Dwo2Exception) t;
 					if( e.getDwo2Code() == Dwo2ExceptionCode.Rest_LoginNeeded)
-					{
+					{	item.setFromSchool(true);
+						started = false;
 						gotoNext();
 						return;
 					}
@@ -128,6 +141,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 					@Override
 					public Promise<Void> call(Promise<Void> resolved)
 							throws Exception {
+						started = true;
 						view.setupModule(name, item.getFile());
 						panel.setWidget(view);
 						return null;
@@ -138,14 +152,23 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 
 	@Override
 	public void onStop() {
+		started = false;
 		view.setAnchorContext(defaultContext);
 		view.close();
 		super.onStop();
 	}
 	
 	@Override public void onCancel() {
+		started = false;
 		view.setAnchorContext(defaultContext);
 		super.onCancel();
+	}
+
+	@Override
+	public String mayStop() {
+		if (started && DWOplayer.withUser())
+			return Text.constants.maybe_lost_data();
+		return super.mayStop();
 	}
 
 	@Override
@@ -157,6 +180,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 	}
 
 	void gotoNext() {
+		started = false;
 		placeController.goTo(next);
 	}
 

@@ -63,7 +63,7 @@ public class TabletActivityMapper implements ActivityMapper
 		if (place instanceof nl.uu.fi.dwo.mobile.client.ui.places.s) 
 		{
 			String id = ((nl.uu.fi.dwo.mobile.client.ui.places.s) place).getToken();
-			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
+			SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
 			if(item == null)
 			{
 				item = new SelectModuleItem(id, SelectModuleItem.Type.SCO);

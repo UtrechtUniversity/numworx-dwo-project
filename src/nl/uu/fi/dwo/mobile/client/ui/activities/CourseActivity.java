@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
@@ -82,6 +83,7 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 						Dwo2Exception e = (Dwo2Exception) t;
 						if( e.getDwo2Code() == Dwo2ExceptionCode.Rest_LoginNeeded)
 						{
+							item.setFromSchool(true);
 							placeController.goTo(next);
 							return;
 						}
@@ -118,6 +120,8 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 					item.setDescription(description);
 					item.setName(name);
 					item.showChildren(!resolved.getValue().isNotVisible());
+					PersistenceId schoolId = resolved.getValue().getSchoolId();
+					item.setFromSchool(schoolId != null);
 					view.setDescription(item);
 					view.render(item);
 					return null;
