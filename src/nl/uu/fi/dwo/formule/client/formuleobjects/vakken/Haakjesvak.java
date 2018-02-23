@@ -47,10 +47,10 @@ public class Haakjesvak extends FormuleElementWithChildren
 	}
 
 	protected void build(PathBuilder ctx) {
-		int h = 3 * fm.getAscent() / 2;
+		int h = 4 * fm.getAscent() / 3;
 		int hh = h / 2;
 		int b = h / 6;
-		int bb = b / 2;
+		int bb = 2*b / 3;
 
 		int c = fm.getAscent() / 6;
 		int d = fm.getAscent() / 8;
@@ -69,6 +69,7 @@ public class Haakjesvak extends FormuleElementWithChildren
 //		
 //		ctx.beginPath();
 		ctx.moveTo(width-b-1-c, d);
+		ctx.lineTo(width-b+bb-1-c, d+bb);
 		ctx.lineTo(width-1-c, d+hh-b);
 		ctx.lineTo(width-1-c, height-hh+b-d);
 		ctx.lineTo(width-b+bb-1-c, height-bb-d);
