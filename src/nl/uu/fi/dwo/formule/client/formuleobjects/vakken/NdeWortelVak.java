@@ -73,8 +73,8 @@ public class NdeWortelVak extends FormuleElementWithChildren
 		ctx.moveTo(getChild(1).width - 2, 2 * height / 3);
 		ctx.lineTo(fm.getAscent() / 3 + getChild(1).width - 2, height);
 		ctx.lineTo(2 * fm.getAscent() / 3 + getChild(1).width - 3, fm.getAscent() / 8);
-		ctx.moveTo(2 * fm.getAscent() / 3 + getChild(1).width - 2, fm.getAscent() / 8);
-		ctx.lineTo(width + 5, fm.getAscent() / 8);
+		//ctx.moveTo(2 * fm.getAscent() / 3 + getChild(1).width - 2, fm.getAscent() / 8);
+		ctx.lineTo(width , fm.getAscent() / 8);
 		ctx.stroke();
 	}
 
