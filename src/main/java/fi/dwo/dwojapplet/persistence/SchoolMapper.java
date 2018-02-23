@@ -7,8 +7,10 @@ import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.xmlrpc.applet.XmlRpcException;
@@ -230,7 +232,11 @@ class SchoolMapper extends XmlRpcMapper {
         s.setRights((String) data.get("schoolRights"));
         Object expire = data.get("expire");
         if (expire instanceof Date) {
-            s.setExpire((Date) expire);
+        	    Date date = (Date) expire;
+        	    Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        	    c.setTime(date);
+        	    date = new Date(c.get(Calendar.YEAR)-1900,c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+            s.setExpire(date);
         } else {
             s.setExpire(null);
         }

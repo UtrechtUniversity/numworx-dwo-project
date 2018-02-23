@@ -2148,6 +2148,8 @@ public class PersistenceFacade {
             if (date == null) {
                 date0 = DATE_NULL;
             }
+// safe the date in UTC:
+            date0 = new Date(Date.UTC(date0.getYear(), date0.getMonth(), date.getDate(), 0, 0, 0));
             if (DbAccessCreator.instance().setExpireDate(schoolID, date0)) {
                 school.setExpire(date);
             }
