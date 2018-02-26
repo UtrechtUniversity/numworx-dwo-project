@@ -2,7 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.mapperconstants;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'C:/Users/tacom103/eclipse-workspace/DWOplayer/src/nl/uu/fi/dwo/mobile/client/ui/views/interactionviews/mapperconstants/Feedback.properties'.
+ * 	'/Users/sietske/eclipse-oxygen-workspace/DWOplayer/src/nl/uu/fi/dwo/mobile/client/ui/views/interactionviews/mapperconstants/Feedback.properties'.
  */
 public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup {
   
@@ -14,6 +14,42 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   @DefaultStringValue("Je hebt niet het gevraagde significantieniveau gebruikt.")
   @Key("buggy.component.alpha")
   String buggy_component_alpha();
+
+  /**
+   * Translated "Bij welk significantieniveau heb je de kritieke waarde opgezocht?".
+   * 
+   * @return translated "Bij welk significantieniveau heb je de kritieke waarde opgezocht?"
+   */
+  @DefaultStringValue("Bij welk significantieniveau heb je de kritieke waarde opgezocht?")
+  @Key("buggy.component.critical.chi-value.alpha")
+  String buggy_component_critical_chi_value_alpha();
+
+  /**
+   * Translated "Bij welk aantal vrijheidsgraden heb je de kritieke waarde opgezocht?".
+   * 
+   * @return translated "Bij welk aantal vrijheidsgraden heb je de kritieke waarde opgezocht?"
+   */
+  @DefaultStringValue("Bij welk aantal vrijheidsgraden heb je de kritieke waarde opgezocht?")
+  @Key("buggy.component.critical.chi-value.df")
+  String buggy_component_critical_chi_value_df();
+
+  /**
+   * Translated "In welke staart(en) van de verdeling ligt het kritieke gebied bij een Chi-kwadraattoets? Links, rechts, of allebei?".
+   * 
+   * @return translated "In welke staart(en) van de verdeling ligt het kritieke gebied bij een Chi-kwadraattoets? Links, rechts, of allebei?"
+   */
+  @DefaultStringValue("In welke staart(en) van de verdeling ligt het kritieke gebied bij een Chi-kwadraattoets? Links, rechts, of allebei?")
+  @Key("buggy.component.critical.chi-value.sided")
+  String buggy_component_critical_chi_value_sided();
+
+  /**
+   * Translated "Wat is precies de kritieke waarde en wat is de toetsingsgrootheid?".
+   * 
+   * @return translated "Wat is precies de kritieke waarde en wat is de toetsingsgrootheid?"
+   */
+  @DefaultStringValue("Wat is precies de kritieke waarde en wat is de toetsingsgrootheid?")
+  @Key("buggy.component.critical.chi-value.test-value")
+  String buggy_component_critical_chi_value_test_value();
 
   /**
    * Translated "Bij welk significantieniveau heb je de kritieke waarde opgezocht?".
@@ -412,6 +448,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_conclusion_p_value__PValue_missing();
 
   /**
+   * Translated "Je hebt niet de juiste waarde van de correlatiecoefficient ingevuld. ".
+   * 
+   * @return translated "Je hebt niet de juiste waarde van de correlatiecoefficient ingevuld. "
+   */
+  @DefaultStringValue("Je hebt niet de juiste waarde van de correlatiecoefficient ingevuld. ")
+  @Key("check.correlation")
+  String check_correlation();
+
+  /**
    * Translated "Dit is niet de juiste kritieke waarde.".
    * 
    * @return translated "Dit is niet de juiste kritieke waarde."
@@ -509,6 +554,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   @DefaultStringValue("Het aantal vrijheidsgraden is niet correct.")
   @Key("check.df: no match")
   String check_df__no_match();
+
+  /**
+   * Translated "De verwachte frequenties kloppen niet allemaal.".
+   * 
+   * @return translated "De verwachte frequenties kloppen niet allemaal."
+   */
+  @DefaultStringValue("De verwachte frequenties kloppen niet allemaal.")
+  @Key("check.expected-frequencies")
+  String check_expected_frequencies();
 
   /**
    * Translated "Dit is niet het juiste aantal groepen.".
@@ -610,6 +664,33 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_ha__value_mismatch();
 
   /**
+   * Translated ": total = De totalen van de geobserveerde frequenties kloppen niet allemaal.".
+   * 
+   * @return translated ": total = De totalen van de geobserveerde frequenties kloppen niet allemaal."
+   */
+  @DefaultStringValue(": total = De totalen van de geobserveerde frequenties kloppen niet allemaal.")
+  @Key("check.observed-totals")
+  String check_observed_totals();
+
+  /**
+   * Translated "De totalen van de geobserveerde frequenties kloppen niet allemaal.".
+   * 
+   * @return translated "De totalen van de geobserveerde frequenties kloppen niet allemaal."
+   */
+  @DefaultStringValue("De totalen van de geobserveerde frequenties kloppen niet allemaal.")
+  @Key("check.observed-totals: columns")
+  String check_observed_totals__columns();
+
+  /**
+   * Translated "De totalen van de geobserveerde frequenties kloppen niet allemaal.".
+   * 
+   * @return translated "De totalen van de geobserveerde frequenties kloppen niet allemaal."
+   */
+  @DefaultStringValue("De totalen van de geobserveerde frequenties kloppen niet allemaal.")
+  @Key("check.observed-totals: rows")
+  String check_observed_totals__rows();
+
+  /**
    * Translated "Dit is niet de juiste p-waarde bij de toetsingsgrootheid.".
    * 
    * @return translated "Dit is niet de juiste p-waarde bij de toetsingsgrootheid."
@@ -700,6 +781,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   String check_rejectioncritical__anova_mismatch();
 
   /**
+   * Translated "Past het teken dat je in het kritiek gebied gebruikt bij de toets die je aan het doen bent?".
+   * 
+   * @return translated "Past het teken dat je in het kritiek gebied gebruikt bij de toets die je aan het doen bent?"
+   */
+  @DefaultStringValue("Past het teken dat je in het kritiek gebied gebruikt bij de toets die je aan het doen bent?")
+  @Key("check.rejectioncritical: chi-squared mismatch")
+  String check_rejectioncritical__chi_squared_mismatch();
+
+  /**
    * Translated "Bepaal eerst het gehele kritieke gebied, voor je nakijkt.".
    * 
    * @return translated "Bepaal eerst het gehele kritieke gebied, voor je nakijkt."
@@ -770,6 +860,15 @@ public interface Feedback extends com.google.gwt.i18n.client.ConstantsWithLookup
   @DefaultStringValue("Deze toetsrichting past niet bij een ANOVA.")
   @Key("check.sided: anova")
   String check_sided__anova();
+
+  /**
+   * Translated "Deze toetsrichting past niet bij een Chi-kwadraattoets.".
+   * 
+   * @return translated "Deze toetsrichting past niet bij een Chi-kwadraattoets."
+   */
+  @DefaultStringValue("Deze toetsrichting past niet bij een Chi-kwadraattoets.")
+  @Key("check.sided: chi-squared")
+  String check_sided__chi_squared();
 
   /**
    * Translated "Dit is niet de juiste waarde van de standaardfout.".
