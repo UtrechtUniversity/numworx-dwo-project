@@ -109,6 +109,7 @@ public class Save2004Action extends GuiAction {
 
             // ugly string creation
             String scormURL = DwoHelper.getAppURLPath().toString() + variant + "/";
+            scormURL = GuiConstants.PLAYER_BASE;
             runner.setBase(scormURL);
             runner.setUser(GuiCreator.instance().getUser());
 
@@ -135,7 +136,11 @@ public class Save2004Action extends GuiAction {
  		out.putNextEntry(new ZipEntry("metadata.xml"));
  		runner.copy(au.getStream("resources/metadata.txt"), out);
  		out.closeEntry();
-
+// Logica.js
+ 		out.putNextEntry(new ZipEntry("logica.js"));
+ 		runner.copy(au.getStream("resources/logica.js"), out);
+ 		out.closeEntry();
+		
 		makeCopies(out, runner, runner.getBase());
 	}
 
@@ -203,6 +208,7 @@ public class Save2004Action extends GuiAction {
         } catch(Exception e) {
         	LOG.log(Level.SEVERE, "makeCopies", e);;
         }
+        set.remove("logica.js");
         viewFileNames = set.toArray(viewFileNames);
         
         copyList(out, runner, scormURL, viewFileNames, prefix);

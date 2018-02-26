@@ -126,6 +126,8 @@ public abstract class GuiConstants {
     public final static int CENTER_HEIGHT = 503;
     private static final String INCLUDE = "include";
     public static final String SEARCH_IMAGE = "resources/vergrootglas.gif";
+
+	public static String PLAYER_BASE = null;
     public static String DEPLOY_VARIANT = "";
     public static boolean DEEP_LINK;
 
@@ -175,6 +177,7 @@ public abstract class GuiConstants {
         DEPLOY_VARIANT = getString(prop, "deployVariant");
         PLAYER = getString(prop, "player");
         STUDENT_PLAYER = getString(prop, "student_player");
+        PLAYER_BASE = getString(prop, "player_base");
 // TODO deze code opnemen in profile.properties:
         dwoProfile = profile;
         if (profile == 5 || profile == 56) {
