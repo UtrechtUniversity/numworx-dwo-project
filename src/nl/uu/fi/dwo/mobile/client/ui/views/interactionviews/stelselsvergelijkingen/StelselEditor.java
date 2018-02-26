@@ -250,7 +250,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 			hoofdPanel.geefHoofdEditor().zetFocusFalse();
 			heeftFocus = true;
 		}
-		if(!fromEditor)
+		if(!fromEditor && editor != null)
 			editor.requestFocus();
 	}
 	

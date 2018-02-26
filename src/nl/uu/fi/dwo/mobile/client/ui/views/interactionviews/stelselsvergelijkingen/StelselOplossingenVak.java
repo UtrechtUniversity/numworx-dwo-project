@@ -132,8 +132,12 @@ public class StelselOplossingenVak
 	
 	public void requestFocus()
 	{
-		editor.setCurrent(0, 0);
-		editor.requestFocus();
+		if(editor != null)
+		{
+			editor.setCurrent(0, 0);
+			editor.requestFocus();
+		}
+		
 	}
 
 	public void init(Map h, String[] randomVars, HashMap<String, Number> randomValues)

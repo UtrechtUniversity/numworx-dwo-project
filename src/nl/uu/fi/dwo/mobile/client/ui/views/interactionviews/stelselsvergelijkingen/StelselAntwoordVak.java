@@ -313,7 +313,9 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 	{
 		if(rekenVakZichtbaar)
 		{	if(!rekenVak.geefHoofdEditor().heeftKinderen())
+			{	
 				rekenVak.geefHoofdEditor().requestFocus(false);
+			}
 		}
 		else
 			focusNaarOplossingenVak();
