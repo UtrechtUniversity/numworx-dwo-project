@@ -15,6 +15,7 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 	private DWOTabletKeyboardGrUpper grupper;
 	private DWOTabletKeyboardGrLower grlower;
 	private DWOMathKeyboard math;
+	DWOTabletKeyboardPen pen;
 
 	DWOTabbedDesktopKeyboard(int nr) {
 		k123 = current = createKeyboard(nr);
@@ -45,6 +46,12 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 		disableKey(math.pad.t3_16);
 		disableKey(math.pad.t4_16);
 		main.add(math);
+		
+		
+		pen = new DWOTabletKeyboardPen();
+		pen.setDelegate(this);
+		pen.setVisible(false);
+		main.add(pen);
 		
 		setPixelSize(-1, getKeyboardHeight());
 	}
@@ -79,6 +86,7 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 //		case 0: return new DesktopKeyboardOnderbouw();
 		default:
 		case 1: return new DWODesktopKeyboard().init();
+//		case 1: return new DWOTabletKeyboard().init();
 //		case 2: return new DesktopKeyboardGonio().init();
 //		case 3: return new DesktopKeyboardStatistiek();
 //		case 4: return new DesktopKeyboardMeetkunde().init();
@@ -92,6 +100,7 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 //		grupper.setEditor(formuleEditor);
 //		grlower.setEditor(formuleEditor);
 		math.setEditor(formuleEditor);
+		pen.setEditor(formuleEditor);
 	}
 
 	private HasHeight scrollPanel; 
@@ -120,10 +129,13 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 
 	@Override
 	public void focus() {
+		if(current==pen) pen.focus(); // does read formula
 		super.focus();
 		resizeScrollPanel(getKeyboardHeight());
 		FocusOnTouch.focus();
 	}
+	
+	
 
 	@Override
 	public void softFocus() {
@@ -163,6 +175,10 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 	
 	public void switch123() {
 		switchTo(k123);		
+	}
+	
+	public void switchHand() {
+		switchTo(pen);		
 	}
 
 	private void switchTo(AbstractKeyboard kto) {
