@@ -1176,9 +1176,11 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			if (isBack)
 			{
 				int x = wo.getBox().x;
-				int y = wo.getBoxMid().y - wo.getBox().width / 2;
+				//int y = wo.getBoxMid().y - wo.getBox().width / 2;
+				int y = wo.getBoxMid().y - averageHeight / 2;
 				int w = wo.getBox().width;
-				int h = wo.getBox().width;
+				//int h = wo.getBox().width;
+				int h = averageHeight;
 				Rectangle box = new Rectangle(x, y, w, h);
 				int objectsBefore = writeObjects.size();
 //System.out.println("before " + objectsBefore);				
@@ -1189,7 +1191,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 				{	lastObject = null;
 				}
 				else
-				{	lastObject = wo;
+				{	wo = new WriteObject("-",wo.getPoints());
+					lastObject = wo;
 					writeObjects.add(wo);
 				}
 			}
@@ -1454,7 +1457,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		
 		// =
 		else if (((woLast.getTeken().equals("-")) && wo.getTeken().equals("-")) ||
-				 ((woLast.getTeken().equals("back")) && wo.getTeken().equals("back")))
+				//((woLast.getTeken().equals("back")) && wo.getTeken().equals("back")))
+				 ((woLast.getTeken().equals("-")) && wo.getTeken().equals("back")))
 		{
 			if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < averageHeight / 3 && 
 			    Math.abs(woLast.getBoxMid().y - wo.getBoxMid().y) < 2 * averageHeight / 3 )
