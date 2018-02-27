@@ -1234,6 +1234,9 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		if (gewensteEindOplossing != null)
 			var = gewensteEindOplossing.geefVergelijkingVar();
 		
+		//nodig om vorm te checken (daar niet substitueren antwoordSubstituties)
+		VergelijkingMeerv antwoordVoorAntwSub = antwoord;
+		
 
 		if (antwoordSubstituties != null && antwoord != null) {
 			for (int i = 0; i < antwoordSubstituties.length; i++)
@@ -1313,7 +1316,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 
 			isJuisteVorm = false;
 			for (int i = 0; i < juisteVormen.length; i++) {
-				isJuisteVorm = isJuisteVorm || Algebra.gelijkGevormd(antwoord, juisteVormen[i]);
+				isJuisteVorm = isJuisteVorm || Algebra.gelijkGevormd(antwoordVoorAntwSub, juisteVormen[i]);
 				if (isJuisteVorm)
 					break;
 			}
