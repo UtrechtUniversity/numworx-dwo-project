@@ -1275,6 +1275,8 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			if(FormuleParser.isDiffOperatoren())
 			{	antwoord = antwoord.vervangDifferentialen(diffVar);
 				antwoord = antwoord.vervangDiffs(gewensteEindOplossing.geefEindOplossingen(var), var);
+				antwoordVoorAntwSub = antwoordVoorAntwSub.vervangDifferentialen(diffVar);
+				antwoordVoorAntwSub = antwoordVoorAntwSub.vervangDiffs(gewensteEindOplossing.geefEindOplossingen(var), var);
 			}
 			
 			boolean isGelijkwaardigEind = antwoord.isOplossing(gewensteEindOplossing.geefEindOplossingen(var), var, gewensteEindOplossing.geefVergTekens());
