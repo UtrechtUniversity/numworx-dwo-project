@@ -11,6 +11,10 @@ import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 import java.applet.Applet;
 import java.applet.AppletContext;
@@ -25,6 +29,7 @@ import java.io.Writer;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -32,6 +37,8 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+
+import com.owlike.genson.Genson;
 
 /**
  * This class is responsible for the Sco data. It also implements the
@@ -592,7 +599,18 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
                 return String.valueOf(tmpSc);
             }
         }
-
+// FIXME export schoolmodels
+        if ( DwoHelper.isTest() && "studentModelContexts".equals(name)) {
+        		try {
+				List<DomStudentModelContext> list = SecureTeacherStudentModelManager.getList();
+				Genson genson = StoredRestManager.getInstance().getGenson();
+				return genson.serialize(list);
+			} catch (Exception e) {
+				LOG.log(Level.WARNING, "studentModelContexts", e);
+				return null;
+			}
+        }
+        
         Hashtable ld = getLaunchdata();
 
         Object result = ld.get(name);

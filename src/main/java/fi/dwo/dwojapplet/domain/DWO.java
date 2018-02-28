@@ -89,6 +89,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.plaf.ColorUIResource;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 
 import org.apache.xmlrpc.applet.MySimpleXmlRpcClient;
@@ -2110,6 +2111,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 		Object mode = m.get("mode");
 		int value = mode == null ? 0 : Integer.parseInt(mode.toString());
 		scoContext.setScoType(ScoType.values()[value]);
+		extractStudentModel(scoContext, sco, m);
 		scoData.setLaunchdata(launchdata);
 		if (sco.hasFeature(Sco.JSON_OUT))
 			scoData.setLaunchdatabytes(sco.getLaunchdataBytes());
@@ -2118,6 +2120,22 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 		int scoid = MySQLPersistenceId.getNativeId(scoContext).intValue();
 		sco = (Sco) PersistenceFacade.instance().get(scoid, Sco.class);
 		return sco;
+	}
+
+	protected void extractStudentModel(DomScoContextFull scoContext, Sco sco, Map<?, ?> m) {
+		Object instellingenStr = m.get("instellingen");
+		try {
+			Map map = (Map) StringCodeObject.decodeStringToObject(instellingenStr.toString(), sco.getApplet().getClass().getClassLoader());
+			String model = (String) map.get("studentModelId");
+			if(model != null) {
+				scoContext.setStudentModelContext(new PersistenceId(model));
+			} else {
+				scoContext.setStudentModelContext(null);
+			}
+		} catch(Exception e) {		
+			scoContext.setStudentModelContext(null);
+			LOG.log(Level.WARNING, "instellingen/model failed", e);
+		};
 	}
 
     /*
@@ -2141,6 +2159,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 			scoContext.setId(PersistentScoContext.buildPersistenceId((long)sco.getScoID()));
 			scoData = new DomScoData();
 			scoData.setLaunchdata(sco.getLaunchdataString());
+			extractStudentModel(scoContext, sco, m);
 	  		if (sco.hasFeature(Sco.JSON_OUT))
 	  			scoData.setLaunchdatabytes(sco.getLaunchdataBytes());
 		} catch (Exception e) {
