@@ -42,7 +42,7 @@ import org.eclipse.persistence.annotations.Converter;
 //  UNIQUE INDEX `modelID_UNIQUE` (`modelID` ASC),
 //  UNIQUE INDEX `schoolID_UNIQUE` (`schoolID` ASC));
 @Entity
-@Table(name = "tblStudentModelContext", schema = "")
+@Table(name = "tblstudentmodelcontext", schema = "")
 @Converter(name = "studentModelStructureConverter", converterClass = JpaEclipseConverterDomStudentModelStructure.class)
 @XmlRootElement
 @NamedQueries({
