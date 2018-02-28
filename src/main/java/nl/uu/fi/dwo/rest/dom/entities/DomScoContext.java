@@ -18,7 +18,10 @@ public class DomScoContext extends DomScoContextId {
     private Long sequencenr;
     private String image; // zie DomCourseStudent
     private ScoType scoType;
-
+    
+    private PersistenceId schoolId; // Zie domCourse
+    private PersistenceId studentModelContext; // XXX overleg nodig ID of compleet?
+    
     /**
      * @return the courseId
      */
@@ -110,5 +113,27 @@ public class DomScoContext extends DomScoContextId {
 	public void setScoType(ScoType scoType) {
 		if (scoType == ScoType.normal) scoType = ScoType.OEFENEN; // Backwards compatibility
 		this.scoType = scoType;
+	}
+
+	public PersistenceId getSchoolId() {
+		return schoolId;
+	}
+
+	public void setSchoolId(PersistenceId schoolId) {
+		this.schoolId = schoolId;
+	}
+
+	/**
+	 * @return the studentModelContext
+	 */
+	public PersistenceId getStudentModelContext() {
+		return studentModelContext;
+	}
+
+	/**
+	 * @param persistenceId the studentModelContext to set
+	 */
+	public void setStudentModelContext(PersistenceId persistenceId) {
+		this.studentModelContext = persistenceId;
 	}
 }

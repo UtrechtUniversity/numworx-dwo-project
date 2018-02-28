@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author plas0006
  */
 @XmlRootElement
-public class DomStudentModelStructure extends DomStudentModelContextId {
+public class DomStudentModelStructure {
 
     private static final Logger LOG = Logger.getLogger(DomStudentModelStructure.class.getName());
     private DomStudentModelContextInfo info;
