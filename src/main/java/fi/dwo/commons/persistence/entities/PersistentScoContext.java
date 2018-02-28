@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
@@ -91,11 +92,19 @@ public class PersistentScoContext implements Serializable {
     /** 
      * @since 1.5.0 (was al in 1.5 besteld);
      */
-    
     @Column(name="urnID")
     private Long urnID;
     @Column(name="scoType", nullable = false)
     private ScoType scoType = ScoType.OEFENEN;
+    /**
+     * @since 1.5.2
+     */
+    @Column(name="schoolID")
+    private Long schoolID;
+    @Column(name="dwoProfileID")
+    private Long dwoProfileID;
+    @Column(name="modelID")
+    private Long modelID;
     
 ////not supported.
 //    /**
@@ -179,6 +188,30 @@ public class PersistentScoContext implements Serializable {
         this.sequencenr = sequencenr;
     }
 
+    public Long getSchoolID() {
+      return schoolID;
+    }
+
+    public void setSchoolID(Long schoolID) {
+      this.schoolID = schoolID;
+    }
+
+    public Long getDwoProfileID() {
+      return dwoProfileID;
+    }
+
+    public void setDwoProfileID(Long dwoProfileID) {
+      this.dwoProfileID = dwoProfileID;
+    }
+
+    public Long getModelID() {
+      return modelID;
+    }
+
+    public void setModelID(Long modelID) {
+      this.modelID = modelID;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -214,6 +247,9 @@ public class PersistentScoContext implements Serializable {
         scoContext.setId(buildPersistenceId());
         scoContext.setAppletId(PersistentApplet.buildPersistenceId(this.appletID));
         scoContext.setCourseId(PersistentCourse.buildPersistenceId(this.courseID));
+        scoContext.setSchoolId(PersistentSchool.buildPersistenceId(this.schoolID));
+        scoContext.setStudentModelContext(PersistentStudentModelContext.buildPersistenceId(modelID));
+        
         scoContext.setScoName(sconame);
         scoContext.setSequencenr(sequencenr);
         scoContext.setShowScore(showscore);
