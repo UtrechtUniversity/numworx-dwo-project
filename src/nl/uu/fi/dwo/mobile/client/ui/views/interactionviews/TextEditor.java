@@ -409,6 +409,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	@Override
 	public void kijkNa() {
+		
+		//TODO voor Wim:
+		//log ID opvragen
+		//bevat logID "adviseme": 
+		//opsturen naar IDEAS.
 	}
 
 	@Override
