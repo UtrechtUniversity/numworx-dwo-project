@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `tblanalyticalmodel`;
 DROP TABLE IF EXISTS `tblapplet`;
 DROP TABLE IF EXISTS `tblappletconfig`;
 DROP TABLE IF EXISTS `tblclass`;
@@ -18,11 +19,14 @@ DROP TABLE IF EXISTS `tblscocontext`;
 DROP TABLE IF EXISTS `tblscodata`;
 DROP TABLE IF EXISTS `tblscoview`;
 DROP TABLE IF EXISTS `tblstudentof`;
+DROP TABLE IF EXISTS `tblstudentmodelcontext`;
+DROP TABLE IF EXISTS `tblstudentmodeldata`;
 DROP TABLE IF EXISTS `tblstudentscodata`;
 DROP TABLE IF EXISTS `tblstudentscocontext`;
 DROP TABLE IF EXISTS `tblteacherof`;
 DROP TABLE IF EXISTS `tbluser`;
 DROP TABLE IF EXISTS `tblschoolgroup`;
+DROP TABLE IF EXISTS `tblurnresource`;
 DROP TABLE IF EXISTS `tomcat_roles_view`;
 DROP TABLE IF EXISTS `tomcat_user_view`;
 
