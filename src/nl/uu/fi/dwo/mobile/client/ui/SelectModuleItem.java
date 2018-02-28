@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 //import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.xml.client.Node;
@@ -63,6 +64,7 @@ public class SelectModuleItem
 	private boolean showChildren = true;
 	private DomClassCourse classCourse;
 	private ScoType scoType;
+	private PersistenceId studentModelId;
 
 	public ScoType getScoType() {
 		if (getCourseType() == CourseType.assesment)
@@ -221,6 +223,7 @@ public class SelectModuleItem
 		if(scoType == null && name .contains("oets")) {
 			scoType = ScoType.ZELFTOETS;
 		}
+		studentModelId = sco.getStudentModelContext();
 	}
 
 	public String getName()
@@ -400,6 +403,10 @@ public class SelectModuleItem
 
 	public void setFromSchool(boolean fromSchool) {
 		this.fromSchool = fromSchool;
+	}
+
+	public PersistenceId getStudentModelId() {
+		return studentModelId;
 	}
 	
 }
