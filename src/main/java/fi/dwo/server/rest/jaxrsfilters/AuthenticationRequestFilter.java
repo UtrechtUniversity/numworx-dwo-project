@@ -12,6 +12,9 @@ import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.annotation.Priority;
+import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.PreMatching;
@@ -30,6 +33,7 @@ import nl.uu.fi.dwo.rest.security.TOTP;
  */
 @Provider
 @PreMatching
+@Priority(Priorities.AUTHENTICATION)
 public class AuthenticationRequestFilter implements ContainerRequestFilter {
 
     public static class DwoUserPrincipal implements Principal {
@@ -39,7 +43,7 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
 
         DwoUserPrincipal(PersistentUser u) {
             this.u = u;
-            this.role = role;
+            this.role = null;
         }
 
         @Override
@@ -47,16 +51,26 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
             return u.getUsername();
         }
 
+        /**
+         * if (principal instanceof DwoUserPrincipal) user principal.getUser();
+         * @return persistentuser
+         */
         public PersistentUser getUser() {
             return u;
+        }
+        
+        public String toString() {
+          return getName();
         }
     }
 
     public static class DwoUserSecurityContext implements SecurityContext {
 
         DwoUserPrincipal u;
+        boolean secure;
+        String scheme;
 
-        public DwoUserSecurityContext(DwoUserPrincipal user) {
+        public DwoUserSecurityContext(DwoUserPrincipal user, boolean secure, String scheme) {
             u = user;
         }
 
@@ -72,12 +86,12 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
 
         @Override
         public boolean isSecure() {
-            return u != null;
+            return secure;
         }
 
         @Override
         public String getAuthenticationScheme() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+          return scheme;
         }
     };
 
@@ -117,12 +131,12 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
         String authFields[] = headerString.trim().split(":");
 
         PersistentUser u = UserManager.findByUserName(authFields[0]);
-        if (u.getPassword().equals(authFields[1])) {
-            SecurityContext sc = new DwoUserSecurityContext(new DwoUserPrincipal(u));
+        if (u != null && u.getPassword().equals(authFields[1])) {
+            SecurityContext sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), secCtx.isSecure(), SecurityContext.BASIC_AUTH);
             return sc;
         }
         //else error
-        return null;
+        return secCtx;
     }
 
     private SecurityContext validateTOTPToken(String authHeader, SecurityContext secCtx) {
@@ -139,11 +153,11 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
         List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
         for (PersistentLoginContext l : loginContextList) {
             if (TOTP.verifyTOTP(authFields[1], DatatypeConverter.printHexBinary(l.getSecretKey()), "8")) {                
-                    SecurityContext sc = new DwoUserSecurityContext(new DwoUserPrincipal(u));
+                    SecurityContext sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), secCtx.isSecure(), "BEARER");
                     return sc;
                 }
             }
-        return null;
+        return secCtx;
         }
 
     private final static char[] hexArray = "0123456789ABCDEF".toCharArray();

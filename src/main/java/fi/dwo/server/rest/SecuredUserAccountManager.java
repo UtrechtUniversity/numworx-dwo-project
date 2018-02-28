@@ -29,7 +29,10 @@ import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import fi.dwo.server.rest.jaxrsfilters.AssertUser;
+import fi.dwo.server.rest.jaxrsfilters.AuthenticationRequestFilter.DwoUserPrincipal;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -68,6 +71,7 @@ import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
  */
 @PermitAll
 @Path("/secure/user/account")
+@AssertUser
 public class SecuredUserAccountManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredUserAccountManager.class.getName());
@@ -85,17 +89,18 @@ public class SecuredUserAccountManager {
     @Produces({"application/json"})
     @Path("/get")
     public DomUserFull getCurrentUser(@Context SecurityContext sc) {
-        EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentUser user = null;
 
         try {
-            user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+            Principal p = sc.getUserPrincipal();
+            if (p instanceof DwoUserPrincipal) 
+              user = ((DwoUserPrincipal) p).getUser();
+            else 
+              user = UserManager.findByUserName(sc.getUserPrincipal().getName());
             LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
-        } finally {
-            em.close();
+            LOG.log(Level.SEVERE, "User " + sc.getUserPrincipal() + ": Unexpected exception", e);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user " + sc.getUserPrincipal() + " .");
         }
         return user.buildDomUserFull();
     }
@@ -128,7 +133,7 @@ public class SecuredUserAccountManager {
             }
             LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
+            LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal() + ": Unexpected exception", e);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
         }
         return loginContext.buildDomLoginContext();
@@ -151,8 +156,8 @@ public class SecuredUserAccountManager {
             u = UserManager.findByUserName(sc.getUserPrincipal().getName());
             LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), u.getUsername()});
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
+            LOG.log(Level.SEVERE, "User " + sc.getUserPrincipal() + ": Unexpected exception", e);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user " + sc.getUserPrincipal() + " .");
         }
 
 //        try {//LoginData may fail, but login should succeed.

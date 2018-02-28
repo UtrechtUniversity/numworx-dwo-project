@@ -15,6 +15,7 @@ import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.ImageManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
+import fi.dwo.server.rest.jaxrsfilters.AssertUser;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,13 +31,11 @@ import javax.ws.rs.core.SecurityContext;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletId;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
-import nl.uu.fi.dwo.rest.entities.RestCourseFull;
 import nl.uu.fi.dwo.rest.entities.RestScoContextFull;
 
 /**
@@ -48,6 +47,7 @@ import nl.uu.fi.dwo.rest.entities.RestScoContextFull;
  */
 @PermitAll
 @Path("/secure/teacher/scoContext")
+@AssertUser
 public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredTeacherScoContextManager.class.getName());
@@ -96,6 +96,11 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 			if(scoContext.getScoType() != null) {
 				pc.setScoType(scoContext.getScoType());
 			}
+			if (scoContext.getStudentModelContext() != null) {
+			  Long model = MySQLPersistenceId.getNativeId(new DomStudentModelContextId(scoContext.getStudentModelContext()));
+			  pc.setModelID(model);
+			}
+			
 			pc=ScoContextManager.edit(pc);
 // if edit fails skip this.
 			if(scoContext.getDescription() != null) {
@@ -148,7 +153,14 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 			Boolean showscore = scoContext.getShowScore(); if(showscore == null) showscore = Boolean.TRUE; // notnull?
 			pc.setShowscore(showscore);
 			pc.setUrnID(null); // XXX als images in UrnResource staan.
-			
+// fill schoolid and profile id
+			pc.setSchoolID(c.getSchoolID());
+			pc.setDwoProfileID(c.getDwoProfileID());
+// fill reference to model
+			if (scoContext.getStudentModelContext() != null) {
+              Long model = MySQLPersistenceId.getNativeId(new DomStudentModelContextId(scoContext.getStudentModelContext()));
+              pc.setModelID(model);
+			}
 			ScoContextManager.create(pc);
 			PersistentScoData sd = new PersistentScoData(pc.getScoID(), scoContext.getDescription());
 			if( sd.getDescription() == null) sd.setDescription("");
