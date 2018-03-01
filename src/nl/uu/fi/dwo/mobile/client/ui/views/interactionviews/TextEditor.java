@@ -346,7 +346,12 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			String[] split = id.split(":");
 			String math = toMathML();
 			String userid = DWOplayer.clientfactory.getUserID().toString();
-			String classid = DWOplayer.clientfactory.getSchoolClass().getId().getIdString();
+			String classid;
+			try {
+				classid = DWOplayer.clientfactory.getSchoolClass().getId().getIdString();
+			} catch (Exception e) {
+				classid = "";
+			}
 			String exerciseid = split[1];
 			String id2 = split[2];
 			Map<String,String> context = new HashMap<>();
