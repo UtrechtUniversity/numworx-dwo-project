@@ -1,14 +1,23 @@
 package fi.dwo.server.PersistentDataManagers.access;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.actions.SchoolAdminTeacherActions;
+import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
+import java.text.MessageFormat;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 
 /**
  * Builder to retrieve persistence data in a cascading way an verify access and
@@ -23,7 +32,7 @@ public class SchoolAdminTeacherDomainAuthorizer extends UserDomainAuthorizer {
 
     private static final Logger LOG = Logger.getLogger(SchoolAdminTeacherDomainAuthorizer.class.getName());
     protected SchoolAdminTeacherPersistentContext schoolAdminTeacherCtx;
-    //private SchoolAdminTeacherActions schoolAdminTeacherActions;
+    private SchoolAdminTeacherActions schoolAdminTeacherActions;
 
     public class SchoolAdminTeacherPersistentContext extends UserPersistentContext {
 
@@ -116,5 +125,27 @@ public class SchoolAdminTeacherDomainAuthorizer extends UserDomainAuthorizer {
             return new TeacherDomainAuthorizer.Builder(instance).setTeacher();
         }
 
+        @Override
+        public PersistentStudentModelContext getStudentModel(DomScoContextId ctxId) throws Dwo2Exception {
+            PersistentScoContext scoCtx = ScoContextManager.findEntity(MySQLPersistenceId.getNativeId(ctxId));
+
+            if (instance.userCtx.school.getSchoolID() != scoCtx.getSchoolID().longValue()) {
+                String msg = MessageFormat.format("Username {0}: SchoolId {1} of sco mismatches hasrole for the given StudentModelContext: {2}", new Object[]{instance.userCtx.getUser().getUsername(), instance.userCtx.school.getSchoolID(), ctxId.getId().toString()});
+                LOG.log(Level.WARNING, msg);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
+            } else if (scoCtx.getSchoolID() == null) {
+                String msg = MessageFormat.format("StudentModelContext not set for Sco {0}", new Object[]{ctxId.getId().toString()});
+                LOG.log(Level.WARNING, msg);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_StudentModelNotSet, msg);
+            } else {
+                try {
+                    return instance.schoolAdminTeacherActions.getStudentModel(instance.userCtx, ctxId);
+                } catch (Dwo2Exception e) {
+                    String msg = MessageFormat.format("Username {0}: Internal error: {1}", new Object[]{instance.userCtx.getUser().getUsername(), e.getMessage()});
+                    LOG.log(Level.WARNING, msg, e);
+                    throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
+                }
+            }
+        }        
     }
 }

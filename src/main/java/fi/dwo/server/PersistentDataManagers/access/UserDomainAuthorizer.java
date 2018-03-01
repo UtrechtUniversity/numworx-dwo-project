@@ -7,14 +7,20 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -37,13 +43,13 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
     protected UserPersistentContext userCtx;
     private UserActions userActions;
 
-    protected class UserPersistentContext extends AnonPersistentContext {
+    public class UserPersistentContext extends AnonPersistentContext {
 
-        protected PersistentUser user;
-        protected PersistentHasRole hasRole;
-        protected RoleType roleType;
-        protected PersistentSchool school;
-        protected PersistentSchoolGroup schoolGroup;
+        public PersistentUser user;
+        public PersistentHasRole hasRole;
+        public RoleType roleType;
+        public PersistentSchool school;
+        public PersistentSchoolGroup schoolGroup;
 
         /**
          * @return the user
@@ -158,6 +164,8 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
         PersistentSchoolGroup getSchoolGroup();
 
         SchoolAdminTeacherState_HR_R_S_SG_U setSchoolAdminTeacher() throws Dwo2Exception;
+
+        public PersistentStudentModelContext getStudentModel(DomScoContextId id) throws Dwo2Exception;
     }
 //
 //    public interface UserState_HR_R_S_SC_SG_U {
@@ -213,7 +221,7 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
 
         /**
          * Verifies the existence of the default hasRole in the PersistentUser
- and sets it as the active hasRole into the userCtx.
+         * and sets it as the active hasRole into the userCtx.
          *
          * @param hr
          * @param r
@@ -236,7 +244,7 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
 
         /**
          * Verifies the existence of the hasRole in the PersistentUser and sets
- it as the active hasRole into the userCtx.
+         * it as the active hasRole into the userCtx.
          *
          * @param hr
          * @param r
@@ -251,7 +259,7 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
 
         /**
          * Verifies the existence of the hasRole in the PersistentUser and sets
- it as the active hasRole into the userCtx.
+         * it as the active hasRole into the userCtx.
          *
          * @param hr
          * @param r
@@ -262,15 +270,15 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
             //determine default hasRole.
             phr = HasRoleManager.findEntity(phrPK);
             if (phr == null
-                    || phr.getUser().getId().longValue()!=instance.userCtx.user.getId().longValue() //users is valid
-                    || phr.getSchoolGroup().getSchoolGroupID().longValue()!=phrPK.getSchoolGroupID().longValue()  //requested hasRole exists                   
+                    || phr.getUser().getId().longValue() != instance.userCtx.user.getId().longValue() //users is valid
+                    || phr.getSchoolGroup().getSchoolGroupID().longValue() != phrPK.getSchoolGroupID().longValue() //requested hasRole exists                   
                     ) {
                 String msg = MessageFormat.format("Hasrole {1} for userlogin {0} could not be found.",
                         new Object[]{instance.userCtx.getUser().getUsername(), this.instance.userCtx.getHasRole().getPersistentHasRolePK()});
                 LOG.log(Level.SEVERE, msg);
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
             }
-            instance.userCtx.school=phr.getSchoolGroup().getSchool();
+            instance.userCtx.school = phr.getSchoolGroup().getSchool();
             this.instance.userCtx.setHasRole(phr);
             instance.userCtx.setRoleType(RoleType.values()[phr.getSchoolGroup().getRole().getGroupID().intValue()]);
             return this;
@@ -278,7 +286,7 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
 
         /**
          * Verifies the existence of the hasRole for the given RoleType and
- stores it and the RoleType into the userCtx.
+         * stores it and the RoleType into the userCtx.
          *
          * @param hr
          * @param r
@@ -295,7 +303,7 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
 
         /**
          * Verifies the existence of the hasRole for the given RoleType and
- stores it and the RoleType into the userCtx.
+         * stores it and the RoleType into the userCtx.
          *
          * @param phrPK
          * @param r
@@ -370,6 +378,29 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
         @Override
         public SchoolAdminTeacherState_HR_R_S_SG_U setSchoolAdminTeacher() throws Dwo2Exception {
             return new SchoolAdminTeacherDomainAuthorizer.Builder(instance).setSchoolAdminTeacher();
+        }
+
+        @Override
+        public PersistentStudentModelContext getStudentModel(DomScoContextId ctxId) throws Dwo2Exception {
+            PersistentScoContext scoCtx = ScoContextManager.findEntity(MySQLPersistenceId.getNativeId(ctxId));
+
+            if (instance.userCtx.school.getSchoolID() != scoCtx.getSchoolID().longValue()) {
+                String msg = MessageFormat.format("Username {0}: SchoolId {1} of sco mismatches hasrole for the given StudentModelContext: {2}", new Object[]{instance.userCtx.getUser().getUsername(), instance.userCtx.school.getSchoolID(), ctxId.getId().toString()});
+                LOG.log(Level.WARNING, msg);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
+            } else if (scoCtx.getSchoolID() == null) {
+                String msg = MessageFormat.format("StudentModelContext not set for Sco {0}", new Object[]{ctxId.getId().toString()});
+                LOG.log(Level.WARNING, msg);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_StudentModelNotSet, msg);
+            } else {
+                try {
+                    return instance.userActions.getStudentModel(instance.userCtx, ctxId);
+                } catch (Dwo2Exception e) {
+                    String msg = MessageFormat.format("Username {0}: Internal error: {1}", new Object[]{instance.userCtx.getUser().getUsername(), e.getMessage()});
+                    LOG.log(Level.WARNING, msg, e);
+                    throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
+                }
+            }
         }
     }
 }

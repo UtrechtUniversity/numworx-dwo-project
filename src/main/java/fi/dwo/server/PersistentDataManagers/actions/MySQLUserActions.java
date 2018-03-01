@@ -3,9 +3,16 @@
  */
 package fi.dwo.server.PersistentDataManagers.actions;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import javax.persistence.PersistenceException;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -31,5 +38,18 @@ public class MySQLUserActions extends MySQLAnonActions implements UserActions {
         } catch (PersistenceException e) {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Failed to update user id " + pUser.getUsername() + " .");
         }
+    }
+
+    /**
+     *
+     * @param context
+     * @param id persistenceId of a PersistentScoContext
+     * @return
+     * @throws Dwo2Exception
+     */
+    @Override
+    public PersistentStudentModelContext getStudentModel(UserDomainAuthorizer.UserPersistentContext context, DomScoContextId id) throws Dwo2Exception {
+        PersistentStudentModelContext model = StudentModelManager.findEntity(MySQLPersistenceId.getNativeId(id));
+        return model;
     }
 }
