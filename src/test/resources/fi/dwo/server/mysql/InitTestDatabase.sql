@@ -574,6 +574,9 @@ CREATE TABLE `tblscocontext` (
   `urnID` int(11) DEFAULT NULL,
   `scoType` tinyint(4) DEFAULT '0',
   `userID` int(11) DEFAULT NULL,
+  `schoolID` int(11) DEFAULT NULL,
+  `dwoProfileID` int(11) DEFAULT NULL,
+  `modelID` int(11) DEFAULT NULL,
   PRIMARY KEY (`scoID`),
   UNIQUE KEY `AK_IDENTIFIER_1` (`sconame`,`courseID`),
   KEY `SCO_APPLET_FK` (`appletID`),
@@ -587,7 +590,7 @@ CREATE TABLE `tblscocontext` (
 
 LOCK TABLES `tblscocontext` WRITE;
 /*!40000 ALTER TABLE `tblscocontext` DISABLE KEYS */;
-INSERT INTO `tblscocontext` VALUES (1,5,17,'Optellen en aftrekken',0,1,0,0,0,0,NULL,NULL,1,NULL),(2,6,17,'Drie getallen optellen en aftrekken',0,2,0,0,0,0,NULL,NULL,1,NULL);
+INSERT INTO `tblscocontext` VALUES (1,5,17,'Optellen en aftrekken',0,1,0,0,0,0,NULL,NULL,1,NULL, NULL, NULL,NULL),(2,6,17,'Drie getallen optellen en aftrekken',0,2,0,0,0,0,NULL,NULL,1,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `tblscocontext` ENABLE KEYS */;
 UNLOCK TABLES;
 
