@@ -111,6 +111,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	class FormuleEditorPopup extends FormuleEditorWithSteps implements CBookEventListener, StateLess, ResizableContentIF 
 	{
+		boolean transfer;
 
 		public FormuleEditorPopup(HashMap<String, Object> h,
 				boolean isVergelijkingVak, String[] randomVarNamen,
@@ -130,12 +131,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 //			transfer(string);
 //		}
 
-		boolean transfer;
-		void transfer(String string) {
+		void transfer(String string)
+		{
 			logger.fine("userstring = " + string);
 			FormuleEditorWithAnswer other = FormuleEditorWithAnswer.this;
 			other.clearMain();
-			other.insert(string);
+			other.insert(string); // let op: changed van other is nu true gezet! 
+			other.setChanged(false); // zet changed weer false om problemen met verhogen errorCount en cross widget communicatie te voorkomen
 			other.processAntwoord();
 		}
 
