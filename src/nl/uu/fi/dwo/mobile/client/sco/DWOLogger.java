@@ -226,4 +226,9 @@ public class DWOLogger implements Logging {
 	public Logging getLogger() {
 		return delegate == null ? this : delegate;
 	}
+
+	@Override
+	public String getLogID() {
+		return logID;
+	}
 }

@@ -3,8 +3,12 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Promise;
+
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
@@ -32,19 +36,9 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
 
-
-
-
-
-
-
-
-
-
-
-
-
+import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
@@ -52,6 +46,8 @@ import fi.wiskopdr.expressies.DecRound;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
+import nl.uu.fi.dwo.ideas.client.AbstractRule;
+import nl.uu.fi.dwo.ideas.client.RuleIF;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
@@ -342,8 +338,64 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		this.asHoogte = ashoogte;
 	}
 
+	private void adviseMe() {
+		if (logging != null) {
+			String id = logging.getLogID();
+			if(! id.startsWith("adviseMe:")) 
+				return;
+			String[] split = id.split(":");
+			String math = toMathML();
+			String userid = DWOplayer.clientfactory.getUserID().toString();
+			String classid = DWOplayer.clientfactory.getSchoolClass().getId().getIdString();
+			String exerciseid = split[1];
+			String id2 = split[2];
+			Map<String,String> context = new HashMap<>();
+			context.put("userid", userid);
+			context.put("groupid", classid);
+			context.put("language", StubView.getLocale());
+			RuleIF rule = new AbstractRule() {
+
+				@Override
+				public String getExpr() {
+					return math;
+				}
+
+				@Override
+				public String getId() {
+					return id2;
+				}
+
+				@Override
+				public Map getContext() {
+					return context;
+				}
+				
+			};
+			PromiseCallback<RuleIF> defer = new PromiseCallback<>();
+			WiskOpdr.ideas.adviseMe(new RuleIF[] { rule }, exerciseid, defer );
+			DWOplayer.clientfactory.addBarrier(defer.getPromise());
+			Logger LOG = Logger.getLogger("TextEditor");
+			defer.getPromise().onResolve(() -> { 
+				Promise<RuleIF> p = defer.getPromise();
+				Throwable t = p.getFailure();
+				if ( t != null) {
+					LOG.log(Level.SEVERE, "adviseMe", t);
+				} else {
+					RuleIF r = p.getValue();
+					if ( r.isException()) {
+						LOG.severe(r.getExpr());
+					} else {
+						LOG.info(r.getExpr());
+					}
+				}
+			} );
+		}
+	}
+	
+	
 	@Override
 	public HashMap<String, Object> getState() {
+		adviseMe();
 		StringBuilder allText = getAllText();
 		setAttempt(allText);
 		String sb = allText.append('\n').toString();
@@ -414,6 +466,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		//log ID opvragen
 		//bevat logID "adviseme": 
 		//opsturen naar IDEAS.
+		adviseMe();
 	}
 
 	@Override
@@ -794,9 +847,39 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		
 	}
 
+	
+	private String toMathML() {
+		StringBuilder sb = new StringBuilder();
+		int count = flow.getWidgetCount()-1;
+		for(int i=0; i < count; i++) {
+			Widget child = flow.getWidget(i);
+			if (child instanceof FormulaVak) {
+				sb.append("<math>").append(((FormulaVak) child).editor.getMainRegel().toMathML()).append("</math>");
+			} else
+			if(child instanceof HasText) {
+				sb.append(xmlEncode(((HasText) child).getText()));
+			}
+		}
+		return sb.toString();
+	}
+	
+	
+	
+	private String xmlEncode(String text) {
+		return text.replace("&", "&amp;").replace("<", "&lt;");
+	}
+
 	private void setReadonly() {
 		editable = false;
 		widget.setStyleName(css.textEditor_readonly(), !editable);
+		int count = flow.getWidgetCount()-1;
+		for(int i=0; i < count; i++) {
+			Widget child = flow.getWidget(i);
+			if(child instanceof FormulaVak) {
+				((FormulaVak) child).setEditable(false);
+			}
+		}
+
 	}
 
 	public boolean isReadOnly() {
@@ -1083,6 +1166,15 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			editor.clearSelection();
 			editor.startSelection(0, 0);
 			editor.endSelection(0, 0);
+		}
+		
+		public void setEditable(boolean b) {
+			panel.setStyleDependentName("readonly", !b);
+			Style s = panel.getElement().getStyle();
+			if (b) 
+				s.clearProperty("pointerEvents");
+			else 
+				s.setProperty("pointerEvents", "none");
 		}
 	}
 	

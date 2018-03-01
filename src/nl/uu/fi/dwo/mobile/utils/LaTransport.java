@@ -326,4 +326,11 @@ public class LaTransport implements Logging {
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
 	}
+
+
+	@Override
+	public String getLogID() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

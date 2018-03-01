@@ -22,4 +22,9 @@ public final class NoLogging implements Logging {
 	public void setClassName(String string) {
 	}
 
+	@Override
+	public String getLogID() {
+		return null;
+	}
+
 }

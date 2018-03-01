@@ -12,4 +12,6 @@ public interface Logging {
 	void setLogID(String string);
 
 	void setClassName(String string);
+
+	String getLogID();
 }
