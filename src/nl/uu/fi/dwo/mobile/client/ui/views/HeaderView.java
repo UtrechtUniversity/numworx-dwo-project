@@ -14,6 +14,7 @@ public interface HeaderView extends IsWidget {
 	Place getHomePlace();
 
 	void setUpPlace(Place homePlace);
+	void setHomePlace(Place homePlace);
 	
 	void hide();
 	void show();

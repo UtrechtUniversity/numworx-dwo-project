@@ -43,6 +43,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.places.Hash;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SearchPlace;
@@ -233,7 +234,8 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 				
 				@Override
 				public void execute() {
-					presenter.goTo(new LoginPlace());					
+					LoginPlace place = new LoginPlace(homePlace);
+					presenter.goTo(place);					
 				}
 			});
 		} else {
@@ -241,7 +243,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 				
 				@Override
 				public void execute() {
-					presenter.goTo(new LoginPlace());
+					presenter.goTo(new LoginPlace(homePlace));
 				}
 			});
 		}
@@ -251,7 +253,9 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 
 	@Override
 	public void execute() {
-		presenter.goTo(new ReloginPlace());		
+		ReloginPlace place;
+		place = new ReloginPlace(homePlace);
+		presenter.goTo(place);		
 	}
 
 	@Override
@@ -260,6 +264,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 		p.setWidgetVisible(this, false);
 		navigation.hide();
 		p.setWidgetTopBottom(root, 0, Unit.PX, 0, Unit.PX);		
+		p.setWidgetTopBottom(navigation, 0, Unit.PX, 0, Unit.PX);
 	}
 
 	@Override

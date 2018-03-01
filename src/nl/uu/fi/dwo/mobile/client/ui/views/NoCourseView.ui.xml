@@ -1,0 +1,32 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:cl="urn:import:com.google.gwt.user.cellview.client"
+	xmlns:v="urn:import:nl.uu.fi.dwo.mobile.client.ui.views"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with field='rb' type='nl.uu.fi.dwo.mobile.client.text.Text' />
+	<ui:style field='style' src="TreeModuleViewNumworx.css"
+		type='nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworxCss' />
+		
+		<g:DockLayoutPanel unit='PX' ui:field='root' styleName='{style.rootPanel}'>
+		<g:center>
+			<g:ScrollPanel ui:field='centerPanel' styleName='{style.centerPanel}'
+				addStyleNames='{style.centerBackground}'>
+				<g:FlowPanel>
+					<g:HorizontalPanel styleName='{style.itemPanel}'>
+						<g:FlowPanel styleName='{style.titlePanel}'>
+							<g:HTML styleName='{style.title}' ui:field='title'></g:HTML>
+							<g:SimplePanel ui:field='description' />
+						</g:FlowPanel>
+						<g:FlowPanel styleName='{style.favicon}'>
+							<g:Image ui:field='favIcon' url="" />
+						</g:FlowPanel>
+					</g:HorizontalPanel>
+					<g:HTMLPanel styleName='{style.description}'>
+						<div>
+						</div>
+					</g:HTMLPanel>
+				</g:FlowPanel>
+			</g:ScrollPanel>
+		</g:center>
+	</g:DockLayoutPanel>
+</ui:UiBinder>

@@ -1,8 +1,10 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
@@ -10,8 +12,12 @@ import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
+import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
+import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -37,11 +43,23 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 	private ClientFactory clientFactory;
 	private SelectModuleItem item;
 	@Inject PlaceController placeController;
+	@Inject Provider<NoCourseView> noCourseView;
 
 	public CourseActivity(ClientFactory clientFactory, SelectModuleItem item) {
 		this.clientFactory = clientFactory;
 		this.item = item;
 		placeController = clientFactory.getPlaceController();
+		noCourseView = new Provider<NoCourseView>() {
+			
+			@Override
+			public NoCourseView get() {
+				HeaderView header;
+				NavigationView navigation;
+				header = clientFactory.getHeaderView();
+				navigation = clientFactory.getNavigationView();
+				return new NoCourseView(header, navigation);
+			}
+		};
 	}
 
 	@Override
@@ -88,6 +106,16 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 							return;
 						}
 					}
+
+					if (t instanceof NoSuchElementException)
+					{
+						NoCourseView view = noCourseView.get();
+						panel.setWidget(view);
+						view.setHomePlace(placeController.getWhere());
+						view.render();
+						return;
+					}
+
 					GWT.log("failure", t);
 				}
 			};
@@ -111,16 +139,22 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 			}
 // start downloading description/name/attributes
 			
-			clientFactory.getRPCHandler().getCourse(item.getID()).then(new Success<DomCourseStudent, Void>() {
+			clientFactory.getRPCHandler().getCourse(item.getID())
+
+			.filter(p -> allowAccess(p.getSchoolId()))
+			
+			
+			.then(new Success<DomCourseStudent, Void>() {
 
 				@Override
 				public Promise<Void> call(Promise<DomCourseStudent> resolved) throws Exception {
-					String name = resolved.getValue().getName();
-					String description = resolved.getValue().getDescription();
+					DomCourseStudent value = resolved.getValue();
+					String name = value.getName();
+					String description = value.getDescription();
 					item.setDescription(description);
 					item.setName(name);
-					item.showChildren(!resolved.getValue().isNotVisible());
-					PersistenceId schoolId = resolved.getValue().getSchoolId();
+					item.showChildren(!value.isNotVisible());
+					PersistenceId schoolId = value.getSchoolId();
 					item.setFromSchool(schoolId != null);
 					view.setDescription(item);
 					view.render(item);
@@ -133,5 +167,10 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 		}
 		view.setDescription(item);
 		panel.setWidget(view);
+	}
+
+	private boolean allowAccess(PersistenceId schoolId) {
+		DomSchool school = clientFactory.getSchool();
+		return schoolId == null || (school != null && schoolId.equals(school.getId()));
 	}
 }
