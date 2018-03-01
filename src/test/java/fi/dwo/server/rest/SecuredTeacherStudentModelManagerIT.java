@@ -1,4 +1,6 @@
-/** Copyrighted Feb 12, 2018 */
+/**
+ * Copyrighted Feb 12, 2018
+ */
 package fi.dwo.server.rest;
 
 import com.owlike.genson.Genson;
@@ -8,7 +10,6 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.server.PersistentDataManagers.core.StudentModelManagerPIT;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
@@ -49,9 +50,9 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 public class SecuredTeacherStudentModelManagerIT {
 
     private static final Logger LOG = Logger.getLogger(SecuredTeacherStudentModelManagerIT.class.getName());
-    
+
     static DatabaseManager dbInstance = null;
-    
+
     public SecuredTeacherStudentModelManagerIT() {
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
     }
@@ -77,9 +78,10 @@ public class SecuredTeacherStudentModelManagerIT {
     public void tearDown() {
         dbInstance.ClearDatabase();
     }
-    
+
     /**
-     * Test of getStudentModels method, of class SecuredTeacherStudentModelManager.
+     * Test of getStudentModels method, of class
+     * SecuredTeacherStudentModelManager.
      */
     @Test
     public void testGetStudentModels() {
@@ -101,18 +103,34 @@ public class SecuredTeacherStudentModelManagerIT {
         List<DomStudentModelContext> expResult = null;
         List<DomStudentModelContext> result = instance.getStudentModels(sc, restContext);
         assertEquals(2, result.size());
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
     }
 
     /**
-     * Test of addStudentModel method, of class SecuredTeacherStudentModelManager.
+     * Test of addStudentModel method, of class
+     * SecuredTeacherStudentModelManager.
      */
     @Test
     public void testAddStudentModel() {
         System.out.println("addStudentModel");
-        
-      DomStudentModelStructure model = new DomStudentModelStructure();
+
+        //build security context
+        SecurityContext sc = new TestSecurityContext("user03", RoleType.TEACHER);
+        RestContext restContext = new RestContext();
+        DomHasRole hr = new DomHasRole();
+        //MYSQL;PersistentHasRole;00000000000000000010;00000000000000000003 TEACHER School01
+        PersistentHasRolePK key = new PersistentHasRolePK(10L, 3L);
+        PersistenceId id = PersistentHasRole.buildPersistenceId(key);
+        hr.setId(id);
+        hr.setUserId(PersistentUser.buildPersistenceId(10L));
+        hr.setSchoolGroupId(PersistentSchoolGroup.buildPersistenceId(10L));
+
+        //build RestContext
+        DomContext context = new DomContext();
+        context.setDomHasRole(hr);
+        restContext.setRestContext(context);
+
+        //Build StudentModelStructure
+        DomStudentModelStructure model = new DomStudentModelStructure();
         Map<String, String> titleMap = new HashMap<>();
         Map<String, String> descrMap = new HashMap<>();
         titleMap.put("nl", "C model");
@@ -145,27 +163,31 @@ public class SecuredTeacherStudentModelManagerIT {
                 }
             }
         }
-
-        Genson g = new GensonBuilder().withConverters(new GensonMapConverter()).create();
-        String jsonModel = g.serialize(model);
-        System.out.println(jsonModel);
-
-        DomStudentModelStructure rModel = g.deserialize(jsonModel, DomStudentModelStructure.class);
-        String out = g.serialize(rModel);
-        System.out.println(out);
-        try {
-            JSONAssert.assertEquals(out, jsonModel, JSONCompareMode.NON_EXTENSIBLE);
-        } catch (JSONException ex) {
-            Logger.getLogger(StudentModelManagerPIT.class.getName()).log(Level.SEVERE, null, ex);
-            fail("Json Exception.");
-        }        
-        SecurityContext sc = null;
-        SecuredTeacherStudentModelManager instance = new SecuredTeacherStudentModelManager();
+        
+        //build RestStudentModelContext
+        RestStudentModelContext restModel = new RestStudentModelContext();
+        restModel.setRestContext(context);
+        DomStudentModelContext domModel = new DomStudentModelContext();
+        domModel.setModelStructure(model);
+        restModel.setDomStudentModelContext(domModel);
         DomStudentModelContext expResult = null;
-  //      DomStudentModelContext result = instance.addStudentModel(sc, );
- //       assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        SecuredTeacherStudentModelManager instance = new SecuredTeacherStudentModelManager();
+        expResult = instance.addStudentModel(sc, restModel);
+
+        //comparing structure attribute between submitted data and returned data.
+        Genson g = new GensonBuilder().withConverters(new GensonMapConverter()).create();        
+        String expModel = g.serialize(expResult.getModelStructure());
+        System.out.println(expModel);
+
+        String out = g.serialize(restModel);
+        String jsonModel = g.serialize(restModel.getDomStudentModelContext().getModelStructure());
+        System.out.println(jsonModel);
+        try {
+            JSONAssert.assertEquals(expModel, jsonModel, JSONCompareMode.NON_EXTENSIBLE);
+        } catch (JSONException ex) {
+            LOG.log(Level.SEVERE,"Returned added studentModelStructure differs from submitted.",ex);
+            fail("Json Exception.");
+        }
     }
-    
+
 }
