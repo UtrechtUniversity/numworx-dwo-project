@@ -68,7 +68,8 @@ public class ScormParameters {
     static final int LANG = 11;
     static final int BGCOLOR = 12;
     static final int BASE = 13;
-    private static final int PLENGTH = 14;
+    static final int PLAYER_BASE = 14;
+    private static final int PLENGTH = 15;
     private Object[] parameters = new Object[PLENGTH];
 
     public void setBase(String base) {
@@ -134,6 +135,7 @@ public class ScormParameters {
         parameters[LANG] = TextMapper.getLanguage();
         parameters[BGCOLOR] = "#" + Integer.toHexString(GuiConstants.MAIN_BACKGROUND.getRGB()).substring(2);
         parameters[BASE] = DwoHelper.getApplet().getDocumentBase();
+        parameters[PLAYER_BASE] = GuiConstants.PLAYER_BASE;
     }
 
     public void copy(BufferedReader in, PrintWriter out) throws IOException {
