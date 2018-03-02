@@ -859,7 +859,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		for(int i=0; i < count; i++) {
 			Widget child = flow.getWidget(i);
 			if (child instanceof FormulaVak) {
-				sb.append("<math>").append(((FormulaVak) child).editor.getMainRegel().toMathML()).append("</math>");
+				sb.append("<math xmlns=\"http://www.w3.org/1998/Math/MathML\">").append(((FormulaVak) child).editor.getMainRegel().toMathML()).append("</math>");
 			} else
 			if(child instanceof HasText) {
 				sb.append(xmlEncode(((HasText) child).getText()));
