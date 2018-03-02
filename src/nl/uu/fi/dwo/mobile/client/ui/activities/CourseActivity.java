@@ -66,6 +66,7 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
 		final SelectModuleView view = clientFactory.getHomeView();
+		clientFactory.getHeaderView().hide();
 		if(true)
 			view.setMenuWidget(clientFactory.getMenuWidget());
 

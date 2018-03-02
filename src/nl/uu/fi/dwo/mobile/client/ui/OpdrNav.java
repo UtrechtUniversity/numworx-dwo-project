@@ -66,6 +66,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.google.web.bindery.event.shared.ResettableEventBus;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 
@@ -175,7 +176,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private int currentActiviteit = 0;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private Memento memento;
-	private final static EventBus BUS = DWOplayer.PARAMETERS.getEventBus();
+	private final static ResettableEventBus BUS = new ResettableEventBus(DWOplayer.PARAMETERS.getEventBus());
 
 	static private Prepare prepare = DWOplayer.PARAMETERS.getPrepareInstance();
 
@@ -229,6 +230,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	public void init(HashMap<String, Object> launchData, ViewModuleViewImpl ev, Memento memento)
 	{
+		BUS.removeHandlers();
 		this.entry = ev;
 		this.memento = memento;
 		memento.setUnload(this);
@@ -554,6 +556,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				currentOpdracht = 0;
 				setOpdrachten(selectedIndex);
 				entry.clearContentPanel();
+				BUS.removeHandlers();
 				entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
 				if (states[currentActiviteit][currentOpdracht] != null)
 					entry.setState(states[currentActiviteit][currentOpdracht]);
@@ -1675,7 +1678,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		removeButtonCursor(buttons.get(currentOpdracht));
 		currentOpdracht = opdracht;
 		setButtonCursor(buttons.get(currentOpdracht));
-
+		BUS.removeHandlers();
 		entry.clearContentPanel();
 		if (states[currentActiviteit][currentOpdracht] == null)
 			entry.zetVolgendeOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
@@ -2285,6 +2288,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		setButtonCursor(buttons.get(currentOpdracht));
 
 		entry.clearContentPanel();
+		BUS.removeHandlers();
 		if (states[currentActiviteit][currentOpdracht] == null)
 		{
 			if (randomize)
