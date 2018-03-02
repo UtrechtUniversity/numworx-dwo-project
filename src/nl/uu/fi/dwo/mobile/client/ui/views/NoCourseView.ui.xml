@@ -4,6 +4,7 @@
 	xmlns:v="urn:import:nl.uu.fi.dwo.mobile.client.ui.views"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:with field='rb' type='nl.uu.fi.dwo.mobile.client.text.Text' />
+	<ui:with field='msg' type='nl.uu.fi.dwo.rest.locale.Dwo2ExceptionsForGWT' />
 	<ui:style field='style' src="TreeModuleViewNumworx.css"
 		type='nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworxCss' />
 		
@@ -14,17 +15,20 @@
 				<g:FlowPanel>
 					<g:HorizontalPanel styleName='{style.itemPanel}'>
 						<g:FlowPanel styleName='{style.titlePanel}'>
-							<g:HTML styleName='{style.title}' ui:field='title'></g:HTML>
-							<g:SimplePanel ui:field='description' />
+							<g:HTML styleName='{style.title}' ui:field='title'><ui:text from='{rb.inloggen_mislukt}' /></g:HTML>
+							<g:SimplePanel ui:field='description' >
+						<g:HTMLPanel styleName='{style.description}'>
+						<div>
+							<ui:text from="{msg.Dwo2ExceptionCode_User_AuthorizationError}"/>
+						</div>
+					</g:HTMLPanel>
+							
+							</g:SimplePanel>
 						</g:FlowPanel>
 						<g:FlowPanel styleName='{style.favicon}'>
 							<g:Image ui:field='favIcon' url="" />
 						</g:FlowPanel>
 					</g:HorizontalPanel>
-					<g:HTMLPanel styleName='{style.description}'>
-						<div>
-						</div>
-					</g:HTMLPanel>
 				</g:FlowPanel>
 			</g:ScrollPanel>
 		</g:center>
