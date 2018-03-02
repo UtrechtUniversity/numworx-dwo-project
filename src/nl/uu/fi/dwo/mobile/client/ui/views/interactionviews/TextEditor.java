@@ -66,10 +66,17 @@ import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor.IsEditable;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 
 public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont {
 	
+	public interface IsEditable {
+
+		void setEditable(boolean b);
+
+	}
+
 	private static final int EXECUTE_HEIGHT = 30;
 	private static final Logger LOGGER = Logger.getLogger("TextEditor");
 	private static DWOplayerCss css = DWOplayer.DWO_BUNDLE.dwoplayercss();
@@ -880,8 +887,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		int count = flow.getWidgetCount()-1;
 		for(int i=0; i < count; i++) {
 			Widget child = flow.getWidget(i);
-			if(child instanceof FormulaVak) {
-				((FormulaVak) child).setEditable(false);
+			if(child instanceof IsEditable) {
+				((IsEditable) child).setEditable(false);
 			}
 		}
 
@@ -1095,7 +1102,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		}
 	}
 	
-	private class FormulaVak extends Composite implements HasText
+	private class FormulaVak extends Composite implements HasText, IsEditable
 	{
 		private FormuleEditor editor;
 		final Panel panel;
@@ -1174,16 +1181,19 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		}
 		
 		public void setEditable(boolean b) {
-			panel.setStyleDependentName("readonly", !b);
+			panel.setStyleName(css.insert_formule_readonly(), !b);
 			Style s = panel.getElement().getStyle();
 			if (b) 
 				s.clearProperty("pointerEvents");
 			else 
+			{
 				s.setProperty("pointerEvents", "none");
+				editor.getKeyboard().blur();
+			}
 		}
 	}
 	
-	private class CalculatorVak extends Composite implements HasText, ClickHandler
+	private class CalculatorVak extends Composite implements HasText, ClickHandler, IsEditable
 	{
 		static final double E_MAX = 1.0E7;
 		static final double E_MIN = 1.0E-3;
@@ -1193,6 +1203,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		private FormuleViewer viewer;
 		private Button btn;
 		private boolean op3;
+		private Panel panel;
 
 		public CalculatorVak()
 		{
@@ -1208,7 +1219,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			editor.insert('0');
 			HorizontalPanel hbox = new HorizontalPanel();
 			hbox.setStyleName(css.insert_calculator());
-			Panel panel = editor.getAsPanel();
+			panel = editor.getAsPanel();
 			panel.setStyleName(css.insert_formule());
 			TouchDelegate wrap = new TouchDelegate(panel);
 			FormuleEditorTouchHandler h = new FormuleEditorTouchHandler(editor)
@@ -1295,6 +1306,20 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			
 			viewer = new FormuleViewer(x);
 			((Panel) getWidget()).add(viewer.getAsPanel());
+		}
+
+		@Override
+		public void setEditable(boolean b) {
+			panel.setStyleName(css.insert_formule_readonly(), !b);
+			btn.setEnabled(b);
+			Style s = panel.getElement().getStyle();
+			if (b) 
+				s.clearProperty("pointerEvents");
+			else 
+			{
+				s.setProperty("pointerEvents", "none");
+				editor.getKeyboard().blur();
+			}
 		}
 	}// class CalculatorVak
 	

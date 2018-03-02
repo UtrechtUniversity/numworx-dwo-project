@@ -59,6 +59,11 @@ div.insert_formule {padding-right:5px; padding-left:5px;}
 
 .textEditor_readonly > div {
 	color: gray;
+	pointer-events: none;
+}
+
+.insert_formule_readonly {
+	pointer-events: none;
 }
 
 .textEditor .balk {
