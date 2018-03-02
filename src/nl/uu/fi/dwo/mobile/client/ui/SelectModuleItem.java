@@ -207,6 +207,7 @@ public class SelectModuleItem
 		id = PersistenceIdDecoderInterface.instance.idOf(sco.getId(), PersistenceClassType.PersistentScoContext);
 		parent = PersistenceIdDecoderInterface.instance.idOf(sco.getCourseId(), PersistenceClassType.PersistentCourse);
 		name = sco.getScoName();
+		fromSchool = sco.getSchoolId() != null;
 		Long sequence = sco.getSequencenr();
 		sequencenr = sequence != null ? sequence.intValue() : Integer.MAX_VALUE;
 		showScore = !Boolean.TRUE.equals(sco.getShowScore());

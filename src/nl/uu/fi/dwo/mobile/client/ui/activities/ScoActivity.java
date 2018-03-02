@@ -91,13 +91,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 				public Promise<String> call(Promise<DomScoContext> resolved) throws Exception {
 					name = resolved.getValue().getScoName();
 					item.setName(name);
-					PersistenceId courseId = resolved.getValue().getCourseId();
-					DomCourse course = new DomCourse();
-					course.setId(courseId);
-					rpcHandler.getCourse(course)
-					.then(p-> {
-						item.setFromSchool(p.getValue().getSchoolId() != null); return p;
-					});
+					item.setFromSchool(resolved.getValue().getSchoolId() != null);
 					view.setScoType(resolved.getValue().getScoType());
 					view.setTitle(name);
 					return Promises.resolved(name);
