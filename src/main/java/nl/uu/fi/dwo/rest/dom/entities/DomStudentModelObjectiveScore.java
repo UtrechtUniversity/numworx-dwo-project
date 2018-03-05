@@ -9,4 +9,5 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 class DomStudentModelObjectiveScore extends DomStudentModelScore<DomStudentModelObjectiveScore> {
+    
 }

@@ -8,24 +8,23 @@ import java.util.logging.Logger;
  * 
  * @author plas0006
  */
-public class DomStudentModelStructureScore {
+public class DomStudentModelStructureScore extends DomStudentModelScore<DomStudentModelCategoryScore>{
 
     private static final Logger LOG = Logger.getLogger(DomStudentModelStructureScore.class.getName());
     
-    private List<DomStudentModelCategoryScore> categories;
 
     
     /**
      * @return the categories
      */
     public List<DomStudentModelCategoryScore> getCategories() {
-        return categories;
+        return getChildren();
     }
 
     /**
      * @param categories the categories to set
      */
     public void setCategories(List<DomStudentModelCategoryScore> categories) {
-        this.categories = categories;
+        this.setChildren(categories);
     }
 }

@@ -23,4 +23,5 @@ public class DomStudentModelCategoryScore extends DomStudentModelScore<DomStuden
      */
     public void setObjectives(List<DomStudentModelObjectiveScore> objectives) {
         setChildren(objectives);
-    }}
+    }
+}
