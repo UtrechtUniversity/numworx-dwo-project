@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 import nl.uu.fi.dwo.rest.entities.RestContext;
@@ -169,6 +170,9 @@ public class SecuredTeacherStudentModelManagerIT {
         restModel.setRestContext(context);
         DomStudentModelContext domModel = new DomStudentModelContext();
         domModel.setModelStructure(model);
+        //domModel
+///        DomStudentModelStructureScore ds = domModel.getModelStructure().generateStudentModelStructureScore();
+        
         restModel.setDomStudentModelContext(domModel);
         DomStudentModelContext expResult = null;
         SecuredTeacherStudentModelManager instance = new SecuredTeacherStudentModelManager();
