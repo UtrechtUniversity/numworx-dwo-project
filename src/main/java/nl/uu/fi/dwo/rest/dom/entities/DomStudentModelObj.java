@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.beans.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -24,5 +25,9 @@ public class DomStudentModelObj {
     public void setInfo(DomStudentModelContextInfo info) {
         this.info = info;
     }
-    
+
+    @Transient
+    DomStudentModelObjectiveScore buildDomStudentModelObjectiveScore() {
+        return new DomStudentModelObjectiveScore();
+    }
 }
