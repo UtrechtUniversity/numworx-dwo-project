@@ -18,7 +18,8 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
 
     private List<T> children = new ArrayList();
     
-    protected double score=0.0;
+    private double score=0.0;
+    private long count=0;
 
     /**
      * @return the score
@@ -33,7 +34,22 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
     public void setScore(double score) {
         this.score = score;
     }
-    
+
+
+    /**
+     * @return the count
+     */
+    public long getCount() {
+        return count;
+    }
+
+    /**
+     * @param count the count to set
+     */
+    public void setCount(long count) {
+        this.count = count;
+    }
+        
     /**
      * @return the children
      */
@@ -42,10 +58,10 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
     }
 
     /**
-     * @param categories the children to set
+     * @param children
      */
     protected void setChildren(List<T> children) {
         this.children = children;
     }
-    
+
 }
