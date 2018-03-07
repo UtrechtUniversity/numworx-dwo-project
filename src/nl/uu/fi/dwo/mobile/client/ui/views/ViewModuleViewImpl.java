@@ -773,14 +773,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			if(cur >= on.getAantalOpdrachten()) 
 				cur = on.getAantalOpdrachten()-1;
 			on.gotoOpdracht(cur, scoreNav);
-			stelNavigatieIn();
 		}
 		else
 		{	int cur = on.getCurrentOpdracht() + 1;
 			if(cur >= on.getAantalOpdrachten()) 
 				cur = on.getAantalOpdrachten()-1;
 			on.gotoOpdracht(cur, scoreNav);
-			stelNavigatieIn();		
 		}
 	}
 	
@@ -792,7 +790,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			while(!bezocht[on.getCurrentActiviteit()][cur] && cur > 0)
 				cur--;
 			on.gotoOpdracht(cur, scoreNav);
-			stelNavigatieIn();
 		}
 		else
 		{
@@ -800,8 +797,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			if(cur < 0) 
 				cur = 0 ;
 			on.gotoOpdracht(cur, scoreNav);
-			stelNavigatieIn();
-			
 		}
 	}
 	
