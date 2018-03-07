@@ -112,4 +112,16 @@ public class GWTPatchTest extends TestCase {
 		assertEquals(4, arr.size());
 	}
 	
+	public void testdiff8() {
+		List lang = Arrays.asList(1,2,3,4,5);
+		List kort = Arrays.asList(1,2,3);
+		ObjectList arr = diff.createDiff(lang, kort);
+		assertEquals(2, arr.size());
+		ObjectMap arr0 = arr.getObjectMap(0);
+		ObjectMap arr1 = arr.getObjectMap(1);
+		assertEquals("/4", arr0.getString("path"));
+		assertEquals("remove", arr0.getString("op"));
+		
+	}
+	
 }

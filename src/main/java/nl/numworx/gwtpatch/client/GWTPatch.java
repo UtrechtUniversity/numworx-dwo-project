@@ -160,7 +160,7 @@ public class GWTPatch {
 		int oldsize = old.size();
 		int nowsize = now.size();
 		if(oldsize > nowsize) {
-			for(int i = nowsize ; i < oldsize; i++) {
+			for(int i = oldsize-1 ; i >= nowsize; i--) { // BACKWARDS!
 				factory.addRemove(combine(pointer, i));
 			}
 		} else if (oldsize < nowsize) {
