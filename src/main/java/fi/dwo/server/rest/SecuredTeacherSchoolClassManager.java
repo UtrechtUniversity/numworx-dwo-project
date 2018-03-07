@@ -1082,7 +1082,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         try {
             //fail if invalid parameters, fill build if valid
 //            CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
-            TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().setUser(sc.getUserPrincipal().getName())
+            TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                     .setHasRole(rest.getRestContext().getDomHasRole())
                     //.setDefaultHasRole()
                     .setSchoolAdminTeacher()

@@ -411,7 +411,7 @@ public class SecuredUserAccountManager {
         }
 //clear results
         try {            
-            UserDomainAuthorizer.UserState_U build = AnonDomainAuthorizer.build().setUser(sc.getUserPrincipal().getName());
+            UserDomainAuthorizer.UserState_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName());
             return build.UpdateAccount(user.getDomUserFull());
             //TODO clear all excess classcourses.
         } catch (Dwo2Exception e) {

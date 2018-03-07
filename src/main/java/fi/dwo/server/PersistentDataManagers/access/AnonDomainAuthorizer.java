@@ -22,7 +22,21 @@ public class AnonDomainAuthorizer {
 
     private static final Logger LOG = Logger.getLogger(AnonDomainAuthorizer.class.getName());
 
-    protected AnonPersistentContext context = new AnonPersistentContext();
+    private AnonPersistentContext context = new AnonPersistentContext();
+
+    /**
+     * @return the context
+     */
+    protected AnonPersistentContext getContext() {
+        return context;
+    }
+
+    /**
+     * @param context the context to set
+     */
+    protected void setContext(AnonPersistentContext context) {
+        this.context = context;
+    }
 
     public class AnonPersistentContext {
         //currently no context info (although HeaderInfo other REST payload
@@ -34,50 +48,18 @@ public class AnonDomainAuthorizer {
     }
 
     public static AnonState build() throws Dwo2Exception {
-        return new AnonDomainAuthorizer.Builder();
+        return new AnonBuilder();
     }
 
     public interface AnonState {
-        UserState_U setUser(String u) throws Dwo2Exception;
-        UserState_U setUser(DomUser u) throws Dwo2Exception;
+        UserState_U submitUser(String u) throws Dwo2Exception;
+        UserState_U submitUser(DomUser u) throws Dwo2Exception;
         public boolean LoginCheck(DomLoginCheck check) throws Dwo2Exception;
     }
 
     public interface Build {
-        //return any public server info here.
+        //return any public server info here. For example version info
     }
 
-    private static class Builder implements AnonState, Build {
-        private AnonDomainAuthorizer instance = new AnonDomainAuthorizer();
-            private AnonActions anonActions = new MySQLAnonActions();
-
-        public Builder() throws Dwo2Exception {
-        }
-    
-    /**
-     * Verifies and stores the PersistentUser into the context.
-     *
-     * @param username
-     * @return
-     * @throws Dwo2Exception
-     */
-    public UserState_U setUser(String username) throws Dwo2Exception {
-        return UserDomainAuthorizer.user(instance,username);
-    }
-
-    public UserState_U setUser(DomUser u) throws Dwo2Exception {
-        return UserDomainAuthorizer.user(instance,u.getUserName());
-    }
-
-    protected UserState_U setUser(PersistentUser u) throws Dwo2Exception {
-        return UserDomainAuthorizer.user(instance,u.getUsername());
-    }
-    
-    public boolean LoginCheck(DomLoginCheck check) throws Dwo2Exception
-    {
-        return anonActions.getLoginCheck(check);
-    }
-
-}
 
 }

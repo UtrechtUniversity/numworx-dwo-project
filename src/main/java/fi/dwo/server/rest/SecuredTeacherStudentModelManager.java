@@ -43,7 +43,7 @@ public class SecuredTeacherStudentModelManager {
     @Path("/getList")
     public List<DomStudentModelContext> getStudentModels(@Context SecurityContext sc, RestContext context) {
         try {
-            TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().setUser(sc.getUserPrincipal().getName())
+            TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                     .setHasRole(context.getRestContext().getDomHasRole())
                     .setSchoolAdminTeacher()
                     .setTeacher();
@@ -66,7 +66,7 @@ public class SecuredTeacherStudentModelManager {
     @Path("/add")
     public DomStudentModelContext addStudentModel(@Context SecurityContext sc, RestStudentModelContext model) {
         try {
-            TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().setUser(sc.getUserPrincipal().getName())
+            TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                     .setHasRole(model.getRestContext().getDomHasRole())
                     //.setDefaultHasRole()
                     .setSchoolAdminTeacher()
