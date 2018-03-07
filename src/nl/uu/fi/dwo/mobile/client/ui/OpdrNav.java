@@ -5,14 +5,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.TouchButton;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
-import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
@@ -25,8 +23,6 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
-import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
-
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -39,8 +35,6 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
@@ -52,7 +46,6 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
@@ -373,6 +366,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		if (currentActiviteit < 0) currentActiviteit = 0;
 		else if(currentActiviteit >= aantalActiviteiten) currentActiviteit = aantalActiviteiten-1;
 		currentOpdracht = memento.getCurrentOpdracht();
+		// ook ScoreNavFacade.currentOpdracht zetten
+		ScoreNavIF source = entry.scoreNav;
+		source.setOpdracht(currentOpdracht);
+		
 		if(currentOpdracht < 0) currentOpdracht = 0;
 		if(currentOpdracht >= aantalOpdrachten[currentActiviteit]) {
 			logger.log(Level.SEVERE, "MISMATCH currentOpdracht " + currentOpdracht + " >= " + aantalOpdrachten[currentActiviteit]);
@@ -662,48 +659,51 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		fp_opdrachten.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		//fp_opdrachten.getElement().addClassName("opdrbutton-container");
 		
-		//if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
-		// altijd maken omdat ze gebruikt worden om de navigatiebalk op maat te maken
-		{	
-			shiftButtonLeft = new TouchButton();
-			shiftButtonLeft.setStylePrimaryName("shiftBtn");
-			addScrollButtonHandler(shiftButtonLeft,-1);
-//			shiftButtonLeft.setText("◀◀"); // lelijk icoon op ipad
-			shiftButtonLeft.setText("\u27EA"); // <<, dun, hoog
-			//if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar) // niet, anders heeft hij geen maat
-				fp_opdrachten.add(shiftButtonLeft);
-			spaceStart = new Label();
-			spaceStart.setStylePrimaryName("spaceShiftLabel");
-			spaceStart.setText("...");
-			//if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
-				fp_opdrachten.add(spaceStart);
-		}
-		
-		for (int j = 0; j < aantalOpdrachten[index]; j++)
+		if (entry.bolletjesZichtbaar())
 		{
-			setButton(j);
-			if (mode == ZELFTOETS) 
-				setButtonCorrectZelftoets(buttons.get(j), isCorrectZelftoets[index][j], j);
-			else
-				setButtonCorrect(buttons.get(j), isCorrect[index][j], j);
+			//if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
+			// altijd maken omdat ze gebruikt worden om de navigatiebalk op maat te maken
+			{	
+				shiftButtonLeft = new TouchButton();
+				shiftButtonLeft.setStylePrimaryName("shiftBtn");
+				addScrollButtonHandler(shiftButtonLeft,-1);
+	//			shiftButtonLeft.setText("◀◀"); // lelijk icoon op ipad
+				shiftButtonLeft.setText("\u27EA"); // <<, dun, hoog
+				//if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar) // niet, anders heeft hij geen maat
+					fp_opdrachten.add(shiftButtonLeft);
+				spaceStart = new Label();
+				spaceStart.setStylePrimaryName("spaceShiftLabel");
+				spaceStart.setText("...");
+				//if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
+					fp_opdrachten.add(spaceStart);
+			}
+			
+			for (int j = 0; j < aantalOpdrachten[index]; j++)
+			{
+				setButton(j);
+				if (mode == ZELFTOETS) 
+					setButtonCorrectZelftoets(buttons.get(j), isCorrectZelftoets[index][j], j);
+				else
+					setButtonCorrect(buttons.get(j), isCorrect[index][j], j);
+			}
+			
+			if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
+			{		
+				Label spaceEnd = new Label();
+				spaceEnd.setStylePrimaryName("spaceShiftLabel");
+				spaceEnd.setText("...");
+				fp_opdrachten.add(spaceEnd);
+				TouchButton shiftButtonRight = new TouchButton();
+				shiftButtonRight.setStylePrimaryName("shiftBtn");
+				addScrollButtonHandler(shiftButtonRight,1);
+	//			shiftButtonRight.setText("▶▶"); // lelijk icoon op ipad
+				shiftButtonRight.setText("\u27EB"); // >>, dun, hoog
+				fp_opdrachten.add(shiftButtonRight);
+			}
+			
+			fp_opdrachten.getElement().getStyle().setFloat(Style.Float.LEFT);
+			contentPanel.add(fp_opdrachten);
 		}
-		
-		if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
-		{		
-			Label spaceEnd = new Label();
-			spaceEnd.setStylePrimaryName("spaceShiftLabel");
-			spaceEnd.setText("...");
-			fp_opdrachten.add(spaceEnd);
-			TouchButton shiftButtonRight = new TouchButton();
-			shiftButtonRight.setStylePrimaryName("shiftBtn");
-			addScrollButtonHandler(shiftButtonRight,1);
-//			shiftButtonRight.setText("▶▶"); // lelijk icoon op ipad
-			shiftButtonRight.setText("\u27EB"); // >>, dun, hoog
-			fp_opdrachten.add(shiftButtonRight);
-		}
-		
-		fp_opdrachten.getElement().getStyle().setFloat(Style.Float.LEFT);
-		contentPanel.add(fp_opdrachten);
 	}
 
 	/**
@@ -730,45 +730,52 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		fp_opdrachten.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		//fp_opdrachten.getElement().addClassName("opdrbutton-container");
 		
-		if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
-		{	
-			shiftButtonLeft = new TouchButton();
-			shiftButtonLeft.setStylePrimaryName("shiftBtn");
-			addScrollButtonHandler(shiftButtonLeft,-1);
-//			shiftButtonLeft.setText("◀◀"); // lelijk icoon op ipad
-			shiftButtonLeft.setText("\u27EA"); // <<, dun, hoog
-			fp_opdrachten.add(shiftButtonLeft);
-			spaceStart = new Label();
-			spaceStart.setStylePrimaryName("spaceShiftLabel");
-			spaceStart.setText("...");
-			fp_opdrachten.add(spaceStart);
-		}
-		
-		for (int j = 0; j < aantalOpdrachten[index]; j++)
+		if (entry.bolletjesZichtbaar())
 		{
-			setButton(j);
-			if (mode == ZELFTOETS) 
-				setButtonCorrectZelftoets(buttons.get(j), isCorrectZelftoets[index][j], j);
-			else
-				setButtonCorrect(buttons.get(j), isCorrect[index][j], j);
+			if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
+			{	
+				shiftButtonLeft = new TouchButton();
+				shiftButtonLeft.setStylePrimaryName("shiftBtn");
+				addScrollButtonHandler(shiftButtonLeft,-1);
+	//			shiftButtonLeft.setText("◀◀"); // lelijk icoon op ipad
+				shiftButtonLeft.setText("\u27EA"); // <<, dun, hoog
+				fp_opdrachten.add(shiftButtonLeft);
+				spaceStart = new Label();
+				spaceStart.setStylePrimaryName("spaceShiftLabel");
+				spaceStart.setText("...");
+				fp_opdrachten.add(spaceStart);
+			}
+			
+			for (int j = 0; j < aantalOpdrachten[index]; j++)
+			{
+				setButton(j);
+				if (mode == ZELFTOETS) 
+					setButtonCorrectZelftoets(buttons.get(j), isCorrectZelftoets[index][j], j);
+				else
+					setButtonCorrect(buttons.get(j), isCorrect[index][j], j);
+			}
+			
+			if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
+			{		
+				Label spaceEnd = new Label();
+				spaceEnd.setStylePrimaryName("spaceShiftLabel");
+				spaceEnd.setText("...");
+				fp_opdrachten.add(spaceEnd);
+				TouchButton shiftButtonRight = new TouchButton();
+				shiftButtonRight.setStylePrimaryName("shiftBtn");
+				addScrollButtonHandler(shiftButtonRight,1);
+	//			shiftButtonRight.setText("▶▶"); // lelijk icoon op ipad
+				shiftButtonRight.setText("\u27EB"); // >>, dun, hoog
+				fp_opdrachten.add(shiftButtonRight);
+			}
+
+			fp_opdrachten.getElement().getStyle().setFloat(Style.Float.LEFT);
+			contentPanel.add(fp_opdrachten);
 		}
-		
-		if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
-		{		
-			Label spaceEnd = new Label();
-			spaceEnd.setStylePrimaryName("spaceShiftLabel");
-			spaceEnd.setText("...");
-			fp_opdrachten.add(spaceEnd);
-			TouchButton shiftButtonRight = new TouchButton();
-			shiftButtonRight.setStylePrimaryName("shiftBtn");
-			addScrollButtonHandler(shiftButtonRight,1);
-//			shiftButtonRight.setText("▶▶"); // lelijk icoon op ipad
-			shiftButtonRight.setText("\u27EB"); // >>, dun, hoog
-			fp_opdrachten.add(shiftButtonRight);
+		else
+		{
+			contentPanel.getElement().getStyle().setMargin(0, Unit.PX); // het lijnt niet goed uit...
 		}
-		
-		fp_opdrachten.getElement().getStyle().setFloat(Style.Float.LEFT);
-		contentPanel.add(fp_opdrachten);
 	}
 
 	/**
@@ -777,7 +784,14 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 */
 	private void shiftCurrentOpdrachtInBeeld()
 	{
-		if (currentOpdracht > maxAantalOnBar - 2 + currentShift - 1) // - 1 voor de correcte index (telt vanaf 0)
+		int upperBound = 0;
+		if (maxAantalOnBar >= aantalOpdrachten[currentActiviteit])
+			upperBound = maxAantalOnBar + currentShift - 1; // - 1 voor de correcte index (telt vanaf 0)
+		else
+			// er zijn shiftbuttons
+			upperBound = maxAantalOnBar -2 + currentShift - 1;
+		
+		if (currentOpdracht > upperBound)
 			// schuif het verschil vooruit
 			currentShift = currentShift + (currentOpdracht - (maxAantalOnBar - 2 + currentShift - 1));
 		else if (currentOpdracht < currentShift)
@@ -841,7 +855,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		addButtonHandler(button, j);
 		
 		buttons.add(button);
-		if (aantalOpdrachten[currentActiviteit] > 1 
+		if (aantalOpdrachten[currentActiviteit] > 1
 			&& j > currentShift - 1 
 			&& j < aantalOpdrachten[currentActiviteit] 
 			&& (j < maxAantalOnBar - 2 + currentShift || aantalOpdrachten[currentActiviteit] < maxAantalOnBar + 1))
@@ -1174,6 +1188,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	{
 		if (!entry.bolletjesZichtbaar() || buttons.size() < j)
 			return;
+
 		buttonsEnabled[currentActiviteit][j] = b;
 		if (b)
 		{
@@ -1566,7 +1581,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		for (int j = 0; j < aantalOpdrachten[currentActiviteit]; j++)
 		{
-			setButtonCorrectZelftoets(buttons.get(j), isCorrectZelftoets[currentActiviteit][j], j);
+			if (entry.bolletjesZichtbaar())
+				setButtonCorrectZelftoets(buttons.get(j), isCorrectZelftoets[currentActiviteit][j], j);
 			source.setItemScore(j, scores[currentActiviteit][j]);
 		}
 
@@ -1668,16 +1684,22 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public void gotoOpdracht(final int opdracht)
 	{
 		saveCurrentState();
-		if (mode == ZELFTOETS)
-			setButtonCorrectZelftoets(buttons.get(currentOpdracht), isCorrectZelftoets[currentActiviteit][currentOpdracht],
-				currentOpdracht);
-		else
-			setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht],
-				currentOpdracht);
+		
+		if (entry.bolletjesZichtbaar())
+		{
+			if (mode == ZELFTOETS)
+				setButtonCorrectZelftoets(buttons.get(currentOpdracht), isCorrectZelftoets[currentActiviteit][currentOpdracht],
+					currentOpdracht);
+			else
+				setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht],
+					currentOpdracht);
 
-		removeButtonCursor(buttons.get(currentOpdracht));
+			removeButtonCursor(buttons.get(currentOpdracht));
+			//currentOpdracht = opdracht;
+			setButtonCursor(buttons.get(currentOpdracht));
+		}
+
 		currentOpdracht = opdracht;
-		setButtonCursor(buttons.get(currentOpdracht));
 		BUS.removeHandlers();
 		entry.clearContentPanel();
 		if (states[currentActiviteit][currentOpdracht] == null)
@@ -2232,7 +2254,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public void reloadOpdracht(int opdracht, ScoreNavIF source)
 	{
 		saveCurrentState();
-		removeButtonCursor(buttons.get(currentOpdracht));
+		if (entry.bolletjesZichtbaar())
+			removeButtonCursor(buttons.get(currentOpdracht));
 		boolean randomize;
 		if (opdracht < 0) // alles opnieuw
 		{
@@ -2242,7 +2265,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			for (opdracht = 0; opdracht < aantalOpdrachten[currentActiviteit]; opdracht++)
 			{
 				clearState(opdracht, source);
-				setButtonCorrect(buttons.get(opdracht), isCorrect[currentActiviteit][opdracht], opdracht);
+				if (entry.bolletjesZichtbaar())
+					setButtonCorrect(buttons.get(opdracht), isCorrect[currentActiviteit][opdracht], opdracht);
 			}
 
 			entry.setZelftoetsNagekeken(false);
@@ -2268,14 +2292,17 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 			// reset bezocht
 			resetBezocht();
-		} // alles opnieuwe
+			
+			setOpdrachten(currentOpdracht); // shift naar 0
+		} // alles opnieuw
 		else
 		{
 			// opdracht opnieuw
 			randomize = false; // TODO moet wel, tenzij er nu geen enkele state
 								// meer is. Peter vragen?
 			clearState(opdracht, source);
-			setButtonCorrect(buttons.get(opdracht), isCorrect[currentActiviteit][opdracht], opdracht);
+			if (entry.bolletjesZichtbaar())
+				setButtonCorrect(buttons.get(opdracht), isCorrect[currentActiviteit][opdracht], opdracht);
 
 			resetBezocht(currentActiviteit, opdracht);
 		}
@@ -2285,7 +2312,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		// setButtonCorrect(buttons.get(currentOpdracht),
 		// isCorrect[currentActiviteit][currentOpdracht], currentOpdracht);
 
-		setButtonCursor(buttons.get(currentOpdracht));
+		if (entry.bolletjesZichtbaar())
+			setButtonCursor(buttons.get(currentOpdracht));
 
 		entry.clearContentPanel();
 		BUS.removeHandlers();
