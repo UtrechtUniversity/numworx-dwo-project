@@ -3762,7 +3762,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	
 	public int hoogteStepPanelMetEditor()
 	{
-		int hoogte = editor.getMainRegel().getHeight();
+		int hoogte = editor.getHeight();
 		if(prefixViewer != null)
 		{	hoogte = Math.max(hoogte, prefixViewer.getHeight());
 			//en om te zorgen dat subscripts van de prefix niet kunnen verdwijnen:
