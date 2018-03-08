@@ -452,7 +452,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		}
 	}
 	
-		public void paintPilot()
+	public void paintPilot()
 	{
 		ctx.setFillStyle("white");
 		ctx.fillRect(0, 0, canvas.getOffsetWidth(), canvas.getOffsetHeight());
@@ -503,7 +503,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 				ctx.fillText(objectivesForDiagram[0][i], labelX, textY);
 				if(stars)
 				{
-					
+					drawStars(scoresPercObjectives[0][i], scoreX, margin);
 				}
 				else
 				{
@@ -591,7 +591,6 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 				textDifference += lineHeight - 15;  //label-location and drawString need different y
 				if(stars)
 				{
-					/// drawStars
 					drawStars(categoryScoresPercObjectives[j], scoreX, columnHeight);// + textDifference);
 					
 				}
@@ -614,7 +613,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 						ctx.fillText(objectivesForDiagram[j][i], labelX, columnHeight + textDifference);
 						if(stars)
 						{
-							//fillstars
+							drawStars(scoresPercObjectives[j][i], scoreX, columnHeight);
 						}
 						else
 						{
@@ -727,24 +726,23 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		String strokeColor = cssColorNeutral.toString();
 			
 		if(numberOfStars == 3)
-		{	fillColor = "green"; //TODO; use green also used to mark pages green
-			strokeColor = "darkgreen";
+		{	fillColor = CssColor.make(150, 200, 150).toString();
+			strokeColor = CssColor.make(75, 125, 75).toString();
 		}
 		drawStar(x + 40, y + 2, fillColor, strokeColor);
 		if(numberOfStars == 2)
 		{
-			fillColor = "yellow";
-			strokeColor = "darkyellow";
+			fillColor = CssColor.make(250, 250, 125).toString();
+			strokeColor = CssColor.make(200, 200, 75).toString();
 		}
 		drawStar(x + 20, y + 2, fillColor, strokeColor);
 		if(numberOfStars == 1)
 		{
-			fillColor = "orange";
-			strokeColor = "darkorange";
+			fillColor = CssColor.make(250, 150, 75).toString();
+			strokeColor = CssColor.make(200, 100, 25).toString();
 		}
 		drawStar(x, y + 2, fillColor, strokeColor);
 		
-		//don't forget: if star earned, than also draw a dark border to help the color blind. 
 		ctx.setFillStyle("black");
 		ctx.setStrokeStyle("black");
 		//TODO: call drawStars on all appropriate places. 
