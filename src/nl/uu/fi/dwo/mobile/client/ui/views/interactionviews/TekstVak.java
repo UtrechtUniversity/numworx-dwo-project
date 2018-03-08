@@ -509,7 +509,8 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				}
 				else
 				{	
-					regelBreedte = setupTekstElement(regelBreedte, (InteractionView) currentObject, false);
+					boolean isSymbol = currentObject instanceof SymboolPanel; 
+					regelBreedte = setupTekstElement(regelBreedte, (InteractionView) currentObject, isSymbol);
 //					if(regelBreedte == 0 || regelBreedte + ((InteractionView) currentObject).getWidth() <= tekstVakBreedte || pasAanB)
 //					{	regelVakken[aantalRegels - 1].addObject(currentObject);
 //						regelBreedte += ((InteractionView) currentObject).getWidth();
@@ -521,8 +522,6 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 //						regelBreedte = ((InteractionView) currentObject).getWidth();
 //					}
 				}
-				
-				
 				
 			}
 			else if (currentObject instanceof ImageView || currentObject instanceof IFrameView)
@@ -1195,7 +1194,8 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 						{
 							ArrayList<Object> regelList = getRegelVak(j).getRegelObjects();
 							if(regelList.contains(currentObject))
-							{	getRegelVak(j).setHeight(tvp.getHoogte());
+							{	
+								getRegelVak(j).setHeight(tvp.getHoogte());
 								break;
 							}
 						}
@@ -1222,7 +1222,10 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 					{
 						ArrayList<Object> regelList = getRegelVak(j).getRegelObjects();
 						if(regelList.contains(currentObject))
-						{	getRegelVak(j).setHeight(this.hoogte);
+						{	
+							//getRegelVak(j).setHeight(this.hoogte);
+							if(getRegelVak(j).getHeight() < ((SymboolPanel) currentObject).getHeight())
+								getRegelVak(j).setHeight(((SymboolPanel) currentObject).getHeight());
 							getRegelVak(j).hervulRegel();
 							break;
 						}

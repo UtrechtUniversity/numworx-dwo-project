@@ -83,7 +83,10 @@ public class TekstRegel extends LayoutPanel
 	
 	public void setAsHoogte(int ashoogte)
 	{	if(ashoogte - this.ashoogte > 0)
-		{	setHeight(hoogte + ashoogte - this.ashoogte);
+		{	
+		
+		setHeight(hoogte + ashoogte - this.ashoogte);
+		
 		}
 		this.ashoogte = ashoogte;
 		
