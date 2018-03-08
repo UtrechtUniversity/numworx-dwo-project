@@ -3490,6 +3490,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		fv.setDefaultFont(font);
 		fv.setSelection(selectionStartX, selectionStartY, selectionEndX, selectionEndY);
 		
+		// update hoogte van steppanel
+		contentPanel.setWidgetTopHeight(current, stepPanelY, Style.Unit.PX, fv.getHeightWithImage(), Style.Unit.PX);
+		
 		if (show && !substitutieVak)
 			if (!eigenOpdr || stapNr > 0) // eigenopdracht niet tonen voor stapNr 0
 			{
