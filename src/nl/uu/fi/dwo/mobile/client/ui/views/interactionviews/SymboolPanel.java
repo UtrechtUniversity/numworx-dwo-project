@@ -40,6 +40,7 @@ public class SymboolPanel implements InteractionStub, FacetAware
 	public static int PIJL = 2;
 	public static int ACCOLADE = 3;
 	public static int ELLIPS = 4;
+	public static int HAAK = 5;
 	
 	public static int RICHTING_LINKS = 0;
 	public static int RICHTING_RECHTS = 1;
@@ -379,7 +380,27 @@ public class SymboolPanel implements InteractionStub, FacetAware
 			 
 //			g2.draw(new Ellipse2D.Double(dikte, dikte, this.getWidth() - 2 * dikte, this.getHeight() - 2 * dikte));
 		}
-		
+		else if(type == HAAK)
+		{
+			if(richting == RICHTING_LINKS)
+			{	
+				int x = breedte / 2;
+				ctx.beginPath();
+				ctx.arc(x + 5, 6, 5, 3 * Math.PI / 2, Math.PI, true);
+				ctx.lineTo(x, hoogte - 6);
+				ctx.arc(x + 5, hoogte - 7, 5, Math.PI, Math.PI / 2, true);
+				ctx.stroke();
+			}
+			else if(richting == RICHTING_RECHTS)
+			{
+				int x = breedte / 2;
+				ctx.beginPath();
+				ctx.arc(x - 5, 6, 5, 3 * Math.PI / 2, 2 * Math.PI);//kan het laatste argument hier ook 0 zijn?
+				ctx.lineTo(x, hoogte - 6);
+				ctx.arc(x - 5, hoogte - 7, 5, 0, Math.PI / 2);
+				ctx.stroke();
+			}
+		}
 	}
 	
 	@Override
