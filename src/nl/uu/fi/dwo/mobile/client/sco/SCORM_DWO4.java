@@ -239,8 +239,8 @@ log("setScoID " + scoID);
 								Object tag = p.getValue();
 								Map copy2 = new HashMap(copy);
 								copy2.remove(Memento.SUSPEND_DATA);
-//								if(tag instanceof String) 
-//									copy2.put("ETag", tag);
+								if(tag instanceof String) 
+									copy2.put("ETag", tag);
 								return scoDataManager.setValuesETag(sco, schoolClassID, context, copy2);
 							}
 							)
