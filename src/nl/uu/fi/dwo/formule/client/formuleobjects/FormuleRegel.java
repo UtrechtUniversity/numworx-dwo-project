@@ -1439,10 +1439,20 @@ public class FormuleRegel extends FormuleElement
 
 	public String toMathML() {		
 		int count = children.size();
-		if(count == 1)
-			return fix1char(((FormuleElement) children.get(0)).toMathML());
+		if(count == 0)
+			return "<mtext>\u25AF</mtext>";
+		if(count == 1) {
+			FormuleElement f = (FormuleElement) children.get(0);
+			String string = fix1char(f.toMathML());
+			if(f instanceof Machtvak) {
+				return "<msup><mtext/>" + string + "</msup>";
+			}
+			if (f instanceof SubscriptVak) 
+				return "<msub><mtext/>" + string + "</msub>";
+			return string;
+		}
 		int pos = 0;
-		int next = 0;
+		int next;
 		StringBuffer sb = new StringBuffer("<mrow>");
 		for(int i=0 ; i<count  ; i++)
 		{	
@@ -1453,12 +1463,14 @@ public class FormuleRegel extends FormuleElement
 			mathML = fix1char(mathML);
 			if(f instanceof Machtvak)
 			{
-				sb.insert(pos, "<msup>");				
+				if(i == 0) sb.append("<msup><mtext/>");
+				else sb.insert(pos, "<msup>");
 				sb.append(mathML);
 				sb.append("</msup>");
 			} else if(f instanceof SubscriptVak)
 			{
-				sb.insert(pos, "<msub>");				
+				if(i == 0) sb.append("<msub><mtext/>");
+				else sb.insert(pos, "<msub>");				
 				sb.append(mathML);
 				sb.append("</msub>");
 			} else
