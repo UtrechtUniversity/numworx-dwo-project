@@ -20,7 +20,17 @@ public class AnonDomainAuthorizer {
     private static final Logger LOG = Logger.getLogger(AnonDomainAuthorizer.class.getName());
 
     private AnonPersistentContext anonCtx = new AnonPersistentContext();
+        
+    /** Creates a builder and initializes a context if given. */    
+    public static AnonState build() throws Dwo2Exception {
+        return new AnonBuilder();
+    }
 
+    /** Ensure that it is not called other than from the builder. */
+    protected AnonDomainAuthorizer() {
+        //TODO inject executror
+    }
+    
     /**
      * @return the anonCtx
      */
@@ -36,33 +46,27 @@ public class AnonDomainAuthorizer {
     }
 
     protected static class AnonPersistentContext {
-        
-        protected AnonPersistentContext(){
-            
+
+        protected AnonPersistentContext() {
+
         }
 
-        protected AnonPersistentContext(AnonPersistentContext ctx){
-            
+        protected AnonPersistentContext(AnonPersistentContext ctx) {
+
         }
-    }
-
-    protected AnonDomainAuthorizer() {
-        //TODO inject executror
-    }
-
-    public static AnonState build() throws Dwo2Exception {        
-        return new AnonBuilder();
     }
 
     public interface AnonState {
+
         UserState_U submitUser(String u) throws Dwo2Exception;
+
         UserState_U submitUser(DomUser u) throws Dwo2Exception;
+
         public boolean LoginCheck(DomLoginCheck check) throws Dwo2Exception;
     }
 
     public interface Build {
         //return any public server info here. For example version info
     }
-
 
 }

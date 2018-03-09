@@ -29,7 +29,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
  *
  * @author Gert van der Plas
  */
-class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_U, UserDomainAuthorizer.UserState_HR_R_S_SG_U, //UserState_HR_R_S_SC_SG_U,
+class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_U, UserDomainAuthorizer.UserState_HR_R_S_SG_U,
         UserDomainAuthorizer.Build {
 
     private static final Logger LOG = Logger.getLogger(UserBuilder.class.getName());
@@ -44,7 +44,6 @@ class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_
 
     protected UserBuilder(AnonBuilder builder) throws Dwo2Exception {
         super();
-        instance.userCtx = new UserDomainAuthorizer.UserPersistentContext(builder.instance.getAnonCtx());
     }
 
     /**
@@ -67,8 +66,6 @@ class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_
      * Verifies the existence of the default hasRole in the PersistentUser and
      * sets it as the active hasRole into the userCtx.
      *
-     * @param hr
-     * @param r
      * @return
      * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception If the default hasRole
      * is invalid.
@@ -89,6 +86,7 @@ class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_
      * @param hr
      * @param r
      * @return
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     @Override
     public UserDomainAuthorizer.UserState_HR_R_S_SG_U setHasRole(DomHasRole hr) throws Dwo2Exception {
@@ -101,10 +99,12 @@ class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_
      * Verifies the existence of the hasRole in the PersistentUser and sets it
      * as the active hasRole into the userCtx.
      *
+     * @param phrPK
      * @return
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     private UserDomainAuthorizer.UserState_HR_R_S_SG_U setHasRole(PersistentHasRolePK phrPK) throws Dwo2Exception {
-        PersistentHasRole phr = null;
+        PersistentHasRole phr;
         //determine default hasRole.
         phr = HasRoleManager.findEntity(phrPK);
         if (phr == null || phr.getUser().getId().longValue() != instance.userCtx.user.getId().longValue() //users is valid
@@ -128,10 +128,8 @@ class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_
      * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     @Override
-    public StudentDomainAuthorizer.StudentState_HR_R_S_SG_U setStudent() throws Dwo2Exception {
-        StudentBuilder builder = new StudentBuilder(this);
-        return builder.setStudent();
-
+    public StudentDomainAuthorizer.StudentState_HR_R_S_SG_U buildStudent() throws Dwo2Exception {
+        return  new StudentBuilder(this);        
     }
 
     /**
@@ -161,7 +159,7 @@ class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_
      */
     private UserDomainAuthorizer.UserState_HR_R_S_SG_U setHasRoleIfType(PersistentHasRolePK phrPK, RoleType r) throws Dwo2Exception {
         //fetch PersistentHasRole if it exists.
-        PersistentHasRole phr = null;
+        PersistentHasRole phr;
         phr = HasRoleManager.findEntity(phrPK);
         if (phr == null) {
             String msg = MessageFormat.format("Hasrole {1} for userlogin {0} could not be found.", new Object[]{instance.userCtx.getUser().getUsername(), this.instance.userCtx.getHasRole().getPersistentHasRolePK()});
@@ -223,8 +221,8 @@ class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_
     }
 
     @Override
-    public SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U setSchoolAdminTeacher() throws Dwo2Exception {
-        return new SchoolAdminTeacherDomainAuthorizer.Builder(instance).setSchoolAdminTeacher();
+    public SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U buildSchoolAdminTeacher() throws Dwo2Exception {
+        return new SchoolAdminTeacherDomainAuthorizer.Builder(instance).buildSchoolAdminTeacher();
     }
 
     @Override
@@ -248,5 +246,5 @@ class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_
             }
         }
     }
-
+    
 }

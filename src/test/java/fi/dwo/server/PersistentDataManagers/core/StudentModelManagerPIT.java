@@ -203,7 +203,7 @@ public class StudentModelManagerPIT {
 
             modelA.setSchoolID(1L);
             modelA.setModelStructure(model);
-            modelA = StudentModelManager.create(modelA);
+            modelA = StudentModelContextManager.create(modelA);
         } catch (Exception e) {
             fail("AnalyticalModelManager.create() failed.");
         }
@@ -211,7 +211,7 @@ public class StudentModelManagerPIT {
         //get
         try {
             System.out.println("reading modelA ");
-            PersistentStudentModelContext modelD = StudentModelManager.findEntity(modelA.getModelID());
+            PersistentStudentModelContext modelD = StudentModelContextManager.findEntity(modelA.getModelID());
             assertEquals(modelA.getModelID(), modelD.getModelID());
 //            JSONAssert.assertEquals(modelA.getModelStructure().toJSONString(), modelD.getModelStructure().toJSONString(), JSONCompareMode.NON_EXTENSIBLE);
             //should succeed            
@@ -230,8 +230,8 @@ public class StudentModelManagerPIT {
 //
 //        try {
 //            System.out.println("create model");
-//            modelA = StudentModelManager.create(modelA);
-//            modelB = StudentModelManager.create(modelB);
+//            modelA = StudentModelContextManager.create(modelA);
+//            modelB = StudentModelContextManager.create(modelB);
 //        } catch (Exception e) {
 //            fail("AnalyticalModelManager.create() failed.");
 //        }
@@ -240,7 +240,7 @@ public class StudentModelManagerPIT {
 //        // recreate
 //        try {
 //            System.out.println("create model again");
-//            modelC = StudentModelManager.create(modelA);
+//            modelC = StudentModelContextManager.create(modelA);
 //            //should succeed            
 //        } catch (PersistenceException e) {
 //            Logger.getLogger(StudentModelManagerPIT.class.getName()).log(Level.SEVERE, null, e);
@@ -250,7 +250,7 @@ public class StudentModelManagerPIT {
 //        // test delete
 //        try {
 //            System.out.println("delete second copy of modelA ");
-//            StudentModelManager.destroy(modelC.getModelID().longValue());
+//            StudentModelContextManager.destroy(modelC.getModelID().longValue());
 //            //should succeed            
 //        } catch (Exception e) {
 //            Logger.getLogger(StudentModelManagerPIT.class.getName()).log(Level.SEVERE, null, e);
@@ -259,7 +259,7 @@ public class StudentModelManagerPIT {
 //
 //        try {
 //            System.out.println("delete second copy of modelA  again");
-//            StudentModelManager.destroy(modelC.getModelID().longValue());
+//            StudentModelContextManager.destroy(modelC.getModelID().longValue());
 //            fail("AnalyticalModelManager.create() did not fail removing deleted opy.");
 //            //should succeed            
 //        } catch (Exception e) {
@@ -269,7 +269,7 @@ public class StudentModelManagerPIT {
 //        // test read single
 //        try {
 //            System.out.println("reading modelA ");
-//            PersistentStudentModelContext modelD = StudentModelManager.findEntity(modelB.getModelID());
+//            PersistentStudentModelContext modelD = StudentModelContextManager.findEntity(modelB.getModelID());
 //            assertEquals(modelB.getModelID(), modelD.getModelID());
 //            JSONAssert.assertEquals(modelB.getModelStructure().toJSONString(), modelD.getModelStructure().toJSONString(), JSONCompareMode.NON_EXTENSIBLE);
 //            //should succeed            
@@ -280,7 +280,7 @@ public class StudentModelManagerPIT {
 //
 //        try {
 //            System.out.println("reading modelA ");
-//            PersistentStudentModelContext modelD = StudentModelManager.findEntity(modelB.getModelID());
+//            PersistentStudentModelContext modelD = StudentModelContextManager.findEntity(modelB.getModelID());
 //            assertEquals(modelB.getModelID(), modelD.getModelID());
 //            JSONAssert.assertEquals(modelB.getModelStructure().toJSONString(), modelD.getModelStructure().toJSONString(), JSONCompareMode.NON_EXTENSIBLE);
 //            //should succeed            
@@ -295,7 +295,7 @@ public class StudentModelManagerPIT {
 //            int lock1 = modelB.getOptlock();
 //            long time1 = modelB.getLastChangeTimeStamp();
 //            modelB.getModelStructure().put("de", "German version");
-//            modelB = StudentModelManager.edit(modelB);
+//            modelB = StudentModelContextManager.edit(modelB);
 //            long time2 = modelB.getLastChangeTimeStamp();
 //            int lock2 = modelB.getOptlock();
 //            //  check if modelStructure is updated.

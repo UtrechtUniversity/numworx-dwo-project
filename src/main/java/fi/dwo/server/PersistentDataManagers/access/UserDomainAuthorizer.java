@@ -32,6 +32,23 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
     protected UserPersistentContext userCtx;
     private UserActions userActions;
 
+//
+//    /** Creates a builder and initializes a context if given. */    
+//    protected static UserState buildUser(AnonBuilder anon) throws Dwo2Exception {
+//        return new AnonBuilder();
+//    }
+    protected UserDomainAuthorizer() {
+        super();
+        userCtx = new UserPersistentContext();
+        userActions = new MySQLUserActions();
+    }
+
+    protected UserDomainAuthorizer(AnonDomainAuthorizer anon) {
+        super();
+        userCtx = new UserPersistentContext();
+        userActions = new MySQLUserActions();
+    }
+
     /**
      * @return the userActions
      */
@@ -54,15 +71,14 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
         public PersistentSchool school;
         public PersistentSchoolGroup schoolGroup;
 
-
         protected UserPersistentContext() {
             super();
         }
-        
+
         protected UserPersistentContext(AnonPersistentContext ctx) {
             super(ctx);
         }
-        
+
         protected UserPersistentContext(UserPersistentContext ctx) {
             super(ctx);
             this.hasRole = ctx.hasRole;
@@ -82,7 +98,7 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
         /**
          * @param user the user to set
          */
-        public void setUser(PersistentUser user) {
+        protected void setUser(PersistentUser user) {
             this.user = user;
         }
 
@@ -96,7 +112,7 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
         /**
          * @param hasRole the hasRole to set
          */
-        public void setHasRole(PersistentHasRole hasRole) {
+        protected void setHasRole(PersistentHasRole hasRole) {
             this.hasRole = hasRole;
         }
 
@@ -110,7 +126,7 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
         /**
          * @param roleType the roleType to set
          */
-        public void setRoleType(RoleType roleType) {
+        protected void setRoleType(RoleType roleType) {
             this.roleType = roleType;
         }
 
@@ -124,7 +140,7 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
         /**
          * @param school the school to set
          */
-        public void setSchool(PersistentSchool school) {
+        protected void setSchool(PersistentSchool school) {
             this.school = school;
         }
 
@@ -138,28 +154,16 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
         /**
          * @param schoolGroup the schoolGroup to set
          */
-        public void setSchoolGroup(PersistentSchoolGroup schoolGroup) {
+        protected void setSchoolGroup(PersistentSchoolGroup schoolGroup) {
             this.schoolGroup = schoolGroup;
         }
     }
 
-    protected UserDomainAuthorizer() {
-        super();
-        userCtx = new UserPersistentContext();
-        userActions = new MySQLUserActions();
-    }
-
-    protected UserDomainAuthorizer(AnonDomainAuthorizer anon) {
-        super();
-        userCtx = new UserPersistentContext();
-        userActions = new MySQLUserActions();
-    }
 //
 //    public static UserState_U user(AnonDomainAuthorizer auth, String username) throws Dwo2Exception {
 //        UserDomainAuthorizer.buildUser().setUser(username);
 //        return 
 //    }
-
     public interface UserState_U {
 
         PersistentUser getUser();
@@ -185,37 +189,14 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
 
         PersistentSchoolGroup getSchoolGroup();
 
-        SchoolAdminTeacherState_HR_R_S_SG_U setSchoolAdminTeacher() throws Dwo2Exception;
-        StudentState_HR_R_S_SG_U setStudent() throws Dwo2Exception;
-
         public PersistentStudentModelContext getStudentModel(DomScoContextId id) throws Dwo2Exception;
+
+        SchoolAdminTeacherState_HR_R_S_SG_U buildSchoolAdminTeacher() throws Dwo2Exception;
+
+        StudentState_HR_R_S_SG_U buildStudent() throws Dwo2Exception;
     }
-//
-//    public interface UserState_HR_R_S_SC_SG_U {
-//
-//        PersistentUser getUser();
-//
-//        PersistentHasRole getHasRole();
-//
-//        RoleType getRoleType();
-//
-//        PersistentSchool getSchool();
-//
-//        PersistentSchoolGroup getSchoolGroup();
-//
-//    }
-
+    
     public interface Build {
-//
-//        PersistentHasRole getHasRole();
-//
-//        PersistentUser getUser();
-//
-//        PersistentSchool getSchool();
-//
-//        RoleType getRoleType();
-//        
-
     }
 
 }

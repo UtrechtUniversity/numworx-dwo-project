@@ -85,6 +85,9 @@ import static java.lang.Thread.sleep;
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import static java.lang.Thread.sleep;
 import static java.lang.Thread.sleep;
+import static java.lang.Thread.sleep;
+import static java.lang.Thread.sleep;
+import static java.lang.Thread.sleep;
 
 /**
  * Handles the public registration of new users.

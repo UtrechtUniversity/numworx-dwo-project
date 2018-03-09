@@ -1,7 +1,9 @@
 package fi.dwo.server.PersistentDataManagers.access;
 
+import fi.dwo.server.PersistentDataManagers.actions.MySQLStudentActions;
 import fi.dwo.server.PersistentDataManagers.actions.StudentActions;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
@@ -17,7 +19,21 @@ public class StudentDomainAuthorizer extends UserDomainAuthorizer {
 
     private static final Logger LOG = Logger.getLogger(StudentDomainAuthorizer.class.getName());
     protected StudentPersistentContext studentCtx;
-    private StudentActions studentActions;
+    private StudentActions studentActions = new MySQLStudentActions();
+
+    /**
+     * @return the studentActions
+     */
+    protected StudentActions getStudentActions() {
+        return studentActions;
+    }
+
+    /**
+     * @param studentActions the studentActions to set
+     */
+    protected void setStudentActions(StudentActions studentActions) {
+        this.studentActions = studentActions;
+    }
 
     public class StudentPersistentContext extends UserPersistentContext {
         
@@ -29,9 +45,13 @@ public class StudentDomainAuthorizer extends UserDomainAuthorizer {
             super(ctx);
         }
     }
+    /** Creates a builder and initializes a context if given. */    
+    public static StudentState_HR_R_S_SG_U buildStudent() throws Dwo2Exception {
+        return new StudentBuilder();
+    }
 
     public interface StudentState_HR_R_S_SG_U extends UserState_HR_R_S_SG_U {
-        StudentState_HR_R_S_SG_U setStudent() throws Dwo2Exception;
+        public void updateStudentModelData(DomStudentModelData data) throws Dwo2Exception;
 
     }
 //

@@ -26,7 +26,7 @@ import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
-import fi.dwo.server.PersistentDataManagers.core.StudentModelManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
@@ -575,7 +575,7 @@ public class TeacherDomainAuthorizer extends SchoolAdminTeacherDomainAuthorizer 
 
         @Override
         public List<DomStudentModelContext> getStudentModels() throws Dwo2Exception {
-            List<PersistentStudentModelContext> pModels = StudentModelManager.findEntities(instance.context.getSchool());
+            List<PersistentStudentModelContext> pModels = StudentModelContextManager.findEntities(instance.context.getSchool());
             List<DomStudentModelContext> result = new ArrayList<>(pModels.size());
             pModels.stream().forEach(m -> result.add(m.buildDomStudentModelContext()));
             return result;

@@ -3,7 +3,7 @@ package fi.dwo.server.PersistentDataManagers.actions;
 
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
-import fi.dwo.server.PersistentDataManagers.core.StudentModelManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class MySQLTeacherActions extends MySQLSchoolAdminTeacherActions implemen
                 pModel.setModelStructure(model.getModelStructure());
                 pModel.setSchoolID(model.getSchoolID());
                 pModel.setPublishState(PublishState.published);                
-                return StudentModelManager.create(pModel);
+                return StudentModelContextManager.create(pModel);
         } catch (Exception e) {
             String msg = MessageFormat.format("Username {0}: Internal error: {1}", new Object[]{context.getUser().getUsername(), e.getMessage()});
             LOG.log(Level.WARNING, msg, e);
@@ -38,7 +38,7 @@ public class MySQLTeacherActions extends MySQLSchoolAdminTeacherActions implemen
     }
 
     public List<DomStudentModelContext> getStudentModels(TeacherDomainAuthorizer.TeacherPersistentContext context) throws Dwo2Exception {           
-            List<PersistentStudentModelContext> pModels =  StudentModelManager.findEntities(context.getSchool());
+            List<PersistentStudentModelContext> pModels =  StudentModelContextManager.findEntities(context.getSchool());
             List<DomStudentModelContext>  result = new ArrayList<>(pModels.size());
             pModels.stream().forEach(m -> result.add(m.buildDomStudentModelContext()));
             return result;

@@ -1083,7 +1083,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                     .setHasRole(rest.getRestContext().getDomHasRole())
                     //.setDefaultHasRole()
-                    .setSchoolAdminTeacher()
+                    .buildSchoolAdminTeacher()
                     .setTeacher()
                     .addProfile(rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile())
                     .addSchoolClass(rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass())

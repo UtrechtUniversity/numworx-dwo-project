@@ -112,7 +112,7 @@ public class SchoolAdminTeacherDomainAuthorizer extends UserDomainAuthorizer {
         }
 
         @Override
-        public SchoolAdminTeacherState_HR_R_S_SG_U setSchoolAdminTeacher() throws Dwo2Exception {
+        public SchoolAdminTeacherState_HR_R_S_SG_U buildSchoolAdminTeacher() throws Dwo2Exception {
             if (instance.schoolAdminTeacherCtx.roleType == RoleType.SCHOOLADMIN || instance.schoolAdminTeacherCtx.roleType == RoleType.TEACHER) {
                 return this;
             } else {

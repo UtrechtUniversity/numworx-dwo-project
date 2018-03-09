@@ -1,7 +1,6 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
-import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
-import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
@@ -19,9 +18,9 @@ import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
  *
  * @author G.A.J. van der Plas
  */
-public class StudentModelManager {
+public class StudentModelDataManager {
 
-    private static final Logger LOG = Logger.getLogger(StudentModelManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(StudentModelDataManager.class.getName());
 
     private static EntityManager getEntityManager() {
         EntityManager em = DwoEmfFactory.getEntityManager();
@@ -31,19 +30,19 @@ public class StudentModelManager {
     /**
      * Create.
      *
-     * @param model
+     * @param data
      */
-    public static PersistentStudentModelContext create(PersistentStudentModelContext model) throws PersistenceException {
+    public static PersistentStudentModelData create(PersistentStudentModelData data) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            model.setLastChangeTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
-            em.persist(model);
+            data.setLastChangeTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+            em.persist(data);
             em.getTransaction().commit();
-            return model;
+            return data;
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentStudentModelContext.", e);
+            LOG.log(Level.SEVERE, "Can't create the PersistentStudentModelData.", e);
             throw new PersistenceException(e);
         } finally {
             if (em != null) {
@@ -55,23 +54,23 @@ public class StudentModelManager {
     /**
      * Update
      *
-     * @param model
+     * @param data
      * @return jpa merged course
      */
-    public static PersistentStudentModelContext edit(PersistentStudentModelContext model) throws PersistenceException {
+    public static PersistentStudentModelData edit(PersistentStudentModelData data) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            model.setLastChangeTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());            
-            model = em.merge(model);
+            data.setLastChangeTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());            
+            data = em.merge(data);
             em.getTransaction().commit();
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Long id = model.getModelID();
+                Long id = data.getModelDataId();
                 if (findEntity(id) == null) {
-                    LOG.log(Level.INFO, "The PersistentStudentModelContext with " + id + " no longer exists.", e);
+                    LOG.log(Level.INFO, "The PersistentStudentModelData with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
                 }
             }
@@ -81,7 +80,7 @@ public class StudentModelManager {
                 em.close();
             }
         }
-        return model;
+        return data;
     }
 
     /**
@@ -94,12 +93,12 @@ public class StudentModelManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            PersistentStudentModelContext model = null;
+            PersistentStudentModelData model = null;
             try {
-                model = em.getReference(PersistentStudentModelContext.class, id);
-                model.getModelID();
+                model = em.getReference(PersistentStudentModelData.class, id);
+                model.getModelDataId();
             } catch (EntityNotFoundException e) {
-                LOG.log(Level.FINE, "The PersistentStudentModelContext with " + id + " no longer exists.", e);
+                LOG.log(Level.FINE, "The PersistentStudentModelData with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
             em.remove(model);
@@ -111,19 +110,19 @@ public class StudentModelManager {
         }
     }
 
-    public static List<PersistentStudentModelContext> findEntities() {
+    public static List<PersistentStudentModelData> findEntities() {
         return findEntities(true, -1, -1);
     }
 
-    public static List<PersistentStudentModelContext> findEntities(int maxResults, int firstResult) {
+    public static List<PersistentStudentModelData> findEntities(int maxResults, int firstResult) {
         return findEntities(false, maxResults, firstResult);
     }
 
-    private static List<PersistentStudentModelContext> findEntities(boolean all, int maxResults, int firstResult) {
+    private static List<PersistentStudentModelData> findEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(PersistentStudentModelContext.class));
+            cq.select(cq.from(PersistentStudentModelData.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -134,28 +133,14 @@ public class StudentModelManager {
             em.close();
         }
     }
-        
-    public static List<PersistentStudentModelContext> findEntities(PersistentSchool s) {
-        EntityManager em = getEntityManager();
-        try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentStudentModelContext.findBySchoolID");
-            q.setParameter("schoolID", s.getSchoolID());
-            List<PersistentStudentModelContext> list = q.getResultList();
-            LOG.log(Level.FINE, "Course-manager retrieved {0} PersistentStudentModelContext with schoolid {1}", new Object[]{list.size(), s.getSchoolID()});
-            return list;
-        }
-        finally {
-            em.close();
-        }
-    }
 
 
-    public static PersistentStudentModelContext findEntity(Long id) throws PersistenceException {
+    public static PersistentStudentModelData findEntity(Long id) throws PersistenceException {
         EntityManager em = getEntityManager();
         try {
-            return em.find(PersistentStudentModelContext.class, id);
+            return em.find(PersistentStudentModelData.class, id);
          } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentStudentModelContext with " + id + " was not found.", e);
+            LOG.log(Level.FINE, "The PersistentStudentModelData with " + id + " was not found.", e);
             throw e;
        } finally {
             em.close();
@@ -166,7 +151,7 @@ public class StudentModelManager {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<PersistentStudentModelContext> rt = cq.from(PersistentStudentModelContext.class);
+            Root<PersistentStudentModelData> rt = cq.from(PersistentStudentModelData.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

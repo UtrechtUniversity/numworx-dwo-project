@@ -45,7 +45,7 @@ public class SecuredTeacherStudentModelManager {
         try {
             TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                     .setHasRole(context.getRestContext().getDomHasRole())
-                    .setSchoolAdminTeacher()
+                    .buildSchoolAdminTeacher()
                     .setTeacher();
             return build.getStudentModels();
             //return null;
@@ -69,7 +69,7 @@ public class SecuredTeacherStudentModelManager {
             TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                     .setHasRole(model.getRestContext().getDomHasRole())
                     //.setDefaultHasRole()
-                    .setSchoolAdminTeacher()
+                    .buildSchoolAdminTeacher()
                     .setTeacher();
             return build.addStudentModel(model.getDomStudentModelContext());
             
