@@ -34,11 +34,12 @@ public enum PersistenceClassType {
     PersistentScoContext,
     PersistentScoData,
     PersistentStudentModelContext,
+    PersistentStudentModelData,
     PersistentStudentOfClass,
     PersistentStudentScoContext,
     PersistentStudentScoData,
     PersistentTeacherOfClass,
     PersistentUrnResource,
-    PersistentUser
+    PersistentUser, 
 
 }
