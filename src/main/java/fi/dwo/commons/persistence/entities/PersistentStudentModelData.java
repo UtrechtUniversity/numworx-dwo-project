@@ -3,7 +3,7 @@
  */
 package fi.dwo.commons.persistence.entities;
 
-import fi.dwo.commons.persistence.JpaEclipseConverter4JsonObject;
+import fi.dwo.commons.persistence.JpaEclipseConverterDomStudentModelStructureScore;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -17,19 +17,23 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.Converter;
-import org.json.simple.JSONObject;
 
 /**
  * <p>
- * A set of Analytical models that describing a performance model for analyzing 
- * student performance. Each models contains categories and each category contains 
- * at least one (educational) objective. 
+ * A set of Analytical models that describing a performance model for analyzing
+ * student performance. Each models contains categories and each category
+ * contains at least one (educational) objective.
  * <p>
  * @author Gert van der Plas
  */
-
 //CREATE TABLE `dwo_devel`.`tblanalyticalmodel` (
 //  `schoolID` INT(11) NOT NULL,
 //  `modelID` INT(11) NOT NULL,
@@ -38,14 +42,14 @@ import org.json.simple.JSONObject;
 //  PRIMARY KEY (`modelID`),
 //  UNIQUE INDEX `modelID_UNIQUE` (`modelID` ASC),
 //  UNIQUE INDEX `schoolID_UNIQUE` (`schoolID` ASC));
-
 @Entity
 @Table(name = "tblStudentModelData", schema = "")
-@Converter(name = "jsonObjectConverter",converterClass = JpaEclipseConverter4JsonObject.class)
+@Converter(name = "studentModelScoreConverter", converterClass = JpaEclipseConverterDomStudentModelStructureScore.class)
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PersistentStudentModelData.findByModelDataId", query = "SELECT p FROM PersistentStudentModelData p WHERE p.modelDataId = :modelDataId")})
 public class PersistentStudentModelData implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,11 +61,12 @@ public class PersistentStudentModelData implements Serializable {
     @Column(name = "scoID", nullable = false)
     private Long scoID;
     private PersistentHasRolePK persistentHasRolePK;
-    
-    @Convert("jsonObjectConverter")
-    private JSONObject modelData;
+
+    @Convert("studentModelScoreConverter")
+    private DomStudentModelStructureScore modelData;
     @Column(name = "optlock")
-    @Version private int optlock;
+    @Version
+    private int optlock;
     @Column(name = "lastChangeTimeStamp")
     private long lastChangeTimeStamp;
 
@@ -110,14 +115,14 @@ public class PersistentStudentModelData implements Serializable {
     /**
      * @return the modelData
      */
-    public JSONObject getModelData() {
+    public DomStudentModelStructureScore getModelData() {
         return modelData;
     }
 
     /**
      * @param modelData the modelData to set
      */
-    public void setModelData(JSONObject modelData) {
+    public void setModelData(DomStudentModelStructureScore modelData) {
         this.modelData = modelData;
     }
 
@@ -147,5 +152,42 @@ public class PersistentStudentModelData implements Serializable {
      */
     public void setLastChangeTimeStamp(long lastChangeTimeStamp) {
         this.lastChangeTimeStamp = lastChangeTimeStamp;
+    }
+    
+    /**
+     * Builds a PersistenceId using this object's data.
+     *
+     * @return
+     */
+    public PersistenceId buildPersistenceId() {
+        return buildPersistenceId(modelDataId);
+    }
+
+    /**
+     * Builds a persistenceId from the parameters given.
+     *
+     * @param aModelData
+     * @return
+     */
+    public static PersistenceId buildPersistenceId(Long aModelData) {
+    	if(aModelData == null) return null;
+        PersistenceId id = new PersistenceId();
+        id.setIdString(String.format("MYSQL;%s;%020d",
+                PersistenceClassType.PersistentStudentModelData.name(), aModelData));
+        return id;
+    }
+    
+    public DomStudentModelData buildDomStudentModelContext(){
+        DomStudentModelData data = new DomStudentModelData();
+        fillDomStudentModelData(data);
+        return data;
+    }
+    
+    public void fillDomStudentModelData(DomStudentModelData data){
+        data.setId(buildPersistenceId());
+        DomScoContextId dScoId = new DomScoContextId();
+        dScoId.setId(PersistentScoContext.buildPersistenceId(scoID));
+        data.setScoContextId(dScoId);
+        data.setDomStudentModelStructureScore(modelData);
     }
 }
