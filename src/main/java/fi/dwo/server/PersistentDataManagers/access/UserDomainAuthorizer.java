@@ -8,6 +8,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
@@ -45,13 +46,31 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
         this.userActions = userActions;
     }
 
-    public class UserPersistentContext extends AnonPersistentContext {
+    public static class UserPersistentContext extends AnonPersistentContext {
 
         public PersistentUser user;
         public PersistentHasRole hasRole;
         public RoleType roleType;
         public PersistentSchool school;
         public PersistentSchoolGroup schoolGroup;
+
+
+        protected UserPersistentContext() {
+            super();
+        }
+        
+        protected UserPersistentContext(AnonPersistentContext ctx) {
+            super(ctx);
+        }
+        
+        protected UserPersistentContext(UserPersistentContext ctx) {
+            super(ctx);
+            this.hasRole = ctx.hasRole;
+            this.roleType = ctx.roleType;
+            this.school = ctx.school;
+            this.schoolGroup = ctx.schoolGroup;
+            this.user = ctx.user;
+        }
 
         /**
          * @return the user
@@ -135,10 +154,11 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
         userCtx = new UserPersistentContext();
         userActions = new MySQLUserActions();
     }
-
-    public static UserState_U user(AnonDomainAuthorizer auth, String username) throws Dwo2Exception {
-        return new UserBuilder(auth).setUser(username);
-    }
+//
+//    public static UserState_U user(AnonDomainAuthorizer auth, String username) throws Dwo2Exception {
+//        UserDomainAuthorizer.buildUser().setUser(username);
+//        return 
+//    }
 
     public interface UserState_U {
 
@@ -166,6 +186,7 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
         PersistentSchoolGroup getSchoolGroup();
 
         SchoolAdminTeacherState_HR_R_S_SG_U setSchoolAdminTeacher() throws Dwo2Exception;
+        StudentState_HR_R_S_SG_U setStudent() throws Dwo2Exception;
 
         public PersistentStudentModelContext getStudentModel(DomScoContextId id) throws Dwo2Exception;
     }

@@ -28,7 +28,6 @@ import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
-import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.rest.jaxrsfilters.AssertUser;
 import fi.dwo.server.rest.jaxrsfilters.AuthenticationRequestFilter.DwoUserPrincipal;
 
@@ -39,7 +38,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.security.PermitAll;
-import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;

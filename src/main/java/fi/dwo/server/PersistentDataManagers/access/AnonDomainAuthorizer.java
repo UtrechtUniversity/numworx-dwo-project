@@ -1,8 +1,5 @@
 package fi.dwo.server.PersistentDataManagers.access;
 
-import fi.dwo.server.PersistentDataManagers.actions.AnonActions;
-import fi.dwo.server.PersistentDataManagers.actions.MySQLAnonActions;
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginCheck;
@@ -22,32 +19,38 @@ public class AnonDomainAuthorizer {
 
     private static final Logger LOG = Logger.getLogger(AnonDomainAuthorizer.class.getName());
 
-    private AnonPersistentContext context = new AnonPersistentContext();
+    private AnonPersistentContext anonCtx = new AnonPersistentContext();
 
     /**
-     * @return the context
+     * @return the anonCtx
      */
-    protected AnonPersistentContext getContext() {
-        return context;
+    protected AnonPersistentContext getAnonCtx() {
+        return anonCtx;
     }
 
     /**
-     * @param context the context to set
+     * @param anonCtx the anonCtx to set
      */
-    protected void setContext(AnonPersistentContext context) {
-        this.context = context;
+    protected void setAnonCtx(AnonPersistentContext anonCtx) {
+        this.anonCtx = anonCtx;
     }
 
-    public class AnonPersistentContext {
-        //currently no context info (although HeaderInfo other REST payload
-        //could be set here.
+    protected static class AnonPersistentContext {
+        
+        protected AnonPersistentContext(){
+            
+        }
+
+        protected AnonPersistentContext(AnonPersistentContext ctx){
+            
+        }
     }
 
     protected AnonDomainAuthorizer() {
         //TODO inject executror
     }
 
-    public static AnonState build() throws Dwo2Exception {
+    public static AnonState build() throws Dwo2Exception {        
         return new AnonBuilder();
     }
 

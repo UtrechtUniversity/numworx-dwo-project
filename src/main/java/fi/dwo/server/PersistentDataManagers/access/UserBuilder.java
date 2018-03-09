@@ -30,13 +30,21 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
  * @author Gert van der Plas
  */
 class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_U, UserDomainAuthorizer.UserState_HR_R_S_SG_U, //UserState_HR_R_S_SC_SG_U,
-UserDomainAuthorizer.Build {
+        UserDomainAuthorizer.Build {
 
     private static final Logger LOG = Logger.getLogger(UserBuilder.class.getName());
-    
-    private UserDomainAuthorizer instance = new UserDomainAuthorizer();
 
-    protected UserBuilder(AnonDomainAuthorizer auth) throws Dwo2Exception {
+    protected UserDomainAuthorizer instance = new UserDomainAuthorizer();
+
+//    protected UserBuilder(AnonDomainAuthorizer auth) throws Dwo2Exception {
+//    }
+    protected UserBuilder() throws Dwo2Exception {
+        super();
+    }
+
+    protected UserBuilder(AnonBuilder builder) throws Dwo2Exception {
+        super();
+        instance.userCtx = new UserDomainAuthorizer.UserPersistentContext(builder.instance.getAnonCtx());
     }
 
     /**
@@ -56,14 +64,14 @@ UserDomainAuthorizer.Build {
     }
 
     /**
-     * Verifies the existence of the default hasRole in the PersistentUser
-     * and sets it as the active hasRole into the userCtx.
+     * Verifies the existence of the default hasRole in the PersistentUser and
+     * sets it as the active hasRole into the userCtx.
      *
      * @param hr
      * @param r
      * @return
-     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception If the default
-     * hasRole is invalid.
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception If the default hasRole
+     * is invalid.
      */
     @Override
     public UserDomainAuthorizer.UserState_HR_R_S_SG_U setDefaultHasRole() throws Dwo2Exception {
@@ -75,8 +83,8 @@ UserDomainAuthorizer.Build {
     }
 
     /**
-     * Verifies the existence of the hasRole in the PersistentUser and sets
-     * it as the active hasRole into the userCtx.
+     * Verifies the existence of the hasRole in the PersistentUser and sets it
+     * as the active hasRole into the userCtx.
      *
      * @param hr
      * @param r
@@ -90,11 +98,9 @@ UserDomainAuthorizer.Build {
     }
 
     /**
-     * Verifies the existence of the hasRole in the PersistentUser and sets
-     * it as the active hasRole into the userCtx.
+     * Verifies the existence of the hasRole in the PersistentUser and sets it
+     * as the active hasRole into the userCtx.
      *
-     * @param hr
-     * @param r
      * @return
      */
     private UserDomainAuthorizer.UserState_HR_R_S_SG_U setHasRole(PersistentHasRolePK phrPK) throws Dwo2Exception {
@@ -102,8 +108,8 @@ UserDomainAuthorizer.Build {
         //determine default hasRole.
         phr = HasRoleManager.findEntity(phrPK);
         if (phr == null || phr.getUser().getId().longValue() != instance.userCtx.user.getId().longValue() //users is valid
-         || phr.getSchoolGroup().getSchoolGroupID().longValue() != phrPK.getSchoolGroupID().longValue() //requested hasRole exists
-        ) {
+                || phr.getSchoolGroup().getSchoolGroupID().longValue() != phrPK.getSchoolGroupID().longValue() //requested hasRole exists
+                ) {
             String msg = MessageFormat.format("Hasrole {1} for userlogin {0} could not be found.", new Object[]{instance.userCtx.getUser().getUsername(), this.instance.userCtx.getHasRole().getPersistentHasRolePK()});
             LOG.log(Level.SEVERE, msg);
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
@@ -115,8 +121,22 @@ UserDomainAuthorizer.Build {
     }
 
     /**
-     * Verifies the existence of the hasRole for the given RoleType and
-     * stores it and the RoleType into the userCtx.
+     * Verifies the existence of the hasRole for the given RoleType and stores
+     * it and the RoleType into the userCtx.
+     *
+     * @return
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
+     */
+    @Override
+    public StudentDomainAuthorizer.StudentState_HR_R_S_SG_U setStudent() throws Dwo2Exception {
+        StudentBuilder builder = new StudentBuilder(this);
+        return builder.setStudent();
+
+    }
+
+    /**
+     * Verifies the existence of the hasRole for the given RoleType and stores
+     * it and the RoleType into the userCtx.
      *
      * @param hr
      * @param r
@@ -131,8 +151,8 @@ UserDomainAuthorizer.Build {
     }
 
     /**
-     * Verifies the existence of the hasRole for the given RoleType and
-     * stores it and the RoleType into the userCtx.
+     * Verifies the existence of the hasRole for the given RoleType and stores
+     * it and the RoleType into the userCtx.
      *
      * @param phrPK
      * @param r
@@ -228,5 +248,5 @@ UserDomainAuthorizer.Build {
             }
         }
     }
-    
+
 }

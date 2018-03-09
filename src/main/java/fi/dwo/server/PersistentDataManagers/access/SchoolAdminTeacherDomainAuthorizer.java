@@ -77,7 +77,7 @@ public class SchoolAdminTeacherDomainAuthorizer extends UserDomainAuthorizer {
 
     }
 
-    protected static class Builder implements SchoolAdminTeacherState_HR_R_S_SG_U,
+    protected static class Builder extends UserBuilder implements SchoolAdminTeacherState_HR_R_S_SG_U,
             Build {
 
         private SchoolAdminTeacherDomainAuthorizer instance;
