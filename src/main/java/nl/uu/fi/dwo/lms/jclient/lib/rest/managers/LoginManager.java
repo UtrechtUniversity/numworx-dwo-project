@@ -21,7 +21,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 
 /**
  * Handles basicLogin actions and updates user and role stored in the DwoHelper.
@@ -53,7 +52,7 @@ public class LoginManager {
             Authenticator.setDefault(null);
             CookieManager.setDefault(null);
             StoredRestManager restManager = StoredRestManager.getInstance();
-			URL url = new URL(restManager.getServerUrlPath() , "rest/secure/user/account/login"); //TODO make basicLogin            
+            URL url = new URL(restManager.getServerUrlPath(), "rest/secure/user/account/login"); //TODO make basicLogin            
             String authString = username + ":" + password;
             authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -85,20 +84,25 @@ public class LoginManager {
 
 //          LIST EXAMPLE: List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
             user = genson.deserialize(json.toString(), DomUserFullwLoginContext.class);
- // initialize authenticated services
+            // initialize authenticated services
             restManager.setBasicAuthString(authString);
- // turn isAuthenticated into true
+            // turn isAuthenticated into true
             restManager.getAuthenticator().setUsername(username);
             restManager.getAuthenticator().setPassword(password);
             //Set current user for domain
             return user;
         } catch (MalformedURLException e) {
+            String msg = "Malformed URL error.";
+            LOG.log(Level.WARNING, msg, e);
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
         } catch (ConnectException e) {
-        		LOG.log(Level.WARNING, "basicLogin", e); // Komt voor!
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ConnectionTimeout, e.getMessage());
+            String msg = "Connection error, cannot connect to port.";
+            LOG.log(Level.WARNING, msg, e);
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ConnectionTimeout, msg);
         } catch (IOException e) {
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+            String msg = "IO-error,failed or interrupted connection to server.";
+            LOG.log(Level.WARNING, msg, e);
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError,msg);
         }
     }
 
