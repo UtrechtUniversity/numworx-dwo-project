@@ -5,10 +5,8 @@ package fi.dwo.server.PersistentDataManagers.access;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
-import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
-import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
 import java.text.MessageFormat;
 import java.util.logging.Level;
@@ -96,16 +94,14 @@ class StudentBuilder extends UserBuilder implements StudentDomainAuthorizer.Stud
             throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
         }
 //        PersistentStudentModelContext pModelContext = StudentModelContextManager.findEntity(pScoContext.getModelID().longValue());
+//  let's ignore faulty match for now. Clearly either user of developer screw up.
 //        if (!pModelContext.getModelStructure().matches()) {
 //            msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Can't update, schoolID not given or wrong.", new Object[]{instance.userCtx.getUser().getUsername()});
 //            LOG.log(Level.WARNING, msg);
 //            throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
 //        };
-        //StudentModel is in School?
-//        if(pScoContext.getModelID()==null){
-//            msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Can't update, modelID not given.", new Object[]{instance.userCtx.getUser().getUsername()});
-//        }
-        //StudentModelStructure and StudentModelStructureScore match
-        instance.getStudentActions().setStudentModelData(instance.studentCtx, data);
+        //updateModelData in pData.
+        pData.setModelData(data.getDomStudentModelStructureScore());
+        instance.getStudentActions().setStudentModelData(instance.studentCtx, pData);
     }
 }
