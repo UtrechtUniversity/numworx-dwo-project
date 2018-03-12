@@ -177,7 +177,7 @@ public class PersistentStudentModelData implements Serializable {
         return id;
     }
     
-    public DomStudentModelData buildDomStudentModelContext(){
+    public DomStudentModelData buildDomStudentModelData(){
         DomStudentModelData data = new DomStudentModelData();
         fillDomStudentModelData(data);
         return data;
