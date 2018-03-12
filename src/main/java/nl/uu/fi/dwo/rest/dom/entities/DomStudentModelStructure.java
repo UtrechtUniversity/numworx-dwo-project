@@ -46,7 +46,7 @@ public class DomStudentModelStructure {
     }
 
     /**
-     * Generates a DomStudentModelStructureScore matching the structure.
+     * Generates an empty DomStudentModelStructureScore matching the structure.
      * 
      * @return 
      */
