@@ -54,6 +54,34 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMisconceptions, CBookEventListener
 {
+	private class SelectRule extends AbstractRule {
+		private final String id2;
+		private final String math;
+		final private Map<String, String> context;
+
+		private SelectRule(String id2, String math, Map<String, String> c) {
+			this.id2 = id2;
+			this.math = math;
+			this.context = c;
+		}
+
+		@Override
+		public String getExpr() {
+			return math;
+		}
+
+		@Override
+		public String getId() {
+			return id2;
+		}
+
+		@Override
+		public Map<String,String> getContext() {
+			return context;
+		}
+		
+	}
+
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
 	public static final String ACTION_FALSE2 = "action.false_2";
@@ -676,7 +704,6 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 			if(! id.startsWith("adviseMe:")) 
 				return;
 			String[] split = id.split(":");
-			String math = toMathML();
 			String userid = DWOplayer.clientfactory.getUserID().toString();
 			String classid;
 			try {
@@ -690,26 +717,9 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 			context.put("userid", userid);
 			context.put("groupid", classid);
 			context.put("language", StubView.getLocale());
-			RuleIF rule = new AbstractRule() {
-
-				@Override
-				public String getExpr() {
-					return math;
-				}
-
-				@Override
-				public String getId() {
-					return id2;
-				}
-
-				@Override
-				public Map getContext() {
-					return context;
-				}
-				
-			};
+			RuleIF[] math = toMathML(id2, context);
 			PromiseCallback<RuleIF> defer = new PromiseCallback<>();
-			WiskOpdr.ideas.adviseMe(new RuleIF[] { rule }, exerciseid, defer );
+			WiskOpdr.ideas.adviseMe(math, exerciseid, defer );
 			DWOplayer.clientfactory.addBarrier(defer.getPromise());
 			Logger LOG = Logger.getLogger("TextEditor");
 			defer.getPromise().onResolve(() -> { 
@@ -729,18 +739,19 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		}
 	}
 	
-	private String toMathML() {
-		StringBuilder sb = new StringBuilder();
+	private RuleIF[] toMathML(String base, Map<String, String> context) {
+		RuleIF[] result = new RuleIF[ipList.length];
 		for(int i = 0; i < ipList.length; i++) {
 			TekstVakPanel t = ipList[i];
-			sb.append(t.getIpId())
-			  .append('\t')
-			  .append(t.isIpSelected())
-			  .append('\t')
-			  .append(t.getIpExpString())
-			  .append('\n');
+			String id = base + (char) ('a'-1 + t.getIpId());
+			String math = String.valueOf(t.isIpSelected());
+			String label = t.getIpExpString();
+			Map<String,String> c = new HashMap<>(context);
+			c.put("label", label);
+			SelectRule r = new SelectRule(id, math,c);
+			result[i] = r;
 		}
-		return null;
+		return result;
 	}
 
 	private void initialize(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)

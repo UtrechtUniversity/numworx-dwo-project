@@ -75,7 +75,7 @@ div.insert_formule {padding-right:5px; padding-left:5px;}
 	color: gray;
 }
 
-.textEditor_empty > div::before {
+.textEditor_empty > div:last-child::before {
 	content: "...";
 	color: #808080
 }
