@@ -19,7 +19,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -96,12 +95,12 @@ public class StudentBuilderTest {
         StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser("user05")
                 .setDefaultHasRole()
                 .buildStudent();
-        state.updateStudentModelData(domData);
-        //DomStudentModelData expResult = state.updateStudentModelData(domData);
+        DomStudentModelData result = state.setStudentModelData(domData);
+        DomStudentModelData expResult = state.getStudentModelData(result.getScoContextId());
         
         //compare input and output
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+      //  fail("The test case is a prototype.");
     }
     
 }

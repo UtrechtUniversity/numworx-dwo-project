@@ -39,7 +39,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
-import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
@@ -56,6 +55,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
  *
  * @author G.A.J. van der Plas
  */
+@Deprecated
 public class CascadingPersistenceBuilder {
 
     private static final Logger LOG = Logger.getLogger(CascadingPersistenceBuilder.class.getName());

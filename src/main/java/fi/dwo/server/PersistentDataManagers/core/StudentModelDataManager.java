@@ -1,5 +1,7 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
@@ -11,10 +13,11 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
- * Manages analytical models in the persistent storage. 
+ * Manages analytical models in the persistent storage.
  *
  * @author G.A.J. van der Plas
  */
@@ -31,6 +34,7 @@ public class StudentModelDataManager {
      * Create.
      *
      * @param data
+     * @return
      */
     public static PersistentStudentModelData create(PersistentStudentModelData data) throws PersistenceException {
         EntityManager em = null;
@@ -55,14 +59,14 @@ public class StudentModelDataManager {
      * Update
      *
      * @param data
-     * @return jpa merged course
+     * @return JPA merged course
      */
     public static PersistentStudentModelData edit(PersistentStudentModelData data) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            data.setLastChangeTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());            
+            data.setLastChangeTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
             data = em.merge(data);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -134,15 +138,14 @@ public class StudentModelDataManager {
         }
     }
 
-
     public static PersistentStudentModelData findEntity(Long id) throws PersistenceException {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentStudentModelData.class, id);
-         } catch (PersistenceException e) {
+        } catch (PersistenceException e) {
             LOG.log(Level.FINE, "The PersistentStudentModelData with " + id + " was not found.", e);
             throw e;
-       } finally {
+        } finally {
             em.close();
         }
     }
@@ -160,5 +163,39 @@ public class StudentModelDataManager {
         }
     }
 
+    public static DomStudentModelData insertOrUpdate(PersistentStudentModelData data) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
+    /**
+     * Return null if none or more than one found.
+     * 
+     * @param school
+     * @param hasRole
+     * @param nativeId
+     * @return 
+     */
+    public static PersistentStudentModelData findEntity(PersistentSchool school, PersistentHasRole hasRole, Long nativeId) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            javax.persistence.Query q = em.createNamedQuery("PersistentStudentModelData.findByUniqueKeys");
+            q.setParameter("scoID", nativeId);
+            q.setParameter("schoolID", school.getSchoolID());
+            q.setParameter("persistentHasRolePK", hasRole.getPersistentHasRolePK());
+            List<PersistentStudentModelData> list = q.getResultList();
+            if (list.size() != 1) {
+                LOG.log(Level.FINE, "StudentModelData-manager retrieved {0} PersistentStudentModelData with schoolId {1} and hasRole {2}", new Object[]{list.size(), school.getSchoolID(), hasRole.getPersistentHasRolePK()});
+                return null;
+            }
+
+            em.getTransaction().commit();
+            return list.get(0);
+        } catch (RuntimeException e) {
+            LOG.log(Level.SEVERE, "", e);
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
 }

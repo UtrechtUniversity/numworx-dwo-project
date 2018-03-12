@@ -46,13 +46,16 @@ public class StudentDomainAuthorizer extends UserDomainAuthorizer {
             super(ctx);
         }
     }
-    /** Creates a builder and initializes a context if given. */    
+    /** Creates a builder and initializes a context if given.
+     * 
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
+     */    
     public static StudentState_HR_R_S_SG_U buildStudent() throws Dwo2Exception {
         return new StudentBuilder();
     }
 
     public interface StudentState_HR_R_S_SG_U extends UserState_HR_R_S_SG_U {
-        public void updateStudentModelData(DomStudentModelData data) throws Dwo2Exception;
+        public DomStudentModelData setStudentModelData(DomStudentModelData data) throws Dwo2Exception;
         public DomStudentModelData getStudentModelData(DomScoContextId domScoId) throws Dwo2Exception;
 
     }

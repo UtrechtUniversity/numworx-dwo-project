@@ -50,19 +50,16 @@ class StudentBuilder extends UserBuilder implements StudentDomainAuthorizer.Stud
         }
     }
 
+    /**
+     * If a studentModelData id is set, and update is expected. If it is null an insert or update is expected.
+     * @param data
+     * @throws Dwo2Exception 
+     */
     @Override
-    public void updateStudentModelData(DomStudentModelData data) throws Dwo2Exception {
-        long id = MySQLPersistenceId.getNativeId(data);
-        PersistentStudentModelData pData = StudentModelDataManager.findEntity(id);
-        //check security
+    public DomStudentModelData setStudentModelData(DomStudentModelData data) throws Dwo2Exception {
         String msg = null;
-        //data exists
-        if (pData == null) {
-            msg = MessageFormat.format("Username {0}: ILLEGAL OPERATION: Can't update, does not exist.", new Object[]{instance.userCtx.getUser().getUsername()});
-            LOG.log(Level.WARNING, msg);
-            throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
-        }
-        PersistentScoContext pScoContext = ScoContextManager.findEntity(pData.getScoID());
+        PersistentStudentModelData pData;
+        PersistentScoContext pScoContext = ScoContextManager.findEntity(MySQLPersistenceId.getNativeId(data.getScoContextId()));
         //scoContext exists
         if (pScoContext == null) {
             msg = MessageFormat.format("Username {0}: ILLEGAL OPERATION: Can't update, ScoContext nog given.", new Object[]{instance.userCtx.getUser().getUsername()});
@@ -72,13 +69,6 @@ class StudentBuilder extends UserBuilder implements StudentDomainAuthorizer.Stud
         //School matches with user state
         if (pScoContext.getSchoolID() == null && instance.userCtx.school.getSchoolID().longValue() != pScoContext.getSchoolID().longValue()) {
             msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Can't update, schoolID not given or wrong.", new Object[]{instance.userCtx.getUser().getUsername()});
-            LOG.log(Level.WARNING, msg);
-            throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
-        }
-        //HasRole matches with user state
-        if (pData.getPersistentHasRolePK().getUserID().longValue() != instance.userCtx.user.getId().longValue()
-                && pData.getPersistentHasRolePK().getSchoolGroupID().longValue() != instance.userCtx.schoolGroup.getSchoolGroupID().longValue()) {
-            msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Can't update, hasRole mismatch.", new Object[]{instance.userCtx.getUser().getUsername()});
             LOG.log(Level.WARNING, msg);
             throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
         }
@@ -94,21 +84,41 @@ class StudentBuilder extends UserBuilder implements StudentDomainAuthorizer.Stud
             LOG.log(Level.WARNING, msg);
             throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
         }
-//        PersistentStudentModelContext pModelContext = StudentModelContextManager.findEntity(pScoContext.getModelID().longValue());
-//  let's ignore faulty match for now. Clearly either user of developer screw up.
-//        if (!pModelContext.getModelStructure().matches()) {
-//            msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Can't update, schoolID not given or wrong.", new Object[]{instance.userCtx.getUser().getUsername()});
-//            LOG.log(Level.WARNING, msg);
-//            throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
-//        };
-        //updateModelData in pData.
-        pData.setModelData(data.getDomStudentModelStructureScore());
-        instance.getStudentActions().setStudentModelData(instance.studentCtx, pData);
-    }
+        //find StudentModelData
+        Long id = MySQLPersistenceId.getNativeId(data);
+        if (id != null) {
+            pData = StudentModelDataManager.findEntity(id);
+            if (pData != null) {
+                //data exists
+                //check if HasRole matches with user state
+                if (pData.getPersistentHasRolePK().getUserID().longValue() != instance.userCtx.user.getId().longValue()
+                        && pData.getPersistentHasRolePK().getSchoolGroupID().longValue() != instance.userCtx.schoolGroup.getSchoolGroupID().longValue()) {
+                    msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Can't update, hasRole mismatch.", new Object[]{instance.userCtx.getUser().getUsername()});
+                    LOG.log(Level.WARNING, msg);
+                    throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
+                }
+            } else if (pData == null) {                
+                    //StudentModelData id was given but not found.
+                    msg = MessageFormat.format("Username {0}: ILLEGAL OPERATION: Can't update, does not exist.", new Object[]{instance.userCtx.getUser().getUsername()});
+                    LOG.log(Level.WARNING, msg);
+                    throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
+                }
+        }else{
+            //create a PersistentStudentModelData and do an insert or update
+                pData = new PersistentStudentModelData();
+                pData.setScoID(MySQLPersistenceId.getNativeId(data.getScoContextId()));
+                pData.setPersistentHasRolePK(instance.userCtx.hasRole.getPersistentHasRolePK());                
+        }
+            
+            //insert or updateModelDataScore in pData.
+            pData.setModelData(data.getDomStudentModelStructureScore());
+            return instance.getStudentActions().setStudentModelData(instance.studentCtx, pData);
+        }
 
-    @Override
-    public DomStudentModelData getStudentModelData(DomScoContextId domScoId) throws Dwo2Exception {
-        return instance.getStudentActions().getStudentModelData(instance.studentCtx, domScoId).buildDomStudentModelData();
-    }
+        @Override
+        public DomStudentModelData getStudentModelData
+        (DomScoContextId domScoId) throws Dwo2Exception {
+            return instance.getStudentActions().getStudentModelData(instance.studentCtx, domScoId).buildDomStudentModelData();
+        }
 
-}
+    }
