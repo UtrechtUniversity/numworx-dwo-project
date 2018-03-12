@@ -1,5 +1,7 @@
 package fi.dwo.server.rest;
 
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -10,7 +12,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 
 /**
  * StudentModel manager for the teacher. Basic operations.
@@ -40,4 +45,28 @@ public class SecuredStudentStudentModelManager {
         return new ArrayList<DomStudentModelContext>();
     }
 
+//
+//    /**
+//     * Returns the school data to be displayed.
+//     *
+//     * @param sc
+//     * @param mode The created model.
+//     * @return
+//     */
+//    @PUT
+//    @Produces({"application/json"})
+//    @Path("/add")
+//    public DomStudentModelData updateStudentModel(@Context SecurityContext sc, RestStudentModelData data) {
+//        try {
+//            StudentDomainAuthorizer.StudentState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+//                    .setHasRole(data.getRestContext().getDomHasRole())
+//                    
+//                    //.setDefaultHasRole()
+//                    
+//            return build.addStudentModel(data.getDomStudentModelContext());
+//            
+//        } catch (Dwo2Exception e) {
+//            throw new Dwo2RestException(e);
+//        }
+//    }    
 }

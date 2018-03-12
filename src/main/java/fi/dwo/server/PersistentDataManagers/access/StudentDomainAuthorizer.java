@@ -3,6 +3,7 @@ package fi.dwo.server.PersistentDataManagers.access;
 import fi.dwo.server.PersistentDataManagers.actions.MySQLStudentActions;
 import fi.dwo.server.PersistentDataManagers.actions.StudentActions;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
@@ -52,6 +53,7 @@ public class StudentDomainAuthorizer extends UserDomainAuthorizer {
 
     public interface StudentState_HR_R_S_SG_U extends UserState_HR_R_S_SG_U {
         public void updateStudentModelData(DomStudentModelData data) throws Dwo2Exception;
+        public DomStudentModelData getStudentModelData(DomScoContextId domScoId) throws Dwo2Exception;
 
     }
 //

@@ -5,6 +5,7 @@ package fi.dwo.server.PersistentDataManagers.actions;
 
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
@@ -13,4 +14,5 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  */
 public interface StudentActions {
     public void setStudentModelData(StudentDomainAuthorizer.StudentPersistentContext ctx, PersistentStudentModelData data) throws Dwo2Exception;
+    public PersistentStudentModelData getStudentModelData(StudentDomainAuthorizer.StudentPersistentContext ctx, DomScoContextId domScoId) throws Dwo2Exception;
 }

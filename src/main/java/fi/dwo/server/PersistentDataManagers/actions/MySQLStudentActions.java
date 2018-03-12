@@ -10,6 +10,7 @@ import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
@@ -30,6 +31,11 @@ public class MySQLStudentActions implements StudentActions {
             LOG.log(Level.WARNING, msg,e);
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError,msg);
         }
+    }
+
+    @Override
+    public PersistentStudentModelData getStudentModelData(StudentDomainAuthorizer.StudentPersistentContext ctx, DomScoContextId domScoId) throws Dwo2Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     

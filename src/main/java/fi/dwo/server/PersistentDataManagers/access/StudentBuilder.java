@@ -11,6 +11,7 @@ import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -104,4 +105,10 @@ class StudentBuilder extends UserBuilder implements StudentDomainAuthorizer.Stud
         pData.setModelData(data.getDomStudentModelStructureScore());
         instance.getStudentActions().setStudentModelData(instance.studentCtx, pData);
     }
+
+    @Override
+    public DomStudentModelData getStudentModelData(DomScoContextId domScoId) throws Dwo2Exception {
+        return instance.getStudentActions().getStudentModelData(instance.studentCtx, domScoId).buildDomStudentModelData();
+    }
+
 }
