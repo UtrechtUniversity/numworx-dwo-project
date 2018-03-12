@@ -18,7 +18,6 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
@@ -47,7 +46,8 @@ import org.eclipse.persistence.annotations.Converter;
 @Converter(name = "studentModelScoreConverter", converterClass = JpaEclipseConverterDomStudentModelStructureScore.class)
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PersistentStudentModelData.findByModelDataId", query = "SELECT p FROM PersistentStudentModelData p WHERE p.modelDataId = :modelDataId")})
+    @NamedQuery(name = "PersistentStudentModelData.findByModelDataId", query = "SELECT p FROM PersistentStudentModelData p WHERE p.modelDataId = :modelDataId"),
+    @NamedQuery(name = "PersistentStudentModelData.findByUniqueKeys", query = "SELECT p FROM PersistentStudentModelData p WHERE p.scoID = :scoId and p.schoolID and p.persistentHasRolePK = :persistentHasRolePK")})
 public class PersistentStudentModelData implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -60,6 +60,12 @@ public class PersistentStudentModelData implements Serializable {
     @NotNull
     @Column(name = "scoID", nullable = false)
     private Long scoID;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "schoolID", nullable = false)
+    private Long schoolID;
+    @Basic(optional = false)
+    @NotNull
     private PersistentHasRolePK persistentHasRolePK;
 
     @Convert("studentModelScoreConverter")
@@ -190,4 +196,19 @@ public class PersistentStudentModelData implements Serializable {
         data.setScoContextId(dScoId);
         data.setDomStudentModelStructureScore(modelData);
     }
+
+    /**
+     * @return the schoolID
+     */
+    protected Long getSchoolID() {
+        return schoolID;
+    }
+
+    /**
+     * @param schoolID the schoolID to set
+     */
+    protected void setSchoolID(Long schoolID) {
+        this.schoolID = schoolID;
+    }
+
 }
