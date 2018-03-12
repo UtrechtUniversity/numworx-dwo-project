@@ -4,6 +4,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.osgi.util.promise.Promise;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
@@ -22,14 +26,18 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
+import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.RestartException;
+import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.text.Text;
 import fi.wiskopdr.text.TextConstants;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
+import nl.uu.fi.dwo.ideas.client.AbstractRule;
+import nl.uu.fi.dwo.ideas.client.RuleIF;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
@@ -661,7 +669,80 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 
 		
 	}
+
+	private void adviseMe() {
+		if (logOption) {
+			String id = logID;
+			if(! id.startsWith("adviseMe:")) 
+				return;
+			String[] split = id.split(":");
+			String math = toMathML();
+			String userid = DWOplayer.clientfactory.getUserID().toString();
+			String classid;
+			try {
+				classid = DWOplayer.clientfactory.getSchoolClass().getId().getIdString();
+			} catch (Exception e) {
+				classid = "";
+			}
+			String exerciseid = split[1];
+			String id2 = split[2];
+			Map<String,String> context = new HashMap<>();
+			context.put("userid", userid);
+			context.put("groupid", classid);
+			context.put("language", StubView.getLocale());
+			RuleIF rule = new AbstractRule() {
+
+				@Override
+				public String getExpr() {
+					return math;
+				}
+
+				@Override
+				public String getId() {
+					return id2;
+				}
+
+				@Override
+				public Map getContext() {
+					return context;
+				}
+				
+			};
+			PromiseCallback<RuleIF> defer = new PromiseCallback<>();
+			WiskOpdr.ideas.adviseMe(new RuleIF[] { rule }, exerciseid, defer );
+			DWOplayer.clientfactory.addBarrier(defer.getPromise());
+			Logger LOG = Logger.getLogger("TextEditor");
+			defer.getPromise().onResolve(() -> { 
+				Promise<RuleIF> p = defer.getPromise();
+				Throwable t = p.getFailure();
+				if ( t != null) {
+					LOG.log(Level.SEVERE, "adviseMe", t);
+				} else {
+					RuleIF r = p.getValue();
+					if ( r.isException()) {
+						LOG.severe(r.getExpr());
+					} else {
+						LOG.info(r.getExpr());
+					}
+				}
+			} );
+		}
+	}
 	
+	private String toMathML() {
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < ipList.length; i++) {
+			TekstVakPanel t = ipList[i];
+			sb.append(t.getIpId())
+			  .append('\t')
+			  .append(t.isIpSelected())
+			  .append('\t')
+			  .append(t.getIpExpString())
+			  .append('\n');
+		}
+		return null;
+	}
+
 	private void initialize(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
 		attempts = new Vector();
@@ -714,6 +795,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 				kijkNa();
 	        	attemptsCount++;
 				setAttempt();
+				adviseMe();
 			}
 		});
 		
