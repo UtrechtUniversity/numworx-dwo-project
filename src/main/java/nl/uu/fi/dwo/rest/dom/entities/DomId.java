@@ -39,14 +39,14 @@ public abstract class DomId {
     /**
      * @return the optLock
      */
-    public Long getVersion() {
+    public Long getOptLock() {
         return optLock;
     }
 
     /**
      * @param version the optLock to set
      */
-    public void setVersion(Long version) {
+    public void setOptLock(Long version) {
         this.optLock = version;
     }
 	
