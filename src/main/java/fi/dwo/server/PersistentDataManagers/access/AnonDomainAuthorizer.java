@@ -19,11 +19,12 @@ public class AnonDomainAuthorizer {
 
     private static final Logger LOG = Logger.getLogger(AnonDomainAuthorizer.class.getName());
 
-    private AnonPersistentContext anonCtx = new AnonPersistentContext();
+    private Context context;
         
     /** Creates a builder and initializes a context if given. */    
     public static AnonState build() throws Dwo2Exception {
-        return new AnonBuilder();
+        AnonBuilder builder =  new AnonBuilder();
+        return builder.init();
     }
 
     /** Ensure that it is not called other than from the builder. */
@@ -31,20 +32,29 @@ public class AnonDomainAuthorizer {
         //TODO inject executror
     }
     
-    /**
-     * @return the anonCtx
-     */
-    protected AnonPersistentContext getAnonCtx() {
-        return anonCtx;
-    }
 
-    /**
-     * @param anonCtx the anonCtx to set
-     */
-    protected void setAnonCtx(AnonPersistentContext anonCtx) {
-        this.anonCtx = anonCtx;
-    }
+    public static class Context {
+        private AnonPersistentContext anonCtx;
+        
+        public Context(){
+            anonCtx = new AnonPersistentContext();
+        }
 
+        /**
+         * @return the anonCtx
+         */
+        public AnonPersistentContext getAnonCtx() {
+            return anonCtx;
+        }
+
+        /**
+         * @param anonCtx the anonCtx to set
+         */
+        public void setAnonCtx(AnonPersistentContext anonCtx) {
+            this.anonCtx = anonCtx;
+        }
+    }
+    
     protected static class AnonPersistentContext {
 
         protected AnonPersistentContext() {
@@ -67,6 +77,20 @@ public class AnonDomainAuthorizer {
 
     public interface Build {
         //return any public server info here. For example version info
+    }
+
+    /**
+     * @return the context
+     */
+    public Context getContext() {
+        return context;
+    }
+
+    /**
+     * @param context the context to set
+     */
+    public void setContext(Context context) {
+        this.context = context;
     }
 
 }

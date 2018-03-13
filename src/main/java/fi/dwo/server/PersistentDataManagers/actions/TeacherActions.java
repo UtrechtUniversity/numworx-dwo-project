@@ -14,7 +14,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  * 
  * @author Gert van der Plas
  */
-public interface TeacherActions extends SchoolAdminTeacherActions {
-    public List<DomStudentModelContext> getStudentModels(TeacherDomainAuthorizer.TeacherPersistentContext context) throws Dwo2Exception;
-    public PersistentStudentModelContext addStudentModel(TeacherDomainAuthorizer.TeacherPersistentContext context, PersistentStudentModelContext model) throws Dwo2Exception;
+public interface TeacherActions  {
+    public List<DomStudentModelContext> getStudentModels(TeacherDomainAuthorizer.Context context) throws Dwo2Exception;
+    public PersistentStudentModelContext addStudentModel(TeacherDomainAuthorizer.Context context, PersistentStudentModelContext model) throws Dwo2Exception;
 }

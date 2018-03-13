@@ -1,7 +1,7 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
-import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
@@ -172,20 +172,20 @@ public class StudentModelDataManager {
      * 
      * @param school
      * @param hasRole
-     * @param nativeId
+     * @param nativeScoId
      * @return 
      */
-    public static PersistentStudentModelData findEntity(PersistentSchool school, PersistentHasRole hasRole, Long nativeId) {
+    public static PersistentStudentModelData findEntity(PersistentScoContext ctx, PersistentHasRole hasRole) {
         EntityManager em = getEntityManager();
         try {
             em.getTransaction().begin();
             javax.persistence.Query q = em.createNamedQuery("PersistentStudentModelData.findByUniqueKeys");
-            q.setParameter("scoID", nativeId);
-            q.setParameter("schoolID", school.getSchoolID());
-            q.setParameter("persistentHasRolePK", hasRole.getPersistentHasRolePK());
+            q.setParameter("scoID", ctx.getScoID());
+            q.setParameter("modelID", ctx.getModelID());
+            q.setParameter("hasRolePK", hasRole.getPersistentHasRolePK());
             List<PersistentStudentModelData> list = q.getResultList();
             if (list.size() != 1) {
-                LOG.log(Level.FINE, "StudentModelData-manager retrieved {0} PersistentStudentModelData with schoolId {1} and hasRole {2}", new Object[]{list.size(), school.getSchoolID(), hasRole.getPersistentHasRolePK()});
+                LOG.log(Level.FINE, "StudentModelData-manager retrieved {0} PersistentStudentModelData with modelId {1}, hasRole {2} for scoId {3}", new Object[]{list.size(), ctx.getModelID(), hasRole.getPersistentHasRolePK(),ctx.getScoID()});
                 return null;
             }
 

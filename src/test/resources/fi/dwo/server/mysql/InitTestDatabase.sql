@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `dwojunittest` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
 USE `dwojunittest`;
--- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.21, for Linux (x86_64)
 --
--- Host: localhost    Database: dwojunittest
+-- Host: 127.0.0.1    Database: dwojunittest
 -- ------------------------------------------------------
--- Server version	5.7.19
+-- Server version	5.7.21-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -590,7 +590,7 @@ CREATE TABLE `tblscocontext` (
 
 LOCK TABLES `tblscocontext` WRITE;
 /*!40000 ALTER TABLE `tblscocontext` DISABLE KEYS */;
-INSERT INTO `tblscocontext` VALUES (1,5,17,'Optellen en aftrekken',0,1,0,0,0,0,NULL,NULL,1,NULL, NULL, NULL,NULL),(2,6,17,'Drie getallen optellen en aftrekken',0,2,0,0,0,0,NULL,NULL,1,NULL,NULL,NULL,NULL);
+INSERT INTO `tblscocontext` VALUES (1,5,17,'Optellen en aftrekken',0,1,0,0,0,0,NULL,NULL,1,NULL,NULL,NULL,NULL),(2,6,17,'Drie getallen optellen en aftrekken',0,2,0,0,0,0,NULL,NULL,1,NULL,NULL,NULL,NULL),(3,14,17,'Drie getallen optellen en aftrekken',0,2,0,0,0,0,NULL,NULL,1,NULL,3,NULL,1);
 /*!40000 ALTER TABLE `tblscocontext` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -663,13 +663,17 @@ DROP TABLE IF EXISTS `tblstudentmodeldata`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tblstudentmodeldata` (
   `modelDataID` int(11) NOT NULL AUTO_INCREMENT,
+  `userID` int(11) NOT NULL,
+  `schoolGroupID` int(11) NOT NULL,
+  `classID` int(11) DEFAULT NULL,
   `modelID` int(11) NOT NULL,
   `scoID` int(11) NOT NULL,
   `modelData` json NOT NULL,
   `optlock` int(11) DEFAULT '0',
   `lastChangeTimeStamp` bigint(20) DEFAULT '0',
-  PRIMARY KEY (`modelID`),
-  UNIQUE KEY `modelID_UNIQUE` (`modelDataID`)
+  `del` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`modelDataID`),
+  UNIQUE KEY `modelDataID_UNIQUE` (`modelDataID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -902,4 +906,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-02-13  6:50:38
+-- Dump completed on 2018-03-13 11:35:12

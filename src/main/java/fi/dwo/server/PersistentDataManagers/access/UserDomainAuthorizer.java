@@ -7,6 +7,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer.AnonPersistentContext;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
 import java.util.logging.Logger;
@@ -25,11 +26,10 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  *
  * @author G.A.J. van der Plas
  */
-public class UserDomainAuthorizer extends AnonDomainAuthorizer {
+public class UserDomainAuthorizer {
 
     private static final Logger LOG = Logger.getLogger(UserDomainAuthorizer.class.getName());
-
-    protected UserPersistentContext userCtx;
+    private Context context;
     private UserActions userActions;
 
 //
@@ -39,13 +39,6 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
 //    }
     protected UserDomainAuthorizer() {
         super();
-        userCtx = new UserPersistentContext();
-        userActions = new MySQLUserActions();
-    }
-
-    protected UserDomainAuthorizer(AnonDomainAuthorizer anon) {
-        super();
-        userCtx = new UserPersistentContext();
         userActions = new MySQLUserActions();
     }
 
@@ -63,7 +56,47 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
         this.userActions = userActions;
     }
 
-    public static class UserPersistentContext extends AnonPersistentContext {
+
+    public static class Context {
+        private AnonPersistentContext anonCtx;
+        private UserPersistentContext userCtx;
+        
+        
+        public Context(AnonPersistentContext anonCtx){
+            this.anonCtx = anonCtx;
+        }
+
+        /**
+         * @return the anonCtx
+         */
+        public AnonPersistentContext getAnonCtx() {
+            return anonCtx;
+        }
+
+        /**
+         * @return the userCtx
+         */
+        public UserPersistentContext getUserCtx() {
+            return userCtx;
+        }
+
+        /**
+         * @param anonCtx the anonCtx to set
+         */
+        protected void setAnonCtx(AnonPersistentContext anonCtx) {
+            this.anonCtx = anonCtx;
+        }
+
+        /**
+         * @param userCtx the userCtx to set
+         */
+        protected void setUserCtx(UserPersistentContext userCtx) {
+            this.userCtx = userCtx;
+        }
+
+    }
+    
+    public static class UserPersistentContext {
 
         public PersistentUser user;
         public PersistentHasRole hasRole;
@@ -76,11 +109,9 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
         }
 
         protected UserPersistentContext(AnonPersistentContext ctx) {
-            super(ctx);
         }
 
         protected UserPersistentContext(UserPersistentContext ctx) {
-            super(ctx);
             this.hasRole = ctx.hasRole;
             this.roleType = ctx.roleType;
             this.school = ctx.school;
@@ -197,6 +228,20 @@ public class UserDomainAuthorizer extends AnonDomainAuthorizer {
     }
     
     public interface Build {
+    }
+
+    /**
+     * @return the context
+     */
+    public Context getContext() {
+        return context;
+    }
+
+    /**
+     * @param context the context to set
+     */
+    public void setContext(Context context) {
+        this.context = context;
     }
 
 }

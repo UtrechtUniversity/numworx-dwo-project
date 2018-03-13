@@ -19,11 +19,11 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
  *
  * @author plas0006
  */
-public class MySQLTeacherActions extends MySQLSchoolAdminTeacherActions implements TeacherActions {
+public class MySQLTeacherActions implements TeacherActions {
 
     private static final Logger LOG = Logger.getLogger(MySQLTeacherActions.class.getName());
 
-    public PersistentStudentModelContext addStudentModel(TeacherDomainAuthorizer.TeacherPersistentContext context, PersistentStudentModelContext model) throws Dwo2Exception {
+    public PersistentStudentModelContext addStudentModel(TeacherDomainAuthorizer.Context context, PersistentStudentModelContext model) throws Dwo2Exception {
         try {
                 PersistentStudentModelContext pModel = new PersistentStudentModelContext();
                 pModel.setModelStructure(model.getModelStructure());
@@ -31,14 +31,14 @@ public class MySQLTeacherActions extends MySQLSchoolAdminTeacherActions implemen
                 pModel.setPublishState(PublishState.published);                
                 return StudentModelContextManager.create(pModel);
         } catch (Exception e) {
-            String msg = MessageFormat.format("Username {0}: Internal error: {1}", new Object[]{context.getUser().getUsername(), e.getMessage()});
+            String msg = MessageFormat.format("Username {0}: Internal error: {1}", new Object[]{context.getUserCtx().getUser().getUsername(), e.getMessage()});
             LOG.log(Level.WARNING, msg, e);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
         }
     }
 
-    public List<DomStudentModelContext> getStudentModels(TeacherDomainAuthorizer.TeacherPersistentContext context) throws Dwo2Exception {           
-            List<PersistentStudentModelContext> pModels =  StudentModelContextManager.findEntities(context.getSchool());
+    public List<DomStudentModelContext> getStudentModels(TeacherDomainAuthorizer.Context context) throws Dwo2Exception {           
+            List<PersistentStudentModelContext> pModels =  StudentModelContextManager.findEntities(context.getUserCtx().getSchool());
             List<DomStudentModelContext>  result = new ArrayList<>(pModels.size());
             pModels.stream().forEach(m -> result.add(m.buildDomStudentModelContext()));
             return result;

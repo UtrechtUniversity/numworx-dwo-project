@@ -3,10 +3,19 @@
  */
 package fi.dwo.server.PersistentDataManagers.access;
 
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
+import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
+import fi.dwo.server.mysql.DatabaseManager;
+import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -14,8 +23,12 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,31 +38,40 @@ import org.junit.Test;
  * @author Gert van der Plas
  */
 public class StudentBuilderTest {
+
+    private static final Logger LOG = Logger.getLogger(StudentBuilderTest.class.getName());
     
+    static DatabaseManager dbInstance = null;
+
     public StudentBuilderTest() {
+        Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
     }
-    
-    @BeforeClass
+      @BeforeClass
     public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
+        DwoEmfFactory.setEntityManagerFactory("DWO_TestDB");
+        dbInstance = new DatabaseManager();
     }
 
+    @AfterClass
+    public static void tearDownClass() {
+        dbInstance = new DatabaseManager();
+        DwoEmfFactory.setDefaultEntityManagerFactory();
+    }
+
+    @Before
+    public void setUp() {
+        dbInstance.IntializeTestDatabase();
+    }
+
+    @After
+    public void tearDown() {
+        dbInstance.ClearDatabase();
+    }
     /**
      * Test of updateStudentModelData method, of class StudentBuilder.
      */
     @Test
-    public void testUpdateStudentModelData() throws Exception {
+    public void testSetStudentModelData() throws Exception {
 
 
         //Build StudentModelStructure
@@ -88,19 +110,46 @@ public class StudentBuilderTest {
         }
         
         //build RestStudentModelContext
+        //scoId =3, schoolId=3, modelId=1, courseId=. userId = 9 "user02"
         DomStudentModelData domData = new DomStudentModelData();
-        domData.setModelId(new DomStudentModelContextId());
-        domData.setScoContextId(new DomScoContextId());
+        DomStudentModelContextId modelId = new DomStudentModelContextId();
+        modelId.setId(PersistentStudentModelContext.buildPersistenceId(1L));
+        domData.setModelId(modelId);
+        DomScoContextId scoId = new DomScoContextId();
+        scoId.setId(PersistentScoContext.buildPersistenceId(3L));
+        domData.setScoContextId(scoId);
         domData.setDomStudentModelStructureScore(model.generateStudentModelStructureScore());
-        StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser("user05")
-                .setDefaultHasRole()
+        StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser("user02")
+                .setDefaultHasRole()//
                 .buildStudent();
-        DomStudentModelData result = state.setStudentModelData(domData);
-        DomStudentModelData expResult = state.getStudentModelData(result.getScoContextId());
-        
+        try{
+        state.setStudentModelData(domData);
+        }catch(Dwo2Exception e){
+            fail("Exception thrown for Dwo2Exception.");
+        }
+        PersistentStudentModelData data = StudentModelDataManager.findEntity(ScoContextManager.findEntity(3L), state.getHasRole());
+        assertEquals(data.getModelID().longValue(), 1L);
+        assertEquals(data.getScoID().longValue(), 3L);
+        assertEquals(data.getModelDataId().longValue(), 1L);
         //compare input and output
         // TODO review the generated test code and remove the default call to fail.
       //  fail("The test case is a prototype.");
+    }
+
+
+    /**
+     * Test of getStudentModelData method, of class StudentBuilder.
+     */
+    @Test
+    public void testGetStudentModelData() throws Exception {
+        System.out.println("getStudentModelData");
+        DomScoContextId domScoId = null;
+        StudentBuilder instance = new StudentBuilder();
+        DomStudentModelData expResult = null;
+        DomStudentModelData result = instance.getStudentModelData(domScoId);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
     
 }

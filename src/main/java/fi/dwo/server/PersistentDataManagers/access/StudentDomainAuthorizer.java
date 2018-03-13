@@ -1,5 +1,7 @@
 package fi.dwo.server.PersistentDataManagers.access;
 
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.actions.MySQLStudentActions;
 import fi.dwo.server.PersistentDataManagers.actions.StudentActions;
 import java.util.logging.Logger;
@@ -16,10 +18,10 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  *
  * @author G.A.J. van der Plas
  */
-public class StudentDomainAuthorizer extends UserDomainAuthorizer {
+public class StudentDomainAuthorizer {
 
     private static final Logger LOG = Logger.getLogger(StudentDomainAuthorizer.class.getName());
-    protected StudentPersistentContext studentCtx;
+     private Context context;
     private StudentActions studentActions = new MySQLStudentActions();
 
     /**
@@ -36,26 +38,84 @@ public class StudentDomainAuthorizer extends UserDomainAuthorizer {
         this.studentActions = studentActions;
     }
 
-    public class StudentPersistentContext extends UserPersistentContext {
-        
-        public StudentPersistentContext() {
-            
+    public static class Context {
+
+        private AnonDomainAuthorizer.AnonPersistentContext anonCtx;
+        private UserDomainAuthorizer.UserPersistentContext userCtx;
+        private StudentPersistentContext studentCtx;
+
+        public Context(AnonDomainAuthorizer.AnonPersistentContext anonCtx) {
+            this.anonCtx = anonCtx;
         }
 
-        public StudentPersistentContext(UserPersistentContext ctx) {
-            super(ctx);
+        /**
+         * @return the anonCtx
+         */
+        public AnonDomainAuthorizer.AnonPersistentContext getAnonCtx() {
+            return anonCtx;
+        }
+
+        /**
+         * @return the userCtx
+         */
+        public UserDomainAuthorizer.UserPersistentContext getUserCtx() {
+            return userCtx;
+        }
+
+        /**
+         * @param anonCtx the anonCtx to set
+         */
+        protected void setAnonCtx(AnonDomainAuthorizer.AnonPersistentContext anonCtx) {
+            this.anonCtx = anonCtx;
+        }
+
+        /**
+         * @param userCtx the userCtx to set
+         */
+        protected void setUserCtx(UserDomainAuthorizer.UserPersistentContext userCtx) {
+            this.userCtx = userCtx;
+        }
+
+        /**
+         * @return the studentCtx
+         */
+        protected StudentPersistentContext getStudentCtx() {
+            return studentCtx;
+        }
+
+        /**
+         * @param studentCtx the studentCtx to set
+         */
+        protected void setStudentCtx(StudentPersistentContext studentCtx) {
+            this.studentCtx = studentCtx;
+        }
+
+    }
+
+    public static class StudentPersistentContext {
+
+        public PersistentSchoolClass schoolClass;
+
+        protected StudentPersistentContext() {
+        }
+
+        protected StudentPersistentContext(StudentPersistentContext ctx) {
         }
     }
-    /** Creates a builder and initializes a context if given.
-     * 
+
+    /**
+     * Creates a builder and initializes a context if given.
+     *
      * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
-     */    
+     */
     public static StudentState_HR_R_S_SG_U buildStudent() throws Dwo2Exception {
         return new StudentBuilder();
     }
 
     public interface StudentState_HR_R_S_SG_U extends UserState_HR_R_S_SG_U {
-        public DomStudentModelData setStudentModelData(DomStudentModelData data) throws Dwo2Exception;
+
+        public void setStudentModelData(DomStudentModelData data) throws Dwo2Exception;
+
         public DomStudentModelData getStudentModelData(DomScoContextId domScoId) throws Dwo2Exception;
 
     }
@@ -81,6 +141,20 @@ public class StudentDomainAuthorizer extends UserDomainAuthorizer {
 //        RoleType getRoleType();
 //        
 
+    }
+
+    /**
+     * @return the context
+     */
+    protected StudentDomainAuthorizer.Context getContext() {
+        return context;
+    }
+
+    /**
+     * @param context the context to set
+     */
+    protected void setContext(StudentDomainAuthorizer.Context context) {
+        this.context = context;
     }
 
 }

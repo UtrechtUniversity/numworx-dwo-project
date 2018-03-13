@@ -16,10 +16,11 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  */
 class AnonBuilder implements AnonDomainAuthorizer.AnonState, AnonDomainAuthorizer.Build {
     
-    protected AnonDomainAuthorizer instance = new AnonDomainAuthorizer();
+    protected AnonDomainAuthorizer instance;
     private AnonActions anonActions = new MySQLAnonActions();
 
     protected AnonBuilder() throws Dwo2Exception {
+        instance = new AnonDomainAuthorizer();
     }
 
     /**
@@ -30,22 +31,29 @@ class AnonBuilder implements AnonDomainAuthorizer.AnonState, AnonDomainAuthorize
      * @throws Dwo2Exception
      */
     public UserDomainAuthorizer.UserState_U submitUser(String username) throws Dwo2Exception {
-        UserBuilder builder = new UserBuilder(this);
+        UserBuilder builder = new UserBuilder();
+        builder.init(this.instance.getContext());
         return builder.setUser(username);
     }
 
     public UserDomainAuthorizer.UserState_U submitUser(DomUser u) throws Dwo2Exception {
-        UserBuilder builder = new UserBuilder(this);
+        UserBuilder builder = new UserBuilder();
+        builder.init(this.instance.getContext());
         return builder.setUser(u.getUserName());
     }
 
     protected UserDomainAuthorizer.UserState_U submitUser(PersistentUser u) throws Dwo2Exception {
-        UserBuilder builder = new UserBuilder(this);
+        UserBuilder builder = new UserBuilder();
+        builder.init(this.instance.getContext());
         return builder.setUser(u.getUsername());
     }
 
     public boolean LoginCheck(DomLoginCheck check) throws Dwo2Exception {
         return anonActions.getLoginCheck(check);
+    }
+
+    AnonDomainAuthorizer.AnonState init() {
+        return this;
     }
     
 }
