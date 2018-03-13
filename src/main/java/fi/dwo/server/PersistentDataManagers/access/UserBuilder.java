@@ -39,10 +39,10 @@ class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_
 //    protected UserBuilder(AnonDomainAuthorizer auth) throws Dwo2Exception {
 //    }
     protected UserBuilder() throws Dwo2Exception {
-        super();        
+        super();
         instance = new UserDomainAuthorizer();
     }
-    
+
     /**
      * Verifies and stores the PersistentUser into the userCtx.
      *
@@ -126,7 +126,7 @@ class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_
      */
     @Override
     public StudentDomainAuthorizer.StudentState_HR_R_S_SG_U buildStudent() throws Dwo2Exception {
-        StudentBuilder builder = new StudentBuilder();        
+        StudentBuilder builder = new StudentBuilder();
         return builder.init(this.instance.getContext());
     }
 
@@ -220,7 +220,7 @@ class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_
 
     @Override
     public SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U buildSchoolAdminTeacher() throws Dwo2Exception {
-                SchoolAdminTeacherBuilder builder = new SchoolAdminTeacherBuilder();        
+        SchoolAdminTeacherBuilder builder = new SchoolAdminTeacherBuilder();
         return builder.init(this.instance.getContext());
 //        return new SchoolAdminTeacherDomainAuthorizer.Builder(instance).buildSchoolAdminTeacher();
     }
@@ -248,7 +248,7 @@ class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_
     }
 
     public void init(AnonDomainAuthorizer.Context ctx) {
-        this.instance.getContext().setAnonCtx(ctx.getAnonCtx());
+        this.instance.setContext(new UserDomainAuthorizer.Context(ctx));
     }
-    
+
 }

@@ -44,8 +44,10 @@ public class StudentDomainAuthorizer {
         private UserDomainAuthorizer.UserPersistentContext userCtx;
         private StudentPersistentContext studentCtx;
 
-        public Context(AnonDomainAuthorizer.AnonPersistentContext anonCtx) {
-            this.anonCtx = anonCtx;
+        public Context(UserDomainAuthorizer.Context ctx) {
+            this.anonCtx = ctx.getAnonCtx();
+            this.userCtx = ctx.getUserCtx();
+            studentCtx = new StudentPersistentContext();
         }
 
         /**

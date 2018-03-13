@@ -62,8 +62,9 @@ public class UserDomainAuthorizer {
         private UserPersistentContext userCtx;
         
         
-        public Context(AnonPersistentContext anonCtx){
-            this.anonCtx = anonCtx;
+        public Context(AnonDomainAuthorizer.Context ctx){
+            this.anonCtx = ctx.getAnonCtx();
+            userCtx = new UserPersistentContext();
         }
 
         /**
@@ -106,9 +107,6 @@ public class UserDomainAuthorizer {
 
         protected UserPersistentContext() {
             super();
-        }
-
-        protected UserPersistentContext(AnonPersistentContext ctx) {
         }
 
         protected UserPersistentContext(UserPersistentContext ctx) {

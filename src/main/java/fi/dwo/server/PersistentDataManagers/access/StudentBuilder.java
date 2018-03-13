@@ -129,6 +129,7 @@ class StudentBuilder extends UserBuilder implements StudentDomainAuthorizer.Stud
     }
 
     public StudentState_HR_R_S_SG_U init(UserDomainAuthorizer.Context ctx) throws Dwo2Exception {
+        this.instance.setContext(new StudentDomainAuthorizer.Context(ctx));
         if (ctx.getUserCtx().roleType != null && ctx.getUserCtx().roleType == RoleType.STUDENT) {
             this.instance.getContext().setUserCtx(ctx.getUserCtx());
             this.instance.getContext().setAnonCtx(ctx.getAnonCtx());

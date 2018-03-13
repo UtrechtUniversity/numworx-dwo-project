@@ -1,9 +1,7 @@
 package fi.dwo.server.PersistentDataManagers.access;
 
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
-import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserPersistentContext;
-import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.actions.SchoolAdminTeacherActions;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
@@ -32,8 +30,11 @@ public class SchoolAdminTeacherDomainAuthorizer {
         private UserDomainAuthorizer.UserPersistentContext userCtx;
         private SchoolAdminTeacherPersistentContext schooladminTeacherCtx;
 
-        public Context(AnonDomainAuthorizer.AnonPersistentContext anonCtx) {
-            this.anonCtx = anonCtx;
+        public Context(UserDomainAuthorizer.Context ctx) {
+            this.anonCtx = ctx.getAnonCtx();
+            this.userCtx = ctx.getUserCtx();
+            this.schooladminTeacherCtx = new SchoolAdminTeacherPersistentContext();
+
         }
 
         /**
@@ -80,7 +81,7 @@ public class SchoolAdminTeacherDomainAuthorizer {
 
     }
 
-    public class SchoolAdminTeacherPersistentContext  {
+    public static class SchoolAdminTeacherPersistentContext  {
 
         public SchoolAdminTeacherPersistentContext() {
 

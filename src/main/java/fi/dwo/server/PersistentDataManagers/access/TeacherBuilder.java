@@ -344,10 +344,8 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
     }
 
     public TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U init(SchoolAdminTeacherDomainAuthorizer.Context ctx) throws Dwo2Exception {
-        if (instance.getContext().getUserCtx().roleType == RoleType.TEACHER) {
-            this.instance.getContext().setAnonCtx(ctx.getAnonCtx());
-            this.instance.getContext().setUserCtx(ctx.getUserCtx());
-            this.instance.getContext().setSchooladminTeacherCtx(ctx.getSchooladminTeacherCtx());
+        if (ctx.getUserCtx().roleType == RoleType.TEACHER) {
+            this.instance.setContext(new TeacherDomainAuthorizer.Context(ctx));
             return this;
         } else {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Not a schooladmin or teacher");

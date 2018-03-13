@@ -46,8 +46,11 @@ public static class Context {
         private SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherPersistentContext schooladminTeacherCtx;
         private TeacherPersistentContext teacherCtx;
 
-        public Context(AnonDomainAuthorizer.AnonPersistentContext anonCtx) {
-            this.anonCtx = anonCtx;
+        public Context(SchoolAdminTeacherDomainAuthorizer.Context ctx) {
+            this.anonCtx = ctx.getAnonCtx();
+            this.userCtx = ctx.getUserCtx();
+            this.schooladminTeacherCtx = ctx.getSchooladminTeacherCtx();
+            teacherCtx = new TeacherPersistentContext();
         }
 
         /**
@@ -109,7 +112,7 @@ public static class Context {
     }
 
     
-    public class TeacherPersistentContext  {
+    public static class TeacherPersistentContext  {
 
         public TeacherPersistentContext() {
             super();

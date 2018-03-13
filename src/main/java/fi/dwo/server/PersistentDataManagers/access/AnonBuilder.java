@@ -53,6 +53,7 @@ class AnonBuilder implements AnonDomainAuthorizer.AnonState, AnonDomainAuthorize
     }
 
     AnonDomainAuthorizer.AnonState init() {
+        this.instance.setContext(new AnonDomainAuthorizer.Context());
         return this;
     }
     
