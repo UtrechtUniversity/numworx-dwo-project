@@ -204,28 +204,28 @@ public class PersistentStudentModelData implements Serializable {
     /**
      * @return the schoolID
      */
-    protected Long getSchoolID() {
+    public Long getSchoolID() {
         return schoolID;
     }
 
     /**
      * @param schoolID the schoolID to set
      */
-    protected void setSchoolID(Long schoolID) {
+    public void setSchoolID(Long schoolID) {
         this.schoolID = schoolID;
     }
 
     /**
      * @return the modelID
      */
-    protected Long getModelID() {
+    public Long getModelID() {
         return modelID;
     }
 
     /**
      * @param modelID the modelID to set
      */
-    protected void setModelID(Long modelID) {
+    public void setModelID(Long modelID) {
         this.modelID = modelID;
     }
 
