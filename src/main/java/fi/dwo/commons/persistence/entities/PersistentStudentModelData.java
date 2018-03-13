@@ -47,7 +47,7 @@ import org.eclipse.persistence.annotations.Converter;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PersistentStudentModelData.findByModelDataId", query = "SELECT p FROM PersistentStudentModelData p WHERE p.modelDataId = :modelDataId"),
-    @NamedQuery(name = "PersistentStudentModelData.findByUniqueKeys", query = "SELECT p FROM PersistentStudentModelData p WHERE p.scoID = :scoId and p.schoolID and p.persistentHasRolePK = :persistentHasRolePK")})
+    @NamedQuery(name = "PersistentStudentModelData.findByUniqueKeys", query = "SELECT p FROM PersistentStudentModelData p WHERE p.scoID = :scoId and p.modelID = :modelID and p.persistentHasRolePK = :persistentHasRolePK")})
 public class PersistentStudentModelData implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -62,17 +62,20 @@ public class PersistentStudentModelData implements Serializable {
     private Long scoID;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "modelID", nullable = false)
+    private Long modelID;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "schoolID", nullable = false)
     private Long schoolID;
     @Basic(optional = false)
     @NotNull
     private PersistentHasRolePK persistentHasRolePK;
-
     @Convert("studentModelScoreConverter")
     private DomStudentModelStructureScore modelData;
     @Column(name = "optlock")
     @Version
-    private int optlock;
+    private Long optlock;
     @Column(name = "lastChangeTimeStamp")
     private long lastChangeTimeStamp;
 
@@ -135,14 +138,14 @@ public class PersistentStudentModelData implements Serializable {
     /**
      * @return the optlock
      */
-    public int getOptlock() {
+    public Long getOptlock() {
         return optlock;
     }
 
     /**
      * @param optlock the optlock to set
      */
-    public void setOptlock(int optlock) {
+    public void setOptlock(Long optlock) {
         this.optlock = optlock;
     }
 
@@ -193,6 +196,7 @@ public class PersistentStudentModelData implements Serializable {
         data.setId(buildPersistenceId());
         DomScoContextId dScoId = new DomScoContextId();
         dScoId.setId(PersistentScoContext.buildPersistenceId(scoID));
+        data.setVersion(optlock);
         data.setScoContextId(dScoId);
         data.setDomStudentModelStructureScore(modelData);
     }
@@ -209,6 +213,20 @@ public class PersistentStudentModelData implements Serializable {
      */
     protected void setSchoolID(Long schoolID) {
         this.schoolID = schoolID;
+    }
+
+    /**
+     * @return the modelID
+     */
+    protected Long getModelID() {
+        return modelID;
+    }
+
+    /**
+     * @param modelID the modelID to set
+     */
+    protected void setModelID(Long modelID) {
+        this.modelID = modelID;
     }
 
 }

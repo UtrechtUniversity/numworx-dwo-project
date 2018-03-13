@@ -65,23 +65,23 @@ public class PersistentDwoProfile implements Serializable {
     @Size(max = 100)
     @Column(name = "dwoProfileDescription", length = 100)
     private String dwoProfileDescription;
-	/**
-	 * @since 1.5.0
-	 */
-	@Column(name = "optlock")
-	@Version
-	private int optlock;
-	@Column(name = "lastChangeTimeStamp")
-	private long lastChangeTimeStamp;
-	@NotNull
-	@Column(name = "del", nullable = false)
-	private DelState delState = DelState.not;
+    /**
+     * @since 1.5.0
+     */
+    @Column(name = "optlock")
+    @Version
+    private Long optlock;
+    @Column(name = "lastChangeTimeStamp")
+    private long lastChangeTimeStamp;
+    @NotNull
+    @Column(name = "del", nullable = false)
+    private DelState delState = DelState.not;
     /**
      * @since 1.5.1
      */
     @Size(max = 5)
-	@Column(name = "language", length = 5)
-	private String language;
+    @Column(name = "language", length = 5)
+    private String language;
 
     public PersistentDwoProfile() {
     }
@@ -136,11 +136,11 @@ public class PersistentDwoProfile implements Serializable {
     }
 
     public String getLanguage() {
-      return language;
+        return language;
     }
 
     public void setLanguage(String language) {
-      this.language = language;
+        this.language = language;
     }
 
     @Override
@@ -168,10 +168,12 @@ public class PersistentDwoProfile implements Serializable {
     }
 
     public static DomDwoProfileId buildDomDwoProfileId(Long id) {
-    	if (id == null) return null;
-    	return new DomDwoProfileId(buildPersistenceId(id));
+        if (id == null) {
+            return null;
+        }
+        return new DomDwoProfileId(buildPersistenceId(id));
     }
-    
+
     public DomDwoProfile buildDomDwoProfile() {
         DomDwoProfile profile = new DomDwoProfile();
         PersistentDwoProfile.this.fillDomDwoProfile(profile);
@@ -212,8 +214,9 @@ public class PersistentDwoProfile implements Serializable {
      * @return
      */
     public static PersistenceId buildPersistenceId(Long aProfileId) {
-    	if (aProfileId == null)
-    		return null;
+        if (aProfileId == null) {
+            return null;
+        }
         PersistenceId id = new PersistenceId();
         id.setIdString(String.format("MYSQL;%s;%020d",
                 PersistenceClassType.PersistentDwoProfile.name(), aProfileId));
@@ -221,9 +224,9 @@ public class PersistentDwoProfile implements Serializable {
     }
 
     @PrePersist
-	@PreUpdate
-	void changeTimestamp() {
-		lastChangeTimeStamp = System.currentTimeMillis();
-	}
+    @PreUpdate
+    void changeTimestamp() {
+        lastChangeTimeStamp = System.currentTimeMillis();
+    }
 
 }

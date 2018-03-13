@@ -69,7 +69,7 @@ public class PersistentAppletConfig implements Serializable {
 	 */
 	@Column(name = "optlock")
 	@Version
-	private int optlock;
+	private Long optlock;
 	@Column(name = "lastChangeTimeStamp")
 	private long lastChangeTimeStamp;
 	@NotNull

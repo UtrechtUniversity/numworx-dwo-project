@@ -1,7 +1,6 @@
 /*Copyrighted 2015. */
 package fi.dwo.commons.persistence.entities;
 
-import fi.dwo.commons.persistence.PersistentUpdate;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;

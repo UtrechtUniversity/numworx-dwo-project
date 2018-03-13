@@ -72,7 +72,7 @@ public class PersistentStudentModelContext implements Serializable {
     private DomStudentModelStructure modelStructure;
     @Column(name = "optlock")
     @Version
-    private int optlock;
+    private Long optlock;
     @Column(name = "lastChangeTimeStamp")
     private long lastChangeTimeStamp;
     @NotNull
@@ -124,14 +124,14 @@ public class PersistentStudentModelContext implements Serializable {
     /**
      * @return the optlock
      */
-    public int getOptlock() {
+    public Long getOptlock() {
         return optlock;
     }
 
     /**
      * @param optlock the optlock to set
      */
-    public void setOptlock(int optlock) {
+    public void setOptlock(Long optlock) {
         this.optlock = optlock;
     }
 

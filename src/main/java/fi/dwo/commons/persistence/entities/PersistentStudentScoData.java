@@ -33,8 +33,10 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @Table(name = "tblstudentscodata", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PersistentStudentScoData.findAll", query = "SELECT p FROM PersistentStudentScoData p"),
-    @NamedQuery(name = "PersistentStudentScoData.findByStudentSco", query = "SELECT p FROM PersistentStudentScoData p WHERE p.studentSco = :studentSco"),
+    @NamedQuery(name = "PersistentStudentScoData.findAll", query = "SELECT p FROM PersistentStudentScoData p")
+    ,
+    @NamedQuery(name = "PersistentStudentScoData.findByStudentSco", query = "SELECT p FROM PersistentStudentScoData p WHERE p.studentSco = :studentSco")
+    ,
     @NamedQuery(name = "PersistentStudentScoData.removeByScoIDandHasRolePK", query = "DELETE FROM PersistentStudentScoData p WHERE p.studentSco=:studentSco")})
 
 public class PersistentStudentScoData implements Serializable {
@@ -56,18 +58,18 @@ public class PersistentStudentScoData implements Serializable {
     @Column(name = "cocd", length = 65535)
     private String cocd;
     @Column(name = "optlock")
-    @Version private int optlock;
+    @Version
+    private Long optlock;
     @Column(name = "lastChangeTimeStamp")
     private long lastChangeTimeStamp;
     @NotNull
-    @Column(name = "del", nullable=false)
+    @Column(name = "del", nullable = false)
     private DelState delState = DelState.not;
-    
-    
+
     @PrePersist
     @PreUpdate
     void changeTimestamp() {
-    	lastChangeTimeStamp = System.currentTimeMillis();
+        lastChangeTimeStamp = System.currentTimeMillis();
     }
 
     public PersistentStudentScoData() {
@@ -106,23 +108,23 @@ public class PersistentStudentScoData implements Serializable {
         this.cocd = cocd;
     }
 
-    public int getOptlock() {
-		return optlock;
-	}
+    public Long getOptlock() {
+        return optlock;
+    }
 
-	public void setOptlock(int optlock) {
-		this.optlock = optlock;
-	}
+    public void setOptlock(Long optlock) {
+        this.optlock = optlock;
+    }
 
-	public long getLastChangeTimeStamp() {
-		return lastChangeTimeStamp;
-	}
+    public long getLastChangeTimeStamp() {
+        return lastChangeTimeStamp;
+    }
 
-	public void setLastChangeTimeStamp(long lastChangeTimeStamp) {
-		this.lastChangeTimeStamp = lastChangeTimeStamp;
-	}
+    public void setLastChangeTimeStamp(long lastChangeTimeStamp) {
+        this.lastChangeTimeStamp = lastChangeTimeStamp;
+    }
 
-	@Override
+    @Override
     public int hashCode() {
         int hash = 0;
         hash += (studentSco != null ? studentSco.hashCode() : 0);
@@ -147,7 +149,7 @@ public class PersistentStudentScoData implements Serializable {
         return "fi.dwo.server.persistence.PersistentStudentScoData[ studentSco=" + studentSco + " ]";
     }
 
-  /**
+    /**
      * Builds a PersistenceId using this object's data.
      *
      * @return
@@ -167,5 +169,5 @@ public class PersistentStudentScoData implements Serializable {
         id.setIdString(String.format("MYSQL;%s;%020d",
                 PersistenceClassType.PersistentStudentScoData.name(), aStudentScoId));
         return id;
-    }        
+    }
 }

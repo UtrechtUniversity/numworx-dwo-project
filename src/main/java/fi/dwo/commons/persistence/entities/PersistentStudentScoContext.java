@@ -98,7 +98,8 @@ public class PersistentStudentScoContext implements Serializable {
     @Column(name="classID")
     private Long classID;
     @Column(name = "optlock")
-    @Version private int optlock;
+    @Version 
+    private Long optlock;
     @Column(name = "lastChangeTimeStamp")
     private long lastChangeTimeStamp;
     @NotNull
@@ -216,11 +217,11 @@ public class PersistentStudentScoContext implements Serializable {
 		this.persistentHasRolePK = persistentHasRolePK;
 	}
 
-	public int getOptlock() {
+	public Long getOptlock() {
 		return optlock;
 	}
 
-	public void setOptlock(int optlock) {
+	public void setOptlock(Long optlock) {
 		this.optlock = optlock;
 	}
 
