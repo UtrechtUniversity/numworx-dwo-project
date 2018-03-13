@@ -17,7 +17,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 /**
- * 
+ *
  *
  * @author Gert van der Plas
  */
@@ -27,13 +27,26 @@ public class MySQLStudentActions implements StudentActions {
 
     @Override
     public DomStudentModelData setStudentModelData(StudentDomainAuthorizer.StudentPersistentContext ctx, PersistentStudentModelData data) throws Dwo2Exception {
-                //data exists
-        try{
-           return StudentModelDataManager.insertOrUpdate(data);
-        }catch(PersistenceException e){
-            String msg = MessageFormat.format("Failed merging  PersistentStudentModelData {0}", data.getModelDataId());
-            LOG.log(Level.WARNING, msg,e);
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError,msg);
+        if (data.buildPersistenceId() == null) {  //data is not expected to exist.
+            try {
+                return StudentModelDataManager.create(data).buildDomStudentModelData();
+            } catch (PersistenceException e) {
+                //fails if data exists, clearly a system error or we are out of sync (working in more than one copy of the sco).
+                //it is possible that studentmodeldata was inserted between the check and the insert.
+                String msg = MessageFormat.format("Failed creating PersistentStudentModelData {0}", data.getModelDataId());
+                LOG.log(Level.WARNING, msg, e);
+                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
+            }
+        } else {
+            //data exists, should be updated but fails if version mismatch.
+            try {
+                StudentModelDataManager.edit(data);
+                return data.buildDomStudentModelData();
+            } catch (PersistenceException e) {
+                String msg = MessageFormat.format("Failed merging  PersistentStudentModelData {0}", data.getModelDataId());
+                LOG.log(Level.WARNING, msg, e);
+                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
+            }
         }
     }
 
@@ -41,5 +54,5 @@ public class MySQLStudentActions implements StudentActions {
     public PersistentStudentModelData getStudentModelData(StudentDomainAuthorizer.StudentPersistentContext ctx, DomScoContextId domScoId) throws Dwo2Exception {
         return StudentModelDataManager.findEntity(ctx.school, ctx.hasRole, MySQLPersistenceId.getNativeId(domScoId));
     }
-    
+
 }
