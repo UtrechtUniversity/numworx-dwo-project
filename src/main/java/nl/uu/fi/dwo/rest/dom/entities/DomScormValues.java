@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.util.List;
 
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class DomScormValues {
 	private List<DomMapEntry<String,String>> values;

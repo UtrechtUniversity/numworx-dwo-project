@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @XmlRootElement
 public abstract class DomId {
 	private PersistenceId id;
+        private Long version;
 
 	public DomId(PersistenceId id) {
 		super();
@@ -34,5 +35,19 @@ public abstract class DomId {
 	public void setId(PersistenceId id) {
 		this.id = id;
 	}
+
+    /**
+     * @return the version
+     */
+    public Long getVersion() {
+        return version;
+    }
+
+    /**
+     * @param version the version to set
+     */
+    public void setVersion(Long version) {
+        this.version = version;
+    }
 	
 }
