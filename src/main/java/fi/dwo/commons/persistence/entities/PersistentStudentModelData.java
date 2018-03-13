@@ -196,7 +196,7 @@ public class PersistentStudentModelData implements Serializable {
         data.setId(buildPersistenceId());
         DomScoContextId dScoId = new DomScoContextId();
         dScoId.setId(PersistentScoContext.buildPersistenceId(scoID));
-        data.setVersion(optlock);
+        data.setOptLock(optlock);
         data.setScoContextId(dScoId);
         data.setDomStudentModelStructureScore(modelData);
     }
