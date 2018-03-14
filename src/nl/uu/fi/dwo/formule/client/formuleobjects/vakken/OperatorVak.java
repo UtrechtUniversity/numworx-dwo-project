@@ -36,6 +36,7 @@ public class OperatorVak extends FormuleElementWithChildren {
 		super.paintComponent(ctx);
 		ctx.translate(teken.x, teken.y);
 		teken.paintComponent(ctx);
+		teken.setChanged(false);
 		ctx.translate(-teken.x, -teken.y);
 	}
 
@@ -47,7 +48,8 @@ public class OperatorVak extends FormuleElementWithChildren {
 		teken.validate();
 
 		int width = 0;
-		if(!(this instanceof AftrekVak && a.toString().equals("0")))
+		boolean hasA = !(this instanceof AftrekVak && a.toString().equals("0"));
+		if(hasA)
 		{	
 			width = a.width;
 		}
@@ -58,8 +60,11 @@ public class OperatorVak extends FormuleElementWithChildren {
 // at width+width, 0
 		b.setX(width);
 		width += b.width;
-		as = Math.max(a.getAsHoogte(), Math.max(b.getAsHoogte(), teken.getAsHoogte()));
-		int height = as + Math.max(a.height-a.getAsHoogte(), Math.max( teken.height-teken.getAsHoogte(), b.height-b.getAsHoogte()));
+		as = Math.max(b.getAsHoogte(), teken.getAsHoogte());
+		if(hasA) as = Math.max(a.getAsHoogte(), as);
+		int descent =  Math.max( teken.height-teken.getAsHoogte(), b.height-b.getAsHoogte());
+		if(hasA) descent = Math.max(a.height-a.getAsHoogte(), descent);
+		int height = as + descent;
 		setSize(width, height);
 		setAsHoogte(as);
 		a.setY(as-a.getAsHoogte());
