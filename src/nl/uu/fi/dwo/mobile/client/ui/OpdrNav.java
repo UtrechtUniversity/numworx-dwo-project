@@ -2124,9 +2124,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				
 				for (int i = 0; i < objectives.length; i++)
 				{
+					boolean categorieGescoord = false;
 					for (int j = 0; j < objectives[i].length; j++)
 					{
-						boolean categorieGescoord = false;
 						if (logObjectives.get(i).isArray().get(j).isBoolean().booleanValue())
 						{
 							if(score > 0)
