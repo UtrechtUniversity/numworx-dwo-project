@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `dwojunittest` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
 USE `dwojunittest`;
--- MySQL dump 10.13  Distrib 5.7.21, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
 --
--- Host: 127.0.0.1    Database: dwojunittest
+-- Host: localhost    Database: dwojunittest
 -- ------------------------------------------------------
--- Server version	5.7.21-0ubuntu0.16.04.1
+-- Server version	5.7.19
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -673,8 +673,9 @@ CREATE TABLE `tblstudentmodeldata` (
   `lastChangeTimeStamp` bigint(20) DEFAULT '0',
   `del` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`modelDataID`),
-  UNIQUE KEY `modelDataID_UNIQUE` (`modelDataID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  UNIQUE KEY `modelDataID_UNIQUE` (`modelDataID`),
+  UNIQUE KEY `unique_tuple` (`userID`,`schoolGroupID`,`modelID`, `scoID`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -683,6 +684,7 @@ CREATE TABLE `tblstudentmodeldata` (
 
 LOCK TABLES `tblstudentmodeldata` WRITE;
 /*!40000 ALTER TABLE `tblstudentmodeldata` DISABLE KEYS */;
+INSERT INTO `tblstudentmodeldata` VALUES (1,9,2,NULL,1,3,'{\"count\": 0, \"score\": 0, \"categories\": [{\"count\": 0, \"score\": 0, \"objectives\": [{\"count\": 0, \"score\": 0}, {\"count\": 0, \"score\": 0}]}, {\"count\": 0, \"score\": 0, \"objectives\": [{\"count\": 0, \"score\": 0}, {\"count\": 0, \"score\": 0}]}, {\"count\": 0, \"score\": 0, \"objectives\": [{\"count\": 0, \"score\": 0}, {\"count\": 0, \"score\": 0}]}]}',1,1521021459010,0);
 /*!40000 ALTER TABLE `tblstudentmodeldata` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -906,4 +908,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-13 11:35:12
+-- Dump completed on 2018-03-14 11:13:20

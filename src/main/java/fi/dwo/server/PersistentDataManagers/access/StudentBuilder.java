@@ -22,7 +22,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
  *
  * @author Gert van der Plas
  */
-class StudentBuilder extends UserBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U, StudentDomainAuthorizer.Build {
+class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U {
 
     private static final Logger LOG = Logger.getLogger(StudentBuilder.class.getName());
 
@@ -78,7 +78,7 @@ class StudentBuilder extends UserBuilder implements StudentDomainAuthorizer.Stud
             throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
         }
         //Sco has modelId
-        if (pScoContext.getModelID() == null) {
+        if (pScoContext.getModelID() == null || data.getModelId()== null || pScoContext.getModelID().longValue() != (MySQLPersistenceId.getNativeId(data.getModelId()).longValue()))  {
             msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Can't update, modelID not given.", new Object[]{instance.getContext().getUserCtx().getUser().getUsername()});
             LOG.log(Level.WARNING, msg);
             throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
@@ -140,5 +140,15 @@ class StudentBuilder extends UserBuilder implements StudentDomainAuthorizer.Stud
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
         }
     }
+
+    @Override
+    public StudentDomainAuthorizer.Context getContext() {
+        return instance.getContext();
+    }
+
+    @Override
+    public void setContext(StudentDomainAuthorizer.Context context) {
+        instance.setContext(context);
+    }    
 }
 

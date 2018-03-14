@@ -108,43 +108,28 @@ public class StudentDomainAuthorizer {
     /**
      * Creates a builder and initializes a context if given.
      *
+     * @return 
      * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
     public static StudentState_HR_R_S_SG_U buildStudent() throws Dwo2Exception {
         return new StudentBuilder();
     }
 
-    public interface StudentState_HR_R_S_SG_U extends UserState_HR_R_S_SG_U {
+    public interface StudentState_HR_R_S_SG_U  extends StudentDomainAuthorizer.PublicContext{
 
         public void setStudentModelData(DomStudentModelData data) throws Dwo2Exception;
 
         public DomStudentModelData getStudentModelData(DomScoContextId domScoId) throws Dwo2Exception;
 
     }
-//
-//    protected StudentDomainAuthorizer() {
-//        super();
-//    }
-//
-//    protected StudentDomainAuthorizer(UserDomainAuthorizer userAuth) {
-//        super();
-//        studentCtx = new StudentPersistentContext(userAuth.userCtx);
-//        //schoolAdminTeacherActions = new SchoolAdminTeacherActions();
-//    }
 
-    public interface Build {
-//
-//        PersistentHasRole getHasRole();
-//
-//        PersistentUser getUser();
-//
-//        PersistentSchool getSchool();
-//
-//        RoleType getRoleType();
-//        
+   public interface PublicContext {
 
+        public StudentDomainAuthorizer.Context getContext();
+
+        public void setContext(StudentDomainAuthorizer.Context context);
     }
-
+   
     /**
      * @return the context
      */

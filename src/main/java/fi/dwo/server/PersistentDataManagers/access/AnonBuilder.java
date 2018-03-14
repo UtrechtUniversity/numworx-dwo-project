@@ -14,7 +14,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  *
  * @author Gert van der Plas
  */
-class AnonBuilder implements AnonDomainAuthorizer.AnonState, AnonDomainAuthorizer.Build {
+class AnonBuilder implements AnonDomainAuthorizer.AnonState, AnonDomainAuthorizer.PublicContext {
     
     protected AnonDomainAuthorizer instance;
     private AnonActions anonActions = new MySQLAnonActions();
@@ -23,6 +23,16 @@ class AnonBuilder implements AnonDomainAuthorizer.AnonState, AnonDomainAuthorize
         instance = new AnonDomainAuthorizer();
     }
 
+    @Override
+    public AnonDomainAuthorizer.Context getContext() {
+        return instance.getContext();
+    }
+
+    @Override
+    public void setContext(AnonDomainAuthorizer.Context context) {
+        instance.setContext(context);
+    }
+        
     /**
      * Verifies and stores the PersistentUser into the context.
      *
@@ -56,5 +66,5 @@ class AnonBuilder implements AnonDomainAuthorizer.AnonState, AnonDomainAuthorize
         this.instance.setContext(new AnonDomainAuthorizer.Context());
         return this;
     }
-    
+
 }

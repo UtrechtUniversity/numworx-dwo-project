@@ -29,7 +29,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 public class UserDomainAuthorizer {
 
     private static final Logger LOG = Logger.getLogger(UserDomainAuthorizer.class.getName());
-    private Context context;
+    private UserDomainAuthorizer.Context context;
     private UserActions userActions;
 
 //
@@ -206,7 +206,7 @@ public class UserDomainAuthorizer {
         public DomUserFull UpdateAccount(DomUserFull user) throws Dwo2Exception;
     }
 
-    public interface UserState_HR_R_S_SG_U {
+    public interface UserState_HR_R_S_SG_U extends PublicContext{
 
         PersistentUser getUser();
 
@@ -225,20 +225,25 @@ public class UserDomainAuthorizer {
         StudentState_HR_R_S_SG_U buildStudent() throws Dwo2Exception;
     }
     
-    public interface Build {
+   public interface PublicContext {
+
+        public UserDomainAuthorizer.Context getContext();
+
+        public void setContext(UserDomainAuthorizer.Context context);
     }
+    //return any public server info here. For example version info
 
     /**
      * @return the context
      */
-    public Context getContext() {
-        return context;
+    public UserDomainAuthorizer.Context getContext() {
+        return this.context;
     }
 
     /**
      * @param context the context to set
      */
-    public void setContext(Context context) {
+    protected void setContext(UserDomainAuthorizer.Context context) {
         this.context = context;
     }
 

@@ -2,12 +2,8 @@
 package fi.dwo.server.PersistentDataManagers.access;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.commons.persistence.entities.PersistentHasRole;
-import fi.dwo.commons.persistence.entities.PersistentSchool;
-import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import java.text.MessageFormat;
@@ -23,7 +19,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
  *
  * @author plas0006
  */
-class SchoolAdminTeacherBuilder implements SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U, SchoolAdminTeacherDomainAuthorizer.Build {
+class SchoolAdminTeacherBuilder implements SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U {
 
     private static final Logger LOG = Logger.getLogger(SchoolAdminTeacherBuilder.class.getName());
 

@@ -101,25 +101,6 @@ public class SchoolAdminTeacherDomainAuthorizer {
     protected SchoolAdminTeacherDomainAuthorizer() {
         super();
     }
-//
-//    protected SchoolAdminTeacherDomainAuthorizer(UserDomainAuthorizer userAuth) {
-//        super();
-//        schoolAdminTeacherCtx = new SchoolAdminTeacherPersistentContext(userAuth.userCtx);
-//        //schoolAdminTeacherActions = new SchoolAdminTeacherActions();
-//    }
-
-    public interface Build {
-//
-//        PersistentHasRole getHasRole();
-//
-//        PersistentUser getUser();
-//
-//        PersistentSchool getSchool();
-//
-//        RoleType getRoleType();
-//        
-
-    }
 
     /**
      * @return the context

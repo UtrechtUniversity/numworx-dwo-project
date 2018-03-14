@@ -20,23 +20,27 @@ public class AnonDomainAuthorizer {
     private static final Logger LOG = Logger.getLogger(AnonDomainAuthorizer.class.getName());
 
     private Context context;
-        
-    /** Creates a builder and initializes a context if given. */    
+
+    /**
+     * Creates a builder and initializes a context if given.
+     */
     public static AnonState build() throws Dwo2Exception {
-        AnonBuilder builder =  new AnonBuilder();
+        AnonBuilder builder = new AnonBuilder();
         return builder.init();
     }
 
-    /** Ensure that it is not called other than from the builder. */
+    /**
+     * Ensure that it is not called other than from the builder.
+     */
     protected AnonDomainAuthorizer() {
         //TODO inject executror
     }
-    
 
     public static class Context {
+
         private AnonPersistentContext anonCtx;
-        
-        public Context(){
+
+        public Context() {
             anonCtx = new AnonPersistentContext();
         }
 
@@ -54,7 +58,7 @@ public class AnonDomainAuthorizer {
             this.anonCtx = anonCtx;
         }
     }
-    
+
     protected static class AnonPersistentContext {
 
         protected AnonPersistentContext() {
@@ -75,22 +79,25 @@ public class AnonDomainAuthorizer {
         public boolean LoginCheck(DomLoginCheck check) throws Dwo2Exception;
     }
 
-    public interface Build {
-        //return any public server info here. For example version info
+    public interface PublicContext {
+
+        public Context getContext();
+
+        public void setContext(Context context);
     }
+    //return any public server info here. For example version info
 
     /**
      * @return the context
      */
-    public Context getContext() {
-        return context;
+    protected Context getContext() {
+        return this.context;
     }
 
     /**
      * @param context the context to set
      */
-    public void setContext(Context context) {
+    protected void setContext(Context context) {
         this.context = context;
     }
-
 }

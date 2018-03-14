@@ -29,8 +29,8 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
  *
  * @author Gert van der Plas
  */
-class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_U, UserDomainAuthorizer.UserState_HR_R_S_SG_U,
-        UserDomainAuthorizer.Build {
+class UserBuilder implements UserDomainAuthorizer.UserState_U, UserDomainAuthorizer.UserState_HR_R_S_SG_U
+        {
 
     private static final Logger LOG = Logger.getLogger(UserBuilder.class.getName());
 
@@ -72,6 +72,7 @@ class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_
         PersistentHasRole phr = null;
         //determine default hasRole.
         PersistentHasRolePK phrPK;
+        this.instance.getContext().getUserCtx().setSchoolGroup(this.instance.getContext().getUserCtx().getUser().getPersistentSchoolGroup());
         phrPK = new PersistentHasRolePK(this.instance.getContext().getUserCtx().getUser().getId(), this.instance.getContext().getUserCtx().getUser().getPersistentSchoolGroup().getSchoolGroupID());
         return setHasRole(phrPK);
     }
@@ -111,8 +112,9 @@ class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_
             LOG.log(Level.SEVERE, msg);
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
         }
+        instance.getContext().getUserCtx().setSchoolGroup(phr.getSchoolGroup());
         instance.getContext().getUserCtx().school = phr.getSchoolGroup().getSchool();
-        this.instance.getContext().getUserCtx().setHasRole(phr);
+        instance.getContext().getUserCtx().setHasRole(phr);
         instance.getContext().getUserCtx().setRoleType(RoleType.values()[phr.getSchoolGroup().getRole().getGroupID().intValue()]);
         return this;
     }
@@ -251,4 +253,14 @@ class UserBuilder extends AnonBuilder implements UserDomainAuthorizer.UserState_
         this.instance.setContext(new UserDomainAuthorizer.Context(ctx));
     }
 
+
+    @Override
+    public UserDomainAuthorizer.Context getContext() {
+        return instance.getContext();
+    }
+
+    @Override
+    public void setContext(UserDomainAuthorizer.Context context) {
+        instance.setContext(context);
+    }    
 }

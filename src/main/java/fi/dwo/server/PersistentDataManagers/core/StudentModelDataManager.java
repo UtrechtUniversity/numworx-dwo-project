@@ -182,7 +182,7 @@ public class StudentModelDataManager {
             javax.persistence.Query q = em.createNamedQuery("PersistentStudentModelData.findByUniqueKeys");
             q.setParameter("scoID", ctx.getScoID());
             q.setParameter("modelID", ctx.getModelID());
-            q.setParameter("hasRolePK", hasRole.getPersistentHasRolePK());
+            q.setParameter("persistentHasRolePK", hasRole.getPersistentHasRolePK());
             List<PersistentStudentModelData> list = q.getResultList();
             if (list.size() != 1) {
                 LOG.log(Level.FINE, "StudentModelData-manager retrieved {0} PersistentStudentModelData with modelId {1}, hasRole {2} for scoId {3}", new Object[]{list.size(), ctx.getModelID(), hasRole.getPersistentHasRolePK(),ctx.getScoID()});

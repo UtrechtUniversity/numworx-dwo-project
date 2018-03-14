@@ -40,13 +40,14 @@ import org.junit.Test;
 public class StudentBuilderTest {
 
     private static final Logger LOG = Logger.getLogger(StudentBuilderTest.class.getName());
-    
+
     static DatabaseManager dbInstance = null;
 
     public StudentBuilderTest() {
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
     }
-      @BeforeClass
+
+    @BeforeClass
     public static void setUpClass() {
         DwoEmfFactory.setEntityManagerFactory("DWO_TestDB");
         dbInstance = new DatabaseManager();
@@ -67,12 +68,12 @@ public class StudentBuilderTest {
     public void tearDown() {
         dbInstance.ClearDatabase();
     }
+
     /**
      * Test of updateStudentModelData method, of class StudentBuilder.
      */
     @Test
     public void testSetStudentModelData() throws Exception {
-
 
         //Build StudentModelStructure
         DomStudentModelStructure model = new DomStudentModelStructure();
@@ -108,7 +109,7 @@ public class StudentBuilderTest {
                 }
             }
         }
-        
+
         //build RestStudentModelContext
         //scoId =3, schoolId=3, modelId=1, courseId=. userId = 9 "user02"
         DomStudentModelData domData = new DomStudentModelData();
@@ -122,20 +123,31 @@ public class StudentBuilderTest {
         StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser("user02")
                 .setDefaultHasRole()//
                 .buildStudent();
-        try{
-        state.setStudentModelData(domData);
-        }catch(Dwo2Exception e){
-            fail("Exception thrown for Dwo2Exception.");
+        try {
+            //update existing data
+            state.setStudentModelData(domData);
+            fail("There is a unique constraint, that did not work possible a column is NULL (classID?).");
+        } catch (Dwo2Exception e) {
+            //success
         }
-        PersistentStudentModelData data = StudentModelDataManager.findEntity(ScoContextManager.findEntity(3L), state.getHasRole());
+        state = AnonDomainAuthorizer.build().submitUser("user04")
+                .setDefaultHasRole()//
+                .buildStudent();
+        try {
+            //update existing data
+            state.setStudentModelData(domData);
+            //success
+        } catch (Dwo2Exception e) {
+            fail("Something went wrong.");
+        }
+        PersistentStudentModelData data = StudentModelDataManager.findEntity(ScoContextManager.findEntity(3L), state.getContext().getUserCtx().getHasRole());
         assertEquals(data.getModelID().longValue(), 1L);
         assertEquals(data.getScoID().longValue(), 3L);
-        assertEquals(data.getModelDataId().longValue(), 1L);
+        assertEquals(data.getModelDataId().longValue(), 3L);
         //compare input and output
         // TODO review the generated test code and remove the default call to fail.
-      //  fail("The test case is a prototype.");
+        //  fail("The test case is a prototype.");
     }
-
 
     /**
      * Test of getStudentModelData method, of class StudentBuilder.
@@ -143,13 +155,18 @@ public class StudentBuilderTest {
     @Test
     public void testGetStudentModelData() throws Exception {
         System.out.println("getStudentModelData");
-        DomScoContextId domScoId = null;
-        StudentBuilder instance = new StudentBuilder();
-        DomStudentModelData expResult = null;
-        DomStudentModelData result = instance.getStudentModelData(domScoId);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser("user02")
+                .setDefaultHasRole()//
+                .buildStudent();
+        try {
+            DomScoContextId scoId = new DomScoContextId();
+            scoId.setId(PersistentScoContext.buildPersistenceId(3L));
+            state.getStudentModelData(scoId);
+        } catch (Dwo2Exception e) {
+            fail("Did not find matching student model data for a student.");
+        }
+
     }
-    
+
 }
