@@ -47,7 +47,7 @@ import org.eclipse.persistence.annotations.Converter;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PersistentStudentModelData.findByModelDataId", query = "SELECT p FROM PersistentStudentModelData p WHERE p.modelDataId = :modelDataId"),
-    @NamedQuery(name = "PersistentStudentModelData.findByUniqueKeys", query = "SELECT p FROM PersistentStudentModelData p WHERE p.scoID = :scoId and p.modelID = :modelID and p.persistentHasRolePK = :persistentHasRolePK")})
+    @NamedQuery(name = "PersistentStudentModelData.findByUniqueKeys", query = "SELECT p FROM PersistentStudentModelData p WHERE p.scoID = :scoID and p.modelID = :modelID and p.persistentHasRolePK = :persistentHasRolePK")})
 public class PersistentStudentModelData implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -64,11 +64,11 @@ public class PersistentStudentModelData implements Serializable {
     @NotNull
     @Column(name = "modelID", nullable = false)
     private Long modelID;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "schoolID", nullable = false)
-    private Long schoolID;
-    @Basic(optional = false)
+//    @Basic(optional = false)
+//    @NotNull
+//    @Column(name = "schoolID", nullable = false)
+//    private Long schoolID;
+//    @Basic(optional = false)
     @NotNull
     private PersistentHasRolePK persistentHasRolePK;
     @Convert("studentModelScoreConverter")
@@ -200,20 +200,20 @@ public class PersistentStudentModelData implements Serializable {
         data.setScoContextId(dScoId);
         data.setDomStudentModelStructureScore(modelData);
     }
-
-    /**
-     * @return the schoolID
-     */
-    public Long getSchoolID() {
-        return schoolID;
-    }
-
-    /**
-     * @param schoolID the schoolID to set
-     */
-    public void setSchoolID(Long schoolID) {
-        this.schoolID = schoolID;
-    }
+//
+//    /**
+//     * @return the schoolID
+//     */
+//    public Long getSchoolID() {
+//        return schoolID;
+//    }
+//
+//    /**
+//     * @param schoolID the schoolID to set
+//     */
+//    public void setSchoolID(Long schoolID) {
+//        this.schoolID = schoolID;
+//    }
 
     /**
      * @return the modelID
