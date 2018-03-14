@@ -1,4 +1,6 @@
-/** Copyrighted Feb 15, 2018 */
+/**
+ * Copyrighted Feb 15, 2018
+ */
 package fi.dwo.server.rest.jaxrsfilters;
 
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
@@ -15,10 +17,13 @@ import java.util.logging.Logger;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
 import javax.xml.bind.DatatypeConverter;
@@ -53,14 +58,15 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
 
         /**
          * if (principal instanceof DwoUserPrincipal) user principal.getUser();
+         *
          * @return persistentuser
          */
         public PersistentUser getUser() {
             return u;
         }
-        
+
         public String toString() {
-          return getName();
+            return getName();
         }
     }
 
@@ -91,32 +97,45 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
 
         @Override
         public String getAuthenticationScheme() {
-          return scheme;
+            return scheme;
         }
     };
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-
-        final SecurityContext securityContext = requestContext.getSecurityContext();
-// inspect headers, SecurityContext, etc...
-        String authHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-        if (authHeader == null) {
+        if (!requestContext.getUriInfo().getPath().startsWith("secure")) {
+            //public request
             return;
-        }
-        //fetch password if matches
-//        if (authHeader.startsWith("totpkey ")) {
-        if (authHeader.startsWith("Basic ")) {
-            SecurityContext context = validateBasicAuthorization(authHeader.substring("Basic ".length()), securityContext);
-            requestContext.setSecurityContext(context);
-        } else if (authHeader.startsWith("Bearer ")) {
-            //We use our TOTP with username as the bearer token.
-            SecurityContext context = validateTOTPToken(authHeader.substring("Bearer ".length()), securityContext);
-            requestContext.setSecurityContext(context);
         } else {
-            //do nothing
+            //secure access
+            final SecurityContext securityContext = requestContext.getSecurityContext();
+            String authHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+            if (authHeader == null) {
+                //Throw 401
+                throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+                //requestContext.abortWith(Response.status(Status.UNAUTHORIZED).build());
+            }
+            //fetch password if matches
+            if (authHeader.startsWith("Basic ")) {
+                SecurityContext context = validateBasicAuthorization(authHeader.substring("Basic ".length()), securityContext);
+                if(context==null){
+                    throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+    //                requestContext.abortWith(Response.status(Status.UNAUTHORIZED).build());
+                }
+                requestContext.setSecurityContext(context);
+            } else if (authHeader.startsWith("Bearer ")) {
+                //We use our TOTP with username as the bearer token.
+                SecurityContext context = validateTOTPToken(authHeader.substring("Bearer ".length()), securityContext);
+                if(context==null){
+                    throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+  //                  requestContext.abortWith(Response.status(Status.UNAUTHORIZED).build());
+                }
+                requestContext.setSecurityContext(context);
+            } else {
+                    throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+//                requestContext.abortWith(Response.status(Status.UNAUTHORIZED).build());
+            }
         }
-
     }
 
     private SecurityContext validateBasicAuthorization(String authHeader, SecurityContext secCtx) {
@@ -136,7 +155,7 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
             return sc;
         }
         //else error
-        return secCtx;
+        return null;
     }
 
     private SecurityContext validateTOTPToken(String authHeader, SecurityContext secCtx) {
@@ -152,24 +171,24 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
         PersistentUser u = UserManager.findByUserName(authFields[0]);
         List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
         for (PersistentLoginContext l : loginContextList) {
-            if (TOTP.verifyTOTP(authFields[1], DatatypeConverter.printHexBinary(l.getSecretKey()), "8")) {                
-                    SecurityContext sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), secCtx.isSecure(), "BEARER");
-                    return sc;
-                }
+            if (TOTP.verifyTOTP(authFields[1], DatatypeConverter.printHexBinary(l.getSecretKey()), "8")) {
+                SecurityContext sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), secCtx.isSecure(), "BEARER");
+                return sc;
             }
-        return secCtx;
         }
-
-    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
-
-    public static String bytesToHex(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
-        for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
+        return null;
     }
+//
+//    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+//
+//    public static String bytesToHex(byte[] bytes) {
+//        char[] hexChars = new char[bytes.length * 2];
+//        for (int j = 0; j < bytes.length; j++) {
+//            int v = bytes[j] & 0xFF;
+//            hexChars[j * 2] = hexArray[v >>> 4];
+//            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+//        }
+//        return new String(hexChars);
+//    }
 
 }

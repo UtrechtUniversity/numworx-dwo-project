@@ -1,7 +1,5 @@
 package fi.dwo.server.rest;
 
-import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
-import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -12,10 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.entities.RestContext;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 
 /**
  * StudentModel manager for the teacher. Basic operations.
@@ -26,7 +21,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
  * @author G.A.J. van der Plas
  */
 @PermitAll
-@Path("/secure/teacher/studentmodel")
+@Path("/secure/student/studentmodel")
 public class SecuredStudentStudentModelManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredStudentStudentModelManager.class.getName());
