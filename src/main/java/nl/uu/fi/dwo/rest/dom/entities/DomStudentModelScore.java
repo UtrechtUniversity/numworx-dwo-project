@@ -16,7 +16,7 @@ public class DomStudentModelScore<T extends DomStudentModelScore> {
 
     private static final Logger LOG = Logger.getLogger(DomStudentModelScore.class.getName());
 
-    private List<T> children = new ArrayList();
+    private List<T> children = new ArrayList<T>();
     
     private double score=0.0;
     private long count=0;
