@@ -196,7 +196,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
 			<artifactId>formule</artifactId>
-			<version>0.0.10-SNAPSHOT</version>
+			<version>0.0.10</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.inject</groupId>
@@ -212,7 +212,7 @@
 		<dependency>
 			<groupId>nl.numworx.gwtpatch</groupId>
 			<artifactId>gwtpatch</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.2</version>
 		</dependency>
 	</dependencies>
 	<parent>
