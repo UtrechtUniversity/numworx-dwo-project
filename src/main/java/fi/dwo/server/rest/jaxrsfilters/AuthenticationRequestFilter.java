@@ -27,7 +27,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
 import javax.xml.bind.DatatypeConverter;
-import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+
 import nl.uu.fi.dwo.rest.security.TOTP;
 
 /**
@@ -41,36 +41,7 @@ import nl.uu.fi.dwo.rest.security.TOTP;
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationRequestFilter implements ContainerRequestFilter {
 
-    public static class DwoUserPrincipal implements Principal {
-
-        private PersistentUser u;
-        private RoleType role;
-
-        DwoUserPrincipal(PersistentUser u) {
-            this.u = u;
-            this.role = null;
-        }
-
-        @Override
-        public String getName() {
-            return u.getUsername();
-        }
-
-        /**
-         * if (principal instanceof DwoUserPrincipal) user principal.getUser();
-         *
-         * @return persistentuser
-         */
-        public PersistentUser getUser() {
-            return u;
-        }
-
-        public String toString() {
-            return getName();
-        }
-    }
-
-    public static class DwoUserSecurityContext implements SecurityContext {
+    private static class DwoUserSecurityContext implements SecurityContext {
 
         DwoUserPrincipal u;
         boolean secure;

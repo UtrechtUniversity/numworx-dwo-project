@@ -28,8 +28,7 @@ import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
-import fi.dwo.server.rest.jaxrsfilters.AssertUser;
-import fi.dwo.server.rest.jaxrsfilters.AuthenticationRequestFilter.DwoUserPrincipal;
+import fi.dwo.server.rest.jaxrsfilters.DwoUserPrincipal;
 
 import java.security.Principal;
 import java.util.List;
@@ -69,7 +68,6 @@ import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
  */
 @PermitAll
 @Path("/secure/user/account")
-@AssertUser
 public class SecuredUserAccountManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredUserAccountManager.class.getName());
@@ -94,7 +92,7 @@ public class SecuredUserAccountManager {
             if (p instanceof DwoUserPrincipal) 
               user = ((DwoUserPrincipal) p).getUser();
             else 
-              user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+              user = UserManager.findByUserName(p.getName());
             LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "User " + sc.getUserPrincipal() + ": Unexpected exception", e);

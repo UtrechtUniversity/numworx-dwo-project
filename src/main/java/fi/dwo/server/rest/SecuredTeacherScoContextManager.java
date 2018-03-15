@@ -15,7 +15,6 @@ import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.ImageManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
-import fi.dwo.server.rest.jaxrsfilters.AssertUser;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,7 +46,6 @@ import nl.uu.fi.dwo.rest.entities.RestScoContextFull;
  */
 @PermitAll
 @Path("/secure/teacher/scoContext")
-@AssertUser
 public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredTeacherScoContextManager.class.getName());
