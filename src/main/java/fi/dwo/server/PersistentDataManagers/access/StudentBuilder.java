@@ -5,14 +5,17 @@ package fi.dwo.server.PersistentDataManagers.access;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -78,7 +81,7 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
             throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
         }
         //Sco has modelId
-        if (pScoContext.getModelID() == null || data.getModelId()== null || pScoContext.getModelID().longValue() != (MySQLPersistenceId.getNativeId(data.getModelId()).longValue()))  {
+        if (pScoContext.getModelID() == null || data.getModelId() == null || pScoContext.getModelID().longValue() != (MySQLPersistenceId.getNativeId(data.getModelId()).longValue())) {
             msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Can't update, modelID not given.", new Object[]{instance.getContext().getUserCtx().getUser().getUsername()});
             LOG.log(Level.WARNING, msg);
             throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
@@ -149,6 +152,11 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
     @Override
     public void setContext(StudentDomainAuthorizer.Context context) {
         instance.setContext(context);
-    }    
-}
+    }
 
+    @Override
+    public DomStudentModelData getStudentModelData(DomStudentModelContextId domModelId) throws Dwo2Exception {
+        PersistentStudentModelContext pStudentModel = StudentModelContextManager.findEntity(MySQLPersistenceId.getNativeId(domModelId));
+        return instance.getStudentActions().getStudentModelData(instance.getContext(), pStudentModel);
+    }
+}

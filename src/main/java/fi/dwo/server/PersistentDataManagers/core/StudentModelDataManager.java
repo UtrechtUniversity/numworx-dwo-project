@@ -2,6 +2,7 @@ package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
@@ -197,5 +198,9 @@ public class StudentModelDataManager {
         } finally {
             em.close();
         }
+    }
+
+    public static void findEntities(PersistentStudentModelContext pStudentModel, PersistentHasRole hasRole) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

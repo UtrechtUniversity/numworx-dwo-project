@@ -4,13 +4,18 @@
 package fi.dwo.server.PersistentDataManagers.actions;
 
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
+import static fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager.findEntities;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
@@ -51,6 +56,18 @@ public class MySQLStudentActions implements StudentActions {
     @Override
     public PersistentStudentModelData getStudentModelData(StudentDomainAuthorizer.Context ctx, PersistentScoContext pScoContext) throws Dwo2Exception {
         return StudentModelDataManager.findEntity(pScoContext, ctx.getUserCtx().getHasRole());
+    }
+
+    @Override
+    public DomStudentModelData getStudentModelData(StudentDomainAuthorizer.Context ctx, PersistentStudentModelContext pStudentModel) throws Dwo2Exception {
+        DomStudentModelStructureScore score = pStudentModel.buildDomStudentModelContext().getModelStructure().generateStudentModelStructureScore();
+        //get list of al StudentModelData
+//        List<PersistentStudentModelData> StudentModelDataManager.findEntities(pStudentModel,ctx.getUserCtx().getHasRole());
+//        //aggregate data
+//        
+//        //build result with no index in separate type
+return null;
+//        StudentModelDataManager.findEntity(pStudentModel);
     }
 
 }

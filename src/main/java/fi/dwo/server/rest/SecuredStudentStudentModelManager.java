@@ -10,7 +10,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
 
 /**
  * StudentModel manager for the teacher. Basic operations.
@@ -40,6 +42,21 @@ public class SecuredStudentStudentModelManager {
         return new ArrayList<DomStudentModelContext>();
     }
 
+    /**
+     * Returns the list of student models in the school.
+     *
+     * @param sc
+     * @param context
+     * @return
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getScore")
+    public DomStudentModelData getStudentModelScore(@Context SecurityContext sc, RestStudentModelContextId restModelId) {
+        
+        return null;
+    }
+    
 //
 //    /**
 //     * Returns the school data to be displayed.
