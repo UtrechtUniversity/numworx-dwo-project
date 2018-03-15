@@ -86,7 +86,9 @@ public class StrokeChecker {
 			checkers.add(wo.hasDirection(90, 90, 10, 19, 4));
 			checkers.add(wo.hasDirection(180, 90, 15, 19, 2));
 			
-			checkers.add(wo.hasCloseDistance(20, wo, 0, 1, 19, 20));
+			checkers.add(!wo.hasDirection(0, 60, 16, 19, 2));
+			
+			checkers.add(wo.hasCloseDistance(30, wo, 0, 1, 19, 20));
 			checkers.add(wo.hasIncreasingAngle(10,2,19));
 		}
 		if("1".equals(teken)) {
@@ -122,9 +124,9 @@ public class StrokeChecker {
 		}
 		if("6".equals(teken)) {
 			checkers.add(wo.hasDirection(240, 50, 1, 12, 7));
-			checkers.add(wo.hasDirection(0, 60, 8, 15, 3));
+			checkers.add(wo.hasDirection(0, 90, 8, 15, 3));
 			checkers.add(wo.hasDirection(90, 90, 12, 19, 2));
-			checkers.add(wo.hasDirection(180, 90, 15, 19, 2));
+			checkers.add(wo.hasDirection(180, 90, 15, 19, 1));
 			checkers.add(wo.hasCloseDistance(25, wo, 19, 20, 5, 10));
 			checkers.add(!wo.hasSharpAngle(180, 30, 5, 15));
 		}
@@ -163,12 +165,12 @@ public class StrokeChecker {
 			checkers.add(wo.hasDirection(180, 90, 1, 5, 3));
 			checkers.add(wo.hasDirection(270, 90, 2, 7, 4));
 			checkers.add(wo.hasDirection(0, 90, 6, 11, 3));
-			checkers.add(wo.hasDirection(80, 50, 8, 13, 4));
-			checkers.add(wo.hasDirection(270, 40, 13, 19, 4));
+			checkers.add(wo.hasDirection(80, 50, 8, 13, 3));
+			checkers.add(wo.hasDirection(270, 40, 13, 19, 3));
 			
-			checkers.add(wo.hasSharpAngle(180, 20, 10, 17));
-			checkers.add(wo.hasCloseDistance(25, wo, 0, 1, 8, 16));
-			checkers.add(wo.hasCloseYDistance(20, wo, 3, 10, 19, 20));
+			checkers.add(wo.hasSharpAngle(180, 30, 10, 19));
+			checkers.add(wo.hasCloseDistance(30, wo, 0, 1, 8, 16));
+			checkers.add(wo.hasCloseYDistance(25, wo, 3, 10, 19, 20));
 			checkers.add(!wo.hasYDistance(-50, 25, wo, 0, 1, 12, 20));
 		}
 		if("b".equals(teken)) {
@@ -337,12 +339,12 @@ public class StrokeChecker {
 			checkers.add(wo.hasCloseYDistance(20, wo, 0, 1, 8, 16));
 			//checkers.add(!wo.hasYDistance(-50, 25, wo, 0, 1, 12, 20));
 		}
-		if("v".equals(teken)) {
+		if("v".equals(teken)) {logging = true;
 			checkers.add(wo.hasDirection(270, 60, 1, 10, 5));
 			checkers.add(wo.hasDirection(60, 40, 10, 19, 6));
 			checkers.add(wo.hasCloseYDistance(30, wo, 0, 1, 19, 20));
 			checkers.add(wo.hasIncreasingAngle(30,7,13));
-			checkers.add(!wo.hasCloseDistance(25, wo, 0, 2, 16, 19));
+			checkers.add(!wo.hasCloseDistance(35, wo, 0, 1, 19, 20));
 			checkers.add(!wo.hasDirection(315, 20, 1, 10, 7));
 			checkers.add(!wo.hasDirection(35, 20, 10, 19, 7));
 			checkers.add(!wo.hasDirection(270, 50, 10, 13, 2));
@@ -381,9 +383,9 @@ public class StrokeChecker {
 			checkers.add(wo.hasDirection(240, 30, 5, 17, 5));
 			checkers.add(wo.hasDirection(0, 40, 15, 19, 2));
 			checkers.add(!wo.hasDirection(90, 90, 7, 13, 4));
-			checkers.add(wo.hasSharpAngle(-150, 30, 0, 10));
+			checkers.add(wo.hasSharpAngle(-150, 30, 2, 10));
 		}
-		if("of".equals(teken)) {
+		if(" of ".equals(teken)) {
 			checkers.add(wo.hasDirection(315, 20, 1, 10, 7));
 			checkers.add(wo.hasDirection(45, 20, 10, 19, 7));
 		}

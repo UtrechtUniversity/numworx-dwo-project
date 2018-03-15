@@ -152,12 +152,12 @@ public class TwoStrokeMatcher {
 				
 		// j 
 		if (checkStrokes(woLast,"jH1",wo,"jH2"))
-			if(woLast.hasYDistance(-20,15,wo,0,1,0,1) && woLast.hasCloseXDistance(10,wo,0,1,0,1))
+			if(woLast.hasYDistance(-30,25,wo,0,1,0,1) && woLast.hasCloseXDistance(20,wo,0,1,0,1))
 				return new WriteObject("j", woLast, wo);	
 		
 		// i
 		if (checkStrokes(woLast,"iH1",wo,"iH2"))
-			if(woLast.hasYDistance(-20,15,wo,0,1,0,1) && woLast.hasCloseXDistance(10,wo,0,1,0,1))
+			if(woLast.hasYDistance(-30,25,wo,0,1,0,1) && woLast.hasCloseXDistance(20,wo,0,1,0,1))
 				return new WriteObject("i", woLast, wo);
 		
 		return null;

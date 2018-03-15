@@ -57,7 +57,7 @@ public class TwoStrokeChecker {
 		//y
 		if("yH1".equals(teken)) {
 			checkers.add(wo.hasDirection(280, 30, 1, 15, 8));
-			checkers.add(wo.hasDirection(300, 40, 10, 19, 4));
+			checkers.add(wo.hasDirection(300, 40, 10, 18, 4));
 		}
 		if("yH2".equals(teken)) {
 			checkers.add(wo.hasDirection(240, 30, 1, 15, 8));
@@ -167,18 +167,18 @@ public class TwoStrokeChecker {
 		
 		//=
 		if("=H1".equals(teken)) {
-			checkers.add(wo.hasDirection(0, 20, 1, 19, 14));
+			checkers.add(wo.hasDirection(0, 30, 1, 19, 14));
 			checkers.add(!wo.hasDirection(300, 25, 1, 3, 1)); // ivm lang wortelteken
 			checkers.add(!wo.hasDirection(70, 15, 2, 7, 2));
 		}
 		if("=H1+".equals(teken)) {
-			checkers.add(wo.hasDirection(180, 20, 1, 19, 16));
+			checkers.add(wo.hasDirection(180, 30, 1, 19, 16));
 		}
 		if("=H2".equals(teken)) {
-			checkers.add(wo.hasDirection(0, 20, 1, 19, 14));
+			checkers.add(wo.hasDirection(0, 30, 1, 19, 14));
 		}
 		if("=H2+".equals(teken)) {
-			checkers.add(wo.hasDirection(180, 20, 1, 19, 16));
+			checkers.add(wo.hasDirection(180, 30, 1, 19, 16));
 		}
 		
 		//f
@@ -207,16 +207,16 @@ public class TwoStrokeChecker {
 		
 		//j
 		if("jH1".equals(teken)) {
-			checkers.add(wo.hasDirection(260, 25, 1, 15, 10));
-			checkers.add(wo.hasDirection(180, 45, 15, 19, 2));
+			checkers.add(wo.hasDirection(260, 40, 1, 15, 8));
+			checkers.add(wo.hasDirection(180, 55, 15, 19, 2));
 		}
 		if("jH2".equals(teken)) {
 			checkers.add(".".equals(wo.getTeken()));
 		}
 		
-		//j
-		if("iH1".equals(teken)) {
-			checkers.add(wo.hasDirection(260, 25, 1, 15, 10));
+		//i
+		if("iH1".equals(teken)) {logging = true;
+			checkers.add(wo.hasDirection(260, 40, 1, 15, 8));
 			checkers.add(wo.hasDirection(0, 90, 15, 19, 2));
 		}
 		if("iH2".equals(teken)) {

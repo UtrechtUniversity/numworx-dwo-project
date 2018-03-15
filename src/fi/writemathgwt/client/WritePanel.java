@@ -235,6 +235,20 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 //			logger.info("Box "+ i + " = ["+box.x + ", "+ box.y+ ", "+ box.width +", "+ box.height + "]");
 //			tekenRechthoek(breukBoxes.get(i));			
 //		}
+		
+		//g.scale(5.0,5.0);
+		//g.translate(300,0);
+		if(lastObject!=null) {
+			
+			double factor = 300.0 / Math.max(lastObject.getBox().width,lastObject.getBox().height);
+			double x = 500 - lastObject.getBox().x;
+			double y = 50 - lastObject.getBox().y;
+			lastObject.draw(g,(int)x, (int)y, factor);
+		}
+				
+		//g.scale(0.2,0.2);
+		//g.translate(-300,0);
+		
 	}
 	
 	public String parseFormule() {		
@@ -1234,7 +1248,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 					lastLastObject = null;
 				}
 				else
-				{	wo = new WriteObject("-",wo.getPoints());
+				{	wo = new WriteObject("-",wo.getIntPoints());
 					lastLastObject = lastObject;
 					lastObject = wo;
 					writeObjects.add(wo);
@@ -1311,10 +1325,10 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	}
 	
 	protected void addWriteObject(String teken, ArrayList<Point> points) {
-//		logger.info("addWriteObject :: "+ teken + ", #Points = "+ points.size());
+	//	logger.info("addWriteObject :: "+ teken + ", #Points = "+ points.size());
 		WriteObject wo = new WriteObject(teken, points);
-		lastLastObject = lastObject;
-		lastObject = wo;
+		//lastLastObject = lastObject;
+		//lastObject = wo;
 		writeObjects.add(wo);
 	}
 	
@@ -1322,8 +1336,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		WriteObject wo1 = new WriteObject(teken, points1);
 		WriteObject wo2 = new WriteObject(teken, points2);
 		WriteObject wo = new WriteObject(teken, wo1, wo2);
-		lastLastObject = lastObject;
-		lastObject = wo;
+		//lastLastObject = lastObject;
+		//lastObject = wo;
 		writeObjects.add(wo);
 	}
 	
@@ -1332,8 +1346,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		WriteObject wo2 = new WriteObject(teken, points2);
 		WriteObject wo3 = new WriteObject(teken, points3);
 		WriteObject wo = new WriteObject(teken, wo1, wo2, wo3);
-		lastLastObject = lastObject;
-		lastObject = wo;
+		//lastLastObject = lastObject;
+		//lastObject = wo;
 		writeObjects.add(wo);
 	}
 	

@@ -93,22 +93,27 @@ public class WriteObject {
 			rawPoints.add(new DoublePoint(points.get(i).x, points.get(i).y));
 			size = Math.max(size, distance(points.get(0), points.get(i)));
 		}
-		//doublePoints = averageSmooth(doublePoints);
-		makeBox(points);
-		
-		// try to standarize
-		if (doublePoints.size() >= 20) {	
-			ArrayList<DoublePoint> tempDoublePoints = standardize(doublePoints);
-			if (tempDoublePoints.size() >= 20)
-				doublePoints = tempDoublePoints;
-		}
 		
 		int dpSize = doublePoints.size();
-		while (dpSize < 20)
+		while (dpSize < 25)
 		{	
 			doublePoints = insertPoint(doublePoints);
 			dpSize = doublePoints.size();
 		}
+		
+		doublePoints = averageSmooth(doublePoints);
+		rawPoints = averageSmooth(rawPoints);
+		
+		makeBox(points);
+		
+		// try to standarize
+//		if (doublePoints.size() >= 20) {	
+//			ArrayList<DoublePoint> tempDoublePoints = standardize(doublePoints);
+//			if (tempDoublePoints.size() >= 20)
+//				doublePoints = tempDoublePoints;
+//		}
+		
+		
 	}
 	
 	public ArrayList<DoublePoint> averageSmooth(ArrayList<DoublePoint> doublePoints)
@@ -148,6 +153,7 @@ public class WriteObject {
 		this.points = new ArrayList<Point>();
 		
 		doublePoints = new ArrayList<DoublePoint>();
+		
 		rawPoints = new ArrayList<DoublePoint>();
 		double size = 0;
 		for(int i = 0 ; i < points.size() ; i++) 
@@ -157,10 +163,26 @@ public class WriteObject {
 			rawPoints.add(new DoublePoint(points.get(i).x, points.get(i).y));
 			size = Math.max(size, distance(points.get(0), points.get(i)));
 		}
-		//doublePoints = averageSmooth(doublePoints);
+		
+		int dpSize = doublePoints.size();
+		while (dpSize < 30)
+		{	
+			doublePoints = insertPoint(doublePoints);
+			dpSize = doublePoints.size();
+		}
+		
+		for(int i = 0 ; i < doublePoints.size() ; i++) 
+		{
+			logger.info("punten"+i+": "+doublePoints.get(i).getX()+" , "+doublePoints.get(i).getY());
+		}
+		
+		logger.info("doublepoints length: " +doublePoints.size() );
+		doublePoints = averageSmooth(doublePoints);
+		rawPoints = averageSmooth(rawPoints);
+		logger.info("doublepoints length: " +doublePoints.size() );
 		makeBox(points);
 		
-		if (size < 3) 
+		if (size < 5) 
 		{
 			teken = ".";
 			parsePoints = new ArrayList<DoublePoint>();
@@ -176,18 +198,13 @@ public class WriteObject {
 		} 
 			
 		// try to standarize
-		if (doublePoints.size() >= 20) {	
-			ArrayList<DoublePoint> tempDoublePoints = standardize(doublePoints);
-			if (tempDoublePoints.size() >= 20)
-				doublePoints = tempDoublePoints;
-		}
+//		if (doublePoints.size() >= 20) {	
+//			ArrayList<DoublePoint> tempDoublePoints = standardize(doublePoints);
+//			if (tempDoublePoints.size() >= 20)
+//				doublePoints = tempDoublePoints;
+//		}
 		
-		int dpSize = doublePoints.size();
-		while (dpSize < 20)
-		{	
-			doublePoints = insertPoint(doublePoints);
-			dpSize = doublePoints.size();
-		}
+		logger.info("doublepoints length na standadize: " +doublePoints.size() );
 			
 		if (!cNewStrokmatcher) { // if old parse after standardize
 			teken = parse(doublePoints);
@@ -208,17 +225,20 @@ public class WriteObject {
 		
 		makeBox(points);
 		doublePoints = new ArrayList<DoublePoint>();
-		parsePoints = new ArrayList<DoublePoint>();
+		//parsePoints = new ArrayList<DoublePoint>();
 		rawPoints = new ArrayList<DoublePoint>();
 		for(int i = 0 ; i <points.size() ; i++) {
 //			logger.info("new Point added -" +i +"- X="+points.get(i).getDoublePoint().getX() +
 //					",Y="+points.get(i).getDoublePoint().getY());
 			doublePoints.add(points.get(i).getDoublePoint());
 			rawPoints.add(points.get(i).getDoublePoint());
-			parsePoints.add(points.get(i).getDoublePoint());
+			//parsePoints.add(points.get(i).getDoublePoint());
 		}
 		
-		parsePoints = standardizeToLength(parsePoints);
+		doublePoints = averageSmooth(doublePoints);
+		rawPoints = averageSmooth(rawPoints);
+		
+		parsePoints = standardizeToLength(doublePoints);
 		this.teken = teken;
 	}
 	
@@ -228,16 +248,18 @@ public class WriteObject {
 		
 		makeBox(points);
 		doublePoints = new ArrayList<DoublePoint>();
-		parsePoints = new ArrayList<DoublePoint>();
+		//parsePoints = new ArrayList<DoublePoint>();
 		rawPoints = new ArrayList<DoublePoint>();
 		for(int i = 0 ; i <points.size() ; i++) {
 //			logger.info("new Point added -" +i +"- X="+points.get(i).getDoublePoint().getX() +
 //					",Y="+points.get(i).getDoublePoint().getY());
 			doublePoints.add(points.get(i).getDoublePoint());
 			rawPoints.add(points.get(i).getDoublePoint());
-			parsePoints.add(points.get(i).getDoublePoint());
+			//parsePoints.add(points.get(i).getDoublePoint());
 		}
-		
+		doublePoints = averageSmooth(doublePoints);
+		rawPoints = averageSmooth(rawPoints);
+		parsePoints = standardizeToLength(doublePoints);
 		this.teken = teken;
 	}
 	
@@ -245,27 +267,27 @@ public class WriteObject {
 	public WriteObject(String teken, WriteObject wo1, WriteObject wo2){
 		isTwoStrokeObject = true;
 		
-		ArrayList<Point> wo1Points = wo1.getPoints();
-		ArrayList<Point> wo2Points = wo2.getPoints();
-		ArrayList<Point> wo1RawPoints = wo1.getRawPoints();
-		ArrayList<Point> wo2RawPoints = wo2.getRawPoints();
+		ArrayList<DoublePoint> wo1Points = wo1.getPoints();
+		ArrayList<DoublePoint> wo2Points = wo2.getPoints();
+		ArrayList<DoublePoint> wo1RawPoints = wo1.getRawPoints();
+		ArrayList<DoublePoint> wo2RawPoints = wo2.getRawPoints();
 		twoStrokeGap = wo1RawPoints.size();
 
 		doublePoints = new ArrayList<DoublePoint>();
 		for(int i = 0 ; i <wo1Points.size() ; i++) {
-			doublePoints.add(wo1Points.get(i).getDoublePoint());
+			doublePoints.add(wo1Points.get(i));
 		}
 		for(int i = 0 ; i <wo2Points.size() ; i++) {
-			doublePoints.add(wo2Points.get(i).getDoublePoint());
+			doublePoints.add(wo2Points.get(i));
 		}
 		makeBoxDouble(doublePoints);
 		
 		rawPoints = new ArrayList<DoublePoint>();
 		for(int i = 0 ; i <wo1RawPoints.size() ; i++) {
-			rawPoints.add(wo1RawPoints.get(i).getDoublePoint());
+			rawPoints.add(wo1RawPoints.get(i));
 		}
 		for(int i = 0 ; i <wo2RawPoints.size() ; i++) {
-			rawPoints.add(wo2RawPoints.get(i).getDoublePoint());
+			rawPoints.add(wo2RawPoints.get(i));
 		}
 
 		this.teken = teken;
@@ -274,36 +296,36 @@ public class WriteObject {
 	public WriteObject(String teken, WriteObject wo1, WriteObject wo2,  WriteObject wo3){
 		isThreeStrokeObject = true;
 		
-		ArrayList<Point> wo1Points = wo1.getPoints();
-		ArrayList<Point> wo2Points = wo2.getPoints();
-		ArrayList<Point> wo3Points = wo3.getPoints();
-		ArrayList<Point> wo1RawPoints = wo1.getRawPoints();
-		ArrayList<Point> wo2RawPoints = wo2.getRawPoints();
-		ArrayList<Point> wo3RawPoints = wo3.getRawPoints();
+		ArrayList<DoublePoint> wo1Points = wo1.getPoints();
+		ArrayList<DoublePoint> wo2Points = wo2.getPoints();
+		ArrayList<DoublePoint> wo3Points = wo3.getPoints();
+		ArrayList<DoublePoint> wo1RawPoints = wo1.getRawPoints();
+		ArrayList<DoublePoint> wo2RawPoints = wo2.getRawPoints();
+		ArrayList<DoublePoint> wo3RawPoints = wo3.getRawPoints();
 		threeStrokeGap1 = wo1RawPoints.size();
 		threeStrokeGap2 = threeStrokeGap1 + wo2RawPoints.size();
 
 		doublePoints = new ArrayList<DoublePoint>();
 		for(int i = 0 ; i <wo1Points.size() ; i++) {
-			doublePoints.add(wo1Points.get(i).getDoublePoint());
+			doublePoints.add(wo1Points.get(i));
 		}
 		for(int i = 0 ; i <wo2Points.size() ; i++) {
-			doublePoints.add(wo2Points.get(i).getDoublePoint());
+			doublePoints.add(wo2Points.get(i));
 		}
 		for(int i = 0 ; i <wo3Points.size() ; i++) {
-			doublePoints.add(wo3Points.get(i).getDoublePoint());
+			doublePoints.add(wo3Points.get(i));
 		}
 		makeBoxDouble(doublePoints);
 		
 		rawPoints = new ArrayList<DoublePoint>();
 		for(int i = 0 ; i <wo1RawPoints.size() ; i++) {
-			rawPoints.add(wo1RawPoints.get(i).getDoublePoint());
+			rawPoints.add(wo1RawPoints.get(i));
 		}
 		for(int i = 0 ; i <wo2RawPoints.size() ; i++) {
-			rawPoints.add(wo2RawPoints.get(i).getDoublePoint());
+			rawPoints.add(wo2RawPoints.get(i));
 		}
 		for(int i = 0 ; i <wo3RawPoints.size() ; i++) {
-			rawPoints.add(wo3RawPoints.get(i).getDoublePoint());
+			rawPoints.add(wo3RawPoints.get(i));
 		}
 
 		this.teken = teken;
@@ -316,7 +338,16 @@ public class WriteObject {
 	}
 	
 	//OK
-	public ArrayList<Point> getPoints() 
+	public ArrayList<DoublePoint> getPoints() 
+	{
+		ArrayList<DoublePoint> points = new ArrayList<DoublePoint>();
+		for(int i = 0 ; i < doublePoints.size() ; i++) {
+			points.add(doublePoints.get(i));
+		}
+		return points;
+	}
+	
+	public ArrayList<Point> getIntPoints() 
 	{
 		ArrayList<Point> points = new ArrayList<Point>();
 		for(int i = 0 ; i < doublePoints.size() ; i++) {
@@ -325,20 +356,20 @@ public class WriteObject {
 		return points;
 	}
 	
-	public ArrayList<Point> getParsePoints() 
+	public ArrayList<DoublePoint> getParsePoints() 
 	{
-		ArrayList<Point> points = new ArrayList<Point>();
+		ArrayList<DoublePoint> points = new ArrayList<DoublePoint>();
 		for(int i = 0 ; i < parsePoints.size() ; i++) {
-			points.add(parsePoints.get(i).getPoint());
+			points.add(parsePoints.get(i));
 		}
 		return points;
 	}
 	
-	public ArrayList<Point> getRawPoints() 
+	public ArrayList<DoublePoint> getRawPoints() 
 	{
-		ArrayList<Point> points = new ArrayList<Point>();
+		ArrayList<DoublePoint> points = new ArrayList<DoublePoint>();
 		for(int i = 0 ; i < rawPoints.size() ; i++) {
-			points.add(rawPoints.get(i).getPoint());
+			points.add(rawPoints.get(i));
 		}
 		return points;
 	}
@@ -473,6 +504,9 @@ public class WriteObject {
 //	}
 	
 	public void draw(Context2d g, int shiftX, int shiftY) {	
+		draw(g,shiftX,shiftY,1);
+	}
+	public void draw(Context2d g, int shiftX, int shiftY, double factor) {	
 		g.setStrokeStyle(CssColor.make(0, 0, 0));
 //		logger.info("Teken object : "+ teken);
 		if (rawPoints.size() > 0) {
@@ -510,7 +544,10 @@ public class WriteObject {
 					if(oldMatchWrong)
 						g.setStrokeStyle(CssColor.make(200, 0, 200));
 					g.beginPath();
-					g.arc(parsePoints.get(j).getX()+shiftX, parsePoints.get(j).getY()+shiftY, 2, 0, 2* Math.PI);
+					double x = factor*(parsePoints.get(j).getX() - box.x)+box.x+shiftX;
+					double y = factor*(parsePoints.get(j).getY() - box.y)+box.y+shiftY;
+					g.arc(x, y, 2, 0, 2* Math.PI);
+					//g.arc(parsePoints.get(j).getX()+shiftX, parsePoints.get(j).getY()+shiftY, 1, 0, 1* Math.PI);
 					g.closePath();
 					g.fill();
 					g.stroke();
@@ -527,18 +564,31 @@ public class WriteObject {
 			if(oldMatchWrong)
 				g.setStrokeStyle(CssColor.make(200, 0, 200));
 			g.beginPath();
-			g.moveTo(rawPoints.get(0).getX()+shiftX, rawPoints.get(0).getY()+shiftY);
+			
+			double x = factor*(rawPoints.get(0).getX() - box.x)+box.x+shiftX;
+			double y = factor*(rawPoints.get(0).getY() - box.y)+box.y+shiftY;
+			g.moveTo(x, y);
+			//g.moveTo(rawPoints.get(0).getX()+shiftX, rawPoints.get(0).getY()+shiftY);
 			
 			for (int j = 1; j <rawPoints.size(); j++) {	
 				if ((!isTwoStrokeObject() || isTwoStrokeObject() && twoStrokeGap!= j)
 						&& (!isThreeStrokeObject() || isThreeStrokeObject() && threeStrokeGap1!= j && threeStrokeGap2!= j)) {
-					g.lineTo(rawPoints.get(j).getX()+shiftX, rawPoints.get(j).getY()+shiftY);
+					x = factor*(rawPoints.get(j).getX() - box.x)+box.x+shiftX;
+					y = factor*(rawPoints.get(j).getY() - box.y)+box.y+shiftY;
+					g.lineTo(x, y);
+					//g.lineTo(factor*rawPoints.get(j).getX()+shiftX, factor*rawPoints.get(j).getY()+shiftY);
 				} else { // skip gaps for two-strokes
-					g.moveTo(rawPoints.get(j).getX()+shiftX, rawPoints.get(j).getY()+shiftY);
+					x = factor*(rawPoints.get(j).getX() - box.x)+box.x+shiftX;
+					y = factor*(rawPoints.get(j).getY() - box.y)+box.y+shiftY;
+					g.moveTo(x, y);
+					//g.moveTo(rawPoints.get(j).getX()+shiftX, rawPoints.get(j).getY()+shiftY);
 					if(teken.equals("i") || teken.equals("j")) {
 						g.stroke();
 						g.beginPath();
-						g.arc(rawPoints.get(j).getX()+shiftX, rawPoints.get(j).getY()+shiftY, 2, 0, 2* Math.PI);
+						 x = factor*(rawPoints.get(j).getX() - box.x)+box.x +shiftX;
+						 y = factor*(rawPoints.get(j).getY() - box.y)+box.y +shiftY;
+						g.arc(x, y, 2, 0, 2* Math.PI);
+						//g.arc(factor*rawPoints.get(j).getX()+shiftX, factor*rawPoints.get(j).getY()+shiftY, 2, 0, 2* Math.PI);
 						g.closePath();
 						g.fill();
 						g.stroke();
@@ -688,6 +738,7 @@ public class WriteObject {
 			// hier nog een smoother?			
 			doublePoints = standardizeToLength(doublePoints);
 		}
+		logger.info("na standardizeToLength doublepoint size:"+doublePoints.size());
 		parsePoints = deepCopy(doublePoints);
 		
 		String gevondenTeken = OneStrokeMatcher.findTeken(this);
@@ -822,6 +873,12 @@ public class WriteObject {
 			else 
 				lengthRest += lengthOld;
 		}
+		if(pointsNew.size()<standardizeLengthNumber-1) {
+			double x = (pointsNew.get(pointsNew.size()-1).getX() + doublePoints.get(doublePoints.size()-1).getX())/2;
+			double y = (pointsNew.get(pointsNew.size()-1).getY() + doublePoints.get(doublePoints.size()-1).getY())/2;
+			pointsNew.add(new DoublePoint(x,y));
+		}
+			
 		pointsNew.add(doublePoints.get(doublePoints.size()-1));
 		return pointsNew;
 	}
