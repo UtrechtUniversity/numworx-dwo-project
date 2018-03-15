@@ -9,12 +9,16 @@ import java.util.Set;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 
+
+
 public class WriteObject {
 	private static Logger logger = Logger.getLogger("WriteObject");
 
 	private final static boolean cNewStrokmatcher = true;
 	static int newTekenSet = 0;
 	public static HashMap<String, int[]>  samples;
+	
+	
  	
 	//OK
 	public static void initSamples(int tekenSet) {
@@ -23,12 +27,20 @@ public class WriteObject {
 		samples = Samples20.init(tekenSet);
 	}
 	
+	public boolean newMatch = false;
+	public boolean oldMatch = false;
+	public boolean newMatchWrong = false;
+	public boolean oldMatchWrong = false;
 	private boolean isTwoStrokeObject;
 	private int twoStrokeGap;
+	private boolean isThreeStrokeObject;
+	private int threeStrokeGap1;
+	private int threeStrokeGap2;
 	private ArrayList<DoublePoint> doublePoints;
 	private ArrayList<DoublePoint> parsePoints;
 	private ArrayList<DoublePoint> rawPoints;
 	private Rectangle box;
+	private int boxDiagonal;
 	int boxOffset = 2;
 	private String teken;
 	
@@ -52,31 +64,110 @@ public class WriteObject {
 	String teken2 = "null";
 	String teken3 = "null";
 	String teken4 = "null";
+	String teken5 = "null";
+	String teken6 = "null";
 	
 	StrokeMatcherWrapper newStrokeMatcher;
+	public ArrayList<Point> points;
 	
-	//OK
-	public WriteObject(ArrayList<Point> points) {
+	public WriteObject(boolean fromRef, ArrayList<Point> points) {
 		isTwoStrokeObject = false;
+		isThreeStrokeObject = false;
 		twoStrokeGap = 0;
+		threeStrokeGap1 = 0;
+		threeStrokeGap2 = 0;
+		
 		if ( cNewStrokmatcher ) {
 			newStrokeMatcher = new StrokeMatcherWrapper(newTekenSet);
 		}
+		
+		this.points = new ArrayList<Point>();
 		
 		doublePoints = new ArrayList<DoublePoint>();
 		rawPoints = new ArrayList<DoublePoint>();
 		double size = 0;
 		for(int i = 0 ; i < points.size() ; i++) 
 		{
+			this.points.add(new Point(points.get(i).x, points.get(i).y));
 			doublePoints.add(new DoublePoint(points.get(i).x, points.get(i).y));
 			rawPoints.add(new DoublePoint(points.get(i).x, points.get(i).y));
 			size = Math.max(size, distance(points.get(0), points.get(i)));
 		}
+		//doublePoints = averageSmooth(doublePoints);
+		makeBox(points);
+		
+		// try to standarize
+		if (doublePoints.size() >= 20) {	
+			ArrayList<DoublePoint> tempDoublePoints = standardize(doublePoints);
+			if (tempDoublePoints.size() >= 20)
+				doublePoints = tempDoublePoints;
+		}
+		
+		int dpSize = doublePoints.size();
+		while (dpSize < 20)
+		{	
+			doublePoints = insertPoint(doublePoints);
+			dpSize = doublePoints.size();
+		}
+	}
+	
+	public ArrayList<DoublePoint> averageSmooth(ArrayList<DoublePoint> doublePoints)
+	{
+		if (doublePoints.size() < 5) 
+			return doublePoints;
+		ArrayList<DoublePoint> pointsNew = new ArrayList<DoublePoint>();
+		pointsNew.add(doublePoints.get(0));		
+		pointsNew.add(doublePoints.get(1));
+		for (int i = 2; i < doublePoints.size() - 2; i++)
+		{
+			DoublePoint pOld0 = doublePoints.get(i-2);
+			DoublePoint pOld1 = doublePoints.get(i-1);
+			DoublePoint pOld2 = doublePoints.get(i);
+			DoublePoint pOld3 = doublePoints.get(i+1);
+			DoublePoint pOld4 = doublePoints.get(i+2);
+			
+			DoublePoint smoothedPoint = new DoublePoint(pOld0.getX()/5 + pOld1.getX()/5 + pOld2.getX()/5 + pOld3.getX()/5 + pOld4.getX()/5,
+														pOld0.getY()/5 + pOld1.getY()/5 + pOld2.getY()/5 + pOld3.getY()/5 + pOld4.getY()/5);
+			pointsNew.add(smoothedPoint);
+		}
+		pointsNew.add(doublePoints.get(doublePoints.size() - 1));
+		
+		return pointsNew;
+		
+	}
+	//OK
+	public WriteObject(ArrayList<Point> points) {
+		isTwoStrokeObject = false;
+		isThreeStrokeObject = false;
+		twoStrokeGap = 0;
+		threeStrokeGap1 = 0;
+		threeStrokeGap2 = 0;
+		if ( cNewStrokmatcher ) {
+			newStrokeMatcher = new StrokeMatcherWrapper(newTekenSet);
+		}
+		this.points = new ArrayList<Point>();
+		
+		doublePoints = new ArrayList<DoublePoint>();
+		rawPoints = new ArrayList<DoublePoint>();
+		double size = 0;
+		for(int i = 0 ; i < points.size() ; i++) 
+		{
+			this.points.add(new Point(points.get(i).x, points.get(i).y));
+			doublePoints.add(new DoublePoint(points.get(i).x, points.get(i).y));
+			rawPoints.add(new DoublePoint(points.get(i).x, points.get(i).y));
+			size = Math.max(size, distance(points.get(0), points.get(i)));
+		}
+		//doublePoints = averageSmooth(doublePoints);
 		makeBox(points);
 		
 		if (size < 3) 
 		{
 			teken = ".";
+			parsePoints = new ArrayList<DoublePoint>();
+			for(int i = 0 ; i < standardizeLengthNumber ; i++) 
+			{
+				parsePoints.add(new DoublePoint(points.get(0).x, points.get(0).y));
+			}
 			return;
 		}
 		
@@ -109,20 +200,44 @@ public class WriteObject {
 	//OK
 	public WriteObject(String teken, ArrayList<Point> points){
 		isTwoStrokeObject = false;
+		isThreeStrokeObject = false;
 		
 //		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-		logger.info("New Object, teken = " + teken);
+		//logger.info("New Object, teken = " + teken);
 //		logger.info("Stacktrace = "+ stackTraceElements);
 		
 		makeBox(points);
 		doublePoints = new ArrayList<DoublePoint>();
+		parsePoints = new ArrayList<DoublePoint>();
 		rawPoints = new ArrayList<DoublePoint>();
 		for(int i = 0 ; i <points.size() ; i++) {
 //			logger.info("new Point added -" +i +"- X="+points.get(i).getDoublePoint().getX() +
 //					",Y="+points.get(i).getDoublePoint().getY());
 			doublePoints.add(points.get(i).getDoublePoint());
 			rawPoints.add(points.get(i).getDoublePoint());
+			parsePoints.add(points.get(i).getDoublePoint());
 		}
+		
+		parsePoints = standardizeToLength(parsePoints);
+		this.teken = teken;
+	}
+	
+	public WriteObject(boolean fromSample, String teken, ArrayList<Point> points){
+		isTwoStrokeObject = false;
+		isThreeStrokeObject = false;
+		
+		makeBox(points);
+		doublePoints = new ArrayList<DoublePoint>();
+		parsePoints = new ArrayList<DoublePoint>();
+		rawPoints = new ArrayList<DoublePoint>();
+		for(int i = 0 ; i <points.size() ; i++) {
+//			logger.info("new Point added -" +i +"- X="+points.get(i).getDoublePoint().getX() +
+//					",Y="+points.get(i).getDoublePoint().getY());
+			doublePoints.add(points.get(i).getDoublePoint());
+			rawPoints.add(points.get(i).getDoublePoint());
+			parsePoints.add(points.get(i).getDoublePoint());
+		}
+		
 		this.teken = teken;
 	}
 	
@@ -156,6 +271,43 @@ public class WriteObject {
 		this.teken = teken;
 	}
 
+	public WriteObject(String teken, WriteObject wo1, WriteObject wo2,  WriteObject wo3){
+		isThreeStrokeObject = true;
+		
+		ArrayList<Point> wo1Points = wo1.getPoints();
+		ArrayList<Point> wo2Points = wo2.getPoints();
+		ArrayList<Point> wo3Points = wo3.getPoints();
+		ArrayList<Point> wo1RawPoints = wo1.getRawPoints();
+		ArrayList<Point> wo2RawPoints = wo2.getRawPoints();
+		ArrayList<Point> wo3RawPoints = wo3.getRawPoints();
+		threeStrokeGap1 = wo1RawPoints.size();
+		threeStrokeGap2 = threeStrokeGap1 + wo2RawPoints.size();
+
+		doublePoints = new ArrayList<DoublePoint>();
+		for(int i = 0 ; i <wo1Points.size() ; i++) {
+			doublePoints.add(wo1Points.get(i).getDoublePoint());
+		}
+		for(int i = 0 ; i <wo2Points.size() ; i++) {
+			doublePoints.add(wo2Points.get(i).getDoublePoint());
+		}
+		for(int i = 0 ; i <wo3Points.size() ; i++) {
+			doublePoints.add(wo3Points.get(i).getDoublePoint());
+		}
+		makeBoxDouble(doublePoints);
+		
+		rawPoints = new ArrayList<DoublePoint>();
+		for(int i = 0 ; i <wo1RawPoints.size() ; i++) {
+			rawPoints.add(wo1RawPoints.get(i).getDoublePoint());
+		}
+		for(int i = 0 ; i <wo2RawPoints.size() ; i++) {
+			rawPoints.add(wo2RawPoints.get(i).getDoublePoint());
+		}
+		for(int i = 0 ; i <wo3RawPoints.size() ; i++) {
+			rawPoints.add(wo3RawPoints.get(i).getDoublePoint());
+		}
+
+		this.teken = teken;
+	}
 
 	// compact deep copy
 	public WriteObject(WriteObject wo)
@@ -169,6 +321,15 @@ public class WriteObject {
 		ArrayList<Point> points = new ArrayList<Point>();
 		for(int i = 0 ; i < doublePoints.size() ; i++) {
 			points.add(doublePoints.get(i).getPoint());
+		}
+		return points;
+	}
+	
+	public ArrayList<Point> getParsePoints() 
+	{
+		ArrayList<Point> points = new ArrayList<Point>();
+		for(int i = 0 ; i < parsePoints.size() ; i++) {
+			points.add(parsePoints.get(i).getPoint());
 		}
 		return points;
 	}
@@ -265,6 +426,14 @@ public class WriteObject {
 	{	
 		return getTeken(teken4);
 	}
+	public String getTeken5() 
+	{	
+		return getTeken(teken5);
+	}
+	public String getTeken6() 
+	{	
+		return getTeken(teken6);
+	}
 
 	//OK
 //	public void draw(Context2d g)
@@ -309,6 +478,14 @@ public class WriteObject {
 		if (rawPoints.size() > 0) {
 			if ( (".".equals(teken)) || ("*".equals(teken) ) ) {
 				g.setFillStyle(CssColor.make(0, 0, 0));
+				if(newMatch)
+					g.setStrokeStyle(CssColor.make(0, 200, 0));
+				if(newMatchWrong)
+					g.setStrokeStyle(CssColor.make(200, 0, 0));
+				if(oldMatch)
+					g.setStrokeStyle(CssColor.make(0, 0, 200));
+				if(oldMatchWrong)
+					g.setStrokeStyle(CssColor.make(200, 0, 200));
 //				g.fillRect(rawPoints.get(0).getX()+shiftX, rawPoints.get(0).getY()+shiftY, 3, 3);
 				g.beginPath();
 				g.arc(rawPoints.get(0).getX()+shiftX, rawPoints.get(0).getY()+shiftY, 2, 0, 2* Math.PI);
@@ -321,14 +498,51 @@ public class WriteObject {
 			
 //			boolean drawContinuous = "-".equals(teken) || "sqrt".equals(teken);			
 			boolean drawContinuous = true;
+			
+			for (int j = 0; parsePoints!=null && j <parsePoints.size(); j++) {	
+				try {
+					if(newMatch)
+						g.setStrokeStyle(CssColor.make(0, 200, 0));
+					if(newMatchWrong)
+						g.setStrokeStyle(CssColor.make(200, 0, 0));
+					if(oldMatch)
+						g.setStrokeStyle(CssColor.make(0, 0, 200));
+					if(oldMatchWrong)
+						g.setStrokeStyle(CssColor.make(200, 0, 200));
+					g.beginPath();
+					g.arc(parsePoints.get(j).getX()+shiftX, parsePoints.get(j).getY()+shiftY, 2, 0, 2* Math.PI);
+					g.closePath();
+					g.fill();
+					g.stroke();
+				}
+				catch (Exception e) {}
+			}
+			
+			if(newMatch)
+				g.setStrokeStyle(CssColor.make(0, 200, 0));
+			if(newMatchWrong)
+				g.setStrokeStyle(CssColor.make(200, 0, 0));
+			if(oldMatch)
+				g.setStrokeStyle(CssColor.make(0, 0, 200));
+			if(oldMatchWrong)
+				g.setStrokeStyle(CssColor.make(200, 0, 200));
 			g.beginPath();
 			g.moveTo(rawPoints.get(0).getX()+shiftX, rawPoints.get(0).getY()+shiftY);
 			
 			for (int j = 1; j <rawPoints.size(); j++) {	
-				if (!isTwoStrokeObject() || (isTwoStrokeObject() && (twoStrokeGap!= j))) {
+				if ((!isTwoStrokeObject() || isTwoStrokeObject() && twoStrokeGap!= j)
+						&& (!isThreeStrokeObject() || isThreeStrokeObject() && threeStrokeGap1!= j && threeStrokeGap2!= j)) {
 					g.lineTo(rawPoints.get(j).getX()+shiftX, rawPoints.get(j).getY()+shiftY);
 				} else { // skip gaps for two-strokes
 					g.moveTo(rawPoints.get(j).getX()+shiftX, rawPoints.get(j).getY()+shiftY);
+					if(teken.equals("i") || teken.equals("j")) {
+						g.stroke();
+						g.beginPath();
+						g.arc(rawPoints.get(j).getX()+shiftX, rawPoints.get(j).getY()+shiftY, 2, 0, 2* Math.PI);
+						g.closePath();
+						g.fill();
+						g.stroke();
+					}
 				}
 			}
 			g.stroke();
@@ -379,6 +593,9 @@ public class WriteObject {
 	public boolean isTwoStrokeObject() {
 		return isTwoStrokeObject;
 	}
+	public boolean isThreeStrokeObject() {
+		return isThreeStrokeObject;
+	}
 	
 	//OK
 	private void makeBox(ArrayList<Point> points) 
@@ -394,6 +611,7 @@ public class WriteObject {
 			yMax = Math.max(yMax, points.get(i).y);
 		}
 		box = new Rectangle(xMin, yMin, xMax-xMin+1, yMax-yMin+1);
+		boxDiagonal = (int)Math.sqrt(box.width*box.width+box.height*box.height);
 	}
 	
 	private void makeBoxDouble(ArrayList<DoublePoint> doublePoints) 
@@ -409,6 +627,12 @@ public class WriteObject {
 			yMax = Math.max(yMax, (int) doublePoints.get(i).getY());
 		}
 		box = new Rectangle(xMin, yMin, xMax-xMin+1, yMax-yMin+1);
+		boxDiagonal = (int)Math.sqrt(box.width*box.width+box.height*box.height);
+	}
+	
+	public int getDiagonal()
+	{
+		return boxDiagonal;
 	}
 
 	
@@ -432,9 +656,48 @@ public class WriteObject {
 		return newPoints;
 	} 
 
+	public String parse(String key) {
+		if (doublePoints.size() > 1) {
+			//doublePoints = scaleToSquare(doublePoints);
+			// hier nog een smoother?			
+			doublePoints = standardizeToLength(doublePoints);
+		}
+		parsePoints = deepCopy(doublePoints);
+		
+		String gevondenTeken = OneStrokeMatcher.findTeken(this);
+		if(gevondenTeken != null) {
+			newMatch = true;
+			if(!gevondenTeken.equals(key))
+					newMatchWrong = true;
+		}
+		else {
+			gevondenTeken = newStrokeMatcher.findTeken(this.doublePoints);
+			if(gevondenTeken != null) {
+				oldMatch = true;
+				if(!gevondenTeken.equals(key))
+						oldMatchWrong = true;
+			}
+		}
+		return gevondenTeken;
+	}
 	//OK
 	private String parse(ArrayList<DoublePoint> doublePoints) {
-		String gevondenTeken = "";
+		
+		if (doublePoints.size() > 1) {
+			//doublePoints = scaleToSquare(doublePoints);
+			// hier nog een smoother?			
+			doublePoints = standardizeToLength(doublePoints);
+		}
+		parsePoints = deepCopy(doublePoints);
+		
+		String gevondenTeken = OneStrokeMatcher.findTeken(this);
+		if(gevondenTeken != null) {
+			newMatch = true;
+		
+			return gevondenTeken;
+		}
+		
+		gevondenTeken = "";
 
 		if (cNewStrokmatcher) {
 			gevondenTeken = newStrokeMatcher.findTeken(doublePoints);
@@ -442,18 +705,18 @@ public class WriteObject {
 			teken2 = newStrokeMatcher.getTeken2();
 			teken3 = newStrokeMatcher.getTeken3();
 			teken4 = newStrokeMatcher.getTeken4();
+			teken5 = newStrokeMatcher.getTeken5();
+			teken6 = newStrokeMatcher.getTeken6();
 //			logger.info("parsing :: match = " + teken1 + "("+ newStrokeMatcher.getTekenId(0) + ")");
 //			logger.info("parsing :: teken2 = " + teken2);
 //			logger.info("parsing :: teken3 = " + teken3);
 //			logger.info("parsing :: teken4 = " + teken4);
+			
 		} 
 			
-		if (doublePoints.size() > 1) {
-			doublePoints = scaleToSquare(doublePoints);
-			// hier nog een smoother?			
-			doublePoints = standardizeToLength(doublePoints);
-		}
-		parsePoints = deepCopy(doublePoints);
+		
+		
+		//StrokeChecker.parse(this);
 		
 		if (!cNewStrokmatcher) {
 			gevondenTeken = findTeken(doublePoints);
@@ -598,6 +861,24 @@ public class WriteObject {
 		return distance;
 	}
 	
+	static WriteObject getWriteObjectFromSample(String key, int[] sample) {
+		ArrayList<Point> woParsePoints = new ArrayList<Point>();
+		for(int i = 0 ; i < sample.length/2 ; i++) {
+				Point p = new Point(sample[2*i], sample[2*i+1]);
+				woParsePoints.add(p);
+		}
+		return new WriteObject(key,woParsePoints);
+	}
+	
+	static WriteObject getWriteObjectFromRefSample(int[] sample) {
+		ArrayList<Point> woPoints = new ArrayList<Point>();
+		for(int i = 0 ; i < sample.length/2 ; i++) {
+				Point p = new Point(sample[2*i], sample[2*i+1]);
+				woPoints.add(p);
+		}
+		return new WriteObject(true,woPoints);
+	}
+	
 	//OK
 	private double getDistanceCurving(ArrayList<DoublePoint> doublePoints, int[] sample) 
 	{
@@ -660,18 +941,27 @@ public class WriteObject {
 		teken2 = "null";
 		teken3 = "null";
 		teken4 = "null";
+		teken5 = "null";
+		teken6 = "null";
 		double min1 = 1000;
 		double min2 = 1000;
 		double min3 = 1000;
 		double min4 = 1000;
+		double min5 = 1000;
+		double min6 = 1000;
 		
 		Set keys = samples.keySet();
 		Iterator<String> iterator = (Iterator<String>)keys.iterator();
 	    while(iterator.hasNext()) 
 	    {
+	    	
 	        String key = iterator.next();
 	        int[] sample = samples.get(key);
 	        double distanceMin = getDistance(doublePoints, sample);
+	        
+	       // if(key.equals("5H"))
+	        	//System.out.println("Afstand tot 5H = " + distanceMin);
+	       // logger.info("Afstand tot "+key+ " = " + distanceMin);
 	        
 	        if(distanceMin < min1)
 	        {
@@ -693,11 +983,193 @@ public class WriteObject {
         		teken4 = key;
         		min4 = distanceMin;
         	}
+        	else if (distanceMin < min5)
+        	{
+        		teken5 = key;
+        		min5 = distanceMin;
+        	}
+        	else if (distanceMin < min6)
+        	{
+        		teken6 = key;
+        		min6 = distanceMin;
+        	}
 
 	        
 	    }
 	    return teken1;
 	}
+	
+	public boolean isCloseTo(String input) {
+		if(input.contentEquals(teken1)
+			|| input.contentEquals(teken2)
+			|| input.contentEquals(teken3)
+			|| input.contentEquals(teken4))
+			return true;
+		return false;
+	}
+	
+	public boolean hasCloseDistance(int distMin, WriteObject wo, int min1, int max1, int min2, int max2) {
+		double dMin = distMin*boxDiagonal/100;
+		double distance = 1000;
+		for(int i=min1 ; i<max1 ; i++) {
+			for(int j=min2 ; j<max2 ; j++) {
+				double dx = parsePoints.get(i).getX() - wo.getParsePoints().get(j).getX();
+				double dy = parsePoints.get(i).getY() - wo.getParsePoints().get(j).getY();
+				double d = Math.sqrt(dx*dx + dy*dy);
+				distance = Math.min(distance, d);
+			}
+		}
+		//logger.info("distance = " + distance);
+		if(distance < dMin)
+			return true;
+		
+		return false;
+	}
+	
+	public boolean hasCloseXDistance(int distMin, WriteObject wo, int min1, int max1, int min2, int max2) {
+		
+		double dMin = distMin*boxDiagonal/100;
+		double distance = 1000;
+		for(int i=min1 ; i<max1 ; i++) {
+			for(int j=min2 ; j<max2 ; j++) {
+				double d = Math.abs(parsePoints.get(i).getX() - wo.getParsePoints().get(j).getX());
+				distance = Math.min(distance, d);
+			}
+		}
+		//logger.info("xDistance = " + distance);
+		if(distance < dMin)
+			return true;
+		
+		return false;
+	}
+	
+	public boolean hasDirection (int angle, double tolerance, int pointNrStart, int pointNrEnd, int minSteps) {
+		int counter = 0;
+		for(int i=pointNrStart ; i<pointNrEnd+1 ; i++) {
+			double dx = parsePoints.get(i).getX() - parsePoints.get(i-1).getX();
+			double dy = parsePoints.get(i).getY() - parsePoints.get(i-1).getY();
+			
+			int angleStep = (int)(180.0*(Math.atan2(-dy, dx)/Math.PI));
+			if(angleStep-angle>180)
+				angleStep -= 360;
+			if(angleStep-angle<-180)
+				angleStep += 360;
+				
+			if(Math.abs(angleStep - angle) < tolerance)
+				counter++;
+		}
+		if(counter >= minSteps)
+			return true;
+		return false;
+	}
+	
+	public boolean hasCloseYDistance(int distMin, WriteObject wo, int min1, int max1, int min2, int max2) {
+		double dMin = distMin*boxDiagonal/100;
+		double distance = 1000;
+		for(int i=min1 ; i<max1 ; i++) {
+			for(int j=min2 ; j<max2 ; j++) {
+				double d = Math.abs(parsePoints.get(i).getY() - wo.getParsePoints().get(j).getY());
+				distance = Math.min(distance, d);
+			}
+		}
+		if(distance < dMin)
+			return true;
+		
+		return false;
+	}
+	
+	public boolean hasYDistance(int dist, int distMin, WriteObject wo, int min1, int max1, int min2, int max2) {
+		double dMin = distMin*boxDiagonal/100;
+		dist = dist*boxDiagonal/100;
+		double distance = 1000;
+		for(int i=min1 ; i<max1 ; i++) {
+			for(int j=min2 ; j<max2 ; j++) {
+				double d =   wo.getParsePoints().get(j).getY() - parsePoints.get(i).getY();
+				//d = d*boxDiagonal/200;
+				distance = Math.min(distance, d);
+			}
+		}
+		//logger.info("Ydistance = "+distance);
+		if(Math.abs(distance-dist) < dMin)
+			return true;
+		
+		return false;
+	}
+	
+	public boolean hasSharpAngle(int angle, int tolerance, int pointNrStart, int pointNrEnd) {
+		for(int i=pointNrStart ; i<pointNrEnd-3 ; i++) {
+			double dx = parsePoints.get(i).getX() - parsePoints.get(i+1).getX();
+			double dy = parsePoints.get(i).getY() - parsePoints.get(i+1).getY();
+			double ddx = parsePoints.get(i+2).getX() - parsePoints.get(i+3).getX();
+			double ddy = parsePoints.get(i+2).getY() - parsePoints.get(i+3).getY();
+			
+			int angleStep1 = (int)(180.0*(Math.atan2(-dy, dx)/Math.PI));
+			int angleStep2 = (int)(180.0*(Math.atan2(-ddy, ddx)/Math.PI));
+			if(angleStep2-angleStep1-angle>180)
+				angleStep2 -= 360;
+			if(angleStep2-angleStep1-angle<-180)
+				angleStep2 += 360;
+			
+			if(Math.abs(angleStep2-angleStep1 - angle) < tolerance) {
+				//logger.info("angle: "+(angleStep2-angleStep1));	
+				return true;
+			}
+				
+		}
+		return false;
+	}
+	
+	public boolean hasIncreasingAngle(int tolerance, int pointNrStart, int pointNrEnd) {
+		boolean increasing = true;
+		int teller = 0;
+		int totalIncrease = 0;
+		for(int i=pointNrStart ; i<pointNrEnd-3 ; i++) {
+			double dx = parsePoints.get(i).getX() - parsePoints.get(i+1).getX();
+			double dy = parsePoints.get(i).getY() - parsePoints.get(i+1).getY();
+			double ddx = parsePoints.get(i+1).getX() - parsePoints.get(i+2).getX();
+			double ddy = parsePoints.get(i+1).getY() - parsePoints.get(i+2).getY();
+			
+			int angleStep1 = (int)(180.0*(Math.atan2(-dy, dx)/Math.PI));
+			int angleStep2 = (int)(180.0*(Math.atan2(-ddy, ddx)/Math.PI));
+			if(angleStep2-angleStep1>180)
+				angleStep2 -= 360;
+			if(angleStep2-angleStep1<-180)
+				angleStep2 += 360;
+			increasing = increasing && angleStep2-angleStep1 >= -tolerance;
+			totalIncrease += angleStep2-angleStep1;
+			teller++;	
+		}
+		int averageIncrease = totalIncrease/teller;
+		return increasing && averageIncrease>0;
+	}
+	
+	public boolean hasDecreasingAngle(int tolerance, int pointNrStart, int pointNrEnd) {
+		boolean decreasing = true;
+		int teller = 0;
+		int totalDecrease = 0;
+		for(int i=pointNrStart ; i<pointNrEnd-3 ; i++) {
+			double dx = parsePoints.get(i).getX() - parsePoints.get(i+1).getX();
+			double dy = parsePoints.get(i).getY() - parsePoints.get(i+1).getY();
+			double ddx = parsePoints.get(i+1).getX() - parsePoints.get(i+2).getX();
+			double ddy = parsePoints.get(i+1).getY() - parsePoints.get(i+2).getY();
+			
+			int angleStep1 = (int)(180.0*(Math.atan2(-dy, dx)/Math.PI));
+			int angleStep2 = (int)(180.0*(Math.atan2(-ddy, ddx)/Math.PI));
+			if(angleStep2-angleStep1>180)
+				angleStep2 -= 360;
+			if(angleStep2-angleStep1<-180)
+				angleStep2 += 360;
+			//logger.info("angle"+(angleStep2-angleStep1));
+			decreasing = decreasing && angleStep2-angleStep1 <= tolerance;
+			totalDecrease += angleStep2-angleStep1;
+			teller++;
+				
+		}
+		int averageDecrease = totalDecrease/teller;
+		return decreasing && averageDecrease<0;
+		
+	}
+	
 	
 	public String printStroke()
 	{	

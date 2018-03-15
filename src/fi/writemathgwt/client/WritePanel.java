@@ -41,7 +41,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
 public class WritePanel extends LayoutPanel { //HorizontalPanel
-//	private static Logger logger = Logger.getLogger("WritePanel");
+	private static Logger logger = Logger.getLogger("WritePanel");
 	
 	private static int cPanelAreaMin = -50000;
 	private static int cPanelAreaMax = 50000;
@@ -53,7 +53,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	WritePanelHolder eigenaar;
 	ArrayList<WriteObject> writeObjects;
 	ArrayList<Point> points;
-	WriteObject lastObject;
+	WriteObject lastObject, lastLastObject;
 	
 	private Canvas writePanelCanvas;
 	private Context2d g;
@@ -64,7 +64,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	private int gridSize = 20;
 	
 	private static int defaultWidth = 680;
-	private static int defaultHeight = 238;
+	private static int defaultHeight = 538;
 	
 	private int width;
 	private int height;
@@ -80,6 +80,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	CorrectiePanel correctiePanel;
 
 	int tekenSet = 1;
+	private boolean noParse = false;
 	
 	//OK
 	public WritePanel(WritePanelHolder eigenaar, int tekenS) 
@@ -140,6 +141,10 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			writePanelCanvas.addTouchEndHandler(touchHandler);
 		}
 		paint();
+	}
+	
+	public void setNoParse(boolean b) {
+		noParse=b;
 	}
 
 	public void setTekenSet(int num)
@@ -481,7 +486,44 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		}
 		return insideObjects;
 	}
-
+	
+	public void logWriteObjects(String key)
+	{
+		String codeRules = "";
+		for (int i = 0; i < writeObjects.size(); i++)
+		{
+			String rRule = "";
+			WriteObject wo = writeObjects.get(i);
+			
+			String s = "";
+			for (int j = 0; j < wo.points.size(); j++)
+			{
+				if(j>0)
+					s=s+",";
+				s=s+wo.points.get(j).getX()+","+wo.points.get(j).getY() ;
+			}
+			codeRules=codeRules+"int[] sample_"+i+" = {"+s+"}; samples.add(sample_"+i+");\n";
+		}
+		logger.info("// "+key+"\n{\nArrayList<int[]> samples = new ArrayList<int[]>();\n"+codeRules+"refSamples.put(\""+key+"\", samples);\n}");
+	}
+	
+	public void loadRefSamples(String key)
+	{
+		writeObjects.clear();
+		ReferenceSamples rs = new ReferenceSamples();
+		//ArrayList<WriteObject> sampleWriteObjects
+		writeObjects = rs.getReferenceObjects(key);
+		String result = "";
+		for(int i=0 ; i<writeObjects.size() ; i++) {
+			String teken = writeObjects.get(i).parse(key);
+			result = result+teken;
+			
+		}
+		//eigenaar.writeFormulaObject(result);
+		paint();
+		
+	}
+	
 	private boolean skipWriteObject(WriteObject wo, WriteObject boxOwner)
 	{
 		if (wo == null)
@@ -1189,13 +1231,43 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 //System.out.println("after " + objectsAfter);				
 				if (objectsBefore != objectsAfter)
 				{	lastObject = null;
+					lastLastObject = null;
 				}
 				else
 				{	wo = new WriteObject("-",wo.getPoints());
+					lastLastObject = lastObject;
 					lastObject = wo;
 					writeObjects.add(wo);
 				}
 			}
+		}
+		else if (lastLastObject != null && lastObject!=null)
+		{
+			WriteObject woThreeStroke = tryThreeStroke(lastLastObject, lastObject,  wo);
+			if (wo != woThreeStroke) 
+			{
+				writeObjects.remove(lastObject);
+				writeObjects.remove(lastLastObject);
+				//lastLastObject = null;
+				wo = woThreeStroke;
+			}
+			else {
+				WriteObject woTwoStroke = tryTwoStroke(lastObject, wo);
+				if (wo != woTwoStroke) 
+				{
+					writeObjects.remove(lastObject);
+					wo = woTwoStroke;
+				}
+				else
+				{
+					lastLastObject = lastObject;
+				}
+				
+			}
+			lastObject = wo;
+			updateAverageHeight(wo);
+			writeObjects.add(wo);
+			
 		}
 		else if (lastObject != null)
 		{
@@ -1205,6 +1277,10 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 				writeObjects.remove(lastObject);
 				wo = woTwoStroke;
 			}
+			else
+			{
+				lastLastObject = lastObject;
+			}
 			lastObject = wo;
 			updateAverageHeight(wo);
 			writeObjects.add(wo);
@@ -1212,6 +1288,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		}
 		else 
 		{
+			lastLastObject = lastObject;
 			lastObject = wo;
 			updateAverageHeight(wo);
 			writeObjects.add(wo);
@@ -1236,6 +1313,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	protected void addWriteObject(String teken, ArrayList<Point> points) {
 //		logger.info("addWriteObject :: "+ teken + ", #Points = "+ points.size());
 		WriteObject wo = new WriteObject(teken, points);
+		lastLastObject = lastObject;
 		lastObject = wo;
 		writeObjects.add(wo);
 	}
@@ -1244,6 +1322,17 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		WriteObject wo1 = new WriteObject(teken, points1);
 		WriteObject wo2 = new WriteObject(teken, points2);
 		WriteObject wo = new WriteObject(teken, wo1, wo2);
+		lastLastObject = lastObject;
+		lastObject = wo;
+		writeObjects.add(wo);
+	}
+	
+	protected void addWriteObject(String teken, ArrayList<Point> points1, ArrayList<Point> points2, ArrayList<Point> points3) {
+		WriteObject wo1 = new WriteObject(teken, points1);
+		WriteObject wo2 = new WriteObject(teken, points2);
+		WriteObject wo3 = new WriteObject(teken, points3);
+		WriteObject wo = new WriteObject(teken, wo1, wo2, wo3);
+		lastLastObject = lastObject;
 		lastObject = wo;
 		writeObjects.add(wo);
 	}
@@ -1318,13 +1407,37 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		averageHeight = (writeObjects.size()*averageHeight + wo.getBox().height)/(writeObjects.size()+1);	
 	}
 	
+	private WriteObject tryThreeStroke(WriteObject woLastLast, WriteObject woLast, WriteObject wo) {
+		logger.info("in tryThreeStroke()");
+		
+		if ( (woLast == null) || ( woLast.isTwoStrokeObject()) || ( woLast.isThreeStrokeObject()) 
+				|| (woLastLast == null) || ( woLastLast.isTwoStrokeObject()) || ( woLastLast.isThreeStrokeObject()) ) {
+			return wo; 
+		}
+		
+		
+		WriteObject result = ThreeStrokeMatcher.findThreeStroke(woLastLast, woLast, wo);
+		if(result != null) {
+			result.newMatch = true;
+			return result;
+		}	
+		return wo;
+	}
+	
 	private WriteObject tryTwoStroke(WriteObject woLast, WriteObject wo) {
 		
-		if ( (woLast == null) || ( woLast.isTwoStrokeObject()) ) {
+		if ( (woLast == null) || ( woLast.isTwoStrokeObject()) || ( woLast.isThreeStrokeObject()) ) {
 			return wo; 
 		}
 		Rectangle boxLast = woLast.getBox();
 		Rectangle box = wo.getBox();
+		
+		WriteObject result = TwoStrokeMatcher.findTwoStroke(woLast, wo);
+		if(result != null) {
+			result.newMatch = true;
+			return result;
+		}	
+/*		
 		
 		// + = 1 + -
 		if (woLast.getTeken().equals("1") && (wo.getTeken().equals("-") || wo.getTeken().equals("back"))) 
@@ -1361,36 +1474,34 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		}
 		// 5 = 5H of b + - in 
 		else if (
-				((woLast.getTeken().equals("5H") || woLast.getTeken().equals("b")) && 
+				((woLast.isCloseTo("5H")) && 
 				 (wo.getTeken().equals("-") || wo.getTeken().equals("back")))) 
 		{
-			int diam = (boxLast.height + box.width) / 2;
-			if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < diam && 
-				Math.abs(boxLast.y - box.y) < diam / 2)
-//				return new WriteObject("5", mergePoints(woLast.getPoints(), wo.getPoints(),true));
+			//int diam = (boxLast.height + box.width) / 2;
+			//if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < diam && 
+			//	Math.abs(boxLast.y - box.y) < diam / 2)
+			if(woLast.hasCloseDistance(10,wo,0,2,0,2))
 			    return new WriteObject("5", woLast, wo);
 		}
 		// 4 = 4H + 1
-		else if ( (woLast.getTeken().equals("4H") && wo.getTeken().equals("1")) || 
-				  (woLast.getTeken().equals("tH") && wo.getTeken().equals("1")) ||
- 				  (woLast.getTeken().equals("<") && wo.getTeken().equals("1")) || 
- 				  (woLast.getTeken().equals("4H") && wo.getTeken().equals("/")) || 
-				  (woLast.getTeken().equals("tH") && wo.getTeken().equals("/")) ||
- 				  (woLast.getTeken().equals("<") && wo.getTeken().equals("/"))
+		else if ( woLast.isCloseTo("tH") && (wo.getTeken().equals("1")|| wo.getTeken().equals("/")) // moet tH niet 4H zijn???
+				  //(woLast.getTeken().equals("4H") && wo.getTeken().equals("1")) || 
+				  //(woLast.getTeken().equals("tH") && wo.getTeken().equals("1")) ||
+ 				  //(woLast.getTeken().equals("<") && wo.getTeken().equals("1")) || 
+ 				  //(woLast.getTeken().equals("4H") && wo.getTeken().equals("/")) || 
+				  //(woLast.getTeken().equals("tH") && wo.getTeken().equals("/")) ||
+ 				  //(woLast.getTeken().equals("<") && wo.getTeken().equals("/"))
+					
 				)
 		{
 			int diam = (boxLast.width + box.height) / 2;
-/* Old merge - criteria 4 */
-//			if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < (diam / 3)  && 
-//				Math.abs(boxLast.y - box.y) < diam ) {
-/* end of old merge criteria 4 */			
+			
 
-			if ( (box.x+box.width > (boxLast.x + 0.40 *boxLast.width)) && (box.x+box.width < (boxLast.x + 1.15 *boxLast.width)) &&
- 				 (box.y > (boxLast.y - 0.05 *boxLast.height)) && (box.y < (boxLast.y + 0.95 *boxLast.height))
-			   ) {
-//					return new WriteObject("4",mergePoints(woLast.getPoints(), wo.getPoints(),true));	
-//					return new WriteObject("4", mergePoints(woLast.getPoints(), wo.getPoints()));
-				    return new WriteObject("4", woLast, wo);
+//			if ( (box.x+box.width > (boxLast.x + 0.40 *boxLast.width)) && (box.x+box.width < (boxLast.x + 1.15 *boxLast.width)) &&
+// 				 (box.y > (boxLast.y - 0.05 *boxLast.height)) && (box.y < (boxLast.y + 0.95 *boxLast.height))
+//			   ) 
+			if(woLast.hasCloseDistance(10,wo,15,20,5,15)) {
+				return new WriteObject("4", woLast, wo);
 			} 
 		}
 		// x = ) + (
@@ -1446,15 +1557,6 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			}
 		}
 		
-		// 7 met extra streepje
-		else if ((woLast.getTeken().equals("7")) && (wo.getTeken().equals("-") || wo.getTeken().equals("back"))) 
-		{
-			if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < woLast.getBox().width / 2  &&  
-				Math.abs(woLast.getBoxMid().y - wo.getBoxMid().y) < woLast.getBox().height / 2)
-//				return new WriteObject("7", mergePoints(woLast.getPoints(), wo.getPoints()));
-				return new WriteObject("7", woLast, wo);
-		}
-		
 		// =
 		else if (((woLast.getTeken().equals("-")) && wo.getTeken().equals("-")) ||
 				//((woLast.getTeken().equals("back")) && wo.getTeken().equals("back")))
@@ -1465,6 +1567,19 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 //				return new WriteObject("=", mergePoints(woLast.getPoints(),wo.getPoints()));
 				return new WriteObject("=", woLast, wo);
 		}
+		
+		// 7 met extra streepje
+		else if ((woLast.getTeken().equals("7")) && (wo.getTeken().equals("-") || wo.getTeken().equals("back"))) 
+		{
+			if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < woLast.getBox().width / 2  &&  
+				Math.abs(woLast.getBoxMid().y - wo.getBoxMid().y) < woLast.getBox().height / 2)
+//				return new WriteObject("7", mergePoints(woLast.getPoints(), wo.getPoints()));
+				return new WriteObject("7", woLast, wo);
+		}
+		
+		
+		
+		
 	
 		// >= = > + /
 		else if(woLast.getTeken().equals(" > ") && wo.getTeken().equals("/")) 
@@ -1501,14 +1616,16 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 //					return new WriteObject(" \u2264 ", mergePoints(woLast.getPoints(),wo.getPoints()));		
 					return new WriteObject(" \u2264 ", woLast, wo);
 		}
+		
 		// f = f(zonder streepje) + -
-		else if(woLast.getTeken().equals("f") && wo.getTeken().equals("-")) 
+		else if(woLast.getTeken().equals("fH") && wo.getTeken().equals("-")) 
 		{			
 			if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < averageHeight / 3 && 
 				Math.abs(woLast.getBoxMid().y - wo.getBoxMid().y) < averageHeight)
 //					return new WriteObject("f", mergePoints(woLast.getPoints(),wo.getPoints()));	
 					return new WriteObject("f", woLast, wo);
 		}
+		
 		// t = tH + -
 		else if(woLast.getTeken().equals("tH") && wo.getTeken().equals("-")) 
 		{			
@@ -1517,6 +1634,16 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 //					return new WriteObject("t", mergePoints(woLast.getPoints(),wo.getPoints()));		
 					return new WriteObject("t", woLast, wo);
 		}
+		
+		// j = jH + .
+		else if(woLast.getTeken().equals("jH") && wo.getTeken().equals(".")) 
+		{			
+			if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < averageHeight / 3 && 
+				Math.abs(woLast.getBoxMid().y - wo.getBoxMid().y) > averageHeight / 2)
+//					return new WriteObject("j", mergePoints2(woLast.getPoints(),wo.getPoints()));		
+					return new WriteObject("j", woLast, wo);
+		}
+		*/
 		// p = 1 + pH
 		else if(woLast.getTeken().equals("1") && wo.getTeken().equals("pH")) 
 		{			
@@ -1533,14 +1660,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 //					return new WriteObject("i", mergePoints2(woLast.getPoints(),wo.getPoints()));		
 					return new WriteObject("i", woLast, wo);
 		}
-		// j = jH + .
-		else if(woLast.getTeken().equals("jH") && wo.getTeken().equals(".")) 
-		{			
-			if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < averageHeight / 3 && 
-				Math.abs(woLast.getBoxMid().y - wo.getBoxMid().y) > averageHeight / 2)
-//					return new WriteObject("j", mergePoints2(woLast.getPoints(),wo.getPoints()));		
-					return new WriteObject("j", woLast, wo);
-		}
+		
 		// k = 1 + <
 		else if(woLast.getTeken().equals("1") && wo.getTeken().equals(" < ")) 
 		{		
@@ -1602,6 +1722,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	{	
 		writeObjects.clear();
 		lastObject = null;
+		lastLastObject = null;
 		resetPanelShift();
 		paint();
 	}
@@ -1612,8 +1733,14 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			return;
 		
 		writeObjects.remove(writeObjects.size() - 1);
-		if (writeObjects.size() > 0)
+		if (writeObjects.size() > 1) {
+			lastLastObject = lastObject;
 			lastObject = writeObjects.get(writeObjects.size()-1);
+		}
+		else if (writeObjects.size() > 0) {
+			lastLastObject = null;
+			lastObject = writeObjects.get(writeObjects.size()-1);
+		}
 		else
 			lastObject = null;	
 		paint();
@@ -1809,7 +1936,21 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			}
 			
 			if (!points.isEmpty() && writing) {
-				addWriteObject();
+				if(noParse) {
+					ArrayList<Point> newWriteObjectPoints = new ArrayList<Point>();
+					for (int i=0; i<points.size(); i++) {
+						newWriteObjectPoints.add(
+								new Point(points.get(i).getX(), points.get(i).getY()) );
+//						newWriteObjectPoints.add(
+//								new Point(points.get(i).getX()-panelShiftX, points.get(i).getY()-panelShiftY) );
+					}
+//					resetPanelShift();
+
+					WriteObject wo = new WriteObject(true,newWriteObjectPoints);
+					writeObjects.add(wo);
+				}
+				else
+					addWriteObject();
 			}
 			
 			if (e.getTouches().length() < 1 ) {
@@ -1889,18 +2030,22 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
     			{
     				if (lastObject != null)
     					correctiePanel = new CorrectiePanel(lastObject.getTeken1(),lastObject.getTeken2(),
-    														lastObject.getTeken3(),lastObject.getTeken4());
+    														lastObject.getTeken3(),lastObject.getTeken4(),
+    														lastObject.getTeken5(),lastObject.getTeken6());
+    				
     				else
-    					correctiePanel = new CorrectiePanel("","","","");
+    					correctiePanel = new CorrectiePanel("","","","","","");
     				//correctiePanel.setLocation(400, 100);
     				add(correctiePanel);
     				setWidgetLeftWidth(correctiePanel, width - 30, Style.Unit.PX, 30, Style.Unit.PX);
-    				setWidgetTopHeight(correctiePanel, 26, Style.Unit.PX, 80, Style.Unit.PX);
+    				setWidgetTopHeight(correctiePanel, 26, Style.Unit.PX, 120, Style.Unit.PX);
 
     				correctiePanel.t1Button.addClickHandler(new CBL());
     				correctiePanel.t2Button.addClickHandler(new CBL());
     				correctiePanel.t3Button.addClickHandler(new CBL());
     				correctiePanel.t4Button.addClickHandler(new CBL());
+    				correctiePanel.t5Button.addClickHandler(new CBL());
+    				correctiePanel.t6Button.addClickHandler(new CBL());
 
     				paint();
     			}
@@ -1908,9 +2053,10 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
     			{	
     				if (lastObject != null)
     					correctiePanel.zetTekens(lastObject.getTeken1(),lastObject.getTeken2(),
-												 lastObject.getTeken3(),lastObject.getTeken4());
+    											 lastObject.getTeken3(),lastObject.getTeken4(),
+												 lastObject.getTeken5(),lastObject.getTeken6());
     				else
-    					correctiePanel.zetTekens("","","","");
+    					correctiePanel.zetTekens("","","","","","");
     				
     				//correctiePanel.setVisible(true);
     				correctiePanel.setVisible(!correctiePanel.isVisible());
@@ -1948,6 +2094,24 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
     			correctiePanel.setVisible(false);
     			if ((lastObject != null) && !lastObject.getTekenRaw().equals(lastObject.getTeken4()))
     				lastObject.zetTeken(lastObject.getTeken4());
+    			//produceAction("");
+    			eigenaar.writePanelChanged();
+
+    		}
+    		if ((correctiePanel != null) && (e.getSource() == correctiePanel.t3Button))
+    		{
+    			correctiePanel.setVisible(false);
+    			if ((lastObject != null) && !lastObject.getTekenRaw().equals(lastObject.getTeken5()))
+    				lastObject.zetTeken(lastObject.getTeken5());
+    			//produceAction("");
+    			eigenaar.writePanelChanged();
+    			
+    		}
+    		if ((correctiePanel != null) && (e.getSource() == correctiePanel.t4Button))
+    		{
+    			correctiePanel.setVisible(false);
+    			if ((lastObject != null) && !lastObject.getTekenRaw().equals(lastObject.getTeken6()))
+    				lastObject.zetTeken(lastObject.getTeken6());
     			//produceAction("");
     			eigenaar.writePanelChanged();
 

@@ -11,7 +11,7 @@ import fi.writemath.engine.strokematching.results.MatchResult;
 import fi.writemath.engine.strokematching.strokesampleset.StrokeSampleSetFactory;
 
 public class StrokeMatcherWrapper {
-//	private static Logger logger = Logger.getLogger("StrokeMatcherWrapper");
+	private static Logger logger = Logger.getLogger("StrokeMatcherWrapper");
 
 	private StrokeMatcher strokeMatcher;
 	
@@ -52,6 +52,15 @@ public class StrokeMatcherWrapper {
 		return getTeken1();
 	}
 	
+	public double getWeight() {
+		MatchResult matchResult = strokeMatcher.getResult(0);
+		if (matchResult != null) {
+			return matchResult.getWeight();
+		} else {
+			return Double.NaN;
+		}
+	}
+	
 	public String getTeken1() {
 		return getTeken(0);
 	}
@@ -67,6 +76,12 @@ public class StrokeMatcherWrapper {
 	public String getTeken4() {
 		return getTeken(3);
 	}
+	public String getTeken5() {
+		return getTeken(4);
+	}
+	public String getTeken6() {
+		return getTeken(5);
+	}
 	
 	/* Private Parts */
 	private Stroke convertDoublePointListToStroke(ArrayList<DoublePoint> doublePoints) {
@@ -81,6 +96,8 @@ public class StrokeMatcherWrapper {
 	private String getTeken(int rank) {
 		MatchResult matchResult = strokeMatcher.getResult(rank);
 		if (matchResult != null) {
+			//logger.info("result: "  + matchResult.getIdentifier());
+			//logger.info("weight: " + matchResult.getWeight());
 			return matchResult.getIdentifier();
 		} else {
 			return "null";

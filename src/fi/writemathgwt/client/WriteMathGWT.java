@@ -1,6 +1,8 @@
 package fi.writemathgwt.client;
 
 
+import java.util.ArrayList;
+
 import com.google.gwt.canvas.client.Canvas;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -10,6 +12,8 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -17,8 +21,12 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+
+
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.ListBox;
+
 
 
 public class WriteMathGWT implements EntryPoint, WritePanelHolder 
@@ -27,7 +35,7 @@ public class WriteMathGWT implements EntryPoint, WritePanelHolder
 	static final String holderId = "rootPanel";
 	DockLayoutPanel dlp;
 	int breedte = 600;
-	int hoogte = 450;
+	int hoogte = 750;
 	int bottomHeight = 200;
 	int leftOffset = 5;
 	int topOffset = 5;
@@ -43,6 +51,7 @@ public class WriteMathGWT implements EntryPoint, WritePanelHolder
 	private IFormuleViewer formuleViewer;
 	private Widget formulePanel;
 	
+	ListBox refSampleComboBox;
 	PushButton wisButton, printButton, closeButton;
 	TekstPopup tekstPopup;
 	
@@ -66,7 +75,7 @@ public class WriteMathGWT implements EntryPoint, WritePanelHolder
 		RootPanel.get(holderId).add(dlp);
 		RootPanel.get(holderId).addStyleName("root");
 		
-		writePanel = new WritePanel(600,300, this, tekenSet); 
+		writePanel = new WritePanel(600,600, this, tekenSet); 
 		//writePanelCanvas = writePanel.getCanvas();
 		//writePanel.initContext2d();	
 		
@@ -83,24 +92,40 @@ public class WriteMathGWT implements EntryPoint, WritePanelHolder
 				
 		standAlone = true;
 		
-int testX = 50;
-int testY = 100;
-testBox = new TextBox();
+		int testX = 50;
+		int testY = 100;
+		testBox = new TextBox();
 // testBox herkrijgt focus niet na tekenen
 
-/*
-if (standAlone)
+
+/*if (standAlone)
 {	bottomPanel.add(testBox);
 	bottomPanel.setWidgetLeftWidth(testBox, testX, Style.Unit.PX, 500, Style.Unit.PX);
 	bottomPanel.setWidgetTopHeight(testBox, testY, Style.Unit.PX, 40, Style.Unit.PX);
 	testBox.addKeyDownHandler(new TextBoxKeyDownHandler());
 	testBox.addClickHandler(new TextBoxClickHandler());	
 }
-*/				
-		wisButton = new PushButton("wis");
-		//wisButton.addStyleName("pushbutton");
+*/		
 		int currentX = 50;
 		int currentY = 150;
+		
+		refSampleComboBox = new ListBox();
+		refSampleComboBox.addItem("Load");
+		for(int i=0 ; i<OneStrokeMatcher.tekens.length ; i++) {
+			refSampleComboBox.addItem(OneStrokeMatcher.tekens[i]);
+		}
+		
+		
+		if (standAlone)
+		{	bottomPanel.add(refSampleComboBox);
+			bottomPanel.setWidgetLeftWidth(refSampleComboBox, currentX, Style.Unit.PX, buttonWidth, Style.Unit.PX);
+			bottomPanel.setWidgetTopHeight(refSampleComboBox, currentY, Style.Unit.PX, buttonHeight, Style.Unit.PX);
+			refSampleComboBox.addChangeHandler(new ListChangeHandler());
+		}
+		currentX += buttonWidth + 50;
+		wisButton = new PushButton("wis");
+		//wisButton.addStyleName("pushbutton");
+		
 		if (standAlone)
 		{	bottomPanel.add(wisButton);
 			bottomPanel.setWidgetLeftWidth(wisButton, currentX, Style.Unit.PX, buttonWidth, Style.Unit.PX);
@@ -158,6 +183,11 @@ if (standAlone)
 		
 	}
 	
+	public void writeFormulaObject(String s) 
+	{
+		formuleViewer.setFormule(s);
+	}
+	
 	public void wisFormulePanel() 
 	{
 		bottomPanel.remove(formulePanel);
@@ -184,9 +214,11 @@ if (standAlone)
 			}
 			else if (e.getSource() == printButton)
 			{
-				showTekstPopup(true);
-				if (writePanel.lastObject != null)
-					tekstPopup.setText(writePanel.lastObject.printStroke());
+				//showTekstPopup(true);
+				//if (writePanel.lastObject != null)
+				//	tekstPopup.setText(writePanel.lastObject.printStroke());
+				String selectedString = refSampleComboBox.getSelectedValue();
+				writePanel.logWriteObjects(selectedString);
 			}
 			else if (e.getSource() == closeButton)
 			{
@@ -242,5 +274,23 @@ if (standAlone)
 		{
 			testBox.setFocus(true);
 		}
-	}	
+	}
+	class ListChangeHandler implements ChangeHandler
+	{
+		@Override
+		public void onChange(ChangeEvent e)
+		{
+			if (e.getSource() == refSampleComboBox)
+			{
+				String selectedString = refSampleComboBox.getSelectedValue();
+				if (selectedString != null)
+				{
+					writePanel.loadRefSamples(selectedString);
+					writePanel.setNoParse(!selectedString.equals("Load"));
+				}
+
+			}
+			
+		}
+	}
 }

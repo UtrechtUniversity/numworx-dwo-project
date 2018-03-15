@@ -14,16 +14,20 @@ public class CorrectiePanel extends LayoutPanel //JPanel
 	String teken2 = "";
 	String teken3 = "";
 	String teken4 = "";
+	String teken5 = "";
+	String teken6 = "";
 	
 	//JButton t1Button, t2Button, t3Button, t4Button, closeButton;
-	PushButton t1Button, t2Button, t3Button, t4Button, closeButton;
+	PushButton t1Button, t2Button, t3Button, t4Button, t5Button, t6Button, closeButton;
 
-	public CorrectiePanel(String t1, String t2, String t3, String t4)
+	public CorrectiePanel(String t1, String t2, String t3, String t4, String t5, String t6)
 	{
 		teken1 = t1;
 		teken2 = t2;
 		teken3 = t3;
 		teken4 = t4;
+		teken5 = t5;
+		teken6 = t6;
 		
 		//t1Button = new JButton(teken1);
 		//t2Button = new JButton(teken2);
@@ -34,11 +38,15 @@ public class CorrectiePanel extends LayoutPanel //JPanel
 		t2Button = new PushButton(teken2);
 		t3Button = new PushButton(teken3);
 		t4Button = new PushButton(teken4);
+		t5Button = new PushButton(teken5);
+		t6Button = new PushButton(teken6);
 		
 		t1Button.addStyleName("pushbutton");
 		t2Button.addStyleName("pushbutton");
 		t3Button.addStyleName("pushbutton");
 		t4Button.addStyleName("pushbutton");
+		t5Button.addStyleName("pushbutton");
+		t6Button.addStyleName("pushbutton");
 
 		//setLayout(null);
 		
@@ -52,6 +60,8 @@ public class CorrectiePanel extends LayoutPanel //JPanel
 		add(t2Button);
 		add(t3Button);
 		add(t4Button);
+		add(t5Button);
+		add(t6Button);
 		//add(closeButton);
 		
 		setWidgetLeftWidth(t1Button, 0, Style.Unit.PX, 30, Style.Unit.PX);
@@ -62,6 +72,10 @@ public class CorrectiePanel extends LayoutPanel //JPanel
 		setWidgetTopHeight(t3Button, 40, Style.Unit.PX, 20, Style.Unit.PX);
 		setWidgetLeftWidth(t4Button, 0, Style.Unit.PX, 30, Style.Unit.PX);
 		setWidgetTopHeight(t4Button, 60, Style.Unit.PX, 20, Style.Unit.PX);
+		setWidgetLeftWidth(t5Button, 0, Style.Unit.PX, 30, Style.Unit.PX);
+		setWidgetTopHeight(t5Button, 80, Style.Unit.PX, 20, Style.Unit.PX);
+		setWidgetLeftWidth(t6Button, 0, Style.Unit.PX, 30, Style.Unit.PX);
+		setWidgetTopHeight(t6Button, 100, Style.Unit.PX, 20, Style.Unit.PX);
 
 				
 		//setSize(60,80);
@@ -69,12 +83,14 @@ public class CorrectiePanel extends LayoutPanel //JPanel
 //System.out.println("cP constructed");		
 	}
 	
-	public void zetTekens(String t1, String t2, String t3, String t4)
+	public void zetTekens(String t1, String t2, String t3, String t4, String t5, String t6)
 	{
 		t1Button.setText(t1);
 		t2Button.setText(t2);
 		t3Button.setText(t3);
 		t4Button.setText(t4);
+		t5Button.setText(t5);
+		t6Button.setText(t6);
 	}
 	
 	
