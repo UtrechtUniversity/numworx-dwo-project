@@ -371,7 +371,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <DWOplayerVersion>2.1.29</DWOplayerVersion>
+        <DWOplayerVersion>2.1.30</DWOplayerVersion>
         <DWOmAccessVersion>0.0.9</DWOmAccessVersion>
         <RegisterVersion>2.1.23</RegisterVersion>
         <DWOGwtClientVersion>0.10.11</DWOGwtClientVersion>
