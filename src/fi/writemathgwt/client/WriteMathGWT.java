@@ -34,8 +34,8 @@ public class WriteMathGWT implements EntryPoint, WritePanelHolder
 	
 	static final String holderId = "rootPanel";
 	DockLayoutPanel dlp;
-	int breedte = 800;
-	int hoogte = 750;
+	int breedte = 1000;
+	int hoogte = 900;
 	int bottomHeight = 200;
 	int leftOffset = 5;
 	int topOffset = 5;
@@ -75,7 +75,7 @@ public class WriteMathGWT implements EntryPoint, WritePanelHolder
 		RootPanel.get(holderId).add(dlp);
 		RootPanel.get(holderId).addStyleName("root");
 		
-		writePanel = new WritePanel(800,600, this, tekenSet); 
+		writePanel = new WritePanel(1000,800, this, tekenSet); 
 		//writePanelCanvas = writePanel.getCanvas();
 		//writePanel.initContext2d();	
 		

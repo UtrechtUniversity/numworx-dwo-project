@@ -90,7 +90,7 @@ public class TwoStrokeMatcher {
 		
 		// =
 		if (checkStrokes(woLast,"=H1",wo,"=H2") || checkStrokes(woLast,"=H1+",wo,"=H2+"))
-			if(woLast.hasCloseXDistance(60,wo,0,2,0,2) && woLast.hasCloseXDistance(60,wo,18,19,18,19) && woLast.hasCloseYDistance(100,wo,0,2,0,2))
+			if(woLast.hasCloseXDistance(60,wo,0,2,0,2) && woLast.hasCloseXDistance(60,wo,18,19,18,19) && woLast.hasCloseYDistance(120,wo,0,2,0,2))
 				return new WriteObject("=", woLast, wo);
 		
 		if (checkStrokes(woLast,"=H1",wo,"=H2+") || checkStrokes(woLast,"=H1+",wo,"=H2"))
@@ -147,7 +147,7 @@ public class TwoStrokeMatcher {
 		
 		// B 
 		if (checkStrokes(woLast,"DH1",wo,"DH2"))
-			if(woLast.hasCloseDistance(20,wo,0,1,0,1) && woLast.hasCloseDistance(30,wo,19,20,19,20))
+			if(woLast.hasCloseDistance(20,wo,0,1,0,3) && woLast.hasCloseDistance(30,wo,19,20,17,20))
 				return new WriteObject("D", woLast, wo);
 				
 		// j 
@@ -159,6 +159,16 @@ public class TwoStrokeMatcher {
 		if (checkStrokes(woLast,"iH1",wo,"iH2"))
 			if(woLast.hasYDistance(-30,25,wo,0,1,0,1) && woLast.hasCloseXDistance(20,wo,0,1,0,1))
 				return new WriteObject("i", woLast, wo);
+		
+		// k
+		if (checkStrokes(woLast,"kH1",wo,"kH2"))
+			if(woLast.hasCloseDistance(20,wo,7,16,7,13) && woLast.hasYDistance(35, 20, wo, 0, 1, 0, 1))
+				return new WriteObject("k", woLast, wo);
+		
+		// K
+		if (checkStrokes(woLast,"KH1",wo,"KH2"))
+			if(woLast.hasCloseDistance(20,wo,7,14,7,13) && woLast.hasYDistance(0, 15, wo, 0, 1, 0, 1))
+				return new WriteObject("K", woLast, wo);
 		
 		return null;
 	}

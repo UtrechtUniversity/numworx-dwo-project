@@ -45,7 +45,7 @@ public class TwoStrokeChecker {
 		if("DH1".equals(teken)) {
 			checkers.add(wo.hasDirection(260, 30, 1, 19, 12));
 		}
-		if("DH2".equals(teken)) {logging=true;
+		if("DH2".equals(teken)) {
 			checkers.add(wo.hasDirection(320, 30, 1, 7, 2));
 			checkers.add(wo.hasDirection(300, 30, 3, 9, 2));
 			checkers.add(wo.hasDirection(270, 40, 5, 15, 3));
@@ -66,9 +66,9 @@ public class TwoStrokeChecker {
 		
 		//x
 		if("x1H1".equals(teken)) {
-			checkers.add(wo.hasDirection(320, 50, 1, 9, 4));
+			checkers.add(wo.hasDirection(330, 50, 1, 9, 4));
 			checkers.add(wo.hasDirection(270, 90, 5, 15, 6));
-			checkers.add(wo.hasDirection(220, 50, 11, 19, 4));
+			checkers.add(wo.hasDirection(210, 50, 11, 19, 4));
 		}
 		if("x1H2".equals(teken)) {
 			checkers.add(wo.hasDirection(220, 50, 1, 9, 4));
@@ -77,9 +77,11 @@ public class TwoStrokeChecker {
 		}
 		if("x2H1".equals(teken)) {
 			checkers.add(wo.hasDirection(310, 30, 1, 19, 10));
+			checkers.add(wo.hasDirection(310, 90, 1, 19, 16));
 		}
 		if("x2H2".equals(teken)) {
 			checkers.add(wo.hasDirection(240, 30, 1, 19, 10));
+			checkers.add(wo.hasDirection(240, 90, 1, 19, 16));
 		}
 		
 		//5
@@ -123,7 +125,7 @@ public class TwoStrokeChecker {
 			checkers.add(wo.hasDirection(260, 30, 1, 19, 16));
 		}
 		if("+H2".equals(teken)) {
-			checkers.add(wo.hasDirection(0, 20, 1, 19, 14));
+			checkers.add(wo.hasDirection(0, 30, 1, 19, 14));
 		}
 		if("+H2+".equals(teken)) {
 			checkers.add(wo.hasDirection(180, 20, 1, 19, 16));
@@ -135,10 +137,10 @@ public class TwoStrokeChecker {
 			checkers.add(wo.hasDirection(250, 20, 7, 19, 8));
 		}
 		if("7H2".equals(teken)) {
-			checkers.add(wo.hasDirection(0, 20, 1, 19, 14));
+			checkers.add(wo.hasDirection(0, 35, 1, 19, 12));
 		}
 		if("7H2+".equals(teken)) {
-			checkers.add(wo.hasDirection(180, 20, 1, 19, 16));
+			checkers.add(wo.hasDirection(180, 35, 1, 19, 12));
 		}
 		
 		//>=
@@ -167,18 +169,20 @@ public class TwoStrokeChecker {
 		
 		//=
 		if("=H1".equals(teken)) {
-			checkers.add(wo.hasDirection(0, 30, 1, 19, 14));
+			checkers.add(wo.hasDirection(0, 30, 1, 19, 10));
+			checkers.add(!wo.hasDirection(180, 90, 1, 19, 3));
 			checkers.add(!wo.hasDirection(300, 25, 1, 3, 1)); // ivm lang wortelteken
 			checkers.add(!wo.hasDirection(70, 15, 2, 7, 2));
 		}
 		if("=H1+".equals(teken)) {
-			checkers.add(wo.hasDirection(180, 30, 1, 19, 16));
+			checkers.add(wo.hasDirection(180, 30, 1, 19, 10));
 		}
 		if("=H2".equals(teken)) {
-			checkers.add(wo.hasDirection(0, 30, 1, 19, 14));
+			checkers.add(wo.hasDirection(0, 30, 1, 19, 10));
+			checkers.add(!wo.hasDirection(180, 90, 1, 19, 3));
 		}
 		if("=H2+".equals(teken)) {
-			checkers.add(wo.hasDirection(180, 30, 1, 19, 16));
+			checkers.add(wo.hasDirection(180, 30, 1, 19, 10));
 		}
 		
 		//f
@@ -215,12 +219,32 @@ public class TwoStrokeChecker {
 		}
 		
 		//i
-		if("iH1".equals(teken)) {logging = true;
+		if("iH1".equals(teken)) {
 			checkers.add(wo.hasDirection(260, 40, 1, 15, 8));
 			checkers.add(wo.hasDirection(0, 90, 15, 19, 2));
 		}
 		if("iH2".equals(teken)) {
 			checkers.add(".".equals(wo.getTeken()));
+		}
+		
+		//k
+		if("kH1".equals(teken)) {logging = true;
+			checkers.add(wo.hasDirection(260, 40, 1, 19, 8));
+			
+		}
+		if("kH2".equals(teken)) {
+			checkers.add(wo.hasDirection(220, 35, 1, 10, 6));
+			checkers.add(wo.hasDirection(320, 35, 10, 19, 6));
+		}
+		
+		//K
+		if("KH1".equals(teken)) {logging = true;
+			checkers.add(wo.hasDirection(260, 40, 1, 19, 8));
+			
+		}
+		if("KH2".equals(teken)) {
+			checkers.add(wo.hasDirection(220, 35, 1, 10, 6));
+			checkers.add(wo.hasDirection(320, 35, 10, 19, 6));
 		}
 		
 		

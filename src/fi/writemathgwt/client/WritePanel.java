@@ -43,6 +43,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 public class WritePanel extends LayoutPanel { //HorizontalPanel
 	private static Logger logger = Logger.getLogger("WritePanel");
 	
+	private boolean analyserOn = false;
+	
 	private static int cPanelAreaMin = -50000;
 	private static int cPanelAreaMax = 50000;
 	
@@ -166,7 +168,12 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	//OK
 	public void paint() 
 	{
-		paintComponent(g);
+		paintComponent(g, true);
+	}
+	
+	public void paint(boolean refresh) 
+	{
+		paintComponent(g, refresh);
 	}
 	
 	public void tekenRechthoek(Rectangle rechthoek) {
@@ -186,9 +193,11 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		g.setStrokeStyle(oldStyle);
 	}
 	
-	public void paintComponent(Context2d g) 
+	public void paintComponent(Context2d g, boolean refresh) 
 	{
 		g.setLineWidth(1.0d);
+		
+		if(refresh) {
 		g.clearRect(0, 0, width, height);
 		
 		g.setFillStyle(CssColor.make(240, 240, 240));
@@ -213,11 +222,48 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			}
 		}
 		
+		
+		
 		g.setStrokeStyle(zwart);
 		for(int i = 0 ; i < writeObjects.size() ; i++) {
+//			g.setFillStyle(CssColor.make(220, 220, 220));
+//			int x = writeObjects.get(i).getBox().x;
+//			int y = writeObjects.get(i).getBox().y;
+//			int w = writeObjects.get(i).getBox().width;
+//			int h = writeObjects.get(i).getBox().height;
+//			g.fillRect(x, y, w, h);
 			writeObjects.get(i).draw(g, panelShiftX, panelShiftY);
+			
+			if(analyserOn) {
+				g.setFillStyle(CssColor.make(255, 255, 255));
+				int bx = 460;
+				int by = 570;
+				int dx = 14;
+				g.fillRect(0, by-180, width, 560);
+				g.setFillStyle(CssColor.make(150, 150, 150));
+				g.setStrokeStyle(ruitjesKleur);
+				for (int k = 0; k < 9; k++) {
+					g.beginPath();
+					g.moveTo(bx, by-180+k*45);
+					g.lineTo(width, by-180+k*45);
+					g.stroke();
+				}
+				for(int j = 0 ; j < writeObjects.get(i).dAngles.size() ; j++) {
+					
+					int xx = bx+dx*j;
+					int ww = dx-5;
+					int barH = writeObjects.get(i).dAngles.get(j).intValue();
+					int yy = by-Math.max(0,barH);
+					int hh = Math.abs(barH);
+					g.fillRect(xx, yy, ww, hh);
+					g.fillText(""+(j+1), bx+dx*j, by+(barH<0?-5:10));
+					
+					g.fillText("dAngle "+(j+1)+" = "+writeObjects.get(i).dAngles.get(j).intValue(), bx-100, by-180+12*(j+1));
+				}
+			}
+			
 		}
-		
+		}
 		if (points.size() > 0) {
 			g.beginPath();
 			g.moveTo(points.get(0).x+panelShiftX, points.get(0).y+panelShiftY);
@@ -238,12 +284,32 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		
 		//g.scale(5.0,5.0);
 		//g.translate(300,0);
-		if(lastObject!=null) {
+		
+		//object vergroot
+		if(analyserOn && lastObject!=null) {
 			
 			double factor = 300.0 / Math.max(lastObject.getBox().width,lastObject.getBox().height);
-			double x = 500 - lastObject.getBox().x;
-			double y = 50 - lastObject.getBox().y;
+			double x = 20 - lastObject.getBox().x;
+			double y = 400 - lastObject.getBox().y;
 			lastObject.draw(g,(int)x, (int)y, factor);
+			
+			{
+				double w =(factor*lastObject.getBox().width);
+				double h =(factor*lastObject.getBox().height);
+				g.setStrokeStyle(ruitjesKleur);
+				for (int i = 0; i < 11; i++) {
+					g.beginPath();
+					g.moveTo(20+0, 400+i*h/10);
+					g.lineTo(20+w, 400+i*h/10);
+					g.stroke();
+				}
+				for (int i = 0; i < 11; i++) {
+					g.beginPath();
+					g.moveTo(20+i*w/10 , 400);
+					g.lineTo(20+i*w/10 , 400+h);
+					g.stroke();
+				}
+			}
 		}
 				
 		//g.scale(0.2,0.2);
@@ -1233,10 +1299,10 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			{
 				int x = wo.getBox().x;
 				//int y = wo.getBoxMid().y - wo.getBox().width / 2;
-				int y = wo.getBoxMid().y - averageHeight / 2;
+				int y = wo.getBoxMid().y - averageHeight ;
 				int w = wo.getBox().width;
 				//int h = wo.getBox().width;
-				int h = averageHeight;
+				int h = 2*averageHeight;
 				Rectangle box = new Rectangle(x, y, w, h);
 				int objectsBefore = writeObjects.size();
 //System.out.println("before " + objectsBefore);				
@@ -1826,7 +1892,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 				Point p = toWorldCoordinates(new Point(e.getX(), e.getY()));
 				points.add(p);
 				paint();
-			
+				
+				
 				addWriteObject();
 // 				// Move current points as stroke to Strokes
 //				Stroke stroke = new Stroke(aPoints);

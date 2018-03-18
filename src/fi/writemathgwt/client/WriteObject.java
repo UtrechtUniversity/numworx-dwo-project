@@ -47,8 +47,11 @@ public class WriteObject {
 	private int maxWidth = 1000;
 	private int maxHeigth = 500;
 	private int standardizeUnit = 20;
-	private int standardizeLengthNumber = 20;
-	
+	private int standardizeLengthNumber = 20;//veelvoud van 20
+	private ArrayList<Integer> cusps= new ArrayList<Integer>();	
+	private ArrayList<Integer> plusCusps= new ArrayList<Integer>();	
+	private ArrayList<Integer> minCusps= new ArrayList<Integer>();	
+	public ArrayList<Double> dAngles = new ArrayList<Double>();	
 	// spatial parsing
 	WriteObject isTellerVan = null;
 	WriteObject isNoemerVan = null;
@@ -95,7 +98,7 @@ public class WriteObject {
 		}
 		
 		int dpSize = doublePoints.size();
-		while (dpSize < 25)
+		while (dpSize < standardizeLengthNumber+5)
 		{	
 			doublePoints = insertPoint(doublePoints);
 			dpSize = doublePoints.size();
@@ -165,21 +168,21 @@ public class WriteObject {
 		}
 		
 		int dpSize = doublePoints.size();
-		while (dpSize < 30)
+		while (dpSize < standardizeLengthNumber+5)
 		{	
 			doublePoints = insertPoint(doublePoints);
 			dpSize = doublePoints.size();
 		}
 		
-		for(int i = 0 ; i < doublePoints.size() ; i++) 
-		{
-			logger.info("punten"+i+": "+doublePoints.get(i).getX()+" , "+doublePoints.get(i).getY());
-		}
+//		for(int i = 0 ; i < doublePoints.size() ; i++) 
+//		{
+//			logger.info("punten"+i+": "+doublePoints.get(i).getX()+" , "+doublePoints.get(i).getY());
+//		}
 		
-		logger.info("doublepoints length: " +doublePoints.size() );
+		//logger.info("doublepoints length: " +doublePoints.size() );
 		doublePoints = averageSmooth(doublePoints);
 		rawPoints = averageSmooth(rawPoints);
-		logger.info("doublepoints length: " +doublePoints.size() );
+		//logger.info("doublepoints length: " +doublePoints.size() );
 		makeBox(points);
 		
 		if (size < 5) 
@@ -204,7 +207,7 @@ public class WriteObject {
 //				doublePoints = tempDoublePoints;
 //		}
 		
-		logger.info("doublepoints length na standadize: " +doublePoints.size() );
+		//logger.info("doublepoints length na standadize: " +doublePoints.size() );
 			
 		if (!cNewStrokmatcher) { // if old parse after standardize
 			teken = parse(doublePoints);
@@ -233,6 +236,13 @@ public class WriteObject {
 			doublePoints.add(points.get(i).getDoublePoint());
 			rawPoints.add(points.get(i).getDoublePoint());
 			//parsePoints.add(points.get(i).getDoublePoint());
+		}
+		
+		int dpSize = doublePoints.size();
+		while (dpSize < standardizeLengthNumber+5)
+		{	
+			doublePoints = insertPoint(doublePoints);
+			dpSize = doublePoints.size();
 		}
 		
 		doublePoints = averageSmooth(doublePoints);
@@ -378,7 +388,7 @@ public class WriteObject {
 	//OK
 	public Rectangle getBox() 
 	{
-		if (teken.equals("-") || teken.equals("back"))
+		if (teken!=null && (teken.equals("-") || teken.equals("back")))
 		{	
 			int height = 2;
 			if (box.height < height)
@@ -512,14 +522,15 @@ public class WriteObject {
 		if (rawPoints.size() > 0) {
 			if ( (".".equals(teken)) || ("*".equals(teken) ) ) {
 				g.setFillStyle(CssColor.make(0, 0, 0));
-				if(newMatch)
-					g.setStrokeStyle(CssColor.make(0, 200, 0));
-				if(newMatchWrong)
-					g.setStrokeStyle(CssColor.make(200, 0, 0));
-				if(oldMatch)
-					g.setStrokeStyle(CssColor.make(0, 0, 200));
-				if(oldMatchWrong)
-					g.setStrokeStyle(CssColor.make(200, 0, 200));
+//				if(newMatch)
+//					g.setStrokeStyle(CssColor.make(0, 200, 0));
+//				if(newMatchWrong)
+//					g.setStrokeStyle(CssColor.make(200, 0, 0));
+//				if(oldMatch)
+//					g.setStrokeStyle(CssColor.make(0, 0, 200));
+//				if(oldMatchWrong)
+//					g.setStrokeStyle(CssColor.make(200, 0, 200));
+				
 //				g.fillRect(rawPoints.get(0).getX()+shiftX, rawPoints.get(0).getY()+shiftY, 3, 3);
 				g.beginPath();
 				g.arc(rawPoints.get(0).getX()+shiftX, rawPoints.get(0).getY()+shiftY, 2, 0, 2* Math.PI);
@@ -535,18 +546,52 @@ public class WriteObject {
 			
 			for (int j = 0; parsePoints!=null && j <parsePoints.size(); j++) {	
 				try {
-					if(newMatch)
-						g.setStrokeStyle(CssColor.make(0, 200, 0));
-					if(newMatchWrong)
-						g.setStrokeStyle(CssColor.make(200, 0, 0));
-					if(oldMatch)
-						g.setStrokeStyle(CssColor.make(0, 0, 200));
-					if(oldMatchWrong)
-						g.setStrokeStyle(CssColor.make(200, 0, 200));
+//					if(newMatch)
+//						g.setStrokeStyle(CssColor.make(0, 200, 0));
+//					if(newMatchWrong)
+//						g.setStrokeStyle(CssColor.make(200, 0, 0));
+//					if(oldMatch)
+//						g.setStrokeStyle(CssColor.make(0, 0, 200));
+//					if(oldMatchWrong)
+//						g.setStrokeStyle(CssColor.make(200, 0, 200));
 					g.beginPath();
 					double x = factor*(parsePoints.get(j).getX() - box.x)+box.x+shiftX;
 					double y = factor*(parsePoints.get(j).getY() - box.y)+box.y+shiftY;
-					g.arc(x, y, 2, 0, 2* Math.PI);
+					if(factor>1) {
+						g.arc(x, y, 2, 0, 2* Math.PI);
+						g.fillText(""+j, x, y);
+					
+						if(j==0 || j==19 || plusCusps.contains(j) || minCusps.contains(j) || cusps.contains(j)) {
+							if(j==0) {
+								g.setStrokeStyle(CssColor.make(0, 60, 0));
+								g.arc(x, y, 2, 0, 2* Math.PI);
+							}
+							if(plusCusps.contains(j)) {
+								g.setFillStyle(CssColor.make(100, 0, 0));
+								g.setStrokeStyle(CssColor.make(100, 0, 0));
+								g.arc(x, y, 4, 0, 4* Math.PI);
+							}
+							if(minCusps.contains(j)) {
+								g.setFillStyle(CssColor.make(0, 0, 150));
+								g.setStrokeStyle(CssColor.make(0, 0, 150));
+								g.arc(x, y, 4, 0, 4* Math.PI);
+							}
+						}
+					}
+					else {
+						
+//							if(plusCusps.contains(j)) {
+//								g.setFillStyle(CssColor.make(100, 0, 0));
+//								g.setStrokeStyle(CssColor.make(100, 0, 0));
+//								g.arc(x, y, 2, 0, 2* Math.PI);
+//							}
+//							if(minCusps.contains(j)) {
+//								g.setFillStyle(CssColor.make(0, 0, 150));
+//								g.setStrokeStyle(CssColor.make(0, 0, 150));
+//								g.arc(x, y, 2, 0, 2* Math.PI);
+//							}
+						
+					}
 					//g.arc(parsePoints.get(j).getX()+shiftX, parsePoints.get(j).getY()+shiftY, 1, 0, 1* Math.PI);
 					g.closePath();
 					g.fill();
@@ -555,14 +600,14 @@ public class WriteObject {
 				catch (Exception e) {}
 			}
 			
-			if(newMatch)
-				g.setStrokeStyle(CssColor.make(0, 200, 0));
-			if(newMatchWrong)
-				g.setStrokeStyle(CssColor.make(200, 0, 0));
-			if(oldMatch)
-				g.setStrokeStyle(CssColor.make(0, 0, 200));
-			if(oldMatchWrong)
-				g.setStrokeStyle(CssColor.make(200, 0, 200));
+//			if(newMatch)
+//				g.setStrokeStyle(CssColor.make(150, 200, 150));
+//			if(newMatchWrong)
+//				g.setStrokeStyle(CssColor.make(200, 0, 0));
+//			if(oldMatch)
+//				g.setStrokeStyle(CssColor.make(0, 0, 200));
+//			if(oldMatchWrong)
+//				g.setStrokeStyle(CssColor.make(200, 0, 200));
 			g.beginPath();
 			
 			double x = factor*(rawPoints.get(0).getX() - box.x)+box.x+shiftX;
@@ -575,7 +620,8 @@ public class WriteObject {
 						&& (!isThreeStrokeObject() || isThreeStrokeObject() && threeStrokeGap1!= j && threeStrokeGap2!= j)) {
 					x = factor*(rawPoints.get(j).getX() - box.x)+box.x+shiftX;
 					y = factor*(rawPoints.get(j).getY() - box.y)+box.y+shiftY;
-					g.lineTo(x, y);
+					//if(factor>1)
+						g.lineTo(x, y);
 					//g.lineTo(factor*rawPoints.get(j).getX()+shiftX, factor*rawPoints.get(j).getY()+shiftY);
 				} else { // skip gaps for two-strokes
 					x = factor*(rawPoints.get(j).getX() - box.x)+box.x+shiftX;
@@ -712,8 +758,12 @@ public class WriteObject {
 			// hier nog een smoother?			
 			doublePoints = standardizeToLength(doublePoints);
 		}
+		logger.info("na parse(String key) doublepoint size:"+doublePoints.size());
 		parsePoints = deepCopy(doublePoints);
-		
+		logger.info("na parse(String key) parsePoints size:"+parsePoints.size());
+		dAngles = findDAngles();
+		plusCusps = findPlusCusps();
+		minCusps = findMinCusps();
 		String gevondenTeken = OneStrokeMatcher.findTeken(this);
 		if(gevondenTeken != null) {
 			newMatch = true;
@@ -738,9 +788,11 @@ public class WriteObject {
 			// hier nog een smoother?			
 			doublePoints = standardizeToLength(doublePoints);
 		}
-		logger.info("na standardizeToLength doublepoint size:"+doublePoints.size());
+		//logger.info("na standardizeToLength doublepoint size:"+doublePoints.size());
 		parsePoints = deepCopy(doublePoints);
-		
+		dAngles = findDAngles();
+		plusCusps = findPlusCusps();
+		minCusps = findMinCusps();
 		String gevondenTeken = OneStrokeMatcher.findTeken(this);
 		if(gevondenTeken != null) {
 			newMatch = true;
@@ -763,6 +815,12 @@ public class WriteObject {
 //			logger.info("parsing :: teken3 = " + teken3);
 //			logger.info("parsing :: teken4 = " + teken4);
 			
+			if(gevondenTeken.charAt(gevondenTeken.length()-1)=='H')
+				gevondenTeken = teken1;
+			if(gevondenTeken.charAt(gevondenTeken.length()-1)=='H')
+				gevondenTeken = teken2;
+			if(gevondenTeken.charAt(gevondenTeken.length()-1)=='H')
+				gevondenTeken = teken3;
 		} 
 			
 		
@@ -1066,6 +1124,10 @@ public class WriteObject {
 	}
 	
 	public boolean hasCloseDistance(int distMin, WriteObject wo, int min1, int max1, int min2, int max2) {
+		min1 = min1*standardizeLengthNumber/20;
+		max1 = max1*standardizeLengthNumber/20;
+		min2 = min2*standardizeLengthNumber/20;
+		max2 = max2*standardizeLengthNumber/20;
 		double dMin = distMin*boxDiagonal/100;
 		double distance = 1000;
 		for(int i=min1 ; i<max1 ; i++) {
@@ -1084,6 +1146,10 @@ public class WriteObject {
 	}
 	
 	public boolean hasCloseXDistance(int distMin, WriteObject wo, int min1, int max1, int min2, int max2) {
+		min1 = min1*standardizeLengthNumber/20;
+		max1 = max1*standardizeLengthNumber/20;
+		min2 = min2*standardizeLengthNumber/20;
+		max2 = max2*standardizeLengthNumber/20;
 		
 		double dMin = distMin*boxDiagonal/100;
 		double distance = 1000;
@@ -1100,7 +1166,307 @@ public class WriteObject {
 		return false;
 	}
 	
+	public ArrayList<Integer> findPlusCusps() {
+		ArrayList<Integer> plusCusps = new ArrayList<Integer>();
+		for(int i=4 ; i<standardizeLengthNumber-4 ; i++) {
+			double before1 = dAngles.get(i-3);
+			double before2 = dAngles.get(i-2);
+			double max1 = dAngles.get(i-1);
+			double max2 = dAngles.get(i);
+			double after1 = dAngles.get(i+1);
+			double after2 = dAngles.get(i+2);
+			
+			boolean signChange = max1<0||before2<0||before1<0 || max2<0 || after1<0 ;
+
+			if(max1>before1 && max1>before2 && max1>after1 && max1>after2 && max2>=before2 
+					|| max2>before1 && max2>before2 && max2>after1 && max2>after2 && max1>=after1){
+				if(signChange && 
+						(max1+max2 > 150 && before2+after1<30 
+						|| max1+max2 > 70 && before2+after1<10 
+						|| max1+max2 > 50 && before2+after1<0)) {
+					if(max1>=max2)
+						plusCusps.add(i);
+					else
+						plusCusps.add(i+1);
+				}
+				else if(!signChange && 
+						(max1+max2 > 160)) {
+					if(max1>=max2)
+						plusCusps.add(i);
+					else
+						plusCusps.add(i+1);
+				}
+			}
+				
+		}
+		
+		return plusCusps;
+	}
+	
+	public ArrayList<Integer> findMinCusps() {
+		ArrayList<Integer> plusCusps = new ArrayList<Integer>();
+		for(int i=4 ; i<standardizeLengthNumber-4 ; i++) {
+			double before1 = dAngles.get(i-3);
+			double before2 = dAngles.get(i-2);
+			double min1 = dAngles.get(i-1);
+			double min2 = dAngles.get(i);
+			double after1 = dAngles.get(i+1);
+			double after2 = dAngles.get(i+2);
+			
+			boolean signChange = min1>0||before2>0||before1>0 || min2>0 || after1>0 ;
+			
+			if(min1<before1 && min1<before2 && min1<after1 && min1<after2 && min2<=before2 || min2<before1 && min2<before2 && min2<after1  && min2<after2 && min1<=after1) {
+				if(signChange &&
+						(min1+min2 < -150 && before2+after1>-30 
+						|| min1+min2 < -70 && before2+after1>-10 
+						|| min1+min2 < -50 && +before2+after1>0)) {
+					if(min1<=min2)
+						plusCusps.add(i);
+					else
+						plusCusps.add(i+1);
+				}
+				else if(!signChange &&
+						(min1+min2 < -160)) {
+					if(min1<=min2)
+						plusCusps.add(i);
+					else
+						plusCusps.add(i+1);
+				}
+			}
+				
+		}
+		
+		return plusCusps;
+	}
+	
+	public ArrayList<Double> findDAngles() {
+		ArrayList<Double> cNrs = new ArrayList<Double>();
+		
+		for(int i=1 ; i<standardizeLengthNumber-1 ; i++) {
+			double dx = parsePoints.get(i).getX() - parsePoints.get(i-1).getX();
+			double dy = parsePoints.get(i).getY() - parsePoints.get(i-1).getY();
+			double ddx = parsePoints.get(i+1).getX() - parsePoints.get(i).getX();
+			double ddy = parsePoints.get(i+1).getY() - parsePoints.get(i).getY();
+			
+			
+			double angleStep1 = 180.0*(Math.atan2(-dy, dx)/Math.PI);
+			double angleStep2 = 180.0*(Math.atan2(-ddy, ddx)/Math.PI);
+			
+			
+			if(angleStep2-angleStep1>180)
+				angleStep2 -= 360;
+			if(angleStep2-angleStep1<-180)
+				angleStep2 += 360;
+			
+			double dAngle = angleStep2-angleStep1;
+			cNrs.add(dAngle);
+		}
+		return cNrs;
+	}
+	
+	public ArrayList<Integer> findCusp() {
+		ArrayList<Integer> cNrs = new ArrayList<Integer>();
+		double changeLimit = 20;
+		double dAngleLast = 0;
+		boolean signChangeDecPending = false;
+		boolean signChangeIncPending = false;
+		double changeDecPending = 0;
+		double changeIncPending = 0;
+		
+		for(int i=1 ; i<17 ; i++) {
+			double dx = parsePoints.get(i).getX() - parsePoints.get(i-1).getX();
+			double dy = parsePoints.get(i).getY() - parsePoints.get(i-1).getY();
+			double ddx = parsePoints.get(i+1).getX() - parsePoints.get(i).getX();
+			double ddy = parsePoints.get(i+1).getY() - parsePoints.get(i).getY();
+			double dddx = parsePoints.get(i+2).getX() - parsePoints.get(i+1).getX();
+			double dddy = parsePoints.get(i+2).getY() - parsePoints.get(i+1).getY();
+			
+			double angleStep1 = 180.0*(Math.atan2(-dy, dx)/Math.PI);
+			double angleStep2 = 180.0*(Math.atan2(-ddy, ddx)/Math.PI);
+			double angleStep3 = 180.0*(Math.atan2(-dddy, dddx)/Math.PI);
+			
+			if(angleStep2-angleStep1>180)
+				angleStep2 -= 360;
+			if(angleStep2-angleStep1<-180)
+				angleStep2 += 360;
+			if(angleStep3-angleStep2>180)
+				angleStep3 -= 360;
+			if(angleStep3-angleStep2<-180)
+				angleStep3 += 360;
+			double dAngle = angleStep2-angleStep1;
+			dAngles.add(dAngle);
+			logger.info("dAngle_"+i+" = "+dAngle);
+			double absChange = Math.abs(dAngleLast - dAngle);
+			
+			boolean signChangeDec = i>2 && dAngle<=-0 && dAngleLast>0 ;
+			boolean signChangeInc = i>2 && dAngle>=0 && dAngleLast<-0 ;
+			
+			boolean signChangeDecBack = i>2 && dAngle>=-0 && dAngleLast<0 ;
+			boolean signChangeIncBack = i>2 && dAngle<=0 && dAngleLast>-0 ;
+			signChangeDecPending = signChangeDecPending && !signChangeDecBack;
+			signChangeIncPending = signChangeIncPending && !signChangeIncBack;
+			
+			if(!signChangeDecPending)
+				changeDecPending=0;
+			if(!signChangeIncPending)
+				changeIncPending=0;
+			
+			boolean changeDecEnough =	dAngleLast-dAngle-changeDecPending>changeLimit ;
+			boolean changeIncEnough = dAngle-dAngleLast+changeIncPending>changeLimit;
+			
+			
+			
+			boolean signChange = (signChangeDec||signChangeDecPending) && changeDecEnough || (signChangeInc ||signChangeIncPending)&& changeIncEnough;
+			if(signChange) {
+				signChangeDecPending = false;
+				signChangeIncPending = false;
+				changeDecPending = 0;
+				changeIncPending = 0;
+				
+				if(cNrs.contains(i-2)) {
+					cNrs.remove(cNrs.size()-1);
+					cNrs.add(i-1);
+				}
+				else
+					cNrs.add(i);
+				i++;
+				dAngleLast = angleStep3-angleStep2;
+			}
+			else if(Math.abs(dAngleLast+dAngle)>165) {
+				signChangeDecPending = false;
+				signChangeIncPending = false;
+				changeDecPending = 0;
+				changeIncPending = 0;
+				
+				cNrs.add(i);
+				i++;
+				dAngleLast = angleStep3-angleStep2;
+			}
+			else {
+				dAngleLast = dAngle;
+				if(signChangeDecPending)
+					changeDecPending += dAngle;
+				else if(signChangeDec && !changeDecEnough && !cNrs.contains(i-2)) {
+					signChangeDecPending = true;
+					changeDecPending += dAngle;
+				}
+				if(signChangeIncPending)
+					changeIncPending += dAngle;
+				else if(signChangeInc && !changeIncEnough && !cNrs.contains(i-2)) {
+					signChangeIncPending = true;
+					changeIncPending += dAngle;
+				}
+			}
+			//logger.info("cuspsAngle = " + dAngle+ ", found= "+(absChange>changeLimit && signChange)+", pendingdec: "+signChangeDecPending+", pendinginc: "+signChangeIncPending);
+			
+		}
+		return cNrs;
+	}
+	public int getSharpAngleStep(double minAngle, int firstStep, int lastStep ) {
+		firstStep = firstStep*standardizeLengthNumber/20;
+		lastStep = lastStep*standardizeLengthNumber/20;
+		
+		for(int i=firstStep ; i<lastStep-1 ; i++) {
+			double dx = parsePoints.get(i).getX() - parsePoints.get(i-1).getX();
+			double dy = parsePoints.get(i).getY() - parsePoints.get(i-1).getY();
+			double ddx = parsePoints.get(i+1).getX() - parsePoints.get(i).getX();
+			double ddy = parsePoints.get(i+1).getY() - parsePoints.get(i).getY();
+			
+			double angleStep1 = 180.0*(Math.atan2(-dy, dx)/Math.PI);
+			double angleStep2 = 180.0*(Math.atan2(-ddy, ddx)/Math.PI);
+			
+			if(angleStep2-angleStep1>180)
+				angleStep2 -= 360;
+			if(angleStep2-angleStep1<-180)
+				angleStep2 += 360;
+			if(Math.abs(angleStep2-angleStep1) < minAngle)
+				return i+1;
+		}
+		return 0;
+	}
+	
+	public boolean hasDAngle(double dAngleTotalMin, double dAngleTotalMax, double dAngleStepMin, double dAngleStepMax, int firstStep, int lastStep) {
+		firstStep = firstStep*standardizeLengthNumber/20;
+		lastStep = lastStep*standardizeLengthNumber/20;
+		
+		boolean hasTotalDAngle = true;
+		boolean hasStepDAngle = true;
+		int teller = 0;
+		double dAngleTotal = 0;
+		for(int i=firstStep ; i<lastStep-1 ; i++) {
+			double dx = parsePoints.get(i).getX() - parsePoints.get(i-1).getX();
+			double dy = parsePoints.get(i).getY() - parsePoints.get(i-1).getY();
+			double ddx = parsePoints.get(i+1).getX() - parsePoints.get(i).getX();
+			double ddy = parsePoints.get(i+1).getY() - parsePoints.get(i).getY();
+			
+			double angleStep1 = 180.0*(Math.atan2(-dy, dx)/Math.PI);
+			double angleStep2 = 180.0*(Math.atan2(-ddy, ddx)/Math.PI);
+			
+			if(angleStep2-angleStep1>180)
+				angleStep2 -= 360;
+			if(angleStep2-angleStep1<-180)
+				angleStep2 += 360;
+			
+			//logger.info("angleStep2-angleStep1 = " + (angleStep2-angleStep1));
+			hasStepDAngle = hasStepDAngle && angleStep2-angleStep1 > dAngleStepMin && angleStep2-angleStep1 < dAngleStepMax;
+			dAngleTotal += angleStep2-angleStep1;
+			teller++;	
+		}
+		//logger.info("dAngleTotal " + (dAngleTotal));
+		hasTotalDAngle = dAngleTotal > dAngleTotalMin &&  dAngleTotal < dAngleTotalMax;
+		return hasStepDAngle && hasTotalDAngle;
+	}
+	
+	public boolean dMinBoxTop(double dMin, double tolerance, int firstPoint, int lastPoint) {
+		firstPoint = firstPoint*standardizeLengthNumber/20;
+		lastPoint = lastPoint*standardizeLengthNumber/20;
+		double min = 1000;
+		for(int i=firstPoint ; i<lastPoint+1 ; i++) {
+			double d = Math.abs(parsePoints.get(i).getY() - getBox().y);
+			min = Math.min(min, d);
+		}
+		return Math.abs(min*100/getBox().height - dMin) < tolerance;
+	}
+	
+	public boolean dMinBoxBottom(double dMin, double tolerance, int firstPoint, int lastPoint) {
+		firstPoint = firstPoint*standardizeLengthNumber/20;
+		lastPoint = lastPoint*standardizeLengthNumber/20;
+		
+		double min = 1000;
+		for(int i=firstPoint ; i<lastPoint+1 ; i++) {
+			double d = Math.abs(getBox().y+getBox().height - parsePoints.get(i).getY());
+			min = Math.min(min, d);
+		}
+		return Math.abs(min*100/getBox().height - dMin) < tolerance;
+	}
+	
+	public boolean dMinBoxLeft(double dMin, double tolerance, int firstPoint, int lastPoint) {
+		firstPoint = firstPoint*standardizeLengthNumber/20;
+		lastPoint = lastPoint*standardizeLengthNumber/20;
+		double min = 1000;
+		for(int i=firstPoint ; i<lastPoint+1 ; i++) {
+			double d = Math.abs(parsePoints.get(i).getX() - getBox().x);
+			min = Math.min(min, d);
+		}
+		return Math.abs(min*100/getBox().width - dMin) < tolerance;
+	}
+	
+	public boolean dMinBoxRight(double dMin, double tolerance, int firstPoint, int lastPoint) {
+		firstPoint = firstPoint*standardizeLengthNumber/20;
+		lastPoint = lastPoint*standardizeLengthNumber/20;
+		double min = 1000;
+		for(int i=firstPoint ; i<lastPoint+1 ; i++) {
+			double d = Math.abs(getBox().x+getBox().width - parsePoints.get(i).getX());
+			min = Math.min(min, d);
+		}
+		return Math.abs(min*100/getBox().width - dMin) < tolerance;
+	}
+	
 	public boolean hasDirection (int angle, double tolerance, int pointNrStart, int pointNrEnd, int minSteps) {
+		pointNrStart = pointNrStart*standardizeLengthNumber/20;
+		pointNrEnd = pointNrEnd*standardizeLengthNumber/20;
+		minSteps = minSteps*standardizeLengthNumber/20;
+		
 		int counter = 0;
 		for(int i=pointNrStart ; i<pointNrEnd+1 ; i++) {
 			double dx = parsePoints.get(i).getX() - parsePoints.get(i-1).getX();
@@ -1121,6 +1487,11 @@ public class WriteObject {
 	}
 	
 	public boolean hasCloseYDistance(int distMin, WriteObject wo, int min1, int max1, int min2, int max2) {
+		min1 = min1*standardizeLengthNumber/20;
+		max1 = max1*standardizeLengthNumber/20;
+		min2 = min2*standardizeLengthNumber/20;
+		max2 = max2*standardizeLengthNumber/20;
+		
 		double dMin = distMin*boxDiagonal/100;
 		double distance = 1000;
 		for(int i=min1 ; i<max1 ; i++) {
@@ -1136,6 +1507,11 @@ public class WriteObject {
 	}
 	
 	public boolean hasYDistance(int dist, int distMin, WriteObject wo, int min1, int max1, int min2, int max2) {
+		min1 = min1*standardizeLengthNumber/20;
+		max1 = max1*standardizeLengthNumber/20;
+		min2 = min2*standardizeLengthNumber/20;
+		max2 = max2*standardizeLengthNumber/20;
+		
 		double dMin = distMin*boxDiagonal/100;
 		dist = dist*boxDiagonal/100;
 		double distance = 1000;
@@ -1154,6 +1530,9 @@ public class WriteObject {
 	}
 	
 	public boolean hasSharpAngle(int angle, int tolerance, int pointNrStart, int pointNrEnd) {
+		pointNrStart = pointNrStart*standardizeLengthNumber/20;
+		pointNrEnd = pointNrEnd*standardizeLengthNumber/20;
+		
 		for(int i=pointNrStart ; i<pointNrEnd-3 ; i++) {
 			double dx = parsePoints.get(i).getX() - parsePoints.get(i+1).getX();
 			double dy = parsePoints.get(i).getY() - parsePoints.get(i+1).getY();
@@ -1177,6 +1556,9 @@ public class WriteObject {
 	}
 	
 	public boolean hasIncreasingAngle(int tolerance, int pointNrStart, int pointNrEnd) {
+		pointNrStart = pointNrStart*standardizeLengthNumber/20;
+		pointNrEnd = pointNrEnd*standardizeLengthNumber/20;
+		
 		boolean increasing = true;
 		int teller = 0;
 		int totalIncrease = 0;
@@ -1201,6 +1583,9 @@ public class WriteObject {
 	}
 	
 	public boolean hasDecreasingAngle(int tolerance, int pointNrStart, int pointNrEnd) {
+		pointNrStart = pointNrStart*standardizeLengthNumber/20;
+		pointNrEnd = pointNrEnd*standardizeLengthNumber/20;
+		
 		boolean decreasing = true;
 		int teller = 0;
 		int totalDecrease = 0;
