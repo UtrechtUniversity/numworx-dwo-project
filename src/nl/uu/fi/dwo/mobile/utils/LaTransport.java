@@ -333,4 +333,11 @@ public class LaTransport implements Logging {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+	@Override
+	public void setLogObjectives(boolean[][] objectives) {
+		// TODO Auto-generated method stub
+		
+	}
 }

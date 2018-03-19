@@ -14,4 +14,6 @@ public interface Logging {
 	void setClassName(String string);
 
 	String getLogID();
+
+	void setLogObjectives(boolean[][] objectives);
 }

@@ -27,4 +27,8 @@ public final class NoLogging implements Logging {
 		return null;
 	}
 
+	@Override
+	public void setLogObjectives(boolean[][] objectives) {
+	}
+
 }
