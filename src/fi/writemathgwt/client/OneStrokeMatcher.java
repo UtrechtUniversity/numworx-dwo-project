@@ -17,7 +17,7 @@ public class OneStrokeMatcher {
 				StrokeChecker.check(wo, tekens[i]);
 				teken = tekens[i];
 				s = s+teken+",";
-				
+				return teken;
 			}
 		}
 		logger.info(s);

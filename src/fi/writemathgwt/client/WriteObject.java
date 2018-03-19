@@ -12,7 +12,7 @@ import com.google.gwt.canvas.dom.client.CssColor;
 
 
 public class WriteObject {
-	private static Logger logger = Logger.getLogger("WriteObject");
+	//private static Logger logger = Logger.getLogger("WriteObject");
 
 	private final static boolean cNewStrokmatcher = true;
 	static int newTekenSet = 0;
@@ -40,6 +40,7 @@ public class WriteObject {
 	private ArrayList<DoublePoint> parsePoints;
 	private ArrayList<DoublePoint> rawPoints;
 	private Rectangle box;
+	private DoubleRectangle parsingBox;
 	private int boxDiagonal;
 	int boxOffset = 2;
 	private String teken;
@@ -399,6 +400,19 @@ public class WriteObject {
 		return box;
 	}
 	
+	public DoubleRectangle getParsingBox() 
+	{
+		if (teken!=null && (teken.equals("-") || teken.equals("back")))
+		{	
+			int height = 2;
+			if (box.height < height)
+				return new DoubleRectangle(box.x - height, box.y - height / 2, box.width + 2 * height, height);
+			else
+				return new DoubleRectangle(box.x - box.height, box.y, box.width + 2 * box.height, box.height);
+		}
+		return parsingBox;
+	}
+	
 	public Point getBoxMid() 
 	{
 		if (hasAscent())
@@ -555,8 +569,8 @@ public class WriteObject {
 //					if(oldMatchWrong)
 //						g.setStrokeStyle(CssColor.make(200, 0, 200));
 					g.beginPath();
-					double x = factor*(parsePoints.get(j).getX() - box.x)+box.x+shiftX;
-					double y = factor*(parsePoints.get(j).getY() - box.y)+box.y+shiftY;
+					double x = factor*(parsePoints.get(j).getX() - parsingBox.x)+parsingBox.x+shiftX;
+					double y = factor*(parsePoints.get(j).getY() - parsingBox.y)+parsingBox.y+shiftY;
 					if(factor>1) {
 						g.arc(x, y, 2, 0, 2* Math.PI);
 						g.fillText(""+j, x, y);
@@ -693,6 +707,22 @@ public class WriteObject {
 		return isThreeStrokeObject;
 	}
 	
+	private void makeParsingBox(ArrayList<DoublePoint> points) 
+	{
+		double xMin = maxWidth;
+		double xMax = 0;
+		double yMin = maxHeigth;
+		double yMax = 0;
+		for(int i = 0 ; i < points.size() ; i++) { 
+			xMin = Math.min(xMin, points.get(i).getX());
+			yMin = Math.min(yMin, points.get(i).getY());
+			xMax = Math.max(xMax, points.get(i).getX());
+			yMax = Math.max(yMax, points.get(i).getY());
+		}
+		parsingBox = new DoubleRectangle(xMin, yMin, xMax-xMin+1, yMax-yMin+1);
+		//parsingBoxDiagonal = (int)Math.sqrt(parsingBox.width*parsingBox.width+parsingBox.height*parsingBox.height);
+	}
+	
 	//OK
 	private void makeBox(ArrayList<Point> points) 
 	{
@@ -758,9 +788,11 @@ public class WriteObject {
 			// hier nog een smoother?			
 			doublePoints = standardizeToLength(doublePoints);
 		}
-		logger.info("na parse(String key) doublepoint size:"+doublePoints.size());
+		//logger.info("na parse(String key) doublepoint size:"+doublePoints.size());
 		parsePoints = deepCopy(doublePoints);
-		logger.info("na parse(String key) parsePoints size:"+parsePoints.size());
+		makeParsingBox(parsePoints);
+		
+		//logger.info("na parse(String key) parsePoints size:"+parsePoints.size());
 		dAngles = findDAngles();
 		plusCusps = findPlusCusps();
 		minCusps = findMinCusps();
@@ -790,6 +822,7 @@ public class WriteObject {
 		}
 		//logger.info("na standardizeToLength doublepoint size:"+doublePoints.size());
 		parsePoints = deepCopy(doublePoints);
+		makeParsingBox(parsePoints);
 		dAngles = findDAngles();
 		plusCusps = findPlusCusps();
 		minCusps = findMinCusps();
@@ -1295,7 +1328,7 @@ public class WriteObject {
 				angleStep3 += 360;
 			double dAngle = angleStep2-angleStep1;
 			dAngles.add(dAngle);
-			logger.info("dAngle_"+i+" = "+dAngle);
+			//logger.info("dAngle_"+i+" = "+dAngle);
 			double absChange = Math.abs(dAngleLast - dAngle);
 			
 			boolean signChangeDec = i>2 && dAngle<=-0 && dAngleLast>0 ;

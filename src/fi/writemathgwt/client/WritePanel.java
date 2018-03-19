@@ -41,7 +41,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
 public class WritePanel extends LayoutPanel { //HorizontalPanel
-	private static Logger logger = Logger.getLogger("WritePanel");
+	//private static Logger logger = Logger.getLogger("WritePanel");
 	
 	private boolean analyserOn = false;
 	
@@ -288,14 +288,14 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		//object vergroot
 		if(analyserOn && lastObject!=null) {
 			
-			double factor = 300.0 / Math.max(lastObject.getBox().width,lastObject.getBox().height);
-			double x = 20 - lastObject.getBox().x;
-			double y = 400 - lastObject.getBox().y;
+			double factor = 300.0 / Math.max(lastObject.getParsingBox().width,lastObject.getParsingBox().height);
+			double x = 20 - lastObject.getParsingBox().x;
+			double y = 400 - lastObject.getParsingBox().y;
 			lastObject.draw(g,(int)x, (int)y, factor);
 			
 			{
-				double w =(factor*lastObject.getBox().width);
-				double h =(factor*lastObject.getBox().height);
+				double w =(factor*lastObject.getParsingBox().width);
+				double h =(factor*lastObject.getParsingBox().height);
 				g.setStrokeStyle(ruitjesKleur);
 				for (int i = 0; i < 11; i++) {
 					g.beginPath();
@@ -584,7 +584,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			}
 			codeRules=codeRules+"int[] sample_"+i+" = {"+s+"}; samples.add(sample_"+i+");\n";
 		}
-		logger.info("// "+key+"\n{\nArrayList<int[]> samples = new ArrayList<int[]>();\n"+codeRules+"refSamples.put(\""+key+"\", samples);\n}");
+		//logger.info("// "+key+"\n{\nArrayList<int[]> samples = new ArrayList<int[]>();\n"+codeRules+"refSamples.put(\""+key+"\", samples);\n}");
 	}
 	
 	public void loadRefSamples(String key)
@@ -1488,7 +1488,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	}
 	
 	private WriteObject tryThreeStroke(WriteObject woLastLast, WriteObject woLast, WriteObject wo) {
-		logger.info("in tryThreeStroke()");
+		//logger.info("in tryThreeStroke()");
 		
 		if ( (woLast == null) || ( woLast.isTwoStrokeObject()) || ( woLast.isThreeStrokeObject()) 
 				|| (woLastLast == null) || ( woLastLast.isTwoStrokeObject()) || ( woLastLast.isThreeStrokeObject()) ) {
