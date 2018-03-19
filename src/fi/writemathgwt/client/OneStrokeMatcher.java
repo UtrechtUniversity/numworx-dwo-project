@@ -20,7 +20,7 @@ public class OneStrokeMatcher {
 				return teken;
 			}
 		}
-		logger.info(s);
+		//logger.info(s);
 		return teken;		
 	}
 	

@@ -51,7 +51,9 @@ public class WriteObject {
 	private int standardizeLengthNumber = 20;//veelvoud van 20
 	private ArrayList<Integer> cusps= new ArrayList<Integer>();	
 	private ArrayList<Integer> plusCusps= new ArrayList<Integer>();	
-	private ArrayList<Integer> minCusps= new ArrayList<Integer>();	
+	private ArrayList<Integer> minCusps= new ArrayList<Integer>();
+	private ArrayList<Integer> posInflexs= new ArrayList<Integer>();	
+	private ArrayList<Integer> negInflexs= new ArrayList<Integer>();
 	public ArrayList<Double> dAngles = new ArrayList<Double>();	
 	// spatial parsing
 	WriteObject isTellerVan = null;
@@ -575,7 +577,7 @@ public class WriteObject {
 						g.arc(x, y, 2, 0, 2* Math.PI);
 						g.fillText(""+j, x, y);
 					
-						if(j==0 || j==19 || plusCusps.contains(j) || minCusps.contains(j) || cusps.contains(j)) {
+						if(j==0 || j==19 || plusCusps.contains(j) || minCusps.contains(j) || posInflexs.contains(j) || negInflexs.contains(j)) {
 							if(j==0) {
 								g.setStrokeStyle(CssColor.make(0, 60, 0));
 								g.arc(x, y, 2, 0, 2* Math.PI);
@@ -588,6 +590,16 @@ public class WriteObject {
 							if(minCusps.contains(j)) {
 								g.setFillStyle(CssColor.make(0, 0, 150));
 								g.setStrokeStyle(CssColor.make(0, 0, 150));
+								g.arc(x, y, 4, 0, 4* Math.PI);
+							}
+							if(posInflexs.contains(j)) {
+								g.setFillStyle(CssColor.make(100, 100, 0));
+								g.setStrokeStyle(CssColor.make(100, 100, 0));
+								g.arc(x, y, 4, 0, 4* Math.PI);
+							}
+							if(negInflexs.contains(j)) {
+								g.setFillStyle(CssColor.make(0, 150, 150));
+								g.setStrokeStyle(CssColor.make(0, 150, 150));
 								g.arc(x, y, 4, 0, 4* Math.PI);
 							}
 						}
@@ -603,7 +615,18 @@ public class WriteObject {
 //								g.setFillStyle(CssColor.make(0, 0, 150));
 //								g.setStrokeStyle(CssColor.make(0, 0, 150));
 //								g.arc(x, y, 2, 0, 2* Math.PI);
+//						
+//							if(posInflexs.contains(j)) {
+//								g.setFillStyle(CssColor.make(100, 100, 0));
+//								g.setStrokeStyle(CssColor.make(100, 100, 0));
+//								g.arc(x, y, 4, 0, 4* Math.PI);
 //							}
+//							if(negInflexs.contains(j)) {
+//								g.setFillStyle(CssColor.make(0, 150, 150));
+//								g.setStrokeStyle(CssColor.make(0, 150, 150));
+//								g.arc(x, y, 4, 0, 4* Math.PI);
+//							}
+//						}
 						
 					}
 					//g.arc(parsePoints.get(j).getX()+shiftX, parsePoints.get(j).getY()+shiftY, 1, 0, 1* Math.PI);
@@ -794,8 +817,11 @@ public class WriteObject {
 		
 		//logger.info("na parse(String key) parsePoints size:"+parsePoints.size());
 		dAngles = findDAngles();
-		plusCusps = findPlusCusps();
-		minCusps = findMinCusps();
+		//plusCusps = findPlusCusps();
+		//minCusps = findMinCusps();
+		//posInflexs = findPosInflexs();
+		//negInflexs = findNegInflexs();
+		makePlusMinCusps();
 		String gevondenTeken = OneStrokeMatcher.findTeken(this);
 		if(gevondenTeken != null) {
 			newMatch = true;
@@ -824,8 +850,11 @@ public class WriteObject {
 		parsePoints = deepCopy(doublePoints);
 		makeParsingBox(parsePoints);
 		dAngles = findDAngles();
-		plusCusps = findPlusCusps();
-		minCusps = findMinCusps();
+		makePlusMinCusps();
+		//plusCusps = findPlusCusps();
+		//minCusps = findMinCusps();
+		//posInflexs = findPosInflexs();
+		//negInflexs = findNegInflexs();
 		String gevondenTeken = OneStrokeMatcher.findTeken(this);
 		if(gevondenTeken != null) {
 			newMatch = true;
@@ -1199,8 +1228,142 @@ public class WriteObject {
 		return false;
 	}
 	
-	public ArrayList<Integer> findPlusCusps() {
-		ArrayList<Integer> plusCusps = new ArrayList<Integer>();
+	public ArrayList<Integer> findPosInflexs() {
+		ArrayList<Integer> posInflexs = new ArrayList<Integer>();
+		for(int i=4 ; i<standardizeLengthNumber-4 ; i++) {
+			double before1 = dAngles.get(i-3);
+			double before2 = dAngles.get(i-2);
+			double inf1 = dAngles.get(i-1);
+			double inf2 = dAngles.get(i);
+			double after1 = dAngles.get(i+1);
+			double after2 = dAngles.get(i+2);
+			
+			boolean inflex = ((before1<inf1 && before2<inf2 && inf1<after1 && inf2<after2) 
+					&& after2-before1>10
+					&& inf1<0 && inf2>=0);
+			if(inflex)
+				posInflexs.add(i);
+		}
+		return posInflexs;
+	}
+	
+	public ArrayList<Integer> findNegInflexs() {
+		ArrayList<Integer> negInflexs = new ArrayList<Integer>();
+		for(int i=4 ; i<standardizeLengthNumber-4 ; i++) {
+			double before1 = dAngles.get(i-3);
+			double before2 = dAngles.get(i-2);
+			double inf1 = dAngles.get(i-1);
+			double inf2 = dAngles.get(i);
+			double after1 = dAngles.get(i+1);
+			double after2 = dAngles.get(i+2);
+			
+			boolean inflex = ((before1>inf1 && before2>inf2 && inf1>after1 && inf2>after2) 
+					&& after2-before1<-10
+					&& inf1>0 && inf2<=0);
+			if(inflex)
+				negInflexs.add(i);
+		}
+		return negInflexs;
+	}
+	
+//	public ArrayList<Integer> findPlusCusps() {
+//		ArrayList<Integer> plusCusps = new ArrayList<Integer>();
+//		for(int i=4 ; i<standardizeLengthNumber-4 ; i++) {
+//			double before1 = dAngles.get(i-3);
+//			double before2 = dAngles.get(i-2);
+//			double max1 = dAngles.get(i-1);
+//			double max2 = dAngles.get(i);
+//			double after1 = dAngles.get(i+1);
+//			double after2 = dAngles.get(i+2);
+//			
+//			boolean signChange = max1<0||before2<0||before1<0 || max2<0 || after1<0 ;
+//
+//			if(max1>before1 && max1>before2 && max1>after1 && max1>after2 && max2>=before2 
+//					|| max2>before1 && max2>before2 && max2>after1 && max2>after2 && max1>=after1){
+//				if(signChange && 
+//						(max1+max2 > 150 && before2+after1<20 
+//						|| max1+max2 > 70 && before2+after1<10 
+//						|| max1+max2 > 50 && before2+after1<0)) {
+//					if(max1>=max2)
+//						plusCusps.add(i);
+//					else
+//						plusCusps.add(i+1);
+//				}
+//				else if(!signChange && 
+//						(max1+max2 > 160)) {
+//					if(max1>=max2)
+//						plusCusps.add(i);
+//					else
+//						plusCusps.add(i+1);
+//				}
+//			}
+//				
+//		}
+//		
+//		return plusCusps;
+//	}
+	
+//	public ArrayList<Integer> findMinCusps() {
+//		ArrayList<Integer> minCusps = new ArrayList<Integer>();
+//		for(int i=4 ; i<standardizeLengthNumber-4 ; i++) {
+//			double before1 = dAngles.get(i-3);
+//			double before2 = dAngles.get(i-2);
+//			double min1 = dAngles.get(i-1);
+//			double min2 = dAngles.get(i);
+//			double after1 = dAngles.get(i+1);
+//			double after2 = dAngles.get(i+2);
+//			
+//			boolean signChange = min1>0||before2>0||before1>0 || min2>0 || after1>0 ;
+//			
+//			if(min1<before1 && min1<before2 && min1<after1 && min1<after2 && min2<=before2 || min2<before1 && min2<before2 && min2<after1  && min2<after2 && min1<=after1) {
+//				if(signChange &&
+//						(min1+min2 < -150 && before2+after1>-30 
+//						|| min1+min2 < -70 && before2+after1>-10 
+//						|| min1+min2 < -50 && +before2+after1>0)) {
+//					if(min1<=min2)
+//						minCusps.add(i);
+//					else
+//						minCusps.add(i+1);
+//				}
+//				else if(!signChange &&
+//						(min1+min2 < -160)) {
+//					if(min1<=min2)
+//						minCusps.add(i);
+//					else
+//						minCusps.add(i+1);
+//				}
+//			}
+//				
+//		}
+//		
+//		return minCusps;
+//	}
+	
+	public boolean hasMinCusps(int startPoint, int endPoint) {
+		for(int i=startPoint ; i<endPoint+1 ; i++) {
+			if(minCusps.contains(i))
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean hasPlusCusps(int startPoint, int endPoint) {
+		for(int i=startPoint ; i<endPoint+1 ; i++) {
+			if(plusCusps.contains(i))
+				return true;
+		}
+		return false;
+	}
+	
+	public ArrayList<Integer> getMinCusps() {
+		return minCusps;
+	}
+	
+	public ArrayList<Integer> getPlusCusps() {
+		return plusCusps;
+	}
+	
+	public void makePlusMinCusps() {
 		for(int i=4 ; i<standardizeLengthNumber-4 ; i++) {
 			double before1 = dAngles.get(i-3);
 			double before2 = dAngles.get(i-2);
@@ -1214,7 +1377,7 @@ public class WriteObject {
 			if(max1>before1 && max1>before2 && max1>after1 && max1>after2 && max2>=before2 
 					|| max2>before1 && max2>before2 && max2>after1 && max2>after2 && max1>=after1){
 				if(signChange && 
-						(max1+max2 > 150 && before2+after1<30 
+						(max1+max2 > 150 && before2+after1<20 
 						|| max1+max2 > 70 && before2+after1<10 
 						|| max1+max2 > 50 && before2+after1<0)) {
 					if(max1>=max2)
@@ -1225,19 +1388,12 @@ public class WriteObject {
 				else if(!signChange && 
 						(max1+max2 > 160)) {
 					if(max1>=max2)
-						plusCusps.add(i);
+						minCusps.add(i);
 					else
-						plusCusps.add(i+1);
+						minCusps.add(i+1);
 				}
 			}
-				
 		}
-		
-		return plusCusps;
-	}
-	
-	public ArrayList<Integer> findMinCusps() {
-		ArrayList<Integer> plusCusps = new ArrayList<Integer>();
 		for(int i=4 ; i<standardizeLengthNumber-4 ; i++) {
 			double before1 = dAngles.get(i-3);
 			double before2 = dAngles.get(i-2);
@@ -1254,9 +1410,9 @@ public class WriteObject {
 						|| min1+min2 < -70 && before2+after1>-10 
 						|| min1+min2 < -50 && +before2+after1>0)) {
 					if(min1<=min2)
-						plusCusps.add(i);
+						minCusps.add(i);
 					else
-						plusCusps.add(i+1);
+						minCusps.add(i+1);
 				}
 				else if(!signChange &&
 						(min1+min2 < -160)) {
@@ -1266,10 +1422,7 @@ public class WriteObject {
 						plusCusps.add(i+1);
 				}
 			}
-				
 		}
-		
-		return plusCusps;
 	}
 	
 	public ArrayList<Double> findDAngles() {
