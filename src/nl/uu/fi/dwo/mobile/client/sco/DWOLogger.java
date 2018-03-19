@@ -194,10 +194,13 @@ public class DWOLogger implements Logging {
 		maxScore = new JSONNumber(max);
 	}
 	
+	@Override
 	public void setLogObjectives(boolean[][] logObjectives) {
 		this.logObjectives = logObjectives;
 		if(logObjectives != null)
 			map.put("logObjectives", JSONUtilities.toJSONArray(logObjectives));
+		if(delegate != null)
+			delegate.setLogObjectives(logObjectives);
 	}
 	
 	public void setTeltMee(boolean teltMee) {
