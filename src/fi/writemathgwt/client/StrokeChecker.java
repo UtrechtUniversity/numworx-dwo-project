@@ -10,7 +10,7 @@ public class StrokeChecker {
 	
 	private static Logger logger = Logger.getLogger("StrokeChecker");
 
-	public static boolean logging;
+	private static boolean logging;
 	
 	private static HashMap samples;
 	

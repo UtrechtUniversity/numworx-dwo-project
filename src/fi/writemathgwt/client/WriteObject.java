@@ -18,6 +18,9 @@ public class WriteObject {
 	static int newTekenSet = 0;
 	public static HashMap<String, int[]>  samples;
 	
+	private boolean colorAnalyse = false;
+	private boolean cuspsAnalyse = false;
+	
 	
  	
 	//OK
@@ -538,14 +541,16 @@ public class WriteObject {
 		if (rawPoints.size() > 0) {
 			if ( (".".equals(teken)) || ("*".equals(teken) ) ) {
 				g.setFillStyle(CssColor.make(0, 0, 0));
-//				if(newMatch)
-//					g.setStrokeStyle(CssColor.make(0, 200, 0));
-//				if(newMatchWrong)
-//					g.setStrokeStyle(CssColor.make(200, 0, 0));
-//				if(oldMatch)
-//					g.setStrokeStyle(CssColor.make(0, 0, 200));
-//				if(oldMatchWrong)
-//					g.setStrokeStyle(CssColor.make(200, 0, 200));
+				if(colorAnalyse) {
+					if(newMatch)
+						g.setStrokeStyle(CssColor.make(150, 200, 150));
+					if(newMatchWrong)
+						g.setStrokeStyle(CssColor.make(200, 0, 0));
+					if(oldMatch)
+						g.setStrokeStyle(CssColor.make(0, 0, 200));
+					if(oldMatchWrong)
+						g.setStrokeStyle(CssColor.make(200, 0, 200));
+				}
 				
 //				g.fillRect(rawPoints.get(0).getX()+shiftX, rawPoints.get(0).getY()+shiftY, 3, 3);
 				g.beginPath();
@@ -562,14 +567,16 @@ public class WriteObject {
 			
 			for (int j = 0; parsePoints!=null && j <parsePoints.size(); j++) {	
 				try {
-//					if(newMatch)
-//						g.setStrokeStyle(CssColor.make(0, 200, 0));
-//					if(newMatchWrong)
-//						g.setStrokeStyle(CssColor.make(200, 0, 0));
-//					if(oldMatch)
-//						g.setStrokeStyle(CssColor.make(0, 0, 200));
-//					if(oldMatchWrong)
-//						g.setStrokeStyle(CssColor.make(200, 0, 200));
+					if(colorAnalyse) {
+						if(newMatch)
+							g.setStrokeStyle(CssColor.make(150, 200, 150));
+						if(newMatchWrong)
+							g.setStrokeStyle(CssColor.make(200, 0, 0));
+						if(oldMatch)
+							g.setStrokeStyle(CssColor.make(0, 0, 200));
+						if(oldMatchWrong)
+							g.setStrokeStyle(CssColor.make(200, 0, 200));
+					}
 					g.beginPath();
 					double x = factor*(parsePoints.get(j).getX() - parsingBox.x)+parsingBox.x+shiftX;
 					double y = factor*(parsePoints.get(j).getY() - parsingBox.y)+parsingBox.y+shiftY;
@@ -605,17 +612,17 @@ public class WriteObject {
 						}
 					}
 					else {
-						
-//							if(plusCusps.contains(j)) {
-//								g.setFillStyle(CssColor.make(100, 0, 0));
-//								g.setStrokeStyle(CssColor.make(100, 0, 0));
-//								g.arc(x, y, 2, 0, 2* Math.PI);
-//							}
-//							if(minCusps.contains(j)) {
-//								g.setFillStyle(CssColor.make(0, 0, 150));
-//								g.setStrokeStyle(CssColor.make(0, 0, 150));
-//								g.arc(x, y, 2, 0, 2* Math.PI);
-//						
+						if(cuspsAnalyse) {
+							if(plusCusps.contains(j)) {
+								g.setFillStyle(CssColor.make(100, 0, 0));
+								g.setStrokeStyle(CssColor.make(100, 0, 0));
+								g.arc(x, y, 2, 0, 2* Math.PI);
+							}
+							if(minCusps.contains(j)) {
+								g.setFillStyle(CssColor.make(0, 0, 150));
+								g.setStrokeStyle(CssColor.make(0, 0, 150));
+								g.arc(x, y, 2, 0, 2* Math.PI);
+							}
 //							if(posInflexs.contains(j)) {
 //								g.setFillStyle(CssColor.make(100, 100, 0));
 //								g.setStrokeStyle(CssColor.make(100, 100, 0));
@@ -626,9 +633,10 @@ public class WriteObject {
 //								g.setStrokeStyle(CssColor.make(0, 150, 150));
 //								g.arc(x, y, 4, 0, 4* Math.PI);
 //							}
-//						}
-						
+						}
 					}
+						
+					
 					//g.arc(parsePoints.get(j).getX()+shiftX, parsePoints.get(j).getY()+shiftY, 1, 0, 1* Math.PI);
 					g.closePath();
 					g.fill();
@@ -636,15 +644,16 @@ public class WriteObject {
 				}
 				catch (Exception e) {}
 			}
-			
-//			if(newMatch)
-//				g.setStrokeStyle(CssColor.make(150, 200, 150));
-//			if(newMatchWrong)
-//				g.setStrokeStyle(CssColor.make(200, 0, 0));
-//			if(oldMatch)
-//				g.setStrokeStyle(CssColor.make(0, 0, 200));
-//			if(oldMatchWrong)
-//				g.setStrokeStyle(CssColor.make(200, 0, 200));
+			if(colorAnalyse) {
+				if(newMatch)
+					g.setStrokeStyle(CssColor.make(150, 200, 150));
+				if(newMatchWrong)
+					g.setStrokeStyle(CssColor.make(200, 0, 0));
+				if(oldMatch)
+					g.setStrokeStyle(CssColor.make(0, 0, 200));
+				if(oldMatchWrong)
+					g.setStrokeStyle(CssColor.make(200, 0, 200));
+			}
 			g.beginPath();
 			
 			double x = factor*(rawPoints.get(0).getX() - box.x)+box.x+shiftX;

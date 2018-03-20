@@ -13,11 +13,9 @@ public class OneStrokeMatcher {
 		String teken = null;
 		for(int i = 0 ; i<tekens.length ; i++) {
 			if(StrokeChecker.check(wo, tekens[i])) {
-				//StrokeChecker.logging = true;
-				StrokeChecker.check(wo, tekens[i]);
 				teken = tekens[i];
 				s = s+teken+",";
-				return teken;
+				
 			}
 		}
 		//logger.info(s);

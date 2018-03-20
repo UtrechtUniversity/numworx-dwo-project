@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 public class TwoStrokeChecker {
 	
-	private static Logger logger = Logger.getLogger("StrokeChecker");
+	private static Logger logger = Logger.getLogger("TwoStrokeChecker");
 
 	public static boolean logging;
 	
@@ -228,7 +228,7 @@ public class TwoStrokeChecker {
 		}
 		
 		//k
-		if("kH1".equals(teken)) {logging = true;
+		if("kH1".equals(teken)) {
 			checkers.add(wo.hasDirection(260, 40, 1, 19, 8));
 			
 		}
@@ -238,7 +238,7 @@ public class TwoStrokeChecker {
 		}
 		
 		//K
-		if("KH1".equals(teken)) {logging = true;
+		if("KH1".equals(teken)) {
 			checkers.add(wo.hasDirection(260, 40, 1, 19, 8));
 			
 		}

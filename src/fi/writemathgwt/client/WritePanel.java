@@ -286,7 +286,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		//g.translate(300,0);
 		
 		//object vergroot
-		if(analyserOn && lastObject!=null) {
+		if(analyserOn && lastObject!=null && !lastObject.isTwoStrokeObject() && !lastObject.isThreeStrokeObject()) {
 			
 			double factor = 300.0 / Math.max(lastObject.getParsingBox().width,lastObject.getParsingBox().height);
 			double x = 20 - lastObject.getParsingBox().x;
