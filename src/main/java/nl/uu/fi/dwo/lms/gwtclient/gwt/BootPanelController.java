@@ -100,14 +100,12 @@ class BootPanelController {
 //        Map other = codec.decode(json);
 //        System.out.println(other);
 //    }
-
     public void go(RootLayoutPanel rootPanel) {
         /**
          * Testing stuff
          */
-        
-    //    testRestyMapConverter();
 
+        //    testRestyMapConverter();
         parseUrlParam();
         LOG.log(Level.INFO, "profile=" + profile + ".");
         LOG.log(Level.INFO, "testIsOn=" + testIsOn + ".");
@@ -144,15 +142,8 @@ class BootPanelController {
         DwoPresenterFactory fac = new DwoPresenterFactory(new PresenterFactoryGwt(eventBus, dwoGlobalVars));
         presenterFactory = fac.getFac();
 
-        ViewFactoryGwt gwtView = null;
-        if (hideGwtGui) {
-            LOG.log(Level.INFO, "ViewFactoryTeuniz assigned.");
-            viewFactory = new ViewFactoryJs(presenterFactory);
-        } else {
-            LOG.log(Level.INFO, "ViewFactoryGwt assigned.");
-            gwtView = new ViewFactoryGwt(presenterFactory);
-            viewFactory = gwtView;
-        }
+        LOG.log(Level.INFO, "ViewFactoryTeuniz assigned.");
+        viewFactory = new ViewFactoryJs(presenterFactory);
 
         presenterFactory.bindViewFactory(viewFactory);
 
@@ -261,13 +252,7 @@ class BootPanelController {
         });
         LOG.log(Level.FINE, "Intiating Main view.");
         //MainPresenter.Display mainView = viewFactory.getMainView();
-        if (hideGwtGui) {
-            rootPanel.setVisible(false);
-            LOG.log(Level.INFO, "Not showing GwtGui. hideGwtGui = " + getHideGwtGuiString());
-        } else {
-            this.rootPanel.add(gwtView.asWidget());
-            LOG.log(Level.INFO, "Showing GwtGui. hideGwtGui = " + getHideGwtGuiString());
-        }
+        rootPanel.setVisible(false);
         MainPresenter mainPresenter = presenterFactory.getMainPresenter();
         LOG.log(Level.FINE, "Intiating Main presenter. Showing login screen.");
         mainPresenter.init();

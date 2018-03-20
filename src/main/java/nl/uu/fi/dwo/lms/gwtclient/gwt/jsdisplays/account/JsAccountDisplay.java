@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.account;
 
+import com.google.gwt.json.client.JSONValue;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
@@ -29,5 +30,5 @@ public class JsAccountDisplay{
     /** Clears the password field of its value. */
     public static native void init();
     /** Clears username and password fields of values. */
-    public static native void updateView(String username, String firstName, String insertion, String familyName, String email);
+    public static native void updateView(JSONValue schoolLogins);
 }

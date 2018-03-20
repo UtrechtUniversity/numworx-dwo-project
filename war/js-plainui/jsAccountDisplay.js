@@ -1,37 +1,20 @@
 function AccountDisplay() {
-    var username = "";
-    var firstName = "";
-    var insertion = "";
-    var familyName = "";
-    var email = "";
-    var password = "";
-    var newPassword = "";
-    var newPasswordAgain = "";
+    var schoolLogins = "";
 
     this.clear = function () {
-        username = "";
-        firstName = "";
-        insertion = "";
-        familyName = "";
-        password = "";
-        email = "";
-        console.log("cleared account fields");
+        schoolLogins = "";
+        console.log("cleared schoolLogin info");
     }
 
     this.init = function () {
         password = "";
         console.log("intialized account display, cleared password.");
     }
-    this.updateView = function (u, f, i, n, e) {
-        username = u;
-        firstName = f;
-        insertion = i;
-        familyName = n;
-        email = e;
-        console.log("updated username: " + u + ", firstname:" + f + ", insertion:" + i + ", familyname:" + n + ", email: " + e + ".");
+    this.updateView = function (schoolLogins) {        
+        console.log("showing schoolLogins:" + schoolLogins);
     }
     this.showState = function (){
-        console.log("state-info| username: " + u + ", firstname:" + f + ", insertion:" + i + ", familyname:" + n + ", email: " + e + ".");
+        console.log("state-info| schoolLogins:" + schoolLogins);
     }
     
 }
