@@ -105,6 +105,12 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	 */
 	private boolean changed = false;
 	
+	/**
+	 * Wordt gebruikt om tijdens het nakijken geen onnodige ggbLog() te doen.
+	 * Deze zet namelijk changed op true en haalt de feedbackimmages weg.
+	 */
+	private boolean processingDWOCheck = false;
+	
 	public native static Object getGgbWindow(Element frame) /*-{
 		return frame.contentWindow;
 	}-*/;
@@ -126,6 +132,9 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	private void ggbLog(String action, String name, String definition,
 			String value, String type)
 	{
+		if (processingDWOCheck)
+			return;
+		
 		//if(changed) return; TODO uitzoeken of dit okay is (Sylvia)
 		
 		changed = true;
@@ -535,6 +544,8 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	{
 		if (nakijken && ggbApplet != null)
 		{
+			processingDWOCheck = true;
+			
 			if (nakijkenGemaakteObjecten)
 			{
 				int length = getObjectNumber(ggbApplet) - aantalExistingObjects;
@@ -567,17 +578,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 						match = checkObjects[j].equals(objectString);
 						if (!match && !"boolean".equals(getObjectType(ggbApplet, objectName)))
 						{
-							// keep changed value
-							boolean oldChanged = changed;
-							boolean[] oldSettingsImage = {false, false, false};
-							if (!changed)
-							{
-								// keep the state of the feedback images
-								oldSettingsImage = getOldSettingsImage();
-							}
-							evalCommand(ggbApplet, "checkDWO=" + checkObjects[j] + "==" + objectName); // dit zorgt voor een ggbLog die changed true zet...
-							changed = oldChanged;
-							setVisibleFeedbackImages(oldSettingsImage[0], oldSettingsImage[1], oldSettingsImage[2]);
+							evalCommand(ggbApplet, "checkDWO=" + checkObjects[j] + "==" + objectName); // roept ggbLog() aan
 							match = 1.0 == getValue(ggbApplet, "checkDWO");
 						}
 						if (match)
@@ -585,7 +586,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 							if (feedback)
 							{
 								// feedback alleen in oefenen of (toets + nagekeken).
-								setColor(ggbApplet, objectName, 0, 180, 0); // groen, zorgt ook voor een ggbLog die vinkje weghaalt...
+								setColor(ggbApplet, objectName, 0, 180, 0); // groen; roept ggbLog() aan
 							}
 							score += geogebraCheckScores[j];
 							checkObjects[j] = null; // used!
@@ -620,6 +621,9 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 				setCorrect(val == 1.0);
 			}
 			// nagekeken = true;
+			
+			// reset
+			processingDWOCheck = false;
 		}
 	
 		if (isCorrect() == null || !isCorrect()) // halfgoed of fout
@@ -757,7 +761,8 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		{
 			ggbApplet = getApplet(w, this);
 			setRandomVars();
-			if(ggbApplet != null) aantalExistingObjects = getObjectNumber(ggbApplet);
+			if (ggbApplet != null)
+				aantalExistingObjects = getObjectNumber(ggbApplet);
 			setPendingState();
 		}
 	}
