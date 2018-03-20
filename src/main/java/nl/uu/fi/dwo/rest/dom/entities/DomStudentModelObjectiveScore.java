@@ -8,6 +8,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author plas0006
  */
 @XmlRootElement
-class DomStudentModelObjectiveScore extends DomStudentModelScore<DomStudentModelObjectiveScore> {
+public class DomStudentModelObjectiveScore extends DomStudentModelScore<DomStudentModelObjectiveScore> {
     
 }

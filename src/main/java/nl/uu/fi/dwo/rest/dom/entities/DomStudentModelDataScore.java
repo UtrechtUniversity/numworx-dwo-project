@@ -8,25 +8,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author plas0006
  */
 @XmlRootElement
-public class DomStudentModelData  extends DomStudentModelDataId implements Cloneable {
-    private static final Logger LOG = Logger.getLogger(DomStudentModelData.class.getName());
+public class DomStudentModelDataScore implements Cloneable {
+    private static final Logger LOG = Logger.getLogger(DomStudentModelDataScore.class.getName());
     private DomStudentModelContextId modelId;
-    private DomScoContextId scoContextId; 
     private DomStudentModelStructureScore domStudentModelStructureScore;
-
-    /**
-     * @return the scoContextId
-     */
-    public DomScoContextId getScoContextId() {
-        return scoContextId;
-    }
-
-    /**
-     * @param scoContextId the scoContextId to set
-     */
-    public void setScoContextId(DomScoContextId scoContextId) {
-        this.scoContextId = scoContextId;
-    }
 
     /**
      * @return the domStudentModelStructureScore
