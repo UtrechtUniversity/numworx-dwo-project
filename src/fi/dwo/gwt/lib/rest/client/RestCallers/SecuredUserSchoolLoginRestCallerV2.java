@@ -27,6 +27,6 @@ public interface SecuredUserSchoolLoginRestCallerV2 extends RestService {
     public void removeASchoolLogin(RestSchoolRoleAndClassV2 rsrc, Callback<Boolean> callback);
 
     @PUT
-    @Path("/secure/user/account/lologinsV2gins/submit")
+    @Path("/secure/user/account/loginsV2/submit")
     public void addASchoolLogin(RestNewSchoolLogin rnl, Callback<Boolean> callback);
 }
