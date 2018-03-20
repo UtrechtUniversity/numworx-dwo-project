@@ -7,12 +7,15 @@ import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
@@ -92,6 +95,12 @@ public class MySQLStudentActions implements StudentActions {
         id.setId(pStudentModel.buildPersistenceId());
         result.setModelId(id);
         return result;
+    }
+    
+    @Override
+        public List<PersistentStudentModelContext> getStudentModels(StudentDomainAuthorizer.Context context) throws Dwo2Exception {           
+            List<PersistentStudentModelContext> pModels =  StudentModelContextManager.findEntities(context.getUserCtx().getSchool());
+            return pModels;
     }
 
 }

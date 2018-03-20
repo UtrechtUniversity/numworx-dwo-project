@@ -150,7 +150,7 @@ public class StudentBuilderTest {
     }
 
     /**
-     * Test of getStudentModelData method, of class StudentBuilder.
+     * Test of getStudentModelDataScore method, of class StudentBuilder.
      */
     @Test
     public void testGetStudentModelData() throws Exception {

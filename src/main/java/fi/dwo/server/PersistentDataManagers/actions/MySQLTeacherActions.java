@@ -37,11 +37,9 @@ public class MySQLTeacherActions implements TeacherActions {
         }
     }
 
-    public List<DomStudentModelContext> getStudentModels(TeacherDomainAuthorizer.Context context) throws Dwo2Exception {           
+    public List<PersistentStudentModelContext> getStudentModels(TeacherDomainAuthorizer.Context context) throws Dwo2Exception {           
             List<PersistentStudentModelContext> pModels =  StudentModelContextManager.findEntities(context.getUserCtx().getSchool());
-            List<DomStudentModelContext>  result = new ArrayList<>(pModels.size());
-            pModels.stream().forEach(m -> result.add(m.buildDomStudentModelContext()));
-            return result;
+            return pModels;
     }
 
 

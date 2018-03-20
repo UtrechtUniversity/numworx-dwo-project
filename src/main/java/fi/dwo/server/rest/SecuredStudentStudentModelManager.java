@@ -1,5 +1,7 @@
 package fi.dwo.server.rest;
 
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -11,8 +13,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
  * StudentModel manager for the teacher. Basic operations.
@@ -38,8 +42,11 @@ public class SecuredStudentStudentModelManager {
     @PUT
     @Produces({"application/json"})
     @Path("/getList")
-    public List<DomStudentModelContext> getStudentModels(@Context SecurityContext sc, RestContext context) {
-        return new ArrayList<DomStudentModelContext>();
+    public List<DomStudentModelContext> getStudentModels(@Context SecurityContext sc, RestContext context) throws Dwo2Exception {
+    StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+                .setHasRole(context.getRestContext().getDomHasRole())//
+                .buildStudent();
+     return state.getStudentModelContextList();        
     }
 
     /**
@@ -52,9 +59,11 @@ public class SecuredStudentStudentModelManager {
     @PUT
     @Produces({"application/json"})
     @Path("/getScore")
-    public DomStudentModelData getStudentModelScore(@Context SecurityContext sc, RestStudentModelContextId restModelId) {
-        
-        return null;
+    public DomStudentModelDataScore getStudentModelDataScore(@Context SecurityContext sc, RestStudentModelContextId restModelId) throws Dwo2Exception {
+    StudentDomainAuthorizer.StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+                .setHasRole(restModelId.getRestContext().getDomHasRole())//
+                .buildStudent();
+     return state.getStudentModelDataScore(restModelId.getDomStudentModelContext());        
     }
     
 //

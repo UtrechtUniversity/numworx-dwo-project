@@ -7,6 +7,7 @@ import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
+import java.util.List;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
@@ -15,9 +16,8 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  * @author Gert van der Plas
  */
 public interface StudentActions {
-    /** Sets student model data */
+    public List<PersistentStudentModelContext> getStudentModels(StudentDomainAuthorizer.Context context) throws Dwo2Exception;
     public void setStudentModelData(StudentDomainAuthorizer.Context ctx, PersistentStudentModelData data) throws Dwo2Exception;
     public PersistentStudentModelData getStudentModelData(StudentDomainAuthorizer.Context ctx, PersistentScoContext pScoContext) throws Dwo2Exception;
-    /** Gets student model data for a specific */
     public DomStudentModelDataScore getStudentModelData(StudentDomainAuthorizer.Context context, PersistentStudentModelContext pStudentModel) throws Dwo2Exception;
 }

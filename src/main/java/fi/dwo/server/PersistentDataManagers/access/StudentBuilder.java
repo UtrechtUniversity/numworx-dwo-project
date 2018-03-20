@@ -12,9 +12,12 @@ import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
@@ -156,8 +159,16 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
     }
 
     @Override
-    public DomStudentModelDataScore getStudentModelData(DomStudentModelContextId domModelId) throws Dwo2Exception {
+    public DomStudentModelDataScore getStudentModelDataScore(DomStudentModelContextId domModelId) throws Dwo2Exception {
         PersistentStudentModelContext pStudentModel = StudentModelContextManager.findEntity(MySQLPersistenceId.getNativeId(domModelId));
         return instance.getStudentActions().getStudentModelData(instance.getContext(), pStudentModel);
+    }
+    @Override
+    public List<DomStudentModelContext> getStudentModelContextList() throws Dwo2Exception{
+        List<PersistentStudentModelContext> pModels = instance.getStudentActions().getStudentModels(instance.getContext());
+                    List<DomStudentModelContext>  result = new ArrayList<>(pModels.size());
+            pModels.stream().forEach(m -> result.add(m.buildDomStudentModelContext()));
+            return result;
+
     }
 }

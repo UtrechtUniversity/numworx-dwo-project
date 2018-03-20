@@ -3,8 +3,10 @@ package fi.dwo.server.PersistentDataManagers.access;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.server.PersistentDataManagers.actions.MySQLStudentActions;
 import fi.dwo.server.PersistentDataManagers.actions.StudentActions;
+import java.util.List;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
@@ -121,7 +123,8 @@ public class StudentDomainAuthorizer {
         public void setStudentModelData(DomStudentModelData data) throws Dwo2Exception;
 
         public DomStudentModelData getStudentModelData(DomScoContextId domScoId) throws Dwo2Exception;
-        public DomStudentModelDataScore getStudentModelData(DomStudentModelContextId domModelId) throws Dwo2Exception;
+        public DomStudentModelDataScore getStudentModelDataScore(DomStudentModelContextId domModelId) throws Dwo2Exception;
+        public List<DomStudentModelContext> getStudentModelContextList()  throws Dwo2Exception;
 
     }
 
