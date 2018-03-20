@@ -629,6 +629,8 @@ public class PijlVak extends LayoutPanel
 			
 			// openstaande pijl afsluiten
 			fe.setOpenstaandePijl(false);
+			// administratie bijwerken
+			fe.setPijlVakInhouden(fe.getPijlVakOperatorenArray().size() - 1, editor.toString());
 			
 			if (!aanpasbaar)
 				vervangEditorDoorViewer();

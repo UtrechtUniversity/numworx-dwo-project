@@ -615,6 +615,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				
 				pijlVakken.add(pijlVak);
 				
+				// administratie bijhouden
+				addPijlVakOperatoren("");
+				addPijlVakInhouden("");
+				
 				pijlVak.paintComponent();
 				
 				stapNr++;
@@ -767,7 +771,12 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if ((linStrategieVersie || linOefenVersie || abcVisible || subVisible) && (viewers.size() <= pijlVakOperatorenArray.size()))
 			pijlVak = new PijlVak(pijlVakOperatorenArray.get(viewers.size() - 1), this, false);
 		else
-			pijlVak = new PijlVak("", this, false); 
+		{
+			pijlVak = new PijlVak("", this, false);
+			// administratie bijwerken
+			addPijlVakOperatoren("");
+			addPijlVakInhouden("");
+		}
 
 		int y = stepPanelY + fv.getHeightWithImage()/2;
 		
@@ -4126,6 +4135,16 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if(avChecker != null)
 			return avChecker.getPossibleMisconceptions();
 		return null;
+	}
+	
+	/**
+	 * Geef de pijlvakoperatorenarray.
+	 * 
+	 * @return
+	 */
+	List<String> getPijlVakOperatorenArray()
+	{
+		return pijlVakOperatorenArray;
 	}
 	
 	public AntwoordVakChecker getAvChecker()
