@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
@@ -120,7 +121,7 @@ public class StudentDomainAuthorizer {
         public void setStudentModelData(DomStudentModelData data) throws Dwo2Exception;
 
         public DomStudentModelData getStudentModelData(DomScoContextId domScoId) throws Dwo2Exception;
-        public DomStudentModelData getStudentModelData(DomStudentModelContextId domModelId) throws Dwo2Exception;
+        public DomStudentModelDataScore getStudentModelData(DomStudentModelContextId domModelId) throws Dwo2Exception;
 
     }
 

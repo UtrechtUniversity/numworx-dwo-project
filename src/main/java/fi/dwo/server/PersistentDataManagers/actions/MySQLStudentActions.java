@@ -8,13 +8,14 @@ import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
-import static fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager.findEntities;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -59,15 +60,38 @@ public class MySQLStudentActions implements StudentActions {
     }
 
     @Override
-    public DomStudentModelData getStudentModelData(StudentDomainAuthorizer.Context ctx, PersistentStudentModelContext pStudentModel) throws Dwo2Exception {
+    public DomStudentModelDataScore getStudentModelData(StudentDomainAuthorizer.Context ctx, PersistentStudentModelContext pStudentModel) throws Dwo2Exception {
         DomStudentModelStructureScore score = pStudentModel.buildDomStudentModelContext().getModelStructure().generateStudentModelStructureScore();
         //get list of al StudentModelData
-//        List<PersistentStudentModelData> StudentModelDataManager.findEntities(pStudentModel,ctx.getUserCtx().getHasRole());
-//        //aggregate data
-//        
-//        //build result with no index in separate type
-return null;
-//        StudentModelDataManager.findEntity(pStudentModel);
+        List<PersistentStudentModelData> list = StudentModelDataManager.findEntities(pStudentModel, ctx.getUserCtx().getHasRole());
+//        //aggregate data over list
+        try {
+            for (PersistentStudentModelData data : list) {
+                //update leaves
+                DomStudentModelStructureScore dataPoint = data.getModelData();
+                for (int c = 0; c < dataPoint.getCategories().size(); c++) {
+                    for (int o = 0; o < dataPoint.getCategories().get(c).getObjectives().size(); o++) {
+                        DomStudentModelObjectiveScore obj = dataPoint.getCategories().get(c).getObjectives().get(o);
+                        DomStudentModelObjectiveScore sum = score.getCategories().get(c).getObjectives().get(o);
+                        sum.setCount(sum.getCount() + obj.getCount());
+                        sum.setScore(sum.getScore() + obj.getScore());
+                    }
+                }
+            }
+        } catch (RuntimeException e) {
+            String msg = MessageFormat.format("Something went wrong aggregating scores over student model {0}", pStudentModel.getModelID());
+            LOG.log(Level.WARNING, msg, e);
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
+        }
+        //recalculate categories 
+        score.recalculateAncestors();
+        //prep return 
+        DomStudentModelDataScore result = new DomStudentModelDataScore();
+        result.setDomStudentModelStructureScore(score);
+        DomStudentModelContextId id = new DomStudentModelContextId();
+        id.setId(pStudentModel.buildPersistenceId());
+        result.setModelId(id);
+        return result;
     }
 
 }

@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -155,7 +156,7 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
     }
 
     @Override
-    public DomStudentModelData getStudentModelData(DomStudentModelContextId domModelId) throws Dwo2Exception {
+    public DomStudentModelDataScore getStudentModelData(DomStudentModelContextId domModelId) throws Dwo2Exception {
         PersistentStudentModelContext pStudentModel = StudentModelContextManager.findEntity(MySQLPersistenceId.getNativeId(domModelId));
         return instance.getStudentActions().getStudentModelData(instance.getContext(), pStudentModel);
     }

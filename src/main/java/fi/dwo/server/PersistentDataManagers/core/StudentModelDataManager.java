@@ -200,7 +200,22 @@ public class StudentModelDataManager {
         }
     }
 
-    public static void findEntities(PersistentStudentModelContext pStudentModel, PersistentHasRole hasRole) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public static List<PersistentStudentModelData> findEntities(PersistentStudentModelContext pStudentModel, PersistentHasRole hasRole) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            javax.persistence.Query q = em.createNamedQuery("PersistentStudentModelData.findStudentScoresOfModel");
+            q.setParameter("modelID", pStudentModel.getModelID());
+            q.setParameter("persistentHasRolePK", hasRole.getPersistentHasRolePK());
+            List<PersistentStudentModelData> list = q.getResultList();
+
+            em.getTransaction().commit();
+            return list;
+        } catch (RuntimeException e) {
+            LOG.log(Level.SEVERE, "", e);
+            throw e;
+        } finally {
+            em.close();
+        }
     }
 }
