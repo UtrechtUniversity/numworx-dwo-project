@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.Collection;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.web.bindery.event.shared.EventBus;
@@ -112,7 +113,7 @@ public class OpdrNavContext implements OpdrNavIF {
 	public CssColor getBackground() {
 		return background;
 	}
-
+	static final Logger LOG = Logger.getLogger("OpdrNavContext");
 	/**
 	 * @param command
 	 * @param listener
@@ -124,10 +125,13 @@ public class OpdrNavContext implements OpdrNavIF {
 		if(connector == null) return NULL_REGISTRATION;
 		HandlerRegistration registration  = NULL_REGISTRATION;
 		Collection<Entry<String, String>> subscriptions = connector.getSubscriptions(command);
+		if(!subscriptions.isEmpty())
+			LOG.info("addCBOOKEventListener:" + getUUID() + " subscriptions for " + command);
 		for (Entry<String, String> entry : subscriptions) {
 			String rid = entry.getKey();
 			String rcmd = entry.getValue();
 			String source = UUIDpfx + rid + "." + rcmd;
+			LOG.info("subscribe from " + source);
 			CBookEventListener handler = listener;
 			//if(! rcmd.equals(command) ) no optimalisation allowed.
 			{
@@ -135,6 +139,7 @@ public class OpdrNavContext implements OpdrNavIF {
 					
 					@Override
 					public void acceptCBookEvent(CBookEvent event) {
+						LOG.fine("accept " +event.getCommand() + " -> " + command);
 						event = new CBookEvent(command, event.toObjectMap());
 						listener.acceptCBookEvent(event);
 					}
@@ -149,6 +154,8 @@ public class OpdrNavContext implements OpdrNavIF {
 				// registration = PairRegistration(registration, r);
 			}
 		}
+		if (!subscriptions.isEmpty())
+			LOG.info("addCBookListener done");
 		return registration;
 	}
 

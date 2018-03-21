@@ -25,7 +25,7 @@ public class DWOLogger implements Logging {
 	private static final String SEPARATOR = "  ;  ";
 	private static final String LOG_ERROR_COUNT = "logErrorCount";
 	public static final String LOG_ATTEMPTS = "logAttempts";
-	private static final String LOG_ATTEMPTS_COUNT = "logAttemptsCount";
+	static final String LOG_ATTEMPTS_COUNT = "logAttemptsCount";
 	private static final String LOGKEY_SCORE = "logScore";
 	private String logID;
 	private Logging delegate;

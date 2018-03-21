@@ -2,6 +2,11 @@ package nl.uu.fi.dwo.mobile.client.sco;
 
 import java.util.Map;
 import java.util.TreeMap;
+
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
+
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -12,11 +17,14 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 
 public class StudentModelLogger implements Logging {
 
+	
+	static final String SUCCESS_SCORE = "logSuccessScore";
+	
 	public static class Provider extends LoggingProvider {
 		
 		@Override
 		public Logging get() {
-			boolean experiment = true;
+			boolean experiment = Memento.instance().pmodel != null;
 			experiment &= DWOplayer.clientfactory.withUser();
 			if (experiment)
 				return new StudentModelLogger();
@@ -36,6 +44,7 @@ public class StudentModelLogger implements Logging {
 // strategy, compatible with studentmodel;
 	private int attempts;
 	private double score;
+	private JSONObject map;
 
 	@Override
 	public void log(Map<String, ?> parameters) {
@@ -46,6 +55,8 @@ public class StudentModelLogger implements Logging {
 		else success = 0.5;
 		this.score += success;
 		this.attempts += 1;
+		map.put(SUCCESS_SCORE, new JSONNumber(score));
+		map.put(DWOLogger.LOG_ATTEMPTS_COUNT, new JSONNumber(attempts));
 	}
 
 	@Override
@@ -56,15 +67,23 @@ public class StudentModelLogger implements Logging {
 	public void setLogID(String string) {
 		logID = string;
 		addToSet();
+		map = Memento.instance().getLogState(logID);
+		JSONValue n = map.get(DWOLogger.LOG_ATTEMPTS_COUNT);
+		if(n != null && n.isNumber() != null)
+			attempts = (int) n.isNumber().doubleValue();
+		n = map.get(SUCCESS_SCORE);
+		if(n != null && n.isNumber() != null) 
+			score = n.isNumber().doubleValue();
 	}
 
 	private void addToSet() {
 		if(logID != null && objectives != null)
 		{
 			StudentModelLogger old = all.put(logID, this);
-			attempts += old.attempts;
-			score += old.score;
-		}
+			if(old != null) {
+				attempts += old.attempts;
+				score += old.score;
+		}}
 	}
 
 	@Override
@@ -93,8 +112,6 @@ public class StudentModelLogger implements Logging {
 				}
 			}
 		}
-		attempts = 0;
-		score = 0;
 	}
 	
 	public static void accumulateAllScores(DomStudentModelStructureScore studentModel) {

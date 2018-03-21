@@ -39,6 +39,7 @@ import com.google.gwt.user.client.ui.Widget;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.account.client.ProfileCommand;
 import nl.uu.fi.dwo.account.client.SchoolClassStudentCommand;
+import nl.uu.fi.dwo.account.client.StudentModelCommand;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -220,6 +221,14 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 				ScheduledCommand cmd = new SchoolClassStudentCommand(this);
 				m=items.addItem(DwoLocalesForGWT.instance.GUI_MySchoolClasses(), cmd);
 				m.addStyleName(style.menuItem());
+
+				boolean experimenteel = true;
+				if(experimenteel) {
+					m=items.addItem("STUDENT MODEL", new StudentModelCommand());
+					m.addStyleDependentName(style.menuItem());
+				}
+			
+			
 			}
 			boolean single = Boolean.TRUE.equals(currentUser.getSingleSchool());
 			if(!single)

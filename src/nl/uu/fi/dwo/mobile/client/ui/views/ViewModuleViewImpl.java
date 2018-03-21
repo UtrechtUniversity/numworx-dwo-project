@@ -46,6 +46,8 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionViewWithM
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
 import com.google.gwt.canvas.client.Canvas;
@@ -315,7 +317,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			// meer bij noordhoff
 
 			(on = new OpdrNav()).init(launchData, this, createMemento()); // hierin worden bollen gezet
-			
 			mode = on.getMode();
 
 			// voor noordhoff
@@ -696,9 +697,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	}
 
 	protected Memento createMemento() {
-		return new Memento(getApi(), this);
+		return new Memento(getApi(), this, studentModel);
 	}
 	
+
 	void zetToetsNagekeken(ScoreNavIF source)
 	{
 		int mode = on.getMode();
@@ -2291,6 +2293,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	
 	private boolean readonly;
+	private Promise<DomStudentModelContext> studentModel;
 
 	/**
 	 * @return the readonly
@@ -2485,8 +2488,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	@Override
 	public void setTrail(List<SelectModuleItem> trail) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public boolean isScoresZichtbaar()
@@ -2496,19 +2497,20 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	@Override
 	public void setPresenter(Presenter p) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void removeBtns() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setScoType(ScoType type) {
-		// TODO Auto-generated method stub
-		
+	}
+
+	@Override
+	public void setModel(Promise<DomStudentModelContext> studentModel) {
+		this.studentModel = studentModel;
+		if(on != null)
+			on.setStudentModel(studentModel);
 	}
 }

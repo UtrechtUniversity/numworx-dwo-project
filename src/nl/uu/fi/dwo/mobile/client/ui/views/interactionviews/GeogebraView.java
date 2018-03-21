@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -42,6 +43,7 @@ import fi.wiskopdr.text.Text;
  */
 public class GeogebraView implements InteractionView, LoadHandler, CBookEventListener
 {
+	public static Logger LOG = Logger.getLogger("GeogebraView");
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
 	public static final String ACTION_FALSE2 = "action.false_2";
@@ -260,6 +262,8 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	
 	private void fireEvent(CBookEvent event) 
 	{
+
+		LOG.info("fire + " + event.getCommand() + " s: " + event.getSource());
 		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
 		if (this.comRoot != null)
 			this.comRoot.fireEvent(event);

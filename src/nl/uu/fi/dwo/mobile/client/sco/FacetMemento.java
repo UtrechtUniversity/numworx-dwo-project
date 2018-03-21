@@ -79,7 +79,7 @@ public class FacetMemento extends Memento {
 	private TriforkAPI api;
 	
 	public FacetMemento(Scorm2004IF api, FacetAware view, ViewModuleView parent) {
-		super(api, parent);
+		super(api, parent, null);
 		this.api = (TriforkAPI)api;
 		this.view = view;
 	}

@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.osgi.util.promise.Promise;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -37,6 +39,7 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
 public class ViewModuleViewNumworx extends ResizeComposite implements ViewModuleView {
@@ -276,5 +279,12 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		this.presenter = p;
 		if(delegate != null)
 			delegate.setPresenter(p);
+	}
+
+	@Override
+	public void setModel(Promise<DomStudentModelContext> studentModel) {
+		if(delegate != null)
+			delegate.setModel(studentModel);
+		
 	}
 }

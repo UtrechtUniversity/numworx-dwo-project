@@ -106,6 +106,7 @@ import fi.wiskopdr.expressies.Vergelijking;
 
 public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAware, PopupListener, CBookEventListener
 {
+	private static final Logger LOG = Logger.getLogger("TekstVakPanel");
 	public static final String TVP_KLAPUIT = "action.unfold";
 	public static final String TVP_KLAPIN = "action.fold";
 	public static final String TVP_SELECT = "action.select";
@@ -410,6 +411,13 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	{
 		this(hh, randomVarNamen, randomVarWaarden);
 		this.anchorContext = context;
+	}
+	
+	String getLogID() { 
+		if (dwologger != null)
+			return dwologger.getLogID()  +"/" + comRoot.getUUID();
+		else
+			return comRoot.getUUID();
 	}
 	
 	public TekstVakPanel(HashMap<String, Object> hh, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
@@ -1707,7 +1715,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			if(hoogtesState != null && hoogtesState.size() == hoogtes.size())
 				hoogtes = hoogtesState;
 			else
-				Logger.getLogger("TekstVakPanel").severe("hoogtes <> hoogteState");
+				LOG.severe("hoogtes <> hoogteState");
 			if(!hoogtes.isEmpty() && Math.round(hoogtes.get(0).doubleValue()) > hoogte)
 				hoogte = (int) Math.round(hoogtes.get(0).doubleValue());
 		}
@@ -4125,6 +4133,7 @@ private Object CamelCase(String name) {
 	@Override
 	public void acceptCBookEvent(CBookEvent event) {
 		String command = event.getCommand();
+		LOG.info("accept " + command + " s:" + event.getSource() + " id:" + getLogID());
 		if(ACTION_SETVISIBLE.equals(command)) {
 			setVisibility(true);
 		}

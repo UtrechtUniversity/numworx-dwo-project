@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Promise;
+
 import nl.uu.fi.dwo.formule.client.formuleobjects.TouchButton;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
@@ -23,6 +25,8 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -2790,5 +2794,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public int getOpdrachtSpaceWidth()
 	{
 		return opdrachtSpace.getOffsetWidth();
+	}
+
+	public void setStudentModel(Promise<DomStudentModelContext> studentModel) {
+			memento.setStudentModelStructure(studentModel);
+		
 	}
 }

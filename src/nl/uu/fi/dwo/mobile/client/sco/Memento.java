@@ -8,6 +8,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
@@ -18,6 +21,10 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
@@ -37,6 +44,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+
+import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureScoreCodec;
 
 /**
  * Class om suspend_data in en uit te pakken. JSON format, Javascript is hier
@@ -92,6 +101,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	static final String COMPLETION_STATUS = "cmi.completion_status";
 	static final String COMPLETED = "completed";
 	private static final String CMI_MODE = "cmi.mode";
+	public static final String STUDENT_MODEL = "dme.student_model";
 
 	static final String EXIT_NORMAL = "normal";
 	static final String EXIT_SUSPEND = "suspend";
@@ -157,10 +167,11 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private JSONArray aantalNakijken;
 	private CmiMode cmi_mode;
 
-	public Memento(Scorm2004IF api, ViewModuleView view)
+	public Memento(Scorm2004IF api, ViewModuleView view, Promise<DomStudentModelContext> studentModel)
 	{
 		this.api = api;
 		this.view = view;
+		this.pmodel = studentModel;
 		_instance = this;
 		registration[0] = Window.addWindowClosingHandler(this);
 		registration[1] = Window.addCloseHandler(this);
@@ -647,22 +658,37 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 //			return;
 //		_instance = null;
 		if(_instance==this) _instance = null;
-		
-		OpdrNav.immediate(
-		new ScheduledCommand() {
-			public void execute() {
-				logger.fine("closing memento");
-				removeRegistration();
-				runner.run();
-				setSessionTimes();
-				try {
-					DWOplayer.clientfactory.addBarrier(api.Terminate());
-					//api = null;
-				} catch (Exception e) {
-				}
-			}
-		});
+		logger.fine("closing memento");
+		removeRegistration();
+		runner.run();
+		setSessionTimes();
+		DWOplayer.clientfactory.addBarrier(
+		setStudentModelDataScore() // and terminate.
+		);
+			
 	}
+	
+	Promise<DomStudentModelContext> pmodel;
+	protected Promise<?> setStudentModelDataScore() {
+		if(DWOplayer.withUser() && pmodel != null) {
+			Promise<?> then = pmodel.then(p -> { 
+				DomStudentModelStructure model = p.getValue().getModelStructure();
+				DomStudentModelStructureScore data = model.generateStudentModelStructureScore();
+				StudentModelLogger.accumulateAllScores(data);
+				String string = DomStudentModelStructureScoreCodec.CODEC.encode(data).toString();
+				setValue(STUDENT_MODEL, string);
+				return api.Terminate();
+			}).recoverWith( p-> api.Terminate() );
+			return then;
+		} else
+			return api.Terminate();
+		
+	}
+	
+	public void setStudentModelStructure(Promise<DomStudentModelContext> pmodel) {
+		this.pmodel = pmodel;
+	}
+	
 	
 	public void almostClose()
 	{	
@@ -1291,5 +1317,10 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		long millis = stopDate.getTime() - startDate.getTime();	
 		setValue(SESSION_TIME, format(millis));
 		setValue(TOTAL_TIME, format(startTime + millis));
+	}
+	
+	void setStudentModel(DomStudentModelStructureScore model) {
+		JSONValue string = DomStudentModelStructureScoreCodec.CODEC.encode(model);
+		setValue(STUDENT_MODEL, string.toString());
 	}
 }

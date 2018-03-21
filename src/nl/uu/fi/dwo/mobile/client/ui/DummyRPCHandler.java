@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -33,7 +34,11 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 class DummyRPCHandler implements RPCHandler {
 
@@ -195,6 +200,21 @@ class DummyRPCHandler implements RPCHandler {
 	@Override
 	public Promise<Void> startExam(String id, String password) {
 		return Promises.resolved(null);
+	}
+
+	@Override
+	public Promise<DomStudentModelContext> getStudentModel(PersistenceId id) {
+		return Promises.resolved(null);
+	}
+
+	@Override
+	public Promise<List<DomStudentModelContext>> getStudentModels() {
+		return Promises.resolved(Collections.emptyList());
+	}
+
+	@Override
+	public Promise<DomStudentModelDataScore> getStudentModelDataScore(DomStudentModelContextId id) {
+		return Promises.failed(new IllegalArgumentException());
 	}
 
 }

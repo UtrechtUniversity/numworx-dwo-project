@@ -90,6 +90,9 @@
     	<when-type-is class="fi.dwo.gwt.lib.rest.DwoConstants" />
     </replace-with>
     
+    <replace-with class="nl.uu.fi.dwo.mobile.client.sco.StudentModelLogger.Provider" >
+    		<when-type-is class="nl.uu.fi.dwo.mobile.utils.LoggingProvider" />
+    </replace-with>
     
 <!-- Logging TRUE/FALSE FINEST/.../SEVERE -->   
     <set-property name="gwt.logging.logLevel" value="INFO"/>

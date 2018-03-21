@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.EventBus;
@@ -109,11 +110,16 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 			view.setTitle(sco.getName());
 			view.setScoType(sco.getScoType());
 			view.setPresenter(this);
-			
 			defaultContext = view.getAnchorContext();
 			view.setAnchorContext(this);
 			view.setUnitId(id);
-		
+			PersistenceId modelid = sco.getStudentModelId();
+
+			if(modelid != null) {
+				view.setModel(clientFactory.getRPCHandler().getStudentModel(modelid));
+			} else
+				view.setModel(null);
+			
 		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 
 			@Override

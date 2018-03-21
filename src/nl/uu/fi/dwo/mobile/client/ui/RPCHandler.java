@@ -12,7 +12,11 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import org.osgi.util.promise.Promise;
 
@@ -62,4 +66,9 @@ public interface RPCHandler {
 	Promise<JSONValue> getJSONLaunchDataBytes(Object scoID);
 // V4 stuff
 	Promise<Void> startExam(String id, String password);
+
+	Promise<DomStudentModelContext> getStudentModel(PersistenceId id);
+	Promise<List<DomStudentModelContext>> getStudentModels();
+	Promise<DomStudentModelDataScore> getStudentModelDataScore(DomStudentModelContextId id);
+
 }
