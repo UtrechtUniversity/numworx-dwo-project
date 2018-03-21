@@ -12,6 +12,7 @@ enum ScormKey {
 	TOTAL_TIME2004,
 	SESSION_TIME,
 	SESSION_TIME2004,
+	STUDENT_MODEL,
 	SUSPEND_DATA,
 	XML;
 	
@@ -31,6 +32,7 @@ enum ScormKey {
     	keys.put("suspendData", SUSPEND_DATA);
     	keys.put("cmi.suspend_data", SUSPEND_DATA);
     	keys.put("cocd", XML);
+    keys.put("dme.student_model", STUDENT_MODEL);
 // MORE to go    	
     }
     

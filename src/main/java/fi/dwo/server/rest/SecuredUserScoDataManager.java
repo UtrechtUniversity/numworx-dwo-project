@@ -28,6 +28,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import com.owlike.genson.Genson;
+
 import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.beans.scorm2xml.Scorm2Xml;
@@ -37,6 +39,7 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
 import fi.dwo.commons.persistence.entities.PersistentUser;
@@ -44,6 +47,7 @@ import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
@@ -53,6 +57,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScormValues;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -198,10 +204,23 @@ public class SecuredUserScoDataManager {
 		}
 		
 		PersistentStudentScoData pssd = null;
+		PersistentStudentModelData psmd = null;
+		Genson genson = null;
 		Scorm2Xml xml = null;
 		for(DomMapEntry<String,String> entry: entryList) {
 			ScormKey key = ScormKey.getKey(entry.getKey());
 			switch(key) {
+			case STUDENT_MODEL:
+				if (psmd == null) {
+					genson = new GensonProvider().getContext(DomStudentModelStructureScore.class);
+					PersistentHasRole hasRole = HasRoleManager.findEntity(pssc.getPersistentHasRolePK());				
+					PersistentScoContext ctx = ScoContextManager.findEntity(pssc.getScoID());
+					psmd = StudentModelDataManager.findEntity(ctx, hasRole);
+				}
+				DomStudentModelStructureScore modelData = psmd.getModelData();
+				String json = genson.serialize(modelData);
+				entry.setValue(json);
+				break;
 			case SCORE: 
 				entry.setValue(String.valueOf(pssc.getScore())); break;
 			case LOCATION:
@@ -354,6 +373,22 @@ public class SecuredUserScoDataManager {
 			ScormKey key = ScormKey.getKey(entry.getKey());
 			String value = entry.getValue();
 			switch(key) {
+			case STUDENT_MODEL:
+				PersistentStudentModelData psmd = StudentModelDataManager.findEntity(scoContext, phr);
+				DomStudentModelStructureScore modelData = null;
+				modelData = new GensonProvider().getContext(DomStudentModelStructureScore.class).deserialize(value, DomStudentModelStructureScore.class);
+				if(psmd == null) {
+					psmd = new PersistentStudentModelData();
+					psmd.setScoID(scoContext.getScoID());
+					psmd.setPersistentHasRolePK(phr.getPersistentHasRolePK());
+					psmd.setModelID(scoContext.getModelID());
+					psmd.setModelData(modelData);
+					StudentModelDataManager.create(psmd);
+				} else {
+					psmd.setModelData(modelData);
+					psmd = StudentModelDataManager.edit(psmd);
+				}
+				break;
 			case SCORE: 
 				try {
 					pssc.setScore(Float.parseFloat(value));
