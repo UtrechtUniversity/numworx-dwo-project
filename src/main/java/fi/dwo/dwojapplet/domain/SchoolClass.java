@@ -93,21 +93,21 @@ public class SchoolClass implements UserGroup, Comparable {
 //        }
     }
 
-    private void deselectAllCourses(CourseMap[] allCourses) {
-        for (int i = 0; i < allCourses.length; i++) {
-            Course course = (Course) allCourses[i];
-            if (course.isWithChildren()) {
-                deselectAllCourses(course.getChildren());
-            }
-            try {
-                PersistenceFacade.instance().deSelectCoursesForClass(getID(),
-                        course.getID());
-            } catch (PersistenceException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
-            }
-
-        }
-    }
+//    private void deselectAllCourses(CourseMap[] allCourses) {
+//        for (int i = 0; i < allCourses.length; i++) {
+//            Course course = (Course) allCourses[i];
+//            if (course.isWithChildren()) {
+//                deselectAllCourses(course.getChildren());
+//            }
+//            try {
+//                PersistenceFacade.instance().deSelectCoursesForClass(getID(),
+//                        course.getID());
+//            } catch (PersistenceException e) {
+//                JOptionPane.showMessageDialog(null, e.getMessage());
+//            }
+//
+//        }
+//    }
 
     ////peter
     /**

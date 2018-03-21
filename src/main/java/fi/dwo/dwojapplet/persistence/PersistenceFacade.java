@@ -902,42 +902,42 @@ public class PersistenceFacade {
         return addCourse(s, name, description, profile, null, false);
     }
 
-    /**
-     * Returns all the courses that are selected for the specified class. A
-     * teacher could select some courses for a schoolclass.
-     *
-     * @param schoolClass The user to select courses from.
-     * @return The courses for the specified class.
-     * @throws PersistenceException If a database or xml-rpc exception occurs.
-     * @see
-     * fi.dwo.client.persistence.PersistenceFacade#selectCoursesForClass(int,
-     * int)
-     */
-    public Course[] getCourses(SchoolClass schoolClass) throws PersistenceException {
-        try {
-            Vector v;
-            v = DbAccessCreator.instance().getCoursesForClass(schoolClass.getID());
-            MapperIF mapper = MapperCreator.instance(Course.class);
-            return (Course[]) mapper.getObjectFromReturn(v);
-
-        }
-        catch (IOException e) {
-            System.out.println(e.getMessage());
-            LOG.log(Level.SEVERE, null, e);
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (XmlRpcException e) {
-            System.out.println(e.getMessage());
-            LOG.log(Level.SEVERE, null, e);
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (SQLException e) {
-            System.out.println(e.getMessage());
-            LOG.log(Level.SEVERE, null, e);
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-
-    }
+//    /**
+//     * Returns all the courses that are selected for the specified class. A
+//     * teacher could select some courses for a schoolclass.
+//     *
+//     * @param schoolClass The user to select courses from.
+//     * @return The courses for the specified class.
+//     * @throws PersistenceException If a database or xml-rpc exception occurs.
+//     * @see
+//     * fi.dwo.client.persistence.PersistenceFacade#selectCoursesForClass(int,
+//     * int)
+//     */
+//    public Course[] getCourses(SchoolClass schoolClass) throws PersistenceException {
+//        try {
+//            Vector v;
+//            v = DbAccessCreator.instance().getCoursesForClass(schoolClass.getID());
+//            MapperIF mapper = MapperCreator.instance(Course.class);
+//            return (Course[]) mapper.getObjectFromReturn(v);
+//
+//        }
+//        catch (IOException e) {
+//            System.out.println(e.getMessage());
+//            LOG.log(Level.SEVERE, null, e);
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (XmlRpcException e) {
+//            System.out.println(e.getMessage());
+//            LOG.log(Level.SEVERE, null, e);
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//        catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//            LOG.log(Level.SEVERE, null, e);
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//
+//    }
 
     /**
      * returns the selected courses for the specified schoolclass. folders are
@@ -1055,9 +1055,6 @@ public class PersistenceFacade {
      * @param user The user to select courses from.
      * @return The courses for the specified user.
      * @throws PersistenceException If a database or xml-rpc exception occurs.
-     * @see
-     * fi.dwo.client.persistence.PersistenceFacade#selectCoursesForClass(int,
-     * int)
      */
     public Course[] getCourses(User user) throws PersistenceException {
 //        throw new RuntimeException("This routine must be rewriten to use DbAccessCreator.instance().getCourses(SchoolID)");
@@ -1241,37 +1238,37 @@ public class PersistenceFacade {
 
     }
 
-    /**
-     * Deselect a course for a schoolclass.
-     *
-     * @param classID The class to deselect the course.
-     * @param courseID The course to deselect.
-     * @throws PersistenceException
-     */
-    @Deprecated //broken ?
-    public void deSelectCoursesForClass(int classID, int courseID)
-            throws PersistenceException {
-        try {
-            DbAccessCreator.instance().deSelectCoursesForClass(classID,
-                    courseID);
-        }
-        catch (IOException e) {
-            System.out.println(e.getMessage());
-            LOG.log(Level.SEVERE, null, e);
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (XmlRpcException e) {
-            System.out.println(e.getMessage());
-            LOG.log(Level.SEVERE, null, e);
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (SQLException e) {
-            System.out.println(e.getMessage());
-            LOG.log(Level.SEVERE, null, e);
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-
-    }
+//    /**
+//     * Deselect a course for a schoolclass.
+//     *
+//     * @param classID The class to deselect the course.
+//     * @param courseID The course to deselect.
+//     * @throws PersistenceException
+//     */
+//    @Deprecated //broken ?
+//    public void deSelectCoursesForClass(int classID, int courseID)
+//            throws PersistenceException {
+//        try {
+//            DbAccessCreator.instance().deSelectCoursesForClass(classID,
+//                    courseID);
+//        }
+//        catch (IOException e) {
+//            System.out.println(e.getMessage());
+//            LOG.log(Level.SEVERE, null, e);
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (XmlRpcException e) {
+//            System.out.println(e.getMessage());
+//            LOG.log(Level.SEVERE, null, e);
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//        catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//            LOG.log(Level.SEVERE, null, e);
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//
+//    }
 
     /**
      * Returns all the courses which can be edited by the teacher.

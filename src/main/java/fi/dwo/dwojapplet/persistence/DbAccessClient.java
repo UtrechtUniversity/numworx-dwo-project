@@ -24,31 +24,31 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
-    @Override
-    public java.util.Vector getCoursesForClassJS(int a) throws IOException, XmlRpcException {
-        Vector vv = new Vector(1);
-        vv.addElement(new Integer(a));
-        Object object = invoke("getCoursesForClassJS", vv);
-        return (java.util.Vector) object;
-    }
+//    @Override
+//    public java.util.Vector getCoursesForClassJS(int a) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(1);
+//        vv.addElement(new Integer(a));
+//        Object object = invoke("getCoursesForClassJS", vv);
+//        return (java.util.Vector) object;
+//    }
 
-    @Override
-    public boolean selectCoursesForClass(int a, int b) throws IOException, XmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(new Integer(a));
-        vv.addElement(new Integer(b));
-        Object object = invoke("selectCoursesForClass", vv);
-        return ((Boolean) object).booleanValue();
-    }
+//    @Override
+//    public boolean selectCoursesForClass(int a, int b) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(new Integer(a));
+//        vv.addElement(new Integer(b));
+//        Object object = invoke("selectCoursesForClass", vv);
+//        return ((Boolean) object).booleanValue();
+//    }
 
-    @Override
-    public boolean deSelectCoursesForClass(int a, int b) throws IOException, XmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(new Integer(a));
-        vv.addElement(new Integer(b));
-        Object object = invoke("deSelectCoursesForClass", vv);
-        return ((Boolean) object).booleanValue();
-    }
+//    @Override
+//    public boolean deSelectCoursesForClass(int a, int b) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(new Integer(a));
+//        vv.addElement(new Integer(b));
+//        Object object = invoke("deSelectCoursesForClass", vv);
+//        return ((Boolean) object).booleanValue();
+//    }
 
     @Override
     public java.util.Vector getCourses(int a) throws IOException, XmlRpcException {

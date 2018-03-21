@@ -908,24 +908,24 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         return PersistenceFacade.instance().sequence(courses);
     }
 
-    /**
-     * Returns all the courses available for the user. If some courses are
-     * available for the users school, they are also returned.
-     *
-     * @param schoolClass
-     * @deprecated not used?
-     * @return An array of all the courses for the current user.
-     *
-     */
-    private Course[] getCourses(SchoolClass schoolClass) {
-        try {
-            courseList = PersistenceFacade.instance().getCourses(schoolClass);
-            return selectDwoProfileCourses(courseList);
-        } catch (PersistenceException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-            return null;
-        }
-    }
+//    /**
+//     * Returns all the courses available for the user. If some courses are
+//     * available for the users school, they are also returned.
+//     *
+//     * @param schoolClass
+//     * @deprecated not used?
+//     * @return An array of all the courses for the current user.
+//     *
+//     */
+//    private Course[] getCourses(SchoolClass schoolClass) {
+//        try {
+//            courseList = PersistenceFacade.instance().getCourses(schoolClass);
+//            return selectDwoProfileCourses(courseList);
+//        } catch (PersistenceException e) {
+//            JOptionPane.showMessageDialog(this, e.getMessage());
+//            return null;
+//        }
+//    }
 
     // courses no folders, no timelimits. profile restricted.
     public Course[] getSelectedCourses(SchoolClass schoolClass) {
