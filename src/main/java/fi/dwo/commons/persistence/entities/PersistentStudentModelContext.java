@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
+import nl.uu.fi.dwo.rest.dom.entities.util.StudentModelClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import org.eclipse.persistence.annotations.Convert;
@@ -57,15 +58,6 @@ public class PersistentStudentModelContext implements Serializable {
     private Long modelID;
     @Column(name = "schoolID", nullable = false)
     private Long schoolID;
-//    @NotNull
-//    @Column(name = "title", nullable = false)
-//    @Convert("jsonObjectConverter")
-//    private JSONObject title;
-//    @Basic(optional = false)
-////    @NotNull
-//    @Column(name = "description", nullable = true)
-//    @Convert("jsonObjectConverter")
-//    private JSONObject description;
     @NotNull
     @Column(name = "model", nullable = false)
     @Convert("studentModelStructureConverter")
@@ -78,7 +70,11 @@ public class PersistentStudentModelContext implements Serializable {
     @NotNull
     @Column(name = "publishState", nullable = false)
     private PublishState publishState = PublishState.published;
-
+//Future design
+//    @NotNull
+//    @Column(name="classType", nullable = false)
+//    private StudentModelClassType classType = StudentModelClassType.scoreAndCount;
+    /** 
     /**
      * @return the modelID
      */
@@ -194,13 +190,20 @@ public class PersistentStudentModelContext implements Serializable {
     
     public void fillDomStudentModelContext(DomStudentModelContext context){
         context.setId(buildPersistenceId(modelID));
-//        Genson genson = new GensonBuilder().withConverters(new GensonMapConverter()).create();
-//            String jsonModel = genson.serialize(modelStructure);
-//            System.out.println(jsonModel);
-
-        //do genson magic.        
-        //DomStudentModelStructure model = genson.deserialize(modelStructure.toJSONString(), DomStudentModelStructure.class);
-        //context.setModelStructure(model);
         context.setModelStructure(modelStructure);
     }
+//    Future design
+//    /**
+//     * @return the classType
+//     */
+//    public StudentModelClassType getClassType() {
+//        return classType;
+//    }
+//
+//    /**
+//     * @param classType the classType to set
+//     */
+//    public void setClassType(StudentModelClassType classType) {
+//        this.classType = classType;
+//    }
 }
