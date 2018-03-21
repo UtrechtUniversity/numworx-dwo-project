@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.account;
 
 import com.google.gwt.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +34,6 @@ public class AccountPresenter {
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
     private AccountService accountService;
-    private SecuredUserSchoolLoginManagerV2 schoolLoginManager = new SecuredUserSchoolLoginManagerV2();
     private Map<String, DomSchoolRoleAndClassV2> sracData;
 
     private Display view;
@@ -72,7 +70,6 @@ public class AccountPresenter {
         view.updateSchoolLogins(dwoGlobalVars.getSchoolLogins());
     }
 
-    
     private Map<String, DomSchoolRoleAndClassV2> getTeacherRoles() {
         Map<String, DomSchoolRoleAndClassV2> result = new HashMap<String, DomSchoolRoleAndClassV2>();
         DomSchoolsRolesAndClassesV2 sl = dwoGlobalVars.getSchoolLogins();
@@ -88,23 +85,56 @@ public class AccountPresenter {
     @JsMethod
     public void switchRole(String hasRoleId) {
         LOG.log(Level.INFO, "Switching to hasRoleId: " + hasRoleId);
-         DomSchoolRoleAndClassV2 srac = sracData.get(hasRoleId);
-         if(srac!=null && srac.getRole().getRoleName().equals(RoleType.TEACHER.name())){
-        dwoGlobalVars.setActiveSchoolRoleAndClass(srac);
-        dwoGlobalVars.getSchoolLogins().setActiveSchoolRoleAndClass(srac);
-        Promise<DomSchoolRoleAndClassV2> promise = schoolLoginManager.switchToSchoolLogin(srac);
+        DomSchoolRoleAndClassV2 srac = sracData.get(hasRoleId);
+        if (srac != null && srac.getRole().getRoleName().equals(RoleType.TEACHER.name())) {
+            dwoGlobalVars.setActiveSchoolRoleAndClass(srac);
+            dwoGlobalVars.getSchoolLogins().setActiveSchoolRoleAndClass(srac);
+            Promise<DomSchoolRoleAndClassV2> promise = accountService.switchToSchoolLogin(srac);
 
-        promise.then(new Success<DomSchoolRoleAndClassV2, Void>() {
+            promise.then(new Success<DomSchoolRoleAndClassV2, Void>() {
+                @Override
+                public Promise<Void> call(Promise<DomSchoolRoleAndClassV2> resolved) throws Exception {
+                    if (!dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
+                        eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
+                    };
+                    //flip back to schoolclasses screen 
+                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.WELCOME));
+                    return null;
+                }
+
+            },
+                    new Failure() {
+                @Override
+                public void fail(Promise<?> resolved) throws Exception {
+                    Throwable fail = resolved.getFailure();
+                    if (fail instanceof Dwo2Exception) {
+                        LOG.log(Level.SEVERE, fail.getMessage());
+                        eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    } else {
+                        LOG.log(Level.SEVERE, fail.getMessage());
+                        eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                        //throw directly
+                    }
+                }
+            });
+        } else {
+            //jump to app.dwo.nl/leerling
+            LOG.log(Level.SEVERE, "Switching to other roles than teacher currently not supported.");
+        }
+    }
+
+    @JsMethod
+    public void addRole(String role, String schoolLogin, String accessCode) {
+        LOG.log(Level.INFO, "role " + role + " schoolLogin " + schoolLogin);
+        Promise<Boolean> promise = accountService.addASchoolLogin(role, schoolLogin, accessCode);
+
+        promise.then(new Success<Boolean, Void>() {
             @Override
-            public Promise<Void> call(Promise<DomSchoolRoleAndClassV2> resolved) throws Exception {
-                if (!dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
-                    eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
-                };
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                 //flip back to schoolclasses screen 
-                eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.WELCOME));
+                eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
                 return null;
             }
-
         },
                 new Failure() {
             @Override
@@ -120,17 +150,6 @@ public class AccountPresenter {
                 }
             }
         });
-    }else{
-             //jump to app.dwo.nl/leerling
-             LOG.log(Level.SEVERE, "Switching to other roles than teacher currently not supported.");
-         }
-    }
-    
-    @JsMethod
-    public void addRole(String role, String schoolLogin, String accesCode) {
-        LOG.log(Level.INFO, "role " + role + " schoolLogin " + schoolLogin + " accesCode " + accesCode);
-        
-        //TODO
     }
 
     @JsMethod
