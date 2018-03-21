@@ -615,7 +615,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			}
 			codeRules=codeRules+"int[] sample_"+i+" = {"+s+"}; samples.add(sample_"+i+");\n";
 		}
-		//logger.info("// "+key+"\n{\nArrayList<int[]> samples = new ArrayList<int[]>();\n"+codeRules+"refSamples.put(\""+key+"\", samples);\n}");
+		//if(analyserOn)
+			logger.info("// "+key+"\n{\nArrayList<int[]> samples = new ArrayList<int[]>();\n"+codeRules+"refSamples.put(\""+key+"\", samples);\n}");
 	}
 	
 	public void loadRefSamples(String key)
@@ -2057,24 +2058,26 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			if (e.getTouches().length() > 0 ) {
 				touch = e.getTouches().get(0);
 				eventX = touch.getPageX() - writePanelCanvas.getAbsoluteLeft();
-				eventY = touch.getPageY() - writePanelCanvas.getAbsoluteTop();		
+				eventY = touch.getPageY() - writePanelCanvas.getAbsoluteTop();
+				
+					
 			}
 			
 			if (!points.isEmpty() && writing) {
-				if(noParse) {
-					ArrayList<Point> newWriteObjectPoints = new ArrayList<Point>();
-					for (int i=0; i<points.size(); i++) {
-						newWriteObjectPoints.add(
-								new Point(points.get(i).getX(), points.get(i).getY()) );
+//				if(noParse) {
+//					ArrayList<Point> newWriteObjectPoints = new ArrayList<Point>();
+//					for (int i=0; i<points.size(); i++) {
 //						newWriteObjectPoints.add(
-//								new Point(points.get(i).getX()-panelShiftX, points.get(i).getY()-panelShiftY) );
-					}
-//					resetPanelShift();
-
-					WriteObject wo = new WriteObject(true,newWriteObjectPoints);
-					writeObjects.add(wo);
-				}
-				else
+//								new Point(points.get(i).getX(), points.get(i).getY()) );
+////						newWriteObjectPoints.add(
+////								new Point(points.get(i).getX()-panelShiftX, points.get(i).getY()-panelShiftY) );
+//					}
+////					resetPanelShift();
+//
+//					WriteObject wo = new WriteObject(true,newWriteObjectPoints);
+//					writeObjects.add(wo);
+//				}
+//				else
 					addWriteObject();
 			}
 			

@@ -90,7 +90,7 @@ public class TwoStrokeMatcher {
 		
 		// =
 		if (checkStrokes(woLast,"=H1",wo,"=H2") || checkStrokes(woLast,"=H1+",wo,"=H2+"))
-			if(woLast.hasCloseXDistance(60,wo,0,2,0,2) && woLast.hasCloseXDistance(60,wo,18,19,18,19) && woLast.hasCloseYDistance(120,wo,0,2,0,2))
+			if(woLast.hasCloseXDistance(80,wo,0,2,0,2) && woLast.hasCloseXDistance(80,wo,18,19,18,19) && woLast.hasCloseYDistance(120,wo,0,2,0,2))
 				return new WriteObject("=", woLast, wo);
 		
 		if (checkStrokes(woLast,"=H1",wo,"=H2+") || checkStrokes(woLast,"=H1+",wo,"=H2"))

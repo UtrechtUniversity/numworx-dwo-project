@@ -101,7 +101,7 @@ public class StrokeChecker {
 		}
 		if("1".equals(teken)) {
 			checkers.add(wo.hasDirection(265, 20, 1, 19, 12));
-			checkers.add(wo.hasDAngle(-20, 20, -20, 20, 3, 18));
+			checkers.add(wo.hasDAngle(-20, 20, -20, 20, 5, 18));
 			
 			checkersPlus.add(wo.hasDirection(45, 45, 1, 4, 2));
 			checkersPlus.add(wo.hasDirection(265, 20, 1, 19, 13));
@@ -114,7 +114,7 @@ public class StrokeChecker {
 			checkers.add(!wo.hasDirection(90, 90, 7, 13, 4));
 			
 			//checkers.add(wo.hasDecreasingAngle(20,2,7));
-			checkers.add(wo.hasDAngle(-250, -80, -120, 0, 2, 10));
+			checkers.add(wo.hasDAngle(-250, -80, -120, 20, 2, 10));
 		}
 		if("3".equals(teken)) {
 			checkers.add(wo.hasDirection(0, 60, 1, 5, 3));
@@ -145,7 +145,7 @@ public class StrokeChecker {
 //			checkers.add(wo.hasDirection(180, 90, 15, 19, 1));
 //			checkers.add(wo.hasCloseDistance(25, wo, 19, 20, 5, 10));
 //			checkers.add(!wo.hasSharpAngle(180, 30, 5, 15));
-			checkers.add(wo.hasDAngle(0, 80, -15, 140, 2, 10));
+			checkers.add(wo.hasDAngle(-10, 80, -15, 140, 2, 10));
 			checkers.add(wo.hasDAngle(210, 400, -15, 140, 2, 19));
 			checkers.add(wo.hasCloseDistance(30, wo, 19, 20, 5, 10));
 		}
@@ -197,7 +197,7 @@ public class StrokeChecker {
 			checkers.add(wo.dMinBoxTop(0, 40, 8, 15));
 			checkers.add(wo.dMinBoxBottom(0, 35, 6, 10));
 			checkers.add(wo.dMinBoxBottom(0, 35, 18, 19));
-			checkers.add(wo.hasDAngle(200, 360, -5, 180, 1, 12));
+			checkers.add(wo.hasDAngle(200, 360, -15, 180, 1, 12));
 		}
 		if("b".equals(teken)) {
 			checkers.add(wo.hasDirection(260, 30, 1, 10, 6));

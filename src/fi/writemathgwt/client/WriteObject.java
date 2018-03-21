@@ -12,7 +12,7 @@ import com.google.gwt.canvas.dom.client.CssColor;
 
 
 public class WriteObject {
-	//private static Logger logger = Logger.getLogger("WriteObject");
+	private static Logger logger = Logger.getLogger("WriteObject");
 
 	private final static boolean cNewStrokmatcher = true;
 	static int newTekenSet = 0;
@@ -174,7 +174,7 @@ public class WriteObject {
 		}
 		
 		int dpSize = doublePoints.size();
-		while (dpSize < standardizeLengthNumber+5)
+		while (size >4 && dpSize < standardizeLengthNumber+5)
 		{	
 			doublePoints = insertPoint(doublePoints);
 			dpSize = doublePoints.size();
@@ -197,7 +197,7 @@ public class WriteObject {
 			parsePoints = new ArrayList<DoublePoint>();
 			for(int i = 0 ; i < standardizeLengthNumber ; i++) 
 			{
-				parsePoints.add(new DoublePoint(points.get(0).x, points.get(0).y));
+				parsePoints.add(new DoublePoint(points.get(0).x+i*0.0001, points.get(0).y+i*0.0001));
 			}
 			makeParsingBox(parsePoints);
 			return;
@@ -570,7 +570,7 @@ public class WriteObject {
 				try {
 					if(colorAnalyse) {
 						if(newMatch)
-							g.setStrokeStyle(CssColor.make(150, 200, 150));
+							g.setStrokeStyle(CssColor.make(0, 200, 0));
 						if(newMatchWrong)
 							g.setStrokeStyle(CssColor.make(200, 0, 0));
 						if(oldMatch)
@@ -647,7 +647,7 @@ public class WriteObject {
 			}
 			if(colorAnalyse) {
 				if(newMatch)
-					g.setStrokeStyle(CssColor.make(150, 200, 150));
+					g.setStrokeStyle(CssColor.make(0, 200, 0));
 				if(newMatchWrong)
 					g.setStrokeStyle(CssColor.make(200, 0, 0));
 				if(oldMatch)
@@ -879,20 +879,34 @@ public class WriteObject {
 			teken1 = newStrokeMatcher.getTeken1();
 			teken2 = newStrokeMatcher.getTeken2();
 			teken3 = newStrokeMatcher.getTeken3();
-			teken4 = newStrokeMatcher.getTeken4();
-			teken5 = newStrokeMatcher.getTeken5();
-			teken6 = newStrokeMatcher.getTeken6();
+			//teken4 = newStrokeMatcher.getTeken4();
+			//teken5 = newStrokeMatcher.getTeken5();
+			//teken6 = newStrokeMatcher.getTeken6();
 //			logger.info("parsing :: match = " + teken1 + "("+ newStrokeMatcher.getTekenId(0) + ")");
 //			logger.info("parsing :: teken2 = " + teken2);
 //			logger.info("parsing :: teken3 = " + teken3);
 //			logger.info("parsing :: teken4 = " + teken4);
-			
 			if(gevondenTeken.charAt(gevondenTeken.length()-1)=='H')
 				gevondenTeken = teken1;
 			if(gevondenTeken.charAt(gevondenTeken.length()-1)=='H')
 				gevondenTeken = teken2;
 			if(gevondenTeken.charAt(gevondenTeken.length()-1)=='H')
 				gevondenTeken = teken3;
+			
+			String codeRules = "";
+			String s = "";
+			for (int j = 0; j < points.size(); j++)
+			{
+				if(j>0)
+					s=s+",";
+				s=s+points.get(j).getX()+","+points.get(j).getY() ;
+			}
+			codeRules=codeRules+"int[] sample_"+0+" = {"+s+"}; samples.add(sample_"+0+");\n";
+			
+			//if(analyserOn)
+				logger.info("// "+gevondenTeken+"\n{\nArrayList<int[]> samples = new ArrayList<int[]>();\n"+codeRules+"refSamples.put(\""+gevondenTeken+"\", samples);\n}");
+			
+			
 		} 
 			
 		
@@ -1003,7 +1017,7 @@ public class WriteObject {
 			else 
 				lengthRest += lengthOld;
 		}
-		if(pointsNew.size()<standardizeLengthNumber-1) {
+		while(pointsNew.size()<standardizeLengthNumber-1) {
 			double x = (pointsNew.get(pointsNew.size()-1).getX() + doublePoints.get(doublePoints.size()-1).getX())/2;
 			double y = (pointsNew.get(pointsNew.size()-1).getY() + doublePoints.get(doublePoints.size()-1).getY())/2;
 			pointsNew.add(new DoublePoint(x,y));
