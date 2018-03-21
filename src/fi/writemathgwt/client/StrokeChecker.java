@@ -14,6 +14,8 @@ public class StrokeChecker {
 	
 	private static HashMap samples;
 	
+	public static String checkerBooleans = "";
+	
 	
 	public static String parse(WriteObject wo) {
 		
@@ -439,16 +441,20 @@ public class StrokeChecker {
 	private static boolean combine(ArrayList<Boolean> checkers, ArrayList<Boolean> checkersPlus) {
 		boolean check = true;
 		boolean checkPlus = true;
+		checkerBooleans = "";
 		
 		for(int i = 0 ; i<checkers.size() ; i++) {
 			check = check && checkers.get(i);
-			if(logging)
-				logger.info("    checker "+i+" :"+checkers.get(i));
+//			if(logging)
+//				logger.info("    checker "+i+" :"+checkers.get(i));
+			checkerBooleans = checkerBooleans+"-checker "+i+" :"+checkers.get(i)+"\n";
 		}
+		checkerBooleans = checkerBooleans+"\n";
 		for(int i = 0 ; i<checkersPlus.size() ; i++) {
 			checkPlus = checkPlus && checkersPlus.get(i);
-			if(logging)
-				logger.info("    checkerPlus "+i+" :"+checkersPlus.get(i));
+//			if(logging)
+//				logger.info("    checkerPlus "+i+" :"+checkersPlus.get(i));
+			checkerBooleans = checkerBooleans+"checkerPlus "+i+" :"+checkersPlus.get(i)+"\n";
 		}
 		if(checkers.size()==0) 
 			check = false;
@@ -458,4 +464,11 @@ public class StrokeChecker {
 		return check || checkPlus;
 
 	}
+	
+	public static String getCheckerBooleans() {
+		return checkerBooleans;
+	}
+			
+		
+	
 }

@@ -36,14 +36,22 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
+
+import fi.writemathgwt.client.WriteMathGWT.ListChangeHandler;
+
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
 public class WritePanel extends LayoutPanel { //HorizontalPanel
-	//private static Logger logger = Logger.getLogger("WritePanel");
+	private static Logger logger = Logger.getLogger("WritePanel");
 	
-	private boolean analyserOn = false;
+	public static boolean analyserOn = false;
+	WriteObject objectToAnalyse;
+	String checkerBooleans = "";
 	
 	private static int cPanelAreaMin = -50000;
 	private static int cPanelAreaMax = 50000;
@@ -80,6 +88,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	
 	PushButton correctieButton;
 	CorrectiePanel correctiePanel;
+	
+	ListBox sampleInspectComboBox;
 
 	int tekenSet = 1;
 	private boolean noParse = false;
@@ -122,11 +132,24 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		correctieButton = new PushButton("C");
 		correctieButton.addStyleName("pushbutton");
 		add(correctieButton);
+		
+		
 		//correctieButton.setSize(50,20);
 		setWidgetLeftWidth(correctieButton, width - 30, Style.Unit.PX, 30, Style.Unit.PX);
 		setWidgetTopHeight(correctieButton, 6, Style.Unit.PX, 20, Style.Unit.PX);
 		
 		correctieButton.addClickHandler(new CBL());
+		
+		if(analyserOn) {
+		sampleInspectComboBox = new ListBox();
+		sampleInspectComboBox.addItem("choose");
+		add(sampleInspectComboBox);
+		sampleInspectComboBox.addChangeHandler(new ListChangeHandler());
+		
+		setWidgetLeftWidth(sampleInspectComboBox, width - 150, Style.Unit.PX, 100, Style.Unit.PX);
+		setWidgetTopHeight(sampleInspectComboBox, 6, Style.Unit.PX, 20, Style.Unit.PX);
+		}
+		
 		
 		initContext2d();
 		
@@ -226,18 +249,22 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		
 		g.setStrokeStyle(zwart);
 		for(int i = 0 ; i < writeObjects.size() ; i++) {
-//			g.setFillStyle(CssColor.make(220, 220, 220));
-//			int x = writeObjects.get(i).getBox().x;
-//			int y = writeObjects.get(i).getBox().y;
-//			int w = writeObjects.get(i).getBox().width;
-//			int h = writeObjects.get(i).getBox().height;
-//			g.fillRect(x, y, w, h);
+			g.setFillStyle(CssColor.make(220, 220, 220));
+			if(analyserOn) {
+				int x = writeObjects.get(i).getBox().x;
+				int y = writeObjects.get(i).getBox().y;
+				int w = writeObjects.get(i).getBox().width;
+				int h = writeObjects.get(i).getBox().height;
+				//g.fillRect(x, y, w, h);
+				g.setFillStyle(CssColor.make(0, 0, 0));
+				g.fillText(""+i, x, y);
+			}
 			writeObjects.get(i).draw(g, panelShiftX, panelShiftY);
 			
 			if(analyserOn) {
 				g.setFillStyle(CssColor.make(255, 255, 255));
 				int bx = 460;
-				int by = 570;
+				int by = 420;
 				int dx = 14;
 				g.fillRect(0, by-180, width, 560);
 				g.setFillStyle(CssColor.make(150, 150, 150));
@@ -286,30 +313,34 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		//g.translate(300,0);
 		
 		//object vergroot
-		if(analyserOn && lastObject!=null && !lastObject.isTwoStrokeObject() && !lastObject.isThreeStrokeObject()) {
+		if(analyserOn && objectToAnalyse!=null && !objectToAnalyse.isTwoStrokeObject() && !objectToAnalyse.isThreeStrokeObject()) {
 			
-			double factor = 300.0 / Math.max(lastObject.getParsingBox().width,lastObject.getParsingBox().height);
-			double x = 20 - lastObject.getParsingBox().x;
-			double y = 400 - lastObject.getParsingBox().y;
-			lastObject.draw(g,(int)x, (int)y, factor);
+			int bx=20;
+			int by=250;
+			double factor = 300.0 / Math.max(objectToAnalyse.getParsingBox().width,objectToAnalyse.getParsingBox().height);
+			double x = bx - objectToAnalyse.getParsingBox().x;
+			double y = by - objectToAnalyse.getParsingBox().y;
+			objectToAnalyse.draw(g,(int)x, (int)y, factor);
 			
 			{
-				double w =(factor*lastObject.getParsingBox().width);
-				double h =(factor*lastObject.getParsingBox().height);
+				double w =(factor*objectToAnalyse.getParsingBox().width);
+				double h =(factor*objectToAnalyse.getParsingBox().height);
 				g.setStrokeStyle(ruitjesKleur);
 				for (int i = 0; i < 11; i++) {
 					g.beginPath();
-					g.moveTo(20+0, 400+i*h/10);
-					g.lineTo(20+w, 400+i*h/10);
+					g.moveTo(bx+0, by+i*h/10);
+					g.lineTo(bx+w, by+i*h/10);
 					g.stroke();
 				}
 				for (int i = 0; i < 11; i++) {
 					g.beginPath();
-					g.moveTo(20+i*w/10 , 400);
-					g.lineTo(20+i*w/10 , 400+h);
+					g.moveTo(bx+i*w/10 , by);
+					g.lineTo(bx+i*w/10 , by+h);
 					g.stroke();
 				}
 			}
+			
+			g.fillText(checkerBooleans, 300, by);
 		}
 				
 		//g.scale(0.2,0.2);
@@ -594,10 +625,17 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		//ArrayList<WriteObject> sampleWriteObjects
 		writeObjects = rs.getReferenceObjects(key);
 		String result = "";
+		if(analyserOn) {
+			sampleInspectComboBox.clear();
+			sampleInspectComboBox.addItem(key);
+		}
 		for(int i=0 ; i<writeObjects.size() ; i++) {
 			String teken = writeObjects.get(i).parse(key);
-			result = result+teken;
 			
+			writeObjects.get(i).translate(20+(i%10)*80-writeObjects.get(i).getBox().x , 20+(i/10)*110-writeObjects.get(i).getBox().y );
+			result = result+teken;
+			if(analyserOn)
+				sampleInspectComboBox.addItem(""+i+". :"+teken);
 		}
 		//eigenaar.writeFormulaObject(result);
 		paint();
@@ -1345,6 +1383,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 				
 			}
 			lastObject = wo;
+			if(analyserOn)
+				objectToAnalyse = wo;
 			updateAverageHeight(wo);
 			writeObjects.add(wo);
 			
@@ -1362,6 +1402,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 				lastLastObject = lastObject;
 			}
 			lastObject = wo;
+			if(analyserOn)
+				objectToAnalyse = wo;
 			updateAverageHeight(wo);
 			writeObjects.add(wo);
 			
@@ -1370,6 +1412,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		{
 			lastLastObject = lastObject;
 			lastObject = wo;
+			if(analyserOn)
+				objectToAnalyse = wo;
 			updateAverageHeight(wo);
 			writeObjects.add(wo);
 		}
@@ -2204,6 +2248,35 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 
     	}
     }
+    
+    class ListChangeHandler implements ChangeHandler
+	{
+		@Override
+		public void onChange(ChangeEvent e)
+		{
+			if (e.getSource() == sampleInspectComboBox)
+			{
+				int selectedindex = sampleInspectComboBox.getSelectedIndex();
+				if (selectedindex != 0)
+				{	objectToAnalyse = writeObjects.get(selectedindex-1);
+					String key = sampleInspectComboBox.getItemText(0);
+					String teken = objectToAnalyse.parse(key);
+					if(!key.equals(teken)) {
+						checkerBooleans = ""+StrokeChecker.check(objectToAnalyse,key);
+						checkerBooleans = checkerBooleans + key+":\n";
+						checkerBooleans = checkerBooleans + StrokeChecker.getCheckerBooleans();
+					}
+					
+					logger.info(checkerBooleans);
+					
+					paint();
+				}
+				
+
+			}
+			
+		}
+	}
 
 }
 

@@ -24,4 +24,9 @@ public class Point
 		double y = this.y;
 		return new DoublePoint(x,y);
 	}
+	
+	public void translate(int dx, int dy) {
+		x+=dx;
+		y+=dy;
+	}
 }

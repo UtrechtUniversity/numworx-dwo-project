@@ -18,8 +18,8 @@ public class WriteObject {
 	static int newTekenSet = 0;
 	public static HashMap<String, int[]>  samples;
 	
-	private boolean colorAnalyse = false;
-	private boolean cuspsAnalyse = false;
+	private boolean colorAnalyse = WritePanel.analyserOn;
+	private boolean cuspsAnalyse = WritePanel.analyserOn;
 	
 	
  	
@@ -199,6 +199,7 @@ public class WriteObject {
 			{
 				parsePoints.add(new DoublePoint(points.get(0).x, points.get(0).y));
 			}
+			makeParsingBox(parsePoints);
 			return;
 		}
 		
@@ -1093,6 +1094,23 @@ public class WriteObject {
 		return distance;
 	}
 	
+	public void translate(int x, int y)
+	{
+		for(int i = 0 ; i < points.size() ; i++) 
+		{	points.get(i).translate(x, y);
+		}
+		for(int i = 0 ; i < doublePoints.size() ; i++) 
+		{	doublePoints.get(i).translate(x, y);
+		}
+		for(int i = 0 ; i < rawPoints.size() ; i++) 
+		{	rawPoints.get(i).translate(x, y);
+		}
+		for(int i = 0 ; i < parsePoints.size() ; i++) 
+		{	parsePoints.get(i).translate(x, y);
+		}
+		makeParsingBox(parsePoints);
+		makeBox(points);
+	}
 	//OK
 	private ArrayList<DoublePoint> scaleToSquare(ArrayList<DoublePoint> doublePoints) 
 	{

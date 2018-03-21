@@ -32,4 +32,9 @@ public class DoublePoint
 	public void setY(double y) {
 		this.y = y;
 	}
+	
+	public void translate(double dx, double dy) {
+		x+=dx;
+		y+=dy;
+	}
 }
