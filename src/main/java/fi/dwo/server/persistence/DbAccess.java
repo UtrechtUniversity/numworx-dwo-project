@@ -2058,7 +2058,6 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return true;
     }
 
-    @Override
     @Deprecated
     public boolean selectCoursesForClass(int classID, int courseID)
             throws IOException, XmlRpcException, SQLException {
@@ -2073,7 +2072,6 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return true;
     }
 
-    @Override
     @Deprecated
     public boolean deSelectCoursesForClass(int classID, int courseID)
             throws IOException, XmlRpcException, SQLException {

@@ -47,17 +47,17 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
         return getDelegate().getCoursesForClass(classID);
     }
 
-    @Override
-    public boolean selectCoursesForClass(int classID, int courseID)
-            throws IOException, XmlRpcException, SQLException {
-        return getDelegate().selectCoursesForClass(classID, courseID);
-    }
+//    @Override
+//    public boolean selectCoursesForClass(int classID, int courseID)
+//            throws IOException, XmlRpcException, SQLException {
+//        return getDelegate().selectCoursesForClass(classID, courseID);
+//    }
 
-    @Override
-    public boolean deSelectCoursesForClass(int classID, int courseID)
-            throws IOException, XmlRpcException, SQLException {
-        return getDelegate().deSelectCoursesForClass(classID, courseID);
-    }
+//    @Override
+//    public boolean deSelectCoursesForClass(int classID, int courseID)
+//            throws IOException, XmlRpcException, SQLException {
+//        return getDelegate().deSelectCoursesForClass(classID, courseID);
+//    }
 
     @Override
     public Vector getCourses(int profileValue) throws IOException, XmlRpcException,
