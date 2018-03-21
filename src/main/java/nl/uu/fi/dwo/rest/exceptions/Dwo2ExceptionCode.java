@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public enum Dwo2ExceptionCode {
+    Client_InternalError, //Internal software error, a stack trace should be acquired.
     User_AuthenticationError, //Illegal account details.
     User_IllegalAction, //Illegal action logged.
     User_AuthorizationError, // please switch role / switch class / switch login (not intentional illegal)
