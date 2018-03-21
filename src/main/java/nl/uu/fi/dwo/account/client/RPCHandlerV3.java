@@ -18,9 +18,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
@@ -43,6 +47,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.PublicUserResultsManager;
 import fi.dwo.gwt.lib.rest.CallManagers.ScoContextManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentCoursesOfSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentScoDataManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentStudentModelManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserCourseManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserResultsManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserScoContextManager;
@@ -58,6 +63,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	CoursesOfSchoolClassManager studentManager;
 	UserResultsManager resultManager;
 	StudentScoDataManager scormApi;
+	SecuredStudentStudentModelManager studentModelManager;
 	
 	protected Promise<DomDwoProfileFull> profile;
 	
@@ -248,6 +254,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 				studentManager = new SecuredStudentCoursesOfSchoolClassManager(secure);
 				resultManager = new SecuredUserResultsManager();
 				scormApi = new SecuredStudentScoDataManager(secure);
+				studentModelManager = new SecuredStudentStudentModelManager();
 				return resolved;
 			}
 		});
@@ -267,6 +274,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 				studentManager = new PublicCoursesOfSchoolClassManager();
 				resultManager = new PublicUserResultsManager();
 				scormApi = new PublicStudentScoDataManager();
+				studentModelManager = null;
 				return null;
 			}});
 
@@ -355,4 +363,27 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 //			}})
 		;
 	}
+		
+	public Promise<List<DomStudentModelContext>> getStudentModels() {
+		if(studentModelManager == null)
+			return Promises.failed(new IllegalArgumentException());
+		return studentModelManager.getStudentModels(getContext());
+	}
+	
+	public Promise<DomStudentModelContext> getStudentModel(final PersistenceId id) {
+		return getStudentModels().map(list -> {
+			for(DomStudentModelContext item: list) {
+				if(id.equals(item.getId()))
+					return item;
+			}
+			return null;
+		});
+	}
+	
+	public Promise<DomStudentModelDataScore> getStudentModelDataScore(DomStudentModelContextId id) {
+		if(studentModelManager == null)
+			return Promises.failed(new IllegalArgumentException());
+		return studentModelManager.getStudentModelDataScore(getContext(), id);
+	}
+
 }
