@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
+import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogEvent;
 import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPromise;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
@@ -26,7 +27,9 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 import org.osgi.util.promise.Promise;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.SUCCESS_ROLE;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Success;
 
@@ -151,6 +154,7 @@ class BootPanelController {
         eventBus.addHandler(LoginEvent.TYPE, new LoginEventHandler() {
             @Override
             public void onLoginEvent(LoginEvent loginEvent) {
+                if(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name())){
                 switch (loginEvent.getState()) {
                     case SUCCESS:
                     case SUCCESS_WELCOME:
@@ -201,6 +205,13 @@ class BootPanelController {
                     default:
                         LOG.log(Level.SEVERE, "Login handling failed in app controller.");
                 }
+                }else{
+                    LOG.log(Level.INFO, "Login succeeded. Showing account view for teacher.");
+                        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
+                        DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
+                        eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_SwitchTeacher()));
+                        //viewFactory.getMainView().showPostLoginWidgets();
+                }
             }
         });
 
@@ -208,6 +219,7 @@ class BootPanelController {
         eventBus.addHandler(SwitchViewEvent.TYPE, new SwitchViewEventHandler() {
             @Override
             public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
+                if(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name())){
                 switch (switchViewEvent.getEventValue()) {
                     case ACCOUNT:
                         presenterFactory.getAccountPresenter().init();
@@ -248,6 +260,10 @@ class BootPanelController {
                     default:
                         LOG.log(Level.SEVERE, "Switch panel failed in app controller.");
                 }
+                }else{
+                    LOG.log(Level.INFO, "Showing account view, because not a teacher.");
+                        presenterFactory.getAccountPresenter().init();
+                }                
             }
         });
         LOG.log(Level.FINE, "Intiating Main view.");

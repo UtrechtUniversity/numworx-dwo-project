@@ -67,7 +67,7 @@ public class AccountPresenter {
     public void init() {
         view.init();
         sracData = getTeacherRoles();
-        view.updateSchoolLogins(dwoGlobalVars.getSchoolLogins());
+        view.updateSchoolLogins(dwoGlobalVars.getSchoolLogins());        
     }
 
     private Map<String, DomSchoolRoleAndClassV2> getTeacherRoles() {
@@ -86,7 +86,7 @@ public class AccountPresenter {
     public void switchSchoolLogin(String hasRoleId) {
         LOG.log(Level.INFO, "Switching to hasRoleId: " + hasRoleId);
         DomSchoolRoleAndClassV2 srac = sracData.get(hasRoleId);
-        if (srac != null && srac.getRole().getRoleName().equals(RoleType.TEACHER.name())) {
+        if (srac != null){ //&& srac.getRole().getRoleName().equals(RoleType.TEACHER.name())) {
             dwoGlobalVars.setActiveSchoolRoleAndClass(srac);
             dwoGlobalVars.getSchoolLogins().setActiveSchoolRoleAndClass(srac);
             Promise<DomSchoolRoleAndClassV2> promise = accountService.switchToSchoolLogin(srac);
@@ -119,7 +119,8 @@ public class AccountPresenter {
             });
         } else {
             //jump to app.dwo.nl/leerling
-            LOG.log(Level.SEVERE, "Switching to other roles than teacher currently not supported.");
+            eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "Internal error")));
+            //LOG.log(Level.SEVERE, "Switching to other roles than teacher currently not supported.");
         }
     }
 
