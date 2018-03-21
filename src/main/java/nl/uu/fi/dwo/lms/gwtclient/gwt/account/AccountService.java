@@ -46,4 +46,8 @@ public class AccountService {
         data.setSchoolCode(accessCode);
         return schoolLoginManager.addASchoolLogin(data);
     }
+
+    Promise<Boolean> removeASchoolLogin(DomSchoolRoleAndClassV2 data) {
+        return schoolLoginManager.removeASchoolLogin(data);
+    }
 }

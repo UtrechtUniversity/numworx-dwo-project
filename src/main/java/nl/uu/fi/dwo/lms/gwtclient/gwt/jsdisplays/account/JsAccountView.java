@@ -24,7 +24,6 @@ public class JsAccountView implements AccountPresenter.Display{
     @Override
     public void updateSchoolLogins(DomSchoolsRolesAndClassesV2 schoolLogins) {
         JSONValue sl = DomSchoolsRolesAndClassesV2Codec.CODEC.encode(schoolLogins);
-        
         JsAccountDisplay.updateView(sl);  
     }
 

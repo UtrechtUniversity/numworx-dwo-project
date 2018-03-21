@@ -75,15 +75,15 @@ public class AccountPresenter {
         DomSchoolsRolesAndClassesV2 sl = dwoGlobalVars.getSchoolLogins();
         List<DomSchoolRoleAndClassV2> fullList = sl.getSchoolsRolesAndClassesList();
         for (DomSchoolRoleAndClassV2 hasRole : fullList) {
-            if (hasRole.getRole().getRoleName().equals("TEACHER")) {
+//            if (hasRole.getRole().getRoleName().equals("TEACHER")) {
                 result.put(hasRole.getHasRole().getId().getIdString(), hasRole);
-            }
+  //          }
         }
         return result;
     }
 
     @JsMethod
-    public void switchRole(String hasRoleId) {
+    public void switchSchoolLogin(String hasRoleId) {
         LOG.log(Level.INFO, "Switching to hasRoleId: " + hasRoleId);
         DomSchoolRoleAndClassV2 srac = sracData.get(hasRoleId);
         if (srac != null && srac.getRole().getRoleName().equals(RoleType.TEACHER.name())) {
@@ -124,7 +124,7 @@ public class AccountPresenter {
     }
 
     @JsMethod
-    public void addRole(String role, String schoolLogin, String accessCode) {
+    public void addASchoolLogin(String role, String schoolLogin, String accessCode) {
         LOG.log(Level.INFO, "role " + role + " schoolLogin " + schoolLogin);
         Promise<Boolean> promise = accountService.addASchoolLogin(role, schoolLogin, accessCode);
 
@@ -152,6 +152,35 @@ public class AccountPresenter {
         });
     }
 
+    @JsMethod
+    public void removeASchoolLogin(String hasRoleId) {
+        LOG.log(Level.INFO, "Removing schoolLogin " + hasRoleId);
+        Promise<Boolean> promise = accountService.removeASchoolLogin(sracData.get(hasRoleId));
+        promise.then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                //flip back to schoolclasses screen 
+                eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
+                return null;
+            }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        });
+    }
+    
+    
     @JsMethod
     public void changePasword(String curPassword, String newPassword, String newPasswordAgain) {
         if (!MD5.md5(curPassword).equals(dwoGlobalVars.getCurrentUser().getPassword())) {

@@ -10,16 +10,12 @@ import jsinterop.annotations.JsType;
  * Callback from the MainDisplay UI to the presenter occurs
  * via 
  * 
- * There are two relevant presenter functions.
+ * There are four relevant presenter functions.
  * 
- * To save account data:
- * 
- * public void saveUser(String givenName, String insertion, String familyName, 
- *   String email, String curPassword, String newPassword, String newPasswordAgain);
- * 
- * and to reset the data in the Account display.
- * 
- * public void updateUserDataInView();
+ * public void changePasword(String curPassword, String newPassword, String newPasswordAgain)
+ * public void switchSchoolLogin(String hasRoleId);
+ * public void addASchoolLogin(String role, String schoolLogin, String accessCode);
+ * public void removeASchoolLogin(String hasRoleId);
  * 
  * @author G.A.J. van der Plas
  */
