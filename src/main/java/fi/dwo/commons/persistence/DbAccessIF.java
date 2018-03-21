@@ -35,30 +35,30 @@ public interface DbAccessIF extends DbAccessLogin {
      */
     public Vector getCoursesForClass(int classID) throws IOException, XmlRpcException, SQLException;
 
-    /**
-     * Select a course for the specified class.
-     *
-     * @param classID The class wherefor the courses must be selected.
-     * @param courseID The course to select.
-     * @return If true, te course was successfully connected to the class.
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    public boolean selectCoursesForClass(int classID, int courseID) throws IOException, XmlRpcException, SQLException;
+//    /**
+//     * Select a course for the specified class.
+//     *
+//     * @param classID The class wherefor the courses must be selected.
+//     * @param courseID The course to select.
+//     * @return If true, te course was successfully connected to the class.
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    public boolean selectCoursesForClass(int classID, int courseID) throws IOException, XmlRpcException, SQLException;
 
-    /**
-     * Deselect a course for the specified class.
-     *
-     * @param classID The class wherefor the courses must be deselected.
-     * @param courseID The course to deselect.
-     * @return If true, the course was successfully disconnected from the class.
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    public boolean deSelectCoursesForClass(int classID, int courseID) throws IOException, XmlRpcException, SQLException;
-    ////peter
+//    /**
+//     * Deselect a course for the specified class.
+//     *
+//     * @param classID The class wherefor the courses must be deselected.
+//     * @param courseID The course to deselect.
+//     * @return If true, the course was successfully disconnected from the class.
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    public boolean deSelectCoursesForClass(int classID, int courseID) throws IOException, XmlRpcException, SQLException;
+//    ////peter
 
     /**
      * Returns all the available courses for the specified user.
@@ -659,8 +659,8 @@ public interface DbAccessIF extends DbAccessLogin {
 	SQLException;
 
 	//Alleen sorteren binnen één parent.	
-	public Vector getCoursesForClassJS(int classID) throws IOException,
-		XmlRpcException, SQLException;
+//	public Vector getCoursesForClassJS(int classID) throws IOException,
+//		XmlRpcException, SQLException;
 	
 	public Vector getEditableCoursesJS(int schoolID) throws IOException,
 		XmlRpcException, SQLException;
