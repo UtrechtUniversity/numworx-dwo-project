@@ -52,6 +52,7 @@ public class WelcomePresenter {
 
         public void clear();
 
+        public void setDefaultText();
         public void setWelcomeText(String html);
     }
 

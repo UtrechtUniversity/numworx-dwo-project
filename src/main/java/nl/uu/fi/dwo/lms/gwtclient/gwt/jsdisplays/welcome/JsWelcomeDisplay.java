@@ -18,4 +18,6 @@ public class JsWelcomeDisplay{
     public static native void clear();
     /** Sets the welcome text. */
     public static native void setWelcomeText(String html);
+    /** Sets the default welcome text depending on nl or en language, hard-coded in the html/javascript code. */
+    public static native void setDefaultText();
 }

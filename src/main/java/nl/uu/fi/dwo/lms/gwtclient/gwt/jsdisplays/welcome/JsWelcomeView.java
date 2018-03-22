@@ -14,6 +14,11 @@ public class JsWelcomeView implements WelcomePresenter.Display{
         JsWelcomeDisplay.clear();
     }
     @Override
+    public void setDefaultText(){
+        JsWelcomeDisplay.setDefaultText();
+    }
+    
+    @Override
     public void setWelcomeText(String html){
         JsWelcomeDisplay.setWelcomeText(html);
     }

@@ -21,6 +21,11 @@ public class WelcomeView extends Composite implements WelcomePresenter.Display {
 
     private static final Logger LOG = Logger.getLogger(WelcomeView.class.getName());
 
+    @Override
+    public void setDefaultText() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 
     interface MyUiBinder extends UiBinder<Widget, WelcomeView> {
     }
