@@ -706,23 +706,23 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
         return getDbAccessJS().getCoursesJS(profileValue);
     }
 
-    @Override
-    public Vector getCoursesForClassJS(int classID) throws IOException,
-            XmlRpcException, SQLException {
-        return getDbAccessJS().getCoursesForClassJS(classID);
-    }
+//    @Override
+//    public Vector getCoursesForClassJS(int classID) throws IOException,
+//            XmlRpcException, SQLException {
+//        return getDbAccessJS().getCoursesForClassJS(classID);
+//    }
 
-    @Override
-    public Vector getEditableCoursesJS(int schoolID) throws IOException,
-            XmlRpcException, SQLException {
-        return getDbAccessJS().getEditableCoursesJS(schoolID);
-    }
+//    @Override
+//    public Vector getEditableCoursesJS(int schoolID) throws IOException,
+//            XmlRpcException, SQLException {
+//        return getDbAccessJS().getEditableCoursesJS(schoolID);
+//    }
 
-    @Override
-    public Vector getEditableCoursesAdminJS() throws IOException,
-            XmlRpcException, SQLException {
-        return getDbAccessJS().getEditableCoursesAdminJS();
-    }
+//    @Override
+//    public Vector getEditableCoursesAdminJS() throws IOException,
+//            XmlRpcException, SQLException {
+//        return getDbAccessJS().getEditableCoursesAdminJS();
+//    }
 
     @Override
     public Vector getTableJS(String table, Hashtable wheredef, String orderby)

@@ -12,14 +12,14 @@ public interface DbAccessJS {
 	SQLException;
 
 	//Alleen sorteren binnen één parent.	
-	public Vector getCoursesForClassJS(int classID) throws IOException,
-		XmlRpcException, SQLException;
+//	public Vector getCoursesForClassJS(int classID) throws IOException,
+//		XmlRpcException, SQLException;
 	
-	public Vector getEditableCoursesJS(int schoolID) throws IOException,
-		XmlRpcException, SQLException;
+//	public Vector getEditableCoursesJS(int schoolID) throws IOException,
+//		XmlRpcException, SQLException;
 	
-	public Vector getEditableCoursesAdminJS() throws IOException,
-		XmlRpcException, SQLException;
+//	public Vector getEditableCoursesAdminJS() throws IOException,
+//		XmlRpcException, SQLException;
 
 	public Vector getTableJS(String table, Hashtable wheredef, String orderby)
 			throws IOException, XmlRpcException, SQLException;
