@@ -71,12 +71,12 @@ class DbAccessClient extends Client implements DbAccessIF {
         Object object = invoke("getEditableCoursesAdmin", vv);
         return (java.util.Vector) object;
     }
-    @Override
-    public java.util.Vector getEditableCoursesAdminJS() throws IOException, XmlRpcException {
-        Vector vv = new Vector(0);
-        Object object = invoke("getEditableCoursesAdminJS", vv);
-        return (java.util.Vector) object;
-    }
+//    @Override
+//    public java.util.Vector getEditableCoursesAdminJS() throws IOException, XmlRpcException {
+//        Vector vv = new Vector(0);
+//        Object object = invoke("getEditableCoursesAdminJS", vv);
+//        return (java.util.Vector) object;
+//    }
 
     @Override
     public java.util.Vector getEditableCourses(int a) throws IOException, XmlRpcException {
@@ -85,13 +85,13 @@ class DbAccessClient extends Client implements DbAccessIF {
         Object object = invoke("getEditableCourses", vv);
         return (java.util.Vector) object;
     }
-    @Override
-    public java.util.Vector getEditableCoursesJS(int a) throws IOException, XmlRpcException {
-        Vector vv = new Vector(1);
-        vv.addElement(new Integer(a));
-        Object object = invoke("getEditableCoursesJS", vv);
-        return (java.util.Vector) object;
-    }
+//    @Override
+//    public java.util.Vector getEditableCoursesJS(int a) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(1);
+//        vv.addElement(new Integer(a));
+//        Object object = invoke("getEditableCoursesJS", vv);
+//        return (java.util.Vector) object;
+//    }
 
     @Override
     public java.util.Hashtable getRecord(java.lang.String a, java.lang.String b, int c) throws IOException, XmlRpcException {
