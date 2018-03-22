@@ -872,7 +872,8 @@ public class StelselEditor extends FormuleEditorWithSteps
 			else 
 			{
 				StelselEditor editorMetFocus = vindKindMetFocus();
-				editorMetFocus.splitsOfMaakStap(backStep, show, setState);
+				if(editorMetFocus != null)
+					editorMetFocus.splitsOfMaakStap(backStep, show, setState);
 			}
 		}
 		catch(RestartException e)
@@ -934,7 +935,8 @@ public class StelselEditor extends FormuleEditorWithSteps
 		else
 		{
 			StelselEditor editorMetFocus = vindKindMetFocus();
-			editorMetFocus.backStep(setState);
+			if(editorMetFocus != null)
+				editorMetFocus.backStep(setState);
 		}
 	}
 	
