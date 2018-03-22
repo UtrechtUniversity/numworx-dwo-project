@@ -662,10 +662,10 @@ public interface DbAccessIF extends DbAccessLogin {
 //	public Vector getCoursesForClassJS(int classID) throws IOException,
 //		XmlRpcException, SQLException;
 	
-	public Vector getEditableCoursesJS(int schoolID) throws IOException,
-		XmlRpcException, SQLException;
+//	public Vector getEditableCoursesJS(int schoolID) throws IOException,
+//		XmlRpcException, SQLException;
 	
-	public Vector getEditableCoursesAdminJS() throws IOException,
-		XmlRpcException, SQLException;
+//	public Vector getEditableCoursesAdminJS() throws IOException,
+//		XmlRpcException, SQLException;
 
 }
