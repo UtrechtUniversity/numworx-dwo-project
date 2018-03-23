@@ -24,7 +24,8 @@ public class StudentModelLogger implements Logging {
 		
 		@Override
 		public Logging get() {
-			boolean experiment = Memento.instance().pmodel != null;
+			Memento instance = Memento.instance();
+			boolean experiment = instance != null && instance.pmodel != null;
 			experiment &= DWOplayer.clientfactory.withUser();
 			if (experiment)
 				return new StudentModelLogger();

@@ -164,7 +164,7 @@ public class DWOLogger implements Logging {
 		if(delegate != null)
 			delegate.setLogID(string);
 		attempts = null;
-		map = memento.getLogState(string);
+		map = memento != null ? memento.getLogState(string) : new JSONObject();
 		JSONValue value = map.get(LOG_ATTEMPTS);
 		if(value != null)
 			attempts =  value.isArray();
