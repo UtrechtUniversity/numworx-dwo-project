@@ -46,14 +46,15 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 		add(staticPanel);
 		kb.blur(); // we start hidden!
 
-// css style!		
-		Style style = getElement().getStyle();
-		style.setPosition(Style.Position.ABSOLUTE);
-		style.setBottom(0, Style.Unit.PX);
-		style.setRight(0, Style.Unit.PX);
-		style.setLeft(0, Style.Unit.PX);
-		style.setBackgroundColor("rgb(229,231,233)");
-		
+// css style! FIXME naar dwoplayercss
+		Style style;
+//		style = getElement().getStyle();
+//		style.setPosition(Style.Position.ABSOLUTE);
+//		style.setBottom(0, Style.Unit.PX);
+//		style.setRight(0, Style.Unit.PX);
+//		style.setLeft(0, Style.Unit.PX);
+//		style.setBackgroundColor("rgb(229,231,233)");
+		addStyleName(dwoplayercss.DWOkeyboard());;
 		
 		style = staticPanel.getElement().getStyle();
 		style.setHeight(getStatusBarHeight(), Unit.PX);
@@ -65,7 +66,7 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 
 		style = kb.getElement().getStyle();
 		style.setProperty("margin", "0 auto");
-		style.setWidth(882, Unit.PX);
+		style.setWidth(982, Unit.PX); // MAXIMUM BREEDTE TOETSENBORDEN
 		style.setPosition(Position.RELATIVE);
 		
 //		staticPanel.addDomHandler(new MouseUpHandler() {

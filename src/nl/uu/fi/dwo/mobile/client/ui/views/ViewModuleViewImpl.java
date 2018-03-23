@@ -2279,7 +2279,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		if(size != lastSize) {
 			fp.setWidgetSize(statusView, size);
 			lastSize = size;
-			fp.animate(300);
+			//fp.animate(300);
 		}
 		setWebkitScrolling(true);
 	}
