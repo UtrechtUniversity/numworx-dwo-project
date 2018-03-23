@@ -13,10 +13,10 @@ public class OneStrokeMatcher {
 		checkLogString = "";
 		String teken = null;
 		for(int i = 0 ; i<tekens.length ; i++) {
-			if(StrokeChecker.check(wo, tekens[i])) {
+			if(OneStrokeChecker.check(wo, tekens[i])) {
 				teken = tekens[i];
 				checkLogString = checkLogString+teken+"\n";
-				checkLogString = checkLogString + StrokeChecker.getCheckerBooleans();
+				checkLogString = checkLogString + OneStrokeChecker.getCheckerBooleans();
 				if(!WritePanel.analyserOn)
 					return teken;
 			}

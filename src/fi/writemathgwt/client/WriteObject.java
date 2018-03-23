@@ -544,7 +544,7 @@ public class WriteObject {
 				g.setFillStyle(CssColor.make(0, 0, 0));
 				if(colorAnalyse) {
 					if(newMatch)
-						g.setStrokeStyle(CssColor.make(150, 200, 150));
+						g.setStrokeStyle(CssColor.make(0, 200, 0));
 					if(newMatchWrong)
 						g.setStrokeStyle(CssColor.make(200, 0, 0));
 					if(oldMatch)

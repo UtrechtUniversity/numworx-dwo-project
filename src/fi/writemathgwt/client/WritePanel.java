@@ -2265,9 +2265,9 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 					String key = sampleInspectComboBox.getItemText(0);
 					String teken = objectToAnalyse.parse(key);
 					if(!key.equals(teken)) {
-						checkerBooleans = ""+StrokeChecker.check(objectToAnalyse,key);
+						checkerBooleans = ""+OneStrokeChecker.check(objectToAnalyse,key);
 						checkerBooleans = checkerBooleans + key+":\n";
-						checkerBooleans = checkerBooleans + StrokeChecker.getCheckerBooleans();
+						checkerBooleans = checkerBooleans + OneStrokeChecker.getCheckerBooleans();
 					}
 					
 					logger.info(checkerBooleans);

@@ -90,6 +90,8 @@ public class TwoStrokeMatcher {
 		
 		// =
 		if (checkStrokes(woLast,"=H1",wo,"=H2") || checkStrokes(woLast,"=H1+",wo,"=H2+"))
+			//if (Math.abs(woLast.getBoxMid().x - wo.getBoxMid().x) < averageHeight / 3 && 
+			//	    Math.abs(woLast.getBoxMid().y - wo.getBoxMid().y) < 2 * averageHeight / 3 )
 			if(woLast.hasCloseXDistance(80,wo,0,2,0,2) && woLast.hasCloseXDistance(80,wo,18,19,18,19) && woLast.hasCloseYDistance(120,wo,0,2,0,2))
 				return new WriteObject("=", woLast, wo);
 		

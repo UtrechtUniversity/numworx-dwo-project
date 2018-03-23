@@ -171,8 +171,8 @@ public class TwoStrokeChecker {
 		if("=H1".equals(teken)) {
 			checkers.add(wo.hasDirection(0, 30, 1, 19, 10));
 			checkers.add(!wo.hasDirection(180, 90, 1, 19, 3));
-			checkers.add(!wo.hasDirection(300, 25, 1, 3, 1)); // ivm lang wortelteken
-			checkers.add(!wo.hasDirection(70, 15, 2, 7, 2));
+			//checkers.add(!wo.hasDirection(300, 25, 1, 3, 1)); // ivm lang wortelteken
+			//checkers.add(!wo.hasDirection(70, 15, 2, 7, 2));
 		}
 		if("=H1+".equals(teken)) {
 			checkers.add(wo.hasDirection(180, 30, 1, 19, 10));
