@@ -67,11 +67,15 @@ public class StudentModelPanel extends Composite implements HasText, StudentMode
 		int s = selectBox.getSelectedIndex();
 		if( s == 0) {
 			LOG.info("deselect all");
-			area.setText("");
+			deselect();
 		} else {
 			String value = selectBox.getSelectedValue();
 			controller.select(value);
 		}
+	}
+
+	protected void deselect() {
+		area.setText("");
 	}
 	
 	
