@@ -2,9 +2,13 @@
 /**
  * script en css loader
  */
-<% String cdn = System.getProperty("CDN_HOST", "cdn.dwo.nl"); %>
+<% 
+	String cdn = System.getProperty("CDN_HOST", "cdn.dwo.nl");
+	String env = System.getProperty("DWO_ENV","app");
+%>
 var deploy = "//<%= cdn %>/apps/"
-//deploy = "//test-dwo-nl.s3.amazonaws.com/apps/"	
+var dwo_env = "<%= env %>"
+
 function script(name) {
 	var elem = document.createElement('script');
 	elem.src = deploy + name;
