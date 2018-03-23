@@ -44,6 +44,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.StudentModelPanel;
 import nl.uu.fi.dwo.mobile.client.ui.places.Hash;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
@@ -224,11 +225,9 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 
 				boolean experimenteel = true;
 				if(experimenteel) {
-					m=items.addItem("STUDENT MODEL", new StudentModelCommand());
-					m.addStyleDependentName(style.menuItem());
+					m=items.addItem("Studentmodel", new StudentModelCommand(StudentModelPanel.BUILDER));
+					m.addStyleName(style.menuItem());
 				}
-			
-			
 			}
 			boolean single = Boolean.TRUE.equals(currentUser.getSingleSchool());
 			if(!single)
