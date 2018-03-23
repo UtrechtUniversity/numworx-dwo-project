@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 
-	private static int HEIGHT = 166;
+	//private static int HEIGHT = variabel;
 	private AbstractKeyboard current;
 	private AbstractKeyboard k123;
 	private DWOTabletKeyboardABC kabc;
@@ -101,7 +101,7 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 	public void focus() {
 		if(current==pen) pen.focus(); // does read formula
 		super.focus();
-		resizeScrollPanel(HEIGHT);
+		resizeScrollPanel(getKeyboardHeight());
 		FocusOnTouch.focus();
 	}
 
@@ -121,13 +121,10 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 		else switchLtLower();
 	}
 
+		
 	@Override
 	void switch123() {
-		if(current != k123) {
-			current.setVisible(false);
-			current = k123;
-			current.setVisible(true);
-		}
+		switchTo(k123);
 	}
 
 	@Override
@@ -136,6 +133,7 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 			current.setVisible(false);
 			current = pen;
 			current.focus(); // does read formula
+			resizeScrollPanel(getKeyboardHeight());
 		}
 	}
 
@@ -149,12 +147,8 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 
 
 	private void switchLtUpper() {
-		if(current != kABC) {
-			current.setVisible(false);
-			current = kABC;
-			upper = true;
-			current.setVisible(true);
-		}
+		upper = true;
+		switchTo(kABC);
 	}
 
 	@Override
@@ -167,12 +161,8 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 
 
 	private void switchLtLower() {
-		if(current != kabc) {
-			current.setVisible(false);
-			current = kabc;
-			upper = false;
-			current.setVisible(true);
-		}
+		upper = false;
+		switchTo(kabc);
 	}
 
 	@Override
@@ -193,25 +183,18 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 			current.setVisible(false);
 			current = kto;
 			current.setVisible(true);
+			resizeScrollPanel(getKeyboardHeight());
 		}
 	}
 
 	private void switchGrUpper() {
-		if(current != kGrUpper) {
-			current.setVisible(false);
-			current = kGrUpper;
-			upper = true;
-			current.setVisible(true);
-		}
+		upper = true;
+		switchTo(kGrUpper);
 	}
 
 	private void switchGrLower() {
-		if(current != kGrLower) {
-			current.setVisible(false);
-			current = kGrLower;
-			upper = false;
-			current.setVisible(true);
-		}
+		upper = false;
+		switchTo(kGrLower);
 	}
 	
 	private HasHeight scrollPanel; 
@@ -221,6 +204,7 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 	private FlowPanel main;
 	
 	void resizeScrollPanel(int size) {
+		setPixelSize(-1, size);
 		origDelta = size;
 		if(scrollPanel != null)
 			scrollPanel.setHeight(origHeight - size);
@@ -234,7 +218,9 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 	}
 
 	int getKeyboardHeight() {
-		return HEIGHT;
+		if(isVisible())
+			return current.getKeyboardHeight();
+		return 0;
 	}
 
 	@Override
@@ -292,7 +278,6 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 			kGrUpper.setEnterImage(resource);
 			kGrLower.setEnterImage(resource);
 			math.setEnterImage(resource);
-
 		}
 	}
 	

@@ -7,11 +7,12 @@
 	.pad {
 		float: right;
 		margin-left: 7px;
+		margin-top: 60px;
 	}
 	
 	.pen {
-		width: 593px;
-		height: 150px;
+		width: 793px;
+		height: 210px;
 	}
 	.dkeys {
 		width: auto !important;
