@@ -109,7 +109,6 @@ public class Save2004Action extends GuiAction {
 
             // ugly string creation
             String scormURL = DwoHelper.getAppURLPath().toString() + variant + "/";
-            scormURL = GuiConstants.PLAYER_BASE;
             runner.setBase(scormURL);
             runner.setUser(GuiCreator.instance().getUser());
 
