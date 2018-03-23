@@ -9,7 +9,7 @@
 	<g:HTMLPanel>
 		StudentModel: <g:ListBox multipleSelect="false" ui:field="selectBox" />
 		<br></br>
-		<g:TextArea ui:field="area" characterWidth="80" readOnly="true"></g:TextArea>
+		<g:TextArea ui:field="area" characterWidth="60" readOnly="true"></g:TextArea>
 		<g:Button styleName="{style.important}" ui:field="button" >Ok</g:Button>
 	</g:HTMLPanel>
 </ui:UiBinder> 

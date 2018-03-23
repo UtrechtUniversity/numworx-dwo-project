@@ -6,12 +6,25 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import java.util.logging.Logger;
 
+import javax.inject.Provider;
+
 /**
  *
- * @author plas0006
+ * @author velth101
  */
 public class StudentModelCommand implements Command {
 
+	
+	private Provider<StudentModelView> builder;
+	
+	public StudentModelCommand(Provider<StudentModelView> builder) {
+		this.builder = builder;
+	}
+	
+	public StudentModelCommand() {
+		this(() -> new StudentModelPanel());
+	}
+	
     private static final Logger LOG = Logger.getLogger(StudentModelCommand.class.getName());
     
     @Override
@@ -24,10 +37,8 @@ public class StudentModelCommand implements Command {
         PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
 		popup.setStyleName("numworx-popup");
 
-        StudentModelPanel panel = new StudentModelPanel(DwoGlobalVars.instance().getCurrentUser(), DwoGlobalVars.instance().getActiveSchoolRoleAndClass());
+        StudentModelView panel = builder.get();
         panel.setPopup(popup);
-        panel.setPixelSize(300, 200);
-        popup.add(panel);
         popup.center();
     }
 }

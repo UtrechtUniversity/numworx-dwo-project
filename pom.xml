@@ -188,6 +188,11 @@
 	  <classifier>sources</classifier>
       <scope>provided</scope>
     </dependency>
+    	<dependency>
+    		<groupId>javax.inject</groupId>
+    		<artifactId>javax.inject</artifactId>
+    		<version>1</version>
+    	</dependency>
     </dependencies>
     <description>Gebruiker: profiel en klas panels</description>
     <parent>

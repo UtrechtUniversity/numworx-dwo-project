@@ -2,16 +2,17 @@ package nl.uu.fi.dwo.account.client;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
@@ -20,46 +21,49 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
-import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 
-public class StudentModelPanel extends Composite implements HasText {
+public class StudentModelPanel extends Composite implements HasText, StudentModelView, ClickHandler, ChangeHandler {
 
 	static private Logger LOG = Logger.getLogger("StudentModelPanel");
 	
 	private static StudentModelPanelUiBinder uiBinder = GWT.create(StudentModelPanelUiBinder.class);
 
+	protected String locale = LocaleInfo.getCurrentLocale().getLocaleName();
+
 	interface StudentModelPanelUiBinder extends UiBinder<Widget, StudentModelPanel> {
 	}
 
-	public StudentModelPanel(DomUserFull domUserFull, DomSchoolRoleAndClassV2 role) {
-		initWidget(uiBinder.createAndBindUi(this));
-		controller = new StudentModelController(this, domUserFull, role);
+	public StudentModelPanel() {
+		createAndBindUi();
+		controller = new StudentModelController(this, locale);
 		controller.init();
 	}
 
-	@UiField
-	Button button;
-	
-	@UiField ListBox selectBox;
-	@UiField TextArea area;
+	protected void createAndBindUi() {
+		initWidget(uiBinder.createAndBindUi(this));
+	}
+
+
+	@UiField protected Button button;	
+	@UiField protected ListBox selectBox;
+	@UiField protected TextArea area;
 	
 	private PopupPanel popup;
 	private StudentModelController controller;
 	
 	@UiHandler("button")
-	void onClick(ClickEvent e) {
+	public void onClick(ClickEvent e) {
 		popup.hide();
 	}
 
 	@UiHandler("selectBox")
-	void onChange(ChangeEvent e) {
+	public void onChange(ChangeEvent e) {
 		int s = selectBox.getSelectedIndex();
 		if( s == 0) {
 			LOG.info("deselect all");
@@ -80,7 +84,10 @@ public class StudentModelPanel extends Composite implements HasText {
 	}
 
 	public void setPopup(PopupPanel popup) {
-		this.popup = popup;;	
+		this.popup = popup;
+        setPixelSize(600, 400);
+        popup.setWidget(this);
+
 	}
 
 	public void updateModels(Collection<String> keySet) {
@@ -93,7 +100,7 @@ public class StudentModelPanel extends Composite implements HasText {
 	}
 
 	public void updateStructure(DomStudentModelStructure modelStructure,
-			DomStudentModelStructureScore modelStructureScore, String locale) {
+			DomStudentModelStructureScore modelStructureScore) {
 		StringBuilder sb = new StringBuilder(256);
 		List<DomStudentModelCategory> categories = modelStructure.getCategories();
 		List<DomStudentModelCategoryScore> cscore = modelStructureScore.getCategories();
@@ -125,8 +132,6 @@ public class StudentModelPanel extends Composite implements HasText {
 					.append("=").append(scr/cnt)
 				.	append("\n");
 					sb.append("   ").append(odescr).append("\n");
-			
-				
 			}
 			
 		}
