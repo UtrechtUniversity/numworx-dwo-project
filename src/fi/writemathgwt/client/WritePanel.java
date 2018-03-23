@@ -112,7 +112,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		
 		tekenSet = tekenS;
 		
-		setSize("100%", "250px");
+		setSize("100%", height + "px");
 		
 		WriteObject.initSamples(tekenSet);
 		writeObjects = new ArrayList<WriteObject>();
