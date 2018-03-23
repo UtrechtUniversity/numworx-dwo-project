@@ -259,6 +259,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	
 	private boolean selectable;
 	private boolean sleepbaar;
+	private boolean draaibaar;
 	private boolean selected;
 	private String checkExpressieString = "$f1@";
 	private boolean defaultBijNull;
@@ -276,6 +277,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	
 	private int locationX, locationY;
 	private int startX, startY;
+	private double startHoek;
+	private double draaihoek;
 	
 	String[][][] randomteksten = new String[1][][];
 	ObjectList randomIpLaunchdata;
@@ -537,6 +540,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			if(style.containsKey("cellSpaceRow")) cellSpaceRow = style.getInt("cellSpaceRow");
 			if(style.containsKey("randDikte")) randDikte = style.getInt("randDikte");
 			
+			draaihoek = (double)hoek;
+			
 			bgColor = getColor(style, "bgColor", bgColor_red, bgColor_green, bgColor_blue);
 			if(anderFont)
 			{	fgColor = getColor(style, "fgColor",fgColor_red, fgColor_green, fgColor_blue);
@@ -609,6 +614,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			if(launchState.containsKey("anderFont"))
 				anderFont = launchState.getBoolean("anderFont");
 			
+			draaihoek = (double)hoek;
+			
 			bgColor = getColor(launchState, "bgColor", bgColor_red, bgColor_green, bgColor_blue);
 			if(anderFont)
 			{	fgColor = getColor(launchState, "fgColor",fgColor_red, fgColor_green, fgColor_blue);
@@ -625,6 +632,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		
 		selectable = launchState.getBoolean("selectable",selectable); 
 		sleepbaar = launchState.getBoolean("sleepbaar", sleepbaar);
+		draaibaar = launchState.getBoolean("draaibaar", draaibaar);
 		sleepdoel = launchState.getBoolean("sleepdoel",sleepdoel);
 		sleepHandle = launchState.getBoolean("sleepHandle",sleepHandle);
 		if (launchState.containsKey("checkExpressieString"))
@@ -3712,70 +3720,101 @@ private Object CamelCase(String name) {
 			}
 		}
 		
-		if(!sleepbaar)
+		if(!sleepbaar && !draaibaar)
 		{
 			return;
 		}
 		
 		startX = eventX - locationX;
 		startY = eventY - locationY;
+		
+		int dx = eventX - locationX - parent.getAbsoluteLeft() - breedte/2;
+		int dy = eventY - locationY - parent.getAbsoluteTop() - hoogte/2;
+		startHoek = Math.atan2(dy, dx);
 	}
 	
 	public void mouseMoveTouchMoveAction(int eventX, int eventY)
 	{
-		locationX = eventX - startX;
-		locationY = eventY - startY;
-		
-		if(parent != null && zwevend)
-		{	locationX = Math.max(locationX, 0);
-			locationX = Math.min(locationX, parent.getOffsetWidth() - breedte);
-			locationY = Math.max(locationY, 0);
-			locationY = Math.min(locationY, parent.getOffsetHeight() - hoogte);
-	
-			parent.remove(this.asWidget());
-			parent.add(this.asWidget());
-			parent.setWidgetLeftWidth(this.asWidget(), locationX, Style.Unit.PX, breedte, Style.Unit.PX);
-			parent.setWidgetTopHeight(this.asWidget(), locationY, Style.Unit.PX, hoogte, Style.Unit.PX);
-		}		
+		if(sleepbaar)
+		{
+			int mx = startX - parent.getAbsoluteLeft() - breedte/2;
+			int my = startY - parent.getAbsoluteTop() - hoogte/2;
+			if(!draaibaar || mx*mx+my*my<900) { //alleen versleepbaar indien aangepakt in het midden
+				locationX = eventX - startX;
+				locationY = eventY - startY;
+				
+				if(parent != null && zwevend)
+				{	
+					if(!draaibaar) { // meer sleepruimte indien draaibaar
+						locationX = Math.max(locationX, 0);
+						locationX = Math.min(locationX, parent.getOffsetWidth() - breedte);
+						locationY = Math.max(locationY, 0);
+						locationY = Math.min(locationY, parent.getOffsetHeight() - hoogte);
+					}
+					
+					parent.remove(this.asWidget());
+					parent.add(this.asWidget());
+					parent.setWidgetLeftWidth(this.asWidget(), locationX, Style.Unit.PX, breedte, Style.Unit.PX);
+					parent.setWidgetTopHeight(this.asWidget(), locationY, Style.Unit.PX, hoogte, Style.Unit.PX);
+				}
+			}
+		}
+		if(draaibaar && parent != null && zwevend)
+		{
+			int dx = eventX - locationX - parent.getAbsoluteLeft() - breedte/2;
+			int dy = eventY - locationY - parent.getAbsoluteTop() - hoogte/2;
+			
+			double dhoek = Math.atan2(dy,dx)-startHoek;
+			draaihoek = draaihoek + dhoek*180.0/Math.PI;
+			
+			
+			int mx = startX - parent.getAbsoluteLeft() - breedte/2;
+			int my = startY - parent.getAbsoluteTop() - hoogte/2;
+			if(mx*mx+my*my>900) {
+				mainPanel2.getElement().getStyle().setProperty("transform", "rotate(" + (draaihoek) + "deg)");
+				mainPanel2.getElement().getStyle().setProperty("WebkitTransform", "rotate(" + (draaihoek) + "deg)");
+				startHoek = startHoek+dhoek;
+			}
+		}
 		
 	}
 	
 	public void mouseUpTouchEndAction(int eventX, int eventY)
-	{	if(sleepbaar)
+	{	if(sleepbaar && !draaibaar)
 		{	//hier zorgen dat de pagina wordt versleept?
-		locationX = eventX - startX;
-		locationY = eventY - startY;
-		if(parent != null && zwevend)
-		{	locationX = Math.max(locationX, 0);
-			locationX = Math.min(locationX, parent.getOffsetWidth() - breedte);
-			locationY = Math.max(locationY, 0);
-			locationY = Math.min(locationY, parent.getOffsetHeight() - hoogte);
-
-			if(sleepSnap) 
-			{
-				if(doelPosities != null) 
-				{	boolean snapped = false;
-					for(int i=0 ; i<doelPosities.length ; i++)
-					{	int dx = (int) Math.abs(locationX - doelPosities[i].getX());
-						int dy = (int) Math.abs(locationY - doelPosities[i].getY());
-						if(sleepSnap && dx < sleepdoelMarge && dy < sleepdoelMarge) 
-						{	locationX = (int) doelPosities[i].getX();
-							locationY = (int) doelPosities[i].getY();
-							snapped = true;
-							break;
+			locationX = eventX - startX;
+			locationY = eventY - startY;
+			if(parent != null && zwevend)
+			{	locationX = Math.max(locationX, 0);
+				locationX = Math.min(locationX, parent.getOffsetWidth() - breedte);
+				locationY = Math.max(locationY, 0);
+				locationY = Math.min(locationY, parent.getOffsetHeight() - hoogte);
+	
+				if(sleepSnap) 
+				{
+					if(doelPosities != null) 
+					{	boolean snapped = false;
+						for(int i=0 ; i<doelPosities.length ; i++)
+						{	int dx = (int) Math.abs(locationX - doelPosities[i].getX());
+							int dy = (int) Math.abs(locationY - doelPosities[i].getY());
+							if(sleepSnap && dx < sleepdoelMarge && dy < sleepdoelMarge) 
+							{	locationX = (int) doelPosities[i].getX();
+								locationY = (int) doelPosities[i].getY();
+								snapped = true;
+								break;
+							}
+						}
+						if(!snapped && relocate)
+						{	locationX = startSleepX;
+							locationY = startSleepY;
 						}
 					}
-					if(!snapped && relocate)
-					{	locationX = startSleepX;
-						locationY = startSleepY;
-					}
 				}
+				parent.remove(this.asWidget());
+				parent.add(this.asWidget());
+				parent.setWidgetLeftWidth(this.asWidget(), locationX, Style.Unit.PX, breedte, Style.Unit.PX);
+				parent.setWidgetTopHeight(this.asWidget(), locationY, Style.Unit.PX, hoogte, Style.Unit.PX);
 			}
-			parent.remove(this.asWidget());
-			parent.add(this.asWidget());
-			parent.setWidgetLeftWidth(this.asWidget(), locationX, Style.Unit.PX, breedte, Style.Unit.PX);
-			parent.setWidgetTopHeight(this.asWidget(), locationY, Style.Unit.PX, hoogte, Style.Unit.PX);
-		}
 		} else {
 // Werk dit? FIXME naar de link api.		
 		if(isLink && linkUrls != null) {
@@ -3867,7 +3906,7 @@ private Object CamelCase(String name) {
 				return;
 			}
 
-			if(sleepbaar && mouseDown)
+			if((sleepbaar||draaibaar) && mouseDown)
 			{	e.preventDefault();
 				mouseMoveTouchMoveAction(eventX, eventY);
 			}
