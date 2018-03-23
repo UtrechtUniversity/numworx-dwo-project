@@ -208,3 +208,12 @@ div.insert_formule {padding-right:5px; padding-left:5px;}
 	flex-wrap: nowrap;
 	flex: 1;
 }
+
+.DWOkeyboard {
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	background-color: rgb(229,231,233);
+	
+}

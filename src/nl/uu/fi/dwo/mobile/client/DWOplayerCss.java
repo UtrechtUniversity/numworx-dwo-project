@@ -46,4 +46,6 @@ public interface DWOplayerCss extends CssResource {
 	String navigatiebalkLabel();
 	
 	String opdrachtbollen();
+	
+	String DWOkeyboard();
 }
