@@ -69,4 +69,5 @@ public interface DWOplayerParameters {
 	Text   getTextBundle();
 	String getCDN();
 	SecureMode getSecureMode();
+	String getDwoEnv();
 }
