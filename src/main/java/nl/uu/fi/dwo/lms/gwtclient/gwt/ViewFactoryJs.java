@@ -5,22 +5,19 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolPresenter;
 
 
-import fi.dwo.gwt.lib.rest.ui.MsgConfirmDialogPresenter;
-import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.account.JsAccountView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsConfirmDialogView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsAlertDialogWithConfirmCancelView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.login.JsLoginView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMainView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsResultsView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsMsgDialogView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsSchoolClassesView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.roleswitch.JsSwitchSchoolView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsAddSchoolClassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsEditSchoolClassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsStudentsInSchoolClassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsTeachersInSchoolClassView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsProgressDialogView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsProgressDialogWithAbortView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.welcome.JsWelcomeView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter;
@@ -39,6 +36,12 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresenter;
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsAlertDialogWithConfirmView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsMessageDialogWithConfirmView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithConfirmPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
@@ -62,12 +65,12 @@ public class ViewFactoryJs implements ViewFactory {
     private final TeachersInSchoolclassPresenter.Display teachersInSchoolclassView;
     private final EditSchoolclassPresenter.Display editSchoolclassView;
     private final EditStudentPresenter.Display editStudentView;
-    private final MsgDialogPresenter.Display msgDialogView;
-    private final MsgConfirmDialogPresenter.Display msgConfirmDialogView;
-    private final MsgClickedDialogPresenter.Display msgClickedDialogView;
+    private final AlertDialogWithConfirmPresenter.Display alertDialogWithConfirmView;
+    private final MessageDialogWithConfirmPresenter.Display messageDialogWithConfirmView;
+    private final AlertDialogWithConfirmCancelPresenter.Display alertDialogWithConfirmCancelView;
     private final AddStudentsPresenter.Display addStudentsView;
     private final FileUploadStudentsPresenter.Display fileUploadStudentsView;
-    private final ProgressDialogPresenter.Display progressDialogView;
+    private final ProgressDialogWithAbortPresenter.Display progressDialogView;
 
     public ViewFactoryJs(PresenterFactory pf) {
         mainView = new JsMainView();
@@ -86,10 +89,10 @@ public class ViewFactoryJs implements ViewFactory {
         editSchoolclassView = new JsEditSchoolClassView();
         editStudentView = new EditStudentView(pf.getEditStudentPresenter());
         addStudentsView = new AddStudentsView(pf.getAddStudentsPresenter());
-        msgDialogView = new JsMsgDialogView();
-        msgConfirmDialogView = new JsConfirmDialogView();
-        msgClickedDialogView = null;//new JsClickedDialogView();
-        progressDialogView = new JsProgressDialogView();
+        alertDialogWithConfirmView = new JsAlertDialogWithConfirmView();
+        messageDialogWithConfirmView = new JsMessageDialogWithConfirmView();
+        alertDialogWithConfirmCancelView = new JsAlertDialogWithConfirmCancelView();
+        progressDialogView = new JsProgressDialogWithAbortView();
         fileUploadStudentsView = new FileUploadStudentsView(pf.getFileUploadStudentsPresenter());
     }
 
@@ -161,17 +164,17 @@ public class ViewFactoryJs implements ViewFactory {
     }
 
     /**
-     * @return the msgDialogView
+     * @return the alertDialogWithConfirmView
      */
-    public MsgDialogPresenter.Display getMsgDialogView() {
-        return msgDialogView;
+    public AlertDialogWithConfirmPresenter.Display getAlertDialogWithConfirmView() {
+        return alertDialogWithConfirmView;
     }
 
     /**
-     * @return the msgConfirmDialogView
+     * @return the messageDialogWithConfirmView
      */
-    public MsgConfirmDialogPresenter.Display getMsgConfirmDialogView() {
-        return msgConfirmDialogView;
+    public MessageDialogWithConfirmPresenter.Display getMessageDialogWithConfirmView() {
+        return messageDialogWithConfirmView;
     }
 
     /**
@@ -197,12 +200,17 @@ public class ViewFactoryJs implements ViewFactory {
 
     @Override
     public MsgClickedDialogPresenter.Display getMsgClickedDialogView() {
-        return msgClickedDialogView;
+        return alertDialogWithConfirmCancelView;
     }
 
     @Override
     public ProgressDialogPresenter.Display getProgressDialogView() {
         return progressDialogView;
+    }
+
+    @Override
+    public AlertDialogWithConfirmCancelPresenter.Display getAlertDialogWithConfirmCancelView() {
+        return alertDialogWithConfirmCancelView;
     }
 
 

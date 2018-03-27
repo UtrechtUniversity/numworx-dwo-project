@@ -8,7 +8,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import com.google.gwt.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPresenter;
 
-import fi.dwo.gwt.lib.rest.ui.MsgConfirmDialogPresenter;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
@@ -21,6 +20,9 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresenter;
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithConfirmPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
@@ -47,9 +49,9 @@ public class PresenterFactoryGwt implements PresenterFactory {
     private final EditSchoolclassPresenter editSchoolclassPresenter;
     private final EditStudentPresenter editStudentPresenter;
     private final AddStudentsPresenter addStudentsPresenter;
-    private final MsgDialogPresenter msgDialogPresenter;
-    private final MsgConfirmDialogPresenter msgConfirmDialogPresenter;
-    private final MsgClickedDialogPresenter msgClickedDialogPresenter;
+    private final MessageDialogWithConfirmPresenter messageDialogWithConfirmPresenter;
+    private final AlertDialogWithConfirmPresenter alertDialogWithConfirmPresenter;
+    private final AlertDialogWithConfirmCancelPresenter alertDialogWithConfirmCancelPresenter;
     private final FileUploadStudentsPresenter fileUploadStudentsPresenter;
     private final ProgressDialogPresenter progressDialogPresenter;
 
@@ -71,10 +73,10 @@ public class PresenterFactoryGwt implements PresenterFactory {
         editSchoolclassPresenter = new EditSchoolclassPresenter(eventBus, dwoGlobalVars);
         editStudentPresenter = new EditStudentPresenter(eventBus, dwoGlobalVars);
         addStudentsPresenter = new AddStudentsPresenter(eventBus, dwoGlobalVars);
-        msgDialogPresenter = new MsgDialogPresenter(eventBus);
+        messageDialogWithConfirmPresenter = new MessageDialogWithConfirmPresenter(eventBus);
         fileUploadStudentsPresenter = new FileUploadStudentsPresenter(eventBus, dwoGlobalVars);
-        msgConfirmDialogPresenter = new MsgConfirmDialogPresenter(eventBus);
-        msgClickedDialogPresenter = new MsgClickedDialogPresenter(eventBus);
+        alertDialogWithConfirmPresenter = new AlertDialogWithConfirmPresenter(eventBus);
+        alertDialogWithConfirmCancelPresenter = new AlertDialogWithConfirmCancelPresenter(eventBus);
         progressDialogPresenter = new ProgressDialogPresenter(eventBus);
 
     }
@@ -94,10 +96,10 @@ public class PresenterFactoryGwt implements PresenterFactory {
         editSchoolclassPresenter.setView(viewFactory.getEditSchoolclassView());
         editStudentPresenter.setView(viewFactory.getEditStudentView());
         addStudentsPresenter.setView(viewFactory.getAddStudentsView());
-        msgDialogPresenter.setView(viewFactory.getMsgDialogView());
         fileUploadStudentsPresenter.setView(viewFactory.getFileUploadStudentsView());
-        msgConfirmDialogPresenter.setView(viewFactory.getMsgConfirmDialogView());
-        msgClickedDialogPresenter.setView(viewFactory.getMsgClickedDialogView());
+        messageDialogWithConfirmPresenter.setView(viewFactory.getMessageDialogWithConfirmView());
+        alertDialogWithConfirmPresenter.setView(viewFactory.getAlertDialogWithConfirmView());
+        alertDialogWithConfirmCancelPresenter.setView(viewFactory.getAlertDialogWithConfirmCancelView());
         progressDialogPresenter.setView(viewFactory.getProgressDialogView());
         welcomePresenter.setView(viewFactory.getWelcomeView());
         //last!
@@ -215,21 +217,13 @@ public class PresenterFactoryGwt implements PresenterFactory {
      * @return the msgDialogPresenter
      */
     @JsMethod    
-    public MsgDialogPresenter getMsgDialogPresenter() {
-        return msgDialogPresenter;
-    }
-
-    /**
-     * @return the msgDialogPresenter
-     */
-    @JsMethod    
-    public MsgConfirmDialogPresenter getMsgConfirmDialogPresenter() {
-        return msgConfirmDialogPresenter;
+    public MessageDialogWithConfirmPresenter getMessageDialogWithConfirmPresenter() {
+        return messageDialogWithConfirmPresenter;
     }
 
     @JsMethod
     public MsgClickedDialogPresenter getMsgClickedDialogPresenter() {
-        return msgClickedDialogPresenter;
+        return alertDialogWithConfirmCancelPresenter;
     }
 
    @JsMethod
@@ -259,6 +253,21 @@ public class PresenterFactoryGwt implements PresenterFactory {
 //    @JsMethod    
     public FileUploadStudentsPresenter getFileUploadStudentsPresenter() {
         return fileUploadStudentsPresenter;
+    }
+
+    @Override
+    public AlertDialogWithConfirmCancelPresenter getAlertDialogWithConfirmCancelPresenter() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public AlertDialogWithConfirmPresenter getAlertDialogWithConfirmPresenter() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public MessageDialogWithConfirmPresenter getMessageDialogWithConfirmPresenterr() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

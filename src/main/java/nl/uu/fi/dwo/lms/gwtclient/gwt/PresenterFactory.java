@@ -20,6 +20,9 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresenter;
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithConfirmPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
@@ -45,9 +48,9 @@ public interface PresenterFactory {
     public EditSchoolclassPresenter getEditSchoolclassPresenter();
     public EditStudentPresenter getEditStudentPresenter();
     public AddStudentsPresenter getAddStudentsPresenter();
-    public MsgDialogPresenter getMsgDialogPresenter();
-    public MsgClickedDialogPresenter getMsgClickedDialogPresenter();
-    public MsgConfirmDialogPresenter getMsgConfirmDialogPresenter();
+    public AlertDialogWithConfirmCancelPresenter getAlertDialogWithConfirmCancelPresenter();
+    public AlertDialogWithConfirmPresenter getAlertDialogWithConfirmPresenter();
+    public MessageDialogWithConfirmPresenter getMessageDialogWithConfirmPresenterr();
     public ProgressDialogPresenter getProgressDialogPresenter();
     public FileUploadStudentsPresenter getFileUploadStudentsPresenter();
     public void bindViewFactory(ViewFactory viewFactory);

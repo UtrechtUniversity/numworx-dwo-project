@@ -3,8 +3,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.roleswitch.SwitchSchoolPresenter;
-import fi.dwo.gwt.lib.rest.ui.MsgConfirmDialogPresenter;
-import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
@@ -18,6 +16,9 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresenter;
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithConfirmPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
@@ -41,8 +42,9 @@ public interface ViewFactory {
     public EditSchoolclassPresenter.Display getEditSchoolclassView();
     public EditStudentPresenter.Display getEditStudentView();
     public AddStudentsPresenter.Display getAddStudentsView();
-    public MsgDialogPresenter.Display getMsgDialogView();
-    public MsgConfirmDialogPresenter.Display getMsgConfirmDialogView();
+    public AlertDialogWithConfirmCancelPresenter.Display getAlertDialogWithConfirmCancelView();
+    public AlertDialogWithConfirmPresenter.Display getAlertDialogWithConfirmView();
+    public MessageDialogWithConfirmPresenter.Display getMessageDialogWithConfirmView();
     public MsgClickedDialogPresenter.Display getMsgClickedDialogView();
     public FileUploadStudentsPresenter.Display getFileUploadStudentsView();
     public ProgressDialogPresenter.Display getProgressDialogView();
