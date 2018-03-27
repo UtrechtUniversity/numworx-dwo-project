@@ -1,7 +1,6 @@
 package fi.dwo.gwt.lib.rest.ui;
 
 import com.google.gwt.event.shared.EventBus;
-import fi.dwo.gwt.lib.rest.ui.MsgConfirmDialogPresenter;
 import java.util.logging.Logger;
 
 /**
@@ -57,5 +56,9 @@ public class ProgressDialogPresenter implements ProgressDialogEventHandler {
     public void setView(ProgressDialogPresenter.Display view) {
         this.view = view;
     }    
-
+   
+    public void abort(){
+        view.hideDialog();
+        promise.resolve(Boolean.TRUE);
+    }    
 }

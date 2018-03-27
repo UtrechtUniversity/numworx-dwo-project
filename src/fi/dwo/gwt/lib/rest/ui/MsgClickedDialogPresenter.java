@@ -4,7 +4,7 @@ import com.google.gwt.event.shared.EventBus;
 import java.util.logging.Logger;
 
 /**
- * Handler for for Login actions.
+ * Handler for for ok/cancel dialogs.
  *
  * @author Gert van der Plas
  */
