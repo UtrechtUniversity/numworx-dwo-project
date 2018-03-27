@@ -677,6 +677,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 				StudentModelLogger.accumulateAllScores(data);
 				String string = DomStudentModelStructureScoreCodec.CODEC.encode(data).toString();
 				setValue(STUDENT_MODEL, string);
+				StudentModelLogger.destroy();
 				return api.Terminate();
 			}).recoverWith( p-> api.Terminate() );
 			return then;
@@ -687,6 +688,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	
 	public void setStudentModelStructure(Promise<DomStudentModelContext> pmodel) {
 		this.pmodel = pmodel;
+		StudentModelLogger.destroy();
 	}
 	
 	
