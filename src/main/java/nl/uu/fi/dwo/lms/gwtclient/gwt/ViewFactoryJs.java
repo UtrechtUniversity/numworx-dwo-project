@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsAddSchoolClassV
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsEditSchoolClassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsStudentsInSchoolClassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsTeachersInSchoolClassView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsProgressDialogView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.welcome.JsWelcomeView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter;
@@ -37,6 +38,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresenter;
+import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
@@ -65,6 +67,7 @@ public class ViewFactoryJs implements ViewFactory {
     private final MsgClickedDialogPresenter.Display msgClickedDialogView;
     private final AddStudentsPresenter.Display addStudentsView;
     private final FileUploadStudentsPresenter.Display fileUploadStudentsView;
+    private final ProgressDialogPresenter.Display progressDialogView;
 
     public ViewFactoryJs(PresenterFactory pf) {
         mainView = new JsMainView();
@@ -86,6 +89,7 @@ public class ViewFactoryJs implements ViewFactory {
         msgDialogView = new JsMsgDialogView();
         msgConfirmDialogView = new JsConfirmDialogView();
         msgClickedDialogView = null;//new JsClickedDialogView();
+        progressDialogView = new JsProgressDialogView();
         fileUploadStudentsView = new FileUploadStudentsView(pf.getFileUploadStudentsPresenter());
     }
 
@@ -194,6 +198,11 @@ public class ViewFactoryJs implements ViewFactory {
     @Override
     public MsgClickedDialogPresenter.Display getMsgClickedDialogView() {
         return msgClickedDialogView;
+    }
+
+    @Override
+    public ProgressDialogPresenter.Display getProgressDialogView() {
+        return progressDialogView;
     }
 
 

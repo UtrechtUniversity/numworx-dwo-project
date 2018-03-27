@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresenter;
+import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
@@ -50,6 +51,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     private final MsgConfirmDialogPresenter msgConfirmDialogPresenter;
     private final MsgClickedDialogPresenter msgClickedDialogPresenter;
     private final FileUploadStudentsPresenter fileUploadStudentsPresenter;
+    private final ProgressDialogPresenter progressDialogPresenter;
 
     public PresenterFactoryGwt(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         dwoGlobalVars = aDwoGlobalVars;
@@ -73,6 +75,8 @@ public class PresenterFactoryGwt implements PresenterFactory {
         fileUploadStudentsPresenter = new FileUploadStudentsPresenter(eventBus, dwoGlobalVars);
         msgConfirmDialogPresenter = new MsgConfirmDialogPresenter(eventBus);
         msgClickedDialogPresenter = new MsgClickedDialogPresenter(eventBus);
+        progressDialogPresenter = new ProgressDialogPresenter(eventBus);
+
     }
 
     @Override
@@ -94,6 +98,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         fileUploadStudentsPresenter.setView(viewFactory.getFileUploadStudentsView());
         msgConfirmDialogPresenter.setView(viewFactory.getMsgConfirmDialogView());
         msgClickedDialogPresenter.setView(viewFactory.getMsgClickedDialogView());
+        progressDialogPresenter.setView(viewFactory.getProgressDialogView());
         welcomePresenter.setView(viewFactory.getWelcomeView());
         //last!
         mainPresenter.setView(viewFactory.getMainView());
@@ -222,6 +227,16 @@ public class PresenterFactoryGwt implements PresenterFactory {
         return msgConfirmDialogPresenter;
     }
 
+    @JsMethod
+    public MsgClickedDialogPresenter getMsgClickedDialogPresenter() {
+        return msgClickedDialogPresenter;
+    }
+
+   @JsMethod
+    public ProgressDialogPresenter getProgressDialogPresenter() {
+        return progressDialogPresenter;
+    }
+        
     /**
      * @return the teachersInSchoolclassPresenter
      */
@@ -244,11 +259,6 @@ public class PresenterFactoryGwt implements PresenterFactory {
 //    @JsMethod    
     public FileUploadStudentsPresenter getFileUploadStudentsPresenter() {
         return fileUploadStudentsPresenter;
-    }
-
-    @Override
-    public MsgClickedDialogPresenter getMsgClickedDialogPresenter() {
-        return msgClickedDialogPresenter;
     }
 
 }
