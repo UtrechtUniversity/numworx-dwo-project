@@ -58,4 +58,7 @@
   <description>Keyboard voor desktop en tablet
 DWO en Noordhoff variant</description>
   <version>2.1.31-SNAPSHOT</version>
+  <scm>
+  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/KeyboardGWT/trunk</developerConnection>
+  </scm>
 </project>
