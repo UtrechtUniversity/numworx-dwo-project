@@ -66,7 +66,7 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 
 		style = kb.getElement().getStyle();
 		style.setProperty("margin", "0 auto");
-		style.setWidth(982, Unit.PX); // MAXIMUM BREEDTE TOETSENBORDEN
+		style.setWidth(1024, Unit.PX); // MAXIMUM BREEDTE TOETSENBORDEN
 		style.setPosition(Position.RELATIVE);
 		
 //		staticPanel.addDomHandler(new MouseUpHandler() {

@@ -27,12 +27,7 @@
 				<g:HorizontalPanel styleName='{style.itemPanel}'>
 					<g:FlowPanel styleName='{style.titlePanel}'> 
 							<g:HTML styleName='{style.title}' ui:field='title' ></g:HTML>
-							<g:HTML styleName='{style.description}'>
-								<p>Dit is een toets</p>
-								<p>Ga naar de <a href='/toets/'>beveiligde toets omgeving</a>
-									als je deze toets wilt maken
-								</p>
-							</g:HTML>
+							<g:HTML styleName='{style.description}' HTML="{rb.UNSAFE_MODULE_HTML}"></g:HTML>
 					</g:FlowPanel>
 					<g:FlowPanel styleName='{style.favicon}'>
 						<g:Image ui:field='favIcon'
