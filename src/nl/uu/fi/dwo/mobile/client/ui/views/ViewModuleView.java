@@ -7,6 +7,7 @@ import org.osgi.util.promise.Promise;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
@@ -36,8 +37,8 @@ public interface ViewModuleView extends IsWidget
 
 	void close();
 	
-	AnchorView.AnchorContext getAnchorContext();
-	void setAnchorContext(AnchorView.AnchorContext context);
+	AnchorContext getAnchorContext();
+	void setAnchorContext(AnchorContext context);
 	
 	 public interface Loader {
 	        void viewModuleViewSetupDone();

@@ -6,7 +6,7 @@ import nl.uu.fi.dwo.mobile.client.ui.NavigationBundle;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationTextAndroid;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationTextDefault;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationTextIpad;
-import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.Prepare;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.views.ScoreNavFacade;
@@ -170,8 +170,8 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 		return new SimpleEventBus();
 	}
 	
-	public OpdrNav.Prepare getPrepareInstance() {
-		return new OpdrNav.Prepare();
+	public Prepare getPrepareInstance() {
+		return new Prepare();
 	}
 
 	@Override

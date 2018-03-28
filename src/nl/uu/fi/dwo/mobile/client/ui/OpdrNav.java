@@ -29,7 +29,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -176,20 +175,6 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private final static ResettableEventBus BUS = new ResettableEventBus(DWOplayer.PARAMETERS.getEventBus());
 
 	static private Prepare prepare = DWOplayer.PARAMETERS.getPrepareInstance();
-
-	public static class Prepare
-	{
-		void defer(ScheduledCommand cmd)
-		{
-			Scheduler.get().scheduleDeferred(cmd);
-		}
-
-		@Deprecated
-		void immediate(ScheduledCommand cmd)
-		{
-			cmd.execute();
-		}
-	}
 
 	public static class MC2Prepare extends Prepare
 	{

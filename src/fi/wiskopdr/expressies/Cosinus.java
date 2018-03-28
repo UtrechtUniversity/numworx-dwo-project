@@ -1,7 +1,5 @@
 package fi.wiskopdr.expressies;
 
-import java.awt.*;
-
 import fi.wiskopdr.expressies.repr.AbstractConverter;
 
 public class Cosinus extends Expressie  

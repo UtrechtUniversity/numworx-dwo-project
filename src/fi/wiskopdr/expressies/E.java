@@ -1,6 +1,5 @@
 package fi.wiskopdr.expressies;
 
-import java.awt.*;
 import java.util.Vector;
 
 public class E extends BasisExpressie  
