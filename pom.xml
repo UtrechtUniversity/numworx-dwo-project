@@ -203,7 +203,7 @@
                                 <artifactItem>
                                     <groupId>fi.dwo</groupId>
                                     <artifactId>DWO-apps</artifactId>
-                                    <version>2.0.5-SNAPSHOT</version>
+                                    <version>2.0.5</version>
                                     <type>war</type>
                                     <outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/apps/</outputDirectory>
                                 </artifactItem>
@@ -371,10 +371,10 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <DWOplayerVersion>2.1.31-SNAPSHOT</DWOplayerVersion>
+        <DWOplayerVersion>2.2.0</DWOplayerVersion>
         <DWOmAccessVersion>0.0.9</DWOmAccessVersion>
         <RegisterVersion>2.1.23</RegisterVersion>
-        <DWOGwtClientVersion>0.10.11</DWOGwtClientVersion>
+        <DWOGwtClientVersion>0.10.12</DWOGwtClientVersion>
     </properties>
     <scm>
         <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</developerConnection>
