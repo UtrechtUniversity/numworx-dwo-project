@@ -3,7 +3,7 @@
   <parent>
     <groupId>fi.parentgwt</groupId>
     <artifactId>ParentGWT</artifactId>
-    <version>0.0.5</version>
+    <version>0.0.6</version>
     <relativePath>../ParentGWT</relativePath>
   </parent>
   <groupId>nl.uu.fi.dwo.keyboard</groupId>
@@ -58,9 +58,4 @@
   <description>Keyboard voor desktop en tablet
 DWO en Noordhoff variant</description>
   <version>2.1.31-SNAPSHOT</version>
-  <properties>
-  	<gwtVersion>2.8.1</gwtVersion>
-  	<maven.compiler.source>1.8</maven.compiler.source>
-  	<maven.compiler.target>1.8</maven.compiler.target>
-  </properties>
 </project>
