@@ -25,9 +25,11 @@
 	}
 	if(failed)
 	{
-		Logger.getLogger("toets.jsp").severe("hash = " + requestHash);
-		response.sendError(HttpServletResponse.SC_FORBIDDEN);
-		return;
+		Logger.getLogger("toets.jsp").severe(request.getRequestURL() + " hash = " + requestHash);
+		if(requestHash == null) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;
+		}
 	}
 	
 %>
@@ -35,9 +37,9 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <link type="text/css" rel="stylesheet" href="/dwo/tablet/DWOplayer.css">
-    <meta name="gwt:property" content="locale=nl" >
+    <meta name="gwt:property" content="locale=en" >
     <script>
-    	DWO_PROFILE_ID = 77
+    	DWO_PROFILE_ID = 92
     	SECURE_MODE="SEB" // possibly others
     	function logout() {
     		window.location = "https://app.dwo.nl/toets/logout.html"

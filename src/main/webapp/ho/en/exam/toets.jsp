@@ -25,9 +25,11 @@
 	}
 	if(failed)
 	{
-		Logger.getLogger("toets.jsp").severe("hash = " + requestHash);
-		response.sendError(HttpServletResponse.SC_FORBIDDEN);
-		return;
+		Logger.getLogger("toets.jsp").severe(request.getRequestURL() + " hash = " + requestHash);
+		if(requestHash == null) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;
+		}
 	}
 	
 %>

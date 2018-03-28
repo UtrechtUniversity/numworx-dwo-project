@@ -7,7 +7,7 @@
 <body>
 <h1>Start</h1>
 <p>
-<a href='sebs://app.dwo.nl/ho/en/exam/leerling.seb'>Start the secured <strong>exam</strong> environment</a>
+<a href='sebs://app.dwo.nl/ho/en/exam/leerling.seb'>Start the safe <strong>exam</strong> environment</a>
 
 <h1>Install</h1>
 <ul>
