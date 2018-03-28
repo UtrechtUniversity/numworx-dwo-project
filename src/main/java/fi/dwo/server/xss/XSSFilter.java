@@ -43,6 +43,7 @@ public class XSSFilter implements Filter {
             res.setHeader("Access-Control-Allow-Origin", origin);
             res.setHeader("Access-Control-Expose-Headers", "content-type");
             res.setHeader("Access-Control-Allow-Credentials", "true");
+            res.setHeader("Strict-Transport-Security","max-age=60000");
             // ensure there is never any caching for now
             boolean rest = req.getRequestURI().contains("/rest/");
             boolean nocache = req.getRequestURI().contains(".nocache.");
