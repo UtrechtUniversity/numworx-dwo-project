@@ -108,8 +108,10 @@ public class StudentModelLogger implements Logging {
 				if (objectives[i][j]) {
 					DomStudentModelScore<?> s = studentModel.getCategories().get(i).getObjectives().get(j);
 // more strategie
-					s.setCount(s.getCount()+attempts);
-					s.setScore(s.getScore()+score);
+					if(attempts > 0) {
+						s.setCount(s.getCount()+1);
+						s.setScore(s.getScore()+score/attempts);
+					}
 				}
 			}
 		}
