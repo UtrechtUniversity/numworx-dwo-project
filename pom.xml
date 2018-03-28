@@ -61,4 +61,7 @@ DWO en Noordhoff variant</description>
   <scm>
   	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/KeyboardGWT/trunk</developerConnection>
   </scm>
+  <properties>
+  	<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+  </properties>
 </project>
