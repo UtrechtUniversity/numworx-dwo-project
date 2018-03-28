@@ -11,10 +11,12 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 
+import com.gargoylesoftware.htmlunit.javascript.host.css.CSS;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -31,6 +33,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	private String[] categoryString;
 	private String scoreText = Text.constants.scoreKopLabel();
 	private String categoryText = Text.constants.categorieLabel(); 
+	private String linkText = Text.constants.linkLabel();
 
 	private String[][] objectivesForDiagram;
 	private String[] categoryStringForDiagram;
@@ -85,6 +88,10 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	//display student model as number of stars instead of categories
 	//TODO: set boolean stars from settings attached student model.
 	private boolean stars = false;
+	
+	//display links to useful material in student model
+	//TODO: obtain links from settings attached student model (?)
+	private boolean showLinks = false;
 	
 	public ScoresObjectivesPanel(HashMap<String, Object> map, boolean pilot)
 	{
@@ -274,6 +281,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 				categoryLabels[j] = new Label(categoryStringForDiagram[j]);
 				categoryLabels[j].getElement().getStyle().setFontSize(12, Unit.PX);
 				categoryLabels[j].getElement().getStyle().setPaddingLeft(15, Unit.PX);
+				categoryLabels[j].getElement().getStyle().setFontWeight(FontWeight.BOLD);
 				
 				if(numberOfDiagrams > 1)
 					add(categoryLabels[j]);
@@ -462,8 +470,13 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		ctx.setStrokeStyle("black");
 		int scoreWidth = (int) ctx.measureText(scoreText).getWidth() + margin;
 		if(stars)
-			scoreWidth = 60 + margin;
-		
+			scoreWidth = 100 + margin;
+		int linkWidth = 0;
+		if(showLinks)
+		{
+			linkWidth = 200;
+			//TODO: calculate linkWidth based on available links
+		}
 		
 		lineHeight = 15 + margin; //TODO nog iets zinvollers van 15 maken; meten mbv canvas?
 		textColumnWidth = 0;
@@ -536,22 +549,27 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 			textColumnWidth += buttonWidth;
 			int categoryX = margin + 5;
 			int labelX = margin + indent + buttonWidth + 5;
-			int scoreX = categoryX + textColumnWidth;
+			int categoryScoreX = categoryX + textColumnWidth;
+			int scoreX = categoryX + indent + textColumnWidth;
 			//int colorX = margin + textColumnWidth + buttonWidth;
 			int columnHeight = margin;
-			int tableWidth = textColumnWidth + scoreWidth + margin;
+			int tableWidth = textColumnWidth + scoreWidth + margin + indent + linkWidth;
 			
 			//int tekstY = regelHoogte + 2;
 			int textDifference = lineHeight - margin + 2;
 			int interspace = 5;
 			ctx.setFont(boldFontString);
 			ctx.fillText(categoryText, categoryX, columnHeight + textDifference);
-			ctx.fillText(scoreText, scoreX, columnHeight + textDifference);
+			ctx.fillText(scoreText, categoryScoreX, columnHeight + textDifference);
+			if(showLinks)
+				ctx.fillText(linkText, categoryScoreX + scoreWidth + indent, columnHeight + textDifference);
 			ctx.setFont(fontString);
 			textDifference += 3;
 			ctx.beginPath();
 			ctx.moveTo(margin, columnHeight);
 			ctx.lineTo(tableWidth, columnHeight);
+			ctx.moveTo(textColumnWidth + margin, columnHeight);
+			ctx.lineTo(textColumnWidth + margin, columnHeight + lineHeight);
 			ctx.closePath();
 			ctx.stroke();
 			columnHeight += lineHeight;			
@@ -562,17 +580,20 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 				ctx.beginPath();
 				ctx.moveTo(margin, columnHeight);
 				ctx.lineTo(tableWidth, columnHeight);
+				
 				ctx.closePath();
 				ctx.stroke();
 				columnHeight += interspace;
 				if(!stars)
 				{
 					ctx.setFillStyle(categoryColorArray[j]);
-					ctx.fillRect(tableWidth - scoreWidth, columnHeight, scoreWidth, lineHeight);
+					ctx.fillRect(textColumnWidth + margin, columnHeight, scoreWidth + indent, lineHeight);
 				}
 				ctx.beginPath();
 				ctx.moveTo(margin, columnHeight);
 				ctx.lineTo(tableWidth, columnHeight);
+				ctx.moveTo(textColumnWidth + margin, columnHeight);
+				ctx.lineTo(textColumnWidth + margin, columnHeight + lineHeight);
 				ctx.closePath();
 				ctx.stroke();
 				
@@ -591,12 +612,12 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 				textDifference += lineHeight - 15;  //label-location and drawString need different y
 				if(stars)
 				{
-					drawStars(categoryScoresPercObjectives[j], scoreX, columnHeight);// + textDifference);
+					drawStars(categoryScoresPercObjectives[j], categoryScoreX, columnHeight);// + textDifference);
 					
 				}
 				else
 				{
-					ctx.fillText((int) categoryScoresPercObjectives[j]+"%", scoreX, columnHeight + textDifference);
+					ctx.fillText((int) categoryScoresPercObjectives[j]+"%", categoryScoreX, columnHeight + textDifference);
 				}
 				
 				if(categoryFoldedOut[j])
@@ -607,7 +628,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 						if(!stars)
 						{
 							ctx.setFillStyle(colorArray[j][i]);
-							ctx.fillRect(tableWidth - scoreWidth, columnHeight, scoreWidth, lineHeight);
+							ctx.fillRect(textColumnWidth + margin + indent, columnHeight, scoreWidth, lineHeight);
 						}
 						ctx.setFillStyle("black");
 						ctx.fillText(objectivesForDiagram[j][i], labelX, columnHeight + textDifference);
@@ -622,6 +643,8 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 						ctx.beginPath();
 						ctx.moveTo(margin, columnHeight);
 						ctx.lineTo(tableWidth, columnHeight);//textColumnWidth + margin, columnHeight);
+						ctx.moveTo(textColumnWidth + margin + indent, columnHeight);
+						ctx.lineTo(textColumnWidth + margin + indent, columnHeight + lineHeight);
 						ctx.closePath();
 						ctx.stroke();
 					}
@@ -636,8 +659,10 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 			//draw vertical table borders
 			ctx.moveTo(margin, margin);
 			ctx.lineTo(margin, columnHeight);
-			ctx.moveTo(tableWidth - scoreWidth, margin);
-			ctx.lineTo(tableWidth - scoreWidth, columnHeight);
+			//ctx.moveTo(tableWidth - scoreWidth - indent, margin);
+			//ctx.lineTo(tableWidth - scoreWidth - indent, columnHeight);
+			ctx.moveTo(tableWidth - linkWidth, margin);
+			ctx.lineTo(tableWidth - linkWidth, columnHeight);
 			ctx.moveTo(tableWidth, margin);
 			ctx.lineTo(tableWidth, columnHeight);
 			
@@ -713,33 +738,49 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	public void drawStars(double score, int x, int y)
 	{
 		int numberOfStars = 0;
-		//boundaries for 0, 1, 2 or 3 stars are quite arbitrary at the moment; 
-		//TODO: find appropriate values by looking at student data
-		if(score > 70)
+		//boundaries for number of stars based on student work last year; 
+		//TODO: make adjustable instead of hard-coded.
+		if(score > 85)
+			numberOfStars = 5;
+		else if (score > 75)
+			numberOfStars = 4;
+		else if (score > 65)
 			numberOfStars = 3;
-		else if (score > 40)
+		else if (score > 50)
 			numberOfStars = 2;
-		else if (score > 10)
+		else if (score > 0)
 			numberOfStars = 1;
 		
 		String fillColor = cssColorNeutral.toString();
 		String strokeColor = cssColorNeutral.toString();
-			
+		
+		if(numberOfStars == 5)
+		{
+			fillColor = CssColor.make(100, 175, 100).toString();
+			strokeColor = CssColor.make(50, 125, 50).toString();
+		}
+		drawStar(x + 80, y + 2, fillColor, strokeColor);
+		if(numberOfStars == 4)
+		{
+			fillColor = CssColor.make(200, 250, 125).toString();
+			strokeColor = CssColor.make(150, 200, 75).toString();
+		}
+		drawStar(x + 60, y + 2, fillColor, strokeColor);
 		if(numberOfStars == 3)
-		{	fillColor = CssColor.make(150, 200, 150).toString();
-			strokeColor = CssColor.make(75, 125, 75).toString();
+		{	fillColor = CssColor.make(250, 250, 125).toString();
+			strokeColor = CssColor.make(200, 200, 75).toString();
 		}
 		drawStar(x + 40, y + 2, fillColor, strokeColor);
 		if(numberOfStars == 2)
 		{
-			fillColor = CssColor.make(250, 250, 125).toString();
-			strokeColor = CssColor.make(200, 200, 75).toString();
+			fillColor = CssColor.make(250, 150, 75).toString();
+			strokeColor = CssColor.make(200, 100, 25).toString();
 		}
 		drawStar(x + 20, y + 2, fillColor, strokeColor);
 		if(numberOfStars == 1)
 		{
-			fillColor = CssColor.make(250, 150, 75).toString();
-			strokeColor = CssColor.make(200, 100, 25).toString();
+			fillColor = CssColor.make(250, 50, 50).toString();
+			strokeColor = CssColor.make(200, 0, 0).toString();
 		}
 		drawStar(x, y + 2, fillColor, strokeColor);
 		
