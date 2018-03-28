@@ -33,7 +33,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	private String[] categoryString;
 	private String scoreText = Text.constants.scoreKopLabel();
 	private String categoryText = Text.constants.categorieLabel(); 
-	private String linkText = Text.constants.linkLabel();
+	//private String linkText = Text.constants.linkLabel();
 
 	private String[][] objectivesForDiagram;
 	private String[] categoryStringForDiagram;
@@ -91,11 +91,17 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	
 	//display links to useful material in student model
 	//TODO: obtain links from settings attached student model (?)
-	private boolean showLinks = false;
+	//private boolean showLinks = false;
 	
 	public ScoresObjectivesPanel(HashMap<String, Object> map, boolean pilot)
 	{
+		this(map, pilot, false);
+	}
+	
+	public ScoresObjectivesPanel(HashMap<String, Object> map, boolean pilot, boolean stars)
+	{
 		this.pilot = pilot;
+		this.stars = stars;
 		canvas = Canvas.createIfSupported();
 		ctx = canvas.getContext2d();
 		//setLayout(null);
@@ -471,12 +477,12 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		int scoreWidth = (int) ctx.measureText(scoreText).getWidth() + margin;
 		if(stars)
 			scoreWidth = 100 + margin;
-		int linkWidth = 0;
-		if(showLinks)
-		{
-			linkWidth = 200;
-			//TODO: calculate linkWidth based on available links
-		}
+		int linkWidth = 0; //for when adding links from student model becomes possible; toekomstmuziek. 
+//		if(showLinks)
+//		{
+//			linkWidth = 200;
+//			//TODO: calculate linkWidth based on available links
+//		}
 		
 		lineHeight = 15 + margin; //TODO nog iets zinvollers van 15 maken; meten mbv canvas?
 		textColumnWidth = 0;
@@ -561,8 +567,8 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 			ctx.setFont(boldFontString);
 			ctx.fillText(categoryText, categoryX, columnHeight + textDifference);
 			ctx.fillText(scoreText, categoryScoreX, columnHeight + textDifference);
-			if(showLinks)
-				ctx.fillText(linkText, categoryScoreX + scoreWidth + indent, columnHeight + textDifference);
+//			if(showLinks)
+//				ctx.fillText(linkText, categoryScoreX + scoreWidth + indent, columnHeight + textDifference);
 			ctx.setFont(fontString);
 			textDifference += 3;
 			ctx.beginPath();

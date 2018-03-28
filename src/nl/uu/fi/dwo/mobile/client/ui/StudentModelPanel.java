@@ -114,7 +114,7 @@ public class StudentModelPanel extends nl.uu.fi.dwo.account.client.StudentModelP
 		
 		try {
 			if(main != null) simple.remove(main);
-			main = new ScoresObjectivesPanel(map, true);
+			main = new ScoresObjectivesPanel(map, true, true);
 			simple.add(main);
 		} catch (Exception e) {
 			
