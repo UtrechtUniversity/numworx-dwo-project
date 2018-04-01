@@ -47,10 +47,10 @@ public class ThreeStrokeChecker {
 		
 		//pi
 		if("piT1".equals(teken)) {
-			checkers.add(wo.hasDirection(265, 20, 1, 19, 16));
+			checkers.add(wo.hasDirection(265, 30, 2, 19, 13));
 		}
 		if("piT2".equals(teken)) {
-			checkers.add(wo.hasDirection(265, 20, 1, 19, 16));
+			checkers.add(wo.hasDirection(265, 30, 2, 19, 13));
 		}
 		if("piT3".equals(teken)) {
 			checkers.add(wo.hasDirection(0, 30, 1, 19, 12));

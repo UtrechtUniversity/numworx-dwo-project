@@ -111,9 +111,9 @@ public class WriteMathGWT implements EntryPoint, WritePanelHolder
 		
 		refSampleComboBox = new ListBox();
 		refSampleComboBox.addItem("Load");
-		for(int i=0 ; i<OneStrokeMatcher.tekens.length ; i++) {
-			refSampleComboBox.addItem(OneStrokeMatcher.tekens[i]);
-		}
+//		for(int i=0 ; i<OneStrokeMatcher.tekens.length ; i++) {
+//			refSampleComboBox.addItem(OneStrokeMatcher.tekens[i]);
+//		}
 		
 		
 		if (standAlone)

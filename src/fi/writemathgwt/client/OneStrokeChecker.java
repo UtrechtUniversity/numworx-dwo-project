@@ -192,12 +192,16 @@ public class OneStrokeChecker {
 //			checkers.add(wo.hasCloseYDistance(25, wo, 3, 10, 19, 20));
 //			checkers.add(!wo.hasYDistance(-50, 25, wo, 0, 1, 12, 20));
 			
-			checkers.add(wo.hasCloseDistance(30, wo, 0, 1, 8, 16));
-			checkers.add(wo.dMinBoxTop(0, 20, 0, 3));
-			checkers.add(wo.dMinBoxTop(0, 40, 8, 15));
-			checkers.add(wo.dMinBoxBottom(0, 35, 6, 10));
-			checkers.add(wo.dMinBoxBottom(0, 35, 18, 19));
-			checkers.add(wo.hasDAngle(200, 360, -15, 180, 1, 12));
+			checkers.add(wo.hasPosition(40, 100, 0, 40, 0, 0, 1));
+			checkers.add(wo.hasPosition(50, 100, 70, 100, 19, 19, 1));
+			checkers.add(wo.hasPosition(50, 100, 0, 100, 10, 19, 6));
+			
+//			checkers.add(wo.hasCloseDistance(30, wo, 0, 1, 8, 16));
+//			checkers.add(wo.dMinBoxTop(0, 20, 0, 3));
+//			checkers.add(wo.dMinBoxTop(0, 40, 8, 15));
+//			checkers.add(wo.dMinBoxBottom(0, 35, 6, 10));
+//			checkers.add(wo.dMinBoxBottom(0, 35, 18, 19));
+//			checkers.add(wo.hasDAngle(200, 360, -15, 180, 1, 12));
 		}
 		if("b".equals(teken)) {
 			checkers.add(wo.hasDirection(260, 30, 1, 10, 6));

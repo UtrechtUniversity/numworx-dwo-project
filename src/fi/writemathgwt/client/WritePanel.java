@@ -78,6 +78,9 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	
 	private int width;
 	private int height;
+
+	
+	
 	
 	private int panelShiftX, panelShiftY;
 	
@@ -622,9 +625,9 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	public void loadRefSamples(String key)
 	{
 		writeObjects.clear();
-		ReferenceSamples rs = new ReferenceSamples();
+		//ReferenceSamples rs = new ReferenceSamples();
 		//ArrayList<WriteObject> sampleWriteObjects
-		writeObjects = rs.getReferenceObjects(key);
+		//writeObjects = rs.getReferenceObjects(key);
 		String result = "";
 		if(analyserOn) {
 			sampleInspectComboBox.clear();
@@ -2266,7 +2269,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 					String teken = objectToAnalyse.parse(key);
 					if(!key.equals(teken)) {
 						checkerBooleans = ""+OneStrokeChecker.check(objectToAnalyse,key);
-						checkerBooleans = checkerBooleans + key+":\n";
+						checkerBooleans = checkerBooleans + teken+":\n";
 						checkerBooleans = checkerBooleans + OneStrokeChecker.getCheckerBooleans();
 					}
 					
