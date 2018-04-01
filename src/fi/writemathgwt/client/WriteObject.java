@@ -805,21 +805,21 @@ public class WriteObject {
 		parsePoints = deepCopy(doublePoints);
 		makeParsingBox(parsePoints);
 		
-		dAngles = findDAngles();
+		//dAngles = findDAngles();
 		String gevondenTeken = StrokeMatcher.findTeken(new Stroke(points));
 		if(gevondenTeken != null) {
 			newMatch = true;
 			if(!gevondenTeken.equals(key))
 					newMatchWrong = true;
 		}
-		else {
-			gevondenTeken = newStrokeMatcher.findTeken(this.doublePoints);
-			if(gevondenTeken != null) {
-				oldMatch = true;
-				if(!gevondenTeken.equals(key))
-						oldMatchWrong = true;
-			}
-		}
+//		else {
+//			gevondenTeken = newStrokeMatcher.findTeken(this.doublePoints);
+//			if(gevondenTeken != null) {
+//				oldMatch = true;
+//				if(!gevondenTeken.equals(key))
+//						oldMatchWrong = true;
+//			}
+//		}
 		return gevondenTeken;
 	}
 	//OK
@@ -830,7 +830,7 @@ public class WriteObject {
 		}
 		parsePoints = deepCopy(doublePoints);
 		makeParsingBox(parsePoints);
-		dAngles = findDAngles();
+		//dAngles = findDAngles();
 		gevondenTeken = StrokeMatcher.findTeken(new Stroke(points));
 		if(gevondenTeken != null) {
 			newMatch = true;

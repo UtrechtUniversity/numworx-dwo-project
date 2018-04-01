@@ -6,7 +6,6 @@ public class StrokeMatcher {
 	
 	private static String checkLogString;
 	private static ArrayList<Double> scores;
-	private static ArrayList<String> filteredOut;
 	private static String[] tekens = ReferenceSamples.getTekens();
 	
 	public static boolean match(Stroke wo, String key, boolean filter) {
@@ -22,7 +21,6 @@ public class StrokeMatcher {
 		
 		ArrayList<String> gevondenTekens = new ArrayList<String>();
 		scores = new ArrayList<Double>();
-		filteredOut = new ArrayList<String>();
 		double minScore = 10000;
 		for(int i = 0 ; i<tekens.length ; i++) {
 			double score = Math.min(getMatchScoreDir(wo, tekens[i],0) , getMatchScoreDir(wo, tekens[i],5));
@@ -49,28 +47,23 @@ public class StrokeMatcher {
 		if(filter) {
 			for(int i = 0 ; i<gevondenTekens.size()  ; i++) {
 				if(!StrokeLocFilter.checkLoc(wo, gevondenTekens.get(i))) {
-					filteredOut.add(gevondenTekens.get(i));
 					gevondenTekens.remove(i);
 					scores.remove(i);
 					i--;
 				}
-			}
-			for(int i = 0 ; i<gevondenTekens.size()  ; i++) {
-				if(!StrokeDAngleFilter.checkDAngle(wo, gevondenTekens.get(i))) {
-					filteredOut.add(gevondenTekens.get(i));
+				else if(!StrokeDAngleFilter.checkDAngle(wo, gevondenTekens.get(i))) {
 					gevondenTekens.remove(i);
 					scores.remove(i);
 					i--;
 				}
-			}
-			for(int i = 0 ; i<gevondenTekens.size()  ; i++) {
-				if(!StrokeDirFilter.checkDir(wo, gevondenTekens.get(i))) {
-					filteredOut.add(gevondenTekens.get(i));
+				else if(!StrokeDirFilter.checkDir(wo, gevondenTekens.get(i))) {
 					gevondenTekens.remove(i);
 					scores.remove(i);
 					i--;
-				}
+				}	
+				else break;
 			}
+			
 			while(gevondenTekens.size()<4)
 				gevondenTekens.add("null");
 			while(scores.size()<4)
