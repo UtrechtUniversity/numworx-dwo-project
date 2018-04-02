@@ -60,7 +60,12 @@ public class StrokeMatcher {
 					gevondenTekens.remove(i);
 					scores.remove(i);
 					i--;
-				}	
+				}
+				else if(!StrokeLocDAngleFilter.checkLocDAngle(wo, gevondenTekens.get(i))) {
+					gevondenTekens.remove(i);
+					scores.remove(i);
+					i--;
+				}
 				else break;
 			}
 			

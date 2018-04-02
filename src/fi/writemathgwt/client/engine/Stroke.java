@@ -274,6 +274,24 @@ public class Stroke {
 		return hasStepDAngle && hasTotalDAngle;
 	}
 	
+	public boolean hasLocDAngle(int angle, int tolerance, int pointNrStart, int pointNrEnd) {
+		for(int i=pointNrStart ; i<pointNrEnd-3 ; i++) {
+			double angleStep1 = angles[i];
+			double angleStep2 = angles[i+2];
+			if(angleStep2-angleStep1-angle>180)
+				angleStep2 -= 360;
+			if(angleStep2-angleStep1-angle<-180)
+				angleStep2 += 360;
+			
+			if(Math.abs(angleStep2-angleStep1 - angle) < tolerance) {
+				//logger.info("angle: "+(angleStep2-angleStep1));	
+				return true;
+			}
+				
+		}
+		return false;
+	}
+	
 	private double calculateDAngle(double h1, double h2) {
 		if(h1-h2>180)
 			h1 -= 360;
