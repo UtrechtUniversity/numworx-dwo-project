@@ -527,7 +527,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	}
 
 	private Promise<List<SelectModuleItem>> getChildrenOrScosPromise(SelectModuleItem parent) {
-		if(parent.getType() == Type.SCO)
+		if(parent.getType() == Type.MODULE)
 			return getScosPromise(parent);
 		return getChildrenPromise(parent);
 	}
