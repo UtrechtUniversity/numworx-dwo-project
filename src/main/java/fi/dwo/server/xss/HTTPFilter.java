@@ -12,6 +12,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpUtils;
 
 public class HTTPFilter implements Filter {
 
@@ -69,6 +70,12 @@ public class HTTPFilter implements Filter {
 		@Override
 		public boolean isSecure() {
 			return secure;
+		}
+
+		@SuppressWarnings("deprecation")
+		@Override
+		public StringBuffer getRequestURL() {
+			return HttpUtils.getRequestURL(this);
 		}
 		
 	}
