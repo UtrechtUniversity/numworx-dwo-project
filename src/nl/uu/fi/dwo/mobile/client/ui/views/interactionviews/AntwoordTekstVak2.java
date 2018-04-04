@@ -1387,7 +1387,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	{
 		public Widget asWidget()
 		{
-			return getMainRegel().getCanvas();
+			return getMainRegel().asWidget();
 		}
 
 		void setEditable(boolean editable)

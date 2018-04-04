@@ -843,7 +843,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	public int getCurrentOpdracht() {
 		try {
 			return Integer.parseInt(getValue(LOCATION));
-		} catch(Exception _)
+		} catch(Exception ignore)
 		{
 		}
 		try {

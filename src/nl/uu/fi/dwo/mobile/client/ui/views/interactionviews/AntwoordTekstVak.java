@@ -525,7 +525,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 			achtergrondPanel.getElement().addClassName("insert_formule");
 			achtergrondPanel.getElement().getStyle().setPaddingLeft(3, Style.Unit.PX);
 			achtergrondPanel.getElement().getStyle().setPaddingTop(2, Style.Unit.PX);
-			achtergrondPanel.add(formuleVak.getMainRegel().getCanvas());
+			achtergrondPanel.add(formuleVak.getMainRegel());
 			achtergrondPanel.addTouchHandler(new FormuleEditorTouchHandler(formuleVak));
 			//basisPanel.add(formuleVak.getMainRegel().getCanvas());
 			//basisPanel.setWidgetLeftRight(formuleVak.getMainRegel().getCanvas(), 4, Style.Unit.PX, 20, Style.Unit.PX);

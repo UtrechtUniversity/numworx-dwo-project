@@ -653,7 +653,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//sp.add(contentPanel);
 			//sp.add(prefixPanel);
 			
-			sp.add(this.getMainRegel().getCanvas());
+			sp.add(this.getMainRegel().asWidget());
 			sp.add(checkPanel);
 			
 			//checkPanel.getElement().getStyle().setBackgroundColor("red");
