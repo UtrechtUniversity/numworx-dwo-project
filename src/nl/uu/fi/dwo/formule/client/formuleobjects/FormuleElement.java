@@ -2,6 +2,9 @@ package nl.uu.fi.dwo.formule.client.formuleobjects;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.CanvasBuilder;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PathBuilder;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SvgBuilder;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
@@ -462,16 +465,29 @@ public abstract class FormuleElement implements TekstElement
 		//geen cursor tekenen als dit niet het huidige element is, of als er een deel van de expressie geselecteerd is
 		if (this.isCurrent() == false || this.isSelected() || this.holder.hasSelection())
 			return;
-		
-		ctx.setLineWidth(2);
-		ctx.setStrokeStyle("#00f");
-
+		PathBuilder pb = new CanvasBuilder(ctx);
+		drawCursor(x, pb);
+	}
+	protected void drawCursor(OMSVGElement svg) {
+		drawCursor(width, svg);
+	}
+	
+	protected void drawCursor(int width, OMSVGElement svg) {
+		if (this.isCurrent() == false || this.isSelected() || this.holder.hasSelection())
+			return;
+		PathBuilder pb = new SvgBuilder(svg,0,0);
+		drawCursor(width, pb);
+	}
+	
+	protected void drawCursor(int x, PathBuilder pb) {
+		pb.setLineWidth(2);
+		pb.setStrokeStyle("#00f");
 		if (x - 1 < 0)
 			x += 2;
-		ctx.beginPath();
-		ctx.moveTo(x - 1, 2);
-		ctx.lineTo(x - 1, height - 2);
-		ctx.stroke();
+		pb.beginPath();
+		pb.moveTo(x - 1, 2);
+		pb.lineTo(x - 1, height - 2);
+		pb.stroke();
 	}
 
 	/**

@@ -1,11 +1,17 @@
 package nl.uu.fi.dwo.formule.client.formuleholder;
 
 import org.vectomatic.dom.svg.OMSVGDocument;
+import org.vectomatic.dom.svg.OMSVGLength;
 import org.vectomatic.dom.svg.OMSVGSVGElement;
+import org.vectomatic.dom.svg.OMSVGStyle;
+import org.vectomatic.dom.svg.OMSVGTextElement;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.utils.OMSVGParser;
+import org.vectomatic.dom.svg.utils.SVGConstants;
 
 import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.dom.client.Style.FontStyle;
+import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
@@ -21,7 +27,7 @@ class MainFormuleRegel extends FormuleRegel implements IsWidget {
 
 	MainFormuleRegel(FormuleHolder holder) {
 		super(holder);
-		isEditor = holder instanceof FormuleEditor;
+		isEditor = false; // holder instanceof FormuleEditor;
 		OMSVGDocument document = OMSVGParser.currentDocument();
 		svg = document.createSVGSVGElement();
 		svgImage = new SVGImage(svg);
@@ -59,7 +65,8 @@ class MainFormuleRegel extends FormuleRegel implements IsWidget {
 			x = 0;
 		if (this.selectionStart == -1) // in dit geval geen selectie?
 		{
-			this.drawCursor(x);
+			if(isEditor) this.drawCursor(x);
+			else this.drawCursor(x,svg);
 		}
 
 		// draw selection line
@@ -69,11 +76,22 @@ class MainFormuleRegel extends FormuleRegel implements IsWidget {
 		// selectioncords[3]);
 
 		if (children.isEmpty() && stippels) {
-			String font = ctx.getFont();
-			ctx.setFont(fm.getFontStyle());
-			ctx.setFillStyle(color);
-			ctx.fillText("...", 0, getAsHoogte());
-			ctx.setFont(font);
+			if(isEditor) {
+				String font = ctx.getFont();
+				ctx.setFont(fm.getFontStyle());
+				ctx.setFillStyle(color);
+				ctx.fillText("...", 0, getAsHoogte());
+				ctx.setFont(font);
+			} else {
+				OMSVGTextElement t = new OMSVGTextElement(0, getAsHoogte(), OMSVGLength.SVG_LENGTHTYPE_NUMBER, "...");
+				OMSVGStyle style = t.getStyle();
+				style.setFontSize(fm.getFontSize() , Unit.PX);
+				style.setFontStyle(fm.isItalic() ? FontStyle.ITALIC: FontStyle.NORMAL);
+				style.setSVGProperty(SVGConstants.CSS_FONT_FAMILY_PROPERTY, fm.getFont());
+				style.setSVGProperty(SVGConstants.CSS_FILL_PROPERTY,color);
+				style.setFontWeight(fm.isBold() ? FontWeight.BOLD : FontWeight.NORMAL);
+				svg.appendChild(t);
+			}
 		}
 	}
 

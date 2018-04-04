@@ -6,7 +6,10 @@ import java.util.logging.Logger;
 import org.vectomatic.dom.svg.OMSVGElement;
 import org.vectomatic.dom.svg.OMSVGGElement;
 import org.vectomatic.dom.svg.OMSVGImageElement;
+import org.vectomatic.dom.svg.OMSVGRectElement;
+import org.vectomatic.dom.svg.OMSVGStyle;
 import org.vectomatic.dom.svg.OMSVGTransform;
+import org.vectomatic.dom.svg.utils.SVGConstants;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -1640,6 +1643,8 @@ public class FormuleRegel extends FormuleElement
 	 */
 	@Override
 	public void draw(OMSVGElement svg) {
+		paintComponent(svg);
+		
 		OMSVGGElement g = new OMSVGGElement();
 		svg.appendChild(g);
 
@@ -1656,7 +1661,32 @@ public class FormuleRegel extends FormuleElement
 			}
 		} else {
 			svg.removeChild(g);
+			
 		}
+	}
+
+	private void paintComponent(OMSVGElement svg) {
+		//ignore if the formule is not editable
+		if (holder instanceof FormuleEditor)
+			if (holder.getCurrentRegel() == this && this.parent != null)
+			{
+				//draw background
+				OMSVGRectElement rect = new OMSVGRectElement(x,y,width,height,0, 0);
+				rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "#EEEEEE");
+				svg.appendChild(rect);
+			}
+
+		if (this.children.isEmpty() && holder.isInputNeeded())
+		{
+			//draw square if line is empty
+			OMSVGRectElement rect = new OMSVGRectElement(x,y,width,height,0, 0);
+			OMSVGStyle style = rect.getStyle();
+			style.setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, "#888888");
+			style.setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "none");
+			svg.appendChild(rect);
+		}
+		
+		
 	}
 
 	
