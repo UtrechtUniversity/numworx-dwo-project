@@ -441,8 +441,12 @@ public class SecuredDwoAdminSchoolManager {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
+        if (phr==null) {
+            LOG.log(Level.SEVERE, "User {0} not in admin role.", sc.getUserPrincipal().getName());
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Not in a DWO Admin role.");
+        }
         school = SchoolManager.findBySchoolLogin(restSchool.getDomSchool4DwoAdmin().getSchoolLogin());
-        if (phr!=null || school == null) {
+        if (school == null) {
             LOG.log(Level.SEVERE, "School with login {0} was not found.", restSchool.getDomSchool4DwoAdmin().getSchoolLogin());
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "School not found.");
         }
