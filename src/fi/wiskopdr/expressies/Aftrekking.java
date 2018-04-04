@@ -1,8 +1,5 @@
 package fi.wiskopdr.expressies;
 
-import java.awt.*;
-import java.util.*;
-
 import fi.wiskopdr.expressies.repr.AbstractConverter;
 
 public class Aftrekking extends Expressie  

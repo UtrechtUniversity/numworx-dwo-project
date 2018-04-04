@@ -1,28 +1,27 @@
 package fi.wiskopdr;
 
-import java.awt.Container;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.MissingResourceException;
 import java.util.logging.Logger;
 
-import com.google.gwt.user.client.Window;
-
-import nl.uu.fi.dwo.interaction.client.JSONUtilities;
-import nl.uu.fi.dwo.interaction.client.json.ObjectList;
-import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 //import fi.beans.ideas.IdeasIF;
 //import fi.beans.ideas.RuleIF;
 //import fi.beans.stringutils.StringUtils;
 //import fi.wiskopdr.formuleobjects.*;
 //import fi.wiskopdr.tekstobjects.TekstArea;
-import fi.wiskopdr.expressies.*;
+import fi.wiskopdr.expressies.Algebra;
+import fi.wiskopdr.expressies.Expressie;
+import fi.wiskopdr.expressies.FunctieMVDefSet;
+import fi.wiskopdr.expressies.Vergelijking;
+import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.text.Text;
 //import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.text.TextConstants;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 
 
