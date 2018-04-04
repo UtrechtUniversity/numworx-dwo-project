@@ -208,11 +208,11 @@ public interface DbAccessIF extends DbAccessLogin {
      * @throws XmlRpcException
      * @throws SQLException
      */
-    public boolean renameClass(int classID, String newName, boolean iconizer) throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException;
+//    public boolean renameClass(int classID, String newName, boolean iconizer) throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException;
 
-    public boolean renameClass(int classID, String newName /*, boolean iconizer*/) throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException;
+//    public boolean renameClass(int classID, String newName /*, boolean iconizer*/) throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException;
 
     public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException;
@@ -220,21 +220,21 @@ public interface DbAccessIF extends DbAccessLogin {
     public Vector<Object> getTeachersOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException;
 
-    /**
-     * Give a class a new teacher
-     *
-     * @param classID
-     * @param newName
-     * @param newRegistrationKey
-     * @param iconizer
-     * @return
-     * @throws DwoXmlRpcException
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    public boolean renameClass(int classID, String newName, String newRegistrationKey, boolean iconizer) throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException;
+//    /**
+//     * Give a class a new teacher
+//     *
+//     * @param classID
+//     * @param newName
+//     * @param newRegistrationKey
+//     * @param iconizer
+//     * @return
+//     * @throws DwoXmlRpcException
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    public boolean renameClass(int classID, String newName, String newRegistrationKey, boolean iconizer) throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException;
 
     /**
      * Add a teacher to a class
@@ -308,8 +308,8 @@ public interface DbAccessIF extends DbAccessLogin {
     public String LMSGetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement) throws IOException, XmlRpcException,
             SQLException;
 
-    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement, String iValue) throws IOException, XmlRpcException,
-            SQLException;
+//    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement, String iValue) throws IOException, XmlRpcException,
+//            SQLException;
 
     public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement, String iValue, String random) throws IOException, XmlRpcException,
             SQLException;
