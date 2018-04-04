@@ -2293,8 +2293,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws IOException
      * @throws XmlRpcException
      */
-    @Override
-    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement,
+    //@Override
+    private String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement,
             String iValue) throws SQLException, IOException, XmlRpcException {
 
         log("LMSSetValue("
@@ -2692,8 +2692,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws XmlRpcException
      * @throws SQLException
      */
-    @Override
-    public boolean renameClass(int classID, String newName)
+    //@Override
+    private boolean renameClass(int classID, String newName)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
         PreparedStatement ps = getStatement(QRY_UPDATE_CLASS_NAME);
@@ -2708,8 +2708,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws java.sql.SQLException
      * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      */
-    @Override
-    public boolean renameClass(int classID, String newName, boolean iconizer) throws SQLException, DwoXmlRpcException {
+    //@Override
+    private boolean renameClass(int classID, String newName, boolean iconizer) throws SQLException, DwoXmlRpcException {
         PreparedStatement ps = getStatement(QRY_UPDATE_CLASS_NAME2);
         ps.setString(1, newName);
         ps.setBoolean(2, iconizer);
@@ -2724,8 +2724,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws java.sql.SQLException
      * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      */
-    @Override
-    public boolean renameClass(int classID, String newName, String newRegistrationKey, boolean iconizer) throws SQLException, DwoXmlRpcException {
+    //@Override
+    private boolean renameClass(int classID, String newName, String newRegistrationKey, boolean iconizer) throws SQLException, DwoXmlRpcException {
         PreparedStatement ps = getStatement(QRY_UPDATE_CLASS_NAME3);
         ps.setString(1, newName);
         ps.setString(2, newRegistrationKey);

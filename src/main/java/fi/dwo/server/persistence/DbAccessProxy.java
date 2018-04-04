@@ -118,19 +118,19 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
         return getDelegate().getTable(tableName, columnnames, wheredef, orderBy);
     }
 
-    @Override
-    public boolean renameClass(int classID, String newName)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        return getDelegate().renameClass(classID, newName);
-    }
-
-    @Override
-    public boolean renameClass(int classID, String newName, boolean iconizer)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        return getDelegate().renameClass(classID, newName, iconizer);
-    }
+//    @Override
+//    public boolean renameClass(int classID, String newName)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        return getDelegate().renameClass(classID, newName);
+//    }
+//
+//    @Override
+//    public boolean renameClass(int classID, String newName, boolean iconizer)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        return getDelegate().renameClass(classID, newName, iconizer);
+//    }
 //TODO V1_2 obsolete
 //    @Override
 //    public boolean reassignClass(int classID, int newTeacher)
@@ -154,11 +154,11 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
         return getDelegate().LMSGetValue(scoID, userID, schoolGroupID, iDataModelElement);
     }
 
-    @Override
-    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement,
-            String iValue) throws IOException, XmlRpcException, SQLException {
-        return getDelegate().LMSSetValue(scoID, userID, schoolGroupID, iDataModelElement, iValue);
-    }
+//    @Override
+//    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement,
+//            String iValue) throws IOException, XmlRpcException, SQLException {
+//        return getDelegate().LMSSetValue(scoID, userID, schoolGroupID, iDataModelElement, iValue);
+//    }
 
     @Override
     public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement,
@@ -623,10 +623,10 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
         return getDelegate().getTeachersOfClass(schoolClassID);
     }
 
-    @Override
-    public boolean renameClass(int classID, String newName, String newRegistrationKey, boolean iconizer) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
-        return getDelegate().renameClass(classID, newName, newRegistrationKey, iconizer);
-    }
+//    @Override
+//    public boolean renameClass(int classID, String newName, String newRegistrationKey, boolean iconizer) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
+//        return getDelegate().renameClass(classID, newName, newRegistrationKey, iconizer);
+//    }
 
     @Override
     public boolean disconnectFromClass(int userID, int classID) throws IOException, XmlRpcException, SQLException {
