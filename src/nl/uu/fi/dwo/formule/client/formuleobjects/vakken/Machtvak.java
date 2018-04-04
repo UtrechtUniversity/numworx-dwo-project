@@ -112,6 +112,7 @@ public class Machtvak extends FormuleElementWithChildren
 				g.getTransform().getBaseVal().appendItem(transform);
 			}
 		}
+		drawCursor(svg);
 	}
 
 	

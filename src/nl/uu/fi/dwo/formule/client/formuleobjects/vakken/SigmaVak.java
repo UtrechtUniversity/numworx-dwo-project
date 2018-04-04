@@ -140,6 +140,7 @@ public class SigmaVak extends FormuleElementWithChildren{
 		getChild(1).draw(g);
 		getChild(2).draw(g);
 		getChild(3).draw(g);
+		drawCursor(svg);
 	}
 
 }

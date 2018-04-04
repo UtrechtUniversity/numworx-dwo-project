@@ -93,6 +93,7 @@ public class ConjugVak extends FormuleElementWithChildren
 			g.getTransform().getBaseVal().appendItem(transform);
 		}
 		getChild().draw(g);
+		drawCursor(svg);
 	}
 
 }

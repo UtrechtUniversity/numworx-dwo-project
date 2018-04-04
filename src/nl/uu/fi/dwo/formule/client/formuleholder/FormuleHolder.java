@@ -96,7 +96,7 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 		main.paint();
 	}
 
-	public FormuleRegel getMainRegel()
+	public MainFormuleRegel getMainRegel()
 	{
 		return main;
 	}

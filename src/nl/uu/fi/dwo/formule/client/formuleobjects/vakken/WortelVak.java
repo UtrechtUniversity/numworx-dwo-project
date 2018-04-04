@@ -172,6 +172,7 @@ public class WortelVak extends FormuleElementWithChildren
 			g.getTransform().getBaseVal().appendItem(transform);
 		}
 		getChild().draw(g);
+		drawCursor(svg);
 	}
 
 }

@@ -100,6 +100,7 @@ public class SubscriptVak extends FormuleElementWithChildren
 			transform.setTranslate(x, y);
 			g.getTransform().getBaseVal().appendItem(transform);
 		}
+		drawCursor(svg);
 	}
 
 }

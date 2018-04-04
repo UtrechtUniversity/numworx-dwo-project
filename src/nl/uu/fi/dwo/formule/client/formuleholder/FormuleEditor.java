@@ -177,7 +177,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		//nl.uu.fi.dwo.interaction.client.touch.TouchPanel sp = new nl.uu.fi.dwo.interaction.client.touch.TouchPanel();
 		TouchPanel sp = new TouchPanel();
 		sp.getElement().addClassName("insert_formule");
-		sp.add(this.getMainRegel().getCanvas());
+		sp.add(this.getMainRegel().asWidget());
 		return sp;
 	}
 

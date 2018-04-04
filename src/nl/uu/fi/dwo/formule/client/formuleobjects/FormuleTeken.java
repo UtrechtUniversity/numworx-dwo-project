@@ -489,6 +489,7 @@ public class FormuleTeken extends FormuleElement
 			r.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY,"#AAAAFF");
 			svg.appendChild(r);
 		}
+
 		if(teken != null) {
 			int dx = x;
 			int dy = y+getAsHoogte();
@@ -517,6 +518,8 @@ public class FormuleTeken extends FormuleElement
 		} else {
 			buildChar(new SvgBuilder(svg, x, y));
 		}
+
+		drawCursor(svg);
 	}
 
 }

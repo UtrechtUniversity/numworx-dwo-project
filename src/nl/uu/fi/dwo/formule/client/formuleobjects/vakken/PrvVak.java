@@ -175,6 +175,7 @@ public class PrvVak extends FormuleElementWithChildren
 		getChild(0).draw(g);
 		getChild(1).draw(g);
 		getChild(2).draw(g);
+		drawCursor(svg);
 	}
 
 }

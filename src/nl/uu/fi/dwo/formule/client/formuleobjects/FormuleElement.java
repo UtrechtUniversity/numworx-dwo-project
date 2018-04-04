@@ -475,7 +475,7 @@ public abstract class FormuleElement implements TekstElement
 	protected void drawCursor(int width, OMSVGElement svg) {
 		if (this.isCurrent() == false || this.isSelected() || this.holder.hasSelection())
 			return;
-		PathBuilder pb = new SvgBuilder(svg,0,0);
+		PathBuilder pb = new SvgBuilder(svg,x,y);
 		drawCursor(width, pb);
 	}
 	

@@ -98,6 +98,7 @@ public class AbsVak extends FormuleElementWithChildren
 			g.getTransform().getBaseVal().appendItem(transform);
 		}
 		getChild().draw(g);
+		drawCursor(svg);
 	}
 
 }

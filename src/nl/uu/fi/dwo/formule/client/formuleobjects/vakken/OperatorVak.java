@@ -114,6 +114,7 @@ public class OperatorVak extends FormuleElementWithChildren {
 			a.draw(g);
 		teken.draw(g);
 		getChild(1).draw(g);
+		drawCursor(svg);
 	}
 
 }

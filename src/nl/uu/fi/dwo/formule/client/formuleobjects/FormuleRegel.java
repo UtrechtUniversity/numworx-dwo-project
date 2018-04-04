@@ -1663,6 +1663,13 @@ public class FormuleRegel extends FormuleElement
 			svg.removeChild(g);
 			
 		}
+		int x = this.width;
+		if (this.currentPosition == -1 || this.children.isEmpty())
+			x = 0;
+		if(this.selectionStart == -1) //in dit geval geen selectie?
+		{	
+			this.drawCursor(x,svg);
+		}
 	}
 
 	private void paintComponent(OMSVGElement svg) {

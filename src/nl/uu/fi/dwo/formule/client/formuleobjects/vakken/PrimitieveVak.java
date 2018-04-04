@@ -117,6 +117,7 @@ public class PrimitieveVak extends FormuleElementWithChildren
 		}
 		getChild(0).draw(g);
 		getChild(1).draw(g);
+		drawCursor(svg);
 	}
 
 }

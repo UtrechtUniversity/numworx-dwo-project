@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.Widget;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
 
-class MainFormuleRegel extends FormuleRegel implements IsWidget {
+public class MainFormuleRegel extends FormuleRegel implements IsWidget {
 
 	private SVGImage svgImage;
 	private OMSVGSVGElement svg;

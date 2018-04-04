@@ -267,6 +267,7 @@ public class StelselVak extends FormuleElementWithChildren
 			g.getTransform().getBaseVal().appendItem(transform);
 		}
 		for(FormuleRegel c: children) c.draw(g);
+		drawCursor(svg);
 	}
 
 
