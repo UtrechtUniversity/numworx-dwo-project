@@ -5,11 +5,11 @@
  * Variables starting with a $ tells you they are jQuery objects.
  */
 
-function MainApp() {	
+function MainApp() {
 	this.mainDisplay = new MainDisplay();
 	window.jsMainDisplay = this.mainDisplay; // make it available for API
 	
-	this.NAV_WIDTH = 200;	
+	this.NAV_WIDTH = 200;
 }
 
 MainApp.prototype.getPresenterFactory = function() {

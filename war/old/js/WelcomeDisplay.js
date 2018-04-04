@@ -8,14 +8,13 @@ function WelcomeDisplay() {
 }
 
 WelcomeDisplay.prototype.show = function() {
-	console.log("show welcome");
 	this.$panel.show();
 }
 
 WelcomeDisplay.prototype.clear = function() {
-	//this.$panel.find(".content").html("");
+	this.$panel.find(".content").html("");
 }
 
 WelcomeDisplay.prototype.setWelcomeText = function(html) {
-	//this.$panel.find(".content").html(html);
+	this.$panel.find(".content").html(html);
 }

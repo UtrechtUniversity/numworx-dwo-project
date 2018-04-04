@@ -1,0 +1,222 @@
+table {
+	//table-layout: fixed;
+	width: 100%;	
+	border-collapse: collapse;
+	//float: left;
+	height: 100px; max-height: 100px;
+	position: relative;
+	margin-bottom: $elementMarginBottom;
+	
+	thead tr, tbody tr {
+	    display:table;
+	    width:100%;
+	    table-layout:fixed;
+	}
+	
+	thead {
+		//width: 100%;
+		//position: absolute;
+		left: 0; right: 0;
+	    @include border-box;
+		display: block;
+		width: 100%;
+				
+		tr {
+			width: 100%;
+			th { 
+				text-transform: uppercase;
+				color: $primaryLight;
+				padding: 10px;
+				&:first-child { padding-left: 0; }
+			}
+		}		
+	}
+	
+	tbody {
+		//box-shadow: 0 0 0 3px $primary inset; // border doesn't work combined with radius
+		border: $borderThickness $primary solid;
+	    @include border-box;
+		@include border-radius($defaultRadius);
+		background: $white;
+		width: 100%;
+		//position: absolute;
+		max-height: 200px;
+		overflow-y: scroll;
+		top: 2em;
+		display: block;
+		
+		tr {					
+			td {
+				line-height: 1.8em;
+				border-bottom: 1px $line1 solid;
+				padding: 5px 10px;
+				vertical-align: middle;
+			}	
+				
+		}
+	}
+	
+	&.hoverable tr:hover td, &.hoverable tr:hover td span {
+		background-color: $shade2;
+	}	
+	&.selectable {
+		tr td {
+			cursor: pointer;
+			@include transition(all 500ms ease);
+		}
+		tr.selected td {
+			background-color: $shade3;
+		}
+		input[type="checkbox"].hidden { position: absolute; opacity: 0;}
+	}
+}
+
+.tablewrap {
+	width: 100%;
+	overflow-x: scroll;
+	overflow-y: visible;
+	padding-top: 3em;
+	
+	//position: relative;
+	//border-right: $borderThickness $primary solid;
+	
+	&:after {
+		content: "";
+		position: absolute;
+		width: 1 / 12 * $sitewidth * 1px;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#edeff1+0,edeff1+100&0+0,1+100 */
+		background: -moz-linear-gradient(left, rgba(237,239,241,0) 0%, rgba(237,239,241,1) 100%); /* FF3.6-15 */
+		background: -webkit-linear-gradient(left, rgba(237,239,241,0) 0%,rgba(237,239,241,1) 100%); /* Chrome10-25,Safari5.1-6 */
+		background: linear-gradient(to right, rgba(237,239,241,0) 0%,rgba(237,239,241,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00edeff1', endColorstr='#edeff1',GradientType=1 ); /* IE6-9 */
+	}
+}
+table.results {
+	
+	overflow-x: scroll;
+	overflow-y: visible;
+	margin-right: 1 / 12 * $sitewidth * 1px;
+	max-height: 500px; height: auto;
+	
+	&:after {
+		content: "\00A0";
+		display: block;
+		width: 1 / 12 * $sitewidth * 1px;
+	    position: absolute;
+	    top: 0;
+		right: 1 / 12 * $sitewidth * -1px;
+	}
+	
+	//width: 100%;
+	//display: block;
+	
+	th, td {
+		width: (1 / 12 * $sitewidth - 20) * 1px;
+		text-align: center;
+		
+		&:first-child {
+			width: (2 / 12 * $sitewidth - 20) * 1px;
+			position: relative;
+			text-align: left;
+			span { 
+				width: (2 / 12 * $sitewidth - 20) * 1px;
+				position: absolute; 
+				padding: 5px 10px;
+				display: block;
+				top: 0;
+				left: 0;
+				bottom: 0;
+				background-color: $transWhite;
+				line-height: 1.8em;
+				.active & { border-right: 1px $line1 solid;}
+			}
+		}
+	}
+	
+	thead {
+		position: relative;
+		border-left: $borderThickness $primary solid;
+		border-right: $borderThickness $primary solid;
+		border-top: $borderThickness $primary solid;
+		@include border-radius(4px, 4px, 0px, 0px);		
+		
+		tr {
+			
+			&:nth-child(1) {
+				position: absolute;
+				background-color: $primary;
+				color: $white;
+				top: (16 + 4) * -1px;
+				width: 98%;
+				left: 1%;
+							
+				th {
+					padding: 2px 10px;					
+				}
+			}
+			&:nth-child(2) {
+				background-color: $shade3;
+				border-bottom: $borderThickness $line1 solid;
+			
+				th {
+					position: relative;
+					
+					//line-height: 2em;
+					//padding: 0;
+					
+					span {
+						position: absolute;
+						display: block;
+						border: $borderThickness $primary solid;
+						margin: -3em 5px 0 5px;
+						padding: 5px;
+						
+						//width: (1 / 12 * $sitewidth - 20) * 1px;
+						background-color: $shade2;
+//						z-index: 10;
+						line-height: 1em;
+						text-transform: none;
+						
+						height: 3em;
+						overflow-y: hidden;
+					}
+				}
+			}
+			&:nth-child(3) {
+				background-color: $shade3;
+				
+			}			
+		}
+	}
+	
+	tbody {
+		//max-width: 100%;
+		//overflow: visible;
+		border-top-style: none;
+		max-height: 500px;
+		@include border-radius(0px, 0px, 4px, 4px);
+		
+		td {
+			a.resultIndicator {
+				display: block;
+				width: 100%;
+				background-color: $shade1;
+				text-align: center;
+				border-bottom: $borderThicknessResult $primary solid;
+				
+				@include transition(all 200ms ease);
+				
+				&:hover { 
+					background-color: $primary;
+					color: $white;
+				}
+			}
+						
+		}
+		
+	}
+	
+}

@@ -1,0 +1,320 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="gwt:property" content="locale=nl" >
+	
+	<meta name="viewport" content="width=1342">
+	
+    <title>Library</title>	
+   	
+	<link href="https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700" rel="stylesheet">
+	<link rel="stylesheet" href="css/styles.css" type="text/css" media="screen">	
+	<script src="js/jquery-3.2.1.min.js" type="text/javascript" language="javascript"></script>
+	
+	<!-- Helpers for interface stuff -->
+	<script src="js/helpers.js" type="text/javascript" charset="utf-8"></script>
+	
+  </head>
+
+  <body>
+	
+	<main id="mainPanel" class="panel">
+		<header>
+			<a href="#" id="logo"><img src="images/header-logoNumworxDocent.png"></a>
+			<div id="accountBox">
+				<span id="presentationName">Voorbeeld van Naam</span>
+				<span id="schoolName">Voorbeeldschool</span>
+			</div>
+		</header>
+		
+		<nav>
+			<ul>
+				<li><a href="#"><span class="icon"></span><span class="name">Resultaten</span></a></li>
+				<li><a href="#"><span class="icon"></span><span class="name">Personen</span></a></li>
+				<li><a href="#"><span class="icon"></span><span class="name">Klassen</span></a></li>
+				<li><a href="#"><span class="icon"></span><span class="name">Modules</span></a></li>
+				<li><a href="#"><span class="icon"></span><span class="name">Organisatie</span></a></li>
+			</ul>
+		</nav>
+		
+		<section id="welcomeDisplayPanel" class="subpanel">
+			<header>
+				<div class="container">
+					<div class="content">
+					<!-- <span class="icon resultaten"></span> -->
+						<h1>Personen bewerken en toevoegen</h1>
+						<h2 class="sectionhead"><span>Zoek een persoon om te bewerken</span></h2>					
+						
+						<section id="help">
+							<h2 class="helpheader">Numworx Help</h2>
+							<div class="content">
+								<h2>Help kop</h2>
+								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium gravida dignissim. Aliquam id metus quam. Aenean consequat arcu sit amet commodo porttitor.</p><p>Proin viverra, enim non feugiat ornare, purus urna dignissim ante, consectetur faucibus libero diam id ligula.</p>
+							</div>
+						</section>
+					</div>
+				</div>
+			</header>
+
+			<section>
+				
+				<div class="row">
+					<form>
+						<fieldset>
+							<label for="field_1" class="col-2 input">
+								Gebruikersnaam
+								<input id="field_1" type="text" value="" />
+							</label>
+							<label for="field_1" class="col-2 input">
+								Voornaam
+								<input id="field_1" type="text" value="" />
+							</label>
+							<label for="field_1" class="col-2 input">
+								Tussenvoegsel
+								<input id="field_1" type="text" value="" />
+							</label>
+							<label for="field_1" class="col-2 input">
+								Achternaam
+								<input id="field_1" type="text" value="" />
+							</label>
+							<label for="field_1" class="col-2 input">
+								E-mailadres
+								<input id="field_1" type="text" value="" />
+							</label>
+							<div class="col-2 options">
+								<label>Leerling / docent?</label>
+								<div class="option">
+							    	<input type="radio" name="option" id="option_1" value="1">
+									<label for="option_1">L</label>
+								</div>
+								<div class="option">
+									<input type="radio" name="option" id="option_2" value="2" checked="checked">
+									<label for="option_2">D</label>
+								</div> 
+							</div>
+						</fieldset>
+						<input type="submit" class="primary right" value="Zoek" />
+					</form>
+					
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-12">
+						<h3>Gevonden personen</h2>
+						<form>
+							
+						<table class="hoverable selectable">
+							<thead>
+								<tr>
+									<th>Gebruikersnaam</th>
+									<th>Voornaam</th>
+									<th>Tussenvoegsel</th>
+									<th>Achternaam</th>
+									<th>Emailadres</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<input type="checkbox" class="hidden" value="bakker34">
+										Bakker34
+									</td>
+									<td>Michel</td>
+									<td></td>
+									<td>Bakker</td>
+									<td>michel@hotmail.com</td>
+								</tr>
+								
+								<tr>
+									<td>
+										<input type="checkbox" class="hidden" value="bakker34">
+										Bakker34
+									</td>
+									<td>Michel</td>
+									<td></td>
+									<td>Bakker</td>
+									<td>michel@hotmail.com</td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox" class="hidden" value="bakker34">
+										Bakker34
+									</td>
+									<td>Michel</td>
+									<td></td>
+									<td>Bakker</td>
+									<td>michel@hotmail.com</td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox" class="hidden" value="bakker34">
+										Bakker34
+									</td>
+									<td>Michel</td>
+									<td></td>
+									<td>Bakker</td>
+									<td>michel@hotmail.com</td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox" class="hidden" value="bakker34">
+										Bakker34
+									</td>
+									<td>Michel</td>
+									<td></td>
+									<td>Bakker</td>
+									<td>michel@hotmail.com</td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox" class="hidden" value="bakker34">
+										Bakker34
+									</td>
+									<td>Michel</td>
+									<td></td>
+									<td>Bakker</td>
+									<td>michel@hotmail.com</td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox" class="hidden" value="bakker34">
+										Bakker34
+									</td>
+									<td>Michel</td>
+									<td></td>
+									<td>Bakker</td>
+									<td>michel@hotmail.com</td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox" class="hidden" value="bakker34">
+										Bakker34
+									</td>
+									<td>Michel</td>
+									<td></td>
+									<td>Bakker</td>
+									<td>michel@hotmail.com</td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox" class="hidden" value="bakker34">
+										Bakker34
+									</td>
+									<td>Michel</td>
+									<td></td>
+									<td>Bakker</td>
+									<td>michel@hotmail.com</td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox" class="hidden" value="bakker34">
+										Bakker34
+									</td>
+									<td>Michel</td>
+									<td></td>
+									<td>Bakker</td>
+									<td>michel@hotmail.com</td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox" class="hidden" value="bakker34">
+										Bakker34
+									</td>
+									<td>Michel</td>
+									<td></td>
+									<td>Bakker</td>
+									<td>michel@hotmail.com</td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox" class="hidden" value="bakker34">
+										Bakker34
+									</td>
+									<td>Michel</td>
+									<td></td>
+									<td>Bakker</td>
+									<td>michel@hotmail.com</td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox" class="hidden" value="bakker34">
+										Bakker34
+									</td>
+									<td>Michel</td>
+									<td></td>
+									<td>Bakker</td>
+									<td>michel@hotmail.com</td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox" class="hidden" value="bakker34">
+										Bakker34
+									</td>
+									<td>Michel</td>
+									<td></td>
+									<td>Bakker</td>
+									<td>michel@hotmail.com</td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox" class="hidden" value="bakker34">
+										Bakker34
+									</td>
+									<td>Michel</td>
+									<td></td>
+									<td>Bakker</td>
+									<td>michel@hotmail.com</td>
+								</tr>
+								
+							</tbody>
+						</table>
+						
+						
+							<input type="submit" class="primary right" value="Bewerk persoon" />
+						</form>
+					</div>
+				</div>
+				
+				<div class="row">					
+					<div class="col-6">
+						<h2 class="sectionhead"><span>Voeg een nieuwe persoon toe</span></h2>
+						<form>
+							<fieldset>
+								<label for="button_1">
+									Een enkele nieuwe leerling of docent opvoeren
+									<input type="submit" id="button_1" class="secondary right" value="Toevoegen" />
+								</label>
+							</fieldset>
+						</form>
+					</div>
+					<div class="col-6">
+						<h2 class="sectionhead"><span>Meerdere personen tegelijk toevoegen</span></h2>
+						<form>
+							<fieldset>
+								<label for="button_2">
+									Importeer leerlingen of docenten vanuit een csv bestand
+									<input type="submit" id="button_2" class="secondary right" value="Zoek bestand" />
+								</label>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+				
+			</section>
+				
+				
+		</section>
+		
+	</main>
+
+<script>
+	$(document).ready(function(){ 
+		$(".panel").show();
+	});
+</script>
+
+  </body>
+</html>
+

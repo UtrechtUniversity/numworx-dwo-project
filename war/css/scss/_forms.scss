@@ -1,0 +1,274 @@
+input[type="submit"], button {
+	background-color: $primary;
+	&.danger {
+		background-color: $danger;
+	}
+	padding: 10px 0px;
+	border-width: 0px;
+	text-align: center;
+	
+	cursor: pointer;
+	
+	//width: ((2 / 12 * $sitewidth) - $gutter) / $sitewidth * 100%;
+	max-width: ((2 / 12 * $sitewidth) - $gutter) / $sitewidth * 100%;
+	
+	width: 100%;
+    
+	.col-2 & { max-width: ((2/2 * $sitewidth) - ($gutter)) / $sitewidth * 100%; }
+	.col-3 & { max-width: ((2/3 * $sitewidth) - ($gutter/2)) / $sitewidth * 100%; }
+	.col-4 & { max-width: ((2/4 * $sitewidth) - ($gutter)) / $sitewidth * 100%; }
+	.col-5 & { max-width: ((2/5 * $sitewidth) - ($gutter/2)) / $sitewidth * 100%; }
+	.col-6 & { max-width: ((2/6 * $sitewidth) - ($gutter/2)) / $sitewidth * 100%; }
+	.col-7 & { max-width: ((2/7 * $sitewidth) - ($gutter/2)) / $sitewidth * 100%; }
+	.col-8 & { max-width: ((2/8 * $sitewidth) - ($gutter/2)) / $sitewidth * 100%; }
+	.col-9 & { max-width: ((2/9 * $sitewidth) - ($gutter/2)) / $sitewidth * 100%; }
+	.col-10 & { max-width: ((2/10 * $sitewidth) - ($gutter/2)) / $sitewidth * 100%; }
+	.col-11 & { max-width: ((2/11* $sitewidth) - ($gutter/2)) / $sitewidth * 100%; }
+	.col-12 & { max-width: ((2/12 * $sitewidth) - ($gutter/2)) / $sitewidth * 100%; }
+	
+	@include border-radius($defaultRadius);
+	
+	&.right {
+		float: right;
+		clear: right;
+		margin-right: ($gutter / 2) / ($sitewidth) * 100%;
+		margin-bottom: $elementMarginBottom;
+		.col-4 & { margin-right: 0; }//($gutter / 2) / ($sitewidth * 4) * 100%; }
+		.col-6 & { margin-right: ($gutter / 2) / ($sitewidth * 6) * 100%; }
+		.col-12 & { margin-right: ($gutter / 2) / ($sitewidth * 12) * 100%; }
+	}
+	&.single { margin-left: 100%; }
+	&.down { margin-top: 1em;}
+	&.bottom.right {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		float: none;
+		margin-right: ($gutter / 2) / ($sitewidth) * 100%;
+		max-width: ((2/12 * $sitewidth) - ($gutter)) / $sitewidth * 100%;
+	}
+	
+}
+
+input[type="text"] {
+	border: $borderThickness $primary solid;
+	@include border-box;
+	
+	width: 100%;
+	padding: 0px 2%;
+	
+	font-size: 1em;
+	line-height: 2em;
+	
+	@include border-radius($defaultRadius);
+}
+
+label {
+	color: $primaryLight;
+	font-weight: bold;
+	margin-bottom: $elementMarginBottom;
+	
+	&.option {
+		
+	}
+	&.input {
+		text-transform: uppercase;
+		font-weight: normal;
+	}
+	input[type="text"] { 
+		width: 100%; 
+		margin-top: $elementMarginBottom; // in fact, this is the labels bottom margin
+	}
+	input[type="submit"] {
+		display: block;
+		margin-top: $elementMarginBottom; // in fact, this is the labels bottom margin		
+	}
+}
+form {
+	fieldset {
+		@include clearfix;
+	}
+}
+
+.options {
+	float: left;
+	
+	label {
+		float: left;
+		width: 100%;
+	}
+	
+	.option {
+		float: left;
+		display: block;
+		position: relative;
+		//padding-left: 60px;
+		width: 60px;
+		margin-bottom: 12px;
+		cursor: pointer;
+	
+		@include user-select(none);
+	  
+		input { 
+			position: absolute;
+			opacity: 0;
+			cursor: pointer;
+			
+			top: 0; left: 0; right: 0; bottom: 0;
+		}
+		
+		label {
+			position: absolute;
+			top: 0;
+			left: 0;
+			//height: 25px;
+			//width: 25px;
+			background-color: $primaryLight;
+			color: $white;
+			
+			text-transform: uppercase;
+			
+			width: 60px;
+			padding: 10px 0px;
+			text-align: center;
+			
+			cursor: pointer;
+			
+			border: $borderThickness $primary solid;
+			@include border-radius($defaultRadius);
+			@include border-box;
+			@include transition(all 300ms ease);
+		
+			//&:after {
+//				content: "";
+//				position: absolute;
+//				display: none;
+//
+//				left: 9px;
+//				top: 5px;
+//				width: 5px;
+//				height: 10px;
+//				border: solid white;
+//				border-width: 0 3px 3px 0;
+//				-webkit-transform: rotate(45deg);
+//				-ms-transform: rotate(45deg);
+//				transform: rotate(45deg);
+//			}
+		}
+		input:checked ~ label {
+			background-color: $primary;
+			//&:after {
+//				display: block;
+//			}
+		}
+		
+	}
+		
+}
+
+	
+.checkbox {
+	float: left;
+	display: block;
+	position: relative;
+	width: 25px;
+	height: 25px;
+	cursor: pointer;
+
+	@include user-select(none);
+  
+	input { 
+		position: absolute;
+		//opacity: 0;
+		cursor: pointer;
+		
+		top: 0; left: 0; right: 0; bottom: 0;
+	}
+	
+	label.icon {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 25px;
+		width: 25px;
+		
+		margin-bottom: 0;
+		background-color: $white;
+		
+		text-align: center;
+		
+		cursor: pointer;
+		
+		border: $borderThickness $line1 solid;
+		@include border-radius(100%);
+		@include border-box;
+		@include transition(all 200ms ease);
+	
+		&:after {
+				content: "";
+				position: absolute;
+				display: none;
+
+				left: 6px;
+				top: 2px;
+				width: 5px;
+				height: 10px;
+				border: solid white;
+				border-width: 0 3px 3px 0;
+				-webkit-transform: rotate(45deg);
+				-ms-transform: rotate(45deg);
+				transform: rotate(45deg);
+			}
+	}
+	input:checked ~ label.icon {
+		background-color: $primary;
+		
+		border: $borderThickness $primary solid;
+		&:after {
+			display: block;
+		}
+		&:before {
+			display: block;
+		}
+	}
+	
+	
+	&.danger {
+		input:checked ~ label.icon {
+			background-color: $danger;
+			border: $borderThickness $danger solid;
+		}
+		label.icon:after {
+			content: "";
+			position: absolute;
+			display: none;
+
+			left: 5px;
+			top: 0px;
+			width: 7px;
+			height: 8px;
+			border: solid white;
+			border-width: 0 3px 3px 0;
+			-webkit-transform: rotate(45deg);
+			-ms-transform: rotate(45deg);
+			transform: rotate(45deg);
+		}
+		label.icon:before {
+			content: "";
+			position: absolute;
+			display: none;
+
+			left: 5px;
+			top: 11px;
+			width: 7px;
+			height: 7px;
+			border: solid white;
+			border-width: 0 3px 3px 0;
+			-webkit-transform: rotate(225deg);
+			-ms-transform: rotate(225deg);
+			transform: rotate(225deg);
+		}
+	}
+	
+}
+	

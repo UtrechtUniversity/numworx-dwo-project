@@ -1,0 +1,104 @@
+html {
+	font-family: 'Ubuntu', sans-serif;
+	font-size: 16px;
+}
+
+input[type="submit"], button {
+	font-family: 'Ubuntu', sans-serif;
+	text-transform: uppercase;
+	color: $buttonTextColor;
+	font-weight: bold;
+	letter-spacing: .3px;
+	font-size: 12px;
+}
+input[type="text"] {
+	font-family: 'Ubuntu', sans-serif;
+}
+.options .option label {
+	font-size: 12px;
+}
+
+
+h1 {
+	font-size: 18 / 16 * 1em;
+	color: $primary;	
+	font-weight: bold;
+	margin-bottom: 2 * $elementMarginBottom; //TODO
+	padding-top: $elementMarginBottom; //TODO
+}
+h2 {
+	margin-bottom: $elementMarginBottom;
+	header & { margin-bottom: 0; }
+	
+	&.sectionhead {
+		width: 100%;
+		border-bottom: 1px $primary solid;
+
+	
+		header & { border-bottom-style: none; }
+		
+		span {
+			display: block;
+			width: 100%;
+			
+			background-color: $primary;
+			color: $textOnPrimary;
+			
+			padding: 2px 0;
+			text-indent: 10px;
+			
+			.col-1 &, .col-2 &, .col-3 &, .col-4 &, .col-5 &, .col-6 & { max-width: 100%; }
+			.col-7 & { max-width: ((6/7 * $sitewidth) - ($gutter/2)) / $sitewidth * 100%; }
+			.col-8 & { max-width: ((6/8 * $sitewidth) - ($gutter/2)) / $sitewidth * 100%; }
+			.col-9 & { max-width: ((6/9 * $sitewidth) - ($gutter/2)) / $sitewidth * 100%; }
+			.col-10 & { max-width: ((6/10 * $sitewidth) - ($gutter/2)) / $sitewidth * 100%; }
+			.col-11 & { max-width: ((6/11 * $sitewidth) - ($gutter/2)) / $sitewidth * 100%; }
+			.col-12 & { max-width: ((6/12 * $sitewidth) - ($gutter/2)) / $sitewidth * 100%; }
+			
+			header & { max-width: ((6/12 * $sitewidth) - ($gutter/2)) / $sitewidth * 100%; }
+		}
+	}
+	
+	&.helpheader {
+		background-color: $shade3;
+		color: $textOnPrimary;
+		
+		padding: 2px 0;
+		text-indent: 10px;
+	}
+}
+
+h3 {
+	color: $primary;
+	margin-bottom: $elementMarginBottom;
+	font-weight: bold;
+}
+h4 {
+	color: $primaryLight;
+	text-transform: uppercase;
+	border-bottom: 1px $primary solid;
+	margin-bottom: $elementMarginBottom;
+}
+
+#help .content {
+	h1, h2, h3, h4 {
+		font-size: 24 / 16 * 1em;
+		font-weight: bold;
+		margin-bottom: 1em;
+	}
+}
+
+p {
+	color: $primary;
+	margin-bottom: $elementMarginBottom;
+}
+
+label {
+	color: $primary;
+	font-weight: bold;
+}
+
+a.resultIndicator {
+	color: $black;
+	text-decoration: none;
+}

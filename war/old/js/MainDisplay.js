@@ -11,9 +11,9 @@ function MainDisplay() {
 	window.jsLoginDisplay = this.loginDisplay;		
 	this.welcomeDisplay = new WelcomeDisplay();
 	window.jsWelcomeDisplay = this.welcomeDisplay;
-		
+	
 	// Init
-	this.showLoginView(); // Gert moet de login view aanroepen nadat alles geinitialiseerd is.
+	this.showLoginView();
 }
 
 MainDisplay.prototype.showLoginView = function() {

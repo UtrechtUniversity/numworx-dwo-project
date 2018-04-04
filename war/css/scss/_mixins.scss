@@ -18,6 +18,53 @@
 	-moz-box-shadow: $hor $ver $blur $spread $color;
 	box-shadow: $hor $ver $blur $spread $color;
 }
+@mixin border-radius($tl, $tr:null, $br:null, $bl:null) {
+	@if $tr == null {
+	 $tr : $tl; $br : $tl; $bl : $tl;	
+	} 
+	
+	-webkit-border-top-left-radius: $tl;
+	-webkit-border-top-right-radius: $tr;
+	-webkit-border-bottom-right-radius: $br;
+	-webkit-border-bottom-left-radius: $bl;
+	-moz-border-radius-topleft: $tl;
+	-moz-border-radius-topright: $tr;
+	-moz-border-radius-bottomright: $br;
+	-moz-border-radius-bottomleft: $bl;
+	border-top-left-radius: $tl;
+	border-top-right-radius: $tr;
+	border-bottom-right-radius: $br;
+	border-bottom-left-radius: $bl;
+}
+
+@mixin border-box {
+    box-sizing: border-box;
+       -moz-box-sizing: border-box;
+       -webkit-box-sizing: border-box;
+}
+
+@mixin clearfix {
+	&::after {
+	    content: "";
+	    clear: both;
+	    display: table;
+	}
+}
+
+@mixin user-select($value) {
+	-webkit-user-select: $value;
+	-moz-user-select: $value;
+	-ms-user-select: $value;
+	user-select: $value;
+}
+
+@mixin transition($value) {
+	-webkit-transition: $value;
+	-moz-transition: $value;
+	-ms-transition: $value;
+	-o-transition: $value;
+	transition: $value;
+}
 
 
 @mixin placeholder {
