@@ -139,14 +139,14 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 //        return getDelegate().reassignClass(classID, newTeacher);
 //    }
 
-    @Override
-    public boolean register(String username, String password, String firstname,
-            String middlename, String lastname, String email)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        return getDelegate().register(username, password, firstname, middlename,
-                lastname, email);
-    }
+//    @Override
+//    public boolean register(String username, String password, String firstname,
+//            String middlename, String lastname, String email)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        return getDelegate().register(username, password, firstname, middlename,
+//                lastname, email);
+//    }
 
     @Override
     public String LMSGetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement)
@@ -234,51 +234,11 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
                 middlename, lastname, email);
     }
 
-    @Override
-    public Hashtable addClass(int teacher, String className)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        return getDelegate().addClass(teacher, className);
-    }
 
-    @Override
-    public Hashtable addSchool(String schoolName, String schoolLogin,
-            String studentPassw, String teacherPassw)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        return getDelegate().addSchool(schoolName, schoolLogin, studentPassw,
-                teacherPassw);
-    }
 
-    @Override
-    public Hashtable addSchool(int schoolId, String schoolName,
-            String schoolLogin, String studentPassw, String teacherPassw)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        return getDelegate().addSchool(schoolId, schoolName, schoolLogin,
-                studentPassw, teacherPassw);
-    }
+ 
 
-    @Override
-    public Hashtable editSchool(int schoolID, String schoolName,
-            String schoolLogin, String studentPassw, String teacherPassw)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        return getDelegate().editSchool(schoolID, schoolName, schoolLogin,
-                studentPassw, teacherPassw);
-    }
-
-    @Override
-    public boolean deleteUser(int userID) throws IOException, XmlRpcException,
-            SQLException {
-        return getDelegate().deleteUser(userID);
-    }
-
-    @Override
-    public boolean deleteClass(int classID, boolean mustEmpty)
-            throws IOException, XmlRpcException, SQLException {
-        return getDelegate().deleteClass(classID, mustEmpty);
-    }
+ 
 
     @Override
     public Vector getResults(Vector courses, int userID) throws IOException,
@@ -320,10 +280,10 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
         return getDelegate().log(s);
     }
 
-    @Override
-    public boolean log(Level level, String s) throws IOException, XmlRpcException {
-        return getDelegate().log(level, s);
-    }
+//    @Override
+//    public boolean log(Level level, String s) throws IOException, XmlRpcException {
+//        return getDelegate().log(level, s);
+//    }
 
     @Override
     public int addCourse(int schoolID, String name, String description,
@@ -435,12 +395,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
         return getDelegate().deleteSchool(schoolID);
     }
 
-    @Override
-    public Hashtable getFidentitySchools() throws IOException, XmlRpcException,
-            SQLException, DwoXmlRpcException {
-        return getDelegate().getFidentitySchools();
-    }
-
+ 
     @Override
     public Vector getUserResults(int courseID, int userID, int schoolGroupID) throws IOException,
             XmlRpcException, SQLException {
@@ -608,65 +563,65 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
         return getDelegate().getToSchoolsFrom(schoolID);
     }
 
-    @Override
-    public boolean isInTeacherRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        return getDelegate().isInTeacherRole(userID, schoolID);
-    }
+//    @Override
+//    public boolean isInTeacherRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        return getDelegate().isInTeacherRole(userID, schoolID);
+//    }
 
     @Override
     public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
         return getDelegate().getStudentsOfClass(schoolClassID);
     }
 
-    @Override
-    public Vector<Object> getTeachersOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
-        return getDelegate().getTeachersOfClass(schoolClassID);
-    }
+//    @Override
+//    public Vector<Object> getTeachersOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
+//        return getDelegate().getTeachersOfClass(schoolClassID);
+//    }
 
 //    @Override
 //    public boolean renameClass(int classID, String newName, String newRegistrationKey, boolean iconizer) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
 //        return getDelegate().renameClass(classID, newName, newRegistrationKey, iconizer);
 //    }
 
-    @Override
-    public boolean disconnectFromClass(int userID, int classID) throws IOException, XmlRpcException, SQLException {
-        return getDelegate().disconnectFromClass(userID, classID);
-    }
+//    @Override
+//    public boolean disconnectFromClass(int userID, int classID) throws IOException, XmlRpcException, SQLException {
+//        return getDelegate().disconnectFromClass(userID, classID);
+//    }
 
     @Override
     public Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
         return getDelegate().getClassesOfTeacher(userID, schoolID);
     }
 
-    @Override
-    public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        return getDelegate().isInStudentRole(userID, schoolID);
-    }
+//    @Override
+//    public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        return getDelegate().isInStudentRole(userID, schoolID);
+//    }
 
-    @Override
-    public Vector<Object> getClassesOfStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        return getDelegate().getClassesOfStudent(userID, schoolID);
-    }
+//    @Override
+//    public Vector<Object> getClassesOfStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        return getDelegate().getClassesOfStudent(userID, schoolID);
+//    }
 
-    @Override
-    public boolean removeStudentFromClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        return getDelegate().removeStudentFromClass(classID, studentID);
-    }
+//    @Override
+//    public boolean removeStudentFromClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        return getDelegate().removeStudentFromClass(classID, studentID);
+//    }
 
-    @Override
-    public boolean addStudentToClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        return getDelegate().removeStudentFromClass(classID, studentID);
-    }
+//    @Override
+//    public boolean addStudentToClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        return getDelegate().removeStudentFromClass(classID, studentID);
+//    }
+//
+//    @Override
+//    public boolean removeTeacherFromClass(int classID, int teacherID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        return getDelegate().removeTeacherFromClass(classID, teacherID);
+//    }
 
-    @Override
-    public boolean removeTeacherFromClass(int classID, int teacherID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        return getDelegate().removeTeacherFromClass(classID, teacherID);
-    }
-
-    @Override
-    public boolean addTeacherToClass(int classID, int teacherID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        return getDelegate().addTeacherToClass(classID, teacherID);
-    }
+//    @Override
+//    public boolean addTeacherToClass(int classID, int teacherID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        return getDelegate().addTeacherToClass(classID, teacherID);
+//    }
 
     @Override
     public Vector<Object> getHasRoleUser(int uid, int sgid) throws IOException, XmlRpcException, SQLException {

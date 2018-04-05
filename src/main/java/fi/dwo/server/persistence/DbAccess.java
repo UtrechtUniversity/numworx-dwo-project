@@ -183,10 +183,10 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * Select all top level course entities an anonymous user may access in
      * alphabetical order of the course name.
      */
-    private final static String QRY_SELECT_COURSES_GUEST = "SELECT tblCourse.* "
-            + "FROM tblCourse "
-            + "WHERE (isnull(tblCourse.schoolID)) and parentID = 0 "
-            + "ORDER BY name ";
+//    private final static String QRY_SELECT_COURSES_GUEST = "SELECT tblCourse.* "
+//            + "FROM tblCourse "
+//            + "WHERE (isnull(tblCourse.schoolID)) and parentID = 0 "
+//            + "ORDER BY name ";
 
     /**
      * Selects all top level course entities an anonymous user may access in
@@ -424,9 +424,9 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     private final static String QRY_ADD_SCHOOLID = "INSERT INTO tblSchool(schoolName, schoollogin, schoolID) "
             + "VALUES(?, ?, ?) ";
 
-    private final static String QRY_SELECT_SCHOOL_FROM_SCHOOLLOGIN = "SELECT schoolID "
-            + "FROM tblSchool "
-            + "WHERE schoollogin = ?";
+//    private final static String QRY_SELECT_SCHOOL_FROM_SCHOOLLOGIN = "SELECT schoolID "
+//            + "FROM tblSchool "
+//            + "WHERE schoollogin = ?";
 
     private final static String QRY_DELETE_DEFAULT = "DELETE FROM `{0}` "
             + "WHERE `{1}` = ?";
@@ -1048,27 +1048,27 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      * @throws java.sql.SQLException
      */
-    @Override
-    public boolean register(String username, String password, String firstname,
-            String middlename, String lastname, String email)
-            throws DwoXmlRpcException, SQLException {
-        if (usernameExists(username)) {
-            throw new DwoXmlRpcException(DwoXmlRpcException.EXC_USER_EXISTS);
-        } else {
-            // insert user data
-            PreparedStatement ps = getStatement(QRY_INSERT_USER);
-            ps.setString(1, firstname);
-            ps.setString(2, middlename);
-            ps.setString(3, lastname);
-            ps.setString(4, username);
-            ps.setString(5, password);
-            ps.setString(6, email);
-
-            ps.execute();
-            ps.close();
-        }
-        return true;
-    }
+    //@Override
+//    private boolean register(String username, String password, String firstname,
+//            String middlename, String lastname, String email)
+//            throws DwoXmlRpcException, SQLException {
+//        if (usernameExists(username)) {
+//            throw new DwoXmlRpcException(DwoXmlRpcException.EXC_USER_EXISTS);
+//        } else {
+//            // insert user data
+//            PreparedStatement ps = getStatement(QRY_INSERT_USER);
+//            ps.setString(1, firstname);
+//            ps.setString(2, middlename);
+//            ps.setString(3, lastname);
+//            ps.setString(4, username);
+//            ps.setString(5, password);
+//            ps.setString(6, email);
+//
+//            ps.execute();
+//            ps.close();
+//        }
+//        return true;
+//    }
 
     /**
      * Add a new user and the user into a school.
@@ -1418,56 +1418,56 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @@
      *
      */
-    @Override
-    public Hashtable addClass(int teacher, String className)
-            throws DwoXmlRpcException, SQLException {
-        /* Search the school from the teacher */
-        Hashtable result = null;
-        PreparedStatement ps = getStatement(QRY_SELECT_SCHOOL_FROM_USER);
-        ps.setInt(1, teacher);
-
-        ResultSet rs = ps.executeQuery();
-        if (!isEmpty(rs)) {
-            int schoolID = rs.getInt(1);
-            rs.close();
-
-            // Add class a class to the school
-            ps = getStatementWithGeneratedKeys(QRY_ADD_CLASS);
-            ps.setInt(1, schoolID);
-            ps.setString(2, className);
-
-            try {
-                ps.execute();
-                LOG.log(Level.FINE, "Added teacher {0} to class named {1} in school {2}.", new Object[]{teacher, className, schoolID});
-            } catch (SQLException e) {
-                if (e.getErrorCode() == 1062) {
-                    /* The class already exists */
-                    LOG.log(Level.FINE, "Class {0} already exists in school {1}.", new Object[]{className, schoolID});
-                    throw new DwoXmlRpcException(
-                            DwoXmlRpcException.EXC_CLASS_EXISTS);
-                } else {
-                    //LOG.log(Level.INFO, "Exception adding teacher {0} to class named {1} of school {2}: {3}", new Object[]{teacher, className, schoolID, e.getMessage()});
-                    throw e;
-                }
-            }
-
-            rs = ps.getGeneratedKeys();
-
-            if (!isEmpty(rs)) {
-                int classID = rs.getInt(1);
-                result = getRecord("tblClass", "classID", classID);
-                // By definition an empty class exists now, add the Teacher
-                ps = getStatement(QRY_ADD_TEACHER);
-                ps.setInt(1, classID);
-                ps.setInt(2, teacher);
-                ps.execute();
-                LOG.log(Level.FINE, "Added teacher {0} to class {1} of school {2}.", new Object[]{teacher, className, schoolID});
-            }
-            rs.close();
-        }
-
-        return result;
-    }
+    //@Override
+//    private Hashtable addClass(int teacher, String className)
+//            throws DwoXmlRpcException, SQLException {
+//        /* Search the school from the teacher */
+//        Hashtable result = null;
+//        PreparedStatement ps = getStatement(QRY_SELECT_SCHOOL_FROM_USER);
+//        ps.setInt(1, teacher);
+//
+//        ResultSet rs = ps.executeQuery();
+//        if (!isEmpty(rs)) {
+//            int schoolID = rs.getInt(1);
+//            rs.close();
+//
+//            // Add class a class to the school
+//            ps = getStatementWithGeneratedKeys(QRY_ADD_CLASS);
+//            ps.setInt(1, schoolID);
+//            ps.setString(2, className);
+//
+//            try {
+//                ps.execute();
+//                LOG.log(Level.FINE, "Added teacher {0} to class named {1} in school {2}.", new Object[]{teacher, className, schoolID});
+//            } catch (SQLException e) {
+//                if (e.getErrorCode() == 1062) {
+//                    /* The class already exists */
+//                    LOG.log(Level.FINE, "Class {0} already exists in school {1}.", new Object[]{className, schoolID});
+//                    throw new DwoXmlRpcException(
+//                            DwoXmlRpcException.EXC_CLASS_EXISTS);
+//                } else {
+//                    //LOG.log(Level.INFO, "Exception adding teacher {0} to class named {1} of school {2}: {3}", new Object[]{teacher, className, schoolID, e.getMessage()});
+//                    throw e;
+//                }
+//            }
+//
+//            rs = ps.getGeneratedKeys();
+//
+//            if (!isEmpty(rs)) {
+//                int classID = rs.getInt(1);
+//                result = getRecord("tblClass", "classID", classID);
+//                // By definition an empty class exists now, add the Teacher
+//                ps = getStatement(QRY_ADD_TEACHER);
+//                ps.setInt(1, classID);
+//                ps.setInt(2, teacher);
+//                ps.execute();
+//                LOG.log(Level.FINE, "Added teacher {0} to class {1} of school {2}.", new Object[]{teacher, className, schoolID});
+//            }
+//            rs.close();
+//        }
+//
+//        return result;
+//    }
 
     @Override
     public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
@@ -1478,14 +1478,14 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return v;
     }
 
-    @Override
-    public Vector<Object> getTeachersOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
-        PreparedStatement ps = getStatement(QRY_SELECT_TEACHERS_OF_CLASS);
-        ps.setInt(1, schoolClassID);
-        Vector v = executeQueryWithResult(ps);
-        LOG.log(Level.FINE, "Retrieved Teacher's of SchoolClass {0}.", new Object[]{schoolClassID});
-        return v;
-    }
+    //@Override
+//    private Vector<Object> getTeachersOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
+//        PreparedStatement ps = getStatement(QRY_SELECT_TEACHERS_OF_CLASS);
+//        ps.setInt(1, schoolClassID);
+//        Vector v = executeQueryWithResult(ps);
+//        LOG.log(Level.FINE, "Retrieved Teacher's of SchoolClass {0}.", new Object[]{schoolClassID});
+//        return v;
+//    }
 
     /**
      * @param schoolName
@@ -1497,11 +1497,11 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws java.sql.SQLException
      * @deprecated Gebruik expliciet nummer.
      */
-    @Override
-    public Hashtable addSchool(String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
-            throws DwoXmlRpcException, SQLException {
-        return addSchool(0, schoolName, schoolLogin, studentPassw, teacherPassw);
-    }
+    //@Override
+//    private Hashtable addSchool(String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
+//            throws DwoXmlRpcException, SQLException {
+//        return addSchool(0, schoolName, schoolLogin, studentPassw, teacherPassw);
+//    }
 
     /**
      * Add an existing user to a school.
@@ -1516,48 +1516,48 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws java.sql.SQLException
      *
      */
-    @Override
-    public Hashtable addSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
-            throws DwoXmlRpcException, SQLException {
-        Hashtable result = null;
-        if (schoolLoginExists(schoolLogin)) {
-            throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCHOOL_EXISTS);
-        } else {
-            PreparedStatement ps = getStatementWithGeneratedKeys(QRY_ADD_SCHOOLID);
-            ps.setString(1, schoolName);
-            ps.setString(2, schoolLogin);
-            ps.setInt(3, schoolID);
-            ps.execute();
-            if (schoolID == 0) {
-                ResultSet rs = ps.getGeneratedKeys();
-                rs.first();
-                schoolID = rs.getInt(1);
-                rs.close();
-            }
-            if (studentPassw != null && !studentPassw.trim().equals("")) {
-                ps = getStatement(QRY_INSERT_SCHOOLGROUP);
-                ps.setInt(1, 1);
-                ps.setInt(2, schoolID);
-                ps.setString(3, studentPassw);
-
-                ps.execute();
-                ps.close();
-            }
-            if (teacherPassw != null && !teacherPassw.trim().equals("")) {
-                ps = getStatement(QRY_INSERT_SCHOOLGROUP);
-                ps.setInt(1, 2);
-                ps.setInt(2, schoolID);
-                ps.setString(3, teacherPassw);
-
-                ps.execute();
-                ps.close();
-            }/**/
-
-            result = getRecord("tblSchool", "schoolID", schoolID);
-
-        }
-        return result;
-    }
+    //@Override
+//    private Hashtable addSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
+//            throws DwoXmlRpcException, SQLException {
+//        Hashtable result = null;
+//        if (schoolLoginExists(schoolLogin)) {
+//            throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCHOOL_EXISTS);
+//        } else {
+//            PreparedStatement ps = getStatementWithGeneratedKeys(QRY_ADD_SCHOOLID);
+//            ps.setString(1, schoolName);
+//            ps.setString(2, schoolLogin);
+//            ps.setInt(3, schoolID);
+//            ps.execute();
+//            if (schoolID == 0) {
+//                ResultSet rs = ps.getGeneratedKeys();
+//                rs.first();
+//                schoolID = rs.getInt(1);
+//                rs.close();
+//            }
+//            if (studentPassw != null && !studentPassw.trim().equals("")) {
+//                ps = getStatement(QRY_INSERT_SCHOOLGROUP);
+//                ps.setInt(1, 1);
+//                ps.setInt(2, schoolID);
+//                ps.setString(3, studentPassw);
+//
+//                ps.execute();
+//                ps.close();
+//            }
+//            if (teacherPassw != null && !teacherPassw.trim().equals("")) {
+//                ps = getStatement(QRY_INSERT_SCHOOLGROUP);
+//                ps.setInt(1, 2);
+//                ps.setInt(2, schoolID);
+//                ps.setString(3, teacherPassw);
+//
+//                ps.execute();
+//                ps.close();
+//            }/**/
+//
+//            result = getRecord("tblSchool", "schoolID", schoolID);
+//
+//        }
+//        return result;
+//    }
 
     /**
      * Add an existing user to a school.
@@ -1604,16 +1604,16 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws java.sql.SQLException
      *
      */
-    @Override
-    public Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
-            throws DwoXmlRpcException, SQLException {
-        Hashtable result = getRecord("tblSchool", "schoolID", schoolID);
-        updateSchoolNameLogin(schoolID, schoolName, schoolLogin, result);
-        updateSchoolGroupPasswd(schoolID, SchoolGroupIndices.STUDENT, studentPassw);
-        updateSchoolGroupPasswd(schoolID, SchoolGroupIndices.TEACHER, teacherPassw);
-        result = getRecord("tblSchool", "schoolID", schoolID);
-        return result;
-    }
+   // @Override
+//    private Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
+//            throws DwoXmlRpcException, SQLException {
+//        Hashtable result = getRecord("tblSchool", "schoolID", schoolID);
+//        updateSchoolNameLogin(schoolID, schoolName, schoolLogin, result);
+//        updateSchoolGroupPasswd(schoolID, SchoolGroupIndices.STUDENT, studentPassw);
+//        updateSchoolGroupPasswd(schoolID, SchoolGroupIndices.TEACHER, teacherPassw);
+//        result = getRecord("tblSchool", "schoolID", schoolID);
+//        return result;
+//    }
 
     private void updateSchoolGroupPasswd(int schoolID, int groupID, String passwd)
             throws SQLException {
@@ -1729,59 +1729,59 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws java.sql.SQLException
      *
      */
-    @Override
-    public boolean deleteUser(int userID) throws SQLException {
-// Student suspend_data
-        PreparedStatement ps = getStatement(QRY_DELETE_STUDENTSCO_BY_STUDENT);
-        ps.setInt(1, userID);
-        ps.execute();
-        ps.close();
-        LOG.log(Level.INFO, "deleteUser(" + userID + ")");
-//        String[] arguments = {"tblStudentSco", "userID"};
-//        String query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
-//        PreparedStatement ps = getStatement(query);
+    //@Override
+//    private boolean deleteUser(int userID) throws SQLException {
+//// Student suspend_data
+//        PreparedStatement ps = getStatement(QRY_DELETE_STUDENTSCO_BY_STUDENT);
 //        ps.setInt(1, userID);
 //        ps.execute();
 //        ps.close();
-
-// Link aan SAML
-        String[] arguments = {"tblSamlUser", "userID"};
-        String query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
-        ps = getStatement(query);
-        ps.setInt(1, userID);
-        ps.execute();
-        ps.close();
-// Link aan tblStudentOfClass
-        arguments[0] = "tblStudentOf";
-        query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
-        ps = getStatement(query);
-        ps.setInt(1, userID);
-        ps.execute();
-        ps.close();
-        // Link aan tblTeacherOfClass
-        arguments[0] = "tblTeacherOf";
-        query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
-        ps = getStatement(query);
-        ps.setInt(1, userID);
-        ps.execute();
-        ps.close();
-        // Link aan tblHasRole
-        arguments[0] = "tblHasRole";
-        query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
-        ps = getStatement(query);
-        ps.setInt(1, userID);
-        ps.execute();
-        ps.close();
-// user zelf        
-        arguments[0] = "tblUser";
-        query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
-        ps = getStatement(query);
-        ps.setInt(1, userID);
-        ps.execute();
-        ps.close();
-
-        return true;
-    }
+//        LOG.log(Level.INFO, "deleteUser(" + userID + ")");
+////        String[] arguments = {"tblStudentSco", "userID"};
+////        String query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
+////        PreparedStatement ps = getStatement(query);
+////        ps.setInt(1, userID);
+////        ps.execute();
+////        ps.close();
+//
+//// Link aan SAML
+//        String[] arguments = {"tblSamlUser", "userID"};
+//        String query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
+//        ps = getStatement(query);
+//        ps.setInt(1, userID);
+//        ps.execute();
+//        ps.close();
+//// Link aan tblStudentOfClass
+//        arguments[0] = "tblStudentOf";
+//        query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
+//        ps = getStatement(query);
+//        ps.setInt(1, userID);
+//        ps.execute();
+//        ps.close();
+//        // Link aan tblTeacherOfClass
+//        arguments[0] = "tblTeacherOf";
+//        query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
+//        ps = getStatement(query);
+//        ps.setInt(1, userID);
+//        ps.execute();
+//        ps.close();
+//        // Link aan tblHasRole
+//        arguments[0] = "tblHasRole";
+//        query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
+//        ps = getStatement(query);
+//        ps.setInt(1, userID);
+//        ps.execute();
+//        ps.close();
+//// user zelf        
+//        arguments[0] = "tblUser";
+//        query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
+//        ps = getStatement(query);
+//        ps.setInt(1, userID);
+//        ps.execute();
+//        ps.close();
+//
+//        return true;
+//    }
 
     /**
      * Deletes a class, and disconnect the students in it.
@@ -1793,54 +1793,54 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws java.sql.SQLException
      *
      */
-    @Override
-    public boolean deleteClass(int classID, boolean mustEmpty)
-            throws SQLException {
-        boolean canDelete = !mustEmpty;
-        String query;
-        PreparedStatement ps;
-        // needs to be replaced by QRY_DELETE_CLASS_IF_EMPTY and QRY_DELETE_CLASS_AND_TEACHERS_AND_STUDENTS
-        if (mustEmpty) {
-            /* Check for students in the class */
-            String[] arguments = {"tblUser", "classID"};
-            query = MessageFormat.format(QRY_DEFAULT_SELECT_ID, (Object[]) arguments);
-
-            ps = getStatement(query);
-            ps.setInt(1, classID);
-
-            ResultSet rs = ps.executeQuery();
-            LOG.log(Level.FINE, "Class must be empty for deletion and there are {0} students in the class with id {1}.", new Object[]{ps.getUpdateCount() - 1, classID});
-
-            canDelete = isEmpty(rs); // no students
-            //students
-            rs.close();
-        }
-
-        if (canDelete) {
-            // do multi table delete
-            // In example delete c,u from tblClass c join tbluser u  where c.classID =5219 and u.classID = 5219
-            // Disconnect students from the class and simultaneous delete the students from the class 
-            ps = getStatement(QRY_DELETE_STUDENTS_AND_TEACHERS_FROM_CLASS);
-            ps.setInt(1, classID);
-            ps.execute();
-            LOG.log(Level.FINE, "Deleted totally {0} rows, in tblClass, tblTeacherOf and tblStudentOf.", new Object[]{ps.getUpdateCount() - 1, classID});
-
-            ps = getStatement(QRY_CLEAR_ALLUSERS_ROLE_DEFAULT_CLASS);
-            ps.setInt(1, classID);
-            ps.execute();
-            ps.close();
-
-            // TODO merge this line with above multi-table delete
-            Object[] arguments2 = {"tblClassCourse", "classID"};
-            query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments2);
-            ps = getStatement(query);
-            ps.setInt(1, classID);
-            ps.execute();
-            ps.close();
-
-        }
-        return canDelete;
-    }
+    //@Override
+//    private boolean deleteClass(int classID, boolean mustEmpty)
+//            throws SQLException {
+//        boolean canDelete = !mustEmpty;
+//        String query;
+//        PreparedStatement ps;
+//        // needs to be replaced by QRY_DELETE_CLASS_IF_EMPTY and QRY_DELETE_CLASS_AND_TEACHERS_AND_STUDENTS
+//        if (mustEmpty) {
+//            /* Check for students in the class */
+//            String[] arguments = {"tblUser", "classID"};
+//            query = MessageFormat.format(QRY_DEFAULT_SELECT_ID, (Object[]) arguments);
+//
+//            ps = getStatement(query);
+//            ps.setInt(1, classID);
+//
+//            ResultSet rs = ps.executeQuery();
+//            LOG.log(Level.FINE, "Class must be empty for deletion and there are {0} students in the class with id {1}.", new Object[]{ps.getUpdateCount() - 1, classID});
+//
+//            canDelete = isEmpty(rs); // no students
+//            //students
+//            rs.close();
+//        }
+//
+//        if (canDelete) {
+//            // do multi table delete
+//            // In example delete c,u from tblClass c join tbluser u  where c.classID =5219 and u.classID = 5219
+//            // Disconnect students from the class and simultaneous delete the students from the class 
+//            ps = getStatement(QRY_DELETE_STUDENTS_AND_TEACHERS_FROM_CLASS);
+//            ps.setInt(1, classID);
+//            ps.execute();
+//            LOG.log(Level.FINE, "Deleted totally {0} rows, in tblClass, tblTeacherOf and tblStudentOf.", new Object[]{ps.getUpdateCount() - 1, classID});
+//
+//            ps = getStatement(QRY_CLEAR_ALLUSERS_ROLE_DEFAULT_CLASS);
+//            ps.setInt(1, classID);
+//            ps.execute();
+//            ps.close();
+//
+//            // TODO merge this line with above multi-table delete
+//            Object[] arguments2 = {"tblClassCourse", "classID"};
+//            query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments2);
+//            ps = getStatement(query);
+//            ps.setInt(1, classID);
+//            ps.execute();
+//            ps.close();
+//
+//        }
+//        return canDelete;
+//    }
 
     /**
      * @param userID
@@ -1849,22 +1849,22 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws java.sql.SQLException
      *
      */
-    @Override
-    public boolean disconnectFromClass(int userID, int schoolClassID) throws SQLException {
-        PreparedStatement ps = getStatement(QRY_DISCONNECT_USER_CLASS);
-        ps.setInt(1, userID);
-        ps.setInt(2, schoolClassID);
-        ps.execute();
-
-        ps = getStatement(QRY_CLEAR_USER_ROLE_DEFAULT_CLASS);
-        ps.setInt(1, userID);
-        ps.setInt(2, schoolClassID);
-        ps.execute();
-
-        ps.close();
-
-        return true;
-    }
+   // @Override
+//    private boolean disconnectFromClass(int userID, int schoolClassID) throws SQLException {
+//        PreparedStatement ps = getStatement(QRY_DISCONNECT_USER_CLASS);
+//        ps.setInt(1, userID);
+//        ps.setInt(2, schoolClassID);
+//        ps.execute();
+//
+//        ps = getStatement(QRY_CLEAR_USER_ROLE_DEFAULT_CLASS);
+//        ps.setInt(1, userID);
+//        ps.setInt(2, schoolClassID);
+//        ps.execute();
+//
+//        ps.close();
+//
+//        return true;
+//    }
 
     /**
      * Executes a prepared statement, and returns a valid xml-rpc value (a
@@ -2869,8 +2869,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * 
      * @see fi.dwo.client.persistence.DbAccessIF#log(java.lang.String)
      */
-    @Override
-    public boolean log(Level level, String s) {
+    //@Override
+    private boolean log(Level level, String s) {
         //TODO V1_3 make log handler.
         log(level, s, null);
         return false;
@@ -3909,8 +3909,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      *
      * @return @throws DwoXmlRpcException
      */
-    @Override
-    public Hashtable getFidentitySchools() throws DwoXmlRpcException {
+    //@Override
+    private Hashtable getFidentitySchools() throws DwoXmlRpcException {
         throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCHOOL_UNSUPPORTED);
     }
 
@@ -4523,8 +4523,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws XmlRpcException
      * @throws DwoXmlRpcException
      */
-    @Override
-    public boolean addTeacherToClass(int classID, int teacherID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+    //@Override
+    private boolean addTeacherToClass(int classID, int teacherID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
         // Fetch any teachers that are a member of the class.
         PreparedStatement ps = getStatement(QRY_SELECT_CLASS_TEACHER);
         ps.setInt(1, classID);
@@ -4570,8 +4570,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws XmlRpcException
      * @throws DwoXmlRpcException
      */
-    @Override
-    public boolean removeTeacherFromClass(int classID, int teacherID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+    //@Override
+    private boolean removeTeacherFromClass(int classID, int teacherID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
         // Delete the <teacher,class> entry
         PreparedStatement ps = getStatement(QRY_DELETE_CLASS_TEACHER);
         ps.setInt(1, classID);
@@ -4592,8 +4592,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws XmlRpcException
      * @throws DwoXmlRpcException
      */
-    @Override
-    public boolean addStudentToClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+    //@Override
+    private boolean addStudentToClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
         // Fetch any student that are a member of the class.
         PreparedStatement ps = getStatement(QRY_SELECT_CLASS_STUDENT);
         ps.setInt(1, classID);
@@ -4639,8 +4639,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws XmlRpcException
      * @throws DwoXmlRpcException
      */
-    @Override
-    public boolean removeStudentFromClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+    //@Override
+    private boolean removeStudentFromClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
         // Delete the <teacher,class> entry
         PreparedStatement ps = getStatement(QRY_DELETE_CLASS_STUDENT);
         ps.setInt(1, classID);
@@ -4668,8 +4668,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      */
-    @Override
-    public Vector<Object> getClassesOfStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+    //@Override
+    private Vector<Object> getClassesOfStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
 
         PreparedStatement ps = getStatement(QRY_SELECT_CLASSES_OF_STUDENT);
         ps.setInt(1, userID);
@@ -4701,8 +4701,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return v;
     }
 
-    @Override
-    public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+    //@Override
+    private boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
         PreparedStatement ps = getStatement(QRY_IS_IN_STUDENT_ROLE);
         ps.setInt(1, userID);
         ps.setInt(2, schoolID);
@@ -4711,8 +4711,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return v.size() > 0;
     }
 
-    @Override
-    public boolean isInTeacherRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+    //@Override
+    private boolean isInTeacherRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
         PreparedStatement ps = getStatement(QRY_IS_IN_TEACHER_ROLE);
         ps.setInt(1, userID);
         ps.setInt(2, schoolID);
