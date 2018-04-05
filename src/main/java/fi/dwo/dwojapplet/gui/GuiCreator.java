@@ -306,19 +306,19 @@ public class GuiCreator {
      * @param email The e-mail address of the user.
      * @throws fi.dwo.commons.exceptions.RegisterException
      */
-    public void register(String username, String password, String rePassword,
-            String firstname, String middlename, String lastname, String email)
-            throws RegisterException {
-        dwo.register(username, password, rePassword, firstname, middlename,
-                lastname, email);
-        JOptionPane.showMessageDialog(DwoHelper.getApplet(), TextMapper
-                .getText(TextMapper.GUIR_MSG_REGISTERED));
-        WelcomePanel wcp = getWelcomePanel();
-        wcp.setUsername(username);
-        wcp.setPassword(password);
-        dwo.setPanel(wcp);
-
-    }
+//    public void register(String username, String password, String rePassword,
+//            String firstname, String middlename, String lastname, String email)
+//            throws RegisterException {
+//        dwo.register(username, password, rePassword, firstname, middlename,
+//                lastname, email);
+//        JOptionPane.showMessageDialog(DwoHelper.getApplet(), TextMapper
+//                .getText(TextMapper.GUIR_MSG_REGISTERED));
+//        WelcomePanel wcp = getWelcomePanel();
+//        wcp.setUsername(username);
+//        wcp.setPassword(password);
+//        dwo.setPanel(wcp);
+//
+//    }
 
     /**
      * Register a user in the system. Als links a user to a school. Then it
@@ -716,14 +716,14 @@ public class GuiCreator {
         return dwo.addSchool(id, schoolName, schoolLogin, schoolPasswdMap, date);
     }
 
-    /**
-     * Deletes the account of the current user and loggs of.
-     *
-     */
-    public void deleteUser() {
-        dwo.deleteUser();
-        logoff();
-    }
+//    /**
+//     * Deletes the account of the current user and loggs of.
+//     *
+//     */
+//    public void deleteUser() {
+//        dwo.deleteUser();
+//        logoff();
+//    }
 
 //    /**
 //     * Deletes the specified class from the system.

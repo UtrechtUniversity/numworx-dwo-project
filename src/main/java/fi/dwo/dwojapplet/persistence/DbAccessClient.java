@@ -196,18 +196,18 @@ class DbAccessClient extends Client implements DbAccessIF {
 //        return ((Boolean) object).booleanValue();
 //    }
 
-    @Override
-    public boolean register(java.lang.String a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e, java.lang.String f) throws IOException, XmlRpcException {
-        Vector vv = new Vector(6);
-        vv.addElement(a);
-        vv.addElement(b);
-        vv.addElement(c);
-        vv.addElement(d);
-        vv.addElement(e);
-        vv.addElement(f);
-        Object object = invoke("register", vv);
-        return ((Boolean) object).booleanValue();
-    }
+//    @Override
+//    public boolean register(java.lang.String a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e, java.lang.String f) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(6);
+//        vv.addElement(a);
+//        vv.addElement(b);
+//        vv.addElement(c);
+//        vv.addElement(d);
+//        vv.addElement(e);
+//        vv.addElement(f);
+//        Object object = invoke("register", vv);
+//        return ((Boolean) object).booleanValue();
+//    }
 
     @Override
     public java.lang.String LMSGetValue(int a, int b, int c, java.lang.String d) throws IOException, XmlRpcException {
@@ -309,66 +309,66 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
-    @Override
-    public java.util.Hashtable addClass(int a, java.lang.String b) throws IOException, XmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(new Integer(a));
-        vv.addElement(b);
-        Object object = invoke("addClass", vv);
-        return (java.util.Hashtable) object;
-    }
+//    @Override
+//    public java.util.Hashtable addClass(int a, java.lang.String b) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(new Integer(a));
+//        vv.addElement(b);
+//        Object object = invoke("addClass", vv);
+//        return (java.util.Hashtable) object;
+//    }
 
-    @Override
-    public java.util.Hashtable addSchool(java.lang.String a, java.lang.String b, java.lang.String c, java.lang.String d) throws IOException, XmlRpcException {
-        Vector vv = new Vector(4);
-        vv.addElement(a);
-        vv.addElement(b);
-        vv.addElement(c);
-        vv.addElement(d);
-        Object object = invoke("addSchool", vv);
-        return (java.util.Hashtable) object;
-    }
+//    @Override
+//    public java.util.Hashtable addSchool(java.lang.String a, java.lang.String b, java.lang.String c, java.lang.String d) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(4);
+//        vv.addElement(a);
+//        vv.addElement(b);
+//        vv.addElement(c);
+//        vv.addElement(d);
+//        Object object = invoke("addSchool", vv);
+//        return (java.util.Hashtable) object;
+//    }
 
-    @Override
-    public java.util.Hashtable addSchool(int a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e) throws IOException, XmlRpcException {
-        Vector vv = new Vector(5);
-        vv.addElement(new Integer(a));
-        vv.addElement(b);
-        vv.addElement(c);
-        vv.addElement(d);
-        vv.addElement(e);
-        Object object = invoke("addSchool", vv);
-        return (java.util.Hashtable) object;
-    }
+//    @Override
+//    public java.util.Hashtable addSchool(int a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(5);
+//        vv.addElement(new Integer(a));
+//        vv.addElement(b);
+//        vv.addElement(c);
+//        vv.addElement(d);
+//        vv.addElement(e);
+//        Object object = invoke("addSchool", vv);
+//        return (java.util.Hashtable) object;
+//    }
 
-    @Override
-    public java.util.Hashtable editSchool(int a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e) throws IOException, XmlRpcException {
-        Vector vv = new Vector(5);
-        vv.addElement(new Integer(a));
-        vv.addElement(b);
-        vv.addElement(c);
-        vv.addElement(d);
-        vv.addElement(e);
-        Object object = invoke("editSchool", vv);
-        return (java.util.Hashtable) object;
-    }
+//    @Override
+//    public java.util.Hashtable editSchool(int a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(5);
+//        vv.addElement(new Integer(a));
+//        vv.addElement(b);
+//        vv.addElement(c);
+//        vv.addElement(d);
+//        vv.addElement(e);
+//        Object object = invoke("editSchool", vv);
+//        return (java.util.Hashtable) object;
+//    }
 
-    @Override
-    public boolean deleteUser(int a) throws IOException, XmlRpcException {
-        Vector vv = new Vector(1);
-        vv.addElement(new Integer(a));
-        Object object = invoke("deleteUser", vv);
-        return ((Boolean) object).booleanValue();
-    }
+//    @Override
+//    public boolean deleteUser(int a) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(1);
+//        vv.addElement(new Integer(a));
+//        Object object = invoke("deleteUser", vv);
+//        return ((Boolean) object).booleanValue();
+//    }
 
-    @Override
-    public boolean deleteClass(int a, boolean b) throws IOException, XmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(new Integer(a));
-        vv.addElement(Boolean.valueOf(b));
-        Object object = invoke("deleteClass", vv);
-        return ((Boolean) object).booleanValue();
-    }
+//    @Override
+//    public boolean deleteClass(int a, boolean b) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(new Integer(a));
+//        vv.addElement(Boolean.valueOf(b));
+//        Object object = invoke("deleteClass", vv);
+//        return ((Boolean) object).booleanValue();
+//    }
 
     @Override
     public java.util.Vector getResults(java.util.Vector a, int b) throws IOException, XmlRpcException {
@@ -408,26 +408,26 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
-    public boolean disconnectFromClass(int a) throws IOException, XmlRpcException {
-        Vector vv = new Vector(1);
-        vv.addElement(new Integer(a));
-        Object object = invoke("disconnectFromClass", vv);
-        return ((Boolean) object).booleanValue();
-    }
+//    public boolean disconnectFromClass(int a) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(1);
+//        vv.addElement(new Integer(a));
+//        Object object = invoke("disconnectFromClass", vv);
+//        return ((Boolean) object).booleanValue();
+//    }
 
-    public boolean selectJar(java.lang.String a, java.lang.String b) throws IOException, XmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(a);
-        vv.addElement(b);
-        Object object = invoke("selectJar", vv);
-        return ((Boolean) object).booleanValue();
-    }
+//    public boolean selectJar(java.lang.String a, java.lang.String b) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(a);
+//        vv.addElement(b);
+//        Object object = invoke("selectJar", vv);
+//        return ((Boolean) object).booleanValue();
+//    }
 
-    public boolean reconnect() throws IOException, XmlRpcException {
-        Vector vv = new Vector(0);
-        Object object = invoke("reconnect", vv);
-        return ((Boolean) object).booleanValue();
-    }
+//    public boolean reconnect() throws IOException, XmlRpcException {
+//        Vector vv = new Vector(0);
+//        Object object = invoke("reconnect", vv);
+//        return ((Boolean) object).booleanValue();
+//    }
 
     @Override
     public boolean log(java.lang.String a) throws IOException, XmlRpcException {
@@ -437,14 +437,14 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
-    @Override
-    public boolean log(Level l, java.lang.String a) throws IOException, XmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(l);
-        vv.addElement(a);
-        Object object = invoke("log", vv);
-        return ((Boolean) object).booleanValue();
-    }
+//    @Override
+//    public boolean log(Level l, java.lang.String a) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(l);
+//        vv.addElement(a);
+//        Object object = invoke("log", vv);
+//        return ((Boolean) object).booleanValue();
+//    }
     
     @Override
     public int addCourse(int a, java.lang.String b, java.lang.String c, int d, int e, boolean f) throws IOException, XmlRpcException {
@@ -609,12 +609,12 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
-    @Override
-    public java.util.Hashtable getFidentitySchools() throws IOException, XmlRpcException {
-        Vector vv = new Vector(0);
-        Object object = invoke("getFidentitySchools", vv);
-        return (java.util.Hashtable) object;
-    }
+//    @Override
+//    public java.util.Hashtable getFidentitySchools() throws IOException, XmlRpcException {
+//        Vector vv = new Vector(0);
+//        Object object = invoke("getFidentitySchools", vv);
+//        return (java.util.Hashtable) object;
+//    }
 
     @Override
     public java.util.Vector getUserResults(int a, int b, int c) throws IOException, XmlRpcException {
@@ -873,50 +873,50 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
-    @Override
-    public boolean addStudentToClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(new Integer(classID));
-        vv.addElement(new Integer(studentID));
-        Object object = invoke("addStudentToClass", vv);
-        return ((Boolean) object);
-    }
+//    @Override
+//    public boolean addStudentToClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(new Integer(classID));
+//        vv.addElement(new Integer(studentID));
+//        Object object = invoke("addStudentToClass", vv);
+//        return ((Boolean) object);
+//    }
 
-    @Override
-    public boolean removeStudentFromClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(classID);
-        vv.addElement(studentID);
-        Object object = invoke("removeStudentFromClass", vv);
-        return ((Boolean) object);
-    }
+//    @Override
+//    public boolean removeStudentFromClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(classID);
+//        vv.addElement(studentID);
+//        Object object = invoke("removeStudentFromClass", vv);
+//        return ((Boolean) object);
+//    }
 
-    @Override
-    public Vector<Object> getClassesOfStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(userID);
-        vv.addElement(schoolID);
-        Object object = invoke("getClassesOfStudent", vv);
-        return (java.util.Vector) object;
-    }
+//    @Override
+//    public Vector<Object> getClassesOfStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(userID);
+//        vv.addElement(schoolID);
+//        Object object = invoke("getClassesOfStudent", vv);
+//        return (java.util.Vector) object;
+//    }
 
-    @Override
-    public boolean addTeacherToClass(int classID, int newTeacher) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(new Integer(classID));
-        vv.addElement(new Integer(newTeacher));
-        Object object = invoke("addTeacherToClass", vv);
-        return ((Boolean) object).booleanValue();
-    }
+//    @Override
+//    public boolean addTeacherToClass(int classID, int newTeacher) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(new Integer(classID));
+//        vv.addElement(new Integer(newTeacher));
+//        Object object = invoke("addTeacherToClass", vv);
+//        return ((Boolean) object).booleanValue();
+//    }
 
-    @Override
-    public boolean removeTeacherFromClass(int classID, int newTeacher) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(new Integer(classID));
-        vv.addElement(new Integer(newTeacher));
-        Object object = invoke("removeTeacherFromClass", vv);
-        return ((Boolean) object);
-    }
+//    @Override
+//    public boolean removeTeacherFromClass(int classID, int newTeacher) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(new Integer(classID));
+//        vv.addElement(new Integer(newTeacher));
+//        Object object = invoke("removeTeacherFromClass", vv);
+//        return ((Boolean) object);
+//    }
 
     @Override
     public Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
@@ -927,23 +927,23 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
-    @Override
-    public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(new Integer(userID));
-        vv.addElement(new Integer(schoolID));
-        Object object = invoke("isStudent", vv);
-        return ((Boolean) object);
-    }
+//    @Override
+//    public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(new Integer(userID));
+//        vv.addElement(new Integer(schoolID));
+//        Object object = invoke("isStudent", vv);
+//        return ((Boolean) object);
+//    }
 
-    @Override
-    public boolean isInTeacherRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(new Integer(userID));
-        vv.addElement(new Integer(schoolID));
-        Object object = invoke("isTeacher", vv);
-        return ((Boolean) object);
-    }
+//    @Override
+//    public boolean isInTeacherRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(new Integer(userID));
+//        vv.addElement(new Integer(schoolID));
+//        Object object = invoke("isTeacher", vv);
+//        return ((Boolean) object);
+//    }
 
     @Override
     public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
@@ -953,22 +953,22 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
-    @Override
-    public Vector<Object> getTeachersOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
-        Vector vv = new Vector(1);
-        vv.addElement(new Integer(schoolClassID));
-        Object object = invoke("getTeachersOfClass", vv);
-        return (java.util.Vector) object;
-    }
+//    @Override
+//    public Vector<Object> getTeachersOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
+//        Vector vv = new Vector(1);
+//        vv.addElement(new Integer(schoolClassID));
+//        Object object = invoke("getTeachersOfClass", vv);
+//        return (java.util.Vector) object;
+//    }
 
-    @Override
-    public boolean disconnectFromClass(int userID, int classID) throws IOException, XmlRpcException, SQLException {
-        Vector vv = new Vector(2);
-        vv.addElement(new Integer(userID));
-        vv.addElement(new Integer(classID));
-        Object object = invoke("disconnectFromClass", vv);
-        return ((Boolean) object);
-    }
+//    @Override
+//    public boolean disconnectFromClass(int userID, int classID) throws IOException, XmlRpcException, SQLException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(new Integer(userID));
+//        vv.addElement(new Integer(classID));
+//        Object object = invoke("disconnectFromClass", vv);
+//        return ((Boolean) object);
+//    }
 
     @Override
     public Vector getToSchoolsFrom(int schoolID) throws IOException, XmlRpcException, SQLException {

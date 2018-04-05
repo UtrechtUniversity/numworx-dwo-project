@@ -622,49 +622,49 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * @throws fi.dwo.commons.exceptions.RegisterException
      *
      */
-    public boolean register(String username, String password, String rePassword, String firstname, String middlename,
-            String lastname, String email) throws RegisterException {
-
-        String[] arguments = new String[2];
-        // checks:
-        // no spaces (trimmed)
-        // ascii only
-        // aselect: ....
-        if (isEmpty(username)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIR_USERNAME);
-            arguments[1] = TextMapper.getText(TextMapper.GUIR_REGISTERINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (!isValid(username)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIR_USERNAME);
-            arguments[1] = TextMapper.getText(TextMapper.GUIR_REGISTERINFO);
-            throw new RegisterException(RegisterException.RE_WRONG_FORMAT, arguments);
-        } else if (isEmpty(password)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIR_PASSWORD);
-            arguments[1] = TextMapper.getText(TextMapper.GUIR_REGISTERINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (isEmpty(firstname)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIR_FIRSTNAME);
-            arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (isEmpty(lastname)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIR_LASTNAME);
-            arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (isEmpty(email)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIR_EMAIL);
-            arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (!isValidEmail(email)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIR_EMAIL);
-            arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
-            throw new RegisterException(RegisterException.RE_WRONG_EMAILFORMAT, arguments);
-        }
-        if (!password.equals(rePassword)) {
-            throw new RegisterException(RegisterException.RE_WRONG_SECOND_PASSWORD);
-        } else {
-            return PersistenceFacade.instance().register(username, password, firstname, middlename, lastname, email);
-        }
-    }
+//    public boolean register(String username, String password, String rePassword, String firstname, String middlename,
+//            String lastname, String email) throws RegisterException {
+//
+//        String[] arguments = new String[2];
+//        // checks:
+//        // no spaces (trimmed)
+//        // ascii only
+//        // aselect: ....
+//        if (isEmpty(username)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIR_USERNAME);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIR_REGISTERINFO);
+//            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
+//        } else if (!isValid(username)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIR_USERNAME);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIR_REGISTERINFO);
+//            throw new RegisterException(RegisterException.RE_WRONG_FORMAT, arguments);
+//        } else if (isEmpty(password)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIR_PASSWORD);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIR_REGISTERINFO);
+//            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
+//        } else if (isEmpty(firstname)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIR_FIRSTNAME);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
+//            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
+//        } else if (isEmpty(lastname)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIR_LASTNAME);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
+//            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
+//        } else if (isEmpty(email)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIR_EMAIL);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
+//            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
+//        } else if (!isValidEmail(email)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIR_EMAIL);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
+//            throw new RegisterException(RegisterException.RE_WRONG_EMAILFORMAT, arguments);
+//        }
+//        if (!password.equals(rePassword)) {
+//            throw new RegisterException(RegisterException.RE_WRONG_SECOND_PASSWORD);
+//        } else {
+//            return PersistenceFacade.instance().register(username, password, firstname, middlename, lastname, email);
+//        }
+//    }
 
     /**
      * Test of we een echt e-mail adres hebben. Test of het ASCII is, minus
@@ -1146,41 +1146,41 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         }
     }
 
-    /**
-     * Adds a class to the school of the current user. The current user will
-     * also be the teacher. The operation is only carried out if the user is a
-     * teacher.
-     *
-     * @param className The name of the new class.
-     * @return boolean If the class is successfully inserted it returns true.
-     * Otherwise it returns false.
-     * @throws fi.dwo.commons.exceptions.ClassException
-     *
-     */
-    public boolean addClass(String className) throws ClassException {
-        if (DwoHelper.getCurrentFacadeUser() instanceof Teacher) {
-            SchoolClass sc = PersistenceFacade.instance().addClass((Teacher) DwoHelper.getCurrentFacadeUser(),
-                    className);
-            ((Teacher) DwoHelper.getCurrentFacadeUser()).addClass(sc);
+//    /**
+//     * Adds a class to the school of the current user. The current user will
+//     * also be the teacher. The operation is only carried out if the user is a
+//     * teacher.
+//     *
+//     * @param className The name of the new class.
+//     * @return boolean If the class is successfully inserted it returns true.
+//     * Otherwise it returns false.
+//     * @throws fi.dwo.commons.exceptions.ClassException
+//     *
+//     */
+//    public boolean addClass(String className) throws ClassException {
+//        if (DwoHelper.getCurrentFacadeUser() instanceof Teacher) {
+//            SchoolClass sc = PersistenceFacade.instance().addClass((Teacher) DwoHelper.getCurrentFacadeUser(),
+//                    className);
+//            ((Teacher) DwoHelper.getCurrentFacadeUser()).addClass(sc);
+//
+//            if (DwoHelper.getCurrentFacadeUser().getSchool() != null) {
+//                DwoHelper.getCurrentFacadeUser().getSchool().addClass(sc);
+//            }
+//        }
+//        return false;
+//    }
 
-            if (DwoHelper.getCurrentFacadeUser().getSchool() != null) {
-                DwoHelper.getCurrentFacadeUser().getSchool().addClass(sc);
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Deletes the current user.
-     *
-     */
-    public void deleteUser() {
-        try {
-            PersistenceFacade.instance().deleteUser(DwoHelper.getCurrentFacadeUser());
-        } catch (RegisterException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
-    }
+//    /**
+//     * Deletes the current user.
+//     *
+//     */
+//    public void deleteUser() {
+//        try {
+//            PersistenceFacade.instance().deleteUser(DwoHelper.getCurrentFacadeUser());
+//        } catch (RegisterException e) {
+//            JOptionPane.showMessageDialog(this, e.getMessage());
+//        }
+//    }
 
 //    /**
 //     * Deletes the specified class from the system.

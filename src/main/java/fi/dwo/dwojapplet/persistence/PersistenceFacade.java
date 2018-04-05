@@ -321,29 +321,29 @@ public class PersistenceFacade {
      * USER FUNCTIONALITY
      * =============================================================================
      */
-    /**
-     * Deletes a user out of the database.
-     *
-     * @param user The user to delete.
-     * @throws fi.dwo.commons.exceptions.RegisterException
-     *
-     */
-    public void deleteUser(User user) throws RegisterException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            dbAccess.deleteUser(user.getUserID());
-        }
-        catch (IOException e) {
-            throw new RegisterException(RegisterException.EX_IO);
-        }
-        catch (XmlRpcException e) {
-            throw new RegisterException(RegisterException.EX_XML_RPC);
-        }
-        catch (SQLException e) {
-            throw new RegisterException(RegisterException.EX_DB);
-        }
-
-    }
+//    /**
+//     * Deletes a user out of the database.
+//     *
+//     * @param user The user to delete.
+//     * @throws fi.dwo.commons.exceptions.RegisterException
+//     *
+//     */
+//    public void deleteUser(User user) throws RegisterException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            dbAccess.deleteUser(user.getUserID());
+//        }
+//        catch (IOException e) {
+//            throw new RegisterException(RegisterException.EX_IO);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new RegisterException(RegisterException.EX_XML_RPC);
+//        }
+//        catch (SQLException e) {
+//            throw new RegisterException(RegisterException.EX_DB);
+//        }
+//
+//    }
 
 //    /**
 //     * =============================================================================
@@ -1527,33 +1527,33 @@ public class PersistenceFacade {
      * @throws fi.dwo.commons.exceptions.RegisterException
      *
      */
-    public boolean register(String username, String password, String firstname,
-            String middlename, String lastname, String email)
-            throws RegisterException {
-// password null: LDAP user
-        password = password == null ? "" : MD5.getHashString(password);
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            return dbAccess.register(username, password, firstname,
-                    middlename, lastname, email);
-        }
-        catch (IOException e) {
-            throw new RegisterException(RegisterException.EX_IO);
-        }
-        catch (XmlRpcException e) {
-            if (e.code != 0) {
-                throw new RegisterException(e.code, username);
-            } else {
-                throw new RegisterException(RegisterException.EX_XML_RPC);
-            }
-        }
-        catch (SQLException e) {
-            throw new RegisterException(RegisterException.EX_DB);
-        }
-        catch (DwoXmlRpcException e) {
-            throw new RegisterException(e.code, username);
-        }
-    }
+//    public boolean register(String username, String password, String firstname,
+//            String middlename, String lastname, String email)
+//            throws RegisterException {
+//// password null: LDAP user
+//        password = password == null ? "" : MD5.getHashString(password);
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            return dbAccess.register(username, password, firstname,
+//                    middlename, lastname, email);
+//        }
+//        catch (IOException e) {
+//            throw new RegisterException(RegisterException.EX_IO);
+//        }
+//        catch (XmlRpcException e) {
+//            if (e.code != 0) {
+//                throw new RegisterException(e.code, username);
+//            } else {
+//                throw new RegisterException(RegisterException.EX_XML_RPC);
+//            }
+//        }
+//        catch (SQLException e) {
+//            throw new RegisterException(RegisterException.EX_DB);
+//        }
+//        catch (DwoXmlRpcException e) {
+//            throw new RegisterException(e.code, username);
+//        }
+//    }
 
     /**
      * Register a user in the system. Als links a user to a school.
@@ -1806,51 +1806,51 @@ public class PersistenceFacade {
         }
     }
 
-    /**
-     * Creates a new school
-     *
-     * @throws fi.dwo.commons.exceptions.SchoolException
-     * @deprecated use {@link #addSchool(int, String, String, Hashtable)}
-     * @param id The id of the new school
-     * @param schoolName The name of the new school.
-     * @param schoolLogin The login name of the new school.
-     * @param studentPassw Password for students.
-     * @param teacherPassw Password for teachers.
-     * @return The new schoolclass. If an exception occurs, null is returned.
-     *
-     */
-    public School addSchool(int id, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
-            throws SchoolException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                MapperIF mapper = MapperCreator.instance(School.class);
-                Hashtable result = dbAccess.addSchool(id, schoolName, schoolLogin, studentPassw, teacherPassw);
-                return (School) mapper.getObjectFromReturn(result);
-            }
-            catch (IOException e) {
-                System.out.println(e.toString());
-                throw new SchoolException(SchoolException.EX_IO);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (SchoolException) getException(e, e.code);
-                } else {
-                    throw new SchoolException(SchoolException.EX_XML_RPC);
-                }
-            }
-            catch (SQLException e) {
-                System.out.println(e.toString());
-                throw new SchoolException(SchoolException.EX_DB);
-            }
-            catch (DwoXmlRpcException e) {
-                throw (SchoolException) getException(e, e.code);
-            }
-        }
-        catch (PersistenceException e) {
-            throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR);
-        }
-    }
+//    /**
+//     * Creates a new school
+//     *
+//     * @throws fi.dwo.commons.exceptions.SchoolException
+//     * @deprecated use {@link #addSchool(int, String, String, Hashtable)}
+//     * @param id The id of the new school
+//     * @param schoolName The name of the new school.
+//     * @param schoolLogin The login name of the new school.
+//     * @param studentPassw Password for students.
+//     * @param teacherPassw Password for teachers.
+//     * @return The new schoolclass. If an exception occurs, null is returned.
+//     *
+//     */
+//    public School addSchool(int id, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
+//            throws SchoolException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                MapperIF mapper = MapperCreator.instance(School.class);
+//                Hashtable result = dbAccess.addSchool(id, schoolName, schoolLogin, studentPassw, teacherPassw);
+//                return (School) mapper.getObjectFromReturn(result);
+//            }
+//            catch (IOException e) {
+//                System.out.println(e.toString());
+//                throw new SchoolException(SchoolException.EX_IO);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (SchoolException) getException(e, e.code);
+//                } else {
+//                    throw new SchoolException(SchoolException.EX_XML_RPC);
+//                }
+//            }
+//            catch (SQLException e) {
+//                System.out.println(e.toString());
+//                throw new SchoolException(SchoolException.EX_DB);
+//            }
+//            catch (DwoXmlRpcException e) {
+//                throw (SchoolException) getException(e, e.code);
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR);
+//        }
+//    }
 
     public School addSchool(int id, String schoolName, String schoolLogin, Hashtable passw)
             throws SchoolException {
@@ -1919,28 +1919,28 @@ public class PersistenceFacade {
         }
     }
 
-    public Hashtable getFidentitySchools() {
-        DbAccessIF dbaccess = DbAccessCreator.instance();
-        try {
-            return dbaccess.getFidentitySchools();
-        }
-        catch (IOException e) {
-            LOG.log(Level.SEVERE, null, e);
-        }
-        catch (XmlRpcException e) {
-            if (e.code == SchoolException.SE_SCHOOL_UNSUPPORTED && e.getMessage().equals(SchoolException.class.getName())) {
-                return null;
-            }
-            LOG.log(Level.SEVERE, null, e);
-        }
-        catch (SQLException e) {
-            LOG.log(Level.SEVERE, null, e);
-        }
-        catch (DwoXmlRpcException e) {
-            return null;
-        }
-        return new Hashtable();
-    }
+//    public Hashtable getFidentitySchools() {
+//        DbAccessIF dbaccess = DbAccessCreator.instance();
+//        try {
+//            return dbaccess.getFidentitySchools();
+//        }
+//        catch (IOException e) {
+//            LOG.log(Level.SEVERE, null, e);
+//        }
+//        catch (XmlRpcException e) {
+//            if (e.code == SchoolException.SE_SCHOOL_UNSUPPORTED && e.getMessage().equals(SchoolException.class.getName())) {
+//                return null;
+//            }
+//            LOG.log(Level.SEVERE, null, e);
+//        }
+//        catch (SQLException e) {
+//            LOG.log(Level.SEVERE, null, e);
+//        }
+//        catch (DwoXmlRpcException e) {
+//            return null;
+//        }
+//        return new Hashtable();
+//    }
 
     /**
      *
@@ -2058,51 +2058,51 @@ public class PersistenceFacade {
         return false;
     }
 
-    /**
-     * Edit an old school
-     *
-     * @param schoolID
-     * @throws fi.dwo.commons.exceptions.SchoolException
-     * @deprecated use {@link #editSchool(int, String, String, Hashtable)}
-     * @param schoolName The name of the new school.
-     * @param schoolLogin The login name of the new school.
-     * @param studentPassw Password for students.
-     * @param teacherPassw Password for teachers.
-     * @return The new schoolclass. If an exception occurs, null is returned.
-     *
-     */
-    public School editSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
-            throws SchoolException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                MapperIF mapper = MapperCreator.instance(School.class);
-                Hashtable result = dbAccess.editSchool(schoolID, schoolName, schoolLogin, studentPassw, teacherPassw);
-                return (School) mapper.getObjectFromReturn(result);
-            }
-            catch (IOException e) {
-                System.out.println(e.toString());
-                throw new SchoolException(SchoolException.EX_IO);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (SchoolException) getException(e, e.code);
-                } else {
-                    throw new SchoolException(SchoolException.EX_XML_RPC);
-                }
-            }
-            catch (SQLException e) {
-                System.out.println(e.toString());
-                throw new SchoolException(SchoolException.EX_DB);
-            }
-            catch (DwoXmlRpcException e) {
-                throw (SchoolException) getException(e, e.code);
-            }
-        }
-        catch (PersistenceException e) {
-            throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR);
-        }
-    }
+//    /**
+//     * Edit an old school
+//     *
+//     * @param schoolID
+//     * @throws fi.dwo.commons.exceptions.SchoolException
+//     * @deprecated use {@link #editSchool(int, String, String, Hashtable)}
+//     * @param schoolName The name of the new school.
+//     * @param schoolLogin The login name of the new school.
+//     * @param studentPassw Password for students.
+//     * @param teacherPassw Password for teachers.
+//     * @return The new schoolclass. If an exception occurs, null is returned.
+//     *
+//     */
+//    public School editSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
+//            throws SchoolException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                MapperIF mapper = MapperCreator.instance(School.class);
+//                Hashtable result = dbAccess.editSchool(schoolID, schoolName, schoolLogin, studentPassw, teacherPassw);
+//                return (School) mapper.getObjectFromReturn(result);
+//            }
+//            catch (IOException e) {
+//                System.out.println(e.toString());
+//                throw new SchoolException(SchoolException.EX_IO);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (SchoolException) getException(e, e.code);
+//                } else {
+//                    throw new SchoolException(SchoolException.EX_XML_RPC);
+//                }
+//            }
+//            catch (SQLException e) {
+//                System.out.println(e.toString());
+//                throw new SchoolException(SchoolException.EX_DB);
+//            }
+//            catch (DwoXmlRpcException e) {
+//                throw (SchoolException) getException(e, e.code);
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR);
+//        }
+//    }
 
     public void editSchool(School school, String string) throws PersistenceException {
         try {
@@ -2229,46 +2229,46 @@ public class PersistenceFacade {
      * SCHOOLCLASS FUNCTIONALITY
      * =============================================================================
      */
-    /**
-     * Creates a new schoolclass for the specified teacher
-     *
-     * @param teacher The teacher of the new schoolclass.
-     * @param className The name of the new schoolclass.
-     * @return The new schoolclass. If an exception occurs, null is returned.
-     * @throws fi.dwo.commons.exceptions.ClassException
-     *
-     */
-    public SchoolClass addClass(Teacher teacher, String className)
-            throws ClassException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                MapperIF mapper = MapperCreator.instance(SchoolClass.class);
-                Hashtable result = dbAccess.addClass(teacher.getUserID(),
-                        className);
-                return (SchoolClass) mapper.getObjectFromReturn(result);
-            }
-            catch (IOException e) {
-                throw new ClassException(ClassException.EX_IO);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (ClassException) getException(e, e.code);
-                } else {
-                    throw new ClassException(ClassException.EX_XML_RPC);
-                }
-            }
-            catch (SQLException e) {
-                throw new ClassException(ClassException.EX_DB);
-            }
-            catch (DwoXmlRpcException e) {
-                throw (ClassException) getException(e, e.code);
-            }
-        }
-        catch (PersistenceException e) {
-            throw new ClassException(ClassException.EX_UNKNOWN_ERROR);
-        }
-    }
+//    /**
+//     * Creates a new schoolclass for the specified teacher
+//     *
+//     * @param teacher The teacher of the new schoolclass.
+//     * @param className The name of the new schoolclass.
+//     * @return The new schoolclass. If an exception occurs, null is returned.
+//     * @throws fi.dwo.commons.exceptions.ClassException
+//     *
+//     */
+//    public SchoolClass addClass(Teacher teacher, String className)
+//            throws ClassException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                MapperIF mapper = MapperCreator.instance(SchoolClass.class);
+//                Hashtable result = dbAccess.addClass(teacher.getUserID(),
+//                        className);
+//                return (SchoolClass) mapper.getObjectFromReturn(result);
+//            }
+//            catch (IOException e) {
+//                throw new ClassException(ClassException.EX_IO);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (ClassException) getException(e, e.code);
+//                } else {
+//                    throw new ClassException(ClassException.EX_XML_RPC);
+//                }
+//            }
+//            catch (SQLException e) {
+//                throw new ClassException(ClassException.EX_DB);
+//            }
+//            catch (DwoXmlRpcException e) {
+//                throw (ClassException) getException(e, e.code);
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            throw new ClassException(ClassException.EX_UNKNOWN_ERROR);
+//        }
+//    }
 
 //    /**
 //     * Deletes the specified schoolclass. if mustEmpty is true, and the class
