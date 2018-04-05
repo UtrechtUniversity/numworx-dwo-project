@@ -43,8 +43,8 @@ public class StrokeDAngleFilter {
 		if("6".equals(teken)) {int[][] data = {};return data;}
 		if("7".equals(teken)) {int[][] data = {{-30,30,-20,20,25,38}};return data;}
 		if("8".equals(teken)) {int[][] data = {};return data;}
-		if("9".equals(teken)) {int[][] data = {};return data;}
-		
+		if("9".equals(teken)) {int[][] data = {{20,240,0,90,5,12}};return data;}
+
 		if("a".equals(teken)) {int[][] data = {{90,460,-10,120,2,20}};return data;}
 		if("b".equals(teken)) {int[][] data = {};return data;}
 		if("b_1".equals(teken)) {int[][] data = {{90,240,-10,120,23,33},{150,270,-20,180,3,20}};return data;}

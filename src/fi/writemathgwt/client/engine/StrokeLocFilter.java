@@ -83,6 +83,8 @@ public class StrokeLocFilter {
 		if("N".equals(teken)) {int[][] data = {{70,100,0,30,39,39,1},{0,50,1,30,8,18,1},{0,30,70,100,0,0,1}};return data;}
 
 		if("φ".equals(teken)) {int[][] data = {{0,75,20,100,25,39,10}};return data;}
+		if("μ_1".equals(teken)) {int[][] data = {{0,100,0,60,10,39,27}};return data;}
+
 
 		
 		if("-".equals(teken)) {int[][] data = {{0,10,0,100,0,0,1},{90,100,0,100,39,39,1}};return data;}
