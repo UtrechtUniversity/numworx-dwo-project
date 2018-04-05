@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.mobile.client.ui.places;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceTokenizer;
 
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
 public class c extends Place implements Hash {
 
 	private String token;
@@ -39,6 +41,11 @@ public class c extends Place implements Hash {
 	@Override
 	public Place getPlace() {
 		return this;
+	}
+
+	@Override
+	public PersistenceId getID() {
+		return new PersistenceId("MYSQL;PersistentCourse;" + token);
 	}
 
 }
