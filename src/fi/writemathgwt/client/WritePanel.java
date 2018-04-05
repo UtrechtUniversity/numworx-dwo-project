@@ -8,9 +8,6 @@ import java.util.logging.Logger;
 
 import javax.swing.JButton;
 
-//import javax.swing.JButton;
-
-
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -39,7 +36,7 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 
-import fi.writemathgwt.client.WriteMathGWT.ListChangeHandler;
+import fi.writemathgwt.client.engine.Point;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;

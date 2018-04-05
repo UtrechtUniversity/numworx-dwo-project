@@ -1,9 +1,11 @@
-package fi.writemathgwt.client;
+package fi.writemathgwt.client.engine;
 
-public class DoublePoint 
-{
-	
-	private double x; private double y;
+import fi.writemathgwt.client.engine.Point;
+
+public class DoublePoint {
+
+	public double x; 
+	public double y;
 	
 	public DoublePoint(double x, double y) 
 	{

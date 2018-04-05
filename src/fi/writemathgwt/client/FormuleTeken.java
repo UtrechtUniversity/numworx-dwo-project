@@ -2,6 +2,8 @@ package fi.writemathgwt.client;
 
 //import java.awt.*;
 import java.util.*;
+import fi.writemathgwt.client.engine.Point;
+
 import java.util.logging.Logger;
 
 

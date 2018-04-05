@@ -1,5 +1,7 @@
 package fi.writemathgwt.client;
 
+import fi.writemathgwt.client.engine.Point;
+
 public class Rectangle 
 {
 

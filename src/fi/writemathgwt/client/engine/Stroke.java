@@ -2,19 +2,22 @@ package fi.writemathgwt.client.engine;
 
 import java.util.ArrayList;
 
-import fi.writemathgwt.client.DoublePoint;
-import fi.writemathgwt.client.DoubleRectangle;
-import fi.writemathgwt.client.Point;
+import fi.writemathgwt.client.engine.DoublePoint;
+import fi.writemathgwt.client.engine.DoubleRectangle;
+import fi.writemathgwt.client.engine.Point;
 
 
 public class Stroke {
 	
-	private ArrayList<DoublePoint> parsePoints;
-	private int standardizeLengthNumber = 40;
-	private DoubleRectangle parsePointsBox;
-	private double[] angles;
-	private double[] dAngles;
+	protected ArrayList<DoublePoint> parsePoints;
+	protected int standardizeLengthNumber = 40;
+	protected DoubleRectangle parsePointsBox;
+	protected double[] angles;
+	protected double[] dAngles;
 	
+	public Stroke() {
+		
+	}
 	
 	public Stroke(ArrayList<Point> points) {
 		ArrayList<DoublePoint> doublePoints = new ArrayList<DoublePoint>();

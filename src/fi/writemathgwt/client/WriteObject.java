@@ -10,6 +10,9 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 
 import fi.writemathgwt.client.engine.Stroke;
+import fi.writemathgwt.client.engine.Point;
+import fi.writemathgwt.client.engine.DoublePoint;
+import fi.writemathgwt.client.engine.DoubleRectangle;
 import fi.writemathgwt.client.engine.StrokeMatcher;
 
 

@@ -33,11 +33,17 @@ private static HashMap<String,int[][]> cachedLocDAngleData = new HashMap<String,
 			return cachedLocDAngleData.get(teken);
 			
 		if("b".equals(teken)) {int[][] data = {{180,30,10,22}};return data;}
-		if("h_1".equals(teken)) {int[][] data = {};return data;}
+		if("h_1".equals(teken)) {int[][] data = {{150,40,16,32}};return data;}
 		if("k".equals(teken)) {int[][] data = {{120,60,29,38}};return data;}
 		if("k_1".equals(teken)) {int[][] data = {{120,60,32,39}};return data;}
 		if("r".equals(teken)) {int[][] data = {{180,40,10,22}};return data;}
 		if("z".equals(teken)) {int[][] data = {{-130,30,5,20}};return data;}
+
+		if("B".equals(teken)) {int[][] data = {{120,60,20,35}};return data;}
+		
+		if(">".equals(teken)) {int[][] data = {{-120,30,10,30}};return data;}
+
+
 
 		return new int[0][0];
 	}

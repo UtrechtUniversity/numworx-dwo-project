@@ -2,6 +2,8 @@ package fi.writemathgwt.client;
 
 
 import java.util.ArrayList;
+import fi.writemathgwt.client.engine.Point;
+
 
 
 /**

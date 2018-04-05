@@ -10,6 +10,10 @@ import fi.writemath.engine.strokematching.StrokeMatcherFactory;
 import fi.writemath.engine.strokematching.results.MatchResult;
 import fi.writemath.engine.strokematching.strokesampleset.StrokeSampleSetFactory;
 
+import fi.writemathgwt.client.engine.Point;
+import fi.writemathgwt.client.engine.DoublePoint;
+
+
 public class StrokeMatcherWrapper {
 	private static Logger logger = Logger.getLogger("StrokeMatcherWrapper");
 

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class StrokeMatcher {
 	
-	private static String checkLogString;
-	private static ArrayList<Double> scores;
-	private static String[] tekens = ReferenceSamples.getTekens();
+	protected static String checkLogString;
+	protected static ArrayList<Double> scores;
+	protected static String[] tekens = ReferenceSamples.getTekens();
 	
 	public static boolean match(Stroke wo, String key, boolean filter) {
 		if(key.equals(findMatches(wo, filter)[0]))
