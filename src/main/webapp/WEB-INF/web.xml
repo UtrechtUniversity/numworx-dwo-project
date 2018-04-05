@@ -105,7 +105,12 @@
       <filter-name>JAMonFilter</filter-name>
       <url-pattern>/*</url-pattern>
     </filter-mapping>-->
- 
+<!-- This must be first -->
+	<filter-mapping>
+		<filter-name>HTTPS</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+  
     <filter-mapping>
         <filter-name>Remote Address Filter</filter-name>
         <url-pattern>/public/user/registerSAML</url-pattern>
@@ -125,12 +130,13 @@
 		<url-pattern>*.jsp</url-pattern>
 	</filter-mapping>
 	
-	<filter-mapping>
-		<filter-name>HTTPS</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-    
+   
     <!-- Servlets -->
+    <servlet>
+    	<description>Snoop servlet from tomcat examples</description>
+    	<servlet-name>snoop</servlet-name>
+    	<servlet-class>fi.servlet.snoop.Snoop</servlet-class>
+    </servlet>
     <servlet>
         <description><![CDATA[Servlet voor het genereren van de dwo.html pagina]]></description>
         <servlet-name>DwoWebPage</servlet-name>
@@ -220,6 +226,11 @@
     <!--
     servlet mappings 
     -->
+    <servlet-mapping>
+   		<servlet-name>snoop</servlet-name>
+   		<url-pattern>/snoop</url-pattern>
+   		<url-pattern>/snoop/*</url-pattern>
+   </servlet-mapping>
     <servlet-mapping>
         <!-- note that xmlrpc is a hardcoded path relative to the applet containing html page -->
         <!-- note that jars is also a hardcoded path relative to the applet containing html page -->

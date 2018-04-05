@@ -90,9 +90,8 @@ public class HTTPFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		req = balanced(req);
 
-		LOG.fine("Balanced " + req.getRequestURL() + " " + req.isSecure() + " from " + req.getRemoteAddr());
-
-		if(req.isSecure() || req.getRemoteAddr().equals("127.0.0.1"))
+		LOG.info("Balanced " + req.getRequestURL() + " " + req.isSecure() + " from " + req.getRemoteAddr());
+		if(req.isSecure() || req.getRemoteAddr().equals("127.0.0.1") || req.getRemoteAddr().equals("0:0:0:0:0:0:0:1"))
 		{
 			chain.doFilter(req, response);
 			return;
@@ -119,7 +118,7 @@ public class HTTPFilter implements Filter {
 	}
 
 	private boolean isException(String uri) {
-		return uri.contains("rest")||uri.contains("xmlrpc");
+		return uri.contains("rest")||uri.contains("xmlrpc")||uri.contains("crossdomain.xml");
 	}
 
 	@Override

@@ -55,5 +55,11 @@
         <from>^/$</from>
         <to>index.html</to>
     </rule>
+    
+    <rule>
+    	<note>/rest/userid/schoolid/*</note>
+    	<from>^/2rest/[^/]+/[^/]+/(.*)$</from>
+    	<to>/rest/$1</to>   
+    </rule>
         
 </urlrewrite>   

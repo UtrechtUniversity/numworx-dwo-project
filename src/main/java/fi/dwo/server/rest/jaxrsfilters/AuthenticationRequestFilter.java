@@ -16,14 +16,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.Priority;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.PreMatching;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
 import javax.xml.bind.DatatypeConverter;
@@ -41,6 +42,9 @@ import nl.uu.fi.dwo.rest.security.TOTP;
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationRequestFilter implements ContainerRequestFilter {
 
+	
+	@Context HttpServletRequest request;
+	
     private static class DwoUserSecurityContext implements SecurityContext {
 
         DwoUserPrincipal u;
@@ -123,13 +127,27 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
         PersistentUser u = UserManager.findByUserName(authFields[0]);
         if (u != null && u.getPassword().equals(authFields[1])) {
             SecurityContext sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), secCtx.isSecure(), SecurityContext.BASIC_AUTH);
+            setUsername(sc);
             return sc;
         }
         //else error
         return null;
     }
 
-    private SecurityContext validateTOTPToken(String authHeader, SecurityContext secCtx) {
+	/**
+	 * Save the username in a http request attribute <b>"username"</b>. In tomcat
+	 * this string can be logged by %{username}r in the logging valve.
+	 * 
+	 * @param sc
+	 */
+	private void setUsername(SecurityContext sc) {
+		if (request != null) {
+			request.setAttribute("username", sc.getUserPrincipal().getName());
+		}
+
+	}
+
+	private SecurityContext validateTOTPToken(String authHeader, SecurityContext secCtx) {
 
         byte[] header = Base64.getDecoder().decode(authHeader);
         String headerString = ":";
@@ -144,6 +162,7 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
         for (PersistentLoginContext l : loginContextList) {
             if (TOTP.verifyTOTP(authFields[1], DatatypeConverter.printHexBinary(l.getSecretKey()), "8")) {
                 SecurityContext sc = new DwoUserSecurityContext(new DwoUserPrincipal(u), secCtx.isSecure(), "BEARER");
+                setUsername(sc);
                 return sc;
             }
         }
