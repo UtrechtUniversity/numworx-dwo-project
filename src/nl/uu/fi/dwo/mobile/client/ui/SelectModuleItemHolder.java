@@ -6,6 +6,10 @@ import java.util.List;
 
 import com.google.gwt.xml.client.Node;
 
+import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
 /**
  * Contains all items in module selection
  * 
@@ -87,6 +91,9 @@ public class SelectModuleItemHolder
 	
 	public static SelectModuleItem getScoByID(Object id) {
 		init();
+		if(id instanceof PersistenceId) {
+			id = PersistenceIdDecoderInterface.instance.idOf((PersistenceId) id, PersistenceClassType.PersistentScoContext);
+		}
 		return scos.get(id.toString());
 	}
 

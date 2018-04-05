@@ -587,13 +587,16 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	void gotoSelected(String href, SelectModuleItem parent) {
 		//String page = "";
 		href = href.substring(5);
+		String location  = null;
 		int dot = href.lastIndexOf('.');
 		if(dot > 0) {
 			//page = href.substring(dot+1);
+			location = Integer.toString(Integer.parseInt(href.substring(dot+1))-1);
 			href = href.substring(0,dot);
 		}
 		Promise<List<SelectModuleItem>> children = getChildrenOrScosPromise(parent);
 		final String ref = href;
+		final String loc = location;
 		children.then(
 			new Success<List<SelectModuleItem>,Void>() {
 
@@ -604,13 +607,13 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 						// try numeric first
 						int sconr = Integer.parseInt(ref)-1;
 						SelectModuleItem is = children.get(sconr);
-						westPanel.selectItem(is);
+						westPanel.selectItem(is,loc);
 					} catch (Exception ex) {
 						for (Iterator<SelectModuleItem> iterator = children.iterator(); iterator.hasNext();) {
 							SelectModuleItem is = iterator.next();
 							if(is.getName().startsWith(ref))
 							{
-								westPanel.selectItem(is);
+								westPanel.selectItem(is,loc);
 								break;
 							}
 						}

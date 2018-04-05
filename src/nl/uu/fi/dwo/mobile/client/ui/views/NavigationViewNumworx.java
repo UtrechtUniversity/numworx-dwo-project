@@ -303,4 +303,27 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		p.setWidgetLeftRight(root, 0, Unit.PX, 0, Unit.PX);
 	}
 
+	public void selectItem(SelectModuleItem o, String location) {
+		Place place ;
+		switch(o.getType()) {
+		default:
+		case ROOT:
+			place = new TreeModulePlace("0");
+			break;
+		case SCO:
+			place = new ViewModulePlace(o.getID(), location);
+			break;
+		case MODULE:
+			//place = new SelectModulePlace(o.getID());
+			place = new TreeModulePlace(o.getID());
+			break;
+		case FOLDER:
+			place = new TreeModulePlace(o.getID());
+			break;
+		}
+		presenter.goTo(place);
+		
+		
+	}
+
 }

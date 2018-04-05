@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.mobile.client.ui.places;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceTokenizer;
 
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
 public interface Hash {
 	enum Type { c(new c.Tokenizer()), s(new s.Tokenizer());
 		
@@ -19,4 +21,5 @@ public interface Hash {
 	Type getType();
 	Place getPlace();
 	String getToken();
+	PersistenceId getID();
 }

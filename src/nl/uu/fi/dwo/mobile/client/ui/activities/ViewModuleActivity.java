@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -45,7 +46,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 	private SelectModuleItem sco;
 	private Timer tm;
 	private boolean started;
-	
+	private String location;
 	
 	
 	@Override
@@ -55,10 +56,11 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 		return super.mayStop();
 	}
 
-	public ViewModuleActivity(ClientFactory clientFactory, SelectModuleItem sco)
+	public ViewModuleActivity(ClientFactory clientFactory, SelectModuleItem sco, ViewModulePlace where)
 	{
 		this.clientFactory = clientFactory;
 		this.sco = sco;
+		this.location = where.getLocation();
 
 	}
 
@@ -134,6 +136,9 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 
 			@Override
 			public void onSuccess(Void result) {
+				if(location != null) {
+					view.getApi().SetValue(Memento.LOCATION, location);
+				}
 				view.setupModule(sco.getName(), sco.getFile());
 				//panel.setWidget(view);
 			}
@@ -209,9 +214,12 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 			}
 			SelectModuleItem item = list.get(sconr);
 			Object scoid = item.getID();
-			if(item != sco )
+			if (item != sco )
 			{	
-				goTo(new ViewModulePlace(scoid));
+				String location = null;
+				if (sconr>=0)
+					location = Integer.toString(sconr);
+				goTo(new ViewModulePlace(scoid,location));
 			}
 		}
 	}

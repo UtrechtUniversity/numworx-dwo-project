@@ -12,10 +12,12 @@ import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.s;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewNumworx;
@@ -44,19 +46,29 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 	@Inject ViewModuleView view;
 	private String name;
 	private AnchorContext defaultContext;
-	private Place next;
+	final private Place next;
+	final private String location;
 	@Inject PlaceController placeController;
 	@Inject nl.uu.fi.dwo.mobile.client.ui.RPCHandler rpcHandler;
 	private boolean started;
 
-	@Inject ScoActivity() {}
+	@Inject ScoActivity(s where) {
+		next = new LoginPlace(where);
+		location = where.getLocation();
+	}
 	
-	public ScoActivity(ClientFactory clientFactory, SelectModuleItem item) {
+//	public ScoActivity(ClientFactory clientFactory, SelectModuleItem item) {
+//		this(clientFactory, item, (s) clientFactory.getPlaceController().getWhere());
+//	}
+	
+	public ScoActivity(ClientFactory clientFactory, SelectModuleItem item, s where) {
 		this.item = item;
 		placeController = clientFactory.getPlaceController();
 		view = clientFactory.getEntryView();
 		//view = new ViewModuleViewNumworx().initialize().setupAPI();
 		rpcHandler = clientFactory.getRPCHandler();
+		next = new LoginPlace(where);
+		location = where.getLocation();
 	}
 
 	@Override
@@ -70,7 +82,6 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 		String scoID = item.getID().toString();
 		DWOplayer.insertCSS(scoID);
 		view.setUnitId(scoID);
-		next = new LoginPlace(placeController.getWhere());
 
 		addHandlerRegistration(
 		view.getBackButton().addTapHandler(new TapHandler() {
@@ -136,6 +147,9 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 					public Promise<Void> call(Promise<Void> resolved)
 							throws Exception {
 						started = true;
+						if(location != null) {
+							view.getApi().SetValue(Memento.LOCATION, location);
+						}
 						view.setupModule(name, item.getFile());
 						panel.setWidget(view);
 						return null;

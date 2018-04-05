@@ -20,6 +20,7 @@ import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 
 import fi.dwo.gwt.lib.rest.DwoConstants;
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.DummyClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
@@ -85,10 +86,14 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 
 			@Override
 			public void onSuccess(Void result) {
-				String target 
-				= Window.Location.getHash();
+				String target = Window.Location.getHash();
 				if(target.startsWith("#")) target = target.substring(1);
-				//target = History.getToken();		
+				int dot = target.lastIndexOf('.');
+				if(dot > 0) {
+					String location = target.substring(dot+1);
+					target = target.substring(0, dot-1);
+					api.SetValue(Memento.LOCATION, location);
+				}
 				ValueChangeEvent<String> event = new InitialValueChangeEvent(target);
 				onValueChange(event);
 			}

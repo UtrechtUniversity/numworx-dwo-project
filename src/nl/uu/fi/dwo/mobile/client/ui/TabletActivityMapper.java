@@ -21,6 +21,9 @@ import nl.uu.fi.dwo.mobile.client.ui.places.SearchPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.s;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
@@ -60,16 +63,19 @@ public class TabletActivityMapper implements ActivityMapper
 			return new CourseActivity(clientFactory, item);
 		}
 
-		if (place instanceof nl.uu.fi.dwo.mobile.client.ui.places.s) 
+		if (place instanceof s) 
 		{
-			String id = ((nl.uu.fi.dwo.mobile.client.ui.places.s) place).getToken();
+			s where = (s) place;
+			PersistenceId id = where.getID();
 			SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
 			if(item == null)
 			{
-				item = new SelectModuleItem(id, SelectModuleItem.Type.SCO);
+				DomScoContext sco = new DomScoContext();
+				sco.setId(id);
+				item = new SelectModuleItem(sco);
 				SelectModuleItemHolder.insert(item);
 			}
-			return new ScoActivity(clientFactory, item);
+			return new ScoActivity(clientFactory, item, where);
 		}
 		
 		
@@ -88,11 +94,12 @@ public class TabletActivityMapper implements ActivityMapper
 			return new FlatModuleActivity(clientFactory, item);
 		}
 		if (place instanceof ViewModulePlace)
-		{	String id = ((ViewModulePlace) place).getToken();
+		{	ViewModulePlace where = (ViewModulePlace) place;
+			PersistenceId id = where.getID();
 			SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
 			if(item == null)
 				return new LoginActivity(clientFactory);
-			final ViewModuleActivity viewModuleActivity = new ViewModuleActivity(clientFactory, item);
+			final ViewModuleActivity viewModuleActivity = new ViewModuleActivity(clientFactory, item, where);
 			Provider<Activity> provider = new Provider<Activity>() {
 				
 				@Override

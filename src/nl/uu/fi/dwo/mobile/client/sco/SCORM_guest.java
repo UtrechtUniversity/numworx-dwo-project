@@ -11,6 +11,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SCORM_guest implements Scorm2004IF {
 
+	
+	private String location;
+	
 	@Override
 	public Promise<String> Commit() {
 		return Promises.resolved("");
@@ -24,6 +27,8 @@ public class SCORM_guest implements Scorm2004IF {
 			return "Guest, Anonymous";
 		if(Memento.LEARNER_PREFERENCE_LANGUAGE.equals(name))
 			return 	getLocale();
+		if(Memento.LOCATION.equals(name))
+			return location;
 		return "";
 	}
 
@@ -54,6 +59,8 @@ public class SCORM_guest implements Scorm2004IF {
 
 	@Override
 	public String SetValue(String name, String value) {
+		if(Memento.LOCATION.equals(name))
+			location = value;
 		return "";
 	}
 
@@ -64,6 +71,7 @@ public class SCORM_guest implements Scorm2004IF {
 
 	@Override
 	public String Initialize() {
+		location = "";
 		return "";
 	}
 
@@ -73,5 +81,7 @@ public class SCORM_guest implements Scorm2004IF {
 	public void setScoID(int scoID) {
 	}
 	
-	public void Initialize(final AsyncCallback<Void> callback) { if(callback!=null) callback.onSuccess(null); }
+	public void Initialize(final AsyncCallback<Void> callback) {
+		location = "";
+		if(callback!=null) callback.onSuccess(null); }
 }
