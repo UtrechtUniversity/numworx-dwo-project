@@ -77,7 +77,6 @@ public class StrokeDirFilter {
 		if("of".equals(teken)) {int[][] data = {};return data;}
 		if("sqrt".equals(teken)) {int[][] data = {};return data;}
 		if("sqrt_1".equals(teken)) {int[][] data = {};return data;}
-		if("/".equals(teken)) {int[][] data = {{ 230, 20, 1, 39, 32}};return data;}
 		
 		if("B".equals(teken)) {int[][] data = {{  210, 60, 20, 28, 3}};return data;}
 		if("G".equals(teken)) {int[][] data = {{  0, 30, 36, 39, 2}};return data;}
@@ -97,6 +96,9 @@ public class StrokeDirFilter {
 		if("<".equals(teken)) {int[][] data = {};return data;}
 		if("(".equals(teken)) {int[][] data = {};return data;}
 		if(")".equals(teken)) {int[][] data = {};return data;}
+		if("\\".equals(teken)) {int[][] data = {{310,20,1,39,25}};return data;}
+		if("/".equals(teken)) {int[][] data = {{ 230, 20, 1, 39, 32}};return data;}
+		
 		
 		return new int[0][0];
 	}
