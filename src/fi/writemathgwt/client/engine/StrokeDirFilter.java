@@ -39,7 +39,7 @@ public class StrokeDirFilter {
 		if("0".equals(teken)) {int[][] data = {};return data;}
 		if("1".equals(teken)) {int[][] data = {{265,20,1,39,24}};return data;}
 		if("1_1".equals(teken)) {int[][] data = {{45,45,1,8,4},{265,30,1,39,26}};return data;}
-		if("2".equals(teken)) {int[][] data = {};return data;}
+		if("2".equals(teken)) {int[][] data = {{0,60,33,39,2}};return data;}
 		if("3".equals(teken)) {int[][] data = {{180,90,7,20,2},{0,90,20,30,2}};return data;}
 		if("4".equals(teken)) {int[][] data = {};return data;}
 		if("6".equals(teken)) {int[][] data = {};return data;}
@@ -72,7 +72,7 @@ public class StrokeDirFilter {
 		if("v_1".equals(teken)) {int[][] data = {{ 0, 60, 1, 5, 2}};return data;}
 		if("w".equals(teken)) {int[][] data = {};return data;}
 		if("x".equals(teken)) {int[][] data = {};return data;}
-		if("y".equals(teken)) {int[][] data = {};return data;}
+		if("y".equals(teken)) {int[][] data = {{70,30,8,20,4}};return data;}
 		if("z".equals(teken)) {int[][] data = {};return data;}
 		if("of".equals(teken)) {int[][] data = {};return data;}
 		if("sqrt".equals(teken)) {int[][] data = {};return data;}
