@@ -96,6 +96,12 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>nl.uu.fi.dwo.ideas</groupId>
+			<artifactId>IdeasGWT</artifactId>
+			<version>0.1.0</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<version>0.0.12-SNAPSHOT</version>
 	<properties>
