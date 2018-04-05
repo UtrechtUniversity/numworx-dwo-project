@@ -217,8 +217,8 @@ public interface DbAccessIF extends DbAccessLogin {
     public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException;
 
-    public Vector<Object> getTeachersOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException;
+//    public Vector<Object> getTeachersOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException;
 
 //    /**
 //     * Give a class a new teacher
@@ -236,74 +236,74 @@ public interface DbAccessIF extends DbAccessLogin {
 //    public boolean renameClass(int classID, String newName, String newRegistrationKey, boolean iconizer) throws DwoXmlRpcException, IOException, XmlRpcException,
 //            SQLException;
 
-    /**
-     * Add a teacher to a class
-     *
-     * @param classID
-     * @param newTeacher
-     * @return
-     * @throws IOException
-     * @throws SQLException
-     * @throws XmlRpcException
-     * @throws DwoXmlRpcException
-     */
-    public boolean addTeacherToClass(int classID, int newTeacher) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+//    /**
+//     * Add a teacher to a class
+//     *
+//     * @param classID
+//     * @param newTeacher
+//     * @return
+//     * @throws IOException
+//     * @throws SQLException
+//     * @throws XmlRpcException
+//     * @throws DwoXmlRpcException
+//     */
+//    public boolean addTeacherToClass(int classID, int newTeacher) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+
+//    /**
+//     * Remove a teacher from a class
+//     *
+//     * @param classID
+//     * @param newTeacher
+//     * @return
+//     * @throws IOException
+//     * @throws SQLException
+//     * @throws XmlRpcException
+//     * @throws DwoXmlRpcException
+//     */
+//    public boolean removeTeacherFromClass(int classID, int newTeacher) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+
+//    /**
+//     * Add a student to a class
+//     *
+//     * @param classID
+//     * @param studentID
+//     * @return
+//     * @throws IOException
+//     * @throws SQLException
+//     * @throws XmlRpcException
+//     * @throws DwoXmlRpcException
+//     */
+//    public boolean addStudentToClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 
     /**
-     * Remove a teacher from a class
-     *
-     * @param classID
-     * @param newTeacher
-     * @return
-     * @throws IOException
-     * @throws SQLException
-     * @throws XmlRpcException
-     * @throws DwoXmlRpcException
-     */
-    public boolean removeTeacherFromClass(int classID, int newTeacher) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+//     * Remove a student from class
+//     *
+//     * @param classID
+//     * @param studentID
+//     * @return
+//     * @throws IOException
+//     * @throws SQLException
+//     * @throws XmlRpcException
+//     * @throws DwoXmlRpcException
+//     */
+//    public boolean removeStudentFromClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 
-    /**
-     * Add a student to a class
-     *
-     * @param classID
-     * @param studentID
-     * @return
-     * @throws IOException
-     * @throws SQLException
-     * @throws XmlRpcException
-     * @throws DwoXmlRpcException
-     */
-    public boolean addStudentToClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
-
-    /**
-     * Remove a student from class
-     *
-     * @param classID
-     * @param studentID
-     * @return
-     * @throws IOException
-     * @throws SQLException
-     * @throws XmlRpcException
-     * @throws DwoXmlRpcException
-     */
-    public boolean removeStudentFromClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
-
-    /**
-     * @param username
-     * @param password
-     * @param firstname
-     * @param middlename
-     * @param lastname
-     * @param email
-     * @return boolean
-     * @throws fi.dwo.client.system.RegisterException
-     * @throws java.sql.SQLException
-     *
-     */
-    public boolean register(String username, String password, String firstname,
-            String middlename, String lastname, String email)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException;
+//    /**
+//     * @param username
+//     * @param password
+//     * @param firstname
+//     * @param middlename
+//     * @param lastname
+//     * @param email
+//     * @return boolean
+//     * @throws fi.dwo.client.system.RegisterException
+//     * @throws java.sql.SQLException
+//     *
+//     */
+//    public boolean register(String username, String password, String firstname,
+//            String middlename, String lastname, String email)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException;
 
     public String LMSGetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement) throws IOException, XmlRpcException,
             SQLException;
@@ -394,78 +394,78 @@ public interface DbAccessIF extends DbAccessLogin {
             String lastname, String email) throws DwoXmlRpcException,
             IOException, XmlRpcException, SQLException;
 
-    /**
-     * @param teacher
-     * @param className
-     * @return java.util.Hashtable
-     * @throws fi.dwo.client.system.ClassException
-     * @throws java.sql.SQLException
-     *
-     */
-    public Hashtable addClass(int teacher, String className)
-            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+//    /**
+//     * @param teacher
+//     * @param className
+//     * @return java.util.Hashtable
+//     * @throws fi.dwo.client.system.ClassException
+//     * @throws java.sql.SQLException
+//     *
+//     */
+//    public Hashtable addClass(int teacher, String className)
+//            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-    /**
-     * @param schoolName
-     * @param schoolLogin
-     * @param studentPassw
-     * @param teacherPassw
-     * @return java.util.Hashtable
-     * @throws fi.dwo.client.system.ClassException
-     * @throws java.sql.SQLException
-     *
-     */
-    public Hashtable addSchool(String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
-            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+//    /**
+//     * @param schoolName
+//     * @param schoolLogin
+//     * @param studentPassw
+//     * @param teacherPassw
+//     * @return java.util.Hashtable
+//     * @throws fi.dwo.client.system.ClassException
+//     * @throws java.sql.SQLException
+//     *
+//     */
+//    public Hashtable addSchool(String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
+//            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-    /**
-     * @param schoolId
-     * @param schoolName
-     * @param schoolLogin
-     * @param studentPassw
-     * @param teacherPassw
-     * @return java.util.Hashtable
-     * @throws fi.dwo.client.system.ClassException
-     * @throws java.sql.SQLException
-     *
-     */
-    public Hashtable addSchool(int schoolId, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
-            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+//    /**
+//     * @param schoolId
+//     * @param schoolName
+//     * @param schoolLogin
+//     * @param studentPassw
+//     * @param teacherPassw
+//     * @return java.util.Hashtable
+//     * @throws fi.dwo.client.system.ClassException
+//     * @throws java.sql.SQLException
+//     *
+//     */
+//    public Hashtable addSchool(int schoolId, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
+//            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-    /**
-     * @param schoolID
-     * @param schoolName
-     * @param schoolLogin
-     * @param studentPassw
-     * @param teacherPassw
-     * @return java.util.Hashtable
-     * @throws fi.dwo.client.system.ClassException
-     * @throws java.sql.SQLException
-     *
-     */
-    public Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
-            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+//    /**
+//     * @param schoolID
+//     * @param schoolName
+//     * @param schoolLogin
+//     * @param studentPassw
+//     * @param teacherPassw
+//     * @return java.util.Hashtable
+//     * @throws fi.dwo.client.system.ClassException
+//     * @throws java.sql.SQLException
+//     *
+//     */
+//    public Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
+//            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-    /**
-     * @param userID
-     * @return
-     *
-     */
-    public boolean deleteUser(int userID) throws IOException, XmlRpcException,
-            SQLException;
+//    /**
+//     * @param userID
+//     * @return
+//     *
+//     */
+//    public boolean deleteUser(int userID) throws IOException, XmlRpcException,
+//            SQLException;
 
-    /**
-     * if mustEmpty is true, and the class contains students, this function
-     * returns false. Otherwise it returns true
-     *
-     * @param classID
-     * @param mustEmpty
-     * @return boolean
-     * @throws java.sql.SQLException
-     *
-     */
-    public boolean deleteClass(int classID, boolean mustEmpty)
-            throws IOException, XmlRpcException, SQLException;
+//    /**
+//     * if mustEmpty is true, and the class contains students, this function
+//     * returns false. Otherwise it returns true
+//     *
+//     * @param classID
+//     * @param mustEmpty
+//     * @return boolean
+//     * @throws java.sql.SQLException
+//     *
+//     */
+//    public boolean deleteClass(int classID, boolean mustEmpty)
+//            throws IOException, XmlRpcException, SQLException;
 
     public Vector getResults(Vector courses, int userID) throws IOException, XmlRpcException, SQLException;
 
@@ -475,8 +475,8 @@ public interface DbAccessIF extends DbAccessLogin {
 
     public Vector getResults(int courseID, int userID) throws IOException, XmlRpcException, SQLException;
 
-    public boolean disconnectFromClass(int userID, int classID) throws IOException,
-            XmlRpcException, SQLException;
+//    public boolean disconnectFromClass(int userID, int classID) throws IOException,
+//            XmlRpcException, SQLException;
 
     /**
      * Logs a string to the error-log at the server (just for debugging
@@ -489,7 +489,7 @@ public interface DbAccessIF extends DbAccessLogin {
      */
     public boolean log(String s) throws IOException, XmlRpcException;
 
-    public boolean log(Level level, String s) throws IOException, XmlRpcException;
+//    public boolean log(Level level, String s) throws IOException, XmlRpcException;
 
     public int addCourse(int schoolID, String name, String description, int dwoProfile, int parentID, boolean withChildren) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
@@ -527,7 +527,7 @@ public interface DbAccessIF extends DbAccessLogin {
 
     public boolean deleteSchool(int schoolID) throws IOException, XmlRpcException, SQLException;
 
-    public Hashtable getFidentitySchools() throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
+//    public Hashtable getFidentitySchools() throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
 
     public Vector getUserResults(int courseID, int userID, int schoolGroupID) throws IOException, XmlRpcException, SQLException;
 
@@ -643,15 +643,15 @@ public interface DbAccessIF extends DbAccessLogin {
             boolean delete, byte[] launchdata, boolean showScore)
             throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-    public Vector<Object> getClassesOfStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+//    public Vector<Object> getClassesOfStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 
     public Vector getToSchoolsFrom(int schoolID) throws IOException, XmlRpcException, SQLException;
 
-    public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+//    public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 
     public Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 
-    public boolean isInTeacherRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+//    public boolean isInTeacherRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 
     public Vector<Object> getHasRoleUser(int uid, int sgid) throws IOException, XmlRpcException, SQLException;
 
