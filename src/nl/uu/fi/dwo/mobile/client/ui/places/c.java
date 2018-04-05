@@ -45,7 +45,9 @@ public class c extends Place implements Hash {
 
 	@Override
 	public PersistenceId getID() {
-		return new PersistenceId("MYSQL;PersistentCourse;" + token);
+		String id = token;
+		while(id.length()<20) id = '0' + id;
+		return new PersistenceId("MYSQL;PersistentCourse;" + id);
 	}
 
 }

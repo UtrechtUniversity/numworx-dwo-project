@@ -37,7 +37,8 @@ public class ViewModulePlace extends Place
 
 	public PersistenceId getID() {
 		int dot = token.lastIndexOf('.');
-		String id = dot > 0 ? token.substring(0, dot-1) : token;
+		String id = dot > 0 ? token.substring(0, dot) : token;
+		while(id.length()<20) id = '0' + id;
 		return new PersistenceId("MYSQL;PersistentScoContext;" + id);
 	}
 
