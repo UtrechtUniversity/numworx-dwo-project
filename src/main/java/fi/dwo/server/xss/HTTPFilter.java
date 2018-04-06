@@ -32,18 +32,22 @@ public class HTTPFilter implements Filter {
 		
 		public BalancedServletRequest(HttpServletRequest request) {
 			super(request);
-			String remoteAddr = request.getHeader("X-Forwarded-For");
-			int index = remoteAddr.lastIndexOf(',');
-			if (index>=0) {
-				remoteAddr = remoteAddr.substring(index+1);
+			String remoteAddr = request.getHeader("x-forwarded-for");
+			if (remoteAddr == null)
+				remoteAddr = request.getRemoteAddr();
+			else {
+				int index = remoteAddr.lastIndexOf(',');
+				if (index >= 0) {
+					remoteAddr = remoteAddr.substring(index + 1);
+				}
 			}
-			String serverPort = request.getHeader("X-Forwarded-Port");
-			String scheme = request.getHeader("X-Forwarded-Proto");
-			
+			String serverPort = request.getHeader("x-forwarded-port");
+			String scheme = request.getHeader("x-forwarded-proto");
+
 			this.remoteAddr = remoteAddr;
-			this.serverPort = Integer.parseInt(serverPort);
-			this.scheme = scheme;
-			this.secure = "https".equals(scheme);
+			this.serverPort = serverPort != null ? Integer.parseInt(serverPort) : request.getServerPort();
+			this.scheme = scheme != null ? scheme : request.getScheme();
+			this.secure = scheme != null ? "https".equals(scheme) : request.isSecure();
 		}
 
 		@Override
@@ -88,9 +92,12 @@ public class HTTPFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
+		LOG.info("HTTP  " + req.getRequestURL() + " " + req.isSecure() + " from " + req.getRemoteAddr());
 		req = balanced(req);
 
-		LOG.info("Balanced " + req.getRequestURL() + " " + req.isSecure() + " from " + req.getRemoteAddr());
+		LOG.info("Balanced " + req.getRequestURL() + " " + req.isSecure() + " from " + req.getRemoteAddr() + " " + req.getClass().getName());
+		request.setAttribute("remoteAddr", req.getRemoteAddr());
+
 		if(req.isSecure() || req.getRemoteAddr().equals("127.0.0.1") || req.getRemoteAddr().equals("0:0:0:0:0:0:0:1"))
 		{
 			chain.doFilter(req, response);
@@ -125,6 +132,7 @@ public class HTTPFilter implements Filter {
 	public void init(FilterConfig config) throws ServletException {
 		prefix = config.getInitParameter("prefix");
 		if(prefix == null) prefix = "172.";
+		LOG.info("init prefix = "  + prefix);
 	}
 
 }
