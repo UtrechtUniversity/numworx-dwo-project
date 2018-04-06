@@ -71,7 +71,7 @@ public class StrokeDAngleFilter {
 		if("v_1".equals(teken)) {int[][] data = {};return data;}
 		if("w".equals(teken)) {int[][] data = {};return data;}
 		if("x".equals(teken)) {int[][] data = {{-300,-20,-120,5,2,10},{30,160,-10,90,30,39},{180,360,-10,180,18,35}};return data;}
-		if("y".equals(teken)) {int[][] data = {{-40,40,-20,20,25,35}};return data;}
+		if("y".equals(teken)) {int[][] data = {{-240,40,-100,20,25,35}};return data;}
 		if("z".equals(teken)) {int[][] data = {};return data;}
 		
 		if("R".equals(teken)) {int[][] data = {{-300,-120,-90,10,15,27}};return data;}
@@ -83,6 +83,7 @@ public class StrokeDAngleFilter {
 		if("N".equals(teken)) {int[][] data = {};return data;}
 		
 		if("α".equals(teken)) {int[][] data = {{-330,-240,-120,20,5,30}};return data;}
+		if("γ".equals(teken)) {int[][] data = {{-360,-200,-150,20,3,38}};return data;}
 		if("φ".equals(teken)) {int[][] data = {{360,500,-30,120,2,38}};return data;}
 		
 		if("-".equals(teken)) {int[][] data = {};return data;}
