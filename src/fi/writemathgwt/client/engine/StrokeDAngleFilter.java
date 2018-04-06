@@ -70,7 +70,7 @@ public class StrokeDAngleFilter {
 		if("v".equals(teken)) {int[][] data = {};return data;}
 		if("v_1".equals(teken)) {int[][] data = {};return data;}
 		if("w".equals(teken)) {int[][] data = {};return data;}
-		if("x".equals(teken)) {int[][] data = {{-300,-20,-120,5,2,10}};return data;}
+		if("x".equals(teken)) {int[][] data = {{-300,-20,-120,5,2,10},{30,160,-10,90,30,39},{180,360,-10,180,18,35}};return data;}
 		if("y".equals(teken)) {int[][] data = {{-40,40,-20,20,25,35}};return data;}
 		if("z".equals(teken)) {int[][] data = {};return data;}
 		
