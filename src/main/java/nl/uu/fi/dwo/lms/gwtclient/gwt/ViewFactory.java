@@ -15,10 +15,10 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentsInSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresenter;
-import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithConfirmPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
@@ -47,5 +47,5 @@ public interface ViewFactory {
     public MessageDialogWithConfirmPresenter.Display getMessageDialogWithConfirmView();
     public MsgClickedDialogPresenter.Display getMsgClickedDialogView();
     public FileUploadStudentsPresenter.Display getFileUploadStudentsView();
-    public ProgressDialogPresenter.Display getProgressDialogView();
+    public ProgressDialogWithAbortPresenter.Display getProgressDialogView();
 }
