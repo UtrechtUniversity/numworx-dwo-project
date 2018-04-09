@@ -10,12 +10,14 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -139,6 +141,19 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 				item.setChildrenAsync(promise);
 			}
 // start downloading description/name/attributes
+			if ( clientFactory.getSchoolClass() != null) {
+				clientFactory.getRPCHandler().getCourseClass(item.getID(), clientFactory.getSchoolClass()).
+				filter(p-> !p.getClassCourses().isEmpty()).
+				then(p -> { 
+					DomClassCourse cc = p.getValue().getClassCourses().get(0).getValue();
+					DomCourseStudent c = p.getValue().getCourses().get(0).getValue();
+					item = new SelectModuleItem(c,cc);
+					SelectModuleItemHolder.insert(item);
+					view.setDescription(item);
+					view.render(item);
+					return null;
+				}, failure);
+			} else {
 			
 			clientFactory.getRPCHandler().getCourse(item.getID())
 
@@ -162,6 +177,7 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 					return null;
 				}
 			}, failure);
+			}
 		} else {
 			view.render(item);
 			

@@ -32,6 +32,8 @@ public interface RPCHandler {
 //	void getCoursesClass(Object classid,
 //			AsyncCallback<List<Map<String, Object>>> callback);
 	Promise<DomCoursesOfSchoolClass> getCoursesClass(DomSchoolClass schoolClass);
+	Promise<DomCoursesOfSchoolClass> getCourseClass(Object course, DomSchoolClass schoolClass);
+	Promise<DomCoursesOfSchoolClass> getScoContextClass(Object sco, DomSchoolClass schoolClass);
 	
 //	void getCoursesSchool(Object schoolID,
 //			AsyncCallback<List<Map<String, Object>>> callback);

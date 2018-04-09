@@ -211,4 +211,16 @@ class DummyRPCHandler implements RPCHandler {
 		return Promises.failed(new IllegalArgumentException());
 	}
 
+	@Override
+	public Promise<DomCoursesOfSchoolClass> getCourseClass(Object course, DomSchoolClass schoolClass) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Promise<DomCoursesOfSchoolClass> getScoContextClass(Object sco, DomSchoolClass schoolClass) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
