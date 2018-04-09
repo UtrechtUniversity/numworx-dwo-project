@@ -152,6 +152,21 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		});
 	}
 
+	public Promise<DomCoursesOfSchoolClass> getCourseClass(Object id, DomSchoolClass schoolclass) {
+		DomCourse course = toCourse(id);
+		return profile.then( p -> 
+			studentManager.getCourseClass(getContext(), schoolclass, course, p.getValue())
+		);
+	}
+
+	public Promise<DomCoursesOfSchoolClass> getScoContextClass(Object id, DomSchoolClass schoolclass) {
+		DomScoContext sco = toScoContext(id);
+		return profile.then( p -> 
+			studentManager.getScoContextClass(getContext(), schoolclass, sco, p.getValue())
+		);
+	}
+	
+	
 	@Override
 	public Promise<List<DomCourseStudent>> getCourses(Object id) {
 		final DomCourse parent = toCourse(id);	
@@ -168,7 +183,11 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	private DomCourse toCourse(Object id) {
 		if(id instanceof DomCourse) return (DomCourse) id;
 		DomCourse result = new DomCourse();
-		result.setId(idOf(id, PersistenceClassType.PersistentCourse));
+		if(id instanceof PersistenceId) {
+			result.setId((PersistenceId) id);
+		} else {
+			result.setId(idOf(id, PersistenceClassType.PersistentCourse));
+		}
 		return result;
 	}
 
@@ -186,6 +205,8 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			}
 		});
 	}
+	
+	
 
 	@Override
 	public Promise<DomDwoProfileFull> getDwoProfile() {
@@ -231,7 +252,11 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	private DomScoContext toScoContext(Object scoID) {
 		if(scoID instanceof DomScoContext) return (DomScoContext) scoID;
 		DomScoContext sco = new DomScoContext();
-		sco.setId(idOf(scoID, PersistenceClassType.PersistentScoContext));
+		if(scoID instanceof PersistenceId) {
+			sco.setId( (PersistenceId) scoID);
+		} else {
+			sco.setId(idOf(scoID, PersistenceClassType.PersistentScoContext));
+		}
 		return sco;
 	}
 
