@@ -3,6 +3,8 @@ package fi.writemathgwt.client.engine;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+import com.google.gwt.canvas.dom.client.Context2d;
+
 import fi.writemathgwt.client.Rectangle;
 import fi.writemathgwt.client.WriteObject;
 
@@ -25,7 +27,7 @@ public class StrokeContainer {
 		parseStrokes();
 	}
 	
-	public void draw(Graphics g) {
+	public void draw(Context2d g) {
 		for(int i=0 ; i<strokes.size() ; i++)
 			strokes.get(i).draw(g);
 	}

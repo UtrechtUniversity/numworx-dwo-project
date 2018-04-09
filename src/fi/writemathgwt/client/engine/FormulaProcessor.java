@@ -2,8 +2,6 @@ package fi.writemathgwt.client.engine;
 
 import java.util.ArrayList;
 
-import fi.writemathgwt.client.Rectangle;
-import fi.writemathgwt.client.WriteObject;
 import fi.writemathgwt.client.engine.WMObject;
 
 public class FormulaProcessor {

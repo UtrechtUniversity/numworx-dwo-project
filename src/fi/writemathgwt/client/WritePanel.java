@@ -37,6 +37,8 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 
 import fi.writemathgwt.client.engine.Point;
+import fi.writemathgwt.client.engine.Stroke;
+import fi.writemathgwt.client.engine.StrokeContainer;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -76,7 +78,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	private int width;
 	private int height;
 
-	
+	private StrokeContainer strokeContainer = new StrokeContainer();
 	
 	
 	private int panelShiftX, panelShiftY;
@@ -225,6 +227,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		
 		g.setFillStyle(CssColor.make(240, 240, 240));
 		g.fillRect(0, 0, width, height);
+		g.fill();
 		
 		if (true) 
 		{
@@ -243,61 +246,66 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 				g.lineTo(hCnt * gridSize, height - 1);
 				g.stroke();
 			}
+			
 		}
 		
 		
 		
 		g.setStrokeStyle(zwart);
-		for(int i = 0 ; i < writeObjects.size() ; i++) {
-			g.setFillStyle(CssColor.make(220, 220, 220));
-			if(analyserOn) {
-				int x = writeObjects.get(i).getBox().x;
-				int y = writeObjects.get(i).getBox().y;
-				int w = writeObjects.get(i).getBox().width;
-				int h = writeObjects.get(i).getBox().height;
-				//g.fillRect(x, y, w, h);
-				g.setFillStyle(CssColor.make(0, 0, 0));
-				g.fillText(""+i, x, y);
-			}
-			writeObjects.get(i).draw(g, panelShiftX, panelShiftY);
-			
-			if(analyserOn) {
-				g.setFillStyle(CssColor.make(255, 255, 255));
-				int bx = 460;
-				int by = 420;
-				int dx = 14;
-				g.fillRect(0, by-180, width, 560);
-				g.setFillStyle(CssColor.make(150, 150, 150));
-				g.setStrokeStyle(ruitjesKleur);
-				for (int k = 0; k < 9; k++) {
-					g.beginPath();
-					g.moveTo(bx, by-180+k*45);
-					g.lineTo(width, by-180+k*45);
-					g.stroke();
-				}
-				for(int j = 0 ; j < writeObjects.get(i).dAngles.size() ; j++) {
-					
-					int xx = bx+dx*j;
-					int ww = dx-5;
-					int barH = writeObjects.get(i).dAngles.get(j).intValue();
-					int yy = by-Math.max(0,barH);
-					int hh = Math.abs(barH);
-					g.fillRect(xx, yy, ww, hh);
-					g.fillText(""+(j+1), bx+dx*j, by+(barH<0?-5:10));
-					
-					g.fillText("dAngle "+(j+1)+" = "+writeObjects.get(i).dAngles.get(j).intValue(), bx-100, by-180+12*(j+1));
-				}
-			}
-			
-		}
-		}
+		strokeContainer.draw(g);
+//		for(int i = 0 ; i < writeObjects.size() ; i++) {
+//			g.setFillStyle(CssColor.make(220, 220, 220));
+//			if(analyserOn) {
+//				int x = writeObjects.get(i).getBox().x;
+//				int y = writeObjects.get(i).getBox().y;
+//				int w = writeObjects.get(i).getBox().width;
+//				int h = writeObjects.get(i).getBox().height;
+//				//g.fillRect(x, y, w, h);
+//				g.setFillStyle(CssColor.make(0, 0, 0));
+//				g.fillText(""+i, x, y);
+//			}
+//			writeObjects.get(i).draw(g, panelShiftX, panelShiftY);
+//			
+//			if(analyserOn) {
+//				g.setFillStyle(CssColor.make(255, 255, 255));
+//				int bx = 460;
+//				int by = 420;
+//				int dx = 14;
+//				g.fillRect(0, by-180, width, 560);
+//				g.setFillStyle(CssColor.make(150, 150, 150));
+//				g.setStrokeStyle(ruitjesKleur);
+//				for (int k = 0; k < 9; k++) {
+//					g.beginPath();
+//					g.moveTo(bx, by-180+k*45);
+//					g.lineTo(width, by-180+k*45);
+//					g.stroke();
+//				}
+//				for(int j = 0 ; j < writeObjects.get(i).dAngles.size() ; j++) {
+//					
+//					int xx = bx+dx*j;
+//					int ww = dx-5;
+//					int barH = writeObjects.get(i).dAngles.get(j).intValue();
+//					int yy = by-Math.max(0,barH);
+//					int hh = Math.abs(barH);
+//					g.fillRect(xx, yy, ww, hh);
+//					g.fillText(""+(j+1), bx+dx*j, by+(barH<0?-5:10));
+//					
+//					g.fillText("dAngle "+(j+1)+" = "+writeObjects.get(i).dAngles.get(j).intValue(), bx-100, by-180+12*(j+1));
+//				}
+//			}
+//			
+//		}
+	}
 		if (points.size() > 0) {
 			g.beginPath();
 			g.moveTo(points.get(0).x+panelShiftX, points.get(0).y+panelShiftY);
 			for(int j = 1 ; j <points.size() ; j++) {
 				g.lineTo(points.get(j).x+panelShiftX, points.get(j).y+panelShiftY);
 			}
+			g.moveTo(points.get(0).x+panelShiftX, points.get(0).y+panelShiftY);
+			g.closePath();
 			g.stroke();
+			
 		}
 		
 //		if (breukBoxes.size() > 0 ) {
@@ -348,7 +356,13 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		
 	}
 	
-	public String parseFormule() {		
+	public String parseFormule() {
+		return strokeContainer.getFormulaString();
+	}
+	
+	
+	public String parseFormule_() {	
+		
 		ArrayList<WriteObject> writeObjectsToDo = new ArrayList<WriteObject>();
 		// make a compact deep copy
 		for (int i = 0; i < writeObjects.size(); i++) {	
@@ -1299,141 +1313,146 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	
 	// OK
 	private void addWriteObject() {
-		ArrayList<Point> newWriteObjectPoints = new ArrayList<Point>();
-		for (int i=0; i<points.size(); i++) {
-			newWriteObjectPoints.add(
-					new Point(points.get(i).getX(), points.get(i).getY()) );
-//			newWriteObjectPoints.add(
-//					new Point(points.get(i).getX()-panelShiftX, points.get(i).getY()-panelShiftY) );
-		}
-//		resetPanelShift();
-
-		WriteObject wo = new WriteObject(newWriteObjectPoints);
-	
-		if ("null".equals(wo.getTeken())) 
-		{
-		}
-		//wis of gum
-		else if ("back".equals(wo.getTeken())) 
-		{
-			boolean isBack = true;
-			if (lastObject != null)
-			{	
-				
-//System.out.println("lo not null");				
-				WriteObject woTwoStroke = tryTwoStroke(lastObject, wo);
-				if (wo != woTwoStroke) 
-				{	
-//System.out.println("two");					
-					writeObjects.remove(lastObject);
-					wo = woTwoStroke;
-					lastObject = wo;
-					updateAverageHeight(wo);
-					writeObjects.add(wo);
-					isBack = false;
-				}
-			}
-//System.out.println("isBack " + isBack);			
-			if (isBack)
-			{
-				int x = wo.getBox().x;
-				//int y = wo.getBoxMid().y - wo.getBox().width / 2;
-				int y = wo.getBoxMid().y - averageHeight ;
-				int w = wo.getBox().width;
-				//int h = wo.getBox().width;
-				int h = 2*averageHeight;
-				Rectangle box = new Rectangle(x, y, w, h);
-				int objectsBefore = writeObjects.size();
-//System.out.println("before " + objectsBefore);				
-				writeObjects = removeAllInBox(writeObjects,box);
-				int objectsAfter = writeObjects.size();
-//System.out.println("after " + objectsAfter);				
-				if (objectsBefore != objectsAfter)
-				{	lastObject = null;
-					lastLastObject = null;
-				}
-				else
-				{	wo = new WriteObject("-",wo.getIntPoints());
-					lastLastObject = lastObject;
-					lastObject = wo;
-					writeObjects.add(wo);
-				}
-			}
-		}
-		else if (lastLastObject != null && lastObject!=null)
-		{
-			WriteObject woThreeStroke = tryThreeStroke(lastLastObject, lastObject,  wo);
-			if (wo != woThreeStroke) 
-			{
-				writeObjects.remove(lastObject);
-				writeObjects.remove(lastLastObject);
-				//lastLastObject = null;
-				wo = woThreeStroke;
-			}
-			else {
-				WriteObject woTwoStroke = tryTwoStroke(lastObject, wo);
-				if (wo != woTwoStroke) 
-				{
-					writeObjects.remove(lastObject);
-					wo = woTwoStroke;
-				}
-				else
-				{
-					lastLastObject = lastObject;
-				}
-				
-			}
-			lastObject = wo;
-			if(analyserOn)
-				objectToAnalyse = wo;
-			updateAverageHeight(wo);
-			writeObjects.add(wo);
-			
-		}
-		else if (lastObject != null)
-		{
-			WriteObject woTwoStroke = tryTwoStroke(lastObject, wo);
-			if (wo != woTwoStroke) 
-			{
-				writeObjects.remove(lastObject);
-				wo = woTwoStroke;
-			}
-			else
-			{
-				lastLastObject = lastObject;
-			}
-			lastObject = wo;
-			if(analyserOn)
-				objectToAnalyse = wo;
-			updateAverageHeight(wo);
-			writeObjects.add(wo);
-			
-		}
-		else 
-		{
-			lastLastObject = lastObject;
-			lastObject = wo;
-			if(analyserOn)
-				objectToAnalyse = wo;
-			updateAverageHeight(wo);
-			writeObjects.add(wo);
-		}
-		
+		strokeContainer.addStroke(new Stroke(points));
 		points.clear();
 		paint();
-		
-		//Buiten de DWOplayer:
-		//formuleViewer = new FormuleViewer(parseFormule());
 		eigenaar.writePanelChanged();
-		
-		//Binnen de DWOplayer:
-		//String text = parseFormule();
-		//FormuleEditor editor = kb.getEditor();
-		//if (editor != null)	{
-		//	editor.clearAll();
-		//	editor.insert(text);
-		//}
-	}
+	}	
+//		ArrayList<Point> newWriteObjectPoints = new ArrayList<Point>();
+//		for (int i=0; i<points.size(); i++) {
+//			newWriteObjectPoints.add(
+//					new Point(points.get(i).getX(), points.get(i).getY()) );
+////			newWriteObjectPoints.add(
+////					new Point(points.get(i).getX()-panelShiftX, points.get(i).getY()-panelShiftY) );
+//		}
+////		resetPanelShift();
+//
+//		WriteObject wo = new WriteObject(newWriteObjectPoints);
+//	
+//		if ("null".equals(wo.getTeken())) 
+//		{
+//		}
+//		//wis of gum
+//		else if ("back".equals(wo.getTeken())) 
+//		{
+//			boolean isBack = true;
+//			if (lastObject != null)
+//			{	
+//				
+////System.out.println("lo not null");				
+//				WriteObject woTwoStroke = tryTwoStroke(lastObject, wo);
+//				if (wo != woTwoStroke) 
+//				{	
+////System.out.println("two");					
+//					writeObjects.remove(lastObject);
+//					wo = woTwoStroke;
+//					lastObject = wo;
+//					updateAverageHeight(wo);
+//					writeObjects.add(wo);
+//					isBack = false;
+//				}
+//			}
+////System.out.println("isBack " + isBack);			
+//			if (isBack)
+//			{
+//				int x = wo.getBox().x;
+//				//int y = wo.getBoxMid().y - wo.getBox().width / 2;
+//				int y = wo.getBoxMid().y - averageHeight ;
+//				int w = wo.getBox().width;
+//				//int h = wo.getBox().width;
+//				int h = 2*averageHeight;
+//				Rectangle box = new Rectangle(x, y, w, h);
+//				int objectsBefore = writeObjects.size();
+////System.out.println("before " + objectsBefore);				
+//				writeObjects = removeAllInBox(writeObjects,box);
+//				int objectsAfter = writeObjects.size();
+////System.out.println("after " + objectsAfter);				
+//				if (objectsBefore != objectsAfter)
+//				{	lastObject = null;
+//					lastLastObject = null;
+//				}
+//				else
+//				{	wo = new WriteObject("-",wo.getIntPoints());
+//					lastLastObject = lastObject;
+//					lastObject = wo;
+//					writeObjects.add(wo);
+//				}
+//			}
+//		}
+//		else if (lastLastObject != null && lastObject!=null)
+//		{
+//			WriteObject woThreeStroke = tryThreeStroke(lastLastObject, lastObject,  wo);
+//			if (wo != woThreeStroke) 
+//			{
+//				writeObjects.remove(lastObject);
+//				writeObjects.remove(lastLastObject);
+//				//lastLastObject = null;
+//				wo = woThreeStroke;
+//			}
+//			else {
+//				WriteObject woTwoStroke = tryTwoStroke(lastObject, wo);
+//				if (wo != woTwoStroke) 
+//				{
+//					writeObjects.remove(lastObject);
+//					wo = woTwoStroke;
+//				}
+//				else
+//				{
+//					lastLastObject = lastObject;
+//				}
+//				
+//			}
+//			lastObject = wo;
+//			if(analyserOn)
+//				objectToAnalyse = wo;
+//			updateAverageHeight(wo);
+//			writeObjects.add(wo);
+//			
+//		}
+//		else if (lastObject != null)
+//		{
+//			WriteObject woTwoStroke = tryTwoStroke(lastObject, wo);
+//			if (wo != woTwoStroke) 
+//			{
+//				writeObjects.remove(lastObject);
+//				wo = woTwoStroke;
+//			}
+//			else
+//			{
+//				lastLastObject = lastObject;
+//			}
+//			lastObject = wo;
+//			if(analyserOn)
+//				objectToAnalyse = wo;
+//			updateAverageHeight(wo);
+//			writeObjects.add(wo);
+//			
+//		}
+//		else 
+//		{
+//			lastLastObject = lastObject;
+//			lastObject = wo;
+//			if(analyserOn)
+//				objectToAnalyse = wo;
+//			updateAverageHeight(wo);
+//			writeObjects.add(wo);
+//		}
+//		
+//		points.clear();
+//		paint();
+//		
+//		//Buiten de DWOplayer:
+//		//formuleViewer = new FormuleViewer(parseFormule());
+//		eigenaar.writePanelChanged();
+//		
+//		//Binnen de DWOplayer:
+//		//String text = parseFormule();
+//		//FormuleEditor editor = kb.getEditor();
+//		//if (editor != null)	{
+//		//	editor.clearAll();
+//		//	editor.insert(text);
+//		//}
+//	}
 	
 	protected void addWriteObject(String teken, ArrayList<Point> points) {
 	//	logger.info("addWriteObject :: "+ teken + ", #Points = "+ points.size());

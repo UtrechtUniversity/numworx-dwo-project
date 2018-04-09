@@ -1,7 +1,9 @@
 package fi.writemathgwt.client.engine;
 
-import java.awt.Graphics;
 import java.util.ArrayList;
+
+import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.canvas.dom.client.CssColor;
 
 import fi.writemathgwt.client.engine.DoublePoint;
 import fi.writemathgwt.client.engine.DoubleRectangle;
@@ -49,9 +51,18 @@ public class Stroke {
 		makeDAngles();
 	}
 	
-	public void draw(Graphics g) {
+	public void draw(Context2d g) {
+		g.setStrokeStyle(CssColor.make(0, 0, 0));
+		
+		double x = (int)parsePoints.get(0).x;
+		double y = (int)parsePoints.get(0).y;
+		g.moveTo(x,y);
+		g.beginPath();
 		for(int i=1 ; i<parsePoints.size() ; i++)
-			g.drawLine((int)parsePoints.get(i-1).x, (int)parsePoints.get(i-1).y, (int)parsePoints.get(i).x, (int)parsePoints.get(i).y);
+			g.lineTo((int)parsePoints.get(i).x, (int)parsePoints.get(i).y);
+		g.moveTo(x,y);
+		g.closePath();
+		g.stroke();
 	}
 	
 	public ArrayList<DoublePoint> getParsePoints() {
