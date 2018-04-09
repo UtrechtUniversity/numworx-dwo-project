@@ -12,9 +12,9 @@ public class FormulaProcessor {
 	private static int cPanelAreaMax = 50000;
 	private static int cPanelAreaDelta = cPanelAreaMax - cPanelAreaMin;
 	
-	private static int averageHeight;
+	private static int averageHeight = 30;
 
-	public String parseFormule(ArrayList<WMObject> wmObjects) {		
+	public static String parseFormule(ArrayList<WMObject> wmObjects) {		
 		ArrayList<WMObject> wmObjectsToDo = new ArrayList<WMObject>();
 		// make a compact deep copy
 		for (int i = 0; i < wmObjects.size(); i++) {	
@@ -78,8 +78,8 @@ public class FormulaProcessor {
 		// bubble sort op lengte wortel
 		// langste vooraan
 		swapped = true;
-		while (swapped)
-		{	swapped = false;
+		while (swapped)	{	
+			swapped = false;
 			for (int i = 1; i < wortels.size(); i++) {	
 				WMObject wo1 = wortels.get(i-1);
 				WMObject wo2 = wortels.get(i);
@@ -117,18 +117,17 @@ public class FormulaProcessor {
 			// klein verwerkt worden
 			for (int k = 0; k < objectsInside.size(); k++) {	
 				WMObject oi = objectsInside.get(k);
-				if ((oi != wo) && !oi.getTeken().equals("sqrt"))
-				{	oi.setIsOnderWortel(wo);
+				if ((oi != wo) && !oi.getTeken().equals("sqrt")) {	
+					oi.setIsOnderWortel(wo);
 				}
-				else if ((oi != wo) && oi.getTeken().equals("sqrt"))
-				{
+				else if ((oi != wo) && oi.getTeken().equals("sqrt")) {
 					if (oi.getWortelBox().width < wo.getWortelBox().width)
 						oi.setIsOnderWortel(wo);
 				}
 			}
 			
-			for (int j = 0; j < breukStrepen.size(); j++)
-			{	WMObject bs = breukStrepen.get(j);
+			for (int j = 0; j < breukStrepen.size(); j++) {	
+				WMObject bs = breukStrepen.get(j);
 				// breukstreep binnen de wortel
 				// a) mag de wortel niet als teller/noemer hebben
 				// b) objecten buiten de wortel mogen geen teller of noemer zijn van deze breukstreep
@@ -142,48 +141,46 @@ public class FormulaProcessor {
 					int inNoemerCnt = noemerObjects.size();
 						
 					// wortel eruit indien die in de teller zit
-					if (tellerObjects.contains(wo))
-					{	// NB wo kan al aan de juiste breukstreep zijn toegewezen!
+					if (tellerObjects.contains(wo))	{	
+						// NB wo kan al aan de juiste breukstreep zijn toegewezen!
 						if ((wo.isTellerVan() != null) && (wo.isTellerVan() == bs))
 							wo.setIsTellerVan(null);
 						tellerObjects.remove(wo);
 						inTellerCnt--;
 					}
 					// wortel eruit indien die in de noemer zit
-					if (noemerObjects.contains(wo))
-					{	// NB wo kan al aan de juiste breukstreep zijn toegewezen!
+					if (noemerObjects.contains(wo))	{	
+						// NB wo kan al aan de juiste breukstreep zijn toegewezen!
 						if ((wo.isNoemerVan() != null) && (wo.isNoemerVan() == bs))
 							wo.setIsNoemerVan(null);
 						noemerObjects.remove(wo);
 						inNoemerCnt--;
 					}
 					// objecten buiten de wortel uit de teller van bs
-					for (int tCnt = 0; tCnt < tellerObjects.size(); tCnt++)
-					{	WMObject to = tellerObjects.get(tCnt);
-						if (!wBox.contains(to.getBoxMid().x, to.getBoxMid().y))
-						{
-							if ((to.isTellerVan() != null) && (to.isTellerVan() == bs))
-							{	to.setIsTellerVan(null);
+					for (int tCnt = 0; tCnt < tellerObjects.size(); tCnt++)	{	
+						WMObject to = tellerObjects.get(tCnt);
+						if (!wBox.contains(to.getBoxMid().x, to.getBoxMid().y))	{
+							if ((to.isTellerVan() != null) && (to.isTellerVan() == bs))	{	
+								to.setIsTellerVan(null);
 								tellerObjects.remove(wo);
 								inTellerCnt--;
 							}
 						}
 					}
 					// objecten buiten de wortel uit de noemer van bs
-					for (int nCnt = 0; nCnt < noemerObjects.size(); nCnt++)
-					{	WMObject no = noemerObjects.get(nCnt);
-						if (!wBox.contains(no.getBoxMid().x, no.getBoxMid().y))
-						{
-							if ((no.isNoemerVan() != null) && (no.isNoemerVan() == bs))
-							{	no.setIsNoemerVan(null);
+					for (int nCnt = 0; nCnt < noemerObjects.size(); nCnt++)	{	
+						WMObject no = noemerObjects.get(nCnt);
+						if (!wBox.contains(no.getBoxMid().x, no.getBoxMid().y))	{
+							if ((no.isNoemerVan() != null) && (no.isNoemerVan() == bs))	{	
+								no.setIsNoemerVan(null);
 								noemerObjects.remove(wo);
 								inNoemerCnt--;
 							}
 						}
 					}
 					// check of bs nog breuk is	
-					if ((inTellerCnt == 0) && (inNoemerCnt == 0))
-					{	bs.setBreuk(false);
+					if ((inTellerCnt == 0) && (inNoemerCnt == 0)) {	
+						bs.setBreuk(false);
 						bs.setTellerBox(null);
 						bs.setNoemerBox(null);
 					}
@@ -196,54 +193,46 @@ public class FormulaProcessor {
 				// teller/noemer bevat (breukstrepen zijn gesorteerd
 				// maar: doe dit niet als wo onder een wortel zit die bs al als teller of noemer heeft !!
 				// let op dat bs buiten iha voor bs binnen komt omdat iha bs buiten langer is dan bs binnen 
-				else if (bs.isBreuk() && !wBox.contains(bs.getBoxMid().x, bs.getBoxMid().y))
-				{	
-					
+				else if (bs.isBreuk() && !wBox.contains(bs.getBoxMid().x, bs.getBoxMid().y)) {	
 					boolean tellerCorrection = true;
 					// corrigeer niet als wo onder een wortel zit die bs al als teller heeft !!
 					// deze bs-allocatie is correct want wo wordt later behandeld dan deze moederwortel
 					// omdat de moederwortel groter is dan wo 
-					if ((wo.isOnderWortel() != null) && 
-						(wo.isOnderWortel().isTellerVan() != null) && (wo.isOnderWortel().isTellerVan() == bs))
+					if ((wo.isOnderWortel() != null) && (wo.isOnderWortel().isTellerVan() != null) && (wo.isOnderWortel().isTellerVan() == bs))
 						tellerCorrection = false;
 					// corrigeer als nodig	
-					if (bs.getTellerBox().contains(wo.getBoxMid().x, wo.getBoxMid().y) && tellerCorrection)
-					{	wo.setIsTellerVan(bs);
+					if (bs.getTellerBox().contains(wo.getBoxMid().x, wo.getBoxMid().y) && tellerCorrection)	{	
+						wo.setIsTellerVan(bs);
 						wo.setIsNoemerVan(null);
 					}
 					// corrigeer niet als wo onder een wortel zit die bs al als noemer heeft !!
 					// deze bs-allocatie is correct want wo wordt later behandeld dan deze moederwortel
 					// omdat de moederwortel groter is dan wo 
 					boolean noemerCorrection = true;
-					if ((wo.isOnderWortel() != null) && 
-						(wo.isOnderWortel().isNoemerVan() != null) && (wo.isOnderWortel().isNoemerVan() == bs))
+					if ((wo.isOnderWortel() != null) && wo.isOnderWortel().isNoemerVan() != null && wo.isOnderWortel().isNoemerVan() == bs)
 						noemerCorrection = false;
 					// corrigeer als nodig	
-					if (bs.getNoemerBox().contains(wo.getBoxMid().x, wo.getBoxMid().y) && noemerCorrection)
-					{	wo.setIsTellerVan(null);
+					if (bs.getNoemerBox().contains(wo.getBoxMid().x, wo.getBoxMid().y) && noemerCorrection)	{	
+						wo.setIsTellerVan(null);
 						wo.setIsNoemerVan(bs);
 					}	
 
 					// indien(!) wo nu teller of noemer is van bs, dan kunnen alle objecten (exclusief wo)
 					// geen teller of noemer meer zijn van bs; zet dus tellerVan of noemerVan op null
-					if (((wo.isTellerVan() != null) && (wo.isTellerVan() == bs)) ||
-						((wo.isNoemerVan() != null) && (wo.isNoemerVan() == bs))
-					   )
-					{	for (int k = 0; k < objectsInside.size(); k++)
-						{	WMObject oi = objectsInside.get(k);
-							if (oi != wo)
-							{	
-								if ((oi.isTellerVan() != null) && (oi.isTellerVan() == bs))
-								{	oi.setIsTellerVan(null);
+					if (((wo.isTellerVan() != null) && (wo.isTellerVan() == bs)) ||	((wo.isNoemerVan() != null) && (wo.isNoemerVan() == bs))) {	
+						for (int k = 0; k < objectsInside.size(); k++) {	
+							WMObject oi = objectsInside.get(k);
+							if (oi != wo) {	
+								if ((oi.isTellerVan() != null) && (oi.isTellerVan() == bs))	{	
+									oi.setIsTellerVan(null);
 								}
-								if ((oi.isNoemerVan() != null) && (oi.isNoemerVan() == bs))
-								{	oi.setIsNoemerVan(null);
+								if ((oi.isNoemerVan() != null) && (oi.isNoemerVan() == bs))	{	
+									oi.setIsNoemerVan(null);
 								}
 							}
 						} //for
 					}
 				} // breukstreep buiten de wortel
-					
 			} // for breukstrepen
 		} // for wortels
 		
@@ -253,16 +242,12 @@ public class FormulaProcessor {
 //		return parseBox(new Rectangle(0, 0, width, height), writeObjectsToDo, null, null);
 	}
 	
-	private void isBreuk(WMObject wo, ArrayList<WMObject> writeObjectsToDo) 
-	{
-		
-
+	private static void isBreuk(WMObject wo, ArrayList<WMObject> writeObjectsToDo) {
 		boolean hasTeller = false;
 		boolean hasNoemer = false;
 		
 		// wo moet een (breuk)streep zijn
-		if (!"-".equals(wo.getTeken())) 
-		{	
+		if (!"-".equals(wo.getTeken()))	{	
 			return; // false;
 		}
 		
@@ -283,7 +268,6 @@ public class FormulaProcessor {
 			double nh = cPanelAreaMax-ny;
 			
 			wo.setNoemerBox(new DoubleRectangle(nx,ny,nw,nh));
-			
 		}
 		else if ((wo.isTellerVan() != null) && (wo.isNoemerVan() == null)) {
 			// neem alle hoogte tot bovenaan
@@ -305,7 +289,6 @@ public class FormulaProcessor {
 			double nh = wo.isTellerVan().getBox().y - ny; 
 			wo.setNoemerBox(new DoubleRectangle(nx,ny,nw,nh));
 		}
-		
 		else if ((wo.isTellerVan() == null) && (wo.isNoemerVan() != null)) {	
 			
 			// pas tussen wo.isNoemerVan boven wo 
@@ -323,18 +306,16 @@ public class FormulaProcessor {
 			double nh = cPanelAreaMax-ny;
 			wo.setNoemerBox(new DoubleRectangle(nx,ny,nw,nh));
 		}
-		
 		for (int i = 0; i < writeObjectsToDo.size(); i++) {	
 			WMObject wmObject = writeObjectsToDo.get(i);
 			if (wo.getTellerBox().contains(wmObject.getBoxMid().x, wmObject.getBoxMid().y))	{	
 				hasTeller = true;
-			wmObject.setIsTellerVan(wo);
-			wmObject.setIsNoemerVan(null);
+				wmObject.setIsTellerVan(wo);
+				wmObject.setIsNoemerVan(null);
 			}
 		}
-
-		for (int i = 0; i < writeObjectsToDo.size(); i++)
-		{	WMObject wmObject = writeObjectsToDo.get(i);
+		for (int i = 0; i < writeObjectsToDo.size(); i++) {	
+			WMObject wmObject = writeObjectsToDo.get(i);
 			if (wo.getNoemerBox().contains(wmObject.getBoxMid().x, wmObject.getBoxMid().y)) {	
 				hasNoemer = true;
 				wmObject.setIsNoemerVan(wo);
@@ -354,22 +335,20 @@ public class FormulaProcessor {
 		
 	}
 	
-	private ArrayList<WMObject> wmObjectsInBox(ArrayList<WMObject> wObjects, DoubleRectangle box)
-	{
+	private static ArrayList<WMObject> wmObjectsInBox(ArrayList<WMObject> wObjects, DoubleRectangle box) {
 		ArrayList<WMObject> insideObjects = new ArrayList<WMObject>();
-		for (int i = 0; i < wObjects.size(); i++)
-		{	WMObject wo = wObjects.get(i);
+		for (int i = 0; i < wObjects.size(); i++) {	
+			WMObject wo = wObjects.get(i);
 			if (box.contains(wo.getBoxMid().x, wo.getBoxMid().y))
 				insideObjects.add(wo);
 		}
 		return insideObjects;
 	}
 	
-	public String parseBox(DoubleRectangle box, ArrayList<WMObject> writeObjectsToDo, WMObject lastWriteObject, WMObject boxOwner) {
+	public static String parseBox(DoubleRectangle box, ArrayList<WMObject> writeObjectsToDo, WMObject lastWriteObject, WMObject boxOwner) {
 		String string = "";
 		DoubleRectangle correctedBox = null;
 
-		ArrayList<WMObject> wortelsInBox = new ArrayList<WMObject>();
 		double x = box.x; 
 		double width = box.width;
 		for (int i = 0; i < writeObjectsToDo.size(); i++) {	
@@ -386,254 +365,192 @@ public class FormulaProcessor {
 			WMObject wo = writeObjectsToDo.get(i);
 			if (correctedBox.contains(wo.getBoxMid().x, wo.getBoxMid().y))
 				writeObjectsToDoNow.add(wo);
+		}
+		// vindt het meest linkse object in de box dat nog niet verwerkt is
+		// en dat niet in een teller of noemer voorkomt, m.u.v. de teller of noemer 
+		// van boxOwner
+		WMObject nextWriteObject = null;
+		boolean found = false;
+		for (int i = 0; i < writeObjectsToDoNow.size(); i++) {	
+			WMObject wo = writeObjectsToDoNow.get(i);
+			boolean skipWo = skipWriteObject(wo,boxOwner);
+			if (!skipWo && !found) {	
+				nextWriteObject = wo;
+				found = true;
 			}
+		}
+		int stopCnt = 0;
+		//tijdelijk		
+		//while (writeObjectsToDoNow.size() > 0)
+		while ((nextWriteObject != null) && (stopCnt < 50)) {
+			stopCnt++;
+			//breuk
+			if (nextWriteObject.isBreuk()) {
+				String teller = "";
+				String noemer = "";
+				teller = parseBox(nextWriteObject.getTellerBox(), writeObjectsToDoNow, null, nextWriteObject);
+				noemer = parseBox(nextWriteObject.getNoemerBox(), writeObjectsToDoNow, null, nextWriteObject);
 
-			// vindt het meest linkse object in de box dat nog niet verwerkt is
-			// en dat niet in een teller of noemer voorkomt, m.u.v. de teller of noemer 
-			// van boxOwner
-			WMObject nextWriteObject = null;
-			boolean found = false;
+				if ((lastWriteObject != null) && isMacht(lastWriteObject, nextWriteObject))
+					string = string + processMacht(lastWriteObject, nextWriteObject, "$b" + teller + "$n" + noemer + "@@"); 
+				else	
+					string = string + "$b" + teller + "$n" + noemer + "@@";
+	
+				nextWriteObject.setVerwerkt(true);
+				zetAllInBoxVerwerkt(writeObjectsToDo, nextWriteObject.getTellerBox(), true);
+				zetAllInBoxVerwerkt(writeObjectsToDo, nextWriteObject.getNoemerBox(), true);
+			}
+			//wortel
+			else if (nextWriteObject.getTeken().equals("sqrt")) {
+				DoubleRectangle wBox = nextWriteObject.getWortelBox(); 
+				nextWriteObject.setVerwerkt(true);
+				removeIsOnderWortel(writeObjectsToDoNow, wBox, nextWriteObject);
+				String operand = parseBox(wBox, writeObjectsToDoNow, null,nextWriteObject);
+
+				if ((lastWriteObject != null) && isMacht(lastWriteObject, nextWriteObject))
+					string = string + processMacht(lastWriteObject, nextWriteObject, "$w" + operand + "@"); 
+				else	
+					string = string + "$w" + operand + "@";
+				zetAllInBoxVerwerkt(writeObjectsToDo, wBox, true);
+			}
+			//macht 
+			else if(lastWriteObject != null && isMacht(lastWriteObject, nextWriteObject)){
+				// isMacht = false betekent 1) verboden situatie of 
+				// 2) nextWriteObject staat niet boven lastWriteObject en 
+				// lastWriteObject is geen macht
+			
+				if (staatBoven(lastWriteObject, nextWriteObject)) {
+					nextWriteObject.setIsMachtVan(lastWriteObject);
+					// open de macht
+					string = string + "$m" + nextWriteObject.getTeken();
+					nextWriteObject.setVerwerkt(true);
+				}
+				else if (staatNaast(lastWriteObject, nextWriteObject)) {
+					if (lastWriteObject.isMachtVan() != null) {
+						nextWriteObject.setIsMachtVan(lastWriteObject.isMachtVan());
+						string = string + nextWriteObject.getTeken();
+						nextWriteObject.setVerwerkt(true);
+					}
+					// else isMacht = false 
+				}
+				// staat lager en zou weer bij een eerdere macht kunnen horen
+				else { // maak dit maar redundant
+					if ((lastWriteObject.isMachtVan() != null) && staatNaast(lastWriteObject.isMachtVan(), nextWriteObject)) {
+						if (lastWriteObject.isMachtVan().isMachtVan() == null) {
+							// macht afsluiten
+							string = string + "@" + nextWriteObject.getTeken();
+							// teken hier afhandelen
+							nextWriteObject.setVerwerkt(true);
+						}
+						else { 
+							// lastWriteObject.isMachtVan.isMachtVan != null)
+							nextWriteObject.setIsMachtVan(lastWriteObject.isMachtVan().isMachtVan());
+							// macht afsluiten
+							string = string + "@" + nextWriteObject.getTeken();
+							nextWriteObject.setVerwerkt(true);
+						}	
+					}
+					if ((lastWriteObject.isMachtVan() != null) && (lastWriteObject.isMachtVan().isMachtVan() != null) && staatNaast(lastWriteObject.isMachtVan().isMachtVan(), nextWriteObject)) {
+						if (lastWriteObject.isMachtVan().isMachtVan().isMachtVan() == null)	{
+							// macht 2 keer (!) afsluiten
+							string = string + "@@" + nextWriteObject.getTeken();
+							nextWriteObject.setVerwerkt(true);
+						}
+						else {
+							// lastWriteObject.isMachtVan.isMachtVan.isMachtVan != null
+							nextWriteObject.setIsMachtVan(lastWriteObject.isMachtVan().isMachtVan().isMachtVan());
+							// macht 2 keer (!) afsluiten
+							string = string + "@@" + nextWriteObject.getTeken();
+							nextWriteObject.setVerwerkt(true);
+						}
+					}
+					
+					if ((lastWriteObject.isMachtVan() != null) && 
+						(lastWriteObject.isMachtVan().isMachtVan() != null) &&
+						(lastWriteObject.isMachtVan().isMachtVan().isMachtVan() != null) &&
+						staatNaast(lastWriteObject.isMachtVan().isMachtVan().isMachtVan(), nextWriteObject)) {
+								
+						if (lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan() == null) {
+							// macht 3 keer (!) afsluiten
+							string = string + "@@@" + nextWriteObject.getTeken();
+							// teken hier afhandelen
+							nextWriteObject.setVerwerkt(true);
+						}
+						else { 
+							// lastWriteObject.isMachtVan.isMachtVan.isMachtVan.isMachtVan != null
+							nextWriteObject.setIsMachtVan(lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan());
+							// macht 3 keer (!) afsluiten
+							string = string + "@@@" + nextWriteObject.getTeken();
+							nextWriteObject.setVerwerkt(true);
+						}
+					}
+					if ((lastWriteObject.isMachtVan() != null) && 
+						(lastWriteObject.isMachtVan().isMachtVan() != null) &&
+						(lastWriteObject.isMachtVan().isMachtVan().isMachtVan() != null) &&
+						(lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan() != null) &&
+						staatNaast(lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan(), nextWriteObject)) {
+									
+						if (lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan().isMachtVan() == null) {
+							// macht 4 keer (!) afsluiten
+							string = string + "@@@@" + nextWriteObject.getTeken();
+							// teken hier afhandelen
+							nextWriteObject.setVerwerkt(true);
+						}
+						else {
+							// lastWriteObject.isMachtVan.isMachtVan.isMachtVan.isMachtVan != null
+							nextWriteObject.setIsMachtVan(lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan().isMachtVan());
+							// macht 4 keer (!) afsluiten
+							string = string + "@@@@" + nextWriteObject.getTeken();
+							nextWriteObject.setVerwerkt(true);
+						}
+					}
+				}
+			} 
+			// punt
+			else if (nextWriteObject.getTeken().equals(".")) {
+				double py = nextWriteObject.getBoxMid().y;
+				if (lastWriteObject != null) {	
+					double ly = lastWriteObject.getBox().y;
+					if (py > ly + 2 * averageHeight / 3)
+						string = string + ".";
+					else
+						string = string + "*";
+				}
+				nextWriteObject.setVerwerkt(true);
+			}
+			else {
+				String teken = "";
+				if (!nextWriteObject.isVerwerkt()) {	
+					nextWriteObject.setVerwerkt(true);
+					teken = nextWriteObject.getTeken();
+				}
+				string = string + teken;
+			}
+			lastWriteObject = nextWriteObject;
+					
+			// vindt het meest linkse object dat nog niet verwerkt is (if any) 
+			nextWriteObject = null;
+			//minX = width;
+			found = false;
 			for (int i = 0; i < writeObjectsToDoNow.size(); i++) {	
 				WMObject wo = writeObjectsToDoNow.get(i);
-
 				boolean skipWo = skipWriteObject(wo,boxOwner);
-				if (!skipWo && !found) 
-				{	nextWriteObject = wo;
+				if (!skipWo && !found) {	
+					nextWriteObject = wo;
 					found = true;
 				}
 			}
-
-			int stopCnt = 0;
-			//tijdelijk		
-			//while (writeObjectsToDoNow.size() > 0)
-			while ((nextWriteObject != null) && (stopCnt < 50)) {
-				stopCnt++;
-
-				//breuk
-				if (nextWriteObject.isBreuk()) {
-					String teller = "";
-					String noemer = "";
-					teller = parseBox(nextWriteObject.getTellerBox(), writeObjectsToDoNow, null, nextWriteObject);
-					noemer = parseBox(nextWriteObject.getNoemerBox(), writeObjectsToDoNow, null, nextWriteObject);
-	
-					if ((lastWriteObject != null) && isMacht(lastWriteObject, nextWriteObject))
-						string = string + processMacht(lastWriteObject, nextWriteObject, "$b" + teller + "$n" + noemer + "@@"); 
-					else	
-						string = string + "$b" + teller + "$n" + noemer + "@@";
-	
-					nextWriteObject.setVerwerkt(true);
-	
-					zetAllInBoxVerwerkt(writeObjectsToDo, nextWriteObject.getTellerBox(), true);
-					zetAllInBoxVerwerkt(writeObjectsToDo, nextWriteObject.getNoemerBox(), true);
-				}
-
-				//wortel
-				else if (nextWriteObject.getTeken().equals("sqrt")) {
-					DoubleRectangle wBox = nextWriteObject.getWortelBox(); 
-	
-					nextWriteObject.setVerwerkt(true);
-	
-	removeIsOnderWortel(writeObjectsToDoNow, wBox, nextWriteObject);
-	
-	String operand = parseBox(wBox, writeObjectsToDoNow, null,nextWriteObject);
-	
-	if ((lastWriteObject != null) && isMacht(lastWriteObject, nextWriteObject))
-		string = string + processMacht(lastWriteObject, nextWriteObject, "$w" + operand + "@"); 
-	else	
-		string = string + "$w" + operand + "@";
-
-	zetAllInBoxVerwerkt(writeObjectsToDo, wBox, true);
-	
-}
-
-//macht 
-else if(lastWriteObject != null && isMacht(lastWriteObject, nextWriteObject))
-{
-	// isMacht = false betekent 1) verboden situatie of 
-	// 2) nextWriteObject staat niet boven lastWriteObject en 
-	// lastWriteObject is geen macht
-
-
-	if (staatBoven(lastWriteObject, nextWriteObject))
-	{
-		
-		nextWriteObject.setIsMachtVan(lastWriteObject);
-		// open de macht
-		string = string + "$m" + nextWriteObject.getTeken();
-		nextWriteObject.setVerwerkt(true);
-		
+			if (nextWriteObject == null) {
+				string = string + sluitMachtenAf(lastWriteObject);
+			}
+				
+		} // while
+		string = removeHalfObjects(string);
+		return string;
 	}
-	else if (staatNaast(lastWriteObject, nextWriteObject))
-	{
-		if (lastWriteObject.isMachtVan() != null)
-		{
-			nextWriteObject.setIsMachtVan(lastWriteObject.isMachtVan());
-			string = string + nextWriteObject.getTeken();
-			nextWriteObject.setVerwerkt(true);
-		}
-		// else isMacht = false 
-	}
-	// staat lager en zou weer bij een eerdere macht kunnen horen
-	else // maak dit maar redundant
-	{
-		
-		if ((lastWriteObject.isMachtVan() != null) &&
-		    staatNaast(lastWriteObject.isMachtVan(), nextWriteObject))	
-		{
-			
-			if (lastWriteObject.isMachtVan().isMachtVan() == null)
-			{
-				
-				// macht afsluiten
-				string = string + "@" + nextWriteObject.getTeken();
-				// teken hier afhandelen
-				nextWriteObject.setVerwerkt(true);
-			}
-			else // lastWriteObject.isMachtVan.isMachtVan != null)
-			{								
-
-				nextWriteObject.setIsMachtVan(lastWriteObject.isMachtVan().isMachtVan());
-				// macht afsluiten
-				string = string + "@" + nextWriteObject.getTeken();
-				nextWriteObject.setVerwerkt(true);
-			}	
-		}
-		
-		if ((lastWriteObject.isMachtVan() != null) && 
-			(lastWriteObject.isMachtVan().isMachtVan() != null) &&
-			staatNaast(lastWriteObject.isMachtVan().isMachtVan(), nextWriteObject))
-		{
-			
-			
-			if (lastWriteObject.isMachtVan().isMachtVan().isMachtVan() == null)
-			{
-				
-				// macht 2 keer (!) afsluiten
-				string = string + "@@" + nextWriteObject.getTeken();
-				nextWriteObject.setVerwerkt(true);
-			}
-			else // lastWriteObject.isMachtVan.isMachtVan.isMachtVan != null
-			{
-				nextWriteObject.setIsMachtVan(lastWriteObject.isMachtVan().isMachtVan().isMachtVan());
-				// macht 2 keer (!) afsluiten
-				string = string + "@@" + nextWriteObject.getTeken();
-				nextWriteObject.setVerwerkt(true);
-				
-			}
-		}
-		
-		if ((lastWriteObject.isMachtVan() != null) && 
-			(lastWriteObject.isMachtVan().isMachtVan() != null) &&
-			(lastWriteObject.isMachtVan().isMachtVan().isMachtVan() != null) &&
-			staatNaast(lastWriteObject.isMachtVan().isMachtVan().isMachtVan(), nextWriteObject))
-			{
-				
-				if (lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan() == null)
-				{
-					
-					// macht 3 keer (!) afsluiten
-					string = string + "@@@" + nextWriteObject.getTeken();
-					// teken hier afhandelen
-					nextWriteObject.setVerwerkt(true);
-				}
-				else // lastWriteObject.isMachtVan.isMachtVan.isMachtVan.isMachtVan != null
-				{
-					nextWriteObject.setIsMachtVan(lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan());
-					// macht 3 keer (!) afsluiten
-					string = string + "@@@" + nextWriteObject.getTeken();
-					nextWriteObject.setVerwerkt(true);
-					
-				}
-			}
-		
-		if ((lastWriteObject.isMachtVan() != null) && 
-			(lastWriteObject.isMachtVan().isMachtVan() != null) &&
-			(lastWriteObject.isMachtVan().isMachtVan().isMachtVan() != null) &&
-			(lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan() != null) &&
-			staatNaast(lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan(), nextWriteObject))
-				{
-					
-					
-					if (lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan().isMachtVan() == null)
-					{
-						
-				
-						// macht 4 keer (!) afsluiten
-						string = string + "@@@@" + nextWriteObject.getTeken();
-						// teken hier afhandelen
-						nextWriteObject.setVerwerkt(true);
-					}
-					else // lastWriteObject.isMachtVan.isMachtVan.isMachtVan.isMachtVan != null
-					{
-						nextWriteObject.setIsMachtVan(lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan().isMachtVan());
-						// macht 4 keer (!) afsluiten
-						string = string + "@@@@" + nextWriteObject.getTeken();
-						nextWriteObject.setVerwerkt(true);
-						
-					}
-				}
-			}
-	
-		} 
-				// punt
-		else if (nextWriteObject.getTeken().equals("."))
-		{
-
-			double py = nextWriteObject.getBoxMid().y;
-			if (lastWriteObject != null)
-			{	
-				double ly = lastWriteObject.getBox().y;
-				if (py > ly + 2 * averageHeight / 3)
-					string = string + ".";
-				else
-					string = string + "*";
-			}
-	
-			nextWriteObject.setVerwerkt(true);
-	
-		}
-	else	
-	{
-	
-		String teken = "";
-		if (!nextWriteObject.isVerwerkt())
-		{	
-			nextWriteObject.setVerwerkt(true);
-			teken = nextWriteObject.getTeken();
-		}
-		string = string + teken;
-	}
-lastWriteObject = nextWriteObject;
-
-// vindt het meest linkse object dat nog niet verwerkt is (if any) 
-nextWriteObject = null;
-//minX = width;
-found = false;
-for (int i = 0; i < writeObjectsToDoNow.size(); i++)
-{	WriteObject wo = writeObjectsToDoNow.get(i);
-	
-	boolean skipWo = skipWriteObject(wo,boxOwner);
-	
-	if (!skipWo && !found) 
-	{	nextWriteObject = wo;
-		found = true;
-	}
-}
-if (nextWriteObject == null)
-{
-	string = string + sluitMachtenAf(lastWriteObject);
-}
-
-} // while
-
-string = removeHalfObjects(string);
-
-return string;
-}
 
 
-	private boolean skipWriteObject(WMObject wo, WMObject boxOwner)
-	{
+	private static boolean skipWriteObject(WMObject wo, WMObject boxOwner) {
 		if (wo == null)
 			return true;
 		
@@ -653,45 +570,24 @@ return string;
 		return skipWo1 || skipWo2 || skipWo3;
 	}
 	
-	
-	
-	private  ArrayList<WriteObject> removeAllInBox(ArrayList<WriteObject> wo, Rectangle box) 
-	{
-		ArrayList<WriteObject> woNew = new ArrayList<WriteObject>();
-		for (int i = 0; i < wo.size(); i++)
-		{
-			WriteObject awo = wo.get(i);
-			boolean wortelLatenStaan = (wo.size() > 1) && awo.getTeken().equals("sqrt") &&
-									   (awo.getBox().width > box.width);	
-			if (!box.contains(awo.getBoxMid()) || wortelLatenStaan)
-				woNew.add(awo);
-		}
-		return woNew;
-	}
-
-	private void removeIsOnderWortel(ArrayList<WMObject> wo, DoubleRectangle wortelBox, WMObject wortel)
-	{
-		for (int i = 0; i < wo.size(); i++)
-		{	WMObject wob = wo.get(i);
-			if (wortelBox.contains(wob.getBoxMid()) && 
-			   (wob.isOnderWortel() != null) && (wob.isOnderWortel() == wortel))
-			{	wob.setIsOnderWortel(null);
+	private static void removeIsOnderWortel(ArrayList<WMObject> wo, DoubleRectangle wortelBox, WMObject wortel) {
+		for (int i = 0; i < wo.size(); i++)	{	
+			WMObject wob = wo.get(i);
+			if (wortelBox.contains(wob.getBoxMid()) && (wob.isOnderWortel() != null) && (wob.isOnderWortel() == wortel)) {	
+				wob.setIsOnderWortel(null);
 			}
-		
 		}
 	}
 	
-	private void zetAllInBoxVerwerkt(ArrayList<WMObject> wo, DoubleRectangle box, boolean b) 
-	{
-		for (int i = 0; i < wo.size(); i++)
-		{	WMObject wob = wo.get(i);
+	private static void zetAllInBoxVerwerkt(ArrayList<WMObject> wo, DoubleRectangle box, boolean b) {
+		for (int i = 0; i < wo.size(); i++) {	
+			WMObject wob = wo.get(i);
 			if (box.contains(wob.getBoxMid().x, wob.getBoxMid().y))
 				wob.setVerwerkt(b);
 		}
 	}
 	
-	private boolean isMacht(WMObject lastWo, WMObject wo)
-	{
+	private static boolean isMacht(WMObject lastWo, WMObject wo) {
 		// lastWo^{".","=","+",")","/"} kan/mag niet
 		if (staatBoven(lastWo,wo) &&
 			(".".equals(wo.getTeken()) || 
@@ -703,27 +599,25 @@ return string;
 			return false;
 		//{".","=","+","-",")","/"}^wo kan niet
 		else if (staatBoven(lastWo,wo) &&
-				 (".".equals(lastWo.getTeken()) || 
-				  "=".equals(lastWo.getTeken()) || 
-				  "+".equals(lastWo.getTeken()) || 
-				  "-".equals(lastWo.getTeken()) || 
-				  "(".equals(lastWo.getTeken()) || 
-				  "/".equals(lastWo.getTeken()))
-				)
+			(".".equals(lastWo.getTeken()) || 
+			 "=".equals(lastWo.getTeken()) || 
+			 "+".equals(lastWo.getTeken()) || 
+			 "-".equals(lastWo.getTeken()) || 
+			 "(".equals(lastWo.getTeken()) || 
+			 "/".equals(lastWo.getTeken()))
+			)
 			return false;
 		
 		boolean isMacht = staatBoven(lastWo,wo) || (lastWo.isMachtVan() != null);
 		return isMacht;
 	}
 	
-	private boolean staatBoven(WMObject lastWo, WMObject wo)
-	{
-		return (wo.getBoxMid().y + averageHeight / 2 < lastWo.getBoxMid().y) &&
-			   (wo.getBox().x > lastWo.getBoxMid().x);
+	private static boolean staatBoven(WMObject lastWo, WMObject wo) {
+		return (wo.getBoxMid().y + averageHeight / 2 < lastWo.getBoxMid().y) && (wo.getBox().x > lastWo.getBoxMid().x);
 	}
 	
-	private boolean staatNaast(WMObject lastWo, WMObject wo)
-	{	if (wo.getTeken().equals("-"))
+	private static boolean staatNaast(WMObject lastWo, WMObject wo) {	
+		if (wo.getTeken().equals("-"))
 			return (wo.getBoxMid().y > lastWo.getBox().y) && 
 				   (wo.getBoxMid().y < (lastWo.getBox().y + lastWo.getBox().height)) && 
 				   (wo.getBox().x > lastWo.getBoxMid().x);
@@ -732,121 +626,156 @@ return string;
 			   	   (wo.getBox().x > lastWo.getBoxMid().x);
 	}
 	
-	private String processMacht(WMObject lastWriteObject, WMObject nextWriteObject, String objectString) {
+	private static String processMacht(WMObject lastWriteObject, WMObject nextWriteObject, String objectString) {
 		String string = "";
 		
-		if (staatBoven(lastWriteObject, nextWriteObject))
-		{
+		if (staatBoven(lastWriteObject, nextWriteObject)) {
 			nextWriteObject.setIsMachtVan(lastWriteObject);
 			// open de macht
 			string = string + "$m" + objectString;
 			nextWriteObject.setVerwerkt(true);
 			
 		}
-		else if (staatNaast(lastWriteObject, nextWriteObject))
-		{
-			if (lastWriteObject.isMachtVan != null)
-			{
-				nextWriteObject.isMachtVan = lastWriteObject.isMachtVan;
+		else if (staatNaast(lastWriteObject, nextWriteObject)) {
+			if (lastWriteObject.isMachtVan() != null) {
+				nextWriteObject.setIsMachtVan(lastWriteObject.isMachtVan());
 				string = string + objectString;
-				nextWriteObject.isVerwerkt = true;
+				nextWriteObject.setVerwerkt(true);
 			}
 			// else isMacht = false 
 		}
 		// staat lager en zou weer bij een eerdere macht kunnen horen
-		else // maak dit maar redundant
-		{
-			if ((lastWriteObject.isMachtVan != null) &&
-			    staatNaast(lastWriteObject.isMachtVan, nextWriteObject))	
-			{
-				if (lastWriteObject.isMachtVan.isMachtVan == null)
-				{
+		else {
+			// maak dit maar redundant
+		
+			if ((lastWriteObject.isMachtVan() != null) && staatNaast(lastWriteObject.isMachtVan(), nextWriteObject)) {
+				if (lastWriteObject.isMachtVan().isMachtVan() == null) {
 					// macht afsluiten
 					string = string + "@" + objectString;
 					// teken hier afhandelen
-					nextWriteObject.isVerwerkt = true;
+					nextWriteObject.setVerwerkt(true);
 				}
-				else // lastWriteObject.isMachtVan.isMachtVan != null)
-				{								
-					nextWriteObject.isMachtVan = lastWriteObject.isMachtVan.isMachtVan;
+				else {
+					// lastWriteObject.isMachtVan.isMachtVan != null)
+					nextWriteObject.setIsMachtVan(lastWriteObject.isMachtVan().isMachtVan());
 					// macht afsluiten
 					string = string + "@" + objectString;
-					nextWriteObject.isVerwerkt = true;
+					nextWriteObject.setVerwerkt(true);
 				}	
 			}
 			
-			if ((lastWriteObject.isMachtVan != null) && 
-				(lastWriteObject.isMachtVan.isMachtVan != null) &&
-				staatNaast(lastWriteObject.isMachtVan.isMachtVan, nextWriteObject))
-			{
+			if ((lastWriteObject.isMachtVan() != null) && 
+				(lastWriteObject.isMachtVan().isMachtVan() != null) &&
+				staatNaast(lastWriteObject.isMachtVan().isMachtVan(), nextWriteObject)) {
 				
-				if (lastWriteObject.isMachtVan.isMachtVan.isMachtVan == null)
-				{
+				if (lastWriteObject.isMachtVan().isMachtVan().isMachtVan() == null) {
 					// macht 2 keer (!) afsluiten
 					string = string + "@@" + objectString;
-					nextWriteObject.isVerwerkt = true;
+					nextWriteObject.setVerwerkt(true);
 				}
-				else // lastWriteObject.isMachtVan.isMachtVan.isMachtVan != null
-				{
-					nextWriteObject.isMachtVan = lastWriteObject.isMachtVan.isMachtVan.isMachtVan;
+				else {
+					// lastWriteObject.isMachtVan.isMachtVan.isMachtVan != null
+					nextWriteObject.setIsMachtVan(lastWriteObject.isMachtVan().isMachtVan().isMachtVan());
 					// macht 2 keer (!) afsluiten
 					string = string + "@@" + objectString;
-					nextWriteObject.isVerwerkt = true;
+					nextWriteObject.setVerwerkt(true);
+				}
+			}
+			
+			if ((lastWriteObject.isMachtVan() != null) && 
+				(lastWriteObject.isMachtVan().isMachtVan() != null) &&
+				(lastWriteObject.isMachtVan().isMachtVan().isMachtVan() != null) &&
+				staatNaast(lastWriteObject.isMachtVan().isMachtVan().isMachtVan(), nextWriteObject)) {
+					
+				if (lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan() == null) {
+					// macht 3 keer (!) afsluiten
+					string = string + "@@@" + objectString;
+					// teken hier afhandelen
+					nextWriteObject.setVerwerkt(true);
+				}
+				else {
+					// lastWriteObject.isMachtVan.isMachtVan.isMachtVan.isMachtVan != null
+					nextWriteObject.setIsMachtVan(lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan());
+					// macht 3 keer (!) afsluiten
+					string = string + "@@@" + objectString;
+					nextWriteObject.setVerwerkt(true);
 					
 				}
 			}
 			
-			if ((lastWriteObject.isMachtVan != null) && 
-				(lastWriteObject.isMachtVan.isMachtVan != null) &&
-				(lastWriteObject.isMachtVan.isMachtVan.isMachtVan != null) &&
-				staatNaast(lastWriteObject.isMachtVan.isMachtVan.isMachtVan, nextWriteObject))
-				{
-					
-					if (lastWriteObject.isMachtVan.isMachtVan.isMachtVan.isMachtVan == null)
-					{
-						// macht 3 keer (!) afsluiten
-						string = string + "@@@" + objectString;
-						// teken hier afhandelen
-						nextWriteObject.isVerwerkt = true;
-					}
-					else // lastWriteObject.isMachtVan.isMachtVan.isMachtVan.isMachtVan != null
-					{
-						nextWriteObject.isMachtVan = lastWriteObject.isMachtVan.isMachtVan.isMachtVan.isMachtVan;
-						// macht 3 keer (!) afsluiten
-						string = string + "@@@" + objectString;
-						nextWriteObject.isVerwerkt = true;
+			if ((lastWriteObject.isMachtVan() != null) && 
+				(lastWriteObject.isMachtVan().isMachtVan() != null) &&
+				(lastWriteObject.isMachtVan().isMachtVan().isMachtVan() != null) &&
+				(lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan() != null) &&
+				staatNaast(lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan(), nextWriteObject)) {
 						
-					}
+				if (lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan().isMachtVan() == null) {
+					// macht 4 keer (!) afsluiten
+					string = string + "@@@@" + objectString;
+					// teken hier afhandelen
+					nextWriteObject.setVerwerkt(true);
 				}
-			
-			if ((lastWriteObject.isMachtVan != null) && 
-				(lastWriteObject.isMachtVan.isMachtVan != null) &&
-				(lastWriteObject.isMachtVan.isMachtVan.isMachtVan != null) &&
-				(lastWriteObject.isMachtVan.isMachtVan.isMachtVan.isMachtVan != null) &&
-				staatNaast(lastWriteObject.isMachtVan.isMachtVan.isMachtVan.isMachtVan, nextWriteObject))
-					{
-						
-						
-						if (lastWriteObject.isMachtVan.isMachtVan.isMachtVan.isMachtVan.isMachtVan == null)
-						{
-					
-							// macht 4 keer (!) afsluiten
-							string = string + "@@@@" + objectString;
-							// teken hier afhandelen
-							nextWriteObject.isVerwerkt = true;
-						}
-						else // lastWriteObject.isMachtVan.isMachtVan.isMachtVan.isMachtVan != null
-						{
-							nextWriteObject.isMachtVan = 
-								lastWriteObject.isMachtVan.isMachtVan.isMachtVan.isMachtVan.isMachtVan;
-							// macht 4 keer (!) afsluiten
-							string = string + "@@@@" + objectString;
-							nextWriteObject.isVerwerkt = true;
-							
-						}
-					}
+				else {
+					// lastWriteObject.isMachtVan.isMachtVan.isMachtVan.isMachtVan != null
+					nextWriteObject.setIsMachtVan(lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan().isMachtVan());
+					// macht 4 keer (!) afsluiten
+					string = string + "@@@@" + objectString;
+					nextWriteObject.setVerwerkt(true);
+				}
+			}
 		}
-		
 		return string;
+	}
+	
+	private static String sluitMachtenAf(WMObject wo) {	
+		String result = ""; 
+		if (wo.isMachtVan() == null)
+			return result;
+		else if (wo.isMachtVan().isMachtVan() == null)
+			return "@";
+		else if (wo.isMachtVan().isMachtVan().isMachtVan() == null)
+			return "@@";
+		else if (wo.isMachtVan().isMachtVan().isMachtVan().isMachtVan() == null)
+			return "@@@";
+		else if (wo.isMachtVan().isMachtVan().isMachtVan().isMachtVan().isMachtVan() == null)
+			return "@@@@";
+	
+		return result;
+	}
+	
+	public static String removeHalfObjects(String s) {
+		String result = new String(s);
+		int tHIndex = result.indexOf("tH");
+		if (tHIndex >= 0) {	
+			String s1 = result.substring(0,tHIndex);
+			String s2 = result.substring(tHIndex + 2);
+			result = s1 + s2;
+		}
+		int fourHIndex = result.indexOf("4H");
+		if (fourHIndex >= 0) {	
+			String s1 = result.substring(0,fourHIndex);
+			String s2 = result.substring(fourHIndex + 2);
+			result = s1 + s2;
+		}
+		int fiveHIndex = result.indexOf("5H");
+		if (fiveHIndex >= 0) {	
+			String s1 = result.substring(0,fiveHIndex);
+			String s2 = result.substring(fiveHIndex + 2);
+			result = s1 + s2;
+		}
+		int jHIndex = result.indexOf("jH");
+		if (jHIndex >= 0) {	
+			String s1 = result.substring(0,jHIndex);
+			String s2 = result.substring(jHIndex + 2);
+			result = s1 + s2;
+		}
+		int xHIndex = result.indexOf("xH");
+		if (xHIndex >= 0) {	
+			String s1 = result.substring(0,xHIndex);
+			String s2 = result.substring(xHIndex + 2);
+			result = s1 + s2;
+		}
+
+		return result;
 	}
 }

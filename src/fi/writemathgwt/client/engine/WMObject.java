@@ -7,7 +7,7 @@ import fi.writemathgwt.client.WriteObject;
 
 public class WMObject {
 
-	private ArrayList<Stroke> strokes;
+	private ArrayList<Stroke> strokes = new ArrayList<Stroke>();
 	private DoubleRectangle box;
 	private String teken;
 	

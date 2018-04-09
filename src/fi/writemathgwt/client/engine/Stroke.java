@@ -1,5 +1,6 @@
 package fi.writemathgwt.client.engine;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
 
 import fi.writemathgwt.client.engine.DoublePoint;
@@ -46,6 +47,11 @@ public class Stroke {
 		angles = new double[parsePoints.size()-1];
 		makeAngles();
 		makeDAngles();
+	}
+	
+	public void draw(Graphics g) {
+		for(int i=1 ; i<parsePoints.size() ; i++)
+			g.drawLine((int)parsePoints.get(i-1).x, (int)parsePoints.get(i-1).y, (int)parsePoints.get(i).x, (int)parsePoints.get(i).y);
 	}
 	
 	public ArrayList<DoublePoint> getParsePoints() {

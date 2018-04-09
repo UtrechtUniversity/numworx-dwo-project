@@ -8,79 +8,79 @@ public class TwoStrokeProcessor {
 		
 		//y = \ (klein) + /
 		if (checkStrokes(stroke1,"yH1",stroke2,"yH2"))
-			if(hasCloseDistance(stroke1, stroke2, 20,17,19,7,12) && hasCloseYDistance(stroke1, stroke2, 30,0,1,0,1))
+			if(hasCloseDistance(stroke1, stroke2, 20,34,39,14,24) && hasCloseYDistance(stroke1, stroke2, 30,0,1,0,1))
 				return "y";
 				
 		//x
 			// x = ) + (
 		if (checkStrokes(stroke1,"x1H1",stroke2,"x1H2"))
-			if(hasCloseDistance(stroke1, stroke2, 20,7,13,7,13))
+			if(hasCloseDistance(stroke1, stroke2, 20,14,26,14,26))
 				return "x";
 			
 		// x = / + \
 		if (checkStrokes(stroke1,"x2H1",stroke2,"x2H2"))
-			if(hasCloseDistance(stroke1, stroke2, 10,5,15,5,15))
+			if(hasCloseDistance(stroke1, stroke2, 10,10,30,10,30))
 				return "x";
 			
 		// x = \ + /
 		if (checkStrokes(stroke1,"x2H2",stroke2,"x2H1"))
-			if(hasCloseDistance(stroke1, stroke2, 10,8,12,8,12))
+			if(hasCloseDistance(stroke1, stroke2, 10,16,24,16,24))
 				return "x";
 				
 		// 5 = 5 + -
 		if (checkStrokes(stroke1,"5H1",stroke2,"5H2"))
-			if(hasCloseDistance(stroke1, stroke2, 20,0,2,0,2))
+			if(hasCloseDistance(stroke1, stroke2, 20,0,4,0,4))
 				return "5";
 		
 		// 5 = 5 + back
 		if (checkStrokes(stroke1,"5H1",stroke2,"5H2+"))
-			if(hasCloseDistance(stroke1, stroke2, 20,0,2,18,20))
+			if(hasCloseDistance(stroke1, stroke2, 20,0,4,36,39))
 				return "5";
 		
 		//9				  
 		if (checkStrokes(stroke1,"9H1",stroke2,"9H2"))
-			if(hasCloseDistance(stroke1, stroke2, 20,0,1,0,1) && hasCloseDistance(stroke1, stroke2, 20,19,20,5,10))
+			if(hasCloseDistance(stroke1, stroke2, 20,0,2,0,2) && hasCloseDistance(stroke1, stroke2, 20,38,39,38,39))
 				return "9";
 				
 		//4				  
 		if (checkStrokes(stroke1,"4H1",stroke2,"4H2"))
-			if(hasCloseDistance(stroke1, stroke2, 20,15,19,5,15))
+			if(hasCloseDistance(stroke1, stroke2, 20,30,39,10,30))
 				return "4";
 				
 		// 7 met extra streepje
 		if (checkStrokes(stroke1,"7H1",stroke2,"7H2")) 
-			if(hasCloseDistance(stroke1, stroke2, 10,10,16,7,13))
+			if(hasCloseDistance(stroke1, stroke2, 10,20,32,14,26))
 				return "7";	
 		
 		// 7 met extra streepje back
 		if (checkStrokes(stroke1,"7H1",stroke2,"7H2+"))
-			if(hasCloseDistance(stroke1, stroke2, 10,10,16,8,12))
+			if(hasCloseDistance(stroke1, stroke2, 10,20,32,16,24))
 				return "7";	
 			
 		//+
 		if (checkStrokes(stroke1,"+H1",stroke2,"+H2"))
-			if(hasCloseDistance(stroke1, stroke2, 10,6,14,6,14))
+			if(hasCloseDistance(stroke1, stroke2, 10,12,28,12,28))
 				return "+";
 		
 		if (checkStrokes(stroke1,"+H1",stroke2,"+H2+"))
-			if(hasCloseDistance(stroke1, stroke2, 10,6,14,6,14))
+			if(hasCloseDistance(stroke1, stroke2, 10,12,28,12,28))
 				return "+";
 		
 		if (checkStrokes(stroke1,"+H2",stroke2,"+H1"))
-			if(hasCloseDistance(stroke1, stroke2, 10,6,14,6,14))
+			if(hasCloseDistance(stroke1, stroke2, 10,12,28,12,28))
 				return "+";
 		
 		if (checkStrokes(stroke1,"+H2+",stroke2,"+H1"))
-			if(hasCloseDistance(stroke1, stroke2, 10,6,14,6,14))
+			if(hasCloseDistance(stroke1, stroke2, 10,12,28,12,28))
 				return "+";
 		
 		// =
 		if (checkStrokes(stroke1,"=H1",stroke2,"=H2") || checkStrokes(stroke1,"=H1+",stroke2,"=H2+"))
-			if(hasCloseXDistance(stroke1, stroke2, 80,0,2,0,2) && hasCloseXDistance(stroke1, stroke2, 80,18,19,18,19) && hasCloseYDistance(stroke1, stroke2, 120,0,2,0,2))
+			if(hasCloseXDistance(stroke1, stroke2, 80,0,4,0,4) && hasCloseXDistance(stroke1, stroke2, 80,36,39,36,39) && hasCloseYDistance(stroke1, stroke2, 120,0,4,0,4))
 				return "=";
 		
 		if (checkStrokes(stroke1,"=H1",stroke2,"=H2+") || checkStrokes(stroke1,"=H1+",stroke2,"=H2"))
-			if(hasCloseXDistance(stroke1, stroke2, 40,0,2,18,19) && hasCloseXDistance(stroke1, stroke2, 40,18,19,0,0) && hasCloseYDistance(stroke1, stroke2, 80,0,2,0,2))
+			if(hasCloseXDistance(stroke1, stroke2, 40,0,4,36,39) && hasCloseXDistance(stroke1, stroke2, 40,39,39,0,0) && hasCloseYDistance(stroke1, stroke2, 80,0,4,0,4))
 				return "=";
 				
 		// >=
@@ -164,7 +164,7 @@ public class TwoStrokeProcessor {
 	}
 	
 	private static boolean checkStrokes(Stroke stroke1, String teken1, Stroke stroke2, String teken2) {
-		return TwoStrokeDirFilter.checkDir(stroke1,teken1) && TwoStrokeDirFilter.checkDir(stroke1,teken2);
+		return TwoStrokeDirFilter.checkDir(stroke1,teken1) && TwoStrokeDirFilter.checkDir(stroke2,teken2);
 	}
 		
 	public static boolean hasCloseDistance(Stroke stroke1, Stroke stroke2, int distMin, int min1, int max1, int min2, int max2) {
