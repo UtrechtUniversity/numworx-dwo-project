@@ -26,16 +26,16 @@ private static HashMap<String,int[][]> cachedLocDAngleData = new HashMap<String,
 			locDAngleBooleans[i] = wo.hasLocDAngle(locDAngleData[i][0], locDAngleData[i][1], locDAngleData[i][2], locDAngleData[i][3]);
 		}
 		return locDAngleBooleans;
-	}
-	
+	} 
 	public static int[][] getLocDAngleData(String teken) {
 		if(cachedLocDAngleData.containsKey(teken))
 			return cachedLocDAngleData.get(teken);
 		
 		
 		if("b".equals(teken)) {int[][] data = {{180,30,10,22}};return data;}
+		if("b_1".equals(teken)) {int[][] data = {{-180,140,30,39}};return data;}
 		if("h".equals(teken)) {int[][] data = {{180,40,10,25}};return data;}
-		if("h_1".equals(teken)) {int[][] data = {{150,40,16,32}};return data;}
+		if("h_1".equals(teken)) {int[][] data = {{150,40,16,33},{-100,40,28,39}};return data;}
 		if("k".equals(teken)) {int[][] data = {{120,60,29,38}};return data;}
 		if("k_1".equals(teken)) {int[][] data = {{120,60,32,39}};return data;}
 		if("r".equals(teken)) {int[][] data = {{180,40,10,22}};return data;}

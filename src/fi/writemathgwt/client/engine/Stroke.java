@@ -14,6 +14,7 @@ public class Stroke {
 	protected DoubleRectangle parsePointsBox;
 	protected double[] angles;
 	protected double[] dAngles;
+	private long timeStamp;
 	
 	public Stroke() {
 		
@@ -33,6 +34,7 @@ public class Stroke {
 		angles = new double[parsePoints.size()-1];
 		makeAngles();
 		makeDAngles();
+		timeStamp = System.currentTimeMillis();
 	}
 	
 	public Stroke(ArrayList<DoublePoint> points, boolean fromParsePoints) {
@@ -50,6 +52,11 @@ public class Stroke {
 		return parsePoints;
 	}
 	
+	public long getTimeStamp() {
+		return timeStamp;
+	}
+	
+	
 	public double[] getAngles() {
 		return angles;
 	}
@@ -62,7 +69,6 @@ public class Stroke {
 		return parsePointsBox;
 	}
 	
-		
 	public String getParsePointsText() {
 		String text = "{";
 		for(int i = 0 ; i < parsePoints.size() ; i++) {

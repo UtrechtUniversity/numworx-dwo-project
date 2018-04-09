@@ -10,5 +10,15 @@ public class DoubleRectangle {
 		this.width = width;
 		this.height = height;
 	}
+	
+	public boolean contains(double px, double py) {
+		return (px >= x) && (px <= (x + width)) &&
+			       (py >= y) && (py <= (y + height));
+	}
+	
+	public boolean contains(DoublePoint p) {
+		return (p.x >= x) && (p.x <= (x + width)) &&
+			       (p.y >= y) && (p.y <= (y + height));
+	}
 }
 

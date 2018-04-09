@@ -10,8 +10,8 @@ public class StrokeDirFilter {
 		cachedDirData.put(key, dirData);
 	}
 	
-	public static boolean checkDir(Stroke wo, String teken) {
-		boolean[] dirBooleans = getDirBooleans(wo,teken);
+	public static boolean checkDir(Stroke stroke, String teken) {
+		boolean[] dirBooleans = getDirBooleans(stroke,teken);
 		boolean check = true;
 		for(int i=0 ; i<dirBooleans.length ; i++) {
 			check = check && dirBooleans[i];
@@ -19,7 +19,7 @@ public class StrokeDirFilter {
 		return check;
 	}
 	
-	public static boolean[] getDirBooleans(Stroke wo, String teken) {
+	public static boolean[] getDirBooleans(Stroke stroke, String teken) {
 		int[][] dirData = getDirData(teken);
 		
 		for(int i=0 ; i<dirData.length ; i++) {
@@ -27,7 +27,7 @@ public class StrokeDirFilter {
 		}
 		boolean[] dirBooleans = new boolean[dirData.length];
 		for(int i=0 ; i<dirData.length ; i++) {
-			dirBooleans[i] = wo.hasDirection(dirData[i][0], dirData[i][1], dirData[i][2], dirData[i][3], dirData[i][4]);
+			dirBooleans[i] = stroke.hasDirection(dirData[i][0], dirData[i][1], dirData[i][2], dirData[i][3], dirData[i][4]);
 		}
 		return dirBooleans;
 	}
@@ -41,8 +41,8 @@ public class StrokeDirFilter {
 		if("1_1".equals(teken)) {int[][] data = {{45,45,1,8,4},{265,30,1,39,26}};return data;}
 		if("2".equals(teken)) {int[][] data = {{0,60,33,39,2}};return data;}
 		if("3".equals(teken)) {int[][] data = {{180,90,7,20,2},{0,90,20,30,2}};return data;}
-		if("4".equals(teken)) {int[][] data = {};return data;}
-		if("6".equals(teken)) {int[][] data = {};return data;}
+		if("4".equals(teken)) {int[][] data = {{250,30,1,12,8},{0,60,8,30,6},{90,90,16,32,2},{260,30,20,39,6}};return data;}
+		if("6".equals(teken)) {int[][] data = {{240,50,1,24,14}};return data;}
 		if("7".equals(teken)) {int[][] data = {{0,40,1,11,3},{250,30,15,39,20}};return data;}
 		if("8".equals(teken)) {int[][] data = {};return data;}
 		if("9".equals(teken)) {int[][] data = {{200,50,32,39,2},{180,80,2,10,3}};return data;}
