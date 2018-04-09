@@ -85,75 +85,75 @@ public class TwoStrokeProcessor {
 				
 		// >=
 		if (checkStrokes(stroke1,">=H1",stroke2,">=H2"))
-			if(hasYDistance(stroke1, stroke2, 20,20,18,19,0,1) && hasCloseXDistance(stroke1, stroke2, 30,18,19,0,1))
+			if(hasYDistance(stroke1, stroke2, 20,20,36,39,0,2) && hasCloseXDistance(stroke1, stroke2, 30,36,39,0,2))
 				return "\\u2265";
 		
 		if (checkStrokes(stroke1,">=H1",stroke2,">=H2+"))
-			if(hasYDistance(stroke1, stroke2, 20,20,18,19,18,19) && hasCloseXDistance(stroke1, stroke2, 30,18,19,0,1))
+			if(hasYDistance(stroke1, stroke2, 20,20,36,99,36,39) && hasCloseXDistance(stroke1, stroke2, 30,36,39,0,2))
 				return "\\u2265";
 		
 		// <=
 		if (checkStrokes(stroke1,"<=H1",stroke2,"<=H2"))
-			if(hasYDistance(stroke1, stroke2, 20,20,18,19,18,19) && hasCloseXDistance(stroke1, stroke2, 30,18,19,18,19))
+			if(hasYDistance(stroke1, stroke2, 20,20,36,39,36,39) && hasCloseXDistance(stroke1, stroke2, 30,36,39,36,39))
 				return "\\u2264";
 				
 		if (checkStrokes(stroke1,"<=H1",stroke2,"<=H2+"))
-			if(hasYDistance(stroke1, stroke2, 20,20,18,19,0,1) &&hasCloseXDistance(stroke1, stroke2, 30,18,19,0,1))
+			if(hasYDistance(stroke1, stroke2, 20,20,36,39,0,2) &&hasCloseXDistance(stroke1, stroke2, 30,36,39,0,2))
 				return "\\u2264";
 		
 		// f met extra streepje
 		if (checkStrokes(stroke1,"fH1",stroke2,"fH2")) 
-			if(hasCloseDistance(stroke1, stroke2, 10,5,16,7,13))
+			if(hasCloseDistance(stroke1, stroke2, 10,10,32,14,26))
 				return "f";	
 				
 		// f met extra streepje back
 		if (checkStrokes(stroke1,"fH1",stroke2,"fH2+"))
-			if(hasCloseDistance(stroke1, stroke2, 10,5,16,7,13))
+			if(hasCloseDistance(stroke1, stroke2, 10,10,32,14,26))
 				return "f";	
 		
 		// t met extra streepje
 		if (checkStrokes(stroke1,"tH1",stroke2,"tH2")) 
-			if(hasCloseDistance(stroke1, stroke2, 10,5,16,7,13))
+			if(hasCloseDistance(stroke1, stroke2, 10,10,32,14,26))
 				return "t";	
 						
 		// t met extra streepje back
 			if (checkStrokes(stroke1,"tH1",stroke2,"tH2+"))
-				if(hasCloseDistance(stroke1, stroke2, 10,5,16,7,13))
+				if(hasCloseDistance(stroke1, stroke2, 10,10,32,14,26))
 					return "t";
 			
 		// A 
 		if (checkStrokes(stroke1,"AH1",stroke2,"AH2"))
-			if(hasCloseDistance(stroke1, stroke2, 20,3,7,0,1) && hasCloseDistance(stroke1, stroke2, 20,13,17,19,20))
+			if(hasCloseDistance(stroke1, stroke2, 20,6,14,0,2) && hasCloseDistance(stroke1, stroke2, 20,26,34,38,39))
 				return "A";	
 		
 		// B 
 		if (checkStrokes(stroke1,"BH1",stroke2,"BH2"))
-			if(hasCloseDistance(stroke1, stroke2, 20,0,1,0,3) && hasCloseDistance(stroke1, stroke2, 30,19,20,17,20))
+			if(hasCloseDistance(stroke1, stroke2, 20,0,2,0,6) && hasCloseDistance(stroke1, stroke2, 30,38,39,34,39))
 				return "B";	
 		
 		// B 
 		if (checkStrokes(stroke1,"DH1",stroke2,"DH2"))
-			if(hasCloseDistance(stroke1, stroke2, 20,0,1,0,3) && hasCloseDistance(stroke1, stroke2, 30,19,20,17,20))
+			if(hasCloseDistance(stroke1, stroke2, 20,0,2,0,6) && hasCloseDistance(stroke1, stroke2, 30,38,39,34,39))
 				return "D";
 				
 		// j 
 		if (checkStrokes(stroke1,"jH1",stroke2,"jH2"))
-			if(hasYDistance(stroke1, stroke2, -30,25,0,1,0,1) && hasCloseXDistance(stroke1, stroke2, 20,0,1,0,1))
+			if(hasYDistance(stroke1, stroke2, -30,25,0,2,0,2) && hasCloseXDistance(stroke1, stroke2, 20,0,2,0,2))
 				return "j";	
 		
 		// i
 		if (checkStrokes(stroke1,"iH1",stroke2,"iH2"))
-			if(hasYDistance(stroke1, stroke2, -30,25,0,1,0,1) && hasCloseXDistance(stroke1, stroke2, 20,0,1,0,1))
+			if(hasYDistance(stroke1, stroke2, -30,25,0,2,0,2) && hasCloseXDistance(stroke1, stroke2, 20,0,2,0,2))
 				return "i";
 		
 		// k
 		if (checkStrokes(stroke1,"kH1",stroke2,"kH2"))
-			if(hasCloseDistance(stroke1, stroke2, 20,7,16,7,13) && hasYDistance(stroke1, stroke2, 35, 20,  0, 1, 0, 1))
+			if(hasCloseDistance(stroke1, stroke2, 20,14,32,14,26) && hasYDistance(stroke1, stroke2, 35, 20,  0, 2, 0, 2))
 				return "k";
 		
 		// K
 		if (checkStrokes(stroke1,"KH1",stroke2,"KH2"))
-			if(hasCloseDistance(stroke1, stroke2, 20,7,14,7,13) &&hasYDistance(stroke1, stroke2, 0, 15,  0, 1, 0, 1))
+			if(hasCloseDistance(stroke1, stroke2, 20,14,28,14,26) &&hasYDistance(stroke1, stroke2, 0, 15,  0, 2, 0, 2))
 				return "K";
 		
 		return null;

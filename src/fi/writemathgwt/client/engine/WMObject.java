@@ -82,9 +82,9 @@ public class WMObject {
 		return box;
 	}
 	
-	public DoublePoint getBoxMid() {
-		return new DoublePoint(box.x+box.width/2 , box.y+box.height/2);
-	}
+//	public DoublePoint getBoxMid() {
+//		return new DoublePoint(box.x+box.width/2 , box.y+box.height/2);
+//	}
 	
 	private void makeBox() {
 		double minx = 10000;
@@ -170,5 +170,35 @@ public class WMObject {
 	
 	public boolean isBreuk() {
 		return isBreuk;
+	}
+	
+	public DoublePoint getBoxMid() 
+	{
+		if (hasAscent())
+			return new DoublePoint(box.x + box.width / 2, box.y + 2 * box.height / 3);
+		else if (hasDescent())
+			return new DoublePoint(box.x + box.width / 2, box.y + box.height / 3);	
+		else
+			return new DoublePoint(box.x + box.width / 2, box.y + box.height / 2);
+	}
+	
+	public boolean hasAscent()
+	{	
+		if (getTeken().equals("b") || getTeken().equals("d") || getTeken().equals("h") || getTeken().equals("k") ||
+			getTeken().equals("l") || getTeken().equals("t") || getTeken().equals("6") || getTeken().equals("8"))
+		{	return true;
+		}
+		else 
+			return false;
+	}
+	
+	public boolean hasDescent()
+	{	
+		if (getTeken().equals("f") || getTeken().equals("g") || getTeken().equals("j") || getTeken().equals("p") ||
+			getTeken().equals("q") || getTeken().equals("y") || getTeken().equals("7") || getTeken().equals("9"))
+		{	return true;
+		}
+		else
+			return false;
 	}
 }

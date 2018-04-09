@@ -12,7 +12,7 @@ public class StrokeContainer {
 	private ArrayList<Stroke> strokes;
 	private ArrayList<WMObject> wmObjects;
 	private String formulaString = "";
-	private int averageHeight = 30;
+	private double averageHeight = 30;
 	
 	
 	public StrokeContainer() {
@@ -36,25 +36,29 @@ public class StrokeContainer {
 	
 	private void parseStrokes() {
 		String s = null;
-		if(strokes.size()>2 && wmObjects.get(0).isOneStroke() && wmObjects.get(1).isOneStroke()) {
+		if(strokes.size()>2 && wmObjects.size()>1 && wmObjects.get(0).isOneStroke() && wmObjects.get(1).isOneStroke()) {
 			Stroke stroke1 = strokes.get(2);
 			Stroke stroke2 = strokes.get(1);
 			Stroke stroke3 = strokes.get(0);
 			s = ThreeStrokeProcessor.findThreeStrokeTeken(stroke1, stroke2, stroke3);
 			if(s!=null) {
+				WMObject wo = new WMObject(stroke1, stroke2, stroke3, s);
 				wmObjects.remove(0);
 				wmObjects.remove(0);
-				wmObjects.add(0, new WMObject(stroke1, stroke2, stroke3, s));
+				updateAverageHeight(wo);
+				wmObjects.add(0,wo);
 			}
 			
 		}
-		if(s==null && strokes.size()>1 && wmObjects.get(0).isOneStroke()) {
+		if(s==null && strokes.size()>1 &&wmObjects.size()>0 && wmObjects.get(0).isOneStroke()) {
 			Stroke stroke1 = strokes.get(1);
 			Stroke stroke2 = strokes.get(0);
 			s = TwoStrokeProcessor.findTwoStrokeTeken(stroke1, stroke2);
 			if(s!=null) {
+				WMObject wo = new WMObject(stroke1, stroke2, s);
 				wmObjects.remove(0);
-				wmObjects.add(0, new WMObject(stroke1, stroke2, s));
+				updateAverageHeight(wo);
+				wmObjects.add(0, wo);
 			}
 		}
 		if(s==null && strokes.size()>0) {
@@ -62,8 +66,10 @@ public class StrokeContainer {
 			WMObject wo = new WMObject(strokes.get(0), s);
 			if("back".equals(s)) 
 				doBack(wo);
-			else 
+			else {
+				updateAverageHeight(wo);
 				wmObjects.add(0, wo);
+			}
 		}
 		formulaString = FormulaProcessor.parseFormule(wmObjects);
 		
@@ -94,9 +100,19 @@ public class StrokeContainer {
 		int objectsAfter = wmObjects.size();
 		if (objectsBefore == objectsAfter) {	
 			wo = new WMObject(strokes.get(0),"-");
+			updateAverageHeight(wo);
 			wmObjects.add(0, wo);
 		}
 		else
 			strokes.remove(0);
+	}
+	
+	private void updateAverageHeight(WMObject wo) {
+		if ("-".equals(wo.getTeken())|| 
+			".".equals(wo.getTeken())|| 
+			"sqrt".equals(wo.getTeken()) || 
+			"=".equals(wo.getTeken())) 
+			return;
+		averageHeight = (wmObjects.size()*averageHeight + wo.getBox().height)/(wmObjects.size()+1);	
 	}
 }
