@@ -18,7 +18,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  * @author M.J.B. Kupers
  * @xmlrpc.generate
  */
-public interface DbAccessIF extends DbAccessLogin {
+public interface DbAccessIF  {
 
     // LET OP: void/null returns en null parameters zijn niet gesupport!
     public static String ERROR_CLASS = "__ERROR_CLASS__";
@@ -335,15 +335,15 @@ public interface DbAccessIF extends DbAccessLogin {
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException;
 
-    /**
-     * @param username
-     * @param password
-     * @return java.util.Hashtable
-     * @throws java.sql.SQLException
-     *
-     */
-    public Hashtable login(String username, String password)
-            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+//    /**
+//     * @param username
+//     * @param password
+//     * @return java.util.Hashtable
+//     * @throws java.sql.SQLException
+//     *
+//     */
+//    public Hashtable login(String username, String password)
+//            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
     /**
      * @param userID
