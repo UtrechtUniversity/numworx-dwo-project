@@ -2,9 +2,6 @@ package fi.writemathgwt.client.engine;
 
 import java.util.ArrayList;
 
-import fi.writemathgwt.client.Rectangle;
-import fi.writemathgwt.client.WriteObject;
-
 public class WMObject {
 
 	private ArrayList<Stroke> strokes = new ArrayList<Stroke>();
@@ -45,7 +42,7 @@ public class WMObject {
 	public WMObject(WMObject wo) {
 		strokes = wo.getStrokes();
 		this.teken = wo.getTekenRaw();
-		this.box = wo.getBox();
+		this.box = new DoubleRectangle(wo.getBox().x , wo.getBox().y , wo.getBox().width , wo.getBox().height);
 	}
 
 	public boolean isOneStroke() {
@@ -79,8 +76,16 @@ public class WMObject {
 	}
 	
 	public DoubleRectangle getBox() {
+		if (teken!=null && (teken.equals("-") || teken.equals("back")))	{	
+			int height = 2;
+			if (box.height < height)
+				return new DoubleRectangle(box.x - height, box.y - height / 2, box.width + 2 * height, height);
+			else
+				return new DoubleRectangle(box.x - box.height, box.y, box.width + 2 * box.height, box.height);
+		}
 		return box;
 	}
+	
 	
 //	public DoublePoint getBoxMid() {
 //		return new DoublePoint(box.x+box.width/2 , box.y+box.height/2);
@@ -95,7 +100,7 @@ public class WMObject {
 			minx = Math.min(minx, strokes.get(i).getParsePointsbox().x);
 			miny = Math.min(miny, strokes.get(i).getParsePointsbox().y);
 			maxx = Math.max(maxx, strokes.get(i).getParsePointsbox().x+strokes.get(i).getParsePointsbox().width);
-			maxy = Math.max(maxx, strokes.get(i).getParsePointsbox().y+strokes.get(i).getParsePointsbox().height);
+			maxy = Math.max(maxy, strokes.get(i).getParsePointsbox().y+strokes.get(i).getParsePointsbox().height);
 		}
 		box = new DoubleRectangle(minx, miny, maxx-minx, maxy-miny);
 	}

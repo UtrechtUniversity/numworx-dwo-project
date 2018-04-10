@@ -10,9 +10,9 @@ public class FormulaProcessor {
 	private static int cPanelAreaMax = 50000;
 	private static int cPanelAreaDelta = cPanelAreaMax - cPanelAreaMin;
 	
-	private static int averageHeight = 30;
+	
 
-	public static String parseFormule(ArrayList<WMObject> wmObjects) {		
+	public static String parseFormule(ArrayList<WMObject> wmObjects, DoubleRectangle parseArea) {		
 		ArrayList<WMObject> wmObjectsToDo = new ArrayList<WMObject>();
 		// make a compact deep copy
 		for (int i = 0; i < wmObjects.size(); i++) {	
@@ -236,8 +236,9 @@ public class FormulaProcessor {
 		
 //      Changed scope of the writePanel, size is now inifinite (as fars as that is possible within the int parameters)
 //		return parseBox(new Rectangle(Integer.MIN_VALUE / 2, Integer.MIN_VALUE / 2, Integer.MAX_VALUE, Integer.MAX_VALUE), writeObjectsToDo, null, null);
-		return parseBox(new DoubleRectangle(cPanelAreaMin, cPanelAreaMin, cPanelAreaDelta, cPanelAreaDelta), wmObjectsToDo, null, null);
-//		return parseBox(new Rectangle(0, 0, width, height), writeObjectsToDo, null, null);
+				return parseBox(new DoubleRectangle(cPanelAreaMin, cPanelAreaMin, cPanelAreaDelta, cPanelAreaDelta), wmObjectsToDo, null, null);
+				//return parseBox(parseArea, wmObjectsToDo, null, null);
+				//		return parseBox(new DoubleRectangle(0, 0, width, height), writeObjectsToDo, null, null);
 	}
 	
 	private static void isBreuk(WMObject wo, ArrayList<WMObject> writeObjectsToDo) {
@@ -509,7 +510,7 @@ public class FormulaProcessor {
 				double py = nextWriteObject.getBoxMid().y;
 				if (lastWriteObject != null) {	
 					double ly = lastWriteObject.getBox().y;
-					if (py > ly + 2 * averageHeight / 3)
+					if (py > ly + 2 * StrokeContainer.averageHeight / 3)
 						string = string + ".";
 					else
 						string = string + "*";
@@ -611,7 +612,7 @@ public class FormulaProcessor {
 	}
 	
 	private static boolean staatBoven(WMObject lastWo, WMObject wo) {
-		return (wo.getBoxMid().y + averageHeight / 2 < lastWo.getBoxMid().y) && (wo.getBox().x > lastWo.getBoxMid().x);
+		return (wo.getBoxMid().y + StrokeContainer.averageHeight / 2 < lastWo.getBoxMid().y) && (wo.getBox().x > lastWo.getBoxMid().x);
 	}
 	
 	private static boolean staatNaast(WMObject lastWo, WMObject wo) {	
@@ -620,7 +621,7 @@ public class FormulaProcessor {
 				   (wo.getBoxMid().y < (lastWo.getBox().y + lastWo.getBox().height)) && 
 				   (wo.getBox().x > lastWo.getBoxMid().x);
 		else
-			return (Math.abs(wo.getBoxMid().y - lastWo.getBoxMid().y) < averageHeight / 3) && 
+			return (Math.abs(wo.getBoxMid().y - lastWo.getBoxMid().y) < StrokeContainer.averageHeight / 3) && 
 			   	   (wo.getBox().x > lastWo.getBoxMid().x);
 	}
 	

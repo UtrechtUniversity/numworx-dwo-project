@@ -5,16 +5,14 @@ import java.util.ArrayList;
 
 import com.google.gwt.canvas.dom.client.Context2d;
 
-import fi.writemathgwt.client.Rectangle;
-import fi.writemathgwt.client.WriteObject;
-
 
 public class StrokeContainer {
 	
 	private ArrayList<Stroke> strokes;
 	private ArrayList<WMObject> wmObjects;
 	private String formulaString = "";
-	private double averageHeight = 30;
+	public static double averageHeight = 30;
+	private DoubleRectangle parseArea;
 	
 	
 	public StrokeContainer() {
@@ -23,7 +21,8 @@ public class StrokeContainer {
 	}
 	
 	public void addStroke(Stroke stroke) {
-		strokes.add(0,stroke);
+		strokes.add(stroke);
+		updateParseArea(stroke);
 		parseStrokes();
 	}
 	
@@ -32,48 +31,53 @@ public class StrokeContainer {
 			strokes.get(i).draw(g);
 	}
 	
+//	public void draw(Graphics g) {
+//		for(int i=0 ; i<strokes.size() ; i++)
+//			strokes.get(i).draw(g);
+//	}
+	
 	public String getFormulaString() {
 		return formulaString;
 	}
 	
 	private void parseStrokes() {
 		String s = null;
-		if(strokes.size()>2 && wmObjects.size()>1 && wmObjects.get(0).isOneStroke() && wmObjects.get(1).isOneStroke()) {
-			Stroke stroke1 = strokes.get(2);
-			Stroke stroke2 = strokes.get(1);
-			Stroke stroke3 = strokes.get(0);
+		if(strokes.size()>2 && wmObjects.size()>1 && wmObjects.get(wmObjects.size()-1).isOneStroke() && wmObjects.get(wmObjects.size()-2).isOneStroke()) {
+			Stroke stroke1 = strokes.get(strokes.size()-3);
+			Stroke stroke2 = strokes.get(strokes.size()-2);
+			Stroke stroke3 = strokes.get(strokes.size()-1);
 			s = ThreeStrokeProcessor.findThreeStrokeTeken(stroke1, stroke2, stroke3);
 			if(s!=null) {
 				WMObject wo = new WMObject(stroke1, stroke2, stroke3, s);
-				wmObjects.remove(0);
-				wmObjects.remove(0);
+				wmObjects.remove(wmObjects.size()-1);
+				wmObjects.remove(wmObjects.size()-1);
 				updateAverageHeight(wo);
-				wmObjects.add(0,wo);
+				wmObjects.add(wo);
 			}
 			
 		}
-		if(s==null && strokes.size()>1 &&wmObjects.size()>0 && wmObjects.get(0).isOneStroke()) {
-			Stroke stroke1 = strokes.get(1);
-			Stroke stroke2 = strokes.get(0);
+		if(s==null && strokes.size()>1 &&wmObjects.size()>0 && wmObjects.get(wmObjects.size()-1).isOneStroke()) {
+			Stroke stroke1 = strokes.get(strokes.size()-2);
+			Stroke stroke2 = strokes.get(strokes.size()-1);
 			s = TwoStrokeProcessor.findTwoStrokeTeken(stroke1, stroke2);
 			if(s!=null) {
 				WMObject wo = new WMObject(stroke1, stroke2, s);
-				wmObjects.remove(0);
+				wmObjects.remove(wmObjects.size()-1);
 				updateAverageHeight(wo);
-				wmObjects.add(0, wo);
+				wmObjects.add(wo);
 			}
 		}
 		if(s==null && strokes.size()>0) {
-			s = StrokeMatcher.findTekenRaw(strokes.get(0));
-			WMObject wo = new WMObject(strokes.get(0), s);
+			s = StrokeMatcher.findTekenRaw(strokes.get(strokes.size()-1));
+			WMObject wo = new WMObject(strokes.get(strokes.size()-1), s);
 			if("back".equals(s)) 
 				doBack(wo);
 			else {
 				updateAverageHeight(wo);
-				wmObjects.add(0, wo);
+				wmObjects.add(wo);
 			}
 		}
-		formulaString = FormulaProcessor.parseFormule(wmObjects);
+		formulaString = FormulaProcessor.parseFormule(wmObjects, parseArea);
 		
 	}
 	
@@ -101,12 +105,12 @@ public class StrokeContainer {
 		wmObjects = removeAllInBox(wmObjects,box);
 		int objectsAfter = wmObjects.size();
 		if (objectsBefore == objectsAfter) {	
-			wo = new WMObject(strokes.get(0),"-");
+			wo = new WMObject(strokes.get(strokes.size()-1),"-");
 			updateAverageHeight(wo);
-			wmObjects.add(0, wo);
+			wmObjects.add(wo);
 		}
 		else
-			strokes.remove(0);
+			strokes.remove(strokes.size()-1);
 	}
 	
 	private void updateAverageHeight(WMObject wo) {
@@ -116,5 +120,17 @@ public class StrokeContainer {
 			"=".equals(wo.getTeken())) 
 			return;
 		averageHeight = (wmObjects.size()*averageHeight + wo.getBox().height)/(wmObjects.size()+1);	
+	}
+	
+	private void updateParseArea(Stroke stroke) {
+		if(strokes.size()==1) 
+			parseArea = new DoubleRectangle(stroke.getParsePointsbox().x, stroke.getParsePointsbox().y, stroke.getParsePointsbox().width, stroke.getParsePointsbox().height);
+		else if(strokes.size()>1) {
+			double xmin = Math.min(parseArea.x, stroke.getParsePointsbox().x);
+			double ymin = Math.min(parseArea.y, stroke.getParsePointsbox().y);
+			double xmax = Math.max(parseArea.x + parseArea.width, stroke.getParsePointsbox().x + stroke.getParsePointsbox().width);
+			double ymax = Math.max(parseArea.y + parseArea.height, stroke.getParsePointsbox().y + stroke.getParsePointsbox().height);
+			parseArea = new DoubleRectangle(xmin, ymin, xmax-xmin, ymax-ymin);
+		}
 	}
 }

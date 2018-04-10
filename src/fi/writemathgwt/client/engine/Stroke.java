@@ -1,5 +1,6 @@
 package fi.writemathgwt.client.engine;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
 
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -64,6 +65,12 @@ public class Stroke {
 		g.closePath();
 		g.stroke();
 	}
+	
+//	public void draw(Graphics g) {
+//		for(int i=1 ; i<parsePoints.size() ; i++)
+//			g.drawLine((int)parsePoints.get(i-1).x, (int)parsePoints.get(i-1).y, (int)parsePoints.get(i).x, (int)parsePoints.get(i).y);
+//		
+//	}
 	
 	public ArrayList<DoublePoint> getParsePoints() {
 		return parsePoints;
