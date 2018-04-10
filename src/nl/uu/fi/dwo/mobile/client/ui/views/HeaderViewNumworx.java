@@ -223,7 +223,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 				m=items.addItem(DwoLocalesForGWT.instance.GUI_MySchoolClasses(), cmd);
 				m.addStyleName(style.menuItem());
 
-				boolean experimenteel = "test".equals(DWOplayer.PARAMETERS.getDwoEnv());
+				boolean experimenteel = true;//"test".equals(DWOplayer.PARAMETERS.getDwoEnv());
 				if(experimenteel) {
 					m=items.addItem("Studentmodel", new StudentModelCommand(StudentModelPanel.BUILDER));
 					m.addStyleName(style.menuItem());

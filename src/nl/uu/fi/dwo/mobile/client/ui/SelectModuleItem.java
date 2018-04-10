@@ -185,20 +185,7 @@ public class SelectModuleItem
 	}
 
 	public SelectModuleItem(DomCourseStudent course, DomClassCourse domClassCourse) {
-		Boolean withChildren = course.getWithChildren();
-		type = withChildren != null && withChildren.booleanValue() ? Type.FOLDER : Type.MODULE;
-		description = course.getDescription();
-		fromSchool = course.getSchoolId() != null;
-		id = PersistenceIdDecoderInterface.instance.idOf(course.getId(), PersistenceClassType.PersistentCourse);
-		parent = PersistenceIdDecoderInterface.instance.idOf(course.getParentID(), PersistenceClassType.PersistentCourse);
-		name = course.getName();
-		Long sequence = course.getSequenceNr();
-		sequencenr = sequence != null ? sequence.intValue() : Integer.MAX_VALUE;
-		showScore = false;
-		showChildren(!course.isNotVisible());
-		classCourse = domClassCourse;
-		image = course.getImage();
-		if("".equals(image)) image = null;
+		setDomClassCourseStudent(course,domClassCourse);
 	}
 
 	public SelectModuleItem(DomScoContext sco) {
@@ -408,6 +395,23 @@ public class SelectModuleItem
 
 	public PersistenceId getStudentModelId() {
 		return studentModelId;
+	}
+
+	public void setDomClassCourseStudent(DomCourseStudent course, DomClassCourse cc) {
+		Boolean withChildren = course.getWithChildren();
+		type = withChildren != null && withChildren.booleanValue() ? Type.FOLDER : Type.MODULE;
+		description = course.getDescription();
+		fromSchool = course.getSchoolId() != null;
+		id = PersistenceIdDecoderInterface.instance.idOf(course.getId(), PersistenceClassType.PersistentCourse);
+		parent = PersistenceIdDecoderInterface.instance.idOf(course.getParentID(), PersistenceClassType.PersistentCourse);
+		name = course.getName();
+		Long sequence = course.getSequenceNr();
+		sequencenr = sequence != null ? sequence.intValue() : Integer.MAX_VALUE;
+		showScore = false;
+		showChildren(!course.isNotVisible());
+		classCourse = cc;
+		image = course.getImage();
+		if("".equals(image)) image = null;
 	}
 	
 }

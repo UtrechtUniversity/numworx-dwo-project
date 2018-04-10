@@ -9,7 +9,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
+import nl.uu.fi.dwo.account.client.StudentModelView;
 import nl.uu.fi.dwo.formule.client.formuleobjects.TouchButton;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
@@ -1919,19 +1921,26 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		 * en niet alleen laatste status - Zichtbaarheid knop: alleen op laatste
 		 * pagina - Berekening en weergave categorie-score
 		 */
-		if (pilot)
-			scoresObjectivesPanel = new ScoresObjectivesPanel(getScoresObjectivesForDiagramFromLogs(), pilot);
-		else
-			scoresObjectivesPanel = new ScoresObjectivesPanel(getScoresObjectivesForDiagram(), pilot);
-
-		// if(aantalDiagrammen < 4)
-		// scoresObjectivesPanel.setBounds(0, 0, 400 * aantalDiagrammen, 350);
-		// else
-		// scoresObjectivesPanel.setBounds(0, 0, 1200, 700);
-		scoresObjectivesDialog.add(scoresObjectivesPanel.asWidget());
+		if(memento.getStudentModelStructure() != null) {
+			StudentModelView view = StudentModelPanel.BUILDER.get();
+			view.setPopup(scoresObjectivesDialog);
+			view.setInitialStructure(memento.getStudentModelStructure());
+			scoresObjectivesPanel = null;
+		} else {
+			ScoresObjectivesPanel v;
+			if (pilot) 
+				v = (new ScoresObjectivesPanel(getScoresObjectivesForDiagramFromLogs(), pilot));
+			else
+				v = (new ScoresObjectivesPanel(getScoresObjectivesForDiagram(), pilot));
+			scoresObjectivesPanel = v;
+			scoresObjectivesDialog.add(scoresObjectivesPanel.asWidget());
+		}
+		
 		scoresObjectivesDialog.show();
 		scoresObjectivesDialog.center();
 		// scoresObjectivesDialog.setSize(scoresObjectivesPanel.getSize());
+		if(scoresObjectivesPanel != null) {
+		
 		int width = 1200;
 		int height = 730;
 
@@ -1947,7 +1956,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		}
 		scoresObjectivesDialog.setWidth(width + "px");
 		scoresObjectivesDialog.setHeight(height + "px");
-
+		}
 	}
 
 	public void openMisconceptionsPanel()

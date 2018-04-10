@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
@@ -10,6 +11,7 @@ import java.util.logging.Logger;
 import javax.inject.Provider;
 
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -44,10 +46,10 @@ public class StudentModelPanel extends nl.uu.fi.dwo.account.client.StudentModelP
 	protected void createAndBindUi() {
 		selectBox = new ListBox();
 		FlowPanel flow = new FlowPanel();
-		flow.add(new InlineHTML("StudentModel"));
+		flow.add(new InlineHTML("StudentModel "));
 		flow.add(selectBox);
 		button = new Button("X");
-		flow.add(button);
+		//flow.add(button);
 		dock = new DockLayoutPanel(Unit.EM);
 		dock.addNorth(flow, 3);
 		simple = new SimplePanel();
@@ -120,6 +122,18 @@ public class StudentModelPanel extends nl.uu.fi.dwo.account.client.StudentModelP
 			
 			Logger.getGlobal().log(Level.SEVERE, "scoreobjectives", e);
 		}
+		
+		
 	}
+
+	@Override
+	public void updateModels(Collection<String> keySet) {
+		super.updateModels(keySet);
+		if(!keySet.isEmpty() && initialSelection == null) {
+			selectBox.setSelectedIndex(selectBox.getItemCount()-1); // pick last to start
+			onChange(null);
+		}
+	}
+	
 
 }

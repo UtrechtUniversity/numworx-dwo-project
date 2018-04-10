@@ -691,6 +691,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		StudentModelLogger.destroy();
 	}
 	
+	public Promise<DomStudentModelContext> getStudentModelStructure() {
+		return pmodel;
+	}
 	
 	public void almostClose()
 	{	
