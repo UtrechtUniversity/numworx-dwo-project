@@ -2,7 +2,14 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\Teacher.java
 package fi.dwo.dwojapplet.domain;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Arrays;
+
+import org.apache.xmlrpc.applet.XmlRpcException;
+
+import fi.dwo.dwojapplet.persistence.MapperCreator;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 
 /**
  * This class is responsible for the Teacher data. It extends <code>User</code>,
@@ -110,5 +117,22 @@ public class Teacher extends User {
     public boolean hasIconizer() {
         return true;
     }
+
+	@Override
+	public void setSchoolRoleAndClass(DomSchoolsRolesAndClassesV2 dom) {
+		super.setSchoolRoleAndClass(dom);
+        Object[] o = null;
+		try {
+			o = MapperCreator.instance(SchoolClass.class).get(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        if (o != null) {
+            SchoolClass[] slist = (SchoolClass[]) o;
+            setClasses(slist);
+        } else {
+            setClasses(null);
+        }
+	}
 
 }

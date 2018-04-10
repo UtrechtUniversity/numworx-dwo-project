@@ -46,7 +46,7 @@ public interface MapperIF {
             SQLException;
     
     /**
-     * This method saves an object in the database.<br>
+     * This method saves an object in the cache.<br>
      * NOT IMPLEMENTED!!
      *
      * @param oid
@@ -55,8 +55,7 @@ public interface MapperIF {
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      */
-    public void put(int oid, Object obj) throws IOException, SQLException,
-            XmlRpcException;
+    public void put(int oid, Object obj);
 
     /**
      * Returns all the objects of this mapper.<br>

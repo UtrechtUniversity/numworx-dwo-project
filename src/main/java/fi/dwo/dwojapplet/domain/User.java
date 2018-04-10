@@ -2,7 +2,18 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\User.java
 package fi.dwo.dwojapplet.domain;
 
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * This class is responsible for the User data.
@@ -30,7 +41,7 @@ public class User implements UserGroup, Comparable {
 
     private School school;
     
-    private int schoolGroupID;
+    private PersistenceId schoolGroupID;
 
     private long lastLogin = System.currentTimeMillis();
     private long timeZone = 0L;
@@ -115,6 +126,61 @@ public class User implements UserGroup, Comparable {
         return email;
     }
 
+    public void setDomUserFull(DomUserFull u) {
+        setEmail(u.getEmail());
+        setFirstname(u.getGivenName());
+        setMiddleName(u.getInsertion());
+        setLastName(u.getFamilyName());
+        setUsername(u.getUserName());
+        try {
+			setUserID( MySQLPersistenceId.getNativeId(u).intValue() );
+		} catch (Dwo2Exception e) {
+
+		}
+    }
+
+    public void setDomLoginContext(DomLoginContext context) {
+    	setLastLogin(context.getLastLoginTimeStamp().longValue());
+    }
+    
+    
+    public void setSchoolRoleAndClass(DomSchoolsRolesAndClassesV2 dom) {
+    	rights = dom.getActiveSchoolRoleAndClass().getHasRole().getRights();
+    	char[] schoolRights = dom.getActiveSchoolRoleAndClass().getSchool().getSchoolRights().toCharArray();
+    	for(char ch: schoolRights) addRight(ch);
+    	schoolGroupID = dom.getActiveSchoolRoleAndClass().getHasRole().getSchoolGroupId();
+    	DomSchool NULL = dom.getNullSchool();
+    	if(NULL.getId().equals(dom.getActiveSchoolRoleAndClass().getSchool().getId()))
+    		setSchool(null);
+    	else {
+     		try {
+				int sid = MySQLPersistenceId.getNativeId(dom.getActiveSchoolRoleAndClass().getSchool()).intValue();
+				School s = (School) PersistenceFacade.instance().get(sid, School.class);
+				if(s != null) {
+					setSchool(s);
+				} else {
+					s = new School(); s.setDomSchool(dom.getActiveSchoolRoleAndClass().getSchool());
+					PersistenceFacade.instance().put(s.getSchoolID(), s);
+				}
+				DomSchoolClass domSchoolClass = dom.getActiveSchoolRoleAndClass().getSchoolClass();
+				if(domSchoolClass != null) {
+					SchoolClass cls = (SchoolClass)PersistenceFacade.instance().get(MySQLPersistenceId.getNativeId(domSchoolClass).intValue(), SchoolClass.class);
+					if(cls == null) {
+						cls = new SchoolClass();
+						cls.setDomSchoolClass(domSchoolClass);
+						PersistenceFacade.instance().put(cls.getID(), cls);
+					}
+					inClass = cls;
+				} 
+				
+				
+    		} catch (Dwo2Exception | PersistenceException e) {
+				e.printStackTrace();
+			}
+    	}
+    	
+    }
+    
     /**
      * Sets the e-mail address of the user.
      *
@@ -522,14 +588,14 @@ public class User implements UserGroup, Comparable {
     /**
      * @return the schoolGroupID
      */
-    public int getSchoolGroupID() {
+    public PersistenceId getSchoolGroupID() {
         return schoolGroupID;
     }
 
     /**
      * @param schoolGroupID the schoolGroupID to set
      */
-    public void setSchoolGroupID(int schoolGroupID) {
+    public void setSchoolGroupID(PersistenceId schoolGroupID) {
         this.schoolGroupID = schoolGroupID;
     }
 }

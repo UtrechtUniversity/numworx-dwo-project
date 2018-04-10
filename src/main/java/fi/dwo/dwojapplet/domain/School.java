@@ -5,6 +5,10 @@ package fi.dwo.dwojapplet.domain;
 import java.util.Arrays;
 import java.util.Date;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+
 /**
  * This class is responsible for the School data.
  *
@@ -243,5 +247,17 @@ public class School {
     public Date getExpire() {
         return expire;
     }
+
+	public void setDomSchool(DomSchool school) {
+		expire = school.getExpire();
+		name = school.getSchoolName();
+		rights = school.getSchoolRights();
+		try {
+			schoolID = MySQLPersistenceId.getNativeId(school).intValue();
+		} catch (Dwo2Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 
 }

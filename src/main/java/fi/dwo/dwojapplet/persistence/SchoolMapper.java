@@ -125,8 +125,7 @@ class SchoolMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public void put(int oid, Object obj) throws IOException, SQLException,
-            XmlRpcException {
+    public void put(int oid, Object obj)  {
         System.err.println("SchoolMapper.put() Not yet implemented!");
 
     }

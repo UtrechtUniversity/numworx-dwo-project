@@ -140,8 +140,8 @@ public class GuiCreator {
         try {
             DwoHelper.setContact(false);
             DomUserFullwLoginContext user = LoginManager.basicLogin(username, MD5.getHashString(String.valueOf(password)));
-            DwoHelper.setCurrentUser(user.getDomUserFull());
             DwoHelper.setCurrentLoginContext(user.getDomLoginContext());
+            DwoHelper.setCurrentUser(user.getDomUserFull());
 //            Code underdevelopment to do digest.
 //            PublicUserManager.digestLogin(username, password);
 
@@ -183,8 +183,8 @@ public class GuiCreator {
         try {
             DwoHelper.setContact(false);
             DomUserFullwLoginContext user = LoginManager.basicLogin(username, password);
-            DwoHelper.setCurrentUser(user.getDomUserFull());
             DwoHelper.setCurrentLoginContext(user.getDomLoginContext());
+            DwoHelper.setCurrentUser(user.getDomUserFull());
 //          Code under development for digest.
 //            PublicUserManager.digestLogin(username, password);
 

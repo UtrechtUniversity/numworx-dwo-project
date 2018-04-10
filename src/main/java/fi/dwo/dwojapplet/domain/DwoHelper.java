@@ -17,10 +17,12 @@ import fi.dwo.commons.system.TextMapper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
+import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 
 import java.applet.Applet;
@@ -591,11 +593,7 @@ public final class DwoHelper {
     public static void updateCurrentUser(DomUserFull aCurrentUser) {
         if (aCurrentUser.getId() == currentUser.getId()) {
             currentUser = aCurrentUser;
-            try {
-                currentFacadeUser = (User) PersistenceFacade.instance().login(aCurrentUser.getUserName());
-            } catch (LoginException ex) {
-                LOG.log(Level.SEVERE, null, ex);
-            }
+            currentFacadeUser.setDomUserFull(aCurrentUser);
         } else {
             currentFacadeUser = null;
         }
@@ -609,12 +607,8 @@ public final class DwoHelper {
         if (aCurrentUser != null) {
             RestAuthenticator.getInstance().setUsername(aCurrentUser.getUserName());
             RestAuthenticator.getInstance().setPassword(aCurrentUser.getPassword());
-            try {
-                GuiCreator.instance().clearCurrentUserData((int) MySQLPersistenceId.getNativeId(aCurrentUser).intValue());
-                currentFacadeUser = (User) PersistenceFacade.instance().login(aCurrentUser.getUserName());
-            } catch (LoginException ex) {
-                LOG.log(Level.SEVERE, null, ex);
-            }
+            GuiCreator.instance().clearCurrentUserData( MySQLPersistenceId.getNativeId(aCurrentUser).intValue());
+			currentFacadeUser = buildFacadeUser(aCurrentUser, getSchoolLogins(), currentLoginContext);
         } else {
             if (currentFacadeUser != null) {
                 GuiCreator.instance().clearCurrentUserData(currentFacadeUser.getID());
@@ -623,7 +617,32 @@ public final class DwoHelper {
         }
     }
 
-    /**
+
+    private static User buildFacadeUser(DomUserFull user, DomSchoolsRolesAndClassesV2 dom, DomLoginContext context) {
+		DomRole role = dom.getActiveSchoolRoleAndClass().getRole();
+		String name = role.getRoleName();
+		User u = null;
+		if(TextMapper.GUIR_OPT_ADMIN.equals(name)) {
+			u = new Admin();
+			setContact(false);
+		} else if (TextMapper.GUIR_OPT_SCHOOLADMIN.equals(name)) {
+			u = new SchoolAdmin();
+			setContact(true);
+		} else if (TextMapper.GUIR_OPT_TEACHER.equals(name)) {
+			u = new Teacher();
+			setContact(false);
+		} else {
+			setContact(false);
+			u = new User(); // Student
+		}
+		u.setDomLoginContext(context);
+		u.setDomUserFull(user);
+		u.setSchoolRoleAndClass(dom);
+		MapperCreator.instance(User.class).put(u.getID(), u);
+		return u;
+	}
+
+	/**
      * @return the currentFacadeUser
      */
     @Deprecated

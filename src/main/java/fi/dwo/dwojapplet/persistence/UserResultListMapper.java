@@ -56,8 +56,7 @@ public class UserResultListMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public void put(int oid, Object obj) throws IOException, SQLException,
-            XmlRpcException {
+    public void put(int oid, Object obj) {
         System.err.println("UserMapper.put() Not yet implemented!");
     }
 

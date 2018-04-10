@@ -4,6 +4,7 @@ package fi.dwo.dwojapplet.persistence;
 
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.SchoolAdmin;
@@ -52,9 +53,8 @@ class UserMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public void put(int oid, Object obj) throws IOException, SQLException,
-            XmlRpcException {
-        System.err.println("UserMapper.put() Not yet implemented!");
+    public void put(int oid, Object obj) {
+    	objects.put(oid, obj);
     }
 
     /**
@@ -75,7 +75,7 @@ class UserMapper extends XmlRpcMapper {
             // user?
             u = (User) objects.get(data.get("userID"));
             //TODO NOW
-            if (u.getSchoolGroupID() != ((Integer) (data.get("schoolGroupID"))).intValue()) {
+            if (PersistenceFacade.idOf(u.getSchoolGroupID()) != ((Integer) (data.get("schoolGroupID"))).intValue()) {
                 u = new User();
                 u = (User) update(u, data);
                 return u;
@@ -157,7 +157,7 @@ class UserMapper extends XmlRpcMapper {
         } else {
             if(objects.containsKey(uid)){
                 User u = (User) objects.get(uid);
-                if(u!=null && u.getSchoolGroupID()==sgid.intValue()){
+                if(u!=null && PersistenceFacade.idOf(u.getSchoolGroupID())==sgid.intValue()){
                     return u;
                 }
             }
@@ -218,7 +218,8 @@ class UserMapper extends XmlRpcMapper {
             u.setUserID(((Integer) data.get("userID")).intValue());
             u.setUsername((String) data.get("username"));
             u.setRights((String) data.get("rights"));
-            u.setSchoolGroupID(((Integer) data.get("schoolGroupID")));
+            Number integer = (Number) data.get("schoolGroupID");
+			u.setSchoolGroupID(PersistentSchoolGroup.buildPersistenceId(integer.longValue()));
             /* Maybe we've got some information about the school */
             School s = (School) MapperCreator.instance(School.class)
                     .getObjectFromReturn(data);

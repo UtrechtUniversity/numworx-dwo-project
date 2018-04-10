@@ -31,6 +31,7 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.UserResultList;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.persistence.cache.ReadOnly;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -233,18 +234,7 @@ public class PersistenceFacade {
     public void put(int oid, Object obj)
             throws PersistenceException {
         MapperIF mapper = MapperCreator.instance(obj.getClass());
-        try {
-            mapper.put(oid, obj);
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
+        mapper.put(oid, obj);
 
     }
 
@@ -824,7 +814,7 @@ public class PersistenceFacade {
 
             int uid = user.getUserID();
             int scoid = sco.getScoID();
-            int sgid = user.getSchoolGroupID();
+            PersistenceId sgid = user.getSchoolGroupID();
 
             String key = mapDataModel(iDataModelElement);
             if (key.equals("score")) {
@@ -841,7 +831,7 @@ public class PersistenceFacade {
                 iValue = Double.toString(d);
             }
 
-            result = StoreCreator.instance().setValue(uid, scoid, sgid, key, iValue);
+            result = StoreCreator.instance().setValue(uid, scoid, idOf(sgid), key, iValue);
             return result;
         } else {
             return "true";
@@ -864,7 +854,7 @@ public class PersistenceFacade {
         if (user != null && !(user instanceof Guest)) {
             int uid = user.getUserID();
             int scoid = sco.getScoID();
-            int sgid = user.getSchoolGroupID();
+            int sgid = idOf(user.getSchoolGroupID());
             String key = mapDataModel(iDataModelElement);
             return StoreCreator.instance().getValue(uid, scoid, sgid, key);
         } else {
@@ -1571,19 +1561,19 @@ public class PersistenceFacade {
         }
     }
 
-    /**
-     * Logs a user in into the system. The user-data will be checked in the
-     * database.
-     *
-     * @param username The username of the user.
-     * @param password The password of the user.
-     * @return The user who logged in. If an exception occurs, null is returned.
-     * @throws fi.dwo.commons.exceptions.LoginException
-     *
-     */
-    public User login(String username, String password) throws LoginException {
-        return login_intern(username, password, DbAccessCreator.instance());
-    }
+//    /**
+//     * Logs a user in into the system. The user-data will be checked in the
+//     * database.
+//     *
+//     * @param username The username of the user.
+//     * @param password The password of the user.
+//     * @return The user who logged in. If an exception occurs, null is returned.
+//     * @throws fi.dwo.commons.exceptions.LoginException
+//     *
+//     */
+//    public User login(String username, String password) throws LoginException {
+//        return login_intern(username, password, DbAccessCreator.instance());
+//    }
 
     /**
      * @param username
@@ -1690,9 +1680,9 @@ public class PersistenceFacade {
 
     };
 
-    public User login(String username) throws LoginException {
-        return login_intern(username, "", DbAccessCreator.instance());
-    }
+//    public User login(String username) throws LoginException {
+//        return login_intern(username, "", DbAccessCreator.instance());
+//    }
 
     public User loginViaSAML(String samlUserID, String samlOrgID) throws LoginException {
         return login_intern(samlUserID, samlOrgID, LOGIN_SAML);
@@ -2002,7 +1992,14 @@ public class PersistenceFacade {
 //        return false;
 //    }
 
-    public boolean updateSchoolTo(School from, School[] to) {
+    @Deprecated
+    static int idOf(PersistenceId id) {
+		String s = id.getIdString();
+		int dot = s.lastIndexOf(';');		
+		return Integer.parseInt(s.substring(dot+1));
+	}
+
+	public boolean updateSchoolTo(School from, School[] to) {
         int schoolID = from.getSchoolID();
         Vector schoolTo = new Vector(to.length);
         for (int i = 0; i < to.length; i++) {
@@ -2474,7 +2471,7 @@ public class PersistenceFacade {
         StoreCreator.instance().commit(user.getUserID(), 0, "");
         try {
             Vector v = DbAccessCreator.instance().getUserResults(course.getID(),
-                    user.getUserID(), user.getSchoolGroupID());
+                    user.getUserID(), idOf(user.getSchoolGroupID()));
             MapperIF mapper = MapperCreator.instance(UserResultList.class);
             return (Vector) (mapper.getObjectFromReturn(v)[0]);
         }
@@ -2526,7 +2523,7 @@ public class PersistenceFacade {
         }
         try {
             Vector v = DbAccessCreator.instance().getUserResults(courseIDs,
-                    user.getUserID(),user.getSchoolGroupID());
+                    user.getUserID(),idOf(user.getSchoolGroupID()));
             MapperIF mapper = MapperCreator.instance(UserResultList.class);
             Object[] oa = mapper.getObjectFromReturn(v);
             if (oa.length > 0) {

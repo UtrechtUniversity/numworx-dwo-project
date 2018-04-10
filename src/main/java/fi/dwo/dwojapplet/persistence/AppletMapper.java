@@ -48,8 +48,7 @@ class AppletMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public void put(int oid, Object obj) throws IOException, SQLException,
-            XmlRpcException {
+    public void put(int oid, Object obj)  {
         System.err.println("AppletMapper.put() Not yet implemented!");
     }
 

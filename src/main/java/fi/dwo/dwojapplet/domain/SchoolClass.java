@@ -3,8 +3,12 @@
 package fi.dwo.dwojapplet.domain;
 
 import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -333,6 +337,16 @@ public class SchoolClass implements UserGroup, Comparable {
 
 	public void setRegistrationKey(String registrationKey) {
 		this.registrationKey = registrationKey;
+	}
+
+	public void setDomSchoolClass(DomSchoolClass domSchoolClass) {
+		try {
+			classID = MySQLPersistenceId.getNativeId(domSchoolClass).intValue();
+		} catch (Dwo2Exception e) {
+		}
+		className = domSchoolClass.getSchoolClassName();
+		iconizer = domSchoolClass.getIconizer().booleanValue();
+		registrationKey = null;
 	}
 	
 }

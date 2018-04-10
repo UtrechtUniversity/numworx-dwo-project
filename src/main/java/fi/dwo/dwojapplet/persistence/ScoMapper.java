@@ -119,8 +119,7 @@ class ScoMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public void put(int oid, Object obj) throws IOException, SQLException,
-            XmlRpcException {
+    public void put(int oid, Object obj)  {
         objects.put(new Integer(oid), obj);
         cachemap.clear();
     }

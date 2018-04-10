@@ -14,8 +14,7 @@ class ClassCourseMapper extends XmlRpcMapper {
     }
 
     @Override
-    public void put(int oid, Object obj) throws IOException, SQLException,
-            XmlRpcException {
+    public void put(int oid, Object obj)  {
 
     }
 

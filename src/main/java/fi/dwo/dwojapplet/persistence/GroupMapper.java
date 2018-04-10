@@ -32,8 +32,7 @@ class GroupMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public void put(int oid, Object obj) throws IOException, SQLException,
-            XmlRpcException {
+    public void put(int oid, Object obj)  {
         System.err.println("GroupMapper.put() Not yet implemented!");
 
     }
