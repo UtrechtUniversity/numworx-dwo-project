@@ -493,20 +493,20 @@ public interface DbAccessIF extends DbAccessLogin {
 
     public int addCourse(int schoolID, String name, String description, int dwoProfile, int parentID, boolean withChildren) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-    public int addCourse(int schoolID, String name, String description, int dwoProfile) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+//    public int addCourse(int schoolID, String name, String description, int dwoProfile) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-    public boolean changeCourse(int courseID, String name, String description) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+ //   public boolean changeCourse(int courseID, String name, String description) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
     public boolean deleteCourse(int courseID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-    public int addSco(int courseID, String name, String description, int appletConfigID, int sequencenr) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+ //   public int addSco(int courseID, String name, String description, int appletConfigID, int sequencenr) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-    public int addSco(int courseID, String name, String description,
-            int appletID, String launchdata, int sequencenr)
-            throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
+//    public int addSco(int courseID, String name, String description,
+//            int appletID, String launchdata, int sequencenr)
+//            throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
 
-    public int addSco(int id, String name, String description, int appletConfigID, int sequencenr,
-            boolean showScore) throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
+//    public int addSco(int id, String name, String description, int appletConfigID, int sequencenr,
+//            boolean showScore) throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
 
     public boolean changeSco(int scoID, String name, String description, String launchdata) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
@@ -537,20 +537,20 @@ public interface DbAccessIF extends DbAccessLogin {
 
     public boolean setLogo(int id, byte[] image) throws SQLException, IOException, XmlRpcException;
 
-    /**
-     * update course met name, description en export.
-     *
-     * @param id
-     * @param name
-     * @param description
-     * @param export
-     * @return
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
-     */
-    public boolean changeCourse(int id, String name, String description,
-            boolean export) throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
+//    /**
+//     * update course met name, description en export.
+//     *
+//     * @param id
+//     * @param name
+//     * @param description
+//     * @param export
+//     * @return
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
+//     */
+//    public boolean changeCourse(int id, String name, String description,
+//            boolean export) throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
 
     public boolean editSchool(int schoolID, boolean export) throws IOException, XmlRpcException, SQLException;
 
@@ -564,8 +564,8 @@ public interface DbAccessIF extends DbAccessLogin {
     public Hashtable addSchool(int schoolId, String schoolName, String schoolLogin, Hashtable passwd)
             throws DwoXmlRpcException, IOException, XmlRpcException, SQLException, DwoXmlRpcException;
 
-    public boolean deleteUserWithRoleFromSchool(int id, int schoolGroupID)
-            throws IOException, XmlRpcException, SQLException;
+//    public boolean deleteUserWithRoleFromSchool(int id, int schoolGroupID)
+//            throws IOException, XmlRpcException, SQLException;
 
     public boolean updateSchoolTo(int schoolID, Vector schoolTo)
             throws IOException, XmlRpcException, SQLException;
@@ -595,20 +595,20 @@ public interface DbAccessIF extends DbAccessLogin {
     public Vector getResultCount(int profile, int classId)
             throws SQLException, IOException, XmlRpcException;
 
-    /**
-     * Zet de rechten van een gebruiker voor één profiel.
-     *
-     * @param uid user
-     * @param schoolGroup
-     * @param profileid profiel
-     * @param rights "aps" etc.
-     * @return "asp"
-     * @throws SQLException
-     * @throws IOException
-     * @throws XmlRpcException
-     */
-    public String setRights(int uid, int schoolGroup, int profileid, String rights)
-            throws SQLException, IOException, XmlRpcException;
+//    /**
+//     * Zet de rechten van een gebruiker voor één profiel.
+//     *
+//     * @param uid user
+//     * @param schoolGroup
+//     * @param profileid profiel
+//     * @param rights "aps" etc.
+//     * @return "asp"
+//     * @throws SQLException
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     */
+//    public String setRights(int uid, int schoolGroup, int profileid, String rights)
+//            throws SQLException, IOException, XmlRpcException;
 
     public boolean changeCourse(int id, String name, String description,
             boolean export, int schoolID)
@@ -625,9 +625,9 @@ public interface DbAccessIF extends DbAccessLogin {
     public boolean moveSco(int scoId, int courseId, int sequencenr, String name)
             throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-    public boolean selectCoursesForClass(int classID, int courseID, int type,
-            Date van, Date tot)
-            throws IOException, XmlRpcException, SQLException;
+//    public boolean selectCoursesForClass(int classID, int courseID, int type,
+//            Date van, Date tot)
+//            throws IOException, XmlRpcException, SQLException;
 
     public boolean selectCoursesForClass(int id, Vector v) throws IOException, XmlRpcException, SQLException;
 
