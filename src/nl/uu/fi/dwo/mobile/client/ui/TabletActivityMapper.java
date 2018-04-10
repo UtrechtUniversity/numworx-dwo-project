@@ -59,6 +59,12 @@ public class TabletActivityMapper implements ActivityMapper
 			{
 				item = new SelectModuleItem(id, SelectModuleItem.Type.MODULE);
 				SelectModuleItemHolder.insert(item);
+			} else {
+				if(item.isExam()) {
+					Activity c = new CourseActivity(clientFactory, item);
+					ExamModuleActivity e = new ExamModuleActivity(clientFactory, item, () -> c, false);
+					return e;
+				}
 			}
 			return new CourseActivity(clientFactory, item);
 		}

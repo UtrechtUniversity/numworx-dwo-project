@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -17,15 +18,22 @@ import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
+import nl.uu.fi.dwo.mobile.client.ui.views.UnSafeModuleView;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.activity.shared.Activity;
@@ -125,36 +133,56 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 
 			Promise<List<SelectModuleItem>> promise = item.getChildrenAsync();
 // Start downloading sco's
-			if(promise == null || (promise.isDone() && promise.getFailure() != null)) {
-				Success<List<SelectModuleItem>, List<SelectModuleItem>> success = 
-						new Success<List<SelectModuleItem>, List<SelectModuleItem>>() {
 
-							@Override
-							public Promise<List<SelectModuleItem>> call(
-									Promise<List<SelectModuleItem>> resolved)
-									throws Exception {
-								return resolved;
-							}
-				};
-				promise = clientFactory.getRPCHandler().getScos(item.getID())
-						.map(new SCO_TO_MODULEITEM(item)).then(success , failure);
-				item.setChildrenAsync(promise);
-			}
 // start downloading description/name/attributes
 			if ( clientFactory.getSchoolClass() != null) {
-				clientFactory.getRPCHandler().getCourseClass(item.getID(), clientFactory.getSchoolClass()).
+				Promise<DomCoursesOfSchoolClass> filtered = clientFactory.getRPCHandler().getCourseClass(item.getID(), clientFactory.getSchoolClass()).
 				filter(p-> !p.getClassCourses().isEmpty()).
 				then(p -> { 
 					DomClassCourse cc = p.getValue().getClassCourses().get(0).getValue();
 					DomCourseStudent c = p.getValue().getCourses().get(0).getValue();
-					item = new SelectModuleItem(c,cc);
-					SelectModuleItemHolder.insert(item);
+					item.setDomClassCourseStudent(c,cc);
 					view.setDescription(item);
 					view.render(item);
-					return null;
+					if(item.getCourseType() == CourseType.assesment) {
+						final UnSafeModuleView w = new UnSafeModuleView(clientFactory.getHeaderView());
+						w.selectItem(item);
+						clientFactory.getNavigationView().hide();
+						clientFactory.barrier().onResolve(		
+								new Runnable() {
+									public void run() {
+										panel.setWidget(w);
+						}
+						});
+						return Promises.failed(new IllegalArgumentException());
+					}
+					return p;
 				}, failure);
+				if(promise == null || (promise.isDone() && promise.getFailure() != null)) {
+					promise = filtered.map(v -> {
+						List<DomMapEntry<PersistenceId, DomScoContext>> list = v.getScoContexts();
+						ArrayList<DomScoContext> scos = new ArrayList<>();
+						for(DomMapEntry<PersistenceId, DomScoContext> entry: list) scos.add(entry.getValue());
+						return scos;
+					}).map(new SCO_TO_MODULEITEM(item));
+					item.setChildrenAsync(promise);
+				}				
 			} else {
-			
+				if(promise == null || (promise.isDone() && promise.getFailure() != null)) {
+					Success<List<SelectModuleItem>, List<SelectModuleItem>> success = 
+							new Success<List<SelectModuleItem>, List<SelectModuleItem>>() {
+
+								@Override
+								public Promise<List<SelectModuleItem>> call(
+										Promise<List<SelectModuleItem>> resolved)
+										throws Exception {
+									return resolved;
+								}
+					};
+					promise = clientFactory.getRPCHandler().getScos(item.getID())
+							.map(new SCO_TO_MODULEITEM(item)).then(success , failure);
+					item.setChildrenAsync(promise);
+				}			
 			clientFactory.getRPCHandler().getCourse(item.getID())
 
 			.filter(p -> allowAccess(p.getSchoolId()))
