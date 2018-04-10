@@ -435,28 +435,28 @@ public class PersistenceFacade {
 //        }
 //    }
 
-    /**
-     * =============================================================================
-     * SCO FUNCTIONALITY
-     * =============================================================================
-     * @param sequencenr
-     * @throws PersistenceException
-     * @deprecated
-     */
-    private int addSco(int courseID, String name, String description, int appletID, String launchdata, int sequencenr) throws PersistenceException {
-    	try {
-			return DbAccessCreator.instance().addSco(courseID, name, description, appletID, launchdata, sequencenr);
-		} catch (DwoXmlRpcException e) {
-			throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-		} catch (IOException e) {
-			throw new PersistenceException(PersistenceException.EX_IO, e);
-		} catch (XmlRpcException e) {
-			throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-		} catch (SQLException e) {
-			throw new PersistenceException(PersistenceException.EX_DB, e);
-		}
-    
-    }
+//    /**
+//     * =============================================================================
+//     * SCO FUNCTIONALITY
+//     * =============================================================================
+//     * @param sequencenr
+//     * @throws PersistenceException
+//     * @deprecated
+//     */
+//    private int addSco(int courseID, String name, String description, int appletID, String launchdata, int sequencenr) throws PersistenceException {
+//    	try {
+//			return DbAccessCreator.instance().addSco(courseID, name, description, appletID, launchdata, sequencenr);
+//		} catch (DwoXmlRpcException e) {
+//			throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//		} catch (IOException e) {
+//			throw new PersistenceException(PersistenceException.EX_IO, e);
+//		} catch (XmlRpcException e) {
+//			throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//		} catch (SQLException e) {
+//			throw new PersistenceException(PersistenceException.EX_DB, e);
+//		}
+//    
+//    }
 
     public Vector getScos(Hashtable restriction, String SEQUENCE_NR)
             throws IOException, XmlRpcException, SQLException, PersistenceException {
@@ -475,74 +475,74 @@ public class PersistenceFacade {
         }
     }
 
-    /**
-     * Adds a sco to the specified course.
-     *
-     * @param course The course where the sco must be added.
-     * @param appletConfig The AppletConfig of the new sco (it contains the
-     * applet and the default launchdata).
-     * @param name The name of the new sco.
-     * @param description The description of the new sco.
-     * @param showScore
-     * @return The new sco. If an exception occurs, null was returned.
-     * @throws ScoException
-     * @deprecated
-     */
-    private Sco addSco(Course course, AppletConfig appletConfig, String name,
-            String description, boolean showScore) throws ScoException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                Sco[] scos = course.getScoList();
-                int max = 0;
-                for (int i = 0; i < scos.length; i++) {
-                    if (scos[i].getSequencenr() > max) {
-                        max = scos[i].getSequencenr();
-                    }
-                }
-                int result;
-                Sco sco = new Sco();
-// if true use 'oldschool'
-                if (showScore) {
-                    result = dbAccess.addSco(course.getID(), name, description,
-                            appletConfig.getID(), ++max);
-                } else {
-                    result = dbAccess.addSco(course.getID(), name, description,
-                            appletConfig.getID(), ++max, false);
-                    sco.setShowScore(Boolean.FALSE);
-                }
-                sco.setScoID(result);
-                sco.setAppletID(appletConfig.getAppletID());
-                sco.setName(name);
-                sco.setDescription(description);
-                sco.setSequencenr(max);
-                sco.setCourse(course);
-                sco.setLaunchdata((Hashtable) new StringCodeObject((String) appletConfig.getLaunchdata()).toObject());
-                sco.setCourseChanged(false);
-                MapperCreator.instance(Sco.class).put(result, sco);
-                return sco;
-            }
-            catch (IOException e) {
-                throw new ScoException(ScoException.EX_IO);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (ScoException) getException(e, e.code);
-                } else {
-                    throw new ScoException(ScoException.EX_XML_RPC);
-                }
-            }
-            catch (SQLException e) {
-                throw new ScoException(ScoException.EX_DB);
-            }
-            catch (DwoXmlRpcException e) {
-                throw (ScoException) getException(e, e.code);
-            }
-        }
-        catch (PersistenceException e) {
-            throw new ScoException(ScoException.EX_UNKNOWN_ERROR);
-        }
-    }
+//    /**
+//     * Adds a sco to the specified course.
+//     *
+//     * @param course The course where the sco must be added.
+//     * @param appletConfig The AppletConfig of the new sco (it contains the
+//     * applet and the default launchdata).
+//     * @param name The name of the new sco.
+//     * @param description The description of the new sco.
+//     * @param showScore
+//     * @return The new sco. If an exception occurs, null was returned.
+//     * @throws ScoException
+//     * @deprecated
+//     */
+//    private Sco addSco(Course course, AppletConfig appletConfig, String name,
+//            String description, boolean showScore) throws ScoException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                Sco[] scos = course.getScoList();
+//                int max = 0;
+//                for (int i = 0; i < scos.length; i++) {
+//                    if (scos[i].getSequencenr() > max) {
+//                        max = scos[i].getSequencenr();
+//                    }
+//                }
+//                int result;
+//                Sco sco = new Sco();
+//// if true use 'oldschool'
+//                if (showScore) {
+//                    result = dbAccess.addSco(course.getID(), name, description,
+//                            appletConfig.getID(), ++max);
+//                } else {
+//                    result = dbAccess.addSco(course.getID(), name, description,
+//                            appletConfig.getID(), ++max, false);
+//                    sco.setShowScore(Boolean.FALSE);
+//                }
+//                sco.setScoID(result);
+//                sco.setAppletID(appletConfig.getAppletID());
+//                sco.setName(name);
+//                sco.setDescription(description);
+//                sco.setSequencenr(max);
+//                sco.setCourse(course);
+//                sco.setLaunchdata((Hashtable) new StringCodeObject((String) appletConfig.getLaunchdata()).toObject());
+//                sco.setCourseChanged(false);
+//                MapperCreator.instance(Sco.class).put(result, sco);
+//                return sco;
+//            }
+//            catch (IOException e) {
+//                throw new ScoException(ScoException.EX_IO);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (ScoException) getException(e, e.code);
+//                } else {
+//                    throw new ScoException(ScoException.EX_XML_RPC);
+//                }
+//            }
+//            catch (SQLException e) {
+//                throw new ScoException(ScoException.EX_DB);
+//            }
+//            catch (DwoXmlRpcException e) {
+//                throw (ScoException) getException(e, e.code);
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            throw new ScoException(ScoException.EX_UNKNOWN_ERROR);
+//        }
+//    }
 
 //    public Sco[] getEditableScos(School school, DwoProfile profile) {
 //        try {
@@ -1198,45 +1198,45 @@ public class PersistenceFacade {
 
     private static final long DATE_OFFSET = 1000L * 3600L * 24L;
 
-    /**
-     * Select a course for a schoolclass.
-     *
-     * @param classID The class to select the course.
-     * @param courseID The course to select.
-     * @param tot
-     * @param van
-     * @param type
-     * @throws PersistenceException
-     */
-    @Deprecated //broken    ?
-    public void selectCoursesForClass(int classID, int courseID, int type, Date van, Date tot)
-            throws PersistenceException {
-        if (van == null) {
-            van = DATE_NULL;
-        }
-        if (tot == null) {
-            tot = DATE_NULL;
-        }
-        try {
-            DbAccessCreator.instance().selectCoursesForClass(classID, courseID, type, van, tot);
-        }
-        catch (IOException e) {
-            System.out.println(e.getMessage());
-            LOG.log(Level.SEVERE, null, e);
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (XmlRpcException e) {
-            System.out.println(e.getMessage());
-            LOG.log(Level.SEVERE, null, e);
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (SQLException e) {
-            System.out.println(e.getMessage());
-            LOG.log(Level.SEVERE, null, e);
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-
-    }
+//    /**
+//     * Select a course for a schoolclass.
+//     *
+//     * @param classID The class to select the course.
+//     * @param courseID The course to select.
+//     * @param tot
+//     * @param van
+//     * @param type
+//     * @throws PersistenceException
+//     */
+//    @Deprecated //broken    ?
+//    public void selectCoursesForClass(int classID, int courseID, int type, Date van, Date tot)
+//            throws PersistenceException {
+//        if (van == null) {
+//            van = DATE_NULL;
+//        }
+//        if (tot == null) {
+//            tot = DATE_NULL;
+//        }
+//        try {
+//            DbAccessCreator.instance().selectCoursesForClass(classID, courseID, type, van, tot);
+//        }
+//        catch (IOException e) {
+//            System.out.println(e.getMessage());
+//            LOG.log(Level.SEVERE, null, e);
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (XmlRpcException e) {
+//            System.out.println(e.getMessage());
+//            LOG.log(Level.SEVERE, null, e);
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//        catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//            LOG.log(Level.SEVERE, null, e);
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//
+//    }
 
 //    /**
 //     * Deselect a course for a schoolclass.
@@ -1463,38 +1463,6 @@ public class PersistenceFacade {
         return (Course[]) MapperCreator.instance(Course.class).get(o);
     }
 
-    public int addCourse(int schoolID, String name, String description, int dwoProfile, int parentID, boolean withChildren) throws CourseException {
-    	try {
-			return DbAccessCreator.instance().addCourse(schoolID, name, description, dwoProfile, parentID, withChildren);
-		}  
-    	catch (IOException e) {
-            throw new CourseException(CourseException.EX_IO);
-        }
-        catch (XmlRpcException e) {
-            if (e.code != 0) {
-                CourseException exception;
-				try {
-					exception = (CourseException) getException(e, e.code);
-					throw exception;
-				} catch (PersistenceException e1) {
-		            throw new CourseException(CourseException.EX_UNKNOWN_ERROR);
-				}
-            } else {
-                throw new CourseException(CourseException.EX_XML_RPC);
-            }
-        }
-        catch (SQLException e) {
-            throw new CourseException(CourseException.EX_DB);
-        }
-        catch (DwoXmlRpcException e) {
-            try {
-				throw (CourseException) getException(e, e.code);
-			} catch (PersistenceException e1) {
-                throw new CourseException(CourseException.EX_XML_RPC);
-			}
-        }
-
-    }
 
     /**
      * =============================================================================
@@ -1740,23 +1708,23 @@ public class PersistenceFacade {
 
     }
 
-    public String setRights(int userID, int schoolGroup, int profileID, String newRights) throws PersistenceException {
-        String result = null;
-        try {
-            result = DbAccessCreator.instance().setRights(userID, schoolGroup, profileID, newRights);
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-
-        return result;
-    }
+//    public String setRights(int userID, int schoolGroup, int profileID, String newRights) throws PersistenceException {
+//        String result = null;
+//        try {
+//            result = DbAccessCreator.instance().setRights(userID, schoolGroup, profileID, newRights);
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//
+//        return result;
+//    }
 
     /**
      * =============================================================================
@@ -1999,40 +1967,40 @@ public class PersistenceFacade {
         }
     }
 
-    /**
-     *
-     * This function should be removed for MANY TO SCHOOLS
-     *
-     * @param userWithRole
-     * @return
-     *
-     * @depreciated
-     */
-
-//TODO MANY TO SCHOOLS    change signature to has role reference
-    public boolean deleteUserFromSchool(User userWithRole) {
-        if (userWithRole.getSchool() != null) {
-            try {
-                boolean result = DbAccessCreator.instance().deleteUserWithRoleFromSchool(userWithRole.getUserID(), userWithRole.getSchoolGroupID());
-                MapperCreator.instance(User.class).removeObject(userWithRole.getUserID());
-                return result;
-
-            }
-            catch (IOException e) {
-
-                LOG.log(Level.SEVERE, null, e);
-            }
-            catch (XmlRpcException e) {
-
-                LOG.log(Level.SEVERE, null, e);
-            }
-            catch (SQLException e) {
-
-                LOG.log(Level.SEVERE, null, e);
-            }
-        }
-        return false;
-    }
+//    /**
+//     *
+//     * This function should be removed for MANY TO SCHOOLS
+//     *
+//     * @param userWithRole
+//     * @return
+//     *
+//     * @depreciated
+//     */
+//
+////TODO MANY TO SCHOOLS    change signature to has role reference
+//    public boolean deleteUserFromSchool(User userWithRole) {
+//        if (userWithRole.getSchool() != null) {
+//            try {
+//                boolean result = DbAccessCreator.instance().deleteUserWithRoleFromSchool(userWithRole.getUserID(), userWithRole.getSchoolGroupID());
+//                MapperCreator.instance(User.class).removeObject(userWithRole.getUserID());
+//                return result;
+//
+//            }
+//            catch (IOException e) {
+//
+//                LOG.log(Level.SEVERE, null, e);
+//            }
+//            catch (XmlRpcException e) {
+//
+//                LOG.log(Level.SEVERE, null, e);
+//            }
+//            catch (SQLException e) {
+//
+//                LOG.log(Level.SEVERE, null, e);
+//            }
+//        }
+//        return false;
+//    }
 
     public boolean updateSchoolTo(School from, School[] to) {
         int schoolID = from.getSchoolID();
