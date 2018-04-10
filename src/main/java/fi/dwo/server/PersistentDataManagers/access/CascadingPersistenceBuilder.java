@@ -563,6 +563,18 @@ public class CascadingPersistenceBuilder {
             }
 
             this.instance.context.course = (course);
+            
+            if (instance.context.schoolClass != null) {
+            	List<PersistentClassCourse> ccList = ClassCourseManager.findEntities(instance.context.schoolClass, course);
+            	if (ccList.size() == 0) {
+            		String msg = MessageFormat.format("Username {0}: ClassCourse {1} not found.", new Object[]{instance.context.user.getUsername(), course.getCourseID()});
+            		LOG.log(Level.INFO, msg);
+            		//throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg); NOT FATAL?
+            		instance.context.classCourse = null;
+            	} else {
+            		instance.context.classCourse = ccList.get(0);
+            	}
+            }
             return this;
         }
 

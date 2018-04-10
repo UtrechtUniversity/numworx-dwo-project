@@ -1,5 +1,6 @@
 package fi.dwo.server.rest;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
@@ -47,6 +49,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
@@ -183,10 +186,23 @@ public class SecuredStudentCoursesOfSchoolClassManager {
       // s contains all data.
       Date NOW = new Date();
       PersistentClassCourse pcc = s.getClassCourse();
+      
+      
       PersistentCourse pc = s.getCourse();
       PersistentSchoolClass psc = s.getSchoolClass();
+// FIXME security logic: public courses are ALWAYS accessible. Move to State?
+      if(pcc == null && pc.getSchoolID() == null) {
+    	  pcc = new PersistentClassCourse();
+    	  pcc.setClassCourseID(0);
+    	  pcc.setAccessKey(null);
+    	  pcc.setClassID(psc.getClassID());
+    	  pcc.setCourseID(pc.getCourseID());
+    	  pcc.setLastChangeTimeStamp(NOW.getTime());
+    	  pcc.setType(0);
+    	  pcc.setViewState(ViewState.studentsAndTeachers);
+      }
 
-      if (pcc.getNotAfter() != null) {
+      if (pcc != null && pcc.getNotAfter() != null) {
         if (NOW.after(pcc.getNotAfter())) pcc = null;
       }
       if (pcc != null && pcc.getNotBefore() != null) {
@@ -197,6 +213,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
       if (pcc == null) {
         result.setClassCourses(Collections.emptyList());
         result.setCourses(Collections.emptyList());
+        result.setScoContexts(Collections.emptyList());
       } else {
         DomClassCourse dcc = pcc.buildDomClassCourse();
         DomCourseStudent dcs = pc.buildDomCourseStudent();
@@ -206,6 +223,12 @@ public class SecuredStudentCoursesOfSchoolClassManager {
             new DomMapEntry<PersistenceId, DomCourseStudent>(dcs.getId(), dcs);
         result.setClassCourses(Collections.singletonList(ecc));
         result.setCourses(Collections.singletonList(ecs));
+// fetch studentScoContexts
+        List<PersistentScoContext> list = ScoContextManager.findEntities(pc);
+        List<DomMapEntry<PersistenceId, DomScoContext>> scos;
+// FIXME NO icons yet!
+        scos = list.stream().map(p -> p.buildDomScoContext()).sorted(new DomScoContextComparator()).map(p -> new DomMapEntry<>(p.getId(), p)).collect(Collectors.toList());
+        result.setScoContexts(scos);       
       }
 
       result.setSchoolClass(psc.buildDomSchoolClass());
@@ -235,8 +258,19 @@ public class SecuredStudentCoursesOfSchoolClassManager {
       PersistentCourse pc = s.getCourse();
       PersistentSchoolClass psc = s.getSchoolClass();
       PersistentScoContext psco = s.getScoContext();
+// FIXME security logic: public courses are ALWAYS accessible. Move to State?
+      if(pcc == null && pc.getSchoolID() == null) {
+    	  pcc = new PersistentClassCourse();
+    	  pcc.setClassCourseID(0);
+    	  pcc.setAccessKey(null);
+    	  pcc.setClassID(psc.getClassID());
+    	  pcc.setCourseID(pc.getCourseID());
+    	  pcc.setLastChangeTimeStamp(NOW.getTime());
+    	  pcc.setType(0);
+    	  pcc.setViewState(ViewState.studentsAndTeachers);
+      }
 
-      if (pcc.getNotAfter() != null) {
+      if (pcc != null && pcc.getNotAfter() != null) {
         if (NOW.after(pcc.getNotAfter())) pcc = null;
       }
       if (pcc != null && pcc.getNotBefore() != null) {
