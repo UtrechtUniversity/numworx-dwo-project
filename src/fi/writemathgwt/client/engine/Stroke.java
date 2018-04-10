@@ -22,7 +22,7 @@ public class Stroke {
 	
 	public Stroke() {
 		
-	}
+	} 
 	
 	public Stroke(ArrayList<Point> points) {
 		ArrayList<DoublePoint> doublePoints = new ArrayList<DoublePoint>();
@@ -248,7 +248,7 @@ public class Stroke {
 			double dx = parsePoints.get(i).getX() - parsePoints.get(i-1).getX();
 			double dy = parsePoints.get(i).getY() - parsePoints.get(i-1).getY();
 			
-			int angleStep = (int)(180.0*(Math.atan2(-dy, dx)/Math.PI));
+			int angleStep = (int)angles[i];//(180.0*(Math.atan2(-dy, dx)/Math.PI));
 			if(angleStep-angle>180)
 				angleStep -= 360;
 			if(angleStep-angle<-180)

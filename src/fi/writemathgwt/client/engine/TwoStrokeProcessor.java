@@ -2,7 +2,7 @@ package fi.writemathgwt.client.engine;
 
 public class TwoStrokeProcessor {
 
-	private static double averageHeight = 30;
+	private static double averageHeight = 50;
 	
 	public static String findTwoStrokeTeken(Stroke stroke1, Stroke stroke2) {
 		
@@ -29,7 +29,7 @@ public class TwoStrokeProcessor {
 				
 		// 5 = 5 + -
 		if (checkStrokes(stroke1,"5H1",stroke2,"5H2"))
-			if(hasCloseDistance(stroke1, stroke2, 20,0,4,0,4))
+			if(hasCloseDistance(stroke1, stroke2, 30,0,4,0,4))
 				return "5";
 		
 		// 5 = 5 + back
@@ -168,7 +168,7 @@ public class TwoStrokeProcessor {
 	}
 		
 	public static boolean hasCloseDistance(Stroke stroke1, Stroke stroke2, int distMin, int min1, int max1, int min2, int max2) {
-		double dMin = distMin*averageHeight/100;
+		double dMin = distMin*StrokeContainer.averageHeight/100;
 		double distance = 1000;
 		for(int i=min1 ; i<max1 ; i++) {
 			for(int j=min2 ; j<max2 ; j++) {
@@ -185,7 +185,7 @@ public class TwoStrokeProcessor {
 	}
 	
 	public static boolean hasCloseXDistance(Stroke stroke1, Stroke stroke2, int distMin,int min1, int max1, int min2, int max2) {
-		double dMin = distMin*averageHeight/100;
+		double dMin = distMin*StrokeContainer.averageHeight/100;
 		double distance = 1000;
 		for(int i=min1 ; i<max1 ; i++) {
 			for(int j=min2 ; j<max2 ; j++) {
@@ -200,7 +200,7 @@ public class TwoStrokeProcessor {
 	}
 	
 	public static boolean hasCloseYDistance(Stroke stroke1, Stroke stroke2, int distMin, int min1, int max1, int min2, int max2) {
-		double dMin = distMin*averageHeight/100;
+		double dMin = distMin*StrokeContainer.averageHeight/100;
 		double distance = 1000;
 		for(int i=min1 ; i<max1 ; i++) {
 			for(int j=min2 ; j<max2 ; j++) {
@@ -215,8 +215,8 @@ public class TwoStrokeProcessor {
 	}
 	
 	public static boolean hasYDistance(Stroke stroke1, Stroke stroke2, int dist, int distMin, int min1, int max1, int min2, int max2) {
-		double dMin = distMin*averageHeight/100;
-		dist = (int)(dist*averageHeight/100);
+		double dMin = distMin*StrokeContainer.averageHeight/100;
+		dist = (int)(dist*StrokeContainer.averageHeight/100);
 		double distance = 1000;
 		for(int i=min1 ; i<max1 ; i++) {
 			for(int j=min2 ; j<max2 ; j++) {

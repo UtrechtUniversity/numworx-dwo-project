@@ -1937,7 +1937,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			if(mouseOnLeft) {
 				Point p = toWorldCoordinates(new Point(e.getX(), e.getY()));
 				points.add(p);
-				paint();
+				paint(false);
 			}
 			if (mouseOnRight) {
 				panelShiftX += e.getX()-shiftReference.getX();
@@ -2055,7 +2055,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			if ( writing ) {
 				Point p = toWorldCoordinates(new Point(eventX, eventY));
 				points.add(p);
-				paint();
+				paint(false);
 			}
 			
 			if (( moving ) && (e.getTouches().length()==2)){

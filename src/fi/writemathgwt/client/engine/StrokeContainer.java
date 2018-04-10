@@ -11,7 +11,7 @@ public class StrokeContainer {
 	private ArrayList<Stroke> strokes;
 	private ArrayList<WMObject> wmObjects;
 	private String formulaString = "";
-	public static double averageHeight = 30;
+	public static double averageHeight = 50;
 	private DoubleRectangle parseArea;
 	
 	
