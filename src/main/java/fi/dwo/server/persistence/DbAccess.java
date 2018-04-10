@@ -2030,9 +2030,9 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws XmlRpcException
      * @throws SQLException
      */
-    @Override
+    //@Override
     @Deprecated
-    public boolean selectCoursesForClass(int classID, int courseID, int type,
+    private boolean selectCoursesForClass(int classID, int courseID, int type,
             Date van, Date tot) throws IOException, XmlRpcException,
             SQLException {
         close(); //for lazy connection
@@ -2915,8 +2915,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws DwoXmlRpcException
      * @throws SQLException
      */
-    @Override
-    public int addCourse(int schoolID, String name, String description, int dwoProfile) throws DwoXmlRpcException, SQLException {
+    //@Override
+    private int addCourse(int schoolID, String name, String description, int dwoProfile) throws DwoXmlRpcException, SQLException {
         return addCourse(schoolID, name, description, dwoProfile, 0, false);
     }
 
@@ -3009,8 +3009,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws DwoXmlRpcException
      * @throws SQLException
      */
-    @Override
-    public boolean changeCourse(int courseID, String name, String description)
+    //@Override
+    private boolean changeCourse(int courseID, String name, String description)
             throws DwoXmlRpcException, SQLException {
         PreparedStatement ps;
         ps = getStatement(QRY_UPDATE_COURSE);
@@ -3032,8 +3032,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return true;
     }
 
-    @Override
-    public boolean changeCourse(int courseID, String name, String description, boolean export)
+    //@Override
+    private boolean changeCourse(int courseID, String name, String description, boolean export)
             throws DwoXmlRpcException, SQLException {
         PreparedStatement ps;
         ps = getStatement(QRY_UPDATE_COURSE2);
@@ -3239,8 +3239,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws XmlRpcException
      * @throws SQLException
      */
-    @Override
-    public int addSco(int courseID, String name, String description,
+    //@Override
+    private int addSco(int courseID, String name, String description,
             int appletConfigID, int sequencenr) throws DwoXmlRpcException,
             IOException, XmlRpcException, SQLException {
         Hashtable data;
@@ -3295,8 +3295,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws XmlRpcException
      * @throws SQLException
      */
-    @Override
-    public int addSco(int courseID, String name, String description,
+    //@Override
+    private int addSco(int courseID, String name, String description,
             int appletConfigID, int sequencenr, boolean showScore) throws DwoXmlRpcException,
             IOException, XmlRpcException, SQLException {
         int result = addSco(courseID, name, description, appletConfigID, sequencenr);
@@ -3317,8 +3317,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws SQLException
      * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      */
-    @Override
-    public int addSco(int courseID, String name, String description,
+    //@Override
+    private int addSco(int courseID, String name, String description,
             int appletID, String launchdata, int sequencenr)
             throws SQLException, DwoXmlRpcException {
         int result = -1;
@@ -3990,8 +3990,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws XmlRpcException
      * @throws SQLException
      */
-    @Override
-    public boolean deleteUserWithRoleFromSchool(int userID, int schoolGroupID)
+    //@Override
+    private boolean deleteUserWithRoleFromSchool(int userID, int schoolGroupID)
             throws IOException, XmlRpcException, SQLException {
 
         Connection c = getConnection();
@@ -4164,8 +4164,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return true;
     }
 
-    @Override
-    public String setRights(int uid, int schoolGroupID, int profileid, String rights)
+   // @Override
+    private String setRights(int uid, int schoolGroupID, int profileid, String rights)
             throws SQLException, IOException, XmlRpcException {
         //TODO V1_3 DONE adjust to rights in tblHasRole
         String sql = "SELECT rights FROM tblHasRole where userID = ? and schoolGroupID = ?";
