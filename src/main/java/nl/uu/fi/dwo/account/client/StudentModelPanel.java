@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Promise;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -23,6 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
@@ -56,6 +59,8 @@ public class StudentModelPanel extends Composite implements HasText, StudentMode
 	
 	private PopupPanel popup;
 	private StudentModelController controller;
+
+	protected Promise<String> initialSelection;
 	
 	@UiHandler("button")
 	public void onClick(ClickEvent e) {
@@ -100,6 +105,24 @@ public class StudentModelPanel extends Composite implements HasText, StudentMode
 		for(String s: keySet) {
 			selectBox.addItem(s);
 		}
+		initialSelection();
+	}
+
+	protected void initialSelection() {
+		if(initialSelection != null) {
+			initialSelection.then(p-> {
+				int count = selectBox.getItemCount();
+				for(int i = 0; i < count; i++) {
+					String item = selectBox.getItemText(i);
+					if(item .equals(p.getValue()))
+					{	selectBox.setSelectedIndex(i);
+						onChange(null);
+						break;
+					}
+				}
+				return p;
+			});
+		}
 		
 	}
 
@@ -140,6 +163,14 @@ public class StudentModelPanel extends Composite implements HasText, StudentMode
 			
 		}
 		setText(sb.toString());
+	}
+
+	@Override
+	public void setInitialStructure(Promise<DomStudentModelContext> studentModelStructure) {
+		if(studentModelStructure != null)
+			this.initialSelection = studentModelStructure.map(v -> v.getModelStructure().getInfo().getTitle().get(locale));
+		else
+			this.initialSelection = null;
 	}
 
 }
