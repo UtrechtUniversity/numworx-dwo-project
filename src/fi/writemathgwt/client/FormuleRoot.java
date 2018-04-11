@@ -1,17 +1,21 @@
 package fi.writemathgwt.client;
 
+import fi.writemathgwt.client.engine.StrokeContainer;
+
 //import java.awt.*;
 
 public class FormuleRoot extends FormuleElementWithChildren 
 {
-	WritePanel owner;
+	StrokeContainer owner;
 	
 	public FormuleRoot(WritePanel o)
 	{	super(null, 1);
+		//owner = o;
+	}
+	
+	public FormuleRoot(StrokeContainer o)
+	{	super(null, 1);
 		owner = o;
-		
-//System.out.println("root created");
-
 	}
 
 	// findSizes()

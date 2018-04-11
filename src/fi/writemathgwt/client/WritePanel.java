@@ -1549,6 +1549,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		if (s.length() == 0)
 		{
 			wis(); // Wim: wis als s leeg is.
+			strokeContainer.wis();
 			return;
 		}
 		
@@ -1570,8 +1571,9 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 //System.out.println("s = " + s);		
 		
 		wis();
+		strokeContainer.wis();
 		// make root
-		FormuleRoot formuleRoot = new FormuleRoot(this);
+		FormuleRoot formuleRoot = new FormuleRoot(strokeContainer);
 		// create formula tree
 		formuleRoot.vulVak(s);
 		// bepaal afmeting
@@ -1923,6 +1925,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		lastObject = null;
 		lastLastObject = null;
 		resetPanelShift();
+		strokeContainer.wis();
 		paint();
 	}
 

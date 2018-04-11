@@ -34,6 +34,33 @@ public class StrokeContainer {
 		return strokes;
 	}
 	
+	public void wis() {
+		strokes.clear();
+		wmObjects.clear();
+	}
+	
+	public void addWriteObject(String teken, Stroke stroke) {
+		
+	}
+	
+	public void addWriteObject(String teken, Stroke stroke1, Stroke strokes2) {
+		
+	}
+	
+	public void addWriteObject(String teken, ArrayList<Point> points) {
+		Stroke stroke = new Stroke(points);
+		strokes.add(stroke);
+		wmObjects.add(new WMObject(stroke, teken));
+	}
+	
+	public void addWriteObject(String teken, ArrayList<Point> points1, ArrayList<Point> points2) {
+		Stroke stroke1 = new Stroke(points1);
+		Stroke stroke2 = new Stroke(points2);
+		strokes.add(stroke1);
+		strokes.add(stroke2);
+		wmObjects.add(new WMObject(stroke1, stroke2, teken));
+	}
+	
 	private void parseStrokes() {
 		String s = null;
 		if(strokes.size()>2 && wmObjects.size()>1 && wmObjects.get(wmObjects.size()-1).isOneStroke() && wmObjects.get(wmObjects.size()-2).isOneStroke()) {
@@ -127,4 +154,6 @@ public class StrokeContainer {
 			parseArea = new DoubleRectangle(xmin, ymin, xmax-xmin, ymax-ymin);
 		}
 	}
+	
+	
 }
