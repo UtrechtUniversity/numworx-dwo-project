@@ -33,6 +33,7 @@ import fi.beans.jdbc.DbConnect;
 import fi.beans.scorm2xml.Scorm2Xml;
 //import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.DbAccessLogin;
 import fi.dwo.commons.persistence.SchoolGroupIndices;
 import fi.dwo.commons.persistence.ScormAccessIF;
 import fi.dwo.commons.system.MD5;
@@ -49,7 +50,7 @@ import java.util.logging.Logger;
  *
  *
  */
-public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, DbAccessJS {
+public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, DbAccessJS, DbAccessLogin {
 
     private static final Logger LOG = Logger.getLogger(DbAccess.class.getName());
 
@@ -1180,6 +1181,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      */
     @Override
+    @Deprecated
     public Hashtable login(String username, String password)
             throws SQLException, DwoXmlRpcException {
         close(); //for lazy connection

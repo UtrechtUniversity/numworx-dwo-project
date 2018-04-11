@@ -28,6 +28,7 @@ import org.apache.xmlrpc.XmlRpc;
 import fi.beans.jdbc.DbConnectIF;
 import fi.beans.xmlrpc.Servlet;
 import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.DbAccessLogin;
 import fi.dwo.commons.persistence.ScormAccessIF;
 
 import java.sql.PreparedStatement;
@@ -59,7 +60,7 @@ public class DataSourceAccessServlet extends Servlet {
     }
 
     static private int count = 0;
-    class MonitorDataSourceAccess extends DataSourceAccess implements fi.beans.jdbc.DbConnectIF, DbAccessIF, ScormAccessIF {
+    class MonitorDataSourceAccess extends DataSourceAccess implements fi.beans.jdbc.DbConnectIF, DbAccessIF, ScormAccessIF, DbAccessLogin {
 
 
         public MonitorDataSourceAccess(DataSource ds) {
@@ -73,7 +74,7 @@ public class DataSourceAccessServlet extends Servlet {
                     + ":";
         }
 
-        @Override
+        //@Override
         public Hashtable login(String username, String password)
                 throws SQLException, DwoXmlRpcException {
             Hashtable h = super.login(username, password);

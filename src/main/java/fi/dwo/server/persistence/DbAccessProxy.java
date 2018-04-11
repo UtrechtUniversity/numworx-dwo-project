@@ -12,6 +12,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.jdbc.DbConnectIF;
 import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.DbAccessLogin;
 import fi.dwo.commons.persistence.ScormAccessIF;
 import fi.dwo.commons.exceptions.LoginException;
 
@@ -178,12 +179,12 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
                 lastname, email, schoolLogin, groupID, groupPassword);
     }
 
-    @Override
+    //@Override
     public Hashtable login(String username, String password)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
         try {
-            return getDelegate().login(username, password);
+            return ((DbAccessLogin) getDelegate()).login(username, password);
         } catch (DwoXmlRpcException go) {
             if (go.code != LoginException.LE_UNKNOWN_USER) {
                 go.printStackTrace(); // Expected
