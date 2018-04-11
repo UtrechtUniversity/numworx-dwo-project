@@ -40,7 +40,8 @@ public class StrokeContainer {
 	}
 	
 	public void addWriteObject(String teken, Stroke stroke) {
-		
+		strokes.add(stroke);
+		wmObjects.add(new WMObject(stroke, teken));
 	}
 	
 	public void addWriteObject(String teken, Stroke stroke1, Stroke strokes2) {

@@ -1998,9 +1998,9 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 				paint();
 			}
 			if (mouseOnRight) {
-				panelShiftX += e.getX()-shiftReference.getX();
-				panelShiftY += e.getY()-shiftReference.getY();
-				shiftReference = new Point(e.getX(), e.getY());
+				//panelShiftX += e.getX()-shiftReference.getX();
+				//panelShiftY += e.getY()-shiftReference.getY();
+				//shiftReference = new Point(e.getX(), e.getY());
 				paint();
 			}
 		} 
@@ -2024,8 +2024,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			}
 			if (mouseOnRight) {
 				mouseOnRight = false;
-				panelShiftX += e.getX()-shiftReference.getX();
-				panelShiftY += e.getY()-shiftReference.getY();
+				//panelShiftX += e.getX()-shiftReference.getX();
+				//panelShiftY += e.getY()-shiftReference.getY();
 				paint();
 			}
 		}
@@ -2088,7 +2088,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 				moving = true;
 				writing = false;
 				points.clear();
-				shiftReference = new Point(eventX, eventY);
+				//shiftReference = new Point(eventX, eventY);
 				paint();
 			}			
 			
@@ -2117,10 +2117,10 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			}
 			
 			if (( moving ) && (e.getTouches().length()==2)){
-				panelShiftX += eventX-shiftReference.getX();
-				panelShiftY += eventY-shiftReference.getY();
-				shiftReference = new Point(eventX, eventY);
-				paint();
+				//panelShiftX += eventX-shiftReference.getX();
+				//panelShiftY += eventY-shiftReference.getY();
+				//shiftReference = new Point(eventX, eventY);
+				//paint();
 			}
 		}
 		

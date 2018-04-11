@@ -5,19 +5,19 @@ import java.util.HashMap;
 public class Samples20 
 {
 	public static int smallWidth = 20;
-	public static int mediumWidth = 30;
+	public static int mediumWidth = 25;
 	public static int largeWidth = 40;
 	
 	public static int smallHeight = 20;
-	public static int mediumHeight = 30;
-	public static int largeHeight = 40;
+	public static int mediumHeight = 40;
+	public static int largeHeight = 50;
 	
 	public static int breuklijnDikte = 3;
 	public static int breuklijnExtraBreedte = 5;
 	public static int breuklijnExtraHoogte = 10;
 	public static int wortelBreedte = 15;
 	public static int wortelHoogte = 10;
-	public static int powerShift = 20;
+	public static int powerShift = 30;
 	public static int charHSpace = 10;
 	public static int charHSpaceSmall = 5;
 	public static int machtHSpace = 5;

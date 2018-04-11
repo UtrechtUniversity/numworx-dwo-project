@@ -2,7 +2,11 @@ package fi.writemathgwt.client;
 
 //import java.awt.*;
 import java.util.*;
+
+import fi.writemathgwt.client.engine.DoublePoint;
 import fi.writemathgwt.client.engine.Point;
+import fi.writemathgwt.client.engine.ReferenceSamples;
+import fi.writemathgwt.client.engine.Stroke;
 
 import java.util.logging.Logger;
 
@@ -93,6 +97,35 @@ public class FormuleTeken extends FormuleElement {
 			int npy = y + (int) Math.round(scaleY * (py - yMin));
 			
 			newList.add(new Point(npx,npy));
+		}	
+		
+		return newList;
+	}
+	
+	public ArrayList<DoublePoint> scaleAndPositionDouble(ArrayList<DoublePoint> pList)
+	{
+		double xMin = 1000;
+		double xMax = 0;
+		double yMin = 1000;
+		double yMax = 0;
+		for (int i = 0; i < pList.size(); i++) 
+		{ 
+			xMin = Math.min(xMin, pList.get(i).x);
+			yMin = Math.min(yMin, pList.get(i).y);
+			xMax = Math.max(xMax, pList.get(i).x);
+			yMax = Math.max(yMax, pList.get(i).y);
+		}
+		ArrayList<DoublePoint> newList = new ArrayList<DoublePoint>();
+		for (int i = 0; i < pList.size(); i++) 
+		{	double px = pList.get(i).x;
+		double py = pList.get(i).y;
+			
+			double scaleX = ((double) width) /(xMax - xMin);
+			double scaleY = ((double) height) /(yMax - yMin);
+			int npx = x + (int) Math.round(scaleX * (px - xMin));
+			int npy = y + (int) Math.round(scaleY * (py - yMin));
+			
+			newList.add(new DoublePoint(npx,npy));
 		}	
 		
 		return newList;
@@ -193,6 +226,13 @@ public class FormuleTeken extends FormuleElement {
 			ArrayList<Point> oPoints = WriteObject.intConvertSample(oIntArray1);
 			ArrayList<Point> sPoints = scaleAndPosition(oPoints);
 			((FormuleRoot) root).owner.addWriteObject(oTeken, sPoints);
+			
+//			Stroke stroke = ReferenceSamples.getReferenceStroke(oTeken);
+//			if(stroke!=null) {
+//				ArrayList<DoublePoint> parsePoints = scaleAndPositionDouble(stroke.getParsePoints());
+//				stroke = new Stroke(parsePoints,true);
+//				((FormuleRoot) root).owner.addWriteObject(oTeken, stroke);
+//			}
 		}
 	}
 	
