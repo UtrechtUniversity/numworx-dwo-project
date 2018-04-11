@@ -2,23 +2,25 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\ClassMapper.java
 package fi.dwo.dwojapplet.persistence;
 
-import fi.dwo.commons.exceptions.DwoXmlRpcException;
-import fi.dwo.commons.persistence.DbAccessIF;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.xmlrpc.applet.XmlRpcException;
+
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Teacher;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import org.apache.xmlrpc.applet.XmlRpcException;
 
-class ClassMapper extends XmlRpcMapper {
+class ClassMapper extends XmlRpcMapper<SchoolClass> {
 
     private static final String TABLENAME = "tblClass";
 
@@ -42,8 +44,8 @@ class ClassMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public void put(int oid, Object obj)  {
-        System.err.println("ClassMapper.put() Not yet implemented!");
+    public void put(int oid, SchoolClass obj)  {
+        objects.put(oid, obj);
 
     }
 
@@ -53,7 +55,7 @@ class ClassMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public Object getObjectFromReturn(Hashtable data) {
+    public SchoolClass getObjectFromReturn(Hashtable data) {
         SchoolClass c = null;
         if (data == null || data.get("classID") == null) { //We don't know enough to make a
             // classobject
@@ -66,7 +68,7 @@ class ClassMapper extends XmlRpcMapper {
         } else {
             c = new SchoolClass();
         }
-        c = (SchoolClass) update(c, data);
+        c = update(c, data);
         if (!objects.containsKey(new Integer(c.getID()))) {
             objects.put(new Integer(c.getID()), c);
         }
@@ -88,22 +90,42 @@ class ClassMapper extends XmlRpcMapper {
      * @throws java.sql.SQLException
      */
     @Override
-    public Object[] get(Object obj) throws IOException, SQLException,
+    public SchoolClass[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
         if (obj instanceof Teacher) {
-            Teacher t = (Teacher) obj;
-            DbAccessIF dbAccess = DbAccessCreator.instance();
-            Vector<Object> vList = null;
-            try {
-                long schoolId = MySQLPersistenceId.getNativeId(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool());
-                vList = dbAccess.getClassesOfTeacher(t.getUserID(), (int) schoolId);
-            }
-            catch (DwoXmlRpcException ex) {
-                Logger.getLogger(ClassMapper.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (Dwo2Exception ex) {
-                Logger.getLogger(ClassMapper.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return getObjectFromReturn(vList);
+//            Teacher t = (Teacher) obj;
+//            DbAccessIF dbAccess = DbAccessCreator.instance();
+//            Vector<Object> vList = null;
+//            try {
+//                long schoolId = MySQLPersistenceId.getNativeId(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool());
+//                vList = dbAccess.getClassesOfTeacher(t.getUserID(), (int) schoolId);
+//            }
+//            catch (DwoXmlRpcException ex) {
+//                Logger.getLogger(ClassMapper.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (Dwo2Exception ex) {
+//                Logger.getLogger(ClassMapper.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//            return getObjectFromReturn(vList);
+        	try {
+        		//assert obj is to be DwoHelper.getCurrentFacadeUser(); 
+				List<DomSchoolClass> list = SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
+				SchoolClass[] array = createArray(list.size());
+				for(int i = 0; i < array.length; i++) {
+					DomSchoolClass item = list.get(i);
+					int id = MySQLPersistenceId.getNativeId(item).intValue();
+					SchoolClass cls = (SchoolClass) objects.get(id);
+					if(cls == null) {
+						cls = new SchoolClass();
+					}
+					cls.setDomSchoolClass(item);
+					objects.put(id, cls);
+					array[i] = cls;
+				}
+				return array;
+				
+			} catch (Dwo2Exception ex) {
+              Logger.getLogger(ClassMapper.class.getName()).log(Level.SEVERE, "get", ex);
+			}
         } else if (obj instanceof School) {
             Hashtable ht = new Hashtable();
             School s = (School) obj;
@@ -140,7 +162,7 @@ class ClassMapper extends XmlRpcMapper {
      *      java.util.Hashtable)
      */
     @Override
-    protected Object update(Object obj, Hashtable data) {
+    protected SchoolClass update(SchoolClass obj, Hashtable data) {
         SchoolClass c = (SchoolClass) obj;
         c.setClassID(((Integer) data.get("classID")).intValue());
         c.setClassName((String) data.get("class"));
@@ -152,7 +174,7 @@ class ClassMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
     @Override
-    protected Object[] createArray(int size) {
+    protected SchoolClass[] createArray(int size) {
         return new SchoolClass[size];
     }
 
@@ -165,7 +187,16 @@ class ClassMapper extends XmlRpcMapper {
     }
 
     @Override
-    public Object get(int uid, Integer sgid) {
+    public SchoolClass get(int uid, Integer sgid) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+	@Override
+	public SchoolClass get(int oid) throws IOException, XmlRpcException, SQLException {
+		// TODO Auto-generated method stub
+		SchoolClass schoolClass = super.get(oid);
+		if(schoolClass != null) objects.put(schoolClass.getID(), schoolClass); // into cache
+		return schoolClass;
+	}
+    
 }

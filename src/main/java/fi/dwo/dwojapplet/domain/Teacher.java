@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.dwojapplet.persistence.MapperCreator;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 
 /**
@@ -123,7 +123,7 @@ public class Teacher extends User {
 		super.setSchoolRoleAndClass(dom);
         Object[] o = null;
 		try {
-			o = MapperCreator.instance(SchoolClass.class).get(this);
+			o = PersistenceFacade.instance().get(SchoolClass.class,this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

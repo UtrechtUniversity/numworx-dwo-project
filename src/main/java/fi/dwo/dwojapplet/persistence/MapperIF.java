@@ -17,7 +17,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  * @author M.J.B. Kupers
  *
  */
-public interface MapperIF {
+public interface MapperIF<T> {
 
     /**
      * Returns a object of the class, with the specified objectID.<br>
@@ -31,7 +31,7 @@ public interface MapperIF {
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
      */
-    public Object get(int oid) throws IOException, XmlRpcException,
+    public T get(int oid) throws IOException, XmlRpcException,
             SQLException;
 
     /** only supported for users
@@ -42,7 +42,7 @@ public interface MapperIF {
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException 
      */
-    public Object get(int uid, Integer sgid) throws IOException, XmlRpcException,
+    public T get(int uid, Integer sgid) throws IOException, XmlRpcException,
             SQLException;
     
     /**
@@ -55,7 +55,7 @@ public interface MapperIF {
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      */
-    public void put(int oid, Object obj);
+    public void put(int oid, T obj);
 
     /**
      * Returns all the objects of this mapper.<br>
@@ -67,7 +67,7 @@ public interface MapperIF {
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      */
-    public Object[] get() throws IOException, SQLException, XmlRpcException;
+    public T[] get() throws IOException, SQLException, XmlRpcException;
 
     /**
      * Creates an object out of the Hashtable. If this is the CourseMapper, a
@@ -79,7 +79,7 @@ public interface MapperIF {
      * @throws SQLException
      * @throws XmlRpcException
      */
-    public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException;
+    public T getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException;
 
     /**
      * Creates all the objects out of the Vector. If this is the CourseMapper,
@@ -91,7 +91,7 @@ public interface MapperIF {
      * @throws SQLException
      * @throws XmlRpcException
      */
-    public Object[] getObjectFromReturn(Vector data) throws IOException, SQLException, XmlRpcException;
+    public T[] getObjectFromReturn(Vector data) throws IOException, SQLException, XmlRpcException;
 
     /**
      * Returns all the objects whith the object as restriction. If this is the
@@ -106,7 +106,7 @@ public interface MapperIF {
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      */
-    public Object[] get(Object obj) throws IOException, SQLException,
+    public T[] get(Object obj) throws IOException, SQLException,
             XmlRpcException;
 
     /**

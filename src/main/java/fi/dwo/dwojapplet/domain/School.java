@@ -252,6 +252,7 @@ public class School {
 		expire = school.getExpire();
 		name = school.getSchoolName();
 		rights = school.getSchoolRights();
+		schoolLogin = ""; // MISSING
 		try {
 			schoolID = MySQLPersistenceId.getNativeId(school).intValue();
 		} catch (Dwo2Exception e) {

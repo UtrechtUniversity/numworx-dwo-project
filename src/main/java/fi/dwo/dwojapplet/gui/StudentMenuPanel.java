@@ -97,7 +97,7 @@ public class StudentMenuPanel extends UserMenuPanel {
         classPanel.setViewportBorder(null);
         classPanel.setBorder(null);
         /* Add class-info */
-        DomUserFull t = (DomUserFull) DwoHelper.getCurrentUser();
+        //DomUserFull t = (DomUserFull) DwoHelper.getCurrentUser();
         if (
         		DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass() != null 
         		&& DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.STUDENT.name())

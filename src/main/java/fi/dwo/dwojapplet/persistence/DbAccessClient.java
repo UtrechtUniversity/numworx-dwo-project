@@ -261,14 +261,14 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
-    @Override
-    public java.util.Hashtable login(java.lang.String a, java.lang.String b) throws IOException, XmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(a);
-        vv.addElement(b);
-        Object object = invoke("login", vv);
-        return (java.util.Hashtable) object;
-    }
+//    @Override
+//    public java.util.Hashtable login(java.lang.String a, java.lang.String b) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(a);
+//        vv.addElement(b);
+//        Object object = invoke("login", vv);
+//        return (java.util.Hashtable) object;
+//    }
 
     @Override
     public java.util.Hashtable addToSchool(int a, java.lang.String b, int c, java.lang.String d) throws IOException, XmlRpcException {

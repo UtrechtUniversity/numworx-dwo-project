@@ -15,7 +15,6 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Teacher;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 import java.awt.Component;
@@ -246,19 +245,15 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                 SchoolClass sc = null;
                 try {
                     DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
-                    sc = (SchoolClass) MapperCreator.instance(SchoolClass.class).get(MySQLPersistenceId.getNativeId(schoolClass).intValue());
+                    sc = (SchoolClass) PersistenceFacade.instance().get(MySQLPersistenceId.getNativeId(schoolClass).intValue(),SchoolClass.class);
                     GuiCreator.instance().getDWO().setWait();
                     allCourses = GuiCreator.instance().getDWO().getCourses();
                     selectedSchoolCourses = sc.getSelectedSchoolCourses();
-                } catch (IOException ex) {
-                    LOG.log(Level.SEVERE, null, ex);
-                } catch (XmlRpcException ex) {
-                    LOG.log(Level.SEVERE, null, ex);
-                } catch (SQLException ex) {
-                    LOG.log(Level.SEVERE, null, ex);
                 } catch (Dwo2Exception ex) {
                     LOG.log(Level.SEVERE, null, ex);
-                } finally {
+                } catch (PersistenceException ex) {
+                    LOG.log(Level.SEVERE, null, ex);
+				} finally {
                     GuiCreator.instance().getDWO().setReady();
                 }
                 Course[] selectedCourses = SelectCoursesDialog.selectCourses(ClassTeacherPanel.this, allCourses, selectedSchoolCourses, sc);

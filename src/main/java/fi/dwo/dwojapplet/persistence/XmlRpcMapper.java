@@ -17,9 +17,9 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  * @author M.J.B. Kupers
  *
  */
-abstract class XmlRpcMapper implements MapperIF {
+abstract class XmlRpcMapper<T> implements MapperIF<T> {
 
-    protected Hashtable objects = new Hashtable();
+    protected Hashtable<Integer, T> objects = new Hashtable();
 
     @Override
     public void removeObject(int key) {
@@ -40,7 +40,7 @@ abstract class XmlRpcMapper implements MapperIF {
      * @see fi.dwo.client.persistence.MapperIF#get()
      */
     @Override
-    public Object[] get() throws IOException, XmlRpcException, SQLException {
+    public T[] get() throws IOException, XmlRpcException, SQLException {
         DbAccessIF dbAccess = DbAccessCreator.instance();
         return getObjectFromReturn(dbAccess.getTable(getTableName(), getOrderbyCol()));
     }
@@ -54,7 +54,7 @@ abstract class XmlRpcMapper implements MapperIF {
      * @throws XmlRpcException
      * @throws SQLException
      */
-    public Object[] get(Hashtable wheredef) throws IOException, XmlRpcException, SQLException {
+    public T[] get(Hashtable wheredef) throws IOException, XmlRpcException, SQLException {
         DbAccessIF dbAccess = DbAccessCreator.instance();
         return getObjectFromReturn(dbAccess.getTable(getTableName(), wheredef, getOrderbyCol()));
     }
@@ -69,13 +69,13 @@ abstract class XmlRpcMapper implements MapperIF {
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      */
     @Override
-    public Object get(int oid) throws IOException, XmlRpcException,
+    public T get(int oid) throws IOException, XmlRpcException,
             SQLException {
         if (objects.containsKey(new Integer(oid))) {
             return objects.get(new Integer(oid));
         } else {
             DbAccessIF dbAccess = DbAccessCreator.instance();
-            Object obj = getObjectFromReturn(dbAccess.getRecord(getTableName(),
+            T obj = getObjectFromReturn(dbAccess.getRecord(getTableName(),
                     getIDCol(), oid));
             if (obj != null) {
                 //               objects.put(new Integer(oid), obj);
@@ -97,9 +97,9 @@ abstract class XmlRpcMapper implements MapperIF {
 
     }
 
-    protected abstract Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException;
+    protected abstract T update(T obj, Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException;
 
-    protected abstract Object[] createArray(int size);
+    protected abstract T[] createArray(int size);
 
     /**
      * Returns the ID column of the object corresponding to this mapper. e.g.
@@ -130,10 +130,10 @@ abstract class XmlRpcMapper implements MapperIF {
      */
 
     @Override
-    public Object[] getObjectFromReturn(Vector data) throws IOException,
+    public T[] getObjectFromReturn(Vector data) throws IOException,
             SQLException, XmlRpcException {
         int i;
-        Object[] oa = createArray(data.size());
+        T[] oa = createArray(data.size());
         for (i = 0; i < data.size(); i++) {
             oa[i] = getObjectFromReturn((Hashtable) data.elementAt(i));
         }

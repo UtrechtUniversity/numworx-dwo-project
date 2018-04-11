@@ -23,7 +23,7 @@ public class SchoolClass implements UserGroup, Comparable {
 
     private String className;
 
-    private String registrationKey;
+    //private String registrationKey;
     private boolean iconizer = false; // database entry
 
     /**
@@ -331,13 +331,13 @@ public class SchoolClass implements UserGroup, Comparable {
         return "";
     }
 
-	public String getRegistrationKey() {
-		return registrationKey;
-}
+//	public String getRegistrationKey() {
+//		return registrationKey;
+//}
 
-	public void setRegistrationKey(String registrationKey) {
-		this.registrationKey = registrationKey;
-	}
+//	public void setRegistrationKey(String registrationKey) {
+//		this.registrationKey = registrationKey;
+//	}
 
 	public void setDomSchoolClass(DomSchoolClass domSchoolClass) {
 		try {
@@ -346,7 +346,7 @@ public class SchoolClass implements UserGroup, Comparable {
 		}
 		className = domSchoolClass.getSchoolClassName();
 		iconizer = domSchoolClass.getIconizer().booleanValue();
-		registrationKey = null;
+//		registrationKey = null;
 	}
 	
 }
