@@ -17,11 +17,10 @@ public class StrokeMatcher {
 	public static String[] findMatches(Stroke wo) {
 		return findMatches(wo, true);
 	}
+	
 	public static String[] findMatches(Stroke wo, boolean filter) {
-		
 		ArrayList<String> gevondenTekens = new ArrayList<String>();
 		scores = new ArrayList<Double>();
-		double minScore = 10000;
 		for(int i = 0 ; i<tekens.length ; i++) {
 			double score = Math.min(getMatchScoreDir(wo, tekens[i],0) , getMatchScoreDir(wo, tekens[i],5));
 			if(gevondenTekens.size()==0) {
@@ -45,7 +44,12 @@ public class StrokeMatcher {
 		}
 		
 		if(filter) {
+			String bestUnfiltered = gevondenTekens.get(0);
 			for(int i = 0 ; i<gevondenTekens.size()  ; i++) {
+				if(scores.get(0)>2000) {
+					gevondenTekens.add(0,bestUnfiltered);
+					return gevondenTekens.toArray(new String[20]);
+				}
 				if(!StrokeLocFilter.checkLoc(wo, gevondenTekens.get(i))) {
 					gevondenTekens.remove(i);
 					scores.remove(i);
@@ -68,11 +72,6 @@ public class StrokeMatcher {
 				}
 				else break;
 			}
-			
-			while(gevondenTekens.size()<4)
-				gevondenTekens.add("null");
-			while(scores.size()<4)
-				scores.add(10000.0);
 		}
 		return gevondenTekens.toArray(new String[20]);		
 	}
@@ -81,6 +80,8 @@ public class StrokeMatcher {
 		String teken = findMatches(stroke)[0];
 		if(teken==null)
 			return null;
+		if(stroke.getParsePointsbox().height + stroke.getParsePointsbox().height<5)
+			teken = ".";
 		if("sqrt_1".equals(teken) && stroke.getParsePointsbox().height<15)
 			teken = "-";
 		int index = teken.indexOf("_");
@@ -94,6 +95,8 @@ public class StrokeMatcher {
 	
 	public static String findTekenRaw(Stroke stroke) {
 		String teken = findMatches(stroke)[0];
+		if(stroke.getParsePointsbox().height + stroke.getParsePointsbox().height<5)
+			teken = ".";
 		return teken;
 	}
 	

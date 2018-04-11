@@ -17,27 +17,27 @@ public class ThreeStrokeProcessor {
 		
 		//A
 		if (checkStrokes(stroke1,"AT1",stroke2,"AT2",stroke3,"AT3"))
-			if(TwoStrokeProcessor.hasCloseDistance(stroke1,stroke2,20,0,1,0,1) 
-					&& TwoStrokeProcessor.hasCloseDistance(stroke1,stroke3,30,6,14,0,1)
-					&& TwoStrokeProcessor.hasCloseDistance(stroke2,stroke3,30,6,14,19,20))
+			if(TwoStrokeProcessor.hasCloseDistance(stroke1,stroke2,20,0,2,0,2) 
+					&& TwoStrokeProcessor.hasCloseDistance(stroke1,stroke3,30,12,28,0,2)
+					&& TwoStrokeProcessor.hasCloseDistance(stroke2,stroke3,30,12,28,38,39))
 				return "A";
 		
 		//F
 		if (checkStrokes(stroke1,"FT1",stroke2,"FT2",stroke3,"FT3"))
-			if(TwoStrokeProcessor.hasCloseDistance(stroke1,stroke2,20,0,1,0,1) 
-					&& TwoStrokeProcessor.hasCloseDistance(stroke1,stroke3,20,6,14,0,1))
+			if(TwoStrokeProcessor.hasCloseDistance(stroke1,stroke2,20,0,2,0,2) 
+					&& TwoStrokeProcessor.hasCloseDistance(stroke1,stroke3,20,12,28,0,2))
 				return "F";
 		
 		//H
 		if (checkStrokes(stroke1,"HT1",stroke2,"HT2",stroke3,"HT3"))
-			if(TwoStrokeProcessor.hasCloseDistance(stroke1,stroke3,20,6,14,0,1) 
-					&& TwoStrokeProcessor.hasCloseDistance(stroke2,stroke3,20,6,14,19,20))
+			if(TwoStrokeProcessor.hasCloseDistance(stroke1,stroke3,20,12,28,0,2) 
+					&& TwoStrokeProcessor.hasCloseDistance(stroke2,stroke3,20,12,28,38,39))
 				return "H";
 						
 		//pi
 		if (checkStrokes(stroke1,"piT1",stroke2,"piT2",stroke3,"piT3"))
-			if( TwoStrokeProcessor.hasCloseDistance(stroke1,stroke3,30,0,1,2,7)
-					&& TwoStrokeProcessor.hasCloseDistance(stroke2,stroke3,30,0,1,13,18))
+			if( TwoStrokeProcessor.hasCloseDistance(stroke1,stroke3,30,0,2,4,14)
+					&& TwoStrokeProcessor.hasCloseDistance(stroke2,stroke3,30,0,2,26,36))
 				return "pi";
 		
 		

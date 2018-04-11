@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 
+import fi.writemathgwt.client.engine.DoublePoint;
 import fi.writemathgwt.client.engine.Point;
 import fi.writemathgwt.client.engine.Stroke;
 import fi.writemathgwt.client.engine.StrokeContainer;
@@ -220,7 +221,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	
 	public void paintComponent(Context2d g, boolean refresh) 
 	{
-		g.setLineWidth(1.0d);
+		g.setLineWidth(0.5d);
 		
 		if(refresh) {
 		g.clearRect(0, 0, width, height);
@@ -250,9 +251,31 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		}
 		
 		
-		
+		g.setLineWidth(1.5d);
 		g.setStrokeStyle(zwart);
-		strokeContainer.draw(g);
+		ArrayList<Stroke> strokes = strokeContainer.getStrokes();
+		for(int i = 0 ; i < strokes.size() ; i++) {
+			Stroke stroke = strokes.get(i);
+			g.beginPath();
+			double x0 = (int)stroke.getParsePoints().get(0).x;
+			double y0 = (int)stroke.getParsePoints().get(0).y;
+			g.moveTo(x0, y0);
+			if(stroke.getParsePointsbox().width>3 ||  stroke.getParsePointsbox().height>3) {
+				for(int j = 1 ; j < stroke.getParsePoints().size() ; j++) {
+					double x = stroke.getParsePoints().get(j).x;
+					double y = stroke.getParsePoints().get(j).y;
+					g.lineTo(x, y);
+				}
+				g.moveTo(x0, y0);
+				g.closePath();
+				g.stroke();
+			}
+			else {
+				g.arc(x0, y0, 1.5, 0, 1.5* Math.PI);
+				g.closePath();
+				g.stroke();
+			}
+		}
 //		for(int i = 0 ; i < writeObjects.size() ; i++) {
 //			g.setFillStyle(CssColor.make(220, 220, 220));
 //			if(analyserOn) {
@@ -296,13 +319,14 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 //			
 //		}
 	}
-		if (points.size() > 0) {
+		ArrayList<DoublePoint> smoothPoints = averageSmoothInt(points);
+		if (smoothPoints.size() > 0) {
 			g.beginPath();
-			g.moveTo(points.get(0).x+panelShiftX, points.get(0).y+panelShiftY);
-			for(int j = 1 ; j <points.size() ; j++) {
-				g.lineTo(points.get(j).x+panelShiftX, points.get(j).y+panelShiftY);
+			g.moveTo(smoothPoints.get(0).x+panelShiftX, smoothPoints.get(0).y+panelShiftY);
+			for(int j = 1 ; j <smoothPoints.size() ; j++) {
+				g.lineTo(smoothPoints.get(j).x+panelShiftX, smoothPoints.get(j).y+panelShiftY);
 			}
-			g.moveTo(points.get(0).x+panelShiftX, points.get(0).y+panelShiftY);
+			g.moveTo(smoothPoints.get(0).x+panelShiftX, smoothPoints.get(0).y+panelShiftY);
 			g.closePath();
 			g.stroke();
 			
@@ -354,6 +378,36 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		//g.scale(0.2,0.2);
 		//g.translate(-300,0);
 		
+	}
+	
+	public ArrayList<DoublePoint> averageSmoothInt(ArrayList<Point> points) {
+		ArrayList<DoublePoint> pointsNew = new ArrayList<DoublePoint>();
+		for (int i = 0; i < points.size(); i++) {
+			DoublePoint doublePoint = new DoublePoint(points.get(i).x , points.get(i).y);
+			pointsNew.add(doublePoint);
+		}
+		return averageSmooth(pointsNew);
+	}
+	
+	public ArrayList<DoublePoint> averageSmooth(ArrayList<DoublePoint> doublePoints) {	
+		if (doublePoints.size() < 5) 
+			return doublePoints;
+		ArrayList<DoublePoint> pointsNew = new ArrayList<DoublePoint>();
+		pointsNew.add(doublePoints.get(0));		
+		pointsNew.add(doublePoints.get(1));
+		for (int i = 2; i < doublePoints.size() - 2; i++) {
+			DoublePoint pOld0 = doublePoints.get(i-2);
+			DoublePoint pOld1 = doublePoints.get(i-1);
+			DoublePoint pOld2 = doublePoints.get(i);
+			DoublePoint pOld3 = doublePoints.get(i+1);
+			DoublePoint pOld4 = doublePoints.get(i+2);
+			
+			DoublePoint smoothedPoint = new DoublePoint(pOld0.getX()/5 + pOld1.getX()/5 + pOld2.getX()/5 + pOld3.getX()/5 + pOld4.getX()/5,
+														pOld0.getY()/5 + pOld1.getY()/5 + pOld2.getY()/5 + pOld3.getY()/5 + pOld4.getY()/5);
+			pointsNew.add(smoothedPoint);
+		}
+		pointsNew.add(doublePoints.get(doublePoints.size() - 1));
+		return pointsNew;
 	}
 	
 	public String parseFormule() {
@@ -1937,7 +1991,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			if(mouseOnLeft) {
 				Point p = toWorldCoordinates(new Point(e.getX(), e.getY()));
 				points.add(p);
-				paint(false);
+				paint();
 			}
 			if (mouseOnRight) {
 				panelShiftX += e.getX()-shiftReference.getX();
@@ -2055,7 +2109,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			if ( writing ) {
 				Point p = toWorldCoordinates(new Point(eventX, eventY));
 				points.add(p);
-				paint(false);
+				paint();
 			}
 			
 			if (( moving ) && (e.getTouches().length()==2)){

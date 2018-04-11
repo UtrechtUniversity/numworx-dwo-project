@@ -26,18 +26,12 @@ public class StrokeContainer {
 		parseStrokes();
 	}
 	
-	public void draw(Context2d g) {
-		for(int i=0 ; i<strokes.size() ; i++)
-			strokes.get(i).draw(g);
-	}
-	
-//	public void draw(Graphics g) {
-//		for(int i=0 ; i<strokes.size() ; i++)
-//			strokes.get(i).draw(g);
-//	}
-	
 	public String getFormulaString() {
 		return formulaString;
+	}
+	
+	public ArrayList<Stroke> getStrokes() {
+		return strokes;
 	}
 	
 	private void parseStrokes() {
