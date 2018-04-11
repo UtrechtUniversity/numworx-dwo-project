@@ -70,6 +70,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	
 	private CssColor ruitjesKleur = CssColor.make(190, 190, 190);
 	private CssColor zwart = CssColor.make(0, 0, 0);
+	private CssColor blauw = CssColor.make(42, 71, 113);
 	private CssColor drawingColor = CssColor.make(0, 0, 0);
 	private int gridSize = 20;
 	
@@ -251,19 +252,19 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		}
 		
 		
-		g.setLineWidth(1.5d);
-		g.setStrokeStyle(zwart);
+		g.setLineWidth(2.0d);
+		g.setStrokeStyle(blauw);
 		ArrayList<Stroke> strokes = strokeContainer.getStrokes();
 		for(int i = 0 ; i < strokes.size() ; i++) {
 			Stroke stroke = strokes.get(i);
 			g.beginPath();
-			double x0 = (int)stroke.getParsePoints().get(0).x;
-			double y0 = (int)stroke.getParsePoints().get(0).y;
+			double x0 = (int)stroke.getParsePoints().get(0).x + panelShiftX;
+			double y0 = (int)stroke.getParsePoints().get(0).y + panelShiftY;
 			g.moveTo(x0, y0);
 			if(stroke.getParsePointsbox().width>3 ||  stroke.getParsePointsbox().height>3) {
 				for(int j = 1 ; j < stroke.getParsePoints().size() ; j++) {
-					double x = stroke.getParsePoints().get(j).x;
-					double y = stroke.getParsePoints().get(j).y;
+					double x = stroke.getParsePoints().get(j).x + panelShiftX;
+					double y = stroke.getParsePoints().get(j).y + panelShiftY;
 					g.lineTo(x, y);
 				}
 				g.moveTo(x0, y0);
@@ -1998,9 +1999,9 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 				paint();
 			}
 			if (mouseOnRight) {
-				//panelShiftX += e.getX()-shiftReference.getX();
-				//panelShiftY += e.getY()-shiftReference.getY();
-				//shiftReference = new Point(e.getX(), e.getY());
+				panelShiftX += e.getX()-shiftReference.getX();
+				panelShiftY += e.getY()-shiftReference.getY();
+				shiftReference = new Point(e.getX(), e.getY());
 				paint();
 			}
 		} 
@@ -2024,8 +2025,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			}
 			if (mouseOnRight) {
 				mouseOnRight = false;
-				//panelShiftX += e.getX()-shiftReference.getX();
-				//panelShiftY += e.getY()-shiftReference.getY();
+				panelShiftX += e.getX()-shiftReference.getX();
+				panelShiftY += e.getY()-shiftReference.getY();
 				paint();
 			}
 		}
@@ -2088,7 +2089,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 				moving = true;
 				writing = false;
 				points.clear();
-				//shiftReference = new Point(eventX, eventY);
+				shiftReference = new Point(eventX, eventY);
 				paint();
 			}			
 			
@@ -2117,10 +2118,10 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 			}
 			
 			if (( moving ) && (e.getTouches().length()==2)){
-				//panelShiftX += eventX-shiftReference.getX();
-				//panelShiftY += eventY-shiftReference.getY();
-				//shiftReference = new Point(eventX, eventY);
-				//paint();
+				panelShiftX += eventX-shiftReference.getX();
+				panelShiftY += eventY-shiftReference.getY();
+				shiftReference = new Point(eventX, eventY);
+				paint();
 			}
 		}
 		

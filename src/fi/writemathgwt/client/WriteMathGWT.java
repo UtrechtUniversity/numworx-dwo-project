@@ -59,7 +59,7 @@ public class WriteMathGWT implements EntryPoint, WritePanelHolder
 	
 	boolean standAlone = false;
 	
-	int tekenSet = 1;
+	int tekenSet = 2;
 	
 	public void onModuleLoad() {
 		
