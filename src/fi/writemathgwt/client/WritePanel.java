@@ -235,17 +235,17 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		{
 			g.setStrokeStyle(ruitjesKleur);
 			int vSteps = height / gridSize;
-			for (int vCnt = 1; vCnt <= vSteps; vCnt++) {
+			for (int vCnt = -panelShiftY/gridSize; vCnt <= vSteps+1-panelShiftY/gridSize; vCnt++) {
 				g.beginPath();
-				g.moveTo(0, vCnt * gridSize);
-				g.lineTo(width - 1, vCnt * gridSize);
+				g.moveTo(0, vCnt * gridSize + panelShiftY);
+				g.lineTo(width - 1, vCnt * gridSize + panelShiftY);
 				g.stroke();
 			}
 			int hSteps = width / gridSize;
-			for (int hCnt = 1; hCnt <= hSteps; hCnt++) {
+			for (int hCnt = -panelShiftX/gridSize; hCnt <= hSteps+1-panelShiftX/gridSize; hCnt++) {
 				g.beginPath();
-				g.moveTo(hCnt * gridSize, 0);
-				g.lineTo(hCnt * gridSize, height - 1);
+				g.moveTo(hCnt * gridSize + panelShiftX, 0);
+				g.lineTo(hCnt * gridSize + panelShiftX, height - 1);
 				g.stroke();
 			}
 			
