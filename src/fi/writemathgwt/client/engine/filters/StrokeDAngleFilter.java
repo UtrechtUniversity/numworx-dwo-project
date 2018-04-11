@@ -1,6 +1,8 @@
-package fi.writemathgwt.client.engine;
+package fi.writemathgwt.client.engine.filters;
 
 import java.util.HashMap;
+
+import fi.writemathgwt.client.engine.Stroke;
 
 public class StrokeDAngleFilter {
 

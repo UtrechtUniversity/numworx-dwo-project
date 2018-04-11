@@ -1,4 +1,6 @@
-package fi.writemathgwt.client.engine;
+package fi.writemathgwt.client.engine.filters;
+
+import fi.writemathgwt.client.engine.Stroke;
 
 public class ThreeStrokeProcessor {
 	

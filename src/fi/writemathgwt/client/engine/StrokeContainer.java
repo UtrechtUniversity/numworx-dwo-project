@@ -5,6 +5,9 @@ import java.util.ArrayList;
 
 import com.google.gwt.canvas.dom.client.Context2d;
 
+import fi.writemathgwt.client.engine.filters.ThreeStrokeProcessor;
+import fi.writemathgwt.client.engine.filters.TwoStrokeProcessor;
+
 
 public class StrokeContainer {
 	

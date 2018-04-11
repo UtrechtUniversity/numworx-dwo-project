@@ -1,4 +1,7 @@
-package fi.writemathgwt.client.engine;
+package fi.writemathgwt.client.engine.filters;
+
+import fi.writemathgwt.client.engine.Stroke;
+import fi.writemathgwt.client.engine.StrokeContainer;
 
 public class TwoStrokeProcessor {
 

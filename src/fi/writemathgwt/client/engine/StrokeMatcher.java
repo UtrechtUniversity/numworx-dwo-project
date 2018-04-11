@@ -2,6 +2,11 @@ package fi.writemathgwt.client.engine;
 
 import java.util.ArrayList;
 
+import fi.writemathgwt.client.engine.filters.StrokeDAngleFilter;
+import fi.writemathgwt.client.engine.filters.StrokeDirFilter;
+import fi.writemathgwt.client.engine.filters.StrokeLocDAngleFilter;
+import fi.writemathgwt.client.engine.filters.StrokeLocFilter;
+
 public class StrokeMatcher {
 	
 	protected static String checkLogString;
