@@ -65,9 +65,11 @@ public class WMObject {
 		return getTeken(teken);
 	}
 	
-	public String getTeken(String s) {
+	private String getTeken(String s) {
 		if (s != null && s.indexOf("_") > 0)
 			s = s.substring(0, s.indexOf("_"));
+		if("of".equals(s))
+			s = " of ";
 		return s;
 	}
 	

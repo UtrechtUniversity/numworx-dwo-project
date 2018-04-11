@@ -319,7 +319,8 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 //			
 //		}
 	}
-		ArrayList<DoublePoint> smoothPoints = averageSmoothInt(points);
+		//ArrayList<DoublePoint> smoothPoints = averageSmoothInt(points);
+		ArrayList<Point> smoothPoints = points;
 		if (smoothPoints.size() > 0) {
 			g.beginPath();
 			g.moveTo(smoothPoints.get(0).x+panelShiftX, smoothPoints.get(0).y+panelShiftY);

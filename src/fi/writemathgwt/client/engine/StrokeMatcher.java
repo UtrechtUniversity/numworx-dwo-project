@@ -80,7 +80,7 @@ public class StrokeMatcher {
 		String teken = findMatches(stroke)[0];
 		if(teken==null)
 			return null;
-		if(stroke.getParsePointsbox().height + stroke.getParsePointsbox().height<5)
+		if(stroke.getParsePointsbox().width<4 && stroke.getParsePointsbox().height<4)
 			teken = ".";
 		if("sqrt_1".equals(teken) && stroke.getParsePointsbox().height<15)
 			teken = "-";
@@ -95,8 +95,10 @@ public class StrokeMatcher {
 	
 	public static String findTekenRaw(Stroke stroke) {
 		String teken = findMatches(stroke)[0];
-		if(stroke.getParsePointsbox().height + stroke.getParsePointsbox().height<5)
+		if(stroke.getParsePointsbox().width<4 && stroke.getParsePointsbox().height<4)
 			teken = ".";
+		if("sqrt_1".equals(teken) && stroke.getParsePointsbox().height<15)
+			teken = "-";
 		return teken;
 	}
 	
