@@ -14,6 +14,23 @@ import jsinterop.annotations.JsType;
  * 
  *   public void updateAndRefresh(String name, Boolean showTree, Boolean hasRegKey, String regKey) 
  * 
+ * Buttons actions: 
+ * 
+ * To copy or move a student to a class
+ * 
+ *   public void copyOrMoveStudents()
+ * 
+ * To add a student to a class
+ * 
+ *   public void connectStudents()
+ * 
+ * To add a teacher to a class
+ * 
+ *   public void connectTeachers()
+ * 
+ * To edit modules to a class
+ *   public void editModules()
+ * 
  * To remove a school class
  * 
  *   public void removeSchoolClass()
@@ -28,4 +45,10 @@ public class JsEditSchoolclassDisplay{
     public static native void init();
     /**  Sets the values for the schoolclass */
     public static native void showSchoolClass(JSONValue schoolClass);
+    /**  Shows a list of students */
+    public static native void showStudents(JSONValue schoolClass);
+    /**  Shows a list of teachers */
+    public static native void showTeachers(JSONValue schoolClass);
+    /**  Shows a list of modules */
+    public static native void showShowModels(JSONValue schoolClass);
 }

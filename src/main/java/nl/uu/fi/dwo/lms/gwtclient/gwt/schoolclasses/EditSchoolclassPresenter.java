@@ -5,6 +5,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.ui.ConfirmDialogEvent;
 import fi.dwo.gwt.lib.rest.ui.ConfirmDialogPromise;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
+import java.util.List;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,8 +13,11 @@ import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import org.osgi.util.promise.Failure;
@@ -41,6 +45,9 @@ public class EditSchoolclassPresenter {
         void init();
 
         void showSchoolClass(DomSchoolClassFull schoolClass);
+        void showStudents(List<DomStudent> students);
+        void showTeachers(List<DomTeacher> teachers);
+        void showShowModels(List<DomCourse> modules);
     }
 
     public EditSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -202,5 +209,40 @@ public class EditSchoolclassPresenter {
                 }
             }
         });
+    }
+
+    @JsMethod
+    public void showStudents() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @JsMethod
+    public void showTeachers() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @JsMethod
+    public void showModules() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }    
+    
+    @JsMethod
+    public void connectStudents() {
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDSTUDENTTOSCHOOLCLASS, schoolClass));
+    }
+    
+    @JsMethod
+    public void copyOrMoveStudents() {
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS, schoolClass));
+    }
+    
+    @JsMethod
+    public void connectTeachers() {
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDTEACHERTOSCHOOLCLASS, schoolClass));
+    }
+
+    @JsMethod
+    public void editModules() {
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.COURSESOFSCHOOLCLASS, schoolClass));
     }
 }
