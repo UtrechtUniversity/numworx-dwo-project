@@ -54,7 +54,7 @@ public class JsEditSchoolClassView implements EditSchoolclassPresenter.Display{
     }
 
     @Override
-    public void showShowModels(List<DomCourse> modules) {
+    public void showModules(List<DomCourse> modules) {
         JSONObject object = new JSONObject();
         for(DomCourse item : modules){
             object.put(item.getId().getIdString(), DomCourseCodec.CODEC.encode(item));

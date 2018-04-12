@@ -5,6 +5,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.ui.ConfirmDialogEvent;
 import fi.dwo.gwt.lib.rest.ui.ConfirmDialogPromise;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.logging.Level;
@@ -13,8 +14,12 @@ import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
@@ -45,9 +50,12 @@ public class EditSchoolclassPresenter {
         void init();
 
         void showSchoolClass(DomSchoolClassFull schoolClass);
+
         void showStudents(List<DomStudent> students);
+
         void showTeachers(List<DomTeacher> teachers);
-        void showShowModels(List<DomCourse> modules);
+
+        void showModules(List<DomCourse> modules);
     }
 
     public EditSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -212,30 +220,125 @@ public class EditSchoolclassPresenter {
     }
 
     @JsMethod
-    public void showStudents() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void showTeachers() {
+        Promise<List<DomTeacher>> promise;
+        promise = manager.getTeachersInSchoolClass(schoolClass);
+        // onSuccess update view
+        promise.then(new Success<List<DomTeacher>, Void>() {
+            @Override
+            public Promise<Void> call(Promise<List<DomTeacher>> resolved) throws Exception {
+                view.showTeachers(resolved.getValue());
+                return null;
+            }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        }
+        );
     }
 
     @JsMethod
-    public void showTeachers() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void showStudents() {
+        Promise<List<DomStudent>> promise;
+        promise = manager.getStudentsInSchoolClass(schoolClass);
+        // onSuccess update view
+        promise.then(new Success<List<DomStudent>, Void>() {
+            @Override
+            public Promise<Void> call(Promise<List<DomStudent>> resolved) throws Exception {
+                view.showStudents(resolved.getValue());
+                return null;
+            }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        }
+        );
     }
 
     @JsMethod
     public void showModules() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }    
-    
+        Promise<DomCoursesOfSchoolClass4Teacher> promise;
+        DomCoursesOfSchoolClass4Teacher result;
+        promise = this.getModules(schoolClass);
+        // onSuccess update view
+        promise.then(new Success<DomCoursesOfSchoolClass4Teacher, Void > () {
+            @Override
+            public Promise<Void> call
+            (Promise<DomCoursesOfSchoolClass4Teacher> resolved) throws Exception {
+                List<DomCourse> courseList = new ArrayList<>();
+                resolved.getValue().getCourses().forEach((k -> courseList.add(k.getValue())));
+                view.showModules(courseList);
+                return null;
+            }
+        },
+
+            new
+        Failure() {
+            @Override
+            public void fail
+            (Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        }
+        );
+    }
+
+    private Promise<DomCoursesOfSchoolClass4Teacher> getModules(final DomSchoolClass sc) {
+        DomContext context = new DomContext();
+        context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
+        return dwoGlobalVars.getProfile().then(new Success<DomDwoProfile, DomCoursesOfSchoolClass4Teacher>() {
+
+            @Override
+            public Promise<DomCoursesOfSchoolClass4Teacher> call(
+                    Promise<DomDwoProfile> resolved) throws Exception {
+                DomSchoolClassAndProfile sap = new DomSchoolClassAndProfile();
+                sap.setDomDwoProfile(resolved.getValue());
+                sap.setDomSchoolClass(sc);
+                return manager.getModules(context, sap);
+            }
+        });
+    }
+
     @JsMethod
     public void connectStudents() {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDSTUDENTTOSCHOOLCLASS, schoolClass));
     }
-    
+
     @JsMethod
     public void copyOrMoveStudents() {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS, schoolClass));
     }
-    
+
     @JsMethod
     public void connectTeachers() {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDTEACHERTOSCHOOLCLASS, schoolClass));
