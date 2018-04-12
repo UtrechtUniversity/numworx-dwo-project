@@ -7,7 +7,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CoursesOfSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
@@ -38,7 +37,6 @@ public interface ViewFactory {
     public TeachersInSchoolclassPresenter.Display getTeachersInSchoolclassView();
     public AccountPresenter.Display getAccountView();
     public WelcomePresenter.Display getWelcomeView();
-    public AddSchoolclassPresenter.Display getAddSchoolclassView();
     public EditSchoolclassPresenter.Display getEditSchoolclassView();
     public EditStudentPresenter.Display getEditStudentView();
     public AddStudentsPresenter.Display getAddStudentsView();

@@ -11,7 +11,6 @@ import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPresenter;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CoursesOfSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
@@ -45,7 +44,6 @@ public class PresenterFactoryGwt implements PresenterFactory {
     private final TeachersInSchoolclassPresenter teachersInSchoolclassPresenter;
     private final AccountPresenter accountPresenter;
     private final WelcomePresenter welcomePresenter;
-    private final AddSchoolclassPresenter addSchoolclassPresenter;
     private final EditSchoolclassPresenter editSchoolclassPresenter;
     private final EditStudentPresenter editStudentPresenter;
     private final AddStudentsPresenter addStudentsPresenter;
@@ -69,7 +67,6 @@ public class PresenterFactoryGwt implements PresenterFactory {
         teachersInSchoolclassPresenter = new TeachersInSchoolclassPresenter(eventBus, dwoGlobalVars);
         accountPresenter = new AccountPresenter(eventBus, dwoGlobalVars);
         welcomePresenter = new WelcomePresenter(eventBus, dwoGlobalVars);
-        addSchoolclassPresenter = new AddSchoolclassPresenter(eventBus, dwoGlobalVars);
         editSchoolclassPresenter = new EditSchoolclassPresenter(eventBus, dwoGlobalVars);
         editStudentPresenter = new EditStudentPresenter(eventBus, dwoGlobalVars);
         addStudentsPresenter = new AddStudentsPresenter(eventBus, dwoGlobalVars);
@@ -92,7 +89,6 @@ public class PresenterFactoryGwt implements PresenterFactory {
         studentsInSchoolclassPresenter.setView(viewFactory.getStudentsInSchoolclassView());
         teachersInSchoolclassPresenter.setView(viewFactory.getTeachersInSchoolclassView());
         accountPresenter.setView(viewFactory.getAccountView());
-        addSchoolclassPresenter.setView(viewFactory.getAddSchoolclassView());
         editSchoolclassPresenter.setView(viewFactory.getEditSchoolclassView());
         editStudentPresenter.setView(viewFactory.getEditStudentView());
         addStudentsPresenter.setView(viewFactory.getAddStudentsView());
@@ -189,14 +185,6 @@ public class PresenterFactoryGwt implements PresenterFactory {
         return welcomePresenter;
     }
     
-    /**
-     * @return the addSchoolclassPresenter
-     */
-    @JsMethod    
-    public AddSchoolclassPresenter getAddSchoolclassPresenter() {
-        return addSchoolclassPresenter;
-    }
-
     /**
      * @return the addSchoolclassPresenter
      */

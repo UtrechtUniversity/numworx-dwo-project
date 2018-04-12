@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
+import fi.dwo.gwt.lib.rest.ui.ConfirmDialogEvent;
+import fi.dwo.gwt.lib.rest.ui.ConfirmDialogPromise;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 
 import java.util.logging.Level;
@@ -23,14 +25,14 @@ import org.osgi.util.promise.Success;
  *
  * @author Gert van der Plas
  */
-public class EditSchoolclassPresenter implements SchoolClassDialogEventHandler {
+public class EditSchoolclassPresenter {
 
     private static final Logger LOG = Logger.getLogger(EditSchoolclassPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
     private Display view;
-    private DomSchoolClass schoolClass;
+    private DomSchoolClassFull schoolClass;
 
     public interface Display {
 
@@ -38,53 +40,47 @@ public class EditSchoolclassPresenter implements SchoolClassDialogEventHandler {
 
         void init();
 
-        void showDialog(String name, Boolean showTree, Boolean hasRegKey, String regKey, boolean edit);
+        void showSchoolClass(DomSchoolClassFull schoolClass);
     }
 
     public EditSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-        eventBus.addHandler(SchoolClassDialogEvent.TYPE, this);
-
-    }
-
-    @Override
-    public void onDialogEvent(SchoolClassDialogEvent dialogEvent) {
-        if (dialogEvent.getEventValue() == SchoolClassDialogEvent.Dialogs.EditSchoolClass) {
-            schoolClass = (DomSchoolClass) dialogEvent.getSchoolClass();
-            Promise<DomSchoolClassFull> promise;
-            promise = manager.getFullSchoolClass(schoolClass);
-            // onSuccess calculate results and show.
-            promise.then(new Success<DomSchoolClassFull, Void>() {
-                @Override
-                public Promise<Void> call(Promise<DomSchoolClassFull> resolved) throws Exception {
-                    //flip back to schoolclasses screen 
-                    DomSchoolClassFull value = resolved.getValue();
-                    view.showDialog(value.getSchoolClassName(), value.getIconizer(), value.getHasRegKey(), value.getRegistrationKey(), true);
-                    return null;
-                }
-            }, new Failure() {
-                @Override
-                public void fail(Promise<?> resolved) throws Exception {
-                    Throwable fail = resolved.getFailure();
-                    if (fail instanceof Dwo2Exception) {
-                        LOG.log(Level.SEVERE, fail.getMessage());
-                        eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
-                    } else {
-                        LOG.log(Level.SEVERE, fail.getMessage());
-                        eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-                        //throw directly
-                    }
-                }
-            }
-            );
-        }else if(dialogEvent.getEventValue() == SchoolClassDialogEvent.Dialogs.AddSchoolClass) {
-                    view.showDialog("", false, false, null, false);
-        }
     }
 
     public void init() {
+        view.init();
+        updateViewData();
+    }
 
+    private void updateViewData() {
+        Promise<DomSchoolClassFull> promise;
+        promise = manager.getFullSchoolClass(schoolClass);
+        // onSuccess update view
+        promise.then(new Success<DomSchoolClassFull, Void>() {
+            @Override
+            public Promise<Void> call(Promise<DomSchoolClassFull> resolved) throws Exception {
+                //flip back to schoolclasses screen 
+                schoolClass = resolved.getValue();
+                view.showSchoolClass(schoolClass);
+                return null;
+            }
+
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        });
     }
 
     /**
@@ -93,46 +89,17 @@ public class EditSchoolclassPresenter implements SchoolClassDialogEventHandler {
     public void setView(Display view) {
         this.view = view;
     }
-    
-//    public void addAndBack(String name, Boolean showTree, Boolean hasRegKey, String regKey) {
-//        Promise<Boolean> promise;
-//        DomSchoolClassFull schoolClass = new DomSchoolClassFull();
-//        schoolClass.setSchoolClassName(name);
-//        schoolClass.setIconizer(showTree);
-//        schoolClass.setHasRegKey(hasRegKey);
-//        schoolClass.setRegistrationKey(regKey);
-//        promise = manager.submitSchoolClass(schoolClass);
-//        // onSuccess calculate results and show.
-//        promise.then(new Success<Boolean,Void> () {
-//            @Override
-//            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-//                //flip back to schoolclasses screen 
-//                if (resolved.getValue() == true) {
-//                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
-//                    return null;
-//                } else {
-//                    throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Rest request failed for unknown reasons.");
-//                }
-//            }
-//        },
-//                new Failure() {
-//            @Override
-//            public void fail(Promise<?> resolved) throws Exception {
-//                Throwable fail = resolved.getFailure();
-//                if (fail instanceof Dwo2Exception) {
-//                    LOG.log(Level.SEVERE, fail.getMessage());
-//                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
-//                } else {
-//                    LOG.log(Level.SEVERE, fail.getMessage());
-//                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-//                    //throw directly
-//                }
-//            }
-//        });
-//    }
-    
+
+    /**
+     * Updates SchoolClass data.
+     *
+     * @param name
+     * @param showTree
+     * @param hasRegKey
+     * @param regKey
+     */
     @JsMethod
-    public void updateAndBack(String name, Boolean showTree, Boolean hasRegKey, String regKey) {
+    public void updateAndRefresh(String name, Boolean showTree, Boolean hasRegKey, String regKey) {
         Promise<Boolean> promise;
         DomSchoolClassFull fullSchoolClass = new DomSchoolClassFull();
         fullSchoolClass.setId(schoolClass.getId());
@@ -147,7 +114,8 @@ public class EditSchoolclassPresenter implements SchoolClassDialogEventHandler {
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                 //flip back to schoolclasses screen 
                 if (resolved.getValue() == true) {
-                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+                    updateViewData();
+                    //eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
                     return null;
                 } else {
                     throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Rest request failed for unknown reasons.");
@@ -170,11 +138,69 @@ public class EditSchoolclassPresenter implements SchoolClassDialogEventHandler {
         });
     }
 
-    /**
-     * Go back to the schoolclasses presentation.
-     */
     @JsMethod
-    public void Back() {
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+    public void removeSchoolClass() {
+        ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure you want to remove schoolclass" + schoolClass.getSchoolClassName() + ".");
+        p.getPromise().then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                LOG.log(Level.INFO, "returned value" + resolved.getValue());
+                if (resolved.getValue() == true) {
+                    executeRemoveSchoolClass(schoolClass);
+                } else {
+                    //do nothing.
+                }
+                return null;
+            }
+        }, new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        }
+        );
+
+        eventBus.fireEvent(new ConfirmDialogEvent(ConfirmDialogEvent.EventType.ConfirmDialog, p));
+    }
+
+    private void executeRemoveSchoolClass(DomSchoolClass schoolClass) {
+        Promise<Boolean> promise;
+        promise = manager.removeSchoolClass(schoolClass);
+        // onSuccess update view
+        promise.then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                //flip back to schoolclasses screen 
+                boolean result = resolved.getValue();
+                if (result != true) {
+                    throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "system error, try again please report.");
+                }
+                eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+                return null;
+            }
+
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        });
     }
 }

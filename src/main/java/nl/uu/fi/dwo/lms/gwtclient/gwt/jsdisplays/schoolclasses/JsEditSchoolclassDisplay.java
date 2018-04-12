@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses;
 
+import com.google.gwt.json.client.JSONValue;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
@@ -9,13 +10,13 @@ import jsinterop.annotations.JsType;
  * 
  * There are two relevant presenter functions.
  * 
- * To add a new school class:
+ * To update a school class:
  * 
- * public void updateAndBack(String name, Boolean showTree, Boolean hasRegKey, String regKey)
+ *   public void updateAndRefresh(String name, Boolean showTree, Boolean hasRegKey, String regKey) 
  * 
- * and to go back without adding a school class.
+ * To remove a school class
  * 
- * public void Back();
+ *   public void removeSchoolClass()
  * 
  * @author G.A.J. van der Plas
  */
@@ -25,6 +26,6 @@ public class JsEditSchoolclassDisplay{
     public static native void clear();
     /** Clears all the edit schoolclass  field of its value. */
     public static native void init();
-    /**  Sets the values for the dialog */
-    public static native void showDialog(String name, boolean showTree, boolean hasRegKey, String regKey);
+    /**  Sets the values for the schoolclass */
+    public static native void showSchoolClass(JSONValue schoolClass);
 }

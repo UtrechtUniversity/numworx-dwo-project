@@ -2,8 +2,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.gwt.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
-import fi.dwo.gwt.lib.rest.ui.ConfirmDialogEvent;
-import fi.dwo.gwt.lib.rest.ui.ConfirmDialogPromise;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 
 import java.util.HashMap;
@@ -16,6 +14,7 @@ import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import org.osgi.util.promise.Failure;
@@ -155,56 +154,29 @@ public class SchoolclassesPresenter {
             }
         });
     }
-
-    private void removeSchoolClass(DomSchoolClass schoolClass) {
-        ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure you want to remove schoolclass" + schoolClass.getSchoolClassName() + ".");
-        p.getPromise().then(new Success<Boolean, Void>() {
-            @Override
-            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                LOG.log(Level.INFO, "returned value" + resolved.getValue());
-                if (resolved.getValue() == true) {
-                    executeRemoveSchoolClass(schoolClass);
-                } else {
-                    //do nothing.
-                }
-                return null;
-            }
-        }, new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        }
-        );
-
-        eventBus.fireEvent(new ConfirmDialogEvent(ConfirmDialogEvent.EventType.ConfirmDialog, p));
-    }
-
-    private void executeRemoveSchoolClass(DomSchoolClass schoolClass) {
-
+    
+    /** Adds a SchoolClass to the school and refreshes the panel */
+    @JsMethod
+    public void AddSchoolClass(String name, Boolean showTree, Boolean hasRegKey, String regKey) {
         Promise<Boolean> promise;
-        promise = manager.removeSchoolClass(schoolClass);
-        // onSuccess update view
-        promise.then(new Success<Boolean, Void>() {
+        DomSchoolClassFull schoolClass = new DomSchoolClassFull();
+        schoolClass.setSchoolClassName(name);
+        schoolClass.setIconizer(showTree);
+        schoolClass.setHasRegKey(hasRegKey);
+        schoolClass.setRegistrationKey(regKey);
+        promise = manager.submitSchoolClass(schoolClass);
+        // onSuccess calculate results and show.
+        promise.then(new Success<Boolean,Void> () {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                 //flip back to schoolclasses screen 
-                boolean result = resolved.getValue();
-                if (result != true) {
-                    throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "system error, try again please report.");
+                if (resolved.getValue() == true) {
+                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+                    return null;
+                } else {
+                    throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Rest request failed for unknown reasons.");
                 }
-                updateViewData();
-                return null;
             }
-
         },
                 new Failure() {
             @Override
@@ -222,50 +194,19 @@ public class SchoolclassesPresenter {
         });
     }
 
-    /**
-     * @param item
-     * @param op
-     */
-    public void selectItem(ClassItem item, int op) {
-        switch (op) {
-            case 1:
-                editSchoolClass(item.key);
-                break;
-            case 2:
-                editModules(item.key);
-                break;
-            case 3:
-                editStudents(item.key);
-                break;
-            case 4:
-                editTeachers(item.key);
-                break;
-            case 5:
-                removeSchoolClass(item.key);
-                break;
-            default:
-                throw new UnsupportedOperationException("Not supported yet.");
-        }
-    }
-
-    @JsMethod
-    public void addSchoolClass() {
-        eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.AddSchoolClass, new DomSchoolClass()));
-    }
-
     @JsMethod
     public void editSchoolClass(String key) {
         eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.EditSchoolClass, schoolClassMap.get(key)));
     }
 
     @JsMethod
-    public void editStudents(String key) {
+    public void connectStudents(String key) {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS, schoolClassMap.get(key)));
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @JsMethod
-    public void editTeachers(String key) {
+    public void connectTeachers(String key) {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.TEACHERSINSCHOOLCLASS, schoolClassMap.get(key)));
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -275,9 +216,9 @@ public class SchoolclassesPresenter {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.COURSESOFSCHOOLCLASS, schoolClassMap.get(key)));
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @JsMethod
-    public void removeSchoolClass(String key) {
-        removeSchoolClass(schoolClassMap.get(key));
-    }
+//
+//    @JsMethod
+//    public void removeSchoolClass(String key) {
+//        removeSchoolClass(schoolClassMap.get(key));
+//    }
 }

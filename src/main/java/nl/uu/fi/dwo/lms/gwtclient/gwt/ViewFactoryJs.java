@@ -13,7 +13,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMainView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsSchoolClassesView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.roleswitch.JsSwitchSchoolView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsAddSchoolClassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsEditSchoolClassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsStudentsInSchoolClassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsTeachersInSchoolClassView;
@@ -23,7 +22,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CoursesOfSchoolclassPresenter;
@@ -59,7 +57,6 @@ public class ViewFactoryJs implements ViewFactory {
     private final SchoolclassesPresenter.Display schoolclassesView;
     private final AccountPresenter.Display accountView;
     private final WelcomePresenter.Display welcomeView;
-    private final AddSchoolclassPresenter.Display addSchoolclassView;
     private final CoursesOfSchoolclassPresenter.Display coursesOfSchoolclassView;
     private final StudentsInSchoolclassPresenter.Display studentsInSchoolclassView;
     private final TeachersInSchoolclassPresenter.Display teachersInSchoolclassView;
@@ -82,7 +79,6 @@ public class ViewFactoryJs implements ViewFactory {
         welcomeView = new JsWelcomeView();
         //ordered!
         schoolclassesView = new JsSchoolClassesView();
-        addSchoolclassView = new JsAddSchoolClassView();
         coursesOfSchoolclassView = new CoursesOfSchoolclassView(pf.getCoursesOfSchoolclassPresenter());
         studentsInSchoolclassView = new JsStudentsInSchoolClassView();
         teachersInSchoolclassView = new JsTeachersInSchoolClassView();
@@ -134,11 +130,6 @@ public class ViewFactoryJs implements ViewFactory {
     @Override
     public WelcomePresenter.Display getWelcomeView() {
         return welcomeView;
-    }
-
-    @Override
-    public AddSchoolclassPresenter.Display getAddSchoolclassView() {
-        return addSchoolclassView;
     }
 
     @Override

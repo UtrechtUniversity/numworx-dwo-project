@@ -6,12 +6,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import com.google.gwt.event.shared.EventBus;
-import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPresenter;
-
-import fi.dwo.gwt.lib.rest.ui.MsgConfirmDialogPresenter;
-import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CoursesOfSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
@@ -44,7 +39,6 @@ public interface PresenterFactory {
     public TeachersInSchoolclassPresenter getTeachersInSchoolclassPresenter();
     public AccountPresenter getAccountPresenter();
     public WelcomePresenter getWelcomePresenter();
-    public AddSchoolclassPresenter getAddSchoolclassPresenter();
     public EditSchoolclassPresenter getEditSchoolclassPresenter();
     public EditStudentPresenter getEditStudentPresenter();
     public AddStudentsPresenter getAddStudentsPresenter();
