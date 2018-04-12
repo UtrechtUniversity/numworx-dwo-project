@@ -81,7 +81,7 @@ public class WriteObject {
 	String teken5 = "null";
 	String teken6 = "null";
 	
-	StrokeMatcherWrapper newStrokeMatcher;
+//	StrokeMatcherWrapper newStrokeMatcher;
 	public ArrayList<Point> points;
 	
 //	public WriteObject(boolean fromRef, ArrayList<Point> points) {
@@ -138,9 +138,9 @@ public class WriteObject {
 		twoStrokeGap = 0;
 		threeStrokeGap1 = 0;
 		threeStrokeGap2 = 0;
-		if ( cNewStrokmatcher ) {
-			newStrokeMatcher = new StrokeMatcherWrapper(newTekenSet);
-		}
+//		if ( cNewStrokmatcher ) {
+//			newStrokeMatcher = new StrokeMatcherWrapper(newTekenSet);
+//		}
 		this.points = new ArrayList<Point>();
 		
 		doublePoints = new ArrayList<DoublePoint>();
