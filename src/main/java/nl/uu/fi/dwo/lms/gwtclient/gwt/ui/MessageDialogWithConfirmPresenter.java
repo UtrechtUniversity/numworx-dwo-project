@@ -4,6 +4,7 @@ import com.google.gwt.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
 
 /**
+ * Subclassing for project.
  *
  * @author plas0006
  */

@@ -4,7 +4,8 @@ import com.google.gwt.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPresenter;
 
 /**
- *
+ * Subclassing for project.
+ * 
  * @author plas0006
  */
 public class AlertDialogWithConfirmCancelPresenter extends MsgClickedDialogPresenter {
