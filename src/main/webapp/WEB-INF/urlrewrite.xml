@@ -57,9 +57,9 @@
     </rule>
     
     <rule>
-    	<note>/rest/userid/schoolid/*</note>
-    	<from>^/2rest/[^/]+/[^/]+/(.*)$</from>
-    	<to>/rest/$1</to>   
+    	<note>/rest/userid+schoolid/*</note>
+    	<from>^/rest/sec:[^/]+/(.*)$</from>
+    	<to>/rest/secure/$1</to>   
     </rule>
         
 </urlrewrite>   
