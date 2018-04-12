@@ -52,7 +52,8 @@ public class MainFormuleRegel extends FormuleRegel implements IsWidget {
 		while (svg.getChildNodes().getLength() > 0) {
 			svg.removeChild(svg.getLastChild());
 		}
-			
+		if(!isEditor)
+			paintComponent(svg);
 		for (FormuleElement e : children) {
 			if (!isEditor) {
 				e.draw(svg);

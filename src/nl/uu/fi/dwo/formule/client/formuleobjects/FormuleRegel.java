@@ -1672,7 +1672,7 @@ public class FormuleRegel extends FormuleElement
 		}
 	}
 
-	private void paintComponent(OMSVGElement svg) {
+	protected void paintComponent(OMSVGElement svg) {
 		//ignore if the formule is not editable
 		if (holder instanceof FormuleEditor)
 			if (holder.getCurrentRegel() == this && this.parent != null)
