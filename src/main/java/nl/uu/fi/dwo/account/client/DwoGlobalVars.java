@@ -14,6 +14,7 @@ import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.rest.DwoLocale;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
@@ -71,6 +72,9 @@ public class DwoGlobalVars {
      */
     public void setActiveSchoolRoleAndClass(DomSchoolRoleAndClassV2 activeSchoolRoleAndClass) {
         this.activeSchoolRoleAndClass = activeSchoolRoleAndClass;
+        if(activeSchoolRoleAndClass != null) {
+        	context.setDomHasRole(activeSchoolRoleAndClass.getHasRole());
+        }
     }
 
     /**
@@ -117,6 +121,8 @@ public class DwoGlobalVars {
     private DomLoginContext currentLoginContext;
     private DomSchoolsRolesAndClassesV2 schoolLogins;
     private DomSchoolRoleAndClassV2  activeSchoolRoleAndClass;
+
+	private DomContext context = new DomContext();
 
     /**
      * @return the instance
@@ -349,6 +355,9 @@ public class DwoGlobalVars {
      */
     public void setSchoolLogins(DomSchoolsRolesAndClassesV2 schoolLogins) {
         this.schoolLogins = schoolLogins;
+        if(schoolLogins != null) {
+        	setActiveSchoolRoleAndClass(schoolLogins.getActiveSchoolRoleAndClass());
+        }
     }
 
     /**
@@ -373,5 +382,13 @@ public class DwoGlobalVars {
 				throw e;
 		}
     }
+
+	public DomContext getContext() {
+		return context;
+	}
+
+	public void setContext(DomContext context) {
+		this.context = context;
+	}
 
 }

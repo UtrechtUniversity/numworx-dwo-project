@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.account.client;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
@@ -21,20 +22,23 @@ class SchoolClassStudentController {
 
     private static final Logger LOG = Logger.getLogger(SchoolClassStudentController.class.getName());
 
-    private SchoolClassStudentPanel view;
+    private final SchoolClassStudentPanel view;
     private DomUserFull currentUser;
     private List<DomSchoolClass> schoolClasses = new ArrayList<DomSchoolClass>();
     private SecuredStudentSchoolClassManager manager = new SecuredStudentSchoolClassManager();
     private SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
     private AddSchoolClassStudentPanel addSchoolClassView;
 
+	private final DomContext context;
+
     /**
      *
      * @param view
      * @param user
      */
-    SchoolClassStudentController(SchoolClassStudentPanel view, DomUserFull user) {
+    SchoolClassStudentController(SchoolClassStudentPanel view, DomUserFull user, DomContext context) {
         this.view = view;
+        this.context = context;
         init(user);
     }
 
@@ -74,7 +78,7 @@ class SchoolClassStudentController {
      *
      */
     public void updateStudentsSchoolClassesInView() {
-        manager.getStudentsSchoolClasses(new AsyncCallback<List<DomSchoolClass>>() {
+        manager.getStudentsSchoolClasses(context, new AsyncCallback<List<DomSchoolClass>>() {
             @Override
             public void onFailure(Throwable t) {
                 //fail and reset all the data.
@@ -96,7 +100,7 @@ class SchoolClassStudentController {
      *
      */
     public void updateSchoolClassesAddSchoolClassView() {
-        manager.getSchoolsClasses(new AsyncCallback<List<DomSchoolClass>>() {
+        manager.getSchoolsClasses(context, new AsyncCallback<List<DomSchoolClass>>() {
             @Override
             public void onFailure(Throwable t) {
                 //fail and reset all the data.
@@ -133,7 +137,7 @@ class SchoolClassStudentController {
      * @param callBack
      */
     public void setActiveSchoolClass(DomSchoolClass submit, AsyncCallback<Boolean> callBack) {
-        manager.setActiveSchoolClass(submit, callBack);
+        manager.setActiveSchoolClass(context, submit, callBack);
     }
 
     /**
@@ -141,7 +145,7 @@ class SchoolClassStudentController {
      * @param callBack
      */
     public void getActiveSchoolClass(AsyncCallback<DomSchoolClass> callBack) {
-        manager.getActiveSchoolClass(callBack);
+        manager.getActiveSchoolClass(context, callBack);
     }
 
     /**
@@ -150,7 +154,7 @@ class SchoolClassStudentController {
      * @param callBack
      */
     public void removeSchoolClass(DomSchoolClass submit, AsyncCallback<Boolean> callBack) {
-        manager.removeSchoolClass(submit, callBack);
+        manager.removeSchoolClass(context, submit, callBack);
     }
 
     /**
@@ -159,7 +163,7 @@ class SchoolClassStudentController {
      * @param callBack
      */
     public void registerStudentForSchoolClass(DomNewSchoolClass4Student submit, AsyncCallback<Boolean> callBack) {
-        manager.registerStudentForSchoolClass(submit, callBack);
+        manager.registerStudentForSchoolClass(context, submit, callBack);
     }
 
     /**

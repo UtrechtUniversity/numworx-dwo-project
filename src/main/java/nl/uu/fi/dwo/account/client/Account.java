@@ -188,7 +188,7 @@ public class Account implements EntryPoint, ClickHandler {
 							String s = result.getActiveSchoolRoleAndClass().getRole().getRoleName();
 							if(RoleType.STUDENT.name().equals(s))
 							{	SecuredStudentSchoolClassManager manager = new SecuredStudentSchoolClassManager();
-								return manager.getActiveSchoolClass(); // or 
+								return manager.getActiveSchoolClass(DwoGlobalVars.instance().getContext()); // or 
 								//return Promises.resolved(result.getActiveSchoolRoleAndClass().getSchoolClass()); 
 							} else
 								return null; // no class

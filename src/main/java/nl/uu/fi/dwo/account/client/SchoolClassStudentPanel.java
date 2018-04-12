@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.CellPreviewEvent;
 import com.google.gwt.view.client.ListDataProvider;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -86,10 +87,10 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
      * @param resetLogin
      * @param user
      */
-    SchoolClassStudentPanel(Command resetLogin, DomUserFull user) {
+    SchoolClassStudentPanel(Command resetLogin, DomUserFull user, DomContext context) {
         this.resetLogin = resetLogin;
         init(user);
-        control = new SchoolClassStudentController(this, user);
+        control = new SchoolClassStudentController(this, user, context);
 //        addSchoolClassPanel = new AddSchoolClassStudentPanel(user, control);
 //        control.init(user); wordt al in constructor gedaan.
 
