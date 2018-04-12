@@ -9,6 +9,7 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
@@ -109,8 +110,8 @@ public class RightsDialog extends JDialog implements ActionListener {
         pack();
     }
 
-    public RightsDialog(SchoolPanel schoolPanel, DomSchool4DwoAdmin sc) throws Dwo2Exception {
-        this(DwoHelper.getFrameForComponent(schoolPanel), "Rechten voor " + sc.getSchoolName(), true);
+    public RightsDialog(Component owner, DomSchool4DwoAdmin sc) throws Dwo2Exception {
+        this(DwoHelper.getFrameForComponent(owner), "Rechten voor " + sc.getSchoolName(), true);
         setProfileID(DWO.getDwoProfileID());
         setSchool(sc);
     }
