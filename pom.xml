@@ -103,7 +103,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<version>0.0.12</version>
+	<version>0.0.13-SNAPSHOT</version>
 	<properties>
 		<maven.test.skip>false</maven.test.skip>
 		<gwtModule>nl.uu.fi.dwo.formule.Formule</gwtModule>
