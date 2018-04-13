@@ -328,8 +328,6 @@ public class FormulaProcessor {
 		}
 		else {
 			wo.setBreuk(true);
-//			breukBoxes.add(wo.tellerBox);
-//			breukBoxes.add(wo.noemerBox);
 		}
 		
 	}
