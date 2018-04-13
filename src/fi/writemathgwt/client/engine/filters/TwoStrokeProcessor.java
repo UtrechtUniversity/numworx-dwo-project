@@ -89,20 +89,20 @@ public class TwoStrokeProcessor {
 		// >=
 		if (checkStrokes(stroke1,">=H1",stroke2,">=H2"))
 			if(hasYDistance(stroke1, stroke2, 20,20,36,39,0,2) && hasCloseXDistance(stroke1, stroke2, 30,36,39,0,2))
-				return "\\u2265";
+				return ">=";
 		
 		if (checkStrokes(stroke1,">=H1",stroke2,">=H2+"))
 			if(hasYDistance(stroke1, stroke2, 20,20,36,99,36,39) && hasCloseXDistance(stroke1, stroke2, 30,36,39,0,2))
-				return "\\u2265";
+				return ">=";
 		
 		// <=
 		if (checkStrokes(stroke1,"<=H1",stroke2,"<=H2"))
 			if(hasYDistance(stroke1, stroke2, 20,20,36,39,36,39) && hasCloseXDistance(stroke1, stroke2, 30,36,39,36,39))
-				return "\\u2264";
+				return "<=";
 				
 		if (checkStrokes(stroke1,"<=H1",stroke2,"<=H2+"))
 			if(hasYDistance(stroke1, stroke2, 20,20,36,39,0,2) &&hasCloseXDistance(stroke1, stroke2, 30,36,39,0,2))
-				return "\\u2264";
+				return "<=";
 		
 		// f met extra streepje
 		if (checkStrokes(stroke1,"fH1",stroke2,"fH2")) 
