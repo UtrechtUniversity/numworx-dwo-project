@@ -47,7 +47,7 @@ public class PublicCourseManager implements CourseManager {
 		PromiseCallback<List<DomCourseStudent>> result = new PromiseCallback<List<DomCourseStudent>>();
 		RestDwoProfile rest = new RestDwoProfile();
 		rest.setDomDwoProfile(profile);
-		rest.setRestContext(createContext());
+		rest.setRestContext(context);
 		service.getCourses(rest, result);
 		return result.getPromise();
 	}
@@ -60,7 +60,7 @@ public class PublicCourseManager implements CourseManager {
 		PromiseCallback<List<DomCourseStudent>> result = new PromiseCallback<List<DomCourseStudent>>();
 		RestCourse rest = new RestCourse();
 		rest.setDomDwoProfile(profile);
-		rest.setRestContext(createContext());
+		rest.setRestContext(context);
 		rest.setDomCourse(course);
 		service.getCourses(rest, result);
 		return result.getPromise();
@@ -74,7 +74,7 @@ public class PublicCourseManager implements CourseManager {
 		PromiseCallback<DomCourseStudent> result = new PromiseCallback<DomCourseStudent>();
 		RestCourse rest = new RestCourse();
 		rest.setDomDwoProfile(profile);
-		rest.setRestContext(createContext());
+		rest.setRestContext(context);
 		rest.setDomCourse(course);
 		rest.setSchoolClassID(notused);
 		service.getCourse(rest, result);

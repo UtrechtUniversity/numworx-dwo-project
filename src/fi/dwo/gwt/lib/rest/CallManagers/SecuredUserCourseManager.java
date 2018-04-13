@@ -8,6 +8,7 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.json.client.JSONValue;
 
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserCourseRestCaller;
+import fi.dwo.gwt.lib.rest.util.PathId;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
@@ -27,7 +28,7 @@ public class SecuredUserCourseManager implements CourseManager {
 		RestDwoProfile rest = new RestDwoProfile();
 		rest.setDomDwoProfile(profile);
 		rest.setRestContext(context);
-		service.getCourses(rest, result);
+		service.getCourses(PathId.getId(context),rest, result);
 		return result.getPromise();
 	}
 
@@ -38,7 +39,7 @@ public class SecuredUserCourseManager implements CourseManager {
 		rest.setDomDwoProfile(profile);
 		rest.setRestContext(context);
 		rest.setDomCourse(course);
-		service.getCourses(rest, result);
+		service.getCourses(PathId.getId(context),rest, result);
 		return result.getPromise();
 	}
 
@@ -50,7 +51,7 @@ public class SecuredUserCourseManager implements CourseManager {
 		rest.setRestContext(context);
 		rest.setSchoolClassID(schoolClassId);
 		rest.setDomCourse(course);
-		service.getCourse(rest, result);
+		service.getCourse(PathId.getId(context),rest, result);
 		return result.getPromise();
 	}
 
@@ -60,7 +61,7 @@ public class SecuredUserCourseManager implements CourseManager {
 		RestDwoProfile rest = new RestDwoProfile();
 		rest.setDomDwoProfile(profile);
 		rest.setRestContext(context);
-		service.getCoursesSchool(rest, result);
+		service.getCoursesSchool(PathId.getId(context),rest, result);
 		return result.getPromise();
 	}
 
@@ -72,7 +73,7 @@ public class SecuredUserCourseManager implements CourseManager {
 		rest.setDomDwoProfile(profile);
 		rest.setRestContext(context);
 		rest.setDomCourse(course);
-		service.getCourseDescription(rest, result);
+		service.getCourseDescription(PathId.getId(context),rest, result);
 		return result.getPromise();
 	}
 

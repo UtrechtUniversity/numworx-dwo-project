@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
@@ -17,23 +18,23 @@ import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 public interface SecuredUserCourseRestCaller extends RestService {
 
 	@PUT
-    @Path("/secure/user/course/getRoot")
-	void getCourses(RestDwoProfile rest, MethodCallback<List<DomCourseStudent>> result);
+    @Path("/sec:{id}/user/course/getRoot")
+	void getCourses(@PathParam("id") String id, RestDwoProfile rest, MethodCallback<List<DomCourseStudent>> result);
 
 	@PUT
-    @Path("/secure/user/course/getChildren")
-	void getCourses(RestCourse rest, MethodCallback<List<DomCourseStudent>> result);
+    @Path("/sec:{id}/user/course/getChildren")
+	void getCourses(@PathParam("id") String id, RestCourse rest, MethodCallback<List<DomCourseStudent>> result);
 
 	@PUT
-    @Path("/secure/user/course/get")
-	void getCourse(RestCourse rest, MethodCallback<DomCourseStudent> result);
+    @Path("/sec:{id}/user/course/get")
+	void getCourse(@PathParam("id") String id, RestCourse rest, MethodCallback<DomCourseStudent> result);
 
 	@PUT
-    @Path("/secure/user/course/getSchool")
-	void getCoursesSchool(RestDwoProfile rest, MethodCallback<List<DomCourseStudent>> result);
+    @Path("/sec:{id}/user/course/getSchool")
+	void getCoursesSchool(@PathParam("id") String id, RestDwoProfile rest, MethodCallback<List<DomCourseStudent>> result);
 
 	@PUT
-    @Path("/secure/user/course/getCourseDescription")
-	void getCourseDescription(RestCourse rest, MethodCallback<JSONValue> result);
+    @Path("/sec:{id}/user/course/getCourseDescription")
+	void getCourseDescription(@PathParam("id") String id, RestCourse rest, MethodCallback<JSONValue> result);
 
 }
