@@ -18,7 +18,7 @@ import fi.dwo.commons.exceptions.LoginException;
 
 import java.util.logging.Level;
 
-public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAccessIF, DbAccessJS {
+public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAccessIF, DbAccessJS, DbAccessObsolete {
 //TODO this class should use reflection to delegate stuff going to be purely serverside.
 //
 
@@ -179,12 +179,12 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
                 lastname, email, schoolLogin, groupID, groupPassword);
     }
 
-    //@Override
+    @Override
     public Hashtable login(String username, String password)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
         try {
-            return ((DbAccessLogin) getDelegate()).login(username, password);
+            return ((DbAccessObsolete) getDelegate()).login(username, password);
         } catch (DwoXmlRpcException go) {
             if (go.code != LoginException.LE_UNKNOWN_USER) {
                 go.printStackTrace(); // Expected
@@ -494,14 +494,14 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     public boolean changeCourse(int id, String name, String description,
             boolean export, int schoolID) throws DwoXmlRpcException,
             IOException, XmlRpcException, SQLException {
-        return getDelegate().changeCourse(id, name, description, export, schoolID);
+        return ((DbAccessObsolete) getDelegate()).changeCourse(id, name, description, export, schoolID);
     }
 
     @Override
     public boolean changeCourse(int id, String name, String description,
             boolean export, int schoolID, int parentID) throws DwoXmlRpcException,
             IOException, XmlRpcException, SQLException {
-        return getDelegate().changeCourse(id, name, description, export, schoolID, parentID);
+        return ((DbAccessObsolete) getDelegate()).changeCourse(id, name, description, export, schoolID, parentID);
     }
 
     @Override
@@ -591,7 +591,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 
     @Override
     public Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        return getDelegate().getClassesOfTeacher(userID, schoolID);
+        return ((DbAccessObsolete) getDelegate()).getClassesOfTeacher(userID, schoolID);
     }
 
 //    @Override

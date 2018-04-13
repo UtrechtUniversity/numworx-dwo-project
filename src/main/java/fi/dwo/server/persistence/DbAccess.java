@@ -50,7 +50,7 @@ import java.util.logging.Logger;
  *
  *
  */
-public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, DbAccessJS, DbAccessLogin {
+public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, DbAccessJS, DbAccessObsolete {
 
     private static final Logger LOG = Logger.getLogger(DbAccess.class.getName());
 
