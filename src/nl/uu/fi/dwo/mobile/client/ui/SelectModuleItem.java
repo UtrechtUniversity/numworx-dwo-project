@@ -208,7 +208,7 @@ public class SelectModuleItem
 		image = sco.getImage();
 		scoType = sco.getScoType();
 // fake...
-		if(scoType == null && name .contains("oets")) {
+		if(scoType == null && name != null && name .contains("oets")) {
 			scoType = ScoType.ZELFTOETS;
 		}
 		studentModelId = sco.getStudentModelContext();
