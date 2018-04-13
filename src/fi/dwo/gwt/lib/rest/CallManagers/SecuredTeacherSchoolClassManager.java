@@ -344,4 +344,8 @@ public class SecuredTeacherSchoolClassManager {
         service.setAccessKeyClassCourse(rest, (defer));
         return defer.getPromise();
 	}            
+
+    public Promise<List<DomStudent>> getTeachersStudents() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
