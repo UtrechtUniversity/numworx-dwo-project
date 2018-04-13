@@ -206,7 +206,7 @@ public class StrokeContainer {
 					if(tekenNew.equals("back"))
 						tekenNew = "-";
 					WMObject wmObjectNew = new WMObject(stroke, tekenNew);
-					wmObjects.add(i, wmObjectNew);
+					wmObjects.add(wmObjectNew);
 					return true;
 				}
 			}
@@ -225,7 +225,7 @@ public class StrokeContainer {
 					wmObjects.remove(wmObjects.get(i));
 					WMObject wo = new WMObject(stroke1, stroke2, s);
 					updateAverageHeight(wo);
-					wmObjects.add(i,wo);
+					wmObjects.add(wo);
 					return true;
 				}
 			}
