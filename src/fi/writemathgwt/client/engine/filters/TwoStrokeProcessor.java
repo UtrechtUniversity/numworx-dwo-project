@@ -63,10 +63,12 @@ public class TwoStrokeProcessor {
 		//+
 		if (checkStrokes(stroke1,"+H1",stroke2,"+H2"))
 			if(hasCloseDistance(stroke1, stroke2, 10,12,28,12,28))
+				if(stroke2.getParsePointsbox().width<1.5*averageHeight)
 				return "+";
 		
 		if (checkStrokes(stroke1,"+H1",stroke2,"+H2+"))
 			if(hasCloseDistance(stroke1, stroke2, 10,12,28,12,28))
+				if(stroke2.getParsePointsbox().width<1.5*averageHeight)
 				return "+";
 		
 		if (checkStrokes(stroke1,"+H2",stroke2,"+H1"))
@@ -92,7 +94,7 @@ public class TwoStrokeProcessor {
 				return ">=";
 		
 		if (checkStrokes(stroke1,">=H1",stroke2,">=H2+"))
-			if(hasYDistance(stroke1, stroke2, 20,20,36,99,36,39) && hasCloseXDistance(stroke1, stroke2, 30,36,39,0,2))
+			if(hasYDistance(stroke1, stroke2, 20,20,36,39,36,39) && hasCloseXDistance(stroke1, stroke2, 30,36,39,0,2))
 				return ">=";
 		
 		// <=
@@ -106,23 +108,27 @@ public class TwoStrokeProcessor {
 		
 		// f met extra streepje
 		if (checkStrokes(stroke1,"fH1",stroke2,"fH2")) 
-			if(hasCloseDistance(stroke1, stroke2, 10,10,32,14,26))
-				return "f";	
+			if(hasCloseDistance(stroke1, stroke2, 10,10,32,0,26))
+				if(stroke2.getParsePointsbox().width<averageHeight)
+					return "f";	
 				
 		// f met extra streepje back
 		if (checkStrokes(stroke1,"fH1",stroke2,"fH2+"))
-			if(hasCloseDistance(stroke1, stroke2, 10,10,32,14,26))
-				return "f";	
+			if(hasCloseDistance(stroke1, stroke2, 10,10,32,14,39))
+				if(stroke2.getParsePointsbox().width<averageHeight)
+					return "f";	
 		
 		// t met extra streepje
 		if (checkStrokes(stroke1,"tH1",stroke2,"tH2")) 
-			if(hasCloseDistance(stroke1, stroke2, 10,10,32,14,26))
-				return "t";	
+			if(hasCloseDistance(stroke1, stroke2, 10,10,32,0,26))
+				if(stroke2.getParsePointsbox().width<averageHeight)
+					return "t";	
 						
 		// t met extra streepje back
 			if (checkStrokes(stroke1,"tH1",stroke2,"tH2+"))
-				if(hasCloseDistance(stroke1, stroke2, 10,10,32,14,26))
-					return "t";
+				if(hasCloseDistance(stroke1, stroke2, 10,10,32,14,39))
+					if(stroke2.getParsePointsbox().width<averageHeight)
+						return "t";
 			
 		// A 
 		if (checkStrokes(stroke1,"AH1",stroke2,"AH2"))
@@ -146,9 +152,12 @@ public class TwoStrokeProcessor {
 		
 		// i
 		if (checkStrokes(stroke1,"iH1",stroke2,"iH2"))
-			if(hasYDistance(stroke1, stroke2, -30,25,0,2,0,2) && hasCloseXDistance(stroke1, stroke2, 20,0,2,0,2))
+			if(hasYDistance(stroke1, stroke2, -40,25,0,2,0,2) && hasCloseXDistance(stroke1, stroke2, 30,0,2,0,2))
 				return "i";
 		
+		if (checkStrokes(stroke1,"iH1+",stroke2,"iH2"))
+			if(hasYDistance(stroke1, stroke2, -40,25,0,2,0,2) && hasCloseXDistance(stroke1, stroke2, 30,0,2,0,2))
+				return "i";
 		// k
 		if (checkStrokes(stroke1,"kH1",stroke2,"kH2"))
 			if(hasCloseDistance(stroke1, stroke2, 20,14,32,14,26) && hasYDistance(stroke1, stroke2, 35, 20,  0, 2, 0, 2))
@@ -173,8 +182,8 @@ public class TwoStrokeProcessor {
 	public static boolean hasCloseDistance(Stroke stroke1, Stroke stroke2, int distMin, int min1, int max1, int min2, int max2) {
 		double dMin = distMin*StrokeContainer.averageHeight/100;
 		double distance = 1000;
-		for(int i=min1 ; i<max1 ; i++) {
-			for(int j=min2 ; j<max2 ; j++) {
+		for(int i=min1 ; i<max1+1 ; i++) {
+			for(int j=min2 ; j<max2+1 ; j++) {
 				double dx = stroke1.getParsePoints().get(i).getX() - stroke2.getParsePoints().get(j).getX();
 				double dy = stroke1.getParsePoints().get(i).getY() - stroke2.getParsePoints().get(j).getY();
 				double d = Math.sqrt(dx*dx + dy*dy);

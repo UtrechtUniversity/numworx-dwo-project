@@ -39,6 +39,15 @@ public class WMObject {
 		makeBox();
 	}
 	
+	public WMObject(Stroke stroke1, Stroke stroke2, Stroke stroke3, Stroke stroke4, String teken) {
+		strokes.add(stroke1);
+		strokes.add(stroke2);
+		strokes.add(stroke3);
+		strokes.add(stroke4);
+		this.teken = teken;
+		makeBox();
+	}
+	
 	public WMObject(WMObject wo) {
 		strokes = wo.getStrokes();
 		this.teken = wo.getTekenRaw();
@@ -54,6 +63,10 @@ public class WMObject {
 	}
 	
 	public boolean isThreeStroke() {
+		return strokes.size()==3;
+	}
+	
+	public boolean isFourStroke() {
 		return strokes.size()==3;
 	}
 	

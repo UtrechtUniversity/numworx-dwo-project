@@ -2,6 +2,7 @@ package fi.writemathgwt.client.engine;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -12,6 +13,8 @@ import fi.writemathgwt.client.engine.Point;
 
 
 public class Stroke {
+	
+	private static Logger logger = Logger.getLogger("Stroke");
 	
 	protected ArrayList<DoublePoint> parsePoints;
 	protected int standardizeLengthNumber = 40;
@@ -50,6 +53,37 @@ public class Stroke {
 		angles = new double[parsePoints.size()-1];
 		makeAngles();
 		makeDAngles();
+	}
+	
+	public void extendRight(Stroke extension) {
+		ArrayList<DoublePoint> doublePoints = parsePoints;
+		for(int i = 0 ; i < extension.parsePoints.size() ; i++) {
+			doublePoints.add(extension.parsePoints.get(i));
+		}
+		doublePoints = averageSmooth(doublePoints);
+		parsePoints = standardizeToLength(40,doublePoints);
+		parsePointsBox = makeParsingBox(parsePoints);
+		angles = new double[parsePoints.size()-1];
+		makeAngles();
+		makeDAngles();
+		timeStamp = System.currentTimeMillis();
+	}
+	
+	public void extendLeft(Stroke extension) {
+		ArrayList<DoublePoint> doublePoints = new ArrayList<DoublePoint>();
+		for(int i = extension.parsePoints.size()-1 ; i > -1 ; i--) {
+			doublePoints.add(extension.parsePoints.get(i));
+		}
+		for(int i = 0 ; i < parsePoints.size() ; i++) {
+			doublePoints.add(parsePoints.get(i));
+		}
+		doublePoints = averageSmooth(doublePoints);
+		parsePoints = standardizeToLength(40,doublePoints);
+		parsePointsBox = makeParsingBox(parsePoints);
+		angles = new double[parsePoints.size()-1];
+		makeAngles();
+		makeDAngles();
+		timeStamp = System.currentTimeMillis();
 	}
 	
 	public ArrayList<DoublePoint> getParsePoints() {
