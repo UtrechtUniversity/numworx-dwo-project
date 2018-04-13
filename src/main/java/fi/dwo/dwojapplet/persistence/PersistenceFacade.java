@@ -1387,67 +1387,67 @@ public class PersistenceFacade {
         }
     }
 
-    /**
-     * Updates the coursedata (name and description) in the database.
-     *
-     * @param course The course to update in the database.
-     * @return If true, the coursedata was successfully changed. Otherwise,
-     * false is returned.
-     * @throws fi.dwo.commons.exceptions.CourseException
-     */
-    public boolean updateCourse(Course course) throws CourseException {
-
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        if (course.getSchoolID() == 0) {
-            try {
-                dbAccess.log("course " + course.getID() + " " + course.getName() + " geen schoolID in updateCourse");
-            }
-            catch (Exception e) {
-            }
-        }
-        try {
-            try {
-                MapperCreator.instance(Course.class).put(course.getID(), course); // clear 1 level cache, keep 2nd level cache!!!!
-                if (course.parentChanged()) {
-                    boolean result
-                            = dbAccess.changeCourse(course.getID(), course.getName(),
-                                    course.getDescription(),
-                                    course.isExport(),
-                                    course.getSchoolID(),
-                                    course.getParentID());
-                    if (result) {
-                        course.resetParent();
-                    }
-                    return result;
-                }
-
-                return dbAccess.changeCourse(course.getID(), course.getName(),
-                        course.getDescription(), course.isExport() // FIXME fallback naar 2parameter methode.
-                        , course.getSchoolID() // TODO fallback!
-                );
-            }
-            catch (IOException e) {
-                throw new CourseException(CourseException.EX_IO);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (CourseException) getException(e, e.code);
-                } else {
-                    throw new CourseException(CourseException.EX_XML_RPC);
-                }
-            }
-            catch (SQLException e) {
-                LOG.log(Level.SEVERE, null, e);
-                throw new CourseException(CourseException.EX_DB);
-            }
-            catch (DwoXmlRpcException e) {
-                throw (CourseException) getException(e, e.code);
-            }
-        }
-        catch (PersistenceException e) {
-            throw new CourseException(CourseException.EX_UNKNOWN_ERROR);
-        }
-    }
+//    /**
+//     * Updates the coursedata (name and description) in the database.
+//     *
+//     * @param course The course to update in the database.
+//     * @return If true, the coursedata was successfully changed. Otherwise,
+//     * false is returned.
+//     * @throws fi.dwo.commons.exceptions.CourseException
+//     */
+//    public boolean updateCourse(Course course) throws CourseException {
+//
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        if (course.getSchoolID() == 0) {
+//            try {
+//                dbAccess.log("course " + course.getID() + " " + course.getName() + " geen schoolID in updateCourse");
+//            }
+//            catch (Exception e) {
+//            }
+//        }
+//        try {
+//            try {
+//                MapperCreator.instance(Course.class).put(course.getID(), course); // clear 1 level cache, keep 2nd level cache!!!!
+//                if (course.parentChanged()) {
+//                    boolean result
+//                            = dbAccess.changeCourse(course.getID(), course.getName(),
+//                                    course.getDescription(),
+//                                    course.isExport(),
+//                                    course.getSchoolID(),
+//                                    course.getParentID());
+//                    if (result) {
+//                        course.resetParent();
+//                    }
+//                    return result;
+//                }
+//
+//                return dbAccess.changeCourse(course.getID(), course.getName(),
+//                        course.getDescription(), course.isExport() // FIXME fallback naar 2parameter methode.
+//                        , course.getSchoolID() // TODO fallback!
+//                );
+//            }
+//            catch (IOException e) {
+//                throw new CourseException(CourseException.EX_IO);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (CourseException) getException(e, e.code);
+//                } else {
+//                    throw new CourseException(CourseException.EX_XML_RPC);
+//                }
+//            }
+//            catch (SQLException e) {
+//                LOG.log(Level.SEVERE, null, e);
+//                throw new CourseException(CourseException.EX_DB);
+//            }
+//            catch (DwoXmlRpcException e) {
+//                throw (CourseException) getException(e, e.code);
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            throw new CourseException(CourseException.EX_UNKNOWN_ERROR);
+//        }
+//    }
 
     public Course[] getCourseFromMapper(Object o) throws IOException, SQLException, XmlRpcException {
         return (Course[]) MapperCreator.instance(Course.class).get(o);

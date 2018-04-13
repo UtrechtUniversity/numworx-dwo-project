@@ -2144,11 +2144,21 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      */
     public boolean updateSco(Sco sco) {
 		DomScoContextFull scoContext = new DomScoContextFull();
+		scoContext.setId(PersistentScoContext.buildPersistenceId((long)sco.getScoID()));
 		DomScoData scoData = null;
-    	if (sco.getImageData() != null) {
-    		scoContext.setId(PersistentScoContext.buildPersistenceId((long)sco.getScoID()));
+
+		if (sco.getImageData() != null) {
     		scoContext.setImageData(sco.getImageData());
     	}
+    	scoContext.setScoName(sco.getScoName());
+    	scoContext.setShowScore(!sco.isShowScore()); // reverse logic
+    	scoContext.setDescription(sco.getDescription());
+    	if (sco.isCourseChanged()) {
+    		scoContext.setCourseId(PersistentCourse.buildPersistenceId((long)sco.getCourse().getID()));
+    		scoContext.setSequencenr((long) sco.getSequencenr());
+    	}
+    	
+    	
     	if (sco.isDataChanged()) {
    		try {
 			@SuppressWarnings("unchecked")
@@ -2156,7 +2166,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 			Object mode = m.get("mode");
 			int value = mode == null ? 0 : Integer.parseInt(mode.toString());
 			scoContext.setScoType(ScoType.values()[value]);
-			scoContext.setId(PersistentScoContext.buildPersistenceId((long)sco.getScoID()));
 			scoData = new DomScoData();
 			scoData.setLaunchdata(sco.getLaunchdataString());
 			extractStudentModel(scoContext, sco, m);
@@ -2166,16 +2175,12 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 			LOG.log(Level.WARNING, "incompatibel", e);
 		}
     	}
-    	
-    	
-    	if (scoContext.getId() != null) {
-    		try {
-				SecuredTeacherScoContextManager.update(scoContext, scoData, getDwoProfile());
-				sco.setImageData(null);
-			} catch (Dwo2Exception e) {
-	            JOptionPane.showMessageDialog(this, e.getMessage());
-			}
-    	}
+		try {
+			SecuredTeacherScoContextManager.update(scoContext, scoData, getDwoProfile());
+			sco.setImageData(null);
+		} catch (Dwo2Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+		}
     	
         try {
             return PersistenceFacade.instance().updateSco(sco);

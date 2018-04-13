@@ -940,12 +940,8 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                 if (inerror) {
                     course.setExport(oldExport);
                 } else {
-                    try {
 //System.out.println("persistCourses " + course.getName());
-                        PersistenceFacade.instance().updateCourse(course);
-                    } catch (CourseException e) {
-                        JOptionPane.showMessageDialog(this, e.getMessage(), e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
-                        LOG.log(Level.SEVERE, null, e);
+                	if(!GuiCreator.instance().dwo.updateCourse(course)) {
                         inerror = true;
                     }
                 }
