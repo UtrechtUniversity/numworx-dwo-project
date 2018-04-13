@@ -40,6 +40,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
@@ -350,5 +351,21 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
         } else {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Not a schooladmin or teacher");
         }
+    }
+
+    @Override
+    public List<DomSchoolClass> getSchoolClasses() throws Dwo2Exception {
+        List<PersistentSchoolClass> classes = instance.teacherActions.getSchoolClasses(instance.getContext());
+        List<DomSchoolClass> result = new ArrayList<>(classes.size());
+        classes.forEach((k-> result.add(k.buildDomSchoolClass())));
+        return result;
+    }
+
+    @Override
+    public List<DomStudent> getTeachersStudents() throws Dwo2Exception {
+        List<PersistentUser> students = instance.teacherActions.getTeachersStudents(instance.getContext());
+        List<DomStudent> result = new ArrayList<>(students.size());
+        students.forEach((k-> result.add(k.buildDomStudent())));
+        return result;
     }
 }

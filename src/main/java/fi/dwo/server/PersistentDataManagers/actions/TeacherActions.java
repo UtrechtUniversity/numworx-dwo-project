@@ -3,7 +3,9 @@
  */
 package fi.dwo.server.PersistentDataManagers.actions;
 
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
+import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
 import java.util.List;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -16,4 +18,6 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 public interface TeacherActions  {
     public List<PersistentStudentModelContext> getStudentModels(TeacherDomainAuthorizer.Context context) throws Dwo2Exception;
     public PersistentStudentModelContext addStudentModel(TeacherDomainAuthorizer.Context context, PersistentStudentModelContext model) throws Dwo2Exception;
+    public List<PersistentSchoolClass> getSchoolClasses(TeacherDomainAuthorizer.Context context) throws Dwo2Exception;
+    public List<PersistentUser> getTeachersStudents(TeacherDomainAuthorizer.Context context) throws Dwo2Exception;
 }

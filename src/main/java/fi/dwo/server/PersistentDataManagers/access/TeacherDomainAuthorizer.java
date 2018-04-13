@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -297,6 +298,10 @@ public static class Context {
         DomStudentModelContext addStudentModel(DomStudentModelContext model) throws Dwo2Exception;
 
         TeacherState_HR_P_R_S_SG_U addProfile(DomDwoProfile p) throws Dwo2Exception;
+        
+        List<DomSchoolClass> getSchoolClasses()  throws Dwo2Exception;
+        
+        List<DomStudent> getTeachersStudents()  throws Dwo2Exception;
     }
 
     public interface TeacherState_HR_P_R_S_SG_U {

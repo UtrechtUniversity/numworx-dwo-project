@@ -1,15 +1,20 @@
 /** Copyrighted Feb 12, 2018 */
 package fi.dwo.server.PersistentDataManagers.actions;
 
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
+import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
+import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -40,6 +45,24 @@ public class MySQLTeacherActions implements TeacherActions {
     public List<PersistentStudentModelContext> getStudentModels(TeacherDomainAuthorizer.Context context) throws Dwo2Exception {           
             List<PersistentStudentModelContext> pModels =  StudentModelContextManager.findEntities(context.getUserCtx().getSchool());
             return pModels;
+    }
+
+    @Override
+    public List<PersistentSchoolClass> getSchoolClasses(TeacherDomainAuthorizer.Context context) throws Dwo2Exception {
+        List<PersistentSchoolClass> schoolClasses = SchoolClassUtilManager.getSchoolClassesOfTeacher(context.getUserCtx().getHasRole());
+            return schoolClasses;
+    }
+
+    @Override
+    public List<PersistentUser> getTeachersStudents(TeacherDomainAuthorizer.Context context) throws Dwo2Exception {
+        Map<String, PersistentUser> students = new HashMap<>();
+        List<PersistentSchoolClass> schoolClasses  = getSchoolClasses(context);
+        for(PersistentSchoolClass sc : schoolClasses){
+            StudentInClassManager.findEntities(sc).forEach((k-> students.putIfAbsent(k.getUser().buildPersistenceId().getIdString(), k.getUser())));
+        }
+        List<PersistentUser> results = new ArrayList<>(students.size());
+        students.forEach((k, v) -> results.add(v));
+        return results;
     }
 
 

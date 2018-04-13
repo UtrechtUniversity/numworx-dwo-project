@@ -229,6 +229,45 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
      */
     @GET
     @Produces({"application/json"})
+    @Path("/getTeachersStudents")
+    public List<DomStudent> getTeachersStudents(@Context SecurityContext sc) {
+        PersistentHasRole phr = null;
+        PersistentSchool school = null;
+        List<DomStudent> domStudents = null;
+        //get SchoolClasses
+        //get STudents in those Schoolclasses
+        //return;
+        try {
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, "", ex);
+            throw new Dwo2RestException(ex);
+        }
+        try {
+            List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.STUDENT);
+            domStudents = new ArrayList<>(userList.size());
+            for (PersistentUser u : userList) {
+                if (u.isSingleSchoolAccount()) {
+                    domStudents.add(u.buildDomStudent());
+                }
+            }
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, "", ex);
+            throw new Dwo2RestException(ex);
+        }
+
+        return domStudents;
+    }
+
+    /**
+     * Returns the school data to be displayed.
+     *
+     * @param sc
+     * @return
+     */
+    @GET
+    @Produces({"application/json"})
     @Path("/getSingleSchoolStudentsInSchoolList")
     public List<DomStudent> getSingleSchoolStudentsInSchool(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
