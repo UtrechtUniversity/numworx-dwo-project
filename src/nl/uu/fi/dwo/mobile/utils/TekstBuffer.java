@@ -30,7 +30,6 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GeogebraView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselAntwoordVak;
-//binnenkort: import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselAntwoordVak;
 
 /**
  * Uses information in the launchdata HashMap to create objects that will be
@@ -372,8 +371,8 @@ public class TekstBuffer
 //			);
 //			return x(map, new PopupFacadeWithFont(map, new TextEditor( currentVakGegevens, randomVarNamen, randomVarWaarden )));
 //			return x(map, new PopupFacade(currentVakGegevens, new  fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])));
-			//return x(map, new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
-			return x(map, new PopupFacade(currentVakGegevens, new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])));
+			return x(map, new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+			//return x(map, new PopupFacade(currentVakGegevens, new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])));
 
 			//return x(map, new PopupFacade(currentVakGegevens, new fi.statistiekgwt.client.StatistiekGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])));
 
