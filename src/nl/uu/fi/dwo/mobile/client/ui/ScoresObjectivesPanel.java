@@ -486,7 +486,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		indent = 20;
 		for(int j = 0; j < objectivesForDiagram.length; j++)
 		{
-			textColumnWidth = Math.max((int) ctx.measureText(categoryStringForDiagram[j]).getWidth() + margin, textColumnWidth);
+			textColumnWidth = Math.max((int) ctx.measureText(categoryStringForDiagram[j]).getWidth() + margin + 20, textColumnWidth);
 			for(int i = 0; i < objectivesForDiagram[j].length; i++ )
 			{
 				textColumnWidth = Math.max((int) ctx.measureText(objectivesForDiagram[j][i]).getWidth() + margin + indent, textColumnWidth);
