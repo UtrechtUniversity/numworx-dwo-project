@@ -13,8 +13,8 @@ import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
-import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
@@ -25,15 +25,15 @@ import org.osgi.util.promise.Success;
  *
  * @author Gert van der Plas
  */
-public class AddStudentToSchoolclassPresenter {
+public class AddTeacherToSchoolclassPresenter {
 
-    private static final Logger LOG = Logger.getLogger(AddStudentToSchoolclassPresenter.class.getName());
+    private static final Logger LOG = Logger.getLogger(AddTeacherToSchoolclassPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
     private Display view;
     private DomSchoolClassFull schoolClass;
-    private Map<String, DomStudent> students = new HashMap();
+    private Map<String, DomTeacher> teachers = new HashMap();
 
     public interface Display {
 
@@ -42,13 +42,12 @@ public class AddStudentToSchoolclassPresenter {
         void init();
 
         void setSchoolClass(DomSchoolClassFull schoolClass);
-
-        void showStudents(Map<String, DomStudent> students);
+        void showTeachers(Map<String, DomTeacher> teachers);
 //        void showTeachers(List<DomTeacher> teachers);
 //        void showShowModels(List<DomCourse> modules);
     }
 
-    public AddStudentToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    public AddTeacherToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
     }
@@ -96,17 +95,16 @@ public class AddStudentToSchoolclassPresenter {
     }
 
     @JsMethod
-    public void FindStudentsOfTeacher(String username, String Firstname, String insertion, String familyName, String email) {
-        Promise<List<DomStudent>> promise;
-        promise = manager.getStudentsInSchool();
-        //TODO add get TeachersStudents() in gwt-lib;
+    public void FindTeachersInSchool(String username, String Firstname, String insertion, String familyName, String email){
+        Promise<List<DomTeacher>> promise;
+        promise = manager.getTeachersInSchool();
         // onSuccess update view
-        promise.then(new Success<List<DomStudent>, Void>() {
+        promise.then(new Success<List<DomTeacher>, Void>() {
             @Override
-            public Promise<Void> call(Promise<List<DomStudent>> resolved) throws Exception {
-                Map<String, DomStudent> studentMap = new HashMap<>();
-                resolved.getValue().forEach((k -> studentMap.put(k.getId().getIdString(), k)));
-                view.showStudents(studentMap);
+            public Promise<Void> call(Promise<List<DomTeacher>> resolved) throws Exception {
+                Map<String, DomTeacher> teacherMap = new HashMap<>();
+                resolved.getValue().forEach((k -> teacherMap.put(k.getId().getIdString(), k)));
+                view.showTeachers(teacherMap);
                 return null;
             }
         },
@@ -125,26 +123,25 @@ public class AddStudentToSchoolclassPresenter {
             }
         }
         );
-    }
-
-@JsMethod
-        public void AddStudentToSchoolClass(String studentId){
+    }    
+    
+    @JsMethod
+    public void AddTeacherToSchoolClass(String teacherId){
                 Promise<Boolean> promise;
-                DomSubmitStudentToSchoolClass submit = new DomSubmitStudentToSchoolClass();
-                submit.setSchoolClassFrom(schoolClass);
-                submit.setSchoolClassTo(schoolClass);
-                submit.setStudent(students.get(studentId));
-                promise = manager.submitStudentToSchoolClass(submit);
+                DomSubmitTeacherToSchoolClass submit = new DomSubmitTeacherToSchoolClass();
+                submit.setSchoolClass(schoolClass);
+                submit.setTeacher(teachers.get(teacherId));
+                promise = manager.submitTeacherToSchoolClass(submit);
                 // onSuccess update view
                 promise.then(new Success<Boolean, Void>() {
                     @Override
-        public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                    public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                         return null;
                     }
                 },
                         new Failure() {
                     @Override
-        public void fail(Promise<?> resolved) throws Exception {
+                    public void fail(Promise<?> resolved) throws Exception {
                         Throwable fail = resolved.getFailure();
                         if (fail instanceof Dwo2Exception) {
                             LOG.log(Level.SEVERE, fail.getMessage());
@@ -156,5 +153,5 @@ public class AddStudentToSchoolclassPresenter {
                         }
                     }
                 });
-            }
+            }  
 }

@@ -3,7 +3,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 import nl.uu.fi.dwo.rest.dom.DomCoursesOfSchoolclassTree;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.ui.Widget;
 
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 
