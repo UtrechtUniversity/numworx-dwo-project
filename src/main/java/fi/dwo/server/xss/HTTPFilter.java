@@ -92,10 +92,10 @@ public class HTTPFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
-		LOG.info("HTTP  " + req.getRequestURL() + " " + req.isSecure() + " from " + req.getRemoteAddr());
+		LOG.fine("HTTP  " + req.getRequestURL() + " " + req.isSecure() + " from " + req.getRemoteAddr());
 		req = balanced(req);
 
-		LOG.info("Balanced " + req.getRequestURL() + " " + req.isSecure() + " from " + req.getRemoteAddr() + " " + req.getClass().getName());
+		LOG.fine("Balanced " + req.getRequestURL() + " " + req.isSecure() + " from " + req.getRemoteAddr() + " " + req.getClass().getName());
 		request.setAttribute("remoteAddr", req.getRemoteAddr());
 
 		if(req.isSecure() || req.getRemoteAddr().equals("127.0.0.1") || req.getRemoteAddr().equals("0:0:0:0:0:0:0:1"))
@@ -125,14 +125,14 @@ public class HTTPFilter implements Filter {
 	}
 
 	private boolean isException(String uri) {
-		return uri.contains("rest")||uri.contains("xmlrpc")||uri.contains("crossdomain.xml");
+		return uri.contains("rest")||uri.contains("xmlrpc")||uri.contains("crossdomain.xml")||"/".equals(uri);
 	}
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
 		prefix = config.getInitParameter("prefix");
 		if(prefix == null) prefix = "172.";
-		LOG.info("init prefix = "  + prefix);
+		LOG.config("init prefix = "  + prefix);
 	}
 
 }
