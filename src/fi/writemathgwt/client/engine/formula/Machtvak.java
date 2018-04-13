@@ -1,4 +1,4 @@
-package fi.writemathgwt.client;
+package fi.writemathgwt.client.engine.formula;
 
 //import java.awt.Point;
 import java.util.ArrayList;

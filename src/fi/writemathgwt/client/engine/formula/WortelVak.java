@@ -1,4 +1,4 @@
-package fi.writemathgwt.client;
+package fi.writemathgwt.client.engine.formula;
 
 import fi.writemathgwt.client.engine.Point;
 
@@ -121,8 +121,8 @@ public class WortelVak extends FormuleElementWithChildren
 		FormuleElement root = findRoot();
 		
 		String oTeken = "sqrt";
-		int[] oIntArray = WriteObject.samples.get(oTeken);
-		ArrayList<Point> oPoints = WriteObject.intConvertSample(oIntArray);
+		int[] oIntArray = samples.get(oTeken);
+		ArrayList<Point> oPoints = intConvertSample(oIntArray);
 		// schalen en op de goede plek zetten
 		ArrayList<Point> sPoints = scaleAndPosition(oPoints, 15);
 		// checken?

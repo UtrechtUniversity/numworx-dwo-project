@@ -1,4 +1,4 @@
-package fi.writemathgwt.client;
+package fi.writemathgwt.client.engine.formula;
 
 //import java.awt.*;
 import java.util.*;
@@ -207,7 +207,7 @@ public class FormuleTeken extends FormuleElement {
 			oIntArray1 = Samples20.getSamplePart(oTeken , 1);
 			oIntArray2 = Samples20.getSamplePart(oTeken , 2);
 		} else {
-			oIntArray1 = WriteObject.samples.get(oTeken);
+			oIntArray1 = samples.get(oTeken);
 		}
 
 		// sample not available
@@ -216,14 +216,14 @@ public class FormuleTeken extends FormuleElement {
 		}
 		
 		if ( Samples20.isTwoStroke(oTeken) ) {
-			ArrayList<Point> oPoints1 = WriteObject.intConvertSample(oIntArray1);
-			ArrayList<Point> oPoints2 = WriteObject.intConvertSample(oIntArray2);
+			ArrayList<Point> oPoints1 = intConvertSample(oIntArray1);
+			ArrayList<Point> oPoints2 = intConvertSample(oIntArray2);
 			ArrayList<Point> sPoints1 = scaleAndPosition(oPoints1, oPoints2);
 			ArrayList<Point> sPoints2 = scaleAndPosition(oPoints2, oPoints1);
 			((FormuleRoot) root).owner.addWriteObject(oTeken, sPoints1, sPoints2);
 			
 		} else {
-			ArrayList<Point> oPoints = WriteObject.intConvertSample(oIntArray1);
+			ArrayList<Point> oPoints = intConvertSample(oIntArray1);
 			ArrayList<Point> sPoints = scaleAndPosition(oPoints);
 			((FormuleRoot) root).owner.addWriteObject(oTeken, sPoints);
 			

@@ -1,4 +1,4 @@
-package fi.writemathgwt.client;
+package fi.writemathgwt.client.engine.formula;
 
 
 import java.util.ArrayList;
@@ -122,8 +122,8 @@ public class Breukvak extends FormuleElementWithChildren
 		FormuleElement root = findRoot();
 		
 		String oTeken = "-";
-		int[] oIntArray = WriteObject.samples.get(oTeken);
-		ArrayList<Point> oPoints = WriteObject.intConvertSample(oIntArray);
+		int[] oIntArray = samples.get(oTeken);
+		ArrayList<Point> oPoints = intConvertSample(oIntArray);
 		// schalen en op de goede plek zetten
 		ArrayList<Point> sPoints = scaleAndPosition(oPoints, x, y + getChild(0).getHeight() + Samples20.breuklijnExtraHoogte);
 		// checken?

@@ -1,5 +1,6 @@
-package fi.writemathgwt.client;
+package fi.writemathgwt.client.engine.formula;
 
+import fi.writemathgwt.client.WritePanel;
 import fi.writemathgwt.client.engine.StrokeContainer;
 
 //import java.awt.*;

@@ -1,11 +1,16 @@
-package fi.writemathgwt.client;
+package fi.writemathgwt.client.engine.formula;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Logger;
+
+import fi.writemathgwt.client.engine.Point;
 
 //import java.awt.*;
 
 public abstract class FormuleElement {
 //	private static Logger logger = Logger.getLogger("FormuleElement");	
+	public static HashMap<String, int[]>  samples;
 	
 	public int x = 0;
 	public int y = 0;
@@ -23,9 +28,25 @@ public abstract class FormuleElement {
 	
 // nodig?	
 	private int ashoogte = 0;
+	
+	public static void initSamples(int tekenSet) {
+		//newTekenSet = tekenSet;
+		samples = Samples20.init(tekenSet);
+	}
+	
+	public static ArrayList<Point> intConvertSample(int[] data) 
+	{
+		ArrayList<Point> newPoints = new ArrayList<Point>();
+		for (int i = 0; i < data.length - 1; i += 2) 
+		{ 
+			newPoints.add(new Point(data[i], data[i+1]));
+		}
+		return newPoints;
+	} 
 
 	public FormuleElement(FormuleElement parent)
 	{	
+		initSamples(2);
 		if (parent != null)
 			initWithParent(parent);
 	}
