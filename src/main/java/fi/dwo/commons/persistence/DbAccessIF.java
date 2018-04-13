@@ -610,13 +610,13 @@ public interface DbAccessIF  {
 //    public String setRights(int uid, int schoolGroup, int profileid, String rights)
 //            throws SQLException, IOException, XmlRpcException;
 
-    public boolean changeCourse(int id, String name, String description,
-            boolean export, int schoolID)
-            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+//    public boolean changeCourse(int id, String name, String description,
+//            boolean export, int schoolID)
+//            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-    public boolean changeCourse(int id, String name, String description,
-            boolean export, int schoolID, int parentID)
-            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+//    public boolean changeCourse(int id, String name, String description,
+//            boolean export, int schoolID, int parentID)
+//            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
     public boolean setCourseSequence(Vector vector, int schoolID, int classID,
             int parent, int profileID)
@@ -649,7 +649,7 @@ public interface DbAccessIF  {
 
 //    public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 
-    public Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+//    public Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 
 //    public boolean isInTeacherRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 
