@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.mobile.utils.Logging;
 public class DWOLogger implements Logging {
 	
 	
+	static final String LOG_OBJECTIVES = "logObjectives";
 	private static final String LOGKEY_ANSWER = "logAnswer";
 	private static final String LOGKEY_MAXSCORE = "logMaxScore";
 	private static final String START = "0";
@@ -198,7 +199,7 @@ public class DWOLogger implements Logging {
 	public void setLogObjectives(boolean[][] logObjectives) {
 		this.logObjectives = logObjectives;
 		if(logObjectives != null)
-			map.put("logObjectives", JSONUtilities.toJSONArray(logObjectives));
+			map.put(LOG_OBJECTIVES, JSONUtilities.toJSONArray(logObjectives));
 		if(delegate != null)
 			delegate.setLogObjectives(logObjectives);
 	}

@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
 import nl.uu.fi.dwo.account.client.StudentModelView;
@@ -52,7 +53,7 @@ public class StudentModelPanel extends nl.uu.fi.dwo.account.client.StudentModelP
 		//flow.add(button);
 		dock = new DockLayoutPanel(Unit.EM);
 		dock.addNorth(flow, 3);
-		simple = new SimplePanel();
+		simple = new ScrollPanel();
 		dock.add(simple);
 		initWidget(dock);	
 		setPixelSize(600,400);
@@ -118,8 +119,7 @@ public class StudentModelPanel extends nl.uu.fi.dwo.account.client.StudentModelP
 			if(main != null) simple.remove(main);
 			main = new ScoresObjectivesPanel(map, true, true);
 			simple.add(main);
-		} catch (Exception e) {
-			
+		} catch (Exception e) {			
 			Logger.getGlobal().log(Level.SEVERE, "scoreobjectives", e);
 		}
 		

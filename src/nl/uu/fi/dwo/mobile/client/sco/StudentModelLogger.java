@@ -7,7 +7,10 @@ import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.LoggingProvider;
@@ -26,7 +29,7 @@ public class StudentModelLogger implements Logging {
 		public Logging get() {
 			Memento instance = Memento.instance();
 			boolean experiment = instance != null && instance.pmodel != null;
-			experiment &= DWOplayer.clientfactory.withUser();
+			experiment &= DWOplayer.withUser();
 			if (experiment)
 				return new StudentModelLogger();
 			else
@@ -118,8 +121,25 @@ public class StudentModelLogger implements Logging {
 	}
 	
 	public static void accumulateAllScores(DomStudentModelStructureScore studentModel) {
-		for(StudentModelLogger l: all.values()) {
-			l.accumulateScore(studentModel);
+		ObjectMap map = JSONUtilities.wrapMap(Memento.instance().getLogState());
+		for(String name: map.keySet()) {
+			ObjectMap logItem = map.getObjectMap(name);
+			ObjectList objectives = logItem.getObjectList(DWOLogger.LOG_OBJECTIVES);
+			int attempts = logItem.getInt(DWOLogger.LOG_ATTEMPTS_COUNT);
+			if(attempts > 0 && objectives != null) {
+				double score = logItem.getDouble(SUCCESS_SCORE);
+				int size = objectives.size();
+				for (int i = 0; i > size; i++ ) {
+					boolean[] objective = objectives.getBooleanArray(i);
+					for( int j = 0; j < objective.length; j++) {
+						if(objective[j]) {
+							DomStudentModelScore<?> s = studentModel.getCategories().get(i).getObjectives().get(j);
+							s.setCount(s.getCount()+1);
+							s.setScore(s.getScore()+score/attempts);
+						}
+					}
+				}
+			}
 		}
 	}
 

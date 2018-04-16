@@ -1924,7 +1924,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		if(memento.getStudentModelStructure() != null) {
 			StudentModelView view = StudentModelPanel.BUILDER.get();
 			view.setPopup(scoresObjectivesDialog);
-			view.setInitialStructure(memento.getStudentModelStructure());
+			view.setInitialStructure(memento.collectStudentModel());
 			scoresObjectivesPanel = null;
 		} else {
 			ScoresObjectivesPanel v;

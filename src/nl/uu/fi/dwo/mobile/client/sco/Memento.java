@@ -675,16 +675,28 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 				DomStudentModelStructure model = p.getValue().getModelStructure();
 				DomStudentModelStructureScore data = model.generateStudentModelStructureScore();
 				StudentModelLogger.accumulateAllScores(data);
-				String string = DomStudentModelStructureScoreCodec.CODEC.encode(data).toString();
-				setValue(STUDENT_MODEL, string);
+				setStudentModel(data);
 				StudentModelLogger.destroy();
 				return api.Terminate();
 			}).recoverWith( p-> api.Terminate() );
 			return then;
 		} else
 			return api.Terminate();
-		
 	}
+	
+	public Promise<DomStudentModelContext> collectStudentModel() {
+		if(pmodel != null && DWOplayer.withUser()) {
+			return pmodel.then(p-> {
+				DomStudentModelStructure model = p.getValue().getModelStructure();
+				DomStudentModelStructureScore data = model.generateStudentModelStructureScore();
+				StudentModelLogger.accumulateAllScores(data);
+				setStudentModel(data);
+				return api.Commit();
+			}).recoverWith(p -> api.Commit()).then(p -> pmodel);
+		}
+		return pmodel;
+	}
+	
 	
 	public void setStudentModelStructure(Promise<DomStudentModelContext> pmodel) {
 		this.pmodel = pmodel;
