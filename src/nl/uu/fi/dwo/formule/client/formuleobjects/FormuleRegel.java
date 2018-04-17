@@ -1686,9 +1686,10 @@ public class FormuleRegel extends FormuleElement
 		if (this.children.isEmpty() && holder.isInputNeeded())
 		{
 			//draw square if line is empty
-			OMSVGRectElement rect = new OMSVGRectElement(x,y,width,height,0, 0);
+			OMSVGRectElement rect = new OMSVGRectElement(x+0.5f,y+0.5f,width-1,height-1,0, 0);
 			OMSVGStyle style = rect.getStyle();
 			style.setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, "#888888");
+			style.setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1");
 			style.setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "none");
 			svg.appendChild(rect);
 		}
