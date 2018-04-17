@@ -187,7 +187,10 @@ class CourseMapper extends XmlRpcMapper {
             }
 
         }
-        return super.get(oid);
+        Object object = super.get(oid);
+        if (object != null) 
+        	put(oid, object);
+		return object;
     }
 
     /**
