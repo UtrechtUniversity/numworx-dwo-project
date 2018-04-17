@@ -2664,44 +2664,7 @@ public class PersistenceFacade {
         ((Hashtable) v.firstElement()).put("dwoProfileID", new Integer(id));
 
         try {
-//<<<<<<< .working
             DbAccessCreator.instance().selectCoursesForClass(schoolClass.getID(), v);
-//=======
-//            try {
-//                int parentID = parent==null ? 0 : parent.getID();
-//				int schoolID = parent==null ? school.getSchoolID() : parent.getSchoolID();
-//				int result = dbAccess.addCourse(schoolID, name,
-//                        description, dwoProfile.getID(), parentID, withChildren);
-//                Course c = new Course();
-//                c.setCourseID(result);
-//                c.setDescription(description);
-//                c.setName(name);
-//                c.setImageUrl(school.getImage());
-//                c.setDwoProfile(dwoProfile.getID());
-//                c.setSchoolID(schoolID); // DEZE IS VERGETEN, WIM 9/5/2011
-//                c.setParentID(parentID);
-//                c.resetParent();
-//                if(withChildren) c.setChildren(Course.NO_CHILDREN);
-//                else c.setScoList(Course.NO_SCOS);
-//                MapperIF map = MapperCreator.instance(Course.class);
-//                map.put(result, c);
-//                return c;
-//            } catch (IOException e) {
-//                throw new CourseException(CourseException.EX_IO);
-//            } catch (XmlRpcException e) {
-//                if (e.code != 0) {
-//                    throw (CourseException) getException(e, e.code);
-//                } else {
-//                    throw new CourseException(CourseException.EX_XML_RPC, e);
-//                }
-//            } catch (SQLException e) {
-//                throw new CourseException(CourseException.EX_DB);
-//            } catch (DwoXmlRpcException e) {
-//                throw (CourseException) getException(e, e.code);
-//            }
-//        } catch (PersistenceException e) {
-//            throw new CourseException(CourseException.EX_UNKNOWN_ERROR);
-//>>>>>>> .merge-right.r12522
         }
         catch (IOException e) {
             throw new PersistenceException(PersistenceException.EX_IO, e);
