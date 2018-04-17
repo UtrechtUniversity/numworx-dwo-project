@@ -22,6 +22,7 @@ public class HTTPFilter implements Filter {
 	 * prefix of load balancer address. E.g. 172.
 	 */
 	private String prefix;
+	private boolean redirect = true;
 	
 	
 	static class BalancedServletRequest extends HttpServletRequestWrapper {
@@ -105,7 +106,7 @@ public class HTTPFilter implements Filter {
 		}
 		
 		String uri = req.getRequestURI();
-		if(!isException(uri)) {
+		if(!isException(uri) && redirect) {
 			StringBuffer sb = new StringBuffer("https://");
 			sb.append(req.getServerName());
 			sb.append(uri);			
@@ -131,8 +132,10 @@ public class HTTPFilter implements Filter {
 	@Override
 	public void init(FilterConfig config) throws ServletException {
 		prefix = config.getInitParameter("prefix");
-		if(prefix == null) prefix = "172.";
+		if(prefix == null) prefix = System.getProperty("DWO_ELB", "172.");
 		LOG.config("init prefix = "  + prefix);
+		redirect = Boolean.valueOf(System.getProperty("DWO_REDIRECT", "true"));
+		LOG.config("init redirect = " + redirect);
 	}
 
 }
