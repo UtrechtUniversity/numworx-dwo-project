@@ -1,16 +1,25 @@
-@mixin resetButton {
-	-webkit-appearance: none;
-}
+/*
 
+MIXINS
+Helpers for tedious (crossbrowser) work.
 
-@mixin flex {
-	display: -webkit-box; display: -ms-flexbox; display: flex;
-}
-@mixin align-items($pos) {
-	-webkit-box-align: $pos; -ms-flex-align: $pos; align-items: $pos;
-}
-@mixin justify-content($pos) {
-	-webkit-box-pack: $pos; -ms-flex-pack: $pos; justify-content: $pos;
+- General (transition, box-shadow, border-radius)
+- Behaviour (border-box, user-select, clearfix)
+- Flexbox (flex, align-items, justify-content)
+- Forms (buttons appearance, placeholder)
+
+*/
+
+/*
+ * GENERAL
+ */
+
+@mixin transition($value) {
+	-webkit-transition: $value;
+	-moz-transition: $value;
+	-ms-transition: $value;
+	-o-transition: $value;
+	transition: $value;
 }
 
 @mixin box-shadow($hor, $ver, $blur, $spread, $color) {
@@ -37,10 +46,22 @@
 	border-bottom-left-radius: $bl;
 }
 
+
+/* 
+ * BEHAVIOR
+ */
+
 @mixin border-box {
     box-sizing: border-box;
        -moz-box-sizing: border-box;
        -webkit-box-sizing: border-box;
+}
+
+@mixin user-select($value) {
+	-webkit-user-select: $value;
+	-moz-user-select: $value;
+	-ms-user-select: $value;
+	user-select: $value;
 }
 
 @mixin clearfix {
@@ -51,27 +72,37 @@
 	}
 }
 
-@mixin user-select($value) {
-	-webkit-user-select: $value;
-	-moz-user-select: $value;
-	-ms-user-select: $value;
-	user-select: $value;
+
+/*
+* FLEXBOX
+*/
+
+@mixin flex {
+	display: -webkit-box; display: -ms-flexbox; display: flex;
+}
+@mixin align-items($pos) {
+	-webkit-box-align: $pos; -ms-flex-align: $pos; align-items: $pos;
+}
+@mixin justify-content($pos) {
+	-webkit-box-pack: $pos; -ms-flex-pack: $pos; justify-content: $pos;
 }
 
-@mixin transition($value) {
-	-webkit-transition: $value;
-	-moz-transition: $value;
-	-ms-transition: $value;
-	-o-transition: $value;
-	transition: $value;
-}
 
+/*
+ * FORMS
+ */
+
+@mixin resetButton {
+	-webkit-appearance: none;
+}
 
 @mixin placeholder {
-  &::-webkit-input-placeholder {@content}
-  &:-moz-placeholder           {@content}
-  &::-moz-placeholder          {@content}
-  &:-ms-input-placeholder      {@content}  
+  &::-webkit-input-placeholder { @content }
+  &:-moz-placeholder           { @content }
+  &::-moz-placeholder          { @content }
+  &:-ms-input-placeholder      { @content }  
 }
+
+
 
 

@@ -1,22 +1,23 @@
 # TODO
-* soms is het label breder dan het veld -> Oplossing zoeken
 
-* exacte kleuren
+* bibliotheekpagina
+
+* algemeen documenteren structuur
+* documenteren per stylesheet
+
+* exacte kleuren 
 * exacte margins/paddings
 
 * hovers buttons
 
-* help
-
-* account menu
 * viewport
-* help section
 
-* dialog box
 * progress box
-* lightbox
+* dialog box afmaken
+* lightbox afmaken
 
 * cross browser check
+* performance test op sorting (voldoet bubblesort?)
 
 * icoontjes
 
@@ -24,6 +25,9 @@
 
 * option boxes
 * select boxes
-
 * hovers tabelrijen
 * select tabelrijen
+* soms is het label breder dan het veld -> Oplossing zoeken
+* help section
+* account menu
+* basic sorting

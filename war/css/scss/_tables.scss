@@ -1,3 +1,18 @@
+/*
+
+TABLE STYLES
+
+- General table styles (heads, hoverable, selectable)
+- Results table
+- Table wrapper (for XL tables)
+
+*/
+
+
+/*
+ * GENERAL TABLE STYLES
+ */ 
+
 table {
 	//table-layout: fixed;
 	width: 100%;	
@@ -23,11 +38,17 @@ table {
 				
 		tr {
 			width: 100%;
+			//&.headers th:first-child { padding-left: 0; }
 			th { 
-				text-transform: uppercase;
-				color: $primaryLight;
 				padding: 10px;
-				&:first-child { padding-left: 0; }
+				//&:first-child { padding-left: 0; }
+				
+				.sortButton {
+					display: inline-block;
+					width: 10px; height: 10px;
+					margin: 0 5px;
+					background-color: $primary;
+				}
 			}
 		}		
 	}
@@ -57,7 +78,7 @@ table {
 	}
 	
 	&.hoverable tr:hover td, &.hoverable tr:hover td span {
-		background-color: $shade2;
+		background-color: $shade3;
 	}	
 	&.selectable {
 		tr td {
@@ -71,6 +92,184 @@ table {
 	}
 }
 
+
+/*
+ * RESULTS TABLE
+ */ 
+
+table.results {
+	margin-right: 1 / 12 * $siteWidth * 1px;
+	max-height: 500px; height: auto;
+	overflow-x: scroll;
+	overflow-y: visible;
+		
+	&:after {
+		content: "\00A0";
+		display: block;
+		right: $colWidth * -1px;
+	    position: absolute;
+	    top: 0;		
+		width: $colWidth * 1px;
+	}
+		
+	th, td {
+		//width: (1 / 12 * $siteWidth - 20) * 1px;
+		text-align: center;
+		width: ($colWidth - $gutter) / 2 * 1px;
+		
+		&:first-child {
+			position: relative;
+			text-align: left;
+			width: ($colWidth - $gutter) * 1px;
+			
+			span:not(.sortButton) { 
+				background-color: $transWhite;
+				bottom: 0;
+				display: block;
+				left: 0;
+				line-height: 1.8em;
+				padding: 5px 10px;
+				position: absolute; 
+				top: 0;
+				width: ($colWidth - $gutter) * 1px;
+				
+				.active & { border-right: 1px $line1 solid;}
+			}
+		}
+	}
+	
+	thead {
+		border-left: $borderThickness $primary solid;
+		@include border-radius(4px, 4px, 0px, 0px);		
+		border-right: $borderThickness $primary solid;
+		border-top: $borderThickness $primary solid;
+		position: relative;
+		
+		tr {
+			&:nth-child(1) {
+				background-color: $primaryLight;
+				color: $white;
+				position: absolute;
+				left: 1%;
+				top: (16 + 4) * -1px;
+				width: 98%;
+							
+				th {
+					padding: 2px 10px;					
+				}
+			}
+			&:nth-child(2) {
+				background-color: $shade2;
+				border-bottom: $borderThickness $line1 solid;
+			
+				th {
+					position: relative;
+					
+					span {
+						background-color: $shade2;
+						border: $borderThickness $shade3 solid;
+						cursor: pointer;
+						display: block;
+						font-size: 13 / 16 * 1em;
+						height: 3 * 1.3em;
+						line-height: 1.3em;
+						margin: -3 * 1.3em 0 0 0;						
+						overflow: hidden;
+						padding: 3px 5px;
+						position: absolute;
+						text-transform: none;
+						@include transition(background-color 200ms ease);
+						transition-property: background-color, color;
+						width: (($colWidth - $gutter) / 2 - 10) * 1px;
+						z-index: 9;
+						
+						&:after {
+							bottom: 0;
+							content: "";
+							left: 0;
+							position: absolute;
+							right: 0;
+							top: 0;  
+							
+							/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#edeff1+0,edeff1+100&0+0,0+80,1+100 */
+							background: -moz-linear-gradient(left, $shade2RGBA0 0%, $shade2RGBA0 70%, $shade2RGBA1 100%); /* FF3.6-15 */
+							background: -webkit-linear-gradient(left, $shade2RGBA0 0%,$shade2RGBA0 70%,$shade2RGBA1 100%); /* Chrome10-25,Safari5.1-6 */
+							background: linear-gradient(to right, $shade2RGBA0 0%,$shade2RGBA0 70%,$shade2RGBA1 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+							filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00edeff1', endColorstr='#{$shade2}',GradientType=1 ); /* IE6-9 */
+						}
+						
+						&.active {
+							background-color: $primary;
+							border: $borderThickness $primary solid;
+							@include box-shadow(3px,3px,10px,0px,$shadow);
+							width: ($colWidth + $gutter) * 1px; //- 20 - 10
+							z-index: 99;
+							
+							a {
+								bottom: 3px;
+								color: $shade1;
+								position: absolute;
+								right: 5px;
+								
+								&:after {
+									background-color: $shade1;
+									content: " ";
+									display: inline-block;
+									margin-left: 5px;
+									width: 14px; height: 14px;									
+								}
+							}
+							&:after {
+								display: none;
+							}
+						}						
+						
+						//word-break: break-all;
+						//word-wrap: break-word;
+						//text-overflow: ellipsis;
+						//display: -webkit-box;
+//						-webkit-line-clamp: 3;
+//						-webkit-box-orient: vertical;
+					}
+				}
+			}
+			&:nth-child(3) {
+				background-color: $shade2;				
+			}			
+		}
+	}
+	
+	tbody {
+		//max-width: 100%;
+		//overflow: visible;
+		@include border-radius(0px, 0px, 4px, 4px);
+		border-top-style: none;
+		max-height: 500px;		
+		
+		td {			
+			a.resultIndicator {
+				background-color: $shade2;
+				border-bottom: $borderThicknessResult $primary solid;
+				display: block;			
+				width: 100%;
+				
+				@include transition(all 200ms ease);
+				
+				&:hover { 
+					background-color: $primary;
+					color: $white;
+				}
+			}						
+		}		
+	}	
+}
+
+
+/*
+ * TABLE WRAPPER
+ * Used for XL tables
+ */
+
 .tablewrap {
 	width: 100%;
 	overflow-x: scroll;
@@ -83,140 +282,14 @@ table {
 	&:after {
 		content: "";
 		position: absolute;
-		width: 1 / 12 * $sitewidth * 1px;
+		width: 1 / 12 * $siteWidth * 1px;
 		top: 0;
 		bottom: 0;
 		right: 0;
 		/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#edeff1+0,edeff1+100&0+0,1+100 */
-		background: -moz-linear-gradient(left, rgba(237,239,241,0) 0%, rgba(237,239,241,1) 100%); /* FF3.6-15 */
-		background: -webkit-linear-gradient(left, rgba(237,239,241,0) 0%,rgba(237,239,241,1) 100%); /* Chrome10-25,Safari5.1-6 */
-		background: linear-gradient(to right, rgba(237,239,241,0) 0%,rgba(237,239,241,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00edeff1', endColorstr='#edeff1',GradientType=1 ); /* IE6-9 */
+		background: -moz-linear-gradient(left, $shade1RGBA0 0%, $shade1RGBA1 100%); /* FF3.6-15 */
+		background: -webkit-linear-gradient(left, $shade1RGBA0 0%,$shade1RGBA1 100%); /* Chrome10-25,Safari5.1-6 */
+		background: linear-gradient(to right, $shade1RGBA0 0%,$shade1RGBA1 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00edeff1', endColorstr='#{$shade1}',GradientType=1 ); /* IE6-9 */
 	}
-}
-table.results {
-	
-	overflow-x: scroll;
-	overflow-y: visible;
-	margin-right: 1 / 12 * $sitewidth * 1px;
-	max-height: 500px; height: auto;
-	
-	&:after {
-		content: "\00A0";
-		display: block;
-		width: 1 / 12 * $sitewidth * 1px;
-	    position: absolute;
-	    top: 0;
-		right: 1 / 12 * $sitewidth * -1px;
-	}
-	
-	//width: 100%;
-	//display: block;
-	
-	th, td {
-		width: (1 / 12 * $sitewidth - 20) * 1px;
-		text-align: center;
-		
-		&:first-child {
-			width: (2 / 12 * $sitewidth - 20) * 1px;
-			position: relative;
-			text-align: left;
-			span { 
-				width: (2 / 12 * $sitewidth - 20) * 1px;
-				position: absolute; 
-				padding: 5px 10px;
-				display: block;
-				top: 0;
-				left: 0;
-				bottom: 0;
-				background-color: $transWhite;
-				line-height: 1.8em;
-				.active & { border-right: 1px $line1 solid;}
-			}
-		}
-	}
-	
-	thead {
-		position: relative;
-		border-left: $borderThickness $primary solid;
-		border-right: $borderThickness $primary solid;
-		border-top: $borderThickness $primary solid;
-		@include border-radius(4px, 4px, 0px, 0px);		
-		
-		tr {
-			
-			&:nth-child(1) {
-				position: absolute;
-				background-color: $primary;
-				color: $white;
-				top: (16 + 4) * -1px;
-				width: 98%;
-				left: 1%;
-							
-				th {
-					padding: 2px 10px;					
-				}
-			}
-			&:nth-child(2) {
-				background-color: $shade3;
-				border-bottom: $borderThickness $line1 solid;
-			
-				th {
-					position: relative;
-					
-					//line-height: 2em;
-					//padding: 0;
-					
-					span {
-						position: absolute;
-						display: block;
-						border: $borderThickness $primary solid;
-						margin: -3em 5px 0 5px;
-						padding: 5px;
-						
-						//width: (1 / 12 * $sitewidth - 20) * 1px;
-						background-color: $shade2;
-//						z-index: 10;
-						line-height: 1em;
-						text-transform: none;
-						
-						height: 3em;
-						overflow-y: hidden;
-					}
-				}
-			}
-			&:nth-child(3) {
-				background-color: $shade3;
-				
-			}			
-		}
-	}
-	
-	tbody {
-		//max-width: 100%;
-		//overflow: visible;
-		border-top-style: none;
-		max-height: 500px;
-		@include border-radius(0px, 0px, 4px, 4px);
-		
-		td {
-			a.resultIndicator {
-				display: block;
-				width: 100%;
-				background-color: $shade1;
-				text-align: center;
-				border-bottom: $borderThicknessResult $primary solid;
-				
-				@include transition(all 200ms ease);
-				
-				&:hover { 
-					background-color: $primary;
-					color: $white;
-				}
-			}
-						
-		}
-		
-	}
-	
 }

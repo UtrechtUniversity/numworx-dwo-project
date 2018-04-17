@@ -2,15 +2,37 @@
  * GENERAL 
  */
 
-$sitewidth : 1342; //px
-$headerHeight : 60; //px
-$navWidth : 200; //px
+$siteWidth : 1342; //px TODO: remove
+ 
+$siteWidthTablet : 1024; //px
+$siteWidthDesktop : 1366; //px
+$siteWidthDesktopWide: 1920; //px
+
+$siteMargin : 22; //px
+
+$headerHeight : 50; //px
+$subpanelHeaderHeight : 58; //px
+
+$navWidth : 54; //px   72
+$navWidthExpanded: 212; //px
+$navWidthLibraryPage : 192; //px   72
+
+$dialogHeight: 150;
+
+/*
+ * MEDIA QUERIES
+ */
+
+$mediaQueryDesktop : "only screen and (min-width : #{$siteWidthDesktop}px)";
+$mediaQueryDesktopWide : "only screen and (min-width : #{$siteWidthDesktopWide}px)";
 
 
 /*
  * GRID
  */ 
-$gutter : 30; //px
+$gutter : 18; //px
+$colWidth : 140; //px
+
 $borderThickness : 2px;
 $borderThicknessResult : 5px;
 
@@ -33,30 +55,31 @@ $defaultRadius: 4px;
  * COLORS
  */
 
-$primary: #2d70b5;
-$primaryDark: #314770;
-$primaryLight: #8fbde1;
+$black: #000000;
+$white: #ffffff;
 
-$shade1: #dbdee0;
-$shade2: #edeff1;
-$shade3: #d1e3f3;
+$primaryLight: #7297c7; // 13
+$primary: #1b75bb; // 14
+$primaryDark: #314770; // 15
+
+$shade1: #e4f2fb; //10
+$shade1RGBA0: rgba(228,242,251,0); 
+$shade1RGBA1: rgba(228,242,251,1); 
+$shade2: #d2e5f5; //11
+$shade2RGBA0: rgba(210,229,245,0); 
+$shade2RGBA1: rgba(210,229,245,1); 
+$shade3: #aac1dc; //12
+$shade10: #eff1f3; // 20
+$shade11: #dde0e3; // 20
+$shade12: #a8abb1; // 20
+$shade13: #798291; // 20
+
 
 $line1: #dadbdd;
 
 $danger: #ff0000;
 
 $transWhite: rgba(255,255,255,0.8);
-
-
-//OLD, to be replaced:
-$textOnPrimary: #ffffff;
-
-$black: #000000;
-$white: #ffffff;
-$offwhite: #d1e3f3;
-
-$grey: #a7aab0;
-$greyLight: #dbdee0;
+$transBlack: rgba(0,0,0,0.7);
 
 $shadow: rgba(0,0,0,0.5);
-$buttonTextColor: #ffffff;
