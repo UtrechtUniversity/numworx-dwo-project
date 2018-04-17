@@ -87,10 +87,10 @@ jarUrlPath=FILE:jars
     tomcat 8.0 configuration, note the performance of org.apache.commons.dbcp.BasicDataSourceFactory
     is not yet tested in production. note tomcat 8.5 has more changes particular for
     credential realms. 
+               factory="org.apache.commons.dbcp.BasicDataSourceFactory"  Not in docker:tomcat8 fatal, use default
     -->
     <Resource abandonWhenPercentageFull="50" auth="Container" 
               driverClassName="com.mysql.jdbc.Driver" 
-              factory="org.apache.commons.dbcp.BasicDataSourceFactory"
               jdbcInterceptors="ResetAbandonedTimer" 
               logAbandoned="true" maxTotal="100" maxIdle="50" 
               maxWaitMillis="10000" minEvictableIdleTimeMillis="60000" minIdle="30" 
