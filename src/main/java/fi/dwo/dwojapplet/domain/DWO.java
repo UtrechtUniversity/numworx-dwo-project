@@ -750,85 +750,85 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 
     public static boolean SEQUENCE = true;
 
-    /**
-     * Register a user in the system. Als links a user to a school.
-     *
-     * @param username The username of the user.
-     * @param password The password of the user.
-     * @param rePassword The re-password for the user. It is used to check for a
-     * typing error.
-     * @param firstname The firstname of the user.
-     * @param middlename The middlename of the user. <br>
-     * e.g: <code>Van</code>
-     * @param lastname The lastname (familyname) of the user.
-     * @param email The e-mail address of the user.
-     * @param schoolLogin The schoolloginname of the school of the user.
-     * @param group The group from the user.
-     * @param groupPassword The password corresponding with the specified group
-     * and the school.
-     * @return If the user was successfully registered true is returned.
-     * Otherwise false is returned.
-     * @throws fi.dwo.commons.exceptions.RegisterException
-     *
-     */
-    public boolean register(String username, String password, String rePassword, String firstname, String middlename,
-            String lastname, String email, String schoolLogin, Group group, String groupPassword)
-            throws RegisterException {
-
-        String[] arguments = new String[2];
-        // checks:
-        // no spaces (trimmed)
-        // ascii only
-        // aselect: ....
-        if (isEmpty(username)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIR_USERNAME);
-            arguments[1] = TextMapper.getText(TextMapper.GUIR_REGISTERINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (!isValid(username)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIR_USERNAME);
-            arguments[1] = TextMapper.getText(TextMapper.GUIR_REGISTERINFO);
-            throw new RegisterException(RegisterException.RE_WRONG_FORMAT, arguments);
-        } else if (isEmpty(password)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIR_PASSWORD);
-            arguments[1] = TextMapper.getText(TextMapper.GUIR_REGISTERINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (isEmpty(firstname)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIR_FIRSTNAME);
-            arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (isEmpty(lastname)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIR_LASTNAME);
-            arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (isEmpty(email)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIR_EMAIL);
-            arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (!isValidEmail(email)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIR_EMAIL);
-            arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
-            throw new RegisterException(RegisterException.RE_WRONG_EMAILFORMAT, arguments);
-        } else if (isEmpty(schoolLogin)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIR_SCHOOLLOGIN);
-            arguments[1] = TextMapper.getText(TextMapper.GUIR_SCHOOLINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (group == null) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIR_SCHOOLGROUP);
-            arguments[1] = TextMapper.getText(TextMapper.GUIR_SCHOOLINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (isEmpty(groupPassword)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIR_SCHOOLPASSWORD);
-            arguments[1] = TextMapper.getText(TextMapper.GUIR_SCHOOLINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        }
-
-        if (!password.equals(rePassword)) {
-            throw new RegisterException(RegisterException.RE_WRONG_SECOND_PASSWORD);
-        } else {
-            return PersistenceFacade.instance().register(username, password, firstname, middlename, lastname, email,
-                    schoolLogin, group, groupPassword);
-        }
-    }
+//    /**
+//     * Register a user in the system. Als links a user to a school.
+//     *
+//     * @param username The username of the user.
+//     * @param password The password of the user.
+//     * @param rePassword The re-password for the user. It is used to check for a
+//     * typing error.
+//     * @param firstname The firstname of the user.
+//     * @param middlename The middlename of the user. <br>
+//     * e.g: <code>Van</code>
+//     * @param lastname The lastname (familyname) of the user.
+//     * @param email The e-mail address of the user.
+//     * @param schoolLogin The schoolloginname of the school of the user.
+//     * @param group The group from the user.
+//     * @param groupPassword The password corresponding with the specified group
+//     * and the school.
+//     * @return If the user was successfully registered true is returned.
+//     * Otherwise false is returned.
+//     * @throws fi.dwo.commons.exceptions.RegisterException
+//     *
+//     */
+//    public boolean register(String username, String password, String rePassword, String firstname, String middlename,
+//            String lastname, String email, String schoolLogin, Group group, String groupPassword)
+//            throws RegisterException {
+//
+//        String[] arguments = new String[2];
+//        // checks:
+//        // no spaces (trimmed)
+//        // ascii only
+//        // aselect: ....
+//        if (isEmpty(username)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIR_USERNAME);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIR_REGISTERINFO);
+//            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
+//        } else if (!isValid(username)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIR_USERNAME);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIR_REGISTERINFO);
+//            throw new RegisterException(RegisterException.RE_WRONG_FORMAT, arguments);
+//        } else if (isEmpty(password)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIR_PASSWORD);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIR_REGISTERINFO);
+//            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
+//        } else if (isEmpty(firstname)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIR_FIRSTNAME);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
+//            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
+//        } else if (isEmpty(lastname)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIR_LASTNAME);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
+//            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
+//        } else if (isEmpty(email)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIR_EMAIL);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
+//            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
+//        } else if (!isValidEmail(email)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIR_EMAIL);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
+//            throw new RegisterException(RegisterException.RE_WRONG_EMAILFORMAT, arguments);
+//        } else if (isEmpty(schoolLogin)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIR_SCHOOLLOGIN);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIR_SCHOOLINFO);
+//            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
+//        } else if (group == null) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIR_SCHOOLGROUP);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIR_SCHOOLINFO);
+//            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
+//        } else if (isEmpty(groupPassword)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIR_SCHOOLPASSWORD);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIR_SCHOOLINFO);
+//            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
+//        }
+//
+//        if (!password.equals(rePassword)) {
+//            throw new RegisterException(RegisterException.RE_WRONG_SECOND_PASSWORD);
+//        } else {
+//            return PersistenceFacade.instance().register(username, password, firstname, middlename, lastname, email,
+//                    schoolLogin, group, groupPassword);
+//        }
+//    }
 
     /**
      * Returns all the available groups.
@@ -1029,57 +1029,57 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     //
     // }
 
-    /**
-     * Change the current user his account.
-     *
-     * @param password The current password of the user. It will be used to
-     * validate the current user.
-     * @param newPassword The new password of the user.
-     * @param reNewPassword The re-password for the user. It is used to check
-     * for a typing error.
-     * @param firstName The firstname of the user.
-     * @param middleName The middlename of the user. <br>
-     * e.g: <code>Van</code>
-     * @param lastName The lastname (familyname) of the user.
-     * @param email The e-mail address of the user.
-     * @param schoolLogin The schoolloginname of the school of the user.
-     * @param group The group from the user.
-     * @param groupPassword The password corresponding with the specified group
-     * and the school.
-     * @throws fi.dwo.commons.exceptions.RegisterException
-     *
-     */
-    public void changeAccount(String password, String newPassword, String reNewPassword, String firstName,
-            String middleName, String lastName, String email, String schoolLogin, Group group, String groupPassword)
-            throws RegisterException {
-
-        validateAccount(password, firstName, lastName, email);
-
-        String[] arguments = new String[2];
-        if (isEmpty(schoolLogin)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIP_SCHOOLLOGIN);
-            arguments[1] = TextMapper.getText(TextMapper.GUIP_SCHOOLINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (group == null) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIP_SCHOOLGROUP);
-            arguments[1] = TextMapper.getText(TextMapper.GUIP_SCHOOLINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (isEmpty(groupPassword)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIP_SCHOOLPASSWORD);
-            arguments[1] = TextMapper.getText(TextMapper.GUIP_SCHOOLINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        }
-
-        if (!newPassword.equals(reNewPassword)) {
-            throw new RegisterException(RegisterException.RE_WRONG_SECOND_PASSWORD);
-        } else {
-            PersistenceFacade.instance().addToSchool(DwoHelper.getCurrentFacadeUser(), schoolLogin, group,
-                    groupPassword);
-            PersistenceFacade.instance().changeAccount(DwoHelper.getCurrentFacadeUser(), password, newPassword,
-                    firstName, middleName, lastName, email);
-        }
-
-    }
+//    /**
+//     * Change the current user his account.
+//     *
+//     * @param password The current password of the user. It will be used to
+//     * validate the current user.
+//     * @param newPassword The new password of the user.
+//     * @param reNewPassword The re-password for the user. It is used to check
+//     * for a typing error.
+//     * @param firstName The firstname of the user.
+//     * @param middleName The middlename of the user. <br>
+//     * e.g: <code>Van</code>
+//     * @param lastName The lastname (familyname) of the user.
+//     * @param email The e-mail address of the user.
+//     * @param schoolLogin The schoolloginname of the school of the user.
+//     * @param group The group from the user.
+//     * @param groupPassword The password corresponding with the specified group
+//     * and the school.
+//     * @throws fi.dwo.commons.exceptions.RegisterException
+//     *
+//     */
+//    public void changeAccount(String password, String newPassword, String reNewPassword, String firstName,
+//            String middleName, String lastName, String email, String schoolLogin, Group group, String groupPassword)
+//            throws RegisterException {
+//
+//        validateAccount(password, firstName, lastName, email);
+//
+//        String[] arguments = new String[2];
+//        if (isEmpty(schoolLogin)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIP_SCHOOLLOGIN);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIP_SCHOOLINFO);
+//            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
+//        } else if (group == null) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIP_SCHOOLGROUP);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIP_SCHOOLINFO);
+//            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
+//        } else if (isEmpty(groupPassword)) {
+//            arguments[0] = TextMapper.getText(TextMapper.GUIP_SCHOOLPASSWORD);
+//            arguments[1] = TextMapper.getText(TextMapper.GUIP_SCHOOLINFO);
+//            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
+//        }
+//
+//        if (!newPassword.equals(reNewPassword)) {
+//            throw new RegisterException(RegisterException.RE_WRONG_SECOND_PASSWORD);
+//        } else {
+//            PersistenceFacade.instance().addToSchool(DwoHelper.getCurrentFacadeUser(), schoolLogin, group,
+//                    groupPassword);
+//            PersistenceFacade.instance().changeAccount(DwoHelper.getCurrentFacadeUser(), password, newPassword,
+//                    firstName, middleName, lastName, email);
+//        }
+//
+//    }
 
     /**
      * Change the current user his account.

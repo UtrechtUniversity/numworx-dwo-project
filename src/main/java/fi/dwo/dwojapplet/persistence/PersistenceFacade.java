@@ -1513,53 +1513,53 @@ public class PersistenceFacade {
 //        }
 //    }
 
-    /**
-     * Register a user in the system. Als links a user to a school.
-     *
-     * @param username The username of the user.
-     * @param password The password of the user.
-     * @param firstname The firstname of the user.
-     * @param middlename The middlename of the user. <br>
-     * e.g: <code>Van</code>
-     * @param lastname The lastname (familyname) of the user.
-     * @param email The e-mail address of the user.
-     * @param schoolLogin The schoolloginname of the school of the user.
-     * @param group The group from the user.
-     * @param groupPassword The password corresponding with the specified group
-     * and the school.
-     * @return If the user was successfully registered true is returned.
-     * Otherwise false is returned.
-     * @throws fi.dwo.commons.exceptions.RegisterException
-     *
-     */
-    public boolean register(String username, String password, String firstname,
-            String middlename, String lastname, String email,
-            String schoolLogin, Group group, String groupPassword)
-            throws RegisterException {
-        password = MD5.getHashString(password);
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            return dbAccess.register(username, password, firstname,
-                    middlename, lastname, email, schoolLogin, group
-                    .getGroupID(), groupPassword);
-        }
-        catch (IOException e) {
-            throw new RegisterException(RegisterException.EX_IO);
-        }
-        catch (XmlRpcException e) {
-            if (e.code != 0) {
-                throw new RegisterException(e.code, username);
-            } else {
-                throw new RegisterException(RegisterException.EX_XML_RPC);
-            }
-        }
-        catch (SQLException e) {
-            throw new RegisterException(RegisterException.EX_DB);
-        }
-        catch (DwoXmlRpcException e) {
-            throw new RegisterException(e.code, username);
-        }
-    }
+//    /**
+//     * Register a user in the system. Als links a user to a school.
+//     *
+//     * @param username The username of the user.
+//     * @param password The password of the user.
+//     * @param firstname The firstname of the user.
+//     * @param middlename The middlename of the user. <br>
+//     * e.g: <code>Van</code>
+//     * @param lastname The lastname (familyname) of the user.
+//     * @param email The e-mail address of the user.
+//     * @param schoolLogin The schoolloginname of the school of the user.
+//     * @param group The group from the user.
+//     * @param groupPassword The password corresponding with the specified group
+//     * and the school.
+//     * @return If the user was successfully registered true is returned.
+//     * Otherwise false is returned.
+//     * @throws fi.dwo.commons.exceptions.RegisterException
+//     *
+//     */
+//    public boolean register(String username, String password, String firstname,
+//            String middlename, String lastname, String email,
+//            String schoolLogin, Group group, String groupPassword)
+//            throws RegisterException {
+//        password = MD5.getHashString(password);
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            return dbAccess.register(username, password, firstname,
+//                    middlename, lastname, email, schoolLogin, group
+//                    .getGroupID(), groupPassword);
+//        }
+//        catch (IOException e) {
+//            throw new RegisterException(RegisterException.EX_IO);
+//        }
+//        catch (XmlRpcException e) {
+//            if (e.code != 0) {
+//                throw new RegisterException(e.code, username);
+//            } else {
+//                throw new RegisterException(RegisterException.EX_XML_RPC);
+//            }
+//        }
+//        catch (SQLException e) {
+//            throw new RegisterException(RegisterException.EX_DB);
+//        }
+//        catch (DwoXmlRpcException e) {
+//            throw new RegisterException(e.code, username);
+//        }
+//    }
 
 //    /**
 //     * Logs a user in into the system. The user-data will be checked in the
@@ -1721,48 +1721,48 @@ public class PersistenceFacade {
      * SCHOOL FUNCTIONALITY
      * =============================================================================
      */
-    /**
-     * Connects a user to a school.
-     *
-     * @param user The user to connect.
-     * @param schoolLogin The schoolname.
-     * @param group The usergroup of the user.
-     * @param groupPassword The password of the usergroup.
-     * @return fi.dwo.client.domain.School The school of the user.
-     * @throws fi.dwo.commons.exceptions.RegisterException
-     *
-     */
-    public School addToSchool(User user, String schoolLogin, Group group,
-            String groupPassword) throws RegisterException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                MapperIF mapper = MapperCreator.instance(School.class);
-                Hashtable result = dbAccess.addToSchool(user.getUserID(),
-                        schoolLogin, group.getGroupID(), groupPassword);
-                return (School) mapper.getObjectFromReturn(result);
-            }
-            catch (IOException e) {
-                throw new RegisterException(RegisterException.EX_IO);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (RegisterException) getException(e, e.code);
-                } else {
-                    throw new RegisterException(RegisterException.EX_XML_RPC);
-                }
-            }
-            catch (SQLException e) {
-                throw new RegisterException(RegisterException.EX_DB);
-            }
-            catch (DwoXmlRpcException e) {
-                throw (RegisterException) getException(e, e.code);
-            }
-        }
-        catch (PersistenceException e) {
-            throw new RegisterException(RegisterException.EX_UNKNOWN_ERROR);
-        }
-    }
+//    /**
+//     * Connects a user to a school.
+//     *
+//     * @param user The user to connect.
+//     * @param schoolLogin The schoolname.
+//     * @param group The usergroup of the user.
+//     * @param groupPassword The password of the usergroup.
+//     * @return fi.dwo.client.domain.School The school of the user.
+//     * @throws fi.dwo.commons.exceptions.RegisterException
+//     *
+//     */
+//    public School addToSchool(User user, String schoolLogin, Group group,
+//            String groupPassword) throws RegisterException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                MapperIF mapper = MapperCreator.instance(School.class);
+//                Hashtable result = dbAccess.addToSchool(user.getUserID(),
+//                        schoolLogin, group.getGroupID(), groupPassword);
+//                return (School) mapper.getObjectFromReturn(result);
+//            }
+//            catch (IOException e) {
+//                throw new RegisterException(RegisterException.EX_IO);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (RegisterException) getException(e, e.code);
+//                } else {
+//                    throw new RegisterException(RegisterException.EX_XML_RPC);
+//                }
+//            }
+//            catch (SQLException e) {
+//                throw new RegisterException(RegisterException.EX_DB);
+//            }
+//            catch (DwoXmlRpcException e) {
+//                throw (RegisterException) getException(e, e.code);
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            throw new RegisterException(RegisterException.EX_UNKNOWN_ERROR);
+//        }
+//    }
 
 //    /**
 //     * Creates a new school

@@ -245,21 +245,21 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.lang.String) object;
     }
 
-    @Override
-    public boolean register(java.lang.String a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e, java.lang.String f, java.lang.String g, int h, java.lang.String i) throws IOException, XmlRpcException {
-        Vector vv = new Vector(9);
-        vv.addElement(a);
-        vv.addElement(b);
-        vv.addElement(c);
-        vv.addElement(d);
-        vv.addElement(e);
-        vv.addElement(f);
-        vv.addElement(g);
-        vv.addElement(new Integer(h));
-        vv.addElement(i);
-        Object object = invoke("register", vv);
-        return ((Boolean) object).booleanValue();
-    }
+//    @Override
+//    public boolean register(java.lang.String a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e, java.lang.String f, java.lang.String g, int h, java.lang.String i) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(9);
+//        vv.addElement(a);
+//        vv.addElement(b);
+//        vv.addElement(c);
+//        vv.addElement(d);
+//        vv.addElement(e);
+//        vv.addElement(f);
+//        vv.addElement(g);
+//        vv.addElement(new Integer(h));
+//        vv.addElement(i);
+//        Object object = invoke("register", vv);
+//        return ((Boolean) object).booleanValue();
+//    }
 
 //    @Override
 //    public java.util.Hashtable login(java.lang.String a, java.lang.String b) throws IOException, XmlRpcException {
@@ -270,16 +270,16 @@ class DbAccessClient extends Client implements DbAccessIF {
 //        return (java.util.Hashtable) object;
 //    }
 
-    @Override
-    public java.util.Hashtable addToSchool(int a, java.lang.String b, int c, java.lang.String d) throws IOException, XmlRpcException {
-        Vector vv = new Vector(4);
-        vv.addElement(new Integer(a));
-        vv.addElement(b);
-        vv.addElement(new Integer(c));
-        vv.addElement(d);
-        Object object = invoke("addToSchool", vv);
-        return (java.util.Hashtable) object;
-    }
+//    @Override
+//    public java.util.Hashtable addToSchool(int a, java.lang.String b, int c, java.lang.String d) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(4);
+//        vv.addElement(new Integer(a));
+//        vv.addElement(b);
+//        vv.addElement(new Integer(c));
+//        vv.addElement(d);
+//        Object object = invoke("addToSchool", vv);
+//        return (java.util.Hashtable) object;
+//    }
 
 //    public boolean changeAccount(int a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e, java.lang.String f, java.lang.String g, int h) throws IOException, XmlRpcException {
 //        Vector vv = new Vector(8);
