@@ -203,20 +203,17 @@ public class SchoolclassesPresenter {
     public void connectStudents(String key) {
     eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDSTUDENTTOSCHOOLCLASS,
         schoolClassMap.get(key)));
-    //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @JsMethod
     public void connectTeachers(String key) {
     eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDTEACHERTOSCHOOLCLASS,
         schoolClassMap.get(key)));
-    //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @JsMethod
     public void editModules(String key) {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.EDITCOURSESOFSCHOOLCLASS, schoolClassMap.get(key)));
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 //
 //    @JsMethod

@@ -98,7 +98,7 @@ public class AddStudentToSchoolclassPresenter {
     @JsMethod
     public void FindStudentsOfTeacher(String username, String Firstname, String insertion, String familyName, String email) {
         Promise<List<DomStudent>> promise;
-        promise = manager.getStudentsInSchool();
+        promise = manager.getTeachersStudents();
         //TODO add get TeachersStudents() in gwt-lib;
         // onSuccess update view
         promise.then(new Success<List<DomStudent>, Void>() {
