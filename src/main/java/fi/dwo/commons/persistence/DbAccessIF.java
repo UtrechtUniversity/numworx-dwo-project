@@ -314,26 +314,26 @@ public interface DbAccessIF  {
     public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement, String iValue, String random) throws IOException, XmlRpcException,
             SQLException;
 
-    /**
-     * @param username
-     * @param password
-     * @param firstname
-     * @param middlename
-     * @param lastname
-     * @param email
-     * @param schoolLogin
-     * @param groupID
-     * @param groupPassword
-     * @return boolean
-     * @throws fi.dwo.client.system.RegisterException
-     * @throws java.sql.SQLException
-     *
-     */
-    public boolean register(String username, String password, String firstname,
-            String middlename, String lastname, String email,
-            String schoolLogin, int groupID, String groupPassword)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException;
+//    /**
+//     * @param username
+//     * @param password
+//     * @param firstname
+//     * @param middlename
+//     * @param lastname
+//     * @param email
+//     * @param schoolLogin
+//     * @param groupID
+//     * @param groupPassword
+//     * @return boolean
+//     * @throws fi.dwo.client.system.RegisterException
+//     * @throws java.sql.SQLException
+//     *
+//     */
+//    public boolean register(String username, String password, String firstname,
+//            String middlename, String lastname, String email,
+//            String schoolLogin, int groupID, String groupPassword)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException;
 
 //    /**
 //     * @param username
@@ -345,19 +345,19 @@ public interface DbAccessIF  {
 //    public Hashtable login(String username, String password)
 //            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-    /**
-     * @param userID
-     * @param schoolLogin
-     * @param groupID
-     * @param groupPassword
-     * @return java.util.Hashtable
-     * @throws fi.dwo.client.system.RegisterException
-     * @throws java.sql.SQLException
-     *
-     */
-    public Hashtable addToSchool(int userID, String schoolLogin, int groupID,
-            String groupPassword) throws DwoXmlRpcException, IOException,
-            XmlRpcException, SQLException;
+//    /**
+//     * @param userID
+//     * @param schoolLogin
+//     * @param groupID
+//     * @param groupPassword
+//     * @return java.util.Hashtable
+//     * @throws fi.dwo.client.system.RegisterException
+//     * @throws java.sql.SQLException
+//     *
+//     */
+//    public Hashtable addToSchool(int userID, String schoolLogin, int groupID,
+//            String groupPassword) throws DwoXmlRpcException, IOException,
+//            XmlRpcException, SQLException;
 
 //TODO V1_2 obsolete
 //    /**
