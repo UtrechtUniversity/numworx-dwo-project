@@ -1071,107 +1071,107 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 //        return true;
 //    }
 
-    /**
-     * Add a new user and the user into a school.
-     *
-     * @param username
-     * @param password
-     * @param firstname
-     * @param middlename
-     * @param lastname
-     * @param email
-     * @param schoolLogin
-     * @param groupID
-     * @param groupPassword
-     * @return boolean
-     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
-     * @throws java.sql.SQLException
-     */
-    //TODO V1_3 DONE Added defaults and hasRole insertion
-    @Override
-    public boolean register(String username, String password, String firstname,
-            String middlename, String lastname, String email,
-            String schoolLogin, int groupID, String groupPassword)
-            throws DwoXmlRpcException, SQLException {
-        if (usernameExists(username)) {
-            throw new DwoXmlRpcException(DwoXmlRpcException.EXC_USER_EXISTS);
-        } else {
-            int schoolGroupID = schoolGroupExists(schoolLogin, groupID,
-                    groupPassword);
-            if (schoolGroupID == -1) {
-                throw new DwoXmlRpcException(
-                        DwoXmlRpcException.EXC_UNKNOWN_SCHOOLGROUP);
-            } else {
-
-                Connection c = getConnection();
-                c.setAutoCommit(false);
-                //First add user
-                PreparedStatement ps = getStatement(QRY_INSERT_USER_SCHOOLGROUP);
-                ps.setInt(1, schoolGroupID);
-                ps.setString(2, firstname);
-                ps.setString(3, middlename);
-                ps.setString(4, lastname);
-                ps.setString(5, username);
-                ps.setString(6, password);
-                ps.setString(7, email);
-
-                try {
-                    ps.execute();
-                } catch (SQLException e) {
-                    if (e.getErrorCode() == 1062) {
-                        /* The user already exists */
-                        throw new DwoXmlRpcException(
-                                DwoXmlRpcException.EXC_USER_EXISTS);
-                    } else {
-                        throw e;
-                    }
-                }
-
-                ResultSet rs = ps.getGeneratedKeys();
-                int id = -1;
-                if (rs.next()) {
-                    id = rs.getInt(1);
-                    ps = getStatement(QRY_ADD_USER_TO_SCHOOL);
-
-                    ps.setInt(1, id);
-                    ps.setInt(2, schoolGroupID);
-
-                    ps.execute();
-                    int count = ps.getUpdateCount();
-                    if (count != 1) {
-                        LOG.log(Level.SEVERE, "Error while adding user {0} to schoolgroup {1}.", new Object[]{id, schoolGroupID});
-                        id = -1;
-                        c.rollback();
-                    }
-                } else {
-                    StringBuilder userData = new StringBuilder();
-                    ps.setString(1, firstname);
-                    ps.setString(2, middlename);
-                    ps.setString(3, lastname);
-                    ps.setString(4, username);
-                    ps.setString(5, password);
-                    ps.setString(6, email);
-                    userData.append(firstname);
-                    userData.append(" ");
-                    userData.append(middlename);
-                    userData.append(" ");
-                    userData.append(lastname);
-                    userData.append(" ");
-                    userData.append(username);
-                    userData.append(" ");
-                    if (LOG.getLevel() == Level.FINEST) {
-                        userData.append(password);// only log unencrypted password at highest log level.
-                        userData.append(" ");
-                    }
-                    userData.append(email);
-                    LOG.log(Level.SEVERE, "Error while adding user data to the datbase: {0}", new Object[]{userData});
-                    c.rollback();
-                }
-                c.commit();
-            }
-        }
-        return true;
-    }
+//    /**
+//     * Add a new user and the user into a school.
+//     *
+//     * @param username
+//     * @param password
+//     * @param firstname
+//     * @param middlename
+//     * @param lastname
+//     * @param email
+//     * @param schoolLogin
+//     * @param groupID
+//     * @param groupPassword
+//     * @return boolean
+//     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
+//     * @throws java.sql.SQLException
+//     */
+//    //TODO V1_3 DONE Added defaults and hasRole insertion
+//    @Override
+//    public boolean register(String username, String password, String firstname,
+//            String middlename, String lastname, String email,
+//            String schoolLogin, int groupID, String groupPassword)
+//            throws DwoXmlRpcException, SQLException {
+//        if (usernameExists(username)) {
+//            throw new DwoXmlRpcException(DwoXmlRpcException.EXC_USER_EXISTS);
+//        } else {
+//            int schoolGroupID = schoolGroupExists(schoolLogin, groupID,
+//                    groupPassword);
+//            if (schoolGroupID == -1) {
+//                throw new DwoXmlRpcException(
+//                        DwoXmlRpcException.EXC_UNKNOWN_SCHOOLGROUP);
+//            } else {
+//
+//                Connection c = getConnection();
+//                c.setAutoCommit(false);
+//                //First add user
+//                PreparedStatement ps = getStatement(QRY_INSERT_USER_SCHOOLGROUP);
+//                ps.setInt(1, schoolGroupID);
+//                ps.setString(2, firstname);
+//                ps.setString(3, middlename);
+//                ps.setString(4, lastname);
+//                ps.setString(5, username);
+//                ps.setString(6, password);
+//                ps.setString(7, email);
+//
+//                try {
+//                    ps.execute();
+//                } catch (SQLException e) {
+//                    if (e.getErrorCode() == 1062) {
+//                        /* The user already exists */
+//                        throw new DwoXmlRpcException(
+//                                DwoXmlRpcException.EXC_USER_EXISTS);
+//                    } else {
+//                        throw e;
+//                    }
+//                }
+//
+//                ResultSet rs = ps.getGeneratedKeys();
+//                int id = -1;
+//                if (rs.next()) {
+//                    id = rs.getInt(1);
+//                    ps = getStatement(QRY_ADD_USER_TO_SCHOOL);
+//
+//                    ps.setInt(1, id);
+//                    ps.setInt(2, schoolGroupID);
+//
+//                    ps.execute();
+//                    int count = ps.getUpdateCount();
+//                    if (count != 1) {
+//                        LOG.log(Level.SEVERE, "Error while adding user {0} to schoolgroup {1}.", new Object[]{id, schoolGroupID});
+//                        id = -1;
+//                        c.rollback();
+//                    }
+//                } else {
+//                    StringBuilder userData = new StringBuilder();
+//                    ps.setString(1, firstname);
+//                    ps.setString(2, middlename);
+//                    ps.setString(3, lastname);
+//                    ps.setString(4, username);
+//                    ps.setString(5, password);
+//                    ps.setString(6, email);
+//                    userData.append(firstname);
+//                    userData.append(" ");
+//                    userData.append(middlename);
+//                    userData.append(" ");
+//                    userData.append(lastname);
+//                    userData.append(" ");
+//                    userData.append(username);
+//                    userData.append(" ");
+//                    if (LOG.getLevel() == Level.FINEST) {
+//                        userData.append(password);// only log unencrypted password at highest log level.
+//                        userData.append(" ");
+//                    }
+//                    userData.append(email);
+//                    LOG.log(Level.SEVERE, "Error while adding user data to the datbase: {0}", new Object[]{userData});
+//                    c.rollback();
+//                }
+//                c.commit();
+//            }
+//        }
+//        return true;
+//    }
 
     /**
      * @param username
@@ -1281,46 +1281,46 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return isCorrect;
     }
 
-    /**
-     * @param userID
-     * @param schoolLogin
-     * @param groupID
-     * @param groupPassword
-     * @return java.util.Hashtable
-     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
-     * @throws java.sql.SQLException
-     *
-     */
-    @Override
-    public Hashtable addToSchool(int userID, String schoolLogin, int groupID,
-            String groupPassword) throws DwoXmlRpcException, SQLException {
-        Hashtable result = null;
-        int schoolGroupID = schoolGroupExists(schoolLogin, groupID,
-                groupPassword);
-        if (schoolGroupID == -1) {
-            throw new DwoXmlRpcException(
-                    DwoXmlRpcException.EXC_UNKNOWN_SCHOOLGROUP);
-        } else {
-            PreparedStatement ps = getStatement(QRY_ADD_USER_TO_SCHOOL);
-            ps.setInt(1, userID);
-            ps.setInt(2, schoolGroupID);
-            ps.execute();
-            ps.close();
-
-            ps = getStatement(QRY_UPDATE_DEFAULT_SCHOOLGROUP);
-            ps.setInt(2, schoolGroupID);
-            ps.setInt(1, userID);
-            ps.execute();
-            ps.close();
-
-            ps = getStatement(QRY_SELECT_SCHOOL_USER);
-            ps.setInt(1, userID);
-
-            result = executeQueryWithRecord(ps);
-        }
-
-        return result;
-    }
+//    /**
+//     * @param userID
+//     * @param schoolLogin
+//     * @param groupID
+//     * @param groupPassword
+//     * @return java.util.Hashtable
+//     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
+//     * @throws java.sql.SQLException
+//     *
+//     */
+//    @Override
+//    public Hashtable addToSchool(int userID, String schoolLogin, int groupID,
+//            String groupPassword) throws DwoXmlRpcException, SQLException {
+//        Hashtable result = null;
+//        int schoolGroupID = schoolGroupExists(schoolLogin, groupID,
+//                groupPassword);
+//        if (schoolGroupID == -1) {
+//            throw new DwoXmlRpcException(
+//                    DwoXmlRpcException.EXC_UNKNOWN_SCHOOLGROUP);
+//        } else {
+//            PreparedStatement ps = getStatement(QRY_ADD_USER_TO_SCHOOL);
+//            ps.setInt(1, userID);
+//            ps.setInt(2, schoolGroupID);
+//            ps.execute();
+//            ps.close();
+//
+//            ps = getStatement(QRY_UPDATE_DEFAULT_SCHOOLGROUP);
+//            ps.setInt(2, schoolGroupID);
+//            ps.setInt(1, userID);
+//            ps.execute();
+//            ps.close();
+//
+//            ps = getStatement(QRY_SELECT_SCHOOL_USER);
+//            ps.setInt(1, userID);
+//
+//            result = executeQueryWithRecord(ps);
+//        }
+//
+//        return result;
+//    }
 
 //    /**
 //     * @param userID

@@ -169,15 +169,15 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
                 random);
     }
 
-    @Override
-    public boolean register(String username, String password, String firstname,
-            String middlename, String lastname, String email,
-            String schoolLogin, int groupID, String groupPassword)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        return getDelegate().register(username, password, firstname, middlename,
-                lastname, email, schoolLogin, groupID, groupPassword);
-    }
+//    @Override
+//    public boolean register(String username, String password, String firstname,
+//            String middlename, String lastname, String email,
+//            String schoolLogin, int groupID, String groupPassword)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        return getDelegate().register(username, password, firstname, middlename,
+//                lastname, email, schoolLogin, groupID, groupPassword);
+//    }
 
     @Override
     public Hashtable login(String username, String password)
@@ -208,13 +208,13 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
         }
     }
 
-    @Override
-    public Hashtable addToSchool(int userID, String schoolLogin, int groupID,
-            String groupPassword) throws DwoXmlRpcException, IOException,
-            XmlRpcException, SQLException {
-        return getDelegate()
-                .addToSchool(userID, schoolLogin, groupID, groupPassword);
-    }
+//    @Override
+//    public Hashtable addToSchool(int userID, String schoolLogin, int groupID,
+//            String groupPassword) throws DwoXmlRpcException, IOException,
+//            XmlRpcException, SQLException {
+//        return getDelegate()
+//                .addToSchool(userID, schoolLogin, groupID, groupPassword);
+//    }
 
     //TODO V1_2 obsolete
 //    @Override
