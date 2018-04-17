@@ -41,10 +41,13 @@ public class AddTeacherToSchoolclassPresenter {
 
         void init();
 
-        void setSchoolClass(DomSchoolClassFull schoolClass);
+//        void setSchoolClass(DomSchoolClass schoolClass);
+        
         void showTeachers(Map<String, DomTeacher> teachers);
-//        void showTeachers(List<DomTeacher> teachers);
-//        void showShowModels(List<DomCourse> modules);
+
+        void setEmptyTableMessage();
+
+        void setsetLoadingTableMessage();        
     }
 
     public AddTeacherToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -66,7 +69,7 @@ public class AddTeacherToSchoolclassPresenter {
             public Promise<Void> call(Promise<DomSchoolClassFull> resolved) throws Exception {
                 //flip back to schoolclasses screen 
                 schoolClass = resolved.getValue();
-                view.setSchoolClass(schoolClass);
+//                view.setSchoolClass(schoolClass);
                 return null;
             }
 

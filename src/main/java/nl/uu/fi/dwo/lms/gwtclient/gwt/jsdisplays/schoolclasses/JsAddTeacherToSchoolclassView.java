@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses;
 
+import com.google.gwt.json.client.JSONObject;
+import fi.dwo.gwt.lib.rest.util.DomTeacherCodec;
 import java.util.Map;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddTeacherToSchoolclassPresenter;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
@@ -21,15 +23,29 @@ public class JsAddTeacherToSchoolclassView implements AddTeacherToSchoolclassPre
     public void init() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @Override
-    public void setSchoolClass(DomSchoolClassFull schoolClass) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+//
+//    @Override
+//    public void setSchoolClass(DomSchoolClassFull schoolClass) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
 
     @Override
     public void showTeachers(Map<String, DomTeacher> teachers) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JSONObject object = new JSONObject();
+        for(DomTeacher teacher : teachers.values()){
+            object.put(teacher.getId().getIdString(), DomTeacherCodec.CODEC.encode(teacher));
+        }
+        JsAddTeacherToSchoolclassDisplay.showTeachers(object.getJavaScriptObject());
+    }
+
+    @Override
+    public void setEmptyTableMessage() {
+        JsAddTeacherToSchoolclassDisplay.setEmptyTableMessage();
+    }
+
+    @Override
+    public void setsetLoadingTableMessage() {
+       JsAddTeacherToSchoolclassDisplay.setLoadingTableMessage();
     }
     
 }
