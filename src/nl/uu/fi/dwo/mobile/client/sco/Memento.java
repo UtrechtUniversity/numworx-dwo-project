@@ -241,6 +241,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		//instalOnBeforeUnload();
 		
 		ShareFacade.setSharedState(shareMap);
+		StudentModelLogger.destroy();
 	}
 
 	private void incAantalSessies() {

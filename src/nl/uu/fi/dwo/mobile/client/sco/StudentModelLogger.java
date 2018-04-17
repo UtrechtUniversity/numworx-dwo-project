@@ -81,13 +81,13 @@ public class StudentModelLogger implements Logging {
 	}
 
 	private void addToSet() {
-		if(logID != null && objectives != null)
-		{
-			StudentModelLogger old = all.put(logID, this);
-			if(old != null) {
-				attempts += old.attempts;
-				score += old.score;
-		}}
+//		if(logID != null && objectives != null)
+//		{
+//			StudentModelLogger old = all.put(logID, this);
+//			if(old != null && old != this) {
+//				attempts += old.attempts;
+//				score += old.score;
+//		}}
 	}
 
 	@Override
@@ -129,7 +129,7 @@ public class StudentModelLogger implements Logging {
 			if(attempts > 0 && objectives != null) {
 				double score = logItem.getDouble(SUCCESS_SCORE);
 				int size = objectives.size();
-				for (int i = 0; i > size; i++ ) {
+				for (int i = 0; i < size; i++ ) {
 					boolean[] objective = objectives.getBooleanArray(i);
 					for( int j = 0; j < objective.length; j++) {
 						if(objective[j]) {
