@@ -47,7 +47,7 @@
 						<input type="submit" name="submit" value="Aanmelden" />
 					</form>
 					<p>U kunt ook inloggen als gast. Uw werk wordt dan niet opgeslagen.</p>
-					<form action="javascript: void(0);" method="POST">
+					<form id="formLogin" action="javascript: void(0);" method="POST">
 						<input type="hidden" name="username" value="gast" />
 						<input type="hidden" name="password" password="" />
 						<input type="submit" name="submit" value="Log in als gast" />
@@ -83,10 +83,14 @@
 			</ul>
 		</nav>
 		
-		<section id="welcomeDisplayPanel" class="subpanel">
-			under construction
+		<section id="welcomeDisplayPanel" class="panel">
+			<div class="content">
+				<p>Welkomsttekst</p>
+			</div>
 		</section>
-		
+		<section id="accountDisplayPanel" class="panel">
+			<h1>Account</h1>
+		</section>
 	</main>
 
   </body>
