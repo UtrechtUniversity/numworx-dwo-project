@@ -11,6 +11,7 @@ import org.osgi.util.promise.Promises;
 import com.google.gwt.core.client.GWT;
 
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserCourseResultsRestCaller;
+import fi.dwo.gwt.lib.rest.util.PathId;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -35,7 +36,7 @@ public class SecuredUserResultsManager implements UserResultsManager {
 		rest.setDomDwoProfile(profile);
 		rest.setRestContext(context);
 		rest.setDomCourse(course);
-		service.getCourseResults(rest, defer);
+		service.getCourseResults(PathId.getId(context), rest, defer);
 		return defer.getPromise().map(new Function<List<DomStudentScoContext>, DomResultsPerStudentCourse>() {
 
 			@Override
