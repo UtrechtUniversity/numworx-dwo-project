@@ -26,7 +26,6 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 import org.osgi.util.promise.Promise;
-import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.SUCCESS_ROLE;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
@@ -221,45 +220,50 @@ class BootPanelController {
             public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
                 if(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name())){
                 switch (switchViewEvent.getEventValue()) {
-                    case ACCOUNT:
-                        presenterFactory.getAccountPresenter().init();
-                        break;
                     case LOGIN:
                         presenterFactory.getLoginPresenter().init();
                         break;
-              // case SWITCHSCHOOL:
-              // presenterFactory.getSwitchSchoolPresenter().init();
-              // break;
-              // case ACTIVERESULTS:
-              // //do nothing presenterFactory.getResultsPresenter().init();
-            // break;
+                    case WELCOME:
+                        presenterFactory.getWelcomePresenter().init();
+                        break;
+                    case ACCOUNT:
+                        presenterFactory.getAccountPresenter().init();
+                        break;
+                    case PEOPLE:
+                        eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+                        break;
                     case RESULTS:
-                        presenterFactory.getResultsPresenter().init();
+                        eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+                        break;
+                    case RESULTSSTUDENT:
+                        eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                         break;
                     case SCHOOLCLASSES:
                         presenterFactory.getSchoolclassesPresenter().init();
                         break;
-//                    case COURSESOFSCHOOLCLASS:
-//                        presenterFactory.getCoursesOfSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
-//                        break;
-            // case STUDENTSINSCHOOLCLASS:
-            // presenterFactory.getStudentsInSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
-            // break;
-            // case ADDSTUDENTS:
-            // presenterFactory.getAddStudentsPresenter().init(switchViewEvent.getSchoolClass());
-            // break;
-            // case TEACHERSINSCHOOLCLASS:
-            // presenterFactory.getTeachersInSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
-            // break;
-            // case SCORESULTS:
-            // presenterFactory.getScoResultsPresenter().init(switchViewEvent.getResultTree(),
-            // switchViewEvent.getResultScoContext(), switchViewEvent.getResultStudent(),
-            // switchViewEvent.getSchoolClass());
-            // break;
-                    case WELCOME:
-                        presenterFactory.getWelcomePresenter().init();
+                    case EDITSCHOOLCLASS:
+                        presenterFactory.getEditSchoolclassPresenter().init();
+                        break;
+                    case ADDSTUDENTTOSCHOOLCLASS:
+                        presenterFactory.getAddStudentToSchoolclassPresenter().init();
+                        break;
+                    case COPYORMOVESTUDENTTOSCHOOLCLASS:
+                        eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+                        break;
+                    case ADDTEACHERTOSCHOOLCLASS:
+                        presenterFactory.getAddTeacherToSchoolclassPresenter().init();
+                        break;
+                    case EDITCOURSESOFSCHOOLCLASS:
+                        eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+                        break;
+                    case ORGANISATION:
+                        eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+                        break;
+                    case MODULES:
+                        eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                         break;
                     default:
+                        eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                         LOG.log(Level.SEVERE, "Switch panel failed in app controller.");
                 }
                 }else{
