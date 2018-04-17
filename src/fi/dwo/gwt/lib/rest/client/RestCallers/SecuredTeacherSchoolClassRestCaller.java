@@ -1,6 +1,7 @@
 package fi.dwo.gwt.lib.rest.client.RestCallers;
 
 //import fi.dwo.gwt.lib.rest.CallManagers.Callback; NOTA BENE Wim: Gebruik MethodCallback niet Callback bij een RestService
+import fi.dwo.gwt.lib.rest.CallManagers.Callback;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -133,4 +134,8 @@ public interface SecuredTeacherSchoolClassRestCaller extends RestService {
     @Path("/secure/teacher/schoolclass/setAccessKeyClassCourse")
 	public void setAccessKeyClassCourse(RestSchoolClassCourseProfilewAccessKey rest,
 			MethodCallback<Boolean> promiseCallback);
+
+    @GET
+    @Path("/secure/teacher/schoolclass/getTeachersStudents")
+        public void getTeachersStudents(Callback<List<DomStudent>> callback);
 }

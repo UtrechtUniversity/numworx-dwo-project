@@ -346,6 +346,12 @@ public class SecuredTeacherSchoolClassManager {
 	}            
 
     public Promise<List<DomStudent>> getTeachersStudents() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PromiseCallback<List<DomStudent>> defer = new PromiseCallback<List<DomStudent>>();
+        this.getTeachersStudents(defer);
+        return defer.getPromise();
+    }
+    
+    private void getTeachersStudents(AsyncCallback<List<DomStudent>> callBack) {
+        service.getTeachersStudents(new Callback<List<DomStudent>>(callBack));
     }
 }
