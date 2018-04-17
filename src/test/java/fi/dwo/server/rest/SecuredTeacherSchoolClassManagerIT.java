@@ -224,6 +224,26 @@ public class SecuredTeacherSchoolClassManagerIT {
         assertEquals(3L, result.size());
     }
 
+
+    /**
+     * Test of GetStudentsInSchoolClass method, of class
+     * SecuredTeacherSchoolClassManager. Tests whether the proper number of
+     * students is returned for a known school class.
+     */
+    @Test
+    public void testGetTeachersStudents() {
+        System.out.println("testGetTeachersStudents");
+        SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+//        RestSchoolClass restSchoolClass = new RestSchoolClass();
+//        PersistenceId id = PersistentSchoolClass.buildPersistenceId(2L);
+//        DomSchoolClass domSchoolClass = new DomSchoolClass();
+//        restSchoolClass.setDomSchoolClass(domSchoolClass);
+//        domSchoolClass.setId(id);
+//        domSchoolClass.setSchoolClassName("The worm wil eat you.");
+        SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
+        List<DomStudent> result = instance.getTeachersStudents(sc);
+        assertEquals(3L, result.size());
+    }    
 //    /**
 //     * Test of getSchoolClasses method, of class
 //     * SecuredTeacherSchoolClassManager.

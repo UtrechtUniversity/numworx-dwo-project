@@ -231,33 +231,18 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @Produces({"application/json"})
     @Path("/getTeachersStudents")
     public List<DomStudent> getTeachersStudents(@Context SecurityContext sc) {
-        PersistentHasRole phr = null;
-        PersistentSchool school = null;
         List<DomStudent> domStudents = null;
-        //get SchoolClasses
-        //get STudents in those Schoolclasses
-        //return;
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
-            school = HasRoleUtilManager.getSchoolforHasRole(phr);
-        } catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, "", ex);
-            throw new Dwo2RestException(ex);
+            TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+                    .setDefaultHasRole()
+                    //.setDefaultHasRole()
+                    .buildSchoolAdminTeacher()
+                    .setTeacher();
+            return build.getTeachersStudents();
+            
+        } catch (Dwo2Exception e) {
+            throw new Dwo2RestException(e);
         }
-        try {
-            List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.STUDENT);
-            domStudents = new ArrayList<>(userList.size());
-            for (PersistentUser u : userList) {
-                if (u.isSingleSchoolAccount()) {
-                    domStudents.add(u.buildDomStudent());
-                }
-            }
-        } catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, "", ex);
-            throw new Dwo2RestException(ex);
-        }
-
-        return domStudents;
     }
 
     /**
