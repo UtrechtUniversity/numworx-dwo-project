@@ -336,7 +336,8 @@ public class EditSchoolclassPresenter {
 
     @JsMethod
     public void copyOrMoveStudents() {
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS, schoolClass));
+    eventBus
+        .fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES, schoolClass));
     }
 
     @JsMethod
@@ -346,6 +347,6 @@ public class EditSchoolclassPresenter {
 
     @JsMethod
     public void editModules() {
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.COURSESOFSCHOOLCLASS, schoolClass));
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.EDITCOURSESOFSCHOOLCLASS, schoolClass));
     }
 }

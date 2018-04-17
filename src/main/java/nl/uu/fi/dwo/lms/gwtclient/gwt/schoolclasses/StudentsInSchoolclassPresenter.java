@@ -245,7 +245,8 @@ public class StudentsInSchoolclassPresenter {
 
     @JsMethod
     public void goAddStudents() {
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDSTUDENTS, schoolClass));
+    eventBus.fireEvent(
+        new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDSTUDENTTOSCHOOLCLASS, schoolClass));
     }
 
     @JsMethod

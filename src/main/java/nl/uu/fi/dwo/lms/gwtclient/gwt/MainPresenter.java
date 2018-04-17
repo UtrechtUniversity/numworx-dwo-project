@@ -24,14 +24,6 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 
     public interface Display {
 
-        //public void init(ViewFactory clientFactory);
-//        public Widget asWidget();
-//        public MainView getViewInstance();
-//        public HasClickHandlers getMenuButton(); // handle clicking on button
-        public void showPostLoginWidgets();
-
-        public void hidePostLoginWidgets();
-
         public void setSchoolName(String schoolName);
 
         public void setUserRole(String userRole);
@@ -44,38 +36,37 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 
         public void showLoginView();
 
-        public void showSwitchSchoolView();
-
         public void showResultsView();
 
-        public void showSchoolclassesView();
+        public void showStudentResultsView();
 
-        public void showCoursesOfSchoolclassView();
+        public void showSchoolclassesView(); // has AddSchoolClass function
+
+        public void showEditSchoolclasView();
+
+        public void showAddStudentToSchoolClassView();
+
+        public void showCopyOrMoveStudentToSchoolClassView();
+
+        public void showAddTeacherToSchoolClassView();
+
+        public void showEditCoursesOfSchoolClassView();
 
         public void showStudentsInSchoolclassView();
 
-        public void showAddStudentsView();
-
         public void showTeachersInSchoolclassView();
 
-        public void showScoResultsView();
-
-        public void showMenuButton();
-
-        public void hideMenuButton();
+        public void showCoursesOfSchoolClassView();
 
         public void setCurrentPanelName(String panel);
 
-        public void showMenuView();
-
-        public void hideMenuView();
-//
-//        public void showMessageDialog(String msg);
-//
-//        public void showErrorDialog(String msg);
-//
-
         public boolean isMenuVisible();
+
+        public void showPersonsView();
+
+        public void showModulesView();
+
+        public void showOrganisationView();
     }
 
     private MainPresenter.Display display;
@@ -89,6 +80,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
     }
 
     public void init() {
+
     }
 
     /**
@@ -101,15 +93,15 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 //    void goLogin() {
 //        display.showLoginView();
 //    }
-
-    @JsMethod
-    public void menuButtonClicked() {
-        if (display.isMenuVisible()) {
-            display.hideMenuView();
-        } else {
-            display.showMenuView();
-        }
-    }
+    //
+    // @JsMethod
+    // public void menuButtonClicked() {
+    // if (display.isMenuVisible()) {
+    // display.hideMenuView();
+    // } else {
+    // display.showMenuView();
+    // }
+    // }
 
     @JsMethod
     public void selectView(String selectedView) {
@@ -127,20 +119,20 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 
     private void onSwitchViewEvent(SwitchViewEvent.SelectedView selectedView) {
         if (selectedView == selectedView.LOGIN) {
-            display.hideMenuButton();
-            display.hidePostLoginWidgets();
+            // display.hideMenuButton();
+            // display.hidePostLoginWidgets();
             //display.showMenuButton();
         } else {//if (selectedView == selectedView.SWITCHSCHOOL) {
             try {
                 display.setSchoolName(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
                 display.setPresentationName(dwoGlobalVars.getCurrentUser().getDisplayName());
-                display.showPostLoginWidgets();
+                // display.showPostLoginWidgets();
             } catch (Exception e) {
             }
         }
         try {
             if (dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())) {
-                display.showMenuButton();
+                // display.showMenuButton();
             }
             RoleType rt = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
             switch (rt) {
@@ -165,51 +157,64 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
         }
 
         switch (selectedView) {
-            case ACCOUNT:
-                display.showAccountView();
+            case LOGIN:
+                display.showLoginView();
                 break;
             case WELCOME:
                 display.showWelcomeView();
                 break;
-            case LOGIN:
-                display.showLoginView();
+            case ACCOUNT:
+                display.showAccountView();
                 break;
-            case SWITCHSCHOOL:
-                display.showSwitchSchoolView();
-                break;
-            case RESULTS:
-                display.showResultsView();
-                break;
-            case ACTIVERESULTS:
-                display.showResultsView();
+            case PEOPLE:
+                display.showPersonsView();
                 break;
             case SCHOOLCLASSES:
                 display.showSchoolclassesView();
                 break;
-            case COURSESOFSCHOOLCLASS:
-                display.showCoursesOfSchoolclassView();
+            case EDITSCHOOLCLASS:
+                display.showEditSchoolclasView();
                 break;
-            case STUDENTSINSCHOOLCLASS:
-                display.showStudentsInSchoolclassView();
+            case ADDSTUDENTTOSCHOOLCLASS:
+                display.showAddStudentToSchoolClassView();
                 break;
-            case ADDSTUDENTS:
-                display.showAddStudentsView();
+            case COPYORMOVESTUDENTTOSCHOOLCLASS:
+                display.showCopyOrMoveStudentToSchoolClassView();
                 break;
-            case TEACHERSINSCHOOLCLASS:
-                display.showTeachersInSchoolclassView();
+            case ADDTEACHERTOSCHOOLCLASS:
+                display.showAddTeacherToSchoolClassView();
                 break;
-            case SCORESULTS:
-                display.showScoResultsView();
+            case EDITCOURSESOFSCHOOLCLASS:
+                display.showEditCoursesOfSchoolClassView();
+                break;
+            case RESULTS:
+                display.showResultsView();
+                break;
+            case RESULTSSTUDENT:
+                display.showStudentResultsView();
+            case MODULES:
+                display.showModulesView();
+            case ORGANISATION:
+                display.showOrganisationView();
+
+            // case ADDSTUDENTS:
+            // display.showAddStudentsView();
+            // break;
+            // case TEACHERSINSCHOOLCLASS:
+            // display.showTeachersInSchoolclassView();
+            // break;
+            // case SCORESULTS:
+            // display.showScoResultsView();
         }
     }
 
     @Override
     public void onLoginEvent(LoginEvent loginEvent) {
-        display.showPostLoginWidgets();
+        /// display.showPostLoginWidgets();
     }
 
     @JsMethod
-    public String getTranslation(String key){
+    public String getTranslation(String key) {
         return rb.getString(key);
     }
 }

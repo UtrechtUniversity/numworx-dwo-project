@@ -14,33 +14,25 @@ import jsinterop.annotations.JsType;
  * public void selectView(String selectedView);
  * with selected view one of 
  * 
- *      LOGIN,
- *      ACCOUNT,
- *      SWITCHSCHOOL,
- *      RESULTS,
- *      ACTIVERESULTS,
- *      SCORESULTS,
- *      SCHOOLCLASSES,
- *      COURSESOFSCHOOLCLASS,
- *      STUDENTSINSCHOOLCLASS,
- *      TEACHERSINSCHOOLCLASS,
- *      ADDSTUDENTS
- * 
- * and
- * 
- * public void menuButtonClicked();
- * 
- * Which shows and hides the Account popup menu. Selecting the popup menu option
- * edit account calls showAccountView(). 
+ *         LOGIN, 
+ *         WELCOME, 
+ *         ACCOUNT, 
+ *         PEOPLE, 
+ *         SCHOOLCLASSES, 
+ *         EDITSCHOOLCLASS,
+ *         ADDSTUDENTTOSCHOOLCLASS, 
+ *         COPYORMOVESTUDENTTOSCHOOLCLASS, 
+ *         ADDTEACHERTOSCHOOLCLASS, 
+ *         EDITCOURSESOFSCHOOLCLASS,
+ *         RESULTS, 
+ *         RESULTSSTUDENT,
+ *         MODULES, (Library menu)
+ *         ORGANISATION
  * 
  * @author G.A.J. van der Plas
  */
 @JsType(isNative = true, name = "jsMainDisplay", namespace = JsPackage.GLOBAL)
 public class JsMainDisplay {
-    /** Turns the school name, user role and user presentation name visible in the header panel. */
-    public static native void showPostLoginWidgets();
-    /** Turns the school name, user role and user presentation name invisible in the header panel. */
-    public static native void hidePostLoginWidgets();
     /** Set the school name in the header of the main panel. */
     public static native void setSchoolName(String schoolName);
     /** Set the user role in the header of the main panel, teacher, student or school admin. */
@@ -49,14 +41,6 @@ public class JsMainDisplay {
     public static native void setPresentationName(String presentationName);    
     /** Sets the name of current panel shown in the main area in the header of the main panel. */
     public static native void  setCurrentPanelName();
-    /** Show the account menu. */
-    public static native void showMenuButton();
-    /** Hide the account menu. */
-    public static native void hideMenuButton();
-    /** Show the account menu. */
-    public static native void  showMenuView();
-    /** Hide the account menu. */    
-    public static native void  hideMenuView();
     /** States if the account menu is visible. */
     public static native boolean isMenuVisible();
     /** Show the account panel. */
@@ -65,20 +49,32 @@ public class JsMainDisplay {
     public static native void showWelcomeView();
     /** Show the login panel. */
     public static native void showLoginView();
-    /** Show the switch school panel. */
-    public static native void  showSwitchSchoolView();
     /** Show the results panel. */
     public static native void  showResultsView();
+    /** Show the results of student panel. */
+    public static native void  showStudentResultsView();
     /** Show the school classes panel. */
     public static native void  showSchoolclassesView();
-    /** Show the courses of school class panel. */
-    public static native void  showCoursesOfSchoolclassView();
+    /** Show the edit school class panel. */
+    public static native void  showEditSchoolclasView();
     /** Show the students in school class panel. */
     public static native void  showStudentsInSchoolclassView();
-    /** Show the add students panel. */
-    public static native void  showAddStudentsView();
     /** Show the teachers in school class panel. */
     public static native void  showTeachersInSchoolclassView();
-    /** Show the sco results panel. */
-    public static native void  showScoResultsView();
+    /** Show the teachers in school class panel. */
+    public static native void  showCoursesOfSchoolclassView();
+    /** Show the add student to school class panel. */
+    public static native void  showAddStudentToSchoolClassView();
+    /** Show the copy or move student to school class panel. */
+    public static native void  showCopyOrMoveStudentToSchoolClassView();
+    /** Show the add teacher to school class panel. */
+    public static native void  showAddTeacherToSchoolClassView();
+    /** Show the add students panel. */
+    public static native void  showEditCoursesOfSchoolClassView();
+    /** Show the add students panel. */
+    public static native void  showPersonsView();
+    /** Show the modules panel (course library). */
+    public static native void  showModulesView();
+    /** Show the organization panel. */
+    public static native void  showOrganisationView();
 }

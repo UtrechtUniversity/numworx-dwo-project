@@ -118,7 +118,8 @@ public class AddStudentsPresenter implements SchoolClassDialogEventHandler {
                 public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                     LOG.log(Level.INFO, "returned value" + resolved.getValue());
                     if (resolved.getValue() == true) {
-                        SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS, schoolClass);
+            SwitchViewEvent event =
+                new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES, schoolClass);
                         eventBus.fireEvent(event);
                     } else {
                         //do nothing.
@@ -143,7 +144,8 @@ public class AddStudentsPresenter implements SchoolClassDialogEventHandler {
 
             eventBus.fireEvent(new ConfirmDialogEvent(ConfirmDialogEvent.EventType.ConfirmDialog, p));
         } else {
-            SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS, schoolClass);
+      SwitchViewEvent event =
+          new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES, schoolClass);
             eventBus.fireEvent(event);
         }
     }

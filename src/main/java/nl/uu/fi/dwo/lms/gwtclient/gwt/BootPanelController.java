@@ -160,23 +160,23 @@ class BootPanelController {
                     case SUCCESS_WELCOME:
                         LOG.log(Level.INFO, "Login succeeded. Showing welcome view.");
                         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.WELCOME));
-                        viewFactory.getMainView().showPostLoginWidgets();
+              // viewFactory.getMainView().showPostLoginWidgets();
                         break;
                     case SUCCESS_RESULTS:
                         LOG.log(Level.INFO, "Login succeeded. Showing results view.");
                         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
-                        viewFactory.getMainView().showPostLoginWidgets();
+              // viewFactory.getMainView().showPostLoginWidgets();
                         break;
                     case SUCCESS_SCHOOLCLASSES:
                         LOG.log(Level.INFO, "Login succeeded. Showing schoolclasses view.");
                         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
-                        viewFactory.getMainView().showPostLoginWidgets();
+              // viewFactory.getMainView().showPostLoginWidgets();
                         break;
-                    case SUCCESS_ROLE:
-                        LOG.log(Level.INFO, "Login succeeded. Showing switch role view.");
-                        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SWITCHSCHOOL));
-                        presenterFactory.getSwitchSchoolPresenter().init();
-                        break;
+            // case SUCCESS_ROLE:
+            // LOG.log(Level.INFO, "Login succeeded. Showing switch role view.");
+            // eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SWITCHSCHOOL));
+            // presenterFactory.getSwitchSchoolPresenter().init();
+            // break;
                     case FAIL:
                         LOG.log(Level.INFO, "Login failed.");
 //                        /eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Login failed.")));
@@ -200,7 +200,7 @@ class BootPanelController {
                         break;
                     case LOGOUT:
                         dwoGlobalVars.clearCurrentUser();
-                        viewFactory.getMainView().hideMenuButton();
+              // viewFactory.getMainView().hideMenuButton();
                         presenterFactory.getMainPresenter().onSwitchViewEvent(new SwitchViewEvent(SwitchViewEvent.eventValue.LOGIN));
                     default:
                         LOG.log(Level.SEVERE, "Login handling failed in app controller.");
@@ -227,33 +227,35 @@ class BootPanelController {
                     case LOGIN:
                         presenterFactory.getLoginPresenter().init();
                         break;
-                    case SWITCHSCHOOL:
-                        presenterFactory.getSwitchSchoolPresenter().init();
-                        break;
-                    case ACTIVERESULTS:
-                        //do nothing presenterFactory.getResultsPresenter().init();
-                        break;
+              // case SWITCHSCHOOL:
+              // presenterFactory.getSwitchSchoolPresenter().init();
+              // break;
+              // case ACTIVERESULTS:
+              // //do nothing presenterFactory.getResultsPresenter().init();
+            // break;
                     case RESULTS:
                         presenterFactory.getResultsPresenter().init();
                         break;
                     case SCHOOLCLASSES:
                         presenterFactory.getSchoolclassesPresenter().init();
                         break;
-                    case COURSESOFSCHOOLCLASS:
-                        presenterFactory.getCoursesOfSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
-                        break;
-                    case STUDENTSINSCHOOLCLASS:
-                        presenterFactory.getStudentsInSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
-                        break;
-                    case ADDSTUDENTS:
-                        presenterFactory.getAddStudentsPresenter().init(switchViewEvent.getSchoolClass());
-                        break;
-                    case TEACHERSINSCHOOLCLASS:
-                        presenterFactory.getTeachersInSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
-                        break;
-                    case SCORESULTS:
-                        presenterFactory.getScoResultsPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultScoContext(), switchViewEvent.getResultStudent(), switchViewEvent.getSchoolClass());
-                        break;
+//                    case COURSESOFSCHOOLCLASS:
+//                        presenterFactory.getCoursesOfSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
+//                        break;
+            // case STUDENTSINSCHOOLCLASS:
+            // presenterFactory.getStudentsInSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
+            // break;
+            // case ADDSTUDENTS:
+            // presenterFactory.getAddStudentsPresenter().init(switchViewEvent.getSchoolClass());
+            // break;
+            // case TEACHERSINSCHOOLCLASS:
+            // presenterFactory.getTeachersInSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
+            // break;
+            // case SCORESULTS:
+            // presenterFactory.getScoResultsPresenter().init(switchViewEvent.getResultTree(),
+            // switchViewEvent.getResultScoContext(), switchViewEvent.getResultStudent(),
+            // switchViewEvent.getSchoolClass());
+            // break;
                     case WELCOME:
                         presenterFactory.getWelcomePresenter().init();
                         break;
@@ -273,5 +275,6 @@ class BootPanelController {
         LOG.log(Level.FINE, "Intiating Main presenter. Showing login screen.");
         mainPresenter.init();
         LOG.log(Level.FINE, "Initiated Main presenter.");
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN));
     }
 }

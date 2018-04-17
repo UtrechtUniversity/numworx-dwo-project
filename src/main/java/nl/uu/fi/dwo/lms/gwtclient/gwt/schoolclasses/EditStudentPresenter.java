@@ -190,7 +190,8 @@ public class EditStudentPresenter implements SchoolClassDialogEventHandler {
                 //calculate tree and call plotting
                 LOG.log(Level.INFO, "DomUser returned.");
                 Boolean result = resolved.getValue();
-                eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.STUDENTSINSCHOOLCLASS, schoolClass));
+        eventBus.fireEvent(
+            new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES, schoolClass));
                 return null;
             }
         },

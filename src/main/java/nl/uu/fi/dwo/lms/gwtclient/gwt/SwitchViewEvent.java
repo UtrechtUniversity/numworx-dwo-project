@@ -37,22 +37,27 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     }
 
     public enum SelectedView {
-        LOGIN,
-        WELCOME,
-        ACCOUNT,
-        SWITCHSCHOOL,
-        RESULTS,
-        ACTIVERESULTS,
-        SCORESULTS,
-        SCHOOLCLASSES,
-        COURSESOFSCHOOLCLASS,
-        STUDENTSINSCHOOLCLASS,
-        TEACHERSINSCHOOLCLASS,
-        ADDSTUDENTS, 
+        LOGIN, 
+        WELCOME, 
+        ACCOUNT, 
+        PEOPLE, 
+        SCHOOLCLASSES, 
+        EDITSCHOOLCLASS,
         ADDSTUDENTTOSCHOOLCLASS, 
-        ADDTEACHERTOSCHOOLCLASS
+        COPYORMOVESTUDENTTOSCHOOLCLASS, 
+        ADDTEACHERTOSCHOOLCLASS, 
+        EDITCOURSESOFSCHOOLCLASS,
+        RESULTS, 
+        RESULTSSTUDENT,
+        MODULES,
+        ORGANISATION
+    // ACTIVERESULTS,
+    // SCORESULTS,
+    // COURSESOFSCHOOLCLASS,
+    // STUDENTSINSCHOOLCLASS,
+    // TEACHERSINSCHOOLCLASS,
     }
-    
+
     private DomStudent student;
     private DomSchoolClass schoolClass;
     private DomResultScoContext scoResult;
@@ -60,27 +65,29 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     private DomResultStudent resultStudent;
     private DomResultScoContext resultScoContext;
     private DomResultTree resultTree;
-    
+
     public static Type<SwitchViewEventHandler> TYPE = new Type<SwitchViewEventHandler>();
     public static SelectedView eventValue;
 
-    public SwitchViewEvent(SelectedView aState){
+  public SwitchViewEvent(SelectedView aState) {
         this.setEventValue(aState);
     }
 
-    public SwitchViewEvent(SelectedView aState, DomStudent aStudent){
+  public SwitchViewEvent(SelectedView aState, DomStudent aStudent) {
         this.setEventValue(aState);
         student = aStudent;
     }
-    
-    public SwitchViewEvent(SelectedView aState, DomSchoolClass aSchoolClass){
+
+  public SwitchViewEvent(SelectedView aState, DomSchoolClass aSchoolClass) {
         this.setEventValue(aState);
         schoolClass = aSchoolClass;
     }
 
-    public SwitchViewEvent(SelectedView aState, DomResultTree aResultTree, DomResultScoContext aStudentSco, DomResultStudent aResultStudent, DomSchoolClass aSchoolClass){
+  public SwitchViewEvent(SelectedView aState, DomResultTree aResultTree,
+      DomResultScoContext aStudentSco, DomResultStudent aResultStudent,
+      DomSchoolClass aSchoolClass) {
         this.setEventValue(aState);
-        resultTree= aResultTree;
+    resultTree = aResultTree;
         resultScoContext = aStudentSco;
         resultStudent = aResultStudent;
         schoolClass = aSchoolClass;
@@ -95,11 +102,12 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     protected void dispatch(SwitchViewEventHandler handler) {
         handler.onSwitchViewEvent(this);
     }
-    
-    public void setEventValue(SelectedView view){
+
+  public void setEventValue(SelectedView view) {
         eventValue = view;
     }
-    public SelectedView getEventValue(){
+
+  public SelectedView getEventValue() {
         return eventValue;
     }
 
@@ -116,10 +124,9 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
 //    public void setStudent(DomStudent student) {
 //        this.student = student;
 //    }
-
-    /**
-     * @return the schoolClass
-     */
+  /**
+   * @return the schoolClass
+   */
     public DomSchoolClass getSchoolClass() {
         return schoolClass;
     }
@@ -136,4 +143,5 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
      */
     public DomStudentScoContext getStudentScoResult() {
         return studentScoResult;
-    }}
+  }
+}
