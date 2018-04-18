@@ -1363,51 +1363,51 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 //        }
 //        //return true;
 //    }
-    /**
-     * @param userID
-     * @param password
-     * @param newPassword
-     * @param firstname
-     * @param middlename
-     * @param lastname
-     * @param email
-     * @return boolean
-     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
-     * @throws java.sql.SQLException
-     *
-     */
-    @Override
-    public boolean changeAccount(int userID, String password,
-            String newPassword, String firstname, String middlename,
-            String lastname, String email) throws DwoXmlRpcException,
-            SQLException {
-        if (!passwordCorrect(userID, password)) {
-            throw new DwoXmlRpcException(
-                    DwoXmlRpcException.EXC_WRONG_USERNAME_PASSWORD);
-        } else {
-            PreparedStatement ps = null;
-            if ((password == null) || (newPassword.equals(""))) {
-                ps = getStatement(QRY_UPDATE_USER_NO_PWD);
-                ps.setString(1, firstname);
-                ps.setString(2, middlename);
-                ps.setString(3, lastname);
-                ps.setString(4, email);
-                ps.setInt(5, userID);
-            } else {
-                ps = getStatement(QRY_UPDATE_USER);
-                ps.setString(1, firstname);
-                ps.setString(2, middlename);
-                ps.setString(3, lastname);
-                ps.setString(4, newPassword);
-                ps.setString(5, email);
-                ps.setInt(6, userID);
-            }
-
-            ps.execute();
-            ps.close();
-        }
-        return true;
-    }
+//    /**
+//     * @param userID
+//     * @param password
+//     * @param newPassword
+//     * @param firstname
+//     * @param middlename
+//     * @param lastname
+//     * @param email
+//     * @return boolean
+//     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
+//     * @throws java.sql.SQLException
+//     *
+//     */
+//    @Override
+//    public boolean changeAccount(int userID, String password,
+//            String newPassword, String firstname, String middlename,
+//            String lastname, String email) throws DwoXmlRpcException,
+//            SQLException {
+//        if (!passwordCorrect(userID, password)) {
+//            throw new DwoXmlRpcException(
+//                    DwoXmlRpcException.EXC_WRONG_USERNAME_PASSWORD);
+//        } else {
+//            PreparedStatement ps = null;
+//            if ((password == null) || (newPassword.equals(""))) {
+//                ps = getStatement(QRY_UPDATE_USER_NO_PWD);
+//                ps.setString(1, firstname);
+//                ps.setString(2, middlename);
+//                ps.setString(3, lastname);
+//                ps.setString(4, email);
+//                ps.setInt(5, userID);
+//            } else {
+//                ps = getStatement(QRY_UPDATE_USER);
+//                ps.setString(1, firstname);
+//                ps.setString(2, middlename);
+//                ps.setString(3, lastname);
+//                ps.setString(4, newPassword);
+//                ps.setString(5, email);
+//                ps.setInt(6, userID);
+//            }
+//
+//            ps.execute();
+//            ps.close();
+//        }
+//        return true;
+//    }
 
     /**
      * Adds a class to the school and adds the teacher to the class.

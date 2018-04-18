@@ -226,14 +226,14 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 //        return getDelegate().changeAccount(userID, password, newPassword, firstname,
 //                middlename, lastname, email, classID);
 //    }
-    @Override
-    public boolean changeAccount(int userID, String password,
-            String newPassword, String firstname, String middlename,
-            String lastname, String email) throws DwoXmlRpcException,
-            IOException, XmlRpcException, SQLException {
-        return getDelegate().changeAccount(userID, password, newPassword, firstname,
-                middlename, lastname, email);
-    }
+//    @Override
+//    public boolean changeAccount(int userID, String password,
+//            String newPassword, String firstname, String middlename,
+//            String lastname, String email) throws DwoXmlRpcException,
+//            IOException, XmlRpcException, SQLException {
+//        return getDelegate().changeAccount(userID, password, newPassword, firstname,
+//                middlename, lastname, email);
+//    }
 
 
 
