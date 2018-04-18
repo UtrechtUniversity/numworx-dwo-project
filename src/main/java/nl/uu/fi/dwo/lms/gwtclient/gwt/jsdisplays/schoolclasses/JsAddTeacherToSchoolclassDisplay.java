@@ -1,12 +1,19 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONValue;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
 /**
  * JsAddTeacherToSchoolclassDisplay UI interface.
-
+ * 
+ * Filtering of teacher happens in the ui.
+ * 
+ * call back: 
+ * 
+ * public void AddTeacherrToSchoolClass(String teacherId);
+ * 
  * @author G.A.J. van der Plas
  */
 @JsType(isNative = true, name = "JsAddTeacherToSchoolclassDisplay", namespace = JsPackage.GLOBAL)
@@ -22,6 +29,8 @@ public class JsAddTeacherToSchoolclassDisplay {
      * Initializes the ui, puts all students in the list.
      */
     public static native void init();
+    
+    public static native void setSchoolClass(JSONValue schoolClass);
 
     /**
      * Fills the list view with the list of teachers students. It requires a JSONObject

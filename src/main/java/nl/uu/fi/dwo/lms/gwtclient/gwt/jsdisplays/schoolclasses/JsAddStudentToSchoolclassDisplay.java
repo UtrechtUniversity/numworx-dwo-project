@@ -1,11 +1,18 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONValue;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
 /**
  * JsAddStudentToSchoolclassDisplay UI interface.
+ * 
+ * Filtering of students happens in the ui.
+ * 
+ * call back: 
+ * 
+ * public void AddStudentToSchoolClass(String studentId);
 
  * @author G.A.J. van der Plas
  */
@@ -23,6 +30,7 @@ public class JsAddStudentToSchoolclassDisplay {
      */
     public static native void init();
 
+    public static native void setSchoolClass(JSONValue schoolClass);
     /**
      * Fills the list view with the list of teachers students. It requires a JSONObject
      * with each field the item key, and a String for the student name as value.
@@ -34,21 +42,11 @@ public class JsAddStudentToSchoolclassDisplay {
      /**
      * setEmptyTableMessage show an indicator that the table is empty.
      */
-    public static native void setEmptyTableMessageA();
+    public static native void setEmptyTableMessage();
 
     /**
      * setEmptyTableMessage show an indicator that we are fetching data.
      */
-    public static native void setLoadingTableMessageA();
+    public static native void setLoadingTableMessage();
 
-
-     /**
-     * setEmptyTableMessage show an indicator that the table is empty.
-     */
-    public static native void setEmptyTableMessageB();
-
-    /**
-     * setEmptyTableMessage show an indicator that we are fetching data.
-     */
-    public static native void setLoadingTableMessageB();
 }

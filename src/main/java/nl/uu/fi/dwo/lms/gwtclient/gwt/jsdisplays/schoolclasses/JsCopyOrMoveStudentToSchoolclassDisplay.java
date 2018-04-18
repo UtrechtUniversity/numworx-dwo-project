@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONValue;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
@@ -23,18 +24,37 @@ public class JsCopyOrMoveStudentToSchoolclassDisplay {
      */
     public static native void init();
 
+    public static native void setSchoolClassA(JSONValue schoolClass);
+
+    public static native void setSchoolClassB(JSONValue schoolClass);
+
+    public static native void setEmptyTableMessageClasses();
+    
+    public static native void setLoadingTableMessageClasses();
     /**
      * setEmptyTableMessage show an indicator that the table is empty.
      */
-    public static native void setEmptyTableMessage();
+    public static native void setEmptyTableMessageA();
 
     /**
      * setEmptyTableMessage show an indicator that we are fetching data.
      */
-    public static native void setLoadingTableMessage();
+    public static native void setLoadingTableMessageA();
     
+    /**
+     * setEmptyTableMessage show an indicator that the table is empty.
+     */
+    public static native void setEmptyTableMessageB();
+
+    /**
+     * setEmptyTableMessage show an indicator that we are fetching data.
+     */
+    public static native void setLoadingTableMessageB();
+
     public static native void showStudentsClassA(JavaScriptObject data);
 
     public static native void showStudentsClassB(JavaScriptObject data);
+    
+    public static native void setClassList(JavaScriptObject data);
 
 }

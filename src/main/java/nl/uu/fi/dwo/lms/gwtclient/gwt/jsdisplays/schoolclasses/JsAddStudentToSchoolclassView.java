@@ -1,10 +1,12 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses;
 
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
+import fi.dwo.gwt.lib.rest.util.DomSchoolClassCodec;
 import fi.dwo.gwt.lib.rest.util.DomStudentCodec;
 import java.util.Map;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentToSchoolclassPresenter;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 
 /**
@@ -44,8 +46,14 @@ public class JsAddStudentToSchoolclassView implements AddStudentToSchoolclassPre
     }
 
     @Override
-    public void setsetLoadingTableMessage() {
+    public void setLoadingTableMessage() {
        JsAddStudentToSchoolclassDisplay.setLoadingTableMessage();
+    }
+
+    @Override
+    public void setSchoolClass(DomSchoolClass schoolClass) {
+        JSONValue sc = DomSchoolClassCodec.CODEC.encode(schoolClass);
+        JsAddStudentToSchoolclassDisplay.setSchoolClass(sc);
     }
     
 }

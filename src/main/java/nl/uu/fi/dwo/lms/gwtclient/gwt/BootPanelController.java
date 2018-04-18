@@ -245,13 +245,13 @@ class BootPanelController {
                         presenterFactory.getEditSchoolclassPresenter().init();
                         break;
                     case ADDSTUDENTTOSCHOOLCLASS:
-                        presenterFactory.getAddStudentToSchoolclassPresenter().init();
+                        presenterFactory.getAddStudentToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
                         break;
                     case COPYORMOVESTUDENTTOSCHOOLCLASS:
                         eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                         break;
                     case ADDTEACHERTOSCHOOLCLASS:
-                        presenterFactory.getAddTeacherToSchoolclassPresenter().init();
+                        presenterFactory.getAddTeacherToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
                         break;
                     case EDITCOURSESOFSCHOOLCLASS:
                         eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));

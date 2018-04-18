@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses;
 
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
+import fi.dwo.gwt.lib.rest.util.DomSchoolClassCodec;
 import fi.dwo.gwt.lib.rest.util.DomStudentCodec;
 import java.util.List;
 import java.util.Map;
@@ -10,10 +12,10 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 
 /**
  * Mapper to allow java interface implementation.
- * 
+ *
  * @author G.A.J. van der Plas
  */
-public class JsCopyOrMoveStudentToSchoolclassView implements CopyOrMoveStudentToSchoolclassPresenter.Display{
+public class JsCopyOrMoveStudentToSchoolclassView implements CopyOrMoveStudentToSchoolclassPresenter.Display {
 
     @Override
     public void clear() {
@@ -27,23 +29,34 @@ public class JsCopyOrMoveStudentToSchoolclassView implements CopyOrMoveStudentTo
 
     @Override
     public void setEmptyTableMessageA() {
-        JsAddStudentToSchoolclassDisplay.setEmptyTableMessageA();
+        JsCopyOrMoveStudentToSchoolclassDisplay.setEmptyTableMessageA();
     }
 
     @Override
     public void setLoadingTableMessageA() {
-       JsAddStudentToSchoolclassDisplay.setLoadingTableMessageA();
+        JsCopyOrMoveStudentToSchoolclassDisplay.setLoadingTableMessageA();
     }
 
     @Override
     public void setEmptyTableMessageB() {
-        JsAddStudentToSchoolclassDisplay.setEmptyTableMessageB();
+        JsCopyOrMoveStudentToSchoolclassDisplay.setEmptyTableMessageB();
     }
 
     @Override
     public void setLoadingTableMessageB() {
-       JsAddStudentToSchoolclassDisplay.setLoadingTableMessageB();
+        JsCopyOrMoveStudentToSchoolclassDisplay.setLoadingTableMessageB();
+    }    
+
+    @Override
+    public void setEmptyTableMessageClasses() {
+        JsCopyOrMoveStudentToSchoolclassDisplay.setEmptyTableMessageClasses();
     }
+
+    @Override
+    public void setLoadingTableMessageClasses() {
+        JsCopyOrMoveStudentToSchoolclassDisplay.setLoadingTableMessageClasses();
+    }
+    
 //
 //    @Override
 //    public void showSchoolClasses(List<DomSchoolClass> schoolClasses) {
@@ -53,11 +66,11 @@ public class JsCopyOrMoveStudentToSchoolclassView implements CopyOrMoveStudentTo
 //        }
 //        JsCopyOrMoveStudentToSchoolclassDisplay.showSchoolClasses(object.getJavaScriptObject());
 //    }    
-    
+
     @Override
     public void showStudentsClassA(Map<String, DomStudent> students) {
         JSONObject object = new JSONObject();
-        for(DomStudent student : students.values()){
+        for (DomStudent student : students.values()) {
             object.put(student.getId().getIdString(), DomStudentCodec.CODEC.encode(student));
         }
         JsCopyOrMoveStudentToSchoolclassDisplay.showStudentsClassA(object.getJavaScriptObject());
@@ -66,7 +79,7 @@ public class JsCopyOrMoveStudentToSchoolclassView implements CopyOrMoveStudentTo
     @Override
     public void showStudentsClassB(Map<String, DomStudent> students) {
         JSONObject object = new JSONObject();
-        for(DomStudent student : students.values()){
+        for (DomStudent student : students.values()) {
             object.put(student.getId().getIdString(), DomStudentCodec.CODEC.encode(student));
         }
         JsCopyOrMoveStudentToSchoolclassDisplay.showStudentsClassB(object.getJavaScriptObject());
@@ -74,17 +87,25 @@ public class JsCopyOrMoveStudentToSchoolclassView implements CopyOrMoveStudentTo
 
     @Override
     public void SetClassA(DomSchoolClass schoolClass) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JSONValue sc = DomSchoolClassCodec.CODEC.encode(schoolClass);
+        JsAddTeacherToSchoolclassDisplay.setSchoolClass(sc);
+        JsCopyOrMoveStudentToSchoolclassDisplay.setSchoolClassA(sc);
     }
 
     @Override
     public void SetClassB(DomSchoolClass schoolClass) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JSONValue sc = DomSchoolClassCodec.CODEC.encode(schoolClass);
+        JsAddTeacherToSchoolclassDisplay.setSchoolClass(sc);
+        JsCopyOrMoveStudentToSchoolclassDisplay.setSchoolClassB(sc);
     }
 
     @Override
     public void SetClassList(List<DomSchoolClass> classList) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JSONObject object = new JSONObject();
+        for(DomSchoolClass sc : classList){
+            object.put(sc.getId().getIdString(), DomSchoolClassCodec.CODEC.encode(sc));
+        }
+        JsCopyOrMoveStudentToSchoolclassDisplay.setClassList(object.getJavaScriptObject());
     }
-        
+
 }

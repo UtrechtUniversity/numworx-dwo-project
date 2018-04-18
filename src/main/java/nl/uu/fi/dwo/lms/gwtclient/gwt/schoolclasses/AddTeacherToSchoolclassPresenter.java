@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -32,7 +32,7 @@ public class AddTeacherToSchoolclassPresenter {
     private EventBus eventBus;
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
     private Display view;
-    private DomSchoolClassFull schoolClass;
+    private DomSchoolClass schoolClass;
     private Map<String, DomTeacher> teachers = new HashMap();
 
     public interface Display {
@@ -42,12 +42,13 @@ public class AddTeacherToSchoolclassPresenter {
         void init();
 
 //        void setSchoolClass(DomSchoolClass schoolClass);
-        
         void showTeachers(Map<String, DomTeacher> teachers);
 
         void setEmptyTableMessage();
 
-        void setsetLoadingTableMessage();        
+        void setLoadingTableMessage();
+
+        public void setSchoolClass(DomSchoolClass schoolClass);
     }
 
     public AddTeacherToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -55,50 +56,16 @@ public class AddTeacherToSchoolclassPresenter {
         dwoGlobalVars = aDwoGlobalVars;
     }
 
-    public void init() {
+    public void init(DomSchoolClass aSchoolClass) {
         view.init();
+        view.setEmptyTableMessage();
+        schoolClass = aSchoolClass;
+        view.setSchoolClass(schoolClass);
         updateViewData();
     }
 
     private void updateViewData() {
-        Promise<DomSchoolClassFull> promise;
-        promise = manager.getFullSchoolClass(schoolClass);
-        // onSuccess update view
-        promise.then(new Success<DomSchoolClassFull, Void>() {
-            @Override
-            public Promise<Void> call(Promise<DomSchoolClassFull> resolved) throws Exception {
-                //flip back to schoolclasses screen 
-                schoolClass = resolved.getValue();
-//                view.setSchoolClass(schoolClass);
-                return null;
-            }
-
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        });
-    }
-
-    /**
-     * @param view the view to set
-     */
-    public void setView(Display view) {
-        this.view = view;
-    }
-
-    @JsMethod
-    public void FindTeachersInSchool(String username, String Firstname, String insertion, String familyName, String email){
+        view.setLoadingTableMessage();
         Promise<List<DomTeacher>> promise;
         promise = manager.getTeachersInSchool();
         // onSuccess update view
@@ -126,35 +93,42 @@ public class AddTeacherToSchoolclassPresenter {
             }
         }
         );
-    }    
-    
+    }
+
+    /**
+     * @param view the view to set
+     */
+    public void setView(Display view) {
+        this.view = view;
+    }
+
     @JsMethod
-    public void AddTeacherToSchoolClass(String teacherId){
-                Promise<Boolean> promise;
-                DomSubmitTeacherToSchoolClass submit = new DomSubmitTeacherToSchoolClass();
-                submit.setSchoolClass(schoolClass);
-                submit.setTeacher(teachers.get(teacherId));
-                promise = manager.submitTeacherToSchoolClass(submit);
-                // onSuccess update view
-                promise.then(new Success<Boolean, Void>() {
-                    @Override
-                    public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                        return null;
-                    }
-                },
-                        new Failure() {
-                    @Override
-                    public void fail(Promise<?> resolved) throws Exception {
-                        Throwable fail = resolved.getFailure();
-                        if (fail instanceof Dwo2Exception) {
-                            LOG.log(Level.SEVERE, fail.getMessage());
-                            eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
-                        } else {
-                            LOG.log(Level.SEVERE, fail.getMessage());
-                            eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-                            //throw directly
-                        }
-                    }
-                });
-            }  
+    public void AddTeacherToSchoolClass(String teacherId) {
+        Promise<Boolean> promise;
+        DomSubmitTeacherToSchoolClass submit = new DomSubmitTeacherToSchoolClass();
+        submit.setSchoolClass(schoolClass);
+        submit.setTeacher(teachers.get(teacherId));
+        promise = manager.submitTeacherToSchoolClass(submit);
+        // onSuccess update view
+        promise.then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                return null;
+            }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        });
+    }
 }
