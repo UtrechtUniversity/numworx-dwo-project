@@ -3,17 +3,26 @@ function MainDisplay() {
 	this.$panel = jQuery("#mainPanel");
 	this.$panels = this.$panel.find(".panel");	
 	this.$nav = this.$panel.find("nav");
-	this.$presentationName = jQuery("#presentationName");
-	this.$schoolName = jQuery("#schoolName");
+
+	this.$accountMenuSchoolName = jQuery("#accountMenuSchoolName");
+	this.$accountMenuUserRole = jQuery("#accountMenuUserRole");
+	this.$accountMenuPresentationName = jQuery("#accountMenuPresentationName");
+	
 	
 	// Setup Display objects
 	this.loginDisplay = new LoginDisplay();
 	window.jsLoginDisplay = this.loginDisplay;		
 	this.welcomeDisplay = new WelcomeDisplay();
 	window.jsWelcomeDisplay = this.welcomeDisplay;
-		
+	this.accountDisplay = new AccountDisplay();
+	window.jsAccountDisplay = this.accountDisplay;
+	this.msgDialogDisplay = new MsgDialogDisplay();
+	window.jsMsgDialogDisplay = this.msgDialogDisplay;
+	this.messageDialogWithConfirmDisplay = new MessageDialogWithConfirmDisplay();
+	window.jsMessageDialogWithConfirmDisplay = this.messageDialogWithConfirmDisplay;	
+			
 	// Init
-	this.showLoginView(); // Gert moet de login view aanroepen nadat alles geinitialiseerd is.
+	this.showLoginView(); // TODO: Gert moet de login view aanroepen nadat alles geinitialiseerd is.
 }
 
 MainDisplay.prototype.showLoginView = function() {
@@ -21,37 +30,43 @@ MainDisplay.prototype.showLoginView = function() {
 	this.loginDisplay.show();
 }
 
-MainDisplay.prototype.initMainView = function() {	
+MainDisplay.prototype.initMainView = function() { // TODO:	remember state
 	this.$panels.hide();
 	this.$panel.show();	
-	this.initNav();	
+	this.loginDisplay.hide();
 }
 
-MainDisplay.prototype.initNav = function() {
-	this.$nav.width(app.NAV_WIDTH);
-	this.$panels.width(window.innerWidth - app.NAV_WIDTH);
-	this.$panels.css('left', app.NAV_WIDTH);
+MainDisplay.prototype.setActiveMenuItem = function() {
+	// TODO: implementeren
 }
+
 
 /*
  * SET MAIN DISPLAY VARIABLES
  */
 
 MainDisplay.prototype.setSchoolName = function (schoolName) {
-	this.$schoolName.html(schoolName);
+	this.$accountMenuSchoolName.html(schoolName);
 };
 MainDisplay.prototype.setUserRole = function (role) {
-    console.log("set role " + role);
+    this.$accountMenuUserRole.html(role);
 };
 MainDisplay.prototype.setPresentationName = function (presentationName) {
-	this.$presentationName.html(presentationName);
+	this.$accountMenuPresentationName.html(presentationName);
 };
+
 
 /*
  * VIEW FUNCTIONS
  */
 
 MainDisplay.prototype.showWelcomeView = function() {
+	console.log("show WelcomeView");
 	this.initMainView();
 	this.welcomeDisplay.show();
+}
+
+MainDisplay.prototype.showAccountView = function(vars) {
+	this.initMainView(); 
+	this.accountDisplay.show();
 }

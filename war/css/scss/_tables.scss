@@ -40,14 +40,44 @@ table {
 			width: 100%;
 			//&.headers th:first-child { padding-left: 0; }
 			th { 
-				padding: 10px;
+				padding: $gutter / 2 * 1px!important;
+				width: $colWidth * 1px;
+				float: none!important; // for if it has a col-class
+				
+				
+				//&.col-1 { width: ($colWidth * 0.5 - 20) * 1px; }
+//				&.col-3 { width: ($colWidth * 1.5 - 20) * 1px; }
+//				&.col-4 { width: ($colWidth * 2.0 - 20) * 1px; }
+//				&.col-5 { width: ($colWidth * 2.5 - 20) * 1px; }
+//				&.col-6 { width: ($colWidth * 3.0 - 20) * 1px; }
+//				&.col-7 { width: ($colWidth * 3.5 - 20) * 1px; }
+//				&.col-8 { width: ($colWidth * 4.0 - 20) * 1px; }
+//				&.col-9 { width: ($colWidth * 4.5 - 20) * 1px; }
+//				&.col-10 { width: ($colWidth * 5.0 - 20) * 1px; }
+//				&.col-11 { width: ($colWidth * 5.5 - 20) * 1px; }
+//				&.col-12 { width: ($colWidth * 6.0 - 20) * 1px; }
+				
+				
+				
 				//&:first-child { padding-left: 0; }
 				
 				.sortButton {
+					cursor: pointer;
 					display: inline-block;
-					width: 10px; height: 10px;
-					margin: 0 5px;
-					background-color: $primary;
+					width: 13px; height: 13px;
+					//width: 64px; height: 64px;
+					margin: 0 -2px;
+					
+					//background-color: $primary;
+					
+					.icon {
+						display: block;			
+						height: 13px; //TODO var			
+						width: 64/73.9 * 13px; //TODO var
+									
+						use { fill: $shade3; }
+					}
+					&.active .icon use { fill: $primary; }
 				}
 			}
 		}		
@@ -72,8 +102,10 @@ table {
 				border-bottom: 1px $line1 solid;
 				padding: 5px 10px;
 				vertical-align: middle;
-			}	
-				
+				padding: $gutter / 2 * 1px!important;
+				width: $colWidth * 1px;
+				float: none!important; // for if it has a col-class
+			}					
 		}
 	}
 	

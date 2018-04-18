@@ -31,6 +31,9 @@ body {
 			z-index: 999;
 		}		
 	}
+	&.login {
+		background-color: $shade2;
+	}
 }
 
 .panel {
@@ -66,6 +69,7 @@ body {
 	}
 	.libraryPage & {
 		margin-right: $navWidthLibraryPage * -1px;
+		padding-top: ($headerHeight) * 1px;
 	}
 	
 	
@@ -212,10 +216,21 @@ body {
 	section {
 		max-width: ($siteWidthTablet - $navWidth - $siteMargin) * 1px;
 		padding-top: $panelSectionPaddingTop;
+		.libraryPage & {
+			padding-top: $gutter * 1px;
+		}
 		position: relative;
 				
 		@media #{$mediaQueryDesktop} {
 			max-width: 6 * ($colWidth + $gutter) * 1px;
+		}
+		
+		&.wide {
+			max-width: none;
+			
+			@media #{$mediaQueryDesktop} {
+				max-width: none;
+			}
 		}		
 		
 		&:after {
@@ -235,73 +250,63 @@ body {
  */
 
 #loginDisplayPanel {
-	@include flex;
 	@include align-items(center);
-	@include justify-content(center);
-	
+	background-color: $shade4;
+	@include flex;	
+	@include justify-content(center);	
 	min-height: 100%;
 	
 	.container {
-		max-width: 100%;
-		width: 580px;
-		position: relative;
-		
 		background: transparent url(../images/login-containerBackground.jpg) no-repeat top left; // TODO: replace by def image
 		background-size: contain;
+		max-width: 100%;		
+		position: relative;
+		width: 580px;		
 	}
 	
 	#loginBox {
+		color: $primaryLight;
+		left: 270 / 580 * 100%;
+		margin-top: 123px;
 		position: relative;
 		width: 310 / 580 * 100%;
-		left: 270 / 580 * 100%;
-
-		margin-top: 123px;
 		
-		color: $primaryLight;
+		.block.primary {
+			background-color: $primaryDark;
+			@include border-radius($defaultRadius);
+			padding: $gutter * 1px;
+		}
 		
 		form {
 			display: block;
 			width: 100%;
 			
+			&:after {
+			    content: "";
+			    clear: both;
+				display: block;
+				width: 100%;
+			}
+			
 			input[type="text"], input[type="password"] {
 				background: $primary;
-				width: 94%;
-				color: $white;
-				padding: 3%;
-				margin-bottom: 8px;
-				
-				font-family: 'Ubuntu', sans-serif;
-				font-size: 1em;
-				
+				color: $white;				
+								
 				@include placeholder {
 					color: $white;
-					font-family: 'Ubuntu', sans-serif;
-					font-size: 1em;					
 				}
 			}
 			input[type="submit"] {
-				@include resetButton;
-				position: relative;
-				left: 50%;
-				width: 50%;
-				margin-top: 8px;
-				padding: 4px;
-				background-color: $primary;
-				color: $white;
-
-				font-family: 'Ubuntu', sans-serif;
-				font-size: 14/16 * 1em;
-				font-weight: bold;
-				text-transform: uppercase;
+				margin-top: $gutter * 1px;
 			}
 		}
 		
 		p {
-			margin: 8px 0;
 			font-size: 14 / 16 * 1em;
 			line-height: 1.3em;
+			margin: 8px 0;
 		}
-		
+
 		ul {
 			font-size: 14 / 16 * 1em;
 			line-height: 1.8em;
@@ -310,6 +315,7 @@ body {
 		
 		a {
 			color: $white;
+			text-decoration: none;
 		}
 	}
 }
@@ -388,12 +394,22 @@ body {
 
 			@include box-shadow(0px,0px,10px,0px,$shadow);
 			
-			#presentationName, #schoolName {
-				clear: both;
+			#accountMenuPresentationName, #accountMenuSchoolName, #accountMenuUserRole {
 				color: $shade12;
+				display: inline;
+				padding: 0;
+			}
+			#accountMenuPresentationName {
+				&:before {
+					content: " ";
+				}
+			}
+			#accountMenuSchoolName {
+				clear: both;
 				display: block;
 				float: right;
-				padding: 0;
+				text-align: right;
+				width: 100%;				
 			}
 		}
 	}

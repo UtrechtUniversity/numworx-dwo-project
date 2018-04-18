@@ -1,6 +1,6 @@
 .row {
 	position: relative;
-	width: 100%;
+	//width: 100%;
 	float: left;
 	margin-bottom: $rowMarginBottom;
 	
@@ -10,6 +10,16 @@
 		display: block;
 		width: 100%;
 	}
+}
+.wide .row {
+	margin-right: ($navWidth + $siteMargin) * 1px;
+	@media #{$mediaQueryDesktop} {
+		margin-right: ($navWidthExpanded + $siteMargin) * 1px;
+	}
+}
+
+.libraryPage .wide .row {
+	margin-right: ($navWidthLibraryPage + $siteMargin) * 1px;
 }
 
 [class*="col-"] {
@@ -35,6 +45,21 @@
 .col-10  { width: (10 * $colWidth / 2 + $gutter *  4) * 1px; }
 .col-11  { width: (11 * $colWidth / 2 + $gutter *  4.5) * 1px; }
 .col-12  { width: (12 * $colWidth / 2 + $gutter *  5) * 1px; }
+
+.libraryPage {
+	.col-1  { width: (1 * $colWidthLibraryPage / 2 - $gutter * 0.5) * 1px; }
+	.col-2  { width: 2 * $colWidthLibraryPage / 2 * 1px; }
+	.col-3  { width: (3 * $colWidthLibraryPage / 2 + $gutter * 0.5) * 1px; }
+	.col-4  { width: (4 * $colWidthLibraryPage / 2 + $gutter *  1) * 1px; }
+	.col-5  { width: (5 * $colWidthLibraryPage / 2 + $gutter *  1.5) * 1px; }
+	.col-6  { width: (6 * $colWidthLibraryPage / 2 + $gutter *  2) * 1px; }
+	.col-7  { width: (7 * $colWidthLibraryPage / 2 + $gutter *  2.5) * 1px; }
+	.col-8  { width: (8 * $colWidthLibraryPage / 2 + $gutter *  3) * 1px; }
+	.col-9  { width: (9 * $colWidthLibraryPage / 2 + $gutter *  3.5) * 1px; }
+	.col-10  { width: (10 * $colWidthLibraryPage / 2 + $gutter *  4) * 1px; }
+	.col-11  { width: (11 * $colWidthLibraryPage / 2 + $gutter *  4.5) * 1px; }
+	.col-12  { width: (12 * $colWidthLibraryPage / 2 + $gutter *  5) * 1px; }
+}
 
 //@media #{$mediaQueryDesktop} {
 //	.col-1  { width: 1 * $colWidthDesktop * 1%; }

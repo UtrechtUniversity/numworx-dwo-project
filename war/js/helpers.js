@@ -64,9 +64,9 @@ tableSorter = function(tbody, index, attr, type, asc) {
 			console.log(val1+" - "+val2); 
 					
 			if (type == "string") {
-				if ( (asc && val2.localeCompare(val1) < 0) || (!asc && val2.localeCompare(val1) > 0) ) { shouldSwitch = true; break; }
+				if ( (!asc && val2.localeCompare(val1) < 0) || (asc && val2.localeCompare(val1) > 0) ) { shouldSwitch = true; break; }
 			} else {
-				if ( (asc && val2 < val1) || (!asc && val2 > val1) ) { shouldSwitch = true; break; }
+				if ( (!asc && val2 < val1) || (asc && val2 > val1) ) { shouldSwitch = true; break; }
 			}
 						
 		}		
@@ -85,6 +85,7 @@ tableSorter = function(tbody, index, attr, type, asc) {
 
 
 $(document).ready(function(){ 
+	
 	$selectableTables = $("table.selectable tr");
 	if ($selectableTables) initSelectableTables();
 	
@@ -93,6 +94,8 @@ $(document).ready(function(){
 	
 	
 	/* UGLY STUFF below */
+	
+	$('link[rel=stylesheet][href="https://teuniz.dwo.nl/gwtclient/gwtclient/gwt/clean/clean.css"]').remove();
 	
 	$(".tablewrap").scroll(function() {
 		var $this = $(this), left = $this.scrollLeft();
@@ -132,13 +135,15 @@ $(document).ready(function(){
 		attr = "score";
 		if ($this.data("attr")) attr = $this.data("attr");
 			
-		tableSorter(tbody, index, attr, type, asc);					
+		tableSorter(tbody, index, attr, type, asc);	
+		
+		$('.sortButton').removeClass("active");
+		$this.addClass("active");				
 	});
 		
 	$(window).resize( function() {
 		if ($(window).outerWidth() > (1366)) {
-			$("#help").addClass('active desktop');
-			
+			$("#help").addClass('active desktop');			
 			if ($(window).outerWidth() > (1366 + 158)) $("#help").addClass('col-3'); else $("#help").removeClass('col-3');
 			if ($(window).outerWidth() > (1366 + 158 + 1 * 79)) $("#help").addClass('col-4'); else $("#help").removeClass('col-4');
 			if ($(window).outerWidth() > (1366 + 158 + 2 * 79)) $("#help").addClass('col-5'); else $("#help").removeClass('col-5');
@@ -147,9 +152,7 @@ $(document).ready(function(){
 			if ($(window).outerWidth() > (1366 + 158 + 5 * 79)) $("#help").addClass('col-8'); else $("#help").removeClass('col-8');
 			if ($(window).outerWidth() > (1366 + 158 + 6 * 79)) $("#help").addClass('col-9'); else $("#help").removeClass('col-9');
 			if ($(window).outerWidth() > (1366 + 158 + 7 * 79)) $("#help").addClass('col-10'); else $("#help").removeClass('col-10');
-			if ($(window).outerWidth() > (1366 + 158 + 8 * 79)) $("#help").addClass('col-11'); else $("#help").removeClass('col-11');
-			
-			
+			if ($(window).outerWidth() > (1366 + 158 + 8 * 79)) $("#help").addClass('col-11'); else $("#help").removeClass('col-11');		
 		}		
 		else $("#help").removeClass('active desktop col-3 col-4 col-5 col-6');
 	} );
@@ -157,8 +160,15 @@ $(document).ready(function(){
 	
 	
 	// Test stuff below
-	if (window.location.hash == "#bibliotheek") { $("body").addClass("libraryPage"); } else { $("#libraryPageNav").hide(); $(".libraryPageIcon").hide(); $("nav h2").hide(); }
-	if (window.location.hash == "#lightbox") { $("body").addClass("overlay"); $(".lightbox").show(); }
-	if (window.location.hash == "#dialog") { $("body").addClass("overlay"); $(".dialog").show(); }
+	$(".panel").hide();
+	$("#mainPanel").show();
+	$("#demoDisplayPanel").show();
+	$("#libraryDisplayPanel").hide();
+	$("#libraryPageNav").hide(); $(".libraryPageIcon").hide(); $("nav h2").hide();
+	if (window.location.hash == "#bibliotheek") { $("body").addClass("libraryPage"); $("#demoDisplayPanel").hide(); $("#libraryDisplayPanel").show(); $("#libraryPageNav").show(); $(".libraryPageIcon").show(); $("nav h2").show(); return; } 
+	if (window.location.hash == "#lightbox") { $("body").addClass("overlay"); $(".lightbox").show(); return; }
+	if (window.location.hash == "#dialog") { $("body").addClass("overlay"); $(".dialog").show(); return; }
+	if (window.location.hash == "#login") { $("#mainPanel").hide(); $("#loginDisplayPanel").show(); return; }
+	
 	
 });

@@ -23,7 +23,8 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
     private EventBus eventBus;
 
     public interface Display {
-
+        public boolean isMenuVisible();
+        
         public void setSchoolName(String schoolName);
 
         public void setUserRole(String userRole);
@@ -59,8 +60,6 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
         public void showCoursesOfSchoolClassView();
 
         public void setCurrentPanelName(String panel);
-
-        public boolean isMenuVisible();
 
         public void showPersonsView();
 

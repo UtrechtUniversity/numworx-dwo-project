@@ -58,6 +58,7 @@ h2 {
 	
 	&.sectionhead {
 		border-bottom: 1px $primary solid;
+		font-size: 14 / 16 * 1em;
 		line-height: $gutter * 1px;
 		width: 100%;
 		header & { border-bottom-style: none; }
@@ -131,8 +132,10 @@ input[type="submit"], button {
 	letter-spacing: .3px;
 	font-size: 12px;
 }
-input[type="text"] {
+input[type="text"], input[type="password"] {
 	font-family: 'Ubuntu', sans-serif;
+	font-size: 1em;
+	line-height: 1em;	
 }
 .options .option label {
 	font-size: 12px;
@@ -140,7 +143,9 @@ input[type="text"] {
 
 label {
 	color: $primaryLight;
+	font-size: 13 / 17 * 1em;
 	font-weight: bold;
+
 	
 	&.input {
 		text-transform: uppercase;
@@ -161,8 +166,13 @@ a.resultIndicator {
 }
 
 table thead tr th {
+	font-size: 13 / 16 * 1em;
 	text-transform: uppercase;
 	color: $primaryLight;
+}
+
+table tbody tr td {
+	font-size: 13 / 16 * 1em;
 }
 
 table.results {

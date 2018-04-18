@@ -1,8 +1,10 @@
-/*
+/**
  * Tried to follow Google's Javascript Styleguide
  * https://google.github.io/styleguide/javascriptguide.xml?showone=Nested_functions#Nested_functions
  *
  * Variables starting with a $ tells you they are jQuery objects.
+ *
+ * @author T.D. van Wijngaarden
  */
 
 function MainApp() {	
@@ -20,5 +22,7 @@ MainApp.prototype.getPresenterFactory = function() {
 
 $(document).ready(function(){ 
 	window.app = new MainApp();
+	
+	//setTimeout(function() { app.getPresenterFactory().loginPresenter.loginClicked("teuniz", "***", false); }, 1000); // temporary auto login
 });
 	

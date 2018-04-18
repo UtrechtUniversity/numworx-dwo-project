@@ -14,8 +14,10 @@ function LoginDisplay() {
 }
 
 LoginDisplay.prototype.show = function() {
-	console.log("show login panel");
 	this.panel.show();
+}
+LoginDisplay.prototype.hide = function() {	
+	this.panel.hide();
 }
 LoginDisplay.prototype.disable = function() {
 	this.usernameField.val("");
@@ -26,11 +28,13 @@ LoginDisplay.prototype.disable = function() {
 LoginDisplay.prototype.login = function(event) {
 	event.preventDefault();
 	
-	var username = this.usernameField.val(), password = this.passwordField.val();
+	var username = this.usernameField.val(), 
+	    password = this.passwordField.val();
 	
 	this.disable();
 	
-	app.getPresenterFactory().loginPresenter.loginClicked(username,password,false);
+	console.log("log in");
+	app.getPresenterFactory().loginPresenter.loginClicked(username, password, false);
 };
 
 
