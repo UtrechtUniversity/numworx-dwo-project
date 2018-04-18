@@ -31,13 +31,24 @@ public class JsAddStudentToSchoolclassDisplay {
      */
      public static native void showStudents(JavaScriptObject data);
 
-             /**
+     /**
      * setEmptyTableMessage show an indicator that the table is empty.
      */
-    public static native void setEmptyTableMessage();
+    public static native void setEmptyTableMessageA();
 
     /**
      * setEmptyTableMessage show an indicator that we are fetching data.
      */
-    public static native void setLoadingTableMessage();
+    public static native void setLoadingTableMessageA();
+
+
+     /**
+     * setEmptyTableMessage show an indicator that the table is empty.
+     */
+    public static native void setEmptyTableMessageB();
+
+    /**
+     * setEmptyTableMessage show an indicator that we are fetching data.
+     */
+    public static native void setLoadingTableMessageB();
 }

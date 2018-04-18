@@ -26,15 +26,24 @@ public class JsCopyOrMoveStudentToSchoolclassView implements CopyOrMoveStudentTo
     }
 
     @Override
-    public void setEmptyTableMessage() {
-        JsAddStudentToSchoolclassDisplay.setEmptyTableMessage();
+    public void setEmptyTableMessageA() {
+        JsAddStudentToSchoolclassDisplay.setEmptyTableMessageA();
     }
 
     @Override
-    public void setsetLoadingTableMessage() {
-       JsAddStudentToSchoolclassDisplay.setLoadingTableMessage();
+    public void setLoadingTableMessageA() {
+       JsAddStudentToSchoolclassDisplay.setLoadingTableMessageA();
     }
 
+    @Override
+    public void setEmptyTableMessageB() {
+        JsAddStudentToSchoolclassDisplay.setEmptyTableMessageB();
+    }
+
+    @Override
+    public void setLoadingTableMessageB() {
+       JsAddStudentToSchoolclassDisplay.setLoadingTableMessageB();
+    }
 //
 //    @Override
 //    public void showSchoolClasses(List<DomSchoolClass> schoolClasses) {
@@ -61,6 +70,21 @@ public class JsCopyOrMoveStudentToSchoolclassView implements CopyOrMoveStudentTo
             object.put(student.getId().getIdString(), DomStudentCodec.CODEC.encode(student));
         }
         JsCopyOrMoveStudentToSchoolclassDisplay.showStudentsClassB(object.getJavaScriptObject());
+    }
+
+    @Override
+    public void SetClassA(DomSchoolClass schoolClass) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void SetClassB(DomSchoolClass schoolClass) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void SetClassList(List<DomSchoolClass> classList) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
         
 }

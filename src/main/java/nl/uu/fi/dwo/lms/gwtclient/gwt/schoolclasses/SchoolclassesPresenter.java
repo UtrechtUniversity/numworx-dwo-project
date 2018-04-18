@@ -198,23 +198,23 @@ public class SchoolclassesPresenter {
     public void editSchoolClass(String key) {
         eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.EditSchoolClass, schoolClassMap.get(key)));
     }
-
-    @JsMethod
-    public void connectStudents(String key) {
-    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDSTUDENTTOSCHOOLCLASS,
-        schoolClassMap.get(key)));
-    }
-
-    @JsMethod
-    public void connectTeachers(String key) {
-    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDTEACHERTOSCHOOLCLASS,
-        schoolClassMap.get(key)));
-    }
-
-    @JsMethod
-    public void editModules(String key) {
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.EDITCOURSESOFSCHOOLCLASS, schoolClassMap.get(key)));
-    }
+//
+//    @JsMethod
+//    public void connectStudents(String key) {
+//    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDSTUDENTTOSCHOOLCLASS,
+//        schoolClassMap.get(key)));
+//    }
+//
+//    @JsMethod
+//    public void connectTeachers(String key) {
+//    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDTEACHERTOSCHOOLCLASS,
+//        schoolClassMap.get(key)));
+//    }
+//
+//    @JsMethod
+//    public void editModules(String key) {
+//        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.EDITCOURSESOFSCHOOLCLASS, schoolClassMap.get(key)));
+//    }
 //
 //    @JsMethod
 //    public void removeSchoolClass(String key) {

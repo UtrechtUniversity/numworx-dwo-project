@@ -211,9 +211,9 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
     public void onLoginEvent(LoginEvent loginEvent) {
         /// display.showPostLoginWidgets();
     }
-
-    @JsMethod
-    public String getTranslation(String key) {
-        return rb.getString(key);
-    }
+//
+//    @JsMethod
+//    public String getTranslation(String key) {
+//        return rb.getString(key);
+//    }
 }
