@@ -377,22 +377,22 @@ public interface DbAccessIF  {
 //            String lastname, String email, int classID)
 //            throws DwoXmlRpcException, IOException, XmlRpcException,
 //            SQLException;
-    /**
-     * @param userID
-     * @param password
-     * @param firstname
-     * @param middlename
-     * @param lastname
-     * @param email
-     * @return boolean
-     * @throws fi.dwo.client.system.RegisterException
-     * @throws java.sql.SQLException
-     *
-     */
-    public boolean changeAccount(int userID, String password,
-            String newPassword, String firstname, String middlename,
-            String lastname, String email) throws DwoXmlRpcException,
-            IOException, XmlRpcException, SQLException;
+//    /**
+//     * @param userID
+//     * @param password
+//     * @param firstname
+//     * @param middlename
+//     * @param lastname
+//     * @param email
+//     * @return boolean
+//     * @throws fi.dwo.client.system.RegisterException
+//     * @throws java.sql.SQLException
+//     *
+//     */
+//    public boolean changeAccount(int userID, String password,
+//            String newPassword, String firstname, String middlename,
+//            String lastname, String email) throws DwoXmlRpcException,
+//            IOException, XmlRpcException, SQLException;
 
 //    /**
 //     * @param teacher
