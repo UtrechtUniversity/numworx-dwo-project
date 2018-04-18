@@ -96,8 +96,8 @@ public class StudentModelPanel extends nl.uu.fi.dwo.account.client.StudentModelP
 			DomStudentModelCategory child = categories.get(i);
 			DomStudentModelCategoryScore cScore = modelStructureScore.getCategories().get(i);
 			categorieString[i] = child.getInfo().getTitle().get(locale);
-			categoryScoreObjectives[i] = cScore.getScore()/cScore.getCount();
-			categorieMaxObjectives[i] = 1;
+			categoryScoreObjectives[i] = cScore.getScore();
+			categorieMaxObjectives[i] = cScore.getCount();
 			List<DomStudentModelObj> list = child.getObjectives();
 			String[] o = new String[list.size()];
 			double[] s = new double[o.length];
@@ -106,8 +106,8 @@ public class StudentModelPanel extends nl.uu.fi.dwo.account.client.StudentModelP
 				o[j] = list.get(j).getInfo().getTitle().get(locale);
 				s[j] = cScore.getObjectives().get(j).getScore();
 				m[j] = cScore.getObjectives().get(j).getCount();
-				s[j] = s[j]/m[j];
-				m[j] = 1;
+//				s[j] = s[j]/m[j];
+//				m[j] = 1;
 			}
 			objectives[i] =o;
 			scores[i] = s;
