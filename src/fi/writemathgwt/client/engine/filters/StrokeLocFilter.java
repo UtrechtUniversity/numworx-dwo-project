@@ -42,19 +42,19 @@ public class StrokeLocFilter {
 		if("2".equals(teken)) {int[][] data = {};return data;}
 		if("3".equals(teken)) {int[][] data = {{0,100,0,20,0,15,5},{0,70,70,100,39,39,1}};return data;}
 		if("4".equals(teken)) {int[][] data = {{0,100,90,100,39,39,1},{0,100,0,90,0,30,30}};return data;}
-		if("6".equals(teken)) {int[][] data = {{0,100,0,10,0,0,1},{0,100,90,100,16,33,5}};return data;}
+		if("6".equals(teken)) {int[][] data = {{0,100,0,20,0,0,1},{0,100,90,100,16,33,5},{0,100,30,100,20,39,20}};return data;}
 		if("7".equals(teken)) {int[][] data = {{0,100,0,25,4,15,11}};return data;}
 		if("8".equals(teken)) {int[][] data = {{50,100,40,100,10,20,5}};return data;}
-		if("9".equals(teken)) {int[][] data = {{0,100,0,60,0,27,20},{5,100,0,30,15,30,1},{0,100,0,15,0,10,4}};return data;}
-		
+		if("9".equals(teken)) {int[][] data = {{0,100,0,55,0,20,21},{5,100,0,30,15,30,1},{0,100,0,15,0,10,4}};return data;}
+
 		if("a".equals(teken)) {int[][] data = {{0,100,70,100,8,20,4},{0,15,40,100,5,20,5},{50,100,60,100,39,39,1}};return data;}
 		if("b".equals(teken)) {int[][] data = {{0,100,0,10,0,2,1},{0,100,30,100,10,39,27},{0,50,70,100,9,20,1}};return data;}
 		if("b_1".equals(teken)) {int[][] data = {};return data;}
 		if("c".equals(teken)) {int[][] data = {{35,100,0,30,0,0,1},{40,100,60,100,39,39,1},{0,10,0,100,10,30,7}};return data;}
-		if("d".equals(teken)) {int[][] data = {{0,100,30,100,0,15,16}};return data;}
+		if("d".equals(teken)) {int[][] data = {{0,100,30,100,0,15,16},{0,100,80,100,34,39,1}};return data;}
 		if("e".equals(teken)) {int[][] data = {};return data;}
 		if("f".equals(teken)) {int[][] data = {{30,100,20,70,39,39,1}};return data;}
-		if("g".equals(teken)) {int[][] data = {};return data;}
+		if("g".equals(teken)) {int[][] data = {{0,100,0,60,0,20,21}};return data;}
 		if("h".equals(teken)) {int[][] data = {{0,100,0,20,0,0,1},{0,100,30,100,10,39,27},{50,100,80,100,39,39,1}};return data;}
 		if("h_1".equals(teken)) {int[][] data = {{70,100,80,100,38,39,1},{0,60,30,100,0,0,1}};return data;}
 		if("k".equals(teken)) {int[][] data = {{0,100,35,100,8,30,17},{0,60,60,100,30,35,1}};return data;}
@@ -62,8 +62,8 @@ public class StrokeLocFilter {
 		if("l".equals(teken)) {int[][] data = {};return data;}
 		if("l_1".equals(teken)) {int[][] data = {{0,60,30,100,0,0,1},{0,100,80,100,39,39,1}};return data;}
 		if("m".equals(teken)) {int[][] data = {{0,50,70,100,5,15,1},{25,75,50,100,20,25,1},{50,100,70,100,34,39,1}};return data;}
-		if("n".equals(teken)) {int[][] data = {{50,100,0,100,25,39,8},{0,50,70,100,5,18,1}};return data;}
-		if("o".equals(teken)) {int[][] data = {{75,100,0,25,39,39,1}};return data;}
+		if("n".equals(teken)) {int[][] data = {{50,100,0,100,25,39,8},{0,50,70,100,5,18,1},{50,100,70,100,30,39,1}};return data;}
+		if("o".equals(teken)) {int[][] data = {{75,100,0,25,39,39,1},{0,100,0,30,0,10,1}};return data;}
 		if("p".equals(teken)) {int[][] data = {{0,100,0,65,22,39,16},{0,40,90,100,10,20,1}};return data;}
 		if("q".equals(teken)) {int[][] data = {};return data;}
 		if("r".equals(teken)) {int[][] data = {{0,60,0,50,0,0,1},{90,100,0,30,39,39,1}};return data;}
@@ -78,7 +78,7 @@ public class StrokeLocFilter {
 		
 		if("B".equals(teken)) {int[][] data = {{0,100,0,25,15,25,4},{0,30,0,100,1,20,10}};return data;}
 		if("D".equals(teken)) {int[][] data = {{0,100,80,100,30,39,5},{0,100,0,20,14,27,5},{80,100,0,100,24,33,5}};return data;}
-		if("G".equals(teken)) {int[][] data = {{60,100,40,80,39,39,1},{0,29,0,100,10,25,10},{1,100,80,100,20,30,5},{1,100,90,100,20,30,5}};return data;}
+		if("G".equals(teken)) {int[][] data = {{60,100,40,80,39,39,1},{0,29,0,100,10,25,10},{1,100,80,100,20,30,5},{1,100,90,100,15,30,5},{1,100,40,100,25,39,15}};return data;}
 		if("L".equals(teken)) {int[][] data = {{0,40,0,100,0,25,10},{0,100,80,100,20,39,10}};return data;}
 		if("M".equals(teken)) {int[][] data = {{0,50,0,20,8,20,2},{50,100,0,20,20,30,2},{30,70,30,100,15,25,1},{0,20,70,100,0,0,1},{80,100,70,100,39,39,1}};return data;}
 		if("R".equals(teken)) {int[][] data = {{0,100,0,10,20,30,2},{0,20,70,100,5,15,1},{0,60,30,70,25,35,1}};return data;}

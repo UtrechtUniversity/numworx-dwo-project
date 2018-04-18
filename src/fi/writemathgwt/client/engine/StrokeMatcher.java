@@ -109,7 +109,7 @@ public class StrokeMatcher {
 	
 	public static double getMatchScoreDir(Stroke stroke, String teken, double rot) {
 		Stroke sample = ReferenceSamples.getReferenceStroke(teken);//ts.getTestStroke(0, teken);//
-		if(sample==null)
+		if(sample==null || stroke==null)
 			return 2000;
 		int margin = 3;
 		double matchScore = 0;
