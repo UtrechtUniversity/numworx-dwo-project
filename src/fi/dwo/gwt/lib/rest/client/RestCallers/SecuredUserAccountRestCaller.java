@@ -1,7 +1,5 @@
 package fi.dwo.gwt.lib.rest.client.RestCallers;
 
-import fi.dwo.gwt.lib.rest.CallManagers.Callback;
-import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 
 import javax.ws.rs.FormParam;
@@ -43,16 +41,16 @@ public interface SecuredUserAccountRestCaller extends RestService {
     public void getAccountData(MethodCallback<DomUserFull> callback);
 
     @PUT
-    @Path("/secure/user/account/update")
-    public void updateAccountData(RestUserFull updateUser, Callback<DomUserFull> callback);
+    @Path("/sec:{id}/user/account/update")
+    public void updateAccountData(@PathParam("id") String id, RestUserFull updateUser, MethodCallback<DomUserFull> callBack);
 
     @PUT
     @Path("/public/user/submitSaml")
     public void getSamlUser(RestSamlUser samlRestUser, MethodCallback<DomUserFullwLoginContext> restcallback);
 
     @PUT
-    @Path("/secure/user/account/basicAuthLogout")
-    public void logout(RestLoginContext loginContext, MethodCallback<Dwo2Exception> callback);
+    @Path("/sec:{id}/user/account/basicAuthLogout")
+    public void logout(@PathParam("id") String id, RestLoginContext loginContext, MethodCallback<Dwo2Exception> callback);
 
     @GET
     @Path("/secure/user/account/getLoginContext")
@@ -69,5 +67,5 @@ public interface SecuredUserAccountRestCaller extends RestService {
 
     @GET
     @Path("/secure/user/account/verifyTOTP")
-    public void verifyTOTP(PromiseCallback<JSONValue> callback);
+    public void verifyTOTP(MethodCallback<JSONValue> callback);
 }

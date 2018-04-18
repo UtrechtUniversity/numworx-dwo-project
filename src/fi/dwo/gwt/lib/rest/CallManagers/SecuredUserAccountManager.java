@@ -11,6 +11,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserAccountRestCaller;
+import fi.dwo.gwt.lib.rest.util.PathId;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginCheck;
@@ -122,7 +123,6 @@ public class SecuredUserAccountManager {
     public void loginUser(final String name, String password, final AsyncCallback<DomUserFullwLoginContext> callback,
             LoginPresenter presenter) {
         final String pwmd5 = MD5.md5(password);
-        GWT.log(pwmd5);
         loginUserMD5(name, pwmd5, callback, presenter);
 
     }
@@ -234,17 +234,27 @@ public class SecuredUserAccountManager {
         this.updateAccountData(updateUser, defer);
         return defer.getPromise();
     }
+    public Promise<DomUserFull> updateAccountData(DomContext context, DomUserFull updateUser) {
+        PromiseCallback<DomUserFull> defer = new PromiseCallback<DomUserFull>();
+        this.updateAccountData(context, updateUser, defer);
+        return defer.getPromise();
+    }
 
     /**
      *
      * @param updateUser
      * @param callBack
+     * @deprecated use with context
      */
     public void updateAccountData(DomUserFull updateUser, AsyncCallback<DomUserFull> callBack) {
-        RestUserFull user = new RestUserFull();
-        user.setRestContext(new DomContext());
+    	updateAccountData(new DomContext(), updateUser, new Callback<DomUserFull>(callBack));
+    }
+    
+    public void updateAccountData(DomContext context, DomUserFull updateUser, MethodCallback<DomUserFull> callBack) {   
+    	RestUserFull user = new RestUserFull();
+        user.setRestContext(context);
         user.setDomUserFull(updateUser);
-        service.updateAccountData(user, new Callback<DomUserFull>(callBack));
+        service.updateAccountData(PathId.getId(context), user, (callBack));
     }
 
     /**
@@ -335,21 +345,26 @@ public class SecuredUserAccountManager {
         this.logout(loginContext, defer);
         return defer.getPromise();
     }
-
-    public void logout(DomLoginContext loginContext, AsyncCallback<Dwo2Exception> callback) {
-        RestLoginContext restcontext = new RestLoginContext();
-        restcontext.setDomLoginContext(loginContext);
-        restcontext.setRestContext(new DomContext());
-        service.logout(restcontext, new Callback<Dwo2Exception>(callback));
+ 
+    public Promise<Dwo2Exception> logout(DomContext context, DomLoginContext loginContext) {
+        PromiseCallback<Dwo2Exception> defer = new PromiseCallback<Dwo2Exception>();
+        this.logout(context, loginContext, defer);
+        return defer.getPromise();
     }
 
-//   public Promise<DomLoginContext> logout() {
-//        PromiseCallback<DomLoginContext> defer = new PromiseCallback<DomLoginContext>();
-//        this.getLoginContext(defer);
-//        return defer.getPromise();
-//    }
+    @Deprecated
+    public void logout(DomLoginContext loginContext, AsyncCallback<Dwo2Exception> callback) {
+    	logout(new DomContext(), loginContext,  new Callback<Dwo2Exception>(callback));
+    }
+ 
+    public void logout(DomContext context, DomLoginContext loginContext, MethodCallback<Dwo2Exception> callback) {
+        RestLoginContext restcontext = new RestLoginContext();
+        restcontext.setDomLoginContext(loginContext);
+        restcontext.setRestContext(context);
+        service.logout(PathId.getId(context), restcontext, callback);
+    }
 
-       public Promise<DomLoginContext> getLoginContext() {
+    public Promise<DomLoginContext> getLoginContext() {
         PromiseCallback<DomLoginContext> defer = new PromiseCallback<DomLoginContext>();
         this.getLoginContext(defer);
         return defer.getPromise();
