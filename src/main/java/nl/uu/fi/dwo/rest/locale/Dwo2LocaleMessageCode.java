@@ -9,7 +9,7 @@ package nl.uu.fi.dwo.rest.locale;
  * @author Gert van der Plas
  */
 public enum Dwo2LocaleMessageCode {
-    GUI_Button_Ok,  
+GUI_Button_Ok,  
 GUI_Button_Cancel,
 GUI_Button_Update,
 GUI_Button_AddTeachersToClass,
