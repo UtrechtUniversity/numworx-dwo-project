@@ -264,7 +264,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	{
 
 		LOG.info("fire + " + event.getCommand() + " s: " + event.getSource());
-		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
+		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this); // Why?
 		if (this.comRoot != null)
 			this.comRoot.fireEvent(event);
 	}
@@ -428,7 +428,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		// alleen als nagekeken.
 		feedback = mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN
 			|| (mode == OpdrNavIF.EINDTOETS && nagekeken);
-		kijkNa(feedback);
+		kijkNa(feedback, false);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		if (bewaarOptie && pendingState != null)
 			map.put("state", pendingState);
@@ -544,7 +544,10 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		changed = b;
 	}
 
-	private void kijkNa(boolean feedback) // getState/kijkna
+	private void kijkNa(boolean feedback) {
+		kijkNa(feedback, true);
+	}
+	private void kijkNa(boolean feedback, boolean fire) // getState/kijkna
 	{
 		if (nakijken && ggbApplet != null)
 		{
@@ -633,7 +636,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		if (isCorrect() == null || !isCorrect()) // halfgoed of fout
 			verhoogErrorCount();
 
-		if (feedback && nakijken)
+		if (feedback && nakijken && fire)
 		{
 			// cross widget communicatie
 			if (correct == null) // halfgoed
