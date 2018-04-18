@@ -718,7 +718,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		if ( widget.isAttached() ) {
 			Widget w = widget;
 			Widget root = RootLayoutPanel.get();
-			while (w != root) {
+			while (w != root && w != null) {
 				if (!w.isVisible()) return false;
 				w = w.getParent();
 			}
@@ -858,7 +858,6 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		}
 		
 	}
-
 	
 	private String toMathML() {
 		StringBuilder sb = new StringBuilder();
@@ -874,9 +873,12 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		}
 		return sb.toString();
 	}
-	
-	
-	
+
+	@Override
+	public String toString() {
+		return getText();
+	}
+
 	private String xmlEncode(String text) {
 		return text.replace("&", "&amp;").replace("<", "&lt;");
 	}

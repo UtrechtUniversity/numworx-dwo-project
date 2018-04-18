@@ -1383,6 +1383,11 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		fontOvererving = b;
 	}
 
+	@Override
+	public String toString() {
+		return getText();
+	}
+
 	private final class FormuleEditorVak extends FormuleEditor implements IsWidget
 	{
 		public Widget asWidget()
