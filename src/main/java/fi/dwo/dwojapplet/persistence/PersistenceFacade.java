@@ -1617,58 +1617,58 @@ public class PersistenceFacade {
         }
     }
 
-    /**
-     * Changes the account of the user.
-     *
-     * @param user The user to change.
-     * @param password The new password.
-     * @param newPassword
-     * @param firstname The new firstname.
-     * @param middlename The new middlename. e.g: <code>Van</code>
-     * @param lastname The new lastname.
-     * @param email The new e-mail address of the user.
-     * @return boolean If the user was successfully changed it returns true,
-     * otherwise false is returned.
-     * @throws fi.dwo.commons.exceptions.RegisterException
-     *
-     */
-    public boolean changeAccount(User user, String password,
-            String newPassword, String firstname, String middlename,
-            String lastname, String email) throws RegisterException {
-        if (password != null) {
-            password = MD5.getHashString(password);
-        } else {
-            password = "";
-        }
-        newPassword = MD5.getHashString(newPassword);
-
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                return dbAccess.changeAccount(user.getUserID(), password,
-                        newPassword, firstname, middlename, lastname, email);
-            }
-            catch (IOException e) {
-                throw new RegisterException(RegisterException.EX_IO);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (RegisterException) getException(e, e.code);
-                } else {
-                    throw new RegisterException(RegisterException.EX_XML_RPC);
-                }
-            }
-            catch (SQLException e) {
-                throw new RegisterException(RegisterException.EX_DB);
-            }
-            catch (DwoXmlRpcException e) {
-                throw (RegisterException) getException(e, e.code);
-            }
-        }
-        catch (PersistenceException e) {
-            throw new RegisterException(RegisterException.EX_UNKNOWN_ERROR);
-        }
-    }
+//    /**
+//     * Changes the account of the user.
+//     *
+//     * @param user The user to change.
+//     * @param password The new password.
+//     * @param newPassword
+//     * @param firstname The new firstname.
+//     * @param middlename The new middlename. e.g: <code>Van</code>
+//     * @param lastname The new lastname.
+//     * @param email The new e-mail address of the user.
+//     * @return boolean If the user was successfully changed it returns true,
+//     * otherwise false is returned.
+//     * @throws fi.dwo.commons.exceptions.RegisterException
+//     *
+//     */
+//    public boolean changeAccount(User user, String password,
+//            String newPassword, String firstname, String middlename,
+//            String lastname, String email) throws RegisterException {
+//        if (password != null) {
+//            password = MD5.getHashString(password);
+//        } else {
+//            password = "";
+//        }
+//        newPassword = MD5.getHashString(newPassword);
+//
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                return dbAccess.changeAccount(user.getUserID(), password,
+//                        newPassword, firstname, middlename, lastname, email);
+//            }
+//            catch (IOException e) {
+//                throw new RegisterException(RegisterException.EX_IO);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (RegisterException) getException(e, e.code);
+//                } else {
+//                    throw new RegisterException(RegisterException.EX_XML_RPC);
+//                }
+//            }
+//            catch (SQLException e) {
+//                throw new RegisterException(RegisterException.EX_DB);
+//            }
+//            catch (DwoXmlRpcException e) {
+//                throw (RegisterException) getException(e, e.code);
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            throw new RegisterException(RegisterException.EX_UNKNOWN_ERROR);
+//        }
+//    }
 
     private static final DbAccessLogin LOGIN_SAML = new DbAccessLogin() {
 

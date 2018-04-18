@@ -295,19 +295,19 @@ class DbAccessClient extends Client implements DbAccessIF {
 //        return ((Boolean) object).booleanValue();
 //    }
 
-    @Override
-    public boolean changeAccount(int a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e, java.lang.String f, java.lang.String g) throws IOException, XmlRpcException {
-        Vector vv = new Vector(7);
-        vv.addElement(new Integer(a));
-        vv.addElement(b);
-        vv.addElement(c);
-        vv.addElement(d);
-        vv.addElement(e);
-        vv.addElement(f);
-        vv.addElement(g);
-        Object object = invoke("changeAccount", vv);
-        return ((Boolean) object).booleanValue();
-    }
+//    @Override
+//    public boolean changeAccount(int a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e, java.lang.String f, java.lang.String g) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(7);
+//        vv.addElement(new Integer(a));
+//        vv.addElement(b);
+//        vv.addElement(c);
+//        vv.addElement(d);
+//        vv.addElement(e);
+//        vv.addElement(f);
+//        vv.addElement(g);
+//        Object object = invoke("changeAccount", vv);
+//        return ((Boolean) object).booleanValue();
+//    }
 
 //    @Override
 //    public java.util.Hashtable addClass(int a, java.lang.String b) throws IOException, XmlRpcException {
