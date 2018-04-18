@@ -35,9 +35,9 @@ public class DomStudentModelStructureScore extends DomStudentModelScore<DomStude
      */
     @Transient
     public void recalculateAncestors(){
-        long count =0L;
-        double score = 0.0;
         for (DomStudentModelCategoryScore cat :this.getCategories()){
+            long count =0L;
+            double score = 0.0;
             for (DomStudentModelObjectiveScore obj :cat.getObjectives()){
                 count += obj.getCount();
                 score += obj.getScore();
