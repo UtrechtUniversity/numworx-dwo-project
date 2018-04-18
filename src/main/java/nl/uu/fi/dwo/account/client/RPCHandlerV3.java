@@ -260,7 +260,6 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		return sco;
 	}
 
-	private DomContext context = new DomContext();
 	private boolean secure = false;
 	
 	

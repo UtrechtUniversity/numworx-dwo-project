@@ -18,6 +18,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -38,6 +39,8 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      *
      */
     protected final SecuredUserSchoolLoginManagerV2 schoolManager = new SecuredUserSchoolLoginManagerV2();
+
+	protected DomContext context = new DomContext();
 	private static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
 
     /**
@@ -221,7 +224,9 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
 			@Override
 			public Promise<Void> call(Promise<Void> resolved) throws Exception {
 				if(DwoGlobalVars.instance().getCurrentUser() != null) {
-					resolved = accountManager.logout(DwoGlobalVars.instance().getCurrentLoginContext())
+					resolved = accountManager.logout(
+							context,
+							DwoGlobalVars.instance().getCurrentLoginContext())
 						.then(new Success<Dwo2Exception, Void>() {
 
 							@Override

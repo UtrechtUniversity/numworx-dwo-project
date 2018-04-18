@@ -46,26 +46,22 @@ class ProfileController {
      */
     public void callUpdate() {
         LOG.log(Level.INFO, "Calling REST-interface login.");
-        manager.updateAccountData(updateUser, new AsyncCallback<DomUserFull>() {
-            @Override
-            public void onFailure(Throwable t) {
-                //fail and reset all the data.
-                Window.alert(t.getMessage());
-            }
+        manager.updateAccountData(DwoGlobalVars.instance().getContext(), updateUser).then (
+        		p-> { DomUserFull result = p.getValue();
+                LOG.log(Level.INFO, "update was succesful.");
+                currentUser = result;
+                updateUser = currentUser.duplicate();
+                //update Globals otherwise can't loginUser in passwd change!
+                DwoGlobalVars.instance().setCurrentUser(currentUser);
+                //update rest authentication done by setcurrentuser
+                view.init(currentUser);
+                view.getPopup().hide();
+                return null; 
+        		},
+        		p -> Window.alert(p.getFailure().getMessage())
 
-            @Override
-            public void onSuccess(DomUserFull result) {
-                //success and set all the data in the view
-                    LOG.log(Level.INFO, "update was succesful.");
-                    currentUser = result;
-                    updateUser = currentUser.duplicate();
-                    //update Globals otherwise can't loginUser in passwd change!
-                    DwoGlobalVars.instance().setCurrentUser(currentUser);
-                    //update rest authentication done by setcurrentuser
-                    view.init(currentUser);
-                    view.getPopup().hide();
-            }
-        });
+        		);
+
     }
 
     /**
