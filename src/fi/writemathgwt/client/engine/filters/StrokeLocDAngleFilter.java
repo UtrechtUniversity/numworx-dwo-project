@@ -36,16 +36,23 @@ private static HashMap<String,int[][]> cachedLocDAngleData = new HashMap<String,
 		
 		if("b".equals(teken)) {int[][] data = {{180,30,10,22}};return data;}
 		if("b_1".equals(teken)) {int[][] data = {{-180,140,30,39}};return data;}
+		if("d".equals(teken)) {int[][] data = {{180,40,20,35}};return data;}
 		if("h".equals(teken)) {int[][] data = {{180,40,10,25}};return data;}
 		if("h_1".equals(teken)) {int[][] data = {{150,40,16,33},{-100,40,28,39}};return data;}
 		if("k".equals(teken)) {int[][] data = {{120,60,29,38}};return data;}
 		if("k_1".equals(teken)) {int[][] data = {{120,60,32,39}};return data;}
+		if("p".equals(teken)) {int[][] data = {{180,40,5,20}};return data;}
 		if("r".equals(teken)) {int[][] data = {{180,40,10,22}};return data;}
 		if("n".equals(teken)) {int[][] data = {{170,40,5,20}};return data;}
 		if("u".equals(teken)) {int[][] data = {{-160,30,20,35}};return data;}
 		if("z".equals(teken)) {int[][] data = {{-130,30,5,20}};return data;}
 
-		if("B".equals(teken)) {int[][] data = {{120,60,20,35}};return data;}
+		if("B".equals(teken)) {int[][] data = {{120,60,20,35},{180,40,5,20}};return data;}
+		if("D".equals(teken)) {int[][] data = {{180,40,5,20}};return data;}
+
+
+		if("μ".equals(teken)) {int[][] data = {{180,40,5,20}};return data;}
+
 		
 		if(">".equals(teken)) {int[][] data = {{-120,30,10,30}};return data;}
 
