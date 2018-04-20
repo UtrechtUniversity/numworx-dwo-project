@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -42,16 +43,13 @@ public class MsgDialogView extends Composite implements MsgDialogPresenter.Displ
     	initWidget(uiBinder.createAndBindUi(this));
         msgDialogPresenter = mp;
         mp.setView(this);
-        okButton.addClickHandler(this);
+        //okButton.addClickHandler(this);
     }
 
+    @UiHandler("okButton")
     public void onClick(ClickEvent event) {
         if (event.getSource() == okButton) {
             msgDialogPresenter.hide();
-//        } else if (event.getSource() == cancelButton) {
-//            LOG.log(Level.INFO, "Add schoolclass now");
-//            dialogBox.hide();
-//            editSchoolClassPresenter.Back();
         }
     }
 
