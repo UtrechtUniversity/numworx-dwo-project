@@ -246,7 +246,7 @@ public static class Context {
         PersistentSchoolClass getSchoolClass();
 
         PersistentDwoProfile getDwoProfile();
-
+        
         TeacherState_C_CC_HR_P_R_S_SC_SG_U addCourse(DomCourse c) throws Dwo2Exception;
 
         TeacherState_C_CC_HR_P_R_S_SC_SCO_SG_U addScoContext(DomScoContext s) throws Dwo2Exception;
@@ -289,6 +289,11 @@ public static class Context {
         PersistentSchoolGroup getSchoolGroup();
 
         PersistentSchoolClass getSchoolClass();
+
+                TeacherState_HR_R_S_SC_SG_U addStudent(DomSchoolClass sc, DomStudent s) throws Dwo2Exception;
+
+ //       TeacherState_HR_R_S_SC_SG_U moveStudent(DomSchoolClass sc, DomStudent s);
+        
     }
 
     public interface TeacherState_HR_R_S_SG_U {
@@ -302,12 +307,12 @@ public static class Context {
         List<DomSchoolClass> getSchoolClasses()  throws Dwo2Exception;
         
         List<DomStudent> getTeachersStudents()  throws Dwo2Exception;
+
+//        TeacherState_HR_R_S_SC_SG_U addASchoolClass(DomSchoolClass schoolClassFrom)  throws Dwo2Exception;
     }
 
     public interface TeacherState_HR_P_R_S_SG_U {
-
         TeacherState_HR_P_R_S_SC_SG_U addSchoolClass(DomSchoolClass s) throws Dwo2Exception;
-
     }
 
     public interface Build {

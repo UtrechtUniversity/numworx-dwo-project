@@ -78,6 +78,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
+import nl.uu.fi.dwo.rest.entities.RestMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewAccessKey;
@@ -239,7 +240,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                     .buildSchoolAdminTeacher()
                     .setTeacher();
             return build.getTeachersStudents();
-            
+
         } catch (Dwo2Exception e) {
             throw new Dwo2RestException(e);
         }
@@ -584,7 +585,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     }
 
     /**
-     * Add a teacher to the school class.
+     * Add a student to the school class.
      *
      * @param sc
      * @param restSubmitStudentToSchoolClass
@@ -642,6 +643,98 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         }
     }
 
+    /**
+     * Move a student to a different school class.
+     *
+     * @param sc
+     * @param restSubmitStudentToSchoolClass
+     * @return true, throws an exception otherwise.
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/moveStudent")
+    public Boolean MoveStudentToSchoolClass(@Context SecurityContext sc, RestMoveStudentToSchoolClass restMoveStudentToSchoolClass) {
+        if (restMoveStudentToSchoolClass == null) {
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
+        DomStudent domStudent = restMoveStudentToSchoolClass.getDomMoveStudentToSchoolClass().getStudent();
+        DomSchoolClass domToSchoolClass = restMoveStudentToSchoolClass.getDomMoveStudentToSchoolClass().getSchoolClassTo();
+        DomSchoolClass domFromSchoolClass = restMoveStudentToSchoolClass.getDomMoveStudentToSchoolClass().getSchoolClassFrom();
+        PersistentHasRole phr = null;
+        PersistentSchool school = null;
+        PersistentSchoolClass fromClass = null;
+        PersistentSchoolClass toClass = null;
+        PersistentUser student = null;
+        PersistentHasRole shr = null;
+        PersistentTeacherOfClass toc = null;
+        try {
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
+            student = UserManager.findEntity(MySQLPersistenceId.getNativeId(domStudent));
+            if (student == null) {
+                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find student to add.");
+            }
+            shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
+            fromClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getNativeId(domFromSchoolClass));
+            toClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getNativeId(domToSchoolClass));
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, "", ex);
+            throw new Dwo2RestException(ex);
+        }
+
+        if (fromClass == null || toClass == null) {
+            LOG.log(Level.WARNING, "Username {0}: Submitted classes do not exist.", new Object[]{sc.getUserPrincipal().getName()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "One or both submitted schoolclasses do not exist.");
+        }
+
+        toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), fromClass.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
+
+        if (toc != null && fromClass.getSchoolID().equals(school.getSchoolID()) && toClass.getSchoolID().equals(school.getSchoolID())) {
+//            PersistentStudentOfClass toSoc = new PersistentStudentOfClass();
+//            toSoc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(student.getId(), toClass.getClassID(), shr.getPersistentHasRolePK().getSchoolGroupID()));
+//            java.util.Date d = DwoDateUtilities.getCurrentDwoDateAsCalendarDate().getTime();
+//            toSoc.setRegisterDate(d);
+//            StudentOfClassManager.create(toSoc);
+//            return true;
+            if (SchoolClassUtilManager.registerStudentForSchoolClass(shr, toClass)) {
+                return SchoolClassUtilManager.removeStudentFromSchoolClass(shr, fromClass);
+            } else {
+                Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.Rest_CanNotAddStudentToClass, "Can not add student to class as requested.");
+                LOG.log(Level.SEVERE, "", e);
+                throw e;
+            }
+        } else {
+            return false;
+        }
+    }
+
+
+    /**
+     * Move a student to a different school class.
+     *
+     * @param sc
+     * @param restSubmitStudentToSchoolClass
+     * @return true, throws an exception otherwise.
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/moveStudent")
+    public Boolean MoveStudentToSchoolClass2(@Context SecurityContext sc, RestMoveStudentToSchoolClass rest) {
+//        //secure builder
+//        try {
+//            TeacherDomainAuthorizer.TeacherState_HR_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+//                    .setHasRole(rest.getRestContext().getDomHasRole())
+//                    .buildSchoolAdminTeacher()
+//                    .setTeacher();
+////                    .addSchoolClass(rest.getDomMoveStudentToSchoolClass().getSchoolClassFrom());
+//                    
+//                    
+//        } catch (Dwo2Exception e) {
+//            throw new Dwo2RestException(e);
+//        }
+        return true;
+    }    
+    
     /**
      * Removes a teacher from a school class and returns true if the remove
      * occurred.
@@ -1111,7 +1204,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                     .setTeacher()
                     .addProfile(rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile())
                     .addSchoolClass(rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass())
-                    .addCourse(rest.getDomSchoolClassCourseAndProfile().getCourse());            
+                    .addCourse(rest.getDomSchoolClassCourseAndProfile().getCourse());
 
             //Loop up the course tree and find the tree path
             Stack<PersistentCourse> treePath = new Stack<>();
@@ -1145,13 +1238,13 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                     } catch (PersistenceException e) {
                         // ignore as it might already exist.
                     }
-                }else{//switch to visible.
+                } else {//switch to visible.
                     ClassCourseManager.editViewState(pcc.get(0).getClassCourseID(), ViewState.studentsAndTeachers);
                 }
             }
         } catch (Dwo2Exception e) {
             throw new Dwo2RestException(e);
-        }        
+        }
         return true;
     }
 
@@ -1399,17 +1492,17 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         }
         return false;
     }
-    
+
     @PUT
     @Produces({"application/json"})
     @Path("/setAccessKeyClassCourse")
     public Boolean setAccessKeyClassCourse(@Context SecurityContext sc, RestSchoolClassCourseProfilewAccessKey rest) throws Dwo2Exception {
-    	State_C_CC_HR_P_R_S_SC_SG_U build = CascadingPersistenceBuilder
-    	.user(sc.getUserPrincipal().getName())
-    	.addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
-    	.addSchoolClass(rest.getDomSchoolClassCourseProfilewAccessKey().getDomSchoolClass())
-    	.addProfile(rest.getDomSchoolClassCourseProfilewAccessKey().getDomDwoProfile())
-    	.addCourse(rest.getDomSchoolClassCourseProfilewAccessKey().getCourse());
+        State_C_CC_HR_P_R_S_SC_SG_U build = CascadingPersistenceBuilder
+                .user(sc.getUserPrincipal().getName())
+                .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
+                .addSchoolClass(rest.getDomSchoolClassCourseProfilewAccessKey().getDomSchoolClass())
+                .addProfile(rest.getDomSchoolClassCourseProfilewAccessKey().getDomDwoProfile())
+                .addCourse(rest.getDomSchoolClassCourseProfilewAccessKey().getCourse());
         List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse());
         if (pcc.size() > 0) {
             //update type.
@@ -1417,9 +1510,9 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             return true;
         }
         return false;
-    	
+
     }
-    
+
     /**
      * Updates the type of a class-course of a class in a school.
      *

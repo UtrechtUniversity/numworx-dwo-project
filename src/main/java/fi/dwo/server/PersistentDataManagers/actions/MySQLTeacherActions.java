@@ -1,11 +1,16 @@
 /** Copyrighted Feb 12, 2018 */
 package fi.dwo.server.PersistentDataManagers.actions;
 
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
 import java.text.MessageFormat;
@@ -15,10 +20,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.PersistenceException;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  *
@@ -65,5 +72,24 @@ public class MySQLTeacherActions implements TeacherActions {
         return results;
     }
 
+    @Override
+    public void addStudent(TeacherDomainAuthorizer.Context context, PersistentSchoolClass sc, PersistentHasRole shr) throws Dwo2Exception {
+        try {
+            PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(shr.getPersistentHasRolePK().getUserID(), sc.getClassID(), shr.getPersistentHasRolePK().getSchoolGroupID());
+            PersistentStudentOfClass soc = new PersistentStudentOfClass();
+            soc.setPersistentStudentOfClassPK(socId);
+            soc.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
+            StudentOfClassManager.create(soc);
 
+            if (shr.getClassID() == null) {
+                shr.setClassID(sc.getClassID());
+                HasRoleManager.edit(shr); // TODO met try/catch?
+            }
+
+        } catch (PersistenceException e) {
+            String msg = MessageFormat.format("Can not add student to class for Username {0}, error: {1}", new Object[]{context.getUserCtx().getUser().getUsername(), e.getMessage()});
+            LOG.log(Level.WARNING, msg, e);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_CanNotAddStudentToClass, msg);
+        }
+    }
 }

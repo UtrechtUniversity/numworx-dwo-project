@@ -14,7 +14,6 @@ import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
-import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
@@ -25,11 +24,11 @@ import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
-import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
+import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
         super();
         instance = new TeacherDomainAuthorizer();
     }
-
+    
     /**
      * Verifies the existence of the schoolClass for the data in the
      * schoolAdminTeacherCtx and adds it and the school to the
@@ -97,15 +96,6 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
                 if (!toc.getPersistentTeacherOfClassPK().getClassID().equals(schoolClass.getClassID())) {
                     //invalid schoolClass
                     String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Not a teacher in the SchoolClass.", new Object[]{instance.getContext().getUserCtx().getUser().getUsername()});
-                    LOG.log(Level.WARNING, msg);
-                    throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
-                }
-                break;
-            case STUDENT:
-                PersistentStudentOfClass soc = StudentOfClassManager.findEntity(new PersistentStudentOfClassPK(this.instance.getContext().getUserCtx().getHasRole().getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), this.instance.getContext().getUserCtx().getHasRole().getPersistentHasRolePK().getSchoolGroupID()));
-                if (!soc.getPersistentStudentOfClassPK().getClassID().equals(schoolClass.getClassID())) {
-                    //invalid schoolClass
-                    String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Not a student in the SchoolClass.", new Object[]{instance.getContext().getUserCtx().getUser().getUsername()});
                     LOG.log(Level.WARNING, msg);
                     throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
                 }
@@ -319,7 +309,6 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
 //            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Not a teacher");
 //        }
 //    }
-
     @Override
     public List<DomStudentModelContext> getStudentModels() throws Dwo2Exception {
         List<PersistentStudentModelContext> pModels = instance.teacherActions.getStudentModels(instance.getContext());
@@ -357,7 +346,7 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
     public List<DomSchoolClass> getSchoolClasses() throws Dwo2Exception {
         List<PersistentSchoolClass> classes = instance.teacherActions.getSchoolClasses(instance.getContext());
         List<DomSchoolClass> result = new ArrayList<>(classes.size());
-        classes.forEach((k-> result.add(k.buildDomSchoolClass())));
+        classes.forEach((k -> result.add(k.buildDomSchoolClass())));
         return result;
     }
 
@@ -365,7 +354,53 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
     public List<DomStudent> getTeachersStudents() throws Dwo2Exception {
         List<PersistentUser> students = instance.teacherActions.getTeachersStudents(instance.getContext());
         List<DomStudent> result = new ArrayList<>(students.size());
-        students.forEach((k-> result.add(k.buildDomStudent())));
+        students.forEach((k -> result.add(k.buildDomStudent())));
         return result;
     }
+
+    /**
+     *
+     *
+     * @param sc
+     * @param s
+     * @return
+     */
+    @Override
+    public TeacherDomainAuthorizer.TeacherState_HR_R_S_SC_SG_U addStudent(DomSchoolClass sc, DomStudent s) throws Dwo2Exception {
+        Long toId = null;
+        try {
+            toId = MySQLPersistenceId.getNativeId(sc);
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, "", ex);
+            throw new Dwo2RestException(ex);
+        }
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(toId);
+        if (schoolClass == null || !schoolClass.getSchoolID().equals(instance.getContext().getUserCtx().school.getSchoolID())) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Target schoolClass {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{instance.getContext().getUserCtx().getUser().getUsername(), instance.getContext().getUserCtx().school.getSchoolID(), (schoolClass != null) ? schoolClass.getClassID() : null});
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + this.instance.getContext().getUserCtx().getUser().getUsername() + ".");
+        }
+        //verify if student is in SchoolClass.
+        PersistentHasRole shr = null;
+        try {
+            PersistentUser student = UserManager.findEntity(MySQLPersistenceId.getNativeId(s));
+            if (student == null) {
+                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find student to add.");
+            }
+            shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, instance.getContext().getUserCtx().school, RoleType.STUDENT);
+            if (shr == null) {
+                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Target student {2} is not valid for the given school {1} and schoolclass for usercode {0}.", new Object[]{instance.getContext().getUserCtx().getUser().getUsername(), instance.getContext().getUserCtx().school.getSchoolID(), (schoolClass != null) ? schoolClass.getClassID() : null});
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + this.instance.getContext().getUserCtx().getUser().getUsername() + ".");
+            }
+             instance.teacherActions.addStudent(instance.getContext(), schoolClass, shr);
+        }catch(Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, "", ex);
+            throw new Dwo2RestException(ex);
+        }
+        return this;
+    }
+//
+//    @Override
+//    public TeacherDomainAuthorizer.TeacherState_HR_R_S_SC_SG_U moveStudent(DomSchoolClass sc, DomStudent s) throws Dwo2Exception {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
 }
