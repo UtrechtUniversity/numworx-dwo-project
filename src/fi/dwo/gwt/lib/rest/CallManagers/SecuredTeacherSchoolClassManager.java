@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
@@ -23,6 +24,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.entities.RestMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
@@ -175,6 +177,19 @@ public class SecuredTeacherSchoolClassManager {
         service.removeTeacherFromSchoolClass(restData, new Callback<Boolean>(callBack));
     }
 
+    public Promise<Boolean> moveStudentToSchoolClass(DomMoveStudentToSchoolClass studentToClass) {
+        RestMoveStudentToSchoolClass restData = new RestMoveStudentToSchoolClass();
+        restData.setRestContext(new DomContext());
+        restData.setDomMoveStudentToSchoolClass(studentToClass);
+        PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
+        this.moveStudentToSchoolClass(restData, defer);
+        return defer.getPromise();
+    }
+
+    private void moveStudentToSchoolClass(RestMoveStudentToSchoolClass restData, AsyncCallback<Boolean> callBack) {
+        service.moveStudentToSchoolClass(restData, new Callback<Boolean>(callBack));
+    }    
+    
     public Promise<Boolean> submitStudentToSchoolClass(DomSubmitStudentToSchoolClass studentToClass) {
         RestSubmitStudentToSchoolClass restData = new RestSubmitStudentToSchoolClass();
         restData.setRestContext(new DomContext());
