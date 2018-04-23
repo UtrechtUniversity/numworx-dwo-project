@@ -10,8 +10,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.rest.dom.entities.DomMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
@@ -192,7 +194,7 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
     @JsMethod
     public void SelectClassB(String classId) {
         schoolClassB = classMap.get(classId);
-        if(schoolClassB!=null){
+        if (schoolClassB != null) {
             view.SetClassB(schoolClassB);
             refreshClassTableB();
         }
@@ -200,29 +202,112 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
 
     @JsMethod
     public void CopyStudentsToClassA(List<String> idList) {
-        //Add to Class
-        for(String id : idList){
-                    DomStudent s =  studentMapB.get(id);
-                    //chain some promises.
-                    //doing stuff
+        //show progress dialog
+        CopyStudent(idList, 0, schoolClassB, schoolClassA);
+        //close progress dialog
+    }
+
+    /**
+     * Tail recursion.
+     *
+     * @param idList
+     * @param i
+     * @param from
+     * @param to
+     */
+    public void CopyStudent(List<String> idList, int i, DomSchoolClass from, DomSchoolClass to) {
+        Promise<Boolean> promise;
+        DomSubmitStudentToSchoolClass submit = new DomSubmitStudentToSchoolClass();
+        submit.setSchoolClassFrom(from);
+        submit.setSchoolClassTo(to);
+        DomStudent s;
+        if (from.equals(schoolClassB)) {
+            s = studentMapB.get(idList.get(i));
+        } else {
+            s = studentMapA.get(idList.get(i));
         }
+        submit.setStudent(s);
+        final int next = i + 1;
+        promise = manager.submitStudentToSchoolClass(submit);
+        promise.then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                CopyStudent(idList, next, from, to);
+                return null;
+            }
+
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                //close progress panel.
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        });
     }
 
     @JsMethod
     public void CopyStudentsToClassB(List<String> idList) {
-        //Add to Class
+        CopyStudent(idList, 0, schoolClassA, schoolClassB);
     }
 
     @JsMethod
     public void MoveStudentsToClassA(List<String> idList) {
         //Add to Class A
-        //remove from class B
+        MoveStudent(idList, 0, schoolClassB, schoolClassA);
     }
 
     @JsMethod
-    public void MoveStudentsToClassB(List<String> studenidListtId) {
+    public void MoveStudentsToClassB(List<String> idList) {
         //Add to Class B
-        //remove from class A
+        MoveStudent(idList, 0, schoolClassA, schoolClassB);
+    }
+
+    public void MoveStudent(List<String> idList, int i, DomSchoolClass from, DomSchoolClass to) {
+        Promise<Boolean> promise;
+        DomMoveStudentToSchoolClass submit = new DomMoveStudentToSchoolClass();
+        submit.setSchoolClassFrom(from);
+        submit.setSchoolClassTo(to);
+        DomStudent s;
+        if (from.equals(schoolClassB)) {
+            s = studentMapB.get(idList.get(i));
+        } else {
+            s = studentMapA.get(idList.get(i));
+        }
+        submit.setStudent(s);
+        final int next = i + 1;
+        promise = manager.moveStudentToSchoolClass(submit);
+        promise.then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                CopyStudent(idList, next, from, to);
+                return null;
+            }
+
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                //close progress panel.
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        });
     }
 
 }
