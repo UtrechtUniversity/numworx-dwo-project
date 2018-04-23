@@ -89,9 +89,10 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 				String target = Window.Location.getHash();
 				if(target.startsWith("#")) target = target.substring(1);
 				int dot = target.lastIndexOf('.');
-				if(dot > 0) {
+				int colon = target.lastIndexOf(':');
+				if(dot > 0 && dot > colon) {
 					String location = target.substring(dot+1);
-					target = target.substring(0, dot-1);
+					target = target.substring(0, dot);
 					api.SetValue(Memento.LOCATION, location);
 				}
 				ValueChangeEvent<String> event = new InitialValueChangeEvent(target);
