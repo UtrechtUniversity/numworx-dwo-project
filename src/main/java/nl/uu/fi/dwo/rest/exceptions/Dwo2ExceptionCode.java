@@ -64,6 +64,7 @@ public enum Dwo2ExceptionCode {
     Rest_Submitted_SchoolClass_exists,//A school
     Rest_Registration_Password_Invalid, 
     Rest_Active_SchoolClass_Not_Set, //schoolclassid in hasRole is null!
+    Rest_CanNotAddStudentToClass, //schoolclassid in hasRole is null!
     //GUI
     GUI_NoUserIsSignedIn,
     GUI_AnIncorrectPasswordWasGiven,
