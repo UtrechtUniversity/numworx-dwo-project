@@ -184,7 +184,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
         try {
-            return ((DbAccessObsolete) getDelegate()).login(username, password);
+            return getDelegateObsolete().login(username, password);
         } catch (DwoXmlRpcException go) {
             if (go.code != LoginException.LE_UNKNOWN_USER) {
                 go.printStackTrace(); // Expected
@@ -336,14 +336,14 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     public boolean changeSco(int scoID, String name, String description,
             String launchdata) throws DwoXmlRpcException, IOException,
             XmlRpcException, SQLException {
-        return ((DbAccessObsolete)getDelegate()).changeSco(scoID, name, description, launchdata);
+        return getDelegateObsolete().changeSco(scoID, name, description, launchdata);
     }
 
     @Override
     public boolean changeSco(int scoID, String name, String description)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
-        return ((DbAccessObsolete)getDelegate()).changeSco(scoID, name, description);
+        return getDelegateObsolete().changeSco(scoID, name, description);
     }
 
     @Override
@@ -380,8 +380,12 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     public boolean changeScoSequenceNr(int scoID, int sequencenr, int scoID2,
             int sequencenr2) throws SQLException, DwoXmlRpcException,
             IOException, XmlRpcException {
-        return getDelegate().changeScoSequenceNr(scoID, sequencenr, scoID2,
+        return getDelegateObsolete().changeScoSequenceNr(scoID, sequencenr, scoID2,
                 sequencenr2);
+    }
+
+    private DbAccessObsolete getDelegateObsolete() {
+      return (DbAccessObsolete)getDelegate();
     }
 
     @Override
@@ -494,14 +498,14 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     public boolean changeCourse(int id, String name, String description,
             boolean export, int schoolID) throws DwoXmlRpcException,
             IOException, XmlRpcException, SQLException {
-        return ((DbAccessObsolete) getDelegate()).changeCourse(id, name, description, export, schoolID);
+        return getDelegateObsolete().changeCourse(id, name, description, export, schoolID);
     }
 
     @Override
     public boolean changeCourse(int id, String name, String description,
             boolean export, int schoolID, int parentID) throws DwoXmlRpcException,
             IOException, XmlRpcException, SQLException {
-        return ((DbAccessObsolete) getDelegate()).changeCourse(id, name, description, export, schoolID, parentID);
+        return getDelegateObsolete().changeCourse(id, name, description, export, schoolID, parentID);
     }
 
     @Override
@@ -523,7 +527,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     public boolean moveSco(int scoId, int courseId, int sequencenr, String name)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
-        return ((DbAccessObsolete) getDelegate()).moveSco(scoId, courseId, sequencenr, name);
+        return getDelegateObsolete().moveSco(scoId, courseId, sequencenr, name);
     }
 
 //    @Override
@@ -591,7 +595,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 
     @Override
     public Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        return ((DbAccessObsolete) getDelegate()).getClassesOfTeacher(userID, schoolID);
+        return getDelegateObsolete().getClassesOfTeacher(userID, schoolID);
     }
 
 //    @Override

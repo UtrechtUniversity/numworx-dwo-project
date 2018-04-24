@@ -3629,7 +3629,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws SQLException
      * @see #changeSco(int, String, String, String)
      */
-    @Override
+    @Deprecated
     public boolean changeScoSequenceNr(int scoID, int sequencenr, int scoID2, int sequencenr2) throws SQLException {
         PreparedStatement ps;
         ps = getStatement(QRY_UPDATE_SCO_SEQUENCENR);

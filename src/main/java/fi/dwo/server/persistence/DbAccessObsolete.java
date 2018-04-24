@@ -31,4 +31,5 @@ public interface DbAccessObsolete {
 
   public boolean moveSco(int scoId, int courseId, int sequencenr, String name)
       throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+  public boolean changeScoSequenceNr(int scoID, int sequencenr, int scoID2, int sequencenr2) throws SQLException, DwoXmlRpcException, IOException, XmlRpcException;
 }
