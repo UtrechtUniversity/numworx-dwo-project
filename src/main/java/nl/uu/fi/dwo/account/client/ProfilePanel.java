@@ -3,21 +3,26 @@ package nl.uu.fi.dwo.account.client;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.web.bindery.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
+import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.osgi.util.promise.Failure;
+import org.osgi.util.promise.Promises;
 
 import nl.uu.fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
@@ -32,7 +37,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
     /**
      *
      */
-    Logger LOG = Logger.getLogger("Account");
+    Logger LOG = Logger.getLogger("ProfilePanel");
 
     /**
      *
@@ -115,14 +120,27 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
         this.popup = popup;
     }
 
+    Failure fail;
+    EventBus bus;
+   
+    private void fail(Dwo2ExceptionCode code, String msg) {
+      bus.fireEvent(new DialogEvent(code, msg));
+    }
+    private void fail(Dwo2ExceptionCode code) {
+      fail(code,"");
+    }
+    
     /**
      *
      * @param user
+     * @param bus 
      */
-    ProfilePanel(DomUserFull user) {
+    ProfilePanel(DomUserFull user, EventBus bus) {
     	Style style = getElement().getStyle();
     	style.setBackgroundColor("#E4F2FB");
-        control = new ProfileController(this, user);
+    	this.bus = bus;
+    	fail = new DialogFailure(bus);
+        control = new ProfileController(this, user, fail);
         init(user);
     }
 
@@ -196,13 +214,13 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
             String newEmail = email.getText();
             if( !SimpleValidUserFieldsChecker.isValidEmail(newEmail))
             {
-            	DwoViewer.showMessage(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid);
+            	fail(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid);
             	return;
             }
             if (!newPassword.getText().isEmpty() &&
             	!SimpleValidUserFieldsChecker.isValidPassword(newPassword.getText()))
             {
-            	DwoViewer.showMessage(Dwo2ExceptionCode.Rest_Registration_Password_Invalid);
+              fail(Dwo2ExceptionCode.Rest_Registration_Password_Invalid);
             	return;
             }
 			user.setEmail(newEmail);
@@ -211,7 +229,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
             user.setInsertion(insertion.getText());
             if ( ! SimpleValidUserFieldsChecker.isNonEmptyNorNull(user.getFamilyName(), user.getGivenName()))
             {
-            	Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_Required_Fields());
+                fail(Dwo2ExceptionCode.Rest_Registration_Required_Fields);
             	return;
             }
             if (MD5.md5(password.getText()).equals(control.getCurrentUser().getPassword())) {
@@ -226,7 +244,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
                     user.setPassword(MD5.md5(newPassword.getText()));
                 } else {
                     //do warning
-                    DwoViewer.showMessage(Dwo2ExceptionCode.User_NewPasswordsDoNotMatch);
+                    fail(Dwo2ExceptionCode.User_NewPasswordsDoNotMatch);
                     return;
                 }
                 LOG.log(Level.INFO, "Sending data to server.");
@@ -234,7 +252,7 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
                 control.callUpdate();
                 LOG.log(Level.INFO, "Data send to server.");
             } else {
-                DwoViewer.showMessage(Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven);
+                fail(Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven);
             }
         }
     }

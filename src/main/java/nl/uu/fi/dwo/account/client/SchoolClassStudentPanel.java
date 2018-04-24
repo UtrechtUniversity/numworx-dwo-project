@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Failure;
+
 import nl.uu.fi.dwo.account.client.icons.AccountImageBundle;
 
 /**
@@ -66,6 +68,8 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 
     private HandlerRegistration registration;
 
+    private Failure failure;
+
     /**
      *
      * @return
@@ -86,11 +90,13 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
      *
      * @param resetLogin
      * @param user
+     * @param failure 
      */
-    SchoolClassStudentPanel(Command resetLogin, DomUserFull user, DomContext context) {
+    SchoolClassStudentPanel(Command resetLogin, DomUserFull user, DomContext context, Failure failure) {
         this.resetLogin = resetLogin;
+        this.failure = failure;
         init(user);
-        control = new SchoolClassStudentController(this, user, context);
+        control = new SchoolClassStudentController(this, user, context, failure);
 //        addSchoolClassPanel = new AddSchoolClassStudentPanel(user, control);
 //        control.init(user); wordt al in constructor gedaan.
 
@@ -201,21 +207,8 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
 //                            if (Window.confirm(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_ConfirmSchoolClassSwitch()) == false) {
 //                                return;
 //                            }
-                            control.setActiveSchoolClass(sc, new AsyncCallback<Boolean>() {
-                                @Override
-                                public void onFailure(Throwable t) {
-                                    //fail and reset all the data.
-                                    Window.alert(t.getMessage());
-                                    //TODO Wim
-                                    //Window.alert("wim handles error here.");
-                                }
-
-                                @Override
-                                public void onSuccess(Boolean result) {
-                                    popup.hide();
-                                    resetLogin.execute();
-                                }
-                            });
+                            control.setActiveSchoolClass(sc).then(p-> {popup.hide();
+                            resetLogin.execute();return null;}, failure);
                             break;
                         case 2:     //remove schoolclass and relogin if it was the active schoolclass.
                             if (DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {

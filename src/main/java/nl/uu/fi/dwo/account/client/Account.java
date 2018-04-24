@@ -27,7 +27,6 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 import fi.dwo.gwt.lib.rest.css.DwoStyle;
-import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import fi.dwo.gwt.lib.rest.ui.DialogEventHandler;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogView;
@@ -60,29 +59,12 @@ public class Account implements EntryPoint, ClickHandler {
 
     EventBus bus = new SimpleEventBus();
     
-    private final Failure SHOW_FAILURE = new Failure() {
-
-		@Override
-		public void fail(Promise<?> resolved) {
-			Throwable t = resolved.getFailure();
-			LOG.log(Level.WARNING, "fail ", t);
-			DialogEvent ev;
-			if(t instanceof Dwo2Exception ) 
-			{	Dwo2Exception e = (Dwo2Exception) t;
-				ev = new DialogEvent(e);
-			} else {
-				Dwo2Exception e = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, t.getMessage());
-				e.initCause(t);
-				ev = new DialogEvent(e);
-			}
-			bus.fireEvent(ev);
-			
-		}};
+    private final Failure SHOW_FAILURE = new DialogFailure(bus);
     private DomUserFull user = null;
     private SecuredUserAccountManager handler = new SecuredUserAccountManager();
     private LoginStatusPanel loginStatusPanel = new LoginStatusPanel();
     private HeaderPanel header = new HeaderPanel();
-    private UserBar userBar = new UserBar();
+    private UserBar userBar = new UserBar(bus);
     private Button loginButton;
     private LoginPanel loginPanel;
 

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 
 import com.google.gwt.core.client.GWT;
@@ -42,9 +43,9 @@ public class StudentModelPanel extends Composite implements HasText, StudentMode
 	interface StudentModelPanelUiBinder extends UiBinder<Widget, StudentModelPanel> {
 	}
 
-	public StudentModelPanel() {
+	public StudentModelPanel(Failure fail) {
 		createAndBindUi();
-		controller = new StudentModelController(this, locale);
+		controller = new StudentModelController(this, locale, fail);
 		controller.init();
 	}
 

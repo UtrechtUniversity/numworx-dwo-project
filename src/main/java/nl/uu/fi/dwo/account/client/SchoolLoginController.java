@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 import org.osgi.util.function.Function;
 import org.osgi.util.function.Predicate;
 import org.osgi.util.promise.Deferred;
+import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
@@ -55,6 +56,8 @@ public class SchoolLoginController {
 
 	private AddSchoolLoginPanel addSchoolPanel;
 
+  private Failure failure;
+
     /**
      *
      * @return
@@ -69,8 +72,9 @@ public class SchoolLoginController {
      * @param user
      * @throws Dwo2Exception
      */
-    public SchoolLoginController(SchoolLoginPanel view, DomUserFull user) throws Dwo2Exception {
+    public SchoolLoginController(SchoolLoginPanel view, DomUserFull user, Failure failure) throws Dwo2Exception {
         this.view = view;
+        this.failure = failure;
         this.init(user);
     }
 
@@ -221,16 +225,16 @@ public class SchoolLoginController {
 		
 	}
 
-	void failedAddSchoolLogin(Promise<?> p) throws Exception {
-		Throwable t = p.getFailure();
-		if( t instanceof Dwo2ExceptionInterface) {
-			Dwo2ExceptionInterface e = (Dwo2ExceptionInterface) t;
-			Dwo2ExceptionCode code = e.getDwo2Code();
-			String message = Dwo2ExceptionTranslator.getLocalizedCodeExplanation(null, code);
-			t = (new RuntimeException(message, t));
-		}
-        Window.alert(t.getMessage()); // FIXME betere foutmelding
-	}
+//	void failedAddSchoolLogin(Promise<?> p) throws Exception {
+//		Throwable t = p.getFailure();
+//		if( t instanceof Dwo2ExceptionInterface) {
+//			Dwo2ExceptionInterface e = (Dwo2ExceptionInterface) t;
+//			Dwo2ExceptionCode code = e.getDwo2Code();
+//			String message = Dwo2ExceptionTranslator.getLocalizedCodeExplanation(null, code);
+//			t = (new RuntimeException(message, t));
+//		}
+//        Window.alert(t.getMessage()); // FIXME betere foutmelding
+//	}
 	
 	
 	public void addASchoolLogin(DomNewSchoolLogin request) {
@@ -242,7 +246,7 @@ public class SchoolLoginController {
 			addSchoolPanel.hide();
 			init(DwoGlobalVars.instance().getCurrentUser());
 			return null;
-		}, p -> addSchoolPanel.enable()).then(null, this::failedAddSchoolLogin);
+		}, p -> addSchoolPanel.enable()).then(null, failure);
 		
 	}
 }

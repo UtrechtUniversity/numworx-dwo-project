@@ -118,10 +118,10 @@ public class SchoolLoginPanel extends VerticalPanel implements ClickHandler {
      * @param user
      * @throws Dwo2Exception
      */
-    SchoolLoginPanel(Command resetLogin, DomUserFull user) throws Dwo2Exception {
+    SchoolLoginPanel(Command resetLogin, DomUserFull user, Failure failure) throws Dwo2Exception {
         init(user);
         this.resetLogin = resetLogin;
-        control = new SchoolLoginController(this, user);
+        control = new SchoolLoginController(this, user, failure);
         //control.init(user); dubbel!
     }
 

@@ -1,12 +1,14 @@
 package nl.uu.fi.dwo.account.client;
 
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
+
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
-import fi.dwo.gwt.lib.rest.GwtRestVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.osgi.util.promise.Failure;
 
 /**
  *
@@ -14,81 +16,82 @@ import java.util.logging.Logger;
  */
 class ProfileController {
 
-    private static final Logger LOG = Logger.getLogger(ProfileController.class.getName());
+  private static final Logger LOG = Logger.getLogger(ProfileController.class.getName());
 
-    private ProfilePanel view = null;
-    private DomUserFull currentUser = null;
-    private DomUserFull updateUser = null;
-    private SecuredUserAccountManager manager = new SecuredUserAccountManager();
+  private ProfilePanel view = null;
+  private DomUserFull currentUser = null;
+  private DomUserFull updateUser = null;
+  private SecuredUserAccountManager manager = new SecuredUserAccountManager();
+  private Failure fail;
 
-    /**
-     *
-     * @param view
-     * @param user
-     */
-    public ProfileController(ProfilePanel view, DomUserFull user) {
-        this.view = view;
-        this.init(user);
-    }
+  /**
+   *
+   * @param view
+   * @param user
+   * @param fail 
+   */
+  public ProfileController(ProfilePanel view, DomUserFull user, Failure fail) {
+    this.view = view;
+    this.fail = fail;
+    this.init(user);
+  }
 
-    /**
-     *
-     * @param user
-     */
-    public void init(DomUserFull user) {
-        currentUser = user;
-        updateUser = currentUser.duplicate();
-    }
+  /**
+   *
+   * @param user
+   */
+  public void init(DomUserFull user) {
+    currentUser = user;
+    updateUser = currentUser.duplicate();
+  }
 
-    /**
-     * Update the currentUser.
-     *
-     */
-    public void callUpdate() {
-        LOG.log(Level.INFO, "Calling REST-interface login.");
-        manager.updateAccountData(DwoGlobalVars.instance().getContext(), updateUser).then (
-        		p-> { DomUserFull result = p.getValue();
-                LOG.log(Level.INFO, "update was succesful.");
-                currentUser = result;
-                updateUser = currentUser.duplicate();
-                //update Globals otherwise can't loginUser in passwd change!
-                DwoGlobalVars.instance().setCurrentUser(currentUser);
-                //update rest authentication done by setcurrentuser
-                view.init(currentUser);
-                view.getPopup().hide();
-                return null; 
-        		},
-        		p -> Window.alert(p.getFailure().getMessage())
+  /**
+   * Update the currentUser.
+   *
+   */
+  public void callUpdate() {
+    LOG.log(Level.INFO, "Calling REST-interface login.");
+    manager.updateAccountData(DwoGlobalVars.instance().getContext(), updateUser).then(p -> {
+      DomUserFull result = p.getValue();
+      LOG.log(Level.INFO, "update was succesful.");
+      currentUser = result;
+      updateUser = currentUser.duplicate();
+      // update Globals otherwise can't loginUser in passwd change!
+      DwoGlobalVars.instance().setCurrentUser(currentUser);
+      // update rest authentication done by setcurrentuser
+      view.init(currentUser);
+      view.getPopup().hide();
+      return null;
+    }, fail
+    );
 
-        		);
+  }
 
-    }
+  /**
+   * @return the currentUser
+   */
+  public DomUserFull getCurrentUser() {
+    return currentUser;
+  }
 
-    /**
-     * @return the currentUser
-     */
-    public DomUserFull getCurrentUser() {
-        return currentUser;
-    }
+  /**
+   * @param aCurrentUser
+   */
+  public void setCurrentUser(DomUserFull aCurrentUser) {
+    currentUser = aCurrentUser;
+  }
 
-    /**
-     * @param aCurrentUser
-     */
-    public void setCurrentUser(DomUserFull aCurrentUser) {
-        currentUser = aCurrentUser;
-    }
+  /**
+   * @return the updateUser
+   */
+  public DomUserFull getUpdateUser() {
+    return updateUser;
+  }
 
-    /**
-     * @return the updateUser
-     */
-    public DomUserFull getUpdateUser() {
-        return updateUser;
-    }
-
-    /**
-     * @param updateUser the updateUser to set
-     */
-    public void setUpdateUser(DomUserFull updateUser) {
-        this.updateUser = updateUser;
-    }
+  /**
+   * @param updateUser the updateUser to set
+   */
+  public void setUpdateUser(DomUserFull updateUser) {
+    this.updateUser = updateUser;
+  }
 }

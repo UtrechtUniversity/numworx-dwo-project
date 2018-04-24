@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 /**
  * Creates or shows dynamic GUI components.
  * @author G.A.J. van der Plas
+ * @deprecated use DialogFailure
  */
 public class DwoViewer {
 

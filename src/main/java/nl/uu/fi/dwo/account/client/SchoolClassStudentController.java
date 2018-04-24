@@ -7,11 +7,14 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.osgi.util.promise.Failure;
+import org.osgi.util.promise.Promise;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 
 /**
@@ -31,14 +34,17 @@ class SchoolClassStudentController {
 
 	private final DomContext context;
 
+	private Failure failure;
+
     /**
      *
      * @param view
      * @param user
      */
-    SchoolClassStudentController(SchoolClassStudentPanel view, DomUserFull user, DomContext context) {
+    SchoolClassStudentController(SchoolClassStudentPanel view, DomUserFull user, DomContext context, Failure fail) {
         this.view = view;
         this.context = context;
+        this.failure = fail;
         init(user);
     }
 
@@ -50,7 +56,6 @@ class SchoolClassStudentController {
         currentUser = user;
         LOG.log(Level.INFO, "" + manager);
         updateStudentsSchoolClassesInView();
-
     }
 
     /**
@@ -77,67 +82,49 @@ class SchoolClassStudentController {
     /**
      *
      */
-    public void updateStudentsSchoolClassesInView() {
-        manager.getStudentsSchoolClasses(context, new AsyncCallback<List<DomSchoolClass>>() {
-            @Override
-            public void onFailure(Throwable t) {
-                //fail and reset all the data.
-                LOG.log(Level.INFO, t.getMessage());
-                DwoViewer.showMessage(Dwo2ExceptionCode.Rest_ConnectionTimeout);
-            }
+  public void updateStudentsSchoolClassesInView() {
+    manager.getStudentsSchoolClasses(context).then(p -> {
+      LOG.log(Level.INFO, "Fetched students schoolclasses.");
+      schoolClasses = p.getValue();
+      view.setSchoolClasses(schoolClasses);
+      return p;
+    }, failure);
 
-            @Override
-            public void onSuccess(List<DomSchoolClass> result) {
-                //success and set all the data in the view
-                LOG.log(Level.INFO, "Fetched students schoolclasses.");
-                schoolClasses = result;
-                view.setSchoolClasses(schoolClasses);
-            }
-        });
-    }
+  }
 
     /**
      *
      */
     public void updateSchoolClassesAddSchoolClassView() {
-        manager.getSchoolsClasses(context, new AsyncCallback<List<DomSchoolClass>>() {
-            @Override
-            public void onFailure(Throwable t) {
-                //fail and reset all the data.
-                LOG.log(Level.INFO, t.getMessage());
-                DwoViewer.showMessage(Dwo2ExceptionCode.Rest_ConnectionTimeout);
-            }
-
-            @Override
-            public void onSuccess(List<DomSchoolClass> result) {
-                //success and set all the data in the view
-                LOG.log(Level.INFO, "Fetched schoolclasses in students school.");
-                List<DomSchoolClass> unregisteredClasses = new ArrayList<>(result.size() - schoolClasses.size());
-                for (DomSchoolClass c : result) {
-                    Boolean flag = true; //add teacher to result list
-                    for (DomSchoolClass sc : schoolClasses) {
-                        if (sc.getId().equals(c.getId())) {
-                            flag = false;
-                            break;
-                        }
-                    }
-                    if (flag) {
-                        unregisteredClasses.add(c);
-                    }
-                }
-                LOG.log(Level.INFO, "Updating unregistered schoolclasses add schoolclass panel.");
-                addSchoolClassView.setSchoolClasses(unregisteredClasses);
-            }
-        });
+        manager.getSchoolsClasses(context)
+        .then(p->{
+          LOG.log(Level.INFO, "Fetched schoolclasses in students school.");
+          List<DomSchoolClass> unregisteredClasses = new ArrayList<>(p.getValue().size() - schoolClasses.size());
+          for (DomSchoolClass c : p.getValue()) {
+              boolean flag = true; //add teacher to result list
+              for (DomSchoolClass sc : schoolClasses) {
+                  if (sc.getId().equals(c.getId())) {
+                      flag = false;
+                      break;
+                  }
+              }
+              if (flag) {
+                  unregisteredClasses.add(c);
+              }
+          }
+          LOG.log(Level.INFO, "Updating unregistered schoolclasses add schoolclass panel.");
+          addSchoolClassView.setSchoolClasses(unregisteredClasses);
+          return p;}, failure);
     }
 
     /**
      *
      * @param submit
      * @param callBack
+     * @return 
      */
-    public void setActiveSchoolClass(DomSchoolClass submit, AsyncCallback<Boolean> callBack) {
-        manager.setActiveSchoolClass(context, submit, callBack);
+    public Promise<Boolean> setActiveSchoolClass(DomSchoolClass submit) {
+        return manager.setActiveSchoolClass(context, submit);
     }
 
     /**

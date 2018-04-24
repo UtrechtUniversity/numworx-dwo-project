@@ -8,6 +8,9 @@ package nl.uu.fi.dwo.account.client;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.web.bindery.event.shared.EventBus;
+
+import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import java.util.logging.Logger;
 
@@ -19,13 +22,15 @@ public class SchoolClassStudentCommand implements Command {
 
     private static final Logger LOG = Logger.getLogger(ProfileCommand.class.getName());
     private Command resetLogin;
+    private EventBus bus;
 
     /**
      *
      * @param resetLogin
      */
-    public SchoolClassStudentCommand(Command resetLogin) {
+    public SchoolClassStudentCommand(Command resetLogin, EventBus bus) {
         this.resetLogin = resetLogin;
+        this.bus = bus;
     }
 
     /**
@@ -47,14 +52,14 @@ public class SchoolClassStudentCommand implements Command {
     @Override
     public void execute() {
         if (DwoGlobalVars.instance().getCurrentUser() == null) {
-            DwoViewer.showMessage(Dwo2ExceptionCode.GUI_NoUserIsSignedIn);
+            bus.fireEvent(new DialogEvent(Dwo2ExceptionCode.GUI_NoUserIsSignedIn));
             return;
         }
         // Create the new popup.
         final PopupPanel popup = new PopupPanel(true);//hide if clicked outside panel
 		popup.setStyleName("numworx-popup");
        //popup.setSize("500", "400");
-        SchoolClassStudentPanel panel = new SchoolClassStudentPanel(resetLogin, DwoGlobalVars.instance().getCurrentUser(), DwoGlobalVars.instance().getContext());
+        SchoolClassStudentPanel panel = new SchoolClassStudentPanel(resetLogin, DwoGlobalVars.instance().getCurrentUser(), DwoGlobalVars.instance().getContext(), new DialogFailure(bus));
         panel.setPopup(popup);
         //panel.setSize("300", "200");
         popup.add(panel);

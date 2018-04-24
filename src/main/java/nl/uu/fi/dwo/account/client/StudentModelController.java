@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Failure;
+
 import com.google.gwt.i18n.client.LocaleInfo;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentStudentModelManager;
@@ -21,18 +23,19 @@ public class StudentModelController {
 	
 	StudentModelView panel;
 	DomUserFull user;
+	Failure fail;
 	
 	private SecuredStudentStudentModelManager manager;
 	
 	private DomContext context;
 	private Map<String, DomStudentModelContext> models = Collections.emptyMap();
 
-	public StudentModelController(StudentModelView panel, String locale) {
-		this(panel, DwoGlobalVars.instance().getCurrentUser(), DwoGlobalVars.instance().getActiveSchoolRoleAndClass());
+	public StudentModelController(StudentModelView panel, String locale, Failure fail) {
+		this(panel, DwoGlobalVars.instance().getCurrentUser(), DwoGlobalVars.instance().getActiveSchoolRoleAndClass(), fail);
 		this.locale = locale;
 	}
 	
-	public StudentModelController(StudentModelView panel, DomUserFull user, DomSchoolRoleAndClassV2 roleAndClass) {
+	public StudentModelController(StudentModelView panel, DomUserFull user, DomSchoolRoleAndClassV2 roleAndClass, Failure fail) {
 		this.panel = panel;
 		this.user = user;
 		context = new DomContext();
@@ -51,7 +54,7 @@ public class StudentModelController {
 					models = map;
 					panel.updateModels(map.keySet());
 					return null;
-				});
+				},fail);
 	}
 
 	public void init() {
@@ -67,7 +70,7 @@ public class StudentModelController {
 					models = map;
 					panel.updateModels(map.keySet());
 					return null;
-				});
+				},fail);
 	}
 
 	public void select(String value) {
@@ -81,7 +84,7 @@ public class StudentModelController {
 					panel.updateStructure(id.getModelStructure(), p.getValue().getDomStudentModelStructureScore());
 					
 					return null;
-				});
+				},fail);
 				
 		
 	}

@@ -8,6 +8,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
@@ -20,10 +21,10 @@ public class UserBar extends Composite implements Command {
 
     private final MenuBar top = new MenuBar();
     private final MenuBar items = new MenuBar(true);
-    private final ProfileCommand profileCmd = new ProfileCommand();
-    private final SchoolLoginCommand schoolLoginCmd = new SchoolLoginCommand(this);
-    private final SchoolClassStudentCommand schoolClassCmd = new SchoolClassStudentCommand(this);
-    private final StudentModelCommand studentModelCmd = new StudentModelCommand();
+    private final ProfileCommand profileCmd;
+    private final SchoolLoginCommand schoolLoginCmd;
+    private final SchoolClassStudentCommand schoolClassCmd;
+    private final StudentModelCommand studentModelCmd;
 	private MenuItem itemSchoolClass;
 	private RoleType role;
 	private String display;
@@ -32,9 +33,14 @@ public class UserBar extends Composite implements Command {
 	private MenuItem userbar;
 	
     /**
+     * @param bus 
      *
      */
-    public UserBar() {
+    public UserBar(EventBus bus) {
+        profileCmd = new ProfileCommand(bus);
+        schoolClassCmd = new SchoolClassStudentCommand(this,bus);
+        studentModelCmd = new StudentModelCommand(bus);
+        schoolLoginCmd = new SchoolLoginCommand(this,bus);
         init();
     }
 
