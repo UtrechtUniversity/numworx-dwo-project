@@ -1,6 +1,6 @@
 package fi.dwo.gwt.lib.rest.ui;
 
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import java.util.logging.Logger;
 
 /**
