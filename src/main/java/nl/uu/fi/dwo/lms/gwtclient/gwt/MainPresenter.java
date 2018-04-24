@@ -23,8 +23,9 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
     private EventBus eventBus;
 
     public interface Display {
+
         public boolean isMenuVisible();
-        
+
         public void setSchoolName(String schoolName);
 
         public void setUserRole(String userRole);
@@ -117,11 +118,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
     }
 
     private void onSwitchViewEvent(SwitchViewEvent.SelectedView selectedView) {
-        if (selectedView == selectedView.LOGIN) {
-            // display.hideMenuButton();
-            // display.hidePostLoginWidgets();
-            //display.showMenuButton();
-        } else {//if (selectedView == selectedView.SWITCHSCHOOL) {
+        if (selectedView != selectedView.LOGIN) {
             try {
                 display.setSchoolName(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
                 display.setPresentationName(dwoGlobalVars.getCurrentUser().getDisplayName());
@@ -129,86 +126,88 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
             } catch (Exception e) {
             }
         }
-        try {
-            if (dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())) {
-                // display.showMenuButton();
+//        try {
+//            RoleType rt = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
+//            switch (rt) {
+//                case STUDENT:
+//                    display.setUserRole(rb.TEACHER());
+//                    break;
+//                case ADMIN:
+//                    display.setUserRole(rb.ADMIN());
+//                    break;
+//                case SCHOOLADMIN:
+//                    display.setUserRole(rb.SCHOOLADMIN());
+//                    break;
+//                case TEACHER:
+//                    display.setUserRole(rb.TEACHER());
+//                    break;
+//                default:
+//                    LOG.log(Level.SEVERE, "unknown role type to display.");
+//            }
+//            //display.setUserRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
+//        } catch (Exception e) {
+//
+//        }
+//
+        if (dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())) {
+            switch (selectedView) {
+                case LOGIN:
+                    display.showLoginView();
+                    break;
+                case WELCOME:
+                    display.showWelcomeView();
+                    break;
+                case ACCOUNT:
+                    display.showAccountView();
+                    break;
+                case PEOPLE:
+                    display.showPersonsView();
+                    break;
+                case SCHOOLCLASSES:
+                    display.showSchoolclassesView();
+                    break;
+                case EDITSCHOOLCLASS:
+                    display.showEditSchoolclasView();
+                    break;
+                case ADDSTUDENTTOSCHOOLCLASS:
+                    display.showAddStudentToSchoolClassView();
+                    break;
+                case COPYORMOVESTUDENTTOSCHOOLCLASS:
+                    display.showCopyOrMoveStudentToSchoolClassView();
+                    break;
+                case ADDTEACHERTOSCHOOLCLASS:
+                    display.showAddTeacherToSchoolClassView();
+                    break;
+                case EDITCOURSESOFSCHOOLCLASS:
+                    display.showEditCoursesOfSchoolClassView();
+                    break;
+                case RESULTS:
+                    display.showResultsView();
+                    break;
+                case RESULTSSTUDENT:
+                    display.showStudentResultsView();
+                case MODULES:
+                    display.showModulesView();
+                case ORGANISATION:
+                    display.showOrganisationView();
+
+                // case ADDSTUDENTS:
+                // display.showAddStudentsView();
+                // break;
+                // case TEACHERSINSCHOOLCLASS:
+                // display.showTeachersInSchoolclassView();
+                // break;
+                // case SCORESULTS:
+                // display.showScoResultsView();
             }
-            RoleType rt = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
-            switch (rt) {
-                case STUDENT:
-                    display.setUserRole(rb.TEACHER());
-                    break;
-                case ADMIN:
-                    display.setUserRole(rb.ADMIN());
-                    break;
-                case SCHOOLADMIN:
-                    display.setUserRole(rb.SCHOOLADMIN());
-                    break;
-                case TEACHER:
-                    display.setUserRole(rb.TEACHER());
-                    break;
-                default:
-                    LOG.log(Level.SEVERE, "unknown role type to display.");
-            }
-            //display.setUserRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
-        } catch (Exception e) {
-
-        }
-
-        switch (selectedView) {
-            case LOGIN:
-                display.showLoginView();
-                break;
-            case WELCOME:
-                display.showWelcomeView();
-                break;
-            case ACCOUNT:
-                display.showAccountView();
-                break;
-            case PEOPLE:
-                display.showPersonsView();
-                break;
-            case SCHOOLCLASSES:
-                display.showSchoolclassesView();
-                break;
-            case EDITSCHOOLCLASS:
-                display.showEditSchoolclasView();
-                break;
-            case ADDSTUDENTTOSCHOOLCLASS:
-                display.showAddStudentToSchoolClassView();
-                break;
-            case COPYORMOVESTUDENTTOSCHOOLCLASS:
-                display.showCopyOrMoveStudentToSchoolClassView();
-                break;
-            case ADDTEACHERTOSCHOOLCLASS:
-                display.showAddTeacherToSchoolClassView();
-                break;
-            case EDITCOURSESOFSCHOOLCLASS:
-                display.showEditCoursesOfSchoolClassView();
-                break;
-            case RESULTS:
-                display.showResultsView();
-                break;
-            case RESULTSSTUDENT:
-                display.showStudentResultsView();
-            case MODULES:
-                display.showModulesView();
-            case ORGANISATION:
-                display.showOrganisationView();
-
-            // case ADDSTUDENTS:
-            // display.showAddStudentsView();
-            // break;
-            // case TEACHERSINSCHOOLCLASS:
-            // display.showTeachersInSchoolclassView();
-            // break;
-            // case SCORESULTS:
-            // display.showScoResultsView();
+        } else {
+            display.showAccountView();
         }
     }
 
     @Override
-    public void onLoginEvent(LoginEvent loginEvent) {
+    public void onLoginEvent(LoginEvent loginEvent
+    ) {
         /// display.showPostLoginWidgets();
     }
 //

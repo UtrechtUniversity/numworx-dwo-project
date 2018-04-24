@@ -12,6 +12,7 @@
     <!-- set to false in order to show the default user-interface -->
             var hideGwtGui = "true";
         </script>
+        <script type="text/javascript" language="javascript" src="/gwtclient/gwtclient/gwtclient.nocache.js"></script>
 
         <!-- TODO: decide whether to add Google fonts locally (consider licence) -->
         <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700" rel="stylesheet">
@@ -34,8 +35,6 @@
 
         <!-- Main script, should handle basic menu flow -->
         <script src="js/MainApp.js" type="text/javascript" charset="utf-8"></script>
-        <script type="text/javascript" language="javascript" src="/gwtclient/gwtclient/gwtclient.nocache.js"></script>
-        <!--<script type="text/javascript" language="javascript" src="/gwtclient/gwtclient.nocache.js"></script>-->
 
     </head>
 
@@ -140,7 +139,7 @@
                     <span id="accountMenuSchoolName">Voorbeeld van Naam</span>
                     <span id="accountMenuUserRole">Docent</span><span id="accountMenuPresentationName">Voorbeeldschool</span>
                     <a href="#ACCOUNT">Account beheren</a>
-                    <a href="javascript:void(0);">Uitloggen</a>
+                    <a href="#LOGOUT">Uitloggen</a>
                 </div>
             </header>
 
@@ -386,14 +385,8 @@
                                                                     <tbody>
                                                                         <tr>
                                                                             <td>
-                                                                                <input type="radio" name="test" class="hidden" value="bakker341">
-                                                                                Bakker34
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>
-                                                                                <input type="radio" name="test" class="hidden" value="bakker34">
-                                                                                Bakker34
+                                                                                <input type="radio" name="schoolclass" id="chooseSchoolclassId" class="hidden" value="schoolclassId">
+                                                                                <span id="chooseSchoolclassName">Schoolclass name</a>
                                                                             </td>
                                                                         </tr>
                                                                     </tbody>

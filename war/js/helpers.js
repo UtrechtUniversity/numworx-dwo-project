@@ -1,26 +1,30 @@
-var $selectableTables,
-
-initSelectableTables = function() {
-	$selectableTables.on('click', selectTableRow);
-},
-selectTableRow = function() {
-	var $el = $(this);
+function Helpers() {
+}
+Helpers.selectTableRow = function(event) {
+	var $el = $(event.target);
 	var $input = $el.find("input");
 	var form = $input[0].form;
 	
-	if ($input.prop("checked") == false) {
-		$input.prop('checked',true);
-	} else {
-		$input.prop("checked", false);	
-	}		
-	
+	if ($input[0].checked == false) $input[0].checked = true;
+	else $input[0].checked = false;		
+		
 	for (i = 0; i < form.elements.length; i++) {
 		el = form.elements[i];		
-		if ( (el.type=="radio" || el.type=="checkbox") && !el.checked ) $(el.parentElement.parentElement).removeClass("selected");
+		if ( (el.type=="radio" || el.type=="checkbox") && el.checked ) $(el.parentElement.parentElement).addClass("selected");
+		else $(el.parentElement.parentElement).removeClass("selected");
 	}
-	
-	$el.addClass("selected");
+};
+
+
+// BELOW for library
+
+
+var $selectableTables,
+
+initSelectableTables = function() {
+	$selectableTables.on('click', Helpers.selectTableRow);
 },
+
 
 resultIndicator,
 

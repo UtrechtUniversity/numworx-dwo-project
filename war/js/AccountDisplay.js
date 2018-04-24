@@ -159,6 +159,7 @@ AccountDisplay.prototype.changeCurrentPasswordInput = function(event) {
 	if (event.target.value != "") this.updateUserFormToggle(true);
 	else this.updateUserFormToggle(false);
 }
+// helpers
 AccountDisplay.prototype.updateUserFormToggle = function(value) {
 	if (value) this.$updateUserForm.find(':submit').prop('disabled','');
 	else this.$updateUserForm.find(':submit').prop('disabled','disabled');
