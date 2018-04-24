@@ -622,8 +622,8 @@ public interface DbAccessIF  {
             int parent, int profileID)
             throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-    public boolean moveSco(int scoId, int courseId, int sequencenr, String name)
-            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+//    public boolean moveSco(int scoId, int courseId, int sequencenr, String name)
+//            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
 //    public boolean selectCoursesForClass(int classID, int courseID, int type,
 //            Date van, Date tot)
