@@ -16,126 +16,133 @@ import javax.servlet.http.HttpUtils;
 
 public class HTTPFilter implements Filter {
 
-	Logger LOG = Logger.getLogger(HTTPFilter.class.getName());
+  Logger LOG = Logger.getLogger(HTTPFilter.class.getName());
 
-	/**
-	 * prefix of load balancer address. E.g. 172.
-	 */
-	private String prefix;
-	private boolean redirect = true;
-	
-	
-	static class BalancedServletRequest extends HttpServletRequestWrapper {
-
-		private String remoteAddr, scheme;
-		private int serverPort;
-		private boolean secure;
-		
-		public BalancedServletRequest(HttpServletRequest request) {
-			super(request);
-			String remoteAddr = request.getHeader("x-forwarded-for");
-			if (remoteAddr == null)
-				remoteAddr = request.getRemoteAddr();
-			else {
-				int index = remoteAddr.lastIndexOf(',');
-				if (index >= 0) {
-					remoteAddr = remoteAddr.substring(index + 1);
-				}
-			}
-			String serverPort = request.getHeader("x-forwarded-port");
-			String scheme = request.getHeader("x-forwarded-proto");
-
-			this.remoteAddr = remoteAddr;
-			this.serverPort = serverPort != null ? Integer.parseInt(serverPort) : request.getServerPort();
-			this.scheme = scheme != null ? scheme : request.getScheme();
-			this.secure = scheme != null ? "https".equals(scheme) : request.isSecure();
-		}
-
-		@Override
-		public String getRemoteAddr() {
-			return remoteAddr;
-		}
-
-		@Override
-		public String getRemoteHost() {
-			return remoteAddr;
-		}
+  /**
+   * prefix of load balancer address. E.g. 172.
+   */
+  private String prefix;
+  private boolean redirect = true;
 
 
-		@Override
-		public String getScheme() {
-			return scheme;
-		}
+  static class BalancedServletRequest extends HttpServletRequestWrapper {
 
-		@Override
-		public int getServerPort() {
-			return serverPort;
-		}
+    private String remoteAddr, scheme;
+    private int serverPort;
+    private boolean secure;
 
-		@Override
-		public boolean isSecure() {
-			return secure;
-		}
+    public BalancedServletRequest(HttpServletRequest request) {
+      super(request);
+      String remoteAddr = request.getHeader("x-forwarded-for");
+      if (remoteAddr == null)
+        remoteAddr = request.getRemoteAddr();
+      else {
+        int index = remoteAddr.lastIndexOf(',');
+        if (index >= 0) {
+          remoteAddr = remoteAddr.substring(index + 1);
+        }
+      }
+      String serverPort = request.getHeader("x-forwarded-port");
+      String scheme = request.getHeader("x-forwarded-proto");
 
-		@SuppressWarnings("deprecation")
-		@Override
-		public StringBuffer getRequestURL() {
-			return HttpUtils.getRequestURL(this);
-		}
-		
-	}
-	
-	@Override
-	public void destroy() {
-	}
+      this.remoteAddr = remoteAddr;
+      this.serverPort = serverPort != null ? Integer.parseInt(serverPort) : request.getServerPort();
+      this.scheme = scheme != null ? scheme : request.getScheme();
+      this.secure = scheme != null ? "https".equals(scheme) : request.isSecure();
+    }
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
-		HttpServletRequest req = (HttpServletRequest) request;
-		LOG.fine("HTTP  " + req.getRequestURL() + " " + req.isSecure() + " from " + req.getRemoteAddr());
-		req = balanced(req);
+    @Override
+    public String getRemoteAddr() {
+      return remoteAddr;
+    }
 
-		LOG.fine("Balanced " + req.getRequestURL() + " " + req.isSecure() + " from " + req.getRemoteAddr() + " " + req.getClass().getName());
-		request.setAttribute("remoteAddr", req.getRemoteAddr());
+    @Override
+    public String getRemoteHost() {
+      return remoteAddr;
+    }
 
-		if(req.isSecure() || req.getRemoteAddr().equals("127.0.0.1") || req.getRemoteAddr().equals("0:0:0:0:0:0:0:1"))
-		{
-			chain.doFilter(req, response);
-			return;
-		}
-		
-		String uri = req.getRequestURI();
-		if(!isException(uri) && redirect) {
-			StringBuffer sb = new StringBuffer("https://");
-			sb.append(req.getServerName());
-			sb.append(uri);			
-			HttpServletResponse res = (HttpServletResponse) response;
-			//res.addHeader("xxxx-security", "....");
-			res.sendRedirect(sb.toString());
-			return;
-		}
-		chain.doFilter(req, response);
-	}
 
-	private HttpServletRequest balanced(HttpServletRequest req) {
-		String balancer = req.getRemoteAddr();
-		if (balancer.startsWith(prefix)) // 
-			return new BalancedServletRequest(req);
-		return req;
-	}
+    @Override
+    public String getScheme() {
+      return scheme;
+    }
 
-	private boolean isException(String uri) {
-		return uri.contains("rest")||uri.contains("xmlrpc")||uri.contains("crossdomain.xml")||"/".equals(uri);
-	}
+    @Override
+    public int getServerPort() {
+      return serverPort;
+    }
 
-	@Override
-	public void init(FilterConfig config) throws ServletException {
-		prefix = config.getInitParameter("prefix");
-		if(prefix == null) prefix = System.getProperty("DWO_ELB", "172.");
-		LOG.config("init prefix = "  + prefix);
-		redirect = Boolean.valueOf(System.getProperty("DWO_REDIRECT", "true"));
-		LOG.config("init redirect = " + redirect);
-	}
+    @Override
+    public boolean isSecure() {
+      return secure;
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public StringBuffer getRequestURL() {
+      return HttpUtils.getRequestURL(this);
+    }
+
+  }
+
+  @Override
+  public void destroy() {}
+
+  private boolean buggyUserAgent(ServletRequest req) {
+    String ua = ((HttpServletRequest) req).getHeader("User-Agent");
+    return ua.contains("JavaFX");
+  }
+
+  @Override
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+      throws IOException, ServletException {
+    HttpServletRequest req = (HttpServletRequest) request;
+    LOG.fine(
+        "HTTP  " + req.getRequestURL() + " " + req.isSecure() + " from " + req.getRemoteAddr());
+    req = balanced(req);
+
+    LOG.fine("Balanced " + req.getRequestURL() + " " + req.isSecure() + " from "
+        + req.getRemoteAddr() + " " + req.getClass().getName());
+    request.setAttribute("remoteAddr", req.getRemoteAddr());
+
+    if (req.isSecure() || req.getRemoteAddr().equals("127.0.0.1")
+        || req.getRemoteAddr().equals("0:0:0:0:0:0:0:1") || buggyUserAgent(req)) {
+      chain.doFilter(req, response);
+      return;
+    }
+
+    String uri = req.getRequestURI();
+    if (!isException(uri) && redirect) {
+      StringBuffer sb = new StringBuffer("https://");
+      sb.append(req.getServerName());
+      sb.append(uri);
+      HttpServletResponse res = (HttpServletResponse) response;
+      // res.addHeader("xxxx-security", "....");
+      res.sendRedirect(sb.toString());
+      return;
+    }
+    chain.doFilter(req, response);
+  }
+
+  private HttpServletRequest balanced(HttpServletRequest req) {
+    String balancer = req.getRemoteAddr();
+    if (balancer.startsWith(prefix)) //
+      return new BalancedServletRequest(req);
+    return req;
+  }
+
+  private boolean isException(String uri) {
+    return uri.contains("rest") || uri.contains("xmlrpc") || uri.contains("crossdomain.xml")
+        || "/".equals(uri);
+  }
+
+  @Override
+  public void init(FilterConfig config) throws ServletException {
+    prefix = config.getInitParameter("prefix");
+    if (prefix == null) prefix = System.getProperty("DWO_ELB", "172.");
+    LOG.config("init prefix = " + prefix);
+    redirect = Boolean.valueOf(System.getProperty("DWO_REDIRECT", "true"));
+    LOG.config("init redirect = " + redirect);
+  }
 
 }
