@@ -523,7 +523,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     public boolean moveSco(int scoId, int courseId, int sequencenr, String name)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
-        return getDelegate().moveSco(scoId, courseId, sequencenr, name);
+        return ((DbAccessObsolete) getDelegate()).moveSco(scoId, courseId, sequencenr, name);
     }
 
 //    @Override
