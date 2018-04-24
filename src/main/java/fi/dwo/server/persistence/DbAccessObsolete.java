@@ -22,4 +22,7 @@ public interface DbAccessObsolete {
 	boolean changeCourse(int courseID, String name, String description, boolean export, int schoolID, int parentID)
 			throws DwoXmlRpcException, SQLException, IOException, XmlRpcException;
 
+  public boolean changeSco(int scoID, String name, String description, String launchdata) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+
+   public boolean changeSco(int scoID, String name, String description) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 }

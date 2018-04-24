@@ -336,14 +336,14 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     public boolean changeSco(int scoID, String name, String description,
             String launchdata) throws DwoXmlRpcException, IOException,
             XmlRpcException, SQLException {
-        return getDelegate().changeSco(scoID, name, description, launchdata);
+        return ((DbAccessObsolete)getDelegate()).changeSco(scoID, name, description, launchdata);
     }
 
     @Override
     public boolean changeSco(int scoID, String name, String description)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
-        return getDelegate().changeSco(scoID, name, description);
+        return ((DbAccessObsolete)getDelegate()).changeSco(scoID, name, description);
     }
 
     @Override

@@ -3391,7 +3391,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      * @see #changeSco(int, String, String, String)
      */
-    @Override
+    @Deprecated
     public boolean changeSco(int scoID, String name, String description)
             throws SQLException, DwoXmlRpcException {
         PreparedStatement ps;
@@ -3495,7 +3495,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws XmlRpcException
      * @throws SQLException
      */
-    @Override
+    @Deprecated
     public boolean changeSco(int scoID, String name, String description, String launchdata)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {

@@ -10,12 +10,18 @@ import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentImage;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
+import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.server.PersistentDataManagers.core.AppletManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.ImageManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,6 +39,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoDataFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.entities.RestScoContextFull;
@@ -56,6 +63,7 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
     @Produces({"application/json"})
     public DomScoContextFull update(@Context SecurityContext sc, RestScoContextFull rest) {
 		DomScoContextFull scoContext = rest.getDomScoContext();
+		DomScoData    	  scoData = rest.getDomScoData();
     	try {
 // Security...
 			Long scoID = MySQLPersistenceId.getNativeId(scoContext);
@@ -64,6 +72,9 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 // editable fields?
 			if(scoContext.getScoName() != null) 
 				pc.setSconame(scoContext.getScoName());
+			if (scoContext.getShowScore() != null) {
+				pc.setShowscore(scoContext.getShowScore());
+			}
 			if(scoContext.getImageData()!=null) 
 			{	
 				byte[] data = (scoContext.getImageData());
@@ -98,6 +109,15 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 			  Long model = MySQLPersistenceId.getNativeId(new DomStudentModelContextId(scoContext.getStudentModelContext()));
 			  pc.setModelID(model);
 			}
+			if (scoContext.getSequencenr() != null) {
+				pc.setSequencenr(scoContext.getSequencenr());
+			}
+			
+			if (scoContext.getCourseId() != null) {
+				DomCourse dc = new DomCourse(); dc.setId(scoContext.getCourseId());
+				Long courseID = MySQLPersistenceId.getNativeId(dc);
+				pc.setCourseID(courseID);
+			}
 			
 			pc=ScoContextManager.edit(pc);
 // if edit fails skip this.
@@ -105,6 +125,28 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 				sd.setDescription(scoContext.getDescription());
 				sd = ScoDataManager.edit(sd);
 			}
+
+			if(scoData != null) {
+				if(scoData.getLaunchdata() != null) 
+					sd.setLaunchdata(scoData.getLaunchdata());
+				if(scoData.getLaunchdatabytes() != null) 
+					sd.setLaunchdatabytes(scoData.getLaunchdatabytes());
+// Destroy all studentSco's			
+				List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(pc);
+				for(PersistentStudentScoContext item:list) {
+					StudentScoDataManager.destroy(item.getStudentSco());
+					StudentScoContextManager.destroy(item.getStudentSco());
+				}				
+// Destroy all studentModels of that sco.
+				List<PersistentStudentModelData> list2 = StudentModelDataManager.findEntity(pc);
+				for(PersistentStudentModelData item: list2) {
+					StudentModelDataManager.destroy(item.getModelDataId());
+				}
+				sd = ScoDataManager.edit(sd);		
+			}
+
+			
+			
 			pc.fillDomScoContextFull(scoContext);
 			sd.fillDomScoContextFull(scoContext);
 			

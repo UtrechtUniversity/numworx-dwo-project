@@ -218,4 +218,21 @@ public class StudentModelDataManager {
             em.close();
         }
     }
+
+	public static List<PersistentStudentModelData> findEntity(PersistentScoContext pc) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            javax.persistence.TypedQuery<PersistentStudentModelData> q = em.createNamedQuery("PersistentStudentModelData.findByScoId", PersistentStudentModelData.class);
+            q.setParameter("scoID", pc.getScoID());
+            List<PersistentStudentModelData> list = q.getResultList();
+            em.getTransaction().commit();
+            return list;
+        } catch (RuntimeException e) {
+            LOG.log(Level.SEVERE, "", e);
+            throw e;
+        } finally {
+            em.close();
+        }
+	}
 }
