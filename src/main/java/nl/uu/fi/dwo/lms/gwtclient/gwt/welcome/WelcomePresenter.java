@@ -1,6 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.welcome;
 
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;

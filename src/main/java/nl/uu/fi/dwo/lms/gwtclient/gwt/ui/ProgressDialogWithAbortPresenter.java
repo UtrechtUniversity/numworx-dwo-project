@@ -1,6 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.ui;
 
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 
 /**

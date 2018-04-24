@@ -20,15 +20,25 @@ function AccountDisplay() {
 	this.$schoolLoginsRow = $(this.updateSchoolLoginsViewForm).find("tbody tr").detach();
 	this.$schoolLoginsTableBody = $(this.updateSchoolLoginsViewForm).find("tbody");
 	
+	this.$updateUserForm = $(this.updateUserForm);
+	this.$updateSchoolLoginsViewForm = $(this.updateSchoolLoginsViewForm);
+	this.$addSchoolLoginForm = $(this.addSchoolLoginForm);
+	
 	// Bind handlers
-	//this.form.on('submit', $.proxy(this.login,this));
-	$(this.updateUserForm).on('submit', $.proxy(this.saveUser,this));
-	$(this.updateSchoolLoginsViewForm).on('submit', $.proxy(this.saveSchoolLogins,this));
-	$(this.addSchoolLoginForm).on('submit', $.proxy(this.addSchoolLogin,this));
+	this.$updateUserForm.on('submit', $.proxy(this.submitUserForm,this));
+	this.$updateSchoolLoginsViewForm.on('submit', $.proxy(this.submitSchoolLogins,this));
+	this.$addSchoolLoginForm.on('submit', $.proxy(this.submitSchoolLoginsViewForm,this));
+	$(this.updateUserForm.elements["currentPassword"]).on('keypress', $.proxy(this.changeCurrentPasswordInput,this));
 	
 	// Init
 	this.$panel.hide();
 }
+
+
+/*
+ * VIEW FUNCTIONS
+ * Map to java implementation
+ */
 
 AccountDisplay.prototype.show = function() {
 	this.$panel.show();
@@ -40,15 +50,26 @@ AccountDisplay.prototype.clear = function () {
 AccountDisplay.prototype.init = function (json) {
 }
 
-AccountDisplay.prototype.refresh = function() {
-	// Refresh update user
+AccountDisplay.prototype.updateUserView = function(json) {
+	this.email = json.jsObject.email;
+	this.familyName = json.jsObject.familyName;
+	this.givenName = json.jsObject.givenName;
+	this.insertion = json.jsObject.insertion;
+
 	this.updateUserForm.elements["email"].value = this.email;
 	this.updateUserForm.elements["familyName"].value = this.familyName;
 	this.updateUserForm.elements["givenName"].value = this.givenName;
 	this.updateUserForm.elements["insertion"].value = this.insertion;
-	
-	// Refresh update school logins
+	this.updateUserFormToggle(false);
+}
+
+AccountDisplay.prototype.updateSchoolLoginsView = function(json) {
+	this.activeSchoolRoleAndClass = json.jsObject.activeSchoolRoleAndClass;
+	this.schoolsRolesAndClassesList = json.jsObject.schoolsRolesAndClassesList;
+
 	if (this.schoolsRolesAndClassesList) {
+		
+		this.$schoolLoginsTableBody.html(""); // empty the table
 		
 		if (this.activeSchoolRoleAndClass) { activeSchoolId = this.activeSchoolRoleAndClass.school.id.idString; activeRoleId = this.activeSchoolRoleAndClass.role.id.idString; }
 		else { activeSchoolId = ""; activeRoleId = ""; }
@@ -68,35 +89,30 @@ AccountDisplay.prototype.refresh = function() {
 				this.nextElementSibling.setAttribute("for", oldFor + i);
 			});
 			
+			
+			// Set active 'active' checkbox and change style of the others
 			if (activeSchoolId.localeCompare(el.school.id.idString) == 0
 				&& activeRoleId.localeCompare(el.role.id.idString) == 0) {
-				$row.find("input[type='radio']").prop('checked','checked');
-			}
+				$row.find("input[name='active[]']").prop('checked','checked').prop('disabled','disabled').parent().addClass('ok');;
+			} 
+			
+			$row.find("input[name='active[]']").on('change', $.proxy(this.changeActiveCheckbox,this));
+			$row.find("input[name='remove[]']").on('change', $.proxy(this.changeRemoveCheckbox,this));
 						
 			this.$schoolLoginsTableBody.append($row);	
 		}
+		
+		this.updateSchoolLoginsViewFormSubmitToggle();
 	}
-	
 }
 
-AccountDisplay.prototype.updateUserView = function(json) {
-	this.email = json.jsObject.email;
-	this.familyName = json.jsObject.familyName;
-	this.givenName = json.jsObject.givenName;
-	this.insertion = json.jsObject.insertion;
-	this.refresh();
-}
-AccountDisplay.prototype.updateSchoolLoginsView = function(json) {
-	console.log("update school logins view");
-	console.log(json);	
-	this.activeSchoolRoleAndClass = json.jsObject.activeSchoolRoleAndClass;
-	this.schoolsRolesAndClassesList = json.jsObject.schoolsRolesAndClassesList;
-	this.refresh();	
-}
 
-AccountDisplay.prototype.saveUser = function(event) {
-	//String givenName, String insertion, String familyName, String email, String curPassword, String newPassword, String newPasswordAgain
-	event.preventDefault();		
+/*
+ * RETURN FUNCTIONS
+ * Use java callbacks
+ */
+
+AccountDisplay.prototype.saveUser = function(event) {	
 	app.getPresenterFactory().accountPresenter.saveUser(    this.updateUserForm.elements["givenName"].value,
 															this.updateUserForm.elements["insertion"].value,
 															this.updateUserForm.elements["familyName"].value,
@@ -107,17 +123,116 @@ AccountDisplay.prototype.saveUser = function(event) {
 }
 
 AccountDisplay.prototype.saveSchoolLogins = function(event) {
-	event.preventDefault();		
-	app.getPresenterFactory().accountPresenter.switchSchoolLogin( this.updateSchoolLoginsViewForm.elements["active"].value );
+	var value = "";
+	for (i = 0; i < this.updateSchoolLoginsViewForm.elements.length; i++) {
+		if (this.updateSchoolLoginsViewForm.elements[i].name == "active[]" && this.updateSchoolLoginsViewForm.elements[i].checked && !this.updateSchoolLoginsViewForm.elements[i].disabled) value = this.updateSchoolLoginsViewForm.elements[i].value;
+	}
+	console.log("set active: "+value);
+	if (value != "") app.getPresenterFactory().accountPresenter.switchSchoolLogin( value );
+	
+	for (i = 0; i < this.updateSchoolLoginsViewForm.elements.length; i++) {
+		if (this.updateSchoolLoginsViewForm.elements[i].name == "remove[]" && this.updateSchoolLoginsViewForm.elements[i].checked) {
+			console.log("remove"+this.updateSchoolLoginsViewForm.elements[i].value);
+			app.getPresenterFactory().accountPresenter.removeASchoolLogin(this.updateSchoolLoginsViewForm.elements[i].value);
+		}
+	}
+	
+	
 }
 
 AccountDisplay.prototype.addSchoolLogin = function(event) {
-	//String role, String schoolLogin, String accessCode
-	event.preventDefault();		
 	app.getPresenterFactory().accountPresenter.addASchoolLogin( this.addSchoolLoginForm.elements["role"].value,
 																this.addSchoolLoginForm.elements["schoolLogin"].value,
-																this.addSchoolLoginForm.elements["accessCode"].value );
+																this.addSchoolLoginForm.elements["schoolCode"].value );
 }
 
 
-//window.jsAccountDisplay = new AccountDisplay();
+/*
+ * EVENT HANDLERS - USER
+ */
+
+AccountDisplay.prototype.submitUserForm = function(event) {
+	event.preventDefault();
+	this.saveUser();		
+}
+AccountDisplay.prototype.changeCurrentPasswordInput = function(event) {
+	if (event.target.value != "") this.updateUserFormToggle(true);
+	else this.updateUserFormToggle(false);
+}
+AccountDisplay.prototype.updateUserFormToggle = function(value) {
+	if (value) this.$updateUserForm.find(':submit').prop('disabled','');
+	else this.$updateUserForm.find(':submit').prop('disabled','disabled');
+}
+
+
+/*
+ * EVENT HANDLERS - SCHOOL LOGINS
+ */
+
+AccountDisplay.prototype.submitSchoolLogins = function(event) {
+	event.preventDefault();		
+	this.saveSchoolLogins();
+}
+
+AccountDisplay.prototype.changeActiveCheckbox = function(event) {
+	if (event.target.checked) {
+		// Set others unchecked
+		this.uncheckSchoolLoginsViewFormCheckboxes();
+		
+		// Set remove unchecked
+		var $row = $(event.target.parentElement.parentElement.parentElement);
+		$row.find("input[name='remove[]']").prop('checked','');
+		
+		// Set current checked
+		event.target.checked = "checked";
+	} else {
+		event.target.checked = "";
+	}
+	this.updateSchoolLoginsViewFormSubmitToggle();
+}
+
+AccountDisplay.prototype.changeRemoveCheckbox = function(event) {
+	if (event.target.checked) {
+		// Set others unchecked
+		this.uncheckSchoolLoginsViewFormCheckboxes();
+		//var $row = $(event.target.parentElement.parentElement.parentElement);
+		//$row.find("input[name='active[]']:not(:disabled)").prop('checked','');
+		
+		// Set current checked
+		event.target.checked = "checked";
+	} else {
+		event.target.checked = "";
+	}
+	this.updateSchoolLoginsViewFormSubmitToggle();
+}
+
+// Helpers
+AccountDisplay.prototype.updateSchoolLoginsViewFormSubmitToggle = function() {
+	if (this.updateSchoolLoginsViewFormStateChanged()) this.$updateSchoolLoginsViewForm.find(':submit').prop('disabled','');
+	else this.$updateSchoolLoginsViewForm.find(':submit').prop('disabled','disabled');
+}
+AccountDisplay.prototype.updateSchoolLoginsViewFormStateChanged = function () {
+	for (i = 0; i < this.updateSchoolLoginsViewForm.elements.length; i++) {
+		if (this.updateSchoolLoginsViewForm.elements[i].name == "active[]" && this.updateSchoolLoginsViewForm.elements[i].checked && !this.updateSchoolLoginsViewForm.elements[i].disabled) return true;
+		if (this.updateSchoolLoginsViewForm.elements[i].name == "remove[]" && this.updateSchoolLoginsViewForm.elements[i].checked) return true;
+	}
+	return false;
+}
+AccountDisplay.prototype.uncheckSchoolLoginsViewFormCheckboxes = function() {
+	for (i = 0; i < this.updateSchoolLoginsViewForm.elements.length; i++) {
+		if ( (this.updateSchoolLoginsViewForm.elements[i].name == "active[]" || this.updateSchoolLoginsViewForm.elements[i].name == "remove[]")
+			&& !this.updateSchoolLoginsViewForm.elements[i].disabled) this.updateSchoolLoginsViewForm.elements[i].checked = "";
+	}
+}
+
+
+/*
+ * EVENT HANDLERS - ADD SCHOOL LOGIN
+ */
+
+AccountDisplay.prototype.submitSchoolLoginsViewForm = function(event) {
+	event.preventDefault();
+	this.addSchoolLogin();		
+}
+
+

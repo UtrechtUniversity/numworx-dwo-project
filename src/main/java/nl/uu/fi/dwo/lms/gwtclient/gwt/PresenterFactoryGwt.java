@@ -3,7 +3,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPresenter;
 
 import jsinterop.annotations.JsMethod;

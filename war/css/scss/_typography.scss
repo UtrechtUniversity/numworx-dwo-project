@@ -89,6 +89,7 @@ h3 {
 	.dialog & {
 		font-size: 18 / 16 * 1em;
 	}
+	
 }
 h4 {
 	color: $primaryLight;
@@ -108,6 +109,11 @@ h4 {
 		text-indent: 10px;		
 		text-transform: none;	
 		min-width: $colWidth * 1px;	
+		
+		
+	}
+	.dialog.alert & {
+		background-color: $danger;
 	}
 }
 

@@ -1,12 +1,12 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
-import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogEvent;
@@ -218,7 +218,12 @@ class BootPanelController {
         eventBus.addHandler(SwitchViewEvent.TYPE, new SwitchViewEventHandler() {
             @Override
             public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
-                if(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name())){
+                if(SwitchViewEvent.eventValue != SwitchViewEvent.eventValue.LOGIN 
+                        && !dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name())){
+                        LOG.log(Level.INFO, "Showing account view, because not a teacher.");
+                        presenterFactory.getAccountPresenter().init();
+                } 
+                
                 switch (switchViewEvent.getEventValue()) {
                     case LOGIN:
                         presenterFactory.getLoginPresenter().init();
@@ -266,10 +271,7 @@ class BootPanelController {
                         eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                         LOG.log(Level.SEVERE, "Switch panel failed in app controller.");
                 }
-                }else{
-                    LOG.log(Level.INFO, "Showing account view, because not a teacher.");
-                        presenterFactory.getAccountPresenter().init();
-                }                
+                               
             }
         });
         LOG.log(Level.FINE, "Intiating Main view.");
@@ -279,6 +281,7 @@ class BootPanelController {
         LOG.log(Level.FINE, "Intiating Main presenter. Showing login screen.");
         mainPresenter.init();
         LOG.log(Level.FINE, "Initiated Main presenter.");
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN));
+        SwitchViewEvent ev = new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN);
+        eventBus.fireEvent(ev);
     }
 }

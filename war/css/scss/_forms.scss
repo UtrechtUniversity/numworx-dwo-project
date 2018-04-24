@@ -60,6 +60,11 @@ input[type="submit"], button {
 		background-color: $shade3;
 		border-color: $shade3;
 	}
+	&:disabled {
+		background-color: $shade3;
+		border-color: $shade3;
+		cursor: not-allowed;
+	}
 	
 	label & {
 		display: block;
@@ -218,8 +223,16 @@ form {
 		}
 		&:before {
 			display: block;
+		}	
+		
+	}
+	&.ok {
+		input:checked ~ label.icon {
+			background-color: $ok;		
+			border: $borderThickness $ok solid;
 		}
 	}
+	
 	
 	
 	&.danger {

@@ -21,8 +21,6 @@ MainApp.prototype.getPresenterFactory = function() {
 }
 
 $(document).ready(function(){ 
-	window.app = new MainApp();
-	
-	//setTimeout(function() { app.getPresenterFactory().loginPresenter.loginClicked("teuniz", "***", false); }, 1000); // temporary auto login
+	window.app = new MainApp();	
 });
 	

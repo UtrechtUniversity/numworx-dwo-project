@@ -4,17 +4,22 @@ initSelectableTables = function() {
 	$selectableTables.on('click', selectTableRow);
 },
 selectTableRow = function() {
-	$el = $(this);
-	$input = $el.find("input");
-	console.log($input.prop("checked"));
+	var $el = $(this);
+	var $input = $el.find("input");
+	var form = $input[0].form;
 	
 	if ($input.prop("checked") == false) {
 		$input.prop('checked',true);
-		$el.addClass("selected");
 	} else {
-		$input.prop("checked", false);
-		$el.removeClass("selected");
+		$input.prop("checked", false);	
+	}		
+	
+	for (i = 0; i < form.elements.length; i++) {
+		el = form.elements[i];		
+		if ( (el.type=="radio" || el.type=="checkbox") && !el.checked ) $(el.parentElement.parentElement).removeClass("selected");
 	}
+	
+	$el.addClass("selected");
 },
 
 resultIndicator,
@@ -90,7 +95,7 @@ $(document).ready(function(){
 	if ($selectableTables) initSelectableTables();
 	
 	$resultIndicator = $(".resultIndicator");
-	if($resultIndicator) initResultIndicators();
+	if ($resultIndicator) initResultIndicators();
 	
 	
 	/* UGLY STUFF below */
@@ -106,7 +111,7 @@ $(document).ready(function(){
 	
 	$("#help h2").click(function() { $(this).parent().toggleClass('active'); $(this).parent().css('z-index','9999');});
 	
-	$("#accountMenuToggle").click( function() { $("#accountMenuBox").toggle(); });
+	//$("#accountMenuToggle").click( function() { $("#accountMenuBox").toggle(); });
 	
 	$("tr.headers th span").hover(function() { 
 		$this = $(this);

@@ -3,7 +3,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 import com.google.gwt.core.client.GWT;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;

@@ -18,7 +18,7 @@ table {
 	width: 100%;	
 	border-collapse: collapse;
 	//float: left;
-	height: 100px; max-height: 100px;
+	//height: 100px; max-height: 100px;
 	position: relative;
 	margin-bottom: $elementMarginBottom;
 	
@@ -120,7 +120,7 @@ table {
 		tr.selected td {
 			background-color: $shade3;
 		}
-		input[type="checkbox"].hidden { position: absolute; opacity: 0;}
+		input[type="checkbox"].hidden, input[type="radio"].hidden { position: absolute; opacity: 0;}
 	}
 }
 
