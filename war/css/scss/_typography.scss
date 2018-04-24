@@ -1,0 +1,200 @@
+/*
+
+TYPOGRAPHY STYLES
+Colors, font-sizes, weights, margins, paddings etc. for text-items.
+
+- General
+- Headers
+- Forms 
+- Tables
+
+*/
+
+
+/*
+ * GENERAL
+ */
+
+html {
+	font-family: 'Ubuntu', sans-serif;
+	font-size: 16px;
+}
+
+p {
+	color: $primary;
+	font-size: 18/16 * 1em;
+	line-height: 24 / 18 * 1em;
+	margin-bottom: $elementMarginBottom;
+	
+	
+	#help & {
+		
+	}
+	.dialog & {
+		font-size: 1em;
+	}
+}
+
+
+/*
+ * HEADERS
+ */
+
+h1 {
+	font-size: 18 / 16 * 1em;
+	color: $primary;	
+	font-weight: bold;
+	margin-bottom:  ($gutter - 5) + 1px; //2 * $elementMarginBottom; //TODO
+	padding-top: $elementMarginBottom; //TODO
+}
+h2 {
+	margin-bottom: $elementMarginBottom;
+	header & { 
+		margin-bottom: 0; 
+	}
+	nav & {
+		font-size: 18 / 16 * 1em;
+	}
+	
+	&.sectionhead {
+		border-bottom: 1px $primary solid;
+		font-size: 14 / 16 * 1em;
+		line-height: $gutter * 1px;
+		width: 100%;
+		header & { border-bottom-style: none; }
+		
+		span {
+			background-color: $primary;
+			color: $white;
+			display: block;
+			max-width: (2 * ($colWidth + $gutter) + $colWidth) * 1px;
+			text-indent: 10px;
+			width: 100%;
+		}
+	}
+	
+	&.helpheader {
+		background-color: $shade3;
+		color: $white;		
+		line-height: $gutter * 1px;
+		text-indent: 10px;
+	}
+}
+
+h3 {
+	color: $primary;
+	margin-bottom: $elementMarginBottom;
+	font-weight: bold;
+	
+	.dialog & {
+		font-size: 18 / 16 * 1em;
+	}
+	
+}
+h4 {
+	color: $primaryLight;
+	text-transform: uppercase;
+	border-bottom: 1px $primary solid;
+	margin-bottom: $elementMarginBottom;
+	
+	.dialog & {
+		background-color: $primary;
+		border-style: none;		
+		color: $white;
+		font-size: 12/16 * 1em;
+		padding-top: 2px;
+		padding-right: $gutter * 1px;
+		padding-bottom: 2px;
+		position: absolute;
+		text-indent: 10px;		
+		text-transform: none;	
+		min-width: $colWidth * 1px;	
+		
+		
+	}
+	.dialog.alert & {
+		background-color: $danger;
+	}
+}
+
+#help .content {
+	h1, h2, h3, h4 {
+		font-size: 20 / 16 * 1em;
+		font-weight: bold;
+		margin-bottom: 1em;
+	}
+}
+
+
+/*
+ * FORMS TYPOGRAPHY
+ */
+
+input[type="submit"], button {
+	font-family: 'Ubuntu', sans-serif;
+	text-transform: uppercase;
+	color: $white;
+	font-weight: bold;
+	letter-spacing: .3px;
+	font-size: 12px;
+}
+input[type="text"], input[type="password"] {
+	font-family: 'Ubuntu', sans-serif;
+	font-size: 1em;
+	line-height: 1em;	
+}
+.options .option label {
+	font-size: 12px;
+}
+
+label {
+	color: $primaryLight;
+	font-size: 13 / 17 * 1em;
+	font-weight: bold;
+
+	
+	&.input {
+		text-transform: uppercase;
+		font-weight: normal;
+	}
+}
+
+
+/*
+ * TABLES TYPOGRAPHY
+ */
+
+a.resultIndicator {
+	color: $black;	
+	font-size: 13 / 16 * 1em;
+	text-align: center;
+	text-decoration: none;
+}
+
+table thead tr th {
+	font-size: 13 / 16 * 1em;
+	text-transform: uppercase;
+	color: $primaryLight;
+}
+
+table tbody tr td {
+	font-size: 13 / 16 * 1em;
+}
+
+table.results {
+	thead {
+		tr:first-child th {
+			color: $white;
+		}
+		tr.headers th span {
+			&.active {
+				color: $white;
+			}
+			a {
+				text-transform: uppercase;
+				color: $white;
+				text-decoration: none;
+			}	
+		}
+	}
+}
