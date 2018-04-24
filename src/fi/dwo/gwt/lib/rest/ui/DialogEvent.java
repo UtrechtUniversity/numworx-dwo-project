@@ -3,6 +3,7 @@ package fi.dwo.gwt.lib.rest.ui;
 import com.google.web.bindery.event.shared.Event;
 
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 /**
  * GWTEvent that notifies of a login action.
@@ -47,6 +48,13 @@ public class DialogEvent extends Event<DialogEventHandler> {
         this.setEventValue(Dialogs.Dwo2ExceptionDialog);
         exception = e;
     }
+    
+    public DialogEvent(Dwo2ExceptionCode code, String msg) {
+      this(new Dwo2Exception(code, msg));
+    }
+    public DialogEvent(Dwo2ExceptionCode code) {
+      this(code, "");
+    }   
     
     @Override
     public Type<DialogEventHandler> getAssociatedType() {
