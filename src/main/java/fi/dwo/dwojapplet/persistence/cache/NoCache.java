@@ -3,6 +3,8 @@ package fi.dwo.dwojapplet.persistence.cache;
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.dwojapplet.domain.Sco;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -78,14 +80,9 @@ public class NoCache implements IStore {
     @Override
     public boolean changeSco(int scoid, String scoName, String description,
             boolean delete, String launchdataString, Boolean showScore) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
-        if (delete) {
-            if (null != showScore) {
-                return dbAccess.changeSco(scoid, scoName, description, launchdataString, showScore.booleanValue());
-            } else {
-                return dbAccess.changeSco(scoid, scoName, description, launchdataString);
-            }
-        } else {
-            boolean result = dbAccess.changeSco(scoid, scoName, description, false, launchdataString);
+        assert !delete;
+    	{
+            boolean result = dbAccess.changeSco(scoid, scoName, description, delete, launchdataString);
             if (result && null != showScore) // heel onwaarschijnlijk?
             {
                 dbAccess.changeSco(scoid, scoName, description, showScore.booleanValue());
@@ -107,5 +104,9 @@ public class NoCache implements IStore {
     @Override
     public void clear(int scoid) {
     }
+
+	@Override
+	public void uncache(Sco sco, boolean delete) {
+	}
 
 }

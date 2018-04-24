@@ -2171,6 +2171,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 			extractStudentModel(scoContext, sco, m);
 	  		if (sco.hasFeature(Sco.JSON_OUT))
 	  			scoData.setLaunchdatabytes(sco.getLaunchdataBytes());
+			StoreCreator.instance().uncache(sco, true);
 		} catch (Exception e) {
 			LOG.log(Level.WARNING, "incompatibel", e);
 		}
@@ -2178,17 +2179,21 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 		try {
 			SecuredTeacherScoContextManager.update(scoContext, scoData, getDwoProfile());
 			sco.setImageData(null);
+			sco.setCourseChanged(false);
+			sco.setDataChanged(false);
 		} catch (Dwo2Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
+            return false;
 		}
     	
-        try {
-            return PersistenceFacade.instance().updateSco(sco);
-        } catch (ScoException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-            return false;
-        }
-    }
+			return true;
+//        try {
+//            return PersistenceFacade.instance().updateSco(sco);
+//        } catch (ScoException e) {
+//            JOptionPane.showMessageDialog(this, e.getMessage());
+//            return false;
+//        }
+     }
 
     /*
      * (non-Javadoc)

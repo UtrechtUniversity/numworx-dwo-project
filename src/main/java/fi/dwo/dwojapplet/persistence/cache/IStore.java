@@ -2,6 +2,8 @@ package fi.dwo.dwojapplet.persistence.cache;
 
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.dwojapplet.domain.Sco;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import org.apache.xmlrpc.applet.XmlRpcException;
@@ -16,6 +18,8 @@ public interface IStore {
 
     void destroy();
 
+    
+    
     /**
      * update SCO data in the store.
      *
@@ -59,4 +63,6 @@ public interface IStore {
      * @param scoId
      */
     void clear(int scoId);
+
+	void uncache(Sco sco, boolean delete);
 }

@@ -544,77 +544,77 @@ public class PersistenceFacade {
 //        return EMPTY_SCOS;
 //    }
 
-    /**
-     * Updates the name and the description of the sco in the database.
-     *
-     * @param sco The sco to update in the database.
-     * @return True if the sco was successfully changed.
-     * @throws ScoException
-     */
-    public boolean updateSco(Sco sco) throws ScoException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                MapperCreator.instance(Sco.class).removeObject(sco.getID());
-                if (sco.isCourseChanged()) {
-                    dbAccess.moveSco(sco.getID(), sco.getCourse().getID(), sco.getSequencenr(), sco.getScoName());
-                    sco.setCourseChanged(false);
-                }
-                if (sco.isDataChanged()) {
-                    boolean result;
-
-                    if (sco.hasFeature(Sco.JSON_OUT)) {
-                        byte[] launchdataBytes = sco.getLaunchdataBytes();
-                        System.out.println("JSON launchdata " + sco.getID() + " " + launchdataBytes.length + " bytes");
-                        result = StoreCreator.instance().changeSco(sco.getID(), sco.getScoName(), sco.getDescription(),
-                                true, launchdataBytes, sco.getShowScore());
-                    }
-                    result = StoreCreator.instance().changeSco(
-                            sco.getID(), sco.getScoName(), sco.getDescription(),
-                            true, sco.getLaunchdataString(), sco.getShowScore());
-
-//         			if(sco.getShowScore() != null)
-//         		            		result = dbAccess.changeSco(sco.getID(), sco.getScoName(), sco
-//					        .getDescription(), sco.getLaunchdataString(), sco.isShowScore());
-//         			else
-//		            		result = dbAccess.changeSco(sco.getID(), sco.getScoName(), sco
-//							        .getDescription(), sco.getLaunchdataString());
-//         			
-                    sco.setDataChanged(false);
-                    return result;
-                } else {
-                    if (sco.getShowScore() != null) {
-                        return dbAccess.changeSco(sco.getID(), sco.getScoName(), sco.getDescription(), sco.isShowScore());
-                    } else {
-                        return dbAccess.changeSco(sco.getID(), sco.getScoName(), sco.getDescription());
-                    }
-
-                }
-
-            }
-            catch (IOException e) {
-                throw new ScoException(ScoException.EX_IO);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (ScoException) getException(e, e.code);
-                } else {
-                	if(e.getMessage().contains("PacketTooBigException"))
-                		throw new ScoException(ScoException.SE_TOO_BIG, e);
-                    throw new ScoException(ScoException.EX_XML_RPC, e);
-                }
-            }
-            catch (SQLException e) {
-                throw new ScoException(ScoException.EX_DB, e);
-            }
-            catch (DwoXmlRpcException e) {
-                throw (ScoException) getException(e, e.code);
-            }
-        }
-        catch (PersistenceException e) {
-            throw new ScoException(ScoException.EX_UNKNOWN_ERROR, e);
-        }
-    }
+//    /**
+//     * Updates the name and the description of the sco in the database.
+//     *
+//     * @param sco The sco to update in the database.
+//     * @return True if the sco was successfully changed.
+//     * @throws ScoException
+//     */
+//    public boolean updateSco(Sco sco) throws ScoException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                MapperCreator.instance(Sco.class).removeObject(sco.getID());
+//                if (sco.isCourseChanged()) {
+//                    dbAccess.moveSco(sco.getID(), sco.getCourse().getID(), sco.getSequencenr(), sco.getScoName());
+//                    sco.setCourseChanged(false);
+//                }
+//                if (sco.isDataChanged()) {
+//                    boolean result;
+//
+//                    if (sco.hasFeature(Sco.JSON_OUT)) {
+//                        byte[] launchdataBytes = sco.getLaunchdataBytes();
+//                        System.out.println("JSON launchdata " + sco.getID() + " " + launchdataBytes.length + " bytes");
+//                        result = StoreCreator.instance().changeSco(sco.getID(), sco.getScoName(), sco.getDescription(),
+//                                true, launchdataBytes, sco.getShowScore());
+//                    }
+//                    result = StoreCreator.instance().changeSco(
+//                            sco.getID(), sco.getScoName(), sco.getDescription(),
+//                            true, sco.getLaunchdataString(), sco.getShowScore());
+//
+////         			if(sco.getShowScore() != null)
+////         		            		result = dbAccess.changeSco(sco.getID(), sco.getScoName(), sco
+////					        .getDescription(), sco.getLaunchdataString(), sco.isShowScore());
+////         			else
+////		            		result = dbAccess.changeSco(sco.getID(), sco.getScoName(), sco
+////							        .getDescription(), sco.getLaunchdataString());
+////         			
+//                    sco.setDataChanged(false);
+//                    return result;
+//                } else {
+//                    if (sco.getShowScore() != null) {
+//                        return dbAccess.changeSco(sco.getID(), sco.getScoName(), sco.getDescription(), sco.isShowScore());
+//                    } else {
+//                        return dbAccess.changeSco(sco.getID(), sco.getScoName(), sco.getDescription());
+//                    }
+//
+//                }
+//
+//            }
+//            catch (IOException e) {
+//                throw new ScoException(ScoException.EX_IO);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (ScoException) getException(e, e.code);
+//                } else {
+//                	if(e.getMessage().contains("PacketTooBigException"))
+//                		throw new ScoException(ScoException.SE_TOO_BIG, e);
+//                    throw new ScoException(ScoException.EX_XML_RPC, e);
+//                }
+//            }
+//            catch (SQLException e) {
+//                throw new ScoException(ScoException.EX_DB, e);
+//            }
+//            catch (DwoXmlRpcException e) {
+//                throw (ScoException) getException(e, e.code);
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            throw new ScoException(ScoException.EX_UNKNOWN_ERROR, e);
+//        }
+//    }
 
     /**
      * Deletes the specified sco. The results of the students at this sco will
@@ -683,10 +683,6 @@ public class PersistenceFacade {
         try {
             try {
                 MapperCreator.instance(Sco.class).put(sco.getID(), sco);
-                if (sco.isCourseChanged()) {
-                    dbAccess.moveSco(sco.getID(), sco.getCourse().getID(), sco.getSequencenr(), sco.getScoName());
-                    sco.setCourseChanged(false);
-                }
                 if (sco.isDataChanged()) {
                     boolean result;
                     if (sco.hasFeature(Sco.JSON_OUT)) {
@@ -702,15 +698,8 @@ public class PersistenceFacade {
                             sco.getLaunchdataString(), sco.getShowScore());
                     sco.setDataChanged(false);
                     return result;
-                } else {
-                    if (sco.getShowScore() != null) {
-                        return dbAccess.changeSco(sco.getID(), sco.getScoName(), sco.getDescription(), sco.isShowScore());
-                    } else {
-                        return dbAccess.changeSco(sco.getID(), sco.getScoName(), sco.getDescription());
-                    }
-
-                }
-
+                } 
+                return true;
             }
             catch (IOException e) {
                 throw new ScoException(ScoException.EX_IO, e);

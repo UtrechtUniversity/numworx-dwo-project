@@ -4,6 +4,8 @@ import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ConcurrentModificationException;
@@ -248,5 +250,10 @@ public class CachingStore implements IStore, Runnable {
     public synchronized void clear(int scoid) {
         uncache(scoid, false);
     }
+
+	@Override
+	public void uncache(Sco sco, boolean delete) {
+		uncache(sco.getScoID(), delete);
+	}
 
 }
