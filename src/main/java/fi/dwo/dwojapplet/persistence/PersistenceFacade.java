@@ -723,59 +723,59 @@ public class PersistenceFacade {
         }
     }
 
-    /**
-     * Swap de sequencenrs van twee sco's. Beide sco's moeten van dezelfde
-     * course zijn.
-     *
-     * @param sco1
-     * @param sco2
-     * @return true
-     * @throws ScoException
-     */
-    public boolean swapScoSequenceNr(Sco sco1, Sco sco2) throws ScoException {
-        boolean result = false;
-        if (sco1.getCourse() != sco2.getCourse()) {
-            throw new ScoException(ScoException.EX_DB);
-        }
-
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                int nr1 = sco1.getSequencenr();
-                int nr2 = sco2.getSequencenr();
-                result = dbAccess.changeScoSequenceNr(sco1.getScoID(), nr2, sco2.getScoID(), nr1);
-                if (result) {
-                    Sco[] scos = sco1.getCourse().getScoList();
-                    scos[nr2 - 1] = sco1;
-                    scos[nr1 - 1] = sco2;
-                    sco1.setSequencenr(nr2);
-                    sco2.setSequencenr(nr1);
-                    sco1.setCourseChanged(false);
-                    sco1.setCourseChanged(false);
-                }
-            }
-            catch (DwoXmlRpcException e) {
-                throw (ScoException) getException(e, e.code);
-            }
-            catch (SQLException e) {
-                throw new ScoException(ScoException.EX_DB, e);
-            }
-            catch (IOException e) {
-                throw new ScoException(ScoException.EX_IO, e);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (ScoException) getException(e, e.code);
-                } else {
-                    throw new ScoException(ScoException.EX_XML_RPC, e);
-                }
-            }
-        }
-        catch (PersistenceException e) {
-            throw new ScoException(ScoException.EX_UNKNOWN_ERROR, e);
-        }
-        return result;
-    }
+//    /**
+//     * Swap de sequencenrs van twee sco's. Beide sco's moeten van dezelfde
+//     * course zijn.
+//     *
+//     * @param sco1
+//     * @param sco2
+//     * @return true
+//     * @throws ScoException
+//     */
+//    public boolean swapScoSequenceNr(Sco sco1, Sco sco2) throws ScoException {
+//        boolean result = false;
+//        if (sco1.getCourse() != sco2.getCourse()) {
+//            throw new ScoException(ScoException.EX_DB);
+//        }
+//
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                int nr1 = sco1.getSequencenr();
+//                int nr2 = sco2.getSequencenr();
+//                result = dbAccess.changeScoSequenceNr(sco1.getScoID(), nr2, sco2.getScoID(), nr1);
+//                if (result) {
+//                    Sco[] scos = sco1.getCourse().getScoList();
+//                    scos[nr2 - 1] = sco1;
+//                    scos[nr1 - 1] = sco2;
+//                    sco1.setSequencenr(nr2);
+//                    sco2.setSequencenr(nr1);
+//                    sco1.setCourseChanged(false);
+//                    sco1.setCourseChanged(false);
+//                }
+//            }
+//            catch (DwoXmlRpcException e) {
+//                throw (ScoException) getException(e, e.code);
+//            }
+//            catch (SQLException e) {
+//                throw new ScoException(ScoException.EX_DB, e);
+//            }
+//            catch (IOException e) {
+//                throw new ScoException(ScoException.EX_IO, e);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (ScoException) getException(e, e.code);
+//                } else {
+//                    throw new ScoException(ScoException.EX_XML_RPC, e);
+//                }
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            throw new ScoException(ScoException.EX_UNKNOWN_ERROR, e);
+//        }
+//        return result;
+//    }
 
     /**
      * =============================================================================

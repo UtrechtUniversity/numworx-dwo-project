@@ -582,16 +582,16 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
-    @Override
-    public boolean changeScoSequenceNr(int a, int b, int c, int d) throws IOException, XmlRpcException {
-        Vector vv = new Vector(4);
-        vv.addElement(new Integer(a));
-        vv.addElement(new Integer(b));
-        vv.addElement(new Integer(c));
-        vv.addElement(new Integer(d));
-        Object object = invoke("changeScoSequenceNr", vv);
-        return ((Boolean) object).booleanValue();
-    }
+//    @Override
+//    public boolean changeScoSequenceNr(int a, int b, int c, int d) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(4);
+//        vv.addElement(new Integer(a));
+//        vv.addElement(new Integer(b));
+//        vv.addElement(new Integer(c));
+//        vv.addElement(new Integer(d));
+//        Object object = invoke("changeScoSequenceNr", vv);
+//        return ((Boolean) object).booleanValue();
+//    }
 
     @Override
     public boolean deleteSco(int a) throws IOException, XmlRpcException {

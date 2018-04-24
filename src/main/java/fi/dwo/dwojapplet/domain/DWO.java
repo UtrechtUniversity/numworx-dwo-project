@@ -2555,7 +2555,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     }
 
     /**
-     * Verwissel de sequencenrs van twee Sco's. De Sco's moeten tot dezelfe
+     * Verwissel de sequencenrs van twee Sco's. De Sco's moeten tot dezelfde
      * Course behoren.
      *
      * @param sco1 Sco
@@ -2564,7 +2564,19 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      */
     public boolean swapSco(Sco sco1, Sco sco2) {
         try {
-            return PersistenceFacade.instance().swapScoSequenceNr(sco1, sco2);
+            if (sco1.getCourse() != sco2.getCourse()) {
+                throw new ScoException(ScoException.EX_DB);
+            }
+            int nr1 = sco1.getSequencenr();
+            int nr2 = sco2.getSequencenr();
+            sco1.setSequencenr(nr2);
+            updateSco(sco1);
+            sco2.setSequencenr(nr1);
+            updateSco(sco2);
+            Sco[] scos = sco1.getCourse().getScoList();
+            scos[nr2 - 1] = sco1;
+            scos[nr1 - 1] = sco2;
+            return true; //PersistenceFacade.instance().swapScoSequenceNr(sco1, sco2);
         } catch (ScoException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
