@@ -28,5 +28,16 @@ public class MySQLDwoAdminActions implements DwoAdminActions {
     return MySQLScoContextActions.add(c, scoContext, scoData);
   }
 
+  @Override
+  public Boolean removeSco(Context context) {
+    PersistentScoContext pc = context.getAdminCtx().scoContext;
+    if(pc == null) {
+      return Boolean.FALSE;
+    }
+    PersistentCourse c = context.getAdminCtx().course;
+    MySQLScoContextActions.remove(pc,c);
+    return Boolean.TRUE;
+  }
+
 
 }

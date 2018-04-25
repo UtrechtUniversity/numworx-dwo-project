@@ -10,9 +10,11 @@ import javax.ws.rs.core.SecurityContext;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_P_R_S_SG_U;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScoContextFull;
 import nl.uu.fi.dwo.rest.entities.RestScoContextFull4DwoAdmin;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -52,5 +54,19 @@ public class SecuredDwoAdminScoContextManager {
 	      DomCourse course = new DomCourse();
 	      course.setId(scoContext.getCourseId());
 	      return state.addCourse(course).add(scoContext, scoData);
+	}
+	
+	@PUT
+	@Path("remove")
+	@Produces({"application/json"})
+	public Boolean remove(@Context SecurityContext sc, RestScoContext rest) throws Dwo2Exception {
+      DwoAdminState_HR_P_R_S_SG_U state = AnonDomainAuthorizer.build()
+          .submitUser(sc.getUserPrincipal().getName())
+          .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN)
+          .buildDwoAdmin().addDwoProfile(rest.getDomDwoProfile());
+
+        DomScoContext scoContext = rest.getDomScoContext();
+        return state.addScoContext(scoContext).removeSco();
+	  
 	}
 }

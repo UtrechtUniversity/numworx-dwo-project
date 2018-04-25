@@ -64,7 +64,7 @@ public class ScoContextManager {
      * @return 
      * @throws Exception
      */
-    public static PersistentScoContext edit(PersistentScoContext sc) throws PersistenceException, Exception {
+    public static PersistentScoContext edit(PersistentScoContext sc) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();

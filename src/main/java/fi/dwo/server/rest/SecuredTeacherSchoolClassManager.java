@@ -718,7 +718,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/moveStudent")
+    @Path("/moveStudent2")
     public Boolean MoveStudentToSchoolClass2(@Context SecurityContext sc, RestMoveStudentToSchoolClass rest) {
 //        //secure builder
 //        try {

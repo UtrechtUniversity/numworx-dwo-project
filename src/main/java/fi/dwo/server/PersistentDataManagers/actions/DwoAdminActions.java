@@ -11,4 +11,6 @@ public interface DwoAdminActions {
 
   DomScoContextFull add(Context context, DomScoContextFull scoContext, DomScoData scoData);
 
+  Boolean removeSco(Context context);
+
 }

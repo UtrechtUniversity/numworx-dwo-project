@@ -12,6 +12,9 @@ import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.actions.MySQLScoContextActions;
 import fi.dwo.server.PersistentDataManagers.core.AppletManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.ImageManager;
@@ -36,12 +39,14 @@ import javax.ws.rs.core.SecurityContext;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletId;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoDataFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
+import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScoContextFull;
 
 /**
@@ -57,6 +62,23 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 
     private static final Logger LOG = Logger.getLogger(SecuredTeacherScoContextManager.class.getName());
 
+    @PUT
+    @Path("remove")
+    @Produces({"appliction/json"})
+    public Boolean remove(@Context SecurityContext sc, RestScoContext rest) throws Dwo2Exception {
+        SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build()
+        .submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole())
+        .buildSchoolAdminTeacher();
+        // TODO state.addProfile().addScoContext().removeSco();
+        
+        DomScoContext scoContext = rest.getDomScoContext();
+        Long scoID = MySQLPersistenceId.getNativeId(scoContext);
+        PersistentScoContext pc = ScoContextManager.findEntity(scoID);
+        if(pc == null) return Boolean.FALSE;
+        PersistentCourse c = CourseManager.findEntity(pc.getCourseID());
+        MySQLScoContextActions.remove(pc, c);
+        return Boolean.TRUE;
+    }
     
     @PUT
     @Path("update")

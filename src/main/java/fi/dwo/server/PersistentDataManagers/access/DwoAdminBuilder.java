@@ -140,4 +140,9 @@ class DwoAdminBuilder
     return actions.add(instance.getContext(), scoContext, scoData);
   }
 
+  @Override
+  public Boolean removeSco() {
+    return actions.removeSco(instance.getContext());
+  }
+
 }

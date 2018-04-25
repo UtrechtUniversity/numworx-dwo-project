@@ -34,7 +34,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-class MySQLScoContextActions {
+public class MySQLScoContextActions {
   private static final Logger LOG = Logger.getLogger(MySQLScoContextActions.class.getName());
 
   private MySQLScoContextActions() {}
@@ -105,17 +105,7 @@ class MySQLScoContextActions {
         if (scoData.getLaunchdatabytes() != null)
           sd.setLaunchdatabytes(scoData.getLaunchdatabytes());
         if (delete) {
-          // Destroy all studentSco's
-          List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(pc);
-          for (PersistentStudentScoContext item : list) {
-            StudentScoDataManager.destroy(item.getStudentSco());
-            StudentScoContextManager.destroy(item.getStudentSco());
-          }
-          // Destroy all studentModels of that sco.
-          List<PersistentStudentModelData> list2 = StudentModelDataManager.findEntity(pc);
-          for (PersistentStudentModelData item : list2) {
-            StudentModelDataManager.destroy(item.getModelDataId());
-          }
+          destroyStudentWork(pc);
         }
         sd = ScoDataManager.edit(sd);
       }
@@ -140,6 +130,20 @@ class MySQLScoContextActions {
     }
 
     return scoContext;
+  }
+
+  private static void destroyStudentWork(PersistentScoContext pc) {
+    // Destroy all studentSco's
+    List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(pc);
+    for (PersistentStudentScoContext item : list) {
+      StudentScoDataManager.destroy(item.getStudentSco());
+      StudentScoContextManager.destroy(item.getStudentSco());
+    }
+    // Destroy all studentModels of that sco.
+    List<PersistentStudentModelData> list2 = StudentModelDataManager.findEntity(pc);
+    for (PersistentStudentModelData item : list2) {
+      StudentModelDataManager.destroy(item.getModelDataId());
+    }
   }
 
   static DomScoContextFull add(PersistentCourse c, DomScoContextFull scoContext,
@@ -227,6 +231,28 @@ class MySQLScoContextActions {
       LOG.log(Level.SEVERE, "", e);
       throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
     }
+  }
+
+  public static void remove(PersistentScoContext pc, PersistentCourse c) {
+    destroyStudentWork(pc);
+    final long seq = pc.getSequencenr().longValue();
+    ScoDataManager.destroy(pc.getScoID());
+    ScoContextManager.destroy(pc.getScoID());
+
+    List<PersistentScoContext> list = ScoContextManager.findEntities(c);
+    list.stream().forEach(item -> {
+      long s = item.getSequencenr().longValue();
+      if (s > seq) {
+        item.setSequencenr(Long.valueOf(s - 1));
+        try {
+          ScoContextManager.edit(item);
+        } catch (PersistenceException e) {
+          LOG.log(Level.SEVERE, "relocate sco", e);
+          throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+        }
+      }
+
+    });
   }
 
 }

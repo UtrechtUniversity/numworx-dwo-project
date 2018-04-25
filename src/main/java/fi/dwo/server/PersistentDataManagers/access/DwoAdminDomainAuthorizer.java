@@ -26,6 +26,8 @@ public class DwoAdminDomainAuthorizer {
   public interface DwoAdminState_C_S {
     DomScoContextFull update(DomScoContextFull scoContext, DomScoData scoData, Boolean delete);
 
+    Boolean removeSco();
+
   }
 
   public static class DwoAdminPersistentContext {
