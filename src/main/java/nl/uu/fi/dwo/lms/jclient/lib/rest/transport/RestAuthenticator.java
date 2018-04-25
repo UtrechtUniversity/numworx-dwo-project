@@ -4,6 +4,7 @@ import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.URL;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 /**
  *
@@ -13,6 +14,7 @@ public class RestAuthenticator extends Authenticator {
 
     private URL serverUrlPath;
     private DomContext context;
+    private RoleType role;
     private String username;
     private String password;
 
@@ -99,5 +101,13 @@ public class RestAuthenticator extends Authenticator {
      */
     public void setContext(DomContext context) {
         this.context = context;
+    }
+
+    public RoleType getRole() {
+      return role;
+    }
+
+    public void setRole(RoleType role) {
+      this.role = role;
     }
 }
