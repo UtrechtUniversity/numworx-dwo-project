@@ -8,6 +8,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer.AnonPersistentContext;
+import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
 import java.util.logging.Logger;
@@ -223,6 +224,8 @@ public class UserDomainAuthorizer {
         SchoolAdminTeacherState_HR_R_S_SG_U buildSchoolAdminTeacher() throws Dwo2Exception;
 
         StudentState_HR_R_S_SG_U buildStudent() throws Dwo2Exception;
+
+        DwoAdminState_HR_R_S_SG_U buildDwoAdmin() throws Dwo2Exception;
     }
     
    public interface PublicContext {

@@ -32,4 +32,16 @@ public interface DbAccessObsolete {
   public boolean moveSco(int scoId, int courseId, int sequencenr, String name)
       throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
   public boolean changeScoSequenceNr(int scoID, int sequencenr, int scoID2, int sequencenr2) throws SQLException, DwoXmlRpcException, IOException, XmlRpcException;
+  public boolean changeSco(int scoID, String name, String description, boolean showScore) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+
+  public boolean changeSco(int id, String scoName, String description,
+          String launchdataString, boolean showScore) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+
+  public boolean changeSco(int scoID, String name, String description, boolean delete, String launchdata)
+          throws DwoXmlRpcException, IOException, XmlRpcException,
+          SQLException;
+  public boolean changeSco(int scoid, String scoName, String description,
+                           boolean delete, byte[] launchdata, boolean showScore)
+                           throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+
 }

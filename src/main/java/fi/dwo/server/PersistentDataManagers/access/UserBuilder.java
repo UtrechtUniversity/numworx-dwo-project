@@ -136,6 +136,19 @@ class UserBuilder implements UserDomainAuthorizer.UserState_U, UserDomainAuthori
      * Verifies the existence of the hasRole for the given RoleType and stores
      * it and the RoleType into the userCtx.
      *
+     * @return
+     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
+     */
+    @Override
+    public DwoAdminDomainAuthorizer.DwoAdminState_HR_R_S_SG_U buildDwoAdmin() throws Dwo2Exception {
+        DwoAdminBuilder builder = new DwoAdminBuilder();
+        return builder.init(this.instance.getContext());
+    }
+
+    /**
+     * Verifies the existence of the hasRole for the given RoleType and stores
+     * it and the RoleType into the userCtx.
+     *
      * @param hr
      * @param r
      * @return

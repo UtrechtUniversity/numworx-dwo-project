@@ -350,21 +350,21 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     public boolean changeSco(int scoID, String name, String description,
             boolean showScore) throws DwoXmlRpcException, IOException,
             XmlRpcException, SQLException {
-        return getDelegate().changeSco(scoID, name, description, showScore);
+        return getDelegateObsolete().changeSco(scoID, name, description, showScore);
     }
 
     @Override
     public boolean changeSco(int scoID, String name, String description, boolean delete, String launchdata)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
-        return getDelegate().changeSco(scoID, name, description, delete, launchdata);
+        return getDelegateObsolete().changeSco(scoID, name, description, delete, launchdata);
     }
 
     @Override
     public boolean changeSco(int scoID, String name, String description, boolean delete, byte[] launchdata, boolean showScore)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
-        return getDelegate().changeSco(scoID, name, description, delete, launchdata, showScore);
+        return getDelegateObsolete().changeSco(scoID, name, description, delete, launchdata, showScore);
     }
 
     @Override
@@ -372,7 +372,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
             String launchdataString, boolean showScore)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
-        return getDelegate().changeSco(id, scoName, description, launchdataString,
+        return getDelegateObsolete().changeSco(id, scoName, description, launchdataString,
                 showScore);
     }
 
