@@ -523,7 +523,7 @@ public interface DbAccessIF  {
 
 //    public boolean changeScoSequenceNr(int scoID, int sequencenr, int scoID2, int sequencenr2) throws SQLException, DwoXmlRpcException, IOException, XmlRpcException;
 
-    public boolean deleteSco(int scoID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+//    public boolean deleteSco(int scoID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
     public boolean deleteSchool(int schoolID) throws IOException, XmlRpcException, SQLException;
 
