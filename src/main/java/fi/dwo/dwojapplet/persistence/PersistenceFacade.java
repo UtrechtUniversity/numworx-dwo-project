@@ -678,50 +678,50 @@ public class PersistenceFacade {
     }
 
 // ALLEEN VOOR ADMINISTRATORS
-    public boolean unsafeSaveSco(Sco sco) throws ScoException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                MapperCreator.instance(Sco.class).put(sco.getID(), sco);
-                if (sco.isDataChanged()) {
-                    boolean result;
-                    if (sco.hasFeature(Sco.JSON_OUT)) {
-                        byte[] launchdataBytes = sco.getLaunchdataBytes();
-                        System.out.println("JSON launchdata " + sco.getID() + " " + launchdataBytes.length + " bytes");
-                        result = StoreCreator.instance().changeSco(sco.getID(), sco.getScoName(), sco.getDescription(),
-                                false, // hier dus ook.
-                                launchdataBytes, sco.getShowScore());
-                    }
-                    result = StoreCreator.instance().changeSco(sco.getID(), sco.getScoName(),
-                            sco.getDescription(),
-                            false, // Daar is het om begonnen...
-                            sco.getLaunchdataString(), sco.getShowScore());
-                    sco.setDataChanged(false);
-                    return result;
-                } 
-                return true;
-            }
-            catch (IOException e) {
-                throw new ScoException(ScoException.EX_IO, e);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (ScoException) getException(e, e.code);
-                } else {
-                    throw new ScoException(ScoException.EX_XML_RPC, e);
-                }
-            }
-            catch (SQLException e) {
-                throw new ScoException(ScoException.EX_DB, e);
-            }
-            catch (DwoXmlRpcException e) {
-                throw (ScoException) getException(e, e.code);
-            }
-        }
-        catch (PersistenceException e) {
-            throw new ScoException(ScoException.EX_UNKNOWN_ERROR, e);
-        }
-    }
+//    public boolean unsafeSaveSco(Sco sco) throws ScoException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                MapperCreator.instance(Sco.class).put(sco.getID(), sco);
+//                if (sco.isDataChanged()) {
+//                    boolean result;
+//                    if (sco.hasFeature(Sco.JSON_OUT)) {
+//                        byte[] launchdataBytes = sco.getLaunchdataBytes();
+//                        System.out.println("JSON launchdata " + sco.getID() + " " + launchdataBytes.length + " bytes");
+//                        result = StoreCreator.instance().changeSco(sco.getID(), sco.getScoName(), sco.getDescription(),
+//                                false, // hier dus ook.
+//                                launchdataBytes, sco.getShowScore());
+//                    }
+//                    result = StoreCreator.instance().changeSco(sco.getID(), sco.getScoName(),
+//                            sco.getDescription(),
+//                            false, // Daar is het om begonnen...
+//                            sco.getLaunchdataString(), sco.getShowScore());
+//                    sco.setDataChanged(false);
+//                    return result;
+//                } 
+//                return true;
+//            }
+//            catch (IOException e) {
+//                throw new ScoException(ScoException.EX_IO, e);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (ScoException) getException(e, e.code);
+//                } else {
+//                    throw new ScoException(ScoException.EX_XML_RPC, e);
+//                }
+//            }
+//            catch (SQLException e) {
+//                throw new ScoException(ScoException.EX_DB, e);
+//            }
+//            catch (DwoXmlRpcException e) {
+//                throw (ScoException) getException(e, e.code);
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            throw new ScoException(ScoException.EX_UNKNOWN_ERROR, e);
+//        }
+//    }
 
 //    /**
 //     * Swap de sequencenrs van twee sco's. Beide sco's moeten van dezelfde

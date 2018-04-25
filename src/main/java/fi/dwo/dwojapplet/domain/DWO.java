@@ -29,9 +29,11 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.BUILD;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicUserManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import fi.dwo.dwojapplet.domain.utils.CheckEmail;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
@@ -88,6 +90,7 @@ import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.plaf.ColorUIResource;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
@@ -2115,14 +2118,21 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 		scoData.setLaunchdata(launchdata);
 		if (sco.hasFeature(Sco.JSON_OUT))
 			scoData.setLaunchdatabytes(sco.getLaunchdataBytes());
-		scoContext = SecuredTeacherScoContextManager.add(scoContext, scoData, getDwoProfile());
+		RoleType role = RestAuthenticator.getInstance().getRole();
+		switch (role) {
+		  default:
+		    scoContext = SecuredTeacherScoContextManager.add(scoContext, scoData, getDwoProfile());
+		    break;
+		  case ADMIN:
+	          scoContext = SecureDwoAdminScoContextManager.add(scoContext, scoData, getDwoProfile());
+		}
 // legacy
 		int scoid = MySQLPersistenceId.getNativeId(scoContext).intValue();
 		sco = (Sco) PersistenceFacade.instance().get(scoid, Sco.class);
 		return sco;
 	}
 
-	protected void extractStudentModel(DomScoContextFull scoContext, Sco sco, Map<?, ?> m) {
+	public void extractStudentModel(DomScoContextFull scoContext, Sco sco, Map<?, ?> m) {
 		Object instellingenStr = m.get("instellingen");
 		try {
 			Map map = (Map) StringCodeObject.decodeStringToObject(instellingenStr.toString(), sco.getApplet().getClass().getClassLoader());
@@ -2177,7 +2187,15 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 		}
     	}
 		try {
-			SecuredTeacherScoContextManager.update(scoContext, scoData, getDwoProfile());
+// TODO this needs refactoring
+		    RoleType role = RestAuthenticator.getInstance().getRole();
+		    switch(role) {
+		      case ADMIN:
+		        SecureDwoAdminScoContextManager.update(scoContext, scoData, getDwoProfile());
+		        break;
+		      default:
+		        SecuredTeacherScoContextManager.update(scoContext, scoData, getDwoProfile());
+		    }
 			sco.setImageData(null);
 			sco.setCourseChanged(false);
 			sco.setDataChanged(false);

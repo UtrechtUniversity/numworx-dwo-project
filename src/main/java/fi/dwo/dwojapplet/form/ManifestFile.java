@@ -12,12 +12,15 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
@@ -333,7 +336,14 @@ class ManifestFile {
     			if (addsco.hasFeature(Sco.JSON_OUT))
     				scoData.setLaunchdatabytes(addsco.getLaunchdataBytes());
      			
-			scoContext = SecuredTeacherScoContextManager.add(scoContext, scoData, profile);
+    	        RoleType role = RestAuthenticator.getInstance().getRole();
+    	        switch (role) {
+    	          default:
+    	            scoContext = SecuredTeacherScoContextManager.add(scoContext, scoData, profile);
+    	            break;
+    	          case ADMIN:
+    	            scoContext = SecureDwoAdminScoContextManager.add(scoContext, scoData, profile);
+    	        }
 // legacy?
     			int scoid = MySQLPersistenceId.getNativeId(scoContext).intValue();
     			Sco newsco = (Sco) PersistenceFacade.instance().get(scoid, Sco.class);

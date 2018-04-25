@@ -5,6 +5,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.exceptions.ScoException;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.AppletConfig;
 import fi.dwo.dwojapplet.domain.Course;
@@ -18,9 +19,11 @@ import fi.dwo.dwojapplet.gui.action.CourseManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import fi.dwo.dwojapplet.persistence.StoreCreator;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,6 +32,11 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminScoContextManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
+import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
@@ -315,9 +323,28 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public void unsafeSaveSco(Sco sco) {
+        if(!sco.isDataChanged())
+          return;
         try {
-            PersistenceFacade.instance().unsafeSaveSco(sco);
-        } catch (ScoException e) {
+ // PersistenceFacade.instance().unsafeSaveSco(sco);
+          DomScoContextFull scoContext = new DomScoContextFull();
+          DomScoData scoData = new DomScoData();
+ // excerpts from DWO.changeSco
+          scoContext.setId(PersistentScoContext.buildPersistenceId((long)sco.getScoID()));
+          @SuppressWarnings("unchecked")
+          Map<String, Object> m = sco.getLaunchdata();
+          Object mode = m.get("mode");
+          int value = mode == null ? 0 : Integer.parseInt(mode.toString());
+          scoContext.setScoType(ScoType.values()[value]);
+          scoData.setLaunchdata(sco.getLaunchdataString());
+          dwo.extractStudentModel(scoContext, sco, m);
+          if (sco.hasFeature(Sco.JSON_OUT))
+              scoData.setLaunchdatabytes(sco.getLaunchdataBytes());
+          StoreCreator.instance().uncache(sco, false);
+          scoContext = SecureDwoAdminScoContextManager.UNSAFEupdate(scoContext, scoData, DWO.getDwoProfile());
+          sco.setDataChanged(false);
+          
+        } catch (Exception e) {
             LOG.log(Level.SEVERE, null, e);
         }
     }

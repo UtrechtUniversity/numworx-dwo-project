@@ -77,29 +77,29 @@ public class NoCache implements IStore {
     public void destroy() {
     }
 
-    @Override
-    public boolean changeSco(int scoid, String scoName, String description,
-            boolean delete, String launchdataString, Boolean showScore) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
-        assert !delete;
-    	{
-            boolean result = dbAccess.changeSco(scoid, scoName, description, delete, launchdataString);
-            if (result && null != showScore) // heel onwaarschijnlijk?
-            {
-                dbAccess.changeSco(scoid, scoName, description, showScore.booleanValue());
-            }
-            return result;
-        }
-    }
+//    @Override
+//    public boolean changeSco(int scoid, String scoName, String description,
+//            boolean delete, String launchdataString, Boolean showScore) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
+//        assert !delete;
+//    	{
+//            boolean result = dbAccess.changeSco(scoid, scoName, description, delete, launchdataString);
+//            if (result && null != showScore) // heel onwaarschijnlijk?
+//            {
+//                dbAccess.changeSco(scoid, scoName, description, showScore.booleanValue());
+//            }
+//            return result;
+//        }
+//    }
 
-    @Override
-    public boolean changeSco(int scoid, String scoName, String description,
-            boolean delete, byte[] launchdata, Boolean showScore) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
-        if (showScore == null) {
-            showScore = Boolean.TRUE;
-        }
-        boolean result = dbAccess.changeSco(scoid, scoName, description, delete, launchdata, showScore);
-        return result;
-    }
+//    @Override
+//    public boolean changeSco(int scoid, String scoName, String description,
+//            boolean delete, byte[] launchdata, Boolean showScore) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
+//        if (showScore == null) {
+//            showScore = Boolean.TRUE;
+//        }
+//        boolean result = dbAccess.changeSco(scoid, scoName, description, delete, launchdata, showScore);
+//        return result;
+//    }
 
     @Override
     public void clear(int scoid) {

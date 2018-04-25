@@ -203,23 +203,23 @@ public class CachingStore implements IStore, Runnable {
         worker.start();
     }
 
-    @Override
-    public synchronized boolean changeSco(int scoid, String scoName, String description,
-            boolean delete, String launchdataString, Boolean showScore)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        uncache(scoid, delete);
-        return delegate.changeSco(scoid, scoName, description, delete, launchdataString, showScore);
-    }
+//    @Override
+//    public synchronized boolean changeSco(int scoid, String scoName, String description,
+//            boolean delete, String launchdataString, Boolean showScore)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        uncache(scoid, delete);
+//        return delegate.changeSco(scoid, scoName, description, delete, launchdataString, showScore);
+//    }
 
-    @Override
-    public synchronized boolean changeSco(int scoid, String scoName, String description,
-            boolean delete, byte[] launchdata, Boolean showScore)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        uncache(scoid, delete);
-        return delegate.changeSco(scoid, scoName, description, delete, launchdata, showScore);
-    }
+//    @Override
+//    public synchronized boolean changeSco(int scoid, String scoName, String description,
+//            boolean delete, byte[] launchdata, Boolean showScore)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        uncache(scoid, delete);
+//        return delegate.changeSco(scoid, scoName, description, delete, launchdata, showScore);
+//    }
 
     private void uncache(int scoid, boolean delete) {
         Iterator inter;

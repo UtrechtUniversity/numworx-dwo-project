@@ -180,13 +180,19 @@ public final class DwoHelper {
                 DomContext context = new DomContext();
                 DomSchoolRoleAndClassV2 activeSchoolRoleAndClass = srcs.getActiveSchoolRoleAndClass();
 				if (activeSchoolRoleAndClass != null) 
-					context.setDomHasRole(activeSchoolRoleAndClass.getHasRole());
+				{
+				  context.setDomHasRole(activeSchoolRoleAndClass.getHasRole());
+	              RestAuthenticator.getInstance().setRole(RoleType.valueOf(activeSchoolRoleAndClass.getRole().getRoleName()));
+				} else {
+				  RestAuthenticator.getInstance().setRole(RoleType.STUDENT);
+				}
 				RestAuthenticator.getInstance().setContext(context);
             } else {
                 schoolLogins = null;
                 RestAuthenticator.getInstance().setUsername(null);
                 RestAuthenticator.getInstance().setPassword(null);
                 RestAuthenticator.getInstance().setContext(null);
+                RestAuthenticator.getInstance().setRole(RoleType.ANONYMOUS);
             }
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
