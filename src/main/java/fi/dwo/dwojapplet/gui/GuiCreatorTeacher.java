@@ -4,8 +4,19 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+
 import fi.beans.private_base64code.StringCodeObject;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Admin;
@@ -20,19 +31,9 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.CourseManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
-import fi.dwo.dwojapplet.gui.fullscreen.FramedScoPanel;
-
-import java.awt.Color;
-import java.awt.Font;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
  * This class implements Teacher-specific methods of the GuiCreator. These
@@ -73,7 +74,7 @@ public class GuiCreatorTeacher extends GuiCreator {
     }
 
     private boolean noAdmin, readOnly;
-
+    protected SecuredTeacherScoContextManager manager;
     /**
      * @param dwo
      */
@@ -81,6 +82,7 @@ public class GuiCreatorTeacher extends GuiCreator {
         super(dwo);
         noAdmin = !dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
         readOnly = !dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT);
+        manager = new SecuredTeacherScoContextManager(RestAuthenticator.getInstance().getContext());
     }
 
     /**
@@ -327,7 +329,7 @@ public class GuiCreatorTeacher extends GuiCreator {
     @Override
     public boolean deleteSco(Sco sco) {
         Course c = sco.getCourse();
-        boolean b = dwo.deleteSco(sco);
+        boolean b = dwo.deleteSco(sco,manager);
         getMainPanel().getCenter().updateCourse(c);
         return b;
     }
@@ -347,7 +349,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      */
     @Override
     public boolean updateSco(Sco sco) {
-        return dwo.updateSco(sco);
+        return dwo.updateSco(sco,manager);
     }
 
     /**
@@ -411,7 +413,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      */
     @Override
     public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore, byte[] imageData) {
-        Sco result = dwo.addSco(course, appletConfig, name, description, showScore, imageData);
+        Sco result = dwo.addSco(course, appletConfig, name, description, showScore, imageData,manager);
         if (result != null) {
             getMainPanel().getCenter().updateCourse(course);
         }
@@ -428,7 +430,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      */
     @Override
     public boolean swapSco(Sco sco1, Sco sco2) {
-        return dwo.swapSco(sco1, sco2);
+        return dwo.swapSco(sco1, sco2,manager);
     }
 
     @Override

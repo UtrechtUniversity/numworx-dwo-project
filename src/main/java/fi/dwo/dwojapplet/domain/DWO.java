@@ -1,54 +1,5 @@
 package fi.dwo.dwojapplet.domain;
 
-import fi.beans.appletutil.AppletUtil;
-import fi.beans.dwomaccess.Compressor;
-import fi.beans.jvmchecker.JVMChecker;
-import fi.beans.mainframe.MainFrame;
-import fi.beans.private_base64code.StringCodeObject;
-import fi.beans.scorm.SCORM12APIInterface;
-import fi.beans.scorm.SCORM2004APIInterface;
-import fi.dwo.commons.exceptions.ClassException;
-import fi.dwo.commons.exceptions.CourseException;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
-import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.commons.exceptions.LoginException;
-import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.exceptions.RegisterException;
-import fi.dwo.commons.exceptions.SchoolException;
-import fi.dwo.commons.exceptions.ScoException;
-import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
-import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.commons.persistence.entities.PersistentApplet;
-import fi.dwo.commons.persistence.entities.PersistentCourse;
-import fi.dwo.commons.persistence.entities.PersistentScoContext;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.BUILD;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicUserManager;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminScoContextManager;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherScoContextManager;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
-import fi.dwo.dwojapplet.domain.utils.CheckEmail;
-import fi.dwo.dwojapplet.gui.CenterSubPanel;
-import fi.dwo.dwojapplet.gui.GuiConstants;
-import fi.dwo.dwojapplet.gui.GuiCreator;
-import fi.dwo.dwojapplet.gui.MainPanel;
-import fi.dwo.dwojapplet.gui.ModuleTreePanel;
-import fi.dwo.dwojapplet.gui.ScoPanel;
-import fi.dwo.dwojapplet.gui.WelcomePanel;
-import fi.dwo.dwojapplet.gui.action.Clipboard;
-import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import fi.dwo.dwojapplet.persistence.StoreCreator;
-import fi.beans.loader.Loader;
-import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -89,13 +40,58 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.plaf.ColorUIResource;
-import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
-import nl.uu.fi.dwo.rest.dom.entities.RoleType;
-import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
-import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 
 import org.apache.xmlrpc.applet.MySimpleXmlRpcClient;
+
+import fi.beans.appletutil.AppletUtil;
+import fi.beans.dwomaccess.Compressor;
+import fi.beans.jvmchecker.JVMChecker;
+import fi.beans.loader.Loader;
+import fi.beans.mainframe.MainFrame;
+import fi.beans.private_base64code.StringCodeObject;
+import fi.beans.scorm.SCORM12APIInterface;
+import fi.beans.scorm.SCORM2004APIInterface;
+import fi.dwo.commons.exceptions.CourseException;
+import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.exceptions.RegisterException;
+import fi.dwo.commons.exceptions.SchoolException;
+import fi.dwo.commons.exceptions.ScoException;
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentApplet;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.BUILD;
+import fi.dwo.dwojapplet.domain.utils.CheckEmail;
+import fi.dwo.dwojapplet.gui.CenterSubPanel;
+import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.gui.GuiCreator;
+import fi.dwo.dwojapplet.gui.MainPanel;
+import fi.dwo.dwojapplet.gui.ModuleTreePanel;
+import fi.dwo.dwojapplet.gui.ScoPanel;
+import fi.dwo.dwojapplet.gui.WelcomePanel;
+import fi.dwo.dwojapplet.gui.action.Clipboard;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
+import fi.dwo.dwojapplet.persistence.MapperCreator;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import fi.dwo.dwojapplet.persistence.StoreCreator;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicUserManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 /**
  * This is the main DWO application. It can be started as an applet or as a
@@ -2079,9 +2075,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * (non-Javadoc)
      * 
      */
-    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore, byte[] imageData) {
+    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore, byte[] imageData, AbstractScoContextManager manager) {
 		try {
-    		return addScoWithExceptions(course, appletConfig, name, description, showScore, imageData);
+    		return addScoWithExceptions(course, appletConfig, name, description, showScore, imageData, manager);
 		} catch (Dwo2Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), null, JOptionPane.ERROR_MESSAGE);
             return null;
@@ -2093,7 +2089,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     }
 
 	public Sco addScoWithExceptions(Course course, AppletConfig appletConfig, String name, String description,
-			boolean showScore, byte[] imageData) throws Dwo2Exception, PersistenceException {
+			boolean showScore, byte[] imageData, AbstractScoContextManager manager) throws Dwo2Exception, PersistenceException {
 		DomScoContextFull scoContext = new DomScoContextFull();
 		DomScoData scoData = new DomScoData();
 		scoContext.setImageData(imageData);
@@ -2118,14 +2114,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 		scoData.setLaunchdata(launchdata);
 		if (sco.hasFeature(Sco.JSON_OUT))
 			scoData.setLaunchdatabytes(sco.getLaunchdataBytes());
-		RoleType role = RestAuthenticator.getInstance().getRole();
-		switch (role) {
-		  default:
-		    scoContext = SecuredTeacherScoContextManager.add(scoContext, scoData, getDwoProfile());
-		    break;
-		  case ADMIN:
-	          scoContext = SecureDwoAdminScoContextManager.add(scoContext, scoData, getDwoProfile());
-		}
+		scoContext = manager.add(scoContext, scoData, getDwoProfile());
 // legacy
 		int scoid = MySQLPersistenceId.getNativeId(scoContext).intValue();
 		sco = (Sco) PersistenceFacade.instance().get(scoid, Sco.class);
@@ -2152,7 +2141,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * (non-Javadoc)
      * 
      */
-    public boolean updateSco(Sco sco) {
+    public boolean updateSco(Sco sco, AbstractScoContextManager manager) {
 		DomScoContextFull scoContext = new DomScoContextFull();
 		scoContext.setId(PersistentScoContext.buildPersistenceId((long)sco.getScoID()));
 		DomScoData scoData = null;
@@ -2188,14 +2177,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     	}
 		try {
 // TODO this needs refactoring
-		    RoleType role = RestAuthenticator.getInstance().getRole();
-		    switch(role) {
-		      case ADMIN:
-		        SecureDwoAdminScoContextManager.update(scoContext, scoData, getDwoProfile());
-		        break;
-		      default:
-		        SecuredTeacherScoContextManager.update(scoContext, scoData, getDwoProfile());
-		    }
+		    manager.update(scoContext, scoData, getDwoProfile());
 			sco.setImageData(null);
 			sco.setCourseChanged(false);
 			sco.setDataChanged(false);
@@ -2230,12 +2212,45 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * (non-Javadoc)
      * 
      */
-    public boolean deleteSco(Sco sco) {
+    public boolean deleteSco(Sco sco, AbstractScoContextManager manager) {
         try {
-            return PersistenceFacade.instance().deleteSco(sco);
-        } catch (ScoException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-            return false;
+            {
+                 {
+                    DomScoContext scoContext = new DomScoContext();
+                    scoContext.setId(PersistentScoContext.buildPersistenceId(Long.valueOf(sco.getScoID())));
+                    boolean returnValue = manager.remove(scoContext, getDwoProfile());
+                    if (returnValue) {
+                        MapperCreator.instance(Sco.class).removeObject(sco.getID());
+            
+                        /*
+                         * Delete the sco in the course, and reset all the
+                         * sequencenrs
+                         */
+                        Sco[] scos = sco.getCourse().getScoList();
+                        Sco[] tmp = new Sco[scos.length - 1];
+                        int div = 0;
+                        for (int i = 0; i < scos.length; i++) {
+                            if (scos[i] != sco) {
+                                if (scos[i].getSequencenr() > sco.getSequencenr()) {
+                                    scos[i]
+                                            .setSequencenr(scos[i].getSequencenr() - 1);
+                                    scos[i].setCourseChanged(false);
+                                }
+                                tmp[i + div] = scos[i];
+                            } else {
+                                div--;
+                            }
+                        }
+                        sco.getCourse().setScoList(tmp);
+                    }
+                    return returnValue;
+                }
+                
+            }
+        } catch (Dwo2Exception e) {
+          // TODO Auto-generated catch block
+          JOptionPane.showMessageDialog(this, e.getMessage());
+          return false;
         }
     }
 
@@ -2578,9 +2593,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      *
      * @param sco1 Sco
      * @param sco2 Sco
+     * @param manager 
      * @return boolean: succes of gefaald
      */
-    public boolean swapSco(Sco sco1, Sco sco2) {
+    public boolean swapSco(Sco sco1, Sco sco2, AbstractScoContextManager manager) {
         try {
             if (sco1.getCourse() != sco2.getCourse()) {
                 throw new ScoException(ScoException.EX_DB);
@@ -2588,9 +2604,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
             int nr1 = sco1.getSequencenr();
             int nr2 = sco2.getSequencenr();
             sco1.setSequencenr(nr2);
-            updateSco(sco1);
+            updateSco(sco1, manager);
             sco2.setSequencenr(nr1);
-            updateSco(sco2);
+            updateSco(sco2, manager);
             Sco[] scos = sco1.getCourse().getScoList();
             scos[nr2 - 1] = sco1;
             scos[nr1 - 1] = sco2;

@@ -15,6 +15,8 @@ import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.GuiCreatorTeacher.LazyAppletConfig;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;
@@ -211,8 +213,9 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                 config.setAppletConfigID(-sid); // HACK HACK negatief = scoid
                 config.setName(name);
                 config.setImageSource(PersistentScoContext.buildPersistenceId((long)sco.getID()));
- // we willen exceptions, geen user dialogs here.
-                Sco news = GuiCreator.instance().dwo.addScoWithExceptions(course, config, name, description, sco.isShowScore(), sco.getImageData());
+                AbstractScoContextManager manager = GuiCreator.instance().getScoContextManager();
+                // we willen exceptions, geen user dialogs here.
+                Sco news = GuiCreator.instance().dwo.addScoWithExceptions(course, config, name, description, sco.isShowScore(), sco.getImageData(),manager);
 // TODO common code?		
                 news.setSequencenr(sco.getSequencenr()); // TODO noop?
                 Sco[] oldsa = course.getScoList();

@@ -1,30 +1,5 @@
 package fi.dwo.dwojapplet.gui;
 
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.commons.exceptions.LoginException;
-import fi.dwo.commons.exceptions.RegisterException;
-import fi.dwo.commons.exceptions.SchoolException;
-import fi.dwo.commons.system.MD5;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.Admin;
-import fi.dwo.dwojapplet.domain.AppletConfig;
-import fi.dwo.dwojapplet.domain.SchoolAdmin;
-import fi.dwo.dwojapplet.domain.Course;
-import fi.dwo.dwojapplet.domain.CourseMap;
-import fi.dwo.dwojapplet.domain.DWO;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.Group;
-import fi.dwo.dwojapplet.domain.Guest;
-import fi.dwo.dwojapplet.domain.School;
-import fi.dwo.dwojapplet.domain.SchoolClass;
-import fi.dwo.dwojapplet.domain.SchoolPasswdMap;
-import fi.dwo.dwojapplet.domain.Sco;
-import fi.dwo.dwojapplet.domain.Teacher;
-import fi.dwo.dwojapplet.domain.User;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.LoginManager;
-import fi.dwo.dwojapplet.gui.fullscreen.FramedScoPanel;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-
 import java.awt.Component;
 import java.awt.Container;
 import java.util.Date;
@@ -34,7 +9,31 @@ import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+
+import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.exceptions.SchoolException;
+import fi.dwo.commons.system.MD5;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Admin;
+import fi.dwo.dwojapplet.domain.AppletConfig;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DWO;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Guest;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolAdmin;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.SchoolPasswdMap;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.Teacher;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.fullscreen.FramedScoPanel;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.LoginManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
  * This Class is responsible for creating some GUI elements and to communicate
@@ -1038,6 +1037,11 @@ public class GuiCreator {
 
     CenterSubPanel getStudentModelPanel()  {
         return null;
+    }
+
+    public AbstractScoContextManager getScoContextManager() {
+      // TODO Auto-generated method stub
+      return null;
     }
 
 }

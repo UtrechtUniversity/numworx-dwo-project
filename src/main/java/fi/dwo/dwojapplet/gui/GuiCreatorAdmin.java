@@ -4,7 +4,18 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.exceptions.ScoException;
+import java.awt.Color;
+import java.awt.Font;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.AppletConfig;
@@ -18,22 +29,10 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.CourseManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.StoreCreator;
-
-import java.awt.Color;
-import java.awt.Font;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
@@ -51,12 +50,13 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 public class GuiCreatorAdmin extends GuiCreator {
 
     private static final Logger LOG = Logger.getLogger(GuiCreatorAdmin.class.getName());
-
+    private final SecureDwoAdminScoContextManager manager;
     /**
      * @param dwo
      */
     public GuiCreatorAdmin(DWO dwo) {
         super(dwo);
+        manager = new SecureDwoAdminScoContextManager(RestAuthenticator.getInstance().getContext());
     }
 
     /**
@@ -180,7 +180,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public boolean deleteSco(Sco sco) {
-        return dwo.deleteSco(sco);
+        return dwo.deleteSco(sco, manager);
     }
 
     /**
@@ -198,7 +198,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public boolean updateSco(Sco sco) {
-        return dwo.updateSco(sco);
+        return dwo.updateSco(sco,manager);
     }
 
     /**
@@ -252,7 +252,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore, byte[] imageData) {
-        return dwo.addSco(course, appletConfig, name, description, showScore, imageData);
+        return dwo.addSco(course, appletConfig, name, description, showScore, imageData,manager);
     }
 
     /* (non-Javadoc)
@@ -273,7 +273,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public boolean swapSco(Sco sco1, Sco sco2) {
-        return dwo.swapSco(sco1, sco2);
+        return dwo.swapSco(sco1, sco2,manager);
     }
 
     @Override
@@ -341,7 +341,7 @@ public class GuiCreatorAdmin extends GuiCreator {
           if (sco.hasFeature(Sco.JSON_OUT))
               scoData.setLaunchdatabytes(sco.getLaunchdataBytes());
           StoreCreator.instance().uncache(sco, false);
-          scoContext = SecureDwoAdminScoContextManager.UNSAFEupdate(scoContext, scoData, DWO.getDwoProfile());
+          scoContext = manager.UNSAFEupdate(scoContext, scoData, DWO.getDwoProfile());
           sco.setDataChanged(false);
           
         } catch (Exception e) {
@@ -380,5 +380,10 @@ public class GuiCreatorAdmin extends GuiCreator {
             ShowErrorDialog(null,ex);
         }
         return null;
+    }
+
+    @Override
+    public AbstractScoContextManager getScoContextManager() {
+      return manager;
     }
 }

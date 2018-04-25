@@ -12,6 +12,8 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.CourseManagementPanel;
 import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
+
 import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -105,7 +107,8 @@ public class PasteAction extends GuiAction
 			AppletConfig config = instance().getAppletConfigFromSco(sco);
 			String name = config.getName();
 			name = CourseManagementPanel.replaceDuplicate(name, course.getScoNames());
-			Sco s = instance().getDWO().addSco(course, config, name, sco.getDescription(), sco.isShowScore(), sco.getImageData());
+			AbstractScoContextManager manager = instance().getScoContextManager();
+            Sco s = instance().getDWO().addSco(course, config, name, sco.getDescription(), sco.isShowScore(), sco.getImageData(),manager);
 // FIXME DIT IS NIET GOED, MOET NAAR addSco van de DWO
 // is een kopie van ScoMananagementPanel
 			if(s == null) return;

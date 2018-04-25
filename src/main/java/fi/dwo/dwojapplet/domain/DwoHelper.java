@@ -182,17 +182,14 @@ public final class DwoHelper {
 				if (activeSchoolRoleAndClass != null) 
 				{
 				  context.setDomHasRole(activeSchoolRoleAndClass.getHasRole());
-	              RestAuthenticator.getInstance().setRole(RoleType.valueOf(activeSchoolRoleAndClass.getRole().getRoleName()));
-				} else {
-				  RestAuthenticator.getInstance().setRole(RoleType.STUDENT);
-				}
+				} 
+
 				RestAuthenticator.getInstance().setContext(context);
             } else {
                 schoolLogins = null;
                 RestAuthenticator.getInstance().setUsername(null);
                 RestAuthenticator.getInstance().setPassword(null);
                 RestAuthenticator.getInstance().setContext(null);
-                RestAuthenticator.getInstance().setRole(RoleType.ANONYMOUS);
             }
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
@@ -626,7 +623,7 @@ public final class DwoHelper {
 
     private static User buildFacadeUser(DomUserFull user, DomSchoolsRolesAndClassesV2 dom, DomLoginContext context) {
 		DomRole role = dom.getActiveSchoolRoleAndClass().getRole();
-		String name = role.getRoleName();
+		String name = role == null ? "" : role.getRoleName();
 		User u = null;
 		if(TextMapper.GUIR_OPT_ADMIN.equals(name)) {
 			u = new Admin();

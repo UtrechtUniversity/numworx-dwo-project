@@ -1,29 +1,5 @@
 package fi.dwo.dwojapplet.form;
 
-import fi.dwo.commons.exceptions.CourseException;
-import fi.dwo.commons.exceptions.DwoXmlRpcException;
-import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.commons.persistence.entities.PersistentApplet;
-import fi.dwo.commons.persistence.entities.PersistentCourse;
-import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
-import fi.dwo.dwojapplet.domain.Course;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.Sco;
-import fi.dwo.dwojapplet.gui.GuiCreator;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminScoContextManager;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherScoContextManager;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
-import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
-import nl.uu.fi.dwo.rest.dom.entities.RoleType;
-import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,9 +8,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
-import java.util.logging.Level;
 
-import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -52,6 +26,25 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import fi.dwo.commons.exceptions.CourseException;
+import fi.dwo.commons.exceptions.DwoXmlRpcException;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentApplet;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.gui.GuiCreator;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
+import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
  * Save en restore van courses en single sco's.
@@ -335,15 +328,10 @@ class ManifestFile {
     			scoData.setLaunchdata(launchdata);
     			if (addsco.hasFeature(Sco.JSON_OUT))
     				scoData.setLaunchdatabytes(addsco.getLaunchdataBytes());
-     			
-    	        RoleType role = RestAuthenticator.getInstance().getRole();
-    	        switch (role) {
-    	          default:
-    	            scoContext = SecuredTeacherScoContextManager.add(scoContext, scoData, profile);
-    	            break;
-    	          case ADMIN:
-    	            scoContext = SecureDwoAdminScoContextManager.add(scoContext, scoData, profile);
-    	        }
+// FIXME breaks CDI     			
+    	        AbstractScoContextManager manager = GuiCreator.instance().getScoContextManager();
+    	        scoContext = manager.add(scoContext, scoData, profile);
+    	            
 // legacy?
     			int scoid = MySQLPersistenceId.getNativeId(scoContext).intValue();
     			Sco newsco = (Sco) PersistenceFacade.instance().get(scoid, Sco.class);
