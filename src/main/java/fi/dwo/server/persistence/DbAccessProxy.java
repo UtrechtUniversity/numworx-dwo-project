@@ -391,7 +391,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     @Override
     public boolean deleteSco(int scoID) throws DwoXmlRpcException, IOException,
             XmlRpcException, SQLException {
-        return getDelegate().deleteSco(scoID);
+        return getDelegateObsolete().deleteSco(scoID);
     }
 
     @Override

@@ -43,5 +43,6 @@ public interface DbAccessObsolete {
   public boolean changeSco(int scoid, String scoName, String description,
                            boolean delete, byte[] launchdata, boolean showScore)
                            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+  public boolean deleteSco(int scoID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
 }
