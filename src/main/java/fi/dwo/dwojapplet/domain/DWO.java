@@ -2212,47 +2212,40 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * (non-Javadoc)
      * 
      */
-    public boolean deleteSco(Sco sco, AbstractScoContextManager manager) {
-        try {
-            {
-                 {
-                    DomScoContext scoContext = new DomScoContext();
-                    scoContext.setId(PersistentScoContext.buildPersistenceId(Long.valueOf(sco.getScoID())));
-                    boolean returnValue = manager.remove(scoContext, getDwoProfile());
-                    if (returnValue) {
-                        MapperCreator.instance(Sco.class).removeObject(sco.getID());
-            
-                        /*
-                         * Delete the sco in the course, and reset all the
-                         * sequencenrs
-                         */
-                        Sco[] scos = sco.getCourse().getScoList();
-                        Sco[] tmp = new Sco[scos.length - 1];
-                        int div = 0;
-                        for (int i = 0; i < scos.length; i++) {
-                            if (scos[i] != sco) {
-                                if (scos[i].getSequencenr() > sco.getSequencenr()) {
-                                    scos[i]
-                                            .setSequencenr(scos[i].getSequencenr() - 1);
-                                    scos[i].setCourseChanged(false);
-                                }
-                                tmp[i + div] = scos[i];
-                            } else {
-                                div--;
-                            }
-                        }
-                        sco.getCourse().setScoList(tmp);
-                    }
-                    return returnValue;
-                }
-                
+  public boolean deleteSco(Sco sco, AbstractScoContextManager manager) {
+    try {
+      DomScoContext scoContext = new DomScoContext();
+      scoContext.setId(PersistentScoContext.buildPersistenceId(Long.valueOf(sco.getScoID())));
+      boolean returnValue = manager.remove(scoContext, getDwoProfile());
+      if (returnValue) {
+        MapperCreator.instance(Sco.class).removeObject(sco.getID());
+
+        /*
+         * Delete the sco in the course, and reset all the sequencenrs
+         */
+        Sco[] scos = sco.getCourse().getScoList();
+        Sco[] tmp = new Sco[scos.length - 1];
+        int div = 0;
+        for (int i = 0; i < scos.length; i++) {
+          if (scos[i] != sco) {
+            if (scos[i].getSequencenr() > sco.getSequencenr()) {
+              scos[i].setSequencenr(scos[i].getSequencenr() - 1);
+              scos[i].setCourseChanged(false);
             }
-        } catch (Dwo2Exception e) {
-          // TODO Auto-generated catch block
-          JOptionPane.showMessageDialog(this, e.getMessage());
-          return false;
+            tmp[i + div] = scos[i];
+          } else {
+            div--;
+          }
         }
+        sco.getCourse().setScoList(tmp);
+      }
+      return returnValue;
+    } catch (Dwo2Exception e) {
+      // TODO Auto-generated catch block
+      JOptionPane.showMessageDialog(this, e.getMessage());
+      return false;
     }
+  }
 
     /*
      * (non-Javadoc)

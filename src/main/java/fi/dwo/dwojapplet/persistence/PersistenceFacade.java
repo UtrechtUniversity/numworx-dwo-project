@@ -616,66 +616,66 @@ public class PersistenceFacade {
 //        }
 //    }
 
-    /**
-     * Deletes the specified sco. The results of the students at this sco will
-     * also been deleted.
-     *
-     * @param sco The sco to delete.
-     * @return Returns true if the sco is successfully deleted.
-     * @throws ScoException
-     */
-    public boolean deleteSco(Sco sco) throws ScoException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                boolean returnValue = dbAccess.deleteSco(sco.getID());
-                if (returnValue) {
-                    MapperCreator.instance(Sco.class).removeObject(sco.getID());
-
-                    /*
-                     * Delete the sco in the course, and reset all the
-                     * sequencenrs
-                     */
-                    Sco[] scos = sco.getCourse().getScoList();
-                    Sco[] tmp = new Sco[scos.length - 1];
-                    int div = 0;
-                    for (int i = 0; i < scos.length; i++) {
-                        if (scos[i] != sco) {
-                            if (scos[i].getSequencenr() > sco.getSequencenr()) {
-                                scos[i]
-                                        .setSequencenr(scos[i].getSequencenr() - 1);
-                                scos[i].setCourseChanged(false);
-                            }
-                            tmp[i + div] = scos[i];
-                        } else {
-                            div--;
-                        }
-                    }
-                    sco.getCourse().setScoList(tmp);
-                }
-                return returnValue;
-            }
-            catch (IOException e) {
-                throw new ScoException(CourseException.EX_IO, e);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (ScoException) getException(e, e.code);
-                } else {
-                    throw new ScoException(ScoException.EX_XML_RPC, e);
-                }
-            }
-            catch (SQLException e) {
-                throw new ScoException(ScoException.EX_DB, e);
-            }
-            catch (DwoXmlRpcException e) {
-                throw (ScoException) getException(e, e.code);
-            }
-        }
-        catch (PersistenceException e) {
-            throw new ScoException(ScoException.EX_UNKNOWN_ERROR, e);
-        }
-    }
+//    /**
+//     * Deletes the specified sco. The results of the students at this sco will
+//     * also been deleted.
+//     *
+//     * @param sco The sco to delete.
+//     * @return Returns true if the sco is successfully deleted.
+//     * @throws ScoException
+//     */
+//    public boolean deleteSco(Sco sco) throws ScoException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                boolean returnValue = dbAccess.deleteSco(sco.getID());
+//                if (returnValue) {
+//                    MapperCreator.instance(Sco.class).removeObject(sco.getID());
+//
+//                    /*
+//                     * Delete the sco in the course, and reset all the
+//                     * sequencenrs
+//                     */
+//                    Sco[] scos = sco.getCourse().getScoList();
+//                    Sco[] tmp = new Sco[scos.length - 1];
+//                    int div = 0;
+//                    for (int i = 0; i < scos.length; i++) {
+//                        if (scos[i] != sco) {
+//                            if (scos[i].getSequencenr() > sco.getSequencenr()) {
+//                                scos[i]
+//                                        .setSequencenr(scos[i].getSequencenr() - 1);
+//                                scos[i].setCourseChanged(false);
+//                            }
+//                            tmp[i + div] = scos[i];
+//                        } else {
+//                            div--;
+//                        }
+//                    }
+//                    sco.getCourse().setScoList(tmp);
+//                }
+//                return returnValue;
+//            }
+//            catch (IOException e) {
+//                throw new ScoException(CourseException.EX_IO, e);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (ScoException) getException(e, e.code);
+//                } else {
+//                    throw new ScoException(ScoException.EX_XML_RPC, e);
+//                }
+//            }
+//            catch (SQLException e) {
+//                throw new ScoException(ScoException.EX_DB, e);
+//            }
+//            catch (DwoXmlRpcException e) {
+//                throw (ScoException) getException(e, e.code);
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            throw new ScoException(ScoException.EX_UNKNOWN_ERROR, e);
+//        }
+//    }
 
 // ALLEEN VOOR ADMINISTRATORS
 //    public boolean unsafeSaveSco(Sco sco) throws ScoException {
