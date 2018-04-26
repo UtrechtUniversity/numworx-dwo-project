@@ -87,9 +87,10 @@ jarUrlPath=FILE:jars
     tomcat 8.0 configuration, note the performance of org.apache.commons.dbcp.BasicDataSourceFactory
     is not yet tested in production. note tomcat 8.5 has more changes particular for
     credential realms. 
-               factory="org.apache.commons.dbcp.BasicDataSourceFactory"  Not in docker:tomcat8 fatal, use default
+               factory="org.apache.commons.dbcp.BasicDataSourceFactory"  Not in docker:tomcat8 fatal, use default FIXME in Tomcat8/EB verplicht!
     -->
     <Resource abandonWhenPercentageFull="50" auth="Container" 
+              factory="org.apache.commons.dbcp.BasicDataSourceFactory"
               driverClassName="com.mysql.jdbc.Driver" 
               jdbcInterceptors="ResetAbandonedTimer" 
               logAbandoned="true" maxTotal="100" maxIdle="50" 
