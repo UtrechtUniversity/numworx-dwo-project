@@ -91,7 +91,7 @@ table {
 		background: $white;
 		width: 100%;
 		//position: absolute;
-		max-height: 200px;
+//		max-height: 200px;
 		overflow-y: scroll;
 		top: 2em;
 		display: block;
@@ -109,7 +109,7 @@ table {
 		}
 	}
 	
-	&.hoverable tr:hover td, &.hoverable tr:hover td span {
+	&.hoverable tr:hover td, &.hoverable tr:focus td,  { //&.hoverable tr:hover td span {
 		background-color: $shade3;
 	}	
 	&.selectable {

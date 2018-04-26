@@ -1,6 +1,9 @@
 function Helpers() {
 }
 Helpers.selectTableRow = function(event) {
+	console.log(event);
+	if (event.type == "keypress" && event.keyCode != 32) return;
+
 	var $el = $(event.target);
 	var $input = $el.find("input");
 	var form = $input[0].form;
@@ -23,6 +26,7 @@ var $selectableTables,
 
 initSelectableTables = function() {
 	$selectableTables.on('click', Helpers.selectTableRow);
+	$selectableTables.on('keypress', function (e) { if (e.which == 13) Helpers.selectTableRow(e); });
 },
 
 

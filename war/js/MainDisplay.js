@@ -23,7 +23,9 @@ function MainDisplay() {
 	this.accountDisplay = new AccountDisplay();
 	window.jsAccountDisplay = this.accountDisplay;	
 	this.schoolclassesDisplay = new SchoolclassesDisplay();
-	window.jsSchoolClassesDisplay = this.schoolclassesDisplay;	
+	window.jsSchoolClassesDisplay = this.schoolclassesDisplay;
+	this.editSchoolclassesDisplay = new EditSchoolclassesDisplay();
+	window.jsEditSchoolclassDisplay	= this.editSchoolclassesDisplay;
 	
 	this.msgDialogDisplay = new MsgDialogDisplay();
 	window.jsMsgDialogDisplay = this.msgDialogDisplay;
