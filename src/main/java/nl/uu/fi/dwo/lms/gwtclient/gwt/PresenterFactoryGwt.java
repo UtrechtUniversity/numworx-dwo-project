@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddTeacherToSchoolclassPrese
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithConfirmPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
@@ -45,7 +46,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     private final AlertDialogWithConfirmPresenter alertDialogWithConfirmPresenter;
     private final AlertDialogWithConfirmCancelPresenter alertDialogWithConfirmCancelPresenter;
     private final FileUploadStudentsPresenter fileUploadStudentsPresenter;
-    private final ProgressDialogPresenter progressDialogPresenter;
+    private final ProgressDialogWithAbortPresenter progressDialogPresenter;
 
     public PresenterFactoryGwt(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         dwoGlobalVars = aDwoGlobalVars;
@@ -68,7 +69,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         fileUploadStudentsPresenter = new FileUploadStudentsPresenter(eventBus, dwoGlobalVars);
         alertDialogWithConfirmPresenter = new AlertDialogWithConfirmPresenter(eventBus);
         alertDialogWithConfirmCancelPresenter = new AlertDialogWithConfirmCancelPresenter(eventBus);
-        progressDialogPresenter = new ProgressDialogPresenter(eventBus);
+        progressDialogPresenter = new ProgressDialogWithAbortPresenter(eventBus);
 
     }
 

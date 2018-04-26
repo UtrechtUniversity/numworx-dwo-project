@@ -143,10 +143,8 @@ class BootPanelController {
         //create client factories
         DwoPresenterFactory fac = new DwoPresenterFactory(new PresenterFactoryGwt(eventBus, dwoGlobalVars));
         presenterFactory = fac.getFac();
-
         LOG.log(Level.INFO, "ViewFactoryTeuniz assigned.");
         viewFactory = new ViewFactoryJs(presenterFactory);
-
         presenterFactory.bindViewFactory(viewFactory);
 
         //handle login events
@@ -224,7 +222,6 @@ class BootPanelController {
                     //eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_SwitchTeacher()));
                     presenterFactory.getAccountPresenter().init();
                 } else {
-
                     switch (switchViewEvent.getEventValue()) {
                         case LOGIN:
                             presenterFactory.getLoginPresenter().init();
@@ -273,7 +270,6 @@ class BootPanelController {
                             LOG.log(Level.SEVERE, "Switch panel failed in app controller.");
                     }
                 }
-
             }
         });
         LOG.log(Level.FINE, "Intiating Main view.");

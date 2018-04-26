@@ -91,6 +91,10 @@ public class AccountPresenter {
     public void switchSchoolLogin(String hasRoleId) {
         LOG.log(Level.INFO, "Switching to hasRoleId: " + hasRoleId);
         DomSchoolRoleAndClassV2 srac = sracData.get(hasRoleId);
+        LOG.log(Level.INFO, "Showing sracData: " + sracData);
+        LOG.log(Level.INFO, "Showing sracData: " + srac);
+        
+        
         if (srac != null){ //&& srac.getRole().getRoleName().equals(RoleType.TEACHER.name())) {
             dwoGlobalVars.setActiveSchoolRoleAndClass(srac);
             dwoGlobalVars.getSchoolLogins().setActiveSchoolRoleAndClass(srac);

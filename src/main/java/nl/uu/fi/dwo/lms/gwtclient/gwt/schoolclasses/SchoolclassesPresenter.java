@@ -196,7 +196,7 @@ public class SchoolclassesPresenter {
 
     @JsMethod
     public void editSchoolClass(String key) {
-        eventBus.fireEvent(new SchoolClassDialogEvent(SchoolClassDialogEvent.Dialogs.EditSchoolClass, schoolClassMap.get(key)));
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.EDITSCHOOLCLASS, schoolClassMap.get(key)));
     }
 //
 //    @JsMethod

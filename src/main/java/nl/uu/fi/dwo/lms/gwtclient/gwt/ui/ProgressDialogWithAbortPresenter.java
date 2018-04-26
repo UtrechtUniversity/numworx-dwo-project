@@ -4,7 +4,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 
 /**
- * Subclassing for project.
+ * Sub classing for project.
  *
  * @author plas0006
  */
