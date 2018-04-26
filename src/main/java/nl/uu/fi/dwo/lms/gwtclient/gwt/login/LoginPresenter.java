@@ -134,7 +134,7 @@ public class LoginPresenter {
                         dwoGlobalVars.clearCurrentUser();
                         LOG.log(Level.INFO, "login failed. Firing Login fail event.");
                         eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));                        
-//                        eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Wrong login state.")));
+                        eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Wrong login state.")));
                         // TODO fix login stuff
 //                        Window.Location.assign("");
 
