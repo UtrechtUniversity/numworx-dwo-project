@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.CourseCell;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.CourseCellNode;

@@ -8,6 +8,14 @@ import jsinterop.annotations.JsType;
 /**
  * JsCopyOrMoveStudentToSchoolclassDisplay UI interface.
  *
+ * Callbacks, strings for students are userId's, strings for classes are classId's:
+ * 
+ * public void SelectClassB(String classId)
+ * public void CopyStudentsToClassA(List<String> idList)
+ * public void CopyStudentsToClassB(List<String> idList)
+ * public void MoveStudentsToClassA(List<String> idList)
+ * public void MoveStudentsToClassB(List<String> idList)
+ * 
  * @author G.A.J. van der Plas
  */
 @JsType(isNative = true, name = "JsCopyOrMoveStudentToSchoolclassDisplay", namespace = JsPackage.GLOBAL)

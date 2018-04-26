@@ -1,9 +1,10 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.old;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import java.util.List;
 import java.util.Map;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsSchoolClassesDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.SchoolClassListBoxItem;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.StudentsInSchoolclassPresenter;
 

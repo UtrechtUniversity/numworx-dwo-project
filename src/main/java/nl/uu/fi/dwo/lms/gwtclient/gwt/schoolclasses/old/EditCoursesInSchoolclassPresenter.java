@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.SchoolClassListBoxItem;
 import com.google.web.bindery.event.shared.EventBus;

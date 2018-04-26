@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.CoursesOfSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.CourseCell;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.CourseCellNode;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.CourseItem;

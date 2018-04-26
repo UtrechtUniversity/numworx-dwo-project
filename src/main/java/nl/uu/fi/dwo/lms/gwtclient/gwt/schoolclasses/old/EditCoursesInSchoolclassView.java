@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.CheckboxCell;

@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old;
 
 import nl.uu.fi.dwo.rest.dom.DomCoursesOfSchoolclassTree;
 import com.google.web.bindery.event.shared.EventBus;
@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.ClassCourseItem;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.ModulesOfSchoolclassService;
 import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
@@ -38,7 +40,7 @@ public class CoursesOfSchoolclassPresenter {
     private static final Logger LOG = Logger.getLogger(CoursesOfSchoolclassPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
-    private CoursesOfSchoolclassService service;
+    private ModulesOfSchoolclassService service;
 
     private String[] tableHeaders = {"module name", "assigned", "type", "from [?]", "to [?]", "password"};
     private DomSchoolClass schoolClass;
@@ -125,7 +127,7 @@ public class CoursesOfSchoolclassPresenter {
     public CoursesOfSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-        service = new CoursesOfSchoolclassService(dwoGlobalVars);
+        service = new ModulesOfSchoolclassService(dwoGlobalVars);
     }
 
     /**

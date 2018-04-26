@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.CourseItem;
 import com.google.gwt.cell.client.AbstractCell;
@@ -41,6 +41,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.PasswordTextCell;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.ClassCourseItem;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 

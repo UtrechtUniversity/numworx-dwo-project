@@ -40,7 +40,7 @@ public class ModulesOfSchoolclassPresenter {
     private static final Logger LOG = Logger.getLogger(ModulesOfSchoolclassPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
-    private CoursesOfSchoolclassService service;
+    private ModulesOfSchoolclassService service;
 
     private String[] tableHeaders = {"module name", "assigned", "type", "from [?]", "to [?]", "password"};
     private DomSchoolClass schoolClass;
@@ -132,7 +132,7 @@ public class ModulesOfSchoolclassPresenter {
     public ModulesOfSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-        service = new CoursesOfSchoolclassService(dwoGlobalVars);
+        service = new ModulesOfSchoolclassService(dwoGlobalVars);
     }
 
     /**

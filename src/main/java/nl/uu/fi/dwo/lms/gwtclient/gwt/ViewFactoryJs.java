@@ -11,7 +11,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.login.JsLoginView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMainView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsSchoolClassesView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsEditSchoolClassView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.old.JsEditSchoolClassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsProgressDialogWithAbortView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.welcome.JsWelcomeView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;

@@ -34,14 +34,14 @@ import org.osgi.util.promise.Success;
  *
  * @author Gert van der Plas
  */
-class CoursesOfSchoolclassService {
+public class ModulesOfSchoolclassService {
 
-    private static final Logger LOG = Logger.getLogger(CoursesOfSchoolclassService.class.getName());
+    private static final Logger LOG = Logger.getLogger(ModulesOfSchoolclassService.class.getName());
 
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
     private final DwoGlobalVars dwoGlobalVars;
     
-    public CoursesOfSchoolclassService(DwoGlobalVars aDwoGlobalVars){
+    public ModulesOfSchoolclassService(DwoGlobalVars aDwoGlobalVars){
         dwoGlobalVars=aDwoGlobalVars;
     }
     

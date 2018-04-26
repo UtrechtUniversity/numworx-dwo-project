@@ -12,7 +12,7 @@ import jsinterop.annotations.JsType;
  * 
  * call back: 
  * 
- * public void AddTeacherrToSchoolClass(String teacherId);
+ * public void AddTeacherToSchoolClass(String teacherId);
  * 
  * @author G.A.J. van der Plas
  */

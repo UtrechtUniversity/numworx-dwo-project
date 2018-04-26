@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.CourseItem;
 import com.google.gwt.cell.client.AbstractCell;
@@ -27,6 +27,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.ClassCourseItem;
 
 /**
  * GWT Panel that handles switching the role.
