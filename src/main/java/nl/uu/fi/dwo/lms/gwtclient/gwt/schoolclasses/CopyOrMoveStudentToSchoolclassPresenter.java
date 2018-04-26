@@ -232,6 +232,7 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
         promise.then(new Success<Boolean, Void>() {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                LOG.log(Level.INFO, "Copying student "+idList.get(next)+".");
                 CopyStudent(idList, next, from, to);
                 return null;
             }
@@ -288,6 +289,7 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
         promise.then(new Success<Boolean, Void>() {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                LOG.log(Level.INFO, "Moving student "+idList.get(next)+".");
                 CopyStudent(idList, next, from, to);
                 return null;
             }
