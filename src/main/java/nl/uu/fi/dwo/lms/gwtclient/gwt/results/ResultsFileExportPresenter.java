@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.SchoolClassDialogEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.SchoolClassDialogEventHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.*;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;

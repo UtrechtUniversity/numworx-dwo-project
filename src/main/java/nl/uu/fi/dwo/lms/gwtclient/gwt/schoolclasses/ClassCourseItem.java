@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.CourseItem;
 import java.util.Date;
 
 /**

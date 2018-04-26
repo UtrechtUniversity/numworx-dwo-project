@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.SchoolClassListBoxItem;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserCourseManager;

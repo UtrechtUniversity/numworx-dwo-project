@@ -1,7 +1,8 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old;
 
 import com.google.gwt.view.client.ProvidesKey;
 import java.util.ArrayList;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.ClassCourseItem;
 
 /**
  *

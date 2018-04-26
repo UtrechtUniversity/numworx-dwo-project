@@ -178,8 +178,6 @@ public Promise<Boolean> setAccessKey(DomSchoolClass sc, DomCourse course, String
             rest.setRestContext(context);
             rest.setDomSchoolClassCourseProfilewAccessKey(sap);
             return manager.setAccessKeyClassCourse(rest);
-        });
-
-	
+        });	
 }    
 }

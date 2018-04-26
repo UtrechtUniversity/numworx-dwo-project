@@ -1,5 +1,8 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.CourseCell;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.CourseCellNode;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.CourseItem;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.view.client.ListDataProvider;

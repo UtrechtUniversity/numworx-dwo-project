@@ -4,8 +4,8 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import java.util.List;
 import java.util.Map;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeacherListBoxItem;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.TeachersInSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.TeacherListBoxItem;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.TeachersInSchoolclassPresenter;
 
 /**
  * Mapper to allow java interface implementation.
