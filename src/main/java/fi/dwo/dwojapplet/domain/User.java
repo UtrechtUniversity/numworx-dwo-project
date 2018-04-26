@@ -146,8 +146,9 @@ public class User implements UserGroup, Comparable {
     
     public void setSchoolRoleAndClass(DomSchoolsRolesAndClassesV2 dom) {
     	rights = dom.getActiveSchoolRoleAndClass().getHasRole().getRights();
-    	char[] schoolRights = dom.getActiveSchoolRoleAndClass().getSchool().getSchoolRights().toCharArray();
-    	for(char ch: schoolRights) addRight(ch);
+    	String schoolRights = dom.getActiveSchoolRoleAndClass().getSchool().getSchoolRights();
+    	if (schoolRights == null || "_".equals(schoolRights)) schoolRights = School.DEFAULT_RIGHTS;
+    	for(char ch: schoolRights.toCharArray()) addRight(ch);
     	schoolGroupID = dom.getActiveSchoolRoleAndClass().getHasRole().getSchoolGroupId();
     	DomSchool NULL = dom.getNullSchool();
     	if(NULL.getId().equals(dom.getActiveSchoolRoleAndClass().getSchool().getId()))

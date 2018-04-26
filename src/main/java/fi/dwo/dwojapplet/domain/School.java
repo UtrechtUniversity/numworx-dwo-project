@@ -17,7 +17,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  */
 public class School {
 
-    private static final String DEFAULT_RIGHTS = "" + User.CHANGE_CLASS_RIGHT + User.CHANGE_CLASS_RIGHT_TEACHER + User.MODIFY_MODULES_RIGHT;
+    public static final String DEFAULT_RIGHTS = "" + User.CHANGE_CLASS_RIGHT + User.CHANGE_CLASS_RIGHT_TEACHER + User.MODIFY_MODULES_RIGHT;
 
     private int schoolID;
 
