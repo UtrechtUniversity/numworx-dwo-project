@@ -60,6 +60,8 @@ public class AccountPresenter {
 	// String familyName, String email);
 
 	void updateUserView(DomUserFull user);
+        
+        void clearAddSchoolLogin();
 
     }
 

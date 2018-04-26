@@ -43,4 +43,6 @@ public class JsAccountDisplay {
      * Updates user fields.
      */
     public static native void updateUserView(JSONValue user);
+    
+    public static native void clearAddSchoolLogin();
 }

@@ -35,4 +35,9 @@ public class JsAccountView implements AccountPresenter.Display{
 	JsAccountDisplay.updateUserView(sl);
     }
 
+    @Override
+    public void clearAddSchoolLogin() {
+        JsAccountDisplay.clearAddSchoolLogin();
+    }
+
 }
