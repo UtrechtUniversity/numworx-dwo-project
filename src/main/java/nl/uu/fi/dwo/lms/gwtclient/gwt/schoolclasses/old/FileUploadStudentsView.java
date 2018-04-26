@@ -49,7 +49,7 @@ public class FileUploadStudentsView extends Composite implements FileUploadStude
     var reader = new FileReader();
 
     reader.onload = function(e) {
-        @nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.FileUploadStudentsView::fileLoaded(*)(reader.result);
+        @nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsView::fileLoaded(*)(reader.result);
     }
 
     return reader.readAsText(files[0]);

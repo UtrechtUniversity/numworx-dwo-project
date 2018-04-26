@@ -145,6 +145,7 @@ public class AccountPresenter {
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                 //flip back to schoolclasses screen 
                 eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
+                view.clearAddSchoolLogin();
                 return null;
             }
         },
