@@ -26,6 +26,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 /**
@@ -262,6 +263,7 @@ public class ModulesOfSchoolclassPresenter {
         return tableHeaders;
     }
 
+    @JsMethod
     void setSelectedItem(ClassCourseItem item) {
         boolean isLeaf = false;
         DomTree<DomCourseOfClass> c = tree.getNode(item.getKey());
@@ -302,12 +304,50 @@ public class ModulesOfSchoolclassPresenter {
         }
     }
 
-    @JsMethod
     void goBackToSchoolClasses() {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
     }
 
-    void setCourseType(String key, String typeString) {
+    /**
+     * Course parameters that are not null are updated with their values. A
+     * valid key is required.
+     *
+     * @param key Must not be null.
+     * @param typeString
+     * @param fromData
+     * @param toData
+     */
+    @JsMethod
+    void setModuleSettings(String key, String typeString, String fromData, String toData, String accessKey) {
+        if (key == null) {
+            eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "Internal error, key not given.")));
+            return;
+        }
+        Promise<Boolean> p = Promises.resolved(null);
+        if (typeString != null) {
+            p.then((resolved) -> {
+                return setCourseType(key, typeString);
+            });
+        }
+        if (fromData != null) {
+            p.then((resolved) -> {
+                return setFromDate(key, fromData);
+            });
+        }
+        if (toData != null) {
+            p.then((resolved) -> {
+                return setToDate(key, toData);
+            });
+        }
+        if (accessKey != null) {
+            p.then((resolved) -> {
+                return setAccessKey(key, accessKey);
+            });
+        }
+        p.then(null,(failure) -> {eventBus.fireEvent(new DialogEvent(failure.getFailure().getMessage()));} );
+    }
+
+    private Promise<Boolean> setCourseType(String key, String typeString) {
         CourseType type = CourseType.normal;
         if (typeString != null) {
             try {
@@ -316,11 +356,12 @@ public class ModulesOfSchoolclassPresenter {
                 eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "Unknown course type submitted.")));
             }
             DomTree<DomCourseOfClass> c = tree.getNode(key);
-            service.setTypeClassCourse(schoolClass, c.getObject().getCourse(), type);
+            return service.setTypeClassCourse(schoolClass, c.getObject().getCourse(), type);
         }
+        return null;
     }
 
-    void setFromDate(String key, String dateString) {
+    private Promise<Boolean> setFromDate(String key, String dateString) {
         Date date;
         if (dateString.isEmpty()) {
             date = null;
@@ -331,21 +372,21 @@ public class ModulesOfSchoolclassPresenter {
             } catch (Exception e) {
 
                 eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
-                return;
+                return null;
             }
         }
         DomTree<DomCourseOfClass> c = tree.getNode(key);
         if (date == null || (c.getObject().getClassCourse().getNotAfter() != null
                 && c.getObject().getClassCourse().getNotAfter().after(date))
                 || (c.getObject().getClassCourse().getNotAfter() == null)) {
-            service.setFromDateClassCourse(schoolClass, c.getObject().getCourse(), date);
+            return service.setFromDateClassCourse(schoolClass, c.getObject().getCourse(), date);
         } else {
             eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
-            return;
+            return null;
         }
     }
 
-    void setToDate(String key, String dateString) {
+    private Promise<Boolean> setToDate(String key, String dateString) {
         Date date;
         if (dateString.isEmpty()) {
             date = null;
@@ -355,21 +396,21 @@ public class ModulesOfSchoolclassPresenter {
                 LOG.log(Level.FINE, "Setting To-date to: " + DateTimeFormat.getFullDateTimeFormat().format(date));
             } catch (Exception e) {
                 eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
-                return;
+                return null;
             }
         }
         DomTree<DomCourseOfClass> c = tree.getNode(key);
         if (date == null || c.getObject().getClassCourse().getNotBefore() == null
                 || (c.getObject().getClassCourse().getNotBefore() != null
                 && c.getObject().getClassCourse().getNotBefore().before(date))) {
-            service.setToDateClassCourse(schoolClass, c.getObject().getCourse(), date);
+            return service.setToDateClassCourse(schoolClass, c.getObject().getCourse(), date);
         } else {
             eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
-            return;
+            return null;
         }
     }
 
-    public void setAccessKey(String key, String accessKey) {
+    private Promise<Boolean> setAccessKey(String key, String accessKey) {
         DomTree<DomCourseOfClass> c = tree.getNode(key);
         DomClassCourse4Teacher cc = c.getObject().getClassCourse();
         if (accessKey == null) {
@@ -377,8 +418,9 @@ public class ModulesOfSchoolclassPresenter {
         }
 
         if (!accessKey.equals(cc.getAccessKey())) {
-            service.setAccessKey(schoolClass, c.getObject().getCourse(), accessKey);
+            return service.setAccessKey(schoolClass, c.getObject().getCourse(), accessKey);
         }
+        return null;
 
     }
 }

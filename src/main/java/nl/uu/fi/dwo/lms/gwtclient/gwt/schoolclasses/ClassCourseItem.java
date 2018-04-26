@@ -13,7 +13,7 @@ public class ClassCourseItem extends CourseItem {
         private String type;
         private Date from;
         private Date to;
-        private String school;
+//        private String school;
         private String accessKey;
 
    public ClassCourseItem (){
