@@ -281,7 +281,7 @@ class ManifestFile {
     		pc.setSequencenr(offset);
     		
     		DomCourseFull edit = pc.buildDomCourseFull();
-		edit = SecuredTeacherCourseManager.add(edit);
+		edit = GuiCreator.instance().getCourseManager().add(edit);
 // legacy
 		int pid = MySQLPersistenceId.getNativeId(edit).intValue();
 		return pid;

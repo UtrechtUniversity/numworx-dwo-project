@@ -217,9 +217,9 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         this.addWindowListener(this);
     }
 
-    public static School addSchool() throws SchoolException {
-        return addSchool(null);
-    }
+//    public static School addSchool() throws SchoolException {
+//        return addSchool(null);
+//    }
 
     /**
      * @param owner

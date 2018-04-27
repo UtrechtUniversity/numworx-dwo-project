@@ -944,7 +944,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                     course.setExport(oldExport);
                 } else {
 //System.out.println("persistCourses " + course.getName());
-                	if(!GuiCreator.instance().dwo.updateCourse(course)) {
+                	if(!GuiCreator.instance().dwo.updateCourse(course, GuiCreator.instance().getCourseManager())) {
                         inerror = true;
                     }
                 }

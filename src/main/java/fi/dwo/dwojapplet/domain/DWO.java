@@ -78,10 +78,12 @@ import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.StoreCreator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicUserManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
@@ -1981,7 +1983,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * (non-Javadoc)
      * 
      */
-    public Course addCourse(String name, String description, Course parent, boolean isMap) {
+    public Course addCourse(String name, String description, Course parent, boolean isMap, CourseManager manager) {
 //        try {
 //            return PersistenceFacade.instance().addCourse(DwoHelper.getCurrentFacadeUser().getSchool(), name,
 //                    description, getDwoProfileID(), parent, isMap);
@@ -2009,7 +2011,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     			; // TODO from root
     		
     		DomCourseFull edit = pc.buildDomCourseFull();
-			edit = SecuredTeacherCourseManager.add(edit);
+			edit = manager.add(edit);
 // legacy
 			int pid = MySQLPersistenceId.getNativeId(edit).intValue();
 			Course c = (Course) PersistenceFacade.instance().get(pid, Course.class);
@@ -2034,7 +2036,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 //        }
 //    }
 
-    public boolean updateCourse(Course course) {
+    public boolean updateCourse(Course course, CourseManager manager) {
     	PersistentCourse pc = new PersistentCourse();
     	try {
  // if Course extends persistentCourse
@@ -2042,7 +2044,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     		buildPersistentCourse(course, pc);
  // should work with DomCourseFull
     		DomCourseFull edit = pc.buildDomCourseFull();
-			edit = SecuredTeacherCourseManager.update(edit);
+			edit = manager.update(edit);
     		return true;
     	} catch(Exception e) {
     		LOG.log(Level.SEVERE, "update course", e);
@@ -2199,14 +2201,22 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * (non-Javadoc)
      * 
      */
-    public boolean deleteCourse(Course course) {
-        try {
-            return PersistenceFacade.instance().deleteCourse(course);
-        } catch (CourseException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-            return false;
-        }
+  public boolean deleteCourse(Course course, CourseManager manager) {
+    try {
+      DomCourse c = new DomCourse();
+      c.setId(PersistentCourse.buildPersistenceId(Long.valueOf(course.getID())));
+      boolean r = manager.remove(c, getDwoProfile()).booleanValue();
+      if (r) {
+        MapperCreator.instance(Course.class).removeObject(course.getID());
+      }
+
+      return r;
+      // return PersistenceFacade.instance().deleteCourse(course);
+    } catch (Exception e) {
+      JOptionPane.showMessageDialog(this, e.getMessage());
+      return false;
     }
+  }
 
     /*
      * (non-Javadoc)
@@ -2681,8 +2691,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     }
 
     @Deprecated /* use update Course */
-    public boolean updateLogo(Course c) {
-        return PersistenceFacade.instance().updateLogo(c);
+    public boolean updateLogo(Course c, CourseManager manager) {
+        return updateCourse(c,manager); // TODO optimize, zie code updateLogo(c)
+        //return PersistenceFacade.instance().updateLogo(c);
     }
 
     public String selectSco(String scoid) {

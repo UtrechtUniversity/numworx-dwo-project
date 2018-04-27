@@ -31,6 +31,7 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.fullscreen.FramedScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.LoginManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -1043,5 +1044,7 @@ public class GuiCreator {
       // TODO Auto-generated method stub
       return null;
     }
-
+    public CourseManager getCourseManager() {
+      return null;
+    }
 }

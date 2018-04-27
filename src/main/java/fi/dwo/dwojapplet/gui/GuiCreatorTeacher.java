@@ -31,6 +31,9 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.CourseManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -75,6 +78,7 @@ public class GuiCreatorTeacher extends GuiCreator {
 
     private boolean noAdmin, readOnly;
     protected SecuredTeacherScoContextManager manager;
+    protected SecuredTeacherCourseManager courseManager;
     /**
      * @param dwo
      */
@@ -83,6 +87,7 @@ public class GuiCreatorTeacher extends GuiCreator {
         noAdmin = !dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
         readOnly = !dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT);
         manager = new SecuredTeacherScoContextManager(RestAuthenticator.getInstance().getContext());
+        courseManager = new SecuredTeacherCourseManager();
     }
 
     /**
@@ -294,7 +299,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      */
     @Override
     public Course addCourse(String name, String description, Course parent, boolean isMap) {
-        Course course = dwo.addCourse(name, description, parent, isMap);
+        Course course = dwo.addCourse(name, description, parent, isMap,courseManager);
         getMainPanel().getCenter().addCourse(course);
         return course;
     }
@@ -305,7 +310,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      */
     @Override
     public boolean updateCourse(Course course) {
-        boolean b = dwo.updateCourse(course);
+        boolean b = dwo.updateCourse(course,courseManager);
         if (b) {
             getMainPanel().getCenter().updateCourse(course);
         }
@@ -319,7 +324,7 @@ public class GuiCreatorTeacher extends GuiCreator {
     @Override
     public boolean deleteCourse(Course course) {
         getMainPanel().getCenter().deleteCourse(course);
-        return dwo.deleteCourse(course);
+        return dwo.deleteCourse(course,courseManager);
     }
 
     /**
@@ -498,7 +503,7 @@ public class GuiCreatorTeacher extends GuiCreator {
 
     @Override
     public void updateLogo(Course c) {
-        if (dwo.updateLogo(c))
+        if (dwo.updateLogo(c,courseManager))
 			;
     }
     
@@ -511,6 +516,16 @@ public class GuiCreatorTeacher extends GuiCreator {
             this.ShowErrorDialog(welcomePanel, ex);
             return null;
         }
+    }
+
+    @Override
+    public AbstractScoContextManager getScoContextManager() {
+      return manager;
+    }
+
+    @Override
+    public CourseManager getCourseManager() {
+      return courseManager;
     }
     
 }

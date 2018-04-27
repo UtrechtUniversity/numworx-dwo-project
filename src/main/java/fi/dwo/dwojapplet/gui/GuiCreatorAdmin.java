@@ -31,6 +31,8 @@ import fi.dwo.dwojapplet.gui.action.ScoManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
 import fi.dwo.dwojapplet.persistence.StoreCreator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
@@ -50,13 +52,15 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 public class GuiCreatorAdmin extends GuiCreator {
 
     private static final Logger LOG = Logger.getLogger(GuiCreatorAdmin.class.getName());
-    private final SecureDwoAdminScoContextManager manager;
+    private final SecureDwoAdminScoContextManager scoManager;
+    private final SecureDwoAdminCourseManager courseManager;
     /**
      * @param dwo
      */
     public GuiCreatorAdmin(DWO dwo) {
         super(dwo);
-        manager = new SecureDwoAdminScoContextManager(RestAuthenticator.getInstance().getContext());
+        scoManager = new SecureDwoAdminScoContextManager(RestAuthenticator.getInstance().getContext());
+        courseManager = new SecureDwoAdminCourseManager();
     }
 
     /**
@@ -146,7 +150,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public Course addCourse(String name, String description, Course parent, boolean isMap) {
-        return dwo.addCourse(name, description, parent, isMap);
+        return dwo.addCourse(name, description, parent, isMap, courseManager);
     }
 
     /**
@@ -155,13 +159,13 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public boolean updateCourse(Course course) {
-        return dwo.updateCourse(course);
+        return dwo.updateCourse(course, courseManager);
         // update ModuleTreePanel
     }
 
     @Override
     public void updateLogo(Course c) {
-        if (dwo.updateLogo(c))
+        if (dwo.updateLogo(c,courseManager))
 			;
     }
 
@@ -171,7 +175,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public boolean deleteCourse(Course course) {
-        return dwo.deleteCourse(course);
+        return dwo.deleteCourse(course, courseManager);
     }
 
     /**
@@ -180,7 +184,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public boolean deleteSco(Sco sco) {
-        return dwo.deleteSco(sco, manager);
+        return dwo.deleteSco(sco, scoManager);
     }
 
     /**
@@ -198,7 +202,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public boolean updateSco(Sco sco) {
-        return dwo.updateSco(sco,manager);
+        return dwo.updateSco(sco,scoManager);
     }
 
     /**
@@ -252,7 +256,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore, byte[] imageData) {
-        return dwo.addSco(course, appletConfig, name, description, showScore, imageData,manager);
+        return dwo.addSco(course, appletConfig, name, description, showScore, imageData,scoManager);
     }
 
     /* (non-Javadoc)
@@ -273,7 +277,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public boolean swapSco(Sco sco1, Sco sco2) {
-        return dwo.swapSco(sco1, sco2,manager);
+        return dwo.swapSco(sco1, sco2,scoManager);
     }
 
     @Override
@@ -341,7 +345,7 @@ public class GuiCreatorAdmin extends GuiCreator {
           if (sco.hasFeature(Sco.JSON_OUT))
               scoData.setLaunchdatabytes(sco.getLaunchdataBytes());
           StoreCreator.instance().uncache(sco, false);
-          scoContext = manager.UNSAFEupdate(scoContext, scoData, DWO.getDwoProfile());
+          scoContext = scoManager.UNSAFEupdate(scoContext, scoData, DWO.getDwoProfile());
           sco.setDataChanged(false);
           
         } catch (Exception e) {
@@ -384,6 +388,12 @@ public class GuiCreatorAdmin extends GuiCreator {
 
     @Override
     public AbstractScoContextManager getScoContextManager() {
-      return manager;
+      return scoManager;
     }
+
+    @Override
+    public CourseManager getCourseManager() {
+      return courseManager;
+    }
+    
 }

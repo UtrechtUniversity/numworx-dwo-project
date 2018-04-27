@@ -866,20 +866,20 @@ public class PersistenceFacade {
      */
     private static final Course[] NO_CHILDREN_LOADED = new Course[0];
 
-    /**
-     * Add a course to a school.
-     *
-     * @param s
-     * @param name
-     * @param description
-     * @param profile
-     * @return
-     * @throws CourseException
-     */
-    public Course addCourse(School s, String name, String description,
-            int profile) throws CourseException {
-        return addCourse(s, name, description, profile, null, false);
-    }
+//    /**
+//     * Add a course to a school.
+//     *
+//     * @param s
+//     * @param name
+//     * @param description
+//     * @param profile
+//     * @return
+//     * @throws CourseException
+//     */
+//    public Course addCourse(School s, String name, String description,
+//            int profile) throws CourseException {
+//        return addCourse(s, name, description, profile, null, false);
+//    }
 
 //    /**
 //     * Returns all the courses that are selected for the specified class. A
@@ -1111,46 +1111,46 @@ public class PersistenceFacade {
 
     }
 
-    /**
-     * Deletes the specified course. The sco's and corresponding results will
-     * also be deleted.
-     *
-     * @param course The course to delete.
-     * @return Returns true if the course is deleted.
-     * @throws CourseException
-     */
-    public boolean deleteCourse(Course course) throws CourseException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                boolean returnValue = dbAccess.deleteCourse(course.getID());
-                if (returnValue) {
-                    MapperCreator.instance(Course.class).removeObject(
-                            course.getID());
-                }
-                return returnValue;
-            }
-            catch (IOException e) {
-                throw new CourseException(CourseException.EX_IO, e);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (CourseException) getException(e, e.code);
-                } else {
-                    throw new CourseException(CourseException.EX_XML_RPC, e);
-                }
-            }
-            catch (SQLException e) {
-                throw new CourseException(CourseException.EX_DB, e);
-            }
-            catch (DwoXmlRpcException e) {
-                throw (CourseException) getException(e, e.code);
-            }
-        }
-        catch (PersistenceException e) {
-            throw new CourseException(CourseException.EX_UNKNOWN_ERROR, e);
-        }
-    }
+//    /**
+//     * Deletes the specified course. The sco's and corresponding results will
+//     * also be deleted.
+//     *
+//     * @param course The course to delete.
+//     * @return Returns true if the course is deleted.
+//     * @throws CourseException
+//     */
+//    public boolean deleteCourse(Course course) throws CourseException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                boolean returnValue = dbAccess.deleteCourse(course.getID());
+//                if (returnValue) {
+//                    MapperCreator.instance(Course.class).removeObject(
+//                            course.getID());
+//                }
+//                return returnValue;
+//            }
+//            catch (IOException e) {
+//                throw new CourseException(CourseException.EX_IO, e);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (CourseException) getException(e, e.code);
+//                } else {
+//                    throw new CourseException(CourseException.EX_XML_RPC, e);
+//                }
+//            }
+//            catch (SQLException e) {
+//                throw new CourseException(CourseException.EX_DB, e);
+//            }
+//            catch (DwoXmlRpcException e) {
+//                throw (CourseException) getException(e, e.code);
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            throw new CourseException(CourseException.EX_UNKNOWN_ERROR, e);
+//        }
+//    }
 
     /**
      * Plak twee courses aan elkaar. Sorteer op naam. (a la mysql order by name)
@@ -1799,7 +1799,7 @@ public class PersistenceFacade {
 //        }
 //    }
 
-    public School addSchool(int id, String schoolName, String schoolLogin, Hashtable passw)
+    private School addSchool(int id, String schoolName, String schoolLogin, Hashtable passw)
             throws SchoolException {
         DbAccessIF dbAccess = DbAccessCreator.instance();
         try {
@@ -2816,67 +2816,67 @@ public class PersistenceFacade {
 
     }
 
-    /**
-     * =============================================================================
-     * BLA FUNCTIONALITY
-     * =============================================================================
-     * @return 
-     */
-    public boolean updateLogo(Course c) {
+//    /**
+//     * =============================================================================
+//     * BLA FUNCTIONALITY
+//     * =============================================================================
+//     * @return 
+//     */
+//    public boolean updateLogo(Course c) {
+//
+//        try {
+//            if (c.getImageData() != null) {
+//                DbAccessCreator.instance().setLogo(c.getID(), c.getImageData());
+//            } else if (c.getImageUrl() != null && c.getImageUrl().length() > 0) {
+//// TODO er is geen update by reference.
+//                String imu = GuiConstants.RESOURCES + c.getImageUrl();
+//                URL u = new URL(DwoHelper.getResourceUrlPath(),imu);
+//                URLConnection connection = u.openConnection();
+//                InputStream in = connection.getInputStream();
+//// Check image contentType
+//                if (connection.getContentType().startsWith("image/")) {
+//                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//                    int len;
+//                    byte[] data = new byte[1024];
+//                    do {
+//                        len = in.read(data);
+//                        if (len > 0) {
+//                            bos.write(data, 0, len);
+//                        }
+//                    } while (len > 0);
+//                    bos.close();
+//                    DbAccessCreator.instance().setLogo(c.getID(), bos.toByteArray());
+//                }
+//                in.close();
+//            }
+//            return true;
+//        }
+//        catch (SQLException e) {
+//            LOG.log(Level.SEVERE, null, e);
+//        }
+//        catch (IOException e) {
+//            LOG.log(Level.SEVERE, null, e);
+//        }
+//        catch (XmlRpcException e) {
+//            LOG.log(Level.SEVERE, null, e);
+//        }
+//        return false;
+//    }
 
-        try {
-            if (c.getImageData() != null) {
-                DbAccessCreator.instance().setLogo(c.getID(), c.getImageData());
-            } else if (c.getImageUrl() != null && c.getImageUrl().length() > 0) {
-// TODO er is geen update by reference.
-                String imu = GuiConstants.RESOURCES + c.getImageUrl();
-                URL u = new URL(DwoHelper.getResourceUrlPath(),imu);
-                URLConnection connection = u.openConnection();
-                InputStream in = connection.getInputStream();
-// Check image contentType
-                if (connection.getContentType().startsWith("image/")) {
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    int len;
-                    byte[] data = new byte[1024];
-                    do {
-                        len = in.read(data);
-                        if (len > 0) {
-                            bos.write(data, 0, len);
-                        }
-                    } while (len > 0);
-                    bos.close();
-                    DbAccessCreator.instance().setLogo(c.getID(), bos.toByteArray());
-                }
-                in.close();
-            }
-            return true;
-        }
-        catch (SQLException e) {
-            LOG.log(Level.SEVERE, null, e);
-        }
-        catch (IOException e) {
-            LOG.log(Level.SEVERE, null, e);
-        }
-        catch (XmlRpcException e) {
-            LOG.log(Level.SEVERE, null, e);
-        }
-        return false;
-    }
-
-    public void setLogo(int id, byte[] data) throws PersistenceException {
-        try {
-            DbAccessCreator.instance().setLogo(id, data);
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-    }
+//    public void setLogo(int id, byte[] data) throws PersistenceException {
+//        try {
+//            DbAccessCreator.instance().setLogo(id, data);
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//    }
 
     /**
      * Clears user data from mapper cache
