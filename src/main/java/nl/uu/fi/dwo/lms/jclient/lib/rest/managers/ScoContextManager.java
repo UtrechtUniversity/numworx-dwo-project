@@ -10,6 +10,6 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public interface ScoContextManager {
 	public DomScoContext get(DomScoContext domScoId, DomDwoProfile profile, DomSchoolClassId schoolClass) throws Dwo2Exception;
-	public  List<DomScoContext> getScos(DomCourse course, DomDwoProfile profile, DomSchoolClassId schoolClass) throws Dwo2Exception;
+	public List<DomScoContext> getScos(DomCourse course, DomDwoProfile profile, DomSchoolClassId schoolClass) throws Dwo2Exception;
 
 }
