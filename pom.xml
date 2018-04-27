@@ -10,6 +10,12 @@
     <packaging>war</packaging>
     <name>${project.build.finalName}</name>
     <dependencies>
+<dependency>
+    <groupId>commons-dbcp</groupId>
+    <artifactId>commons-dbcp</artifactId>
+    <version>1.4</version>
+</dependency>
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
