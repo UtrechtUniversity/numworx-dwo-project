@@ -44,5 +44,7 @@ public interface DbAccessObsolete {
                            boolean delete, byte[] launchdata, boolean showScore)
                            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
   public boolean deleteSco(int scoID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+  public boolean setLogo(int id, byte[] image) throws SQLException, IOException, XmlRpcException;
+  public boolean deleteCourse(int courseID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
 }

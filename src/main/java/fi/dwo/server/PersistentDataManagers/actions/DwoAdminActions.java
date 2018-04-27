@@ -1,6 +1,7 @@
 package fi.dwo.server.PersistentDataManagers.actions;
 
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.Context;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 
@@ -12,5 +13,11 @@ public interface DwoAdminActions {
   DomScoContextFull add(Context context, DomScoContextFull scoContext, DomScoData scoData);
 
   Boolean removeSco(Context context);
+
+  DomCourseFull add(Context context, DomCourseFull course);
+
+  DomCourseFull update(Context context, DomCourseFull course);
+  
+  Boolean removeCourse(Context context);
 
 }

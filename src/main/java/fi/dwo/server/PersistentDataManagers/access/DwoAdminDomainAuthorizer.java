@@ -6,9 +6,8 @@ import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
-import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_C;
-import fi.dwo.server.rest.SecuredDwoAdminScoContextManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
@@ -20,6 +19,8 @@ public class DwoAdminDomainAuthorizer {
   public interface DwoAdminState_C {
 
     DomScoContextFull add(DomScoContextFull scoContext, DomScoData scoData) throws Dwo2Exception;
+    DomCourseFull update(DomCourseFull course) throws Dwo2Exception;
+    Boolean removeCourse();
 
   }
 
@@ -71,15 +72,13 @@ public class DwoAdminDomainAuthorizer {
   }
 
   public interface DwoAdminState_HR_R_S_SG_U  {
-    DwoAdminState_HR_P_R_S_SG_U addDwoProfile(DomDwoProfileId id) throws Dwo2Exception;
+    DwoAdminState_HR_P_R_S_SG_U addDwoProfile(DomDwoProfileId id) throws Dwo2Exception;   
   }
  
-  public interface DwoAdminState_HR_P_R_S_SG_U extends DwoAdminState_HR_R_S_SG_U {
-
+  public interface DwoAdminState_HR_P_R_S_SG_U {
     DwoAdminState_C_S addScoContext(DomScoContextId scoContext) throws Dwo2Exception;
-
-    DwoAdminState_C  addCourse(DomCourse course) throws Dwo2Exception;
-    
+    DwoAdminState_C   addCourse(DomCourse course) throws Dwo2Exception;
+    DomCourseFull     add(DomCourseFull course) throws Dwo2Exception;
   }
   
   

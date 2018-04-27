@@ -9,6 +9,7 @@ import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
@@ -136,13 +137,27 @@ class DwoAdminBuilder
   @Override
   public DomScoContextFull add(DomScoContextFull scoContext, DomScoData scoData)
       throws Dwo2Exception {
-    // TODO Auto-generated method stub
     return actions.add(instance.getContext(), scoContext, scoData);
   }
 
   @Override
   public Boolean removeSco() {
     return actions.removeSco(instance.getContext());
+  }
+
+  @Override
+  public DomCourseFull update(DomCourseFull course) throws Dwo2Exception {
+    return actions.update(instance.getContext(), course);
+  }
+
+  @Override
+  public Boolean removeCourse() {
+    return actions.removeCourse(instance.getContext());
+  }
+
+  @Override
+  public DomCourseFull add(DomCourseFull course) throws Dwo2Exception {
+    return actions.add(instance.getContext(), course);
   }
 
 }

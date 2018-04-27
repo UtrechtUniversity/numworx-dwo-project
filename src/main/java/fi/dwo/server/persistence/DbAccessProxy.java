@@ -303,7 +303,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     @Override
     public boolean deleteCourse(int courseID) throws DwoXmlRpcException,
             IOException, XmlRpcException, SQLException {
-        return getDelegate().deleteCourse(courseID);
+        return getDelegateObsolete().deleteCourse(courseID);
     }
 
 //    @Override
@@ -422,7 +422,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     @Override
     public boolean setLogo(int id, byte[] image) throws SQLException,
             IOException, XmlRpcException {
-        return getDelegate().setLogo(id, image);
+        return getDelegateObsolete().setLogo(id, image);
     }
 
 //    @Override

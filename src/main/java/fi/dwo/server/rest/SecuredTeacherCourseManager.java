@@ -5,6 +5,9 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.actions.MySQLCourseActions;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 
 import java.util.logging.Level;
@@ -21,6 +24,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestCourseFull;
 
 /**
@@ -35,7 +39,18 @@ import nl.uu.fi.dwo.rest.entities.RestCourseFull;
 public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredTeacherCourseManager.class.getName());
-
+    @PUT
+    @Path("remove")
+    @Produces({"application/json"})
+    public Boolean remove(@Context SecurityContext sc, RestCourse rest) throws Dwo2Exception {
+      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+          .setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher();
+ 
+      Long id = MySQLPersistenceId.getNativeId(rest.getDomCourse());
+      PersistentCourse pc = CourseManager.findEntity(id);
+      MySQLCourseActions.remove(pc);
+      return Boolean.TRUE;
+    }
     
     @PUT
     @Path("update")
