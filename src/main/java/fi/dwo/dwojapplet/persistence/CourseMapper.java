@@ -221,7 +221,7 @@ class CourseMapper extends XmlRpcMapper {
                 v = (Vector) cachemap.get(ht);
                 if (v == null) {
                     try {
-						v = dbAccess.getTableJS(getTableName(), ht, getOrderbyCol());
+						v = dbAccess.getTable(getTableName(), ht, getOrderbyCol());
 						cachemap.put(ht, v);
 					} catch (IOException e) {
 						LOG.log(Level.SEVERE, "getTableJS, no parent, wait 30 seconds", e);
@@ -230,7 +230,7 @@ class CourseMapper extends XmlRpcMapper {
 						} catch (InterruptedException e1) {
 						}
 		                ht.put("parentID", parent);
-		                v = dbAccess.getTableJS(getTableName(), ht, getOrderbyCol());
+		                v = dbAccess.getTable(getTableName(), ht, getOrderbyCol());
 		                cachemap.put(ht, v);
 		                return super.getObjectFromReturn(v);
 					}
@@ -242,11 +242,11 @@ class CourseMapper extends XmlRpcMapper {
             } else {
 // not from cache, get with parent from database.
                 ht.put("parentID", parent);
-                v = dbAccess.getTableJS(getTableName(), ht, getOrderbyCol());
+                v = dbAccess.getTable(getTableName(), ht, getOrderbyCol());
             }
         } else // not in cache, no parent, use database
         {
-            v = dbAccess.getTableJS(getTableName(), ht, getOrderbyCol());
+            v = dbAccess.getTable(getTableName(), ht, getOrderbyCol());
         }
 
 //System.out.println("put " + v.size() + " for  " + ht);

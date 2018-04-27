@@ -103,13 +103,13 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Hashtable) object;
     }
 
-    @Override
-    public java.util.Vector getTable(java.lang.String a) throws IOException, XmlRpcException {
-        Vector vv = new Vector(1);
-        vv.addElement(a);
-        Object object = invoke("getTable", vv);
-        return (java.util.Vector) object;
-    }
+//    @Override
+//    public java.util.Vector getTable(java.lang.String a) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(1);
+//        vv.addElement(a);
+//        Object object = invoke("getTable", vv);
+//        return (java.util.Vector) object;
+//    }
 
     @Override
     public java.util.Vector getTable(java.lang.String a, java.lang.String b) throws IOException, XmlRpcException {
@@ -120,14 +120,14 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
-    @Override
-    public java.util.Vector getTable(java.lang.String a, java.util.Hashtable b) throws IOException, XmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(a);
-        vv.addElement(b);
-        Object object = invoke("getTable", vv);
-        return (java.util.Vector) object;
-    }
+//    @Override
+//    public java.util.Vector getTable(java.lang.String a, java.util.Hashtable b) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(a);
+//        vv.addElement(b);
+//        Object object = invoke("getTable", vv);
+//        return (java.util.Vector) object;
+//    }
 
     @Override
     public java.util.Vector getTable(java.lang.String a, java.util.Hashtable b, java.lang.String c) throws IOException, XmlRpcException {
@@ -138,15 +138,15 @@ class DbAccessClient extends Client implements DbAccessIF {
         Object object = invoke("getTable", vv);
         return (java.util.Vector) object;
     }
-    @Override
-    public java.util.Vector getTableJS(java.lang.String a, java.util.Hashtable b, java.lang.String c) throws IOException, XmlRpcException {
-        Vector vv = new Vector(3);
-        vv.addElement(a);
-        vv.addElement(b);
-        vv.addElement(c);
-        Object object = invoke("getTableJS", vv);
-        return (java.util.Vector) object;
-    }
+//    @Override
+//    public java.util.Vector getTableJS(java.lang.String a, java.util.Hashtable b, java.lang.String c) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(3);
+//        vv.addElement(a);
+//        vv.addElement(b);
+//        vv.addElement(c);
+//        Object object = invoke("getTableJS", vv);
+//        return (java.util.Vector) object;
+//    }
 
     @Override
     public java.util.Vector getTable(java.lang.String a, java.util.Vector b, java.util.Hashtable c, java.lang.String d) throws IOException, XmlRpcException {

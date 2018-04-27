@@ -469,7 +469,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 
         public ExportModuleModel(User user) throws PersistenceException {
 
-            courses = PersistenceFacade.instance().getCourses(user);
+            courses = PersistenceFacade.instance().getCoursesJS(user);
             if (courses == null) {
                 courses = new Course[0];
             }
