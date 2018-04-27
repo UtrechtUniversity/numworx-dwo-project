@@ -1,9 +1,6 @@
 package fi.dwo.server.PersistentDataManagers.actions;
 
-import static org.junit.Assert.assertTrue;
-
 import fi.dwo.commons.persistence.entities.PersistentCourse;
-import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.Context;

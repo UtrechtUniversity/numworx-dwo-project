@@ -21,7 +21,7 @@ public interface DbAccessJS {
 //	public Vector getEditableCoursesAdminJS() throws IOException,
 //		XmlRpcException, SQLException;
 
-	public Vector getTableJS(String table, Hashtable wheredef, String orderby)
-			throws IOException, XmlRpcException, SQLException;
+//	public Vector getTableJS(String table, Hashtable wheredef, String orderby)
+//			throws IOException, XmlRpcException, SQLException;
 
 }

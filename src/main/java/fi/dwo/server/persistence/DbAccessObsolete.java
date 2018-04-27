@@ -46,5 +46,11 @@ public interface DbAccessObsolete {
   public boolean deleteSco(int scoID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
   public boolean setLogo(int id, byte[] image) throws SQLException, IOException, XmlRpcException;
   public boolean deleteCourse(int courseID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+  public Vector getTableJS(String tableName, Hashtable wheredef, String orderBy) throws IOException,
+  XmlRpcException, SQLException;
+public Vector getTable(String tableName) throws IOException,
+XmlRpcException, SQLException;
+public Vector getTable(String tableName, Hashtable wheredef) throws IOException,
+XmlRpcException, SQLException;
 
 }
