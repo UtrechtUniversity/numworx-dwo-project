@@ -497,7 +497,7 @@ public interface DbAccessIF  {
 
  //   public boolean changeCourse(int courseID, String name, String description) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-    public boolean deleteCourse(int courseID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+//    public boolean deleteCourse(int courseID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
  //   public int addSco(int courseID, String name, String description, int appletConfigID, int sequencenr) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
@@ -535,7 +535,7 @@ public interface DbAccessIF  {
 
     public Vector getUserResults(Vector courses, int i, int j) throws SQLException, IOException, XmlRpcException;
 
-    public boolean setLogo(int id, byte[] image) throws SQLException, IOException, XmlRpcException;
+//    public boolean setLogo(int id, byte[] image) throws SQLException, IOException, XmlRpcException;
 
 //    /**
 //     * update course met name, description en export.
