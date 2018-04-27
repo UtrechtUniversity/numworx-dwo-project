@@ -118,16 +118,16 @@ public interface DbAccessIF  {
     public Hashtable getRecord(String tableName, String idCol, int oid)
             throws IOException, XmlRpcException, SQLException;
 
-    /**
-     * Returns all the records of the specified table.
-     *
-     * @param tableName The name of the table to select the data.
-     * @return A vector contains hashtables where the column-values are mapped
-     * on the columnnames.
-     * @throws java.sql.SQLException
-     */
-    public Vector getTable(String tableName) throws IOException,
-            XmlRpcException, SQLException;
+//    /**
+//     * Returns all the records of the specified table.
+//     *
+//     * @param tableName The name of the table to select the data.
+//     * @return A vector contains hashtables where the column-values are mapped
+//     * on the columnnames.
+//     * @throws java.sql.SQLException
+//     */
+//    public Vector getTable(String tableName) throws IOException,
+//            XmlRpcException, SQLException;
 
     /**
      * Returns all the records of the specified table ordered by the specified
@@ -154,8 +154,8 @@ public interface DbAccessIF  {
      * @throws java.sql.SQLException
      *
      */
-    public Vector getTable(String tableName, Hashtable wheredef) throws IOException,
-            XmlRpcException, SQLException;
+//    public Vector getTable(String tableName, Hashtable wheredef) throws IOException,
+//            XmlRpcException, SQLException;
 
     /**
      * Returns all the records of the specified table with the specified
@@ -175,8 +175,8 @@ public interface DbAccessIF  {
     /**
      * Special getTable for sorted courses
      */
-    public Vector getTableJS(String tableName, Hashtable wheredef, String orderBy) throws IOException,
-    XmlRpcException, SQLException;
+//    public Vector getTableJS(String tableName, Hashtable wheredef, String orderBy) throws IOException,
+//    XmlRpcException, SQLException;
 
     /**
      * Returns specified records of the specified table with the specified
