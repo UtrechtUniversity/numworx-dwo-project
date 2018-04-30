@@ -1642,6 +1642,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		comRoot.addCBookEventListener(TVP_DESELECT, this);
 		comRoot.addCBookEventListener(TVP_KLAPUIT, this);
 		comRoot.addCBookEventListener(TVP_KLAPIN, this);
+		comRoot.addCBookEventListener(TVP_KLAPUIT, this);
+		comRoot.addCBookEventListener(TVP_KLAPIN, this);
 	}
 
 	public HashMap<String, Object> getState()
@@ -2803,6 +2805,7 @@ private Object CamelCase(String name) {
 			parent.setWidgetLeftWidth(this.asWidget(), locationX, Style.Unit.PX, breedte, Style.Unit.PX);
 			parent.setWidgetTopHeight(this.asWidget(), locationY, Style.Unit.PX, hoogte, Style.Unit.PX);
 		}
+		
 	}
 	
 	public void setStartSleep(int x, int y)
@@ -3756,6 +3759,20 @@ private Object CamelCase(String name) {
 					parent.add(this.asWidget());
 					parent.setWidgetLeftWidth(this.asWidget(), locationX, Style.Unit.PX, breedte, Style.Unit.PX);
 					parent.setWidgetTopHeight(this.asWidget(), locationY, Style.Unit.PX, hoogte, Style.Unit.PX);
+					
+					{	Map<String,Object> mapx = new HashMap<String,Object>();
+						mapx.put("name", "xcoordinate");
+						mapx.put("value", locationX);
+						fireEvent(new CBookEvent(this,"double.xcoordinate",mapx));
+					}
+					
+					{	Map<String,Object> mapy = new HashMap<String,Object>();
+						mapy.put("name", "ycoordinate");
+						mapy.put("value", locationY);
+						fireEvent(new CBookEvent(this,"double.ycoordinate",mapy));
+					}
+					LOG.info("zetLocatie");
+					
 				}
 			}
 		}
