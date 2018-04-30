@@ -337,7 +337,7 @@ public class EditSchoolclassPresenter {
     @JsMethod
     public void copyOrMoveStudents() {
     eventBus
-        .fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES, schoolClass));
+        .fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.COPYORMOVESTUDENTTOSCHOOLCLASS, schoolClass));
     }
 
     @JsMethod

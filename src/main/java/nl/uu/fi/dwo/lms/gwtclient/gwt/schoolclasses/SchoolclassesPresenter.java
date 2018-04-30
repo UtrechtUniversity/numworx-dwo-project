@@ -199,6 +199,8 @@ public class SchoolclassesPresenter {
     public void editSchoolClass(String key) {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.EDITSCHOOLCLASS, schoolClassMap.get(key)));
     }
+    
+    
 //
 //    @JsMethod
 //    public void connectStudents(String key) {
@@ -217,8 +219,5 @@ public class SchoolclassesPresenter {
 //        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.EDITCOURSESOFSCHOOLCLASS, schoolClassMap.get(key)));
 //    }
 //
-//    @JsMethod
-//    public void removeSchoolClass(String key) {
-//        removeSchoolClass(schoolClassMap.get(key));
-//    }
+
 }
