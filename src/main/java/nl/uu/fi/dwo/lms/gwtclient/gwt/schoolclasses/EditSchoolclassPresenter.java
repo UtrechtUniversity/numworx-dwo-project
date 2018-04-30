@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
@@ -63,14 +63,14 @@ public class EditSchoolclassPresenter {
         dwoGlobalVars = aDwoGlobalVars;
     }
 
-    public void init() {
+    public void init(DomSchoolClass aSchoolClass) {
         view.init();
-        updateViewData();
+        updateViewData(aSchoolClass);
     }
 
-    private void updateViewData() {
+    private void updateViewData(DomSchoolClass aSchoolClass) {
         Promise<DomSchoolClassFull> promise;
-        promise = manager.getFullSchoolClass(schoolClass);
+        promise = manager.getFullSchoolClass(aSchoolClass);
         // onSuccess update view
         promise.then(new Success<DomSchoolClassFull, Void>() {
             @Override
@@ -129,7 +129,7 @@ public class EditSchoolclassPresenter {
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                 //flip back to schoolclasses screen 
                 if (resolved.getValue() == true) {
-                    updateViewData();
+                    updateViewData(schoolClass);
                     //eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
                     return null;
                 } else {

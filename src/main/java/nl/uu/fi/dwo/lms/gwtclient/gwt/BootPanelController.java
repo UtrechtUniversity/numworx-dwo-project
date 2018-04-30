@@ -245,7 +245,7 @@ class BootPanelController {
                             presenterFactory.getSchoolclassesPresenter().init();
                             break;
                         case EDITSCHOOLCLASS:
-                            presenterFactory.getEditSchoolclassPresenter().init();
+                            presenterFactory.getEditSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
                             break;
                         case ADDSTUDENTTOSCHOOLCLASS:
                             presenterFactory.getAddStudentToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());

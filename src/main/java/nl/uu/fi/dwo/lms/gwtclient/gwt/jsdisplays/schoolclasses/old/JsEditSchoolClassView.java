@@ -7,7 +7,7 @@ import fi.dwo.gwt.lib.rest.util.DomSchoolClassFullCodec;
 import fi.dwo.gwt.lib.rest.util.DomStudentCodec;
 import fi.dwo.gwt.lib.rest.util.DomTeacherCodec;
 import java.util.List;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.EditSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
