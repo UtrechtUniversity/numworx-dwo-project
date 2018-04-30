@@ -187,7 +187,7 @@ public class PersistentSchoolClass implements Serializable {
 
     private void fillDomNewSchoolClass4Student(DomNewSchoolClass4Student schoolClass) {
         fillDomSchoolClass(schoolClass);
-//        schoolClass.setRegistrationKey(registrationKey); // clearly this info should neve be passed to a student
+//        schoolClass.setRegistrationKey(registrationKey); // clearly this info should never be passed to a student
     }
 
        /** Builds a PersistenceId using this object's data.
