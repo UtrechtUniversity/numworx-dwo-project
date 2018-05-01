@@ -6,7 +6,12 @@
 package fi.dwo.server.rest;
 
 import java.util.logging.Logger;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 
 /**
  * A secure JPA query tools for development. It requires localhost access and a 
@@ -19,6 +24,19 @@ public class QueryManager {
 
     private static final Logger LOG = Logger.getLogger(QueryManager.class.getName());
 
+    /**
+     * Runs a dangerous free query, but only for some users.
+     *
+     * @param sc
+     * @param query
+     * @return
+     */
+    @GET
+    @Produces({MediaType.TEXT_PLAIN})
+    @Path("/helloWorld")
+    public String RunQuery(@Context SecurityContext sc) {
+        return "Hello World";
+    }
 //    /**
 //     * Runs a dangerous free query, but only for some users.
 //     *
