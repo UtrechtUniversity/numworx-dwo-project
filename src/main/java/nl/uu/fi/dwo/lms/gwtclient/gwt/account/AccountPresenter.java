@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
@@ -106,7 +107,7 @@ public class AccountPresenter {
                 @Override
                 public Promise<Void> call(Promise<DomSchoolRoleAndClassV2> resolved) throws Exception {
                     if (!dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
-                        eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
+                        eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
                     };
                     //flip back to schoolclasses screen 
                     eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.WELCOME));
@@ -120,10 +121,10 @@ public class AccountPresenter {
                     Throwable fail = resolved.getFailure();
                     if (fail instanceof Dwo2Exception) {
                         LOG.log(Level.SEVERE, fail.getMessage());
-                        eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                        eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                     } else {
                         LOG.log(Level.SEVERE, fail.getMessage());
-                        eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                        eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                         //throw directly
                     }
                 }
@@ -277,13 +278,13 @@ public class AccountPresenter {
                 user.setInsertion(null);
             }
         } else {
-            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Required_Fields)));
+            eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Required_Fields)));
             return;
         }
 
         //check values
         if (!SimpleValidUserFieldsChecker.isValidEmail(email)) {
-            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid)));
+            eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid)));
             return;
         } else {
             user.setEmail(email.trim());
@@ -297,12 +298,12 @@ public class AccountPresenter {
                 && newPassword.compareTo(newPasswordAgain) == 0) {
             if (!SimpleValidUserFieldsChecker.isValidPassword(newPassword)) {
                 //invalid password format
-                eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_NewPasswordsDoNotMatch)));
+                eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_NewPasswordsDoNotMatch)));
             } else {
                 user.setPassword(MD5.md5(newPassword));
             }
         } else {
-            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_NewPasswordsDoNotMatch)));
+            eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_NewPasswordsDoNotMatch)));
             return;
         }
 
@@ -319,7 +320,7 @@ public class AccountPresenter {
                 dwoGlobalVars.setCurrentUser(u);
                 view.clear();
 		view.updateUserView(u);
-                eventBus.fireEvent(new DialogEvent("Success"));
+                eventBus.fireEvent(new AlertDialogWithOKEvent("Success"));
                 return null;
             }
         },
@@ -329,10 +330,10 @@ public class AccountPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }
@@ -362,10 +363,10 @@ public class AccountPresenter {
 		Throwable fail = resolved.getFailure();
 		if (fail instanceof Dwo2Exception) {
 		    LOG.log(Level.SEVERE, fail.getMessage());
-		    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+		    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
 		} else {
 		    LOG.log(Level.SEVERE, fail.getMessage());
-		    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+		    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
 		    // throw directly
 		}
 	    }

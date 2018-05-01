@@ -1,8 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
-import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
-
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.account.JsAccountView;
@@ -23,14 +21,16 @@ import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsAddStudentToSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsAddTeacherToSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsCopyOrMoveStudentToSchoolclassView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsAlertDialogWithConfirmView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsMessageDialogWithConfirmView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsModulesOfSchoolclassView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsAlertDialogWithOKView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsMessageDialogWithOKView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddTeacherToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CopyOrMoveStudentToSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.ModulesOfSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithConfirmPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
@@ -47,12 +47,13 @@ public class ViewFactoryJs implements ViewFactory {
     private final SchoolclassesPresenter.Display schoolclassesView;
     private final AddStudentToSchoolclassPresenter.Display addStudentToSchoolclassView;
     private final CopyOrMoveStudentToSchoolclassPresenter.Display copyOrMoveStudentToSchoolclassView;
+    private final ModulesOfSchoolclassPresenter.Display modulesOfSchoolclassView;
     private final AddTeacherToSchoolclassPresenter.Display addTeacherToSchoolclassView;
     private final AccountPresenter.Display accountView;
     private final WelcomePresenter.Display welcomeView;
     private final EditSchoolclassPresenter.Display editSchoolclassView;
-    private final AlertDialogWithConfirmPresenter.Display alertDialogWithConfirmView;
-    private final MessageDialogWithConfirmPresenter.Display messageDialogWithConfirmView;
+    private final AlertDialogWithOKPresenter.Display alertDialogWithOKView;
+    private final MessageDialogWithOKPresenter.Display messageDialogWithOKView;
     private final AlertDialogWithConfirmCancelPresenter.Display alertDialogWithConfirmCancelView;
     private final FileUploadStudentsPresenter.Display fileUploadStudentsView;
     private final ProgressDialogWithAbortPresenter.Display progressDialogView;
@@ -64,15 +65,16 @@ public class ViewFactoryJs implements ViewFactory {
         accountView = new JsAccountView();
         schoolclassesView = new JsSchoolClassesView();
         editSchoolclassView = new JsEditSchoolClassView();
-        addStudentToSchoolclassView =  new JsAddStudentToSchoolclassView();
-        copyOrMoveStudentToSchoolclassView =  new JsCopyOrMoveStudentToSchoolclassView();
-        addTeacherToSchoolclassView =  new JsAddTeacherToSchoolclassView();
+        addStudentToSchoolclassView = new JsAddStudentToSchoolclassView();
+        copyOrMoveStudentToSchoolclassView = new JsCopyOrMoveStudentToSchoolclassView();
+        modulesOfSchoolclassView = new JsModulesOfSchoolclassView();
+        addTeacherToSchoolclassView = new JsAddTeacherToSchoolclassView();
         //ordered!
         resultsView = new JsResultsView();
 //        editStudentView = new EditStudentView(pf.getEditStudentPresenter());
 //        addStudentsView = new AddStudentsView(pf.getAddStudentsPresenter());
-        alertDialogWithConfirmView = new JsAlertDialogWithConfirmView();
-        messageDialogWithConfirmView = new JsMessageDialogWithConfirmView();
+        alertDialogWithOKView = new JsAlertDialogWithOKView();
+        messageDialogWithOKView = new JsMessageDialogWithOKView();
         alertDialogWithConfirmCancelView = new JsAlertDialogWithConfirmCancelView();
         progressDialogView = new JsProgressDialogWithAbortView();
         fileUploadStudentsView = new FileUploadStudentsView(pf.getFileUploadStudentsPresenter());
@@ -143,15 +145,15 @@ public class ViewFactoryJs implements ViewFactory {
     /**
      * @return the alertDialogWithConfirmView
      */
-    public AlertDialogWithConfirmPresenter.Display getAlertDialogWithConfirmView() {
-        return alertDialogWithConfirmView;
+    public AlertDialogWithOKPresenter.Display getAlertDialogWithOKView() {
+        return alertDialogWithOKView;
     }
 
     /**
-     * @return the messageDialogWithConfirmView
+     * @return the messageDialogWithOKView
      */
-    public MessageDialogWithConfirmPresenter.Display getMessageDialogWithConfirmView() {
-        return messageDialogWithConfirmView;
+    public MessageDialogWithOKPresenter.Display getMessageDialogWithOKView() {
+        return messageDialogWithOKView;
     }
 //
 //    /**
@@ -174,11 +176,11 @@ public class ViewFactoryJs implements ViewFactory {
     public FileUploadStudentsPresenter.Display getFileUploadStudentsView() {
         return fileUploadStudentsView;
     }
-
-    @Override
-    public MsgClickedDialogPresenter.Display getMsgClickedDialogView() {
-        return alertDialogWithConfirmCancelView;
-    }
+//
+//    @Override
+//    public MsgClickedDialogPresenter.Display getMsgClickedDialogView() {
+//        return alertDialogWithConfirmCancelView;
+//    }
 
     @Override
     public ProgressDialogPresenter.Display getProgressDialogView() {
@@ -202,7 +204,7 @@ public class ViewFactoryJs implements ViewFactory {
 
     @Override
     public AddStudentToSchoolclassPresenter.Display getAddStudentToSchoolclassView() {
-       return addStudentToSchoolclassView;
+        return addStudentToSchoolclassView;
     }
 
     @Override
@@ -210,5 +212,12 @@ public class ViewFactoryJs implements ViewFactory {
         return copyOrMoveStudentToSchoolclassView;
     }
 
+    /**
+     * @return the modulesOfSchoolclassView
+     */
+    @Override
+    public ModulesOfSchoolclassPresenter.Display getModulesOfSchoolclassView() {
+        return modulesOfSchoolclassView;
+    }
 
 }

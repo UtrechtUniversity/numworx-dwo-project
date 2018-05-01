@@ -9,9 +9,11 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresen
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddTeacherToSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CopyOrMoveStudentToSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.ModulesOfSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithConfirmPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
@@ -29,7 +31,9 @@ public interface PresenterFactory {
     public SchoolclassesPresenter getSchoolclassesPresenter();
     public EditSchoolclassPresenter getEditSchoolclassPresenter();
     public AddStudentToSchoolclassPresenter getAddStudentToSchoolclassPresenter();
+    public CopyOrMoveStudentToSchoolclassPresenter getCopyOrMoveStudentToSchoolclassPresenter();
     public AddTeacherToSchoolclassPresenter getAddTeacherToSchoolclassPresenter();
+    public ModulesOfSchoolclassPresenter getModulesOfSchoolclassPresenter();
 //    public CoursesOfSchoolclassPresenter getCoursesOfSchoolclassPresenter();
 //    public StudentsInSchoolclassPresenter getStudentsInSchoolclassPresenter();
 //    public TeachersInSchoolclassPresenter getTeachersInSchoolclassPresenter();
@@ -37,8 +41,8 @@ public interface PresenterFactory {
 //    public EditStudentPresenter getEditStudentPresenter();
 //    public AddStudentsPresenter getAddStudentsPresenter();
     public AlertDialogWithConfirmCancelPresenter getAlertDialogWithConfirmCancelPresenter();
-    public AlertDialogWithConfirmPresenter getAlertDialogWithConfirmPresenter();
-    public MessageDialogWithConfirmPresenter getMessageDialogWithConfirmPresenterr();
+    public AlertDialogWithOKPresenter getAlertDialogWithOKPresenter();
+    public MessageDialogWithOKPresenter getMessageDialogWithOKPresenter();
     public ProgressDialogPresenter getProgressDialogPresenter();
     public FileUploadStudentsPresenter getFileUploadStudentsPresenter();
     public void bindViewFactory(ViewFactory viewFactory);

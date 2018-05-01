@@ -4,7 +4,6 @@ import nl.uu.fi.dwo.rest.dom.DomCoursesOfSchoolclassTree;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.i18n.client.DateTimeFormat;
 
-import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +14,7 @@ import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
@@ -56,7 +56,7 @@ public class ModulesOfSchoolclassPresenter {
 
         void updateTable(List<ClassCourseItem> item);
 
-        void setTree(ClassCourseItem item);
+        void setTree(DomTree<DomCourseOfClass> tree);
 
         void setEmptyTableMessageModules();
 
@@ -166,7 +166,7 @@ public class ModulesOfSchoolclassPresenter {
                 tree = new DomCoursesOfSchoolclassTree(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool(), value);
                 ClassCourseItem item = new ClassCourseItem(null, "root");
                 //parse results into a tree.
-                view.setTree(item);
+                view.setTree(tree.getCourseTree());
                 view.setEmptyTableMessageSelected();
                 return null;
             }
@@ -320,7 +320,7 @@ public class ModulesOfSchoolclassPresenter {
     @JsMethod
     void setModuleSettings(String key, String typeString, String fromData, String toData, String accessKey) {
         if (key == null) {
-            eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "Internal error, key not given.")));
+            eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "Internal error, key not given.")));
             return;
         }
         Promise<Boolean> p = Promises.resolved(null);
@@ -344,7 +344,7 @@ public class ModulesOfSchoolclassPresenter {
                 return setAccessKey(key, accessKey);
             });
         }
-        p.then(null,(failure) -> {eventBus.fireEvent(new DialogEvent(failure.getFailure().getMessage()));} );
+        p.then(null,(failure) -> {eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));} );
     }
 
     private Promise<Boolean> setCourseType(String key, String typeString) {
@@ -353,7 +353,7 @@ public class ModulesOfSchoolclassPresenter {
             try {
                 type = CourseType.valueOf(typeString);
             } catch (Exception e) {
-                eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "Unknown course type submitted.")));
+                eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "Unknown course type submitted.")));
             }
             DomTree<DomCourseOfClass> c = tree.getNode(key);
             return service.setTypeClassCourse(schoolClass, c.getObject().getCourse(), type);
@@ -371,7 +371,7 @@ public class ModulesOfSchoolclassPresenter {
                 LOG.log(Level.FINE, "Setting From-date to: " + DateTimeFormat.getFullDateTimeFormat().format(date));
             } catch (Exception e) {
 
-                eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
+                eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
                 return null;
             }
         }
@@ -381,7 +381,7 @@ public class ModulesOfSchoolclassPresenter {
                 || (c.getObject().getClassCourse().getNotAfter() == null)) {
             return service.setFromDateClassCourse(schoolClass, c.getObject().getCourse(), date);
         } else {
-            eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
+            eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
             return null;
         }
     }
@@ -395,7 +395,7 @@ public class ModulesOfSchoolclassPresenter {
                 date = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm").parse(dateString);
                 LOG.log(Level.FINE, "Setting To-date to: " + DateTimeFormat.getFullDateTimeFormat().format(date));
             } catch (Exception e) {
-                eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
+                eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
                 return null;
             }
         }
@@ -405,7 +405,7 @@ public class ModulesOfSchoolclassPresenter {
                 && c.getObject().getClassCourse().getNotBefore().before(date))) {
             return service.setToDateClassCourse(schoolClass, c.getObject().getCourse(), date);
         } else {
-            eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
+            eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
             return null;
         }
     }

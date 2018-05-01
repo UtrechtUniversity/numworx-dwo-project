@@ -2,9 +2,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
-import fi.dwo.gwt.lib.rest.ui.ConfirmDialogEvent;
-import fi.dwo.gwt.lib.rest.ui.ConfirmDialogPromise;
-import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +11,9 @@ import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPromise;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
@@ -88,10 +88,10 @@ public class EditSchoolclassPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }
@@ -143,10 +143,10 @@ public class EditSchoolclassPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }
@@ -155,7 +155,7 @@ public class EditSchoolclassPresenter {
 
     @JsMethod
     public void removeSchoolClass() {
-        ConfirmDialogPromise p = new ConfirmDialogPromise("Are you sure you want to remove schoolclass" + schoolClass.getSchoolClassName() + ".");
+        AlertDialogWithConfirmCancelPromise p = new AlertDialogWithConfirmCancelPromise("Are you sure you want to remove schoolclass" + schoolClass.getSchoolClassName() + ".");
         p.getPromise().then(new Success<Boolean, Void>() {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
@@ -173,17 +173,17 @@ public class EditSchoolclassPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }
         }
         );
 
-        eventBus.fireEvent(new ConfirmDialogEvent(ConfirmDialogEvent.EventType.ConfirmDialog, p));
+        eventBus.fireEvent(new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, p));
     }
 
     private void executeRemoveSchoolClass(DomSchoolClass schoolClass) {
@@ -209,10 +209,10 @@ public class EditSchoolclassPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }
@@ -237,10 +237,10 @@ public class EditSchoolclassPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }
@@ -266,10 +266,10 @@ public class EditSchoolclassPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }
@@ -302,10 +302,10 @@ public class EditSchoolclassPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }
@@ -336,8 +336,7 @@ public class EditSchoolclassPresenter {
 
     @JsMethod
     public void copyOrMoveStudents() {
-    eventBus
-        .fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.COPYORMOVESTUDENTTOSCHOOLCLASS, schoolClass));
+    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.COPYORMOVESTUDENTTOSCHOOLCLASS, schoolClass));
     }
 
     @JsMethod

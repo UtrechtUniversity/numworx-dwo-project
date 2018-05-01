@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -64,6 +65,13 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
 
     }
 
+        /**
+     * @param view the view to set
+     */
+    public void setView(CopyOrMoveStudentToSchoolclassPresenter.Display view) {
+        this.view = view;
+    }
+    
     public CopyOrMoveStudentToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
@@ -107,10 +115,10 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
                 view.setEmptyTableMessageClasses();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }
@@ -141,10 +149,10 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
                     view.setEmptyTableMessageA();
                     if (fail instanceof Dwo2Exception) {
                         LOG.log(Level.SEVERE, fail.getMessage());
-                        eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                        eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                     } else {
                         LOG.log(Level.SEVERE, fail.getMessage());
-                        eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                        eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                         //throw directly
                     }
                 }
@@ -178,10 +186,10 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
                     view.setEmptyTableMessageB();
                     if (fail instanceof Dwo2Exception) {
                         LOG.log(Level.SEVERE, fail.getMessage());
-                        eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                        eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                     } else {
                         LOG.log(Level.SEVERE, fail.getMessage());
-                        eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                        eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                         //throw directly
                     }
                 }
@@ -245,10 +253,10 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
                 //close progress panel.
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }
@@ -302,10 +310,10 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
                 //close progress panel.
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }

@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
-import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
@@ -9,10 +8,11 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentToSchoolclassPrese
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddTeacherToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CopyOrMoveStudentToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.ModulesOfSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithConfirmPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
@@ -30,12 +30,13 @@ public interface ViewFactory {
     public SchoolclassesPresenter.Display getSchoolclassesView();
     public AddStudentToSchoolclassPresenter.Display getAddStudentToSchoolclassView();
     public CopyOrMoveStudentToSchoolclassPresenter.Display getCopyOrMoveStudentToSchoolclassView();
+    public ModulesOfSchoolclassPresenter.Display getModulesOfSchoolclassView();
     public AddTeacherToSchoolclassPresenter.Display getAddTeacherToSchoolclassView();
     public ResultsPresenter.Display getResultsView();
     public AlertDialogWithConfirmCancelPresenter.Display getAlertDialogWithConfirmCancelView();
-    public AlertDialogWithConfirmPresenter.Display getAlertDialogWithConfirmView();
-    public MessageDialogWithConfirmPresenter.Display getMessageDialogWithConfirmView();
-    public MsgClickedDialogPresenter.Display getMsgClickedDialogView();
+    public AlertDialogWithOKPresenter.Display getAlertDialogWithOKView();
+    public MessageDialogWithOKPresenter.Display getMessageDialogWithOKView();
+//    public MsgClickedDialogPresenter.Display getMsgClickedDialogView();
     public FileUploadStudentsPresenter.Display getFileUploadStudentsView();
     public ProgressDialogWithAbortPresenter.Display getProgressDialogView();
 }

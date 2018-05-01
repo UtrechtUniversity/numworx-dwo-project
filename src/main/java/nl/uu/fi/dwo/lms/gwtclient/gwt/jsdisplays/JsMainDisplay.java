@@ -57,12 +57,12 @@ public class JsMainDisplay {
     public static native void  showSchoolclassesView();
     /** Show the edit school class panel. */
     public static native void  showEditSchoolclasView();
-    /** Show the students in school class panel. */
-    public static native void  showStudentsInSchoolclassView();
-    /** Show the teachers in school class panel. */
-    public static native void  showTeachersInSchoolclassView();
-    /** Show the teachers in school class panel. */
-    public static native void  showCoursesOfSchoolclassView();
+//    /** Show the students in school class panel. */
+//    public static native void  showStudentsInSchoolclassView();
+//    /** Show the teachers in school class panel. */
+//    public static native void  showTeachersInSchoolclassView();
+//    /** Show the teachers in school class panel. */
+//    public static native void  showCoursesOfSchoolclassView();
     /** Show the add student to school class panel. */
     public static native void  showAddStudentToSchoolClassView();
     /** Show the copy or move student to school class panel. */

@@ -13,6 +13,7 @@ import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -175,7 +176,9 @@ public class SchoolclassesPresenter {
                     //eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
                     return null;
                 } else {
-                    throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Rest request failed for unknown reasons.");
+                    Dwo2Exception ex = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Rest request failed for unknown reasons.");
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(ex));
+                    throw ex;
                 }
             }
         },
@@ -185,10 +188,10 @@ public class SchoolclassesPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }
@@ -199,8 +202,7 @@ public class SchoolclassesPresenter {
     public void editSchoolClass(String key) {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.EDITSCHOOLCLASS, schoolClassMap.get(key)));
     }
-    
-    
+        
 //
 //    @JsMethod
 //    public void connectStudents(String key) {

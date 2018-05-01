@@ -54,11 +54,11 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 
         public void showEditCoursesOfSchoolClassView();
 
-        public void showStudentsInSchoolclassView();
-
-        public void showTeachersInSchoolclassView();
-
-        public void showCoursesOfSchoolClassView();
+//        public void showStudentsInSchoolclassView();
+//
+//        public void showTeachersInSchoolclassView();
+//
+//        public void showCoursesOfSchoolClassView();
 
         public void setCurrentPanelName(String panel);
 
