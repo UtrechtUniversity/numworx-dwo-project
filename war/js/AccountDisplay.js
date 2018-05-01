@@ -29,9 +29,11 @@ function AccountDisplay() {
 	this.$updateSchoolLoginsViewForm.on('submit', $.proxy(this.submitSchoolLogins,this));
 	this.$addSchoolLoginForm.on('submit', $.proxy(this.submitSchoolLoginsViewForm,this));
 	$(this.updateUserForm.elements["currentPassword"]).on('keypress', $.proxy(this.changeCurrentPasswordInput,this));
+	this.$addSchoolLoginForm.find("input:radio").on('change', $.proxy(this.addSchoolLoginFormToggle,this));
 	
 	// Init
 	this.$panel.hide();
+	this.addSchoolLoginFormToggle();
 }
 
 AccountDisplay.prototype.show = function() {
@@ -49,7 +51,6 @@ AccountDisplay.prototype.clear = function () {
 }
 
 AccountDisplay.prototype.init = function (json) {
-	
 }
 
 AccountDisplay.prototype.updateUserView = function(json) {
@@ -248,5 +249,14 @@ AccountDisplay.prototype.submitSchoolLoginsViewForm = function(event) {
 	event.preventDefault();
 	this.addSchoolLogin();		
 }
+
+//helpers 
+AccountDisplay.prototype.addSchoolLoginFormToggle = function() {
+	if (this.addSchoolLoginForm.elements["role"][0].checked ||
+		this.addSchoolLoginForm.elements["role"][1].checked ||
+		this.addSchoolLoginForm.elements["role"][2].checked ) this.$addSchoolLoginForm.find(':submit').prop('disabled','');
+	else this.$addSchoolLoginForm.find(':submit').prop('disabled','disabled');
+}
+
 
 

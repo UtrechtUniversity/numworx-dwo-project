@@ -22,10 +22,13 @@ function MainDisplay() {
 	window.jsWelcomeDisplay = this.welcomeDisplay;
 	this.accountDisplay = new AccountDisplay();
 	window.jsAccountDisplay = this.accountDisplay;	
+	
 	this.schoolclassesDisplay = new SchoolclassesDisplay();
 	window.jsSchoolClassesDisplay = this.schoolclassesDisplay;
 	this.editSchoolclassesDisplay = new EditSchoolclassesDisplay();
-	window.jsEditSchoolclassDisplay	= this.editSchoolclassesDisplay;
+	window.JsEditSchoolclassDisplay	= this.editSchoolclassesDisplay; // TODO: remove first capital
+	this.studentsInSchoolclassDisplay = new StudentsInSchoolclassDisplay();
+	window.JsStudentsInSchoolclassDisplay	= this.studentsInSchoolclassDisplay;
 	
 	this.msgDialogDisplay = new MsgDialogDisplay();
 	window.jsMsgDialogDisplay = this.msgDialogDisplay;
@@ -100,6 +103,15 @@ MainDisplay.prototype.showAccountView = function(vars) {
 MainDisplay.prototype.showSchoolclassesView = function(vars) {
 	this.initMainView(); 
 	this.schoolclassesDisplay.show();
+}
+
+MainDisplay.prototype.showEditSchoolclasView = function(vars) { // TODO: Change function name @Gert
+	this.initMainView(); 
+	this.editSchoolclassesDisplay.show();
+}
+MainDisplay.prototype.showAddStudentToSchoolClassView = function(vars) { // TODO: Change function name @Gert
+	this.initMainView(); 
+	this.studentsInSchoolclassDisplay.show();
 }
 
 /*

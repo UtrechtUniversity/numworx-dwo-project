@@ -12,6 +12,9 @@
         <!-- set to false in order to show the default user-interface -->
         var hideGwtGui="true";
         </script>
+		
+		
+	<!-- TODO: change reference -->
     <script type="text/javascript" language="javascript" src="/gwtclient/gwtclient/gwtclient.nocache.js"></script>
 	
 	<!-- TODO: decide whether to add Google fonts locally (consider licence) -->
@@ -31,6 +34,7 @@
 	<script src="js/AccountDisplay.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/SchoolclassesDisplay.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/EditSchoolclassesDisplay.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/StudentsInSchoolclassDisplay.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/WelcomeDisplay.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/dialogs.js" type="text/javascript" charset="utf-8"></script>
 	
@@ -328,14 +332,14 @@
 								</div>
 							</div>
 							
+							
+							<label for="schoolLogin" class="col-2 input">
+								Sleutelcode school
+								<input id="schoolLogin" name="schoolLogin" type="text" value="" />
+							</label>
 							<label for="schoolCode" class="col-2 input">
 								Wachtwoord								
 								<input id="schoolCode" name="schoolCode" type="password" value="" />
-							</label>
-							<label for="schoolLogin" class="col-2 input">
-
-								Sleutelcode school
-								<input id="schoolLogin" name="schoolLogin" type="text" value="" />
 							</label>
 							
 							
@@ -383,7 +387,7 @@
 				<div class="row">
 					<form name="chooseSchoolclass">							
 						<div class="col-8">
-							<h3>Kies een klas om te bewerken</h2>
+							<h3>Kies een klas om te bewerken</h3>
 						
 							<table class="hoverable selectable">
 								<tbody>
@@ -482,10 +486,187 @@
 				</div>
 			</header>
 			
-			TODO
+			
+			<!-- Edit schoolclass -->
+			<section>
+				<form name="editSchoolclass">
+					<!-- <input name="id" type="hidden" value="" /> -->
+					
+					<fieldset>
+						<div class="row">						
+							<label for="classname" class="col-2 input">
+								Naam klas
+								<input id="classnameEdit" name="classname" type="text" value="" />
+							</label>
+							
+							<div class="col-2 options">
+								<label>Klassleutel?</label>
+								<div class="option">
+							    	<input type="radio" name="useClasskey" id="useClasskeyYesEdit" value="1">
+									<label for="useClasskeyYesEdit">Ja</label>
+								</div>
+								<div class="option">
+									<input type="radio" name="useClasskey" id="useClasskeyNoEdit" value="0" checked="checked">
+									<label for="useClasskeyNoEdit">Nee</label>
+								</div> 
+							</div>
+							<label for="classkey" class="col-2 input">
+								&nbsp;
+								<input id="classkeyEdit" name="classkey" type="text" value="" />
+							</label>
+						</div>
+						
+						<div class="row">
+							<div class="col-2 options">
+								<label>Boomstructuur?</label>
+								<div class="option">
+									<input type="radio" name="useClasstree" id="useClasstreeYesEdit" value="1">
+									<label for="useClasstreeYesEdit">Ja</label>
+								</div> 
+								<div class="option">
+									<input type="radio" name="useClasstree" id="useClasstreeNoEdit" value="0" checked="checked">
+									<label for="useClasstreeNoEdit">Nee</label>
+								</div>
+							</div>
+							<div class="col-6">
+								&nbsp;
+							</div>
+							<div class="col-2">
+								<input type="button" name="delete" class="danger right down" value="Verwijder" />								
+							</div>
+							<div class="col-2">
+								<input type="submit" name="save" class="primary right down" value="Sla op" />
+							</div>
+						</div>
+					</fieldset>	
+				</form>
+			</section>
+			
+			<!-- add persons -->
+			<section>
+				<div class="row">
+					<div class="col-12">
+						<h3>Gekoppelde gegevens van deze klas</h3>
+					</div>					
+				</div>
+				
+				<div class="row">
+					<div class="col-4">
+						<form name="changeStudents">
+							<fieldset>
+								<table class="">
+									<thead>
+										<tr>
+											<th>Leerlingen</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<!-- <input type="radio" name="student" id="chooseStudentId" class="hidden" value="studentId"> -->
+												<span id="chooseStudentName">Schoolclass name</a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+												
+								<input type="button" name="show" class="primary left" value="Toon leerlingen" />
+								<input type="button" name="connect" class="primary right" value="Wijzigen" />
+								<input type="button" name="copyOrMove" class="primary right" value="Overplaatsen" />	
+							</fieldset>
+						</form>					
+					</div>
+					
+					<div class="col-4">
+						<form name="changeTeachers">
+							<fieldset>
+								<table class="hoverable selectable">
+									<thead>
+										<tr>
+											<th>Docenten</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<input type="radio" name="teacher" id="chooseTeacherId" class="hidden" value="teacherId">
+												<span id="chooseTeacherName">Teacher name</a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+												
+								<input type="submit" class="primary left" value="Toon docenten" />
+								<input type="submit" class="primary right" value="Wijzigen" />
+							</fieldset>
+						</form>
+					</div>
+					
+					<div class="col-4">
+						<form name="changeModules">
+							<fieldset>
+								<table class="hoverable selectable">
+									<thead>
+										<tr>
+											<th>Modules</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<input type="radio" name="module" id="chooseModuleId" class="hidden" value="moduleId">
+												<span id="chooseModuleName">Module name</a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+												
+								<input type="submit" class="primary left" value="Toon modules" />
+								<input type="submit" class="primary right" value="Wijzigen" />
+							</fieldset>
+						</form>							
+					</div>					
+				</div>
+			</section>
+			
 			
 		</section> 
-		<!-- end schoolclasses display panel -->
+		<!-- end editSchoolclassesDisplayPanel -->
+		
+		
+		
+		
+		<!-- 
+		-
+		- studentsInSchoolclassDisplayPanel
+		-
+		-->
+		<section id="studentsInSchoolclassDisplayPanel" class="subpanel">
+			<header>
+				<div class="container">
+					<div class="content">
+						<svg viewBox="0 0 64 64" class="icon">
+							<use xlink:href="#klassen"></use>
+						</svg>
+						<h1>Klassen bewerken</h1>
+						<h2 class="sectionhead"><span>Zoek een leerling om te plaatsen in klas [KLAS]</span></h2>					
+					</div>
+					<section id="help" class="col-2">
+						<h2 class="helpheader">Numworx Help</h2>
+						<div class="content">
+							<h2>Help kop</h2>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium gravida dignissim. Aliquam id metus quam. Aenean consequat arcu sit amet commodo porttitor.</p><p>Proin viverra, enim non feugiat ornare, purus urna dignissim ante, consectetur faucibus libero diam id ligula.</p>
+						</div>
+					</section>
+				</div>
+			</header>
+			
+			<section>
+				TODO
+			</section>
+			
+		</section> 
+		<!-- end editSchoolclassesDisplayPanel -->
 		
 		
 		
@@ -505,7 +686,7 @@
 			<section>
 				<!-- <h3>De wijzigingen zijn opgeslagen</h3> -->
 				<p id="MsgDialogWithConfirmDisplayMessage">Kies DOORGAAN om verder te gaan.</p>
-				<input id="MsgDialogWithConfirmDisplayConfirmButton" type="submit" class="right bottom" value="Doorgaan" />
+				<input id="MsgDialogWithConfirmDisplayConfirmButton" type="button" class="right bottom" value="Doorgaan" />
 			</section>
 		</section>
 		
@@ -516,7 +697,7 @@
 			<section>
 				<!-- <h3>De wijzigingen zijn opgeslagen</h3> -->
 				<p id="AlertDialogWithConfirmDisplayMessage">Kies DOORGAAN om verder te gaan.</p>
-				<input id="AlertDialogWithConfirmDisplayConfirmButton" type="submit" class="right bottom" value="Doorgaan" />
+				<input id="AlertDialogWithConfirmDisplayConfirmButton" type="button" class="right bottom" value="Doorgaan" />
 			</section>
 		</section>
 		<!-- end dialogs -->

@@ -35,10 +35,15 @@ SchoolclassesDisplay.prototype.show = function() {
  */
 
 SchoolclassesDisplay.prototype.clear = function () {
-	console.log("CLEAR!"); // Wil jij clear aanroepen of ik?
 }
 
 SchoolclassesDisplay.prototype.init = function () {
+	this.addSchoolclassForm.elements["classname"].value = "";
+	this.addSchoolclassForm.elements["classkey"].value = "";
+	this.addSchoolclassForm.elements["useClasstree"][0].checked = false;
+	this.addSchoolclassForm.elements["useClasstree"][1].checked = true;
+	this.addSchoolclassForm.elements["useClasskey"][0].checked = false;
+	this.addSchoolclassForm.elements["useClasskey"][1].checked = true;
 }
 
 SchoolclassesDisplay.prototype.updateView = function(json) {
@@ -85,8 +90,8 @@ SchoolclassesDisplay.prototype.chooseClass = function(id) {
 
 SchoolclassesDisplay.prototype.addClass = function(id) {
 	app.getPresenterFactory().schoolclassesPresenter.AddSchoolClass(this.addSchoolclassForm.elements["classname"].value,
-																	this.addSchoolclassForm.elements["useClasstree"].value ? true : false,
-																	this.addSchoolclassForm.elements["useClasskey"].value ? true : false,
+																	this.addSchoolclassForm.elements["useClasstree"].value == 1 ? true : false,
+																	this.addSchoolclassForm.elements["useClasskey"].value == 1 ? true : false,
 																	this.addSchoolclassForm.elements["classkey"].value);
 																	// TODO: function name start with capital?
 }

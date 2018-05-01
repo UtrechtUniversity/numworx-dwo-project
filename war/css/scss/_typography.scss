@@ -130,7 +130,7 @@ h4 {
  * FORMS TYPOGRAPHY
  */
 
-input[type="submit"], button {
+input[type="submit"], input[type="button"], button {
 	font-family: 'Ubuntu', sans-serif;
 	text-transform: uppercase;
 	color: $white;

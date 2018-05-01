@@ -1,10 +1,16 @@
 function Helpers() {
 }
+
 Helpers.selectTableRow = function(event) {
-	console.log(event);
 	if (event.type == "keypress" && event.keyCode != 32) return;
 
 	var $el = $(event.target);
+	$el = $el.first();
+	
+	if ($el.get(0).tagName == "SPAN") {
+		$el = $el.parent();
+	}
+	
 	var $input = $el.find("input");
 	var form = $input[0].form;
 	
