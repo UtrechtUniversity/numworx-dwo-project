@@ -1,6 +1,5 @@
 package fi.dwo.gwt.lib.rest.ui;
 
-import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.logging.Logger;
@@ -51,6 +50,13 @@ public class MsgDialogPresenter implements DialogEventHandler {
         this.view = view;
     }
 
+    /**
+     * @param view the view to set
+     */
+    public Display getView() {
+        return view;
+    }
+    
     public void hide() {
         view.hideDialog();
     }
