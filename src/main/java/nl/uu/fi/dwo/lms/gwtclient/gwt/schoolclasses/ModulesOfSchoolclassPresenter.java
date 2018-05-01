@@ -67,6 +67,7 @@ public class ModulesOfSchoolclassPresenter {
         void setLoadingTableMessageSelected();
     }
 
+    @JsMethod
     void detachItemFromSchoolClass(ClassCourseItem classCourseItem) {
         Promise<Boolean> promise;
         promise = service.detachCourseFromClass(schoolClass, tree.getNode(classCourseItem.getKey()).getObject().getCourse());
@@ -95,6 +96,7 @@ public class ModulesOfSchoolclassPresenter {
         });
     }
 
+    @JsMethod
     void attachItemToSchoolClass(ClassCourseItem classCourseItem) {
         Promise<Boolean> promise;
         promise = service.attachCourseToClass(schoolClass, tree.getNode(classCourseItem.getKey()).getObject().getCourse());

@@ -17,6 +17,17 @@ import jsinterop.annotations.JsType;
  */
 @JsType(isNative = true, name = "jsModulesOfSchoolclassDisplay", namespace = JsPackage.GLOBAL)
 //@JsType(isNative = false, namespace = JsPackage.GLOBAL)
+/**
+ * Op dit moment is de implementatie nog onzeker. De vraag is of de setTree goed overkomt
+ * Zo ja dan kan de classCourseItem worden aangepast.
+ * 
+ * void setSelectedItem(ClassCourseItem item) 
+ * void setModuleSettings(String key, String typeString, String fromData, String toData, String accessKey)
+ * void detachItemFromSchoolClass(ClassCourseItem classCourseItem)
+ * void attachItemToSchoolClass(ClassCourseItem classCourseItem)
+ * 
+ * 
+ */
 public class JsModulesOfSchoolclassDisplay{
     public static native void clear();
     public static native void init();
