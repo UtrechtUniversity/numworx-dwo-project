@@ -26,8 +26,11 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 
 	@Override
 	public String getStubView() {
+		// voor test met lokale widgets en super dev mode onderstaande twee regels uitzetten
+//		/*
 		if(GWT.isProdMode())
 			return "/dwo/apps/";
+//		*/
 		return "";
 	}
 
