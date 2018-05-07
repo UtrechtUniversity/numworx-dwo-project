@@ -64,7 +64,7 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 
     @PUT
     @Path("remove")
-    @Produces({"appliction/json"})
+    @Produces({"application/json"})
     public Boolean remove(@Context SecurityContext sc, RestScoContext rest) throws Dwo2Exception {
         SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build()
         .submitUser(sc.getUserPrincipal().getName()).setHasRole(rest.getRestContext().getDomHasRole())
