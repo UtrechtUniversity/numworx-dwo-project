@@ -31,6 +31,7 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.CourseManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -512,5 +513,10 @@ public class GuiCreatorTeacher extends GuiCreator {
             return null;
         }
     }
+
+	@Override
+	public AbstractScoContextManager getScoContextManager() {
+		return manager;
+	}
     
 }
