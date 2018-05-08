@@ -1216,16 +1216,16 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 			checkPanel.getElement().getStyle().setCursor(Cursor.DEFAULT);
 	}
 
-	public TekstRegel findParentRegel()
-	{
-		Widget parent = asWidget();
-		while (parent != null && !(parent instanceof TekstRegel))
-		{
-			parent = parent.getParent();
-		}
-		return (TekstRegel) parent;
-		
-	}
+//	public TekstRegel findParentRegel()
+//	{
+//		Widget parent = asWidget();
+//		while (parent != null && !(parent instanceof TekstRegel))
+//		{
+//			parent = parent.getParent();
+//		}
+//		return (TekstRegel) parent;
+//		
+//	}
 	
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {

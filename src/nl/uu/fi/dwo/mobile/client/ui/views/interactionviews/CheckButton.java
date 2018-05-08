@@ -436,12 +436,11 @@ public class CheckButton implements InteractionStub, CBookEventListener
 	public TekstRegel findParentRegel()
 	{
 		Widget parent = asWidget();
-		while (parent != null && !(parent instanceof TekstRegel))
+		while (parent != null && !(parent instanceof TekstVak))
 		{
 			parent = parent.getParent();
 		}
-		return (TekstRegel) parent;
-		
+		return ((TekstVak) parent).getRegelVak(0);
 	}
 
 	@Override

@@ -3784,14 +3784,14 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		return hoogte;
 	}
 	
-	public TekstRegel findParentRegel()
+	protected TekstRegel findParentRegel()
 	{
 		Widget parent = asWidget();
-		while (parent != null && !(parent instanceof TekstRegel))
+		while (parent != null && !(parent instanceof TekstVak))
 		{
 			parent = parent.getParent();
 		}
-		return (TekstRegel) parent;
+		return ((TekstVak) parent).getRegelVak(0);
 		
 	}
 	

@@ -1642,8 +1642,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		comRoot.addCBookEventListener(TVP_DESELECT, this);
 		comRoot.addCBookEventListener(TVP_KLAPUIT, this);
 		comRoot.addCBookEventListener(TVP_KLAPIN, this);
-		comRoot.addCBookEventListener(TVP_KLAPUIT, this);
-		comRoot.addCBookEventListener(TVP_KLAPIN, this);
+//		comRoot.addCBookEventListener(TVP_KLAPUIT, this);
+//		comRoot.addCBookEventListener(TVP_KLAPIN, this);
 	}
 
 	public HashMap<String, Object> getState()
@@ -4375,9 +4375,7 @@ private Object CamelCase(String name) {
 		if(visibilityChanged)
 		{
 			//Objects may have to move to next TextRegel, so clear parent and setObjects again. 
-			parent.clear();
-			parent.setObjects(parent.getOpdrachtObjects()); 
-			parent.resize();
+		    parent.reLayout();
 		}
 		resize();
 	}

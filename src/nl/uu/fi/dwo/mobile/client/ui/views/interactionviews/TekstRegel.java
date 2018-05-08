@@ -1,20 +1,20 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
+import org.vectomatic.dom.svg.ui.SVGImage;
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.formule.client.formuleholder.SVGTekstComponent;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
-import nl.uu.fi.dwo.interaction.client.TekstComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.IFrameView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
-import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
-
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -23,6 +23,8 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.FontStyle;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.VerticalAlign;
+import com.google.gwt.layout.client.Layout;
+import com.google.gwt.layout.client.Layout.Layer;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -31,15 +33,13 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
-
-import fi.graphtoolgwt.client.GraphToolGWT;
 import fi.wiskopdr.Letter;
 
 
-public class TekstRegel extends LayoutPanel
+public class TekstRegel //extends LayoutPanel
 {
-	private int ashoogte;
+	private static final Double _0_0 = 0.0;
+  private int ashoogte;
 	private int tekstAshoogte;
 	private int tekstHoogte;
 	private int hoogte;
@@ -58,10 +58,12 @@ public class TekstRegel extends LayoutPanel
 	private CssColor fgColor = CssColor.make(0, 0, 0);
 	
 	private Logger logger = Logger.getLogger("TekstRegel");
-	public TekstRegel(TekstVak tekstVak)
+  private int x;
+  private int y;
+	TekstRegel(TekstVak tekstVak)
 	{
 		super();
-		setStylePrimaryName("tekstregel");
+		//setStylePrimaryName("tekstregel");
 		this.tekstVak = tekstVak;
 		regelObjects = new ArrayList<Object>();
 	}
@@ -106,7 +108,7 @@ public class TekstRegel extends LayoutPanel
 	public void setHeight(int hoogte)
 	{
 		this.hoogte = hoogte;
-		this.setHeight(hoogte + "px");
+		//this.setHeight(hoogte + "px");
 	}
 	
 	public void addObject(Object object)
@@ -175,7 +177,11 @@ public class TekstRegel extends LayoutPanel
 		ctx.setFont(fontString);
 	}
 	
-	public void setFontStyle(int font_style)
+  @Deprecated Element getElement() {
+      return tekstVak.getElement();
+  }
+
+  public void setFontStyle(int font_style)
 	{
 		this.font_style = font_style;
 		this.getElement().getStyle().setFontStyle(font_style == 2 || font_style == 3 ? FontStyle.ITALIC : FontStyle.NORMAL);
@@ -333,13 +339,43 @@ public class TekstRegel extends LayoutPanel
 		//breedte = horPositie;
 	}
 	
-	public void clear()
+	
+	private void setWidgetTopHeight(Widget w, double top, Unit topUnit, double height,
+      Unit heightUnit) {
+	  tops.put(w, top);
+	  heights.put(w, height);
+      tekstVak.setWidgetTopHeight(w, top+y, topUnit, height, heightUnit);
+    
+  }
+
+  private void setWidgetLeftWidth(Widget w, double left, Unit leftUnit, double width, Unit widthUnit) {
+    lefts.put(w, left);
+    widths.put(w, width);
+    tekstVak.setWidgetLeftWidth(w, left+x, leftUnit, width, widthUnit);
+  }
+
+
+  ArrayList<Widget> children = new ArrayList<>();
+	private void add(Widget w) {
+      if(w.getParent() != tekstVak) 
+        tekstVak.add(w);
+      children.add(w);
+    
+  }
+
+  public void clear()
 	{
-		super.clear();
-		regelObjects = new ArrayList<Object>();
+		clearWidgets();
+		clearRegel();
 	}
 	
-	public void resize()
+  private void clearWidgets() {
+      for(Widget w: children) tekstVak.remove(w);
+      children.clear();
+      tops.clear(); lefts.clear(); heights.clear(); widths.clear();
+  }
+
+  public void resize()
 	{
 		bepaalAshoogte();
 		
@@ -412,7 +448,15 @@ public class TekstRegel extends LayoutPanel
 	
 	
 	
-	public void bepaalAshoogte()
+  private Widget getWidget(int i) {
+    return children.get(i);
+  }
+
+  private int getWidgetCount() {
+    return children.size();
+  }
+
+  public void bepaalAshoogte()
 	{
 		int h1 = 0;
 		int h2 = 0;
@@ -469,5 +513,77 @@ public class TekstRegel extends LayoutPanel
 		this.getElement().getStyle().setColor(color.toString());
 		
 	}
-	
+
+  public void clearRegel() {
+    for(Widget w: children) {
+      if ( w instanceof SVGImage ) // SVGTekstComponent
+        remove(w);
+     }
+    children.clear();
+    regelObjects = new ArrayList<Object>();    
+  }
+
+  private void remove(Widget w) {
+    w.removeFromParent();
+    children.remove(w);
+    tops.remove(w); lefts.remove(w); heights.remove(w); widths.remove(w);
+    
+  }
+
+  public void setWidth(double w, Unit px) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  public void setHeight(double h, Unit px) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  public Widget getParent() {
+    return tekstVak;
+  }
+
+  public void setX(int x) {
+    this.x = x;
+    for(Widget w: children) {
+      Unit widthUnit = Unit.PX;
+      double left = getLeft(w);
+      Unit leftUnit = Unit.PX;
+      double width = getWidth(w);
+      tekstVak.setWidgetLeftWidth(w, x+left, leftUnit, width, widthUnit);
+    }
+  }
+  public void setY(int y) {
+    this.y = y;
+    for(Widget w: children) {
+      Unit heightUnit = Unit.PX;
+      double top = getTop(w);
+      Unit topUnit = Unit.PX;
+      double height = getHeight(w);
+      tekstVak.setWidgetTopHeight(w, y+top, topUnit, height, heightUnit);
+    }
+  }
+
+  
+  Map<Widget, Double> widths = new HashMap<>();
+  Map<Widget, Double> lefts = new HashMap<>();
+  Map<Widget, Double> tops = new HashMap<>();
+  Map<Widget, Double> heights = new HashMap<>();
+
+  private double getWidth(Widget w) {
+    return widths.getOrDefault(w, _0_0);
+  }
+
+  private double getLeft(Widget w) {
+    return lefts.getOrDefault(w, _0_0);
+  }
+
+  private double getHeight(Widget w) {
+    return heights.getOrDefault(w, _0_0);
+  }
+  private double getTop(Widget w) {
+    return tops.getOrDefault(w, _0_0);
+  }
+  
 }

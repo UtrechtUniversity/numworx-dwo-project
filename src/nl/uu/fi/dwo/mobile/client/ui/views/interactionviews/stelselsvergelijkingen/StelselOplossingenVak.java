@@ -36,6 +36,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVak;
 import fi.wiskopdr.AntwoordStelselVakChecker;
 import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.FormuleParser;
@@ -475,12 +476,12 @@ public class StelselOplossingenVak
 	public TekstRegel findParentRegel()
 	{
 		Widget parent = asWidget();
-		while (parent != null && !(parent instanceof TekstRegel))
+		while (parent != null && !(parent instanceof TekstVak))
 		{
 			parent = parent.getParent();
 		}
 		
-		return (TekstRegel) parent;
+		return ((TekstVak) parent).getRegelVak(0);
 		
 	}
 	

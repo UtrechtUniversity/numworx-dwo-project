@@ -1,42 +1,27 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
-import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
-import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.IFrameView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer.FormuleEditorPopup;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkingen.StelselAntwoordVak;
-import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.PopupFacadeWithFont;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.FontStyle;
-import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.ToggleButton;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 
@@ -213,7 +198,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		this.tekstVakBreedte = tekstVakBreedte;
 		//flowVak.setWidth(tekstVakBreedte + "px");
 		for(int i = 0; i < aantalRegels  + 1; i++)
-			regelVakken[i].setWidth(tekstVakBreedte + "px");
+			regelVakken[i].setWidth(tekstVakBreedte , Unit.PX);
 	}
 	
 	public void setMarges(int bovenMarge, int cellMarge)
@@ -225,7 +210,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		{	//if(hoogte > 0)
 			//	flowVak.setSize(tekstVakBreedte + "px", "" + hoogte + "px");
 			for(int i = 0; i < aantalRegels  + 1; i++)
-				regelVakken[i].setWidth(tekstVakBreedte + "px");
+				regelVakken[i].setWidth(tekstVakBreedte , Unit.PX);
 		}
 		//vPanel.getElement().getStyle().setProperty("margin", "" + (bovenMarge  + 1)  + "px " + cellMarge + "px");
 	}
@@ -243,7 +228,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		if(tekstVakBreedte >= 0 && h >= 0)
 		{	//flowVak.setSize("" + tekstVakBreedte  + "px", "" + h + "px");
 			for(int i = 0; i < aantalRegels  + 1; i++)
-			{	regelVakken[i].setWidth(tekstVakBreedte + "px");
+			{	regelVakken[i].setWidth(tekstVakBreedte , Unit.PX);
 				//TODO gaat dit goed met centreren?
 			}
 		}
@@ -278,6 +263,16 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		super.clear();
 		
 	}
+	public void clearRegels() {
+      for(int i = 0; i < regelVakken.length; i++)
+      {
+          if(regelVakken[i] == null)
+              break;
+          regelVakken[i].clearRegel();
+      }
+	  
+	}
+	
 	
 	public void setObjects(ArrayList<Object> opdrachtObjects)
 	{
@@ -595,8 +590,8 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		aantalRegels++;
 		regelVakken[aantalRegels] = new TekstRegel(this);
 		if(tekstVakBreedte >= 0)
-			regelVakken[aantalRegels].setWidth(tekstVakBreedte + "px");
-		regelVakken[aantalRegels].setHeight(font_size + 4 + "px"); //dit is nog een beetje willekeurig...
+			regelVakken[aantalRegels].setWidth(tekstVakBreedte , Unit.PX);
+		regelVakken[aantalRegels].setHeight(font_size + 4 , Unit.PX); //dit is nog een beetje willekeurig...
 		//regelVakken[aantalRegels].setHeight(font_size + 5);
 		regelVakken[aantalRegels].setFontStyle(font_style);
 		regelVakken[aantalRegels].setFontName(font_name);
@@ -745,7 +740,23 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	}
 	
 	
-	/*
+	private void add(TekstRegel tekstRegel) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  private void setWidgetTopHeight(TekstRegel tekstRegel, int top, Unit px, int height, Unit px2) {
+    tekstRegel.setHeight(height, px2);
+    tekstRegel.setY(top); 
+  }
+
+  private void setWidgetLeftWidth(TekstRegel tekstRegel, int left, Unit px, int width,
+      Unit px2) {
+    tekstRegel.setWidth(width, px2);
+    tekstRegel.setX(left);
+  }
+
+  /*
 	 * Verplaats focus naar eerstvolgende antwoordvak (FormuleEditorWithAnswer of AntwoordTekstVak)
 	 * Geeft true als de focus is verplaatst naar een antwoordvak in dit tekstvak en false anders.
 	 * Source is de zender van het tabcommando, up is true als de source zich binnen dit tekstvak bevindt en false anders. 
@@ -1112,9 +1123,9 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	{
 		this.knopBreedte = knopBreedte;
 		tekstVakBreedte = this.breedte - 2 * cellMarge - knopBreedte;
-		for(int i = 0; i < this.getWidgetCount(); i++)
+		for(int i = 0; i < aantalRegels; i++)
 		{
-			Widget w = this.getWidget(i);
+			TekstRegel w = getRegelVak(i);
 			if(w instanceof TekstRegel)
 			{
 				int horPositie = cellMarge + knopBreedte;
@@ -1258,6 +1269,12 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		}
 		return uitklapbaar;
 	}
+
+  public void reLayout() {
+    clearRegels();
+    setObjects(getOpdrachtObjects()); 
+    resize();
+  }
 	
 	/*
 	@Override

@@ -930,14 +930,14 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	@Override
 	public void tab() {
 		Widget parent = asWidget();
-		while (parent != null && !(parent instanceof TekstRegel))
+		while (parent != null && !(parent instanceof TekstVak))
 		{
 			parent = parent.getParent();
 		}
 		
-		if(parent != null && parent instanceof TekstRegel)
+		if(parent != null && parent instanceof TekstVak)
 		{
-			((TekstRegel) parent).getTekstVak().tabFocus(this, true);
+			((TekstVak) parent).tabFocus(this, true);
 		}
 	}
 
@@ -945,14 +945,14 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	public void shiftTab()
 	{
 		Widget parent = asWidget();
-		while (parent != null && !(parent instanceof TekstRegel))
+		while (parent != null && !(parent instanceof TekstVak))
 		{
 			parent = parent.getParent();
 		}
 		
-		if (parent != null && parent instanceof TekstRegel)
+		if (parent != null && parent instanceof TekstVak)
 		{
-			((TekstRegel) parent).getTekstVak().shiftTabFocus(this, true);
+			((TekstVak) parent).shiftTabFocus(this, true);
 		}
 	}
 

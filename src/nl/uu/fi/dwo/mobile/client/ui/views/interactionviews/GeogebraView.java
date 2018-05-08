@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
@@ -41,7 +42,7 @@ import fi.wiskopdr.text.Text;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class GeogebraView implements InteractionView, LoadHandler, CBookEventListener
+public class GeogebraView implements InteractionView, LoadHandler, CBookEventListener, AttachEvent.Handler
 {
 	public static Logger LOG = Logger.getLogger("GeogebraView");
 	public static final String ACTION_CORRECT = "action.correct";
@@ -226,7 +227,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		frame = new Frame(DWOplayer.PARAMETERS.getStubView() + "GeoGebra.html?locale=" + StubView.getLocale());
 		frame.setStylePrimaryName("StubView");
 		frame.addStyleDependentName("borderless");
-		
+		frame.addAttachHandler(this);
 		if (bigdata)
 			filename = ggbMap.getString("fileUrl");
 		
@@ -842,13 +843,14 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	}
 	
 	public void zetVolledigeBreedte(int breedte)
-	{
+	{   int oldwidth = width;
 		if(volledigeBreedte)
 		{
 			width = breedte;
 			//initFrame();
 		}
-		initFrame();
+		if(width != oldwidth || frame.getParent() == null) // Do not init if same width.
+		  initFrame();
 	}
 
 	@Override
@@ -900,4 +902,9 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 			kijkNaPanel.setStyleName(css.fout(), kruisRood);
 		}
 	}
+
+  @Override
+  public void onAttachOrDetach(AttachEvent event) {
+    LOG.severe("AttachEvent " + event.isAttached());
+  }
 }
