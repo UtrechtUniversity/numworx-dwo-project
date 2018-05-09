@@ -11,6 +11,7 @@ import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.exceptions.ScoException;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.DbAccessLogin;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.AppletConfig;
@@ -31,6 +32,9 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.UserResultList;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.persistence.cache.ReadOnly;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import java.io.ByteArrayOutputStream;
@@ -2691,7 +2695,7 @@ public class PersistenceFacade {
 //        }
 //    }
 
-    public void setCourseSequence(CourseMap[] courses, School school) throws PersistenceException {
+    public void setCourseSequence(CourseMap[] courses, School school, CourseManager courseManager) throws PersistenceException {
         if (courses.length == 0) {
             return;
         }
@@ -2700,6 +2704,19 @@ public class PersistenceFacade {
             Course course = (Course) courses[i];
 			vector.add(new Integer(course.getID()));
 			course.sequencenr = i; // install sequencenr
+
+			DomCourseFull edit = new DomCourseFull();
+			edit.setDwoProfileId(DWO.getDwoProfile().getId());
+			edit.setSequenceNr(Long.valueOf(i));
+			edit.setId(PersistentCourse.buildPersistenceId(Long.valueOf(course.getID())));
+			edit.setNotVisible(course.isNotVisible()); // not nullable! FIXME
+            try {
+              courseManager.update(edit);
+            } catch (Dwo2Exception e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+        
         }
         int schoolID = 0;
         int classID = 0;
@@ -2715,31 +2732,6 @@ public class PersistenceFacade {
                 }
                 catch (Exception e) {
                 }
-//<<<<<<< .working
-//=======
-//                sco.setScoID(result);
-//                sco.setAppletID(appletConfig.getAppletID());
-//                sco.setName(name);
-//                sco.setDescription(description);
-//                sco.setSequencenr(max);
-//                sco.setCourse(course);
-//                sco.setLaunchdata((Hashtable)new StringCodeObject((String) appletConfig.getLaunchdata()).toObject());
-//                sco.setCourseChanged(false);
-//                MapperCreator.instance(Sco.class).put(result, sco);
-//                return sco;
-//            } catch (IOException e) {
-//                throw new ScoException(ScoException.EX_IO);
-//            } catch (XmlRpcException e) {
-//                if (e.code != 0) {
-//                    throw (ScoException) getException(e, e.code);
-//                } else {
-//                    throw new ScoException(ScoException.EX_XML_RPC, e);
-//                }
-//            } catch (SQLException e) {
-//                throw new ScoException(ScoException.EX_DB);
-//            } catch (DwoXmlRpcException e) {
-//                throw (ScoException) getException(e, e.code);
-//>>>>>>> .merge-right.r12522
             }
 
         }
@@ -2749,22 +2741,22 @@ public class PersistenceFacade {
         }
 //        MapperIF instance = MapperCreator.instance(CourseSequence.class);
 //        instance.removeAllObjects();
-        try {
-            access.setCourseSequence(vector, schoolID, classID, parent, profileID);
-        }
-        catch (Exception e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-
-    }
-
-    @Deprecated
-    public Course[] sequence(Course[] courses) {
-//        if (!DWO.SEQUENCE || true) { // NO SORTING HERE 
-            return courses;
+//        try {
+//            access.setCourseSequence(vector, schoolID, classID, parent, profileID);
 //        }
-//        return sequence(courses, DwoHelper.getCurrentFacadeUser());
+//        catch (Exception e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+
     }
+
+//    @Deprecated
+//    public Course[] sequence(Course[] courses) {
+////        if (!DWO.SEQUENCE || true) { // NO SORTING HERE 
+//            return courses;
+////        }
+////        return sequence(courses, DwoHelper.getCurrentFacadeUser());
+//    }
 
 //    @Deprecated
 //    private Course[] sequence(Course[] courses, User currentUser) {
@@ -2914,7 +2906,7 @@ public class PersistenceFacade {
      */
     private void undoCachingEffect(Course[] courses) {
         MapperIF mapper = MapperCreator.instance(Course.class);
-        sequence(courses);
+//        sequence(courses);
         for (int i = 0; i < courses.length; i++) {
             Course c = courses[i];
             if (c.isWithChildren()) {

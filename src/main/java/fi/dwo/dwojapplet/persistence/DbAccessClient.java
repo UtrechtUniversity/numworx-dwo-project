@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Vector;
-import java.util.logging.Level;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 class DbAccessClient extends Client implements DbAccessIF {
@@ -788,17 +787,17 @@ class DbAccessClient extends Client implements DbAccessIF {
 //        return ((Boolean) object).booleanValue();
 //    }
 
-    @Override
-    public boolean setCourseSequence(java.util.Vector a, int b, int c, int d, int e) throws IOException, XmlRpcException {
-        Vector vv = new Vector(5);
-        vv.addElement(a);
-        vv.addElement(new Integer(b));
-        vv.addElement(new Integer(c));
-        vv.addElement(new Integer(d));
-        vv.addElement(new Integer(e));
-        Object object = invoke("setCourseSequence", vv);
-        return ((Boolean) object).booleanValue();
-    }
+//    @Override
+//    public boolean setCourseSequence(java.util.Vector a, int b, int c, int d, int e) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(5);
+//        vv.addElement(a);
+//        vv.addElement(new Integer(b));
+//        vv.addElement(new Integer(c));
+//        vv.addElement(new Integer(d));
+//        vv.addElement(new Integer(e));
+//        Object object = invoke("setCourseSequence", vv);
+//        return ((Boolean) object).booleanValue();
+//    }
 
 //    @Override
 //    public boolean moveSco(int a, int b, int c, java.lang.String d) throws IOException, XmlRpcException {

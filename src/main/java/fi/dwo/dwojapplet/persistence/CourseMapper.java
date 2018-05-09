@@ -83,7 +83,7 @@ class CourseMapper extends XmlRpcMapper {
         public CourseMap[] getChildren() {
             if (!loaded) {
                 try {
-                    setChildren(PersistenceFacade.instance().sequence((Course[]) get(this)));
+                    setChildren(((Course[]) get(this)));
                 } catch (Exception e) {
     
                     LOG.log(Level.SEVERE,null,e);
@@ -360,7 +360,7 @@ class CourseMapper extends XmlRpcMapper {
                 c.setChildren(Course.NO_CHILDREN);
             } else {
                 try {
-                    c.setChildren(PersistenceFacade.instance().sequence((Course[]) get(c))); // Not Lazy, .... jammer dan.
+                    c.setChildren(((Course[]) get(c))); // Not Lazy, .... jammer dan.
                 } catch (Exception e) {
                     c.setChildren(Course.NO_CHILDREN);
                 }

@@ -11,6 +11,7 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
 import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
@@ -1046,5 +1047,21 @@ public class GuiCreator {
     }
     public CourseManager getCourseManager() {
       return null;
+    }
+
+  public void setCourseSequence(Object parent, CourseMap[] c) {
+    try {
+
+      School school = DwoHelper.getCurrentFacadeUser().getSchool();
+      // een profile admin mag de standaard modules sorteren, maar de school is dan wel null
+      if (parent == ModuleTreePanel.STANDAARD_DWO_MAP|| ModuleTreePanel.STANDAARD_DWO_MODULES == parent) school = null;
+      if (parent instanceof Course) {
+        if (((Course) parent).getSchoolID() == 0) school = null;
+      }
+      PersistenceFacade.instance().setCourseSequence(c, school,getCourseManager());
+    } catch (PersistenceException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
     }
 }

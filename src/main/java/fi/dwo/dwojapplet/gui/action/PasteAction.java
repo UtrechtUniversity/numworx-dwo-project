@@ -153,11 +153,7 @@ public class PasteAction extends GuiAction
 				copyCourseMap(c, (Course)children[i]);
 			}
 // save ordering 
-			if(DWO.SEQUENCE)
-			try {
-				PersistenceFacade.instance().setCourseSequence(c.getChildren(), DwoHelper.getCurrentFacadeUser().getSchool());
-			} catch (PersistenceException e) {
-			}
+			if(DWO.SEQUENCE) instance().setCourseSequence(c, c.getChildren());
 			
 		}
 		

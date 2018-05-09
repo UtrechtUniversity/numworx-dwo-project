@@ -887,7 +887,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
             courseList = PersistenceFacade.instance().getCoursesJS(DwoHelper.getCurrentFacadeUser()); // was getCourses
             if(true)
             	return selectDwoProfileCourses(courseList); // Sorted by server
-            return PersistenceFacade.instance().sequence(selectDwoProfileCourses(courseList));
+            return (selectDwoProfileCourses(courseList));
         } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
@@ -906,7 +906,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         if (!SEQUENCE) {
             return courses;
         }
-        return PersistenceFacade.instance().sequence(courses);
+        return (courses);
     }
 
 //    /**
@@ -1961,7 +1961,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     public Course[] getEditableCourses() {
         try {
             courseList = PersistenceFacade.instance().getEditableCourses(DwoHelper.getCurrentFacadeUser());
-            return PersistenceFacade.instance().sequence(selectDwoProfileCourses(courseList));
+            return (selectDwoProfileCourses(courseList));
         } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;

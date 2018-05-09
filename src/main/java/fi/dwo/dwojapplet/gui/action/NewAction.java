@@ -141,24 +141,20 @@ public class NewAction extends GuiAction {
 // DIT IS EEN KOPIE VAN CourseManagementPanel TODO in deze vorm verplaatsen naar de Domain layer = DWO
 
     private void sequenceCourses(CourseMap map) {
-        try {
-            Object userObject = map.getUserObject();
-            CourseMap[] courses = map.getChildren();
+        Object userObject = map.getUserObject();
+        CourseMap[] courses = map.getChildren();
 
-            School school = DwoHelper.getCurrentFacadeUser().getSchool();
+        School school = DwoHelper.getCurrentFacadeUser().getSchool();
 // een profile admin mag de standaard modules sorteren, maar de school is dan wel null				
-            if (userObject == ModuleTreePanel.STANDAARD_DWO_MAP || ModuleTreePanel.STANDAARD_DWO_MODULES == userObject) {
+        if (userObject == ModuleTreePanel.STANDAARD_DWO_MAP || ModuleTreePanel.STANDAARD_DWO_MODULES == userObject) {
+            school = null;
+        }
+        if (userObject instanceof Course) {
+            if (((Course) userObject).getSchoolID() == 0) {
                 school = null;
             }
-            if (userObject instanceof Course) {
-                if (((Course) userObject).getSchoolID() == 0) {
-                    school = null;
-                }
-            }
-            PersistenceFacade.instance().setCourseSequence(courses, school);
-        } catch (PersistenceException e) {
-            LOG.log(Level.SEVERE,null,e);
         }
+        instance().setCourseSequence(userObject, courses);
 
     }
 

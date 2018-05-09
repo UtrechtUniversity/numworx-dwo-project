@@ -739,22 +739,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         if(updown && DWO.SEQUENCE)
         {    	
         	updown = false;
-        	try {
-        		
-				School school = DwoHelper.getCurrentFacadeUser().getSchool();
-// een profile admin mag de standaard modules sorteren, maar de school is dan wel null				
-				if(userObject== ModuleTreePanel.STANDAARD_DWO_MAP)
-					school = null;
-				if(userObject instanceof Course)
-				{
-					if( ((Course) userObject).getSchoolID() == 0)
-						school = null;
-				}
-				PersistenceFacade.instance().setCourseSequence(courses, school);
-			} catch (PersistenceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        	GuiCreator.instance().setCourseSequence(userObject, courses);
         } 
         else if(userObject instanceof Course)
         {	Course course = (Course) userObject;
@@ -771,6 +756,9 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         		update = false;
         	}
         }
+    }
+
+    private void setCourseSequence(Object parent, CourseMap[] c) {
     }
 
 
