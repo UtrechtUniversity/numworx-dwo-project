@@ -52,5 +52,9 @@ public Vector getTable(String tableName) throws IOException,
 XmlRpcException, SQLException;
 public Vector getTable(String tableName, Hashtable wheredef) throws IOException,
 XmlRpcException, SQLException;
+//-------------------------------------
+public boolean setCourseSequence(Vector vector, int schoolID, int classID,
+                                 int parent, int profileID)
+                                 throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
 }

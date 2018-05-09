@@ -520,7 +520,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     public boolean setCourseSequence(Vector vector, int schoolID, int classID,
             int parent, int profileID) throws DwoXmlRpcException, IOException,
             XmlRpcException, SQLException {
-        return getDelegate().setCourseSequence(vector, schoolID, classID, parent, profileID);
+        return getDelegateObsolete().setCourseSequence(vector, schoolID, classID, parent, profileID);
     }
 
     @Override

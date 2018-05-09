@@ -55,8 +55,11 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
     @PUT
     @Path("update")
     @Produces({"application/json"})
-    public DomCourseFull update(@Context SecurityContext sc, RestCourseFull rest) {
-		DomCourseFull course = rest.getDomCourse();
+    public DomCourseFull update(@Context SecurityContext sc, RestCourseFull rest) throws Dwo2Exception {
+      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+          .setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher();
+      
+      DomCourseFull course = rest.getDomCourse();
     	try {
 // Security...
 			Long courseID = MySQLPersistenceId.getNativeId(course);
@@ -119,8 +122,12 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
     @PUT
     @Path("add")
     @Produces({"application/json"})
-    public DomCourseFull add(@Context SecurityContext sc, RestCourseFull rest) {
-		DomCourseFull course = rest.getDomCourse();
+    public DomCourseFull add(@Context SecurityContext sc, RestCourseFull rest) throws Dwo2Exception {
+      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+          .setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher();
+
+      
+      DomCourseFull course = rest.getDomCourse();
     	try {
 // Security...
 			PersistentCourse pc = new PersistentCourse();
