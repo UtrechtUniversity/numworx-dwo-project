@@ -618,9 +618,9 @@ public interface DbAccessIF  {
 //            boolean export, int schoolID, int parentID)
 //            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-    public boolean setCourseSequence(Vector vector, int schoolID, int classID,
-            int parent, int profileID)
-            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+//    public boolean setCourseSequence(Vector vector, int schoolID, int classID,
+//            int parent, int profileID)
+//            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
 //    public boolean moveSco(int scoId, int courseId, int sequencenr, String name)
 //            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
