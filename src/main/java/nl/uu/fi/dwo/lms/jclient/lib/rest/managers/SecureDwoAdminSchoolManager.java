@@ -27,7 +27,7 @@ public class SecureDwoAdminSchoolManager {
     public static List<DomSchool4DwoAdmin> getSchoolList() throws Dwo2Exception {
         List<DomSchool4DwoAdmin> src;
         src = StoredRestManager.getInstance().getList("rest/secure/dwoadmin/school/getList", RestListClassTypes.DomSchool4DwoAdmin);
-        LOG.log(Level.FINE, "Retrieved list of schoolsfor the dwoadmin with username {0}.", new Object[]{RestAuthenticator.getInstance().getUsername()});
+        LOG.log(Level.FINE, "Retrieved list of schools for the dwoadmin with username {0}.", new Object[]{RestAuthenticator.getInstance().getUsername()});
         return src;
     }
 
@@ -36,7 +36,7 @@ public class SecureDwoAdminSchoolManager {
     	rest.setRestContext(RestAuthenticator.getInstance().getContext());
         rest.setDomSchool4DwoAdmin(submit);
         DomSchoolFull result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/school/get", DomSchoolFull.class, rest);
-        LOG.log(Level.FINE, "Retrieved full school with login {1} for dwoadmin with usrename {0}.", new Object[]{RestAuthenticator.getInstance().getUsername(), rest.getDomSchool4DwoAdmin().getId()});
+        LOG.log(Level.FINE, "Retrieved full school with login {1} for dwoadmin with userename {0}.", new Object[]{RestAuthenticator.getInstance().getUsername(), rest.getDomSchool4DwoAdmin().getId()});
         return result;
     }
 
