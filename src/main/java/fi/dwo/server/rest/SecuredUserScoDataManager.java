@@ -68,7 +68,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 @Path("/secure/user/scoData")
 public class SecuredUserScoDataManager {
     private static final Logger LOG = Logger.getLogger(SecuredUserScoDataManager.class.getName());
-	private static final String COMPLETE = "complete";
+	private static final String COMPLETE = "completed";
 
     @PUT
     @Produces({"application/json"})    
