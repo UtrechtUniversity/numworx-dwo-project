@@ -12,7 +12,6 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -31,7 +30,6 @@ import fi.dwo.gwt.lib.rest.ui.DialogEventHandler;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogView;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
-import nl.uu.fi.dwo.account.client.Account.AccountBundle;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
@@ -49,13 +47,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
  */
 public class Account implements EntryPoint, ClickHandler {
 
-    interface AccountBundle extends ClientBundle {
-    	@Source("dwostyle.css")
-    	DwoStyle style();
-
-	}
-
-	private static final Logger LOG = Logger.getLogger(Account.class.getName());
+    private static final Logger LOG = Logger.getLogger(Account.class.getName());
 
     EventBus bus = new SimpleEventBus();
     
