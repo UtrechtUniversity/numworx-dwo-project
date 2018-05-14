@@ -27,6 +27,8 @@ import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -37,6 +39,7 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentScoDataManager;
 import fi.dwo.gwt.lib.rest.CallManagers.StudentScoDataManager;
+import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import fi.wiskopdr.text.Text;
 
 public class SCORM_DWO4 extends SCORM_guest {
@@ -173,6 +176,18 @@ log("setScoID " + scoID);
 					return;
 				}
 			} else {
+				if(caught instanceof Dwo2Exception ) {
+					Dwo2Exception de = (Dwo2Exception) caught;
+					Dwo2ExceptionCode code = de.getDwo2Code();
+					String message = de.getDwo2Message();
+					if("readonly".equals(message) && code == Dwo2ExceptionCode.User_IllegalAction) 
+					{
+						setStatus(Status.NORMAL);
+						DWOplayer.clientfactory.getEventBus().fireEvent(new DialogEvent(de));
+						deferred.fail(caught);
+						return;
+					}
+				}
 				log("Failed exception: " + caught);
 				if (!Window.confirm(caught.getMessage() + "\n" + Text.constants.opnieuwKnopLabel() +"?"))
 				{

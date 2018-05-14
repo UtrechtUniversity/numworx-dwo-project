@@ -16,19 +16,22 @@ import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.googlecode.mgwt.ui.client.MGWT;
 
+import fi.dwo.gwt.lib.rest.css.DwoStyle;
+import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
+import fi.dwo.gwt.lib.rest.ui.MsgDialogView;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
+import nl.uu.fi.dwo.account.client.AccountBundle;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.account.client.UserBar;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
-import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO3;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO4;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
@@ -37,7 +40,6 @@ import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
-import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.Login2ViewImpl;
@@ -79,15 +81,6 @@ public class DWO2player extends DWOplayer implements EntryPoint {
         //Initialize an Exception translator.
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
         
-        getUserBar().setResetLogin(new Command() {
-        	Place place = new ReloginPlace(); // FIXME met een hash?
-        	
-			@Override
-			public void execute() {
-				clientfactory.getPlaceController().goTo(place);
-			}
-        	
-        });
         
         
 	}
@@ -98,12 +91,24 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		super.setupDWOPlayer();
 		if( MGWT.getOsDetection().isAndroid() )
 			getUserBar().getElement().getStyle().setColor("white");
+        getUserBar().setResetLogin(new Command() {
+        	Place place = new ReloginPlace(); // FIXME met een hash?
+        	
+			@Override
+			public void execute() {
+				clientfactory.getPlaceController().goTo(place);
+			}
+        	
+        });
+
 	}
 
 
-	private UserBar userBar = new UserBar();
+	private UserBar userBar;
 
 	protected UserBar getUserBar() {
+		if (userBar == null) 
+			userBar = new UserBar(clientfactory.getEventBus());
 		return userBar;
 	}
 
@@ -232,6 +237,14 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		String host = PARAMETERS.getHost();
 		String http = Window.Location.getProtocol();
 		factory.setRPCHandler(new DWO2RPCHandler(http + "//" + host + "/dwo/xmlrpc", PROFILE_ID));
+ 
+// 		
+		MsgDialogPresenter mdp = new MsgDialogPresenter(factory.getEventBus());
+        DwoStyle style = GWT.<AccountBundle>create(AccountBundle.class).style();
+        style.ensureInjected();
+        MsgDialogView mdv = new MsgDialogView(mdp, style);
+        
+		
 		return factory;
 	}
 

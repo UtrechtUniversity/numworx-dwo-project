@@ -49,7 +49,8 @@ import com.googlecode.mgwt.ui.client.OsDetection;
  */
 public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 {
-	
+	private final EventBus eventBus = new SimpleEventBus();
+
 	final static Provider<ViewModuleView> NORMAL = new Provider<ViewModuleView>() {
 
 		@Override
@@ -87,7 +88,7 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	// singleton pattern.
 	final Provider<HeaderView> headerView = new Provider<HeaderView>() {
 
-		HeaderViewNumworx impl = new HeaderViewNumworx();
+		HeaderViewNumworx impl = new HeaderViewNumworx(getEventBus());
 		{
 			impl.setPresenter(ClientFactoryImpl.this);
 		}
@@ -114,7 +115,6 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	}
 	
 	
-	private final EventBus eventBus = new SimpleEventBus();
 	private final PlaceController placeController = new PlaceController(eventBus);
 	private Provider<ViewModuleView> entryView = NORMAL;
 	private SelectModuleView selectModuleView;

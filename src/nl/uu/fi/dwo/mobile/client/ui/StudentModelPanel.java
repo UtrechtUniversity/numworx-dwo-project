@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 
 import javax.inject.Provider;
 
+import org.osgi.util.promise.Failure;
+
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.ui.Button;
@@ -21,7 +23,9 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
+import nl.uu.fi.dwo.account.client.DialogFailure;
 import nl.uu.fi.dwo.account.client.StudentModelView;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
@@ -35,7 +39,7 @@ public class StudentModelPanel extends nl.uu.fi.dwo.account.client.StudentModelP
 
 		@Override
 		public StudentModelView get() {
-			return new StudentModelPanel();
+			return new StudentModelPanel(new DialogFailure(DWOplayer.clientfactory.getEventBus()));
 		}
 		
 	}
@@ -61,7 +65,8 @@ public class StudentModelPanel extends nl.uu.fi.dwo.account.client.StudentModelP
 		selectBox.addChangeHandler(this);
 	}
 
-	StudentModelPanel() {
+	StudentModelPanel(Failure failure) {
+		super(failure);
 	}
 
 	@Override

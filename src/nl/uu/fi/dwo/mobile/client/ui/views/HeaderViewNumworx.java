@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.account.client.ProfileCommand;
@@ -74,6 +75,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	@UiField TreeModuleViewNumworxCss style;
 
 	MenuBar items = new MenuBar(true);
+	final private EventBus bus;
 
 
 	/**
@@ -87,7 +89,8 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	 * Note that depending on the widget that is used, it may be necessary to
 	 * implement HasHTML instead of HasText.
 	 */
-	public HeaderViewNumworx() {
+	public HeaderViewNumworx(EventBus bus) {
+		this.bus = bus;
         final int correctie = 10; // width popup 
 		user = new MenuItem("<i class='fa fa-caret-down fa-2x'></i>", true, items) {
             @Override
@@ -212,20 +215,19 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 		boolean withUser = currentUser != null;
 		String login = withUser? currentUser.getDisplayName() : null;
 		setText(login);
-		
 		items.clearItems();
 		MenuItem m;
 		if(withUser) {
-			m=items.addItem(DwoLocalesForGWT.instance.GUI_MyProfile(), new ProfileCommand());
+			m=items.addItem(DwoLocalesForGWT.instance.GUI_MyProfile(), new ProfileCommand(bus));
 			m.addStyleName(style.menuItem());
 			if(role == RoleType.STUDENT) {
-				ScheduledCommand cmd = new SchoolClassStudentCommand(this);
+				ScheduledCommand cmd = new SchoolClassStudentCommand(this, bus);
 				m=items.addItem(DwoLocalesForGWT.instance.GUI_MySchoolClasses(), cmd);
 				m.addStyleName(style.menuItem());
 
 				boolean experimenteel = true;//"test".equals(DWOplayer.PARAMETERS.getDwoEnv());
 				if(experimenteel) {
-					m=items.addItem("Studentmodel", new StudentModelCommand(StudentModelPanel.BUILDER));
+					m=items.addItem("Studentmodel", new StudentModelCommand(StudentModelPanel.BUILDER, bus));
 					m.addStyleName(style.menuItem());
 				}
 			}
@@ -233,7 +235,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 			if(!single)
 			{
 				Command cmd = null;
-				cmd = new nl.uu.fi.dwo.account.client.SchoolLoginCommand(this);			
+				cmd = new nl.uu.fi.dwo.account.client.SchoolLoginCommand(this, bus);			
 				m=items.addItem(DwoLocalesForGWT.instance.GUI_MySchoolLogins(), cmd);
 				m.addStyleName(style.menuItem());
 			}
