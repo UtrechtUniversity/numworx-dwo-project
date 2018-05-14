@@ -3,10 +3,21 @@ package fi.dwo.dwojapplet.persistence.cache;
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredStudentScoDataManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.StudentScoDataManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomScormValues;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.xmlrpc.applet.XmlRpcException;
@@ -14,6 +25,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 public class NoCache implements IStore {
     private static final Logger LOG = Logger.getLogger(NoCache.class.getName());
 
+    
     NoCache(DbAccessIF dbAccess) {
         this.dbAccess = dbAccess;
     }
@@ -24,13 +36,29 @@ public class NoCache implements IStore {
     public String getValue(int uid, int scoid, int sgid, String key) throws PersistenceException {
         String result = null;
         try {
+          PersistenceId schoolGroupId = PersistentSchoolGroup.buildPersistenceId(Long.valueOf(sgid));
+          if (uid == DwoHelper.getCurrentFacadeUser().getUserID() && schoolGroupId .equals( DwoHelper.getCurrentFacadeUser().getSchoolGroupID())) {
+            // SELF 
+            DomScormValues dom = new DomScormValues();
+            DomScoContext scoContext  = new DomScoContext();
+            scoContext.setId(PersistentScoContext.buildPersistenceId(Long.valueOf(scoid)));
+            dom.setScoContext(scoContext);
+            setSchoolClass(dom);
+            DomMapEntry<String,String> o = new DomMapEntry<>(key, "");
+            dom.setValues(Collections.singletonList(o ));
+            result = SecuredStudentScoDataManager.get(dom).getValues().get(0).getValue();
+          } else {
+            // Student Of Teacher
             result = dbAccess.LMSGetValue(scoid, uid, sgid, key);
+          }
         } catch (IOException e) {
             throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (XmlRpcException e) {
             throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         } catch (SQLException e) {
             throw new PersistenceException(PersistenceException.EX_DB, e);
+        } catch (Dwo2Exception e) {
+          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         }
         return result;
     }
@@ -40,10 +68,24 @@ public class NoCache implements IStore {
         String random = Long.toHexString(Double.doubleToRawLongBits(Math.random()));
         String result;
         try {
+          PersistenceId schoolGroupId = PersistentSchoolGroup.buildPersistenceId(Long.valueOf(sgid));
+          if (uid == DwoHelper.getCurrentFacadeUser().getUserID() && schoolGroupId .equals( DwoHelper.getCurrentFacadeUser().getSchoolGroupID())) {
+            // SELF 
+            DomScormValues dom = new DomScormValues();
+            DomScoContext scoContext  = new DomScoContext();
+            scoContext.setId(PersistentScoContext.buildPersistenceId(Long.valueOf(scoid)));
+            dom.setScoContext(scoContext);
+            setSchoolClass(dom);
+            DomMapEntry<String,String> o = new DomMapEntry<>(key, value);
+            dom.setValues(Collections.singletonList(o ));
+            return String.valueOf( SecuredStudentScoDataManager.set(dom) );
+          } else {
+            // Student Of Teacher
             result = dbAccess.LMSSetValue(scoid, uid, sgid, key, value, random);
             if (result.equals(random)) {
                 return "true"; // all's well
             }
+          }
         } catch (IOException e) {
             //log(e.getMessage());
             throw new PersistenceException(PersistenceException.EX_IO, e);
@@ -53,10 +95,21 @@ public class NoCache implements IStore {
         } catch (SQLException e) {
             log(e.getMessage());
             throw new PersistenceException(PersistenceException.EX_DB, e);
+        } catch (Dwo2Exception e) {
+          log(e.getMessage());
+          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         }
         result = "LMSSetValue " + key + ": " + result + " <> " + random;
         log(result);
         throw new PersistenceException(PersistenceException.EX_DB);
+    }
+
+    private void setSchoolClass(DomScormValues dom) {
+      try {
+        dom.setSchoolClassID(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchoolClass());
+      } catch (Exception e) {
+        dom.setSchoolClassID(null);
+      }
     }
 
     private void log(String result) {
