@@ -6,7 +6,6 @@ import com.google.gwt.core.shared.GWT;
 
 import fi.dwo.gwt.lib.rest.client.RestCallers.CoursesOfSchoolRestCaller;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentCourse2RestCaller;
-import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentCourseRestCaller;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentExamCourseRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -30,7 +29,7 @@ public class SecuredStudentCoursesOfSchoolClassManager implements CoursesOfSchoo
 	public SecuredStudentCoursesOfSchoolClassManager(boolean secure) {
 		service = secure
 				? GWT.<SecuredStudentExamCourseRestCaller>create(SecuredStudentExamCourseRestCaller.class)
-				: GWT.<SecuredStudentCourseRestCaller>create(SecuredStudentCourse2RestCaller.class);			
+				: GWT.<SecuredStudentCourse2RestCaller>create(SecuredStudentCourse2RestCaller.class);			
 	}
 	
 

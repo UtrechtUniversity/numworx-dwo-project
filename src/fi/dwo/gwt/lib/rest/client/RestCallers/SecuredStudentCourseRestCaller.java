@@ -11,7 +11,8 @@ import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 
-public interface SecuredStudentCourseRestCaller extends RestService, CoursesOfSchoolRestCaller {
+@Deprecated
+interface SecuredStudentCourseRestCaller extends RestService, CoursesOfSchoolRestCaller {
     @PUT
     @Path("/secure/student/coursesofschoolclass/get")
     void getCoursesClass(RestSchoolClassAndProfile rest, MethodCallback<DomCoursesOfSchoolClass> callback);

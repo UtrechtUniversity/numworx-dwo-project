@@ -5,7 +5,6 @@ import com.google.gwt.core.client.GWT;
 import fi.dwo.gwt.lib.rest.client.RestCallers.ScoContextRestCaller;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentExamScoContextRestCaller;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserScoContext2RestCaller;
-import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserScoContextRestCaller;
 
 public class SecuredUserScoContextManager extends PublicScoContextManager  {
 

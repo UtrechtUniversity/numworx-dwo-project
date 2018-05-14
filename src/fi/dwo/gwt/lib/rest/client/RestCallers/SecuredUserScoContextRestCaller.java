@@ -12,7 +12,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 
-public interface SecuredUserScoContextRestCaller extends RestService, ScoContextRestCaller {
+@Deprecated
+interface SecuredUserScoContextRestCaller extends RestService, ScoContextRestCaller {
 
 	@PUT
     @Path("/secure/user/scoContext/get")
