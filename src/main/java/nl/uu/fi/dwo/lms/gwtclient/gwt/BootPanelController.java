@@ -199,6 +199,7 @@ class BootPanelController {
                             dwoGlobalVars.clearCurrentUser();
                             // viewFactory.getMainView().hideMenuButton();
                             presenterFactory.getMainPresenter().onSwitchViewEvent(new SwitchViewEvent(SwitchViewEvent.eventValue.LOGIN));
+                            break;
                         default:
                             LOG.log(Level.SEVERE, "Login handling failed in app controller.");
                     }
@@ -217,7 +218,9 @@ class BootPanelController {
             @Override
             public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
                 if (SwitchViewEvent.eventValue != SwitchViewEvent.eventValue.LOGIN
-                        && !dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name())) {
+                        && (dwoGlobalVars.getActiveSchoolRoleAndClass() == null
+                        || dwoGlobalVars.getActiveSchoolRoleAndClass().getRole() == null
+                        || !dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name()))) {
                     LOG.log(Level.INFO, "Showing account view, because not a teacher.");
                     //eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_SwitchTeacher()));
                     presenterFactory.getAccountPresenter().init();

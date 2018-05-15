@@ -149,7 +149,15 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 //
 //        }
 //
-        if (dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())) {
+        if (SwitchViewEvent.eventValue != SwitchViewEvent.eventValue.LOGIN
+                        && (dwoGlobalVars.getActiveSchoolRoleAndClass() == null
+                        || dwoGlobalVars.getActiveSchoolRoleAndClass().getRole() == null
+                        || !dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name()))) {
+                    LOG.log(Level.INFO, "Showing account view, because not a teacher.");
+                    //eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_SwitchTeacher()));
+                    display.showAccountView();
+                } else {
+//        if (dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())) {
             switch (selectedView) {
                 case LOGIN:
                     display.showLoginView();
@@ -200,8 +208,8 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
                 // case SCORESULTS:
                 // display.showScoResultsView();
             }
-        } else {
-            display.showAccountView();
+//        } else {
+//            display.showAccountView();
         }
     }
 
