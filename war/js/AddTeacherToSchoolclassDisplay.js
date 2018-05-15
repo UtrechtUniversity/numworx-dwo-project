@@ -36,13 +36,25 @@ AddTeacherToSchoolclassDisplay.prototype.show = function() {
 AddTeacherToSchoolclassDisplay.prototype.searchTeacher = function() {
 	var addTeacherSearchForm = this.addTeacherSearchForm;
 	
-	var $result = this.$addTeacherTableBody.find("td span").filter(function() {
-		if ($(this).get(0).parentElement.cellIndex == 0) return $(this).text() == addTeacherSearchForm.elements["userName"].value;
-		if ($(this).get(0).parentElement.cellIndex == 1) return $(this).text() == addTeacherSearchForm.elements["givenName"].value;
-		if ($(this).get(0).parentElement.cellIndex == 2) return $(this).text() == addTeacherSearchForm.elements["insertion"].value;
-		if ($(this).get(0).parentElement.cellIndex == 3) return $(this).text() == addTeacherSearchForm.elements["familyName"].value;
-		if ($(this).get(0).parentElement.cellIndex == 4) return $(this).text() == addTeacherSearchForm.elements["email"].value;
-	}).closest("tr");
+	if ( addTeacherSearchForm.elements["userName"].value == "" &&
+		 addTeacherSearchForm.elements["givenName"].value == "" &&
+		 addTeacherSearchForm.elements["insertion"].value == "" &&
+		 addTeacherSearchForm.elements["familyName"].value == "" &&
+		 addTeacherSearchForm.elements["email"].value == "" ) {
+			$result = this.$addTeacherTableBody.find("tr");
+	} else {	
+		var $result = this.$addTeacherTableBody.find("td span").filter(function() {
+			el = $(this).get(0);
+						
+			if (el.parentElement.cellIndex == 0) val = addTeacherSearchForm.elements["userName"].value;
+			if (el.parentElement.cellIndex == 1) val = addTeacherSearchForm.elements["givenName"].value;
+			if (el.parentElement.cellIndex == 2) val = addTeacherSearchForm.elements["insertion"].value;
+			if (el.parentElement.cellIndex == 3) val = addTeacherSearchForm.elements["familyName"].value;
+			if (el.parentElement.cellIndex == 4) val = addTeacherSearchForm.elements["email"].value;
+			
+			return el.innerHTML.toLowerCase() == val.toLowerCase();
+		}).closest("tr");
+	}
 	
 	this.$addTeacherTableBody.find("tr").hide()
 	$result.show();
@@ -59,6 +71,7 @@ AddTeacherToSchoolclassDisplay.prototype.clear = function () {
 
 AddTeacherToSchoolclassDisplay.prototype.init = function () {
 	console.log("init");
+	Helpers.stretchHeight([ this.$addTeacherTableBody ]);
 }
 
 AddTeacherToSchoolclassDisplay.prototype.setSchoolClass = function(schoolclass) {
@@ -116,7 +129,7 @@ AddTeacherToSchoolclassDisplay.prototype.setLoadingTableMessage = function() {
  * Use java callbacks
  */
 AddTeacherToSchoolclassDisplay.prototype.addTeacher = function(id) {
-	app.getPresenterFactory().addTeacherToSchoolclassPresenter.AddTeacherToSchoolClass(id);
+	app.getPresenterFactory().getAddTeacherToSchoolclassPresenter().AddTeacherToSchoolClass(id);
 }
 
 

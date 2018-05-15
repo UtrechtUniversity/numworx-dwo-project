@@ -44,6 +44,8 @@ SchoolclassesDisplay.prototype.init = function () {
 	this.addSchoolclassForm.elements["useClasstree"][1].checked = true;
 	this.addSchoolclassForm.elements["useClasskey"][0].checked = false;
 	this.addSchoolclassForm.elements["useClasskey"][1].checked = true;
+	
+	Helpers.stretchHeight( [ this.$chooseSchoolclassTableBody ]);
 }
 
 SchoolclassesDisplay.prototype.updateView = function(json) {
@@ -55,7 +57,7 @@ SchoolclassesDisplay.prototype.updateView = function(json) {
 	var i = 1;
 	for (var id in schoolclasses) { // TODO: probably change to array
 		el = schoolclasses[id];
-		console.log(el); console.log(id);
+		//console.log(el); console.log(id);
 		$row = this.$chooseSchoolclassRow.clone();
 		$row.prop('tabindex', i);
 		$row.find("#chooseSchoolclassId").val( id ).removeAttr("id");
@@ -85,11 +87,11 @@ SchoolclassesDisplay.prototype.setLoadingTableMessage = function(json) {
  */
 
 SchoolclassesDisplay.prototype.chooseClass = function(id) {
-	app.getPresenterFactory().schoolclassesPresenter.editSchoolClass(id);
+	app.getPresenterFactory().getSchoolclassesPresenter().editSchoolClass(id);
 }
 
 SchoolclassesDisplay.prototype.addClass = function(id) {
-	app.getPresenterFactory().schoolclassesPresenter.AddSchoolClass(this.addSchoolclassForm.elements["classname"].value,
+	app.getPresenterFactory().getSchoolclassesPresenter().AddSchoolClass(this.addSchoolclassForm.elements["classname"].value,
 																	this.addSchoolclassForm.elements["useClasstree"].value == 1 ? true : false,
 																	this.addSchoolclassForm.elements["useClasskey"].value == 1 ? true : false,
 																	this.addSchoolclassForm.elements["classkey"].value);

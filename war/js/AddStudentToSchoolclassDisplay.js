@@ -36,6 +36,7 @@ AddStudentToSchoolclassDisplay.prototype.clear = function () {
 
 AddStudentToSchoolclassDisplay.prototype.init = function () {
 	console.log("init");
+	Helpers.stretchHeight([ this.$addStudentTableBody ]);
 }
 
 AddStudentToSchoolclassDisplay.prototype.setSchoolClass = function(schoolclass) {

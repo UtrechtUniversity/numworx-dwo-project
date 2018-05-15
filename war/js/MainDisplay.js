@@ -39,7 +39,7 @@ function MainDisplay() {
 	this.resultsDisplay = new ResultsDisplay();
 	window.jsResultsDisplay = this.resultsDisplay;
 		
-	
+	// Dialog Displays
 	this.msgDialogDisplay = new MsgDialogDisplay();
 	window.jsMsgDialogDisplay = this.msgDialogDisplay;
 	this.msgDialogWithConfirmDisplay = new MsgDialogWithConfirmDisplay();
@@ -52,9 +52,14 @@ function MainDisplay() {
 	window.jsProgressDialogWithAbortDisplay = this.progressDialogWithAbortDisplay;
 	
 	// Bind events
+	$(window).resize(Helpers.resizeHelpSection);
+	$(".help h2").click(Helpers.toggleHelpSection);
 	this.$nav.find('a').on('click', $.proxy(this.clickMenuItem, this));
 	this.$accountMenuBox.find('a').on('click', $.proxy(this.clickAccountMenuItem, this));
 	this.$accountMenuToggle.on('click', $.proxy(this.clickAccountMenuToggle, this));
+	
+	// Trigger window resize for initial help sizing
+	$(window).trigger('resize');
 			
 	// Init
 	this.showLoginView(); // TODO: Gert moet de login view aanroepen nadat alles geinitialiseerd is.
@@ -74,7 +79,7 @@ MainDisplay.prototype.initMainView = function() { // TODO:	remember state
 
 MainDisplay.prototype.setActiveView = function(view) {
 	if (view == "LOGOUT") location.reload(); // TODO: vervangen door echte logout functie
-	app.getPresenterFactory().mainPresenter.selectView(view);
+	app.getPresenterFactory().getMainPresenter.selectView(view);
 }
 
 

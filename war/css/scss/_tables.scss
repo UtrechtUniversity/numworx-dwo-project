@@ -15,7 +15,8 @@ TABLE STYLES
 
 table {
 	//table-layout: fixed;
-	max-width: 100%;	
+	max-width: 100%;
+	
 	border-collapse: collapse;
 	//float: left;
 	//height: 100px; max-height: 100px;
@@ -42,7 +43,7 @@ table {
 			//&.headers th:first-child { padding-left: 0; }
 			th { 
 				padding: $gutter / 2 * 1px!important;
-				width: $colWidth * 1px;
+				width: ($colWidth - $gutter) * 1px;
 				float: none!important; // for if it has a col-class
 				
 				&:first-child { padding-left: 0!important; }
@@ -75,6 +76,7 @@ table {
 	    @include border-box;
 		@include border-radius($defaultRadius);
 		background: $white;
+		min-height: 6em;
 		max-width: 100%;
 		//position: absolute;
 //		max-height: 200px;
@@ -86,7 +88,7 @@ table {
 			td {
 				line-height: 1.8em;
 				border-bottom: 1px $line1 solid;
-				padding: 5px 10px;
+				//padding: 5px 10px;
 				vertical-align: middle;
 				padding: $gutter / 2 * 1px!important;
 				width: ($colWidth - ($gutter)) * 1px;

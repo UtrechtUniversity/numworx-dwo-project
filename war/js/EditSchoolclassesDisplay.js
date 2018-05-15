@@ -91,6 +91,8 @@ EditSchoolclassesDisplay.prototype.init = function () {
 	this.$changeStudentsTableBody.html("");
 	this.$changeTeachersTableBody.html("");
 	this.$changeModulesTableBody.html("");
+	
+	Helpers.stretchHeight( [ this.$changeStudentsTableBody, this.$changeTeachersTableBody, this.$changeModulesTableBody ]);
 }
 
 EditSchoolclassesDisplay.prototype.showSchoolClass = function(json) {	
@@ -140,6 +142,7 @@ EditSchoolclassesDisplay.prototype.showStudents = function(json) {
 		this.$changeStudentsTableBody.append($row);
 		i++;
 	}
+	
 }
 
 EditSchoolclassesDisplay.prototype.showTeachers = function(json) {	
@@ -163,6 +166,7 @@ EditSchoolclassesDisplay.prototype.showTeachers = function(json) {
 		this.$changeTeachersTableBody.append($row);
 		i++;
 	}
+	
 }
 
 EditSchoolclassesDisplay.prototype.showShowModels = function(json) { // TODO: change function name @Gert
@@ -198,40 +202,40 @@ EditSchoolclassesDisplay.prototype.showShowModels = function(json) { // TODO: ch
 
 // Edit form 
 EditSchoolclassesDisplay.prototype.saveSchoolclass = function() {
-	app.getPresenterFactory().editSchoolclassPresenter.updateAndRefresh(this.editSchoolclassForm.elements["classname"].value,
+	app.getPresenterFactory().getEditSchoolclassPresenter().updateAndRefresh(this.editSchoolclassForm.elements["classname"].value,
 																	this.editSchoolclassForm.elements["useClasstree"].value == 1 ? true : false,
 	this.editSchoolclassForm.elements["useClasskey"].value == 1 ? true : false, // TODO: doesnt work
 																	this.editSchoolclassForm.elements["classkey"].value);
 }
 EditSchoolclassesDisplay.prototype.deleteSchoolclass = function() {
-	app.getPresenterFactory().editSchoolclassPresenter.removeSchoolClass();
+	app.getPresenterFactory().getEditSchoolclassPresenter().removeSchoolClass();
 }
 
 // Students
 EditSchoolclassesDisplay.prototype.showStudentsRequest = function() {
-	app.getPresenterFactory().editSchoolclassPresenter.showStudents();
+	app.getPresenterFactory().getEditSchoolclassPresenter().showStudents();
 }
 EditSchoolclassesDisplay.prototype.connectStudents = function() {
-	app.getPresenterFactory().editSchoolclassPresenter.connectStudents();
+	app.getPresenterFactory().getEditSchoolclassPresenter().connectStudents();
 }
 EditSchoolclassesDisplay.prototype.copyOrMoveStudents = function() {
-	app.getPresenterFactory().editSchoolclassPresenter.copyOrMoveStudents();	
+	app.getPresenterFactory().getEditSchoolclassPresenter().copyOrMoveStudents();	
 }
 
 // Teachers
 EditSchoolclassesDisplay.prototype.showTeachersRequest = function() {
-	app.getPresenterFactory().editSchoolclassPresenter.showTeachers();
+	app.getPresenterFactory().getEditSchoolclassPresenter().showTeachers();
 }
 EditSchoolclassesDisplay.prototype.connectTeachers = function() {
-	app.getPresenterFactory().editSchoolclassPresenter.connectTeachers();
+	app.getPresenterFactory().getEditSchoolclassPresenter().connectTeachers();
 }
 
 // Modules
 EditSchoolclassesDisplay.prototype.showModulesRequest = function() {
-	app.getPresenterFactory().editSchoolclassPresenter.showModules();
+	app.getPresenterFactory().getEditSchoolclassPresenter().showModules();
 }
 EditSchoolclassesDisplay.prototype.connectModules = function() {
-	app.getPresenterFactory().editSchoolclassPresenter.editModules();
+	app.getPresenterFactory().getEditSchoolclassPresenter().editModules();
 }
 
 
