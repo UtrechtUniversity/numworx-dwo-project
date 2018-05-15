@@ -10,12 +10,12 @@
     	var API;
         var DwoMainPresenter;
         <!-- set to false in order to show the default user-interface -->
-        var hideGwtGui="true";        
+        var hideGwtGui="true";
         </script>
-	<script type="text/javascript" language="javascript" src="js-plainui/jsModulesOfSchoolClassDisplay.js"></script>	
+		
 		
 	<!-- TODO: change reference -->
-    <script type="text/javascript" language="javascript" src="/gwtclient/gwtclient/gwtclient.nocache.js"></script>
+    <script type="text/javascript" language="javascript" src="https://teuniz.dwo.nl/gwtclient/gwtclient/gwtclient.nocache.js"></script>
 	
 	<!-- TODO: decide whether to add Google fonts locally (consider licence) -->
 	<link href="https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700" rel="stylesheet">
@@ -35,6 +35,11 @@
 	<script src="js/SchoolclassesDisplay.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/EditSchoolclassesDisplay.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/StudentsInSchoolclassDisplay.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/AddStudentToSchoolclassDisplay.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/AddTeacherToSchoolclassDisplay.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/ModulesOfSchoolclassDisplay.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/ResultsDisplay.js" type="text/javascript" charset="utf-8"></script>
+	
 	<script src="js/WelcomeDisplay.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/dialogs.js" type="text/javascript" charset="utf-8"></script>
 	
@@ -151,7 +156,7 @@
 		<nav>
 			<ul id="mainNav">
 				<li>
-					<a href="#"><svg viewBox="0 0 64 64" class="icon">
+					<a href="#RESULTS"><svg viewBox="0 0 64 64" class="icon">
 			  		  <use xlink:href="#resultaten"></use>
 				    </svg><span class="name">Resultaten</span>
 				    </a>
@@ -563,7 +568,6 @@
 									<tbody>
 										<tr>
 											<td>
-												<!-- <input type="radio" name="student" id="chooseStudentId" class="hidden" value="studentId"> -->
 												<span id="chooseStudentName">Schoolclass name</a>
 											</td>
 										</tr>
@@ -580,7 +584,7 @@
 					<div class="col-4">
 						<form name="changeTeachers">
 							<fieldset>
-								<table class="hoverable selectable">
+								<table class="">
 									<thead>
 										<tr>
 											<th>Docenten</th>
@@ -589,15 +593,14 @@
 									<tbody>
 										<tr>
 											<td>
-												<input type="radio" name="teacher" id="chooseTeacherId" class="hidden" value="teacherId">
 												<span id="chooseTeacherName">Teacher name</a>
 											</td>
 										</tr>
 									</tbody>
 								</table>
 												
-								<input type="submit" class="primary left" value="Toon docenten" />
-								<input type="submit" class="primary right" value="Wijzigen" />
+								<input type="submit" name="show" class="primary left" value="Toon docenten" />
+								<input type="submit" name="connect" class="primary right" value="Wijzigen" />
 							</fieldset>
 						</form>
 					</div>
@@ -605,7 +608,7 @@
 					<div class="col-4">
 						<form name="changeModules">
 							<fieldset>
-								<table class="hoverable selectable">
+								<table class="">
 									<thead>
 										<tr>
 											<th>Modules</th>
@@ -614,15 +617,14 @@
 									<tbody>
 										<tr>
 											<td>
-												<input type="radio" name="module" id="chooseModuleId" class="hidden" value="moduleId">
 												<span id="chooseModuleName">Module name</a>
 											</td>
 										</tr>
 									</tbody>
 								</table>
 												
-								<input type="submit" class="primary left" value="Toon modules" />
-								<input type="submit" class="primary right" value="Wijzigen" />
+								<input type="submit" name="show" class="primary left" value="Toon modules" />
+								<input type="submit" name="connect" class="primary right" value="Wijzigen" />
 							</fieldset>
 						</form>							
 					</div>					
@@ -666,12 +668,481 @@
 			</section>
 			
 		</section> 
-		<!-- end editSchoolclassesDisplayPanel -->
+		<!-- end studentsInSchoolclassDisplayPanel -->
+		
+		
+		<!-- 
+		-
+		- addStudentToSchoolclassDisplay
+		-
+		-->
+		<section id="addStudentToSchoolclassDisplay" class="subpanel">
+			<header>
+				<div class="container">
+					<div class="content">
+						<svg viewBox="0 0 64 64" class="icon">
+							<use xlink:href="#klassen"></use>
+						</svg>
+						<h1>Klassen bewerken</h1>
+						<h2 class="sectionhead"><span>Zoek een leerling om te plaatsen in klas [KLAS]</span></h2>					
+					</div>
+					<section id="help" class="col-2">
+						<h2 class="helpheader">Numworx Help</h2>
+						<div class="content">
+							<h2>Help kop</h2>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium gravida dignissim. Aliquam id metus quam. Aenean consequat arcu sit amet commodo porttitor.</p><p>Proin viverra, enim non feugiat ornare, purus urna dignissim ante, consectetur faucibus libero diam id ligula.</p>
+						</div>
+					</section>
+				</div>
+			</header>
+			
+			<section>
+				<div class="row">
+					<form name="addStudentSearch">
+						<fieldset>
+							<label for="addStudentSearchUserName" class="col-2 input">
+								Gebruikersnaam
+								<input id="addStudentSearchUserName" name="username" type="text" value="" />
+							</label>
+							<label for="addStudentSearchGivenName" class="col-2 input">
+								Voornaam
+								<input id="addStudentSearchGivenName" name="givenName" type="text" value="" />
+							</label>
+							<label for="addStudentSearchInsertion" class="col-2 input">
+								Tussenvoegsel
+								<input id="addStudentSearchInsertion" name="insertion" type="text" value="" />
+							</label>
+							<label for="addStudentSearchFamilyName" class="col-2 input">
+								Achternaam
+								<input id="addStudentSearchFamilyName" name="familyName" type="text" value="" />
+							</label>
+							<label for="addStudentSearchEmail" class="col-2 input">
+								Emailadres
+								<input id="addStudentSearchEmail" name="email" type="text" value="" />
+							</label>
+							
+							<div class="col-2">
+								<input type="submit" class="primary bottom" value="Toon resultaten" />
+							</div>
+						</fieldset>
+					</form>
+				</div>
+				
+				<div class="row">
+					<div class="col-12">
+						<h3>Gevonden leerlingen</h2>
+						<form name="addStudentAdd">
+							
+						<table class="hoverable selectable">
+							<thead>
+								<tr>
+									<th>Gebruikersnaam</th>
+									<th>Voornaam</th>
+									<th>Tussenvoegsel</th>
+									<th>Achternaam</th>
+									<th class="col-4">Emailadres</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr tabindex="1">
+									<td>
+										<input type="checkbox" id="addStudentAddId" name="addStudentAddId" class="hidden" value="bakker34">
+										<span id="addStudentAddUsername">Bakker34</span>
+									</td>
+									<td><span id="addStudentAddGivenName">Michel</span></td>
+									<td><span id="addStudentAddInsertion">van</span></td>
+									<td><span id="addStudentAddFamilyName">Bakker</span></td>
+									<td class="col-4"><span id="addStudentAddEmail">michel@hotmail.com</span></td>
+								</tr>
+							</tbody>
+						</table>
+						
+						
+							<input type="submit" class="primary right" value="plaats leerling" />
+						</form>
+					</div>
+				</div>
+			</section>
+			
+		</section> 
+		<!-- end addStudentToSchoolclassDisplay -->
 		
 		
 		
+		<!-- 
+		-
+		- addTeacherToSchoolclassDisplay
+		-
+		-->
+		<section id="addTeacherToSchoolclassDisplay" class="subpanel">
+			<header>
+				<div class="container">
+					<div class="content">
+						<svg viewBox="0 0 64 64" class="icon">
+							<use xlink:href="#klassen"></use>
+						</svg>
+						<h1>Klassen bewerken</h1>
+						<h2 class="sectionhead"><span>Zoek een Docent om te koppelen aan klas [KLAS]</span></h2>					
+					</div>
+					<section id="help" class="col-2">
+						<h2 class="helpheader">Numworx Help</h2>
+						<div class="content">
+							<h2>Help kop</h2>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium gravida dignissim. Aliquam id metus quam. Aenean consequat arcu sit amet commodo porttitor.</p><p>Proin viverra, enim non feugiat ornare, purus urna dignissim ante, consectetur faucibus libero diam id ligula.</p>
+						</div>
+					</section>
+				</div>
+			</header>
+			
+			<section>
+				<div class="row">
+					<form name="addTeacherSearch">
+						<fieldset>
+							<label for="addTeacherSearchUserName" class="col-2 input">
+								Gebruikersnaam
+								<input id="addTeacherSearchUserName" name="userName" type="text" value="" />
+							</label>
+							<label for="addTeacherSearchGivenName" class="col-2 input">
+								Voornaam
+								<input id="addTeacherSearchGivenName" name="givenName" type="text" value="" />
+							</label>
+							<label for="addTeacherSearchInsertion" class="col-2 input">
+								Tussenvoegsel
+								<input id="addTeacherSearchInsertion" name="insertion" type="text" value="" />
+							</label>
+							<label for="addTeacherSearchFamilyName" class="col-2 input">
+								Achternaam
+								<input id="addTeacherSearchFamilyName" name="familyName" type="text" value="" />
+							</label>
+							<label for="addTeacherSearchEmail" class="col-2 input">
+								Emailadres
+								<input id="addTeacherSearchEmail" name="email" type="text" value="" />
+							</label>
+							
+							<div class="col-2">
+								<input type="submit" class="primary down" value="Toon resultaten" />
+							</div>
+						</fieldset>
+					</form>
+				</div>
+				
+				<div class="row">
+					<div class="col-12">
+						<h3>Gevonden leerlingen</h2>
+						<form name="addTeacherAdd">
+							
+						<table class="hoverable selectable">
+							<thead>
+								<tr>
+									<th>Gebruikersnaam</th>
+									<th>Voornaam</th>
+									<th>Tussenvoegsel</th>
+									<th>Achternaam</th>
+									<th class="col-4">Emailadres</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr tabindex="1">
+									<td>
+										<input type="radio" id="addTeacherAddId" name="id" class="hidden" value="bakker34">
+										<span id="addTeacherAddUserName">Bakker34</span>
+									</td>
+									<td><span id="addTeacherAddGivenName">Michel</span></td>
+									<td><span id="addTeacherAddInsertion">van</span></td>
+									<td><span id="addTeacherAddFamilyName">Bakker</span></td>
+									<td class="col-4"><span id="addTeacherAddEmail">michel@hotmail.com</span></td>
+								</tr>
+							</tbody>
+						</table>
+						
+						
+							<input type="submit" class="primary right" value="koppel docent" />
+						</form>
+					</div>
+				</div>
+			</section>
+			
+		</section> 
+		<!-- end addTeacherToSchoolclassDisplay -->
 		
 		
+		<!-- 
+		-
+		- modulesOfSchoolclassDisplay
+		-
+		-->
+		<section id="modulesOfSchoolclassDisplay" class="subpanel">
+			
+			<header>
+				<div class="container">
+					<div class="content">
+						<svg viewBox="0 0 64 64" class="icon">
+							<use xlink:href="#klassen"></use>
+						</svg>
+						<h1>Klassen bewerken</h1>
+						<h2 class="sectionhead"><span>Module aan klas [KLAS] koppelen</span></h2>					
+					</div>
+					<section id="help" class="col-2">
+						<h2 class="helpheader">Numworx Help</h2>
+						<div class="content">
+							<h2>Help kop</h2>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium gravida dignissim. Aliquam id metus quam. Aenean consequat arcu sit amet commodo porttitor.</p><p>Proin viverra, enim non feugiat ornare, purus urna dignissim ante, consectetur faucibus libero diam id ligula.</p>
+						</div>
+					</section>
+				</div>
+			</header>
+			
+			<section>
+				<div class="row">
+					<div class="col-6">
+						<h3>Selecteer de gewenste modules om toe te kennen</h3>
+					
+						<!-- 
+							Example format:
+						
+							<li class="hasSub">
+							<a class="icon folder">Standaard modules</a>
+							<ul>
+								<li class="hasSub">
+									<a class="icon folder">Oefenmateriaal</a>
+									<div class="checkbox">
+										<input type="checkbox" name="module" id="module1" value="module1" checked="checked">
+										<label class="icon" for="module1"></label>
+									</div>
+									<ul>
+										<li class="hasSub">
+											<a class="icon folder">Rekenen</a>
+											<ul>
+												<li class="hasSub">
+													<a class="icon set">Negatieve getallen</a>
+
+													<ul>
+														<li><a class="icon item">Optellen en aftrekken</a></li>
+														<li><a class="icon item">Drie getallen optellen en aftrekken</a></li>
+														<li><a class="icon item">Optellen en afstrekkne, met strafpunten</a></li>
+													</ul>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</li> 
+							-->					
+					
+						<div class="treeWrapper">
+							<ul class="tree">
+							</ul>		
+						</div>					
+					
+					</div>
+					<div class="col-6">
+						<h3>Toe te kennen voor klas A6, zichtbaar voor leerling</h3>
+					
+						<table class="hoverable selectable">
+							<tbody>
+								<tr tabindex="1">
+									<td>
+										<input type="checkbox" name="test" class="hidden" value="">
+										<span>Naam module</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					
+					
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-6">
+						<div class="row">
+							<div class="col-2">
+								<h3>Nu toegekend</h3>
+								<div class="checkbox example">
+									<input type="checkbox" value="" checked="checked">
+									<label class="icon"></label>
+								</div>
+							</div>
+							<div class="col-2">
+								<h3>Ooit toegekend</h3>
+								<div class="checkbox example previouslyChecked">
+									<input type="checkbox" value="">
+									<label class="icon"></label>
+								</div>
+							</div>
+							<div class="col-2">
+								<h3>Niet toegekend</h3>
+								<div class="checkbox example">
+									<input type="checkbox" value="">
+									<label class="icon"></label>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<label for="field_1" class="col-3 input">
+								&nbsp;
+								<input id="field_1" type="text" value="" placeholder="of zoek een module" />
+							</label>
+							<div class="col-1">
+								<input type="submit" class="down secondary" value="Search" />
+							</div>
+							<div class="col-2">
+								<input type="submit" class="down secondary" value="Herlaad boom" />
+							</div>
+						</div>	
+					</div>
+					<div class="col-6">
+						<h3>Instellingen geselecteerde module</h3>
+					
+						<div class="row">
+							<label for="field_1" class="col-2 input">
+								Label
+								<input id="field_1" type="text" value="" />
+							</label>
+							<label for="field_1" class="col-2 input">
+								Label
+								<input id="field_1" type="text" value="" />
+							</label>
+							<div class="col-2 options">
+								<label>Twee opties</label>
+								<div class="option">
+									<input type="radio" name="optiona" id="option_a" value="2">
+									<label for="option_a">1</label>
+								</div> 
+								<div class="option">
+									<input type="radio" name="optiona" id="option_b" value="2" checked="checked">
+									<label for="option_b">2</label>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<label for="field_1" class="col-2 input">
+								Label
+								<input id="field_1" type="text" value="" />
+							</label>
+						</div>
+					
+						<input type="submit" class="bottom right secondary" value="Button" />
+					</div>
+				</div>
+			</section>
+		</section>		
+		<!-- end ModulesOfSchoolclassDisplay -->
+		
+		
+		
+		<!-- 
+		-
+		- resultsDisplay
+		-
+		-->
+		<section id="resultsDisplay" class="subpanel">
+			
+			<header>
+				<div class="container">
+					<div class="content">
+						<svg viewBox="0 0 64 64" class="icon">
+							<use xlink:href="#klassen"></use>
+						</svg>
+						<h1>Resultaten bekijken</h1>
+						<h2 class="sectionhead"><span>Resultaten van een leerling</span></h2>					
+					</div>
+					<section id="help" class="col-2">
+						<h2 class="helpheader">Numworx Help</h2>
+						<div class="content">
+							<h2>Help kop</h2>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium gravida dignissim. Aliquam id metus quam. Aenean consequat arcu sit amet commodo porttitor.</p><p>Proin viverra, enim non feugiat ornare, purus urna dignissim ante, consectetur faucibus libero diam id ligula.</p>
+						</div>
+					</section>
+				</div>
+			</header>
+			
+			<section>
+				<div class="row">
+					<div class="col-6">
+						<form>
+							<fieldset>
+								<label for="button_1">
+									Zoek een leerling om resultaten van te zien
+									<input type="submit" id="button_1" class="secondary right" value="Zoek leerling" />
+								</label>
+							</fieldset>
+						</form>
+					</div>					
+				</div>
+				
+				<div class="row">
+					<div class="col-12">
+						<h2 class="sectionhead"><span>Resultaten van een klas</span></h2>
+					</div>
+				</div>
+				
+				<div class="row">
+					<form name="chooseResultsView">
+						<div class="col-6">
+							<h3>Selecteer klas en soort(en) modules</h3>
+							<table>
+								<thead>
+									<tr>
+										<th>&nbsp;</th>
+										<th>Open</th>
+										<th>Gesloten</th>
+									</tr>
+								</thead>
+								<tbody>	
+							
+									<!-- The row is detached and used as a template by the JS -->								
+									<tr>
+										<td><span id="chooseResultsViewSchoolclassName">Klasnaam</span></td>
+
+										<td>
+											<div class="checkbox">
+												<input type="checkbox" name="active[]" id="chooseResultsViewSchoolclassOpen" value="schoolclassID"><label class="icon" for="chooseResultsViewSchoolclassOpen"></label>
+											</div>											
+										</td>
+										<td>
+											<div class="checkbox">
+												<input type="checkbox" name="remove[]" id="chooseResultsViewSchoolclassClosed" value="schooclassID"><label class="icon" for="chooseResultsViewSchoolclassClosed"></label>
+											</div>											
+										</td>
+									</tr>
+																
+								</tbody>
+							</table>
+						</div>
+					
+						<div class="col-6">
+							<h3>Selecteer module(s) om resultaten van de klas te zien</h3>
+							<table>
+								<thead>
+									<tr>
+										<th>&nbsp;</th>
+										<th>Selecteer</th>
+									</tr>
+								</thead>
+								<tbody>	
+							
+									<!-- The row is detached and used as a template by the JS -->								
+									<tr>
+										<td><span id="chooseResultsViewModulesName">Module name</span></td>
+
+										<td>
+											<div class="checkbox">
+												<input type="checkbox" name="active[]" id="chooseResultsViewModulesSelect" value="moduleID"><label class="icon" for="chooseResultsViewModulesSelect"></label>
+											</div>											
+										</td>
+									</tr>
+																
+								</tbody>
+							</table>	
+						</div>
+						
+						<input type="submit" class="primary right" value="Toon resultaten" />
+					</form>
+				</div>
+			</section>
+		</section>		
+		<!-- end ResultsDisplay -->
 		
 		
 		<!-- 
@@ -698,6 +1169,18 @@
 				<!-- <h3>De wijzigingen zijn opgeslagen</h3> -->
 				<p id="AlertDialogWithConfirmDisplayMessage">Kies DOORGAAN om verder te gaan.</p>
 				<input id="AlertDialogWithConfirmDisplayConfirmButton" type="button" class="right bottom" value="Doorgaan" />
+			</section>
+		</section>
+		
+		<section id="AlertDialogWithConfirmCancelDisplay" class="dialog alert">
+			<header>
+				<h4>Attentie!</h4>
+			</header>
+			<section>
+				<!-- <h3>De wijzigingen zijn opgeslagen</h3> -->
+				<p id="AlertDialogWithConfirmCancelDisplayMessage">Kies DOORGAAN om verder te gaan.</p>
+				<input id="AlertDialogWithConfirmCancelDisplayConfirmButton" type="button" class="secondary left bottom" value="Doorgaan" />
+				<input id="AlertDialogWithConfirmCancelDisplayCancelButton" type="button" class="right bottom" value="Annuleren" />
 			</section>
 		</section>
 		<!-- end dialogs -->

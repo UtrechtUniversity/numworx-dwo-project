@@ -11,6 +11,9 @@
 		width: 100%;
 	}
 }
+.row .row {
+	margin-bottom: 0;
+}
 .wide .row {
 	margin-right: ($navWidth + $siteMargin) * 1px;
 	@media #{$mediaQueryDesktop} {
@@ -24,13 +27,13 @@
 
 [class*="col-"] {
 	float: left;
-	//padding: 0 ($gutter / 2) / $siteWidth * 100%;
-	//padding: 0 0 0 ($gutter) / $siteWidthTablet * 100%;
-	padding: 0 0 0 $gutter * 1px;
-	
-	//@media #{$mediaQueryDesktop} {
-//		padding: 0 0 0 ($gutter) / $siteWidthDesktop * 100%;
-//	}
+	padding: 0 0 0 $gutter * 1px;	
+}
+[class*="col-"] [class*="col-"] {
+	padding-left: 0;
+}
+[class*="col-"] [class*="col-"] + [class*="col-"] {
+	padding-left: $gutter * 1px;
 }
 
 .col-1  { width: (1 * $colWidth / 2 - $gutter * 0.5) * 1px; }

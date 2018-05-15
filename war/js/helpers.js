@@ -7,7 +7,7 @@ Helpers.selectTableRow = function(event) {
 	var $el = $(event.target);
 	$el = $el.first();
 	
-	if ($el.get(0).tagName == "SPAN") {
+	while ($el.get(0).tagName != "TR") {
 		$el = $el.parent();
 	}
 	
@@ -159,6 +159,10 @@ $(document).ready(function(){
 		$('.sortButton').removeClass("active");
 		$this.addClass("active");				
 	});
+	
+	
+	$(".tree li.hasSub a").click(function() { $(this).parent().toggleClass("open"); });
+	
 		
 	$(window).resize( function() {
 		if ($(window).outerWidth() > (1366)) {

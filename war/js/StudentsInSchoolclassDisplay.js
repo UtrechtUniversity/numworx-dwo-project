@@ -7,7 +7,7 @@ function StudentsInSchoolclassDisplay() {
 	// Buttons 
 	
 	// jQuery objects
-	this.$panel = jQuery("#studentsInSchoolclassDisplayPanel");
+	this.$panel = jQuery("#addStudentToSchoolclassDisplay");
 		
 	// Bind handlers
 	

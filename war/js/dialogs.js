@@ -12,6 +12,9 @@ MsgDialogDisplay.prototype.hideDialog = function(event) {
 }
 
 
+
+
+
 function MsgDialogWithConfirmDisplay() {
 	this.active = false;
 	
@@ -49,18 +52,57 @@ MsgDialogWithConfirmDisplay.prototype.setFocus = function() {
 	this.$confirmButton.focus();
 }
 
+
+
+
+
+
 function AlertDialogWithConfirmCancelDisplay() {
-		
+	this.active = false;
+	
+	// jQuery objects
+	this.$dialog = $("#AlertDialogWithConfirmCancelDisplay");
+	this.$message = $("#AlertDialogWithConfirmCancelDisplayMessage");
+	this.$confirmButton = $("#AlertDialogWithConfirmCancelDisplayConfirmButton");
+	this.$cancelButton = $("#AlertDialogWithConfirmCancelDisplayCancelButton");
+	
+	// Bind handlers
+	this.$confirmButton.on('click', $.proxy(this.clickConfirm,this));
+	this.$cancelButton.on('click', $.proxy(this.clickCancel,this));
+	
+	// Init
+	this.$dialog.hide();
 }
-AlertDialogWithConfirmCancelDisplay.prototype.clear = function() {
-}
-AlertDialogWithConfirmCancelDisplay.prototype.init = function() {
-}
+AlertDialogWithConfirmCancelDisplay.prototype.clear = function() {}
+AlertDialogWithConfirmCancelDisplay.prototype.init = function() {}
 AlertDialogWithConfirmCancelDisplay.prototype.showDialog = function(text) {	
-	console.log("AlertDialogWithConfirmCancelDisplay: "+text);
+	this.$dialog.show();
+	this.$message.html(text);
+	this.$confirmButton.focus();
+	this.active = true;	
+	window.app.mainDisplay.openDialogView(this);
 }
 AlertDialogWithConfirmCancelDisplay.prototype.hideDialog = function(event) {
+	this.$dialog.hide();	
+	this.$message.html("");
+	this.active = false;
+	window.app.mainDisplay.closeDialogView(this);
 }
+AlertDialogWithConfirmCancelDisplay.prototype.clickConfirm = function(event) {
+	app.getPresenterFactory().alertDialogWithConfirmCancelPresenter.confirm();
+	this.hideDialog();	
+}
+AlertDialogWithConfirmCancelDisplay.prototype.clickCancel = function(event) {
+	app.getPresenterFactory().alertDialogWithConfirmCancelPresenter.confirm();
+	this.hideDialog();	
+}
+AlertDialogWithConfirmCancelDisplay.prototype.setFocus = function() {
+	this.$confirmButton.focus();
+}
+
+
+
+
 
 
 function AlertDialogWithConfirmDisplay() {

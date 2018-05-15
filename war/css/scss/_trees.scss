@@ -1,0 +1,121 @@
+.treeWrapper {
+	background: $white;
+	border: $borderThickness $primary solid;
+	@include border-radius($defaultRadius);
+	max-height: 80%;
+	overflow: scroll;
+	padding: $gutter * 1px;
+}
+
+ul.tree {
+	font-size: 14 / 16 * 1em;
+	line-height: 27 / 14 * 1em;
+	
+	li {
+		border-left: 1px $shade11 solid;
+		padding-left: $gutter * 1px;
+		position: relative;
+		white-space: nowrap;
+		
+		&:before {
+			background: transparent url(../images/tree-li-open.png);
+			background-repeat: no-repeat;	
+			content: "";
+			display: inline-block;
+			font-size: 0;
+			height: 27px;
+			margin-bottom: -8px;
+			left: -3px;
+			position: relative;	
+			top: -8px;
+			width: 12px;
+		}	
+		
+		&:last-child:before {
+			background: transparent url(../images/tree-li-open-last.png);
+			background-repeat: no-repeat;	
+		}
+		
+		
+		&.hasSub {
+			ul {
+				display: none;
+			}
+			
+			&.open {
+				> ul {
+					display: block;
+				}
+			}
+		}
+		
+		&.hasSub:before {
+			background: transparent url(../images/tree-li-hassub-closed.png);	
+			background-repeat: no-repeat;
+			content: "";
+			display: inline-block;
+			height: 27px;
+			left: -4px;
+			margin-bottom: -8px;
+			position: relative;	
+			top: 0px;
+			width: 12px;
+		}		
+		&.hasSub.open:before {
+			background: transparent url(../images/tree-li-hassub-open.png);	
+			//content: "";
+//			display: inline-block;
+//			height: 21px;
+//			left: -3px;
+//			position: relative;
+//			top: 8px;
+//			width: 12px;
+		}
+		
+		&.hasSub:last-child:before {
+			background: transparent url(../images/tree-li-hassub-closed-last.png);	
+			background-repeat: no-repeat;
+		}
+		&.hasSub.open:last-child:before {
+			background: transparent url(../images/tree-li-hassub-open-last.png);	
+//			background-repeat: no-repeat;
+		}
+		
+		div.checkbox {
+			position: absolute;
+			right: 0;
+			top: 0;
+		}
+	}
+	> li:first-child {
+		border-left-style: none;			
+	}
+	
+	
+	
+}
+
+a.icon {
+	cursor: pointer;
+	left: -24px; // in order to make node clickable
+	padding-left: 24px;
+	position: relative;
+	
+	&:before {
+		content: "";
+		display: inline-block;
+		height: 15px;
+		position: relative;
+		margin-right: 10px;
+		width: 16px;		
+	}
+	&.folder:before {
+		background: transparent url(../images/tree-folder.png);	
+	}
+	&.set:before {
+		background: red url(../images/tree-folder.png);	
+	}
+	&.item:before {
+		background: green url(../images/tree-folder.png);	
+	}
+}

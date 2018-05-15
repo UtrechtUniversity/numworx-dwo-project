@@ -227,9 +227,22 @@ form {
 		}
 		&:before {
 			display: block;
-		}	
-		
+		}		
 	}
+	
+	// Styles for modules that have been activated once before, no impact on JS, only different unchecked style
+	&.previouslyChecked label.icon{
+		background-color: $shade12;
+		
+		border: $borderThickness $shade12 solid;
+		&:after {
+			display: block;
+		}
+		&:before {
+			display: block;
+		}		
+	}
+	
 	&.ok {
 		input:checked ~ label.icon {
 			background-color: $ok;		
@@ -274,6 +287,13 @@ form {
 			-ms-transform: rotate(225deg);
 			transform: rotate(225deg);
 		}
+	}
+	
+	&.example {
+		display: block;
+		cursor: default;
+		border-bottom: 2*$borderThickness $primary solid;
+		padding-bottom: 5px;
 	}
 	
 }

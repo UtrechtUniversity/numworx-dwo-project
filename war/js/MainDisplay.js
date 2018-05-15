@@ -27,8 +27,18 @@ function MainDisplay() {
 	window.jsSchoolClassesDisplay = this.schoolclassesDisplay;
 	this.editSchoolclassesDisplay = new EditSchoolclassesDisplay();
 	window.JsEditSchoolclassDisplay	= this.editSchoolclassesDisplay; // TODO: remove first capital
-	this.studentsInSchoolclassDisplay = new StudentsInSchoolclassDisplay();
-	window.JsStudentsInSchoolclassDisplay	= this.studentsInSchoolclassDisplay;
+	this.studentsInSchoolclassDisplay = new StudentsInSchoolclassDisplay(); // TODO: remove?
+	window.JsStudentsInSchoolclassDisplay	= this.studentsInSchoolclassDisplay; // TODO: remove?
+	this.addStudentToSchoolclassDisplay = new AddStudentToSchoolclassDisplay();
+	window.JsAddStudentToSchoolclassDisplay	= this.addStudentToSchoolclassDisplay;
+	this.addTeacherToSchoolclassDisplay = new AddTeacherToSchoolclassDisplay();
+	window.JsAddTeacherToSchoolclassDisplay	= this.addTeacherToSchoolclassDisplay;	
+	this.modulesOfSchoolclassDisplay = new ModulesOfSchoolclassDisplay();
+	window.JsModulesOfSchoolclassDisplay = this.modulesOfSchoolclassDisplay;
+
+	this.resultsDisplay = new ResultsDisplay();
+	window.jsResultsDisplay = this.resultsDisplay;
+		
 	
 	this.msgDialogDisplay = new MsgDialogDisplay();
 	window.jsMsgDialogDisplay = this.msgDialogDisplay;
@@ -109,9 +119,25 @@ MainDisplay.prototype.showEditSchoolclasView = function(vars) { // TODO: Change 
 	this.initMainView(); 
 	this.editSchoolclassesDisplay.show();
 }
+
 MainDisplay.prototype.showAddStudentToSchoolClassView = function(vars) { // TODO: Change function name @Gert
 	this.initMainView(); 
-	this.studentsInSchoolclassDisplay.show();
+	this.addStudentToSchoolclassDisplay.show();
+}
+
+MainDisplay.prototype.showAddTeacherToSchoolClassView = function(vars) { // TODO: Change function name @Gert
+	this.initMainView(); 
+	this.addTeacherToSchoolclassDisplay.show();
+}
+
+MainDisplay.prototype.showEditCoursesOfSchoolClassView = function() {
+	this.initMainView(); 
+	this.modulesOfSchoolclassDisplay.show();
+}
+
+MainDisplay.prototype.showResultsView = function() {
+	this.initMainView(); 
+	this.resultsDisplay.show();
 }
 
 /*
