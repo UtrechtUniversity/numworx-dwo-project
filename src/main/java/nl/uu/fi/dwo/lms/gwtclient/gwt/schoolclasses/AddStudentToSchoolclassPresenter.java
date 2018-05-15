@@ -63,10 +63,10 @@ public class AddStudentToSchoolclassPresenter {
         view.setEmptyTableMessage();
         schoolClass = aSchoolClass;
         view.setSchoolClass(schoolClass);
-        refreshViewData();
+        updateViewData();
     }
 
-    private void refreshViewData() {
+    private void updateViewData() {
         view.setLoadingTableMessage();
         Promise<List<DomStudent>> promise;
         promise = manager.getTeachersStudents();
@@ -74,8 +74,8 @@ public class AddStudentToSchoolclassPresenter {
         promise.then(new Success<List<DomStudent>, Void>() {
             @Override
             public Promise<Void> call(Promise<List<DomStudent>> resolved) throws Exception {
-                Map<String,DomStudent> studentMap = new HashMap<>(resolved.getValue().size());
-                resolved.getValue().forEach((k -> studentMap.put(k.getId().getIdString(), k)));
+                students = new HashMap<>(resolved.getValue().size());
+                resolved.getValue().forEach((k -> students.put(k.getId().getIdString(), k)));
                 return null;
             }
 
@@ -137,6 +137,7 @@ public class AddStudentToSchoolclassPresenter {
 
 @JsMethod
         public void AddStudentToSchoolClass(String studentId){
+            LOG.log(Level.INFO,"Adding student "+studentId+" to schoolclass"+schoolClass.getId().getIdString());
                 Promise<Boolean> promise;
                 DomSubmitStudentToSchoolClass submit = new DomSubmitStudentToSchoolClass();
                 submit.setSchoolClassFrom(schoolClass);

@@ -74,9 +74,9 @@ public class AddTeacherToSchoolclassPresenter {
         promise.then(new Success<List<DomTeacher>, Void>() {
             @Override
             public Promise<Void> call(Promise<List<DomTeacher>> resolved) throws Exception {
-                Map<String, DomTeacher> teacherMap = new HashMap<>();
-                resolved.getValue().forEach((k -> teacherMap.put(k.getId().getIdString(), k)));
-                view.showTeachers(teacherMap);
+                teachers = new HashMap<>();
+                resolved.getValue().forEach((k -> teachers.put(k.getId().getIdString(), k)));
+                view.showTeachers(teachers);
                 return null;
             }
         },
@@ -106,6 +106,8 @@ public class AddTeacherToSchoolclassPresenter {
 
     @JsMethod
     public void AddTeacherToSchoolClass(String teacherId) {
+        LOG.log(Level.INFO,"Adding teacher "+teacherId+" to schoolclass"+schoolClass.getId().getIdString());
+        LOG.log(Level.INFO,"Teachers: " + teachers + " getTeacher;" + teachers.get(teacherId));
         Promise<Boolean> promise;
         DomSubmitTeacherToSchoolClass submit = new DomSubmitTeacherToSchoolClass();
         submit.setSchoolClass(schoolClass);
