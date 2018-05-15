@@ -17,9 +17,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
 
-public class SecuredStudentStudentModelRestCaller {
+public interface SecuredStudentStudentModelRestCaller extends RestService{
 	
-	interface Helper extends RestService {
 		@PUT
 		@Path("/sec:{id}/student/studentmodel/getList")
 		void getStudentModels(@PathParam("id") String id, RestContext context, MethodCallback<List<DomStudentModelContext>> callback);
@@ -27,18 +26,5 @@ public class SecuredStudentStudentModelRestCaller {
 		@PUT
 		@Path("/sec:{id}/student/studentmodel/getScore")
 		void getStudentModelDataScore(@PathParam("id") String id, RestStudentModelContextId restModelId, MethodCallback<DomStudentModelDataScore> callback);
-		
-	}
-
-	private Helper service = GWT.create(Helper.class);
-	
-	public void getStudentModels(RestContext context, MethodCallback<List<DomStudentModelContext>> callback) {
-		service.getStudentModels(PathId.getId(context.getRestContext()), context, callback);
-		
-	}
-
-	public void getStudentModelDataScore(RestStudentModelContextId restModelId, MethodCallback<DomStudentModelDataScore> callback) {
-		service.getStudentModelDataScore(PathId.getId(restModelId.getRestContext()), restModelId, callback);
-	}
 
 }

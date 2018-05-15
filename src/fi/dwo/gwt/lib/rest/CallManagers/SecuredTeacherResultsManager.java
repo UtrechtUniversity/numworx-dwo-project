@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredTeacherResultsRestCaller;
+import fi.dwo.gwt.lib.rest.util.PathId;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,13 +20,12 @@ import org.osgi.util.promise.Promise;
 
 public class SecuredTeacherResultsManager {
 
-    private SecuredTeacherResultsRestCaller service = GWT.create(SecuredTeacherResultsRestCaller.class);
+    private SecuredTeacherResultsRestCaller service;
     private static final Logger LOG = Logger.getLogger(SecuredTeacherResultsManager.class.getName());
 
     public SecuredTeacherResultsManager() {
         String url = GwtRestVars.instance().getServer();
         init(url);
-
     }
 
     private void init(String url) {
@@ -52,7 +52,7 @@ public class SecuredTeacherResultsManager {
         RestDwoProfile restPut = new RestDwoProfile();
         restPut.setRestContext(domContext);
         restPut.setDomDwoProfile(aProfile);
-        service.getTeachersResults(restPut, new Callback<DomResultsPerTeacher>(callBack));
+        service.getTeachersResults(PathId.getId(domContext), restPut, new Callback<DomResultsPerTeacher>(callBack));
     }
 
     public Promise<Boolean> clearStudentResults(RestClearStudentDataForScoAndClass rest) {
@@ -67,7 +67,8 @@ public class SecuredTeacherResultsManager {
      * @param callBack
      */
     public void clearStudentResults(RestClearStudentDataForScoAndClass rest, AsyncCallback<Boolean> callBack) {
-        service.clearStudentResults(rest, new Callback<Boolean>(callBack));
+      DomContext context = rest.getRestContext();
+      service.clearStudentResults(PathId.getId(context),rest, new Callback<Boolean>(callBack));
     }
 
 }

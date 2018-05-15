@@ -7,6 +7,7 @@ import org.osgi.util.promise.Promise;
 import com.google.gwt.core.shared.GWT;
 
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentStudentModelRestCaller;
+import fi.dwo.gwt.lib.rest.util.PathId;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -23,7 +24,7 @@ public class SecuredStudentStudentModelManager {
 		PromiseCallback<List<DomStudentModelContext>> callback = new PromiseCallback<>();
 		RestContext rest = new RestContext();
 		rest.setRestContext(context);
-		service.getStudentModels(rest, callback);
+		service.getStudentModels(PathId.getId(context), rest, callback);
 		return callback.getPromise();
 	}
 	
@@ -33,7 +34,7 @@ public class SecuredStudentStudentModelManager {
 		RestStudentModelContextId rest = new RestStudentModelContextId();
 		rest.setDomStudentModelContext(id);
 		rest.setRestContext(context);
-		service.getStudentModelDataScore(rest, callback);
+		service.getStudentModelDataScore(PathId.getId(context), rest, callback);
 		
 		return callback.getPromise();
 	}

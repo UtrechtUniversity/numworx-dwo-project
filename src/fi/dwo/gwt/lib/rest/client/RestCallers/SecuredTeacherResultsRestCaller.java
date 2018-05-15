@@ -2,6 +2,7 @@ package fi.dwo.gwt.lib.rest.client.RestCallers;
 
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestClearStudentDataForScoAndClass;
@@ -18,11 +19,11 @@ public interface SecuredTeacherResultsRestCaller extends RestService {
      * @param callback 
      */
     @PUT
-    @Path("/secure/teacher/results/getTeachersResults")
-    public void getTeachersResults(RestDwoProfile aProfile,MethodCallback<DomResultsPerTeacher> callback);
+    @Path("/sec:{id}/teacher/results/getTeachersResults")
+    public void getTeachersResults(@PathParam("id") String id, RestDwoProfile aProfile,MethodCallback<DomResultsPerTeacher> callback);
     
     @PUT
     @Produces({"application/json"})
-    @Path("/secure/teacher/results/clearStudentResults")
-    public void clearStudentResults(RestClearStudentDataForScoAndClass rest, MethodCallback<Boolean> callback);
+    @Path("/sec:{id}/teacher/results/clearStudentResults")
+    public void clearStudentResults(@PathParam("id") String id, RestClearStudentDataForScoAndClass rest, MethodCallback<Boolean> callback);
 }
