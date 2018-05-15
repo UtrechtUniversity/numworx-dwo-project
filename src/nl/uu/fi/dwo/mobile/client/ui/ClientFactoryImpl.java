@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationViewNumworx;
+import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
@@ -296,5 +297,21 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	public void goTo(Place place) {
 		placeController.goTo(place);
 	}
+
+  @Override
+  public Provider<NoCourseView> getNoCourseView() {
+    return new Provider<NoCourseView>() {
+      
+      @Override
+      public NoCourseView get() {
+          HeaderView header;
+          NavigationView navigation;
+          header = getHeaderView();
+          navigation = getNavigationView();
+          return new NoCourseView(header, navigation);
+      }
+  };
+ }
+	
 	
 }

@@ -2,12 +2,15 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.Map;
 
+import javax.inject.Provider;
+
 import org.osgi.util.promise.Promise;
 
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
+import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
@@ -79,6 +82,8 @@ public interface ClientFactory
 	boolean inExam(DomClassCourse classCourse);
 
 	NavigationView getNavigationView();
+
+    Provider<NoCourseView> getNoCourseView();
 
 // High level functions
 /*	Full varianten?

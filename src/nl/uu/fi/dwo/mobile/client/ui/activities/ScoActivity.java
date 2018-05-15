@@ -1,9 +1,11 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Failure;
@@ -19,15 +21,13 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.s;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
+import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
-import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewNumworx;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
-
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
@@ -46,11 +46,13 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 	@Inject ViewModuleView view;
 	private String name;
 	private AnchorContext defaultContext;
-	final private Place next;
+	final private LoginPlace next;
 	final private String location;
 	@Inject PlaceController placeController;
 	@Inject nl.uu.fi.dwo.mobile.client.ui.RPCHandler rpcHandler;
 	private boolean started;
+    @Inject DomSchoolClass schoolClass;
+    @Inject Provider<NoCourseView> noCourseView;
 
 	@Inject ScoActivity(s where) {
 		next = new LoginPlace(where);
@@ -69,6 +71,8 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 		rpcHandler = clientFactory.getRPCHandler();
 		next = new LoginPlace(where);
 		location = where.getLocation();
+		schoolClass = clientFactory.getSchoolClass();
+		noCourseView = clientFactory.getNoCourseView();
 	}
 
 	@Override
@@ -95,8 +99,20 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 		Promise<String> namePromise;
 		if(name == null) {
 			name = scoID;
+			Promise<DomScoContext> sco;
+			if (schoolClass != null && item.isFromSchool()) { // XXX unsure if isSchool correct
+			  //sco = rpcHandler.getSco(item.getID());
+			  sco = rpcHandler.getScoContextClass(item.getID(), schoolClass)
+			  .filter(p -> !p.getScoContexts().isEmpty())
+// should not happen. Server should prevent this.
+			  .filter(p-> p.getClassCourses().get(0).getValue().getCourseType() != CourseType.assesment)
+			  .map(p -> p.getScoContexts().get(0).getValue());
+			} else {
+	            sco = rpcHandler.getSco(item.getID());
+	  
+			}
 			namePromise = 
-			rpcHandler.getSco(item.getID()).then(new Success<DomScoContext, String>() {
+			  sco.then(new Success<DomScoContext, String>() {
 
 				@Override
 				public Promise<String> call(Promise<DomScoContext> resolved) throws Exception {
@@ -126,6 +142,14 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 						return;
 					}
 				}
+				if (t instanceof NoSuchElementException)
+                {
+                    NoCourseView view = noCourseView.get();
+                    panel.setWidget(view);
+                    view.setHomePlace(next.getPlace());
+                    view.render();
+                    return;
+                }
 				Logger.getLogger("ScoActivity").log(Level.SEVERE, "initialize()", t);
 				Window.alert(t.getMessage());
 				gotoNext();

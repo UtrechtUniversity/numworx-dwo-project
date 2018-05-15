@@ -7,15 +7,11 @@ import java.util.NoSuchElementException;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
-import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
-import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
-import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.UnSafeModuleView;
@@ -26,7 +22,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
-import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -59,17 +54,7 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 		this.clientFactory = clientFactory;
 		this.item = item;
 		placeController = clientFactory.getPlaceController();
-		noCourseView = new Provider<NoCourseView>() {
-			
-			@Override
-			public NoCourseView get() {
-				HeaderView header;
-				NavigationView navigation;
-				header = clientFactory.getHeaderView();
-				navigation = clientFactory.getNavigationView();
-				return new NoCourseView(header, navigation);
-			}
-		};
+		noCourseView = clientFactory.getNoCourseView();
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
+import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
@@ -12,6 +13,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+
+import javax.inject.Provider;
 
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -168,4 +171,10 @@ public class DummyClientFactory implements ClientFactory {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+  @Override
+  public Provider<NoCourseView> getNoCourseView() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }
