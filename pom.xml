@@ -157,7 +157,7 @@
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWOServer</artifactId>
             <type>war</type>
-            <version>2.2.2-SNAPSHOT</version>
+            <version>2.2.3-SNAPSHOT</version>
             <scope>runtime</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.google.jsinterop/jsinterop-annotations -->
@@ -450,7 +450,7 @@
                         <webapp>
                             <groupId>nl.uu.fi.dwo</groupId>
                             <artifactId>DWOServer</artifactId> 
-                            <version>2.2.2-SNAPSHOT</version> 
+                            <version>2.2.3-SNAPSHOT</version> 
                             <type>war</type>    
                             <asWebapp>true</asWebapp> 
                             <contextPath>/dwo</contextPath>
