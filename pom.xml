@@ -3,7 +3,7 @@
 
     <groupId>nl.uu.fi.dwo.account</groupId>
     <artifactId>Account</artifactId>
-    <version>0.0.24-SNAPSHOT</version>
+    <version>0.0.23-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>${project.build.finalName}</name>
