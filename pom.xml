@@ -230,7 +230,7 @@
 		<runTarget>${project.artifactId}.html</runTarget>
 		<warClassifier />
 		<gwt.copyWebapp>true</gwt.copyWebapp>
-		<accountVersion>0.0.23-SNAPSHOT</accountVersion>
+		<accountVersion>0.0.23</accountVersion>
 		<gwtVersion>2.8.2</gwtVersion>
 	</properties>
 	<profiles>
