@@ -276,7 +276,17 @@
 				<!-- <gwt.style>PRETTY</gwt.style> -->
 				<gwt.compiler.force>true</gwt.compiler.force>
 				<gwt.compiler.localWorkers>3</gwt.compiler.localWorkers>
+        		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 			</properties>
+			<build>
+				<plugins>
+					<plugin>
+                		<groupId>org.apache.maven.plugins</groupId>
+                		<artifactId>maven-release-plugin</artifactId>
+                		<version>2.5.3</version>         
+            		</plugin>
+				</plugins>
+			</build>
 		</profile>
 		<profile> <!-- gebruik deze voor gwt:run -->
 			<id>DWO2player-run</id>
@@ -297,6 +307,6 @@
 	</profiles>
 	<version>2.2.3-SNAPSHOT</version>
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DwoPlayer/GWT/DWOplayer</developerConnection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DwoPlayer/GWT/trunk</developerConnection>
 	</scm>
 </project>
