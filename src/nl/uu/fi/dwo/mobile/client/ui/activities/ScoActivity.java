@@ -100,7 +100,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 		if(name == null) {
 			name = scoID;
 			Promise<DomScoContext> sco;
-			if (schoolClass != null && item.isFromSchool()) { // XXX unsure if isSchool correct
+			if (schoolClass != null /*&& item.isFromSchool()*/) { // XXX unsure if isSchool correct
 			  //sco = rpcHandler.getSco(item.getID());
 			  sco = rpcHandler.getScoContextClass(item.getID(), schoolClass)
 			  .filter(p -> !p.getScoContexts().isEmpty())
@@ -142,7 +142,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 						return;
 					}
 				}
-				if (t instanceof NoSuchElementException)
+				if (t instanceof NoSuchElementException || t instanceof Dwo2Exception)
                 {
                     NoCourseView view = noCourseView.get();
                     panel.setWidget(view);
