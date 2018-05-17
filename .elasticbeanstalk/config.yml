@@ -1,0 +1,22 @@
+branch-defaults:
+  default:
+    environment: testebserver
+deploy:
+  artifact: target/EBServer-2.2.2.war
+environment-defaults:
+  appebserver:
+    branch: null
+    repository: null
+global:
+  application_name: DWO-EBServer
+  default_ec2_keyname: root-keys
+  default_platform: arn:aws:elasticbeanstalk:eu-west-1::platform/Tomcat 8 with Java
+    8 running on 64bit Amazon Linux/2.7.7
+  default_region: eu-west-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: prod
+  sc: null
+  workspace_type: Application
