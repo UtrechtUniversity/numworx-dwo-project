@@ -379,7 +379,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 	    errorCount = this.errorCount;
 
 	    //if(!("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant))) 
-	    kijkNa(false);
+	    kijkNa(false, false);
 		if(dwologger != null) {
 			Map<String, Object> map = buildLogParameters();
 			dwologger.updateLog(map);
@@ -547,10 +547,10 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 		// reset isVeranderdNaNakijken
 		zetIsVeranderdNaNakijken(false);
 
-    	kijkNa(true);
+    	kijkNa(true, true);
     }
     
-    private void kijkNa(boolean show)
+    private void kijkNa(boolean show, boolean setState)
     {	
     	//Er wordt zonder show nagekeken vanuit getState. Als er dan al een checkimg staat, moet dit niet worden weggehaald. 
     	if (show)
@@ -565,7 +565,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
         ingevuld = false;
         answer = "";
         boolean changed = false;
-    	for (int i=0 ; i<aantalValueObjects ; i++)
+    	for (int i = 0 ; i < aantalValueObjects ; i++)
         {   
     		if (ipValueList[i] != null && ipValueList[i].ipObjectIsChanged())
     			changed = true;
@@ -755,20 +755,26 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 	        }
         } // checkSamen
         else
-        {
+        { // check afzonderlijk
         	for (int i=0 ; i<aantalValueObjects ; i++)
 	        {   
         		if (ipValueList[i] != null)
         		{
 	        		//changed opvragen en straks weer terugzetten; wordt altijd op false gezet door kijkNa in ipobjectIsCorrect.
 	        		boolean ipValueChanged = ipValueList[i].ipObjectIsChanged();
-	        		boolean stapJuist = ipValueList[i].ipObjectIsCorrect();
+	        		boolean stapJuist = ipValueList[i].ipObjectIsCorrect(); // dit roept via FEWA.kijkNa() CheckValueUnit.getState() en daarmee kijkNa() aan...
 		        	ingevuld = ingevuld || ipValueList[i].ipObjectIsIngevuld();
 		        	juist = juist && stapJuist;
-		        	if(view && show)
-		        	{	
-		        		ipValueList[i].zetGoedFout(stapJuist);
+		        	if (view)
+		        	{
+		        		if (show)
+		        			ipValueList[i].zetGoedFout(stapJuist);
 		        	}
+		        	else
+		        	{
+		        		ipValueList[i].ipObjectResetFeedbackImage(); // anders staan er door FEWA.getState() gewoon vinken/kruizen
+		        	}
+		        		
 		        	ipValueList[i].setChanged(ipValueChanged);
         		}
 		    }
@@ -785,7 +791,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
         {   
             correct = false;
             fout = true;
-            verhoogErrorCount(changed);
+            verhoogErrorCount(changed & setState);
             score = 0;
         }
         if (show && check)
