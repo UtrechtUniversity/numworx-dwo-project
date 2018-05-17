@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -515,10 +516,19 @@ public class TekstRegel //extends LayoutPanel
 	}
 
   public void clearRegel() {
-    for(Widget w: children) {
-      if ( w instanceof SVGImage ) // SVGTekstComponent
-        remove(w);
-     }
+    for (Iterator<Widget> iterator = children.iterator(); iterator.hasNext();)
+	{
+		Widget w = iterator.next();
+		if  (w instanceof SVGImage) {
+// pas op: copy van remove(w)			
+			w.removeFromParent();
+			//children.remove(w);
+			iterator.remove();
+			tops.remove(w); lefts.remove(w); heights.remove(w); widths.remove(w);
+		}
+	}
+    
+    
     children.clear();
     regelObjects = new ArrayList<Object>();    
   }
