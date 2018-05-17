@@ -3570,14 +3570,29 @@ private Object CamelCase(String name) {
 	public boolean ipObjectIsChanged()
 	{
 		boolean changed = false;
-		for(int i = 0; i < interactionViewObjects.size(); i++)
-		{	Object object = interactionViewObjects.get(i);
-			if(object instanceof FormuleEditorWithAnswer)
-			{	FormuleEditorWithAnswer object2 = (FormuleEditorWithAnswer) object;
+		for (int i = 0; i < interactionViewObjects.size(); i++)
+		{
+			Object object = interactionViewObjects.get(i);
+			if (object instanceof FormuleEditorWithAnswer)
+			{
+				FormuleEditorWithAnswer object2 = (FormuleEditorWithAnswer) object;
 				changed = changed || object2.isChanged();
 			}
 		}
 		return changed;
+	}
+	
+	public void ipObjectResetFeedbackImage()
+	{
+		for (int i = 0; i < interactionViewObjects.size(); i++)
+		{
+			Object object = interactionViewObjects.get(i);
+			if (object instanceof FormuleEditorWithAnswer)
+			{
+				FormuleEditorWithAnswer object2 = (FormuleEditorWithAnswer) object;
+				object2.resetimg();
+			}
+		}
 	}
 	
 	public void setChanged(boolean b)
@@ -4064,6 +4079,8 @@ private Object CamelCase(String name) {
 		}
 		public void onTouchEnd(TouchEndEvent e)
 		{
+			LOG.info("TekstVakPanel.TouchHandler.onTouchEnd()");
+			
 			e.stopPropagation();
 			if(!editable) return;
 			if(sleepbaar || selectable)
