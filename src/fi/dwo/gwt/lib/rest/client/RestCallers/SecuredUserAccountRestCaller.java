@@ -68,4 +68,8 @@ public interface SecuredUserAccountRestCaller extends RestService {
     @GET
     @Path("/secure/user/account/verifyTOTP")
     public void verifyTOTP(MethodCallback<JSONValue> callback);
+    
+    @GET
+    @Path("/secure/user/account/getBearerToken")
+    public void getBearerToken(MethodCallback<String> callback);
 }

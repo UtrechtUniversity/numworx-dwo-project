@@ -405,5 +405,11 @@ public class SecuredUserAccountManager {
     	service.verifyTOTP(callback);
     	return callback.getPromise();
     }
+  
+    public Promise<String> getBearerToken() {
+        PromiseCallback<String> callback = new PromiseCallback<String>();
+        service.getBearerToken(callback);
+        return callback.getPromise();
+    }
     
 }
