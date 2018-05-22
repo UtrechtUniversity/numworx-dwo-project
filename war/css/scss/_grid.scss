@@ -1,0 +1,100 @@
+.row {
+	position: relative;
+	//width: 100%;
+	float: left;
+	margin-bottom: $rowMarginBottom;
+	
+	&:after {
+	    content: "";
+	    clear: both;
+		display: block;
+		width: 100%;
+	}
+}
+.row .row {
+	margin-bottom: 0;
+}
+.wide .row {
+	margin-right: ($navWidth + $siteMargin) * 1px;
+	@media #{$mediaQueryDesktop} {
+		margin-right: ($navWidthExpanded + $siteMargin) * 1px;
+	}
+}
+
+.libraryPage .wide .row {
+	margin-right: ($navWidthLibraryPage + $siteMargin) * 1px;
+}
+
+[class*="col-"] {
+	float: left;
+	padding: 0 0 0 $gutter * 1px;	
+}
+[class*="col-"] [class*="col-"] {
+	padding-left: 0;
+}
+[class*="col-"] [class*="col-"] + [class*="col-"] {
+	padding-left: $gutter * 1px;
+}
+
+.col-1  { width: (1 * $colWidth / 2 - $gutter * 0.5) * 1px; }
+.col-2  { width: 2 * $colWidth / 2 * 1px; }
+.col-3  { width: (3 * $colWidth / 2 + $gutter * 0.5) * 1px; }
+.col-4  { width: (4 * $colWidth / 2 + $gutter *  1) * 1px; }
+.col-5  { width: (5 * $colWidth / 2 + $gutter *  1.5) * 1px; }
+.col-6  { width: (6 * $colWidth / 2 + $gutter *  2) * 1px; }
+.col-7  { width: (7 * $colWidth / 2 + $gutter *  2.5) * 1px; }
+.col-8  { width: (8 * $colWidth / 2 + $gutter *  3) * 1px; }
+.col-9  { width: (9 * $colWidth / 2 + $gutter *  3.5) * 1px; }
+.col-10  { width: (10 * $colWidth / 2 + $gutter *  4) * 1px; }
+.col-11  { width: (11 * $colWidth / 2 + $gutter *  4.5) * 1px; }
+.col-12  { width: (12 * $colWidth / 2 + $gutter *  5) * 1px; }
+
+.libraryPage {
+	.col-1  { width: (1 * $colWidthLibraryPage / 2 - $gutter * 0.5) * 1px; }
+	.col-2  { width: 2 * $colWidthLibraryPage / 2 * 1px; }
+	.col-3  { width: (3 * $colWidthLibraryPage / 2 + $gutter * 0.5) * 1px; }
+	.col-4  { width: (4 * $colWidthLibraryPage / 2 + $gutter *  1) * 1px; }
+	.col-5  { width: (5 * $colWidthLibraryPage / 2 + $gutter *  1.5) * 1px; }
+	.col-6  { width: (6 * $colWidthLibraryPage / 2 + $gutter *  2) * 1px; }
+	.col-7  { width: (7 * $colWidthLibraryPage / 2 + $gutter *  2.5) * 1px; }
+	.col-8  { width: (8 * $colWidthLibraryPage / 2 + $gutter *  3) * 1px; }
+	.col-9  { width: (9 * $colWidthLibraryPage / 2 + $gutter *  3.5) * 1px; }
+	.col-10  { width: (10 * $colWidthLibraryPage / 2 + $gutter *  4) * 1px; }
+	.col-11  { width: (11 * $colWidthLibraryPage / 2 + $gutter *  4.5) * 1px; }
+	.col-12  { width: (12 * $colWidthLibraryPage / 2 + $gutter *  5) * 1px; }
+}
+
+//@media #{$mediaQueryDesktop} {
+//	.col-1  { width: 1 * $colWidthDesktop * 1%; }
+//	.col-2  { width: 2 * $colWidthDesktop * 1%; }
+//	.col-3  { width: 3 * $colWidthDesktop * 1%; }
+//	.col-4  { width: 4 * $colWidthDesktop * 1%; }
+//	.col-5  { width: 5 * $colWidthDesktop * 1%; }
+//	.col-6  { width: 6 * $colWidthDesktop * 1%; }
+//	.col-7  { width: 7 * $colWidthDesktop * 1%; }
+//	.col-8  { width: 8 * $colWidthDesktop * 1%; }
+//	.col-9  { width: 9 * $colWidthDesktop * 1%; }
+//	.col-10  { width: 10 * $colWidthDesktop * 1%; }
+//	.col-11  { width: 11 * $colWidthDesktop * 1%; }
+//	.col-12  { width: 12 * $colWidthDesktop * 1%; }
+//}
+
+
+//.col-1  { width: ((1 / 12 * $siteWidthTablet) - $gutter) / $siteWidthTablet * 100%; }
+//.col-2  { width: ((2 / 12 * $siteWidthTablet) - $gutter) / $siteWidthTablet * 100%; }
+//.col-3  { width: ((3 / 12 * $siteWidthTablet) - $gutter) / $siteWidthTablet * 100%; }
+//.col-4  { width: ((4 / 12 * $siteWidthTablet) - $gutter) / $siteWidthTablet * 100%; }
+//.col-5  { width: ((5 / 12 * $siteWidthTablet) - $gutter) / $siteWidthTablet * 100%; }
+//.col-6  { width: ((6 / 12 * $siteWidthTablet) - $gutter) / $siteWidthTablet * 100%; }
+//.col-7  { width: ((7 / 12 * $siteWidthTablet) - $gutter) / $siteWidthTablet * 100%; }
+//.col-8  { width: ((8 / 12 * $siteWidthTablet) - $gutter) / $siteWidthTablet * 100%; }
+//.col-9  { width: ((9 / 12 * $siteWidthTablet) - $gutter) / $siteWidthTablet * 100%; }
+//.col-10 { width: ((10 / 12 * $siteWidthTablet) - $gutter) / $siteWidthTablet * 100%; }
+//.col-11 { width: ((11 / 12 * $siteWidthTablet) - $gutter) / $siteWidthTablet * 100%; }
+//.col-12 { width: ((12 / 12 * $siteWidthTablet) - $gutter) / $siteWidthTablet * 100%; }
+
+.clear {
+	clear: both;
+	font-size: 0; line-height: 0;
+	margin-bottom: $rowMarginBottom;
+}
