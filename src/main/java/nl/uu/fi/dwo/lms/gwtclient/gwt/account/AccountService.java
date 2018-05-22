@@ -20,7 +20,7 @@ public class AccountService {
     private static final Logger LOG = Logger.getLogger(AccountService.class.getName());
 
     private SecuredUserAccountManager accountManager = new SecuredUserAccountManager();
-        private SecuredUserSchoolLoginManagerV2 schoolLoginManager = new SecuredUserSchoolLoginManagerV2();
+    private SecuredUserSchoolLoginManagerV2 schoolLoginManager = new SecuredUserSchoolLoginManagerV2();
 
     private final DwoGlobalVars dwoGlobalVars;
     
@@ -50,4 +50,8 @@ public class AccountService {
     Promise<Boolean> removeASchoolLogin(DomSchoolRoleAndClassV2 data) {
         return schoolLoginManager.removeASchoolLogin(data);
     }
-}
+    
+    public Promise<String> getBearerToken() {
+      return accountManager.getBearerToken();
+    }
+ }

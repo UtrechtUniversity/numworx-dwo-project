@@ -1,8 +1,18 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.modules;
 
 import com.google.web.bindery.event.shared.EventBus;
+
+import fi.dwo.gwt.lib.rest.util.Base64;
+
+import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.osgi.util.promise.Promise;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountService;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
  * Login Presenter.
@@ -15,7 +25,8 @@ public class ModulesPresenter {
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
     private Display view;
-    private String url="https://www.dwo.nl/leerling";
+    private String url="/dwo/tablet/DWOplayer.html";
+    private AccountService account;
 
     /**
      * @return the view
@@ -29,7 +40,6 @@ public class ModulesPresenter {
      */
     public void setView(Display view) {
         this.view = view;
-        this.init();
     }
 
     public interface Display {
@@ -40,12 +50,44 @@ public class ModulesPresenter {
     public ModulesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+        account = new AccountService(dwoGlobalVars); // alleen voor getBearerToken.
     }
 
 //    @JsMethod not required unless testing stuff.
     public void init() {
         view.clear();
-        view.openUrl(url);
+        LOG.severe("calling getBearerToken");
+        account.getBearerToken().then(this::gotToken,this::fail);
     }
+
+    /*
+     * bearer token has arrived:
+     */
+    public Promise<Void> gotToken(Promise<String> resolved) {
+     LOG.severe("got Token" + resolved.getValue());
+     String token = "2\f" + resolved.getValue(); //format 2
+     StringBuilder u = new StringBuilder(url);
+     u.append( "?a=" ) .append (Base64.btoa(token)); // User Auth Token
+     u.append( "&header=none");
+     u.append("&profile=").append("77"); // FIXME PROFILE
+     u.append("&locale=").append("nl");  // FIXME LOCALE
+     LOG.info("open URL " + u);
+     view.openUrl(u.toString());
+     return null;
+    }
+    
+    /*
+     * send failure event.
+     */
+    public void fail(Promise<?> resolved) {
+      Throwable fail = resolved.getFailure();
+      if (fail instanceof Dwo2Exception) {
+          LOG.log(Level.SEVERE, fail.getMessage());
+          eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail)); // FIXME which event type?
+      } else {
+          LOG.log(Level.SEVERE, fail.getMessage());
+          eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
+      }
+  }
 
 }
