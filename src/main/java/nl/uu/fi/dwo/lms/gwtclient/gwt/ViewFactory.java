@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentToSchoolclassPresenter;
@@ -39,4 +40,5 @@ public interface ViewFactory {
 //    public MsgClickedDialogPresenter.Display getMsgClickedDialogView();
     public FileUploadStudentsPresenter.Display getFileUploadStudentsView();
     public ProgressDialogWithAbortPresenter.Display getProgressDialogView();
+    public ModulesPresenter.Display getModulesView();
 }

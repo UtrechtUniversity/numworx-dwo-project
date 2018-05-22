@@ -9,6 +9,7 @@ import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresenter;
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddTeacherToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CopyOrMoveStudentToSchoolclassPresenter;
@@ -44,7 +45,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
 //    private final StudentsInSchoolclassPresenter studentsInSchoolclassPresenter;
 //    private final TeachersInSchoolclassPresenter teachersInSchoolclassPresenter;
 //    private final EditStudentPresenter editStudentPresenter;
-//    private final AddStudentsPresenter addStudentsPresenter;
+    private final ModulesPresenter modulesPresenter;
     private final MessageDialogWithOKPresenter messageDialogWithOKPresenter;
     private final AlertDialogWithOKPresenter alertDialogWithOKPresenter;
     private final AlertDialogWithConfirmCancelPresenter alertDialogWithConfirmCancelPresenter;
@@ -64,6 +65,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         copyOrMoveStudentToSchoolclassPresenter = new CopyOrMoveStudentToSchoolclassPresenter(eventBus, dwoGlobalVars);
         addTeacherToSchoolclassPresenter = new AddTeacherToSchoolclassPresenter(eventBus, dwoGlobalVars);
         modulesOfSchoolclassPresenter = new ModulesOfSchoolclassPresenter(eventBus, dwoGlobalVars);
+        modulesPresenter = new ModulesPresenter(eventBus,dwoGlobalVars);
 //        coursesOfSchoolclassPresenter = new CoursesOfSchoolclassPresenter(eventBus, dwoGlobalVars);
 //        studentsInSchoolclassPresenter = new StudentsInSchoolclassPresenter(eventBus, dwoGlobalVars);
 //        teachersInSchoolclassPresenter = new TeachersInSchoolclassPresenter(eventBus, dwoGlobalVars);
@@ -95,6 +97,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
 //        teachersInSchoolclassPresenter.setView(viewFactory.getTeachersInSchoolclassView());
 //        editStudentPresenter.setView(viewFactory.getEditStudentView());
 //        addStudentsPresenter.setView(viewFactory.getAddStudentsView());
+        modulesPresenter.setView(viewFactory.getModulesView());
         fileUploadStudentsPresenter.setView(viewFactory.getFileUploadStudentsView());
         messageDialogWithOKPresenter.setView(viewFactory.getMessageDialogWithOKView());
         alertDialogWithOKPresenter.setView(viewFactory.getAlertDialogWithOKView());
@@ -271,5 +274,15 @@ public class PresenterFactoryGwt implements PresenterFactory {
     public ModulesOfSchoolclassPresenter getModulesOfSchoolclassPresenter() {
         return modulesOfSchoolclassPresenter;
     }
+    
+    /**
+     * @return the modulesPresenter
+     */
+      @JsMethod
+    @Override
+    public ModulesPresenter getModulesPresenter() {
+        return modulesPresenter;
+    }
+    
 
 }

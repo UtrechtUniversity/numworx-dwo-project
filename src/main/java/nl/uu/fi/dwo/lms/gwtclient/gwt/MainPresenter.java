@@ -194,11 +194,13 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
                     break;
                 case RESULTSSTUDENT:
                     display.showStudentResultsView();
+                    break;
                 case MODULES:
                     display.showModulesView();
+                    break;
                 case ORGANISATION:
                     display.showOrganisationView();
-
+                    break;
                 // case ADDSTUDENTS:
                 // display.showAddStudentsView();
                 // break;

@@ -18,12 +18,14 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsView;
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.modules.JsModulesView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsAddStudentToSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsAddTeacherToSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsCopyOrMoveStudentToSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsModulesOfSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsAlertDialogWithOKView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsMessageDialogWithOKView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddTeacherToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CopyOrMoveStudentToSchoolclassPresenter;
@@ -57,6 +59,7 @@ public class ViewFactoryJs implements ViewFactory {
     private final AlertDialogWithConfirmCancelPresenter.Display alertDialogWithConfirmCancelView;
     private final FileUploadStudentsPresenter.Display fileUploadStudentsView;
     private final ProgressDialogWithAbortPresenter.Display progressDialogView;
+    private final ModulesPresenter.Display modulesView;
 
     public ViewFactoryJs(PresenterFactory pf) {
         mainView = new JsMainView();
@@ -78,6 +81,7 @@ public class ViewFactoryJs implements ViewFactory {
         alertDialogWithConfirmCancelView = new JsAlertDialogWithConfirmCancelView();
         progressDialogView = new JsProgressDialogWithAbortView();
         fileUploadStudentsView = new FileUploadStudentsView(pf.getFileUploadStudentsPresenter());
+        modulesView = new JsModulesView();
     }
 
     @Override
@@ -218,6 +222,11 @@ public class ViewFactoryJs implements ViewFactory {
     @Override
     public ModulesOfSchoolclassPresenter.Display getModulesOfSchoolclassView() {
         return modulesOfSchoolclassView;
+    }
+    
+    @Override
+    public ModulesPresenter.Display getModulesView(){
+        return modulesView;
     }
 
 }
