@@ -460,11 +460,11 @@ public class SecuredUserAccountManager {
         PLAIN
     }
 
-@GET
-    @Produces("text/plain")
+    @GET
+    @Produces({"application/json"})
     @Path("/getBearerToken")
     public String getBearerToken(@Context SecurityContext sc) {
-          PersistentUser user = null;
+        PersistentUser user = null;
         PersistentLoginContext loginContext = null;
 
         try {
@@ -477,7 +477,7 @@ public class SecuredUserAccountManager {
                 String result = (loginContext.getSecretKey()==null) ? null : TOTP.generateTOTP(DatatypeConverter.printHexBinary(loginContext.getSecretKey()), timeString, "8");
                 result = user.getUsername()+":"+result;
                 byte bytes[] = result.getBytes();
-                return "Bearer "+java.util.Base64.getEncoder().encodeToString(bytes);
+                return "\"Bearer "+java.util.Base64.getEncoder().encodeToString(bytes) + '\"'; // application/json 
             }else{
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_LoginNeeded, "No login context exists.");
             }

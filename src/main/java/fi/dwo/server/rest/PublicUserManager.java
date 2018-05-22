@@ -5,9 +5,11 @@ import com.digitalmolehill.crypto.SymmetricCryptor;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginCheck;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.security.TOTP;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -31,6 +33,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -41,6 +44,7 @@ import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import fi.dwo.server.rest.jaxrsfilters.AuthenticationRequestFilter;
 
 import java.io.UnsupportedEncodingException;
 
@@ -50,6 +54,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,6 +72,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
+import javax.xml.bind.DatatypeConverter;
 
 import java.util.concurrent.ThreadLocalRandom; //TODO serverside I'd prefere SecureRandom
 
@@ -308,12 +314,38 @@ public class PublicUserManager {
                 StandardCharsets.UTF_8
         );
         char version = authToken.charAt(0);
+        String[] split;
         switch (version) {
             default:
                 LOG.log(Level.SEVERE, "Unsupported AuthToken {0}, version", restAuthToken.getAuthToken());
                 break;
+            case '2':
+                split = authToken.split("\f");
+                if(split.length != 2) {
+                  LOG.log(Level.SEVERE, "Illegal authToken {0}, wrong format", restAuthToken.getAuthToken());
+                  break;
+                }
+// FIXME shared code alert with authenticationrequestfilter
+                String authHeader = split[1].substring(7);
+                byte[] header = Base64.getDecoder().decode(authHeader);
+                String headerString = ":";
+                try {
+                    headerString = new String(header, "UTF8");
+                } catch (UnsupportedEncodingException ex) {
+                    LOG.log(Level.SEVERE, null, ex);
+                }
+                String authFields[] = headerString.trim().split(":");
+                PersistentUser u = UserManager.findByUserName(authFields[0]);
+                List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
+                for (PersistentLoginContext l : loginContextList) {
+                    if (TOTP.verifyTOTP(authFields[1], DatatypeConverter.printHexBinary(l.getSecretKey()), "8")) {
+                        return u.buildDomUserFullwLoginContext(l);
+                    }
+                }
+                break;
+                
             case '1': // Weak token, only for proof of concept, 5 minutes timeout
-                String[] split = authToken.split("\f");
+                split = authToken.split("\f");
                 if (split.length != 4) {
                     LOG.log(Level.SEVERE, "Illegal authToken {0}, wrong format", restAuthToken.getAuthToken());
                     break;
