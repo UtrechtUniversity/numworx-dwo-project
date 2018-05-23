@@ -366,6 +366,7 @@
                     </execution>
                 </executions>
             </plugin>            -->
+            
             <plugin>
                 <groupId>org.codehaus.cargo</groupId>
                 <artifactId>cargo-maven2-plugin</artifactId>
@@ -465,13 +466,13 @@
                             <contextPath>/dwo/apps</contextPath>
                         </webapp>
                         <webapp>
-                        	<groupId>nl.uu.fi.dwo.mobile</groupId>
-                        	<artifactId>DWOplayer</artifactId>
-                        	<version>2.2.3</version>
-                        	<classifier>dwo2</classifier>
-                        	<type>war</type>
-                        	<contextPath>/dwo/tablet</contextPath>
-                        	<asWebapp>true</asWebapp>
+                            <groupId>nl.uu.fi.dwo.mobile</groupId>
+                            <artifactId>DWOplayer</artifactId>
+                            <version>2.2.3</version>
+                            <classifier>dwo2</classifier>
+                            <type>war</type>
+                            <contextPath>/dwo/tablet</contextPath>
+                            <asWebapp>true</asWebapp>
                         </webapp>
                     </webapps>                         
                 </configuration> 
@@ -594,6 +595,36 @@
                     <goals>deploy</goals>
                 </configuration>    
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-HtmlUi</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
+                            <overwrite>true</overwrite>
+                            <resources>
+                                <resource>
+                                    <directory>../DwoGwtClientHtmlUi/src/main/html</directory>
+                                    <includes>
+                                        <include>css/**</include>
+                                        <include>js/**</include>
+                                        <include>images/**</include>
+                                        <include>index.html</include>
+                                        <include>library.html</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>            
             <!-- sample version for with mysql building -->
             <!--                        <plugin>  docker test configuration om gwtclient in een docker image te starten 
                 <groupId>io.fabric8</groupId>
