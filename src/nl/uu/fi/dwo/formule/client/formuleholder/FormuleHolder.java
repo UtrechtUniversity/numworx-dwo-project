@@ -482,4 +482,6 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	@Override
 	public void shiftTab() {
 	}
+
+	public void removeTouchHandler() { }  // alleen in viewer
 }
