@@ -2040,10 +2040,13 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	}
 
 	private PopupFacade facade;
+	private Widget widget;
 	@Override
-	public Widget asWidget()
+	public Widget asWidget() // MUST BE IDEMPOTENT
 	{
-		return facade.wrap(getAsPanel(), this);
+		if(widget == null)
+			widget = facade.wrap(getAsPanel(), this);
+		return widget;
 	}
 	
 	public boolean isPopup()
