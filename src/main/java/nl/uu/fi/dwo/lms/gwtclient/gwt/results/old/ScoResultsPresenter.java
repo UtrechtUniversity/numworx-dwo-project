@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.results.old;
 
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.json.client.JSONArray;
@@ -32,7 +32,7 @@ import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter.StudentItem;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.old.ScoResultsPresenter.StudentItem;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;

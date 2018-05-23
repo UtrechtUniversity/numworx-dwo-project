@@ -8,9 +8,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
-import fi.dwo.gwt.lib.rest.ui.DialogEvent;
-import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogEvent;
-import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPromise;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.Dwo2LocaleMessageGWTTranslator;
 import java.util.logging.Level;
@@ -21,6 +18,8 @@ import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.FAIL;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.LOGOUT;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.SUCCESS_RESULTS;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPromise;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -151,7 +150,7 @@ class BootPanelController {
         eventBus.addHandler(LoginEvent.TYPE, new LoginEventHandler() {
             @Override
             public void onLoginEvent(LoginEvent loginEvent) {
-                if (dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name())) {
+                if (loginEvent.getState()==FAIL || dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name())) {
                     switch (loginEvent.getState()) {
                         case SUCCESS:
                         case SUCCESS_WELCOME:
@@ -176,13 +175,13 @@ class BootPanelController {
                         // break;
                         case FAIL:
                             LOG.log(Level.INFO, "Login failed.");
-//                        /eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Login failed.")));
-                            MsgClickedDialogPromise p = new MsgClickedDialogPromise(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_AuthenticationError));
+//                            eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Login failed.")));
+                                    Window.Location.replace(Window.Location.getHref());
+                            AlertDialogWithConfirmCancelPromise p = new AlertDialogWithConfirmCancelPromise(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_AuthenticationError));
                             p.getPromise().then(new Success<Boolean, Void>() {
                                 @Override
                                 public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                                     LOG.log(Level.INFO, "returned value" + resolved.getValue());
-                                    Window.Location.replace(Window.Location.getHref());
                                     return null;
                                 }
                             }, new Failure() {
@@ -192,8 +191,8 @@ class BootPanelController {
                                 }
                             }
                             );
-                            eventBus.fireEvent(new MsgClickedDialogEvent(MsgClickedDialogEvent.EventType.MsgClickedDialog, p));
-
+//                            eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_AuthenticationError)));
+                            //presenterFactory.getLoginPresenter().getView().ini;
                             break;
                         case LOGOUT:
                             dwoGlobalVars.clearCurrentUser();
@@ -236,13 +235,13 @@ class BootPanelController {
                             presenterFactory.getAccountPresenter().init();
                             break;
                         case PEOPLE:
-                            eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+                            eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                             break;
                         case RESULTS:
-                            eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+                            eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                             break;
                         case RESULTSSTUDENT:
-                            eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+                            eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                             break;
                         case SCHOOLCLASSES:
                             presenterFactory.getSchoolclassesPresenter().init();
@@ -254,22 +253,23 @@ class BootPanelController {
                             presenterFactory.getAddStudentToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
                             break;
                         case COPYORMOVESTUDENTTOSCHOOLCLASS:
-                            eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+                            presenterFactory.getCopyOrMoveStudentToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
                             break;
                         case ADDTEACHERTOSCHOOLCLASS:
                             presenterFactory.getAddTeacherToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
                             break;
                         case EDITCOURSESOFSCHOOLCLASS:
-                            eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+                            LOG.log(Level.SEVERE, "Init panel EDITCOURSESOFSCHOOLCLASS.");
+                            presenterFactory.getModulesOfSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
                             break;
                         case ORGANISATION:
-                            eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+                            eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                             break;
                         case MODULES:                            
                             presenterFactory.getModulesPresenter().init();
                             break;
                         default:
-                            eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+                            eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                             LOG.log(Level.SEVERE, "Switch panel failed in app controller.");
                     }
                 }

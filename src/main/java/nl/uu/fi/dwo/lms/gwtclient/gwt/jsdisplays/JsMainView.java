@@ -101,7 +101,7 @@ public class JsMainView implements MainPresenter.Display{
 
     @Override
     public void showEditCoursesOfSchoolClassView() {
-       JsMainDisplay.showEditCoursesOfSchoolClassView();
+       //JsMainDisplay.showEditCoursesOfSchoolClassView();
     }
 
     @Override

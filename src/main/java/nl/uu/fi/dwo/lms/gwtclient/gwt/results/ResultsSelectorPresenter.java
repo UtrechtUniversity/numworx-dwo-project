@@ -34,7 +34,7 @@ import org.osgi.util.promise.Success;
  *
  * @author Gert van der Plas
  */
-public class ResultCoursesPresenter {
+public class ResultsSelectorPresenter {
 //
 //    private static final Logger LOG = Logger.getLogger(ResultCoursesPresenter.class.getName());
 //    private DwoGlobalVars dwoGlobalVars;

@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.results.old;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ScoResultsPresenter.StudentItem;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.old.ScoResultsPresenter.StudentItem;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 
 /**

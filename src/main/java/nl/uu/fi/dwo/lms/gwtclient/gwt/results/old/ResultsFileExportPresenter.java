@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.results.old;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.SchoolClassDialogEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.SchoolClassDialogEventHandler;

@@ -1,0 +1,647 @@
+/* 
+ * GENERAL
+ */
+
+html { 
+	height: 100%; 
+	overflow-y: scroll;
+	overflow-x: hidden;
+	width: 100%; 
+}
+body { 
+	height: 100%;  
+	min-width: $siteWidthTablet * 1px; 
+	overflow-y: scroll;
+	overflow-x: hidden;
+	position: relative;
+	
+	&.overlay {
+		overflow: hidden;
+		&:after {
+			background: $transBlack;
+			bottom: 0;
+			content: " ";
+			display: block;			
+			height: 100%;
+			left: 0;
+			position: fixed;
+			top: 0; 
+			right: 0;  
+			width: 100%;			
+			z-index: 999;
+		}		
+	}
+	&.login {
+		background-color: $shade2;
+	}
+}
+
+.panel {
+	background-color: $white;
+	display: none;	
+	width: 100%;	
+}
+
+
+
+//.block {
+//	width: 86%;
+//	padding: 7%;
+//
+//	&.blue {
+//		background-color: $primaryDark;
+//		border-radius: 5px;
+//		//color: $white;
+//	}
+//}
+
+.subpanel {
+	margin: 0 0 0 auto;
+	margin-right: $navWidth * -1px;
+	overflow-y: scroll;	
+	padding-top: ($headerHeight + $subpanelHeaderHeight) * 1px;
+	width: 99.9%; // TODO bug Safari
+	
+	
+	@media #{$mediaQueryDesktop} {
+		margin-right: $navWidthExpanded * -1px;
+		//position: relative;
+	}
+	.libraryPage & {
+		margin-right: $navWidthLibraryPage * -1px;
+		padding-top: ($headerHeight) * 1px;
+	}
+	
+	
+	header {
+		background-color: $white; 
+		border-bottom: 1px $primary solid;
+		color: $primary;
+		min-height: $subpanelHeaderHeight * 1px;
+		left: 0;
+		top: $headerHeight * 1px;						
+		position: fixed;
+		width: 100%;
+		z-index: 150;
+		
+		@media #{$mediaQueryDesktop} {
+			margin-right: 0;
+			left: $navWidthExpanded * 1px;
+			//position: fixed;
+			right: 0;
+			z-index: 150;
+		}
+		
+		.libraryPage & { 
+			display: none; // TODO: remove; demo purpose only
+		}
+		
+		.container {
+			//max-width: ($siteWidthTablet - $navWidth) * 1px;
+			width: 100%;
+			
+			@media #{$mediaQueryDesktop} {
+				max-width: ($siteWidthDesktop - $navWidthExpanded) * 1px;
+			}
+		}
+		
+		.icon {
+			border-radius: 2px;
+			display: block;			
+			height: 26px; //TODO var
+			left: $siteMargin * 1px;
+			margin-top: $gutter * 1px;
+			position: fixed;			
+			
+			width: 26px; //TODO var
+			
+			use { fill: $primary; }
+			
+			@media #{$mediaQueryDesktop} {
+				display: none;
+			}
+		}
+		
+		div.content {
+			bottom: 0;
+			margin-left: ($navWidth + $gutter) * 1px;	
+			position: absolute;
+			width: 100%;			
+			//position: absolute;		
+			
+			@media #{$mediaQueryDesktop} {
+				//	width: ($siteWidth - $gutter) / $siteWidth * 100%;
+				//padding: 0 ($gutter / 2) / $siteWidth * 100%;
+				
+				margin-left: ($gutter) * 1px;			
+			}
+		}
+		
+		section#help { 
+			background-color: $shade2;
+			
+			margin-top: -18px;
+			padding-top: 0;		
+			//padding-left: 0;	
+			position: fixed;
+			right: $siteMargin * 1px;
+			top: ($headerHeight + $subpanelHeaderHeight) * 1px;			
+			//width: $colWidth * 1px;			
+			z-index: 99;
+			
+			h2.helpheader {
+				border-bottom: 1px $primary solid;
+				border-left: 1px $shade2 solid;
+				cursor: pointer;
+				margin-left: ($gutter + 1) * -1px;						
+			}			
+			.content {
+				background-color: $shade2;
+				border-left: 1px $shade2 solid;
+				bottom: 0;
+				display: none;				
+				padding: 2em $gutter * 1px;
+				position: fixed;
+				right: $siteMargin * 1px;			
+				top: ($headerHeight + $subpanelHeaderHeight + 1) * 1px;
+				
+				
+				
+				@media #{$mediaQueryDesktopWide} {
+					bottom: auto;
+					min-height: 50%;
+				}				
+			}
+			&.col-2 .content { width: (2 * $colWidth / 2 - $gutter) * 1px; }		
+			&.col-3 .content { width: (3 * $colWidth / 2 + $gutter * 0.5 - $gutter) * 1px; }		
+			&.col-4 .content { width: (4 * $colWidth / 2 + $gutter * 1.0 - $gutter) * 1px; }		
+			&.col-5 .content { width: (5 * $colWidth / 2 + $gutter * 1.5 - $gutter) * 1px; }		
+			&.col-6 .content { width: (6 * $colWidth / 2 + $gutter * 2.0 - $gutter) * 1px; }		
+			&.col-7 .content { width: (7 * $colWidth / 2 + $gutter * 2.5 - $gutter) * 1px; }		
+			&.col-8 .content { width: (8 * $colWidth / 2 + $gutter * 3.0 - $gutter) * 1px; }		
+			&.col-9 .content { width: (9 * $colWidth / 2 + $gutter * 3.5 - $gutter) * 1px; }		
+			&.col-10 .content { width: (10 * $colWidth / 2 + $gutter * 4.0 - $gutter) * 1px; }		
+			&.col-11 .content { width: (11 * $colWidth / 2 + $gutter * 4.5 - $gutter) * 1px; }		
+			&.col-12 .content { width: (12 * $colWidth / 2 + $gutter * 5.0 - $gutter) * 1px; }		
+			
+			&.active {
+				
+				@media #{$mediaQueryDesktop} {
+					right: 0;
+				}
+				
+				h2.helpheader {
+					background-color: $primary;
+					border-left-color: $primary;
+					color: $white;
+					
+					@media #{$mediaQueryDesktop} {
+						background-color: $shade3;
+						border-left-color: $primary;
+						right: 0;
+					}	
+				}
+				.content {
+					display: block;
+					
+					@media #{$mediaQueryDesktop} {
+						border-left-color: $primary;
+						right: 0;
+					}
+				}				
+			}
+		}	
+	}
+	
+	section {
+		max-width: ($siteWidthTablet - $navWidth - $siteMargin) * 1px;
+		padding-top: $panelSectionPaddingTop;
+		.libraryPage & {
+			padding-top: $gutter * 1px;
+		}
+		position: relative;
+				
+		@media #{$mediaQueryDesktop} {
+			max-width: 6 * ($colWidth + $gutter) * 1px;
+		}
+		
+		&.wide {
+			max-width: none;
+			
+			@media #{$mediaQueryDesktop} {
+				max-width: none;
+			}
+		}		
+		
+		&:after {
+		    clear: both;
+			content: "";		    
+		    display: table;
+		}
+	}
+	
+	
+}
+
+
+
+/*
+ * LOGIN PANEL  
+ */
+
+#loginDisplayPanel {
+	@include align-items(center);
+	background-color: $shade4;
+	@include flex;	
+	@include justify-content(center);	
+	min-height: 100%;
+	
+	.container {
+		background: transparent url(../images/login-containerBackground.jpg) no-repeat top left; // TODO: replace by def image
+		background-size: contain;
+		max-width: 100%;		
+		position: relative;
+		width: 580px;		
+	}
+	
+	#loginBox {
+		color: $primaryLight;
+		left: 270 / 580 * 100%;
+		margin-top: 123px;
+		position: relative;
+		width: 310 / 580 * 100%;
+		
+		.block.primary {
+			background-color: $primaryDark;
+			@include border-radius($defaultRadius);
+			padding: $gutter * 1px;
+		}
+		
+		form {
+			display: block;
+			width: 100%;
+			
+			&:after {
+			    content: "";
+			    clear: both;
+				display: block;
+				width: 100%;
+			}
+			
+			input[type="text"], input[type="password"] {
+				background: $primary;
+				color: $white;				
+								
+				@include placeholder {
+					color: $white;
+				}
+			}
+			input[type="submit"] {
+				margin-top: $gutter * 1px;
+			}
+		}
+		
+		p {
+			font-size: 14 / 16 * 1em;
+			line-height: 1.3em;
+			margin: 8px 0;
+		}
+
+		ul {
+			font-size: 14 / 16 * 1em;
+			line-height: 1.8em;
+			margin-top: 16px;
+		}
+		
+		a {
+			color: $white;
+			text-decoration: none;
+		}
+	}
+}
+
+
+
+
+/*
+ * MAIN PANEL
+ */
+
+#mainPanel {
+	background-color: $shade1;
+	min-height: 100%;
+	position: relative;
+	width: 100%;
+	
+	> header {
+		background-color: $primaryDark;		
+		@include box-shadow(0px,3px,10px,0px,$shadow);
+		height: $headerHeight * 1px;
+		left: 0;
+		padding: 0;
+		position: fixed;
+		right: 0;
+		top: 0;
+		width: 100%;
+		z-index: 200;
+		
+		#logo {
+			display: block;
+			float: left;
+			padding: $gutter / 2 * 1px $siteMargin * 1px;
+		}
+		#accountMenuToggle {
+			float: right;
+			margin-right: $siteMargin * 1px;
+			margin-top: 15px;
+
+			.icon {
+				display: block;
+				float: left;
+				
+				border-radius: 2px;
+				float: left;
+				height: 26px; //TODO var
+				margin-right: 0.5em;
+				width: 26px; //TODO var
+				
+				use { fill: $shade12; }
+			}
+			
+		}
+		#accountMenuBox {
+			background-color: $primary;
+			border: 1px $black solid;
+			color: $white;
+			display: none;
+			min-width: $siteWidth / 12 * 2 * 1px; // TODO make flexible
+			padding: 10px;
+			position: absolute;
+			right: $gutter * 1px;
+			text-align: right;
+			top: $headerHeight - 15 * 1px;
+			
+			a {
+				clear: both;
+				color: $white;
+				display: block;
+				float: right;
+				line-height: 2em;
+				text-decoration: none;
+				text-transform: uppercase;				
+				&:first-of-type { margin-top: 1em; }
+			}
+
+			@include box-shadow(0px,0px,10px,0px,$shadow);
+			
+			#accountMenuPresentationName, #accountMenuSchoolName, #accountMenuUserRole {
+				color: $shade12;
+				display: inline;
+				padding: 0;
+			}
+			#accountMenuPresentationName {
+				&:before {
+					content: " ";
+				}
+			}
+			#accountMenuSchoolName {
+				clear: both;
+				display: block;
+				float: right;
+				text-align: right;
+				width: 100%;				
+			}
+		}
+	}
+	
+	nav {
+		background-color: $shade1;
+		bottom: 0;
+		color: $shade12;
+		//height: 100%;
+		left: 0;
+		position: fixed;
+		top: ($headerHeight + $subpanelHeaderHeight) * 1px;
+		width: $navWidth * 1px;
+		z-index: 100;
+		
+		@media #{$mediaQueryDesktop} {
+			@include box-shadow(3px,0px,10px,0px,$shadow);
+			top: ($headerHeight) * 1px;
+			width: $navWidthExpanded * 1px;
+			z-index: 200;
+		}
+		
+		.libraryPage & {
+			@include box-shadow(3px,0px,10px,0px,$shadow);
+			top: ($headerHeight) * 1px;
+			width: $navWidthLibraryPage * 1px;
+			z-index: 200;
+			
+			.libraryPageIcon {
+				display: block;			
+				border-radius: 2px;
+				height: 26px; //TODO var
+	  		    margin-left: $siteMargin * 1px;
+				margin-right: 0.5em;
+				margin-top: $gutter/2 * 1px;
+				margin-bottom: $gutter * 1px;
+				width: 26px; //TODO var
+			
+				use { fill: $shade12; }
+			}
+			
+			h2 { 
+				width: 100%; 
+				text-indent: $siteMargin * 1px;
+			}			
+		}
+		
+		ul {
+			margin-top: $gutter * 1px;
+			margin-left: $siteMargin * 1px;
+			
+			@media #{$mediaQueryDesktop} {
+				margin-top: ($gutter + $subpanelHeaderHeight) * 1px;
+			}
+			
+			.libraryPage & {
+				margin-top: 0;
+			}
+						
+			&#mainNav {
+				.libraryPage & {
+					bottom: $gutter * 1px;
+					position: absolute;
+				}
+			}
+			
+			li {
+				//line-height: 2em;
+				margin: $gutter * 1px 0 0 0;
+				
+				a {
+					color: $shade12;
+					text-decoration: none;
+					
+					&:after {
+					    content: "";
+					    clear: both;
+						display: block;
+						width: 100%;	
+					}
+					
+					&:hover {
+						color: $shade3;
+						text-decoration: none;
+						
+						.icon {
+							use { fill: $shade3; }
+						}
+						
+					}
+					
+					@media #{$mediaQueryDesktop} {
+						&.active {
+							color: $primary;
+							.icon {
+								use { fill: $primary; }
+							}
+						}
+					}
+					
+					.name {
+						display: none;
+						line-height: 26px; // TODO var
+						
+						@media #{$mediaQueryDesktop} {
+							display: block;
+						}
+						.libraryPage & {
+							display: none;
+						}
+					}
+					
+					.icon {
+						display: block;
+						
+						border-radius: 2px;
+						float: left;
+						height: 26px; //TODO var
+						margin-right: 0.5em;
+						width: 26px; //TODO var
+						
+						use { fill: $shade12; }
+					}
+				}
+			}
+			
+			&#libraryPageNav {
+				margin-left: 0;
+				font-size: 14 / 16 * 1em;
+				
+				li {
+					line-height: 2em;
+					margin: 0;
+					
+					a {
+						border-bottom: 1px $shade12 solid;
+						display: block;
+						padding-left: $siteMargin * 1px;
+					}
+					&.active a {
+						background-color: $shade12;
+						color: $white;
+					}
+					span {
+						display: block;
+						line-height: 1.3em;
+						padding-left: $siteMargin * 1px;
+						padding-top: 5px;
+					}
+				}
+			}
+		}
+		
+		
+		
+	}		
+}
+
+//svg path { fill: inherit; }
+
+
+
+section.dialog {
+	background: $shade2;
+	display: none;
+	height: $dialogHeight * 1px;	
+	left: 50%;
+	margin-left: 3 * ($colWidth + $gutter) * -.5px;
+	margin-top: $dialogHeight / 2 * -1px;
+	padding: 0 $gutter * 1px;
+	position: fixed;
+	top: 50%;
+	width: 3 * ($colWidth + $gutter) * 1px;
+	z-index: 9999;
+	@include box-shadow(3px,3px,10px,0px,$shadow);
+	
+	header {
+		left: 0;
+		margin-top: -1em;
+		position: absolute;
+		top: 0;
+	}
+	section {
+		height: 125px;		
+		margin-top: 15px;
+		position: relative;
+	}
+}
+
+section.lightbox {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	
+	background-color: $shade2;
+	
+	width: 90%;
+	//max-width: $siteWidth * 1px;
+	margin-left: -45%;
+	
+	height: 90%;
+	
+	margin-top: -45vh;
+	z-index: 9999;
+	
+	display: none;
+	
+	@include box-shadow(3px,3px,10px,0px,$shadow);
+	
+	header {
+		position: absolute;
+		height: 30px;
+	}
+	section {
+		position: absolute;
+		background-color: $shade1;
+		top: 30px;
+		bottom: 30px;
+		width: 100%;
+	}
+	footer {
+		position: absolute;
+		height: 30px;
+		width: 100%;
+		bottom: 0;
+	}
+}
+
+/*
+ * WELCOME PANEL 
+ */
+
+#welcomeDisplayPanel {
+	
+}

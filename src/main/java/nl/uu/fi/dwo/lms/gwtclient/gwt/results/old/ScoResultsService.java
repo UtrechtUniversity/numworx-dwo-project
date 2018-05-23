@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.results.old;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherResultsManager;
 
