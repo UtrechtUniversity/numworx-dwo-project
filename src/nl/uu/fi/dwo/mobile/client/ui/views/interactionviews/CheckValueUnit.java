@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
@@ -112,6 +113,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 	
 	private String answer = "";
 	private boolean view = false;
+	private CorrectieFacade correctie;
 	
 	public CheckValueUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipValueList)
 	{
@@ -359,6 +361,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
         
         if(ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken))) 
         	kijkNa();
+        correctie = CorrectieFacade.get(h, this, getScoreMax());
 	}
 	
 	public HashMap<String, Object> getState()
@@ -394,6 +397,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
         h.put("attemptsCount", new Integer(attemptsCount));
         h.put("errorCount", new Integer(errorCount));
         
+        if(correctie != null) correctie.correctie(h);
         return h;
 	}
 	

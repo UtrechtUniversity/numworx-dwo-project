@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
@@ -155,7 +156,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	
 	private static boolean fontOvererving = false;
 	private FormuleFont font;
-
+	private CorrectieFacade correctie;
 
 	public AntwoordTekstVak2(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -665,6 +666,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		h.put("errorCount", new Integer(errorCount));
 		h.put("editable", Boolean.valueOf(editable));
 
+		if(correctie != null) correctie.correctie(h);
 		return h;
 	}
 	
@@ -726,6 +728,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 				antwoordTF.acceptCBookEvent(EVENT_READONLY);
 			}
 		}
+		correctie = CorrectieFacade.get(h, this, scoreMax);
 	}
 
 

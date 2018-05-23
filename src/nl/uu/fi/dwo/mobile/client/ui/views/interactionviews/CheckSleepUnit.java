@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
@@ -132,6 +133,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	private boolean view = false;
 	private boolean verzamelDoel;
 	private DWOLogger dwologger;
+	private CorrectieFacade correctie;
 	
 	public void randomizePositions()
 	{
@@ -218,6 +220,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
         h.put("attempts", attempts);
         h.put("attemptsCount", new Integer(attemptsCount));
         h.put("errorCount", new Integer(errorCount));
+        if(correctie != null) correctie.correctie(h);
         return h;
 	}
 
@@ -284,6 +287,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
         {
         	kijkNa();
         }
+        correctie = CorrectieFacade.get(h, this, getScoreMax());
 	}
 	
 	public void setAttempt()

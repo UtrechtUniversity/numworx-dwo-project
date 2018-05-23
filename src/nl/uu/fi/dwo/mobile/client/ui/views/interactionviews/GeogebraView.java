@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
+import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.ImageTextButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
@@ -103,6 +104,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	private Map<String, Object> geogebraParams = new HashMap<String,Object>();
 	private int attemptsCount;
 	private int errorCount;
+	private CorrectieFacade correctie;
 	/**
 	 * Houdt bij of er iets veranderd is, t.b.v. errorCount.
 	 */
@@ -441,7 +443,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		map.put("ingevuld", Boolean.valueOf(ingevuld));
 		map.put("attemptsCount", Integer.valueOf(attemptsCount));
 		map.put("errorCount", Integer.valueOf(errorCount));
-
+		if(correctie != null) correctie.correctie(map);
 		return wrap(map);
 	}
 
@@ -505,6 +507,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		{
 			setVisibleFeedbackImages(false, false, false);
 		}
+		correctie = CorrectieFacade.get(h, this, scoreMax);
 	}
 
 	/**

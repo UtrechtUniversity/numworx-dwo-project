@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
@@ -78,7 +79,7 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 	String variabelenString;
 	private Expressie[][] oplossingen;
 	private OpdrNavIF comRoot;
-	
+	private CorrectieFacade correctie;
 	
 	public StelselAntwoordVak(HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
@@ -334,6 +335,7 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 			HashMap<String, Object> h1 = oplossingenVak.getState();
 			h.put("oplRegelState", h1);
 		}
+		if(correctie != null) correctie.correctie(h);
 		return h;
 	}
 
@@ -353,6 +355,7 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 				oplossingenVak.setState(h1);
 			}
 		}
+		correctie = CorrectieFacade.get(h, this, scoreMax);
 	}
 
 	@Override

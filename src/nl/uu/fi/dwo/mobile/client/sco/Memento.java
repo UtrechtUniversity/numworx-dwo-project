@@ -328,7 +328,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	{
 		this.score = score;
 		scoreRaw = this.score.toString();
-		setValue(SCORE_RAW, scoreRaw);
+		if(!isEindtoetsVerzegeld() || isReview())
+			api.SetValue(SCORE_RAW, scoreRaw);
 	}
 	
 	boolean setValue(String key, String value)
@@ -1342,7 +1343,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
     JSONArray statej = new JSONArray();  statei.set(currentActiviteit, statej);
     statej.set(currentOpdracht, reviewPage);
     String reviewData = r.toString();
-    setValue(REVIEW_DATA, reviewData); 
+    if(isReview())
+    	api.SetValue(REVIEW_DATA, reviewData); 
   }
 
   private JSONObject strip(ObjectMap state, int off) {

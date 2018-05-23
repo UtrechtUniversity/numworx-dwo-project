@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -68,6 +69,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private int scoreMax, score;
 	private boolean teltmee = true;
 	private Boolean correct;
+	private CorrectieFacade correctie;
 	
 	@Override
 	public void onAttachOrDetach(AttachEvent event) {
@@ -181,7 +183,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			return lastResort;
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
-		
+		if(correctie != null) correctie.correctie(map);
 		return wrap(map);
 	}
 
@@ -212,6 +214,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		}
 		else 
 			pendingState = object.toString(); // XXX NPE!
+		correctie = CorrectieFacade.get(h, this, scoreMax);
 	}
 
 	@Override

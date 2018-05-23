@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ResizableContentIF;
@@ -95,7 +96,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 	}
 
-
+	private CorrectieFacade correctie;
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
 	public static final String ACTION_FALSE2 = "action.false_2";
@@ -1705,6 +1706,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			Map<String, Object> map = buildLoggingMap();
 			((DWOLogger) logging).updateLog(map);
 		}
+		if(correctie != null) correctie.correctie(h);
 		return h;
 	}
 
@@ -1770,6 +1772,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				kijkNa(true); // FIXME kijkna in setstate
 		}
 		setEditable(editable);
+		correctie = CorrectieFacade.get(h, this, scoreMax);
 	}
 
 	public String strip$f(String antwoord) {

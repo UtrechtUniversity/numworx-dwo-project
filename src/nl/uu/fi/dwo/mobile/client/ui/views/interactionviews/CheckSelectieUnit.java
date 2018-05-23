@@ -46,6 +46,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
@@ -313,6 +314,8 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		return basisPanel;
 	}
 
+	private CorrectieFacade correctie;
+
 	@Override
 	public HashMap<String, Object> getState() {
 		
@@ -366,6 +369,8 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         h.put("attempts", attempts);
         h.put("attemptsCount", new Integer(attemptsCount));
         h.put("errorCount", new Integer(errorCount));
+        
+        if(correctie != null) correctie.correctie(h);
         return h;
 	}
 
@@ -433,6 +438,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         {
         	kijkNa();
         }
+        correctie = CorrectieFacade.get(h, this, scoreMax);
 	}
 	
 	public void setAttempt()

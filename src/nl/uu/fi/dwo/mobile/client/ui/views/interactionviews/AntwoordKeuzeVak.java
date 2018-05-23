@@ -44,6 +44,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
@@ -149,7 +150,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 	private Logging logging;
 	
 	private boolean verbergFeedback = false;
-	
+	private CorrectieFacade correctie;
 	
 	
 	public AntwoordKeuzeVak(HashMap<String, Object> h, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden, int volleBreedte)
@@ -746,6 +747,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		h.put("attemptsCount", new Integer(attemptsCount));
 		h.put("errorCount", new Integer(errorCount));
 
+		if(correctie != null) correctie.correctie(h);
 		return h;
 	}
 	
@@ -875,6 +877,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 			kijkNa(true, true);
 		
 		basisPanel.setStyleDependentName("readonly", !editable);
+		correctie = CorrectieFacade.get(h, this, getScoreMax());
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })

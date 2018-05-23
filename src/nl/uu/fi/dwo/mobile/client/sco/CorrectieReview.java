@@ -19,14 +19,15 @@ public class CorrectieReview extends CorrectieFacade {
 
     @Override
     protected CorrectieFacade create(Map<String, Object> h, InteractionView iv, int maxScore) {
-      if(!Memento.instance().isReview()) {
-        return super.create(h, iv, maxScore);
+      if(Memento.instance().isReview() && Memento.instance().isEindtoetsVerzegeld() && maxScore > 0) {
+          return new CorrectieReview(h, iv, maxScore);
       }
-      return new CorrectieReview(h, iv, maxScore);
+      return super.create(h, iv, maxScore);
     }
 
     @Override
     public void correctie(Map<String, Object> h) {
+      if(correctie == null) return;
       Object o = correctie.get();
       if (o != null) {
         h.put(CorrectieView.REVIEW_INTERACTIE_DATA, o);

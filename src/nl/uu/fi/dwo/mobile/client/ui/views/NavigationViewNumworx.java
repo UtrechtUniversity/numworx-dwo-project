@@ -163,6 +163,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		// tree stuff		
 		standardMap = new TreeItem(toSafeHTML(Text.constants.standaardModules()));
 		standardMap.setState(true);
+		standardMap.setUserObject(SelectModuleItem.ROOT);
 	}
 
 	public void showCells() {
@@ -253,6 +254,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 			schoolName = DWOplayer.clientfactory.getSchool().getSchoolName();
 		SCHOOL_MODULES = Text.constants.schoolModules() + schoolName;
 		schoolMap = new TreeItem(toSafeHTML(SCHOOL_MODULES));
+		schoolMap.setUserObject(SelectModuleItem.ROOT);
 		schoolMap.setState(true);
 		standardMap.removeItems();
 		tree.removeItems();

@@ -2061,7 +2061,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			dwologger.getStateHook(h);
 		}
 		
-		correctie.correctie(h);
+		if(correctie != null) correctie.correctie(h);
 		
 		return h;
 	}
