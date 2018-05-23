@@ -1499,6 +1499,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			{
 				goon = old;
 			}
+		} else {
+		   if (memento.isReview())
+		   {
+             states[currentActiviteit][currentOpdracht] = entry.getState();
+		     memento.mergeIntoReview(currentActiviteit, currentOpdracht, states[currentActiviteit][currentOpdracht]);
+		   }
 		}
 
 		if (scoresEnabled())

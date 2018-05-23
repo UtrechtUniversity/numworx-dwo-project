@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import com.google.gwt.core.shared.GWT;
@@ -51,7 +52,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 	
 	@Override
 	public String mayStop() {
-		if (started && clientFactory.withUser())
+		if (started && clientFactory.withUser() && clientFactory.getRoleType() == RoleType.STUDENT)
 			return Text.constants.maybe_lost_data();
 		return super.mayStop();
 	}

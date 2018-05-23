@@ -3,31 +3,25 @@ package nl.uu.fi.dwo.mobile.client.sco;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
-
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
-import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Role;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
-
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.json.client.JSONArray;
@@ -36,10 +30,7 @@ import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
@@ -56,7 +47,8 @@ import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureScoreCodec;
  */
 public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEventListener
 {
-	private static final String BEZOCHT = "bezocht";
+	private static final String INTERACTIE_PANEL_STATES = "interactiePanelStates";
+    private static final String BEZOCHT = "bezocht";
 	private static final String ZELFTOETS_NAGEKEKEN = "zelftoetsNagekeken";
 	private static final String TEMPOTOETS_LOCKED = "tempotoetsLocked";
 	private static final String TEMPOTOETS_SECONDS_LEFT = "tempotoetsSecondsLeft";
@@ -270,7 +262,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 					JSONObject statej = statei.get(j).isObject();
 					JSONObject reviewj = reviewi.get(j).isObject();
 					if(statej == null || reviewj == null ) continue;
-					statej = statej.get("interactiePanelStates").isArray().get(5).isObject();
+					statej = statej.get(INTERACTIE_PANEL_STATES).isArray().get(5).isObject();
 					mergeReviewState(statej, reviewj, 5);
 				}
 				
@@ -283,9 +275,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 
 	private void mergeReviewState(JSONObject statej, JSONObject reviewj, int off) {
 		if (statej == null || reviewj == null) return;
-		if (statej.containsKey("interactiePanelStates")) {
-			JSONArray stateArray = statej.get("interactiePanelStates").isArray();
-			JSONArray reviewArray = reviewj.get("interactiePanelStates").isArray();
+		if (statej.containsKey(INTERACTIE_PANEL_STATES)) {
+			JSONArray stateArray = statej.get(INTERACTIE_PANEL_STATES).isArray();
+			JSONArray reviewArray = reviewj.get(INTERACTIE_PANEL_STATES).isArray();
 			int l = Math.min(stateArray.size()+off, reviewArray.size());
 			for(int i = off; i < l; i++) {
 				mergeReviewState( stateArray.get(i-off).isObject(), reviewArray.get(i).isObject(), 0);
@@ -1341,4 +1333,35 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		JSONValue string = DomStudentModelStructureScoreCodec.CODEC.encode(model);
 		setValue(STUDENT_MODEL, string.toString());
 	}
+
+  public void mergeIntoReview(int currentActiviteit, int currentOpdracht,
+      HashMap<String, Object> state) {
+    JSONObject reviewPage = strip(JSONUtilities.wrapMap(state), 0);
+    JSONObject r = new JSONObject();
+    JSONArray  statei = new JSONArray(); r.put(OPDR_CONT_STATES, statei);
+    JSONArray statej = new JSONArray();  statei.set(currentActiviteit, statej);
+    statej.set(currentOpdracht, reviewPage);
+    String reviewData = r.toString();
+    setValue(REVIEW_DATA, reviewData); 
+  }
+
+  private JSONObject strip(ObjectMap state, int off) {
+    if (state == null) return null;
+    JSONObject result = new JSONObject();
+    ObjectList interactionsIn = state.getObjectList(INTERACTIE_PANEL_STATES);
+    if(interactionsIn != null) {
+      JSONArray  interactionsOut = new JSONArray();
+      for(int i = 0; i < interactionsIn.size(); i++) {
+        JSONObject item = strip(interactionsIn.getObjectMap(i),5);
+        interactionsOut.set(i+off, item);
+      }
+      result.put(INTERACTIE_PANEL_STATES, interactionsOut);
+    }
+    if (state.containsKey(CorrectieView.REVIEW_INTERACTIE_DATA))
+    { ObjectMap reviewData = state.getObjectMap(CorrectieView.REVIEW_INTERACTIE_DATA);
+      JSONValue wrap = JSONUtilities.toJSONObject(reviewData);
+      result.put(CorrectieView.REVIEW_INTERACTIE_DATA, wrap);
+    }
+    return result;
+  }
 }

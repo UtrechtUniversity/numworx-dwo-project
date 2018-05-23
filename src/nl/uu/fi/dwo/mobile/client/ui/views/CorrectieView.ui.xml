@@ -1,0 +1,11 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<g:HTMLPanel>
+		maximale score: <g:InlineLabel ui:field='max' text='10' /> <br/>
+		score: <g:InlineLabel ui:field='score' text='4'/> <br/>
+		toevoeging: <g:TextBox ui:field='correctie' text='0'/> <br/>
+		<g:Button ui:field="ok"  text="ok"/>
+		<g:Button ui:field="cancel" text="cancel" />
+	</g:HTMLPanel>
+</ui:UiBinder> 

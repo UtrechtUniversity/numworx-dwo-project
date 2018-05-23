@@ -2,11 +2,11 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import javax.inject.Provider;
 
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNone;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginViewImpl;
@@ -23,9 +23,6 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewNumworx;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -36,6 +33,7 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
@@ -87,16 +85,18 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	}
 		
 	// singleton pattern.
-	final Provider<HeaderView> headerView = new Provider<HeaderView>() {
-
-		HeaderViewNumworx impl = new HeaderViewNumworx(getEventBus());
-		{
-			impl.setPresenter(ClientFactoryImpl.this);
-		}
-		@Override
-		public HeaderView get() {
-			return impl;
-		}
+	final Provider<HeaderView> headerView;
+		
+	{
+	  if ("none".equals(Location.getParameter("header")) )
+	  {
+	    HeaderViewNone headerViewNone = new HeaderViewNone();
+	    headerView = () -> headerViewNone;
+	  } else {
+        HeaderViewNumworx impl = new HeaderViewNumworx(getEventBus());
+        impl.setPresenter(ClientFactoryImpl.this);
+	    headerView = () -> impl;
+	  }
 	};
 	
 	final Provider<NavigationViewNumworx> navigationView = new Provider<NavigationViewNumworx>() {
