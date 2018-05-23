@@ -47,6 +47,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
@@ -1918,36 +1919,51 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	}
 
 
-	class BordjesTouchHandler extends FormuleEditorTouchHandler {
-
-		BordjesTouchHandler(FormuleHolder editor) {
+	class BordjesTouchHandler extends FormuleEditorTouchHandler
+	{
+		BordjesTouchHandler(FormuleHolder editor)
+		{
 			super(editor);
 		}
 		
 		@Override
 		public void onTouchStart(TouchStartEvent event)
 		{
-			if(!editable) return;
 			super.onTouchStart(event);
-			if(editor != null)
+			
+			if (!editable) 
+				return;
+			if (editor != null)
 				editor.requestFocus();
 		}
 
 		@Override
 		public void onTouchEnd(TouchEndEvent event) 
 		{
-			if(!editable) return;
+			logger.info("BordjesTouchHandler.onTouchEnd(): selection = " + editor.getSelectionString()
+				+ ", editable = " + editable + ", bordjesMethode = " + bordjesMethode);
 			super.onTouchEnd(event);
+			
+			if (!editable)
+				return;
 			if (bordjesMethode)
 			{
+//				logger.info("BordjesTouchHandler.onTouchEnd(): selection = " + editor.getSelectionString());
 				addBordjesStap();
 			}
+		}
+
+		@Override
+		public void onTouchMove(TouchMoveEvent event)
+		{
+			super.onTouchMove(event);
 		}
 	}
 	
 	
 	private void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor)
 	{
+		editor.removeTouchHandler();
 		tp.addTouchHandler(new BordjesTouchHandler(editor));
 	}
 	
@@ -2446,7 +2462,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN) // met aftrek
 						score = Math.max(scoreMax - errorCount * foutStraf, 0);
 				}
-				else
+				else if (!(editor != null && editor.toString().equals(""))) // negeer een lege laatste editor
 					score = 0;
 				
 			} // if !toets
@@ -2711,7 +2727,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if (formule == null)
 			formule = "";
 		if (formuleMin1 == null)
-			formuleMin1 = "";
+			return; // er valt niets na te kijken als de vorige null is
 
 		// verwijder een eventuele prefix
 		if (hasPrefix)
