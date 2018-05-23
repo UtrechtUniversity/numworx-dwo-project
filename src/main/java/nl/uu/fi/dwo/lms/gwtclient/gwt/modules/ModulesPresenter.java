@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.modules;
 
+import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.util.Base64;
@@ -56,7 +58,6 @@ public class ModulesPresenter {
 //    @JsMethod not required unless testing stuff.
     public void init() {
         view.clear();
-        LOG.severe("calling getBearerToken");
         account.getBearerToken().then(this::gotToken,this::fail);
     }
 
@@ -64,13 +65,16 @@ public class ModulesPresenter {
      * bearer token has arrived:
      */
     public Promise<Void> gotToken(Promise<String> resolved) {
-     LOG.severe("got Token" + resolved.getValue());
      String token = "2\f" + resolved.getValue(); //format 2
      StringBuilder u = new StringBuilder(url);
      u.append( "?a=" ) .append (Base64.btoa(token)); // User Auth Token
      u.append( "&header=none");
-     u.append("&profile=").append("77"); // FIXME PROFILE
-     u.append("&locale=").append("nl");  // FIXME LOCALE
+     String profile = Location.getParameter("profile");
+     if(profile == null || profile.isEmpty()) profile = "77";
+     u.append("&profile=").append(profile);
+     String locale = LocaleInfo.getCurrentLocale().getLocaleName();
+     if ("default".equals(locale) ) locale =  "nl";
+     u.append("&locale=").append(locale);
      LOG.info("open URL " + u);
      view.openUrl(u.toString());
      return null;
