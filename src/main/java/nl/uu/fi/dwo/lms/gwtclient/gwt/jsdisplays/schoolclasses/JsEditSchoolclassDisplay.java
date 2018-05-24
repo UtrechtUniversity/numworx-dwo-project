@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.old;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses;
 
 import com.google.gwt.json.client.JSONValue;
 import jsinterop.annotations.JsPackage;
@@ -37,7 +37,7 @@ import jsinterop.annotations.JsType;
  * 
  * @author G.A.J. van der Plas
  */
-@JsType(isNative = true, name = "JsEditSchoolclassDisplay", namespace = JsPackage.GLOBAL)
+@JsType(isNative = true, name = "jsEditSchoolclassDisplay", namespace = JsPackage.GLOBAL)
 public class JsEditSchoolclassDisplay{
     /** Clears all the edit schoolclass fields of their values. */
     public static native void clear();

@@ -44,8 +44,8 @@ public class ResultsPresenter {
     //model
     private DomResultTree resultTree;
     private DomResultPlotMatrix resultMatrix;
-//    private DomResultCourseInClass course = null; //null means all courses.
-//    private DomResultSchoolClass schoolClass = null; //null means all classes.
+    private DomResultCourseInClass course = null; //null means all courses.
+    private DomResultSchoolClass schoolClass = null; //null means all classes.
 
     public interface Display {
         void clear();

@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.old;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
