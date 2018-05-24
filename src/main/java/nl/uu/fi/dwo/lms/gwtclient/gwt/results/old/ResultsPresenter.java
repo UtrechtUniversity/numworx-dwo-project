@@ -313,6 +313,7 @@ public class ResultsPresenter {
     public void plotResultsEvent() {
         resultMatrix = calculateResults(course, schoolClass);
         ResultPlot plotData = buildPlotMatrix(resultMatrix);
+        LOG.log(Level.INFO," courses {0}, schoolclassses {1}", new Object[]{plotData.hIndex, plotData.vIndex});
         //view.plot(plotData, (schoolClass != null), (course != null));
     }
 
