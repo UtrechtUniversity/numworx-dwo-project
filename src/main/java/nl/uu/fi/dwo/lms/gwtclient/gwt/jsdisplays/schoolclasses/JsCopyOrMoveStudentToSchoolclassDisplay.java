@@ -18,7 +18,7 @@ import jsinterop.annotations.JsType;
  * 
  * @author G.A.J. van der Plas
  */
-@JsType(isNative = true, name = "JsCopyOrMoveStudentToSchoolclassDisplay", namespace = JsPackage.GLOBAL)
+@JsType(isNative = true, name = "jsCopyOrMoveStudentToSchoolclassDisplay", namespace = JsPackage.GLOBAL)
 //@JsType(isNative = false, namespace = JsPackage.GLOBAL)
 public class JsCopyOrMoveStudentToSchoolclassDisplay {
 

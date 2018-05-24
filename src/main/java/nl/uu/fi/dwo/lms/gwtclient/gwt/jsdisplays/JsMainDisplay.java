@@ -56,7 +56,7 @@ public class JsMainDisplay {
     /** Show the school classes panel. */
     public static native void  showSchoolclassesView();
     /** Show the edit school class panel. */
-    public static native void  showEditSchoolclasView();
+    public static native void  showEditSchoolclassView();
 //    /** Show the students in school class panel. */
 //    public static native void  showStudentsInSchoolclassView();
 //    /** Show the teachers in school class panel. */

@@ -66,8 +66,8 @@ public class JsMainView implements MainPresenter.Display{
     }
 
     @Override
-    public void showEditSchoolclasView() {
-        JsMainDisplay.showEditSchoolclasView();
+    public void showEditSchoolclassView() {
+        JsMainDisplay.showEditSchoolclassView();
     }
 //
 //    @Override

@@ -44,7 +44,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
 
         public void showSchoolclassesView(); // has AddSchoolClass function
 
-        public void showEditSchoolclasView();
+        public void showEditSchoolclassView();
 
         public void showAddStudentToSchoolClassView();
 
@@ -175,7 +175,7 @@ public class MainPresenter implements SwitchViewEventHandler, LoginEventHandler 
                     display.showSchoolclassesView();
                     break;
                 case EDITSCHOOLCLASS:
-                    display.showEditSchoolclasView();
+                    display.showEditSchoolclassView();
                     break;
                 case ADDSTUDENTTOSCHOOLCLASS:
                     display.showAddStudentToSchoolClassView();

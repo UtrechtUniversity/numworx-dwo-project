@@ -2,7 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONString;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.results.old.ResultsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 
 /**
  * Mapper to allow java interface implementation.

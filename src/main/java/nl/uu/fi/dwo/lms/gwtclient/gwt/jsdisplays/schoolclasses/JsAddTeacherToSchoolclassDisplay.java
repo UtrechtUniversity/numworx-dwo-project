@@ -16,7 +16,7 @@ import jsinterop.annotations.JsType;
  * 
  * @author G.A.J. van der Plas
  */
-@JsType(isNative = true, name = "JsAddTeacherToSchoolclassDisplay", namespace = JsPackage.GLOBAL)
+@JsType(isNative = true, name = "jsAddTeacherToSchoolclassDisplay", namespace = JsPackage.GLOBAL)
 //@JsType(isNative = false, namespace = JsPackage.GLOBAL)
 public class JsAddTeacherToSchoolclassDisplay {
 
