@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.ui;
 import com.google.web.bindery.event.shared.EventBus;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jsinterop.annotations.JsMethod;
 
 /**
  * Subclassing for project.
@@ -51,11 +52,13 @@ public class AlertDialogWithConfirmCancelPresenter implements AlertDialogWithCon
         this.view = view;
     }
     
+    @JsMethod
     public void confirm(){
         view.hideDialog();
         promise.resolve(Boolean.TRUE);
     }
 
+    @JsMethod
     public void cancel(){
         view.hideDialog();
         promise.resolve(Boolean.FALSE);       

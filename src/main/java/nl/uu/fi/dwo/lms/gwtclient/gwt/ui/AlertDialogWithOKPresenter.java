@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.ui;
 
 import com.google.web.bindery.event.shared.EventBus;
 import java.util.logging.Logger;
+import jsinterop.annotations.JsMethod;
 
 /**
  * Subclassing for project.
@@ -56,6 +57,7 @@ public class AlertDialogWithOKPresenter  implements AlertDialogWithOKEventHandle
         return view;
     }
     
+    @JsMethod
     public void hide() {
         view.hideDialog();
     }

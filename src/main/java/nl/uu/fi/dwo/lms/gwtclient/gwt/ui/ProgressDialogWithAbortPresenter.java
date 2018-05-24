@@ -13,4 +13,5 @@ public class ProgressDialogWithAbortPresenter extends ProgressDialogPresenter {
     public ProgressDialogWithAbortPresenter(EventBus anEventBus) {
         super(anEventBus);
     }
+    
 }

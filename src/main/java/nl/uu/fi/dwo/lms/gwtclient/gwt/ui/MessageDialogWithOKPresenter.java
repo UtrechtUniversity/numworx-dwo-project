@@ -6,6 +6,7 @@ import fi.dwo.gwt.lib.rest.ui.DialogEventHandler;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jsinterop.annotations.JsMethod;
 
 /**
  * Subclassing for project.
@@ -61,6 +62,7 @@ public class MessageDialogWithOKPresenter  implements MessageDialogWithOKEventHa
         return view;
     }
     
+    @JsMethod
     public void hide() {
         view.hideDialog();
     }
