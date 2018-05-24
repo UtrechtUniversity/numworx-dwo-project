@@ -41,4 +41,8 @@
     	<when-type-is class="nl.uu.fi.dwo.ideas.client.IdeasIF" />
     </replace-with>
  	 
+ 	<replace-with class="nl.uu.fi.dwo.mobile.client.sco.CorrectieReview">
+ 		<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade" />
+ 	</replace-with> 
+ 	 
 </module>
