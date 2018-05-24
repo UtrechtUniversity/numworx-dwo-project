@@ -10,6 +10,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresenter;
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsSelectsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddTeacherToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CopyOrMoveStudentToSchoolclassPresenter;
@@ -35,7 +37,6 @@ public class PresenterFactoryGwt implements PresenterFactory {
     private final AccountPresenter accountPresenter;
     private final SchoolclassesPresenter schoolclassesPresenter;
     private final EditSchoolclassPresenter editSchoolclassPresenter;
-//    private final ResultsPresenter resultsPresenter;
     private final AddStudentToSchoolclassPresenter addStudentToSchoolclassPresenter;
     private final CopyOrMoveStudentToSchoolclassPresenter copyOrMoveStudentToSchoolclassPresenter;
     private final AddTeacherToSchoolclassPresenter addTeacherToSchoolclassPresenter;
@@ -46,6 +47,8 @@ public class PresenterFactoryGwt implements PresenterFactory {
 //    private final TeachersInSchoolclassPresenter teachersInSchoolclassPresenter;
 //    private final EditStudentPresenter editStudentPresenter;
     private final ModulesPresenter modulesPresenter;
+    private final ResultsPresenter resultsPresenter;
+    private final ResultsSelectsPresenter resultsSelectsPresenter;
     private final MessageDialogWithOKPresenter messageDialogWithOKPresenter;
     private final AlertDialogWithOKPresenter alertDialogWithOKPresenter;
     private final AlertDialogWithConfirmCancelPresenter alertDialogWithConfirmCancelPresenter;
@@ -69,9 +72,10 @@ public class PresenterFactoryGwt implements PresenterFactory {
 //        coursesOfSchoolclassPresenter = new CoursesOfSchoolclassPresenter(eventBus, dwoGlobalVars);
 //        studentsInSchoolclassPresenter = new StudentsInSchoolclassPresenter(eventBus, dwoGlobalVars);
 //        teachersInSchoolclassPresenter = new TeachersInSchoolclassPresenter(eventBus, dwoGlobalVars);
-//        resultsPresenter = new ResultsPresenter(eventBus, dwoGlobalVars);
 //        editStudentPresenter = new EditStudentPresenter(eventBus, dwoGlobalVars);
 //        addStudentsPresenter = new AddStudentsPresenter(eventBus, dwoGlobalVars);
+        resultsPresenter = new ResultsPresenter(eventBus, dwoGlobalVars);
+        resultsSelectsPresenter = new ResultsSelectsPresenter(eventBus, dwoGlobalVars);
         messageDialogWithOKPresenter = new MessageDialogWithOKPresenter(eventBus);
         fileUploadStudentsPresenter = new FileUploadStudentsPresenter(eventBus, dwoGlobalVars);
         alertDialogWithOKPresenter = new AlertDialogWithOKPresenter(eventBus);
@@ -91,7 +95,8 @@ public class PresenterFactoryGwt implements PresenterFactory {
         copyOrMoveStudentToSchoolclassPresenter.setView(viewFactory.getCopyOrMoveStudentToSchoolclassView());
         addTeacherToSchoolclassPresenter.setView(viewFactory.getAddTeacherToSchoolclassView());
         modulesOfSchoolclassPresenter.setView(viewFactory.getModulesOfSchoolclassView());
-//        resultsPresenter.setView(viewFactory.getResultsView());
+        resultsSelectsPresenter.setView(viewFactory.getResultsSelectsView());
+        resultsPresenter.setView(viewFactory.getResultsView());
 //        coursesOfSchoolclassPresenter.setView(viewFactory.getCoursesOfSchoolclassView());
 //        studentsInSchoolclassPresenter.setView(viewFactory.getStudentsInSchoolclassView());
 //        teachersInSchoolclassPresenter.setView(viewFactory.getTeachersInSchoolclassView());
@@ -137,15 +142,26 @@ public class PresenterFactoryGwt implements PresenterFactory {
     public LoginPresenter getLoginPresenter() {
         return loginPresenter;
     }
-//
-//    /**
-//     * @return the resultsPresenter
-//     */
-//    @JsMethod    
-//    public ResultsPresenter getResultsPresenter() {
-//        return resultsPresenter;
-//    }
-//
+
+    /**
+     * @return the resultsPresenter
+     */
+    @JsMethod    
+    @Override
+    public ResultsPresenter getResultsPresenter() {
+        return resultsPresenter;
+    }
+
+
+    /**
+     * @return the resultsPresenter
+     */
+    @JsMethod    
+    @Override
+    public ResultsSelectsPresenter getResultsSelectsPresenter() {
+        return resultsSelectsPresenter;
+    }
+
 //    /**
 //     * @return the switchSchoolPresenter
 //     */

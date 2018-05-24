@@ -1,15 +1,17 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.results.old;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
 import com.google.web.bindery.event.shared.EventBus;
-
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
-
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
@@ -28,13 +30,12 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
 /**
- * Controller for ResultsView actions.
  *
- * @author Gert van der Plas
+ * @author plas0006
  */
-public class ResultsPresenter {
+public class ResultsSelectsPresenter {
 
-    private static final Logger LOG = Logger.getLogger(ResultsPresenter.class.getName());
+    private static final Logger LOG = Logger.getLogger(ResultsSelectsPresenter.class.getName());
 
     private final EventBus eventBus;
     private final DwoGlobalVars dwoGlobalVars;
@@ -143,7 +144,7 @@ public class ResultsPresenter {
         }
     }
 
-    public ResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    public ResultsSelectsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         resultService = new ResultsService(dwoGlobalVars);
@@ -170,7 +171,6 @@ public class ResultsPresenter {
 
     public void init() {
         //view.clear();
-        LOG.log(Level.INFO, "Initializing Results.");
         LOG.log(Level.INFO, "DwoGlobalVarsState = " + dwoGlobalVars.getState().name());
         course = null;
         schoolClass = null;
@@ -313,7 +313,7 @@ public class ResultsPresenter {
     public void plotResultsEvent() {
         resultMatrix = calculateResults(course, schoolClass);
         ResultPlot plotData = buildPlotMatrix(resultMatrix);
-        //view.plot(plotData, (schoolClass != null), (course != null));
+        view.plot(plotData, (schoolClass != null), (course != null));
     }
 
     public void updateResults() {
@@ -448,5 +448,5 @@ public class ResultsPresenter {
 
     void finnishedExport() {
         eventBus.fireEvent(new DialogEvent("Exported tab separated values to clipboard."));
-    }
+    }    
 }
