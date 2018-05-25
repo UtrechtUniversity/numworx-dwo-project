@@ -479,7 +479,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     @Override
     public boolean deleteCourseDataFromClass(int courseID, int classID)
             throws SQLException, IOException, XmlRpcException {
-        return getDelegate().deleteCourseDataFromClass(courseID, classID);
+        return getDelegateObsolete().deleteCourseDataFromClass(courseID, classID);
     }
 
     @Override

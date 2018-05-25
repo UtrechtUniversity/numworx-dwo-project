@@ -209,7 +209,8 @@ public class SecuredUserScoDataManager {
 		Scorm2Xml xml = null;
 		for(DomMapEntry<String,String> entry: entryList) {
 			ScormKey key = ScormKey.getKey(entry.getKey());
-			switch(key) {
+			String total_time;
+            switch(key) {
 			case STUDENT_MODEL:
 				if (psmd == null) {
 					genson = new GensonProvider().getContext(DomStudentModelStructureScore.class);
@@ -258,7 +259,9 @@ public class SecuredUserScoDataManager {
 				if(sessionTime == null) sessionTime = "0";
 				entry.setValue(CMI.to2004Timex(CMI.from1_2Timex(sessionTime)));break;
 			case TOTAL_TIME:
-				entry.setValue(String.valueOf(pssc.getTotalTime()));break;
+			    total_time = pssc.getTotalTime();
+			    if(total_time == null) total_time = "0000:00:00.00";
+				entry.setValue(total_time);break;
 			case TOTAL_TIME2004:
 				String totalTime = pssc.getTotalTime();
 				if(totalTime == null) totalTime = "0";

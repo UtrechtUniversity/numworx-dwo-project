@@ -68,5 +68,7 @@ public boolean deleteSchool(int schoolID) throws IOException, XmlRpcException, S
 public boolean setExpireDate(int schoolID, Date date) throws IOException, XmlRpcException, SQLException;
 public boolean editSchoolRights(int schoolID, String rights) throws IOException, SQLException, XmlRpcException;
 public boolean editSchool(int schoolID, boolean export) throws IOException, XmlRpcException, SQLException;
+public boolean deleteCourseDataFromClass(int courseID, int classID)
+    throws SQLException, IOException, XmlRpcException;
 
 }

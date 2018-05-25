@@ -649,20 +649,21 @@ public class CascadingPersistenceBuilder {
             List<PersistentStudentOfClass> socList = StudentOfClassManager.findEntities(instance.context.schoolClass);
             //detach classcourse to ensure no new results occur.
             //TODO mark marked for deleted in the future.
-            ClassCourseManager.editViewState(this.getClassCourse().getClassCourseID(), ViewState.invisible);
+            //ClassCourseManager.editViewState(this.getClassCourse().getClassCourseID(), ViewState.invisible);
             //clean all existing results
             for (PersistentStudentOfClass soc : socList) {
                 PersistentHasRolePK key = new PersistentHasRolePK(soc.getPersistentStudentOfClassPK().getUserID(), soc.getPersistentStudentOfClassPK().getSchoolGroupID());
                 List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(instance.context.scoContext, key);
                 for (PersistentStudentScoContext ssc : sscList) {
-                    String msg = MessageFormat.format("Username {0} is learing studentSco id {1} for userid  {2} schoolgroupid {3} and course {4} {5}.", new Object[]{instance.context.user.getUsername(), ssc.getScoID(), ssc.getPersistentHasRolePK().getUserID(), ssc.getPersistentHasRolePK().getSchoolGroupID(), instance.context.course.getCourseID(), instance.context.course.getName()});
+                    String msg = MessageFormat.format("Username {0} is clearing studentSco id {1} for userid  {2} schoolgroupid {3} and course {4} {5}.", new Object[]{instance.context.user.getUsername(), ssc.getScoID(), ssc.getPersistentHasRolePK().getUserID(), ssc.getPersistentHasRolePK().getSchoolGroupID(), instance.context.course.getCourseID(), instance.context.course.getName()});
                     LOG.log(Level.INFO, msg);
-                    StudentScoDataManager.destroy(ssc.getStudentSco());
+                    if(StudentScoDataManager.findEntity(ssc.getStudentSco()) != null)
+                      StudentScoDataManager.destroy(ssc.getStudentSco());
                     StudentScoContextManager.destroy(ssc.getStudentSco());
                 }
             }
             //remove classcourse to ensure no new attachments occur.
-            ClassCourseManager.destroy(this.getClassCourse().getClassCourseID());
+            //ClassCourseManager.destroy(this.getClassCourse().getClassCourseID());
             return true;
         }
         
