@@ -20,7 +20,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
  *
  * @author G.A.J. van der Plas
  */
-public class SecureDwoAdminSchoolManager {
+public class SecureDwoAdminSchoolManager implements SchoolManager {
 
     private static final Logger LOG = Logger.getLogger(SecureDwoAdminSchoolManager.class.getName());
 
@@ -40,7 +40,7 @@ public class SecureDwoAdminSchoolManager {
         return result;
     }
 
-    public static Boolean updateSchool(DomSchoolFull submit) throws Dwo2Exception {
+    public Boolean updateSchool(DomSchoolFull submit) throws Dwo2Exception {
         RestSchoolFull rest = new RestSchoolFull();
     	rest.setRestContext(RestAuthenticator.getInstance().getContext());
         rest.setDomSchoolFull(submit);
@@ -49,7 +49,7 @@ public class SecureDwoAdminSchoolManager {
         return result;
     }
 
-    public static Boolean removeSchool(DomSchool4DwoAdmin submit) throws Dwo2Exception {
+    public Boolean removeSchool(DomSchool4DwoAdmin submit) throws Dwo2Exception {
         RestSchool4DwoAdmin rest = new RestSchool4DwoAdmin();
     	rest.setRestContext(RestAuthenticator.getInstance().getContext());
         rest.setDomSchool4DwoAdmin(submit);
@@ -87,6 +87,16 @@ public class SecureDwoAdminSchoolManager {
         Boolean result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/school/updateHasRoleRights", Boolean.class, rest);
         LOG.log(Level.FINE, "Submitted school with login {1} to be added by dwoadmin with username {0}.", new Object[]{RestAuthenticator.getInstance().getUsername(), hr.getId()});
         return result;
+    }
+
+    public DomSchoolFull addSchool(DomSchoolFull school) throws Dwo2Exception {
+      RestSchoolFull rest = new RestSchoolFull();
+      rest.setRestContext(RestAuthenticator.getInstance().getContext());
+      rest.setDomSchoolFull(school);
+
+      school = StoredRestManager.getInstance().put("rest/secure/dwoadmin/school/add", DomSchoolFull.class, rest);
+      LOG.log(Level.FINE, "Submitted school with id {1} to be added by dwoadmin with username {0}.", new Object[]{RestAuthenticator.getInstance().getUsername(), school.getId()});
+      return school;
     }
 
 }

@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
 import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
@@ -10,6 +11,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSchoolAdmin;
+import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
@@ -26,7 +28,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
  *
  * @author G.A.J. van der Plas
  */
-public class SecureSchoolAdminSchoolManager {
+public class SecureSchoolAdminSchoolManager implements SchoolManager {
 
     private static final Logger LOG = Logger.getLogger(SecureSchoolAdminSchoolManager.class.getName());
 
@@ -136,6 +138,15 @@ public class SecureSchoolAdminSchoolManager {
         LOG.log(Level.FINE, "Submitted new user {1} enlisted as teacher in the school by user {0}.", new Object[]{RestAuthenticator.getInstance().getUsername(), rest.getDomUserFull().getId()});
         return result;
     }
+
+    public Boolean updateSchool(DomSchoolFull submit) throws Dwo2Exception {
+      RestSchoolFull rest = new RestSchoolFull();
+      rest.setRestContext(RestAuthenticator.getInstance().getContext());
+      rest.setDomSchoolFull(submit);
+      Boolean result = StoredRestManager.getInstance().put("rest/secure/schooladmin/school/update", Boolean.class, rest);
+      LOG.log(Level.FINE, "Updated data for school {1} by username {0}.", new Object[]{RestAuthenticator.getInstance().getUsername(), submit.getId()});
+      return result;
+  }
 
     
             
