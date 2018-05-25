@@ -11,7 +11,10 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserPersistentContext;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import java.text.MessageFormat;
@@ -209,12 +212,26 @@ class UserBuilder implements UserDomainAuthorizer.UserState_U, UserDomainAuthori
 
     @Override
     public PersistentSchool getSchool() {
-        return instance.getContext().getUserCtx().getSchool();
+        UserPersistentContext userCtx = instance.getContext().getUserCtx();
+        PersistentSchool school = userCtx.getSchool();
+        if(school == null) {
+          PersistentSchoolGroup schoolGroup = getSchoolGroup();
+          school = schoolGroup.getSchool();
+          
+          userCtx.setSchool(school);
+        }
+        return school;
     }
 
     @Override
     public PersistentSchoolGroup getSchoolGroup() {
-        return instance.getContext().getUserCtx().getSchoolGroup();
+        UserPersistentContext userCtx = instance.getContext().getUserCtx();
+        PersistentSchoolGroup schoolGroup = userCtx.getSchoolGroup();
+        if(schoolGroup == null) {
+          schoolGroup = SchoolGroupManager.findEntity(userCtx.getHasRole().getPersistentHasRolePK().getSchoolGroupID());
+          userCtx.setSchoolGroup(schoolGroup);
+        }
+        return schoolGroup;
     }
 
     @Override

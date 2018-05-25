@@ -2,6 +2,7 @@ package fi.dwo.server.rest;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
@@ -20,13 +21,18 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSchoolAdmin;
+import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
@@ -705,4 +711,31 @@ public class SecuredSchoolAdminSchoolManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
     }
+    
+    @PUT
+    @Produces({"application/json"})
+    @Path("/update")
+    public Boolean updateSchool(@Context SecurityContext sc, RestSchoolFull rest) throws Dwo2Exception {
+       UserState_HR_R_S_SG_U role = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+          .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.SCHOOLADMIN);
+      PersistentSchool ps = role.getSchool();
+      SchoolAdminTeacherState_HR_R_S_SG_U state = role.buildSchoolAdminTeacher();
+
+      DomSchoolFull school = rest.getDomSchoolFull();
+      Long id = MySQLPersistenceId.getNativeId(school);
+      if( ! id.equals(ps.getSchoolID()))
+        throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthorizationError, "Illegal user action");
+      if(school.getSchoolRights() != null)
+        ps.setSchoolRights(school.getSchoolRights());
+      if (school.getExport() != null)
+        ps.setExport(school.getExport());
+      try {
+        SchoolManager.edit(ps);
+      } catch (Exception e) {
+        LOG.log(Level.SEVERE, "update school for schooladmin", e);
+        throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+      }
+      return Boolean.TRUE;
+    }
+    
 }

@@ -88,11 +88,11 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
         return getDelegate().getRecord(tableName, idCol, oid);
     }
 
-    @Override
-    public Vector getTable(String tableName) throws IOException,
-            XmlRpcException, SQLException {
-        return getDelegateObsolete().getTable(tableName);
-    }
+//    @Override
+//    public Vector getTable(String tableName) throws IOException,
+//            XmlRpcException, SQLException {
+//        return getDelegateObsolete().getTable(tableName);
+//    }
 
     @Override
     public Vector getTable(String tableName, String orderCol)
@@ -100,11 +100,11 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
         return getDelegate().getTable(tableName, orderCol);
     }
 
-    @Override
-    public Vector getTable(String tableName, Hashtable wheredef)
-            throws IOException, XmlRpcException, SQLException {
-        return getDelegateObsolete().getTable(tableName, wheredef);
-    }
+//    @Override
+//    public Vector getTable(String tableName, Hashtable wheredef)
+//            throws IOException, XmlRpcException, SQLException {
+//        return getDelegateObsolete().getTable(tableName, wheredef);
+//    }
 
     @Override
     public Vector getTable(String tableName, Hashtable wheredef, String orderBy)
@@ -179,34 +179,34 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 //                lastname, email, schoolLogin, groupID, groupPassword);
 //    }
 
-    @Override
-    public Hashtable login(String username, String password)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        try {
-            return getDelegateObsolete().login(username, password);
-        } catch (DwoXmlRpcException go) {
-            if (go.code != LoginException.LE_UNKNOWN_USER) {
-                go.printStackTrace(); // Expected
-            }
-            throw go;
-        } catch (XmlRpcException go) {
-            go.printStackTrace();
-            throw go;
-        } catch (IOException go) {
-            go.printStackTrace();
-            throw go;
-        } catch (SQLException go) {
-            go.printStackTrace();
-            throw go;
-        } catch (RuntimeException go) {
-            go.printStackTrace();
-            throw go;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage(), e); // wrap unexpected exception
-        }
-    }
+//    @Override
+//    public Hashtable login(String username, String password)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        try {
+//            return getDelegateObsolete().login(username, password);
+//        } catch (DwoXmlRpcException go) {
+//            if (go.code != LoginException.LE_UNKNOWN_USER) {
+//                go.printStackTrace(); // Expected
+//            }
+//            throw go;
+//        } catch (XmlRpcException go) {
+//            go.printStackTrace();
+//            throw go;
+//        } catch (IOException go) {
+//            go.printStackTrace();
+//            throw go;
+//        } catch (SQLException go) {
+//            go.printStackTrace();
+//            throw go;
+//        } catch (RuntimeException go) {
+//            go.printStackTrace();
+//            throw go;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new RuntimeException(e.getMessage(), e); // wrap unexpected exception
+//        }
+//    }
 
 //    @Override
 //    public Hashtable addToSchool(int userID, String schoolLogin, int groupID,
@@ -300,11 +300,11 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 //        return getDelegate().changeCourse(courseID, name, description);
 //    }
 
-    @Override
-    public boolean deleteCourse(int courseID) throws DwoXmlRpcException,
-            IOException, XmlRpcException, SQLException {
-        return getDelegateObsolete().deleteCourse(courseID);
-    }
+//    @Override
+//    public boolean deleteCourse(int courseID) throws DwoXmlRpcException,
+//            IOException, XmlRpcException, SQLException {
+//        return getDelegateObsolete().deleteCourse(courseID);
+//    }
 
 //    @Override
 //    public int addSco(int courseID, String name, String description,
@@ -332,72 +332,72 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 //                sequencenr, showScore);
 //    }
 
-    @Override
-    public boolean changeSco(int scoID, String name, String description,
-            String launchdata) throws DwoXmlRpcException, IOException,
-            XmlRpcException, SQLException {
-        return getDelegateObsolete().changeSco(scoID, name, description, launchdata);
-    }
+//    @Override
+//    public boolean changeSco(int scoID, String name, String description,
+//            String launchdata) throws DwoXmlRpcException, IOException,
+//            XmlRpcException, SQLException {
+//        return getDelegateObsolete().changeSco(scoID, name, description, launchdata);
+//    }
 
-    @Override
-    public boolean changeSco(int scoID, String name, String description)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        return getDelegateObsolete().changeSco(scoID, name, description);
-    }
+//    @Override
+//    public boolean changeSco(int scoID, String name, String description)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        return getDelegateObsolete().changeSco(scoID, name, description);
+//    }
 
-    @Override
-    public boolean changeSco(int scoID, String name, String description,
-            boolean showScore) throws DwoXmlRpcException, IOException,
-            XmlRpcException, SQLException {
-        return getDelegateObsolete().changeSco(scoID, name, description, showScore);
-    }
+//    @Override
+//    public boolean changeSco(int scoID, String name, String description,
+//            boolean showScore) throws DwoXmlRpcException, IOException,
+//            XmlRpcException, SQLException {
+//        return getDelegateObsolete().changeSco(scoID, name, description, showScore);
+//    }
 
-    @Override
-    public boolean changeSco(int scoID, String name, String description, boolean delete, String launchdata)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        return getDelegateObsolete().changeSco(scoID, name, description, delete, launchdata);
-    }
+//    @Override
+//    public boolean changeSco(int scoID, String name, String description, boolean delete, String launchdata)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        return getDelegateObsolete().changeSco(scoID, name, description, delete, launchdata);
+//    }
 
-    @Override
-    public boolean changeSco(int scoID, String name, String description, boolean delete, byte[] launchdata, boolean showScore)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        return getDelegateObsolete().changeSco(scoID, name, description, delete, launchdata, showScore);
-    }
+//    @Override
+//    public boolean changeSco(int scoID, String name, String description, boolean delete, byte[] launchdata, boolean showScore)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        return getDelegateObsolete().changeSco(scoID, name, description, delete, launchdata, showScore);
+//    }
 
-    @Override
-    public boolean changeSco(int id, String scoName, String description,
-            String launchdataString, boolean showScore)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        return getDelegateObsolete().changeSco(id, scoName, description, launchdataString,
-                showScore);
-    }
+//    @Override
+//    public boolean changeSco(int id, String scoName, String description,
+//            String launchdataString, boolean showScore)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        return getDelegateObsolete().changeSco(id, scoName, description, launchdataString,
+//                showScore);
+//    }
 
-    @Override
-    public boolean changeScoSequenceNr(int scoID, int sequencenr, int scoID2,
-            int sequencenr2) throws SQLException, DwoXmlRpcException,
-            IOException, XmlRpcException {
-        return getDelegateObsolete().changeScoSequenceNr(scoID, sequencenr, scoID2,
-                sequencenr2);
-    }
+//    @Override
+//    public boolean changeScoSequenceNr(int scoID, int sequencenr, int scoID2,
+//            int sequencenr2) throws SQLException, DwoXmlRpcException,
+//            IOException, XmlRpcException {
+//        return getDelegateObsolete().changeScoSequenceNr(scoID, sequencenr, scoID2,
+//                sequencenr2);
+//    }
 
     private DbAccessObsolete getDelegateObsolete() {
       return (DbAccessObsolete)getDelegate();
     }
 
-    @Override
-    public boolean deleteSco(int scoID) throws DwoXmlRpcException, IOException,
-            XmlRpcException, SQLException {
-        return getDelegateObsolete().deleteSco(scoID);
-    }
+//    @Override
+//    public boolean deleteSco(int scoID) throws DwoXmlRpcException, IOException,
+//            XmlRpcException, SQLException {
+//        return getDelegateObsolete().deleteSco(scoID);
+//    }
 
     @Override
     public boolean deleteSchool(int schoolID) throws IOException,
             XmlRpcException, SQLException {
-        return getDelegate().deleteSchool(schoolID);
+        return getDelegateObsolete().deleteSchool(schoolID);
     }
 
  
@@ -419,11 +419,11 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
         return getDelegate().getUserResults(courses, i, j);
     }
     
-    @Override
-    public boolean setLogo(int id, byte[] image) throws SQLException,
-            IOException, XmlRpcException {
-        return getDelegateObsolete().setLogo(id, image);
-    }
+//    @Override
+//    public boolean setLogo(int id, byte[] image) throws SQLException,
+//            IOException, XmlRpcException {
+//        return getDelegateObsolete().setLogo(id, image);
+//    }
 
 //    @Override
 //    public boolean changeCourse(int id, String name, String description,
@@ -435,13 +435,13 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     @Override
     public boolean editSchool(int schoolID, boolean export) throws IOException,
             XmlRpcException, SQLException {
-        return getDelegate().editSchool(schoolID, export);
+        return getDelegateObsolete().editSchool(schoolID, export);
     }
 
     @Override
     public boolean editSchoolRights(int schoolID, String rights) throws IOException,
             XmlRpcException, SQLException {
-        return getDelegate().editSchoolRights(schoolID, rights);
+        return getDelegateObsolete().editSchoolRights(schoolID, rights);
     }
 
     @Override
@@ -454,14 +454,14 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     public Hashtable editSchool(int schoolID, String schoolName,
             String schoolLogin, Hashtable passwd) throws IOException,
             XmlRpcException, SQLException, DwoXmlRpcException {
-        return getDelegate().editSchool(schoolID, schoolName, schoolLogin, passwd);
+        return getDelegateObsolete().editSchool(schoolID, schoolName, schoolLogin, passwd);
     }
 
     @Override
     public Hashtable addSchool(int schoolId, String schoolName,
             String schoolLogin, Hashtable passwd) throws DwoXmlRpcException,
             IOException, XmlRpcException, SQLException, DwoXmlRpcException {
-        return getDelegate().addSchool(schoolId, schoolName, schoolLogin, passwd);
+        return getDelegateObsolete().addSchool(schoolId, schoolName, schoolLogin, passwd);
     }
 
 //    @Override
@@ -494,26 +494,26 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 //        return getDelegate().setRights(uid, schoolGroup, profileid, rights);
 //    }
 
-    @Override
-    public boolean changeCourse(int id, String name, String description,
-            boolean export, int schoolID) throws DwoXmlRpcException,
-            IOException, XmlRpcException, SQLException {
-        return getDelegateObsolete().changeCourse(id, name, description, export, schoolID);
-    }
+//    @Override
+//    public boolean changeCourse(int id, String name, String description,
+//            boolean export, int schoolID) throws DwoXmlRpcException,
+//            IOException, XmlRpcException, SQLException {
+//        return getDelegateObsolete().changeCourse(id, name, description, export, schoolID);
+//    }
 
-    @Override
-    public boolean changeCourse(int id, String name, String description,
-            boolean export, int schoolID, int parentID) throws DwoXmlRpcException,
-            IOException, XmlRpcException, SQLException {
-        return getDelegateObsolete().changeCourse(id, name, description, export, schoolID, parentID);
-    }
+//    @Override
+//    public boolean changeCourse(int id, String name, String description,
+//            boolean export, int schoolID, int parentID) throws DwoXmlRpcException,
+//            IOException, XmlRpcException, SQLException {
+//        return getDelegateObsolete().changeCourse(id, name, description, export, schoolID, parentID);
+//    }
 
     @Override
     public int addCourse(int schoolID, String name, String description,
             int dwoProfile, int parentID, boolean withChildren)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
-        return getDelegate().addCourse(schoolID, name, description, dwoProfile, parentID, withChildren);
+        return getDelegateObsolete().addCourse(schoolID, name, description, dwoProfile, parentID, withChildren);
     }
 
     @Override
@@ -523,12 +523,12 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
         return getDelegateObsolete().setCourseSequence(vector, schoolID, classID, parent, profileID);
     }
 
-    @Override
-    public boolean moveSco(int scoId, int courseId, int sequencenr, String name)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        return getDelegateObsolete().moveSco(scoId, courseId, sequencenr, name);
-    }
+//    @Override
+//    public boolean moveSco(int scoId, int courseId, int sequencenr, String name)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        return getDelegateObsolete().moveSco(scoId, courseId, sequencenr, name);
+//    }
 
 //    @Override
 //    public boolean selectCoursesForClass(int classID, int courseID, int type,
@@ -546,8 +546,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     @Override
     public boolean setExpireDate(int schoolID, Date date) throws IOException,
             XmlRpcException, SQLException {
-        // TODO Auto-generated method stub
-        return getDelegate().setExpireDate(schoolID, date);
+        return getDelegateObsolete().setExpireDate(schoolID, date);
     }
 
     @Override
@@ -593,10 +592,10 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 //        return getDelegate().disconnectFromClass(userID, classID);
 //    }
 
-    @Override
-    public Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        return getDelegateObsolete().getClassesOfTeacher(userID, schoolID);
-    }
+//    @Override
+//    public Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        return getDelegateObsolete().getClassesOfTeacher(userID, schoolID);
+//    }
 
 //    @Override
 //    public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
@@ -684,10 +683,10 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 //        return getDbAccessJS().getEditableCoursesAdminJS();
 //    }
 
-    @Override
-    public Vector getTableJS(String table, Hashtable wheredef, String orderby)
-            throws IOException, XmlRpcException, SQLException {
-        return getDelegateObsolete().getTableJS(table, wheredef, orderby);
-    }
+//    @Override
+//    public Vector getTableJS(String table, Hashtable wheredef, String orderby)
+//            throws IOException, XmlRpcException, SQLException {
+//        return getDelegateObsolete().getTableJS(table, wheredef, orderby);
+//    }
 
 }

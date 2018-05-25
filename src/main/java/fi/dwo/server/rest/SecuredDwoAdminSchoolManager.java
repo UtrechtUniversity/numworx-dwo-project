@@ -1,6 +1,7 @@
 package fi.dwo.server.rest;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
@@ -28,6 +29,8 @@ import nl.uu.fi.dwo.rest.entities.RestHasRole;
 import nl.uu.fi.dwo.rest.entities.RestNewSchool;
 import nl.uu.fi.dwo.rest.entities.RestSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.FromToManager;
@@ -45,6 +48,7 @@ import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -246,15 +250,33 @@ public class SecuredDwoAdminSchoolManager {
         }
         if (hr != null) {
             try {
-                PersistentSchool editSchool = SchoolManager.findBySchoolLogin(school.getSchoolLogin());
+                PersistentSchool editSchool = SchoolManager.findEntity(MySQLPersistenceId.getNativeId(school)); 
                 //User to update is logged in user.
                 editSchool.setExpire(school.getExpire());
-                editSchool.setExport(school.getExport());
+                //editSchool.setExport(school.getExport());
                 editSchool.setImage(school.getImage());
                 editSchool.setSchoolLogin(school.getSchoolLogin());
                 editSchool.setSchoolName(school.getSchoolName());
-                editSchool.setSchoolRights(school.getSchoolRights());
+                //editSchool.setSchoolRights(school.getSchoolRights());
                 SchoolManager.edit(editSchool);
+                List<DomMapEntry<RoleType, String>> passwords = school.getPasswords();
+                List<PersistentSchoolGroup> schoolGroups = new ArrayList<>(SchoolGroupManager.findEntities(editSchool));
+                Iterator<PersistentSchoolGroup> i = schoolGroups.iterator();
+                while (i.hasNext()) {
+                  PersistentSchoolGroup persistentSchoolGroup =  i.next();
+                  Iterator<DomMapEntry<RoleType,String>> j = passwords.iterator();
+                  while (j.hasNext()) {
+                    DomMapEntry<nl.uu.fi.dwo.rest.dom.entities.RoleType, java.lang.String> domMapEntry = j.next();
+                    if(persistentSchoolGroup.getGroupID() == domMapEntry.getKey().ordinal())
+                    {
+                      persistentSchoolGroup.setPasswd(domMapEntry.getValue());
+                      i.remove();
+                      j.remove();
+                    }
+                    
+                  }
+                  
+                }
                 return true;
             } catch (Exception e) {
                 LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
@@ -509,4 +531,36 @@ public class SecuredDwoAdminSchoolManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update the school data.");
         }
     }
+    
+    @PUT
+    @Produces({"application/json"})
+    @Path("/add")
+    public DomSchoolFull addSchool(@Context SecurityContext sc, RestSchoolFull rest) throws Dwo2Exception {
+      DwoAdminState_HR_R_S_SG_U state = AnonDomainAuthorizer.build()
+          .submitUser(sc.getUserPrincipal().getName())
+          .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN)
+          .buildDwoAdmin();
+// TODO move to Action:
+        DomSchoolFull school = rest.getDomSchoolFull();
+        PersistentSchool ps = new PersistentSchool();
+        ps.setSchoolLogin(school.getSchoolLogin());
+        ps.setSchoolName(school.getSchoolName());
+        ps.setSchoolRights("_"); // Default rights
+        school.setSchoolRights("_");
+        ps.setExport(Boolean.FALSE); // no export
+        school.setExport(Boolean.FALSE);
+        ps.setExpire(school.getExpire());
+        SchoolManager.create(ps);
+        List<DomMapEntry<RoleType, String>> passwords = school.getPasswords();
+        for(DomMapEntry<RoleType, String> entry: passwords) {
+          PersistentSchoolGroup psg = new PersistentSchoolGroup();
+          psg.setPasswd(entry.getValue());
+          psg.setSchoolID(ps.getSchoolID().intValue());
+          psg.setGroupID(entry.getKey().ordinal());
+          SchoolGroupManager.create(psg);
+        }
+      school.setId(ps.buildPersistenceId());
+      return school;
+    }
+
 }

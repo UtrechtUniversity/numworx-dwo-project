@@ -2,6 +2,7 @@ package fi.dwo.server.persistence;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -11,7 +12,7 @@ import fi.dwo.commons.exceptions.DwoXmlRpcException;
 
 public interface DbAccessObsolete {
 
-  Hashtable login(String username, String password)
+/*  Hashtable login(String username, String password)
       throws SQLException, DwoXmlRpcException, IOException, XmlRpcException;
 
   Vector<Object> getClassesOfTeacher(int userID, int schoolID)
@@ -52,9 +53,20 @@ public Vector getTable(String tableName) throws IOException,
 XmlRpcException, SQLException;
 public Vector getTable(String tableName, Hashtable wheredef) throws IOException,
 XmlRpcException, SQLException;
-//-------------------------------------
+*///-------------------------------------
 public boolean setCourseSequence(Vector vector, int schoolID, int classID,
                                  int parent, int profileID)
                                  throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+
+public int addCourse(int schoolID, String name, String description, int dwoProfile, int parentID, boolean withChildren) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+
+public Hashtable addSchool(int schoolId, String schoolName, String schoolLogin, Hashtable passwd)
+    throws DwoXmlRpcException, IOException, XmlRpcException, SQLException, DwoXmlRpcException;
+public Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, Hashtable passwd)
+    throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
+public boolean deleteSchool(int schoolID) throws IOException, XmlRpcException, SQLException;
+public boolean setExpireDate(int schoolID, Date date) throws IOException, XmlRpcException, SQLException;
+public boolean editSchoolRights(int schoolID, String rights) throws IOException, SQLException, XmlRpcException;
+public boolean editSchool(int schoolID, boolean export) throws IOException, XmlRpcException, SQLException;
 
 }
