@@ -80,7 +80,7 @@ function sendTerminatedStatement() {
     tincan.sendStatement(statement);
 }
 function sendActionNextAsset() {
-	console.log("send ActionNextPage")
+	tincan.log("send ActionNextPage")
 	var statement = new TinCan.Statement({"verb": {"id":"http://bao.mijnklas.nl/xapi/verbs/navigate"}})
     tincan.sendStatement(statement);
 }
