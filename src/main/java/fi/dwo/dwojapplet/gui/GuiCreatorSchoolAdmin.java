@@ -1,5 +1,7 @@
 package fi.dwo.dwojapplet.gui;
 
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolManager;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.SchoolAdmin;
@@ -15,6 +17,11 @@ public class GuiCreatorSchoolAdmin extends GuiCreatorTeacher {
     public GuiCreatorSchoolAdmin(DWO dwo) {
         super(dwo);
 
+    }
+
+    @Override
+    public SchoolManager getSchoolManager() {
+      return new SecureSchoolAdminSchoolManager();
     }
 
     /* (non-Javadoc)

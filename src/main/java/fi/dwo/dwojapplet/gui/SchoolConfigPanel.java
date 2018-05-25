@@ -1,10 +1,13 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+
 import java.awt.Component;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -92,9 +95,12 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
 
         // school.setRights(sb.toString()); // testing
         try {
-            PersistenceFacade.instance().editSchool(school, sb.toString());
+            DomSchoolFull dom = new DomSchoolFull();
+            dom.setSchoolRights(sb.toString());
+            dom.setId(PersistentSchool.buildPersistenceId((long) school.getSchoolID()));
+            GuiCreator.instance().getSchoolManager().updateSchool(dom);
         }
-        catch (PersistenceException e) {
+        catch (Exception e) {
             LOG.log(Level.SEVERE, null, e);
         }
     }

@@ -5,6 +5,7 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.exceptions.CourseException;
 import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
@@ -16,6 +17,7 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.GuiCreatorTeacher.LazyAppletConfig;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -170,17 +172,15 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                     String name = c.getName();
                     String description = c.getDescription();
                     name = CourseManagementPanel.replaceDuplicate(name, set);
-                    try {
-                        newc = PersistenceFacade.instance().addCourse(s, name, description, profileID, map, false);
-                        if (map != null) {
-                            map.addChild(newc);
-                        } else {
-                            ModuleTreePanel.SCHOOL_MAP.addChild(newc);
-                        }
-                        newc.setScoList(new Sco[0]);
-                    } catch (CourseException e) {
-                        LOG.log(Level.SEVERE, null, e);
-                    }
+                    //                newc = PersistenceFacade.instance().addCourse(s, name, description, profileID, map, false);
+                                  newc = GuiCreator.instance().addCourse(name, description, map, false);
+                                  
+                                  if (map != null) {
+                                        map.addChild(newc);
+                                    } else {
+                                        ModuleTreePanel.SCHOOL_MAP.addChild(newc);
+                                    }
+                                    newc.setScoList(new Sco[0]);
                     status.setText(TextMapper.format(TextMapper.GUIEID_MSG4, new Object[]{name}));
                     status.invalidate();
                     status1.setText("   ");
@@ -674,8 +674,11 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                 }
                 school.setExport(enableImport.isSelected());
                 try {
-                    PersistenceFacade.instance().updateSchool(school);
-                } catch (PersistenceException e) {
+                    DomSchoolFull dom = new DomSchoolFull();
+                    dom.setExport(school.isExport());
+                    dom.setId(PersistentSchool.buildPersistenceId((long)school.getSchoolID()));
+                    GuiCreator.instance().getSchoolManager().updateSchool(dom);
+                } catch (Exception e) {
                     school.setExport(oldExport);
                     enableImport.setSelected(oldExport);
                     JOptionPane.showMessageDialog(enableImport, e.getMessage(), e.getClass().getName(), JOptionPane.ERROR_MESSAGE);

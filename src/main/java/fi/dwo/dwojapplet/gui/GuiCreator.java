@@ -34,6 +34,7 @@ import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.LoginManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
@@ -696,7 +697,7 @@ public class GuiCreator {
      *
      */
     public School editSchool(int schoolID, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {
-        return dwo.editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap, date);
+        return null;
     }
 
     /**
@@ -714,9 +715,12 @@ public class GuiCreator {
      *
      */
     public School addSchool(int id, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {
-        return dwo.addSchool(id, schoolName, schoolLogin, schoolPasswdMap, date);
+        return null;
     }
 
+    public SchoolManager getSchoolManager() {
+      return null;
+    }
 //    /**
 //     * Deletes the account of the current user and loggs of.
 //     *

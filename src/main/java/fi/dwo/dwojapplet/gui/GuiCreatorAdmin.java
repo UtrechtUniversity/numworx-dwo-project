@@ -6,6 +6,7 @@ package fi.dwo.dwojapplet.gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.Date;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
+import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.AppletConfig;
@@ -24,6 +26,7 @@ import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.SchoolPasswdMap;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.CourseManagementAction;
@@ -32,7 +35,9 @@ import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
 import fi.dwo.dwojapplet.persistence.StoreCreator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminCourseManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
@@ -51,9 +56,17 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  */
 public class GuiCreatorAdmin extends GuiCreator {
 
+    @Override
+  public School editSchool(int schoolID, String schoolName, String schoolLogin,
+      SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {
+    // TODO Auto-generated method stub
+    return dwo.editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap, date, schoolManager);
+  }
+
     private static final Logger LOG = Logger.getLogger(GuiCreatorAdmin.class.getName());
     private final SecureDwoAdminScoContextManager scoManager;
     private final SecureDwoAdminCourseManager courseManager;
+    private final SecureDwoAdminSchoolManager schoolManager;
     /**
      * @param dwo
      */
@@ -61,6 +74,12 @@ public class GuiCreatorAdmin extends GuiCreator {
         super(dwo);
         scoManager = new SecureDwoAdminScoContextManager(RestAuthenticator.getInstance().getContext());
         courseManager = new SecureDwoAdminCourseManager();
+        schoolManager = new SecureDwoAdminSchoolManager();
+    }
+
+    @Override
+    public SchoolManager getSchoolManager() {
+      return schoolManager;
     }
 
     /**
@@ -264,8 +283,11 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public boolean deleteSchool(School sc) {
-        return dwo.deleteSchool(sc);
+        return dwo.deleteSchool(sc, schoolManager);
     }
+    public School addSchool(int id, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {
+      return dwo.addSchool(id, schoolName, schoolLogin, schoolPasswdMap, date, schoolManager);
+  }
 
     /**
      * Verwissel de sequencenrs van twee Sco's. De Sco's moeten tot dezelfe

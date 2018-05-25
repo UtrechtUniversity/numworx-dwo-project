@@ -21,6 +21,7 @@ import java.net.CookiePolicy;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -61,6 +62,7 @@ import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentApplet;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.BUILD;
@@ -81,15 +83,22 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicUserManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -476,6 +485,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     public boolean login(String username, String password) throws LoginException {
     	setUserName(username);
     	setPassWord(password);
+    	MySimpleXmlRpcClient.AUTHORIZATION = StoredRestManager.getInstance().getBasicAuthString();
         return setExtraRights(DwoHelper.getCurrentFacadeUser());
     }
 
@@ -583,7 +593,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      */
     public boolean login() throws LoginException {
         DwoHelper.setCurrentFacadeUser(Guest.instance());
-
+        MySimpleXmlRpcClient.AUTHORIZATION = null;
         /*
 	 * Object[] args = new Object[5]; args[0] =
 	 * "http://www.fi.uu.nl/wisweb/scorm/scos/nabouwenaanzichten/NabouwenAanzichten1.htm";
@@ -2581,10 +2591,12 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         return null;
     }
 
-    public boolean deleteSchool(School sc) {
+    public boolean deleteSchool(School sc, SecureDwoAdminSchoolManager schoolManager) {
         try {
-            return PersistenceFacade.instance().deleteSchool(sc);
-        } catch (SchoolException e) {
+            DomSchool4DwoAdmin submit = new DomSchool4DwoAdmin();
+            submit.setId(PersistentSchool.buildPersistenceId(Long.valueOf(sc.getSchoolID())));
+            return schoolManager.removeSchool(submit);
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
@@ -2653,21 +2665,42 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * @param schoolLogin The configurePanelsForUser name of the new school.
      * @param schoolPasswdMap
      * @param date
+     * @param schoolManager 
      * @return
      * @pschool is successfully inserted it returns true. Otherwise it returns
      * false.
      * @throws fi.dwo.commons.exceptions.SchoolException
      *
      */
-    public School addSchool(int id, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date)
+    public School addSchool(int id, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date, SecureDwoAdminSchoolManager schoolManager)
             throws SchoolException {
-
+        
+        DomSchoolFull school = new DomSchoolFull();
+        school.setExpire(date);
+        school.setSchoolLogin(schoolLogin);
+        school.setSchoolName(schoolName);
+        ArrayList<DomMapEntry<RoleType,String>> passwords = new ArrayList<>();
+        for(Map.Entry<String, String> entry: schoolPasswdMap.entrySet()) {
+          RoleType role = RoleType.values()[Integer.parseInt(entry.getKey())];
+          String pw = entry.getValue();
+          passwords.add(new DomMapEntry<RoleType, String>(role, pw));
+        }
+        school.setPasswords(passwords);
         // String studentPassw = schoolPasswdMap.getPasswd(SchoolGroup.STUDENT);
         // String teacherPassw = schoolPasswdMap.getPasswd(SchoolGroup.TEACHER);
         // return PersistenceFacade.instance().addSchool(id, schoolName,
         // schoolLogin, studentPassw, teacherPassw);
-        return PersistenceFacade.instance().addSchool(id, schoolName, schoolLogin, schoolPasswdMap, date);
-    }
+        //return PersistenceFacade.instance().addSchool(id, schoolName, schoolLogin, schoolPasswdMap, date);
+        try {
+          school = schoolManager.addSchool(school);
+          id = MySQLPersistenceId.getNativeId(school).intValue();
+          return (School) PersistenceFacade.instance().get(id, School.class);
+        } catch (PersistenceException e) {
+          throw new SchoolException(SchoolException.EX_XML_RPC);
+        } catch (Dwo2Exception e) {
+           throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR);
+        }
+     }
 
     /**
      * Edit a school to the database.
@@ -2682,12 +2715,33 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      *
      */
     public School editSchool(int schoolID, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap,
-            Date date) throws SchoolException {
+            Date date, SecureDwoAdminSchoolManager schoolManager) throws SchoolException {
         // String studentPassw = schoolPasswdMap.getPasswd(SchoolGroup.STUDENT);
         // String teacherPassw = schoolPasswdMap.getPasswd(SchoolGroup.TEACHER);
         // return PersistenceFacade.instance().editSchool(schoolID, schoolName,
         // schoolLogin, studentPassw, teacherPassw);
-        return PersistenceFacade.instance().editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap, date);
+      DomSchoolFull school = new DomSchoolFull();
+      school.setExpire(date);
+      school.setSchoolLogin(schoolLogin);
+      school.setSchoolName(schoolName);
+      ArrayList<DomMapEntry<RoleType,String>> passwords = new ArrayList<>();
+      for(Map.Entry<String, String> entry: schoolPasswdMap.entrySet()) {
+        RoleType role = RoleType.values()[Integer.parseInt(entry.getKey())];
+        String pw = entry.getValue();
+        passwords.add(new DomMapEntry<RoleType, String>(role, pw));
+      }
+      school.setPasswords(passwords);
+      school.setId(PersistentSchool.buildPersistenceId(Long.valueOf(schoolID)));
+      try {
+        schoolManager.updateSchool(school);
+        int id = MySQLPersistenceId.getNativeId(school).intValue();
+        return (School) PersistenceFacade.instance().get(id, School.class);
+      } catch (PersistenceException e) {
+        throw new SchoolException(SchoolException.EX_XML_RPC);
+      } catch (Dwo2Exception e) {
+         throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR);
+      }
+      //  return PersistenceFacade.instance().editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap, date);
     }
 
     @Deprecated /* use update Course */

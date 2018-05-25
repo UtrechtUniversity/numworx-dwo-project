@@ -5,7 +5,7 @@ import java.util.Hashtable;
  * Read/write copy 
  */
 
-public class SchoolPasswdMap extends Hashtable {
+public class SchoolPasswdMap extends Hashtable<String,String> {
 
     public SchoolPasswdMap() {
     }

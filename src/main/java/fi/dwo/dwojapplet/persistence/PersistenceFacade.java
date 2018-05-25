@@ -1331,54 +1331,54 @@ public class PersistenceFacade {
      * @return The new course. If an exception occurs, null is returned.
      * @throws CourseException
      */
-    public Course addCourse(School school, String name, String description, int profileID, Course parent, boolean withChildren)
-            throws CourseException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                int parentID = parent == null ? 0 : parent.getID();
-                int schoolID = parent == null ? school.getSchoolID() : parent.getSchoolID();
-                int result = dbAccess.addCourse(schoolID, name,
-                        description, profileID, parentID, withChildren);
-                Course c = new Course();
-                c.setCourseID(result);
-                c.setDescription(description);
-                c.setName(name);
-                c.setImageUrl(school.getImage());
-                c.setDwoProfile(profileID);
-                c.setSchoolID(schoolID); // DEZE IS VERGETEN, WIM 9/5/2011
-                c.setParentID(parentID);
-                c.resetParent();
-                if (withChildren) {
-                    c.setChildren(Course.NO_CHILDREN);
-                } else {
-                    c.setScoList(Course.NO_SCOS);
-                }
-                MapperIF map = MapperCreator.instance(Course.class);
-                map.put(result, c);
-                return c;
-            }
-            catch (IOException e) {
-                throw new CourseException(CourseException.EX_IO);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (CourseException) getException(e, e.code);
-                } else {
-                    throw new CourseException(CourseException.EX_XML_RPC);
-                }
-            }
-            catch (SQLException e) {
-                throw new CourseException(CourseException.EX_DB);
-            }
-            catch (DwoXmlRpcException e) {
-                throw (CourseException) getException(e, e.code);
-            }
-        }
-        catch (PersistenceException e) {
-            throw new CourseException(CourseException.EX_UNKNOWN_ERROR);
-        }
-    }
+//    public Course addCourse(School school, String name, String description, int profileID, Course parent, boolean withChildren)
+//            throws CourseException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                int parentID = parent == null ? 0 : parent.getID();
+//                int schoolID = parent == null ? school.getSchoolID() : parent.getSchoolID();
+//                int result = dbAccess.addCourse(schoolID, name,
+//                        description, profileID, parentID, withChildren);
+//                Course c = new Course();
+//                c.setCourseID(result);
+//                c.setDescription(description);
+//                c.setName(name);
+//                c.setImageUrl(school.getImage());
+//                c.setDwoProfile(profileID);
+//                c.setSchoolID(schoolID); // DEZE IS VERGETEN, WIM 9/5/2011
+//                c.setParentID(parentID);
+//                c.resetParent();
+//                if (withChildren) {
+//                    c.setChildren(Course.NO_CHILDREN);
+//                } else {
+//                    c.setScoList(Course.NO_SCOS);
+//                }
+//                MapperIF map = MapperCreator.instance(Course.class);
+//                map.put(result, c);
+//                return c;
+//            }
+//            catch (IOException e) {
+//                throw new CourseException(CourseException.EX_IO);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (CourseException) getException(e, e.code);
+//                } else {
+//                    throw new CourseException(CourseException.EX_XML_RPC);
+//                }
+//            }
+//            catch (SQLException e) {
+//                throw new CourseException(CourseException.EX_DB);
+//            }
+//            catch (DwoXmlRpcException e) {
+//                throw (CourseException) getException(e, e.code);
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            throw new CourseException(CourseException.EX_UNKNOWN_ERROR);
+//        }
+//    }
 
 //    /**
 //     * Updates the coursedata (name and description) in the database.
@@ -1803,72 +1803,72 @@ public class PersistenceFacade {
 //        }
 //    }
 
-    private School addSchool(int id, String schoolName, String schoolLogin, Hashtable passw)
-            throws SchoolException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                MapperIF mapper = MapperCreator.instance(School.class);
-                Hashtable result = dbAccess.addSchool(id, schoolName, schoolLogin, passw);
-                return (School) mapper.getObjectFromReturn(result);
-            }
-            catch (IOException e) {
-                System.out.println(e.toString());
-                throw new SchoolException(SchoolException.EX_IO);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (SchoolException) getException(e, e.code);
-                } else {
-                    throw new SchoolException(SchoolException.EX_XML_RPC);
-                }
-            }
-            catch (SQLException e) {
-                System.out.println(e.toString());
-                throw new SchoolException(SchoolException.EX_DB);
-            }
-            catch (DwoXmlRpcException e) {
-                throw (SchoolException) getException(e, e.code);
-            }
-        }
-        catch (PersistenceException e) {
-            throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR);
-        }
-    }
+//    private School addSchool(int id, String schoolName, String schoolLogin, Hashtable passw)
+//            throws SchoolException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                MapperIF mapper = MapperCreator.instance(School.class);
+//                Hashtable result = dbAccess.addSchool(id, schoolName, schoolLogin, passw);
+//                return (School) mapper.getObjectFromReturn(result);
+//            }
+//            catch (IOException e) {
+//                System.out.println(e.toString());
+//                throw new SchoolException(SchoolException.EX_IO);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (SchoolException) getException(e, e.code);
+//                } else {
+//                    throw new SchoolException(SchoolException.EX_XML_RPC);
+//                }
+//            }
+//            catch (SQLException e) {
+//                System.out.println(e.toString());
+//                throw new SchoolException(SchoolException.EX_DB);
+//            }
+//            catch (DwoXmlRpcException e) {
+//                throw (SchoolException) getException(e, e.code);
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR);
+//        }
+//    }
 
-    public boolean deleteSchool(School sc) throws SchoolException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            boolean result = dbAccess.deleteSchool(sc.getSchoolID());
-            if (result) {
-                // remove caching van school,
-                // TODO classes, users, courses, scos
-                MapperCreator.instance(School.class).removeObject(sc.getSchoolID());
-            }
-            return result;
-        }
-        catch (IOException e) {
-            LOG.log(Level.SEVERE, null, e);
-            throw new SchoolException(SchoolException.EX_IO, e);
-        }
-        catch (SQLException e) {
-            LOG.log(Level.SEVERE, null, e);
-            throw new SchoolException(SchoolException.EX_DB, e);
-        }
-        catch (XmlRpcException e) {
-            LOG.log(Level.SEVERE, null, e);
-            if (e.code == 0) {
-                throw new SchoolException(SchoolException.EX_XML_RPC, e);
-            }
-            try {
-                throw (SchoolException) getException(e, e.code);
-            }
-            catch (PersistenceException e1) {
-                LOG.log(Level.SEVERE, null, e1);
-                throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR, e1);
-            }
-        }
-    }
+//    public boolean deleteSchool(School sc) throws SchoolException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            boolean result = dbAccess.deleteSchool(sc.getSchoolID());
+//            if (result) {
+//                // remove caching van school,
+//                // TODO classes, users, courses, scos
+//                MapperCreator.instance(School.class).removeObject(sc.getSchoolID());
+//            }
+//            return result;
+//        }
+//        catch (IOException e) {
+//            LOG.log(Level.SEVERE, null, e);
+//            throw new SchoolException(SchoolException.EX_IO, e);
+//        }
+//        catch (SQLException e) {
+//            LOG.log(Level.SEVERE, null, e);
+//            throw new SchoolException(SchoolException.EX_DB, e);
+//        }
+//        catch (XmlRpcException e) {
+//            LOG.log(Level.SEVERE, null, e);
+//            if (e.code == 0) {
+//                throw new SchoolException(SchoolException.EX_XML_RPC, e);
+//            }
+//            try {
+//                throw (SchoolException) getException(e, e.code);
+//            }
+//            catch (PersistenceException e1) {
+//                LOG.log(Level.SEVERE, null, e1);
+//                throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR, e1);
+//            }
+//        }
+//    }
 
 //    public Hashtable getFidentitySchools() {
 //        DbAccessIF dbaccess = DbAccessCreator.instance();
@@ -1898,57 +1898,57 @@ public class PersistenceFacade {
      * @param school
      * @throws PersistenceException
      */
-    public void updateSchool(School school) throws PersistenceException {
-        int schoolID = school.getSchoolID();
-        boolean export = school.isExport();
-        try {
-            DbAccessCreator.instance().editSchool(schoolID, export);
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (XmlRpcException e) {
-            LOG.log(Level.SEVERE, null, e);
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
+//    public void updateSchool(School school) throws PersistenceException {
+//        int schoolID = school.getSchoolID();
+//        boolean export = school.isExport();
+//        try {
+//            DbAccessCreator.instance().editSchool(schoolID, export);
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (XmlRpcException e) {
+//            LOG.log(Level.SEVERE, null, e);
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//
+//    }
 
-    }
-
-    public School editSchool(int schoolID, String schoolName,
-            String schoolLogin, Hashtable passwd) throws SchoolException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                MapperIF mapper = MapperCreator.instance(School.class);
-                Hashtable result = dbAccess.editSchool(schoolID, schoolName, schoolLogin, passwd);
-                return (School) mapper.getObjectFromReturn(result);
-            }
-            catch (IOException e) {
-                System.out.println(e.toString());
-                throw new SchoolException(SchoolException.EX_IO, e);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (SchoolException) getException(e, e.code);
-                } else {
-                    throw new SchoolException(SchoolException.EX_XML_RPC, e);
-                }
-            }
-            catch (SQLException e) {
-                System.out.println(e.toString());
-                throw new SchoolException(SchoolException.EX_DB, e);
-            }
-            catch (DwoXmlRpcException e) {
-                throw (SchoolException) getException(e, e.code);
-            }
-        }
-        catch (PersistenceException e) {
-            throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR, e);
-        }
-    }
+//    public School editSchool(int schoolID, String schoolName,
+//            String schoolLogin, Hashtable passwd) throws SchoolException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                MapperIF mapper = MapperCreator.instance(School.class);
+//                Hashtable result = dbAccess.editSchool(schoolID, schoolName, schoolLogin, passwd);
+//                return (School) mapper.getObjectFromReturn(result);
+//            }
+//            catch (IOException e) {
+//                System.out.println(e.toString());
+//                throw new SchoolException(SchoolException.EX_IO, e);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (SchoolException) getException(e, e.code);
+//                } else {
+//                    throw new SchoolException(SchoolException.EX_XML_RPC, e);
+//                }
+//            }
+//            catch (SQLException e) {
+//                System.out.println(e.toString());
+//                throw new SchoolException(SchoolException.EX_DB, e);
+//            }
+//            catch (DwoXmlRpcException e) {
+//                throw (SchoolException) getException(e, e.code);
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR, e);
+//        }
+//    }
 
 //    /**
 //     *
@@ -2062,65 +2062,65 @@ public class PersistenceFacade {
 //        }
 //    }
 
-    public void editSchool(School school, String string) throws PersistenceException {
-        try {
-            if (DbAccessCreator.instance().editSchoolRights(school.getSchoolID(), string)) {
-                school.setRights(string);
-            }
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
+//    public void editSchool(School school, String string) throws PersistenceException {
+//        try {
+//            if (DbAccessCreator.instance().editSchoolRights(school.getSchoolID(), string)) {
+//                school.setRights(string);
+//            }
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//
+//    }
 
-    }
+//    public School editSchool(int schoolID, String schoolName,
+//            String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {
+//
+//        School school = editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap);
+//        setExpireDate(schoolID, date, school);
+//        return school;
+//    }
 
-    public School editSchool(int schoolID, String schoolName,
-            String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {
+//    public School addSchool(int id, String schoolName, String schoolLogin,
+//            SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {
+//        School school = addSchool(id, schoolName, schoolLogin, schoolPasswdMap);
+//        if (date != null) {
+//            setExpireDate(school.getSchoolID(), date, school);
+//        }
+//        return school;
+//    }
 
-        School school = editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap);
-        setExpireDate(schoolID, date, school);
-        return school;
-    }
-
-    public School addSchool(int id, String schoolName, String schoolLogin,
-            SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {
-        School school = addSchool(id, schoolName, schoolLogin, schoolPasswdMap);
-        if (date != null) {
-            setExpireDate(school.getSchoolID(), date, school);
-        }
-        return school;
-    }
-
-    private void setExpireDate(int schoolID, Date date, School school) {
-        try {
-            Date date0 = date;
-            if (date == null) {
-                date0 = DATE_NULL;
-            }
-// safe the date in UTC:
-            date0 = new Date(Date.UTC(date0.getYear(), date0.getMonth(), date.getDate(), 0, 0, 0));
-            if (DbAccessCreator.instance().setExpireDate(schoolID, date0)) {
-                school.setExpire(date);
-            }
-        }
-        catch (IOException e) {
-            // TODO Auto-generated catch block
-            LOG.log(Level.SEVERE, null, e);
-        }
-        catch (XmlRpcException e) {
-            System.err.println(e); // no such method?
-        }
-        catch (SQLException e) {
-            // TODO Auto-generated catch block
-            LOG.log(Level.SEVERE, null, e);
-        }
-    }
+//    private void setExpireDate(int schoolID, Date date, School school) {
+//        try {
+//            Date date0 = date;
+//            if (date == null) {
+//                date0 = DATE_NULL;
+//            }
+//// safe the date in UTC:
+//            date0 = new Date(Date.UTC(date0.getYear(), date0.getMonth(), date.getDate(), 0, 0, 0));
+//            if (DbAccessCreator.instance().setExpireDate(schoolID, date0)) {
+//                school.setExpire(date);
+//            }
+//        }
+//        catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            LOG.log(Level.SEVERE, null, e);
+//        }
+//        catch (XmlRpcException e) {
+//            System.err.println(e); // no such method?
+//        }
+//        catch (SQLException e) {
+//            // TODO Auto-generated catch block
+//            LOG.log(Level.SEVERE, null, e);
+//        }
+//    }
 
 //
 //    /**
