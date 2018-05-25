@@ -490,7 +490,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		{
 			this.pendingState = null;
 		}
-		PopupFacade.showReview(h, this);
+		CorrectieFacade.showReview(h, getWidget());
 		ObjectMap wrap = JSONUtilities.wrapMap(h);
 		ingevuld = wrap.getBoolean("ingevuld", false);
 		nagekeken = wrap.getBoolean("nagekeken", false);
@@ -507,7 +507,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		{
 			setVisibleFeedbackImages(false, false, false);
 		}
-		correctie = CorrectieFacade.get(h, this, scoreMax);
+		correctie = CorrectieFacade.get(h, this, getWidget(), scoreMax);
 	}
 
 	/**
@@ -759,9 +759,10 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		return facade.wrap(this);
 	}
 
+	private Widget widget;
 	public Widget getWidget() 
-	{
-		return mainPanel;
+	{   if (widget == null) widget = CorrectieFacade.wrap(mainPanel);
+		return widget;
 	}
 	
 	@Override

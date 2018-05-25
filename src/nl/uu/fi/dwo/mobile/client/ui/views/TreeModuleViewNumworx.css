@@ -3,9 +3,13 @@
 @external .status-busy, .status-retry;
 @def color15 #314770;
 @def color10 #E4F2FB;
+@def color11 #D2E5F5;
 @def color12 #AAC1DC;
+@def color122 #8eBee5;
 @def color13 #7297C7;
 @def color14 #1B75BB;
+@def color15 #314770;
+@def color21 #DDE0E3;
 @def medium 500;
 @def regular 400;
 
@@ -18,30 +22,30 @@
 
 		.headerPanel {
 			background-color: color15;
-			color: #8eBee5;
+			color: color122;
 			font-size: 13px;
 			font-family: "Ubuntu" !important;
 		}
 		
 		.navPanel {
-			background-color: #DDE0E3;
+			background-color: color21;
 			color: color15;
 			padding-left: 0px;
 			font-size: 14px;
 			line-height: 27px;
 			font-family: "Ubuntu" !important;
-			box-shadow: 2px 2px 2px #314770 inset;
+			box-shadow: 2px 2px 2px color15 inset;
 		}
 .centerPanel {
-			background-color: #D2E5F5;
-			color: #314770; /*15*/
+			background-color: color11;
+			color: color15; /*15*/
 			font-size: 14px;
 			line-height: 18px;
 			padding-top: 40px;
 /* 			padding-left: 18px; */
 /* 			padding-right: 22px; */
 /* 			box-shadow: 8px 0px 14px 0px rgba(0,0,0,0.46) inset;			 */
-			box-shadow: 2px 2px 2px #314770 inset;
+			box-shadow: 2px 2px 2px color15 inset;
 			font-family: "Ubuntu" !important;
 			overflow-y: scroll;
 }
@@ -171,7 +175,7 @@
 		.search-input {
 			font-family: "Ubuntu" !important;
 			background-color: black;
-			color: #E4F2FB;
+			color: color10;
 			margin-left: 22px;
 			margin-top: 16px;
 			display: inline-block;
@@ -240,7 +244,7 @@
 			border-bottom-color: inherit;
 			width: 252px;
 			height: 160px;
-			background-color: #E4F2FB;
+			background-color: color10;
 			display: table;
 		}
 		.tileBodySpan {

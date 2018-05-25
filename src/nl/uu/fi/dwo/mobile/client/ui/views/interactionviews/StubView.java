@@ -204,7 +204,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			score = Integer.parseInt(h.get("STUBVIEW_score").toString());
 		if(h.containsKey("STUBVIEW_correct"))
 			correct = toBoolean(h.get("STUBVIEW_correct").toString());
-		PopupFacade.showReview(h, this);
+		CorrectieFacade.showReview(h, widget);
 		JSONValue object = JSONUtilities.toJSONObject(h);
 		if(innerView != null)
 		{
@@ -214,7 +214,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		}
 		else 
 			pendingState = object.toString(); // XXX NPE!
-		correctie = CorrectieFacade.get(h, this, scoreMax);
+		correctie = CorrectieFacade.get(h, this, widget, scoreMax);
 	}
 
 	@Override
@@ -451,8 +451,11 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			comRoot.setChanged(fout);
 	}
 
+	private Widget widget;
 	public Widget asWidget() {
-		return facade.wrap(this);
+	    if(widget == null)
+	      widget = CorrectieFacade.wrap(this);
+		return facade.wrap(widget);
 	}
 
 	@Override

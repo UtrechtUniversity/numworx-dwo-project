@@ -27,7 +27,6 @@ import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVak;
-import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 
@@ -344,7 +343,7 @@ public class StelselAntwoordVak implements InteractionStub, FacetAware, TekstEle
 	{
 		if (h == null)
 			return;
-		PopupFacade.showReview(h, this);
+		CorrectieFacade.showReview(h, this);
 		if (rekenVakZichtbaar)
 			rekenVak.setState(h);
 		if (oplossingenRegelZichtbaar)

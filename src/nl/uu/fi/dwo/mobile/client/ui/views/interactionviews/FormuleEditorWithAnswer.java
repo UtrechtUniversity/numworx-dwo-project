@@ -1728,7 +1728,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			}
 		}
 		ObjectMap map = JSONUtilities.wrapMap(h);
-		PopupFacade.showReview(h, this);
+		CorrectieFacade.showReview(h, getAsPanel());
 		boolean ingevuld = true;
 		boolean nagekeken = false;
 		boolean editable = true;
@@ -1772,7 +1772,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				kijkNa(true); // FIXME kijkna in setstate
 		}
 		setEditable(editable);
-		correctie = CorrectieFacade.get(h, this, scoreMax);
+		correctie = CorrectieFacade.get(h, this, getAsPanel(), scoreMax);
 	}
 
 	public String strip$f(String antwoord) {

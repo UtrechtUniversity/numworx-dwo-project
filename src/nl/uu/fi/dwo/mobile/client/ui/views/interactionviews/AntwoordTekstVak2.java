@@ -683,7 +683,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		int errorCount = 0;
 
 		ObjectMap map = JSONUtilities.wrapMap(h);
-		PopupFacade.showReview(h, this);
+		CorrectieFacade.showReview(h, getAsPanel());
 
 		if (map.containsKey("ingevuld"))
 			ingevuld = map.getBoolean("ingevuld");
@@ -728,7 +728,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 				antwoordTF.acceptCBookEvent(EVENT_READONLY);
 			}
 		}
-		correctie = CorrectieFacade.get(h, this, scoreMax);
+		correctie = CorrectieFacade.get(h, this, getAsPanel(), scoreMax);
 	}
 
 
@@ -1228,9 +1228,11 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		basisPanel.setWidgetBottomHeight(feedbackLabel, 1, Style.Unit.PX, feedbackLabel.getOffsetHeight(), Style.Unit.PX);
 	}
 
-	public Panel getAsPanel()
+	Widget widget;
+	public Widget getAsPanel()
 	{
-		return basisPanel;
+	    if (widget == null) widget = CorrectieFacade.wrap(basisPanel);
+		return widget;
 	}
 	
 	public TouchPanel getTouchPanel()

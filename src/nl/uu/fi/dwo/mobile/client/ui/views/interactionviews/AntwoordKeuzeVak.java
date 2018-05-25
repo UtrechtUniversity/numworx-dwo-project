@@ -49,7 +49,6 @@ import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.Logging;
-import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEventListener {
@@ -824,7 +823,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		Vector attempts = new Vector();
 		int attemptsCount = 0;
 		int errorCount = 0;
-		PopupFacade.showReview(h, this);
+		CorrectieFacade.showReview(h, this);
 
 		if (h.containsKey("ingevuld"))
 			ingevuld = ((Boolean) h.get("ingevuld")).booleanValue();

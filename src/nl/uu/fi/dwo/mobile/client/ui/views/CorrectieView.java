@@ -28,9 +28,8 @@ public class CorrectieView extends Composite implements HasHide {
   private static final String REVIEW_SCORE_CORRECTIE = "reviewScoreCorrectie";
   public static final String REVIEW_INTERACTIE_DATA = "reviewInteractieData";
   
-  public static Provider<Map<String,Object>> addCorrection(Map<String,Object> map, InteractionView iv, int scoreMax) {
-    final Widget w = Widget.asWidgetOrNull(iv);
-    w.addStyleName("correctie");
+  public static Provider<Map<String,Object>> addCorrection(Map<String,Object> map, InteractionView iv, final Widget widget, int scoreMax) {
+    widget.addStyleName("correctie");
     return new Provider<Map<String, Object>>() {
 
       Map<String, Object> result = new HashMap<>();
@@ -49,17 +48,17 @@ public class CorrectieView extends Composite implements HasHide {
           if (h.containsKey(REVIEW_SCORE_CORRECTIE))
             result.put(REVIEW_SCORE_CORRECTIE, h.getInt(REVIEW_SCORE_CORRECTIE));
         }
-        w.addDomHandler(event -> {
-          int x = event.getRelativeX(w.getElement());
-          int y = event.getRelativeY(w.getElement());
-          int width = w.getOffsetWidth() - 16;
-          int height = w.getOffsetHeight() - 16;
+        widget.addDomHandler(event -> {
+          int x = event.getRelativeX(widget.getElement());
+          int y = event.getRelativeY(widget.getElement());
+          int width = widget.getOffsetWidth() - 16;
+          int height = widget.getOffsetHeight() - 16;
           if (x > width && y > height) {
             if(popup != null) {
-              popup.showRelativeTo(w);
+              popup.showRelativeTo(widget);
             } else {
               //iv.kijkNa();iv.getState(); // wat is nodig voor score?????? FIXME
-              popup = startCorrection(result, w, iv.getScore(), scoreMax);
+              popup = startCorrection(result, widget, iv.getScore(), scoreMax);
             }
           }
         }, MouseUpEvent.getType());

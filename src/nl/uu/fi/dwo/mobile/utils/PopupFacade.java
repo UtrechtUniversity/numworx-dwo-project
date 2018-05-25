@@ -3,19 +3,17 @@ package nl.uu.fi.dwo.mobile.utils;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
-import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
@@ -191,7 +189,7 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 	public void setState(HashMap<String, Object> h) {
 			setPopupState(h);
 			delegate.setState(h);
-			showReview(h, delegate);
+			CorrectieFacade.showReview(h, delegate);
 	}
 
 	public void setPopupState(HashMap<String, Object> h) {
@@ -324,15 +322,6 @@ public class PopupFacade implements InteractionView, FacetAware, CBookEventListe
 
 	public void setPopup(boolean popup) {
 		this.popup = popup;
-	}
-
-	public static  void showReview(Map<String,Object> h0, IsWidget w) {
-		if(h0 == null) return;
-		ObjectMap h = JSONUtilities.wrapMap(h0);
-		h = h.getObjectMap("reviewInteractieData");
-		if(h != null && h.containsKey("reviewScoreCorrectie") && h.getInt("reviewScoreCorrectie")!=0) {
-			w.asWidget().addStyleName("correctie");
-		}
 	}
 
 	@Override

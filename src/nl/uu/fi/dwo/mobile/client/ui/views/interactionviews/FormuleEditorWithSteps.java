@@ -2118,7 +2118,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		boolean enabled = setFocusEnabled(false);
 		try {
 			setState0(h);
-	        correctie = CorrectieFacade.get(h, this, scoreMax);
+	        correctie = CorrectieFacade.get(h, this, getAsPanel(), scoreMax);
 	} finally {
 			setFocusEnabled(enabled);
 		}
@@ -2141,7 +2141,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		String antwoordString = "";
 		String[] gebruikersSubStrings = null;
 		ObjectMap hh = JSONUtilities.wrapMap(h);
-		PopupFacade.showReview(h, this);
+		CorrectieFacade.showReview(h, getAsPanel());
 		if (h.get("stapNr") != null)
 			stapNr = ((Number) h.get("stapNr")).intValue();
 		if (h.get("stapOk") != null)
