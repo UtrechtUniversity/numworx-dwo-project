@@ -733,14 +733,14 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
-    @Override
-    public boolean deleteCourseDataFromClass(int a, int b) throws IOException, XmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(new Integer(a));
-        vv.addElement(new Integer(b));
-        Object object = invoke("deleteCourseDataFromClass", vv);
-        return ((Boolean) object).booleanValue();
-    }
+//    @Override
+//    public boolean deleteCourseDataFromClass(int a, int b) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(new Integer(a));
+//        vv.addElement(new Integer(b));
+//        Object object = invoke("deleteCourseDataFromClass", vv);
+//        return ((Boolean) object).booleanValue();
+//    }
 
     @Override
     public java.util.Vector getResultCount(int a, int b) throws IOException, XmlRpcException {

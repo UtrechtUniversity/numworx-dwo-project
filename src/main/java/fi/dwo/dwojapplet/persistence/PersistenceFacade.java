@@ -12,6 +12,8 @@ import fi.dwo.commons.exceptions.ScoException;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.DbAccessLogin;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.AppletConfig;
@@ -33,7 +35,11 @@ import fi.dwo.dwojapplet.domain.UserResultList;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.persistence.cache.ReadOnly;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherResultsManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -2616,15 +2622,34 @@ public class PersistenceFacade {
      * @return 
      */
     public boolean deleteCourseClassData(Course course, SchoolClass sc) {
-        int courseID = course.getID();
-        int classID = sc.getID();
-        try {
-            return DbAccessCreator.instance().deleteCourseDataFromClass(courseID, classID);
-        }
-        catch (Exception e) {
-            LOG.log(Level.SEVERE, null, e);
+//        int courseID = course.getID();
+//        int classID = sc.getID();
+//        try {
+//            return DbAccessCreator.instance().deleteCourseDataFromClass(courseID, classID);
+//        }
+//        catch (Exception e) {
+//            LOG.log(Level.SEVERE, null, e);
+//            return false;
+//        }
+        course.loadScos();
+        Sco[] children = course.getScoList();
+        DomClearStudentDataForScoAndClass dom = new DomClearStudentDataForScoAndClass();
+        dom.setDomProfile(DWO.getDwoProfile());
+        DomSchoolClass domSchoolClass = new DomSchoolClass();
+        dom.setDomSchoolClass(domSchoolClass);
+        domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId((long)sc.getID()));
+        DomScoContext context = new DomScoContext();
+        dom.setDomScoContext(context);
+        for(Sco sco: children) {
+          context.setId(PersistentScoContext.buildPersistenceId((long)sco.getID()));
+          try {
+            SecuredTeacherResultsManager.clearStudentResults(dom);
+          } catch (Dwo2Exception e) {
+            LOG.log(Level.SEVERE, "delete course data from class", e);
             return false;
+          }
         }
+        return true;
     }
 
     public void selectCoursesForClass(SchoolClass schoolClass, ClassCourse[] classCourses)
