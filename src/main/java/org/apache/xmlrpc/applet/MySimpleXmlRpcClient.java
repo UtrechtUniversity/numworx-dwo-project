@@ -66,6 +66,7 @@ import java.net.*;
  */
 public class MySimpleXmlRpcClient {
 
+    public static String AUTHORIZATION;
     URL url;
 
     /**
@@ -269,6 +270,12 @@ class MyXmlRpcSupport extends org.xml.sax.HandlerBase {
             con.setAllowUserInteraction(false);
             con.setRequestProperty("Content-Length", Integer.toString(request.length));
             con.setRequestProperty("Content-Type", "text/xml");
+ // AUTHORIZATION requested
+            if ( MySimpleXmlRpcClient.AUTHORIZATION != null) 
+              con.setRequestProperty("Authorization", MySimpleXmlRpcClient.AUTHORIZATION);
+            
+            
+            
             // con.connect ();
             OutputStream out = con.getOutputStream();
             out.write(request);

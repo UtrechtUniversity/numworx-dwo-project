@@ -491,7 +491,7 @@ public interface DbAccessIF  {
 
 //    public boolean log(Level level, String s) throws IOException, XmlRpcException;
 
-    public int addCourse(int schoolID, String name, String description, int dwoProfile, int parentID, boolean withChildren) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+//    public int addCourse(int schoolID, String name, String description, int dwoProfile, int parentID, boolean withChildren) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
 //    public int addCourse(int schoolID, String name, String description, int dwoProfile) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
@@ -525,7 +525,7 @@ public interface DbAccessIF  {
 
 //    public boolean deleteSco(int scoID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-    public boolean deleteSchool(int schoolID) throws IOException, XmlRpcException, SQLException;
+//    public boolean deleteSchool(int schoolID) throws IOException, XmlRpcException, SQLException;
 
 //    public Hashtable getFidentitySchools() throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
 
@@ -552,17 +552,17 @@ public interface DbAccessIF  {
 //    public boolean changeCourse(int id, String name, String description,
 //            boolean export) throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
 
-    public boolean editSchool(int schoolID, boolean export) throws IOException, XmlRpcException, SQLException;
+//    public boolean editSchool(int schoolID, boolean export) throws IOException, XmlRpcException, SQLException;
 
-    public boolean editSchoolRights(int schoolID, String rights) throws IOException, SQLException, XmlRpcException;
+//    public boolean editSchoolRights(int schoolID, String rights) throws IOException, SQLException, XmlRpcException;
 
     public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID) throws IOException, XmlRpcException, SQLException;
 
-    public Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, Hashtable passwd)
-            throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
+//    public Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, Hashtable passwd)
+//            throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
 
-    public Hashtable addSchool(int schoolId, String schoolName, String schoolLogin, Hashtable passwd)
-            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException, DwoXmlRpcException;
+//    public Hashtable addSchool(int schoolId, String schoolName, String schoolLogin, Hashtable passwd)
+//            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException, DwoXmlRpcException;
 
 //    public boolean deleteUserWithRoleFromSchool(int id, int schoolGroupID)
 //            throws IOException, XmlRpcException, SQLException;
@@ -631,7 +631,7 @@ public interface DbAccessIF  {
 
     public boolean selectCoursesForClass(int id, Vector v) throws IOException, XmlRpcException, SQLException;
 
-    public boolean setExpireDate(int schoolID, Date date) throws IOException, XmlRpcException, SQLException;
+//    public boolean setExpireDate(int schoolID, Date date) throws IOException, XmlRpcException, SQLException;
 
     public Hashtable login_saml(String a, String b)
             throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
