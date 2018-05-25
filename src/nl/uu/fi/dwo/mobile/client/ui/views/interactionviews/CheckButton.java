@@ -47,7 +47,17 @@ import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 
 public class CheckButton implements InteractionStub, CBookEventListener
 {
-	boolean editable = true;
+  static class ActionNextPage implements ClickHandler {
+    private static final CBookEvent NEXT_PAGE_EVENT = new CBookEvent(ACTION_NEXT_PAGE);
+
+    @Override
+    public void onClick(ClickEvent event) {
+      logger.warning("CheckButton " + ACTION_NEXT_PAGE);
+      DWOplayer.clientfactory.getEventBus().fireEvent(NEXT_PAGE_EVENT);
+    }
+  }
+
+  boolean editable = true;
 	
 	final class NakijkenVak implements ClickHandler {
 		public void onClick(ClickEvent e)
@@ -73,7 +83,7 @@ public class CheckButton implements InteractionStub, CBookEventListener
 	private static final String READONLY = "action.setNotEditable";
 	public static final CBookEvent CHECK_EVENT = new CBookEvent(CHECK);
 	public static final CBookEvent SEAL_EVENT = new CBookEvent(AFRONDEN);
-	
+	public static final String ACTION_NEXT_PAGE = "actionNextPage";
 	
 	final class NakijkenPagina implements ClickHandler {
 		@Override
@@ -165,6 +175,7 @@ public class CheckButton implements InteractionStub, CBookEventListener
 	private boolean nakijkenXWidget=false;
 	private boolean actieBewaren=false;
 	private boolean actieAfronden=false;
+    private boolean actionNextPage=false;
 
 	
 	public CheckButton(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
@@ -198,6 +209,7 @@ public class CheckButton implements InteractionStub, CBookEventListener
 			nakijkenXWidget = nakijken && launchData.getBoolean("nakijkenXWidget", nakijkenXWidget);
 			actieBewaren = launchData.getBoolean("actieBewaren", actieBewaren);
 			actieAfronden = launchData.getBoolean("actieAfronden", actieAfronden);
+			actionNextPage = launchData.getBoolean(ACTION_NEXT_PAGE, actionNextPage);
 		}
 	    boolean logOption = true;
     	boolean[][] logObjectives = null;
@@ -332,7 +344,8 @@ public class CheckButton implements InteractionStub, CBookEventListener
 		if(nakijkenPagina) checkButton.addClickHandler(new NakijkenPagina());
 		if(nakijkenXWidget) checkButton.addClickHandler(new NakijkenXWidget());
 		if(actieBewaren) checkButton.addClickHandler(new ActieBewaren());
-		if(actieAfronden) checkButton.addClickHandler(new ActieAfronden());
+		if(actieAfronden) checkButton.addClickHandler(new ActieAfronden());		
+        if(actionNextPage) checkButton.addClickHandler(new ActionNextPage());
 	}
 	
 	

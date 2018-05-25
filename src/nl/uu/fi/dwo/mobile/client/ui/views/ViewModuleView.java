@@ -56,4 +56,6 @@ public interface ViewModuleView extends IsWidget
 	
 	void setPresenter(Presenter p);
 	void setModel(Promise<DomStudentModelContext> studentModel);
+	
+	boolean nextPageAction();
 }

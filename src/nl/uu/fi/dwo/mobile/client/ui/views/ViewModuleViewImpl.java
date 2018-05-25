@@ -784,6 +784,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 	}
 	
+	public boolean nextPageAction() {
+	  if(on.getCurrentOpdracht() >= on.getAantalOpdrachten()-1)
+	      return false;
+	  gaNaarVolgendeOpdracht();
+	  return true;
+	}
 	public void gaNaarVorigeOpdracht()
 	{
 		if(condNav && condNavVoorwaarden)

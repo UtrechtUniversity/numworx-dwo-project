@@ -46,7 +46,11 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 
 	private static ViewModuleViewNumworxUiBinder uiBinder = GWT.create(ViewModuleViewNumworxUiBinder.class);
 
-	interface ViewModuleViewNumworxUiBinder extends UiBinder<DockLayoutPanel, ViewModuleViewNumworx> {
+	public boolean nextPageAction() {
+    return delegate.nextPageAction();
+  }
+
+  interface ViewModuleViewNumworxUiBinder extends UiBinder<DockLayoutPanel, ViewModuleViewNumworx> {
 	}
 
 	private DockLayoutPanel root;

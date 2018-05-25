@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
@@ -17,6 +19,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -39,7 +42,7 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
  * @author Danny Hendrix
  * 
  */
-public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorContext, ViewModuleView.Presenter
+public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorContext, ViewModuleView.Presenter, CBookEventListener
 {
 	private ClientFactory clientFactory;
 	private ViewModuleView view;
@@ -65,6 +68,10 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 
 	}
 
+	
+	
+	
+	
 	@Override
 	public void start(final AcceptsOneWidget panel, EventBus eventBus)
 	{
@@ -97,6 +104,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 		
 		
 		started = true;
+		addHandlerRegistration(eventBus.addHandler(CBookEvent.TYPE, this));
 		clientFactory.getHeaderView().hide();
 		view = clientFactory.getEntryView();
 		panel.setWidget(view); // terug naar af. problemen met gekke scrolls
@@ -190,7 +198,8 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 	public void gotoUrl(String href) {
 		if("goto:0".equals(href)) {
 			started = false;
-			History.back();
+			//History.back(); // FIXME Niet meer goed als je goto gebruikt.
+			goTo(new TreeModulePlace(sco.getParentID()));
 		}
 		else if(href.startsWith("goto:.")) defaultContext.gotoUrl(href);
 		else if(href.startsWith("goto:")){
@@ -198,7 +207,11 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 			SelectModuleItem parent = sco.getParent();
 			List<SelectModuleItem> list = parent.getChildren();
 			int page = href.lastIndexOf('.');
-			if(page >= 0) href = href.substring(0, page);
+            String location = null;
+			if (page >= 0) {
+	          location = Integer.toString(Integer.parseInt(href.substring(page+1))-1);
+			  href = href.substring(0, page);
+			}
 			int sconr = -1;
 			try {
 				sconr = Integer.parseInt(href)-1;
@@ -217,9 +230,6 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 			Object scoid = item.getID();
 			if (item != sco )
 			{	
-				String location = null;
-				if (sconr>=0)
-					location = Integer.toString(sconr);
 				goTo(new ViewModulePlace(scoid,location));
 			}
 		}
@@ -230,5 +240,25 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 		started = false;
 		clientFactory.getPlaceController().goTo(place);
 	}
+
+  @Override
+  public void acceptCBookEvent(CBookEvent event) {
+    if (CheckButton.ACTION_NEXT_PAGE.equals(event.getCommand()))
+    {
+      if ( !view.nextPageAction())  {
+        SelectModuleItem parent = sco.getParent();
+        List<SelectModuleItem> list = parent.getChildren();
+        String url;
+        int index = list.indexOf(sco);
+        if (index == list.size()-1) {
+            url = "goto:0";
+        } else {
+            url = "goto:" + (index+2) + ".1";
+        }
+        gotoUrl(url);
+      }
+    }
+    
+  }
 	
 }
