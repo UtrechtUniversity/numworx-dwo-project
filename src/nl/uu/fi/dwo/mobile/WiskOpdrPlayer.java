@@ -20,13 +20,16 @@ import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 
 import fi.dwo.gwt.lib.rest.DwoConstants;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.DummyClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 
-public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
+public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, CBookEventListener {
 
 	static class InitialValueChangeEvent extends ValueChangeEvent<String> {
 
@@ -63,6 +66,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		DummyClientFactory dummyClientFactory = new DummyClientFactory();
 		DWOplayer.clientfactory = dummyClientFactory;
 		
+		dummyClientFactory.getEventBus().addHandler(CBookEvent.TYPE, this);
 		MGWTsetup();
 		
 		DWOplayer.DWO_BUNDLE.dwoplayercss().ensureInjected();
@@ -204,6 +208,17 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		view.setUnitId("scoViewNr");
 		view.preSetupModule(link, url);
 	}
+
+  public static String ACTION_NEXT_ASSET = "actionNextAsset";
+  @Override
+  public void acceptCBookEvent(CBookEvent event) {
+    if (CheckButton.ACTION_NEXT_PAGE.equals(event.getCommand()))
+    {
+        if (! view.nextPageAction())
+          DWOplayer.clientfactory.getEventBus().fireEvent(new CBookEvent(ACTION_NEXT_ASSET));
+    }
+    
+  }
 	
 	
 }

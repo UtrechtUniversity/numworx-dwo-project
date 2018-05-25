@@ -6,11 +6,16 @@ import java.util.logging.Logger;
 import org.osgi.util.promise.Promise;
 
 import nl.uu.fi.dwo.interaction.client.Role;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.WiskOpdrPlayer;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
+public class TinCanAPI extends SCORM_guest implements Scorm2004IF, CBookEventListener {
 	
 	private native static void script(String item) /*-{
 		$wnd.script(item)	
@@ -34,6 +39,7 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 	private boolean success = false;
 	private long    startTime  = System.currentTimeMillis();
 	private String duration;
+    private HandlerRegistration regis;
 	/**
 	 * @return the completion
 	 */
@@ -135,10 +141,16 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 	public Promise<String> Terminate() {
 		sendModuleDataStatement(moduleData);
 		if(isCompletion()) sendCompletedStatement(getDuration(), getScoreScaled());
+		regis.removeHandler();
 		sendTerminatedStatement();
+		
 		return super.Terminate();
 	}
 
+	private static native void sendActionNextAsset() /*-{
+	  $wnd.sendActionNextAsset();
+	}-*/;
+	
 	private static native void sendTerminatedStatement() /*-{
 		$wnd.sendTerminatedStatement();
 	}-*/;
@@ -240,6 +252,7 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 
 	@Override
 	public String Initialize() {
+	  regis = DWOplayer.clientfactory.getEventBus().addHandler(CBookEvent.TYPE, this);
 		return super.Initialize();
 	}
 
@@ -273,5 +286,13 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF {
 	private String getDuration() {
 		return duration = format(System.currentTimeMillis() - startTime);
 	}
+
+  @Override
+  public void acceptCBookEvent(CBookEvent event) {
+    if (WiskOpdrPlayer.ACTION_NEXT_ASSET.equals(event.getCommand()))
+    {
+      sendActionNextAsset();
+    }
+  }
 	
 }

@@ -79,7 +79,13 @@ function sendTerminatedStatement() {
 	var statement = new TinCan.Statement({"verb": {"id":"http://adlnet.gov/expapi/verbs/terminated"}})
     tincan.sendStatement(statement);
 }
+function sendActionNextAsset() {
+	console.log("send ActionNextPage")
+	var statement = new TinCan.Statement({"verb": {"id":"http://bao.mijnklas.nl/xapi/verbs/navigate"}})
+    tincan.sendStatement(statement);
+}
 
 
 var lrs = new ContentApiLrs();
+//lrs.setTarget(window.parent, "*")
 TinCan.enableDebug()
