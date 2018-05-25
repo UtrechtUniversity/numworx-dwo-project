@@ -579,8 +579,8 @@ public interface DbAccessIF  {
      * @throws SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      */
-    public boolean deleteCourseDataFromClass(int courseID, int classID)
-            throws SQLException, IOException, XmlRpcException;
+//    public boolean deleteCourseDataFromClass(int courseID, int classID)
+//            throws SQLException, IOException, XmlRpcException;
 
     /**
      * get courses with resultdata from a class.
