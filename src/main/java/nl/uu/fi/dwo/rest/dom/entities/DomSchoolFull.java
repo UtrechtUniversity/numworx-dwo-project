@@ -4,6 +4,8 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.util.Date;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -17,6 +19,7 @@ public class DomSchoolFull extends DomSchool{
     private Boolean export;
     private String schoolRights;
     private String image;
+    private List<DomMapEntry<RoleType,String>> passwords;
 
     /**
      * @return the schoolLogin
@@ -72,6 +75,14 @@ public class DomSchoolFull extends DomSchool{
      */
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public List<DomMapEntry<RoleType,String>> getPasswords() {
+      return passwords;
+    }
+
+    public void setPasswords(List<DomMapEntry<RoleType,String>> passwords) {
+      this.passwords = passwords;
     }
 
 }
