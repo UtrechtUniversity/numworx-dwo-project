@@ -50,7 +50,7 @@ public class ResultsPresenter {
     public interface Display {
         void clear();
 
-        void plot(ResultPlot data, boolean zoomedClass, boolean zoomedCourse);
+        void setResultTree(DomResultTree data);
 
         void setEmptyTableMessage();
 
@@ -183,12 +183,7 @@ public class ResultsPresenter {
                 LOG.log(Level.INFO, "DomResults returned.");
                 resultTree = new DomResultTree(resolved.getValue());
                 LOG.log(Level.INFO, "ResultTree obtained.");// plots the result tree.
-                //LOG.log(Level.INFO, "Plotting Resulttree.\n\n"+resultTree.getPlottedResultTree());
-
-                resultMatrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(resultTree);
-                LOG.log(Level.INFO, "ResultMatrix obtained.");
-                view.setEmptyTableMessage();
-                plotResultsEvent();
+                view.setResultTree(resultTree);
                 LOG.log(Level.INFO, "plotted ResultMatrix.");
                 return null;
             }
@@ -234,7 +229,7 @@ public class ResultsPresenter {
         }
         resultMatrix = calculateResults(course, schoolClass);
         ResultPlot plotData = buildPlotMatrix(resultMatrix);
-        view.plot(plotData, (schoolClass != null), (course != null));
+        //view.plot(plotData, (schoolClass != null), (course != null));
     }
 
     /**
@@ -267,7 +262,7 @@ public class ResultsPresenter {
         resultMatrix = calculateResults(course, schoolClass);
         ResultPlot plotData = buildPlotMatrix(resultMatrix);
         LOG.log(Level.FINE, getExportString());
-        view.plot(plotData, (schoolClass != null), (course != null));
+//        view.plot(plotData, (schoolClass != null), (course != null));
     }
 
     /**
@@ -288,11 +283,12 @@ public class ResultsPresenter {
                 LOG.log(Level.INFO, "DomResults returned.");
                 resultTree = new DomResultTree(resolved.getValue());
                 LOG.log(Level.INFO, "ResultTree obtained.");
-                //LOG.log(Level.INFO, "Plotting Resulttree.\n\n"+resultTree.getPlottedResultTree());
-                resultMatrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(resultTree);
-                LOG.log(Level.INFO, "ResultMatrix obtained.");
-                plotResultsEvent();
-                LOG.log(Level.INFO, "plotted ResultMatrix.");
+                view.setResultTree(resultTree);
+//                //LOG.log(Level.INFO, "Plotting Resulttree.\n\n"+resultTree.getPlottedResultTree());
+//                resultMatrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(resultTree);
+//                LOG.log(Level.INFO, "ResultMatrix obtained.");
+//                plotResultsEvent();
+                LOG.log(Level.INFO, "plotted.");
                 return null;
             }
         },
@@ -309,11 +305,6 @@ public class ResultsPresenter {
         });
     }
 
-    public void plotResultsEvent() {
-        resultMatrix = calculateResults(course, schoolClass);
-        ResultPlot plotData = buildPlotMatrix(resultMatrix);
-        view.plot(plotData, (schoolClass != null), (course != null));
-    }
 
     public void updateResults() {
         resultMatrix = calculateResults(course, schoolClass);

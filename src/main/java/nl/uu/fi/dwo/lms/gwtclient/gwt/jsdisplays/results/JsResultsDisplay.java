@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
@@ -22,9 +21,7 @@ import jsinterop.annotations.JsType;
 public class JsResultsDisplay{
     /** Clears the results in the ui. */
     public static native void clear();
-    /** Fills the result table with the results.
-     * @param data a double map with string data to show */
-    public static native void plot(JavaScriptObject data, boolean zoomedClass, boolean zoomedCourse);    
+    public static native void setResultTree(String data);    
     /** setEmptyTableMessage show an indicator that the table is empty. */
     public static native void setEmptyTableMessage();
     /** setEmptyTableMessage show an indicator that we are fetching data. */

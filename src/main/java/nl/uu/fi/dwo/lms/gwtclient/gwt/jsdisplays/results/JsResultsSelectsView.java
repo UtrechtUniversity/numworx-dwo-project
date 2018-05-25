@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONString;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsSelectsPresenter;
 
 /**
@@ -45,17 +44,17 @@ public class JsResultsSelectsView implements ResultsSelectsPresenter.Display {
             }
             rows.set(y+1, line);
         }
-        JsResultsDisplay.plot(rows.getJavaScriptObject(), zoomedClass, zoomedCourse);     
+        JsResultsSelectsDisplay.plot(rows.getJavaScriptObject(), zoomedClass, zoomedCourse);     
     }
     
 
     @Override
         public void setEmptyTableMessage() {
-        JsResultsDisplay.setEmptyTableMessage();
+        JsResultsSelectsDisplay.setEmptyTableMessage();
     }
 
     @Override
         public void setLoadingTableMessage() {
-        JsResultsDisplay.setLoadingTableMessage();
+        JsResultsSelectsDisplay.setLoadingTableMessage();
     }
 }

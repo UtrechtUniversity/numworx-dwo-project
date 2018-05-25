@@ -1,8 +1,9 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results;
 
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONString;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
+import nl.uu.fi.dwo.rest.dom.DomResultTree;
 
 /**
  * Mapper to allow java interface implementation.
@@ -11,42 +12,12 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
  */
 public class JsResultsView implements ResultsPresenter.Display {
 
+    private static final Logger LOG = Logger.getLogger(JsResultsView.class.getName());
+
     @Override
     public void clear() {
         JsResultsDisplay.clear();
     }
-
-    /** plots ResultPlot data via jsResultsDisplay. Data contains a horizontal index
-     * including the column label for the row headers. Result data rows contains 
-     * in the first element the row labels and row score. Vertical  index does
-     * does not contain the column label for the row headers.
-     * 
-     * @param data
-     * @param zoomedClass
-     * @param zoomedCourse 
-     */
-    @Override
-    public void plot(ResultsPresenter.ResultPlot data, boolean zoomedClass, boolean zoomedCourse) {
-        JSONArray rows = new JSONArray();
-        JSONArray line = new JSONArray();
-        //set headers
-        for (int x = 0; x < data.gethIndex().length; x++) {
-                line.set(x, new JSONString(data.gethIndex()[x].label));
-            }
-        rows.set(0, line);
-        //set rows
-        for (int y = 0; y < data.getvIndex().length; y++) {
-        //set row header appended by row scores
-            line = new JSONArray();
-                line.set(0, new JSONString(data.getMarks().get(y).get(0).label));
-            for (int x = 1; x < data.getMarks().get(y).size(); x++) {
-                line.set(x, new JSONString(""+data.getMarks().get(y).get(x).score));
-            }
-            rows.set(y+1, line);
-        }
-        JsResultsDisplay.plot(rows.getJavaScriptObject(), zoomedClass, zoomedCourse);     
-    }
-    
 
     @Override
         public void setEmptyTableMessage() {
@@ -56,5 +27,13 @@ public class JsResultsView implements ResultsPresenter.Display {
     @Override
         public void setLoadingTableMessage() {
         JsResultsDisplay.setLoadingTableMessage();
+    }
+
+    @Override
+    public void setResultTree(DomResultTree data) {
+        LOG.log(Level.INFO,"tree data has "+data.getStudentTree().getChildren().values().size()+" student classes.");
+        LOG.log(Level.INFO,"tree data has "+data.getResultTree().getChildren().values().size()+"  result classes.");
+        String s = "tree : {id1 : c34534; name :rootnode}";
+        JsResultsDisplay.setResultTree(s);
     }
 }
