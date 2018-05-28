@@ -142,7 +142,12 @@ public class KeyboardGWT implements EntryPoint {
 		TabletOnderbouwKeyboard w = new TabletOnderbouwKeyboard(true);
 		w.setEditor(editor);
 		root.add(w);
-		
+
+		root.add(new Label("Nieuw onderbouw toetsenbord"));
+		w = new TabletOnderbouwKeyboard(false);
+		w.setEditor(editor);
+		root.add(w);
+	
 if ( false ) 	{	
 		root.add(new Label("algebra"));
 		AbstractKeyboard panel = new TabbedDesktopKeyboard(1);

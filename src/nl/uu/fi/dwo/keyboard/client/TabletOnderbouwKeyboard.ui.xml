@@ -4,6 +4,9 @@
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	>
 	<ui:style field='style' type='nl.uu.fi.dwo.keyboard.client.KeyboardCSS'>
+	@external basis-T1-5;
+	@external basis-T2-5;
+	
 	.small {
 		transform-origin: left top;
 		transform: scale(0.680272,0.6971);
@@ -28,7 +31,7 @@
 	.table4 {
 	}
 
-	.smallfont {
+	.smallfont, .small .smallfont p {
 		font-size: 12px !important;
 		line-height: normal !important;
 	}
@@ -61,6 +64,28 @@
 	.okey p {
 		margin: 17px 0px;
 	}
+	
+	.small .okey p.big {
+		font-size: 40px;
+		margin-top: 3px;
+	}
+	.small .okey p {
+		font-size: 150%;
+		margin: 10px 0px;
+	}
+	
+	.small span.basis-T1-5::before, .small span.basis-T2-5:before {
+		font-size: 375% !important;
+		left: -10% !important;
+		top: 0% !important;
+	}
+	
+	.small .okey span::before {
+		left: 0% !important;
+		top: 0% !important;
+	}
+	
+	
 	
 	.keyboard {
 		background-color: #d2d2d2;	
@@ -108,7 +133,7 @@
 		</table>
 
 		<table class="{style.table} {style.table2} ">
-			<tr><td><my:FKey ui:field='t1_3' addStyleNames="{style.okey} key icon"><span class="basis basis-T1-6"><span class="path1"></span><span class="path2"></span></span></my:FKey></td>
+			<tr><td><my:FKey ui:field='t1_3' addStyleNames="{style.okey} key icon"><p><span class="basis basis-T1-6"><span class="path1"></span><span class="path2"></span></span></p></my:FKey></td>
 			    <td><my:FKey ui:field='t1_4' addStyleNames="{style.okey} key icon"><p><span class="basis basis-T1-7"></span></p></my:FKey></td>
 			    <td><my:FKey ui:field='t1_5' addStyleNames="{style.okey} key icon"><p><span class="basis basis-T4-5"><span class='path1'></span><span class='path2'></span><span class='path3'></span></span></p></my:FKey></td>
 			    </tr>
