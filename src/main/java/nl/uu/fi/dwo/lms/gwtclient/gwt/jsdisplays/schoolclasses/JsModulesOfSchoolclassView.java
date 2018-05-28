@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
-import fi.dwo.gwt.lib.rest.util.DomCourseOfClassCodec;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,11 +66,11 @@ public class JsModulesOfSchoolclassView implements ModulesOfSchoolclassPresenter
                 if (coc.getObject() != null && coc.getObject().getCourse() != null) {
                     if (coc.getChildren() != null && !coc.getChildren().isEmpty()) {
                         for (DomTree<DomCourseOfClass> child : node.getChildren().values()) {
-                            json.put(child.getObject().getClassCourse().getId().getIdString(), buildSubTree(child));
+                            json.put(child.getObject().getCourse().getId().getIdString(), buildSubTree(child));
                         }
                     } else {
                         LOG.log(Level.INFO, "id: " + new Object[]{coc.getObject().getCourse().getId().getIdString() + " coursename " + coc.getObject().getCourse().getName()});
-                        json.put(coc.getObject().getClassCourse().getId().getIdString(), new JSONString(coc.getObject().getCourse().getName()));
+                        json.put(coc.getObject().getCourse().getId().getIdString(), new JSONString(coc.getObject().getCourse().getName()));
                     }
                 }
             }
