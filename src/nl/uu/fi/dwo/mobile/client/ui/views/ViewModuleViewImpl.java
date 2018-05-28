@@ -315,8 +315,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 																			// 15
 			// GEEN randje aan de linkerkant, want dan klopt de maat (100%) niet
 			// meer bij noordhoff
-
-			(on = new OpdrNav()).init(launchData, this, createMemento()); // hierin worden bollen gezet
+// ExtensionPoint here.
+			(on = GWT.create(OpdrNav.class)).init(launchData, this, createMemento()); // hierin worden bollen gezet
 			mode = on.getMode();
 
 			// voor noordhoff

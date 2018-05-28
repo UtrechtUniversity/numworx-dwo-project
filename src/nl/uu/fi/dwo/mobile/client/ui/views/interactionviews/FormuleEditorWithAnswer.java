@@ -241,7 +241,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					|| (mode == OpdrNavIF.ZELFTOETS && isNagekeken() && !isVeranderdNaNakijken());
 
 				// helemaal niet nakijken voor eindtoets?
-				if (!(mode == OpdrNav.EINDTOETS))
+				if (!(mode == OpdrNavIF.EINDTOETS))
 				{
 					other.kijkNa(false, show, false);
 				}
@@ -1303,7 +1303,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			fews.setScore(this.score);     // update score van parent fe
 		}
 		this.scoreZonderAftrek = (Integer) checkResults.get("score");
-		if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
+		if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
 			score = Math.max(0, score - errorCount * foutStraf);
 		//System.out.println("score = " + score);
 		this.feedback = (String) checkResults.get("feedback");

@@ -906,7 +906,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 				if (show)
 					zetGoedFout(GOED);
 				score = puntenFeedback;
-				if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
+				if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
 					score = Math.max(0, puntenFeedback - errorCount * foutStraf);
 				correct = Boolean.TRUE;
 			}
@@ -915,7 +915,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 				if (show)
 					zetGoedFout(HALF);
 				score = puntenFeedback;
-				if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
+				if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
 					score = Math.max(0, puntenFeedback - errorCount * foutStraf);
 				correct = null;
 
@@ -925,7 +925,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 				if (show && ingevuld)
 					zetGoedFout(FOUT);
 				score = puntenFeedback;
-				if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
+				if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
 					score = Math.max(0, puntenFeedback - errorCount * foutStraf);
 				correct = Boolean.FALSE;
 				verhoogErrorCount();
@@ -939,7 +939,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 					zetGoedFout(GOED);
 				correct = Boolean.TRUE;
 				score = scoreMax;
-				if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
+				if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
 					score = Math.max(0, scoreMax - errorCount * foutStraf);
 			}
 			else

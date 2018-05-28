@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.google.web.bindery.event.shared.HandlerRegistrations;
 
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
@@ -152,6 +153,7 @@ public class OpdrNavContext implements OpdrNavIF {
 				registration = r;
 			else {
 				// registration = PairRegistration(registration, r);
+			    registration = HandlerRegistrations.compose(registration, r);
 			}
 		}
 		if (!subscriptions.isEmpty())

@@ -222,8 +222,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		activiteitNamen = new String[aantalActiviteiten];
 		aantalOpdrachten = new int[aantalActiviteiten];
 		buttonsEnabled = new boolean[aantalActiviteiten][];
-
-		mode = Integer.parseInt((String) launchData.get("mode"));
+// MODE
+		mode = createMode(launchData);
 
 		ObjectMap wrap = JSONUtilities.wrapMap(launchData);
 		if (wrap.containsKey("instellingen"))
@@ -441,6 +441,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], state);
 		}
 	}
+
+  protected int createMode(HashMap<String, Object> launchData) {
+    return Integer.parseInt((String) launchData.get("mode"));
+  }
 
 	/**
 	 * Initialiseer scores voor zelftoets, zo mogelijk met

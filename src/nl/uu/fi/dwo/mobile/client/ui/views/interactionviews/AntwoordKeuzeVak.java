@@ -983,7 +983,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				if (show)
 					zetGoedFout(GOED);
 				score = puntenFeedback;
-				if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
+				if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
 					score = Math.max(0, puntenFeedback - errorCount * foutStraf);
 				correct = true;
 				fout = false;
@@ -993,7 +993,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				if (show)
 					zetGoedFout(HALF);
 				score = puntenFeedback;
-				if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
+				if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
 					score = Math.max(0, puntenFeedback - errorCount * foutStraf);
 				correct = false;
 				fout = false;
@@ -1003,7 +1003,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				if (show)
 					zetGoedFout(FOUT);
 				score = puntenFeedback;
-				if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
+				if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
 					score = Math.max(0, puntenFeedback - errorCount * foutStraf);
 				correct = false;
 				fout = true;
@@ -1020,7 +1020,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				correct = true;
 				fout = false;
 				score = scoreMax;
-				if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
+				if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
 					score = Math.max(0, scoreMax - errorCount * foutStraf);
 			}
 			else
