@@ -42,8 +42,8 @@ public class DomResultTree {
     private DomResultTeacher studentTree;
     private int newNodeId = 0;
     private List<DomResultScore> nodeList = new ArrayList<DomResultScore>();
-    
-    private void addToNodeMap(DomResultScore score){
+
+    private void addToNodeMap(DomResultScore score) {
         score.setNodeId(nodeList.size());
         nodeList.add(score);
     }
@@ -179,10 +179,12 @@ public class DomResultTree {
         assignNodeIds(studentTree);
     }
 
-    private void assignNodeIds(DomResultScore score){
+    private void assignNodeIds(DomResultScore score) {
         addToNodeMap(score);
-        for(DomResultScore s: (Collection<DomResultScore>) score.getChildren().values()){
-            assignNodeIds(s);
+        if (score.getChildren() instanceof DomResultScore) {
+            for (DomResultScore s : (Collection<DomResultScore>) score.getChildren().values()) {
+                assignNodeIds(s);
+            }
         }
     }
 
@@ -215,10 +217,11 @@ public class DomResultTree {
     }
 
     final String tabs = "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t";
+
     /**
      * Debug test code for logging a ResultTree.
-     * 
-     * @return 
+     *
+     * @return
      */
     public String getPlottedResultTree() {
         StringBuilder sb = new StringBuilder();
@@ -235,9 +238,9 @@ public class DomResultTree {
 
     /**
      * used by getPlottedResultTree().
-     * 
+     *
      * @param rt
-     * @param depth 
+     * @param depth
      */
     private void plotSubTree(DomResultScore rt, int depth) {
         StringBuilder sb = new StringBuilder();
@@ -252,22 +255,20 @@ public class DomResultTree {
 
         for (DomResultScore s : (Collection<DomResultScore>) rt.getChildren().values()) {
             if (rt.getChildren().size() > 0) {
-                
-                plotSubTree(s, depth+1);
+
+                plotSubTree(s, depth + 1);
             }
         }
 
-        
     }
-
 
     /**
      * @return the nodeMap
      */
     public DomResultCourseInClass getDomCourseInClassFromId(int nodeId) {
-        if(nodeList.get(nodeId) instanceof DomResultCourseInClass){
+        if (nodeList.get(nodeId) instanceof DomResultCourseInClass) {
             return (DomResultCourseInClass) nodeList.get(nodeId);
-        }else{
+        } else {
             return null;
         }
     }
