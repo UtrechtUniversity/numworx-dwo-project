@@ -595,7 +595,7 @@
                     <goals>deploy</goals>
                 </configuration>    
             </plugin>
-            <plugin>
+<!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.1.0</version>
@@ -624,7 +624,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>            
+            </plugin>            -->
             <!-- sample version for with mysql building -->
             <!--                        <plugin>  docker test configuration om gwtclient in een docker image te starten 
                 <groupId>io.fabric8</groupId>
