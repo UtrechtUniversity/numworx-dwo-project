@@ -4,10 +4,13 @@
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	>
 	<ui:style field='style' type='nl.uu.fi.dwo.keyboard.client.KeyboardCSS'>
+
 	.small {
-		transform-origin: left top;
-		transform: scale(0.680272,0.6971);
+		width: 572px !important;
+		padding-left: 14px !important;
+		padding-right: 14px !important;
 	}
+
 	.pad {
 		float: right;
 		margin-right: 7px;
@@ -17,6 +20,16 @@
 		width: 740px;
 		height: 150px;
 	}
+	.small .pad {
+		transform-origin: right top;
+		transform: translate(0,-10px) scale(0.680272,0.8735);
+	}
+
+	.small .pen {
+		width: 584px;
+		height: 125px;
+	}
+
 	
 	</ui:style>
 		<g:HorizontalPanel addStyleNames="keyboard keyboard-hand is-active" >

@@ -6,7 +6,7 @@
 	<ui:style field='style' type='nl.uu.fi.dwo.keyboard.client.KeyboardCSS'>
 	.small {
 		transform-origin: left top;
-		transform: scale(0.680272,0.6971);
+		transform: scale(0.680272,0.8735);
 	}
 	.pad {
 		float: right;

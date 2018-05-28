@@ -15,12 +15,14 @@ import fi.writemathgwt.client.WritePanelHolder;
 public class TabletKeyboardPen extends AbstractKeyboard implements WritePanelHolder {
 
 	private static int HEIGHT = 166;
+	private int height = HEIGHT;
 	int getKeyboardHeight() {
-		return HEIGHT;
+		return height;
 	}
 
 	@UiField TabletKeyboardPad pad;
 	@UiField SimplePanel writePanel;
+	@UiField KeyboardCSS style;
 	
 	WritePanel panel;
 	
@@ -32,12 +34,17 @@ public class TabletKeyboardPen extends AbstractKeyboard implements WritePanelHol
 	}
 
 	public TabletKeyboardPen(boolean small) {
-		initWidget(uiBinder.createAndBindUi(this));
+		Widget w;
+		initWidget(w = uiBinder.createAndBindUi(this));
+		if(small) {
+			w.addStyleName(style.small());
+			height = 145;
+		}
 		pad.disableKey(pad.t1_16);
 		pad.t4_16.addStyleName("is-active");;
 		pad.setDelegate(this);
 		
-		panel = new WritePanel(740,150,this,1);
+		panel = new WritePanel(small?504:740,small?125:150,this,1);
 		writePanel.setWidget(panel);
 	}
 
