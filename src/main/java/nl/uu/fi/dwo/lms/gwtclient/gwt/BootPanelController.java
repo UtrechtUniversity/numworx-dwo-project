@@ -259,7 +259,7 @@ class BootPanelController {
                             presenterFactory.getAddTeacherToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
                             break;
                         case EDITCOURSESOFSCHOOLCLASS:
-                            LOG.log(Level.SEVERE, "Init panel EDITCOURSESOFSCHOOLCLASS.");
+                            LOG.log(Level.INFO, "Init panel EDITCOURSESOFSCHOOLCLASS.");
                             presenterFactory.getModulesOfSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
                             break;
                         case ORGANISATION:
