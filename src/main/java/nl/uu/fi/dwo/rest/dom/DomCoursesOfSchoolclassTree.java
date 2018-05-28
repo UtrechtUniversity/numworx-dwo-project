@@ -4,14 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
-import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -78,7 +76,7 @@ public class DomCoursesOfSchoolclassTree {
             //attach classCourse to DomTree<DomCourseOfClass> n if it exists
             //LOG.log(Level.FINE, " id, parent id " + n.getObject().getCourse().getId() + ", " + n.getObject().getCourse().getParentID());
             if (classCourseMap.containsKey(n.getObject().getCourse().getId().getIdString())
-               && classCourseMap.get(n.getObject().getCourse().getId().getIdString()).getViewState()!=ViewState.invisible
+//               && classCourseMap.get(n.getObject().getCourse().getId().getIdString()).getViewState()!=ViewState.invisible
                     ){
                 n.getObject().setClassCourse(classCourseMap.get(n.getObject().getCourse().getId().getIdString()));
             }
