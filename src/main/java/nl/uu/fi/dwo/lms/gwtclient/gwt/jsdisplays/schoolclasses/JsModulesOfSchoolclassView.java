@@ -71,7 +71,7 @@ public class JsModulesOfSchoolclassView implements ModulesOfSchoolclassPresenter
                             JSONObject jsonNode = new JSONObject();
                             jsonNode.put("data", DomCourseOfClassCodec.CODEC.encode(coc.getObject()));
                             jsonNode.put("children", children);
-                            json.put(child.getObject().getCourse().getId().getIdString(), jsonNode) ;
+                            json.put(coc.getObject().getCourse().getId().getIdString(), jsonNode) ;
                         }
                     } else {
 //                        LOG.log(Level.INFO, "id: " + new Object[]{coc.getObject().getCourse().getId().getIdString() + " coursename " + coc.getObject().getCourse().getName()});
