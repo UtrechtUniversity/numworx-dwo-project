@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
@@ -34,6 +35,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  *
  * @author G.A.J. van der Plas email: G.A.J.vanderPlas@uu.nl
  */
+@XmlRootElement
 public class DomResultTree {
 
     private static final Logger LOG = Logger.getLogger(DomResultTree.class.getName());
