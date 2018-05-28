@@ -1,11 +1,11 @@
 package nl.uu.fi.dwo.keyboard.client;
 
-public class TabletKeyboardFactory implements KeyboardFactory {
+public class SmallTabletKeyboardFactory extends TabletKeyboardFactory implements KeyboardFactory {
 
 	@Override
 	public AbstractKeyboard getKeyboard() {
 		//return new TabbedTouchKeyboard(new TabletKeyboardStatistiek());
-		return new TabbedTouchKeyboard();
+		return new TabbedTouchKeyboard(true);
 	}
 
 }

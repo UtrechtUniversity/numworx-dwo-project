@@ -32,6 +32,9 @@ public class TabletOnderbouwKeyboard extends AbstractKeyboard {
 	
 	@UiField TKey t3_5;
 
+	@UiField KeyboardCSS style;
+
+    private int height = HEIGHT;
 	/**
 	 * Because this class has a default constructor, it can
 	 * be used as a binder template. In other words, it can be used in other
@@ -48,20 +51,26 @@ public class TabletOnderbouwKeyboard extends AbstractKeyboard {
 		setPixelSize(882,HEIGHT);
 	}
 
-	public TabletOnderbouwKeyboard(String firstName) {
-		initWidget(uiBinder.createAndBindUi(this));
+	public TabletOnderbouwKeyboard(boolean small) {
+      Widget w;
+      initWidget(w = uiBinder.createAndBindUi(this));
+      if(small) {
+        w.addStyleName(style.small());
+        height = 145;
+      } 
+      setPixelSize(882,HEIGHT);
 	}
-
+	
 	@Override
 	int getKeyboardHeight() {
-		return HEIGHT;
+		return height ;
 	}
 
 	DuoKeys duoLT;
 	@UiHandler("t2_1") void onT2_1(LongTapEvent e) {
 		hideAll();
 		if(duoLT == null) {
-			duoLT = new DuoKeys();
+			duoLT = new DuoKeys(height != HEIGHT);
 			duoLT.setOrg('<');
 			duoLT.setAlt('≤');
 		}
@@ -81,7 +90,7 @@ public class TabletOnderbouwKeyboard extends AbstractKeyboard {
 	@UiHandler("t2_2") void onT2_2(LongTapEvent e) {
 		hideAll();
 		if(duoGT == null) {
-			duoGT = new DuoKeys();
+			duoGT = new DuoKeys(height != HEIGHT);
 			duoGT.setOrg('>');
 			duoGT.setAlt('≥');
 		}
@@ -95,7 +104,7 @@ public class TabletOnderbouwKeyboard extends AbstractKeyboard {
 	@UiHandler("t3_5") void onT3_5(LongTapEvent e) {
 		hideAll();
 		if(duoGR == null) {
-			duoGR = new DuoKeys();
+			duoGR = new DuoKeys(height != HEIGHT);
 			duoGR.org.removeStyleName("bg-purple");
 			duoGR.alt.removeStyleName("bg-purple");
 			duoGR.setOrg('°');

@@ -14,8 +14,11 @@ import com.google.gwt.user.client.ui.Widget;
 public class TabletKeyboardUpper extends AbstractKeyboard {
 
 	private static int HEIGHT = 166;
+	private int height = HEIGHT;
+	@UiField KeyboardCSS style;
+	
 	int getKeyboardHeight() {
-		return HEIGHT;
+		return height;
 	}
 
 	@Override
@@ -32,12 +35,17 @@ public class TabletKeyboardUpper extends AbstractKeyboard {
 			UiBinder<Widget, TabletKeyboardUpper> {
 	}
 
-	public TabletKeyboardUpper() {
+	public TabletKeyboardUpper(boolean small) {
 		pad = new TabletKeyboardPad();
 		pad.disableKey(pad.t1_16);
 		pad.t3_16.addStyleName("is-active");;
 		pad.setDelegate(this);
-		initWidget(uiBinder.createAndBindUi(this));
+		Widget w;
+		initWidget(w = uiBinder.createAndBindUi(this));
+		if(small) {
+		  height = 145;
+		  w.addStyleName(style.small());
+		}
 		leestekens.addShiftHandler(new ClickHandler() {
 
 			@Override

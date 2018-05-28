@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author wim
  *
  */
-public class DuoKeys extends Composite {
+class DuoKeys extends Composite {
 
 	private static DuoKeysUiBinder uiBinder = GWT.create(DuoKeysUiBinder.class);
 
@@ -31,7 +31,9 @@ public class DuoKeys extends Composite {
 	}
 
 	@UiField FKey org,alt;
+	@UiField KeyboardCSS style;
 	private char orgChar, altChar;
+	private int offset = 20;
 	
 	private FormuleEditorIF formuleEditor;
 	private PopupPanel popup;
@@ -55,13 +57,23 @@ public class DuoKeys extends Composite {
 	 * Note that depending on the widget that is used, it may be necessary to
 	 * implement HasHTML instead of HasText.
 	 */
-	public DuoKeys() {
+	DuoKeys() {
 		initWidget(uiBinder.createAndBindUi(this));
 		popup = new PopupPanel(true);
 		popup.setStyleName("duokeys");
 		popup.setGlassEnabled(false);
 		popup.setWidget(this);
 	}
+	
+	DuoKeys(boolean small) {
+	  this();
+	  if(small)
+	  {
+	    top.addStyleName(style.small());
+	    offset = 13;
+	  }
+	}
+	
     @UiField FlowPanel top;
 //	@UiHandler("top")
 //	void onClickTop(MouseUpEvent e) { hideDuo(); }
@@ -107,7 +119,7 @@ public class DuoKeys extends Composite {
 			
 			@Override
 			public void setPosition(int offsetWidth, int offsetHeight) {
-				popup.setPopupPosition(x-20, y-20);
+				popup.setPopupPosition(x-offset, y-offset);
 			}
 		});
 	}

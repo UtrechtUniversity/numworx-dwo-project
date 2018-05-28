@@ -2,7 +2,11 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style>
+	<ui:style field='style' type='nl.uu.fi.dwo.keyboard.client.KeyboardCSS'>
+	.small {
+		transform-origin: left top;
+		transform: scale(0.68,0.7);
+	}
 		.panel {
 			padding-left: 16px;
 			padding-right: 16px;

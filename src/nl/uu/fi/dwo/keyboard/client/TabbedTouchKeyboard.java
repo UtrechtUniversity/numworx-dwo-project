@@ -21,22 +21,29 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 	private AbstractKeyboard createKeyboard(int i) {
 		switch(i) {
 		case 0: 
-				return new TabletOnderbouwKeyboard().init();
+				return new TabletOnderbouwKeyboard(small).init();
 				//return new TabletKeyboardOnderbouw();
-		case 1: return new TabletKeyboard().init();
-		case 2: return new TabletKeyboardGonio();
-		case 3: return new TabletKeyboardStatistiek();
-		case 4: return new TabletKeyboardMeetkunde();
+		case 1: return new TabletKeyboard(small).init();
+		case 2: return new TabletKeyboardGonio(small);
+		case 3: return new TabletKeyboardStatistiek(small);
+		case 4: return new TabletKeyboardMeetkunde(small);
 		}
-		return new TabletKeyboard().init();
+		return new TabletKeyboard(small).init();
 	}
 
 	
 	TabbedTouchKeyboard() {
-		this(DEFAULT);
+		this(DEFAULT, false);
 	}
 	
-	TabbedTouchKeyboard(int nr) {
+	TabbedTouchKeyboard(boolean small) {
+	  this(DEFAULT, small);
+	  
+	}
+	
+	final boolean small;
+	TabbedTouchKeyboard(int nr, boolean small) {
+	    this.small = small;
 		AbstractKeyboard tk = createKeyboard(nr);
 		stock [nr] = tk;
 		this.nr = nr;
@@ -47,15 +54,15 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 		main.addStyleName("touch");
 		main.add(tk);
 		tk.setDelegate(this);
-		kabc = new TabletKeyboardABC();
+		kabc = new TabletKeyboardABC(small);
 		kabc.setDelegate(this);
 		kabc.setVisible(false);
 		main.add(kabc);
-		kABC = new TabletKeyboardUpper();
+		kABC = new TabletKeyboardUpper(small);
 		kABC.setDelegate(this);
 		kABC.setVisible(false);
 		main.add(kABC);
-		pen = new TabletKeyboardPen();
+		pen = new TabletKeyboardPen(small);
 		pen.setDelegate(this);
 		pen.setVisible(false);
 		main.add(pen);

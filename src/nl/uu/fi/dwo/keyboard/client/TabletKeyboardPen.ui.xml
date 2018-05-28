@@ -3,7 +3,11 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	>
-	<ui:style>
+	<ui:style field='style' type='nl.uu.fi.dwo.keyboard.client.KeyboardCSS'>
+	.small {
+		transform-origin: left top;
+		transform: scale(0.680272,0.6971);
+	}
 	.pad {
 		float: right;
 		margin-right: 7px;

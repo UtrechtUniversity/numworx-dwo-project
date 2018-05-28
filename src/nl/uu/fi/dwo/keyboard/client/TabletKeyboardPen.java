@@ -31,7 +31,7 @@ public class TabletKeyboardPen extends AbstractKeyboard implements WritePanelHol
 			UiBinder<Widget, TabletKeyboardPen> {
 	}
 
-	public TabletKeyboardPen() {
+	public TabletKeyboardPen(boolean small) {
 		initWidget(uiBinder.createAndBindUi(this));
 		pad.disableKey(pad.t1_16);
 		pad.t4_16.addStyleName("is-active");;

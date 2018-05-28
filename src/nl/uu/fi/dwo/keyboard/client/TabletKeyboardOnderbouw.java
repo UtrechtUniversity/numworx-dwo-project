@@ -4,7 +4,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 
 public class TabletKeyboardOnderbouw extends TabletKeyboard {
 
-	public TabletKeyboardOnderbouw() {
+	public TabletKeyboardOnderbouw(boolean small) {
+	    super(small);
 		// move around
 		t2_6.setHTML(t4_5.getHTML());
 

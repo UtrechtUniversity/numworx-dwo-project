@@ -37,8 +37,9 @@ public class TabletKeyboard extends AbstractKeyboard {
 	 * &lt;/ui:UiBinder&gt;
 	 * Note that depending on the widget that is used, it may be necessary to
 	 * implement HasHTML instead of HasText.
+	 * @param small 
 	 */
-	public TabletKeyboard() {
+	public TabletKeyboard(boolean small) {
 		pad = new TabletKeyboardPad();
 		pad.setDelegate(this);
 		initWidget(uiBinder.createAndBindUi(this));

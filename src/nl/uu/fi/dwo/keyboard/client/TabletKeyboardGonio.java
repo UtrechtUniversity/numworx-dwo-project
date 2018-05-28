@@ -4,7 +4,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 
 public class TabletKeyboardGonio extends TabletKeyboard {
 
-	public TabletKeyboardGonio() {
+	public TabletKeyboardGonio(boolean small) {
+	    super(small);
 		t1_9.setHTML("<span class='gonio gonio-T1-9'></span>");
 		t1_10.setHTML("<span class='gonio gonio-T1-10'></span>");
 

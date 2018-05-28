@@ -4,7 +4,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 
 public class TabletKeyboardStatistiek extends TabletKeyboard {
 
-	public TabletKeyboardStatistiek() {
+	public TabletKeyboardStatistiek(boolean small) {
+	    super(small);
 		t1_9.setHTML("<span class='statistiek statistiek-T1-9'></span>");
 		t1_10.setHTML("<span class='statistiek statistiek-T1-10'></span>");
 
