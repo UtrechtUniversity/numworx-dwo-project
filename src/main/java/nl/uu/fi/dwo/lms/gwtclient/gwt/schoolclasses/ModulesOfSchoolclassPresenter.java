@@ -54,7 +54,7 @@ public class ModulesOfSchoolclassPresenter {
 
         void init();
 
-        void updateTable(List<ClassCourseItem> item);
+//        void updateTable(List<ClassCourseItem> item);
 
         void setTree(DomTree<DomCourseOfClass> tree);
 
@@ -68,9 +68,9 @@ public class ModulesOfSchoolclassPresenter {
     }
 
     @JsMethod
-    void detachItemFromSchoolClass(ClassCourseItem classCourseItem) {
+    void detachItemFromSchoolClass(String id) {
         Promise<Boolean> promise;
-        promise = service.detachCourseFromClass(schoolClass, tree.getNode(classCourseItem.getKey()).getObject().getCourse());
+        promise = service.detachCourseFromClass(schoolClass, tree.getNode(id).getObject().getCourse());
         // onSuccess update view
         promise.then(new Success<Boolean, Void>() {
             @Override
@@ -97,9 +97,9 @@ public class ModulesOfSchoolclassPresenter {
     }
 
     @JsMethod
-    void attachItemToSchoolClass(ClassCourseItem classCourseItem) {
+    void attachItemToSchoolClass(String id) {
         Promise<Boolean> promise;
-        promise = service.attachCourseToClass(schoolClass, tree.getNode(classCourseItem.getKey()).getObject().getCourse());
+        promise = service.attachCourseToClass(schoolClass, tree.getNode(id).getObject().getCourse());
         // onSuccess update view
         promise.then(new Success<Boolean, Void>() {
             @Override
@@ -264,47 +264,47 @@ public class ModulesOfSchoolclassPresenter {
     public String[] getTableHeaders() {
         return tableHeaders;
     }
-
-    @JsMethod
-    void setSelectedItem(ClassCourseItem item) {
-        boolean isLeaf = false;
-        DomTree<DomCourseOfClass> c = tree.getNode(item.getKey());
-        for (DomTree<DomCourseOfClass> coc : c.getChildren().values()) {
-            if (coc.getChildren() == null || coc.getChildren().isEmpty()) {
-                isLeaf = true;
-                break;
-            }
-        }
-        if (isLeaf) {
-            //Show children in cellTable
-            LOG.log(Level.INFO, "Going to show children in table");
-            List<ClassCourseItem> ccList = new ArrayList<>(c.getChildren().size());
-            for (DomTree<DomCourseOfClass> coc : c.getChildren().values()) {
-                //creat list for table
-                if (!coc.getObject().getCourse().getWithChildren()
-                        && (coc.getChildren() == null || coc.getChildren().isEmpty())) {
-                    ClassCourseItem cc = new ClassCourseItem();
-                    cc.setKey(coc.getObject().getCourse().getId().getIdString());
-                    cc.setName(coc.getObject().getCourse().getName());
-                    cc.setHasStudentData(false);
-                    if (coc.getObject().getClassCourse() != null) {
-                        cc.setType(coc.getObject().getClassCourse().getCourseType().name());
-                        cc.setFrom(coc.getObject().getClassCourse().getNotBefore());
-                        cc.setTo(coc.getObject().getClassCourse().getNotAfter());
-                        cc.setAccessKey(coc.getObject().getClassCourse().getAccessKey());
-                        cc.setHasStudentData(true);
-                    }
-                    cc.setIsLeaf(coc.getObject().getCourse().getWithChildren());
-                    ccList.add(cc);
-                }
-            };
-            view.updateTable(ccList);
-        } else {
-            List<ClassCourseItem> ccList = new ArrayList<>(c.getChildren().size());
-            view.updateTable(ccList);
-            LOG.log(Level.INFO, "Selected item " + item.getName());
-        }
-    }
+//
+//    @JsMethod
+//    void setSelectedItem(String id) {
+//        boolean isLeaf = false;
+//        DomTree<DomCourseOfClass> c = tree.getNode(id);
+//        for (DomTree<DomCourseOfClass> coc : c.getChildren().values()) {
+//            if (coc.getChildren() == null || coc.getChildren().isEmpty()) {
+//                isLeaf = true;
+//                break;
+//            }
+//        }
+//        if (isLeaf) {
+//            //Show children in cellTable
+//            LOG.log(Level.INFO, "Going to show children in table");
+//            List<ClassCourseItem> ccList = new ArrayList<>(c.getChildren().size());
+//            for (DomTree<DomCourseOfClass> coc : c.getChildren().values()) {
+//                //creat list for table
+//                if (!coc.getObject().getCourse().getWithChildren()
+//                        && (coc.getChildren() == null || coc.getChildren().isEmpty())) {
+//                    ClassCourseItem cc = new ClassCourseItem();
+//                    cc.setKey(coc.getObject().getCourse().getId().getIdString());
+//                    cc.setName(coc.getObject().getCourse().getName());
+//                    cc.setHasStudentData(false);
+//                    if (coc.getObject().getClassCourse() != null) {
+//                        cc.setType(coc.getObject().getClassCourse().getCourseType().name());
+//                        cc.setFrom(coc.getObject().getClassCourse().getNotBefore());
+//                        cc.setTo(coc.getObject().getClassCourse().getNotAfter());
+//                        cc.setAccessKey(coc.getObject().getClassCourse().getAccessKey());
+//                        cc.setHasStudentData(true);
+//                    }
+//                    cc.setIsLeaf(coc.getObject().getCourse().getWithChildren());
+//                    ccList.add(cc);
+//                }
+//            };
+//            view.updateTable(ccList);
+//        } else {
+//            List<ClassCourseItem> ccList = new ArrayList<>(c.getChildren().size());
+//            view.updateTable(ccList);
+//            LOG.log(Level.INFO, "Selected item " + id);
+//        }
+//    }
 
     void goBackToSchoolClasses() {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));

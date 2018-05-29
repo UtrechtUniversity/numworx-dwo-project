@@ -23,8 +23,8 @@ import jsinterop.annotations.JsType;
  * 
  * void setSelectedItem(ClassCourseItem item) 
  * void setModuleSettings(String key, String typeString, String fromData, String toData, String accessKey)
- * void detachItemFromSchoolClass(ClassCourseItem classCourseItem)
- * void attachItemToSchoolClass(ClassCourseItem classCourseItem)
+ * void detachItemFromSchoolClass(String id)
+ * void attachItemToSchoolClass(String id)
  * 
  * 
  */
@@ -35,6 +35,6 @@ public class JsModulesOfSchoolclassDisplay{
     public static native void setLoadingTableMessageModules();
     public static native void setEmptyTableMessageSelected();
     public static native void setLoadingTableMessageSelected();
-    public static native void updateTable(JavaScriptObject jsObject);
+//    public static native void updateTable(JavaScriptObject jsObject);
     public static native void setTree(JSONValue jsNode);
 }

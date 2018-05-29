@@ -29,15 +29,15 @@ public class JsModulesOfSchoolclassView implements ModulesOfSchoolclassPresenter
     public void init() {
         JsModulesOfSchoolclassDisplay.init();
     }
-
-    @Override
-    public void updateTable(List<ClassCourseItem> dataList) {
-        JSONObject object = new JSONObject();
-        for (ClassCourseItem item : dataList) {
-            object.put(item.getKey(), new JSONString(item.getName()));
-        }
-        JsModulesOfSchoolclassDisplay.updateTable(object.getJavaScriptObject());
-    }
+//
+//    @Override
+//    public void updateTable(List<ClassCourseItem> dataList) {
+//        JSONObject object = new JSONObject();
+//        for (ClassCourseItem item : dataList) {
+//            object.put(item.getKey(), new JSONString(item.getName()));
+//        }
+//        JsModulesOfSchoolclassDisplay.updateTable(object.getJavaScriptObject());
+//    }
 
     private void DFSTreePrint(DomTree<DomCourseOfClass> node) {
         DFSTreePrint(node, 0);
