@@ -549,12 +549,12 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
         return getDelegateObsolete().setExpireDate(schoolID, date);
     }
 
-    @Override
-    public Hashtable login_saml(String a, String b) throws DwoXmlRpcException,
-            IOException, XmlRpcException, SQLException {
-        return getDelegate().login_saml(a, b);
-
-    }
+//    @Override
+//    public Hashtable login_saml(String a, String b) throws DwoXmlRpcException,
+//            IOException, XmlRpcException, SQLException {
+//        return getDelegate().login_saml(a, b);
+//
+//    }
 
     @Override
     public boolean link_saml(String userid, String orgid, int id)

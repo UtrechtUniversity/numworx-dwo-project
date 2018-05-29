@@ -4475,8 +4475,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws XmlRpcException
      * @throws SQLException
      */
-    @Override
-    public Hashtable login_saml(String userid, String orgid) throws DwoXmlRpcException,
+    
+    private Hashtable login_saml(String userid, String orgid) throws DwoXmlRpcException,
             IOException, XmlRpcException, SQLException {
         close(); //for lazy connection
         //TODO DONE V1_3

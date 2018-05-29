@@ -389,6 +389,10 @@ public class DataSourceAccessServlet extends Servlet {
 			HttpSession s = req.getSession(true);
 			session.set(s);
 			s.setAttribute("ip", req.getRemoteAddr());
+			String authorization = req.getHeader("Authorization");
+			if(authorization != null) {
+			  authorization(authorization);
+			}
 			super.service(req, resp);
 		} catch (RuntimeException re) {
 			LOG.log(Level.SEVERE, "service", re);
@@ -402,6 +406,12 @@ public class DataSourceAccessServlet extends Servlet {
 			session.remove();
 		}
 	}
+
+    private boolean authorization(String authorization) {
+      LOG.log(Level.INFO,"Authorization: " + authorization);
+// TODO ....   
+      return true; // okay
+    }
 
     @Override
     public void destroy() {
