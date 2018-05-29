@@ -4498,8 +4498,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @return
      * @throws SQLException
      */
-    @Override
-    public boolean link_saml(String userid, String orgid, int id)
+    private boolean link_saml(String userid, String orgid, int id)
             throws SQLException {
         String INSERT_SAML_USER = "INSERT INTO tblSamlUser(samluserid, samlorgid, userID) VALUE(?,?,?)";
         PreparedStatement ps = getStatement(INSERT_SAML_USER);

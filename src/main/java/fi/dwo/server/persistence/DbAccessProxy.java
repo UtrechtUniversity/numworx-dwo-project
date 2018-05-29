@@ -556,11 +556,11 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 //
 //    }
 
-    @Override
-    public boolean link_saml(String userid, String orgid, int id)
-            throws IOException, XmlRpcException, SQLException {
-        return getDelegate().link_saml(userid, orgid, id);
-    }
+//    @Override
+//    public boolean link_saml(String userid, String orgid, int id)
+//            throws IOException, XmlRpcException, SQLException {
+//        return getDelegate().link_saml(userid, orgid, id);
+//    }
 
     @Override
     public Vector getToSchoolsFrom(int schoolID) throws IOException, XmlRpcException, SQLException {

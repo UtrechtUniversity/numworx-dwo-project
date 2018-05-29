@@ -7,21 +7,25 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
+import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.entities.RestLoginContext;
+import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
+import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
@@ -518,5 +522,25 @@ public class SecuredUserAccountManager {
             LOG.log(Level.SEVERE, "verifyTOTP failed", e);
             return "false";
         }
+    }
+    
+    
+    @PUT
+    @Produces("application/json")
+    @Path("linkSaml")
+    public Boolean linkSaml(@Context SecurityContext sc, RestSamlUser rest) throws Dwo2Exception
+    {
+      UserState_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName());
+      PersistentUser user = state.getUser();
+      String org = rest.getDomSamlUser().getSamlOrgId();
+      String account = rest.getDomSamlUser().getSamlUserId();
+      PersistentSamlUser saml = new PersistentSamlUser();
+      saml.setSamlorgid(org);
+      saml.setSamluserid(account);
+      saml.setUserID(user.getId());
+      saml.setAuthToken("none");
+      SamlUserManager.create(saml);
+      
+      return Boolean.TRUE;
     }
 }
