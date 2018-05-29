@@ -21,7 +21,6 @@ import jsinterop.annotations.JsType;
  * Op dit moment is de implementatie nog onzeker. De vraag is of de setTree goed overkomt
  * Zo ja dan kan de classCourseItem worden aangepast.
  * 
- * void setSelectedItem(ClassCourseItem item) 
  * void setModuleSettings(String key, String typeString, String fromData, String toData, String accessKey)
  * void detachItemFromSchoolClass(String id)
  * void attachItemToSchoolClass(String id)
