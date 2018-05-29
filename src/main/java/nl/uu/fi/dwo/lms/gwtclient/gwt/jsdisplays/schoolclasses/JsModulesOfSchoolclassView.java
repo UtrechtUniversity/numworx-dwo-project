@@ -62,29 +62,26 @@ public class JsModulesOfSchoolclassView implements ModulesOfSchoolclassPresenter
 
     private JSONObject buildSubTree(DomTree<DomCourseOfClass> node) {
         JSONObject json = new JSONObject();
+        //set course data in node.
+        if (node.getObject() != null) {
+            json.put("data", DomCourseOfClassCodec.CODEC.encode(node.getObject()));
+        } else {
+            json.put("data", DomCourseOfClassCodec.CODEC.encode(new DomCourseOfClass()));
+        }
+        //Add children.
         if (node.getChildren() != null && !node.getChildren().isEmpty()) {
+            //there are children
+            JSONObject children = new JSONObject();
             for (DomTree<DomCourseOfClass> coc : node.getChildren().values()) {
+                //child node
+                JSONObject child = new JSONObject();
                 if (coc.getObject() != null && coc.getObject().getCourse() != null) {
-                    if (coc.getChildren() != null && !coc.getChildren().isEmpty()) {
-                        for (DomTree<DomCourseOfClass> child : node.getChildren().values()) {
-                            JSONObject children = buildSubTree(child);
-                            JSONObject jsonNode = new JSONObject();
-                            jsonNode.put("data", DomCourseOfClassCodec.CODEC.encode(coc.getObject()));
-                            jsonNode.put("children", children);
-                            json.put(coc.getObject().getCourse().getId().getIdString(), jsonNode) ;
-                        }
-                    } else {
-//                        LOG.log(Level.INFO, "id: " + new Object[]{coc.getObject().getCourse().getId().getIdString() + " coursename " + coc.getObject().getCourse().getName()});
-//                        json.put(coc.getObject().getCourse().getId().getIdString(), new JSONString(coc.getObject().getCourse().getName()));
-//                        json.put(coc.getObject().getCourse().getId().getIdString(), DomCourseOfClassCodec.CODEC.encode(coc.getObject()));
-                            JSONObject jsonNode = new JSONObject();
-                            jsonNode.put("data", DomCourseOfClassCodec.CODEC.encode(coc.getObject()));
-                            json.put(coc.getObject().getCourse().getId().getIdString(), jsonNode) ;
-                    }
+                    //put child in children
+                    children.put(coc.getObject().getCourse().getId().getIdString(), buildSubTree(coc));
                 }
             }
+            json.put("children", children);
         }
-//        LOG.log(Level.INFO, "node: " + json.toString());
         return json;
     }
 
