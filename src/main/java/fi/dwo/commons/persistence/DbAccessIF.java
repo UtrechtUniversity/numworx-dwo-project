@@ -636,8 +636,8 @@ public interface DbAccessIF  {
 //    public Hashtable login_saml(String a, String b)
 //            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-    public boolean link_saml(String userid, String orgid, int id)
-            throws IOException, XmlRpcException, SQLException;
+//    public boolean link_saml(String userid, String orgid, int id)
+//            throws IOException, XmlRpcException, SQLException;
 
 //    public boolean changeSco(int scoid, String scoName, String description,
 //            boolean delete, byte[] launchdata, boolean showScore)
