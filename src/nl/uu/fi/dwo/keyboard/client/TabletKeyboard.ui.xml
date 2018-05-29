@@ -10,7 +10,7 @@
 	
 	.small {
 		transform-origin: left top;
-		transform: scale(0.680272,0.6971);
+		transform: scale(0.680272,0.7712);
 	}
 	.pad {
 		float:right;

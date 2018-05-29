@@ -22,8 +22,9 @@ public class TabletKeyboard extends AbstractKeyboard {
 			.create(TabletKeyboardUiBinder.class);
 
 	@UiField KeyboardCSS style;
-	static int HEIGHT = 166;
-
+	final static int HEIGHT = 166;
+	final int height;
+	
 	interface TabletKeyboardUiBinder extends UiBinder<Widget, TabletKeyboard> {
 	}
 
@@ -47,6 +48,9 @@ public class TabletKeyboard extends AbstractKeyboard {
 		initWidget(w = uiBinder.createAndBindUi(this));
 		if(small) {
 		  w.addStyleName(style.small());
+		  	height = 145;
+		} else {
+			height = HEIGHT;
 		}
 	}
 	
@@ -160,6 +164,6 @@ public class TabletKeyboard extends AbstractKeyboard {
 
 	@Override
 	int getKeyboardHeight() {
-		return HEIGHT;
+		return height;
 	}
 }

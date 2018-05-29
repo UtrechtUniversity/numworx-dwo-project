@@ -27,7 +27,9 @@ public class TabbedDesktopKeyboard extends AbstractKeyboard {
 		main.setStyleName("keyboard-container");
 		main.addStyleName("computer");
 		main.add(current);
-		if(small) main.setPixelSize(-1, current.getKeyboardHeight());
+		if(small) {
+			main.setPixelSize(-1, current.getKeyboardHeight());
+		}
 		current.setDelegate(this);
 	}
 
@@ -52,6 +54,7 @@ public class TabbedDesktopKeyboard extends AbstractKeyboard {
 			current.setEditor(getEditor());
 			current.setDelegate(this);
 			main.add(current);
+			if(small) main.setPixelSize(-1, current.getKeyboardHeight());
 		}
 	}
 	
@@ -90,13 +93,13 @@ public class TabbedDesktopKeyboard extends AbstractKeyboard {
 	}
 
 	public int getKeyboardHeight() {
-		return HEIGHT;
+		return current.getKeyboardHeight();
 	}
 
 	@Override
 	public void focus() {
 		super.focus();
-		resizeScrollPanel(HEIGHT);
+		resizeScrollPanel(getKeyboardHeight());
 		FocusOnTouch.focus();
 	}
 
