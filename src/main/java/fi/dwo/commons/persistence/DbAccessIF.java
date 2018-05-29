@@ -633,8 +633,8 @@ public interface DbAccessIF  {
 
 //    public boolean setExpireDate(int schoolID, Date date) throws IOException, XmlRpcException, SQLException;
 
-    public Hashtable login_saml(String a, String b)
-            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+//    public Hashtable login_saml(String a, String b)
+//            throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
     public boolean link_saml(String userid, String orgid, int id)
             throws IOException, XmlRpcException, SQLException;
