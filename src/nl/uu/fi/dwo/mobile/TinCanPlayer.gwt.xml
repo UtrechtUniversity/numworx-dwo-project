@@ -9,7 +9,7 @@
   	<inherits name="nl.uu.fi.dwo.account.Account-DWO" />
 	<add-linker name='xsiframe' />
 	
-    <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
+<!--     <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" /> -->
 
 	<entry-point class='nl.uu.fi.dwo.mobile.NoordhoffPlayer'/>
 	
@@ -25,6 +25,13 @@
 		<when-type-is class="nl.uu.fi.dwo.mobile.client.ui.OpdrNav" />
 	</replace-with>
 
+	<replace-with class="nl.uu.fi.dwo.keyboard.client.SmallTabletKeyboardFactory">
+		<when-type-is class="nl.uu.fi.dwo.keyboard.client.TabletKeyboardFactory" />
+	</replace-with>
+ 	<replace-with class="nl.uu.fi.dwo.keyboard.client.SmallDesktopKeyboardFactory">
+		<when-type-is class="nl.uu.fi.dwo.keyboard.client.DesktopKeyboardFactory" />
+	</replace-with>
+  
   	<replace-with class="fi.wiskopdr.FailingIdeas">
     	<when-type-is class="nl.uu.fi.dwo.ideas.client.IdeasIF" />
     </replace-with>

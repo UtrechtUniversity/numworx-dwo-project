@@ -1,9 +1,9 @@
 package nl.uu.fi.dwo.mobile.client.ui.noordhoffkb;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.MGWT;
@@ -30,9 +30,9 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 		if(detection.isDesktop()
 				//&& false
 				) {
-			factory = new DesktopKeyboardFactory();
+			factory = GWT.create(DesktopKeyboardFactory.class);
 		} else {
-			factory = new TabletKeyboardFactory();
+			factory = GWT.create(TabletKeyboardFactory.class);
 		}
 		kb = factory.getKeyboard();
 		setWidget(kb);
