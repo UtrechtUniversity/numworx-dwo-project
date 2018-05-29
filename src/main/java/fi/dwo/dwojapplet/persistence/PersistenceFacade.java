@@ -1669,23 +1669,23 @@ public class PersistenceFacade {
 //        }
 //    }
 
-    private static final DbAccessLogin LOGIN_SAML = new DbAccessLogin() {
-
-        @Override
-        public Hashtable login(String a, String b) throws IOException,
-                SQLException, XmlRpcException, DwoXmlRpcException {
-            return DbAccessCreator.instance().login_saml(a, b);
-        }
-
-    };
+//    private static final DbAccessLogin LOGIN_SAML = new DbAccessLogin() {
+//
+//        @Override
+//        public Hashtable login(String a, String b) throws IOException,
+//                SQLException, XmlRpcException, DwoXmlRpcException {
+//            return DbAccessCreator.instance().login_saml(a, b);
+//        }
+//
+//    };
 
 //    public User login(String username) throws LoginException {
 //        return login_intern(username, "", DbAccessCreator.instance());
 //    }
 
-    public User loginViaSAML(String samlUserID, String samlOrgID) throws LoginException {
-        return login_intern(samlUserID, samlOrgID, LOGIN_SAML);
-    }
+//    public User loginViaSAML(String samlUserID, String samlOrgID) throws LoginException {
+//        return login_intern(samlUserID, samlOrgID, LOGIN_SAML);
+//    }
 
     public void linkViaSAML(User user, String userid, String orgid) {
         try {

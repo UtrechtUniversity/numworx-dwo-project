@@ -840,14 +840,14 @@ class DbAccessClient extends Client implements DbAccessIF {
 //        return ((Boolean) object).booleanValue();
 //    }
 
-    @Override
-    public java.util.Hashtable login_saml(java.lang.String a, java.lang.String b) throws IOException, XmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(a);
-        vv.addElement(b);
-        Object object = invoke("login_saml", vv);
-        return (java.util.Hashtable) object;
-    }
+//    @Override
+//    public java.util.Hashtable login_saml(java.lang.String a, java.lang.String b) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(a);
+//        vv.addElement(b);
+//        Object object = invoke("login_saml", vv);
+//        return (java.util.Hashtable) object;
+//    }
 
     @Override
     public boolean link_saml(java.lang.String a, java.lang.String b, int c) throws IOException, XmlRpcException {
