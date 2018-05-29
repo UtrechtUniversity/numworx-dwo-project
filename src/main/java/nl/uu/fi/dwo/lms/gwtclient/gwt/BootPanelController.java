@@ -266,7 +266,7 @@ class BootPanelController {
                             eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                             break;
                         case MODULES:                            
-                            presenterFactory.getModulesPresenter().init();
+                            presenterFactory.getModulesPresenter().show();
                             break;
                         default:
                             eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));

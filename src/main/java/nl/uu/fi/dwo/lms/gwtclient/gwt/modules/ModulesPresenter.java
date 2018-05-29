@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountService;
@@ -29,6 +30,7 @@ public class ModulesPresenter {
     private Display view;
     private String url="/dwo/tablet/DWOplayer.html";
     private AccountService account;
+    private Promise<String> init;
 
     /**
      * @return the view
@@ -56,15 +58,26 @@ public class ModulesPresenter {
     }
 
 //    @JsMethod not required unless testing stuff.
+    public void show() {
+      if (init == null || (init.isDone() && init.getFailure() != null)) {
+        init();
+      } else {
+        init.then(p-> {
+          LOG.severe("switch to modules view " + p.getValue());
+          return null;
+        });
+      }
+    }
+
     public void init() {
-        view.clear();
-        account.getBearerToken().then(this::gotToken,this::fail);
+      view.clear();
+      init = account.getBearerToken().then(this::gotToken,this::fail);
     }
 
     /*
      * bearer token has arrived:
      */
-    public Promise<Void> gotToken(Promise<String> resolved) {
+    public Promise<String> gotToken(Promise<String> resolved) {
      String token = "2\f" + resolved.getValue(); //format 2
      StringBuilder u = new StringBuilder(url);
      u.append( "?a=" ) .append (Base64.btoa(token)); // User Auth Token
@@ -75,9 +88,10 @@ public class ModulesPresenter {
      String locale = LocaleInfo.getCurrentLocale().getLocaleName();
      if ("default".equals(locale) ) locale =  "nl";
      u.append("&locale=").append(locale);
-     LOG.info("open URL " + u);
-     view.openUrl(u.toString());
-     return null;
+     String string = u.toString();
+     LOG.info("open URL " + string);
+     view.openUrl(string);
+     return Promises.resolved(string);
     }
     
     /*
