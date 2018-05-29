@@ -168,8 +168,7 @@ public class ModulesOfSchoolclassPresenter {
                 tree = new DomCoursesOfSchoolclassTree(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool(), value);
                 //ClassCourseItem item = new ClassCourseItem(null, "root");
                 //parse results into a tree.
-                view.setTree(tree.getCourseTree());
-                view.setEmptyTableMessageSelected();
+                view.setTree(tree.getCourseTree());                
                 return null;
             }
 
@@ -346,6 +345,10 @@ public class ModulesOfSchoolclassPresenter {
                 return setAccessKey(key, accessKey);
             });
         }
+        p.then((resolved) ->{
+           updateViewData();
+           return resolved;
+        });
         p.then(null,(failure) -> {eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));} );
     }
 

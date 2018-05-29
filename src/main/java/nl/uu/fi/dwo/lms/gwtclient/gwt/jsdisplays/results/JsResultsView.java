@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
@@ -41,11 +42,15 @@ public class JsResultsView implements ResultsPresenter.Display {
 
     private JSONObject buildSubTree(DomResultScore node) {
         JSONObject json = new JSONObject();
+        node.calculateSumOfSubtreeScore();
         //set course data in node.
         String classType = node.getClass().getSimpleName();
         json.put("classType", new JSONString(classType));
         json.put("label", new JSONString(node.getLabel()));
-        if (node instanceof DomResultStudentScoContext) {
+        json.put("sumScore", new JSONNumber(node.getScore()));
+        json.put("scoCount", new JSONNumber(node.getScoCount()));
+        json.put("studentScoCount", new JSONNumber(node.getStudentScoCount()));
+                if (node instanceof DomResultStudentScoContext) {
             String userIdString = ((DomResultStudentScoContext) node).getStudentSco().getUserID().getIdString();
             json.put("user-id", new JSONString(userIdString));
         }
