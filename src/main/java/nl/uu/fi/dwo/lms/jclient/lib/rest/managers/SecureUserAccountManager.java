@@ -8,7 +8,9 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.entities.RestLoginContext;
+import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 import java.io.BufferedReader;
@@ -198,6 +200,20 @@ public class SecureUserAccountManager {
     public static Boolean removeAccountData() throws Dwo2Exception {
         Boolean b;
         b = StoredRestManager.getInstance().get("rest/secure/user/account/remove", Boolean.class);
+        return b;
+    }
+    
+    public static Boolean link_saml(String userid, String orgid, String token) throws Dwo2Exception {
+    	Boolean b;
+    	DomContext context = new DomContext();
+    	DomSamlUser saml = new DomSamlUser();
+    	saml.setSamlOrgId(orgid);
+    	saml.setSamlUserId(userid);
+    	saml.setAuthToken(token);
+    	RestSamlUser rest = new RestSamlUser();
+    	rest.setDomSamlUser(saml);
+    	rest.setRestContext(context);
+        b = StoredRestManager.getInstance().put("rest/secure/user/account/linkSaml", Boolean.class, rest);
         return b;
     }
 }
