@@ -1687,15 +1687,15 @@ public class PersistenceFacade {
 //        return login_intern(samlUserID, samlOrgID, LOGIN_SAML);
 //    }
 
-    public void linkViaSAML(User user, String userid, String orgid) {
-        try {
-            DbAccessCreator.instance().link_saml(userid, orgid, user.getID());
-        }
-        catch (Exception e) {
-            LOG.log(Level.SEVERE, null, e);
-        }
-
-    }
+//    public void linkViaSAML(User user, String userid, String orgid) {
+//        try {
+//            DbAccessCreator.instance().link_saml(userid, orgid, user.getID());
+//        }
+//        catch (Exception e) {
+//            LOG.log(Level.SEVERE, null, e);
+//        }
+//
+//    }
 
 //    public String setRights(int userID, int schoolGroup, int profileID, String newRights) throws PersistenceException {
 //        String result = null;

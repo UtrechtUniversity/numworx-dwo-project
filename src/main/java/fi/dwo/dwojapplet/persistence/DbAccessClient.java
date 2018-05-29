@@ -849,15 +849,15 @@ class DbAccessClient extends Client implements DbAccessIF {
 //        return (java.util.Hashtable) object;
 //    }
 
-    @Override
-    public boolean link_saml(java.lang.String a, java.lang.String b, int c) throws IOException, XmlRpcException {
-        Vector vv = new Vector(3);
-        vv.addElement(a);
-        vv.addElement(b);
-        vv.addElement(new Integer(c));
-        Object object = invoke("link_saml", vv);
-        return ((Boolean) object).booleanValue();
-    }
+//    @Override
+//    public boolean link_saml(java.lang.String a, java.lang.String b, int c) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(3);
+//        vv.addElement(a);
+//        vv.addElement(b);
+//        vv.addElement(new Integer(c));
+//        Object object = invoke("link_saml", vv);
+//        return ((Boolean) object).booleanValue();
+//    }
 
 //    @Override
 //    public boolean changeSco(int a, java.lang.String b, java.lang.String c, boolean d, byte[] e, boolean f) throws IOException, XmlRpcException {

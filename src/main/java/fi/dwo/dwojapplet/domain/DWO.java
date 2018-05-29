@@ -2465,7 +2465,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         return LMSGetDiagnostic(iErrorCode);
     }
 
-    HashMap samlData;
+    HashMap<String,String> samlData;
 
 	private String dwo_env;
 
@@ -2511,17 +2511,23 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
                 LOG.log(Level.INFO,"Dwo2ExceptionCode {0}, msg: {1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
                 GuiCreator.instance().ShowErrorDialog(rootPane, e);
             }
-            samlData = new HashMap();
+            samlData = new HashMap<String,String>();
             samlData.put(DWO_SAML_USER_ID, samlUserID);
             samlData.put(DWO_SAML_ORGANIZATION_ID, samlOrgID);
             samlData.put("dwoSAMLOrganization", samlOrg);
+            samlData.put("dwoSAMLAuthToken", authToken);
         }
         return null;
     }
 
     public void linkViaSAML() {
-        PersistenceFacade.instance().linkViaSAML(getUser(), samlData.get(DWO_SAML_USER_ID).toString(),
-                samlData.get(DWO_SAML_ORGANIZATION_ID).toString());
+        try {
+          SecureUserAccountManager.link_saml(samlData.get(DWO_SAML_USER_ID),
+                  samlData.get(DWO_SAML_ORGANIZATION_ID), (String) samlData.get("dwoSAMLAuthToken"));
+        } catch (Dwo2Exception e) {
+            LOG.log(Level.SEVERE, "linkViaSaml", e);
+            /// popup
+        }
 
     }
 
