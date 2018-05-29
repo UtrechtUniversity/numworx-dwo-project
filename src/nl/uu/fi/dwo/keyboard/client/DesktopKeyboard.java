@@ -22,7 +22,7 @@ public class DesktopKeyboard extends AbstractKeyboard {
 	//@UiField ResourceBase res = ResourceBase.INSTANCE;
 
 	static final int HEIGHT = 30;
-	
+	static int height;
 	
 	private static DesktopKeyboardUiBinder uiBinder = GWT
 			.create(DesktopKeyboardUiBinder.class);
@@ -41,10 +41,22 @@ public class DesktopKeyboard extends AbstractKeyboard {
 	 * Note that depending on the widget that is used, it may be necessary to
 	 * implement HasHTML instead of HasText.
 	 */
-	public DesktopKeyboard() {
+	DesktopKeyboard() {
+	    height = HEIGHT;
 		initWidget(uiBinder.createAndBindUi(this));
 	}
+	
+	DesktopKeyboard(boolean small) {
+      Widget w = uiBinder.createAndBindUi(this);
+      initWidget(w);
+	  if(small) {
+	    w.addStyleName(style.small());
+	    height = HEIGHT*2;
+	  } else 
+	    height = HEIGHT;
+	}
 
+	@UiField KeyboardCSS style;
 	@UiField
 	FKey c1, c2, c3, c4, c5;
 	@UiField
@@ -197,7 +209,7 @@ public class DesktopKeyboard extends AbstractKeyboard {
 	}
 
 	int getKeyboardHeight() {
-		return HEIGHT;
+		return height;
 	}
 
 	private Widget scrollPanel; 

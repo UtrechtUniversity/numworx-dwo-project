@@ -15,7 +15,10 @@ public class TabbedDesktopKeyboard extends AbstractKeyboard {
 	private int nr;
 	private FlowPanel main;
 
-	TabbedDesktopKeyboard(int nr) {
+  private final boolean small;
+
+	TabbedDesktopKeyboard(int nr, boolean small) {
+	    this.small = small;
 		current = createKeyboard(nr);
 		stock[nr] = current;
 		this.nr = nr;
@@ -24,12 +27,17 @@ public class TabbedDesktopKeyboard extends AbstractKeyboard {
 		main.setStyleName("keyboard-container");
 		main.addStyleName("computer");
 		main.add(current);
+		if(small) main.setPixelSize(-1, current.getKeyboardHeight());
 		current.setDelegate(this);
 	}
 
 	public TabbedDesktopKeyboard() {
-		this(DEFAULT);
+		this(DEFAULT, false);
 	}
+ 
+	TabbedDesktopKeyboard(boolean small) {
+      this(DEFAULT, small);
+  }
 
 
 	@Override
@@ -49,13 +57,13 @@ public class TabbedDesktopKeyboard extends AbstractKeyboard {
 	
 	private DesktopKeyboard createKeyboard(int i) {
 		switch(i) {
-		case 0: return new DesktopKeyboardOnderbouw();
-		case 1: return new DesktopKeyboard().init();
-		case 2: return new DesktopKeyboardGonio().init();
-		case 3: return new DesktopKeyboardStatistiek();
-		case 4: return new DesktopKeyboardMeetkunde().init();
+		case 0: return new DesktopKeyboardOnderbouw(small);
+		case 1: return new DesktopKeyboard(small).init();
+		case 2: return new DesktopKeyboardGonio(small).init();
+		case 3: return new DesktopKeyboardStatistiek(small);
+		case 4: return new DesktopKeyboardMeetkunde(small).init();
 		}
-		return new DesktopKeyboard().init();
+		return new DesktopKeyboard(small).init();
 	}
 
 	@Override

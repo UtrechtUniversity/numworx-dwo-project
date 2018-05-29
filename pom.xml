@@ -23,7 +23,6 @@
   	<dependency>
   		<groupId>nl.uu.fi.dwo.mobile</groupId>
   		<artifactId>interaction</artifactId>
-  		<version>0.0.6</version>
   	</dependency>
 
   	<dependency>

@@ -3,7 +3,20 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	>
-	<ui:style>
+	<ui:style field='style' type='nl.uu.fi.dwo.keyboard.client.KeyboardCSS'>
+	@external key;
+	@external icon;
+	.small {
+		width: 582px;
+		padding-top: 1px !important;
+	}
+	.small .key {
+		margin-top: 2px;
+	}
+	.small .key.icon:first-child {
+		margin-left: 4px;
+	}
+	
 	</ui:style>
 	<g:FlowPanel addStyleNames="keyboard" >
 		<my:FKey addStyleNames="key icon" ui:field="c1" >

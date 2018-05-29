@@ -7,7 +7,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DesktopKeyboardOnderbouw extends DesktopKeyboard {
 
-	public DesktopKeyboardOnderbouw() {
+	public DesktopKeyboardOnderbouw(boolean small) {
+	    super(small);
 		disableKey(c5);
 		disableKey(c7);
 		disableKey(c8);
@@ -65,5 +66,10 @@ public class DesktopKeyboardOnderbouw extends DesktopKeyboard {
 		else
 			super.functionKey(code);
 	}
+
+  @Override
+  int getKeyboardHeight() {
+    return HEIGHT;
+  }
 	
 }

@@ -4,7 +4,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 
 public class DesktopKeyboardGonio extends DesktopKeyboard {
 
-	public DesktopKeyboardGonio() {
+	public DesktopKeyboardGonio(boolean small) {
+	    super(small);
 		c25.setHTML("<span class='gonio gonio-C25'></span>");
 		c26.setHTML("<span class='gonio gonio-C26'></span>");
 		c27.setHTML("<span class='gonio gonio-C27'><span class='path1'><span class='path2'></span></span>");

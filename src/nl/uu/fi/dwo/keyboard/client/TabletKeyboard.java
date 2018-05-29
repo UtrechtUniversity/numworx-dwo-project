@@ -10,7 +10,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -22,6 +21,7 @@ public class TabletKeyboard extends AbstractKeyboard {
 	private static TabletKeyboardUiBinder uiBinder = GWT
 			.create(TabletKeyboardUiBinder.class);
 
+	@UiField KeyboardCSS style;
 	static int HEIGHT = 166;
 
 	interface TabletKeyboardUiBinder extends UiBinder<Widget, TabletKeyboard> {
@@ -40,9 +40,14 @@ public class TabletKeyboard extends AbstractKeyboard {
 	 * @param small 
 	 */
 	public TabletKeyboard(boolean small) {
+	  
 		pad = new TabletKeyboardPad();
 		pad.setDelegate(this);
-		initWidget(uiBinder.createAndBindUi(this));
+		Widget w;
+		initWidget(w = uiBinder.createAndBindUi(this));
+		if(small) {
+		  w.addStyleName(style.small());
+		}
 	}
 	
 	@Override

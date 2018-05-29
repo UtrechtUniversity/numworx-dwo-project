@@ -148,9 +148,9 @@ public class KeyboardGWT implements EntryPoint {
 		w.setEditor(editor);
 		root.add(w);
 	
-if ( false ) 	{	
+if ( true ) 	{	
 		root.add(new Label("algebra"));
-		AbstractKeyboard panel = new TabbedDesktopKeyboard(1);
+		AbstractKeyboard panel = new TabbedDesktopKeyboard(1,true);
 		panel.setEditor(editor);
 		root.add(panel);
 		TabletKeyboard tk;
@@ -159,30 +159,35 @@ if ( false ) 	{
 		tablet.setEditor(editor);
 		root.add(new Label("touch"));root.add(tablet);
 		root.add(new Label("statistiek"));
-		panel = new TabbedDesktopKeyboard(3);
+		panel = new TabbedDesktopKeyboard(3,true);
 		panel.setEditor(editor);
 		root.add(panel);
 		root.add(new Label("touch")); tablet = new TabbedTouchKeyboard(3, true);
 		tablet.setEditor(editor);
 		root.add(tablet);
 		root.add(new Label("meetkunde"));
-		panel = new TabbedDesktopKeyboard(4);
+		panel = new TabbedDesktopKeyboard(4,true);
 		panel.setEditor(editor);
 		root.add(panel);
 		root.add(new Label("touch")); tablet = new TabbedTouchKeyboard(4, true);
 		tablet.setEditor(editor);
 		root.add(tablet);
 		root.add(new Label("gonio"));
-		panel = new TabbedDesktopKeyboard(2);
+		panel = new TabbedDesktopKeyboard(2,true);
 		panel.setEditor(editor);
 		root.add(panel);
 		root.add(new Label("touch")); tablet = new TabbedTouchKeyboard(2,true);
 		tablet.setEditor(editor);
 		root.add(tablet);
 		root.add(new Label("onderbouw"));
-		panel = new TabbedDesktopKeyboard(0);
+		panel = new TabbedDesktopKeyboard(0, true);
 		panel.setEditor(editor);
 		root.add(panel);
+		root.add(new Label("normal onderbouw"));
+        panel = new TabbedDesktopKeyboard(0, false);
+        panel.setEditor(editor);
+        root.add(panel);
+
 		root.add(new Label("touch")); tablet = new TabbedTouchKeyboard(0,true);
 		tablet.setEditor(editor);
 		//tablet.switchABC();

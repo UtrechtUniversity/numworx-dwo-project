@@ -4,8 +4,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 
 public class DesktopKeyboardStatistiek extends DesktopKeyboard {
 
-	public DesktopKeyboardStatistiek() {
-		super();
+	public DesktopKeyboardStatistiek(boolean small) {
+		super(small);
 		c25.setHTML("<span class='statistiek statistiek-C25'></span>");
 		c26.setHTML("<span class='statistiek statistiek-C26'></span>");
 		c27.setHTML("<span class='statistiek statistiek-C27'></span>");

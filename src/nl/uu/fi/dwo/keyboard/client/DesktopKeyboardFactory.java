@@ -8,7 +8,6 @@ public class DesktopKeyboardFactory implements KeyboardFactory {
 	@Override
 	public AbstractKeyboard getKeyboard() {
 		return new TabbedDesktopKeyboard();
-		//return new DesktopKeyboardMeetkunde();
 	}
 
 }

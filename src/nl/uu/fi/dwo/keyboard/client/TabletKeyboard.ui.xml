@@ -4,6 +4,10 @@
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	>
 	<ui:style field='style' type='nl.uu.fi.dwo.keyboard.client.KeyboardCSS'>
+	@external icon;
+	@external key;
+	@external height-l;
+	
 	.small {
 		transform-origin: left top;
 		transform: scale(0.680272,0.6971);
@@ -13,6 +17,22 @@
 	}
 	.panel {
 		float: left;
+	}
+	
+	.small .icon.key.height-l span:before {
+		font-size: 80px !important;
+		left: -12% !important;
+		top: -5% !important;
+	}
+	
+	.small .icon.key span::before {
+		font-size: 40px !important;
+		left: -12% !important;
+		top: -5% !important;
+	}
+	.small .key {
+		font-size: 150%;
+		margin: 10px 0px;
 	}
 	</ui:style>
 

@@ -41,7 +41,7 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 	  
 	}
 	
-	final boolean small;
+	boolean small;
 	TabbedTouchKeyboard(int nr, boolean small) {
 	    this.small = small;
 		AbstractKeyboard tk = createKeyboard(nr);
