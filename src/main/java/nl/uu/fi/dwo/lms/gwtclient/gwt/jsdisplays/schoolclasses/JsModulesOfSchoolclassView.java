@@ -74,7 +74,6 @@ public class JsModulesOfSchoolclassView implements ModulesOfSchoolclassPresenter
             JSONObject children = new JSONObject();
             for (DomTree<DomCourseOfClass> coc : node.getChildren().values()) {
                 //child node
-                JSONObject child = new JSONObject();
                 if (coc.getObject() != null && coc.getObject().getCourse() != null) {
                     //put child in children
                     children.put(coc.getObject().getCourse().getId().getIdString(), buildSubTree(coc));
