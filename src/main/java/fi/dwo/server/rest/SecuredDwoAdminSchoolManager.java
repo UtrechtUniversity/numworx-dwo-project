@@ -232,61 +232,70 @@ public class SecuredDwoAdminSchoolManager {
      * @param restSchool
      * @return
      */
-    @PUT
-    @Produces({"application/json"})
-    @Path("/update")
-    public Boolean updateSchool(@Context SecurityContext sc, RestSchoolFull restSchool
-    ) {
-        if (restSchool == null) {
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
-        }
-        PersistentHasRole hr = null;
-        DomSchoolFull school = restSchool.getDomSchoolFull();
-        try {
-            hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        } catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
-            throw new Dwo2RestException(ex);
-        }
-        if (hr != null) {
-            try {
-                PersistentSchool editSchool = SchoolManager.findEntity(MySQLPersistenceId.getNativeId(school)); 
-                //User to update is logged in user.
-                editSchool.setExpire(school.getExpire());
-                //editSchool.setExport(school.getExport());
-                editSchool.setImage(school.getImage());
-                editSchool.setSchoolLogin(school.getSchoolLogin());
-                editSchool.setSchoolName(school.getSchoolName());
-                //editSchool.setSchoolRights(school.getSchoolRights());
-                SchoolManager.edit(editSchool);
-                List<DomMapEntry<RoleType, String>> passwords = school.getPasswords();
-                List<PersistentSchoolGroup> schoolGroups = new ArrayList<>(SchoolGroupManager.findEntities(editSchool));
-                Iterator<PersistentSchoolGroup> i = schoolGroups.iterator();
-                while (i.hasNext()) {
-                  PersistentSchoolGroup persistentSchoolGroup =  i.next();
-                  Iterator<DomMapEntry<RoleType,String>> j = passwords.iterator();
-                  while (j.hasNext()) {
-                    DomMapEntry<nl.uu.fi.dwo.rest.dom.entities.RoleType, java.lang.String> domMapEntry = j.next();
-                    if(persistentSchoolGroup.getGroupID() == domMapEntry.getKey().ordinal())
-                    {
-                      persistentSchoolGroup.setPasswd(domMapEntry.getValue());
-                      i.remove();
-                      j.remove();
-                    }
-                    
-                  }
-                  
-                }
-                return true;
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
-                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to update school with login " + school.getSchoolLogin() + " .");
-            }
-        } else {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the school with login {1}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolLogin()});
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update the school data.");
-        }
+  @PUT
+  @Produces({"application/json"})
+  @Path("/update")
+  public Boolean updateSchool(@Context SecurityContext sc, RestSchoolFull restSchool) {
+    if (restSchool == null) {
+      throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError,
+          "Incorrect formatted REST-request.");
     }
+    PersistentHasRole hr = null;
+    DomSchoolFull school = restSchool.getDomSchoolFull();
+    try {
+      hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+    } catch (Dwo2Exception ex) {
+      Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
+      throw new Dwo2RestException(ex);
+    }
+    if (hr != null) {
+      try {
+        PersistentSchool editSchool =
+            SchoolManager.findEntity(MySQLPersistenceId.getNativeId(school));
+        // User to update is logged in user.
+        editSchool.setExpire(school.getExpire());
+        // editSchool.setExport(school.getExport());
+        editSchool.setImage(school.getImage());
+        editSchool.setSchoolLogin(school.getSchoolLogin());
+        editSchool.setSchoolName(school.getSchoolName());
+        // editSchool.setSchoolRights(school.getSchoolRights());
+        SchoolManager.edit(editSchool);
+        List<DomMapEntry<RoleType, String>> passwords = school.getPasswords();
+        if (passwords != null) { // Optional
+          List<PersistentSchoolGroup> schoolGroups =
+              new ArrayList<>(SchoolGroupManager.findEntities(editSchool));
+          Iterator<PersistentSchoolGroup> i = schoolGroups.iterator();
+          while (i.hasNext()) {
+            PersistentSchoolGroup persistentSchoolGroup = i.next();
+            Iterator<DomMapEntry<RoleType, String>> j = passwords.iterator();
+            while (j.hasNext()) {
+              DomMapEntry<nl.uu.fi.dwo.rest.dom.entities.RoleType, java.lang.String> domMapEntry =
+                  j.next();
+              if (persistentSchoolGroup.getGroupID() == domMapEntry.getKey().ordinal()) {
+                persistentSchoolGroup.setPasswd(domMapEntry.getValue());
+                i.remove();
+                j.remove();
+              }
+
+            }
+          }
+          // TODO wat met de leftovers te doen? nu ignore!
+        }
+        return true;
+      } catch (Exception e) {
+        LOG.log(Level.SEVERE,
+            "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
+        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError,
+            "Failed to update school with login " + school.getSchoolLogin() + " .");
+      }
+    } else {
+      LOG.log(Level.WARNING,
+          "Username {0}: ILLEGAL USER-OPERATION: Trying to update the school with login {1}.",
+          new Object[] {sc.getUserPrincipal().getName(), school.getSchoolLogin()});
+      throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction,
+          "You Don't Have Permission to update the school data.");
+    }
+  }
 
     /**
      * Removes all the school data of the current school and returns true.
