@@ -4,13 +4,25 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewAccessKey;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewFrom;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewTo;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewType;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.ClassCourse;
 import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
@@ -26,6 +38,9 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -243,8 +258,9 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                 Course[] allCourses = null;
                 Course[] selectedSchoolCourses = null;
                 SchoolClass sc = null;
+                DomSchoolClass schoolClass = null;
                 try {
-                    DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+                    schoolClass = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
                     sc = (SchoolClass) PersistenceFacade.instance().get(MySQLPersistenceId.getNativeId(schoolClass).intValue(),SchoolClass.class);
                     GuiCreator.instance().getDWO().setWait();
                     allCourses = GuiCreator.instance().getDWO().getCourses();
@@ -260,7 +276,8 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                 if (selectedCourses != null) {
                     GuiCreator.instance().getDWO().setWait();
                     try {
-                        sc.saveSelectedCourses(allCourses, selectedCourses);
+                        //sc.saveSelectedCourses(allCourses, selectedCourses);
+                        saveSelectedCourses(schoolClass, selectedSchoolCourses, selectedCourses);
                     } finally {
                         GuiCreator.instance().getDWO().setReady();
                     }
@@ -304,6 +321,110 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                     fireEditingStopped();
                 }
             }
+        }
+
+        private DomCourse toDomCourse(Course c) {
+          DomCourse result = new DomCourse();
+          result.setId(PersistentCourse.buildPersistenceId(Long.valueOf(c.getID())));
+          result.setName(c.getName());
+          result.setWithChildren(c.isWithChildren());
+          result.setParentID(PersistentCourse.buildPersistenceId(Long.valueOf(c.getParentID())));
+          
+          return result;
+        }
+        
+        private void saveSelectedCourses(DomSchoolClass schoolClass, Course[] oldselected,
+            Course[] selected) {
+          // TODO attach selected & detach oldselected
+          DomSchoolClassCourseProfilewAccessKey key = new DomSchoolClassCourseProfilewAccessKey();
+          DomSchoolClassCourseAndProfile dom;
+          dom = key;
+          dom.setDomSchoolClass(schoolClass);
+          dom.setDomDwoProfile(DWO.getDwoProfile());
+          List<Course> selectedList = Arrays.asList(selected);
+          for(Course c : oldselected) {
+            while(c != null && ! selectedList.contains(c) && c.getDwoProfile() == DWO.getDwoProfileID()) {
+                DomCourse domcourse = toDomCourse(c);
+                dom.setCourse(domcourse);
+                try {
+                  SecureTeacherSchoolClassManager.detachCourseFromClass(dom);
+                  int parent = c.getParentID();
+                  if (parent == 0) break;
+                  c = (Course) PersistenceFacade.instance().get(parent, Course.class);
+                  
+                } catch (Dwo2Exception e) {
+                  LOG.log(Level.SEVERE, "detach", e);
+                  return;
+                } catch (PersistenceException e) {
+                  LOG.log(Level.WARNING, "detach parent", e);
+                  break;
+                }
+            }
+          }
+          DomSchoolClassCourseProfilewFrom from = new DomSchoolClassCourseProfilewFrom();
+          from.setDomDwoProfile(DWO.getDwoProfile());
+          from.setDomSchoolClass(schoolClass);
+          DomSchoolClassCourseProfilewTo to = new DomSchoolClassCourseProfilewTo();
+          to.setDomDwoProfile(DWO.getDwoProfile());
+          to.setDomSchoolClass(schoolClass);
+
+          DomSchoolClassCourseProfilewType type = new DomSchoolClassCourseProfilewType();
+          type.setDomDwoProfile(DWO.getDwoProfile());
+          type.setDomSchoolClass(schoolClass);
+          
+          selectedList = Arrays.asList(oldselected);
+          for(Course c: selected) {
+            if(c.link == null) 
+              c.link = new ClassCourse();
+            DomCourse domcourse = toDomCourse(c);
+
+            from.setCourse(domcourse);
+            from.setFrom(c.link.getNotBefore());
+            try {
+              SecureTeacherSchoolClassManager.setFromDataClassCourse(from);
+            } catch (Dwo2Exception e) {
+              LOG.log(Level.SEVERE, "from", e);
+              return;
+            }
+
+            to.setCourse(domcourse);
+            to.setTo(c.link.getNotAfter());
+            try {
+              SecureTeacherSchoolClassManager.setToDataClassCourse(to);
+            } catch (Dwo2Exception e) {
+              LOG.log(Level.SEVERE, "to", e);
+              return;
+            }
+            type.setCourse(domcourse);
+            type.setType(CourseType.values()[c.link.getType()]);
+            try {
+              SecureTeacherSchoolClassManager.setClassCourseType(type);
+            } catch (Dwo2Exception e) {
+              LOG.log(Level.SEVERE, "type", e);
+              return;
+            }
+            key.setCourse(domcourse);
+            key.setAccessKey(c.link.getAccessKey());;
+            try {
+              SecureTeacherSchoolClassManager.setAccessKeyClassCourse(key);
+            } catch (Dwo2Exception e) {
+              LOG.log(Level.SEVERE, "key", e);
+              return;
+            }
+           
+            if (!selectedList.contains(c)) {
+              try {
+                SecureTeacherSchoolClassManager.attachCourseToClass(dom);
+              } catch (Dwo2Exception e) {
+                LOG.log(Level.SEVERE, "attach", e);
+                return;
+              }
+            }
+           
+            
+          }
+          
+          
         }
 
     }

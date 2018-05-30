@@ -53,30 +53,30 @@ public class SchoolClass implements UserGroup, Comparable {
         return courses;
     }
 
-    public void saveSelectedCourses(Course[] selectedCourses) {
-        ClassCourse[] v = new ClassCourse[selectedCourses.length];
-        for (int i = 0; i < selectedCourses.length; i++) {
-            ClassCourse link = selectedCourses[i].link;
-            if (link != null) {
-            } else {
-                link = new ClassCourse();
-            }
-            link.setCourseID(selectedCourses[i].getID());
-            v[i] = link;
-        }
-        try {
-            PersistenceFacade.instance().selectCoursesForClass(this, v);
-        } catch (PersistenceException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-        }
-    }
+//    public void saveSelectedCourses(Course[] selectedCourses) {
+//        ClassCourse[] v = new ClassCourse[selectedCourses.length];
+//        for (int i = 0; i < selectedCourses.length; i++) {
+//            ClassCourse link = selectedCourses[i].link;
+//            if (link != null) {
+//            } else {
+//                link = new ClassCourse();
+//            }
+//            link.setCourseID(selectedCourses[i].getID());
+//            v[i] = link;
+//        }
+//        try {
+//            PersistenceFacade.instance().selectCoursesForClass(this, v);
+//        } catch (PersistenceException e) {
+//            JOptionPane.showMessageDialog(null, e.getMessage());
+//        }
+//    }
 
-    public void saveSelectedCourses(Course[] allCourses,
-            Course[] selectedCourses) {
-        if (true) {
-            saveSelectedCourses(selectedCourses);
-            return;
-        }
+//    public void saveSelectedCourses(Course[] allCourses,
+//            Course[] selectedCourses) {
+//        if (true) {
+//            saveSelectedCourses(selectedCourses);
+//            return;
+//        }
 //        deselectAllCourses(allCourses);
 //        for (int i = 0; i < selectedCourses.length; i++) {
 //            try {
@@ -95,7 +95,7 @@ public class SchoolClass implements UserGroup, Comparable {
 //                JOptionPane.showMessageDialog(null, e.getMessage());
 //            }
 //        }
-    }
+//    }
 
 //    private void deselectAllCourses(CourseMap[] allCourses) {
 //        for (int i = 0; i < allCourses.length; i++) {

@@ -2652,49 +2652,49 @@ public class PersistenceFacade {
         return true;
     }
 
-    public void selectCoursesForClass(SchoolClass schoolClass, ClassCourse[] classCourses)
-            throws PersistenceException {
-        Vector v = new Vector(classCourses.length);
-        for (int i = 0; i < classCourses.length; i++) {
-            ClassCourse deze = classCourses[i];
-            Hashtable h = new Hashtable();
-            h.put("courseID", new Integer(deze.getCourseID()));
-            if (deze.getType() != 0) {
-                h.put("type", new Integer(deze.getType()));
-            }
-            if (deze.getNotAfter() != null && deze.getNotAfter().getTime() > DATE_OFFSET) {
-                h.put("notAfter", deze.getNotAfter());
-            }
-            if (deze.getNotBefore() != null && deze.getNotBefore().getTime() > DATE_OFFSET) {
-                h.put("notBefore", deze.getNotBefore());
-            }
-            h.put("viewState", new Integer(deze.getViewState()));
-            String accessKey = deze.getAccessKey();
-			if(accessKey != null) 
-				h.put("accessKey", accessKey);
-            v.add(h);
-        }
-// insert dwoProfileID.
-        if (v.isEmpty()) {
-            v.add(new Hashtable());
-        }
-        int id = getDwoProfileID(); // TODO denk aan parameter?
-        ((Hashtable) v.firstElement()).put("dwoProfileID", new Integer(id));
-
-        try {
-            DbAccessCreator.instance().selectCoursesForClass(schoolClass.getID(), v);
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-
-    }
+//    public void selectCoursesForClass(SchoolClass schoolClass, ClassCourse[] classCourses)
+//            throws PersistenceException {
+//        Vector v = new Vector(classCourses.length);
+//        for (int i = 0; i < classCourses.length; i++) {
+//            ClassCourse deze = classCourses[i];
+//            Hashtable h = new Hashtable();
+//            h.put("courseID", new Integer(deze.getCourseID()));
+//            if (deze.getType() != 0) {
+//                h.put("type", new Integer(deze.getType()));
+//            }
+//            if (deze.getNotAfter() != null && deze.getNotAfter().getTime() > DATE_OFFSET) {
+//                h.put("notAfter", deze.getNotAfter());
+//            }
+//            if (deze.getNotBefore() != null && deze.getNotBefore().getTime() > DATE_OFFSET) {
+//                h.put("notBefore", deze.getNotBefore());
+//            }
+//            h.put("viewState", new Integer(deze.getViewState()));
+//            String accessKey = deze.getAccessKey();
+//			if(accessKey != null) 
+//				h.put("accessKey", accessKey);
+//            v.add(h);
+//        }
+//// insert dwoProfileID.
+//        if (v.isEmpty()) {
+//            v.add(new Hashtable());
+//        }
+//        int id = getDwoProfileID(); // TODO denk aan parameter?
+//        ((Hashtable) v.firstElement()).put("dwoProfileID", new Integer(id));
+//
+//        try {
+//            DbAccessCreator.instance().selectCoursesForClass(schoolClass.getID(), v);
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//
+//    }
 
 //    /**
 //     * =============================================================================
