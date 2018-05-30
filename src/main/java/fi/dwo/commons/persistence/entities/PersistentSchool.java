@@ -3,6 +3,7 @@ package fi.dwo.commons.persistence.entities;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -281,5 +282,12 @@ public class PersistentSchool implements Serializable {
         id.setIdString(String.format("MYSQL;%s;%020d",
                 PersistenceClassType.PersistentSchool.name(), aSchoolId));
         return id;
+    }
+
+    public DomSchoolFrom buildDomSchoolFrom() {
+      DomSchoolFrom build = new DomSchoolFrom();
+      build.setId(buildPersistenceId());
+      build.setSchoolName(getSchoolName());
+      return build;
     }    
 }
