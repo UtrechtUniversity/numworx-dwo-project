@@ -36,6 +36,7 @@ import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.DbAccessLogin;
 import fi.dwo.commons.persistence.SchoolGroupIndices;
 import fi.dwo.commons.persistence.ScormAccessIF;
+import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.MD5;
 
 
@@ -60,6 +61,10 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      */
     protected String session() {
         return "";
+    }
+    
+    protected PersistentUser getUser() {
+      return null; // unknown
     }
 
     private void log(Level level, String msg, Throwable t) {

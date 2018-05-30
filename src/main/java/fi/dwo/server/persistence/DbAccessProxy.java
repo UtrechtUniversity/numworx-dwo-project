@@ -540,7 +540,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     @Override
     public boolean selectCoursesForClass(int id, Vector v) throws IOException,
             XmlRpcException, SQLException {
-        return getDelegate().selectCoursesForClass(id, v);
+        return getDelegateObsolete().selectCoursesForClass(id, v);
     }
 
     @Override

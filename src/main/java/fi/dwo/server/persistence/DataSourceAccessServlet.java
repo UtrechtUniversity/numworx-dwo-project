@@ -4,6 +4,7 @@ import fi.dwo.commons.exceptions.DwoXmlRpcException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -20,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
-
 import org.apache.xmlrpc.XmlRpc;
 
 //import com.jamonapi.proxy.MonProxyFactory;
@@ -30,14 +30,15 @@ import fi.beans.xmlrpc.Servlet;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.DbAccessLogin;
 import fi.dwo.commons.persistence.ScormAccessIF;
-
+import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import java.sql.PreparedStatement;
+import java.util.Base64;
 import java.util.HashMap;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**
  * Supplies doGet for database status info and database-operations via doPost
@@ -49,7 +50,7 @@ public class DataSourceAccessServlet extends Servlet {
 	private boolean monitor;
 	private boolean threading;
 	private ThreadLocal<HttpSession> session = new ThreadLocal<HttpSession>();
-	static private Logger logger = Logger.getLogger(DataSourceAccessServlet.class.getName());
+	private ThreadLocal<PersistentUser> user = new ThreadLocal<>();
 	
     private static final Logger LOG = Logger.getLogger(DataSourceAccessServlet.class.getName());
 
@@ -62,7 +63,11 @@ public class DataSourceAccessServlet extends Servlet {
     static private int count = 0;
     class MonitorDataSourceAccess extends DataSourceAccess implements fi.beans.jdbc.DbConnectIF, DbAccessIF, ScormAccessIF, DbAccessLogin {
 
-
+        protected PersistentUser getUser() {
+            return user.get();
+        }
+      
+      
         public MonitorDataSourceAccess(DataSource ds) {
             super(ds);
         }
@@ -148,14 +153,21 @@ public class DataSourceAccessServlet extends Servlet {
             return mine;
         }
     };
-
-    static class DataSourceProxy extends DbAccessProxy {
+    
+    
+   class DataSourceProxy extends DbAccessProxy {
 
         DataSource ds;
 
         @Override
         protected DbAccessIF createDelegate() {
-            return new DataSourceAccess(ds);
+            return new DataSourceAccess(ds) {
+
+              @Override
+              protected PersistentUser getUser() {
+                return user.get();
+              }
+           };
         }
 
         DataSourceProxy(DataSource ds) {
@@ -240,7 +252,7 @@ public class DataSourceAccessServlet extends Servlet {
 			try { 
 				ds.getDelegate();
 			} catch (Exception e) {
-				logger.info("getDelegate at init " + e);
+				LOG.info("getDelegate at init " + e);
 			}
 			
 			
@@ -380,7 +392,7 @@ public class DataSourceAccessServlet extends Servlet {
 		try { 
 			ds.getDelegate();
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "service", e);
+			LOG.log(Level.SEVERE, "service", e);
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}  
@@ -388,10 +400,11 @@ public class DataSourceAccessServlet extends Servlet {
 		try { 
 			HttpSession s = req.getSession(true);
 			session.set(s);
+			user.set(null);
 			s.setAttribute("ip", req.getRemoteAddr());
 			String authorization = req.getHeader("Authorization");
 			if(authorization != null) {
-			  authorization(authorization);
+			  authorization(authorization,req);
 			}
 			super.service(req, resp);
 		} catch (RuntimeException re) {
@@ -407,10 +420,26 @@ public class DataSourceAccessServlet extends Servlet {
 		}
 	}
 
-    private boolean authorization(String authorization) {
-      LOG.log(Level.INFO,"Authorization: " + authorization);
+    private boolean authorization(String authHeader, HttpServletRequest req) {
+      LOG.log(Level.FINE,"Authorization: " + authHeader);
+      if (authHeader.startsWith("Basic ")) {
+        authHeader = authHeader.substring(6);
+        byte[] header = Base64.getDecoder().decode(authHeader);
+        authHeader = new String(header, StandardCharsets.UTF_8);
+        String authFields[] = authHeader.trim().split(":");
+        PersistentUser u = UserManager.findByUserName(authFields[0]);
+        if (u != null && u.getPassword().equals(authFields[1])) {
+            user.set(u);
+            LOG.log(Level.INFO,"Authenticated user: " + u.getUsername());
+            req.setAttribute("username", u.getUsername());
+            return true;
+        } else {
+          LOG.log(Level.SEVERE, "Unauthenticated user " +  authHeader);
+          return false;
+        }
+      }
 // TODO ....   
-      return true; // okay
+      return true; // okay for now.
     }
 
     @Override

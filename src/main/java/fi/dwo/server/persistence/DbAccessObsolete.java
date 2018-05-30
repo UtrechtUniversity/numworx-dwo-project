@@ -70,5 +70,6 @@ public boolean editSchoolRights(int schoolID, String rights) throws IOException,
 public boolean editSchool(int schoolID, boolean export) throws IOException, XmlRpcException, SQLException;
 public boolean deleteCourseDataFromClass(int courseID, int classID)
     throws SQLException, IOException, XmlRpcException;
+public boolean selectCoursesForClass(int id, Vector v) throws IOException, XmlRpcException, SQLException;
 
 }
