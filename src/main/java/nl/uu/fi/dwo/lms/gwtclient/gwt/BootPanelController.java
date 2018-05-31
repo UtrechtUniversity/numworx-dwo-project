@@ -240,6 +240,9 @@ class BootPanelController {
                         case RESULTS:
                             presenterFactory.getResultsPresenter().init();
                             break;
+                        case SELECTEDRESULTS:
+                            presenterFactory.getSelectedResultsPresenter().init();
+                            break;
                         case RESULTSSTUDENT:
                             eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                             break;

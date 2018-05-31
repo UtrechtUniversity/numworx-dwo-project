@@ -33,9 +33,9 @@ import org.osgi.util.promise.Success;
  *
  * @author plas0006
  */
-public class ResultsSelectsPresenter {
+public class SelectedResultsPresenter {
 
-    private static final Logger LOG = Logger.getLogger(ResultsSelectsPresenter.class.getName());
+    private static final Logger LOG = Logger.getLogger(SelectedResultsPresenter.class.getName());
 
     private final EventBus eventBus;
     private final DwoGlobalVars dwoGlobalVars;
@@ -144,7 +144,7 @@ public class ResultsSelectsPresenter {
         }
     }
 
-    public ResultsSelectsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    public SelectedResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         resultService = new ResultsService(dwoGlobalVars);

@@ -6,7 +6,7 @@ import com.google.gwt.json.client.JSONString;
 import fi.dwo.gwt.lib.rest.util.DomStudentCodec;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsSelectsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectedResultsPresenter;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
@@ -20,9 +20,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
  *
  * @author G.A.J. van der Plas
  */
-public class JsResultsSelectsView implements ResultsSelectsPresenter.Display {
+public class JsSelectedResultsView implements SelectedResultsPresenter.Display {
 
-    private static final Logger LOG = Logger.getLogger(JsResultsSelectsView.class.getName());
+    private static final Logger LOG = Logger.getLogger(JsSelectedResultsView.class.getName());
 
     @Override
     public void clear() {
@@ -31,12 +31,12 @@ public class JsResultsSelectsView implements ResultsSelectsPresenter.Display {
 
     @Override
         public void setEmptyTableMessage() {
-        JsResultsSelectsDisplay.setEmptyTableMessage();
+        JsSelectedResultsDisplay.setEmptyTableMessage();
     }
 
     @Override
         public void setLoadingTableMessage() {
-        JsResultsSelectsDisplay.setLoadingTableMessage();
+        JsSelectedResultsDisplay.setLoadingTableMessage();
     }
         
 
@@ -156,6 +156,6 @@ public class JsResultsSelectsView implements ResultsSelectsPresenter.Display {
         LOG.log(Level.INFO, "Building student tree in json.");
         JSONObject students = buildSubStudentTree(data.getStudentTree());
         LOG.log(Level.INFO, "studentTree json string is:\n " + students.toString());
-        JsResultsSelectsDisplay.setResultTree(results,students);
+        JsSelectedResultsDisplay.setResultTree(results,students);
     }        
 }

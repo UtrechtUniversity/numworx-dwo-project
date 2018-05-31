@@ -51,6 +51,8 @@ public class JsMainDisplay {
     public static native void showLoginView();
     /** Show the results panel. */
     public static native void  showResultsView();
+    /** Show the selected results panel. */
+    public static native void  showSelectedResultsView();
     /** Show the results of student panel. */
     public static native void  showStudentResultsView();
     /** Show the school classes panel. */

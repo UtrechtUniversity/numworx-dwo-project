@@ -13,14 +13,12 @@ import jsinterop.annotations.JsType;
  * 
  * The callbacks are:
  * 
- * public void selectColumnZoom(int col); // Select for  tableheader col clicks (zoom in and out)
- * public void selectRowAndCol(int row, int col); // Selects for class/student result fields. rows starts with 0.
- * public String getExportString(); //Returns tsv result data to be copied to clipboard.
+ *  public void showSelectedResults(String schoolClassId, boolean showOpenModules, boolean showClosedModules, JSONObject courseIds)
  * 
  * @author G.A.J. van der Plas
  */
 @JsType(isNative = true, name = "jsResultsSelectsDisplay", namespace = JsPackage.GLOBAL)
-public class JsResultsSelectsDisplay{
+public class JsSelectedResultsDisplay{
     /** Clears the results in the ui. */
     public static native void clear();
     /** Fills the result table with the results.*/

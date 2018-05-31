@@ -19,7 +19,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresen
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsView;
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.modules.JsModulesView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsResultsSelectsView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsSelectedResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsAddStudentToSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsAddTeacherToSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsCopyOrMoveStudentToSchoolclassView;
@@ -27,7 +27,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsModulesOfSchool
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsAlertDialogWithOKView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsMessageDialogWithOKView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsSelectsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectedResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddTeacherToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CopyOrMoveStudentToSchoolclassPresenter;
@@ -48,7 +48,7 @@ public class ViewFactoryJs implements ViewFactory {
     private final MainPresenter.Display mainView;
     private final LoginPresenter.Display loginView;
     private final ResultsPresenter.Display resultsView;
-    private final ResultsSelectsPresenter.Display resultsSelectsView;
+    private final SelectedResultsPresenter.Display resultsSelectsView;
     private final SchoolclassesPresenter.Display schoolclassesView;
     private final AddStudentToSchoolclassPresenter.Display addStudentToSchoolclassView;
     private final CopyOrMoveStudentToSchoolclassPresenter.Display copyOrMoveStudentToSchoolclassView;
@@ -77,7 +77,7 @@ public class ViewFactoryJs implements ViewFactory {
         addTeacherToSchoolclassView = new JsAddTeacherToSchoolclassView();
         //ordered!
         resultsView = new JsResultsView();
-        resultsSelectsView = new JsResultsSelectsView();
+        resultsSelectsView = new JsSelectedResultsView();
 //        editStudentView = new EditStudentView(pf.getEditStudentPresenter());
 //        addStudentsView = new AddStudentsView(pf.getAddStudentsPresenter());
         alertDialogWithOKView = new JsAlertDialogWithOKView();
@@ -104,7 +104,7 @@ public class ViewFactoryJs implements ViewFactory {
     }
 
     @Override
-    public ResultsSelectsPresenter.Display getResultsSelectsView() {
+    public SelectedResultsPresenter.Display getSelectedResultsView() {
         return resultsSelectsView;
     }
 

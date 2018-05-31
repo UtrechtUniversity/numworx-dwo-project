@@ -11,7 +11,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresen
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsSelectsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectedResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddTeacherToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CopyOrMoveStudentToSchoolclassPresenter;
@@ -48,7 +48,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
 //    private final EditStudentPresenter editStudentPresenter;
     private final ModulesPresenter modulesPresenter;
     private final ResultsPresenter resultsPresenter;
-    private final ResultsSelectsPresenter resultsSelectsPresenter;
+    private final SelectedResultsPresenter selectedResultsPresenter;
     private final MessageDialogWithOKPresenter messageDialogWithOKPresenter;
     private final AlertDialogWithOKPresenter alertDialogWithOKPresenter;
     private final AlertDialogWithConfirmCancelPresenter alertDialogWithConfirmCancelPresenter;
@@ -75,7 +75,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
 //        editStudentPresenter = new EditStudentPresenter(eventBus, dwoGlobalVars);
 //        addStudentsPresenter = new AddStudentsPresenter(eventBus, dwoGlobalVars);
         resultsPresenter = new ResultsPresenter(eventBus, dwoGlobalVars);
-        resultsSelectsPresenter = new ResultsSelectsPresenter(eventBus, dwoGlobalVars);
+        selectedResultsPresenter = new SelectedResultsPresenter(eventBus, dwoGlobalVars);
         messageDialogWithOKPresenter = new MessageDialogWithOKPresenter(eventBus);
         fileUploadStudentsPresenter = new FileUploadStudentsPresenter(eventBus, dwoGlobalVars);
         alertDialogWithOKPresenter = new AlertDialogWithOKPresenter(eventBus);
@@ -95,7 +95,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         copyOrMoveStudentToSchoolclassPresenter.setView(viewFactory.getCopyOrMoveStudentToSchoolclassView());
         addTeacherToSchoolclassPresenter.setView(viewFactory.getAddTeacherToSchoolclassView());
         modulesOfSchoolclassPresenter.setView(viewFactory.getModulesOfSchoolclassView());
-        resultsSelectsPresenter.setView(viewFactory.getResultsSelectsView());
+        selectedResultsPresenter.setView(viewFactory.getSelectedResultsView());
         resultsPresenter.setView(viewFactory.getResultsView());
 //        coursesOfSchoolclassPresenter.setView(viewFactory.getCoursesOfSchoolclassView());
 //        studentsInSchoolclassPresenter.setView(viewFactory.getStudentsInSchoolclassView());
@@ -158,8 +158,8 @@ public class PresenterFactoryGwt implements PresenterFactory {
      */
     @JsMethod    
     @Override
-    public ResultsSelectsPresenter getResultsSelectsPresenter() {
-        return resultsSelectsPresenter;
+    public SelectedResultsPresenter getSelectedResultsPresenter() {
+        return selectedResultsPresenter;
     }
 
 //    /**

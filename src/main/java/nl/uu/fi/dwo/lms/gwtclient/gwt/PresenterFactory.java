@@ -9,7 +9,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresen
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsSelectsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectedResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddTeacherToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CopyOrMoveStudentToSchoolclassPresenter;
@@ -43,7 +43,7 @@ public interface PresenterFactory {
 //    public EditStudentPresenter getEditStudentPresenter();
     public ModulesPresenter getModulesPresenter();
     public ResultsPresenter getResultsPresenter();
-    public ResultsSelectsPresenter getResultsSelectsPresenter();
+    public SelectedResultsPresenter getSelectedResultsPresenter();
     public AlertDialogWithConfirmCancelPresenter getAlertDialogWithConfirmCancelPresenter();
     public AlertDialogWithOKPresenter getAlertDialogWithOKPresenter();
     public MessageDialogWithOKPresenter getMessageDialogWithOKPresenter();

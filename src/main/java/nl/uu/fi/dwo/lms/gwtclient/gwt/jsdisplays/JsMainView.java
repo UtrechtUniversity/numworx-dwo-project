@@ -54,6 +54,11 @@ public class JsMainView implements MainPresenter.Display{
     public void showResultsView() {
         JsMainDisplay.showResultsView();
     }
+
+    @Override
+    public void showSelectedResultsView() {
+        JsMainDisplay.showSelectedResultsView();
+    }
     
     @Override
     public void showStudentResultsView() {

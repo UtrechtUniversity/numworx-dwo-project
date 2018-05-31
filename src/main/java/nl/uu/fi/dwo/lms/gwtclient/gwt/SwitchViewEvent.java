@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.json.client.JSONObject;
+import java.util.List;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
@@ -37,25 +39,27 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     }
 
     public enum SelectedView {
-        LOGIN, 
-        WELCOME, 
-        ACCOUNT, 
-        PEOPLE, 
-        SCHOOLCLASSES, 
+        LOGIN,
+        WELCOME,
+        ACCOUNT,
+        PEOPLE,
+        SCHOOLCLASSES,
         EDITSCHOOLCLASS,
-        ADDSTUDENTTOSCHOOLCLASS, 
-        COPYORMOVESTUDENTTOSCHOOLCLASS, 
-        ADDTEACHERTOSCHOOLCLASS, 
+        ADDSTUDENTTOSCHOOLCLASS,
+        COPYORMOVESTUDENTTOSCHOOLCLASS,
+        ADDTEACHERTOSCHOOLCLASS,
         EDITCOURSESOFSCHOOLCLASS,
-        RESULTS, 
+        RESULTS,
+        SELECTSTUDENTRESULTS,
+        SELECTEDRESULTS,
         RESULTSSTUDENT,
         MODULES,
         ORGANISATION
-    // ACTIVERESULTS,
-    // SCORESULTS,
-    // COURSESOFSCHOOLCLASS,
-    // STUDENTSINSCHOOLCLASS,
-    // TEACHERSINSCHOOLCLASS,
+        // ACTIVERESULTS,
+        // SCORESULTS,
+        // COURSESOFSCHOOLCLASS,
+        // STUDENTSINSCHOOLCLASS,
+        // TEACHERSINSCHOOLCLASS,
     }
 
     private DomStudent student;
@@ -65,29 +69,46 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     private DomResultStudent resultStudent;
     private DomResultScoContext resultScoContext;
     private DomResultTree resultTree;
+    private boolean showOpenModules;
+    private boolean showClosedModules;
+    private JSONObject moduleIds;
 
     public static Type<SwitchViewEventHandler> TYPE = new Type<SwitchViewEventHandler>();
     public static SelectedView eventValue;
 
-  public SwitchViewEvent(SelectedView aState) {
+    public SwitchViewEvent(SelectedView aState) {
         this.setEventValue(aState);
     }
 
-  public SwitchViewEvent(SelectedView aState, DomStudent aStudent) {
+    public SwitchViewEvent(SelectedView aState, DomStudent aStudent) {
         this.setEventValue(aState);
         student = aStudent;
     }
 
-  public SwitchViewEvent(SelectedView aState, DomSchoolClass aSchoolClass) {
+    public SwitchViewEvent(SelectedView aState, DomSchoolClass aSchoolClass) {
         this.setEventValue(aState);
         schoolClass = aSchoolClass;
     }
 
-  public SwitchViewEvent(SelectedView aState, DomResultTree aResultTree,
-      DomResultScoContext aStudentSco, DomResultStudent aResultStudent,
-      DomSchoolClass aSchoolClass) {
+    public SwitchViewEvent(SelectedView aState, DomResultTree aResultTree) {
+        resultTree = aResultTree;
+    }
+
+    public SwitchViewEvent(SelectedView aState, DomResultTree aResultTree,
+            DomSchoolClass aSchoolClass, boolean openModules, boolean closedModules, JSONObject aModuleIds) {
         this.setEventValue(aState);
-    resultTree = aResultTree;
+        resultTree = aResultTree;
+        schoolClass = aSchoolClass;
+        showOpenModules = openModules;
+        showClosedModules = closedModules;
+        moduleIds = aModuleIds;
+    }
+
+    public SwitchViewEvent(SelectedView aState, DomResultTree aResultTree,
+            DomResultScoContext aStudentSco, DomResultStudent aResultStudent,
+            DomSchoolClass aSchoolClass) {
+        this.setEventValue(aState);
+        resultTree = aResultTree;
         resultScoContext = aStudentSco;
         resultStudent = aResultStudent;
         schoolClass = aSchoolClass;
@@ -103,11 +124,11 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         handler.onSwitchViewEvent(this);
     }
 
-  public void setEventValue(SelectedView view) {
+    public void setEventValue(SelectedView view) {
         eventValue = view;
     }
 
-  public SelectedView getEventValue() {
+    public SelectedView getEventValue() {
         return eventValue;
     }
 
@@ -124,9 +145,9 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
 //    public void setStudent(DomStudent student) {
 //        this.student = student;
 //    }
-  /**
-   * @return the schoolClass
-   */
+    /**
+     * @return the schoolClass
+     */
     public DomSchoolClass getSchoolClass() {
         return schoolClass;
     }
@@ -143,5 +164,26 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
      */
     public DomStudentScoContext getStudentScoResult() {
         return studentScoResult;
-  }
+    }
+
+    /**
+     * @return the showOpenModules
+     */
+    protected boolean isShowOpenModules() {
+        return showOpenModules;
+    }
+
+    /**
+     * @return the showClosedModules
+     */
+    protected boolean isShowClosedModules() {
+        return showClosedModules;
+    }
+
+    /**
+     * @return the moduleIds
+     */
+    protected JSONObject getModuleIds() {
+        return moduleIds;
+    }
 }
