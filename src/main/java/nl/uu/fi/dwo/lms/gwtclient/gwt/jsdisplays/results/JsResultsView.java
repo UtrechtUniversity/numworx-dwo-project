@@ -3,7 +3,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
-import com.google.gwt.json.client.JSONValue;
+import fi.dwo.gwt.lib.rest.util.DomStudentCodec;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
@@ -12,9 +12,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 
 /**
  * Mapper to allow java interface implementation.
@@ -40,7 +39,7 @@ public class JsResultsView implements ResultsPresenter.Display {
         JsResultsDisplay.setLoadingTableMessage();
     }
 
-    private JSONObject buildSubTree(DomResultScore node) {
+    private JSONObject buildSubResultTree(DomResultScore node) {
         JSONObject json = new JSONObject();
         node.calculateSumOfSubtreeScore();
         //set course data in node.
@@ -50,7 +49,7 @@ public class JsResultsView implements ResultsPresenter.Display {
         json.put("sumScore", new JSONNumber(node.getScore()));
         json.put("scoCount", new JSONNumber(node.getScoCount()));
         json.put("studentScoCount", new JSONNumber(node.getStudentScoCount()));
-                if (node instanceof DomResultStudentScoContext) {
+        if (node instanceof DomResultStudentScoContext) {
             String userIdString = ((DomResultStudentScoContext) node).getStudentSco().getUserID().getIdString();
             json.put("user-id", new JSONString(userIdString));
         }
@@ -78,10 +77,61 @@ public class JsResultsView implements ResultsPresenter.Display {
                 }
                 if (o instanceof DomResultScore) {
                     DomResultScore childScore = (DomResultScore) o;
-                    children.put(id, buildSubTree(childScore));
+                    children.put(id, buildSubResultTree(childScore));
                 }
             }
             json.put("children", children);
+        }
+        return json;
+    }
+
+    /**
+     * Assumes DomResultTeacher with DomResultSchoolClasses with DomStudents
+     *
+     * @param node
+     * @return
+     */
+    private JSONObject buildSubStudentTree(DomResultScore node) {
+        JSONObject json = new JSONObject();
+        String classType = node.getClass().getSimpleName();
+        json.put("classType", new JSONString(classType));
+        json.put("label", new JSONString(node.getLabel()));
+        json.put("sumScore", new JSONNumber(node.getScore()));
+        json.put("scoCount", new JSONNumber(node.getScoCount()));
+        json.put("studentScoCount", new JSONNumber(node.getStudentScoCount()));
+        //Add children.
+        if (node.getChildren() != null && !node.getChildren().isEmpty()) {
+            //there are schoolclasses
+            JSONObject schoolClasses = new JSONObject();
+            for (Object o : node.getChildren().values()) {
+                //for each schoolclass
+                //child node
+                String id;
+                if (o instanceof DomResultSchoolClass) {
+                    //for each schoolclass
+                    JSONObject schoolClass = new JSONObject();
+                    schoolClass.put("classType", new JSONString(classType));
+                    schoolClass.put("label", new JSONString(node.getLabel()));
+                    schoolClass.put("sumScore", new JSONNumber(node.getScore()));
+                    schoolClass.put("scoCount", new JSONNumber(node.getScoCount()));
+                    schoolClass.put("studentScoCount", new JSONNumber(node.getStudentScoCount()));
+                    JSONObject students = new JSONObject();
+                    for (Object so : ((DomResultSchoolClass) o).getChildren().values()) {
+                        //for each student
+                        if (so instanceof DomStudent) {
+                            DomStudent s = (DomStudent) so;
+                            students.put(s.getId().getIdString(), DomStudentCodec.CODEC.encode(s));
+                        }
+                    }
+                    //put students in schoolclass
+                    id = ((DomResultSchoolClass) o).getSchoolClass().getId().getIdString();
+                    schoolClass.put(id, students);
+                    //put schoolclass in schoolclasses
+                    id = ((DomResultSchoolClass) o).getSchoolClass().getId().getIdString();
+                    schoolClasses.put(id, schoolClass);
+                }
+            }
+            json.put("schoolclasses", schoolClasses);
         }
         return json;
     }
@@ -99,10 +149,12 @@ public class JsResultsView implements ResultsPresenter.Display {
     public void setResultTree(DomResultTree data) {
         LOG.log(Level.INFO, "tree data has " + data.getStudentTree().getChildren().values().size() + " student classes.");
         LOG.log(Level.INFO, "tree data has " + data.getResultTree().getChildren().values().size() + "  result classes.");
-        LOG.log(Level.INFO, "Building tree in json.");
-        JSONObject object = buildSubTree(data.getResultTree());
-//        JSONValue json = DomResultTreeCodec.CODEC.encode(data);
-        LOG.log(Level.INFO, "tree json string is:\n " + object.toString());
-        JsResultsDisplay.setResultTree(object);
+        LOG.log(Level.INFO, "Building result tree in json.");
+        JSONObject results = buildSubResultTree(data.getResultTree());
+        LOG.log(Level.INFO, "resultTree json string is:\n " + results.toString());
+//        LOG.log(Level.INFO, "Building student tree in json.");
+//        JSONObject students = buildSubStudentTree(data.getStudentTree());
+//        LOG.log(Level.INFO, "studentTree json string is:\n " + students.toString());
+        JsResultsDisplay.setResultTree(results);
     }
 }

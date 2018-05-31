@@ -51,7 +51,7 @@ public class ResultsSelectsPresenter {
     public interface Display {
         void clear();
 
-        void plot(ResultPlot data, boolean zoomedClass, boolean zoomedCourse);
+        void setResultTree(DomResultTree data);
 
         void setEmptyTableMessage();
 
@@ -235,7 +235,7 @@ public class ResultsSelectsPresenter {
         }
         resultMatrix = calculateResults(course, schoolClass);
         ResultPlot plotData = buildPlotMatrix(resultMatrix);
-        view.plot(plotData, (schoolClass != null), (course != null));
+//        view.plot(plotData, (schoolClass != null), (course != null));
     }
 
     /**
@@ -268,7 +268,7 @@ public class ResultsSelectsPresenter {
         resultMatrix = calculateResults(course, schoolClass);
         ResultPlot plotData = buildPlotMatrix(resultMatrix);
         LOG.log(Level.FINE, getExportString());
-        view.plot(plotData, (schoolClass != null), (course != null));
+//        view.plot(plotData, (schoolClass != null), (course != null));
     }
 
     /**
@@ -313,7 +313,7 @@ public class ResultsSelectsPresenter {
     public void plotResultsEvent() {
         resultMatrix = calculateResults(course, schoolClass);
         ResultPlot plotData = buildPlotMatrix(resultMatrix);
-        view.plot(plotData, (schoolClass != null), (course != null));
+//        view.plot(plotData, (schoolClass != null), (course != null));
     }
 
     public void updateResults() {
