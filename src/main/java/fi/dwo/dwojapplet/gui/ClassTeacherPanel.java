@@ -378,6 +378,16 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
               c.link = new ClassCourse();
             DomCourse domcourse = toDomCourse(c);
 
+            if (!selectedList.contains(c)) {
+              try {
+                dom.setCourse(domcourse);
+                SecureTeacherSchoolClassManager.attachCourseToClass(dom); // Prepare attach
+              } catch (Dwo2Exception e) {
+                LOG.log(Level.SEVERE, "attach", e);
+                return;
+              }
+            }
+
             from.setCourse(domcourse);
             from.setFrom(c.link.getNotBefore());
             try {
@@ -414,7 +424,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
            
             if (!selectedList.contains(c)) {
               try {
-                SecureTeacherSchoolClassManager.attachCourseToClass(dom);
+                SecureTeacherSchoolClassManager.attachCourseToClass(dom); // commit attach
               } catch (Dwo2Exception e) {
                 LOG.log(Level.SEVERE, "attach", e);
                 return;
