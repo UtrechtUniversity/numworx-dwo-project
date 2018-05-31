@@ -1,4 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `dwojunittest` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
 USE `dwojunittest`;
 -- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
 --
@@ -293,8 +292,8 @@ CREATE TABLE `tblfromto` (
   PRIMARY KEY (`schoolFrom`,`schoolTo`),
   KEY `schoolFrom` (`schoolFrom`),
   KEY `schoolTo` (`schoolTo`),
-  CONSTRAINT `tblfromto_ibfk_1` FOREIGN KEY (`schoolFrom`) REFERENCES `tblschool` (`schoolID`) ON DELETE CASCADE,
-  CONSTRAINT `tblfromto_ibfk_2` FOREIGN KEY (`schoolTo`) REFERENCES `tblschool` (`schoolID`) ON DELETE CASCADE
+  CONSTRAINT `tblfromto_ibfk_1` FOREIGN KEY (`schoolFrom`) REFERENCES `tblschool` (`schoolID`) ON DELETE CASCADE/*,
+  CONSTRAINT `tblfromto_ibfk_2` FOREIGN KEY (`schoolTo`)   REFERENCES `tblschool` (`schoolID`) ON DELETE CASCADE*/
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -305,6 +304,8 @@ CREATE TABLE `tblfromto` (
 LOCK TABLES `tblfromto` WRITE;
 /*!40000 ALTER TABLE `tblfromto` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tblfromto` ENABLE KEYS */;
+INSERT INTO tblfromto VALUES(3,1, 0,0,0);
+INSERT INTO tblfromto VALUES(1,3, 0,0,0);
 UNLOCK TABLES;
 
 --
@@ -517,7 +518,7 @@ CREATE TABLE `tblschool` (
 
 LOCK TABLES `tblschool` WRITE;
 /*!40000 ALTER TABLE `tblschool` DISABLE KEYS */;
-INSERT INTO `tblschool` VALUES (0,'DwoSchool','dwo','',0,'_',NULL,NULL,0,0,0),(1,'NULL','null','',0,'_',NULL,NULL,0,0,0),(3,'School01','school01','',0,'_',NULL,NULL,0,0,0),(4,'School02','school02','',0,'_c',NULL,NULL,0,0,0);
+INSERT INTO `tblschool` VALUES (0,'DwoSchool','dwo','',1,'_',NULL,NULL,0,0,0),(1,'NULL','null','',0,'_',NULL,NULL,0,0,0),(3,'School01','school01','',0,'_',NULL,NULL,0,0,0),(4,'School02','school02','',0,'_c',NULL,NULL,0,0,0);
 /*!40000 ALTER TABLE `tblschool` ENABLE KEYS */;
 UNLOCK TABLES;
 

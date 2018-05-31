@@ -55,7 +55,8 @@ public class SecuredTeacherFromToManager {
         if(to == -1L) result.setAll(Boolean.TRUE);
         else {
           PersistentSchool s = SchoolManager.findEntity(to);
-          result.getSchools().add(s.buildDomSchoolFrom());
+          if (s != null)
+            result.getSchools().add(s.buildDomSchoolFrom());
         }
       }
       
