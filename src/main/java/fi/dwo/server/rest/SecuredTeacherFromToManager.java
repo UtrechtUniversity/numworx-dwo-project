@@ -1,8 +1,5 @@
 package fi.dwo.server.rest;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
