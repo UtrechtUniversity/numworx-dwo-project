@@ -14,8 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class DomSchool {
-    private PersistenceId id;
+public class DomSchool extends DomSchoolId {
     private String schoolName;
     private String schoolRights;
     private Date expire;
@@ -24,20 +23,6 @@ public class DomSchool {
         
     }
     
-    /**
-     * @return the id
-     */
-    public PersistenceId getId() {
-        return id;
-    }
-
-    /**
-     * @param schoolId the id to set
-     */
-    public void setId(PersistenceId schoolId) {
-        this.id = schoolId;
-    }
-
     /**
      * @return the schoolName
      */
