@@ -3,6 +3,10 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditPersonPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.ImportPersonsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectedResultsPresenter;
@@ -43,4 +47,12 @@ public interface ViewFactory {
     public FileUploadStudentsPresenter.Display getFileUploadStudentsView();
     public ProgressDialogWithAbortPresenter.Display getProgressDialogView();
     public ModulesPresenter.Display getModulesView();
+
+    public PersonsPresenter.Display getPersonsView();
+
+    public EditPersonPresenter.Display getEditPersonView();
+
+    public AddPersonPresenter.Display getAddPersonView();
+
+    public ImportPersonsPresenter.Display getImportPersonsView();
 }

@@ -10,8 +10,14 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresenter;
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditPersonPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.ImportPersonsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectStudentResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectedResultsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddTeacherToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CopyOrMoveStudentToSchoolclassPresenter;
@@ -41,14 +47,17 @@ public class PresenterFactoryGwt implements PresenterFactory {
     private final CopyOrMoveStudentToSchoolclassPresenter copyOrMoveStudentToSchoolclassPresenter;
     private final AddTeacherToSchoolclassPresenter addTeacherToSchoolclassPresenter;
     private final ModulesOfSchoolclassPresenter modulesOfSchoolclassPresenter;
-//    private final CoursesOfSchoolclassPresenter coursesOfSchoolclassPresenter;
-//    private final ScoResultsPresenter scoResultsPresenter;
-//    private final StudentsInSchoolclassPresenter studentsInSchoolclassPresenter;
-//    private final TeachersInSchoolclassPresenter teachersInSchoolclassPresenter;
-//    private final EditStudentPresenter editStudentPresenter;
     private final ModulesPresenter modulesPresenter;
     private final ResultsPresenter resultsPresenter;
     private final SelectedResultsPresenter selectedResultsPresenter;
+    private final SelectStudentResultsPresenter selectStudentResultsPresenter;
+    private final StudentScoResultPresenter studentScoResultPresenter ;
+    
+    private final PersonsPresenter personsPresenter;
+    private final AddPersonPresenter addPersonPresenter;
+    private final EditPersonPresenter editPersonPresenter;
+    private final ImportPersonsPresenter importPersonsPresenter;
+    
     private final MessageDialogWithOKPresenter messageDialogWithOKPresenter;
     private final AlertDialogWithOKPresenter alertDialogWithOKPresenter;
     private final AlertDialogWithConfirmCancelPresenter alertDialogWithConfirmCancelPresenter;
@@ -69,13 +78,15 @@ public class PresenterFactoryGwt implements PresenterFactory {
         addTeacherToSchoolclassPresenter = new AddTeacherToSchoolclassPresenter(eventBus, dwoGlobalVars);
         modulesOfSchoolclassPresenter = new ModulesOfSchoolclassPresenter(eventBus, dwoGlobalVars);
         modulesPresenter = new ModulesPresenter(eventBus,dwoGlobalVars);
-//        coursesOfSchoolclassPresenter = new CoursesOfSchoolclassPresenter(eventBus, dwoGlobalVars);
-//        studentsInSchoolclassPresenter = new StudentsInSchoolclassPresenter(eventBus, dwoGlobalVars);
-//        teachersInSchoolclassPresenter = new TeachersInSchoolclassPresenter(eventBus, dwoGlobalVars);
-//        editStudentPresenter = new EditStudentPresenter(eventBus, dwoGlobalVars);
-//        addStudentsPresenter = new AddStudentsPresenter(eventBus, dwoGlobalVars);
         resultsPresenter = new ResultsPresenter(eventBus, dwoGlobalVars);
         selectedResultsPresenter = new SelectedResultsPresenter(eventBus, dwoGlobalVars);
+        studentScoResultPresenter = new StudentScoResultPresenter(eventBus, dwoGlobalVars);
+        selectStudentResultsPresenter = new SelectStudentResultsPresenter(eventBus, dwoGlobalVars);
+        personsPresenter = new PersonsPresenter(anEventBus, aDwoGlobalVars);
+        editPersonPresenter = new EditPersonPresenter(anEventBus, aDwoGlobalVars);
+        addPersonPresenter = new AddPersonPresenter(anEventBus, aDwoGlobalVars);        
+        importPersonsPresenter = new ImportPersonsPresenter(anEventBus, aDwoGlobalVars);
+        
         messageDialogWithOKPresenter = new MessageDialogWithOKPresenter(eventBus);
         fileUploadStudentsPresenter = new FileUploadStudentsPresenter(eventBus, dwoGlobalVars);
         alertDialogWithOKPresenter = new AlertDialogWithOKPresenter(eventBus);
@@ -95,14 +106,15 @@ public class PresenterFactoryGwt implements PresenterFactory {
         copyOrMoveStudentToSchoolclassPresenter.setView(viewFactory.getCopyOrMoveStudentToSchoolclassView());
         addTeacherToSchoolclassPresenter.setView(viewFactory.getAddTeacherToSchoolclassView());
         modulesOfSchoolclassPresenter.setView(viewFactory.getModulesOfSchoolclassView());
-        selectedResultsPresenter.setView(viewFactory.getSelectedResultsView());
-        resultsPresenter.setView(viewFactory.getResultsView());
-//        coursesOfSchoolclassPresenter.setView(viewFactory.getCoursesOfSchoolclassView());
-//        studentsInSchoolclassPresenter.setView(viewFactory.getStudentsInSchoolclassView());
-//        teachersInSchoolclassPresenter.setView(viewFactory.getTeachersInSchoolclassView());
-//        editStudentPresenter.setView(viewFactory.getEditStudentView());
-//        addStudentsPresenter.setView(viewFactory.getAddStudentsView());
         modulesPresenter.setView(viewFactory.getModulesView());
+        resultsPresenter.setView(viewFactory.getResultsView());
+        selectedResultsPresenter.setView(viewFactory.getSelectedResultsView());
+
+        personsPresenter.setView(viewFactory.getPersonsView());
+        editPersonPresenter.setView(viewFactory.getEditPersonView());
+        addPersonPresenter.setView(viewFactory.getAddPersonView());
+        importPersonsPresenter.setView(viewFactory.getImportPersonsView());
+        
         fileUploadStudentsPresenter.setView(viewFactory.getFileUploadStudentsView());
         messageDialogWithOKPresenter.setView(viewFactory.getMessageDialogWithOKView());
         alertDialogWithOKPresenter.setView(viewFactory.getAlertDialogWithOKView());
@@ -298,6 +310,42 @@ public class PresenterFactoryGwt implements PresenterFactory {
     @Override
     public ModulesPresenter getModulesPresenter() {
         return modulesPresenter;
+    }
+
+    @Override
+    public SelectStudentResultsPresenter getSelectStudentResultsPresenter() {
+        return selectStudentResultsPresenter;
+    }
+ 
+    @Override 
+    public StudentScoResultPresenter getStudentScoResultPresenter(){
+        return studentScoResultPresenter;
+    }
+    
+    @Override
+    public PersonsPresenter getPersonsPresenter() {
+        return personsPresenter;
+    }
+
+    /**
+     * @return the addPersonPresenter
+     */
+    public AddPersonPresenter getAddPersonPresenter() {
+        return addPersonPresenter;
+    }
+
+    /**
+     * @return the editPersonPresenter
+     */
+    public EditPersonPresenter getEditPersonPresenter() {
+        return editPersonPresenter;
+    }
+
+    /**
+     * @return the importPersonsPresenter
+     */
+    public ImportPersonsPresenter getImportPersonsPresenter() {
+        return importPersonsPresenter;
     }
     
 

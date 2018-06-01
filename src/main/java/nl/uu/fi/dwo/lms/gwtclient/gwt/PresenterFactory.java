@@ -8,8 +8,14 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresenter;
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditPersonPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.ImportPersonsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectStudentResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectedResultsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddTeacherToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CopyOrMoveStudentToSchoolclassPresenter;
@@ -20,7 +26,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
- * Client factory interface for GWT app.
+ * Client factory interface for GWT App.
  * 
  * @author G.A.J. van der Plas
  */
@@ -37,13 +43,16 @@ public interface PresenterFactory {
     public CopyOrMoveStudentToSchoolclassPresenter getCopyOrMoveStudentToSchoolclassPresenter();
     public AddTeacherToSchoolclassPresenter getAddTeacherToSchoolclassPresenter();
     public ModulesOfSchoolclassPresenter getModulesOfSchoolclassPresenter();
-//    public CoursesOfSchoolclassPresenter getCoursesOfSchoolclassPresenter();
-//    public StudentsInSchoolclassPresenter getStudentsInSchoolclassPresenter();
-//    public TeachersInSchoolclassPresenter getTeachersInSchoolclassPresenter();
-//    public EditStudentPresenter getEditStudentPresenter();
     public ModulesPresenter getModulesPresenter();
     public ResultsPresenter getResultsPresenter();
     public SelectedResultsPresenter getSelectedResultsPresenter();
+    public SelectStudentResultsPresenter getSelectStudentResultsPresenter();
+    public StudentScoResultPresenter getStudentScoResultPresenter();
+    public PersonsPresenter getPersonsPresenter();
+    public EditPersonPresenter getEditPersonPresenter();
+    public AddPersonPresenter getAddPersonPresenter();
+    public ImportPersonsPresenter getImportPersonsPresenter();
+
     public AlertDialogWithConfirmCancelPresenter getAlertDialogWithConfirmCancelPresenter();
     public AlertDialogWithOKPresenter getAlertDialogWithOKPresenter();
     public MessageDialogWithOKPresenter getMessageDialogWithOKPresenter();

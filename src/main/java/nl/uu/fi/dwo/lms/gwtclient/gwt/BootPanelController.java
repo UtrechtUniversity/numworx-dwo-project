@@ -235,7 +235,7 @@ class BootPanelController {
                             presenterFactory.getAccountPresenter().init();
                             break;
                         case PEOPLE:
-                            eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+                            presenterFactory.getPersonsPresenter().init();
                             break;
                         case RESULTS:
                             presenterFactory.getResultsPresenter().init();

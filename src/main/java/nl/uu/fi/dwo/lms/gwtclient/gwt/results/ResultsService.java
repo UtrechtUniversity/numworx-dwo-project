@@ -5,11 +5,9 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherResultsManager;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
-import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
-import nl.uu.fi.dwo.rest.entities.RestClearStudentDataForScoAndClass;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 

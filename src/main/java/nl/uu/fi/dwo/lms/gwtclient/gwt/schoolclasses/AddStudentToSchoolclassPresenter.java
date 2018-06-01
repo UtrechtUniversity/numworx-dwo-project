@@ -43,9 +43,8 @@ public class AddStudentToSchoolclassPresenter {
         void init();
 
 //        void setSchoolClass(DomSchoolClassFull schoolClass);
-
         void showStudents(Map<String, DomStudent> students);
-        
+
         void setEmptyTableMessage();
 
         void setLoadingTableMessage();
@@ -135,36 +134,36 @@ public class AddStudentToSchoolclassPresenter {
 //        );
 //    }
 
-@JsMethod
-        public void AddStudentToSchoolClass(String studentId){
-            LOG.log(Level.INFO,"Adding student "+studentId+" to schoolclass"+schoolClass.getId().getIdString());
-                Promise<Boolean> promise;
-                DomSubmitStudentToSchoolClass submit = new DomSubmitStudentToSchoolClass();
-                submit.setSchoolClassFrom(schoolClass);
-                submit.setSchoolClassTo(schoolClass);
-                submit.setStudent(students.get(studentId));
-                promise = manager.submitStudentToSchoolClass(submit);
-                // onSuccess update view
-                promise.then(new Success<Boolean, Void>() {
-                    @Override
-        public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                        eventBus.fireEvent(new MessageDialogWithOKEvent("Success"));
-                        return null;
-                    }
-                },
-                        new Failure() {
-                    @Override
-        public void fail(Promise<?> resolved) throws Exception {
-                        Throwable fail = resolved.getFailure();
-                        if (fail instanceof Dwo2Exception) {
-                            LOG.log(Level.SEVERE, fail.getMessage());
-                            eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                        } else {
-                            LOG.log(Level.SEVERE, fail.getMessage());
-                            eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                            //throw directly
-                        }
-                    }
-                });
+    @JsMethod
+    public void AddStudentToSchoolClass(String studentId) {
+        LOG.log(Level.INFO, "Adding student " + studentId + " to schoolclass" + schoolClass.getId().getIdString());
+        Promise<Boolean> promise;
+        DomSubmitStudentToSchoolClass submit = new DomSubmitStudentToSchoolClass();
+        submit.setSchoolClassFrom(schoolClass);
+        submit.setSchoolClassTo(schoolClass);
+        submit.setStudent(students.get(studentId));
+        promise = manager.submitStudentToSchoolClass(submit);
+        // onSuccess update view
+        promise.then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                eventBus.fireEvent(new MessageDialogWithOKEvent("Success"));
+                return null;
             }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        });
+    }
 }

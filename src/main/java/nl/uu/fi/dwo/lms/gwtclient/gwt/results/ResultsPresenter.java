@@ -22,7 +22,8 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
 /**
- * Controller for ResultsView actions.
+ * Initial section panel. Here the schoolclass, viewState and type of modules are 
+ * selected. Additionally the results are fetched.
  *
  * @author Gert van der Plas
  */

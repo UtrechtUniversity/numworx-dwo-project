@@ -19,7 +19,13 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresen
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsView;
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.modules.JsModulesView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.persons.JsAddPersonView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.persons.JsEditPersonView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.persons.JsImportPersonsView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.persons.JsPersonsView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsSelectStudentResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsSelectedResultsView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsStudentScoResultView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsAddStudentToSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsAddTeacherToSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsCopyOrMoveStudentToSchoolclassView;
@@ -27,7 +33,13 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsModulesOfSchool
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsAlertDialogWithOKView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsMessageDialogWithOKView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditPersonPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.ImportPersonsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectStudentResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectedResultsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddTeacherToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CopyOrMoveStudentToSchoolclassPresenter;
@@ -49,6 +61,8 @@ public class ViewFactoryJs implements ViewFactory {
     private final LoginPresenter.Display loginView;
     private final ResultsPresenter.Display resultsView;
     private final SelectedResultsPresenter.Display resultsSelectsView;
+    private final SelectStudentResultsPresenter.Display selectStudentResultsView;
+    private final StudentScoResultPresenter.Display studentScoResultView;
     private final SchoolclassesPresenter.Display schoolclassesView;
     private final AddStudentToSchoolclassPresenter.Display addStudentToSchoolclassView;
     private final CopyOrMoveStudentToSchoolclassPresenter.Display copyOrMoveStudentToSchoolclassView;
@@ -57,12 +71,19 @@ public class ViewFactoryJs implements ViewFactory {
     private final AccountPresenter.Display accountView;
     private final WelcomePresenter.Display welcomeView;
     private final EditSchoolclassPresenter.Display editSchoolclassView;
+    private final ModulesPresenter.Display modulesView;
+
+
+    private final PersonsPresenter.Display personsView;
+    private final AddPersonPresenter.Display addPersonView;
+    private final EditPersonPresenter.Display editPersonView;
+    private final ImportPersonsPresenter.Display importPersonsView;
+    
     private final AlertDialogWithOKPresenter.Display alertDialogWithOKView;
     private final MessageDialogWithOKPresenter.Display messageDialogWithOKView;
     private final AlertDialogWithConfirmCancelPresenter.Display alertDialogWithConfirmCancelView;
     private final FileUploadStudentsPresenter.Display fileUploadStudentsView;
     private final ProgressDialogWithAbortPresenter.Display progressDialogView;
-    private final ModulesPresenter.Display modulesView;
 
     public ViewFactoryJs(PresenterFactory pf) {
         mainView = new JsMainView();
@@ -75,17 +96,24 @@ public class ViewFactoryJs implements ViewFactory {
         copyOrMoveStudentToSchoolclassView = new JsCopyOrMoveStudentToSchoolclassView();
         modulesOfSchoolclassView = new JsModulesOfSchoolclassView();
         addTeacherToSchoolclassView = new JsAddTeacherToSchoolclassView();
+        modulesView = new JsModulesView();
         //ordered!
         resultsView = new JsResultsView();
         resultsSelectsView = new JsSelectedResultsView();
-//        editStudentView = new EditStudentView(pf.getEditStudentPresenter());
-//        addStudentsView = new AddStudentsView(pf.getAddStudentsPresenter());
+        selectStudentResultsView = new JsSelectStudentResultsView();
+        studentScoResultView = new JsStudentScoResultView();
+        
+        personsView= new JsPersonsView();
+        editPersonView= new JsEditPersonView();
+        addPersonView= new JsAddPersonView();
+        importPersonsView= new JsImportPersonsView();
+
+
         alertDialogWithOKView = new JsAlertDialogWithOKView();
         messageDialogWithOKView = new JsMessageDialogWithOKView();
         alertDialogWithConfirmCancelView = new JsAlertDialogWithConfirmCancelView();
         progressDialogView = new JsProgressDialogWithAbortView();
         fileUploadStudentsView = new FileUploadStudentsView(pf.getFileUploadStudentsPresenter());
-        modulesView = new JsModulesView();
     }
 
     @Override
@@ -237,6 +265,40 @@ public class ViewFactoryJs implements ViewFactory {
     @Override
     public ModulesPresenter.Display getModulesView(){
         return modulesView;
+    }
+
+    @Override
+    public PersonsPresenter.Display getPersonsView() {
+        return personsView;
+    }
+
+    @Override
+    public EditPersonPresenter.Display getEditPersonView() {
+        return editPersonView;
+    }
+
+    @Override
+    public AddPersonPresenter.Display getAddPersonView() {
+        return addPersonView;
+    }
+
+    @Override
+    public ImportPersonsPresenter.Display getImportPersonsView() {
+        return importPersonsView;
+    }
+
+    /**
+     * @return the selectStudentResultsView
+     */
+    protected SelectStudentResultsPresenter.Display getSelectStudentResultsView() {
+        return selectStudentResultsView;
+    }
+
+    /**
+     * @return the studentScoResultView
+     */
+    protected StudentScoResultPresenter.Display getStudentScoResultView() {
+        return studentScoResultView;
     }
 
 }
