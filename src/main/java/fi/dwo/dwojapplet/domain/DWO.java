@@ -68,6 +68,7 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.BUILD;
 import fi.dwo.dwojapplet.domain.utils.CheckEmail;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
+import fi.dwo.dwojapplet.gui.DwoProfilePanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
@@ -2056,6 +2057,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     		DomCourseFull edit = pc.buildDomCourseFull();
 			edit = manager.update(edit);
     		return true;
+    	} catch (Dwo2Exception e) {
+    	  GuiCreator.instance().ShowErrorDialog(this, e);
+    	  return false;
     	} catch(Exception e) {
     		LOG.log(Level.SEVERE, "update course", e);
             JOptionPane.showMessageDialog(this, e.getMessage());
@@ -2194,7 +2198,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 			sco.setCourseChanged(false);
 			sco.setDataChanged(false);
 		} catch (Dwo2Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+            GuiCreator.instance().ShowErrorDialog(this, e);
             return false;
 		}
     	
