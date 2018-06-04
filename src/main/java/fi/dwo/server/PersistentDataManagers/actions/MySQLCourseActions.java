@@ -149,7 +149,10 @@ public class MySQLCourseActions {
       CourseManager.destroy(pc.getCourseID());
  // sequencenr doorschuiven.
       long parentID = pc.getParentID();
-      long pcseq = pc.getSequencenr().longValue();
+      Long sequencenr = pc.getSequencenr();
+      if(sequencenr == null) return;
+// update sequencenr of siblings.
+      long pcseq = sequencenr.longValue();
       if(parentID != 0) {
         PersistentCourse parent = CourseManager.findEntity(parentID);
         children = CourseManager.findChildrenOf(parent);

@@ -12,6 +12,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.RollbackException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
@@ -64,6 +65,9 @@ public class CourseManager {
             em.getTransaction().begin();
             course = em.merge(course);
             em.getTransaction().commit();
+        } 
+        catch (RollbackException e) {
+          throw e;
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {

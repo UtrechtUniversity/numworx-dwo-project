@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.security.PermitAll;
+import javax.persistence.RollbackException;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -112,6 +113,12 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 
 			pc=CourseManager.edit(pc);
 			course = pc.buildDomCourseFull();
+    	} catch (RollbackException e) {
+    	    String msg = e.getMessage();
+    	    //if(msg.contains("Duplicate entry")) 
+    	    {
+    	      throw new Dwo2RestException(Dwo2ExceptionCode.Rest_CourseNameExists, msg);
+    	    }
 		} catch (Dwo2Exception e) {
 			throw new Dwo2RestException(e);
 		}
