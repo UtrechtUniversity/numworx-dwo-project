@@ -6,8 +6,12 @@ import java.util.logging.Logger;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
+import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
@@ -141,5 +145,28 @@ public class MySQLCourseActions {
       children.stream().forEach(MySQLCourseActions::remove);
       List<PersistentScoContext> scos = ScoContextManager.findEntities(pc);
       scos.stream().forEach(sco -> {MySQLScoContextActions.remove(sco,pc);});
-  }
+      
+      CourseManager.destroy(pc.getCourseID());
+ // sequencenr doorschuiven.
+      long parentID = pc.getParentID();
+      long pcseq = pc.getSequencenr().longValue();
+      if(parentID != 0) {
+        PersistentCourse parent = CourseManager.findEntity(parentID);
+        children = CourseManager.findChildrenOf(parent);
+      } else {
+        PersistentDwoProfile profile = DwoProfileManager.findEntity(pc.getDwoProfileID());
+        PersistentSchool school = 
+            pc.getSchoolID() == null || pc.getSchoolID() == 0L ? null :
+            SchoolManager.findEntity(pc.getSchoolID());
+        children = CourseManager.findChildrenOf(profile, school);
+      }
+      for(PersistentCourse c: children) {
+        Long seq = c.getSequencenr();
+        if(seq != null && seq.longValue() > pcseq) {
+          c.setSequencenr(seq-1);
+          CourseManager.edit(c);
+        }
+      }
+      
+   }
 }
