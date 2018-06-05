@@ -1,6 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
-import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.web.bindery.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
@@ -17,7 +17,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -103,7 +102,7 @@ public class ResultsPresenter {
     }
 
     @JsMethod
-    public void showSelectedResults(JSONObject resultState) {
+    public void showSelectedResults(JavaScriptObject resultState) {
         eventBus.fireEvent(
                 new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTS, resultTree, resultState));
     }

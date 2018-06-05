@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -160,7 +161,7 @@ public class JsSelectedResultsView implements SelectedResultsPresenter.Display {
     }        
 
     @Override
-    public void init(JSONObject aResultState) {
-        JsSelectedResultsDisplay.init(aResultState.getJavaScriptObject());
+    public void init(JavaScriptObject aResultState) {
+        JsSelectedResultsDisplay.init(aResultState);
     }
 }

@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.json.client.JSONObject;
 import java.util.List;
@@ -69,7 +70,7 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     private DomResultStudent resultStudent;
     private DomResultScoContext resultScoContext;
     private DomResultTree resultTree;
-    private JSONObject moduleIds;
+    private JavaScriptObject moduleIds;
 
     public static Type<SwitchViewEventHandler> TYPE = new Type<SwitchViewEventHandler>();
     public static SelectedView eventValue;
@@ -92,7 +93,7 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         resultTree = aResultTree;
     }
 
-    public SwitchViewEvent(SelectedView aState, DomResultTree aResultTree, JSONObject aModuleIds) {
+    public SwitchViewEvent(SelectedView aState, DomResultTree aResultTree, JavaScriptObject aModuleIds) {
         this.setEventValue(aState);
         resultTree = aResultTree;
         moduleIds = aModuleIds;
@@ -163,7 +164,7 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     /**
      * @return the moduleIds
      */
-    protected JSONObject getResultState() {
+    protected JavaScriptObject getResultState() {
         return moduleIds;
     }
 }

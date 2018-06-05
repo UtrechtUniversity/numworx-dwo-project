@@ -5,6 +5,7 @@
  */
 package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
@@ -31,7 +32,7 @@ public class SelectedResultsPresenter {
 
     private Display view;
     private ResultsService resultService;
-    private JSONObject resultState;
+    private JavaScriptObject resultState;
     //model
     private DomResultTree resultTree;
 
@@ -41,7 +42,7 @@ public class SelectedResultsPresenter {
 
         void updateResultTree(DomResultTree data);
 
-        void init(JSONObject aResultState);
+        void init(JavaScriptObject aResultState);
 
         void setEmptyTableMessage();
 
@@ -56,7 +57,7 @@ public class SelectedResultsPresenter {
 
     }
 
-    public void init(DomResultTree aResultTree, JSONObject aResultState) {
+    public void init(DomResultTree aResultTree, JavaScriptObject aResultState) {
         resultTree = aResultTree;
         resultState = aResultState;
         view.init(aResultState);
