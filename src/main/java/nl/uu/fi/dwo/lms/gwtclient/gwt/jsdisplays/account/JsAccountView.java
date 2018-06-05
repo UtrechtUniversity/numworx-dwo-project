@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.account;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONValue;
 import fi.dwo.gwt.lib.rest.util.DomSchoolsRolesAndClassesV2Codec;
 import fi.dwo.gwt.lib.rest.util.DomUserFullCodec;
@@ -26,13 +27,13 @@ public class JsAccountView implements AccountPresenter.Display{
     @Override
     public void updateSchoolLoginsView(DomSchoolsRolesAndClassesV2 schoolLogins) {
         JSONValue sl = DomSchoolsRolesAndClassesV2Codec.CODEC.encode(schoolLogins);
-	JsAccountDisplay.updateSchoolLoginsView(sl);
+	JsAccountDisplay.updateSchoolLoginsView(sl.isObject().getJavaScriptObject());
     }
 
     @Override
     public void updateUserView(DomUserFull user) {
 	JSONValue sl = DomUserFullCodec.CODEC.encode(user);
-	JsAccountDisplay.updateUserView(sl);
+	JsAccountDisplay.updateUserView(sl.isObject().getJavaScriptObject());
     }
 
     @Override

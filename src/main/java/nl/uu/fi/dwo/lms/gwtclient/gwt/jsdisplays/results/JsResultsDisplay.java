@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONValue;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
@@ -20,7 +21,7 @@ import jsinterop.annotations.JsType;
 public class JsResultsDisplay{
     /** Clears the results in the ui. */
     public static native void clear();
-    public static native void setResultTree(JSONValue resultTree);    
+    public static native void setResultTree(JavaScriptObject resultTree);    
     /** setEmptyTableMessage show an indicator that the table is empty. */
     public static native void setEmptyTableMessage();
     /** setEmptyTableMessage show an indicator that we are fetching data. */

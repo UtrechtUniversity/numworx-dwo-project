@@ -156,6 +156,6 @@ public class JsSelectedResultsView implements SelectedResultsPresenter.Display {
         LOG.log(Level.INFO, "Building student tree in json.");
         JSONObject students = buildSubStudentTree(data.getStudentTree());
         LOG.log(Level.INFO, "studentTree json string is:\n " + students.toString());
-        JsSelectedResultsDisplay.setResultTree(results,students);
+        JsSelectedResultsDisplay.setResultTree(results.getJavaScriptObject(),students.getJavaScriptObject());
     }        
 }

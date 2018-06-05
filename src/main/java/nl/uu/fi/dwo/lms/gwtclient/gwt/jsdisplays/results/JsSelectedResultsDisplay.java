@@ -22,7 +22,7 @@ public class JsSelectedResultsDisplay{
     /** Clears the results in the ui. */
     public static native void clear();
     /** Fills the result table with the results.*/
-     public static native void setResultTree(JSONValue resultsTree, JSONValue studentsTree);    
+     public static native void setResultTree(JavaScriptObject resultsTree, JavaScriptObject studentsTree);    
     /** setEmptyTableMessage show an indicator that the table is empty. */
     public static native void setEmptyTableMessage();
     /** setEmptyTableMessage show an indicator that we are fetching data. */

@@ -1,6 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.account;
 
-import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.core.client.JavaScriptObject;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
@@ -37,12 +37,12 @@ public class JsAccountDisplay {
     /**
      * Updates SchoolLogins table.
      */
-    public static native void updateSchoolLoginsView(JSONValue schoolLogins);
+    public static native void updateSchoolLoginsView(JavaScriptObject schoolLogins);
 
     /**
      * Updates user fields.
      */
-    public static native void updateUserView(JSONValue user);
+    public static native void updateUserView(JavaScriptObject user);
     
     public static native void clearAddSchoolLogin();
 }

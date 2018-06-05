@@ -45,7 +45,7 @@ public class JsEditSchoolclassDisplay{
     /** Clears all the edit schoolclass  field of its value. */
     public static native void init();
     /**  Sets the values for the schoolclass */
-    public static native void showSchoolClass(JSONValue schoolClass);
+    public static native void showSchoolClass(JavaScriptObject schoolClass);
     /**  Shows a list of students */
     public static native void showStudents(JavaScriptObject schoolClass);
     /**  Shows a list of teachers */

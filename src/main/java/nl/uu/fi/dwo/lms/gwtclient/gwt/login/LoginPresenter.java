@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -133,8 +134,8 @@ public class LoginPresenter {
                     } else {                        
                         dwoGlobalVars.clearCurrentUser();
                         LOG.log(Level.INFO, "login failed. Firing Login fail event.");
-                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));                        
-                        eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Wrong login state.")));
+                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));    
+                        eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Wrong login state.")));
                         // TODO fix login stuff
 //                        Window.Location.assign("");
 
@@ -152,6 +153,7 @@ public class LoginPresenter {
                         dwoGlobalVars.clearCurrentUser();                        
                         //note the order of the events in case of an exception
                         //that might break the running thread.
+                        eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Wrong login state.")));
                         eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
                     } else {
                         LOG.log(Level.SEVERE, fail.getMessage());

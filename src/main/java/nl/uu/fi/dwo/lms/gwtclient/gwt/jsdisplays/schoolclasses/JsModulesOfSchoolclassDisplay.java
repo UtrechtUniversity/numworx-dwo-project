@@ -35,5 +35,5 @@ public class JsModulesOfSchoolclassDisplay{
     public static native void setEmptyTableMessageSelected();
     public static native void setLoadingTableMessageSelected();
 //    public static native void updateTable(JavaScriptObject jsObject);
-    public static native void setTree(JSONValue jsNode);
+    public static native void setTree(JavaScriptObject jsNode);
 }
