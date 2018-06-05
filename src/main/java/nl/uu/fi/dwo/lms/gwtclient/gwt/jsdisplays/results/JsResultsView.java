@@ -114,8 +114,9 @@ public class JsResultsView implements ResultsPresenter.Display {
                 if (o instanceof DomResultSchoolClass) {
                     //for each schoolclass
                     JSONObject schoolClass = new JSONObject();
+                    classType = o.getClass().getSimpleName();
                     schoolClass.put("classType", new JSONString(classType));
-                    schoolClass.put("label", new JSONString(node.getLabel()));
+                    schoolClass.put("label", new JSONString(((DomResultSchoolClass) o).getLabel()));
                     schoolClass.put("sumScore", new JSONNumber(node.getScore()));
                     schoolClass.put("scoCount", new JSONNumber(node.getScoCount()));
                     schoolClass.put("studentScoCount", new JSONNumber(node.getStudentScoCount()));
@@ -132,7 +133,7 @@ public class JsResultsView implements ResultsPresenter.Display {
                     schoolClass.put("children", students);
                     //put schoolclass in schoolclasses
                     id = ((DomResultSchoolClass) o).getSchoolClass().getId().getIdString();
-                    schoolClasses.put("children", schoolClass);
+                    schoolClasses.put(id, schoolClass);
                 }
             }
             json.put("children", schoolClasses);
