@@ -32,9 +32,9 @@ public class JsCopyOrMoveStudentToSchoolclassDisplay {
      */
     public static native void init();
 
-    public static native void setSchoolClassA(JSONValue schoolClass);
+    public static native void setSchoolClassA(JavaScriptObject schoolClass);
 
-    public static native void setSchoolClassB(JSONValue schoolClass);
+    public static native void setSchoolClassB(JavaScriptObject schoolClass);
 
     public static native void setEmptyTableMessageClasses();
     
