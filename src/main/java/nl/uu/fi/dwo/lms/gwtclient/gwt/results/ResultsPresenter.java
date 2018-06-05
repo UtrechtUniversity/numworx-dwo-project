@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -104,7 +105,9 @@ public class ResultsPresenter {
     @JsMethod
     public void showSelectedResults(String schoolClassId, boolean showOpenModules, boolean showClosedModules, JSONObject courseIds) {
         LOG.log(Level.INFO, "schoolClassId "+schoolClassId);
-        DomResultSchoolClass resultSchoolClass = resultTree.getResultTree().getChildren().get(schoolClassId);
+        PersistenceId pId = new PersistenceId(schoolClassId);
+        LOG.log(Level.INFO, "persistenceId "+pId);
+        DomResultSchoolClass resultSchoolClass = resultTree.getResultTree().getChildren().get(pId);
         LOG.log(Level.INFO, "resultSchoolClass "+resultSchoolClass.getSchoolClass());        
         LOG.log(Level.INFO, "SchoolClas found: "+resultSchoolClass.getSchoolClass().getId().getIdString());
         eventBus.fireEvent(
