@@ -3,7 +3,9 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +17,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPromise;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
@@ -289,14 +292,17 @@ public class EditSchoolclassPresenter {
         promise.then(new Success<DomCoursesOfSchoolClass4Teacher, Void>() {
             @Override
             public Promise<Void> call(Promise<DomCoursesOfSchoolClass4Teacher> resolved) throws Exception {
+                DomCoursesOfSchoolClass4Teacher moduleData = resolved.getValue();                
                 List<DomCourse> courseList = new ArrayList<>();
-                resolved.getValue().getClassCourses().forEach(((k) -> 
-                {
-                    DomCourse c = resolved.getValue().getCourses().get(k.getValue().getCourseId());
-                    if(!c.getWithChildren()){
-                        courseList.add(c);
-                    }
-                }));
+                Map<String, DomCourse> courseMap = new HashMap<>();
+                moduleData.getCourses().forEach((k)-> courseMap.put(k.getKey().getIdString(), k.getValue()));
+                Map<String, DomClassCourse4Teacher> ccMap = new HashMap<>();
+//                moduleData.getClassCourses().forEach((k)-> if(!courseMap.get(k.getKey().getIdString()).withChildren){
+//                    courseMap.put(key, value);
+//                }
+//                        
+//                        );
+//                
                 view.showModules(courseList);
                 return null;
             }
