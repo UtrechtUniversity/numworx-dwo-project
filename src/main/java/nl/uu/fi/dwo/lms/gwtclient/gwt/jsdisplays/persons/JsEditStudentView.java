@@ -1,7 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.persons;
 
 import java.util.Map;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditPersonPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 
 /**
@@ -9,7 +9,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUser;
  * 
  * @author G.A.J. van der Plas
  */
-public class JsEditPersonView implements EditPersonPresenter.Display{
+public class JsEditStudentView implements EditStudentPresenter.Display{
 
     @Override
     public void clear() {

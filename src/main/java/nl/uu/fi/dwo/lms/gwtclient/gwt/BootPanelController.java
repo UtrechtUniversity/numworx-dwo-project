@@ -242,9 +242,25 @@ class BootPanelController {
                             presenterFactory.getAccountPresenter().init();
                             viewFactory.getMainView().showAccountView();
                             break;
-                        case PEOPLE:
+                        case PERSONS:
                             presenterFactory.getPersonsPresenter().init();
                             viewFactory.getMainView().showPersonsView();
+                            break;
+                        case ADDPERSON:
+                            presenterFactory.getAddPersonPresenter().init();
+                            viewFactory.getMainView().showAddPersonView();
+                            break;
+                        case EDITSTUDENT:
+                            presenterFactory.getEditStudentPresenter().init(switchViewEvent.getUser());
+                            viewFactory.getMainView().showEditPersonView();
+                            break;
+                        case EDITTEACHER:
+                            presenterFactory.getEditTeacherPresenter().init(switchViewEvent.getUser());
+                            viewFactory.getMainView().showEditPersonView();
+                            break;
+                        case IMPORTPERSONS:
+                            presenterFactory.getPersonsPresenter().init();
+                            viewFactory.getMainView().showImportPersonsView();
                             break;
                         case RESULTS:
                             presenterFactory.getResultsPresenter().init();

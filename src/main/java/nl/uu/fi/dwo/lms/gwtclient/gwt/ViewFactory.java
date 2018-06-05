@@ -4,7 +4,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditPersonPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditTeacherPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.ImportPersonsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
@@ -49,10 +50,8 @@ public interface ViewFactory {
     public ModulesPresenter.Display getModulesView();
 
     public PersonsPresenter.Display getPersonsView();
-
-    public EditPersonPresenter.Display getEditPersonView();
-
+    public EditStudentPresenter.Display getEditStudentView();
+    public EditTeacherPresenter.Display getEditTeacherView();
     public AddPersonPresenter.Display getAddPersonView();
-
     public ImportPersonsPresenter.Display getImportPersonsView();
 }

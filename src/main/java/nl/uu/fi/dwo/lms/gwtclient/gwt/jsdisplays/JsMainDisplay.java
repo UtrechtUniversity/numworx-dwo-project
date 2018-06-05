@@ -73,8 +73,14 @@ public class JsMainDisplay {
     public static native void  showAddTeacherToSchoolClassView();
     /** Show the add students panel. */
     public static native void  showEditCoursesOfSchoolClassView();
-    /** Show the add students panel. */
+    /** Show the persons panel. */
     public static native void  showPersonsView();
+    /** Show the add person panel. */
+    public static native void  showAddPersonView();
+    /** Show the edit person panel. */
+    public static native void  showEditPersonView();
+    /** Show the import persons panel. */
+    public static native void  showImportPersonsView();
     /** Show the modules panel (course library). */
     public static native void  showModulesView();
     /** Show the organization panel. */

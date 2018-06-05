@@ -123,4 +123,19 @@ public class JsMainView implements MainPresenter.Display{
     public void showOrganisationView() {
         JsMainDisplay.showOrganisationView();
     }
+
+    @Override
+    public void showAddPersonView() {
+        JsMainDisplay.showAddPersonView();
+    }
+
+    @Override
+    public void showEditPersonView() {
+        JsMainDisplay.showEditPersonView();
+    }
+
+    @Override
+    public void showImportPersonsView() {
+        JsMainDisplay.showImportPersonsView();
+    }
 }

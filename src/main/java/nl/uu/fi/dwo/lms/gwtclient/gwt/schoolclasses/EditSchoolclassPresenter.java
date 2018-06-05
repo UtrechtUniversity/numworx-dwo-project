@@ -286,22 +286,24 @@ public class EditSchoolclassPresenter {
         DomCoursesOfSchoolClass4Teacher result;
         promise = this.getModules(schoolClass);
         // onSuccess update view
-        promise.then(new Success<DomCoursesOfSchoolClass4Teacher, Void > () {
+        promise.then(new Success<DomCoursesOfSchoolClass4Teacher, Void>() {
             @Override
-            public Promise<Void> call
-            (Promise<DomCoursesOfSchoolClass4Teacher> resolved) throws Exception {
+            public Promise<Void> call(Promise<DomCoursesOfSchoolClass4Teacher> resolved) throws Exception {
                 List<DomCourse> courseList = new ArrayList<>();
-                resolved.getValue().getCourses().forEach((k -> courseList.add(k.getValue())));
+                resolved.getValue().getClassCourses().forEach(((k) -> 
+                {
+                    DomCourse c = resolved.getValue().getCourses().get(k.getValue().getCourseId());
+                    if(!c.getWithChildren()){
+                        courseList.add(c);
+                    }
+                }));
                 view.showModules(courseList);
                 return null;
             }
         },
-
-            new
-        Failure() {
+                new Failure() {
             @Override
-            public void fail
-            (Promise<?> resolved) throws Exception {
+            public void fail(Promise<?> resolved) throws Exception {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
@@ -339,7 +341,7 @@ public class EditSchoolclassPresenter {
 
     @JsMethod
     public void copyOrMoveStudents() {
-    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.COPYORMOVESTUDENTTOSCHOOLCLASS, schoolClass));
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.COPYORMOVESTUDENTTOSCHOOLCLASS, schoolClass));
     }
 
     @JsMethod

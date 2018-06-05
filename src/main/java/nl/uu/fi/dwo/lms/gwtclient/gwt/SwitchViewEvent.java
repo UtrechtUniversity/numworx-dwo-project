@@ -2,14 +2,13 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.json.client.JSONObject;
-import java.util.List;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 
 /**
  * GWTEvent that notifies of a login action.
@@ -43,7 +42,11 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         LOGIN,
         WELCOME,
         ACCOUNT,
-        PEOPLE,
+        PERSONS,
+        IMPORTPERSONS,
+        ADDPERSON,
+        EDITSTUDENT,
+        EDITTEACHER,
         SCHOOLCLASSES,
         EDITSCHOOLCLASS,
         ADDSTUDENTTOSCHOOLCLASS,
@@ -63,7 +66,8 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         // TEACHERSINSCHOOLCLASS,
     }
 
-    private DomStudent student;
+//    private DomStudent student;
+    private DomUser user;
     private DomSchoolClass schoolClass;
     private DomResultScoContext scoResult;
     private DomStudentScoContext studentScoResult;
@@ -78,12 +82,17 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     public SwitchViewEvent(SelectedView aState) {
         this.setEventValue(aState);
     }
+//
+//    public SwitchViewEvent(SelectedView aState, DomStudent aStudent) {
+//        this.setEventValue(aState);
+//        student = aStudent;
+//    }
 
-    public SwitchViewEvent(SelectedView aState, DomStudent aStudent) {
+    public SwitchViewEvent(SelectedView aState, DomUser aUser) {
         this.setEventValue(aState);
-        student = aStudent;
+        user = aUser;
     }
-
+    
     public SwitchViewEvent(SelectedView aState, DomSchoolClass aSchoolClass) {
         this.setEventValue(aState);
         schoolClass = aSchoolClass;
@@ -130,8 +139,8 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     /**
      * @return the student
      */
-    public DomStudent getStudent() {
-        return student;
+    public DomUser getUser() {
+        return user;
     }
 
 //    /**

@@ -61,6 +61,9 @@ public class MainPresenter {
         public void setCurrentPanelName(String panel);
 
         public void showPersonsView();
+        public void showAddPersonView();
+        public void showEditPersonView();
+        public void showImportPersonsView();
 
         public void showModulesView();
 

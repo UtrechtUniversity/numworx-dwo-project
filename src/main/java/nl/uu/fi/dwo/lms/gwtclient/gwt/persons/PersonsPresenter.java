@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
@@ -138,27 +138,29 @@ public class PersonsPresenter {
     }
 
     @JsMethod
-    public void editPerson(String id) {
+    public void editStudent(String id) {
         LOG.log(Level.INFO, "Editing person: " + id);
-        eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
-//        eventBus.fireEvent(
-//                new SwitchViewEvent(SwitchViewEvent.SelectedView.EditUser, )
-//        );
+        DomUser person = personen.get(id);
+        eventBus.fireEvent(
+                new SwitchViewEvent(SwitchViewEvent.SelectedView.EDITSTUDENT, person));
     }
 
     @JsMethod
+    public void editTeacher(String id) {
+        LOG.log(Level.INFO, "Editing person: " + id);
+        DomUser person = personen.get(id);
+        eventBus.fireEvent(
+                new SwitchViewEvent(SwitchViewEvent.SelectedView.EDITTEACHER, person));
+    }
+
+    
+    @JsMethod
     public void addPerson() {
-        eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
-//        eventBus.fireEvent(
-//                new SwitchViewEvent(SwitchViewEvent.SelectedView.EditUser, )
-//        );
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDPERSON));        
     }
     
     @JsMethod
     public void importPersons() {        
-        eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
-//        eventBus.fireEvent(
-//                new SwitchViewEvent(SwitchViewEvent.SelectedView.EditUser, )
-//        );
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.IMPORTPERSONS));
     }
 }
