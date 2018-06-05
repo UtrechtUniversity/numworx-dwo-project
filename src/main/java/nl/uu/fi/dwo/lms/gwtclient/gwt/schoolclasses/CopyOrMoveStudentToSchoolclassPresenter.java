@@ -83,6 +83,7 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
         view.setEmptyTableMessageA();
         view.setEmptyTableMessageB();
         schoolClassA = aSchoolClass;
+        view.SetClassA(aSchoolClass);
         refreshViewData();
     }
 
