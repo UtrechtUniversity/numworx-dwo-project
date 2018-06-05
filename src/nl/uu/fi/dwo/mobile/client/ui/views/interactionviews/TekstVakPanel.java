@@ -315,10 +315,11 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	private int puntenAftrekPopup;
 	private boolean logOption;
 	
-	private boolean visible = true;
+	private boolean visible = true, layerVisible = true;
 	private boolean zichtbaarNaNakijken;
 	private boolean nagekeken;
 	private boolean bgColorZichtbaar;
+	private int layerNr;
 	
 	private String styleString;
 	private boolean doorzochtDoorTab = false;
@@ -646,6 +647,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			checkExpressieString = "$f???@";
 
 		}
+		if (launchState.containsKey("layerNr")) {
+			layerNr = launchState.getInt("layerNr");
+		} else
+			layerNr = 0;
 		visible = launchState.getBoolean("visible", true);
 		if(!visible)
 		{	hoogte = 0;
@@ -1030,6 +1035,12 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 					tekstVakken[i][j].setFontName(font_name);
 					tekstVakken[i][j].setFontSize(font_size);
 				}
+			}
+		}
+		if (layerNr > 0 && instellingen.containsKey("layerVisible")) {
+			boolean[] layers = instellingen.getBooleanArray("layerVisible");
+			if (layerNr-1 < layers.length)
+			{	layerVisible = layers[layerNr-1];
 			}
 		}
 		
@@ -1714,6 +1725,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		if(h == null || h.isEmpty()) 
 		{
 			setStateNull();
+			if ( !layerVisible) {
+				visible = false;
+				setVisibility(false);
+			}
 			return;
 		}
 
@@ -1731,6 +1746,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		}
 		if(map.containsKey("visible"))
 			visible = map.getBoolean("visible");
+		if(!layerVisible) visible = false;
 		if(!visible)
 		{	hoogte = 0;
 			breedte = 0;
@@ -1839,7 +1855,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		
 		//resize gebeurt in setVisibility;
 		if(zichtbaarNaNakijken)
-			setVisibility(nagekeken);
+			setVisibility(nagekeken&&layerVisible);
 		else
 			setVisibility(visible);
 		
@@ -1976,7 +1992,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	{
 		nagekeken = b;
 		if(zichtbaarNaNakijken)
-			setVisibility(b);
+			setVisibility(b&&layerVisible);
 		
 		for (Object object : interactionViewObjects) {
 			if(object instanceof InteractionView)
@@ -4211,7 +4227,7 @@ private Object CamelCase(String name) {
 		String command = event.getCommand();
 		LOG.info("accept " + command + " s:" + event.getSource() + " id:" + getLogID());
 		if(ACTION_SETVISIBLE.equals(command)) {
-			setVisibility(true);
+			setVisibility(layerVisible);
 		}
 		else if(ACTION_SETNOTVISIBLE.equals(command)) {
 			setVisibility(false);
@@ -4273,7 +4289,7 @@ private Object CamelCase(String name) {
 					list.add(tvp);
 					tekstVakken[stapNr - 1][breedtes.size() - 1].zetOpdrachtObjects(list);
 					tekstVakken[stapNr - 1][breedtes.size() - 1].setObjects(list);
-					setVisibility(true);
+					setVisibility(layerVisible);
 				}
 			}
 		}
