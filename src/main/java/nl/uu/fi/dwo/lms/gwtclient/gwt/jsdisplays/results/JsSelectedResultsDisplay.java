@@ -17,7 +17,7 @@ import jsinterop.annotations.JsType;
  * 
  * @author G.A.J. van der Plas
  */
-@JsType(isNative = true, name = "jsResultsSelectsDisplay", namespace = JsPackage.GLOBAL)
+@JsType(isNative = true, name = "JsSelectedResultsDisplay", namespace = JsPackage.GLOBAL)
 public class JsSelectedResultsDisplay{
     /** Clears the results in the ui. */
     public static native void clear();
