@@ -209,7 +209,9 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
     }
 
     @JsMethod
-    public void CopyStudentsToClassA(List<String> idList) {
+    public void CopyStudentsToClassA(String a) {
+        LOG.log(Level.INFO,"input is "+a);
+        List<String> idList=null;
         //show progress dialog
         CopyStudent(idList, 0, schoolClassB, schoolClassA);
         //close progress dialog
