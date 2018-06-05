@@ -290,7 +290,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			public void insert(char charAt)
 			{
 				super.insert(charAt);
-				changed = true;
+				setChanged(true);
 				resetimg();
 			}
 
@@ -298,7 +298,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			public void removeCurrentElement()
 			{
 				super.removeCurrentElement();				
-				changed = true;
+				setChanged(true);
 				resetimg();
 				
 				if (nagekeken)
@@ -309,7 +309,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			public void removeNextElement()
 			{
 				super.removeNextElement();
-				changed = true;
+				setChanged(true);
 				resetimg();
 				
 				if (nagekeken)
@@ -710,7 +710,8 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		if (!formuleMode)
 			// set editable zodat we in setState altijd het opgeslagen antwoord neer kunnen zetten
 			antwoordTF.setEditable(true);
-		setText(antwoord);
+		setText(antwoord); // dit zet changed = true
+		setChanged(false);
 
 		if (ingevuld 
 			&& (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)))
@@ -731,6 +732,11 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		correctie = CorrectieFacade.get(h, this, getAsPanel(), scoreMax);
 	}
 
+	private void setChanged(boolean c)
+	{
+		changed = c;
+	}
+	
 
 	public void setText(String antwoord)
 	{
@@ -889,12 +895,15 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	 */
 	private void kijkNa(boolean show, boolean setState)
 	{
-		checkAntwoord(show);
-		
 		if (formuleMode)
 			ingevuld = !(formuleVak.toString() == null || formuleVak.toString().equals(""));
 		else
 			ingevuld = !(antwoordTF.getText() == null || antwoordTF.getText().equals(""));
+
+		if (!ingevuld)
+			return;
+		
+		checkAntwoord(show);
 
 		correct = null;
 		score = 0;
@@ -961,7 +970,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		
 		// Voorkomen dat door een kijkNa() op de pagina, gevolgd door een comRoot.setChanged() en daarmee getState() van alle interactionviews op de pagina
 		// ook van andere interactionviews de crosswidget-events worden getriggerd, terwijl er nog helemaal geen antwoord is.
-		if (show && check) // alleen als er feedback moet worden geshowd
+		if (show && check && ingevuld) // alleen als er feedback moet worden geshowd
 		{
 			if (correct == null) // halfgoed
 			{
@@ -992,7 +1001,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 	{
 		if(changed)
 			errorCount++;
-		changed = false;
+		setChanged(false);
 	}
 	
 	public void zetNagekeken(boolean b)
@@ -1430,7 +1439,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		public void addElement(FormuleElement e)
 		{
 			super.addElement(e);
-			changed = true;
+			setChanged(true);
 			resize();
 			resetimg();
 			
@@ -1442,7 +1451,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		public void removeCurrentElement()
 		{
 			super.removeCurrentElement();
-			changed = true;
+			setChanged(true);
 			resize();
 			resetimg();
 			
@@ -1454,7 +1463,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		public void removeNextElement()
 		{
 			super.removeNextElement();
-			changed = true;
+			setChanged(true);
 			resize();
 			resetimg();
 			
@@ -1466,7 +1475,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		public void insert(String text)
 		{
 			super.insert(text);
-			changed = true;
+			setChanged(true);
 			resize();
 			resetimg();
 		}
