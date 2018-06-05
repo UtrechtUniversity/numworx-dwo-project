@@ -75,6 +75,7 @@ public class AddStudentToSchoolclassPresenter {
             public Promise<Void> call(Promise<List<DomStudent>> resolved) throws Exception {
                 students = new HashMap<>(resolved.getValue().size());
                 resolved.getValue().forEach((k -> students.put(k.getId().getIdString(), k)));
+                view.showStudents(students);
                 return null;
             }
 
