@@ -124,15 +124,15 @@ public class JsResultsView implements ResultsPresenter.Display {
                         //for each student
                         if (so instanceof DomStudent) {
                             DomStudent s = (DomStudent) so;
-                            students.put("children", DomStudentCodec.CODEC.encode(s));
+                            students.put(s.getId().getIdString(), DomStudentCodec.CODEC.encode(s));
                         }
                     }
                     //put students in schoolclass
                     id = ((DomResultSchoolClass) o).getSchoolClass().getId().getIdString();
-                    schoolClass.put(id, students);
+                    schoolClass.put("children", students);
                     //put schoolclass in schoolclasses
                     id = ((DomResultSchoolClass) o).getSchoolClass().getId().getIdString();
-                    schoolClasses.put(id, schoolClass);
+                    schoolClasses.put("children", schoolClass);
                 }
             }
             json.put("children", schoolClasses);
