@@ -147,7 +147,7 @@ public class JsSelectedResultsView implements SelectedResultsPresenter.Display {
 //    }
 
     @Override
-    public void setResultTree(DomResultTree data) {
+    public void updateResultTree(DomResultTree data) {
         LOG.log(Level.INFO, "tree data has " + data.getStudentTree().getChildren().values().size() + " student classes.");
         LOG.log(Level.INFO, "tree data has " + data.getResultTree().getChildren().values().size() + "  result classes.");
         LOG.log(Level.INFO, "Building result tree in json.");
@@ -156,6 +156,11 @@ public class JsSelectedResultsView implements SelectedResultsPresenter.Display {
         LOG.log(Level.INFO, "Building student tree in json.");
         JSONObject students = buildSubStudentTree(data.getStudentTree());
         LOG.log(Level.INFO, "studentTree json string is:\n " + students.toString());
-        JsSelectedResultsDisplay.setResultTree(results.getJavaScriptObject(),students.getJavaScriptObject());
+        JsSelectedResultsDisplay.updateResultTree(results.getJavaScriptObject(),students.getJavaScriptObject());
     }        
+
+    @Override
+    public void init(JSONObject aResultState) {
+        JsSelectedResultsDisplay.init(aResultState.getJavaScriptObject());
+    }
 }

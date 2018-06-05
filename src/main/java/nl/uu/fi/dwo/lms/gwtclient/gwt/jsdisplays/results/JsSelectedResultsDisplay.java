@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.json.client.JSONValue;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
@@ -17,12 +16,14 @@ import jsinterop.annotations.JsType;
  * 
  * @author G.A.J. van der Plas
  */
-@JsType(isNative = true, name = "JsSelectedResultsDisplay", namespace = JsPackage.GLOBAL)
+@JsType(isNative = true, name = "jsSelectedResultsDisplay", namespace = JsPackage.GLOBAL)
 public class JsSelectedResultsDisplay{
     /** Clears the results in the ui. */
     public static native void clear();
+    /** Inits the view */
+    public static native void init(JavaScriptObject resultState);
     /** Fills the result table with the results.*/
-     public static native void setResultTree(JavaScriptObject resultsTree, JavaScriptObject studentsTree);    
+     public static native void updateResultTree(JavaScriptObject resultsTree, JavaScriptObject studentsTree);    
     /** setEmptyTableMessage show an indicator that the table is empty. */
     public static native void setEmptyTableMessage();
     /** setEmptyTableMessage show an indicator that we are fetching data. */

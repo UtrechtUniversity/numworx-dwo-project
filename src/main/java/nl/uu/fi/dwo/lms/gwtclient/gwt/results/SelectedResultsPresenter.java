@@ -5,15 +5,13 @@
  */
 package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
+import com.google.gwt.json.client.JSONObject;
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
-import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.osgi.util.promise.Failure;
@@ -33,13 +31,17 @@ public class SelectedResultsPresenter {
 
     private Display view;
     private ResultsService resultService;
+    private JSONObject resultState;
     //model
     private DomResultTree resultTree;
 
     public interface Display {
+
         void clear();
 
-        void setResultTree(DomResultTree data);
+        void updateResultTree(DomResultTree data);
+
+        void init(JSONObject aResultState);
 
         void setEmptyTableMessage();
 
@@ -47,15 +49,21 @@ public class SelectedResultsPresenter {
 
     }
 
-     public SelectedResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    public SelectedResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         resultService = new ResultsService(dwoGlobalVars);
 
     }
-     
-    public void init() {
-           //view.clear();
+
+    public void init(DomResultTree aResultTree, JSONObject aResultState) {
+        resultTree = aResultTree;
+        resultState = aResultState;
+        view.init(aResultState);
+    }
+
+    public void updateTree() {
+        //view.clear();
         LOG.log(Level.INFO, "DwoGlobalVarsState = " + dwoGlobalVars.getState().name());
         Promise<DomResultsPerTeacher> promResults;
         promResults = resultService.getResultsPerTeacher();
@@ -67,7 +75,7 @@ public class SelectedResultsPresenter {
                 LOG.log(Level.INFO, "DomResults returned.");
                 resultTree = new DomResultTree(resolved.getValue());
                 LOG.log(Level.INFO, "ResultTree obtained.");// plots the result tree.
-                view.setResultTree(resultTree);
+                view.updateResultTree(resultTree);
                 LOG.log(Level.INFO, "plotted ResultMatrix.");
                 return null;
             }

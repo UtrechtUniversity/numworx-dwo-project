@@ -69,8 +69,6 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     private DomResultStudent resultStudent;
     private DomResultScoContext resultScoContext;
     private DomResultTree resultTree;
-    private boolean showOpenModules;
-    private boolean showClosedModules;
     private JSONObject moduleIds;
 
     public static Type<SwitchViewEventHandler> TYPE = new Type<SwitchViewEventHandler>();
@@ -94,13 +92,9 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         resultTree = aResultTree;
     }
 
-    public SwitchViewEvent(SelectedView aState, DomResultTree aResultTree,
-            DomSchoolClass aSchoolClass, boolean openModules, boolean closedModules, JSONObject aModuleIds) {
+    public SwitchViewEvent(SelectedView aState, DomResultTree aResultTree, JSONObject aModuleIds) {
         this.setEventValue(aState);
         resultTree = aResultTree;
-        schoolClass = aSchoolClass;
-        showOpenModules = openModules;
-        showClosedModules = closedModules;
         moduleIds = aModuleIds;
     }
 
@@ -167,23 +161,9 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     }
 
     /**
-     * @return the showOpenModules
-     */
-    protected boolean isShowOpenModules() {
-        return showOpenModules;
-    }
-
-    /**
-     * @return the showClosedModules
-     */
-    protected boolean isShowClosedModules() {
-        return showClosedModules;
-    }
-
-    /**
      * @return the moduleIds
      */
-    protected JSONObject getModuleIds() {
+    protected JSONObject getResultState() {
         return moduleIds;
     }
 }

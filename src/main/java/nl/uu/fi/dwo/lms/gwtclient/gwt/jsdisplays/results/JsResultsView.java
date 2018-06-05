@@ -156,9 +156,9 @@ public class JsResultsView implements ResultsPresenter.Display {
         LOG.log(Level.INFO, "Building result tree in json.");
         JSONObject results = buildSubResultTree(data.getResultTree());
         LOG.log(Level.INFO, "resultTree json string is:\n " + results.toString());
-//        LOG.log(Level.INFO, "Building student tree in json.");
-//        JSONObject students = buildSubStudentTree(data.getStudentTree());
-//        LOG.log(Level.INFO, "studentTree json string is:\n " + students.toString());
-        JsResultsDisplay.setResultTree(results.getJavaScriptObject());
+        LOG.log(Level.INFO, "Building student tree in json.");
+        JSONObject students = buildSubStudentTree(data.getStudentTree());
+        LOG.log(Level.INFO, "studentTree json string is:\n " + students.toString());
+        JsResultsDisplay.setResultTree(results.getJavaScriptObject(), students.getJavaScriptObject());
     }
 }

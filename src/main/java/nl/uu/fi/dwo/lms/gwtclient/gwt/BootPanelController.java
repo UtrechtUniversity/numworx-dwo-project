@@ -18,7 +18,6 @@ import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.FAIL;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.LOGOUT;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.SUCCESS_RESULTS;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPromise;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -28,8 +27,6 @@ import org.osgi.util.promise.Promise;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
-import org.osgi.util.promise.Failure;
-import org.osgi.util.promise.Success;
 
 /**
  * Controller for Login.
@@ -171,7 +168,7 @@ class BootPanelController {
                         // case SUCCESS_ROLE:
                         // LOG.log(Level.INFO, "Login succeeded. Showing switch role view.");
                         // eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SWITCHSCHOOL));
-                        // presenterFactory.getSwitchSchoolPresenter().init();
+                        // presenterFactory.getSwitchSchoolPresenter().updateTree();
                         // break;
                         case FAIL:
                             LOG.log(Level.INFO, "Login failed.");
@@ -254,7 +251,7 @@ class BootPanelController {
                             viewFactory.getMainView().showResultsView();
                             break;
                         case SELECTEDRESULTS:
-                            presenterFactory.getSelectedResultsPresenter().init();
+                            presenterFactory.getSelectedResultsPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultState());
                             viewFactory.getMainView().showSelectedResultsView();
                             break;
                         case RESULTSSTUDENT:

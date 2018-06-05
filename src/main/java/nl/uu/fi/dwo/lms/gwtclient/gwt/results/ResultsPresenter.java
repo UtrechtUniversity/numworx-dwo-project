@@ -103,17 +103,9 @@ public class ResultsPresenter {
     }
 
     @JsMethod
-    public void showSelectedResults(String schoolClassId, boolean showOpenModules, boolean showClosedModules, JSONObject courseIds) {
-        LOG.log(Level.INFO, "schoolClassId "+schoolClassId);
-        PersistenceId pId = new PersistenceId(schoolClassId);
-        LOG.log(Level.INFO, "persistenceId "+pId);
-        DomResultSchoolClass resultSchoolClass = resultTree.getResultTree().getChildren().get(pId);
-        LOG.log(Level.INFO, "resultSchoolClass "+resultSchoolClass.getSchoolClass());        
-        LOG.log(Level.INFO, "SchoolClas found: "+resultSchoolClass.getSchoolClass().getId().getIdString());
+    public void showSelectedResults(JSONObject resultState) {
         eventBus.fireEvent(
-                new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTS, resultTree,
-                        resultSchoolClass.getSchoolClass(), showOpenModules, showClosedModules, courseIds)
-        );
+                new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTS, resultTree, resultState));
     }
 
     @JsMethod

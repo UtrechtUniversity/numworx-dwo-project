@@ -21,7 +21,7 @@ import jsinterop.annotations.JsType;
 public class JsResultsDisplay{
     /** Clears the results in the ui. */
     public static native void clear();
-    public static native void setResultTree(JavaScriptObject resultTree);    
+    public static native void setResultTree(JavaScriptObject resultTree, JavaScriptObject studentTree);    
     /** setEmptyTableMessage show an indicator that the table is empty. */
     public static native void setEmptyTableMessage();
     /** setEmptyTableMessage show an indicator that we are fetching data. */
