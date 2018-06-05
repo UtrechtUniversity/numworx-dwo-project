@@ -41,7 +41,7 @@ public class JsEditSchoolClassView implements EditSchoolclassPresenter.Display{
         for(DomStudent item : students){
             object.put(item.getId().getIdString(), DomStudentCodec.CODEC.encode(item));
         }
-	JsEditSchoolclassDisplay.showStudents(object);
+	JsEditSchoolclassDisplay.showStudents(object.getJavaScriptObject());
     }
 
     @Override
@@ -50,7 +50,7 @@ public class JsEditSchoolClassView implements EditSchoolclassPresenter.Display{
         for(DomTeacher item : teachers){
             object.put(item.getId().getIdString(), DomTeacherCodec.CODEC.encode(item));
         }
-	JsEditSchoolclassDisplay.showTeachers(object);
+	JsEditSchoolclassDisplay.showTeachers(object.getJavaScriptObject());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class JsEditSchoolClassView implements EditSchoolclassPresenter.Display{
         for(DomCourse item : modules){
             object.put(item.getId().getIdString(), DomCourseCodec.CODEC.encode(item));
         }
-	JsEditSchoolclassDisplay.showShowModels(object);
+	JsEditSchoolclassDisplay.showShowModels(object.getJavaScriptObject());
     }
 
 }

@@ -1,36 +1,41 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.gui;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.gui.old;
 
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.client.ui.Image;
 
 /**
- * Basic gwt cell component.
  *
  * @author G.A.J. van der Plas
  */
-public class DwoImageToolTipClickCell extends DwoImageToolTipCell {
+public class DwoStyledClickCell extends DwoCell{
 
     SelectedCellHandler handler;
+    String style;
 
-    public DwoImageToolTipClickCell(Image anImage, String aToolTip) {
-        super(anImage, aToolTip);
+    public DwoStyledClickCell(){
+        super();
+        style = null;
+    }
+    
+    public DwoStyledClickCell(String style) {
+        
     }
 
     @Override
     public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
         if (value != null) {
-            if (toolTip != null) {
-                sb.appendHtmlConstant("<div title=\"" + toolTip + "\">");
+            if (style != null) {
+                sb.appendHtmlConstant("<div style=\"" + style + "\">");
+                //sb.appendHtmlConstant("<a href='javascript:;'>");
+                sb.appendHtmlConstant("<a href='javascript:;'>");
+                sb.appendEscaped(value);
+                sb.appendHtmlConstant("</a>");
+                sb.appendHtmlConstant("</div>");
+            } else {
+                sb.appendEscaped(value);
             }
-            sb.appendHtmlConstant("<a href='javascript:;'>");
-            sb.appendHtmlConstant("<img src=\'" + super.image.getUrl() + "\'></img>");
-            sb.appendHtmlConstant("</a>");
-        }
-        if (toolTip != null) {
-            sb.appendHtmlConstant("</div>");
         }
     }
 
@@ -46,9 +51,9 @@ public class DwoImageToolTipClickCell extends DwoImageToolTipCell {
             }
         }
     }
-
-    public void addSelectedCellHandler(SelectedCellHandler aHandler) {
+    
+    public void addSelectedCellHandler(SelectedCellHandler aHandler){
         handler = aHandler;
     }
-
+    
 }

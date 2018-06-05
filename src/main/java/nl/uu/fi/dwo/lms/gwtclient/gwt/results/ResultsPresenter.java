@@ -103,7 +103,10 @@ public class ResultsPresenter {
 
     @JsMethod
     public void showSelectedResults(String schoolClassId, boolean showOpenModules, boolean showClosedModules, JSONObject courseIds) {
-        DomResultSchoolClass resultSchoolClass = resultTree.getStudentTree().getChildren().get(schoolClassId);
+        LOG.log(Level.INFO, "schoolClassId "+schoolClassId);
+        DomResultSchoolClass resultSchoolClass = resultTree.getResultTree().getChildren().get(schoolClassId);
+        LOG.log(Level.INFO, "resultSchoolClass "+resultSchoolClass.getSchoolClass());        
+        LOG.log(Level.INFO, "SchoolClas found: "+resultSchoolClass.getSchoolClass().getId().getIdString());
         eventBus.fireEvent(
                 new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTS, resultTree,
                         resultSchoolClass.getSchoolClass(), showOpenModules, showClosedModules, courseIds)
@@ -112,6 +115,7 @@ public class ResultsPresenter {
 
     @JsMethod
     public void selectStudentResults() {
+        LOG.log(Level.SEVERE, "Select StudentResults");
         eventBus.fireEvent(
                 new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTSTUDENTRESULTS, resultTree)
         );

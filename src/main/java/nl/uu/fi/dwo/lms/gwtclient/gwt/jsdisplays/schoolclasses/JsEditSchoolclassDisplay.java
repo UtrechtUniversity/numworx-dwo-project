@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONValue;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
@@ -46,9 +47,9 @@ public class JsEditSchoolclassDisplay{
     /**  Sets the values for the schoolclass */
     public static native void showSchoolClass(JSONValue schoolClass);
     /**  Shows a list of students */
-    public static native void showStudents(JSONValue schoolClass);
+    public static native void showStudents(JavaScriptObject schoolClass);
     /**  Shows a list of teachers */
-    public static native void showTeachers(JSONValue schoolClass);
+    public static native void showTeachers(JavaScriptObject schoolClass);
     /**  Shows a list of modules */
-    public static native void showShowModels(JSONValue schoolClass);
+    public static native void showShowModels(JavaScriptObject schoolClass);
 }

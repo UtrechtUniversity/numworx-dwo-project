@@ -1,30 +1,40 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.gui;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.gui.old;
 
-import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
 /**
- * Basic GWT cell component.
  *
  * @author G.A.J. van der Plas
  */
-public class DwoClickCell extends AbstractCell<String> {
+public class DwoToolTipClickCell extends DwoToolTipCell{
 
     SelectedCellHandler handler;
 
-    public DwoClickCell() {
-        super("click", "keydown");
+    public DwoToolTipClickCell(){
+        super();
+        toolTip = null;
+    }
+    
+    public DwoToolTipClickCell(String toolTipText) {
+        super(toolTipText);
     }
 
     @Override
     public void render(com.google.gwt.cell.client.Cell.Context context, String value, SafeHtmlBuilder sb) {
         if (value != null) {
-            sb.appendHtmlConstant("<a href='javascript:;'>");
-            sb.appendEscaped(value);
-            sb.appendHtmlConstant("</a>");
+            if (toolTip != null) {
+                sb.appendHtmlConstant("<div title=\"" + toolTip + "\">");
+                //sb.appendHtmlConstant("<a href='javascript:;'>");
+                sb.appendHtmlConstant("<a href='javascript:;'>");
+                sb.appendEscaped(value);
+                sb.appendHtmlConstant("</a>");
+                sb.appendHtmlConstant("</div>");
+            } else {
+                sb.appendEscaped(value);
+            }
         }
     }
 
@@ -40,8 +50,9 @@ public class DwoClickCell extends AbstractCell<String> {
             }
         }
     }
-
-    public void addSelectedCellHandler(SelectedCellHandler aHandler) {
+    
+    public void addSelectedCellHandler(SelectedCellHandler aHandler){
         handler = aHandler;
     }
+    
 }

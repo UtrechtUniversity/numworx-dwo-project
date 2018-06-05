@@ -39,7 +39,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.PasswordTextCell;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.old.PasswordTextCell;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.ClassCourseItem;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;

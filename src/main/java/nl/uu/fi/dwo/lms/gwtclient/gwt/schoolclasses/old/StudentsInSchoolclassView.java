@@ -31,8 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.DwoImageToolTipClickCell;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.SelectedCellHandler;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.old.DwoImageToolTipClickCell;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.gui.old.SelectedCellHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.icons.DwoResources;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 

@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt.gui;
+package nl.uu.fi.dwo.lms.gwtclient.gwt.gui.old;
 
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
