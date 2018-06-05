@@ -86,20 +86,9 @@ public class SchoolclassesPresenter {
         }
     }
 
-//    //** should become part of the PresenterFactories ie. DWO.LoginPresenter.loginClicked.
-//    private native static void setDWO(SchoolclassesPresenter q) /*-{
-//
-//    	var apis = {
-//    			"addSchoolClass" : function() {
-//    				return q.@nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter::addSchoolClass()()
-//                        }
-//    		};
-//    	$wnd.DwoSchoolclassesPresenter = apis;
-//    }-*/;
     public SchoolclassesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-//        setDWO(this);
     }
 
     public void init() {
@@ -128,13 +117,10 @@ public class SchoolclassesPresenter {
                 //flip back to schoolclasses screen 
                 schoolClassMap = new HashMap<String, DomSchoolClass>();
                 viewData = new HashMap(schoolClassMap.size());
-//                JSONObject json = new JSONObject();
                 for (DomSchoolClass sc : resolved.getValue()) {
                     schoolClassMap.put(sc.getId().getIdString(), sc);
                     viewData.put(sc.getId().getIdString(), new ClassItem(sc.getId().getIdString(), sc.getSchoolClassName()));
-                    //                  json.put(sc.getId().getIdString(), new JSONString (sc.getSchoolClassName()));
                 }
-//                view.updateJSView(json.getJavaScriptObject());
                 view.updateView(viewData);
                 return null;
             }
@@ -173,7 +159,6 @@ public class SchoolclassesPresenter {
                 //flip back to schoolclasses screen 
                 if (resolved.getValue() == true) {
                     init();
-                    //eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
                     return null;
                 } else {
                     Dwo2Exception ex = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Rest request failed for unknown reasons.");
@@ -202,24 +187,4 @@ public class SchoolclassesPresenter {
     public void editSchoolClass(String key) {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.EDITSCHOOLCLASS, schoolClassMap.get(key)));
     }
-        
-//
-//    @JsMethod
-//    public void connectStudents(String key) {
-//    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDSTUDENTTOSCHOOLCLASS,
-//        schoolClassMap.get(key)));
-//    }
-//
-//    @JsMethod
-//    public void connectTeachers(String key) {
-//    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDTEACHERTOSCHOOLCLASS,
-//        schoolClassMap.get(key)));
-//    }
-//
-//    @JsMethod
-//    public void editModules(String key) {
-//        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.EDITCOURSESOFSCHOOLCLASS, schoolClassMap.get(key)));
-//    }
-//
-
 }

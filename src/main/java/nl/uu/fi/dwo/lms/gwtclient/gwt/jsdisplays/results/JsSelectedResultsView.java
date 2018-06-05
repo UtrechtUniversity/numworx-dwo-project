@@ -122,7 +122,7 @@ public class JsSelectedResultsView implements SelectedResultsPresenter.Display {
                         //for each student
                         if (so instanceof DomStudent) {
                             DomStudent s = (DomStudent) so;
-                            students.put(s.getId().getIdString(), DomStudentCodec.CODEC.encode(s));
+                            students.put("children", DomStudentCodec.CODEC.encode(s));
                         }
                     }
                     //put students in schoolclass
@@ -133,7 +133,7 @@ public class JsSelectedResultsView implements SelectedResultsPresenter.Display {
                     schoolClasses.put(id, schoolClass);
                 }
             }
-            json.put("schoolclasses", schoolClasses);
+            json.put("children", schoolClasses);
         }
         return json;
     }
