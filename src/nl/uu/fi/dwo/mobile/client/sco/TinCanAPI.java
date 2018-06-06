@@ -210,7 +210,7 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF, CBookEventLis
 		}
 
 		native String getResponseMode() /*-{
-		    return "drill"
+		    return this.result.extensions["http://id.tincanapi.com/extension/assessment-type"];
 		}-*/;
 		
 		native String getResponseJson() /*-{
