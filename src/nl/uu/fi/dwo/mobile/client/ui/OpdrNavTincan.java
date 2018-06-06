@@ -1,14 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
-import com.google.gwt.user.client.Window;
 
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
@@ -17,9 +10,8 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 
 class OpdrNavTincan extends OpdrNav {
 
-  private ModuleMode mode;
-
-  
+  private static final String HINT_LAYER = "HintLayer";
+  private static final String ANSWER_LAYER = "AnswerLayer";
   
   OpdrNavTincan() {}
 
@@ -28,35 +20,39 @@ class OpdrNavTincan extends OpdrNav {
     ModuleMode mode = memento.getModuleMode();
     @SuppressWarnings("unchecked")
     Map<String,Object> instellingen = (Map<String,Object>) launchData.get("instellingen");
-    if(mode != ModuleMode.unknown)
-      setInstellingen(instellingen, mode);
+    
     switch(mode) {
       case drill:
+    	  setInstellingen(instellingen, ANSWER_LAYER, Boolean.TRUE);
+    	  setInstellingen(instellingen, HINT_LAYER, Boolean.TRUE);  	  
+    	  launchData.put("mode", Integer.toString(OEFENEN_STRAFPUNTEN));
+    	  launchData.put("instellingen", instellingen);
+          break;
       case homework:
-        launchData.put("mode", Integer.toString(OEFENEN_STRAFPUNTEN));
-        break;
+    	  setInstellingen(instellingen, ANSWER_LAYER, Boolean.FALSE);
+    	  setInstellingen(instellingen, HINT_LAYER, Boolean.TRUE);  	  
+    	  launchData.put("mode", Integer.toString(OEFENEN_STRAFPUNTEN));
+    	  launchData.put("instellingen", instellingen);
+    	  break;
       case test:
-        launchData.put("mode", Integer.toString(EINDTOETS));
+    	  setInstellingen(instellingen, ANSWER_LAYER, Boolean.FALSE);
+    	  setInstellingen(instellingen, HINT_LAYER, Boolean.FALSE);  	  
+    	  launchData.put("mode", Integer.toString(EINDTOETS));
+    	  launchData.put("instellingen", instellingen);
+    	  break;
       default:
-        break;
     }
     super.init(launchData, ev, memento);
   }
 
-  private void setInstellingen(Map<String,Object> instellingen, ModuleMode key) {
+  private void setInstellingen(Map<String,Object> instellingen, String key, Boolean value) {
     Object[] layerNames = (Object[]) instellingen.get("layerNames");
     if(layerNames == null) return;
     Object[] layerVisible = (Object[]) instellingen.get("layerVisible");
-    Set<String> set = Arrays.asList(ModuleMode.values()).stream().
-        filter(m -> m != key && m != ModuleMode.unknown).
-        map(ModuleMode::name).collect(Collectors.toSet());
-    String keyName = key.name();
+    
     for(int i = 0; i < layerNames.length; i++) {
-      if (keyName.equals(layerNames[i]) )
-        layerVisible[i] = Boolean.TRUE;
-      else
-        if (set.contains(layerNames[i]))
-          layerVisible[i] = Boolean.FALSE;
+      if (key.equals(layerNames[i]) )
+        layerVisible[i] = value;
     }
     instellingen.put("layerVisible", layerVisible);    
   }
