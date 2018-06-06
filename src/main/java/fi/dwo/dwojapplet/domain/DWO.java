@@ -1004,7 +1004,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         if (currentCourse != null) {
             currentCourse.setCurrentSco(sco);
         }
-        return sco.getScoPanel(this, DwoHelper.getCurrentFacadeUser());
+        return sco.getScoPanel(this, DwoHelper.getCurrentFacadeUser(),null);
     }
     // TODO DONE MANY TO MANY : obsolete
     // /**
@@ -1754,9 +1754,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * unsuccessful</li>
      * </ul>
      */
-    public String LMSSetValue(ScoBase sco, User user, String iDataModelElement, String iValue) {
+    public String LMSSetValue(ScoBase sco, User user, SchoolClass sc, String iDataModelElement, String iValue) {
         try {
-            return PersistenceFacade.instance().LMSSetValue(sco, user, iDataModelElement, iValue);
+            return PersistenceFacade.instance().LMSSetValue(sco, user, sc, iDataModelElement, iValue);
         } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return "false";
@@ -2313,7 +2313,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         dummy.setName(appletConfig.getName());
         dummy.setLaunchdata((Hashtable) new StringCodeObject(appletConfig.getLaunchdata()).toObject());
         dummy.setLessonMode(Sco.BROWSE);
-        return dummy.getScoPanel(this, null);
+        return dummy.getScoPanel(this, null,null);
     }
 
     /*
@@ -2322,7 +2322,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      */
     public ScoPanel previewSco(Sco sco) {
         sco.setLessonMode(Sco.BROWSE);
-        return sco.getScoPanel(this, null);
+        return sco.getScoPanel(this, null,null);
         // return sco.getNewScoPanel(this, null);
     }
 

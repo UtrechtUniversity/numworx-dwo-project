@@ -6,6 +6,7 @@ import fi.dwo.dwojapplet.domain.AppletData;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.GuiConstants;
@@ -297,9 +298,9 @@ class WrapSco extends Sco {
      * @see fi.dwo.client.domain.ScoBase#setUser(fi.dwo.client.domain.User)
      */
     @Override
-    public void setUser(User u) {
-        super.setUser(u);
-        delegate.setUser(u);
+    public void setUser(User u, SchoolClass cls) {
+        super.setUser(u,cls);
+        delegate.setUser(u,cls);
     }
 	/**
 	 * @param lessonMode
@@ -334,9 +335,9 @@ class WrapSco extends Sco {
 		return super.GetValue(iDataModelElement);
 	}
     @Override
-	public ScoPanel getScoPanel(DWO dwo, User user) {
+	public ScoPanel getScoPanel(DWO dwo, User user, SchoolClass c) {
     	delegate.dwo = dwo;
-    	return super.getScoPanel(dwo, user);
+    	return super.getScoPanel(dwo, user,c);
 	}
 
 	/**

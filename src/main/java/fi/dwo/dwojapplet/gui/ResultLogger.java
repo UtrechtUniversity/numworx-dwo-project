@@ -327,7 +327,7 @@ public class ResultLogger extends JPanel implements ActionListener,
 			User u = leerlingen[i];
 			// sco.setUser(u);
 			List list = sco.getPartialScoreIF().getScoreMapList(
-					new ScoDialog.API(sco, u));
+					new ScoDialog.API(sco, u, schoolClass));
 			lists[i] = new HashMap();
 			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 				Map object = (Map) iterator.next();
@@ -336,7 +336,7 @@ public class ResultLogger extends JPanel implements ActionListener,
 				lists[i].put(page, object);
 			}
 		}
-		sco.setUser(DwoHelper.getCurrentFacadeUser());
+		sco.setUser(DwoHelper.getCurrentFacadeUser(),null);
 		partialModel.setColumnCount(pages.size() * 2);
 		for (int i = 0; i < leerlingen.length; i++) {
 			int j = 0;

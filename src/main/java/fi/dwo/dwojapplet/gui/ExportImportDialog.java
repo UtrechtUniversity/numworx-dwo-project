@@ -17,7 +17,11 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.GuiCreatorTeacher.LazyAppletConfig;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherFromToManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFromTo;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -757,7 +761,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
             @Override
             public void actionPerformed(ActionEvent e) {
                 persistCourses(exportModuleModel.dirty);
-                updateSchoolTo(user.getSchool(), exportSchoolModel, exportAlleScholen.isSelected());
+                updateSchoolTo(exportSchoolModel, exportAlleScholen.isSelected());
                 ExportImportDialog.this.dispose();
             }
         });
@@ -776,7 +780,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
             public void actionPerformed(ActionEvent e) {
                 HashMap dirty = exportModuleModel.dirty;
                 persistCourses(dirty);
-                updateSchoolTo(user.getSchool(), exportSchoolModel, exportAlleScholen.isSelected());
+                updateSchoolTo(exportSchoolModel, exportAlleScholen.isSelected());
                 dirty.clear();
             }
         });
@@ -907,27 +911,45 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
         }
     }
 
-    protected void updateSchoolTo(School from,
-            ExportSchoolModel exportSchoolModel, boolean all) {
-        int cnt = all ? 1 : 0;
+    protected void updateSchoolTo(ExportSchoolModel exportSchoolModel, boolean all) {
+        DomSchoolFromTo dom = new DomSchoolFromTo();
+        dom.setAll(all);
+        ArrayList<DomSchoolFrom> list = new ArrayList<>();
         int rows = exportSchoolModel.getRowCount();
-        for (int i = 0; i < rows; i++) {
-            if (Boolean.TRUE.equals(exportSchoolModel.export[i])) {
-                cnt++;
-            }
+        for(int i = 0;i < rows; i++) {
+          if ( Boolean.TRUE.equals(exportSchoolModel.export[i])) {
+            DomSchoolFrom school = new DomSchoolFrom();
+            school.setId(PersistentSchool.buildPersistenceId((long)exportSchoolModel.schools[i].getSchoolID()));
+            list.add(school);
+          }
         }
-        School[] to = new School[cnt];
-        int index = 0;
-        for (int i = 0; i < rows; i++) {
-            if (Boolean.TRUE.equals(exportSchoolModel.export[i])) {
-                to[index++] = exportSchoolModel.schools[i];
-            }
+        dom.setSchools(list);
+        
+        try {
+          SecureTeacherFromToManager.set(dom);
+        } catch (Dwo2Exception e) {
+          LOG.log(Level.SEVERE, "updateSchoolTo", e);
         }
-        if (all) {
-            to[index] = ALLE_SCHOLEN;
-        }
-        boolean result
-                = PersistenceFacade.instance().updateSchoolTo(from, to);
+      
+//        int cnt = all ? 1 : 0;
+//        int rows = exportSchoolModel.getRowCount();
+//        for (int i = 0; i < rows; i++) {
+//            if (Boolean.TRUE.equals(exportSchoolModel.export[i])) {
+//                cnt++;
+//            }
+//        }
+//        School[] to = new School[cnt];
+//        int index = 0;
+//        for (int i = 0; i < rows; i++) {
+//            if (Boolean.TRUE.equals(exportSchoolModel.export[i])) {
+//                to[index++] = exportSchoolModel.schools[i];
+//            }
+//        }
+//        if (all) {
+//            to[index] = ALLE_SCHOLEN;
+//        }
+//        boolean result
+//                = PersistenceFacade.instance().updateSchoolTo(from, to);
     }
 
     /**

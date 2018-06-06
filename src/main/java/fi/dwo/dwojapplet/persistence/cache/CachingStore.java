@@ -71,7 +71,7 @@ public class CachingStore implements IStore, Runnable {
             try {
                 b = getWork();
 //System.out.println("try setValue " + b);
-                delegate.setValue(b.getUid(), b.getScoid(), b.getSgid(), b.getKey(), b.getValue());
+                delegate.setValue(b.getUid(), b.getScoid(), b.getSgid(), b.getClsid(), b.getKey(), b.getValue());
                 /// sleep(1000)
                 iterator_remove();
                 backoff = INI_BACKOFF;
@@ -116,7 +116,7 @@ public class CachingStore implements IStore, Runnable {
     @Override
     public String getValue(int uid, int scoid, int sgid, String key)
             throws PersistenceException {
-        Bucket b = new Bucket(uid, scoid, sgid, key, "");
+        Bucket b = new Bucket(uid, scoid, sgid, 0, key, "");
         synchronized (this) {
             Bucket v = (Bucket) work.get(b);
             if (v == null) {
@@ -139,9 +139,9 @@ public class CachingStore implements IStore, Runnable {
     }
 
     @Override
-    public String setValue(int uid, int scoid, int sgid, String key,  String value)
+    public String setValue(int uid, int scoid, int sgid, int clsid, String key,  String value)
             throws PersistenceException {
-        putWork(new Bucket(uid, scoid, sgid, key, value));
+        putWork(new Bucket(uid, scoid, sgid, clsid, key, value));
         if (last != null) {
             PersistenceException e = last;
             last = null;

@@ -2,13 +2,15 @@ package fi.dwo.dwojapplet.persistence.cache;
 
 public class Bucket {
 
-    Bucket(int uid, int scoid, int sgid, String key, String value) {
+    private int clsid;
+    Bucket(int uid, int scoid, int sgid, int clsid, String key, String value) {
         super();
         this.uid = uid;
         this.scoid = scoid;
         this.sgid = sgid;
         this.key = key;
         this.value = value;
+        this.setClsid(clsid);
     }
     private int uid, scoid, sgid; //sgid = schoolgroupid.
     private String key, value;
@@ -127,6 +129,14 @@ public class Bucket {
      */
     public void setSgid(int sgid) {
         this.sgid = sgid;
+    }
+
+    public int getClsid() {
+      return clsid;
+    }
+
+    public void setClsid(int clsid) {
+      this.clsid = clsid;
     }
 
 }

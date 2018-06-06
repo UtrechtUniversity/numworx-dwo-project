@@ -32,6 +32,7 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
     protected int scoID;
     public DWO dwo;
     protected User user;
+    protected SchoolClass cls;
     public static final String LESSON_MODE = "cmi.mode";
     public static final String LAUNCH_DATA = "cmi.launch_data";
     public static final String LESSON_LOCATION = "cmi.location";
@@ -212,12 +213,13 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
         this.scoID = scoID;
     }
 
-    public void setUser(User u) {
+    public void setUser(User u, SchoolClass sc) {
         if (u != user) {
             if (!isReview() && !isBrowse()) {
                 lessonLocation = null; // in reviewmode de sco is de baas over de lessonlocation, 
             }
             user = u;
+            cls = sc;
         }
     }
 
@@ -378,13 +380,13 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
                 lessonLocation = iValue;
             }
 
-            return tf(dwo.LMSSetValue(this, user, iDataModelElement, iValue));
+            return tf(dwo.LMSSetValue(this, user, cls, iDataModelElement, iValue));
         }
 
         if (isReview()) {
             boolean ok = getReviewable(iDataModelElement);
             if (ok) {
-                String value = dwo.LMSSetValue(this, user, iDataModelElement, iValue);
+                String value = dwo.LMSSetValue(this, user, cls, iDataModelElement, iValue);
                 firePropertyChange(iDataModelElement, null, iValue);
                 return value;
             } else if (LESSON_LOCATION.equals(iDataModelElement)) {

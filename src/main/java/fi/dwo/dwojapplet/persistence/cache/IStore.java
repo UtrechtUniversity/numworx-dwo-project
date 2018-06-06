@@ -12,7 +12,7 @@ public interface IStore {
 
     String getValue(int uid, int scoid, int sgid, String key) throws PersistenceException;
 
-    String setValue(int uid, int scoid, int sgid, String key, String value) throws PersistenceException;
+    String setValue(int uid, int scoid, int sgid, int clsid, String key, String value) throws PersistenceException;
 
     String commit(int uid, int scoid, String param) throws PersistenceException;
 

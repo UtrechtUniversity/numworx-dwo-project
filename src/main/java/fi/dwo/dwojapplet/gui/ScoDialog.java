@@ -143,7 +143,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         private String creditStatus;
         private Sco sco;
         
-        public API(Sco sco, User u) {
+        public API(Sco sco, User u, SchoolClass sc) {
             super(false);
             this.features = sco.features;
             this.creditStatus = sco.getCreditStatus();
@@ -151,7 +151,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
             setLaunchdata(sco.getLaunchdata());
             setScoID(sco.getScoID());
             this.sco = sco;
-            setUser(u);
+            setUser(u,sc);
             setLessonMode(REVIEW);
         }
 
@@ -161,8 +161,9 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         }
 
         @Override
-        public void setUser(User u) {
+        public void setUser(User u, SchoolClass sc) {
             user = u;
+            cls = sc;
         }
 
         @Override
@@ -206,6 +207,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         private Sco sco;
         private int index;
         private List[] lists;
+        SchoolClass s;
         private ChangeListener listener;
         public void setListener(ChangeListener listener) {
 			this.listener = listener;
@@ -218,6 +220,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		public ClassModel(SchoolClass s, User u, Sco sco) {
             super(sorted(s.getStudents()));
             this.sco = sco;
+            this.s = s;
             setSelectedItem(u);
             index = getIndexOf(u);
             if(index < 0) index = 0;
@@ -238,7 +241,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         }
 
         private API getApi(int i) {
-            return new API(sco, getUser(i));
+            return new API(sco, getUser(i), s);
         }
 
         private Boolean getComplete(int i) {
@@ -472,11 +475,11 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				User u = (User) event.getItem();
 				switch (event.getStateChange()) {
 				case ItemEvent.DESELECTED:
-						sp.getSco().setUser(u);
+						sp.getSco().setUser(u,s);
 						sp.getSco().getApplet().stop();
 						break;
 				case ItemEvent.SELECTED:
-						sp.getSco().setUser(u);
+						sp.getSco().setUser(u,s);
 						userLabel.setText(u.getName());
 						sp.appletStart();
 						sp.repaint();

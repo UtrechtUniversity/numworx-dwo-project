@@ -215,7 +215,7 @@ public class ResultScoreButton extends JPanel implements
                     Sco sco = (Sco) domain.getLessonGroup();
                     String mode = sco.getLessonMode();
                     sco.setLessonMode(Sco.BROWSE);
-                    sco.getScoPanel(GuiCreator.instance().getDWO(), GuiCreator.instance().getUser());
+                    sco.getScoPanel(GuiCreator.instance().getDWO(), GuiCreator.instance().getUser(), null);
                     PartialScoreIF ps = sco.getPartialScoreIF();
                     Map map = ps.getScoreObjectivesMap(sco);
                     sco.endWithoutSaving();

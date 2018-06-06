@@ -130,13 +130,14 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      *
      * @param dwo The dwo to communicate with.
      * @param user The user for the applet. His suspenddata will be used.
+     * @param sc 
      * @return A panel representing this sco.
      *
      */
-    public ScoPanel getScoPanel(DWO dwo, User user) {
+    public ScoPanel getScoPanel(DWO dwo, User user, SchoolClass cls) {
         this.dwo = dwo;
 //        User lastUser = this.user;
-        setUser(user);
+        setUser(user,cls);
 //        if (lastUser != this.user || user == null) {
         applet = null;
         //MapperCreator.instance(Applet.class).removeAllObjects();

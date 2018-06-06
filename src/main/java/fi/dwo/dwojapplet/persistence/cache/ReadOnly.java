@@ -12,9 +12,9 @@ public class ReadOnly extends NoCache {
     }
 
     @Override
-    public String setValue(int uid, int scoid, int sgid, String key, String value) throws PersistenceException {
+    public String setValue(int uid, int scoid, int sgid, int clsid, String key, String value) throws PersistenceException {
  		if(hasSuspendData && allowWrite(key)) // verzegelen.
-			return super.setValue(uid, scoid, sgid, key, value);
+			return super.setValue(uid, scoid, sgid, clsid, key, value);
 		return "true";
 	}
 

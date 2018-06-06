@@ -14,6 +14,7 @@ import fi.dwo.commons.persistence.DbAccessLogin;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.AppletConfig;
@@ -40,6 +41,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -50,6 +52,7 @@ import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
@@ -797,12 +800,13 @@ public class PersistenceFacade {
      *
      * @param sco The SCO of the value.
      * @param user The User of the value.
+     * @param sc schoolclass of user
      * @param iDataModelElement Indicates which item must be saved.
      * @param iValue The value to save.
      * @return "true" or "false"
      * @throws PersistenceException
      */
-    public String LMSSetValue(ScoBase sco, User user, String iDataModelElement,
+    public String LMSSetValue(ScoBase sco, User user, SchoolClass sc, String iDataModelElement,
             String iValue) throws PersistenceException {
         if (user != null && !(user instanceof Guest)) {
             String result = "true";
@@ -830,7 +834,8 @@ public class PersistenceFacade {
                 iValue = Double.toString(d);
             }
 
-            result = StoreCreator.instance().setValue(uid, scoid, idOf(sgid), key, iValue);
+            int clsid = sc==null?0:sc.getID();
+            result = StoreCreator.instance().setValue(uid, scoid, idOf(sgid), clsid, key, iValue);
             return result;
         } else {
             return "true";
@@ -1998,29 +2003,29 @@ public class PersistenceFacade {
 		return Integer.parseInt(s.substring(dot+1));
 	}
 
-	public boolean updateSchoolTo(School from, School[] to) {
-        int schoolID = from.getSchoolID();
-        Vector schoolTo = new Vector(to.length);
-        for (int i = 0; i < to.length; i++) {
-            schoolTo.add(new Integer(to[i].getSchoolID()));
-        }
-        try {
-            return DbAccessCreator.instance().updateSchoolTo(schoolID, schoolTo);
-        }
-        catch (IOException e) {
-            // TODO Auto-generated catch block
-            LOG.log(Level.SEVERE, null, e);
-        }
-        catch (XmlRpcException e) {
-            // TODO Auto-generated catch block
-            LOG.log(Level.SEVERE, null, e);
-        }
-        catch (SQLException e) {
-            // TODO Auto-generated catch block
-            LOG.log(Level.SEVERE, null, e);
-        }
-        return false;
-    }
+//	public boolean updateSchoolTo(School from, School[] to) {
+//        int schoolID = from.getSchoolID();
+//        Vector schoolTo = new Vector(to.length);
+//        for (int i = 0; i < to.length; i++) {
+//            schoolTo.add(new Integer(to[i].getSchoolID()));
+//        }
+//        try {
+//            return DbAccessCreator.instance().updateSchoolTo(schoolID, schoolTo);
+//        }
+//        catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            LOG.log(Level.SEVERE, null, e);
+//        }
+//        catch (XmlRpcException e) {
+//            // TODO Auto-generated catch block
+//            LOG.log(Level.SEVERE, null, e);
+//        }
+//        catch (SQLException e) {
+//            // TODO Auto-generated catch block
+//            LOG.log(Level.SEVERE, null, e);
+//        }
+//        return false;
+//    }
 
 //    /**
 //     * Edit an old school
@@ -2633,8 +2638,17 @@ public class PersistenceFacade {
 //        }
         course.loadScos();
         Sco[] children = course.getScoList();
+        User[] students = sc.getStudents();
+        ArrayList<DomStudent> studentList = new ArrayList<>();
+        for( User u: students) {
+          DomStudent s = new DomStudent();
+          studentList.add(s);
+          s.setId(PersistentUser.buildPersistenceId(Long.valueOf(u.getUserID())));
+        }
         DomClearStudentDataForScoAndClass dom = new DomClearStudentDataForScoAndClass();
         dom.setDomProfile(DWO.getDwoProfile());
+// future...
+        dom.setDomStudentList(studentList);
         DomSchoolClass domSchoolClass = new DomSchoolClass();
         dom.setDomSchoolClass(domSchoolClass);
         domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId((long)sc.getID()));

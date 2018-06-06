@@ -104,7 +104,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
 	            Thread thread = new Thread() {	
 	                public void run() {	
 	                	
-			            ScoPanel sp = sco.getScoPanel(dwo, user);
+			            ScoPanel sp = sco.getScoPanel(dwo, user,(SchoolClass)currentlyZoomedUser);
 			            dwo.setReady();
 			            if(sp != null) {
 			                ScoDialog.showScoDialog(dwo, sp, user, (SchoolClass)currentlyZoomedUser);
