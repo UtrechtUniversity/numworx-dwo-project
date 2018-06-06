@@ -567,8 +567,8 @@ public interface DbAccessIF  {
 //    public boolean deleteUserWithRoleFromSchool(int id, int schoolGroupID)
 //            throws IOException, XmlRpcException, SQLException;
 
-    public boolean updateSchoolTo(int schoolID, Vector schoolTo)
-            throws IOException, XmlRpcException, SQLException;
+//    public boolean updateSchoolTo(int schoolID, Vector schoolTo)
+//            throws IOException, XmlRpcException, SQLException;
 
     /**
      * delete scores/suspenddata van een klas en van een module
