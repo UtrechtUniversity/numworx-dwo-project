@@ -473,7 +473,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     @Override
     public boolean updateSchoolTo(int schoolID, Vector schoolTo)
             throws IOException, XmlRpcException, SQLException {
-        return getDelegate().updateSchoolTo(schoolID, schoolTo);
+        return getDelegateObsolete().updateSchoolTo(schoolID, schoolTo);
     }
 
     @Override

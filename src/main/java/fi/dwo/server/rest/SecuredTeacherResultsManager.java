@@ -13,6 +13,7 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentInClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
@@ -20,10 +21,15 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder;
+import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SCO_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.CourseInClassManager;
@@ -31,6 +37,7 @@ import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentScoInClassManager;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -48,6 +55,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -365,7 +373,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     @Produces({"application/json"})
     @Path("/clearStudentResults")
     public Boolean clearStudentResults(@Context SecurityContext sc, RestClearStudentDataForScoAndClass rest) throws Dwo2RestException {
-        //clear results
+        //clear results, FIXME classcourse wordt niet gedeleted, issue in DWOJCLIENT (Wim)
         try {
             CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SCO_SG_U build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
                     .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
@@ -378,5 +386,32 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             throw new Dwo2RestException(e);
         }
         return false;
+    }
+    
+    
+    @PUT
+    @Produces({"application/json"})
+    @Path("/createStudentResults")
+    public DomResultsPerTeacher createStudentResults(@Context SecurityContext sc, RestClearStudentDataForScoAndClass rest) throws Dwo2Exception {
+      TeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+          .setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher().setTeacher();
+      DomClearStudentDataForScoAndClass dom = rest.getClearStudentDataForScoAndClass();
+      TeacherState_C_CC_HR_P_R_S_SC_SCO_SG_U call = state.addProfile(dom.getDomProfile()).addSchoolClass(dom.getDomSchoolClass()).addScoContext(dom.getDomScoContext());
+      PersistentSchool school = call.getSchool();
+      PersistentSchoolGroup studentRole = SchoolGroupManager.findBySchoolAndRole(school, RoleType.STUDENT);
+      // FIXME tot hier!
+     List<DomStudent> students = dom.getDomStudentList();
+      
+      DomResultsPerTeacher result = new DomResultsPerTeacher();
+      DomClassCourse4Teacher classCourse = call.getClassCourse().buildDomClassCourse4Teacher();
+      result.setClassCourses(Collections.singletonList(new DomMapEntry(classCourse.getId(), classCourse)));
+      DomCourse course = call.getCourse().buildDomCourse();
+      result.setCourses(Collections.singletonList(new DomMapEntry(course.getId(), course)));
+      
+      DomScoContext sco = call.getScoContext().buildDomScoContext();
+      result.setScoContexts(Collections.singletonList(new DomMapEntry(sco.getId(), sco)));
+      
+      result.setFetchTimeStamp(System.currentTimeMillis());
+      return result;
     }
 }

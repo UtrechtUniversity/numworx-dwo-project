@@ -662,7 +662,7 @@ public class CascadingPersistenceBuilder {
                     StudentScoContextManager.destroy(ssc.getStudentSco());
                 }
             }
-            //remove classcourse to ensure no new attachments occur.
+            //remove classcourse to ensure no new attachments occur. FIXME Issue met DWOJClient (Wim) daarom comment
             //ClassCourseManager.destroy(this.getClassCourse().getClassCourseID());
             return true;
         }

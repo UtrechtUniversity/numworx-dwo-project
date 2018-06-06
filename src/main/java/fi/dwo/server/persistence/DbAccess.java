@@ -738,7 +738,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             + "SET sequencenr = sequencenr - 1 " + "WHERE (sequencenr > ?) "
             + "AND   (courseid = ?) ";
 
-    private final static String QRY_SELECT_TO_SCHOOLS_FROM = "select * from tblSchoolFrom where schoolFrom = ? ";
+    private final static String QRY_SELECT_TO_SCHOOLS_FROM = "select * from tblfromto where schoolFrom = ? ";
 
 // TODO false bij een export.    
     /**
