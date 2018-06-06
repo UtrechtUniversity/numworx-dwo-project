@@ -1,8 +1,11 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.persons;
 
+import com.google.gwt.json.client.JSONObject;
+import java.util.Comparator;
 import java.util.Map;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClassCodec;
 
 /**
  * Mapper to allow java interface implementation.
@@ -13,27 +16,34 @@ public class JsAddPersonView implements AddPersonPresenter.Display{
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JsAddPersonDisplay.clear();
     }
 
     @Override
-    public void init() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void init(String role) {
+        JsAddPersonDisplay.init(role);
     }
 
     @Override
-    public void showSchoolClasses(Map<String, DomSchoolClass> schoolClasses) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void showSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses) {
+                JSONObject object = new JSONObject();
+                Comparator<TaggedDomSchoolClass> byName = 
+                        (TaggedDomSchoolClass e1, nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass e2) 
+                                -> e1.getSchoolClass().getSchoolClassName().compareTo(e2.getSchoolClass().getSchoolClassName());
+        schoolClasses.values().stream().sorted(byName).iterator().forEachRemaining(
+                (nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass sc) 
+                        ->{object.put(sc.getSchoolClass().getId().getIdString(), TaggedDomSchoolClassCodec.CODEC.encode(sc));});
+        JsAddPersonDisplay.showSchoolClasses(object.getJavaScriptObject());
     }
 
     @Override
     public void setEmptyTableMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JsAddPersonDisplay.setEmptyTableMessage();
     }
 
     @Override
     public void setLoadingTableMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JsAddPersonDisplay.setLoadingTableMessage();
     }
 
 }

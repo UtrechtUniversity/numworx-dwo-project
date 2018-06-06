@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.persons;
 
 import com.google.web.bindery.event.shared.EventBus;
+import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import java.util.HashMap;
@@ -12,14 +13,16 @@ import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
+import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
-import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -36,9 +39,24 @@ public class EditStudentPresenter {
     private EventBus eventBus;
     private Display view;
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
-    private Map<String, DomSchoolClass> schoolClassMap;
-    private DomUser user;
+    private Map<String, TaggedDomSchoolClass> taggedSchoolClassMap;
+    private DomUserFull user;
 
+    
+    public interface Display {
+
+        void clear();
+
+        void init(String role); //Supports "TEACHER", "SCHOOLADMIN"
+
+        void setStudent(DomUserFull student);
+        void setSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses);
+
+        void setEmptyTableMessage();
+
+        void setLoadingTableMessage();
+    }
+    
     /**
      * @return the view
      */
@@ -53,19 +71,6 @@ public class EditStudentPresenter {
         this.view = view;
     }
 
-    public interface Display {
-
-        void clear();
-
-        void init();
-
-//        void setSchoolClass(DomSchoolClassFull schoolClass);
-        void showPersonen(Map<String, DomUser> personen);
-
-        void setEmptyTableMessage();
-
-        void setLoadingTableMessage();
-    }
 
     public EditStudentPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
@@ -73,13 +78,46 @@ public class EditStudentPresenter {
     }
 
     public void init(DomUser aUser) {
-        user = aUser;
         view.clear();
         view.setEmptyTableMessage();
+        setStudentInView(aUser);
+        setSchoolClassesInView(aUser);
     }
     
+    @JsMethod
+    public void setStudentInView(DomUser aUser) {
+	Promise<DomSingleSchoolStudent> userPromise;
+        DomGetSingleSchoolStudent getStudent = new DomGetSingleSchoolStudent();
+	userPromise = manager.getSingleSchoolStudent(getStudent);
+        
+	// onSuccess calculate results and show.
+	userPromise.then(new Success<DomUserFull, Void>() {
+	    @Override
+	    public Promise<Void> call(Promise<DomUserFull> resolved) throws Exception {
+		// calculate tree and call plotting
+		LOG.log(Level.INFO, "DomFullUser data returned.");
+		user = resolved.getValue();
+		view.setStudent(user);
+		return null;
+	    }
+	}, new Failure() {
+	    @Override
+	    public void fail(Promise<?> resolved) throws Exception {
+		Throwable fail = resolved.getFailure();
+		if (fail instanceof Dwo2Exception) {
+		    LOG.log(Level.SEVERE, fail.getMessage());
+		    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
+		} else {
+		    LOG.log(Level.SEVERE, fail.getMessage());
+		    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
+		    // throw directly
+		}
+	    }
+	});
+    }
     
-    private void updateShoolClasses() {
+    /** Retrieves a list of all school classes and displays the stuff */
+    private void setSchoolClassesInView(DomUser aUser) {
         Promise<List<DomSchoolClass>> promise;
         promise = manager.getTeachersSchoolClasses();
         // onSuccess update view
@@ -87,13 +125,14 @@ public class EditStudentPresenter {
             @Override
             public Promise<Void> call(Promise<List<DomSchoolClass>> resolved) throws Exception {
                 //flip back to schoolclasses screen 
-                schoolClassMap = new HashMap<String, DomSchoolClass>();
-//                viewData = new HashMap(schoolClassMap.size());
+                taggedSchoolClassMap = new HashMap<String, TaggedDomSchoolClass>();
                 for (DomSchoolClass sc : resolved.getValue()) {
-                    schoolClassMap.put(sc.getId().getIdString(), sc);
-//                    viewData.put(sc.getId().getIdString(), new SchoolclassesPresenter.ClassItem(sc.getId().getIdString(), sc.getSchoolClassName()));
+                    TaggedDomSchoolClass tsc = new TaggedDomSchoolClass();
+                    tsc.setSchoolClass(sc);
+                    tsc.setTag(false);
+                    taggedSchoolClassMap.put(sc.getId().getIdString(), tsc);
                 }
-//                view.updateView(viewData);
+                view.setSchoolClasses(taggedSchoolClassMap);
                 return null;
             }
 
@@ -113,5 +152,91 @@ public class EditStudentPresenter {
             }
         });
     }
+    //updateSingleSchoolStudent
+    
 
+    @JsMethod
+    public void saveUser(String givenName, String insertion, String familyName, String email, String curPassword, String newPassword, String newPasswordAgain) {
+        if (!MD5.md5(curPassword).equals(user.getPassword())) {
+            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven)));
+            //DwoViewer.showMessage(Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven);
+            return;
+        }
+
+        DomSingleSchoolStudent changedUser = new DomSingleSchoolStudent();
+        changedUser.setUserName(user.getUserName());
+        //set freely allowed values
+        if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(curPassword, familyName, givenName)) {
+            LOG.log(Level.INFO, "valid required fields.");
+            changedUser.setFamilyName(familyName.trim());
+            changedUser.setGivenName(givenName.trim());
+            if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(insertion)) {
+                changedUser.setInsertion(insertion.trim());
+            } else {
+                changedUser.setInsertion(null);
+            }
+        } else {
+            eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Required_Fields)));
+            return;
+        }
+
+        //check values
+        if (!SimpleValidUserFieldsChecker.isValidEmail(email)) {
+            eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid)));
+            return;
+        } else {
+            changedUser.setEmail(email.trim());
+        }
+
+        if (!SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPassword)
+                && !SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPasswordAgain)) {
+            changedUser.setPassword(user.getPassword());
+        } else if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPassword)
+                && SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPasswordAgain)
+                && newPassword.compareTo(newPasswordAgain) == 0) {
+            if (!SimpleValidUserFieldsChecker.isValidPassword(newPassword)) {
+                //invalid password format
+                eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_NewPasswordsDoNotMatch)));
+            } else {
+                changedUser.setPassword(MD5.md5(newPassword));
+            }
+        } else {
+            eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_NewPasswordsDoNotMatch)));
+            return;
+        }
+
+        //All is well, proceed with REST-request
+        Promise<Boolean> promisedUser;
+	promisedUser = manager.updateSingleSchoolStudent(changedUser);
+        // onSuccess calculate results and show.
+        promisedUser.then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                //calculate tree and call plotting
+                LOG.log(Level.INFO, "DomUser returned.");
+                view.clear();
+		view.setStudent(changedUser);
+                eventBus.fireEvent(new AlertDialogWithOKEvent("Success"));
+                return null;
+            }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        });
+    }    
+    
+    //TODO
+    //submitStudentToSchoolClass
+    //removeStudentFromSchoolClass
 }

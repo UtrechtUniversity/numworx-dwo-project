@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.persons;
 
 import java.util.Map;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditTeacherPresenter;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 
 /**
@@ -22,7 +23,12 @@ public class JsEditTeacherView implements EditTeacherPresenter.Display{
     }
 
     @Override
-    public void showPersonen(Map<String, DomUser> personen) {
+    public void showTeachers(Map<String, DomUser> teachers) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void showSchoolClasses(Map<String, DomSchoolClass> schoolClasses) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -35,6 +41,5 @@ public class JsEditTeacherView implements EditTeacherPresenter.Display{
     public void setLoadingTableMessage() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 
 }

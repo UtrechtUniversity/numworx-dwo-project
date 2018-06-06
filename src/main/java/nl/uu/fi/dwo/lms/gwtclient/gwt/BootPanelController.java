@@ -247,7 +247,7 @@ class BootPanelController {
                             viewFactory.getMainView().showPersonsView();
                             break;
                         case ADDPERSON:
-                            presenterFactory.getAddPersonPresenter().init();
+                            presenterFactory.getAddStudentPresenter().init();
                             viewFactory.getMainView().showAddPersonView();
                             break;
                         case EDITSTUDENT:

@@ -8,72 +8,46 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-import java.util.logging.Logger;
+import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
-import nl.uu.fi.dwo.rest.dom.entities.DomUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
 /**
- * Login Presenter.
+ * 
  *
  * @author G.A.J. van der Plas
  */
-public class EditTeacherPresenter {
+public class AddStudentPresenter extends AddPersonPresenter {
 
-    private static final Logger LOG = Logger.getLogger(EditTeacherPresenter.class.getName());
-    private DwoGlobalVars dwoGlobalVars;
-    private EventBus eventBus;
-    private Display view;
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
-    private Map<String, DomSchoolClass> schoolClassMap;
-    private DomUser user;
+    private Map<String, TaggedDomSchoolClass> taggedSchoolClasses;
 
-    /**
-     * @return the view
-     */
-    public Display getView() {
-        return view;
+
+    //    @JsMethod not required unless testing stuff.
+    public void init() {
+        view.clear();
+        view.init(RoleType.STUDENT.name());
+        view.setEmptyTableMessage();
+        updateSchoolClasses();
     }
 
-    /**
-     * @param view the view to set
-     */
-    public void setView(Display view) {
-        this.view = view;
-    }
-
-    public interface Display {
-
-        void clear();
-
-        void init();
-
-        void showTeachers(Map<String, DomUser> teachers);
-        void showSchoolClasses(Map<String, DomSchoolClass> schoolClasses);        
-
-        void setEmptyTableMessage();
-        void setLoadingTableMessage();
-    }
-
-    public EditTeacherPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    public AddStudentPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
     }
 
-    public void init(DomUser aUser) {
-        user = aUser;
-        view.clear();
-        view.setEmptyTableMessage();
-        updateSchoolClasses();
-    }
-        
+
+    /**
+     * Retrieves a list of all school classes and displays the stuff
+     */
     private void updateSchoolClasses() {
         Promise<List<DomSchoolClass>> promise;
         promise = manager.getTeachersSchoolClasses();
@@ -82,11 +56,14 @@ public class EditTeacherPresenter {
             @Override
             public Promise<Void> call(Promise<List<DomSchoolClass>> resolved) throws Exception {
                 //flip back to schoolclasses screen 
-                schoolClassMap = new HashMap<String, DomSchoolClass>();
+                taggedSchoolClasses = new HashMap<>();
                 for (DomSchoolClass sc : resolved.getValue()) {
-                    schoolClassMap.put(sc.getId().getIdString(), sc);
+                    TaggedDomSchoolClass tsc = new TaggedDomSchoolClass();
+                    tsc.setSchoolClass(sc);
+                    tsc.setTag(false);
+                    taggedSchoolClasses.put(sc.getId().getIdString(), tsc);
                 }
-                view.showSchoolClasses(schoolClassMap);
+                view.showSchoolClasses(taggedSchoolClasses);
                 return null;
             }
 
@@ -107,22 +84,32 @@ public class EditTeacherPresenter {
         });
     }
 
-        public void submitSchoolClass(DomSchoolClass schoolClass, DomTeacher teacher) {
+    @JsMethod
+    public void submitSingleSchoolStudent(String schoolClassId, String username, String givenName, String insertion, String familyName, String eMail, String password) { 
+        DomSingleSchoolStudent student = new DomSingleSchoolStudent();
+        student.setEmail(eMail);
+        student.setFamilyName(familyName);
+        student.setGivenName(givenName);
+        student.setInsertion(insertion);
+        student.setPassword(password);
+        student.setUserName(username);
+        DomSchoolClass schoolClass = taggedSchoolClasses.get(schoolClassId).getSchoolClass();
+        submitSingleSchoolStudent(schoolClass, student);
+    }   
+    
+    private void submitSingleSchoolStudent(DomSchoolClass schoolClass, DomSingleSchoolStudent student) {
         Promise<Boolean> promise;
-        DomSubmitTeacherToSchoolClass teacherToClass = new DomSubmitTeacherToSchoolClass();
-        teacherToClass.setTeacher(teacher);
-        teacherToClass.setSchoolClass(schoolClass);
-        promise = manager.submitTeacherToSchoolClass(teacherToClass);
+        DomNewSingleSchoolStudent newStudent = new DomNewSingleSchoolStudent();
+        newStudent.setDomSingleSchoolStudent(student);
+        newStudent.setDomSchoolClass(schoolClass);
+        promise = manager.submitSingleSchoolStudent(newStudent);
         // onSuccess update view
         promise.then(new Success<Boolean, Void>() {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                //flip back to schoolclasses screen 
-                schoolClassMap = new HashMap<String, DomSchoolClass>();
-//                for (DomSchoolClass sc : resolved.getValue()) {
-//                    schoolClassMap.put(sc.getId().getIdString(), sc);
-//                }
-                view.showSchoolClasses(schoolClassMap);
+                eventBus.fireEvent(new DialogEvent("Added"));
+                view.clear();
+                view.init(RoleType.STUDENT.name());
                 return null;
             }
 
@@ -142,4 +129,5 @@ public class EditTeacherPresenter {
             }
         });
     }
+
 }

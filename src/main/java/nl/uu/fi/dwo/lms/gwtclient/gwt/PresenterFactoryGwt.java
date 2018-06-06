@@ -10,7 +10,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresenter;
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditTeacherPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.ImportPersonsPresenter;
@@ -55,7 +55,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     private final StudentScoResultPresenter studentScoResultPresenter ;
     
     private final PersonsPresenter personsPresenter;
-    private final AddPersonPresenter addPersonPresenter;
+    private final AddStudentPresenter addStudentPresenter;
     private final ImportPersonsPresenter importPersonsPresenter;
     private final EditStudentPresenter editStudentPresenter;
     private final EditTeacherPresenter editTeacherPresenter;
@@ -85,7 +85,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         studentScoResultPresenter = new StudentScoResultPresenter(eventBus, dwoGlobalVars);
         selectStudentResultsPresenter = new SelectStudentResultsPresenter(eventBus, dwoGlobalVars);
         personsPresenter = new PersonsPresenter(anEventBus, aDwoGlobalVars);
-        addPersonPresenter = new AddPersonPresenter(anEventBus, aDwoGlobalVars);        
+        addStudentPresenter = new AddStudentPresenter(anEventBus, aDwoGlobalVars);        
         importPersonsPresenter = new ImportPersonsPresenter(anEventBus, aDwoGlobalVars);
         editStudentPresenter = new EditStudentPresenter(anEventBus, aDwoGlobalVars);
         editTeacherPresenter = new EditTeacherPresenter(anEventBus, aDwoGlobalVars);
@@ -114,7 +114,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         selectedResultsPresenter.setView(viewFactory.getSelectedResultsView());
 
         personsPresenter.setView(viewFactory.getPersonsView());
-        addPersonPresenter.setView(viewFactory.getAddPersonView());
+        addStudentPresenter.setView(viewFactory.getAddPersonView());
         importPersonsPresenter.setView(viewFactory.getImportPersonsView());
         editTeacherPresenter.setView(viewFactory.getEditTeacherView());
         editStudentPresenter.setView(viewFactory.getEditStudentView());
@@ -332,10 +332,10 @@ public class PresenterFactoryGwt implements PresenterFactory {
     }
 
     /**
-     * @return the addPersonPresenter
+     * @return the addStudentPresenter
      */
-    public AddPersonPresenter getAddPersonPresenter() {
-        return addPersonPresenter;
+    public AddStudentPresenter getAddStudentPresenter() {
+        return addStudentPresenter;
     }
 
     /**
