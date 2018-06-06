@@ -1366,4 +1366,13 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
     }
     return result;
   }
+
+  public ModuleMode getModuleMode() {
+    try {
+      String v = api.GetValue(TinCanAPI.MODULE_DATA_MODE);
+      return ModuleMode.valueOf(v);
+    } catch(Exception e) {
+      return ModuleMode.unknown;
+    }
+  }
 }

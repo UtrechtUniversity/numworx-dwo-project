@@ -173,7 +173,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private int currentOpdracht = 0;
 	private int currentActiviteit = 0;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
-	private Memento memento;
+	Memento memento;
 	private final static ResettableEventBus BUS = new ResettableEventBus(DWOplayer.PARAMETERS.getEventBus());
 
 	static private Prepare prepare = DWOplayer.PARAMETERS.getPrepareInstance();
@@ -208,9 +208,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		prepare.defer(cmd);
 	}
 
-	public OpdrNav()
-	{
-	};
+	OpdrNav() {};
 
 	public void init(HashMap<String, Object> launchData, ViewModuleViewImpl ev, Memento memento)
 	{

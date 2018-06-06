@@ -31,9 +31,11 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF, CBookEventLis
 	private static final String MODULEDATA_RESPONSE = "http://bao.mijnklas.nl/xapi/activities/get-moduledata-response";
 	private static final String NAVIGATE_VERB = "http://bao.mijnklas.nl/xapi/verbs/navigate";
 	private static final String MODULEDATA_VERB = "http://bao.mijnklas.nl/xapi/verbs/moduleData";
-	private static final Logger LOG = Logger.getLogger("TinCanAPI");
+    static final String MODULE_DATA_MODE = "xapi.module_data.mode";
+    private static final Logger LOG = Logger.getLogger("TinCanAPI");
 	private AsyncCallback<Void> callback;
 	private String moduleData = "";
+	private String moduleMode = "";
 	private float scoreScaled = 0.0f;
 	private boolean completion = false;
 	private boolean success = false;
@@ -89,17 +91,24 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF, CBookEventLis
 
 	@Override
 	public String GetValue(String name) {
-		if(Memento.SUSPEND_DATA.equals(name))
-			try {
-				return getModuleData();
-			} catch (Exception e) {
-				LOG.log(Level.SEVERE, "getValue " + name, e);
-			}
+		if (Memento.SUSPEND_DATA.equals(name))
+			return getModuleData();
+		else if (MODULE_DATA_MODE.equals(name))
+		    return getModuleMode();
 		return super.GetValue(name);
 	}
 
 	private String getModuleData() {	
 		return moduleData;
+	}
+	
+	private String getModuleMode() {
+	    return moduleMode;
+	}
+
+	private void setModuleMode(String mode) {
+	  if (mode == null) mode = "";
+	  moduleMode = mode;
 	}
 
 	@Override
@@ -200,6 +209,10 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF, CBookEventLis
 		protected Statement() {
 		}
 
+		native String getResponseMode() /*-{
+		    return "drill"
+		}-*/;
+		
 		native String getResponseJson() /*-{
 			return this.result.extensions["http://bao.mijnklas.nl/xapi/extensions/json"];
 		}-*/;
@@ -227,6 +240,7 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF, CBookEventLis
 			&& callback != null
 		  ) {
 			setModuleData(getResponseJson(s));
+			setModuleMode(getResponseMode(s));
 			startTime = System.currentTimeMillis();
 			callback.onSuccess(null);
 			callback = null;
@@ -249,6 +263,15 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF, CBookEventLis
 			return "";
 		}
 	}
+	private static String getResponseMode(Statement s) {
+	  try {
+	      return s.getResponseMode();
+	  } catch (Exception e) {
+	      LOG.severe("ResponseMode " + e);
+	      return null; 
+	  }
+	}
+	
 
 	@Override
 	public String Initialize() {
@@ -259,7 +282,7 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF, CBookEventLis
 	@Override
 	public void Initialize(AsyncCallback<Void> callback) {
 		this.callback = callback;
-		if(false)
+		if(true)
 			Initialize0(this);
 		else {
 			Initialize0(this);
