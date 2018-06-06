@@ -71,5 +71,7 @@ public boolean editSchool(int schoolID, boolean export) throws IOException, XmlR
 public boolean deleteCourseDataFromClass(int courseID, int classID)
     throws SQLException, IOException, XmlRpcException;
 public boolean selectCoursesForClass(int id, Vector v) throws IOException, XmlRpcException, SQLException;
+public boolean updateSchoolTo(int schoolID, Vector schoolTo)
+    throws IOException, XmlRpcException, SQLException;
 
 }

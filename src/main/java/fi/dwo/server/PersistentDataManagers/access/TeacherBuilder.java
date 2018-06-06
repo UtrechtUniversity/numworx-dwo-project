@@ -214,7 +214,7 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
 
     /**
      * Removes StudentSco and corresponding ClassCourses.
-     *
+     * FIXME Issue met DWOJClient (Wim)
      * @return
      * @throws Dwo2Exception
      */
@@ -231,7 +231,8 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
             for (PersistentStudentScoContext ssc : sscList) {
                 String msg = MessageFormat.format("Username {0} is learing studentSco id {1} for userid  {2} schoolgroupid {3} and course {4} {5}.", new Object[]{instance.getContext().getUserCtx().getUser().getUsername(), ssc.getScoID(), ssc.getPersistentHasRolePK().getUserID(), ssc.getPersistentHasRolePK().getSchoolGroupID(), instance.getContext().getTeacherCtx().getCourse().getCourseID(), instance.getContext().getTeacherCtx().getCourse().getName()});
                 LOG.log(Level.INFO, msg);
-                StudentScoDataManager.destroy(ssc.getStudentSco());
+                if (StudentScoDataManager.findEntity(ssc.getStudentSco()) != null)
+                  StudentScoDataManager.destroy(ssc.getStudentSco());
                 StudentScoContextManager.destroy(ssc.getStudentSco());
             }
         }
