@@ -19,32 +19,40 @@ import nl.uu.fi.dwo.rest.entities.RestUserFull;
  */
 public class SecureDwoAdminUserManager {
 
-    private static final Logger LOG = Logger.getLogger(SecureDwoAdminUserManager.class.getName());
+  private static final Logger LOG = Logger.getLogger(SecureDwoAdminUserManager.class.getName());
 
-    public static List<DomUser> getUserList() throws Dwo2Exception {
-        List<DomUser> src;
-        src = StoredRestManager.getInstance().getList("rest/secure/dwoadmin/user/getList", RestListClassTypes.DomUser);
-        LOG.log(Level.FINE, "Retrieved list of schoolsfor the dwoadmin with username {0}.", new Object[]{RestAuthenticator.getInstance().getUsername()});
-        return src;
-    }
+  public static List<DomUser> getUserList() throws Dwo2Exception {
+    List<DomUser> src;
+    src = StoredRestManager.getInstance().getList("rest/secure/dwoadmin/user/getList",
+        RestListClassTypes.DomUser);
+    LOG.log(Level.FINE, "Retrieved list of schoolsfor the dwoadmin with username {0}.",
+        new Object[] {RestAuthenticator.getInstance().getUsername()});
+    return src;
+  }
 
-    public static DomUserFull get(DomUser user) throws Dwo2Exception {
-        RestUser restUser = new RestUser();
-        restUser.setRestContext(RestAuthenticator.getInstance().getContext());
-        restUser.setDomUser(user);
+  public static DomUserFull get(DomUser user) throws Dwo2Exception {
+    RestUser restUser = new RestUser();
+    restUser.setRestContext(RestAuthenticator.getInstance().getContext());
+    restUser.setDomUser(user);
 
-        DomUserFull result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/user/get", DomUserFull.class, restUser);
-        LOG.log(Level.FINE, "Retrieved userdata of user {1} for the dwoadmin with username {0}.", new Object[]{RestAuthenticator.getInstance().getUsername(), restUser.getDomUser().getUserName()});
-        return result;
-    }
+    DomUserFull result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/user/get",
+        DomUserFull.class, restUser);
+    LOG.log(Level.FINE, "Retrieved userdata of user {1} for the dwoadmin with username {0}.",
+        new Object[] {RestAuthenticator.getInstance().getUsername(),
+            restUser.getDomUser().getUserName()});
+    return result;
+  }
 
-    public static DomUserFull update(DomUserFull user) throws Dwo2Exception {
-        RestUserFull restUser = new RestUserFull();
-        restUser.setRestContext(RestAuthenticator.getInstance().getContext());
-        restUser.setDomUserFull(user);
+  public static DomUserFull update(DomUserFull user) throws Dwo2Exception {
+    RestUserFull restUser = new RestUserFull();
+    restUser.setRestContext(RestAuthenticator.getInstance().getContext());
+    restUser.setDomUserFull(user);
 
-        DomUserFull result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/user/update", DomUserFull.class, restUser);
-        LOG.log(Level.FINE, "Retrieved userdata of user {1} for the dwoadmin with username {0}.", new Object[]{RestAuthenticator.getInstance().getUsername(), restUser.getDomUserFull().getUserName()});
-        return result;
-    }
+    DomUserFull result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/user/update",
+        DomUserFull.class, restUser);
+    LOG.log(Level.FINE, "Retrieved userdata of user {1} for the dwoadmin with username {0}.",
+        new Object[] {RestAuthenticator.getInstance().getUsername(),
+            restUser.getDomUserFull().getUserName()});
+    return result;
+  }
 }

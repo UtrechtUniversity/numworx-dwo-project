@@ -18,7 +18,7 @@ public class SecureDwoAdminCourseManager extends AbstractCourseManager {
     super(manager);
     // TODO Auto-generated constructor stub
   }
-  
+
   public SecureDwoAdminCourseManager() {
     this(StoredRestManager.getInstance());
   }
@@ -27,30 +27,35 @@ public class SecureDwoAdminCourseManager extends AbstractCourseManager {
     RestCourseFull rest = new RestCourseFull();
     rest.setRestContext(getContext());
     rest.setDomCourse(edit);
-    DomCourseFull result = manager.put("rest/secure/dwoadmin/course/update",DomCourseFull.class, rest);
-    LOG.log(Level.FINE, "Updated course for the dwoadmin with username {0}.", new Object[]{manager.getAuthenticator().getUsername()});
+    DomCourseFull result =
+        manager.put("rest/secure/dwoadmin/course/update", DomCourseFull.class, rest);
+    LOG.log(Level.FINE, "Updated course for the dwoadmin with username {0}.",
+        new Object[] {manager.getAuthenticator().getUsername()});
     return result;
-}
+  }
 
-public DomCourseFull add(DomCourseFull edit) throws Dwo2Exception {
+  public DomCourseFull add(DomCourseFull edit) throws Dwo2Exception {
     RestCourseFull rest = new RestCourseFull();
     rest.setRestContext(getContext());
     rest.setDomCourse(edit);
-    DomCourseFull result = manager.put("rest/secure/dwoadmin/course/add",DomCourseFull.class, rest);
-    LOG.log(Level.FINE, "Updated course for the dwoadmin with username {0}.", new Object[]{manager.getAuthenticator().getUsername()});
+    DomCourseFull result =
+        manager.put("rest/secure/dwoadmin/course/add", DomCourseFull.class, rest);
+    LOG.log(Level.FINE, "Updated course for the dwoadmin with username {0}.",
+        new Object[] {manager.getAuthenticator().getUsername()});
     return result;
-}
+  }
 
-@Override
-public Boolean remove(DomCourse course, DomDwoProfile profile) throws Dwo2Exception {
-  RestCourse rest = new RestCourse();
-  rest.setDomCourse(course);
-  rest.setDomDwoProfile(profile);
-  rest.setRestContext(getContext());
-  Boolean result = manager.put("rest/secure/dwoadmin/course/remove",Boolean.class, rest);
-  LOG.log(Level.FINE, "Removed course for the dwoadmin with username {0}.", new Object[]{manager.getAuthenticator().getUsername()});
-  return result;
-}
+  @Override
+  public Boolean remove(DomCourse course, DomDwoProfile profile) throws Dwo2Exception {
+    RestCourse rest = new RestCourse();
+    rest.setDomCourse(course);
+    rest.setDomDwoProfile(profile);
+    rest.setRestContext(getContext());
+    Boolean result = manager.put("rest/secure/dwoadmin/course/remove", Boolean.class, rest);
+    LOG.log(Level.FINE, "Removed course for the dwoadmin with username {0}.",
+        new Object[] {manager.getAuthenticator().getUsername()});
+    return result;
+  }
 
 
 }

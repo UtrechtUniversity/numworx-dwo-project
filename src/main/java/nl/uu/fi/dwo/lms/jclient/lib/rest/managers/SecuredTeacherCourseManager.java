@@ -15,50 +15,57 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
  * CRUD for teachers on courses.
+ * 
  * @author wim
  *
  */
 public class SecuredTeacherCourseManager extends AbstractCourseManager {
-    public SecuredTeacherCourseManager(StoredRestManager manager) {
-      super(manager);
-    }
+  public SecuredTeacherCourseManager(StoredRestManager manager) {
+    super(manager);
+  }
 
-    public SecuredTeacherCourseManager() {
-      this(StoredRestManager.getInstance());
-    }
-    
-    private static final Logger LOG = Logger.getLogger(SecuredTeacherCourseManager.class.getName());
+  public SecuredTeacherCourseManager() {
+    this(StoredRestManager.getInstance());
+  }
 
-    /** Update a course. Not all fields are updatable!
-     * @param edit the course
-     * @return the edited course
-    */
-    public DomCourseFull update(DomCourseFull edit) throws Dwo2Exception {
-    	RestCourseFull rest = new RestCourseFull();
-    	rest.setRestContext(getContext());
-    	rest.setDomCourse(edit);
-        DomCourseFull result = manager.put("rest/secure/teacher/course/update",DomCourseFull.class, rest);
-        LOG.log(Level.FINE, "Updated course for the teacher with username {0}.", new Object[]{manager.getAuthenticator().getUsername()});
-        return result;
-    }
+  private static final Logger LOG = Logger.getLogger(SecuredTeacherCourseManager.class.getName());
 
-    public DomCourseFull add(DomCourseFull edit) throws Dwo2Exception {
-    	RestCourseFull rest = new RestCourseFull();
-    	rest.setRestContext(getContext());
-    	rest.setDomCourse(edit);
-        DomCourseFull result = manager.put("rest/secure/teacher/course/add",DomCourseFull.class, rest);
-        LOG.log(Level.FINE, "Updated course for the teacher with username {0}.", new Object[]{manager.getAuthenticator().getUsername()});
-        return result;
-    }
+  /**
+   * Update a course. Not all fields are updatable!
+   * 
+   * @param edit the course
+   * @return the edited course
+   */
+  public DomCourseFull update(DomCourseFull edit) throws Dwo2Exception {
+    RestCourseFull rest = new RestCourseFull();
+    rest.setRestContext(getContext());
+    rest.setDomCourse(edit);
+    DomCourseFull result =
+        manager.put("rest/secure/teacher/course/update", DomCourseFull.class, rest);
+    LOG.log(Level.FINE, "Updated course for the teacher with username {0}.",
+        new Object[] {manager.getAuthenticator().getUsername()});
+    return result;
+  }
 
-    @Override
-    public Boolean remove(DomCourse course, DomDwoProfile profile) throws Dwo2Exception {
-      RestCourse rest = new RestCourse();
-      rest.setDomCourse(course);
-      rest.setDomDwoProfile(profile);
-      rest.setRestContext(getContext());
-      Boolean result = manager.put("rest/secure/teacher/course/remove",Boolean.class, rest);
-      LOG.log(Level.FINE, "Removed course for the teacher with username {0}.", new Object[]{manager.getAuthenticator().getUsername()});
-      return result;
-    }
+  public DomCourseFull add(DomCourseFull edit) throws Dwo2Exception {
+    RestCourseFull rest = new RestCourseFull();
+    rest.setRestContext(getContext());
+    rest.setDomCourse(edit);
+    DomCourseFull result = manager.put("rest/secure/teacher/course/add", DomCourseFull.class, rest);
+    LOG.log(Level.FINE, "Updated course for the teacher with username {0}.",
+        new Object[] {manager.getAuthenticator().getUsername()});
+    return result;
+  }
+
+  @Override
+  public Boolean remove(DomCourse course, DomDwoProfile profile) throws Dwo2Exception {
+    RestCourse rest = new RestCourse();
+    rest.setDomCourse(course);
+    rest.setDomDwoProfile(profile);
+    rest.setRestContext(getContext());
+    Boolean result = manager.put("rest/secure/teacher/course/remove", Boolean.class, rest);
+    LOG.log(Level.FINE, "Removed course for the teacher with username {0}.",
+        new Object[] {manager.getAuthenticator().getUsername()});
+    return result;
+  }
 }

@@ -16,9 +16,11 @@ public class SecureTeacherSchoolManager implements SchoolManager {
     RestSchoolFull rest = new RestSchoolFull();
     rest.setRestContext(RestAuthenticator.getInstance().getContext());
     rest.setDomSchoolFull(submit);
-    Boolean result = StoredRestManager.getInstance().put("rest/secure/teacher/school/update", Boolean.class, rest);
-    LOG.log(Level.FINE, "Updated data for school {1} by username {0}.", new Object[]{RestAuthenticator.getInstance().getUsername(), submit.getId()});
+    Boolean result = StoredRestManager.getInstance().put("rest/secure/teacher/school/update",
+        Boolean.class, rest);
+    LOG.log(Level.FINE, "Updated data for school {1} by username {0}.",
+        new Object[] {RestAuthenticator.getInstance().getUsername(), submit.getId()});
     return result;
-}
+  }
 
 }

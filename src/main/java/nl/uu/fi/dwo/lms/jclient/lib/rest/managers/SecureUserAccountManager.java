@@ -34,186 +34,192 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
  */
 public class SecureUserAccountManager {
 
-    private static final Logger LOG = Logger.getLogger(SecureUserAccountManager.class.getName());
+  private static final Logger LOG = Logger.getLogger(SecureUserAccountManager.class.getName());
 
-    /**
-     * Returns the current user 'logged in'. The information is extracted from
-     * the security context which depends on the credentials used for accessing
-     * the rest interface. Technically it should be equal to the data in the
-     * DwoHelper.
-     *
-     * @return
-     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
-     */
-    public static DomUserFull getAccountData() throws Dwo2Exception {
-        DomUserFull user;
-        user = StoredRestManager.getInstance().get("rest/secure/user/account/get", DomUserFull.class);
-        return user;
+  /**
+   * Returns the current user 'logged in'. The information is extracted from the security context
+   * which depends on the credentials used for accessing the rest interface. Technically it should
+   * be equal to the data in the DwoHelper.
+   *
+   * @return
+   * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
+   */
+  public static DomUserFull getAccountData() throws Dwo2Exception {
+    DomUserFull user;
+    user = StoredRestManager.getInstance().get("rest/secure/user/account/get", DomUserFull.class);
+    return user;
+  }
+
+  public static DomLoginContext getLoginContext(String username, String password)
+      throws Dwo2Exception {
+    DomLoginContext loginContext;
+    Authenticator.setDefault(null);
+    CookieManager.setDefault(null);
+    try {
+      URL url = new URL(StoredRestManager.getInstance().getServerUrlPath().toString()
+          + "rest/secure/user/account/getLoginContext"); // TODO make basicLogin
+      String authString = username + ":" + password;
+      authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setRequestMethod("GET");
+      conn.setRequestProperty("Accept", "application/json");
+      conn.setRequestProperty("Authorization", authString);
+      conn.addRequestProperty("Cookie", "");
+      conn.setUseCaches(false);
+      conn.setAllowUserInteraction(false);
+      conn.connect();
+
+      if (conn.getResponseCode() != 200) {
+        throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError,
+            conn.getResponseMessage());
+      }
+
+      BufferedReader br = new BufferedReader(
+          new InputStreamReader((conn.getInputStream()), StandardCharsets.UTF_8));
+
+      String output;
+      StringBuilder json = new StringBuilder();
+      while ((output = br.readLine()) != null) {
+        json.append(output);
+      }
+      br.close();
+      conn.disconnect();
+      // Authenticator.setDefault(null);
+      // decode JSON
+      Genson genson = StoredRestManager.getInstance().getGenson();
+
+      // LIST EXAMPLE: List<DomUserFull> user = genson.deserialize(json.toString(), new
+      // GenericType<List<DomUserFull>>(){});
+      loginContext = genson.deserialize(json.toString(), DomLoginContext.class);
+      return loginContext;
+    } catch (MalformedURLException e) {
+      throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
+
+    } catch (IOException e) {
+      if (e.getClass().equals(java.net.ConnectException.class)) {
+        throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ConnectionTimeout, e.getMessage());
+      } else {
+        throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+      }
     }
 
-    public static DomLoginContext getLoginContext(String username, String password) throws Dwo2Exception {
-            DomLoginContext loginContext;
-            Authenticator.setDefault(null);
-            CookieManager.setDefault(null);
-            try{
-            URL url = new URL(StoredRestManager.getInstance().getServerUrlPath().toString() + "rest/secure/user/account/getLoginContext"); //TODO make basicLogin            
-            String authString = username + ":" + password;
-            authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setRequestProperty("Authorization", authString);
-            conn.addRequestProperty("Cookie", "");
-            conn.setUseCaches(false);
-            conn.setAllowUserInteraction(false);
-            conn.connect();
 
-            if (conn.getResponseCode() != 200) {
-                throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, conn.getResponseMessage());
-            }
+  }
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream()), StandardCharsets.UTF_8));
+  // /**
+  // * Login for a user. Registers service that the user is logging in. As the
+  // * REST interface is stateless this is merely for gathering statistics.
+  // *
+  // * @return
+  // * @throws fi.dwo.rest.exceptions.Dwo2Exception
+  // */
+  // public static DomUserFull loginUser() throws Dwo2Exception {
+  // DomUserFull user;
+  // user = StoredRestManager.getInstance().get("rest/secure/user/account/login",
+  // DomUserFull.class);
+  // return user;
+  // }
 
-            String output;
-            StringBuilder json = new StringBuilder();
-            while ((output = br.readLine()) != null) {
-                json.append(output);
-            }
-            br.close();
-            conn.disconnect();
-//            Authenticator.setDefault(null);
-            //decode JSON
-            Genson genson = StoredRestManager.getInstance().getGenson();
+  /**
+   * Registers that the user logs out. When doing basic authentication basicAuthLogout is
+   * recommended to be used.
+   *
+   * @return
+   * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
+   */
+  public static Boolean logoutUser(DomLoginContext domLoginContext) throws Dwo2Exception {
+    Boolean result;
+    RestLoginContext submit = new RestLoginContext();
+    submit.setRestContext(new DomContext());
+    submit.setDomLoginContext(domLoginContext);
+    StoredRestManager restManager = StoredRestManager.getInstance();
+    result = restManager.put("rest/secure/user/account/logout", Boolean.class, submit);
+    // ensures basic auth data and cookies are wiped from Java Browser-like framework
+    Authenticator.setDefault(null);
+    CookieManager.setDefault(null);
+    restManager.setBasicAuthString(null);
+    restManager.getAuthenticator().setUsername(null);
+    restManager.getAuthenticator().setPassword(null);
+    return result;
+  }
 
-//          LIST EXAMPLE: List<DomUserFull> user = genson.deserialize(json.toString(), new GenericType<List<DomUserFull>>(){});
-            loginContext = genson.deserialize(json.toString(), DomLoginContext.class);        
-            return loginContext;
-        } catch (MalformedURLException e) {
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
+  /**
+   * Registers that the user logs out, clears client-side cookies and authenticator data, and clears
+   * the session server-side.
+   *
+   * @return
+   * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
+   */
+  public static Boolean basicAuthLogout(DomLoginContext domLoginContext) throws Dwo2Exception {
+    Boolean result;
+    RestLoginContext submit = new RestLoginContext();
+    submit.setRestContext(new DomContext());
+    submit.setDomLoginContext(domLoginContext);
+    StoredRestManager restManager = StoredRestManager.getInstance();
+    result = restManager.put("rest/secure/user/account/basicAuthLogout", Boolean.class, submit);
+    // ensures basic auth data and cookies are wiped from Java Browser-like framework
+    Authenticator.setDefault(null);
+    CookieManager.setDefault(null);
+    restManager.setBasicAuthString(null);
+    restManager.getAuthenticator().setUsername(null);
+    restManager.getAuthenticator().setPassword(null);
+    return result;
+  }
 
-        } catch (IOException e) {
-            if(e.getClass().equals(java.net.ConnectException.class)){
-                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ConnectionTimeout, e.getMessage());
-            }else{
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
-            }
-        }
-            
+  /**
+   * Updates the user profile of a user.
+   *
+   * Fields updated are email, password and the full name of the user. The full name exists out of
+   * the first, insertion and family name.
+   *
+   * @param user
+   * @return
+   * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
+   */
+  public static DomUserFull updateAccountData(DomUserFull user) throws Dwo2Exception {
+    RestUserFull restUser = new RestUserFull();
+    restUser.setRestContext(new DomContext());
+    restUser.setDomUserFull(user);
 
-    }        
-        
-//    /**
-//     * Login for a user. Registers service that the user is logging in. As the
-//     * REST interface is stateless this is merely for gathering statistics.
-//     *
-//     * @return
-//     * @throws fi.dwo.rest.exceptions.Dwo2Exception
-//     */
-//    public static DomUserFull loginUser() throws Dwo2Exception {
-//        DomUserFull user;
-//        user = StoredRestManager.getInstance().get("rest/secure/user/account/login", DomUserFull.class);
-//        return user;
-//    }
+    StoredRestManager restManager = StoredRestManager.getInstance();
+    user = restManager.put("rest/secure/user/account/update", DomUserFull.class, restUser);
+    // Client client = ClientBuilder.newClient().register(feature);
+    // WebTarget target = client.target(RestAuthenticator.getServerUrlPath().toString());
+    // StoredRestManager.setWebTargetAndCredentials(target);
+    restManager.setBasicAuthString(null);
+    restManager.getAuthenticator().setPassword(null);
+    restManager.getAuthenticator().setUsername(null);
+    LOG.log(Level.FINE, "Updated user profile of username {0}.",
+        new Object[] {restUser.getDomUserFull().getUserName()});
+    return user;
+  }
 
-    /**
-     * Registers that the user logs out. When doing basic authentication basicAuthLogout is 
-     * recommended to be used.
-     *
-     * @return
-     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
-     */
-    public static Boolean logoutUser(DomLoginContext domLoginContext) throws Dwo2Exception {
-        Boolean result;
-        RestLoginContext submit = new RestLoginContext();
-        submit.setRestContext(new DomContext());
-        submit.setDomLoginContext(domLoginContext);
-        StoredRestManager restManager = StoredRestManager.getInstance();
-		result = restManager.put("rest/secure/user/account/logout", Boolean.class, submit);
-        //ensures basic auth data and cookies are wiped from Java Browser-like framework
-        Authenticator.setDefault(null);
-        CookieManager.setDefault(null);
-        restManager.setBasicAuthString(null);
-        restManager.getAuthenticator().setUsername(null);
-        restManager.getAuthenticator().setPassword(null);
-        return result;
-    }
+  /**
+   * Updates the user profile of a user.
+   *
+   * Fields updated are email, password and the full name of the user. The full name exists out of
+   * the first, insertion and family name.
+   *
+   * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
+   */
+  public static Boolean removeAccountData() throws Dwo2Exception {
+    Boolean b;
+    b = StoredRestManager.getInstance().get("rest/secure/user/account/remove", Boolean.class);
+    return b;
+  }
 
-    /**
-     * Registers that the user logs out, clears client-side cookies and authenticator data,
-     * and clears the session server-side.
-     *
-     * @return
-     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
-     */
-    public static Boolean basicAuthLogout(DomLoginContext domLoginContext) throws Dwo2Exception {
-        Boolean result;
-        RestLoginContext submit = new RestLoginContext();
-        submit.setRestContext(new DomContext());
-        submit.setDomLoginContext(domLoginContext);
-        StoredRestManager restManager = StoredRestManager.getInstance();
-		result = restManager.put("rest/secure/user/account/basicAuthLogout", Boolean.class, submit);
-        //ensures basic auth data and cookies are wiped from Java Browser-like framework
-        Authenticator.setDefault(null);
-        CookieManager.setDefault(null);
-        restManager.setBasicAuthString(null);
-        restManager.getAuthenticator().setUsername(null);
-        restManager.getAuthenticator().setPassword(null);
-        return result;
-    }
-    
-    /**
-     * Updates the user profile of a user.
-     *
-     * Fields updated are email, password and the full name of the user. The
-     * full name exists out of the first, insertion and family name.
-     *
-     * @param user
-     * @return
-     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
-     */
-    public static DomUserFull updateAccountData(DomUserFull user) throws Dwo2Exception {
-        RestUserFull restUser = new RestUserFull();
-        restUser.setRestContext(new DomContext());
-        restUser.setDomUserFull(user);
-
-        StoredRestManager restManager = StoredRestManager.getInstance();
-		user = restManager.put("rest/secure/user/account/update", DomUserFull.class, restUser);
-//        Client client = ClientBuilder.newClient().register(feature);
-//        WebTarget target = client.target(RestAuthenticator.getServerUrlPath().toString());
-//        StoredRestManager.setWebTargetAndCredentials(target);
-        restManager.setBasicAuthString(null);
-        restManager.getAuthenticator().setPassword(null);
-        restManager.getAuthenticator().setUsername(null);
-        LOG.log(Level.FINE, "Updated user profile of username {0}.", new Object[]{restUser.getDomUserFull().getUserName()});
-        return user;
-    }
-
-    /**
-     * Updates the user profile of a user.
-     *
-     * Fields updated are email, password and the full name of the user. The
-     * full name exists out of the first, insertion and family name.
-     *
-     * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
-     */
-    public static Boolean removeAccountData() throws Dwo2Exception {
-        Boolean b;
-        b = StoredRestManager.getInstance().get("rest/secure/user/account/remove", Boolean.class);
-        return b;
-    }
-    
-    public static Boolean link_saml(String userid, String orgid, String token) throws Dwo2Exception {
-    	Boolean b;
-    	DomContext context = new DomContext();
-    	DomSamlUser saml = new DomSamlUser();
-    	saml.setSamlOrgId(orgid);
-    	saml.setSamlUserId(userid);
-    	saml.setAuthToken(token);
-    	RestSamlUser rest = new RestSamlUser();
-    	rest.setDomSamlUser(saml);
-    	rest.setRestContext(context);
-        b = StoredRestManager.getInstance().put("rest/secure/user/account/linkSaml", Boolean.class, rest);
-        return b;
-    }
+  public static Boolean link_saml(String userid, String orgid, String token) throws Dwo2Exception {
+    Boolean b;
+    DomContext context = new DomContext();
+    DomSamlUser saml = new DomSamlUser();
+    saml.setSamlOrgId(orgid);
+    saml.setSamlUserId(userid);
+    saml.setAuthToken(token);
+    RestSamlUser rest = new RestSamlUser();
+    rest.setDomSamlUser(saml);
+    rest.setRestContext(context);
+    b = StoredRestManager.getInstance().put("rest/secure/user/account/linkSaml", Boolean.class,
+        rest);
+    return b;
+  }
 }

@@ -18,20 +18,32 @@ public abstract class AbstractCourseManager implements CourseManager {
     return manager.getAuthenticator().getContext();
   }
 
-  /* (non-Javadoc)
-   * @see nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager#update(nl.uu.fi.dwo.rest.dom.entities.DomCourseFull)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager#update(nl.uu.fi.dwo.rest.dom.entities.
+   * DomCourseFull)
    */
   @Override
   public abstract DomCourseFull update(DomCourseFull edit) throws Dwo2Exception;
 
-  /* (non-Javadoc)
-   * @see nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager#add(nl.uu.fi.dwo.rest.dom.entities.DomCourseFull)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager#add(nl.uu.fi.dwo.rest.dom.entities.
+   * DomCourseFull)
    */
   @Override
   public abstract DomCourseFull add(DomCourseFull edit) throws Dwo2Exception;
 
-  /* (non-Javadoc)
-   * @see nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager#remove(nl.uu.fi.dwo.rest.dom.entities.DomCourse, nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager#remove(nl.uu.fi.dwo.rest.dom.entities.
+   * DomCourse, nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile)
    */
   @Override
   public abstract Boolean remove(DomCourse course, DomDwoProfile profile) throws Dwo2Exception;

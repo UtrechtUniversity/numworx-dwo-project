@@ -19,8 +19,8 @@ public abstract class AbstractScoContextManager {
 
   public abstract DomScoContextFull add(DomScoContextFull edit, DomScoData data,
       DomDwoProfile dwoProfile) throws Dwo2Exception;
-  
+
   public abstract Boolean remove(DomScoContext sco, DomDwoProfile profile) throws Dwo2Exception;
-    
+
 
 }

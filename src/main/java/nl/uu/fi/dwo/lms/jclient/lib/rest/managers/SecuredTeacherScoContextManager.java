@@ -16,50 +16,62 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
  * CRUD for teachers on courses.
+ * 
  * @author wim
  *
  */
 public class SecuredTeacherScoContextManager extends AbstractScoContextManager {
-    public SecuredTeacherScoContextManager(DomContext context) {
+  public SecuredTeacherScoContextManager(DomContext context) {
     super(context);
     // TODO Auto-generated constructor stub
   }
 
-    private static final Logger LOG = Logger.getLogger(SecuredTeacherScoContextManager.class.getName());
+  private static final Logger LOG =
+      Logger.getLogger(SecuredTeacherScoContextManager.class.getName());
 
-    /** Update a course. Not all fields are updatable!
-     * @param edit the course
-     * @return the edited course
-    */
-    public  DomScoContextFull update(DomScoContextFull edit, DomScoData data, DomDwoProfile dwoProfile) throws Dwo2Exception {
-    	RestScoContextFull rest = new RestScoContextFull();
-    	rest.setDomScoContext(edit);
-    	rest.setDomScoData(data);
-    	rest.setRestContext(context);
-    	rest.setDomDwoProfile(dwoProfile);
-        DomScoContextFull result = StoredRestManager.getInstance().put("rest/secure/teacher/scoContext/update",DomScoContextFull.class, rest);
-        LOG.log(Level.FINE, "Updated sco for the teacher with username {0}.", new Object[]{RestAuthenticator.getInstance().getUsername()});
-        return result;
-    }
+  /**
+   * Update a course. Not all fields are updatable!
+   * 
+   * @param edit the course
+   * @return the edited course
+   */
+  public DomScoContextFull update(DomScoContextFull edit, DomScoData data, DomDwoProfile dwoProfile)
+      throws Dwo2Exception {
+    RestScoContextFull rest = new RestScoContextFull();
+    rest.setDomScoContext(edit);
+    rest.setDomScoData(data);
+    rest.setRestContext(context);
+    rest.setDomDwoProfile(dwoProfile);
+    DomScoContextFull result = StoredRestManager.getInstance()
+        .put("rest/secure/teacher/scoContext/update", DomScoContextFull.class, rest);
+    LOG.log(Level.FINE, "Updated sco for the teacher with username {0}.",
+        new Object[] {RestAuthenticator.getInstance().getUsername()});
+    return result;
+  }
 
-	public DomScoContextFull add(DomScoContextFull edit, DomScoData data, DomDwoProfile dwoProfile) throws Dwo2Exception {
-    	RestScoContextFull rest = new RestScoContextFull();
-    	rest.setDomScoContext(edit);
-    	rest.setRestContext(context);
-    	rest.setDomScoData(data);
-    	rest.setDomDwoProfile(dwoProfile);
-        DomScoContextFull result = StoredRestManager.getInstance().put("rest/secure/teacher/scoContext/add",DomScoContextFull.class, rest);
-        LOG.log(Level.FINE, "Added sco for the teacher with username {0}.", new Object[]{RestAuthenticator.getInstance().getUsername()});
-        return result;
-	}
-	
-	public Boolean remove(DomScoContext sco, DomDwoProfile profile) throws Dwo2Exception {
-	    RestScoContext rest = new RestScoContext();
-	    rest.setDomDwoProfile(profile);
-	    rest.setDomScoContext(sco);
-	    rest.setRestContext(context);
-	    Boolean result = StoredRestManager.getInstance().put("rest/secure/teacher/scoContext/remove", Boolean.class, rest);
-        LOG.log(Level.FINE, "Removed sco for the teacher with username {0}.", new Object[]{RestAuthenticator.getInstance().getUsername()});
-        return result;
-	}
+  public DomScoContextFull add(DomScoContextFull edit, DomScoData data, DomDwoProfile dwoProfile)
+      throws Dwo2Exception {
+    RestScoContextFull rest = new RestScoContextFull();
+    rest.setDomScoContext(edit);
+    rest.setRestContext(context);
+    rest.setDomScoData(data);
+    rest.setDomDwoProfile(dwoProfile);
+    DomScoContextFull result = StoredRestManager.getInstance()
+        .put("rest/secure/teacher/scoContext/add", DomScoContextFull.class, rest);
+    LOG.log(Level.FINE, "Added sco for the teacher with username {0}.",
+        new Object[] {RestAuthenticator.getInstance().getUsername()});
+    return result;
+  }
+
+  public Boolean remove(DomScoContext sco, DomDwoProfile profile) throws Dwo2Exception {
+    RestScoContext rest = new RestScoContext();
+    rest.setDomDwoProfile(profile);
+    rest.setDomScoContext(sco);
+    rest.setRestContext(context);
+    Boolean result = StoredRestManager.getInstance().put("rest/secure/teacher/scoContext/remove",
+        Boolean.class, rest);
+    LOG.log(Level.FINE, "Removed sco for the teacher with username {0}.",
+        new Object[] {RestAuthenticator.getInstance().getUsername()});
+    return result;
+  }
 }

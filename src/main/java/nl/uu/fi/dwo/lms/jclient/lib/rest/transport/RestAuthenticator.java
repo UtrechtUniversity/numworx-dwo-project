@@ -11,94 +11,94 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
  */
 public class RestAuthenticator extends Authenticator {
 
-    private URL serverUrlPath;
-    private DomContext context;
-    private String username;
-    private String password;
+  private URL serverUrlPath;
+  private DomContext context;
+  private String username;
+  private String password;
 
-    private static volatile RestAuthenticator instance;
+  private static volatile RestAuthenticator instance;
 
-    @Deprecated //Static class use is evil!
-    public static RestAuthenticator getInstance() {
-        return instance;
-    }
+  @Deprecated // Static class use is evil!
+  public static RestAuthenticator getInstance() {
+    return instance;
+  }
 
-//    @Deprecated //Static class use is evil!
-//    public static void setInstance(RestAuthenticator instance) {
-//        RestAuthenticator.instance = instance;
-//    }
+  // @Deprecated //Static class use is evil!
+  // public static void setInstance(RestAuthenticator instance) {
+  // RestAuthenticator.instance = instance;
+  // }
 
-    static {
-        instance = new RestAuthenticator();
-    }
+  static {
+    instance = new RestAuthenticator();
+  }
 
-//    public RestAuthenticator(String username, String password) {
-//        this.username = username;
-//        this.password = password;
-//
-//    }
-    protected PasswordAuthentication GetPasswordAuthentication() {
-        return new PasswordAuthentication(getUsername(), getPassword().toCharArray());
-    }
+  // public RestAuthenticator(String username, String password) {
+  // this.username = username;
+  // this.password = password;
+  //
+  // }
+  protected PasswordAuthentication GetPasswordAuthentication() {
+    return new PasswordAuthentication(getUsername(), getPassword().toCharArray());
+  }
 
-    /**
-     * @return the username
-     */
-    public String getUsername() {
-        return username;
-    }
+  /**
+   * @return the username
+   */
+  public String getUsername() {
+    return username;
+  }
 
-    /**
-     * @param username the username to set
-     */
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  /**
+   * @param username the username to set
+   */
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    /**
-     * @return the password
-     */
-    public String getPassword() {
-        return password;
-    }
+  /**
+   * @return the password
+   */
+  public String getPassword() {
+    return password;
+  }
 
-    public boolean isAuthenticated() {
-    		return password != null && username != null;
-    }
- 
-    /**
-     * @param password the password to set
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public boolean isAuthenticated() {
+    return password != null && username != null;
+  }
 
-    /**
-     * @return the serverUrlPath
-     */
-    public URL getServerUrlPath() {
-        return serverUrlPath;
-    }
+  /**
+   * @param password the password to set
+   */
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    /**
-     * @param aServerUrlPath the serverUrlPath to set
-     */
-    public void setServerUrlPath(URL aServerUrlPath) {
-        serverUrlPath = aServerUrlPath;
-    }
+  /**
+   * @return the serverUrlPath
+   */
+  public URL getServerUrlPath() {
+    return serverUrlPath;
+  }
 
-    /**
-     * @return the context
-     */
-    public DomContext getContext() {
-        return context;
-    }
+  /**
+   * @param aServerUrlPath the serverUrlPath to set
+   */
+  public void setServerUrlPath(URL aServerUrlPath) {
+    serverUrlPath = aServerUrlPath;
+  }
 
-    /**
-     * @param context the context to set
-     */
-    public void setContext(DomContext context) {
-        this.context = context;
-    }
+  /**
+   * @return the context
+   */
+  public DomContext getContext() {
+    return context;
+  }
+
+  /**
+   * @param context the context to set
+   */
+  public void setContext(DomContext context) {
+    this.context = context;
+  }
 
 }
