@@ -22,7 +22,7 @@
   <inherits name="fi.writemath.engine.Engine"/>
   <inherits name="fi.beans.lineairealgebra.LineaireAlgebra" />
   <!-- Specify the app entry point class.                         -->
-  <entry-point class='fi.writemathgwt.client.WriteMathGWT'/>
+  <!--<entry-point class='fi.writemathgwt.client.WriteMathGWT'/>-->
 
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/>
