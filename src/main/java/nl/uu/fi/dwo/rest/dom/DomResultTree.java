@@ -229,9 +229,9 @@ public class DomResultTree {
 //       plotSubTree(studentTree);
 //        sb.append("\n");
 //        LOG.log(Level.INFO, sb.toString());
-        plotSubTree(resultTree, 0);
+        plotSubTree(sb,resultTree, 0);
         sb.append("\n");
-        LOG.log(Level.INFO, sb.toString());
+//        LOG.log(Level.INFO, sb.toString());
 
         return sb.toString();
     }
@@ -242,21 +242,21 @@ public class DomResultTree {
      * @param rt
      * @param depth
      */
-    private void plotSubTree(DomResultScore rt, int depth) {
-        StringBuilder sb = new StringBuilder();
+    private void plotSubTree(StringBuilder sb, DomResultScore rt, int depth) {
 
         sb.append(rt.getNodeId());
+        sb.append(":");
+        sb.append(depth);
         sb.append(":");
         sb.append(rt.getLabel());
         sb.append(":");
         sb.append(rt.getScore());
         sb.append("\n");
-        LOG.log(Level.INFO, tabs.substring(0, depth) + sb.toString());
+//        LOG.log(Level.INFO, tabs.substring(0, depth) + sb.toString());
 
         for (DomResultScore s : (Collection<DomResultScore>) rt.getChildren().values()) {
             if (rt.getChildren().size() > 0) {
-
-                plotSubTree(s, depth + 1);
+                plotSubTree(sb, s, depth + 1);
             }
         }
 
