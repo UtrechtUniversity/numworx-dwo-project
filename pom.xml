@@ -37,11 +37,12 @@
   	</dependency>
   </dependencies>
   <parent>
-  	<groupId>fi.parentgwt</groupId>
-  	<artifactId>ParentGWT</artifactId>
-	<version>0.0.6</version>
-  	<relativePath>../ParentGWT</relativePath>
+  	<groupId>nl.uu.fi.dwo</groupId>
+  	<artifactId>DWO-GWT</artifactId>
+  	<relativePath>../DWO-GWT</relativePath>
+  	<version>1.0-SNAPSHOT</version>
   </parent>
   <groupId>nl.uu.fi.dwo.mobile</groupId>
   <description>interaction library</description>
+  <version>0.0.6</version>
 </project>
