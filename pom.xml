@@ -190,10 +190,10 @@
     </dependencies>
     <description>Gebruiker: profiel en klas panels</description>
     <parent>
-        <groupId>fi.parentgwt</groupId>
-        <artifactId>ParentGWT</artifactId>
-        <version>0.0.6</version>
-        <relativePath>../ParentGWT</relativePath>
+        <groupId>nl.uu.fi.dwo</groupId>
+        <artifactId>DWO-GWT</artifactId>
+        <relativePath>../DWO-GWT</relativePath>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <scm>
     	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/Account/trunk</developerConnection>
