@@ -31,6 +31,8 @@ import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.CourseInClassManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
@@ -395,22 +397,53 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     public DomResultsPerTeacher createStudentResults(@Context SecurityContext sc, RestClearStudentDataForScoAndClass rest) throws Dwo2Exception {
       TeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
           .setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher().setTeacher();
+
       DomClearStudentDataForScoAndClass dom = rest.getClearStudentDataForScoAndClass();
       TeacherState_C_CC_HR_P_R_S_SC_SCO_SG_U call = state.addProfile(dom.getDomProfile()).addSchoolClass(dom.getDomSchoolClass()).addScoContext(dom.getDomScoContext());
       PersistentSchool school = call.getSchool();
       PersistentSchoolGroup studentRole = SchoolGroupManager.findBySchoolAndRole(school, RoleType.STUDENT);
-      // FIXME tot hier!
-     List<DomStudent> students = dom.getDomStudentList();
-      
+      PersistentSchoolClass schoolClass = call.getSchoolClass();
+  
+      List<DomStudent> students = dom.getDomStudentList();
+     List<DomMapEntry<PersistenceId, DomStudentScoContext>> studentScoContexts = new ArrayList<>();
+     PersistentScoContext scoContext = call.getScoContext();
+     for(DomStudent student: students) {
+       Long sid = MySQLPersistenceId.getNativeId(student);
+// verify student member of class class
+       PersistentStudentOfClassPK spk = new PersistentStudentOfClassPK(sid, schoolClass.getClassID(), studentRole.getSchoolGroupID());
+       if ( StudentOfClassManager.findEntity(spk) == null) continue;
+             
+       PersistentHasRolePK pk = new PersistentHasRolePK(spk);
+       List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(scoContext, pk);
+       DomStudentScoContext dssc;
+       if(sscList.isEmpty()) {
+         PersistentStudentScoContext ssc = new PersistentStudentScoContext();
+         ssc.setScoID(scoContext.getScoID());
+         ssc.setPersistentHasRolePK(pk);
+         long now = System.currentTimeMillis();
+         ssc.setCreateDate(new java.sql.Date(now));
+         ssc.setCreateTime(new java.sql.Time(now));
+         ssc.setCompletionStatus("");
+         ssc.setLocation("");
+         ssc.setScore(0);
+         ssc.setSessionTime("");
+         StudentScoContextManager.create(ssc);
+         dssc = ssc.buildDomStudentScoContext();
+       } else {
+         dssc = sscList.get(0).buildDomStudentScoContext();     
+       }
+       studentScoContexts.add(new DomMapEntry<PersistenceId, DomStudentScoContext>(dssc.getId(), dssc));
+     }
+     
       DomResultsPerTeacher result = new DomResultsPerTeacher();
       DomClassCourse4Teacher classCourse = call.getClassCourse().buildDomClassCourse4Teacher();
-      result.setClassCourses(Collections.singletonList(new DomMapEntry(classCourse.getId(), classCourse)));
+      result.setClassCourses(Collections.singletonList(new DomMapEntry<PersistenceId, DomClassCourse4Teacher>(classCourse.getId(), classCourse)));
       DomCourse course = call.getCourse().buildDomCourse();
-      result.setCourses(Collections.singletonList(new DomMapEntry(course.getId(), course)));
+      result.setCourses(Collections.singletonList(new DomMapEntry<PersistenceId, DomCourse>(course.getId(), course)));
       
       DomScoContext sco = call.getScoContext().buildDomScoContext();
-      result.setScoContexts(Collections.singletonList(new DomMapEntry(sco.getId(), sco)));
-      
+      result.setScoContexts(Collections.singletonList(new DomMapEntry<PersistenceId, DomScoContext>(sco.getId(), sco)));
+      result.setStudentScoContexts(studentScoContexts);
       result.setFetchTimeStamp(System.currentTimeMillis());
       return result;
     }
