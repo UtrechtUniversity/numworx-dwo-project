@@ -4120,14 +4120,14 @@ private Object CamelCase(String name) {
 	
 	public int getFirstRowMinHeight(TekstVak tv)
 	{
-		if(tv!=tekstVakken[0][0] || !pasAanH) 
+		if (tv!=tekstVakken[0][0] || !pasAanH) 
 			return 0;
 		int minHeight = 2*bovenMarge;
-		if(inklapbaar && klapUitButton!=null ) 
+		if (inklapbaar && klapUitButton!=null ) 
 		{	
-			if(knopImageView1 != null)
-				minHeight = minHeight + knopImageView1.getHeight();
-			else if(view1 != null) 
+			if (knopImageView1 != null)
+				minHeight = minHeight + DWOplayer.DWO_BUNDLE.klapuit1().getHeight();
+			else if (view1 != null) 
 				minHeight += view1.getHeight();
 		}
 		return minHeight;
@@ -4428,38 +4428,46 @@ private Object CamelCase(String name) {
 	{
 		klapUitPanel = new LayoutPanel();
 		Image view1, view2;
+		int breedteView1, hoogteView1, hoogteView2, hoogteMasterView;
 		final int inklapKnopPos = this.inklapKnopPos;
-		if(knopImageView1 != null && knopImageView1.exists()) 
+		
+		
+		if (knopImageView1 != null && knopImageView1.exists()) 
 		{
+			// eigen plaatje gekozen voor in- en uitklappen
 			view1 = this.view1 = knopImageView1.getImage();
+			breedteView1 = view1.getWidth();
+			hoogteView1 = view1.getHeight();
 		} 
 		else
 		{
 			view1 = this.view1 = new Image(DWOplayer.DWO_BUNDLE.klapuit1().getSafeUri());
-//			if(checkUitklapVak)
-//				this.view1goed = new Image(DWOplayer.DWO_BUNDLE.klapuit1().getSafeUri());
-//			else 
-//				this.view1goed = this.view1;
-//			
-			
-//			if(checkUitklapVak && isKlapvakCorrect())
-//				view1 = this.view1goed;
-//			else
-//				view1 = this.view1;		
+			breedteView1 = DWOplayer.DWO_BUNDLE.klapuit1().getWidth();
+			hoogteView1 = DWOplayer.DWO_BUNDLE.klapuit1().getHeight();
 		}
-		if(knopImageView2 != null && knopImageView2.exists()) {
+
+		if (knopImageView2 != null && knopImageView2.exists())
+		{
+			// eigen plaatje gekozen voor in- en uitklappen
 			view2 = knopImageView2.getImage();
-		} else {
+			hoogteView2 = view2.getHeight();
+		}
+		else
+		{
 			view2 = new Image(DWOplayer.DWO_BUNDLE.klapuit2().getSafeUri());
+			hoogteView2 = DWOplayer.DWO_BUNDLE.klapuit2().getHeight();
 		}
 		
 		//In deze implementatie ga ik er voorlopig vanuit dat view1 en view2 dezelfde maat hebben.
-		final int breedtePanel = (checkUitklapVak && !isNoordhoff())?view1.getWidth() + 20:view1.getWidth();
-		int hoogteKnop = view1.getHeight();
+		final int breedtePanel = (checkUitklapVak && !isNoordhoff()) ? breedteView1 + 20 : breedteView1;
+		int hoogteKnop = hoogteView1;
 		
 		klapUitPanel.setPixelSize(breedtePanel, hoogteKnop);
 		
 		final Image masterView = ingeklapt ? view2 : view1;
+		
+		hoogteMasterView = ingeklapt ? hoogteView2 : hoogteView1;
+		
 		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
 		goedKrulImage.setVisible(false);
 		masterView.getElement().getStyle().setProperty("verticalAlign", Math.round(hoogtes.get(0).doubleValue()) + "px");
@@ -4536,7 +4544,7 @@ private Object CamelCase(String name) {
 			public void onLoad(LoadEvent event) {
 				//int width = masterView.getWidth();
 				//int width = klapUitPanel.getOffsetWidth();
-				int height = masterView.getHeight();
+				int height = hoogteMasterView;
 				
 				//setSizeUitklapButton(breedtePanel, hoogtes.get(0).intValue());
 				//klapUitButton.setPixelSize(width, hoogtes.get(0).intValue());
@@ -4545,31 +4553,33 @@ private Object CamelCase(String name) {
 				
 			}
 		};
-// preinitialize width/height?
-		if (knopImageView1 != null && knopImageView1.getWidth() > 0 && knopImageView1.getHeight() > 0)
+		
+		// preinitialize width/height?
+		
+		if (knopImageView1 != null && DWOplayer.DWO_BUNDLE.klapuit1().getWidth() > 0 && DWOplayer.DWO_BUNDLE.klapuit1().getHeight() > 0)
 		{
 			//layoutPanel.insert(klapUitButton,0);
 			layoutPanel.insert(klapUitPanel, 0);
-			int width = knopImageView1.getWidth();
+			int width = DWOplayer.DWO_BUNDLE.klapuit1().getWidth();
 // neem max.
-			width = Math.max(width, knopImageView2.getWidth());
+			width = Math.max(width, DWOplayer.DWO_BUNDLE.klapuit2().getWidth());
 			
-			int height = knopImageView1.getHeight();
+			int height = DWOplayer.DWO_BUNDLE.klapuit1().getHeight();
 			//setSizeUitklapButton(breedtePanel, Math.max(height, hoogtes.get(0).intValue()));
 			
 			//klapUitButton.setPixelSize(width, hoogtes.get(0).intValue());		
 			//setPositionUitklapButton(layoutPanel, inklapKnopPos, width, height);
 			setPositionUitklapButton(layoutPanel, breedtePanel, height);
 		}
-		else 
-		if (masterView.getWidth() > 0)
+		else if (masterView.getWidth() > 0)
 		{
 			//layoutPanel.insert(klapUitButton,0);
 			layoutPanel.insert(klapUitPanel, 0);
 			handler.onLoad(null);
 		}
 		else 
-		{	masterView.addLoadHandler(handler);
+		{
+			masterView.addLoadHandler(handler);
 			//layoutPanel.insert(klapUitButton,0);
 			layoutPanel.insert(klapUitPanel, 0);
 		}
