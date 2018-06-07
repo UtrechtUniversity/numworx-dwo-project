@@ -1159,7 +1159,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                     PersistentCourse course = CourseManager.findEntity(courseID);
                     if (course == null) {
                         LOG.log(Level.SEVERE, "course null for courseid = " + courseID + " sccid = " + scc.getClassCourseID());
-                    } else if (profileID.equals(course.getDwoProfileID())) {
+                    } else if (profileID.longValue()==course.getDwoProfileID().longValue()) {
                         DomClassCourse4Teacher dcc = scc.buildDomClassCourse4Teacher();
                         classCourseMap.put(dcc.getId(), dcc);
                         DomCourse dcs = course.buildDomCourse();
