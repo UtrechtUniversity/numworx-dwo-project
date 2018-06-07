@@ -15,8 +15,12 @@ import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
@@ -25,6 +29,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 /**
@@ -42,21 +47,21 @@ public class EditStudentPresenter {
     private Map<String, TaggedDomSchoolClass> taggedSchoolClassMap;
     private DomUserFull user;
 
-    
     public interface Display {
 
         void clear();
 
-        void init(String role); //Supports "TEACHER", "SCHOOLADMIN"
+        void setUser(DomUser student);
 
-        void setStudent(DomUserFull student);
+        void setSingleSchoolStudent(DomUserFull student);
+
         void setSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses);
 
         void setEmptyTableMessage();
 
         void setLoadingTableMessage();
     }
-    
+
     /**
      * @return the view
      */
@@ -71,7 +76,6 @@ public class EditStudentPresenter {
         this.view = view;
     }
 
-
     public EditStudentPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
@@ -81,80 +85,160 @@ public class EditStudentPresenter {
         view.clear();
         view.setEmptyTableMessage();
         setStudentInView(aUser);
-        setSchoolClassesInView(aUser);
+        initView(aUser);
+//        setSchoolClassesInView(aUser);
     }
-    
-    @JsMethod
+
     public void setStudentInView(DomUser aUser) {
-	Promise<DomSingleSchoolStudent> userPromise;
+        Promise<DomSingleSchoolStudent> userPromise;
         DomGetSingleSchoolStudent getStudent = new DomGetSingleSchoolStudent();
-	userPromise = manager.getSingleSchoolStudent(getStudent);
-        
-	// onSuccess calculate results and show.
-	userPromise.then(new Success<DomUserFull, Void>() {
-	    @Override
-	    public Promise<Void> call(Promise<DomUserFull> resolved) throws Exception {
-		// calculate tree and call plotting
-		LOG.log(Level.INFO, "DomFullUser data returned.");
-		user = resolved.getValue();
-		view.setStudent(user);
-		return null;
-	    }
-	}, new Failure() {
-	    @Override
-	    public void fail(Promise<?> resolved) throws Exception {
-		Throwable fail = resolved.getFailure();
-		if (fail instanceof Dwo2Exception) {
-		    LOG.log(Level.SEVERE, fail.getMessage());
-		    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-		} else {
-		    LOG.log(Level.SEVERE, fail.getMessage());
-		    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-		    // throw directly
-		}
-	    }
-	});
-    }
-    
-    /** Retrieves a list of all school classes and displays the stuff */
-    private void setSchoolClassesInView(DomUser aUser) {
-        Promise<List<DomSchoolClass>> promise;
-        promise = manager.getTeachersSchoolClasses();
-        // onSuccess update view
-        promise.then(new Success<List<DomSchoolClass>, Void>() {
+        userPromise = manager.getSingleSchoolStudent(getStudent);
+
+        // onSuccess calculate results and show.
+        userPromise.then(new Success<DomUserFull, Void>() {
             @Override
-            public Promise<Void> call(Promise<List<DomSchoolClass>> resolved) throws Exception {
-                //flip back to schoolclasses screen 
-                taggedSchoolClassMap = new HashMap<String, TaggedDomSchoolClass>();
-                for (DomSchoolClass sc : resolved.getValue()) {
-                    TaggedDomSchoolClass tsc = new TaggedDomSchoolClass();
-                    tsc.setSchoolClass(sc);
-                    tsc.setTag(false);
-                    taggedSchoolClassMap.put(sc.getId().getIdString(), tsc);
-                }
-                view.setSchoolClasses(taggedSchoolClassMap);
+            public Promise<Void> call(Promise<DomUserFull> resolved) throws Exception {
+                // calculate tree and call plotting
+                LOG.log(Level.INFO, "DomFullUser data returned.");
+                user = resolved.getValue();
+                view.setUser(user);
                 return null;
             }
-
-        },
-                new Failure() {
+        }, new Failure() {
             @Override
             public void fail(Promise<?> resolved) throws Exception {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-                    //throw directly
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
+                    // throw directly
                 }
             }
         });
     }
-    //updateSingleSchoolStudent
-    
 
+    public void initView(DomUser aUser) {
+        Promise p = Promises.resolved(null);
+        //if singleschool fetch user
+        if (aUser.getSingleSchool()) {
+            p.then((resolved) -> {
+                DomGetSingleSchoolStudent student = new DomGetSingleSchoolStudent(new DomStudent(aUser));
+                return manager.getSingleSchoolStudent(student);
+
+            }).then((resolved) -> {
+                DomSingleSchoolStudent student = (DomSingleSchoolStudent) resolved.getValue();
+                view.setSingleSchoolStudent(student);
+                return Promises.resolved(null);
+            });
+        } else {
+            view.setUser(aUser);
+        }
+
+        //fetch schoolclasses
+        p.then((resolved) -> {
+            return manager.getTeachersSchoolClasses();
+
+        }).then((resolved) -> {
+            List<DomSchoolClass> classList = (List<DomSchoolClass>) resolved.getValue();
+            taggedSchoolClassMap = new HashMap<String, TaggedDomSchoolClass>(classList.size());
+            classList.forEach((v) -> taggedSchoolClassMap.put(v.getId().getIdString(), new TaggedDomSchoolClass(v)));
+            return Promises.resolved(null);
+        }).then((resolved) -> {
+            List<DomSchoolClassId> studentClassList = (List<DomSchoolClassId>) resolved.getValue();
+            studentClassList.forEach((v) -> {
+                taggedSchoolClassMap.get(v.getId().getIdString()).setTag(true);
+            });
+            return Promises.resolved(null);
+        });
+
+        p.then(null, (failure) -> {
+            eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
+        });
+    }
+
+    @JsMethod
+    public void removeStudentFromSchoolClass(String schoolClassId) {
+        DomSchoolClass sc = taggedSchoolClassMap.get(schoolClassId).getSchoolClass();
+        DomRemoveStudentFromSchoolClass data = new DomRemoveStudentFromSchoolClass();
+        data.setSchoolClass(sc);
+        data.setStudent(new DomStudent(user));
+        Promise<Boolean> p = manager.removeStudentFromSchoolClass(data);
+        p.then((resolved) -> {
+            this.initView(user);
+            return Promises.resolved(true);
+        });
+        p.then(null, (failure) -> {
+            eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
+        });
+    }
+
+    @JsMethod
+    public void submitStudentToSchoolClass(String schoolClassId) {
+        TaggedDomSchoolClass from = null;
+        for (TaggedDomSchoolClass s : taggedSchoolClassMap.values()) {
+            if (s.isTag() && !s.getSchoolClass().getId().getIdString().equals(schoolClassId)) {
+                from = s;
+                DomSchoolClass to = taggedSchoolClassMap.get(schoolClassId).getSchoolClass();
+                DomSubmitStudentToSchoolClass data = new DomSubmitStudentToSchoolClass();
+                data.setSchoolClassFrom(from.getSchoolClass());
+                data.setSchoolClassTo(to);
+                data.setStudent(new DomStudent(user));
+                Promise<Boolean> p = manager.submitStudentToSchoolClass(data);
+                p.then((resolved) -> {
+                    this.initView(user);
+                    return Promises.resolved(true);
+                });
+                p.then(null, (failure) -> {
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
+                });
+                break;
+            }
+
+        }
+    }
+
+//    
+//    /**
+//     * Retrieves a list of all school classes and displays the stuff
+//     */
+//    private void setSchoolClassesInView(DomUser aUser) {
+//        Promise<List<DomSchoolClass>> promise;
+//        promise = manager.getTeachersSchoolClasses();
+//        // onSuccess update view
+//        promise.then(new Success<List<DomSchoolClass>, Void>() {
+//            @Override
+//            public Promise<Void> call(Promise<List<DomSchoolClass>> resolved) throws Exception {
+//                //flip back to schoolclasses screen 
+//                taggedSchoolClassMap = new HashMap<String, TaggedDomSchoolClass>();
+//                for (DomSchoolClass sc : resolved.getValue()) {
+//                    TaggedDomSchoolClass tsc = new TaggedDomSchoolClass();
+//                    tsc.setSchoolClass(sc);
+//                    tsc.setTag(false);
+//                    taggedSchoolClassMap.put(sc.getId().getIdString(), tsc);
+//                }
+//                view.setSchoolClasses(taggedSchoolClassMap);
+//                return null;
+//            }
+//
+//        },
+//                new Failure() {
+//            @Override
+//            public void fail(Promise<?> resolved) throws Exception {
+//                Throwable fail = resolved.getFailure();
+//                if (fail instanceof Dwo2Exception) {
+//                    LOG.log(Level.SEVERE, fail.getMessage());
+//                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+//                } else {
+//                    LOG.log(Level.SEVERE, fail.getMessage());
+//                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+//                    //throw directly
+//                }
+//            }
+//        });
+//    }
     @JsMethod
     public void saveUser(String givenName, String insertion, String familyName, String email, String curPassword, String newPassword, String newPasswordAgain) {
         if (!MD5.md5(curPassword).equals(user.getPassword())) {
@@ -207,7 +291,7 @@ public class EditStudentPresenter {
 
         //All is well, proceed with REST-request
         Promise<Boolean> promisedUser;
-	promisedUser = manager.updateSingleSchoolStudent(changedUser);
+        promisedUser = manager.updateSingleSchoolStudent(changedUser);
         // onSuccess calculate results and show.
         promisedUser.then(new Success<Boolean, Void>() {
             @Override
@@ -215,7 +299,7 @@ public class EditStudentPresenter {
                 //calculate tree and call plotting
                 LOG.log(Level.INFO, "DomUser returned.");
                 view.clear();
-		view.setStudent(changedUser);
+                view.setUser(changedUser);
                 eventBus.fireEvent(new AlertDialogWithOKEvent("Success"));
                 return null;
             }
@@ -234,9 +318,6 @@ public class EditStudentPresenter {
                 }
             }
         });
-    }    
-    
-    //TODO
-    //submitStudentToSchoolClass
-    //removeStudentFromSchoolClass
+    }
+
 }

@@ -2,23 +2,24 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.persons;
 
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
-import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 import java.util.logging.Logger;
+import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
+import nl.uu.fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import org.osgi.util.promise.Failure;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Success;
+import org.osgi.util.promise.Promises;
 
 /**
  * Login Presenter.
@@ -32,8 +33,21 @@ public class EditTeacherPresenter {
     private EventBus eventBus;
     private Display view;
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
-    private Map<String, DomSchoolClass> schoolClassMap;
-    private DomUser user;
+    private Map<String, TaggedDomSchoolClass> taggedSchoolClassMap;
+    private DomUserFull user;
+
+    public interface Display {
+
+        void clear();
+
+        void setUser(DomUser user);
+
+        void setSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses);
+
+        void setEmptyTableMessage();
+
+        void setLoadingTableMessage();
+    }
 
     /**
      * @return the view
@@ -49,97 +63,74 @@ public class EditTeacherPresenter {
         this.view = view;
     }
 
-    public interface Display {
-
-        void clear();
-
-        void init();
-
-        void showTeachers(Map<String, DomUser> teachers);
-        void showSchoolClasses(Map<String, DomSchoolClass> schoolClasses);        
-
-        void setEmptyTableMessage();
-        void setLoadingTableMessage();
-    }
-
     public EditTeacherPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
     }
 
     public void init(DomUser aUser) {
-        user = aUser;
         view.clear();
         view.setEmptyTableMessage();
-        updateSchoolClasses();
+        view.setUser(aUser);
+        initView(aUser);
+//        setSchoolClassesInView(aUser);
     }
-        
-    private void updateSchoolClasses() {
-        Promise<List<DomSchoolClass>> promise;
-        promise = manager.getTeachersSchoolClasses();
-        // onSuccess update view
-        promise.then(new Success<List<DomSchoolClass>, Void>() {
-            @Override
-            public Promise<Void> call(Promise<List<DomSchoolClass>> resolved) throws Exception {
-                //flip back to schoolclasses screen 
-                schoolClassMap = new HashMap<String, DomSchoolClass>();
-                for (DomSchoolClass sc : resolved.getValue()) {
-                    schoolClassMap.put(sc.getId().getIdString(), sc);
-                }
-                view.showSchoolClasses(schoolClassMap);
-                return null;
-            }
 
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
+    public void initView(DomUser aUser) {
+        Promise p = Promises.resolved(null);
+
+        //fetch schoolclasses
+        p.then((resolved) -> {
+            return manager.getTeachersSchoolClasses();
+
+        }).then((resolved) -> {
+            List<DomSchoolClass> classList = (List<DomSchoolClass>) resolved.getValue();
+            taggedSchoolClassMap = new HashMap<String, TaggedDomSchoolClass>(classList.size());
+            classList.forEach((v) -> taggedSchoolClassMap.put(v.getId().getIdString(), new TaggedDomSchoolClass(v)));
+            return Promises.resolved(null);
+        }).then((resolved) -> {
+            List<DomSchoolClassId> studentClassList = (List<DomSchoolClassId>) resolved.getValue();
+            studentClassList.forEach((v) -> {
+                taggedSchoolClassMap.get(v.getId().getIdString()).setTag(true);
+            });
+            return Promises.resolved(null);
+        });
+
+        p.then(null, (failure) -> {
+            eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
         });
     }
 
-        public void submitSchoolClass(DomSchoolClass schoolClass, DomTeacher teacher) {
-        Promise<Boolean> promise;
-        DomSubmitTeacherToSchoolClass teacherToClass = new DomSubmitTeacherToSchoolClass();
-        teacherToClass.setTeacher(teacher);
-        teacherToClass.setSchoolClass(schoolClass);
-        promise = manager.submitTeacherToSchoolClass(teacherToClass);
-        // onSuccess update view
-        promise.then(new Success<Boolean, Void>() {
-            @Override
-            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                //flip back to schoolclasses screen 
-                schoolClassMap = new HashMap<String, DomSchoolClass>();
-//                for (DomSchoolClass sc : resolved.getValue()) {
-//                    schoolClassMap.put(sc.getId().getIdString(), sc);
-//                }
-                view.showSchoolClasses(schoolClassMap);
-                return null;
-            }
-
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
+    @JsMethod
+    public void removeTeacherFromSchoolClass(String schoolClassId) {
+        DomSchoolClass sc = taggedSchoolClassMap.get(schoolClassId).getSchoolClass();
+        DomRemoveTeacherFromSchoolClass data = new DomRemoveTeacherFromSchoolClass();
+        data.setSchoolClass(sc);
+        data.setTeacher(new DomTeacher(user));
+        Promise<Boolean> p = manager.removeTeacherFromSchoolClass(data);
+        p.then((resolved) -> {
+            this.initView(user);
+            return Promises.resolved(true);
+        });
+        p.then(null, (failure) -> {
+            eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
         });
     }
+
+    @JsMethod
+    public void submitTeacherToSchoolClass(String schoolClassId) {
+        DomSchoolClass sc = taggedSchoolClassMap.get(schoolClassId).getSchoolClass();
+        DomSubmitTeacherToSchoolClass data = new DomSubmitTeacherToSchoolClass();
+        data.setSchoolClass(sc);
+        data.setTeacher(new DomTeacher(user));
+        Promise<Boolean> p = manager.submitTeacherToSchoolClass(data);
+        p.then((resolved) -> {
+            this.initView(user);
+            return Promises.resolved(true);
+        });
+        p.then(null, (failure) -> {
+            eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
+        });
+    }
+
 }

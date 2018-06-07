@@ -1,8 +1,11 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.persons;
 
+import com.google.gwt.json.client.JSONObject;
+import fi.dwo.gwt.lib.rest.util.DomUserCodec;
 import java.util.Map;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditTeacherPresenter;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClassCodec;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 
 /**
@@ -14,32 +17,30 @@ public class JsEditTeacherView implements EditTeacherPresenter.Display{
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JsEditTeacherDisplay.clear();
     }
 
     @Override
-    public void init() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setUser(DomUser user) {
+        JsEditTeacherDisplay.setUser(DomUserCodec.CODEC.encode(user).isObject().getJavaScriptObject());
     }
 
     @Override
-    public void showTeachers(Map<String, DomUser> teachers) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void showSchoolClasses(Map<String, DomSchoolClass> schoolClasses) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses) {
+        JSONObject json = new JSONObject();
+        schoolClasses.forEach((k,v) -> {json.put(k, TaggedDomSchoolClassCodec.CODEC.encode(v).isObject());});        
+        JsEditStudentDisplay.setSchoolClasses(json.getJavaScriptObject());
     }
 
     @Override
     public void setEmptyTableMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JsEditTeacherDisplay.setEmptyTableMessage();
     }
 
     @Override
     public void setLoadingTableMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JsEditTeacherDisplay.setLoadingTableMessage();
     }
+
 
 }

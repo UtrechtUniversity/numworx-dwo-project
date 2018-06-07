@@ -14,6 +14,10 @@ public class TaggedDomSchoolClass {
     public TaggedDomSchoolClass() {
     }
 
+    public TaggedDomSchoolClass(DomSchoolClass aSchoolClass) {
+        schoolClass = aSchoolClass;
+    }
+
     /**
      * @return the tag
      */
