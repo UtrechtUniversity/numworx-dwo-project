@@ -14,6 +14,7 @@ import java.util.List;
 import javax.ws.rs.GET;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
@@ -30,8 +31,10 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewTo;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewType;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
+import nl.uu.fi.dwo.rest.entities.RestTeacher;
 
 public interface SecuredTeacherSchoolClassRestCaller extends RestService {
 
@@ -143,4 +146,12 @@ public interface SecuredTeacherSchoolClassRestCaller extends RestService {
     @GET
     @Path("/secure/teacher/schoolclass/getTeachersStudents")
         public void getTeachersStudents(Callback<List<DomStudent>> callback);
+
+    @PUT
+    @Path("/secure/teacher/schoolclass/getTeachersClassesOfStudent")
+    public void getTeachersClassesOfStudent(RestStudent submit, MethodCallback<List<DomSchoolClassId>> callback);
+
+    @PUT
+    @Path("/secure/teacher/schoolclass/getSharedTeacherClasses")
+    public void getSharedTeacherClasses(RestTeacher submit, MethodCallback<List<DomSchoolClassId>> callback);
 }
