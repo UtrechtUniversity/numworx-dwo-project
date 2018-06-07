@@ -5,16 +5,15 @@ package fi.dwo.server.testutil;
 
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
-import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -90,28 +89,19 @@ public class SqlResultSetMappingIT {
          q.setParameter("studentSgId", 2);
          q.setParameter("studentId", 9);
          studentResults = q.getResultList();
+         assertEquals("Should find one class.", studentResults.size(), 1);
+         assertEquals("Should find class with id=2.", studentResults.get(0), Long.valueOf(2));
          
-        if(!(studentResults.get(0) instanceof Long)){
-        fail("wrong class type");
-    }
-        if(!(studentResults.get(0) instanceof Long)){
-        fail("wrong class type");
-    }
 
         //create list of students classes in course
         List<Long> teacherResults;
          Query q2 = em.createQuery("SELECT c.persistentTeacherOfClassPK.classID FROM PersistentTeacherOfClass c where c.persistentTeacherOfClassPK.userID=:coTeacherId and c.persistentTeacherOfClassPK.schoolGroupID=:teacherSgId and c.persistentTeacherOfClassPK.classID in  (select toc.persistentTeacherOfClassPK.classID from PersistentTeacherOfClass toc where toc.persistentTeacherOfClassPK.userID=:teacherId and toc.persistentTeacherOfClassPK.schoolGroupID =:teacherSgId)");
          q2.setParameter("teacherId", 10);
          q2.setParameter("teacherSgId", 3);
-         q2.setParameter("coTeacherId", 9);
+         q2.setParameter("coTeacherId", 14);
          teacherResults = q2.getResultList();
-         
-        if(!(teacherResults.get(0) instanceof Long)){
-        fail("wrong class type");
-    }
-        if(!(teacherResults.get(0) instanceof Long)){
-        fail("wrong class type");
-    }
+         assertEquals("Should find one class.", teacherResults.size(), 1);
+         assertEquals("Should find class with id=2.", teacherResults.get(0), Long.valueOf(2));
         
     }
 }

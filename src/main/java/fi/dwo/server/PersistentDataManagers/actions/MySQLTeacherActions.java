@@ -3,6 +3,7 @@ package fi.dwo.server.PersistentDataManagers.actions;
 
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
@@ -13,6 +14,7 @@ import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
+import fi.dwo.server.PersistentDataManagers.util.TeacherSchoolClassUtilManager;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,10 +23,12 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
@@ -91,5 +95,15 @@ public class MySQLTeacherActions implements TeacherActions {
             LOG.log(Level.WARNING, msg, e);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_CanNotAddStudentToClass, msg);
         }
+    }
+    
+    @Override
+    public List<PersistenceId> getSharedTeacherClasses(TeacherDomainAuthorizer.Context context, PersistentUser otherTeacher) throws Dwo2Exception {
+        return TeacherSchoolClassUtilManager.getSharedTeacherClasses(context.getUserCtx().getUser(), context.getUserCtx().getSchoolGroup(), otherTeacher);
+    }
+
+    @Override
+    public List<PersistenceId> getTeachersClassesOfStudent(TeacherDomainAuthorizer.Context context, PersistentSchoolGroup studentSg, PersistentUser student) throws Dwo2Exception {
+        return TeacherSchoolClassUtilManager.getTeachersStudentClasses(context.getUserCtx().getUser(), context.getUserCtx().getSchoolGroup(), studentSg, student);
     }
 }

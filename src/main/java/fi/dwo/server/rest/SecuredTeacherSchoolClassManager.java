@@ -76,6 +76,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestMoveStudentToSchoolClass;
@@ -85,6 +86,8 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewAccessKey;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewFrom;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewTo;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewType;
+import nl.uu.fi.dwo.rest.entities.RestStudent;
+import nl.uu.fi.dwo.rest.entities.RestTeacher;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -708,7 +711,6 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         }
     }
 
-
     /**
      * Move a student to a different school class.
      *
@@ -733,8 +735,8 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
 //            throw new Dwo2RestException(e);
 //        }
         return true;
-    }    
-    
+    }
+
     /**
      * Removes a teacher from a school class and returns true if the remove
      * occurred.
@@ -1159,7 +1161,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                     PersistentCourse course = CourseManager.findEntity(courseID);
                     if (course == null) {
                         LOG.log(Level.SEVERE, "course null for courseid = " + courseID + " sccid = " + scc.getClassCourseID());
-                    } else if (profileID.longValue()==course.getDwoProfileID().longValue()) {
+                    } else if (profileID.longValue() == course.getDwoProfileID().longValue()) {
                         DomClassCourse4Teacher dcc = scc.buildDomClassCourse4Teacher();
                         classCourseMap.put(dcc.getId(), dcc);
                         DomCourse dcs = course.buildDomCourse();
@@ -1542,5 +1544,29 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             throw new Dwo2RestException(e);
         }
         return false;
+    }
+
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getTeachersClassesOfStudent")
+    public List<DomSchoolClassId> getTeachersClassesOfStudent(@Context SecurityContext sc, RestStudent restStudent) throws Dwo2Exception {
+        TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+                .setHasRole(restStudent.getRestContext().getDomHasRole())
+                //.setDefaultHasRole()
+                .buildSchoolAdminTeacher()
+                .setTeacher();
+        return build.getTeachersClassesOfStudent(restStudent.getDomStudent());
+    }
+    
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getSharedTeacherClasses")
+    public List<DomSchoolClassId> getSharedTeacherClasses(@Context SecurityContext sc, RestTeacher restTeacher) throws Dwo2Exception {
+        TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+                .setHasRole(restTeacher.getRestContext().getDomHasRole())
+                //.setDefaultHasRole()
+                .buildSchoolAdminTeacher()
+                .setTeacher();
+        return build.getSharedTeacherClasses(restTeacher.getDomTeacher());        
     }
 }

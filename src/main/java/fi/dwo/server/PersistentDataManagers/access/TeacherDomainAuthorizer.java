@@ -18,9 +18,11 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
@@ -40,7 +42,7 @@ public class TeacherDomainAuthorizer {
     private Context context;
     protected TeacherActions teacherActions = new MySQLTeacherActions();
 
-public static class Context {
+    public static class Context {
 
         private AnonDomainAuthorizer.AnonPersistentContext anonCtx;
         private UserDomainAuthorizer.UserPersistentContext userCtx;
@@ -112,8 +114,7 @@ public static class Context {
 
     }
 
-    
-    public static class TeacherPersistentContext  {
+    public static class TeacherPersistentContext {
 
         public TeacherPersistentContext() {
             super();
@@ -246,7 +247,7 @@ public static class Context {
         PersistentSchoolClass getSchoolClass();
 
         PersistentDwoProfile getDwoProfile();
-        
+
         TeacherState_C_CC_HR_P_R_S_SC_SG_U addCourse(DomCourse c) throws Dwo2Exception;
 
         TeacherState_C_CC_HR_P_R_S_SC_SCO_SG_U addScoContext(DomScoContext s) throws Dwo2Exception;
@@ -290,10 +291,9 @@ public static class Context {
 
         PersistentSchoolClass getSchoolClass();
 
-                TeacherState_HR_R_S_SC_SG_U addStudent(DomSchoolClass sc, DomStudent s) throws Dwo2Exception;
+        TeacherState_HR_R_S_SC_SG_U addStudent(DomSchoolClass sc, DomStudent s) throws Dwo2Exception;
 
- //       TeacherState_HR_R_S_SC_SG_U moveStudent(DomSchoolClass sc, DomStudent s);
-        
+        //       TeacherState_HR_R_S_SC_SG_U moveStudent(DomSchoolClass sc, DomStudent s);
     }
 
     public interface TeacherState_HR_R_S_SG_U {
@@ -303,15 +303,20 @@ public static class Context {
         DomStudentModelContext addStudentModel(DomStudentModelContext model) throws Dwo2Exception;
 
         TeacherState_HR_P_R_S_SG_U addProfile(DomDwoProfile p) throws Dwo2Exception;
-        
-        List<DomSchoolClass> getSchoolClasses()  throws Dwo2Exception;
-        
-        List<DomStudent> getTeachersStudents()  throws Dwo2Exception;
+
+        List<DomSchoolClass> getSchoolClasses() throws Dwo2Exception;
+
+        List<DomStudent> getTeachersStudents() throws Dwo2Exception;
+
+        List<DomSchoolClassId> getTeachersClassesOfStudent(DomStudent student) throws Dwo2Exception;
+
+        List<DomSchoolClassId> getSharedTeacherClasses(DomTeacher aTeacher) throws Dwo2Exception;
 
 //        TeacherState_HR_R_S_SC_SG_U addASchoolClass(DomSchoolClass schoolClassFrom)  throws Dwo2Exception;
     }
 
     public interface TeacherState_HR_P_R_S_SG_U {
+
         TeacherState_HR_P_R_S_SC_SG_U addSchoolClass(DomSchoolClass s) throws Dwo2Exception;
     }
 
