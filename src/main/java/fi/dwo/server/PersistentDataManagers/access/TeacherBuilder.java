@@ -38,6 +38,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -404,10 +405,13 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
         }
         return this;
     }
-    
-    /** Returns the subset of current teacher's classes a aTeacher is a member of. */
+
+    /**
+     * Returns the subset of current teacher's classes a aTeacher is a member
+     * of.
+     */
     @Override
-    public List<DomSchoolClassId> getSharedTeacherClasses(DomTeacher aTeacher) throws Dwo2Exception {        
+    public List<DomSchoolClassId> getSharedTeacherClasses(DomTeacher aTeacher) throws Dwo2Exception {
         try {
             PersistentUser teacher = UserManager.findEntity(MySQLPersistenceId.getNativeId(aTeacher));
             if (teacher == null) {
@@ -428,10 +432,13 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
             throw new Dwo2RestException(ex);
         }
     }
-             
-    /** Returns the subset of current teacher's classes a aTeacherr is a member of. */
+
+    /**
+     * Returns the subset of current teacher's classes a aTeacherr is a member
+     * of.
+     */
     @Override
-    public List<DomSchoolClassId> getTeachersClassesOfStudent(DomStudent aStudent) throws Dwo2Exception {        
+    public List<DomSchoolClassId> getTeachersClassesOfStudent(DomStudent aStudent) throws Dwo2Exception {
         try {
             PersistentUser student = UserManager.findEntity(MySQLPersistenceId.getNativeId(aStudent));
             if (student == null) {
@@ -452,9 +459,9 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
             throw new Dwo2RestException(ex);
         }
     }
-//
-//    @Override
-//    public TeacherDomainAuthorizer.TeacherState_HR_R_S_SC_SG_U moveStudent(DomSchoolClass sc, DomStudent s) throws Dwo2Exception {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
+
+    @Override
+    public Boolean attachCourseToClass() throws Dwo2Exception {
+        return instance.teacherActions.attachCourseToClass(instance.getContext());
+    }
 }

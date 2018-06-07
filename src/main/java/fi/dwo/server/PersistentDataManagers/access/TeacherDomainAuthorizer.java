@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -73,35 +74,35 @@ public class TeacherDomainAuthorizer {
         /**
          * @param anonCtx the anonCtx to set
          */
-        protected void setAnonCtx(AnonDomainAuthorizer.AnonPersistentContext anonCtx) {
+        public void setAnonCtx(AnonDomainAuthorizer.AnonPersistentContext anonCtx) {
             this.anonCtx = anonCtx;
         }
 
         /**
          * @param userCtx the userCtx to set
          */
-        protected void setUserCtx(UserDomainAuthorizer.UserPersistentContext userCtx) {
+        public void setUserCtx(UserDomainAuthorizer.UserPersistentContext userCtx) {
             this.userCtx = userCtx;
         }
 
         /**
          * @return the schooladminTeacherCtx
          */
-        protected SchoolAdminTeacherPersistentContext getSchooladminTeacherCtx() {
+        public SchoolAdminTeacherPersistentContext getSchooladminTeacherCtx() {
             return schooladminTeacherCtx;
         }
 
         /**
          * @param schooladminTeacherCtx the schooladminTeacherCtx to set
          */
-        protected void setSchooladminTeacherCtx(SchoolAdminTeacherPersistentContext schooladminTeacherCtx) {
+        public void setSchooladminTeacherCtx(SchoolAdminTeacherPersistentContext schooladminTeacherCtx) {
             this.schooladminTeacherCtx = schooladminTeacherCtx;
         }
 
         /**
          * @return the teacherCtx
          */
-        protected TeacherPersistentContext getTeacherCtx() {
+        public TeacherPersistentContext getTeacherCtx() {
             return teacherCtx;
         }
 
@@ -275,6 +276,8 @@ public class TeacherDomainAuthorizer {
         PersistentClassCourse getClassCourse();
 
         TeacherState_C_CC_HR_P_R_S_SC_SCO_SG_U addScoContext(DomScoContext s) throws Dwo2Exception;
+        
+        Boolean attachCourseToClass()  throws Dwo2Exception;
     }
 
     public interface TeacherState_HR_R_S_SC_SG_U {

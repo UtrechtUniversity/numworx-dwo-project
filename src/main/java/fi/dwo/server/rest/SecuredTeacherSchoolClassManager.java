@@ -1197,8 +1197,6 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     public Boolean attachCourseToClass(@Context SecurityContext sc, RestSchoolClassCourseAndProfile rest) throws Dwo2Exception {
         //secure builder to detach course by setting it invisible.
         try {
-            //fail if invalid parameters, fill build if valid
-//            CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
             TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                     .setHasRole(rest.getRestContext().getDomHasRole())
                     //.setDefaultHasRole()
@@ -1279,9 +1277,9 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             throw new Dwo2RestException(e);
         }
         return false;
-
-// old code that destroys the classcourse entry, keep as example or for revert.    
-//init
+//
+//// old code that destroys the classcourse entry, keep as example or for revert.    
+////init
 //    PersistentHasRole phr = null;
 //    PersistentHasRolePK phrPK = MySQLPersistenceId.getNativeId(rest.getRestContext().getDomHasRole());
 //    PersistentSchool school = null;
@@ -1437,7 +1435,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
 //            }
 //        }
 //    }
-        //commit
+//        commit
 //        return true;
     }
 
