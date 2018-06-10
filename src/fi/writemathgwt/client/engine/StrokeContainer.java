@@ -1,6 +1,7 @@
 package fi.writemathgwt.client.engine;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -39,6 +40,10 @@ public class StrokeContainer {
 	
 	public ArrayList<Stroke> getStrokes() {
 		return strokes;
+	}
+	
+	public DoubleRectangle getBoundingBox() {
+		return parseArea;
 	}
 	
 	public void wis() {
@@ -142,6 +147,7 @@ public class StrokeContainer {
 				for (int j = 0; j < awo.getStrokes().size(); j++) 
 					strokes.remove(awo.getStrokes().get(j));
 		}
+		
 		return woNew;
 	}
 	
@@ -159,8 +165,10 @@ public class StrokeContainer {
 			updateAverageHeight(wo);
 			wmObjects.add(wo);
 		}
-		else
+		else {
 			strokes.remove(strokes.size()-1);
+			makeParseArea();
+		}
 	}
 	
 	private void updateAverageHeight(WMObject wo) {
@@ -182,6 +190,20 @@ public class StrokeContainer {
 			double ymax = Math.max(parseArea.y + parseArea.height, stroke.getParsePointsbox().y + stroke.getParsePointsbox().height);
 			parseArea = new DoubleRectangle(xmin, ymin, xmax-xmin, ymax-ymin);
 		}
+	}
+	
+	private void makeParseArea() {
+		double xMin = 10000;
+		double xMax = -10000;
+		double yMin = 10000;
+		double yMax = -10000;
+		for (int i = 0; i < strokes.size(); i++) {
+			xMin = Math.min((int)xMin,  strokes.get(i).getParsePointsbox().x);
+			yMin = Math.min((int)yMin,  strokes.get(i).getParsePointsbox().y);
+			xMax = Math.max((int)xMax,  strokes.get(i).getParsePointsbox().x + strokes.get(i).getParsePointsbox().width);
+			yMax = Math.max((int)yMax,  strokes.get(i).getParsePointsbox().y + strokes.get(i).getParsePointsbox().height);
+		}
+		parseArea = new DoubleRectangle(xMin, yMin, xMax-xMin, yMax-yMin);
 	}
 	
 	private boolean tryAsStrokeExtension(Stroke extension) {
@@ -231,6 +253,44 @@ public class StrokeContainer {
 			}
 		}
 		return false;
+	}
+	
+	public void translate(int dx, int dy) {
+		for (int i = 0; i < strokes.size(); i++) {
+			strokes.get(i).translate(dx, dy);
+		}
+		for (int i = 0; i < wmObjects.size(); i++) {
+			wmObjects.get(i).translate(dx, dy);
+		}
+		parseArea.translate(dx, dy);
+	}
+	
+	public void scale(double factor) {
+		if(parseArea!=null)
+			scale(parseArea.x, parseArea.y, factor);
+	}
+	
+	public void scale(double cx, double cy,double factor) {
+		for (int i = 0; i < strokes.size(); i++) {
+			strokes.get(i).scale(cx, cy, factor);
+		}
+		for (int i = 0; i < wmObjects.size(); i++) {
+			wmObjects.get(i).scale(cx, cy, factor);
+		}
+		parseArea.scale(cx, cy, factor);
+		averageHeight *= factor;
+	}
+	
+	public boolean contains(int x, int y) {
+		if(parseArea==null)
+			return false;
+		return parseArea.contains(x, y);
+	}
+	
+	public double getDiagonal() {
+		if(parseArea!=null)
+			return parseArea.getDiagonal();
+		return 0;
 	}
 	
 	

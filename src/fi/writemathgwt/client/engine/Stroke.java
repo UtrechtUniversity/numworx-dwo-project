@@ -348,5 +348,19 @@ public class Stroke {
 			h1 += 360;
 		return h1-h2;
 	}
+	
+	public void translate(double dx, double dy) {
+		for(int i = 0 ; i < parsePoints.size() ; i++) {
+			parsePoints.get(i).translate(dx, dy);
+		}
+		parsePointsBox.translate(dx, dy);
+	}
+	
+	public void scale(double cx, double cy, double factor) {
+		for(int i = 0 ; i < parsePoints.size() ; i++) {
+			parsePoints.get(i).scale(cx, cy, factor);
+		}
+		parsePointsBox.scale(cx, cy, factor);
+	}
 }
 

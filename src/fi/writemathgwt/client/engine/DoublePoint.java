@@ -39,4 +39,9 @@ public class DoublePoint {
 		x+=dx;
 		y+=dy;
 	}
+	
+	public void scale(double cx, double cy, double factor) {
+		x = cx+(x-cx)*factor;
+		y = cy+(y-cy)*factor;
+	}
 }

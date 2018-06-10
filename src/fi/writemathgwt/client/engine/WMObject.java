@@ -221,4 +221,12 @@ public class WMObject {
 		else
 			return false;
 	}
+	
+	public void translate(double dx, double dy) {
+		box.translate(dx, dy);
+	}
+	
+	public void scale(double cx, double cy,double factor) {
+		box.scale(cx, cy, factor);
+	}
 }

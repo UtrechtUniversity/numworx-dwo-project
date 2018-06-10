@@ -20,5 +20,21 @@ public class DoubleRectangle {
 		return (p.x >= x) && (p.x <= (x + width)) &&
 			       (p.y >= y) && (p.y <= (y + height));
 	}
+	
+	public void translate(double dx, double dy) {
+		this.x += dx;
+		this.y += dy;
+	}
+	
+	public void scale(double cx, double cy, double factor) {
+		x = cx+(x-cx)*factor;
+		y = cy+(y-cy)*factor;
+		width*=factor;
+		height*=factor;
+	}
+	
+	public double getDiagonal() {
+		return Math.sqrt(width*width+height*height);
+	}
 }
 
