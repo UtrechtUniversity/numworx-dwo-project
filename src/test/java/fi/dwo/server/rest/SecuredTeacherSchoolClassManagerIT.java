@@ -730,8 +730,6 @@ public class SecuredTeacherSchoolClassManagerIT {
         try {
             instance.detachCourseFromClass(sc, submit);
             List<PersistentClassCourse> cc = ClassCourseManager.findEntities(SchoolClassManager.findEntity(2L), CourseManager.findEntity(3L));
-            //should throw exception.
-            fail("Failed to create legit classcourse.");
             if (cc.size() != 0) {
                 fail("Detach added classcourse."); //unless nosql
             }

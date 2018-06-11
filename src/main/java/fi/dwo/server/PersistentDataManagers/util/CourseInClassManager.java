@@ -393,21 +393,23 @@ public class CourseInClassManager {
             //check for results if none remove leave else make it invisible
             course = em.find(PersistentCourse.class, course.getCourseID());
             if (!course.isWithChildren()) {
-                //fetch scoId of course leaf.
-                javax.persistence.Query q = em.createQuery(
-                        "SELECT sco.scoID FROM PersistentClassCourse cc, PersistentCourse c, PersistentScoContext sco WHERE c.courseID=:courseID and c.withChildren=0 and cc.classID=:classID and c.courseID = cc.courseID and  sco.courseID = :courseID");
-                //while not root, update parent node
-                q.setParameter("classID", schoolClass.getClassID());
-                q.setParameter("courseID", course.getCourseID());
-                List<Long> list = q.getResultList();
-                if (list.size() == 1) {
-                    //extract sco results and count them
-                    long scoID = list.get(0);
+//                //fetch scoId of course leaf.
+//                javax.persistence.Query q = em.createQuery(
+//                        "SELECT sco.scoID FROM PersistentScoContext sco WHERE sco.courseID = :courseID");
+////                javax.persistence.Query q = em.createQuery(
+////                        "SELECT sco.scoID FROM PersistentClassCourse cc, PersistentCourse c, PersistentScoContext sco WHERE c.courseID=:courseID and c.withChildren=0 and cc.classID=:classID and c.courseID = cc.courseID and  sco.courseID = :courseID");
+//                //while not root, update parent node
+////                q.setParameter("classID", schoolClass.getClassID());
+//                q.setParameter("courseID", course.getCourseID());
+//                List<Long> list = q.getResultList();
+//                if (list.size() >0) {
+//                    //extract sco results and count them
+//                    long scoID = list.get(0);
                     javax.persistence.Query results = em.createQuery(
-                            "SELECT ssco.persistentHasRolePK.userID FROM PersistentClassCourse cc, PersistentStudentOfClass soc, PersistentStudentScoContext ssco WHERE cc.courseID=:courseID and cc.classID=:classID and soc.persistentStudentOfClassPK.userID = ssco.persistentHasRolePK.userID and soc.persistentStudentOfClassPK.schoolGroupID = ssco.persistentHasRolePK.schoolGroupID and ssco.scoID = :scoID");
+                            "SELECT ssco.persistentHasRolePK.userID FROM PersistentCourse c, PersistentClassCourse cc, PersistentStudentOfClass soc, PersistentScoContext sco, PersistentStudentScoContext ssco WHERE cc.courseID=:courseID and cc.classID=:classID and soc.persistentStudentOfClassPK.userID = ssco.persistentHasRolePK.userID and soc.persistentStudentOfClassPK.schoolGroupID = ssco.persistentHasRolePK.schoolGroupID and ssco.scoID = sco.scoID and sco.courseID = c.courseID and c.courseID=:courseID");
                     results.setParameter("classID", schoolClass.getClassID());
                     results.setParameter("courseID", course.getCourseID());
-                    results.setParameter("scoID", scoID);
+//                    results.setParameter("scoID", scoID);
                     List<Long> resultKeys = results.getResultList();
                     if (resultKeys.size() > 0) {
                         //there are results so update the class course
@@ -458,7 +460,7 @@ public class CourseInClassManager {
                     parent = em.find(PersistentCourse.class, course.getParentID());
                 }
                 em.getTransaction().commit();
-            }
+//            }
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "This course is not a leave. ", e);
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
