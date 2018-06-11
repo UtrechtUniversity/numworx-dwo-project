@@ -19,8 +19,8 @@ import jsinterop.annotations.JsType;
  *
  * @author G.A.J. van der Plas
  */
-@JsType(isNative = true, name = "jsEditStudentDisplay", namespace = JsPackage.GLOBAL)
-public class JsEditTeacherDisplay {
+@JsType(isNative = true, name = "jsEditPersonDisplay", namespace = JsPackage.GLOBAL)
+public class JsEditPersonDisplay {
 
     /**
      * Clears all UI states
@@ -28,6 +28,9 @@ public class JsEditTeacherDisplay {
     public static native void clear();
     /** User data in case one may not change settings */
     public static native void setUser(JavaScriptObject data);
+
+    /** User data in case one may edit settings */
+    public static native void setSingleSchoolStudent(JavaScriptObject data);
     
      public static native void setSchoolClasses(JavaScriptObject data);
 

@@ -19,34 +19,34 @@ public class JsEditStudentView implements EditStudentPresenter.Display {
 
     @Override
     public void clear() {
-        JsEditStudentDisplay.clear();
+        JsEditPersonDisplay.clear();
     }
 
     @Override
     public void setSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses) {
         JSONObject json = new JSONObject();
         schoolClasses.forEach((k,v) -> {json.put(k, TaggedDomSchoolClassCodec.CODEC.encode(v).isObject());});        
-        JsEditStudentDisplay.setSchoolClasses(json.getJavaScriptObject());
+        JsEditPersonDisplay.setSchoolClasses(json.getJavaScriptObject());
     }
 
     @Override
     public void setEmptyTableMessage() {
-        JsEditStudentDisplay.setEmptyTableMessage();
+        JsEditPersonDisplay.setEmptyTableMessage();
     }
 
     @Override
     public void setLoadingTableMessage() {
-       JsEditStudentDisplay.setLoadingTableMessage();
+       JsEditPersonDisplay.setLoadingTableMessage();
     }
 
     @Override
     public void setUser(DomUser student) {
-        JsEditStudentDisplay.setUser(DomUserCodec.CODEC.encode(student).isObject().getJavaScriptObject());
+        JsEditPersonDisplay.setUser(DomUserCodec.CODEC.encode(student).isObject().getJavaScriptObject());
     }
 
     @Override
     public void setSingleSchoolStudent(DomUserFull student) {
-        JsEditStudentDisplay.setSingleSchoolStudent(DomUserFullCodec.CODEC.encode(student).isObject().getJavaScriptObject());
+        JsEditPersonDisplay.setSingleSchoolStudent(DomUserFullCodec.CODEC.encode(student).isObject().getJavaScriptObject());
     }
 
 }

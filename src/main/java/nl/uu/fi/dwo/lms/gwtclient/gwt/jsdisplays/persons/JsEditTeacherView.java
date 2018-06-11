@@ -17,29 +17,29 @@ public class JsEditTeacherView implements EditTeacherPresenter.Display{
 
     @Override
     public void clear() {
-        JsEditTeacherDisplay.clear();
+        JsEditPersonDisplay.clear();
     }
 
     @Override
     public void setUser(DomUser user) {
-        JsEditTeacherDisplay.setUser(DomUserCodec.CODEC.encode(user).isObject().getJavaScriptObject());
+        JsEditPersonDisplay.setUser(DomUserCodec.CODEC.encode(user).isObject().getJavaScriptObject());
     }
 
     @Override
     public void setSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses) {
         JSONObject json = new JSONObject();
         schoolClasses.forEach((k,v) -> {json.put(k, TaggedDomSchoolClassCodec.CODEC.encode(v).isObject());});        
-        JsEditStudentDisplay.setSchoolClasses(json.getJavaScriptObject());
+        JsEditPersonDisplay.setSchoolClasses(json.getJavaScriptObject());
     }
 
     @Override
     public void setEmptyTableMessage() {
-        JsEditTeacherDisplay.setEmptyTableMessage();
+        JsEditPersonDisplay.setEmptyTableMessage();
     }
 
     @Override
     public void setLoadingTableMessage() {
-        JsEditTeacherDisplay.setLoadingTableMessage();
+        JsEditPersonDisplay.setLoadingTableMessage();
     }
 
 
