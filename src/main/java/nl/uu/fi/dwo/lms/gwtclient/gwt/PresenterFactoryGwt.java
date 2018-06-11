@@ -52,14 +52,14 @@ public class PresenterFactoryGwt implements PresenterFactory {
     private final ResultsPresenter resultsPresenter;
     private final SelectedResultsPresenter selectedResultsPresenter;
     private final SelectStudentResultsPresenter selectStudentResultsPresenter;
-    private final StudentScoResultPresenter studentScoResultPresenter ;
-    
+    private final StudentScoResultPresenter studentScoResultPresenter;
+
     private final PersonsPresenter personsPresenter;
     private final AddStudentPresenter addStudentPresenter;
     private final ImportPersonsPresenter importPersonsPresenter;
     private final EditStudentPresenter editStudentPresenter;
     private final EditTeacherPresenter editTeacherPresenter;
-    
+
     private final MessageDialogWithOKPresenter messageDialogWithOKPresenter;
     private final AlertDialogWithOKPresenter alertDialogWithOKPresenter;
     private final AlertDialogWithConfirmCancelPresenter alertDialogWithConfirmCancelPresenter;
@@ -79,17 +79,17 @@ public class PresenterFactoryGwt implements PresenterFactory {
         copyOrMoveStudentToSchoolclassPresenter = new CopyOrMoveStudentToSchoolclassPresenter(eventBus, dwoGlobalVars);
         addTeacherToSchoolclassPresenter = new AddTeacherToSchoolclassPresenter(eventBus, dwoGlobalVars);
         modulesOfSchoolclassPresenter = new ModulesOfSchoolclassPresenter(eventBus, dwoGlobalVars);
-        modulesPresenter = new ModulesPresenter(eventBus,dwoGlobalVars);
+        modulesPresenter = new ModulesPresenter(eventBus, dwoGlobalVars);
         resultsPresenter = new ResultsPresenter(eventBus, dwoGlobalVars);
         selectedResultsPresenter = new SelectedResultsPresenter(eventBus, dwoGlobalVars);
         studentScoResultPresenter = new StudentScoResultPresenter(eventBus, dwoGlobalVars);
         selectStudentResultsPresenter = new SelectStudentResultsPresenter(eventBus, dwoGlobalVars);
         personsPresenter = new PersonsPresenter(anEventBus, aDwoGlobalVars);
-        addStudentPresenter = new AddStudentPresenter(anEventBus, aDwoGlobalVars);        
+        addStudentPresenter = new AddStudentPresenter(anEventBus, aDwoGlobalVars);
         importPersonsPresenter = new ImportPersonsPresenter(anEventBus, aDwoGlobalVars);
         editStudentPresenter = new EditStudentPresenter(anEventBus, aDwoGlobalVars);
         editTeacherPresenter = new EditTeacherPresenter(anEventBus, aDwoGlobalVars);
-        
+
         messageDialogWithOKPresenter = new MessageDialogWithOKPresenter(eventBus);
         fileUploadStudentsPresenter = new FileUploadStudentsPresenter(eventBus, dwoGlobalVars);
         alertDialogWithOKPresenter = new AlertDialogWithOKPresenter(eventBus);
@@ -118,7 +118,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         importPersonsPresenter.setView(viewFactory.getImportPersonsView());
         editTeacherPresenter.setView(viewFactory.getEditTeacherView());
         editStudentPresenter.setView(viewFactory.getEditStudentView());
-        
+
         fileUploadStudentsPresenter.setView(viewFactory.getFileUploadStudentsView());
         messageDialogWithOKPresenter.setView(viewFactory.getMessageDialogWithOKView());
         alertDialogWithOKPresenter.setView(viewFactory.getAlertDialogWithOKView());
@@ -127,7 +127,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         //last!
         mainPresenter.setView(viewFactory.getMainView());
     }
-    
+
     @Override
     public EventBus getEventBus() {
         return eventBus;
@@ -162,17 +162,16 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the resultsPresenter
      */
-    @JsMethod    
+    @JsMethod
     @Override
     public ResultsPresenter getResultsPresenter() {
         return resultsPresenter;
     }
 
-
     /**
      * @return the resultsPresenter
      */
-    @JsMethod    
+    @JsMethod
     @Override
     public SelectedResultsPresenter getSelectedResultsPresenter() {
         return selectedResultsPresenter;
@@ -193,8 +192,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
 //    public ScoResultsPresenter getScoResultsPresenter() {
 //        return scoResultsPresenter;
 //    }
-
-    @JsMethod    
+    @JsMethod
     @Override
     public SchoolclassesPresenter getSchoolclassesPresenter() {
         return schoolclassesPresenter;
@@ -222,16 +220,16 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the addSchoolclassPresenter
      */
-    @JsMethod    
+    @JsMethod
     @Override
     public WelcomePresenter getWelcomePresenter() {
         return welcomePresenter;
     }
-    
+
     /**
      * @return the addSchoolclassPresenter
      */
-    @JsMethod    
+    @JsMethod
     @Override
     public EditSchoolclassPresenter getEditSchoolclassPresenter() {
         return editSchoolclassPresenter;
@@ -248,7 +246,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the messageDialogWithOKPresenter
      */
-    @JsMethod    
+    @JsMethod
     @Override
     public MessageDialogWithOKPresenter getMessageDialogWithOKPresenter() {
         return messageDialogWithOKPresenter;
@@ -260,12 +258,12 @@ public class PresenterFactoryGwt implements PresenterFactory {
         return alertDialogWithConfirmCancelPresenter;
     }
 
-   @JsMethod
+    @JsMethod
     @Override
     public ProgressDialogPresenter getProgressDialogPresenter() {
         return progressDialogPresenter;
     }
-    
+
     @JsMethod
     @Override
     public AlertDialogWithOKPresenter getAlertDialogWithOKPresenter() {
@@ -278,12 +276,12 @@ public class PresenterFactoryGwt implements PresenterFactory {
         return fileUploadStudentsPresenter;
     }
 
-     @JsMethod
+    @JsMethod
     public AddStudentToSchoolclassPresenter getAddStudentToSchoolclassPresenter() {
         return addStudentToSchoolclassPresenter;
     }
 
-     @JsMethod
+    @JsMethod
     @Override
     public AddTeacherToSchoolclassPresenter getAddTeacherToSchoolclassPresenter() {
         return addTeacherToSchoolclassPresenter;
@@ -292,7 +290,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the copyOrMoveStudentToSchoolclassPresenter
      */
-     @JsMethod
+    @JsMethod
     @Override
     public CopyOrMoveStudentToSchoolclassPresenter getCopyOrMoveStudentToSchoolclassPresenter() {
         return copyOrMoveStudentToSchoolclassPresenter;
@@ -301,31 +299,34 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the modulesOfSchoolclassPresenter
      */
-      @JsMethod
+    @JsMethod
     @Override
     public ModulesOfSchoolclassPresenter getModulesOfSchoolclassPresenter() {
         return modulesOfSchoolclassPresenter;
     }
-    
+
     /**
      * @return the modulesPresenter
      */
-      @JsMethod
+    @JsMethod
     @Override
     public ModulesPresenter getModulesPresenter() {
         return modulesPresenter;
     }
 
+    @JsMethod
     @Override
     public SelectStudentResultsPresenter getSelectStudentResultsPresenter() {
         return selectStudentResultsPresenter;
     }
- 
-    @Override 
-    public StudentScoResultPresenter getStudentScoResultPresenter(){
+
+    @JsMethod
+    @Override
+    public StudentScoResultPresenter getStudentScoResultPresenter() {
         return studentScoResultPresenter;
     }
-    
+
+    @JsMethod
     @Override
     public PersonsPresenter getPersonsPresenter() {
         return personsPresenter;
@@ -334,6 +335,8 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the addStudentPresenter
      */
+    @JsMethod
+    @Override
     public AddStudentPresenter getAddStudentPresenter() {
         return addStudentPresenter;
     }
@@ -341,13 +344,17 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the editPersonPresenter
      */
+    @JsMethod
+    @Override
     public EditStudentPresenter getEditStudentPresenter() {
         return editStudentPresenter;
     }
-    
+
     /**
      * @return the editPersonPresenter
      */
+    @JsMethod
+    @Override
     public EditTeacherPresenter getEditTeacherPresenter() {
         return editTeacherPresenter;
     }
@@ -355,6 +362,8 @@ public class PresenterFactoryGwt implements PresenterFactory {
     /**
      * @return the importPersonsPresenter
      */
+    @JsMethod
+    @Override
     public ImportPersonsPresenter getImportPersonsPresenter() {
         return importPersonsPresenter;
     }
