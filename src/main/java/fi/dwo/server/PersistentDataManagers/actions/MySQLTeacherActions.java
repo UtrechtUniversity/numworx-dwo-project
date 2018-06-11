@@ -1,4 +1,6 @@
-/** Copyrighted Feb 12, 2018 */
+/**
+ * Copyrighted Feb 12, 2018
+ */
 package fi.dwo.server.PersistentDataManagers.actions;
 
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
@@ -16,6 +18,7 @@ import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
+import fi.dwo.server.PersistentDataManagers.util.CourseInClassManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
 import fi.dwo.server.PersistentDataManagers.util.TeacherSchoolClassUtilManager;
@@ -26,7 +29,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
@@ -118,7 +120,7 @@ public class MySQLTeacherActions implements TeacherActions {
     @Override
     public Boolean attachCourseToClass(TeacherDomainAuthorizer.Context context) throws Dwo2Exception {
         //Loop up the course tree and find the tree path
-        Stack<PersistentCourse> treePath = new Stack<>();
+        Deque<PersistentCourse> treePath = new LinkedList<>();
         PersistentCourse curCourse = context.getTeacherCtx().getCourse();
         treePath.add(curCourse);
         while (curCourse.getParentID() != 0) {
@@ -131,11 +133,12 @@ public class MySQLTeacherActions implements TeacherActions {
             }
         }// stop when added course with parentid = 0;
 
-        //Walk the treepath list from top to bottom and add classCourses idempotently (ignore if it already exists).   
-        while (!treePath.empty()) {
+        //Walk the treepath list from bottom to top of tree and add classCourses idempotently (ignore if it already exists).   
+        while (treePath.size() > 0) {
             curCourse = treePath.pop();
-            List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(context.getTeacherCtx().getSchoolClass(), context.getTeacherCtx().getCourse());
-            if (pcc.isEmpty()) { //create new 
+            List<PersistentClassCourse> ccResult = ClassCourseManager.findEntities(context.getTeacherCtx().getSchoolClass(), context.getTeacherCtx().getCourse());
+            //if below is for the future case classcourse are not unique any more.
+            if (ccResult.isEmpty()) { //create new 
                 PersistentClassCourse cc = new PersistentClassCourse();
                 cc.setClassID(context.getTeacherCtx().getSchoolClass().getClassID());
                 cc.setCourseID(curCourse.getCourseID());
@@ -143,96 +146,20 @@ public class MySQLTeacherActions implements TeacherActions {
                 cc.setNotBefore(null);
                 cc.setType(CourseType.normal.ordinal());
                 cc.setViewState(ViewState.studentsAndTeachers);
-                try {
-                    cc = ClassCourseManager.create(cc);
-                    LOG.log(Level.FINE, "User {3} adds a ClassCourse {0} for Course {1} and Class {2}", new Object[]{cc.getClassCourseID(), cc.getCourseID(), cc.getClassID(), context.getUserCtx().getUser().getUsername()});
-                } catch (PersistenceException e) {
-                    // ignore as it might already been created.
+                ClassCourseManager.insertOrUpdateViewState(cc);
+            } else {
+                for (PersistentClassCourse cc : ccResult) {
+                    cc.setViewState(ViewState.studentsAndTeachers);
+                    ClassCourseManager.editViewState(cc.getClassCourseID(),ViewState.studentsAndTeachers);
                 }
-            } else {//switch to visible.
-                ClassCourseManager.editViewState(pcc.get(0).getClassCourseID(), ViewState.studentsAndTeachers);
             }
         }
         return true;
     }
-//
-//    public Boolean detachCourseFromClass(TeacherDomainAuthorizer.Context context) throws Dwo2Exception {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//        //Loop up the course tree and find the tree path
-//        Deque<PersistentCourse> treePath = new LinkedList<>();
-//        PersistentCourse curCourse = context.getTeacherCtx().getCourse();
-//        treePath.add(curCourse);
-//        while (curCourse.getParentID() != 0) {
-//            curCourse = CourseManager.findEntity(curCourse.getParentID());
-//            //if no classCourse addPrincipalUser to stack
-//            if (ClassCourseManager.findEntities(context.getTeacherCtx().getSchoolClass(), context.getTeacherCtx().getCourse()).isEmpty()) {
-//                treePath.push(curCourse);
-//            } else {
-//                break; // Someone might erase an existing classcourse in the background, yet this failure will be visible after a tree refresh.
-//            }
-//        }// stop when added course with parentid = 0;
-//
-//        //take leaf course
-//        curCourse = treePath.removeLast();
-//        List<PersistentClassCourse> ccResult = ClassCourseManager.findEntities(context.getTeacherCtx().getSchoolClass(), curCourse);
-//        for (PersistentClassCourse cc : ccResult) {
-//            try {
-//                //destroy if no results
-//                if (ClassCourseUtilManager.hasResults(cc)) {
-//                    
-//                    ClassCourseManager.destroy(cc.getClassCourseID());
-//                } else {
-//                    ClassCourseManager.editViewState(cc.getClassCourseID(), ViewState.invisible);
-//                }
-//
-//            } catch (PersistenceException e) {
-//                // ignore as it might be destroyed already;
-//            }
-//        }
-//
-//        //Walk the treepath list from bottom to top and remove classCourses idempotently (ignore if it already exists).   
-//        while (!treePath.isEmpty()) {
-//            curCourse = treePath.removeLast();
-//            List<PersistentClassCourse> children = ClassCourseManager.findChildEntities(context.getTeacherCtx().getSchoolClass(), context.getTeacherCtx().getCourse());
-//            ccResult = ClassCourseManager.findEntities(context.getTeacherCtx().getSchoolClass(), curCourse);
-//            if (children.isEmpty()) {
-//                //erase ClassCourses
-//                for (PersistentClassCourse cc : ccResult) {
-//                    try {
-//                        //destroy if no results
-//                        if (1 != 1) {
-//                            //if and only if no children
-//                            ClassCourseManager.destroy(cc.getClassCourseID());
-//                        } else {
-//                            ClassCourseManager.editViewState(cc.getClassCourseID(), ViewState.invisible);
-//                        }
-//
-//                    } catch (PersistenceException e) {
-//                        // ignore as it might be destroyed already;
-//                    }
-//                }
-//            } else {
-//                //test if there is one visible
-//                boolean visible = false;
-//                for (PersistentClassCourse cc : children) {
-//                    if (cc.getViewState() == ViewState.studentsAndTeachers) {
-//                        visible = true;
-//                        break;
-//                    }
-//                }
-//                if (visible) {
-//                    for (PersistentClassCourse cc : ccResult) {
-//                        ClassCourseManager.editViewState(cc.getClassCourseID(), ViewState.studentsAndTeachers);
-//                    }
-//                } else {
-//                    for (PersistentClassCourse cc : ccResult) {
-//                        ClassCourseManager.editViewState(cc.getClassCourseID(), ViewState.invisible);
-//                    }
-//                }
-//            }
-//
-//        }
-//        return true;
-//    }
 
+    @Override
+    public Boolean detachCourseFromClass(TeacherDomainAuthorizer.Context context) throws Dwo2Exception {
+        CourseInClassManager.detachLeaveAndUpdateTree(context.getTeacherCtx().getSchoolClass(), context.getTeacherCtx().getCourse());
+        return true;
+    }
 }

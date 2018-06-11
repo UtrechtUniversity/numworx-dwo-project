@@ -658,7 +658,7 @@ public class SecuredTeacherSchoolClassManagerIT {
                 fail("Too many or too few classcourses in mysql db."); //unless nosql
             }
             cc = ClassCourseManager.findEntities(SchoolClassManager.findEntity(2L), CourseManager.findEntity(1L));
-            if (cc.size() != 1) {
+            if (cc.size() != 0) {
                 fail("Too many or too few classcourses in mysql db."); //unless nosql
             }
         } catch (Exception e) {

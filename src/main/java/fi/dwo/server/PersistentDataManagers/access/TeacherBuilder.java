@@ -38,7 +38,6 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -463,5 +462,10 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
     @Override
     public Boolean attachCourseToClass() throws Dwo2Exception {
         return instance.teacherActions.attachCourseToClass(instance.getContext());
+    }
+
+    @Override
+    public Boolean detachCourseFromClass() throws Dwo2Exception {
+        return instance.teacherActions.detachCourseFromClass(instance.getContext());
     }
 }

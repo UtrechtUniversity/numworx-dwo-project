@@ -4,13 +4,18 @@ import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourseInClass;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 /**
  * Manages class courses in the persistent storage.
@@ -230,15 +235,15 @@ public class CourseInClassManager {
 //        }
 //    }
 //
-//    public static List<PersistentClassCourse> findEntities() {
-//        return findEntities(true, -1, -1);
+//    public static List<PersistentClassCourse> findLeaveEntities() {
+//        return findLeaveEntities(true, -1, -1);
 //    }
 //
-//    public static List<PersistentClassCourse> findEntities(int maxResults, int firstResult) {
-//        return findEntities(false, maxResults, firstResult);
+//    public static List<PersistentClassCourse> findLeaveEntities(int maxResults, int firstResult) {
+//        return findLeaveEntities(false, maxResults, firstResult);
 //    }
 //
-//    private static List<PersistentClassCourse> findEntities(boolean all, int maxResults, int firstResult) {
+//    private static List<PersistentClassCourse> findLeaveEntities(boolean all, int maxResults, int firstResult) {
 //        EntityManager em = getEntityManager();
 //        try {
 //            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
@@ -254,7 +259,7 @@ public class CourseInClassManager {
 //        }
 //    }
 //
-//    public static List<PersistentClassCourse> findEntities(PersistentSchoolClass c) {
+//    public static List<PersistentClassCourse> findLeaveEntities(PersistentSchoolClass c) {
 //        EntityManager em = getEntityManager();
 //        try {
 //            javax.persistence.Query q = em.createNamedQuery("PersistentClassCourse.findByClassID");
@@ -281,7 +286,7 @@ public class CourseInClassManager {
 //        }
 //    }
 //
-//    public static List<PersistentClassCourse> findEntities(PersistentCourse c) {
+//    public static List<PersistentClassCourse> findLeaveEntities(PersistentCourse c) {
 //        EntityManager em = getEntityManager();
 //        try {
 //            javax.persistence.TypedQuery<PersistentClassCourse> q = em.createNamedQuery("PersistentClassCourse.findByCourseID", PersistentClassCourse.class);
@@ -294,7 +299,7 @@ public class CourseInClassManager {
 //        }
 //    }
 //
-//    public static List<PersistentClassCourse> findEntities(PersistentSchoolClass schoolClass, PersistentCourse course) {
+//    public static List<PersistentClassCourse> findLeaveEntities(PersistentSchoolClass schoolClass, PersistentCourse course) {
 //        EntityManager em = getEntityManager();
 //        try {
 //            javax.persistence.TypedQuery<PersistentClassCourse> q = em.createNamedQuery("PersistentClassCourse.findByClassIDAndCourseID", PersistentClassCourse.class);
@@ -358,24 +363,95 @@ public class CourseInClassManager {
 //            }
 //        }
 //	}
-    
-    public static List<PersistentCourseInClass> findEntities(PersistentSchoolClass schoolClass, PersistentDwoProfile profile){
-         EntityManager em = getEntityManager();
+
+    public static List<PersistentCourseInClass> findLeaveEntities(PersistentSchoolClass schoolClass, PersistentDwoProfile profile) throws Dwo2Exception {
+        EntityManager em = getEntityManager();
         try {
             javax.persistence.Query q = em.createQuery("SELECT a, b FROM PersistentClassCourse a, PersistentCourse b where b.withChildren = 0 and a.courseID = b.courseID and a.classID=:classID and b.dwoProfileID=:dwoProfileID");
             q.setParameter("classID", schoolClass.getClassID());
             q.setParameter("dwoProfileID", profile.getDwoProfileID());
             List<Object[]> list = q.getResultList();
             List<PersistentCourseInClass> result = new ArrayList<PersistentCourseInClass>(list.size());
-            for(Object[] o: list){
-                result.add(PersistentCourseInClass.build(((PersistentClassCourse) o[0]),((PersistentCourse) o[1])));
+            for (Object[] o : list) {
+                result.add(PersistentCourseInClass.build(((PersistentClassCourse) o[0]), ((PersistentCourse) o[1])));
             }
-            
+
             LOG.log(Level.FINE, "CourseInClassManager retrieved {0} PersistentCourseInClass for classId {1}", new Object[]{list.size(), schoolClass.getClassID()});
             return result;
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Internal server error ", e);
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
         } finally {
             em.close();
         }
-    }       
-    
+    }
+
+    public static void detachLeaveAndUpdateTree(PersistentSchoolClass schoolClass, PersistentCourse course) throws Dwo2Exception {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            //check for results if none remove leave else make it invisible
+            course = em.find(PersistentCourse.class, course.getCourseID());
+            if (!course.isWithChildren()) {
+                //fetch scoId.
+                javax.persistence.Query q = em.createQuery(
+                        "SELECT sco.scoid FROM PersistentClassCourse cc, PersistentCourse c, PersistentScoContext sco WHERE c.courseID=:courseID and c.withChildren=0 and cc.classID=:classID and c.courseID = cc.courseID and  sco.courseID = :courseID");
+                //while not root, update parent node
+                q.setParameter("classID", schoolClass.getClassID());
+                q.setParameter("courseID", course.getCourseID());
+                List<Long> list = q.getResultList(); 
+                if (list.size()== 1) {
+                    //extract sco and count results
+                    long scoID = list.get(0);
+                javax.persistence.Query results = em.createQuery(
+                        "SELECT ssco.persistentHasRolePK FROM PersistentClassCourse cc, PersistentStudentOfClass soc, PersistentStudentScoContext ssco WHERE cc.courseID=:courseID and cc.classID=:classID and ssco.scoID = :scoID");               
+                q.setParameter("classID", schoolClass.getClassID());
+                q.setParameter("courseID", course.getCourseID());
+                q.setParameter("scoID", scoID);
+                List<PersistentHasRolePK> resultKeys = results.getResultList();
+                if(resultKeys.size()>0){
+                    //there are results so update the class course
+                    ClassCourseManager.findEntities(schoolClass, course).forEach((cc) -> {
+                        ClassCourseManager.editViewState(cc.getClassCourseID(), ViewState.invisible);
+                    });                    
+                } else {
+                    //no results, destroy leave
+                    ClassCourseManager.findEntities(schoolClass, course).forEach((cc) -> {
+                        ClassCourseManager.destroy(cc.getClassCourseID());
+                    });
+                }                                
+            } else {
+                LOG.log(Level.SEVERE, "Trying to detach a non-leave ");
+                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Trying to detach a non-leave ");
+            }
+            // walk up the tree and adjust nodes.
+            //when parent node of  is with children and is visible or invisible and children count > 0 stop
+            //if parent node has children count = 0 remove and loop.
+            PersistentCourse parent = em.find(PersistentCourse.class, course.getParentID());
+            while(parent!=null){
+                //find children
+                javax.persistence.Query q2 = em.createQuery(
+                        "SELECT cc FROM PersistentClassCourse cc, PersistentCourse c  WHERE c.parentID=:courseID and c.courseID = cc.courseID and cc.classID=:classID");
+                //while not root, update parent node
+                q2.setParameter("classID", schoolClass.getClassID());
+                q2.setParameter("courseID", parent.getCourseID());
+                List<Object[]> list2 = q2.getResultList();
+                if(list2.size()==0){
+                    ClassCourseManager.findEntities(schoolClass, parent).forEach((v)->{
+                                        ClassCourseManager.destroy(v.getClassCourseID());
+                    });
+                }
+                course = parent;
+                parent = em.find(PersistentCourse.class, course.getParentID());
+            }
+            em.getTransaction().commit();
+            }
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Internal server error ", e);
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+        } finally {
+            em.close();
+        }
+    }
+
 }

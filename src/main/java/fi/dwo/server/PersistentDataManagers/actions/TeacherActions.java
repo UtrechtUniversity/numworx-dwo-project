@@ -27,4 +27,5 @@ public interface TeacherActions  {
     public List<PersistenceId> getSharedTeacherClasses(TeacherDomainAuthorizer.Context context, PersistentUser user) throws Dwo2Exception;
     public List<PersistenceId> getTeachersClassesOfStudent(TeacherDomainAuthorizer.Context context, PersistentSchoolGroup studentSg, PersistentUser user) throws Dwo2Exception;
     public Boolean attachCourseToClass(TeacherDomainAuthorizer.Context context) throws Dwo2Exception;
+    public Boolean detachCourseFromClass(TeacherDomainAuthorizer.Context context) throws Dwo2Exception;
 }

@@ -23,7 +23,6 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder;
-import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SCO_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
@@ -99,7 +98,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     @PUT
     @Produces({"application/json"})
     @Path("/getTeachersResults")
-    public DomResultsPerTeacher getTeachersResults(@Context SecurityContext sc, RestDwoProfile aProfile) {
+    public DomResultsPerTeacher getTeachersResults(@Context SecurityContext sc, RestDwoProfile aProfile) throws Dwo2RestException{
         long curTime = DwoDateUtilities.getCurrentDwoUnixTimeStamp();
         DomDwoProfile domProfile = aProfile.getDomDwoProfile();
         DomContext context = aProfile.getRestContext();
@@ -176,7 +175,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 //                
 //                //And while at it, for each schoolClass fill the set of studentsOf and students
 ////                try {
-//                for (PersistentStudentOfClass soc : StudentOfClassManager.findEntities(schoolClass)) {
+//                for (PersistentStudentOfClass soc : StudentOfClassManager.findLeaveEntities(schoolClass)) {
 //                    //add studentOf to set socMap
 //                    socMap.putIfAbsent(soc.getPersistentStudentOfClassPK(), soc);
 //                    //add user to set studentMap
@@ -234,7 +233,13 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             HashMap<Long, PersistentClassCourse> classCoursesMap = new HashMap<>();
             HashMap<Long, PersistentCourse> coursesMap = new HashMap<>();
             schoolClasses.stream().forEach((schoolClass) -> {
-                List<PersistentCourseInClass> cicList = CourseInClassManager.findEntities(schoolClass, profile);
+                List<PersistentCourseInClass> cicList;
+                try {
+                    cicList = CourseInClassManager.findLeaveEntities(schoolClass, profile);
+                } catch (Dwo2Exception ex) {
+                    Logger.getLogger(SecuredTeacherResultsManager.class.getName()).log(Level.SEVERE, null, ex);
+                    throw new Dwo2RestException(ex);
+                }
                 for (PersistentCourseInClass cic : cicList) {
                     classCoursesMap.putIfAbsent(cic.getClassCourse().getClassCourseID(), cic.getClassCourse());
                     coursesMap.putIfAbsent(cic.getCourse().getCourseID(), cic.getCourse());
@@ -320,7 +325,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             //fill hashmap studentSco for each student x sco
 //            HashMap<Long, PersistentStudentScoContext> studentScosMap = new HashMap<>();
 //            scosMap.entrySet().forEach((sco) -> {
-//                List<PersistentStudentScoContext> studentScos = StudentScoContextManager.findEntities(sco.getValue());
+//                List<PersistentStudentScoContext> studentScos = StudentScoContextManager.findLeaveEntities(sco.getValue());
 //                studentScos.forEach((studentSco) -> {
 //                    studentScosMap.putIfAbsent(studentSco.getStudentSco(), studentSco);
 //                });
@@ -334,7 +339,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 //            for (PersistentScoContext sco : scosMap.values()) {
 //                for (PersistentHasRolePK hasRoleKey : studentHasRoleSet) {
 //                    //TODO optimize
-//                    List<PersistentStudentScoContext> studentScos = StudentScoContextManager.findEntities(sco, hasRoleKey);
+//                    List<PersistentStudentScoContext> studentScos = StudentScoContextManager.findLeaveEntities(sco, hasRoleKey);
 //                    studentScos.forEach((studentSco) -> {
 //                        studentScosMap.putIfAbsent(studentSco.getStudentSco(), studentSco);
 //                    });

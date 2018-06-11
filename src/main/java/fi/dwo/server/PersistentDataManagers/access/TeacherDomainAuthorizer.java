@@ -278,6 +278,7 @@ public class TeacherDomainAuthorizer {
         TeacherState_C_CC_HR_P_R_S_SC_SCO_SG_U addScoContext(DomScoContext s) throws Dwo2Exception;
         
         Boolean attachCourseToClass()  throws Dwo2Exception;
+        Boolean detachCourseFromClass()  throws Dwo2Exception;
     }
 
     public interface TeacherState_HR_R_S_SC_SG_U {

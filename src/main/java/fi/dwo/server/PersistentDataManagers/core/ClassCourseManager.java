@@ -63,7 +63,7 @@ public class ClassCourseManager {
      * Update
      *
      * @param classCourse
-     * @return 
+     * @return
      */
     public static PersistentClassCourse edit(PersistentClassCourse classCourse) throws PersistenceException {
         EntityManager em = null;
@@ -79,6 +79,46 @@ public class ClassCourseManager {
                 Long id = classCourse.getClassCourseID();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentClassCourse with " + id + " no longer exists.", e);
+                    throw new PersistenceException(e);
+                }
+            }
+            throw new PersistenceException(e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+    /**
+     * Updates the ViewState. It requires a fully set PersistentClassCourse with
+     * exception of the index. In case it is not found it is inserted into the database.
+     *
+     * @param cc
+     */
+    public static void insertOrUpdateViewState(PersistentClassCourse cc) throws PersistenceException {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            javax.persistence.TypedQuery<PersistentClassCourse> q = em.createNamedQuery("PersistentClassCourse.findByClassIDAndCourseID", PersistentClassCourse.class);
+            q.setParameter("courseID", cc.getCourseID());
+            q.setParameter("classID", cc.getClassID());
+            List<PersistentClassCourse> list = q.getResultList();
+            
+            if(list.size()==0){
+                //insert
+                em.persist(cc);
+            } else {
+                //merge
+                em.merge(list.get(0));                
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            String msg = e.getLocalizedMessage();
+            if (msg == null || msg.length() == 0) {
+                if (cc == null) {
+                    LOG.log(Level.FINE, "Insert or updating PersistentClassCourse with " + cc.getClassCourseID() + " faulted.", e);
                     throw new PersistenceException(e);
                 }
             }
@@ -344,7 +384,7 @@ public class ClassCourseManager {
         }
     }
 
-	public static void editAccessKey(Long id, String accessKey) {
+    public static void editAccessKey(Long id, String accessKey) {
         EntityManager em = null;
         PersistentClassCourse cc = null;
         try {
@@ -368,5 +408,5 @@ public class ClassCourseManager {
                 em.close();
             }
         }
-	}
+    }
 }
