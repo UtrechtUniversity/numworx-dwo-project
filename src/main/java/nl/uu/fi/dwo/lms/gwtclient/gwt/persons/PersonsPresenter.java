@@ -86,6 +86,7 @@ public class PersonsPresenter {
             public Promise<Void> call(Promise<List<DomStudent>> resolved) throws Exception {
                 personen = new HashMap<>(resolved.getValue().size());
                 resolved.getValue().forEach((k -> personen.put(k.getId().getIdString(), k)));
+                view.showPersonen(personen);
                 return null;
             }
 
@@ -117,6 +118,8 @@ public class PersonsPresenter {
             public Promise<Void> call(Promise<List<DomTeacher>> resolved) throws Exception {
                 personen = new HashMap<>(resolved.getValue().size());
                 resolved.getValue().forEach((k -> personen.put(k.getId().getIdString(), k)));
+                view.showPersonen(personen);
+
                 return null;
             }
 
@@ -153,14 +156,13 @@ public class PersonsPresenter {
                 new SwitchViewEvent(SwitchViewEvent.SelectedView.EDITTEACHER, person));
     }
 
-    
     @JsMethod
     public void addPerson() {
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDPERSON));        
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDPERSON));
     }
-    
+
     @JsMethod
-    public void importPersons() {        
+    public void importPersons() {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.IMPORTPERSONS));
     }
 }
