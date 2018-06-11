@@ -1,10 +1,10 @@
 package fi.wiskopdr;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
 import nl.uu.fi.dwo.ideas.client.AbstractIdeas;
 import nl.uu.fi.dwo.ideas.client.ExerciseArrayCallback;
 import nl.uu.fi.dwo.ideas.client.IdeasIF;
-import nl.uu.fi.dwo.ideas.client.RuleArrayCallback;
-import nl.uu.fi.dwo.ideas.client.RuleCallback;
 import nl.uu.fi.dwo.ideas.client.RuleIF;
 
 public class FailingIdeas extends AbstractIdeas implements IdeasIF {
@@ -13,24 +13,24 @@ public class FailingIdeas extends AbstractIdeas implements IdeasIF {
 
 	@Override
 	public void getDerivation(RuleIF rule, String strategie,
-			RuleArrayCallback callback) {
+			AsyncCallback<RuleIF[]> callback) {
 		callback.onFailure(NOT_IMPLEMENTED);
 	}
 
 	@Override
 	public void getAllFirsts(RuleIF rule, String strategie,
-			RuleArrayCallback callback) {
+			AsyncCallback<RuleIF[]> callback) {
 		callback.onFailure(NOT_IMPLEMENTED);
 	}
 
 	@Override
-	public void getOneFirst(RuleIF expr, String strategie, RuleCallback callback) {
+	public void getOneFirst(RuleIF expr, String strategie, AsyncCallback<RuleIF> callback) {
 		callback.onFailure(NOT_IMPLEMENTED);
 	}
 
 	@Override
 	public void findBuggyRules(RuleIF expr, RuleIF input, String stategie,
-			RuleArrayCallback callback) {
+			AsyncCallback<RuleIF[]> callback) {
 		callback.onFailure(NOT_IMPLEMENTED);
 	}
 
@@ -41,35 +41,40 @@ public class FailingIdeas extends AbstractIdeas implements IdeasIF {
 
 	@Override
 	public void diagnose(RuleIF vgl, RuleIF input, String strategie,
-			RuleCallback callback) {
+			AsyncCallback<RuleIF> callback) {
 		callback.onFailure(NOT_IMPLEMENTED);
 	}
 
 	@Override
-	public void getRuleList(String strategie, RuleArrayCallback callback) {
+	public void getRuleList(String strategie, AsyncCallback<RuleIF[]> callback) {
 		callback.onFailure(NOT_IMPLEMENTED);
 	}
 
 	@Override
-	public void getRulesInfo(String strategie, RuleArrayCallback callback) {
+	public void getRulesInfo(String strategie, AsyncCallback<RuleIF[]> callback) {
 		callback.onFailure(NOT_IMPLEMENTED);
 	}
 
 	@Override
-	public void getExamples(String strategie, RuleArrayCallback callback) {
+	public void getExamples(String strategie, AsyncCallback<RuleIF[]> callback) {
 		callback.onFailure(NOT_IMPLEMENTED);
 	}
 
 	@Override
-	public void interpret(String how, RuleIF[] args, RuleCallback callback) {
+	public void interpret(String how, RuleIF[] args, AsyncCallback<RuleIF> callback) {
 		NOT_IMPLEMENTED.fillInStackTrace();
 		callback.onFailure(NOT_IMPLEMENTED);
 	}
 
 	@Override
 	public void diagnose(RuleIF[] exprs, String strategie,
-			RuleArrayCallback callback) {
+			AsyncCallback<RuleIF[]> callback) {
 		callback.onFailure(NOT_IMPLEMENTED);
+	}
+
+	@Override
+	public void adviseMe(RuleIF[] inputs, String exercise, AsyncCallback<RuleIF> callback) {
+		callback.onFailure(NOT_IMPLEMENTED);		
 	}
 
 }
