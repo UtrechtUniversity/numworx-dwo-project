@@ -455,7 +455,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	public Widget asWidget() {
 	    if(widget == null)
 	      widget = CorrectieFacade.wrap(this);
-		return facade.wrap(widget);
+		return facade.wrap(widget, this);
 	}
 
 	@Override
