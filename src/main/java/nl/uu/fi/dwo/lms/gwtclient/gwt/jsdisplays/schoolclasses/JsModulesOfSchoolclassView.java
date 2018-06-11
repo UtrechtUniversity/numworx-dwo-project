@@ -1,15 +1,14 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses;
 
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
 import fi.dwo.gwt.lib.rest.util.DomCourseOfClassCodec;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.ClassCourseItem;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.ModulesOfSchoolclassPresenter;
 import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 
 /**
  * Mapper to allow java interface implementation.
