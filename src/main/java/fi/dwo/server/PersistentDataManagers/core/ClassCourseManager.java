@@ -141,7 +141,7 @@ public class ClassCourseManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            cc = findEntity(id);
+            cc = em.find(PersistentClassCourse.class, id);
             cc.setViewState(state);
             cc = em.merge(cc);
             em.getTransaction().commit();

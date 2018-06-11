@@ -126,17 +126,17 @@ public class MySQLTeacherActions implements TeacherActions {
         while (curCourse.getParentID() != 0) {
             curCourse = CourseManager.findEntity(curCourse.getParentID());
             //if no classCourse addPrincipalUser to stack
-            if (ClassCourseManager.findEntities(context.getTeacherCtx().getSchoolClass(), context.getTeacherCtx().getCourse()).isEmpty()) {
+//            if (ClassCourseManager.findEntities(context.getTeacherCtx().getSchoolClass(), curCourse).isEmpty()) {
                 treePath.push(curCourse);
-            } else {
-                break; // Someone might erase an existing classcourse in the background, yet this failure will be visible after a tree refresh.
-            }
+//            } else {
+//                break; // Someone might erase an existing classcourse in the background, yet this failure will be visible after a tree refresh.
+//            }
         }// stop when added course with parentid = 0;
 
         //Walk the treepath list from bottom to top of tree and add classCourses idempotently (ignore if it already exists).   
         while (treePath.size() > 0) {
             curCourse = treePath.pop();
-            List<PersistentClassCourse> ccResult = ClassCourseManager.findEntities(context.getTeacherCtx().getSchoolClass(), context.getTeacherCtx().getCourse());
+            List<PersistentClassCourse> ccResult = ClassCourseManager.findEntities(context.getTeacherCtx().getSchoolClass(),curCourse);
             //if below is for the future case classcourse are not unique any more.
             if (ccResult.isEmpty()) { //create new 
                 PersistentClassCourse cc = new PersistentClassCourse();

@@ -451,9 +451,9 @@ public class CourseInClassManager {
                             }
                         }
                         if(invisible){
-                            ClassCourseManager.editViewState(ClassCourseManager.findEntities(schoolClass, parent).get(0).getCourseID(), ViewState.invisible);
+                            ClassCourseManager.editViewState(ClassCourseManager.findEntities(schoolClass, parent).get(0).getClassCourseID(), ViewState.invisible);
                         }else{
-                            ClassCourseManager.editViewState(ClassCourseManager.findEntities(schoolClass, parent).get(0).getCourseID(), ViewState.studentsAndTeachers);
+                            ClassCourseManager.editViewState(ClassCourseManager.findEntities(schoolClass, parent).get(0).getClassCourseID(), ViewState.studentsAndTeachers);
                         }
                     }
                     course = parent;
