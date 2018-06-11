@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import org.osgi.util.promise.Failure;
@@ -292,17 +293,19 @@ public class EditSchoolclassPresenter {
         promise.then(new Success<DomCoursesOfSchoolClass4Teacher, Void>() {
             @Override
             public Promise<Void> call(Promise<DomCoursesOfSchoolClass4Teacher> resolved) throws Exception {
-                DomCoursesOfSchoolClass4Teacher moduleData = resolved.getValue();                
+                DomCoursesOfSchoolClass4Teacher moduleData = resolved.getValue();
                 List<DomCourse> courseList = new ArrayList<>();
                 Map<String, DomCourse> courseMap = new HashMap<>();
-                moduleData.getCourses().forEach((k)-> courseMap.put(k.getKey().getIdString(), k.getValue()));
+                moduleData.getCourses().forEach((k) -> courseMap.put(k.getKey().getIdString(), k.getValue()));
                 Map<String, DomClassCourse4Teacher> ccMap = new HashMap<>();
-//                moduleData.getClassCourses().forEach((k)-> if(!courseMap.get(k.getKey().getIdString()).withChildren){
-//                    courseMap.put(key, value);
-//                }
-//                        
-//                        );
-//                
+                moduleData.getClassCourses().forEach((k) -> {
+                    LOG.log(Level.INFO,"classcourse key: "+k.getKey());
+                    LOG.log(Level.INFO,"course name for key: "+courseMap.get(k.getValue().getCourseId().getIdString()).getName());
+                    if (k.getValue().getViewState()==ViewState.studentsAndTeachers && courseMap.get(k.getValue().getCourseId().getIdString())!=null &&!courseMap.get(k.getValue().getCourseId().getIdString()).getWithChildren()) {
+                        courseList.add(courseMap.get(k.getValue().getCourseId().getIdString()));
+                        LOG.log(Level.INFO,courseMap.get(k.getValue().getCourseId().getIdString()).getName());
+                    }
+                });
                 view.showModules(courseList);
                 return null;
             }
