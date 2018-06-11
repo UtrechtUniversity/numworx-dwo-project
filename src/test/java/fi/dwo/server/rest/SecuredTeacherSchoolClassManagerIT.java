@@ -657,8 +657,14 @@ public class SecuredTeacherSchoolClassManagerIT {
             if (cc.size() != 1) {
                 fail("Too many or too few classcourses in mysql db."); //unless nosql
             }
+            //check leaf
+            cc = ClassCourseManager.findEntities(SchoolClassManager.findEntity(2L), CourseManager.findEntity(3L));
+            if (cc.size() != 1) {
+                fail("Too many or too few classcourses in mysql db."); //unless nosql
+            }
+            //check ancestor now exists
             cc = ClassCourseManager.findEntities(SchoolClassManager.findEntity(2L), CourseManager.findEntity(1L));
-            if (cc.size() != 0) {
+            if (cc.size() != 1) {
                 fail("Too many or too few classcourses in mysql db."); //unless nosql
             }
         } catch (Exception e) {
@@ -724,11 +730,13 @@ public class SecuredTeacherSchoolClassManagerIT {
         try {
             instance.detachCourseFromClass(sc, submit);
             List<PersistentClassCourse> cc = ClassCourseManager.findEntities(SchoolClassManager.findEntity(2L), CourseManager.findEntity(3L));
+            //should throw exception.
+            fail("Failed to create legit classcourse.");
             if (cc.size() != 0) {
                 fail("Detach added classcourse."); //unless nosql
             }
         } catch (Exception e) {
-            fail("Failed to create legit classcourse.");
+            //success
         }
     }
 
