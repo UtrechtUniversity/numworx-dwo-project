@@ -40,9 +40,9 @@ public class BootPanelController {
 
     private static final Logger LOG = Logger.getLogger(BootPanelController.class.getName());
 
-    private ViewFactory viewFactory;
-    private PresenterFactory presenterFactory;
-    private DwoGlobalVars dwoGlobalVars;
+    @Inject ViewFactory viewFactory;
+    @Inject PresenterFactoryGwt presenterFactory;
+    @Inject DwoGlobalVars dwoGlobalVars;
     private int profile;
     private boolean hideGwtGui;
     private boolean testIsOn;
@@ -115,36 +115,36 @@ public class BootPanelController {
         LOG.log(Level.INFO, "HideGwt=" + hideGwtGui + ".");
 
         //intialize our global and environmental variables instance.
-        try {
-            dwoGlobalVars = new DwoGlobalVars();
+//        try {
+            //dwoGlobalVars = new DwoGlobalVars(); // INJECTED
             Promise<DomDwoProfileFull> promise = new PublicProfileManager().get(profile);
             dwoGlobalVars.setProfile(promise);
-        } catch (Dwo2Exception e) {
-            //ugly emergency code in case server fails.
-            String msg = "Fatal server error! " + e.getDwo2Message();
-            LOG.log(Level.INFO, e.getDwo2Message());
-            DialogBox dialogBox = new DialogBox();
-            Label label = new Label();
-            label.setText(msg);
-            dialogBox.add(label);
-            dialogBox.add(new Button("OK"));
-            dialogBox.setModal(true);
-            dialogBox.setAutoHideEnabled(false);
-            dialogBox.setGlassEnabled(true);
-            dialogBox.setAnimationEnabled(true);
-            dialogBox.center();
-            dialogBox.show();
-            return;
-        }
+//        } catch (Dwo2Exception e) {
+//            //ugly emergency code in case server fails.
+//            String msg = "Fatal server error! " + e.getDwo2Message();
+//            LOG.log(Level.INFO, e.getDwo2Message());
+//            DialogBox dialogBox = new DialogBox();
+//            Label label = new Label();
+//            label.setText(msg);
+//            dialogBox.add(label);
+//            dialogBox.add(new Button("OK"));
+//            dialogBox.setModal(true);
+//            dialogBox.setAutoHideEnabled(false);
+//            dialogBox.setGlassEnabled(true);
+//            dialogBox.setAnimationEnabled(true);
+//            dialogBox.center();
+//            dialogBox.show();
+//            return;
+//        }
 
         //show main panel
         this.rootPanel = rootPanel;
 
         //create client factories
-        DwoPresenterFactory fac = new DwoPresenterFactory(new PresenterFactoryGwt(eventBus, dwoGlobalVars));
-        presenterFactory = fac.getFac();
+        DwoPresenterFactory fac = new DwoPresenterFactory(presenterFactory);
+//        presenterFactory = fac.getFac();
         LOG.log(Level.INFO, "ViewFactoryTeuniz assigned.");
-        viewFactory = new ViewFactoryJs(presenterFactory);
+//        viewFactory = new ViewFactoryJs(presenterFactory);
         presenterFactory.bindViewFactory(viewFactory);
 
         //handle login events

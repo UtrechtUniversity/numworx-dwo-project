@@ -3,6 +3,9 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 
@@ -37,6 +40,7 @@ import org.osgi.util.promise.Success;
  *
  * @author Gert van der Plas
  */
+@Singleton
 public class DwoGlobalVars {
 
     private static final Logger LOG = Logger.getLogger(DwoGlobalVars.class.getName());
@@ -165,7 +169,8 @@ public class DwoGlobalVars {
      *
      * @throws Dwo2Exception
      */
-    public DwoGlobalVars() throws Dwo2Exception {
+    @Inject
+    public DwoGlobalVars() {
         //TODO define initialization stages: Unintialized, Initializing, NotLoggedIn, LoggedIn. Closing.
         setState(DwoGlobalVarsState.Initializing);
         initProperties();
@@ -179,7 +184,7 @@ public class DwoGlobalVars {
      *
      * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
-    private void initProperties() throws Dwo2Exception {
+    private void initProperties() {
         LOG.log(Level.INFO, "Starting initProperties():");
         setServer(DwoConstants.constants.server());
         LOG.log(Level.INFO, "restserver=" + server + ".");
@@ -198,7 +203,7 @@ public class DwoGlobalVars {
         LOG.log(Level.INFO, "Done initObjects():");
     }
 
-    private void initVars() throws Dwo2Exception {
+    private void initVars() {
     }
 
     /**

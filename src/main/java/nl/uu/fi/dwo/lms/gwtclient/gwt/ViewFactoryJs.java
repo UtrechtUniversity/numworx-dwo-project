@@ -17,6 +17,9 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsView;
+
+import javax.inject.Inject;
+
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.modules.JsModulesView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.persons.JsAddPersonView;
@@ -88,7 +91,7 @@ public class ViewFactoryJs implements ViewFactory {
     private final FileUploadStudentsPresenter.Display fileUploadStudentsView;
     private final ProgressDialogWithAbortPresenter.Display progressDialogView;
 
-    public ViewFactoryJs(PresenterFactory pf) {
+    @Inject public ViewFactoryJs(PresenterFactory pf) {
         mainView = new JsMainView();
         loginView = new JsLoginView();
         welcomeView = new JsWelcomeView();

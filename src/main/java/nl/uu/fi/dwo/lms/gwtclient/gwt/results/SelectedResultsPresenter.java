@@ -9,12 +9,18 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
+import jsinterop.annotations.JsMethod;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -101,4 +107,18 @@ public class SelectedResultsPresenter {
         view = aView;
     }
 
+    @JsMethod
+    public void sealModuleActivities(String courseID, String classid) {
+    	PersistenceId id = new PersistenceId(courseID);
+    	DomCourse course = new DomCourse();course.setId(id);
+    	
+    	
+    // TODO verzegel course, dus alle activitetien	
+    }
+    
+    @JsMethod
+    public void sealSingleActivity(String scoId, String classid) {
+    	resultTree.getPlottedResultTree();
+    }
+    
 }

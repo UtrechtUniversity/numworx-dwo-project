@@ -3,6 +3,9 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
+
+import javax.inject.Inject;
+
 import com.google.web.bindery.event.shared.EventBus;
 
 import jsinterop.annotations.JsMethod;
@@ -66,7 +69,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     private final FileUploadStudentsPresenter fileUploadStudentsPresenter;
     private final ProgressDialogWithAbortPresenter progressDialogPresenter;
 
-    public PresenterFactoryGwt(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject public PresenterFactoryGwt(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         dwoGlobalVars = aDwoGlobalVars;
         eventBus = anEventBus;
         mainPresenter = new MainPresenter(eventBus, dwoGlobalVars);
