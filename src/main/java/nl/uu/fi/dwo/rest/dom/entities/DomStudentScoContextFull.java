@@ -12,7 +12,6 @@ public class DomStudentScoContextFull extends DomStudentScoContext{
     private String sessionTime;
     private Date createDate;
     private java.sql.Time createTime;
-    private String completionStatus;
     private String location;    
 
     /**
@@ -69,20 +68,6 @@ public class DomStudentScoContextFull extends DomStudentScoContext{
      */
     public void setCreateTime(java.sql.Time createTime) {
         this.createTime = createTime;
-    }
-
-    /**
-     * @return the completionStatus
-     */
-    public String getCompletionStatus() {
-        return completionStatus;
-    }
-
-    /**
-     * @param completionStatus the completionStatus to set
-     */
-    public void setCompletionStatus(String completionStatus) {
-        this.completionStatus = completionStatus;
     }
 
     /**

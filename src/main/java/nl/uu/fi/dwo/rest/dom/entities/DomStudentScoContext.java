@@ -15,6 +15,7 @@ public class DomStudentScoContext {
     private PersistenceId schoolGroupID;
     private PersistenceId schoolClassID;
     private double score;
+	private String completionStatus;
 
     /**
      * @return the id
@@ -98,6 +99,20 @@ public class DomStudentScoContext {
 	 */
 	public void setSchoolClassID(PersistenceId schoolClassID) {
 		this.schoolClassID = schoolClassID;
+	}
+
+	/**
+	 * @return the completionStatus
+	 */
+	public String getCompletionStatus() {
+	    return completionStatus;
+	}
+
+	/**
+	 * @param completionStatus the completionStatus to set
+	 */
+	public void setCompletionStatus(String completionStatus) {
+	    this.completionStatus = completionStatus;
 	}
 
 }
