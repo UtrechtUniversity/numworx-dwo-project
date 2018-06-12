@@ -7,6 +7,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditTeacherPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClassCodec;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 /**
  * Mapper to allow java interface implementation.
@@ -22,7 +23,7 @@ public class JsEditTeacherView implements EditTeacherPresenter.Display{
 
     @Override
     public void setUser(DomUser user) {
-        JsEditPersonDisplay.setUser(DomUserCodec.CODEC.encode(user).isObject().getJavaScriptObject());
+        JsEditPersonDisplay.setUser(RoleType.TEACHER.name(), DomUserCodec.CODEC.encode(user).isObject().getJavaScriptObject());
     }
 
     @Override
