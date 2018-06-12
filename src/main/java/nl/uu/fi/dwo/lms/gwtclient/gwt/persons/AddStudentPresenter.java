@@ -34,7 +34,7 @@ public class AddStudentPresenter extends AddPersonPresenter {
     //    @JsMethod not required unless testing stuff.
     public void init() {
         view.clear();
-        view.init(RoleType.STUDENT.name());
+        view.init(RoleType.TEACHER.name()); //role of client user.
         view.setEmptyTableMessage();
         updateSchoolClasses();
     }
