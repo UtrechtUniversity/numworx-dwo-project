@@ -147,9 +147,10 @@ public class MySQLTeacherActions implements TeacherActions {
                 cc.setType(CourseType.normal.ordinal());
                 cc.setViewState(ViewState.studentsAndTeachers);
                 ClassCourseManager.insertOrUpdateViewState(cc);
+//                    LOG.log(Level.INFO, "created cc of "+ccResult);
             } else {
                 for (PersistentClassCourse cc : ccResult) {
-                    cc.setViewState(ViewState.studentsAndTeachers);
+//                    LOG.log(Level.INFO, "setting visibility of "+cc.getClassCourseID());
                     ClassCourseManager.editViewState(cc.getClassCourseID(),ViewState.studentsAndTeachers);
                 }
             }
