@@ -54,7 +54,9 @@ public class JsResultsView implements ResultsPresenter.Display {
             DomStudentScoContext studentSco = ((DomResultStudentScoContext) node).getStudentSco();
 			String userIdString = studentSco.getUserID().getIdString();
             json.put("user-id", new JSONString(userIdString));
-            json.put("completionStatus", new JSONString(studentSco.getCompletionStatus()));
+            String completionStatus = studentSco.getCompletionStatus(); // XXX What if not present? null of ""?
+            if(completionStatus == null) completionStatus = "";
+			json.put("completionStatus", new JSONString(completionStatus));
         }else if (node instanceof DomResultCourseInClass){
             String viewState = ((DomResultCourseInClass) node).getViewState().name();
             json.put("viewState", new JSONString(viewState));        
