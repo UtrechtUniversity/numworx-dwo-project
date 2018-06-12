@@ -90,6 +90,7 @@ public class HTTPFilter implements Filter {
 
   private boolean buggyUserAgent(ServletRequest req) {
     String ua = ((HttpServletRequest) req).getHeader("User-Agent");
+    if(ua == null) return false;
     return ua.contains("JavaFX");
   }
 
