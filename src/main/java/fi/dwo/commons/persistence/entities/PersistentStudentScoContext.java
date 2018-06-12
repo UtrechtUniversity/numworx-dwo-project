@@ -295,11 +295,11 @@ public class PersistentStudentScoContext implements Serializable {
         studentSco.setScore(score);
         studentSco.setScoID(PersistentScoContext.buildPersistenceId(this.scoID));
         studentSco.setSchoolClassID(PersistentSchoolClass.buildPersistenceId(classID));
+        studentSco.setCompletionStatus(completionStatus);
     }
 
     public void fillDomStudentScoContextFull(DomStudentScoContextFull studentSco) {
         fillDomStudentScoContext(studentSco);
-        studentSco.setCompletionStatus(completionStatus);
         studentSco.setCreateDate(createDate);
         studentSco.setCreateTime(createTime);
         studentSco.setLocation(location);
