@@ -13,6 +13,7 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -31,6 +32,7 @@ public class ModulesPresenter {
     private String url="/dwo/tablet/DWOplayer.html";
     private AccountService account;
     private Promise<String> init;
+	private MainPresenter.Display main;
 
     /**
      * @return the view
@@ -39,6 +41,9 @@ public class ModulesPresenter {
         return view;
     }
 
+    public void setMainView(MainPresenter.Display main) {
+    	this.main = main;
+    }
     /**
      * @param view the view to set
      */
@@ -61,12 +66,12 @@ public class ModulesPresenter {
     public void show() {
       if (init == null || (init.isDone() && init.getFailure() != null)) {
         init();
-      } else {
+      } 
         init.then(p-> {
           LOG.severe("switch to modules view " + p.getValue());
+          main.showModulesView();
           return null;
         });
-      }
     }
 
     public void init() {

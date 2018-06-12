@@ -124,6 +124,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         alertDialogWithOKPresenter.setView(viewFactory.getAlertDialogWithOKView());
         alertDialogWithConfirmCancelPresenter.setView(viewFactory.getAlertDialogWithConfirmCancelView());
         progressDialogPresenter.setView(viewFactory.getProgressDialogView());
+        modulesPresenter.setMainView(viewFactory.getMainView());
         //last!
         mainPresenter.setView(viewFactory.getMainView());
     }
