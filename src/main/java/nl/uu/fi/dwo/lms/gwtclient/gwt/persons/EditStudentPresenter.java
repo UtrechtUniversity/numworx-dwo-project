@@ -151,6 +151,7 @@ public class EditStudentPresenter {
             studentClassList.forEach((v) -> {
                 taggedSchoolClassMap.get(v.getId().getIdString()).setTag(true);
             });
+            view.setSchoolClasses(taggedSchoolClassMap);
             return Promises.resolved(null);
         });
 
