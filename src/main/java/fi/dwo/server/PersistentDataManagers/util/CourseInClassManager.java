@@ -406,7 +406,7 @@ public class CourseInClassManager {
 //                    //extract sco results and count them
 //                    long scoID = list.get(0);
                     javax.persistence.Query results = em.createQuery(
-                            "SELECT ssco.persistentHasRolePK.userID FROM PersistentCourse c, PersistentClassCourse cc, PersistentStudentOfClass soc, PersistentScoContext sco, PersistentStudentScoContext ssco WHERE cc.courseID=:courseID and cc.classID=:classID and soc.persistentStudentOfClassPK.userID = ssco.persistentHasRolePK.userID and soc.persistentStudentOfClassPK.schoolGroupID = ssco.persistentHasRolePK.schoolGroupID and soc.classID = cc.classID and ssco.scoID = sco.scoID and sco.courseID = c.courseID and c.courseID=:courseID");
+                            "SELECT ssco.persistentHasRolePK.userID FROM PersistentCourse c, PersistentClassCourse cc, PersistentStudentOfClass soc, PersistentScoContext sco, PersistentStudentScoContext ssco WHERE cc.courseID=:courseID and cc.classID=:classID and soc.persistentStudentOfClassPK.userID = ssco.persistentHasRolePK.userID and soc.persistentStudentOfClassPK.schoolGroupID = ssco.persistentHasRolePK.schoolGroupID and soc.persistentStudentOfClassPK.classID = cc.classID and ssco.scoID = sco.scoID and sco.courseID = c.courseID and c.courseID=:courseID");
                     results.setParameter("classID", schoolClass.getClassID());
                     results.setParameter("courseID", course.getCourseID());
 //                    results.setParameter("scoID", scoID);
