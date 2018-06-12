@@ -315,7 +315,7 @@ class BootPanelController {
         //MainPresenter.Display mainView = viewFactory.getMainView();
         rootPanel.setVisible(false);
         MainPresenter mainPresenter = presenterFactory.getMainPresenter();
-        LOG.log(Level.FINE, "Intiating Main presenter. Showing login screen.");
+        LOG.log(Level.FINE, "Initiating Main presenter. Showing login screen.");
         mainPresenter.init();
         LOG.log(Level.FINE, "Initiated Main presenter.");
         SwitchViewEvent ev = new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN);
