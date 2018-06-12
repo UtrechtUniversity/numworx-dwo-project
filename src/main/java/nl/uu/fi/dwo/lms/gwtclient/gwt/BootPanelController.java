@@ -13,6 +13,9 @@ import fi.dwo.gwt.lib.rest.util.Dwo2LocaleMessageGWTTranslator;
 import java.util.logging.Level;
 
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.FAIL;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.LOGOUT;
@@ -33,13 +36,13 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
  *
  * @author Gert van der Plas
  */
-class BootPanelController {
+public class BootPanelController {
 
     private static final Logger LOG = Logger.getLogger(BootPanelController.class.getName());
 
-    private ViewFactory viewFactory;
-    private PresenterFactory presenterFactory;
-    private DwoGlobalVars dwoGlobalVars;
+    @Inject ViewFactory viewFactory;
+    @Inject PresenterFactoryGwt presenterFactory;
+    @Inject DwoGlobalVars dwoGlobalVars;
     private int profile;
     private boolean hideGwtGui;
     private boolean testIsOn;
@@ -53,6 +56,7 @@ class BootPanelController {
     EventBus eventBus;
     HasWidgets rootPanel;
 
+    @Inject
     BootPanelController(EventBus eventBus) {
         this.eventBus = eventBus;
         testIsOn = false;
@@ -111,36 +115,36 @@ class BootPanelController {
         LOG.log(Level.INFO, "HideGwt=" + hideGwtGui + ".");
 
         //intialize our global and environmental variables instance.
-        try {
-            dwoGlobalVars = new DwoGlobalVars();
+//        try {
+            //dwoGlobalVars = new DwoGlobalVars(); // INJECTED
             Promise<DomDwoProfileFull> promise = new PublicProfileManager().get(profile);
             dwoGlobalVars.setProfile(promise);
-        } catch (Dwo2Exception e) {
-            //ugly emergency code in case server fails.
-            String msg = "Fatal server error! " + e.getDwo2Message();
-            LOG.log(Level.INFO, e.getDwo2Message());
-            DialogBox dialogBox = new DialogBox();
-            Label label = new Label();
-            label.setText(msg);
-            dialogBox.add(label);
-            dialogBox.add(new Button("OK"));
-            dialogBox.setModal(true);
-            dialogBox.setAutoHideEnabled(false);
-            dialogBox.setGlassEnabled(true);
-            dialogBox.setAnimationEnabled(true);
-            dialogBox.center();
-            dialogBox.show();
-            return;
-        }
+//        } catch (Dwo2Exception e) {
+//            //ugly emergency code in case server fails.
+//            String msg = "Fatal server error! " + e.getDwo2Message();
+//            LOG.log(Level.INFO, e.getDwo2Message());
+//            DialogBox dialogBox = new DialogBox();
+//            Label label = new Label();
+//            label.setText(msg);
+//            dialogBox.add(label);
+//            dialogBox.add(new Button("OK"));
+//            dialogBox.setModal(true);
+//            dialogBox.setAutoHideEnabled(false);
+//            dialogBox.setGlassEnabled(true);
+//            dialogBox.setAnimationEnabled(true);
+//            dialogBox.center();
+//            dialogBox.show();
+//            return;
+//        }
 
         //show main panel
         this.rootPanel = rootPanel;
 
         //create client factories
-        DwoPresenterFactory fac = new DwoPresenterFactory(new PresenterFactoryGwt(eventBus, dwoGlobalVars));
-        presenterFactory = fac.getFac();
+        DwoPresenterFactory fac = new DwoPresenterFactory(presenterFactory);
+//        presenterFactory = fac.getFac();
         LOG.log(Level.INFO, "ViewFactoryTeuniz assigned.");
-        viewFactory = new ViewFactoryJs(presenterFactory);
+//        viewFactory = new ViewFactoryJs(presenterFactory);
         presenterFactory.bindViewFactory(viewFactory);
 
         //handle login events
@@ -304,6 +308,9 @@ class BootPanelController {
                         case MODULES:
                             presenterFactory.getModulesPresenter().show();
                             break;
+                        case MODULESVIEW:
+                            viewFactory.getMainView().showModulesView();
+                            break;
                         default:
                             eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                             LOG.log(Level.SEVERE, "Switch panel failed in app controller.");
@@ -315,7 +322,7 @@ class BootPanelController {
         //MainPresenter.Display mainView = viewFactory.getMainView();
         rootPanel.setVisible(false);
         MainPresenter mainPresenter = presenterFactory.getMainPresenter();
-        LOG.log(Level.FINE, "Intiating Main presenter. Showing login screen.");
+        LOG.log(Level.FINE, "Initiating Main presenter. Showing login screen.");
         mainPresenter.init();
         LOG.log(Level.FINE, "Initiated Main presenter.");
         SwitchViewEvent ev = new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN);

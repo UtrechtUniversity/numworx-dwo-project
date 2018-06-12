@@ -84,7 +84,7 @@ public class EditStudentPresenter {
     public void init(DomUser aUser) {
         view.clear();
         view.setEmptyTableMessage();
-        setStudentInView(aUser);
+//        setStudentInView(aUser);
         initView(aUser);
 //        setSchoolClassesInView(aUser);
     }
@@ -92,6 +92,8 @@ public class EditStudentPresenter {
     public void setStudentInView(DomUser aUser) {
         Promise<DomSingleSchoolStudent> userPromise;
         DomGetSingleSchoolStudent getStudent = new DomGetSingleSchoolStudent();
+        getStudent.setDomStudent(new DomStudent(aUser));
+        //getStudent.setDomSchoolClass();
         userPromise = manager.getSingleSchoolStudent(getStudent);
 
         // onSuccess calculate results and show.
@@ -122,20 +124,6 @@ public class EditStudentPresenter {
 
     public void initView(DomUser aUser) {
         Promise p = Promises.resolved(null);
-        //if singleschool fetch user
-        if (aUser.getSingleSchool()) {
-            p.then((resolved) -> {
-                DomGetSingleSchoolStudent student = new DomGetSingleSchoolStudent(new DomStudent(aUser));
-                return manager.getSingleSchoolStudent(student);
-
-            }).then((resolved) -> {
-                DomSingleSchoolStudent student = (DomSingleSchoolStudent) resolved.getValue();
-                view.setSingleSchoolStudent(student);
-                return Promises.resolved(null);
-            });
-        } else {
-            view.setUser(aUser);
-        }
 
         //fetch schoolclasses
         p.then((resolved) -> {
@@ -154,6 +142,29 @@ public class EditStudentPresenter {
             view.setSchoolClasses(taggedSchoolClassMap);
             return Promises.resolved(null);
         });
+        //if singleschool fetch user
+        if (aUser.getSingleSchool()) {
+            p.then((resolved) -> {
+                for (TaggedDomSchoolClass sc : taggedSchoolClassMap.values()) {
+                    if (sc.isTag()) {
+                        DomGetSingleSchoolStudent student = new DomGetSingleSchoolStudent(new DomStudent(aUser));
+                        student.setDomSchoolClass(sc.getSchoolClass());
+                        return manager.getSingleSchoolStudent(student);
+                    }else{
+                        return Promises.resolved(null);
+                    }
+                }
+                DomGetSingleSchoolStudent student = new DomGetSingleSchoolStudent(new DomStudent(aUser));
+                return manager.getSingleSchoolStudent(student);
+
+            }).then((resolved) -> {
+                DomSingleSchoolStudent student = (DomSingleSchoolStudent) resolved.getValue();
+                view.setSingleSchoolStudent(student);
+                return Promises.resolved(null);
+            });
+        } else {
+            view.setUser(aUser);
+        }
 
         p.then(null, (failure) -> {
             eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));

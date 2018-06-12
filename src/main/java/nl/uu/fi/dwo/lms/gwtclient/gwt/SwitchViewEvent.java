@@ -58,12 +58,14 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         SELECTEDRESULTS,
         RESULTSSTUDENT,
         MODULES,
+        MODULESVIEW,
         ORGANISATION
         // ACTIVERESULTS,
         // SCORESULTS,
         // COURSESOFSCHOOLCLASS,
         // STUDENTSINSCHOOLCLASS,
         // TEACHERSINSCHOOLCLASS,
+        
     }
 
 //    private DomStudent student;

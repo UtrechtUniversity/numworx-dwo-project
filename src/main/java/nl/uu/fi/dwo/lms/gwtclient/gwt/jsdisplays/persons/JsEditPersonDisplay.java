@@ -27,7 +27,7 @@ public class JsEditPersonDisplay {
      */
     public static native void clear();
     /** User data in case one may not change settings */
-    public static native void setUser(JavaScriptObject data);
+    public static native void setUser(String role, JavaScriptObject data);
 
     /** User data in case one may edit settings */
     public static native void setSingleSchoolStudent(JavaScriptObject data);

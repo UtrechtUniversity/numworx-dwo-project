@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 
 /**
  * Mapper to allow java interface implementation.
@@ -50,8 +51,10 @@ public class JsResultsView implements ResultsPresenter.Display {
         json.put("scoCount", new JSONNumber(node.getScoCount()));
         json.put("studentScoCount", new JSONNumber(node.getStudentScoCount()));
         if (node instanceof DomResultStudentScoContext) {
-            String userIdString = ((DomResultStudentScoContext) node).getStudentSco().getUserID().getIdString();
+            DomStudentScoContext studentSco = ((DomResultStudentScoContext) node).getStudentSco();
+			String userIdString = studentSco.getUserID().getIdString();
             json.put("user-id", new JSONString(userIdString));
+            json.put("completionStatus", new JSONString(studentSco.getCompletionStatus()));
         }else if (node instanceof DomResultCourseInClass){
             String viewState = ((DomResultCourseInClass) node).getViewState().name();
             json.put("viewState", new JSONString(viewState));        

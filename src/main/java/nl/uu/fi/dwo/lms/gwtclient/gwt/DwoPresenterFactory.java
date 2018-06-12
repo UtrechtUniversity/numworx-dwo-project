@@ -20,8 +20,8 @@ public class DwoPresenterFactory {
         return factory;
     }
     
-    public DwoPresenterFactory(PresenterFactoryGwt impl) {
-        fac = impl;
+    public DwoPresenterFactory(PresenterFactoryGwt presenterFactory) {
+        fac = presenterFactory;
         factory = this;
     }
 
