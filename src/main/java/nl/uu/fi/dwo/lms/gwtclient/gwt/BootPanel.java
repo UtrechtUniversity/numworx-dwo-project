@@ -1,9 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.BootComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.DaggerBootComponent;

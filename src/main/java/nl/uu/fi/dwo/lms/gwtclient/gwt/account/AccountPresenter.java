@@ -83,20 +83,16 @@ public class AccountPresenter {
         DomSchoolsRolesAndClassesV2 sl = dwoGlobalVars.getSchoolLogins();
         List<DomSchoolRoleAndClassV2> fullList = sl.getSchoolsRolesAndClassesList();
         for (DomSchoolRoleAndClassV2 hasRole : fullList) {
-//            if (hasRole.getRole().getRoleName().equals("TEACHER")) {
+            if (!hasRole.getSchool().getId().getIdString().equals(dwoGlobalVars.getSchoolLogins().getNullSchool().getId().getIdString())) {
                 result.put(hasRole.getHasRole().getId().getIdString(), hasRole);
-  //          }
+            }
         }
         return result;
     }
 
     @JsMethod
     public void switchSchoolLogin(String hasRoleId) {
-        LOG.log(Level.INFO, "Switching to hasRoleId: " + hasRoleId);
         DomSchoolRoleAndClassV2 srac = sracData.get(hasRoleId);
-        LOG.log(Level.INFO, "Showing sracData: " + sracData);
-        LOG.log(Level.INFO, "Showing sracData: " + srac);
-        
         
         if (srac != null){ //&& srac.getRole().getRoleName().equals(RoleType.TEACHER.name())) {
             dwoGlobalVars.setActiveSchoolRoleAndClass(srac);
@@ -193,69 +189,6 @@ public class AccountPresenter {
             }
         });
     }
-    
-//    
-//    @JsMethod
-//    public void changePasword(String curPassword, String newPassword, String newPasswordAgain) {
-//        if (!MD5.md5(curPassword).equals(dwoGlobalVars.getCurrentUser().getPassword())) {
-//            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven)));
-//            //DwoViewer.showMessage(Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven);
-//            return;
-//        }
-//
-//        DomUserFull user = new DomUserFull();
-//        user.setUserName(dwoGlobalVars.getCurrentUser().getUserName());
-//        user.setGivenName(dwoGlobalVars.getCurrentUser().getGivenName());
-//        user.setEmail(dwoGlobalVars.getCurrentUser().getEmail());
-//        user.setInsertion(dwoGlobalVars.getCurrentUser().getInsertion());
-//        user.setFamilyName(dwoGlobalVars.getCurrentUser().getFamilyName());
-//        user.setId(dwoGlobalVars.getCurrentUser().getId());
-//        //set freely allowed values
-//        if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(curPassword, newPassword, newPasswordAgain)) {
-//            LOG.log(Level.INFO, "valid required fields.");
-//            user.setPassword(newPassword);
-////            if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(dwoGlobalVars.getCurrentUser().getInsertion())) {
-////                user.setInsertion(dwoGlobalVars.getCurrentUser().getInsertion().trim());
-////            } else {
-////                user.setInsertion(null);
-////            }
-//        } else {
-//            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Required_Fields)));
-//            return;
-//        }
-//
-//        //All is well, proceed with REST-request
-//        Promise<DomUserFull> promisedUser;
-//        promisedUser = accountService.UpdateUserData(user);
-//        // onSuccess calculate results and show.
-//        promisedUser.then(new Success<DomUserFull, Void>() {
-//            @Override
-//            public Promise<Void> call(Promise<DomUserFull> resolved) throws Exception {
-//                //calculate tree and call plotting
-//                LOG.log(Level.INFO, "Success. DomUser returned.");
-//                DomUserFull u = resolved.getValue();
-//                dwoGlobalVars.setCurrentUser(u);
-//                view.clear();
-////                view.updateView(u.getUserName(), u.getGivenName(), u.getInsertion(), u.getFamilyName(), u.getEmail());
-//                eventBus.fireEvent(new DialogEvent("Success"));
-//                return null;
-//            }
-//        },
-//                new Failure() {
-//            @Override
-//            public void fail(Promise<?> resolved) throws Exception {
-//                Throwable fail = resolved.getFailure();
-//                if (fail instanceof Dwo2Exception) {
-//                    LOG.log(Level.SEVERE, fail.getMessage());
-//                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
-//                } else {
-//                    LOG.log(Level.SEVERE, fail.getMessage());
-//                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-//                    //throw directly
-//                }
-//            }
-//        });
-//    }
     
     @JsMethod
     public void saveUser(String givenName, String insertion, String familyName, String email, String curPassword, String newPassword, String newPasswordAgain) {

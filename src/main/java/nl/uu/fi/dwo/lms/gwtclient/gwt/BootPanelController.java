@@ -176,7 +176,7 @@ public class BootPanelController {
                         // break;
                         case FAIL:
                             LOG.log(Level.INFO, "Login failed.");
-                            Window.Location.replace(Window.Location.getHref());
+//                            Window.Location.replace(Window.Location.getHref());
                             eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Login failed.")));
 //                                    
 //                            AlertDialogWithConfirmCancelPromise p = new AlertDialogWithConfirmCancelPromise(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_AuthenticationError));
