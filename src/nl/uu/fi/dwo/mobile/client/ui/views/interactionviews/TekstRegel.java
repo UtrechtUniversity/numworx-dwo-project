@@ -46,7 +46,8 @@ public class TekstRegel //extends LayoutPanel
 	private int hoogte;
 	private int breedte;
 	private ArrayList<Object> regelObjects;
-	private TekstVak tekstVak;
+	final private TekstVak tekstVak;
+	private final LayoutPanel regelLayer;
 
 	
 	private int font_style;
@@ -64,6 +65,7 @@ public class TekstRegel //extends LayoutPanel
 	TekstRegel(TekstVak tekstVak)
 	{
 		super();
+		regelLayer = tekstVak.regelLayer;
 		//setStylePrimaryName("tekstregel");
 		this.tekstVak = tekstVak;
 		regelObjects = new ArrayList<Object>();
@@ -179,7 +181,7 @@ public class TekstRegel //extends LayoutPanel
 	}
 	
   @Deprecated Element getElement() {
-      return tekstVak.getElement();
+      return regelLayer.getElement();
   }
 
   public void setFontStyle(int font_style)
@@ -345,21 +347,21 @@ public class TekstRegel //extends LayoutPanel
       Unit heightUnit) {
 	  tops.put(w, top);
 	  heights.put(w, height);
-      tekstVak.setWidgetTopHeight(w, top+y, topUnit, height, heightUnit);
+      regelLayer.setWidgetTopHeight(w, top+y, topUnit, height, heightUnit);
     
   }
 
   private void setWidgetLeftWidth(Widget w, double left, Unit leftUnit, double width, Unit widthUnit) {
     lefts.put(w, left);
     widths.put(w, width);
-    tekstVak.setWidgetLeftWidth(w, left+x, leftUnit, width, widthUnit);
+    regelLayer.setWidgetLeftWidth(w, left+x, leftUnit, width, widthUnit);
   }
 
 
   ArrayList<Widget> children = new ArrayList<>();
 	private void add(Widget w) {
-      if(w.getParent() != tekstVak) 
-        tekstVak.add(w);
+      if(w.getParent() != regelLayer) 
+        regelLayer.add(w);
       children.add(w);
     
   }
@@ -371,7 +373,7 @@ public class TekstRegel //extends LayoutPanel
 	}
 	
   private void clearWidgets() {
-      for(Widget w: children) tekstVak.remove(w);
+      for(Widget w: children) regelLayer.remove(w);
       children.clear();
       tops.clear(); lefts.clear(); heights.clear(); widths.clear();
   }
@@ -550,10 +552,6 @@ public class TekstRegel //extends LayoutPanel
     
   }
 
-  public Widget getParent() {
-    return tekstVak;
-  }
-
   public void setX(int x) {
     this.x = x;
     for(Widget w: children) {
@@ -561,7 +559,7 @@ public class TekstRegel //extends LayoutPanel
       double left = getLeft(w);
       Unit leftUnit = Unit.PX;
       double width = getWidth(w);
-      tekstVak.setWidgetLeftWidth(w, x+left, leftUnit, width, widthUnit);
+      regelLayer.setWidgetLeftWidth(w, x+left, leftUnit, width, widthUnit);
     }
   }
   public void setY(int y) {
@@ -571,7 +569,7 @@ public class TekstRegel //extends LayoutPanel
       double top = getTop(w);
       Unit topUnit = Unit.PX;
       double height = getHeight(w);
-      tekstVak.setWidgetTopHeight(w, y+top, topUnit, height, heightUnit);
+      regelLayer.setWidgetTopHeight(w, y+top, topUnit, height, heightUnit);
     }
   }
 

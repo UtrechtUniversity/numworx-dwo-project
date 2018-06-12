@@ -47,6 +47,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	
 	//private FlowPanel flowVak;
 	private TekstRegel[] regelVakken;
+	final LayoutPanel regelLayer = new LayoutPanel();
 	//private VerticalPanel vPanel;
 	private int aantalRegels;
 	
@@ -77,7 +78,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		regelVakken = new TekstRegel[500];
 		regelVakken[0] = new TekstRegel(this);
 		regelVakken[1] = new TekstRegel(this);
-		
+		add(regelLayer); // parent of regelVakken
 		//regelVakken[0].getElement().getStyle().setBackgroundColor(CssColor.make(0, 255, 255).toString());
 		//regelVakken[1].getElement().getStyle().setBackgroundColor(CssColor.make(200, 135, 255).toString());
 		
@@ -707,8 +708,6 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			if(centerH)
 				horPositie += (int) (tekstVakBreedte - regelVakken[i].getWidth())/2;
 			
-			if(regelVakken[i].getParent() == null)
-				this.add(regelVakken[i]);
 			int corr = 0;
 			if(i > 0)
 				corr = Math.max(regelafstand-(regelVakken[i-1].getHeight()-regelVakken[i-1].getAsHoogte()+regelVakken[i].getAsHoogte()), 0);
@@ -723,11 +722,10 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		{
 			for(int i = 0; i < zwevendeTekstVakken.size(); i++)
 			{
-				TekstVakPanel panel = ((TekstVakPanel) zwevendeTekstVakken.get(i));
+				TekstVakPanel panel =  zwevendeTekstVakken.get(i);
 				Widget a = panel.asWidget();
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				if(a.getParent() != this) {
-					this.remove(a);
 					this.add(a);
 				}
 				this.setWidgetLeftWidth(a, panel.getLocationX(), Style.Unit.PX, panel.getBreedte(), Style.Unit.PX);
@@ -740,12 +738,6 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		ashoogte = regelVakken[0].getAsHoogte();
 
 	}
-	
-	
-	private void add(TekstRegel tekstRegel) {
-    // TODO Auto-generated method stub
-    
-  }
 
   private void setWidgetTopHeight(TekstRegel tekstRegel, int top, Unit px, int height, Unit px2) {
     tekstRegel.setHeight(height, px2);
