@@ -4,6 +4,10 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.web.bindery.event.shared.EventBus;
+
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.BootComponent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.DaggerBootComponent;
+
 import java.util.logging.Logger;
 
 /**
@@ -21,9 +25,10 @@ public class BootPanel implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
+    	BootComponent boot = DaggerBootComponent.builder().build();
+    	
         //init app controller
-        EventBus eventBus = new SimpleEventBus(); // eventbus
-        BootPanelController appViewer = new BootPanelController(eventBus);
+        BootPanelController appViewer = boot.controller();
         appViewer.go(RootLayoutPanel.get());
         
         

@@ -13,6 +13,9 @@ import fi.dwo.gwt.lib.rest.util.Dwo2LocaleMessageGWTTranslator;
 import java.util.logging.Level;
 
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.FAIL;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.LOGOUT;
@@ -33,7 +36,7 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
  *
  * @author Gert van der Plas
  */
-class BootPanelController {
+public class BootPanelController {
 
     private static final Logger LOG = Logger.getLogger(BootPanelController.class.getName());
 
@@ -53,6 +56,7 @@ class BootPanelController {
     EventBus eventBus;
     HasWidgets rootPanel;
 
+    @Inject
     BootPanelController(EventBus eventBus) {
         this.eventBus = eventBus;
         testIsOn = false;
@@ -303,6 +307,9 @@ class BootPanelController {
                             break;
                         case MODULES:
                             presenterFactory.getModulesPresenter().show();
+                            break;
+                        case MODULESVIEW:
+                            viewFactory.getMainView().showModulesView();
                             break;
                         default:
                             eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
