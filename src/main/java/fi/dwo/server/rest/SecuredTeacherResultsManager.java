@@ -428,7 +428,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
          long now = System.currentTimeMillis();
          ssc.setCreateDate(new java.sql.Date(now));
          ssc.setCreateTime(new java.sql.Time(now));
-         ssc.setCompletionStatus("");
+         ssc.setCompletionStatus("not attempted");
          ssc.setLocation("");
          ssc.setScore(0);
          ssc.setSessionTime("");
