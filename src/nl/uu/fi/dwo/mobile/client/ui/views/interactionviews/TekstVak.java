@@ -262,6 +262,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			regelVakken[i].clear();
 		}
 		super.clear();
+		add(regelLayer);
 		
 	}
 	public void clearRegels() {
