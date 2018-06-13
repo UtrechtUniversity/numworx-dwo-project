@@ -4,6 +4,7 @@ package nl.uu.fi.dwo.rest.dom.entities;
  *
  * @author G.A.J. van der Plas  email: G.A.J.vanderPlas@uu.nl
  */
+@SuppressWarnings("rawtypes")
 public class DomResultTeacher extends DomResultScore<DomResultSchoolClass> {
     private DomTeacher teacher;
 
