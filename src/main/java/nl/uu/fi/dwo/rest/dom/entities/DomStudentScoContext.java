@@ -16,6 +16,7 @@ public class DomStudentScoContext {
     private PersistenceId schoolClassID;
     private double score;
 	private String completionStatus;
+	private String totalTime;
 
     /**
      * @return the id
@@ -113,6 +114,20 @@ public class DomStudentScoContext {
 	 */
 	public void setCompletionStatus(String completionStatus) {
 	    this.completionStatus = completionStatus;
+	}
+
+	/**
+	 * @return the totalTime
+	 */
+	public String getTotalTime() {
+	    return totalTime;
+	}
+
+	/**
+	 * @param totalTime the totalTime to set
+	 */
+	public void setTotalTime(String totalTime) {
+	    this.totalTime = totalTime;
 	}
 
 }

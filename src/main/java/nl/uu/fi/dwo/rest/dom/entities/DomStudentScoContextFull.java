@@ -8,25 +8,10 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * @author Gert van der Plas
  */
 public class DomStudentScoContextFull extends DomStudentScoContext{
-    private String totalTime;
     private String sessionTime;
     private Date createDate;
     private java.sql.Time createTime;
     private String location;    
-
-    /**
-     * @return the totalTime
-     */
-    public String getTotalTime() {
-        return totalTime;
-    }
-
-    /**
-     * @param totalTime the totalTime to set
-     */
-    public void setTotalTime(String totalTime) {
-        this.totalTime = totalTime;
-    }
 
     /**
      * @return the sessionTime
