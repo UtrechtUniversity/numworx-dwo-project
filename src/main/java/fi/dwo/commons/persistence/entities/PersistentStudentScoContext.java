@@ -296,6 +296,7 @@ public class PersistentStudentScoContext implements Serializable {
         studentSco.setScoID(PersistentScoContext.buildPersistenceId(this.scoID));
         studentSco.setSchoolClassID(PersistentSchoolClass.buildPersistenceId(classID));
         studentSco.setCompletionStatus(completionStatus);
+        studentSco.setTotalTime(totalTime);
     }
 
     public void fillDomStudentScoContextFull(DomStudentScoContextFull studentSco) {
