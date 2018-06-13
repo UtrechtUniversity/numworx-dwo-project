@@ -64,8 +64,8 @@ public class ViewFactoryJs implements ViewFactory {
 
     private final MainPresenter.Display mainView;
     private final LoginPresenter.Display loginView;
-    private final ResultsPresenter.Display resultsView;
-    private final SelectedResultsPresenter.Display resultsSelectsView;
+    @Inject JsResultsView resultsView;
+    @Inject JsSelectedResultsView resultsSelectsView;
     private final SelectStudentResultsPresenter.Display selectStudentResultsView;
     private final StudentScoResultPresenter.Display studentScoResultView;
     private final SchoolclassesPresenter.Display schoolclassesView;
@@ -76,7 +76,7 @@ public class ViewFactoryJs implements ViewFactory {
     private final AccountPresenter.Display accountView;
     private final WelcomePresenter.Display welcomeView;
     private final EditSchoolclassPresenter.Display editSchoolclassView;
-    private final ModulesPresenter.Display modulesView;
+    @Inject JsModulesView modulesView; // non final non private, concrete class for @Inject
 
 
     private final PersonsPresenter.Display personsView;
@@ -91,7 +91,7 @@ public class ViewFactoryJs implements ViewFactory {
     private final FileUploadStudentsPresenter.Display fileUploadStudentsView;
     private final ProgressDialogWithAbortPresenter.Display progressDialogView;
 
-    @Inject public ViewFactoryJs(PresenterFactory pf) {
+    @Inject ViewFactoryJs(PresenterFactory pf) {
         mainView = new JsMainView();
         loginView = new JsLoginView();
         welcomeView = new JsWelcomeView();
@@ -102,10 +102,9 @@ public class ViewFactoryJs implements ViewFactory {
         copyOrMoveStudentToSchoolclassView = new JsCopyOrMoveStudentToSchoolclassView();
         modulesOfSchoolclassView = new JsModulesOfSchoolclassView();
         addTeacherToSchoolclassView = new JsAddTeacherToSchoolclassView();
-        modulesView = new JsModulesView();
         //ordered!
-        resultsView = new JsResultsView();
-        resultsSelectsView = new JsSelectedResultsView();
+        //resultsView = new JsResultsView();
+        //resultsSelectsView = new JsSelectedResultsView();
         selectStudentResultsView = new JsSelectStudentResultsView();
         studentScoResultView = new JsStudentScoResultView();
         

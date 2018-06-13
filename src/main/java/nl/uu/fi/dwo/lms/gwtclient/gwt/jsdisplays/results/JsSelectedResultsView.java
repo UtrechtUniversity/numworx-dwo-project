@@ -7,6 +7,9 @@ import com.google.gwt.json.client.JSONString;
 import fi.dwo.gwt.lib.rest.util.DomStudentCodec;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectedResultsPresenter;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
@@ -15,6 +18,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 
 /**
  * Mapper to allow java interface implementation.
@@ -52,9 +56,16 @@ public class JsSelectedResultsView implements SelectedResultsPresenter.Display {
         json.put("scoCount", new JSONNumber(node.getScoCount()));
         json.put("studentScoCount", new JSONNumber(node.getStudentScoCount()));
         if (node instanceof DomResultStudentScoContext) {
-            String userIdString = ((DomResultStudentScoContext) node).getStudentSco().getUserID().getIdString();
+            DomStudentScoContext studentSco = ((DomResultStudentScoContext) node).getStudentSco();
+			String userIdString = studentSco.getUserID().getIdString();
             json.put("user-id", new JSONString(userIdString));
-        }
+            String completionStatus = studentSco.getCompletionStatus(); // XXX What if not present? null of "" of unknown?
+            if(completionStatus == null) completionStatus = "unknown";
+			json.put("completionStatus", new JSONString(completionStatus));
+			String totalTime = studentSco.getTotalTime();
+			if (totalTime == null) totalTime = "00:00:00";
+			json.put("totalTime", new JSONString(totalTime));
+       }
 //        json.put("node-id", new JSONNumber(node.getNodeId()));
         //Add children.
         if (node.getChildren() != null && !node.getChildren().isEmpty()) {
@@ -164,4 +175,6 @@ public class JsSelectedResultsView implements SelectedResultsPresenter.Display {
     public void init(JavaScriptObject aResultState) {
         JsSelectedResultsDisplay.init(aResultState);
     }
+    
+    @Inject JsSelectedResultsView() {}
 }

@@ -7,22 +7,43 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 import com.google.web.bindery.event.shared.EventBus;
-import fi.dwo.gwt.lib.rest.ui.DialogEvent;
+
 import jsinterop.annotations.JsMethod;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
+import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 /**
@@ -33,6 +54,7 @@ public class SelectedResultsPresenter {
 
     private static final Logger LOG = Logger.getLogger(SelectedResultsPresenter.class.getName());
 
+	private final LoggingFailure FAILURE;
     private final EventBus eventBus;
     private final DwoGlobalVars dwoGlobalVars;
 
@@ -60,7 +82,7 @@ public class SelectedResultsPresenter {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         resultService = new ResultsService(dwoGlobalVars);
-
+        FAILURE = new LoggingFailure(LOG, eventBus);
     }
 
     public void init(DomResultTree aResultTree, JavaScriptObject aResultState) {
@@ -87,38 +109,93 @@ public class SelectedResultsPresenter {
                 return null;
             }
         },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        });
+                FAILURE);
     }
 
     public void setView(Display aView) {
         view = aView;
     }
 
-    @JsMethod
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@JsMethod
     public void sealModuleActivities(String courseID, String classid) {
-    	PersistenceId id = new PersistenceId(courseID);
-    	DomCourse course = new DomCourse();course.setId(id);
+    	PersistenceId schoolclass = new PersistenceId(classid);
+    	DomResultTeacher studentTree = resultTree.getStudentTree();
+    	DomResultSchoolClass domschoolclass = studentTree.getChildren().get(schoolclass);
+    	List<DomStudent> students = new ArrayList<>(domschoolclass.getChildren().values()); // all students
+
+    	PersistenceId course = new PersistenceId(courseID);
+    	DomResultSchoolClass<?> domclassresults = resultTree.getResultTree().getChildren().get(schoolclass);
+    	DomResultScore<?> courseResults = domclassresults.getChildren().get(course);
+    	Set<PersistenceId> scos = courseResults.getChildren().keySet();
+    // TODO verzegel course, dus alle activitetien
+    	Collection<Promise<Object>> promises = new ArrayList<>();
+    	for(PersistenceId scoid : scos) {
+    		DomScoContext sco = new DomScoContext();
+    		sco.setId(scoid);
+			promises.add(resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), students)
+					.map(dom -> dom.getStudentScoContexts().stream().map(DomMapEntry::getValue).collect(Collectors.toList()))
+					.flatMap(resultService::sealList)
+					.then(this::updateResultTree));
+    	}
+    	Promises.all(promises).then(null, FAILURE);
     	
-    	
-    // TODO verzegel course, dus alle activitetien	
     }
     
-    @JsMethod
-    public void sealSingleActivity(String scoId, String classid) {
-    	resultTree.getPlottedResultTree();
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@JsMethod
+	public void sealSingleActivity(String scoId, String classid) {
+		PersistenceId schoolclass = new PersistenceId(classid);
+		DomResultTeacher studentTree = resultTree.getStudentTree();
+		DomResultSchoolClass domschoolclass = studentTree.getChildren().get(schoolclass);
+		List<DomStudent> students = new ArrayList<>(domschoolclass.getChildren().values()); // all students
+
+		PersistenceId scoid = new PersistenceId(scoId);
+		DomScoContext sco = new DomScoContext();
+		sco.setId(scoid);
+		resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), students)
+			.map(dom -> dom.getStudentScoContexts().stream().map(DomMapEntry::getValue).collect(Collectors.toList()))
+			.flatMap(resultService::sealList)
+			.then(this::updateResultTree, FAILURE);
+	}
+    
+    Promise<Object> updateResultTree(Promise<List<DomStudentScoContext>> p) {
+    	view.updateResultTree(resultTree);
+    	return null;
     }
     
+    private static final Collection<String> keys = Arrays.asList(
+            "cmi.suspend_data",
+            "cmi.location",
+            //"cmi.score.raw",
+            //ResultsService.COMPLETION_STATUS,
+            "cmi.comments_from_lms.0.comment"
+    );
+    @JsMethod 
+    public void showStudentResults (String scoid, String studentid, String classid) {
+		PersistenceId schoolclass = new PersistenceId(classid);
+		DomResultTeacher studentTree = resultTree.getStudentTree();
+		@SuppressWarnings("rawtypes")
+		DomResultSchoolClass domschoolclass = studentTree.getChildren().get(schoolclass);
+		PersistenceId key = new PersistenceId(studentid);
+		DomStudent student = (DomStudent) domschoolclass.getChildren().get(key);
+		DomScoContext sco = new DomScoContext(); sco.setId(new PersistenceId(scoid));
+		Promise<DomStudentScoContext> p1 = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), Collections.singletonList(student))
+		.map(p -> p.getStudentScoContexts().get(0).getValue());		
+		Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(sco, domschoolclass.getSchoolClass());		
+		Promise<Map<String,String>> p3 = p1.then(  p-> resultService.getValues(p.getValue(), keys));
+    	
+		Promises.all(p1,p2,p3).then(new Success<Object, Object>() {
+
+			@Override
+			public Promise<Object> call(Promise<Object> resolved) throws Exception {
+				eventBus.fireEvent(new SwitchViewEvent(SelectedView.RESULTSSTUDENT, p1.getValue(), p2.getValue().toString(), p3.getValue()));
+				return null;
+			}
+			
+		}, FAILURE);
+				
+    	
+    	
+    }
 }

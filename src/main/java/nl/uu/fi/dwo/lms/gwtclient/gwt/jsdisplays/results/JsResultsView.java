@@ -6,6 +6,9 @@ import com.google.gwt.json.client.JSONString;
 import fi.dwo.gwt.lib.rest.util.DomStudentCodec;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
@@ -25,6 +28,8 @@ public class JsResultsView implements ResultsPresenter.Display {
 
     private static final Logger LOG = Logger.getLogger(JsResultsView.class.getName());
 
+    @Inject JsResultsView() {}
+    
     @Override
     public void clear() {
         JsResultsDisplay.clear();
@@ -54,13 +59,13 @@ public class JsResultsView implements ResultsPresenter.Display {
             DomStudentScoContext studentSco = ((DomResultStudentScoContext) node).getStudentSco();
             String userIdString = studentSco.getUserID().getIdString();
             json.put("user-id", new JSONString(userIdString));
-            String completionStatus = studentSco.getCompletionStatus(); 
-            //JSONString constructor throws a null exception for null.
-            if (completionStatus == null) {
-                completionStatus = "";
-            }
-            json.put("completionStatus", new JSONString(completionStatus));
-        } else if (node instanceof DomResultCourseInClass) {
+            String completionStatus = studentSco.getCompletionStatus(); // XXX What if not present? null of "" of unknown?
+            if(completionStatus == null) completionStatus = "unknown";
+			json.put("completionStatus", new JSONString(completionStatus));
+			String totalTime = studentSco.getTotalTime();
+			if (totalTime == null) totalTime = "00:00:00";
+			json.put("totalTime", new JSONString(totalTime));
+        }else if (node instanceof DomResultCourseInClass){
             String viewState = ((DomResultCourseInClass) node).getViewState().name();
             json.put("viewState", new JSONString(viewState));
         }

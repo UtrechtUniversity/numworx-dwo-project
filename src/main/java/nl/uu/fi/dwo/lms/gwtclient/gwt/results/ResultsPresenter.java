@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
@@ -33,6 +34,7 @@ public class ResultsPresenter {
 
     private final EventBus eventBus;
     private final DwoGlobalVars dwoGlobalVars;
+    private final Failure FAILURE;
 
     private Display view;
     private ResultsService resultService;
@@ -58,6 +60,7 @@ public class ResultsPresenter {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         resultService = new ResultsService(dwoGlobalVars);
+        FAILURE = new LoggingFailure(LOG, anEventBus);
 
     }
 
@@ -81,20 +84,8 @@ public class ResultsPresenter {
                 return null;
             }
         },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        });
+                FAILURE
+        );
     }
 
     public void setView(Display aView) {

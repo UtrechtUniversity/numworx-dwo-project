@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
+import java.util.Map;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.GwtEvent;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
@@ -120,7 +122,11 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         schoolClass = aSchoolClass;
     }
 
-    @Override
+    public SwitchViewEvent(SelectedView resultsstudent, DomStudentScoContext value, String launchdata, Map<String, String> map) {
+		this(resultsstudent);
+	}
+
+	@Override
     public Type<SwitchViewEventHandler> getAssociatedType() {
         return TYPE;
     }
