@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.account;
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,16 +12,21 @@ import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPromise;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 /**
@@ -55,15 +61,11 @@ public class AccountPresenter {
 
         void init();
 
-	void updateSchoolLoginsView(DomSchoolsRolesAndClassesV2 schoolLogins);
+        void updateSchoolLoginsView(DomSchoolsRolesAndClassesV2 schoolLogins);
 
-	// void updateView(String username, String firstName, String insertion,
-	// String familyName, String email);
+        void updateUserView(DomUserFull user);
 
-	void updateUserView(DomUserFull user);
-        
         void clearAddSchoolLogin();
-
     }
 
     public AccountPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -74,11 +76,11 @@ public class AccountPresenter {
 
     public void init() {
         view.init();
-	sracData = getTeacherRoles();
-	updateUserDataInView();
+        sracData = getAccountRoles();
+        updateUserDataInView();
     }
 
-    private Map<String, DomSchoolRoleAndClassV2> getTeacherRoles() {
+    private Map<String, DomSchoolRoleAndClassV2> getAccountRoles() {
         Map<String, DomSchoolRoleAndClassV2> result = new HashMap<String, DomSchoolRoleAndClassV2>();
         DomSchoolsRolesAndClassesV2 sl = dwoGlobalVars.getSchoolLogins();
         List<DomSchoolRoleAndClassV2> fullList = sl.getSchoolsRolesAndClassesList();
@@ -93,8 +95,8 @@ public class AccountPresenter {
     @JsMethod
     public void switchSchoolLogin(String hasRoleId) {
         DomSchoolRoleAndClassV2 srac = sracData.get(hasRoleId);
-        
-        if (srac != null){ //&& srac.getRole().getRoleName().equals(RoleType.TEACHER.name())) {
+
+        if (srac != null) { //&& srac.getRole().getRoleName().equals(RoleType.TEACHER.name())) {
             dwoGlobalVars.setActiveSchoolRoleAndClass(srac);
             dwoGlobalVars.getSchoolLogins().setActiveSchoolRoleAndClass(srac);
             Promise<DomSchoolRoleAndClassV2> promise = accountService.switchToSchoolLogin(srac);
@@ -140,6 +142,29 @@ public class AccountPresenter {
         promise.then(new Success<Boolean, Void>() {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                //flip back to schoolclasses screen 
+                eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
+                view.clearAddSchoolLogin();
+ //               return accountService.updateSchoolLogins();
+                return null;
+            }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        }).then(new Success<Void, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Void> resolved) throws Exception {
                 //flip back to schoolclasses screen 
                 eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
                 view.clearAddSchoolLogin();
@@ -189,12 +214,11 @@ public class AccountPresenter {
             }
         });
     }
-    
+
     @JsMethod
     public void saveUser(String givenName, String insertion, String familyName, String email, String curPassword, String newPassword, String newPasswordAgain) {
         if (!MD5.md5(curPassword).equals(dwoGlobalVars.getCurrentUser().getPassword())) {
-            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven)));
-            //DwoViewer.showMessage(Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven);
+            eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven)));
             return;
         }
 
@@ -239,25 +263,84 @@ public class AccountPresenter {
             eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_NewPasswordsDoNotMatch)));
             return;
         }
+        //Start with OK/Cancel Promised AlerDialog
+        Promise<Boolean> p = Promises.resolved(true); //empty promise
+        p.then((resolved) -> {
+            //do dialog check
+            AlertDialogWithConfirmCancelPromise dialogPromise = new AlertDialogWithConfirmCancelPromise(DwoLocalesForGWT.instance.GUI_Dialog_User_ConfirmPasswordSwitch());
+            AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
+            eventBus.fireEvent(event);
+            return dialogPromise.getPromise();
+        })
+        // if dialog has success update user data
+        .then((resolved) -> {
+            Boolean doIt = resolved.getValue();
+            if(doIt){
+                LOG.log(Level.INFO, "update user requested.");
+            //All is well, proceed with REST-request
+            Promise<DomUserFull> promisedUser;
+            promisedUser = accountService.UpdateUserData(user);
+            return promisedUser;
+            } else{
+                LOG.log(Level.INFO, "update user cancelled.");
+                return Promises.failed(null);
+            }
+        }).then(
+                    new Success<DomUserFull, Void>() {
+                @Override
+                public Promise<Void> call(Promise<DomUserFull> resolved) throws Exception {
+                    //calculate tree and call plotting
+                    LOG.log(Level.INFO, "DomUser returned.");
+                    DomUserFull u = resolved.getValue();
+                    dwoGlobalVars.setCurrentUser(u);
+                    view.clear();
+                    view.updateUserView(u);
+                    eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Dialog_User_ConfirmChangeCommited()));
+                    return null;
+                }
+            },
+                    new Failure() {
+                @Override
+                public void fail(Promise<?> resolved) throws Exception {
+                    Throwable fail = resolved.getFailure();
+                    if (fail instanceof Dwo2Exception) {
+                        LOG.log(Level.SEVERE, fail.getMessage());
+                        eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
+                    } else {
+                        LOG.log(Level.SEVERE, fail.getMessage());
+                        eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
+                        //throw directly
+                    }
+                }
+            }
+            );
+         
+       
+    }
 
-        //All is well, proceed with REST-request
-        Promise<DomUserFull> promisedUser;
-	promisedUser = accountService.UpdateUserData(user);
+    @JsMethod
+    public void updateUserDataInView() {
+        Promise<DomUserFull> userPromise;
+        userPromise = accountService.getUserData();
         // onSuccess calculate results and show.
-        promisedUser.then(new Success<DomUserFull, Void>() {
+        userPromise.then(new Success<DomUserFull, Void>() {
             @Override
             public Promise<Void> call(Promise<DomUserFull> resolved) throws Exception {
-                //calculate tree and call plotting
-                LOG.log(Level.INFO, "DomUser returned.");
-                DomUserFull u = resolved.getValue();
-                dwoGlobalVars.setCurrentUser(u);
-                view.clear();
-		view.updateUserView(u);
-                eventBus.fireEvent(new AlertDialogWithOKEvent("Success"));
+                // calculate tree and call plotting
+                LOG.log(Level.INFO, "DomFullUser data returned.");
+                DomUserFull uf = resolved.getValue();
+                dwoGlobalVars.setCurrentUser(uf);// updating data
+                view.updateUserView(uf);
+                DomSchoolsRolesAndClassesV2 srac = new DomSchoolsRolesAndClassesV2();
+                srac.setNullSchool(dwoGlobalVars.getSchoolLogins().getNullSchool());
+                srac.setActiveSchoolRoleAndClass(dwoGlobalVars.getActiveSchoolRoleAndClass());
+                List<DomSchoolRoleAndClassV2> sracList = new ArrayList<>(sracData.size());
+                sracData.forEach((k,v) -> {sracList.add(v);});
+                srac.setSchoolsRolesAndClassesList(sracList);
+                view.updateSchoolLoginsView(srac);
                 return null;
             }
-        },
-                new Failure() {
+        }, new Failure() {
             @Override
             public void fail(Promise<?> resolved) throws Exception {
                 Throwable fail = resolved.getFailure();
@@ -267,43 +350,10 @@ public class AccountPresenter {
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
                     eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                    //throw directly
+                    // throw directly
                 }
             }
         });
-        LOG.log(Level.INFO, "Data send to server.");
     }
 
-    @JsMethod
-    public void updateUserDataInView() {
-	Promise<DomUserFull> userPromise;
-	userPromise = accountService.getUserData();
-	// onSuccess calculate results and show.
-	userPromise.then(new Success<DomUserFull, Void>() {
-	    @Override
-	    public Promise<Void> call(Promise<DomUserFull> resolved) throws Exception {
-		// calculate tree and call plotting
-		LOG.log(Level.INFO, "DomFullUser data returned.");
-		DomUserFull uf = resolved.getValue();
-		dwoGlobalVars.setCurrentUser(uf);// updating data
-		view.updateUserView(uf);
-		view.updateSchoolLoginsView(dwoGlobalVars.getSchoolLogins());
-		return null;
-	    }
-	}, new Failure() {
-	    @Override
-	    public void fail(Promise<?> resolved) throws Exception {
-		Throwable fail = resolved.getFailure();
-		if (fail instanceof Dwo2Exception) {
-		    LOG.log(Level.SEVERE, fail.getMessage());
-		    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-		} else {
-		    LOG.log(Level.SEVERE, fail.getMessage());
-		    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-		    // throw directly
-		}
-	    }
-	});
-    }
-    
 }

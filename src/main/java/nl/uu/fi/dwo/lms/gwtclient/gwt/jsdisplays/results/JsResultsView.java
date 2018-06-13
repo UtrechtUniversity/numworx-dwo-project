@@ -52,14 +52,17 @@ public class JsResultsView implements ResultsPresenter.Display {
         json.put("studentScoCount", new JSONNumber(node.getStudentScoCount()));
         if (node instanceof DomResultStudentScoContext) {
             DomStudentScoContext studentSco = ((DomResultStudentScoContext) node).getStudentSco();
-			String userIdString = studentSco.getUserID().getIdString();
+            String userIdString = studentSco.getUserID().getIdString();
             json.put("user-id", new JSONString(userIdString));
-            String completionStatus = studentSco.getCompletionStatus(); // XXX What if not present? null of ""?
-            if(completionStatus == null) completionStatus = "";
-			json.put("completionStatus", new JSONString(completionStatus));
-        }else if (node instanceof DomResultCourseInClass){
+            String completionStatus = studentSco.getCompletionStatus(); 
+            //JSONString constructor throws a null exception for null.
+            if (completionStatus == null) {
+                completionStatus = "";
+            }
+            json.put("completionStatus", new JSONString(completionStatus));
+        } else if (node instanceof DomResultCourseInClass) {
             String viewState = ((DomResultCourseInClass) node).getViewState().name();
-            json.put("viewState", new JSONString(viewState));        
+            json.put("viewState", new JSONString(viewState));
         }
 //        json.put("node-id", new JSONNumber(node.getNodeId()));
         //Add children.
@@ -73,7 +76,7 @@ public class JsResultsView implements ResultsPresenter.Display {
                     id = ((DomResultSchoolClass) o).getSchoolClass().getId().getIdString();
                 } else if (o instanceof DomResultCourseInClass) {
                     id = ((DomResultCourseInClass) o).getCourse().getId().getIdString();
-                    
+
                 } else if (o instanceof DomResultScoContext) {
                     id = ((DomResultScoContext) o).getScoContext().getId().getIdString();
                 } else if (o instanceof DomResultStudentScoContext) {

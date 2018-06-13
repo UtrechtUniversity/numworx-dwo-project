@@ -33,8 +33,7 @@ public class AlertDialogWithConfirmCancelPresenter implements AlertDialogWithCon
 
     @Override
     public void onDialogEvent(AlertDialogWithConfirmCancelEvent aDialogEvent) {
-        LOG.log(Level.INFO,"AlertDialogWithConfirmCancelEvent does: "+aDialogEvent.getEventValue());
-
+        LOG.log(Level.INFO,"AlertDialogWithConfirmCancelEvent does: "+aDialogEvent.getEventValue()+ " with "+aDialogEvent.getPromise().getMsg());
         if (aDialogEvent.getEventValue()==AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog){
             promise = aDialogEvent.getPromise();
             view.showDialog(promise.getMsg());
@@ -55,12 +54,15 @@ public class AlertDialogWithConfirmCancelPresenter implements AlertDialogWithCon
     @JsMethod
     public void confirm(){
         view.hideDialog();
+LOG.log(Level.INFO, "do it");
         promise.resolve(Boolean.TRUE);
     }
 
     @JsMethod
     public void cancel(){
         view.hideDialog();
+//        promise.fail(null);
+LOG.log(Level.INFO, "cancel");
         promise.resolve(Boolean.FALSE);       
     }    
 }
