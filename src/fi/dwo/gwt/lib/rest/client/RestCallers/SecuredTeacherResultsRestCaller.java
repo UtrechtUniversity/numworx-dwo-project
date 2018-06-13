@@ -26,4 +26,9 @@ public interface SecuredTeacherResultsRestCaller extends RestService {
     @Produces({"application/json"})
     @Path("/sec:{id}/teacher/results/clearStudentResults")
     public void clearStudentResults(@PathParam("id") String id, RestClearStudentDataForScoAndClass rest, MethodCallback<Boolean> callback);
+    
+    @PUT
+    @Produces({"application/json"})
+    @Path("/sec:{id}/teacher/results/createStudentResults")
+    public void createStudentResults(@PathParam("id") String id, RestClearStudentDataForScoAndClass rest, MethodCallback<DomResultsPerTeacher> callback);
 }

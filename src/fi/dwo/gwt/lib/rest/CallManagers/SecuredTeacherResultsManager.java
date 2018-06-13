@@ -71,4 +71,9 @@ public class SecuredTeacherResultsManager {
       service.clearStudentResults(PathId.getId(context),rest, new Callback<Boolean>(callBack));
     }
 
+    public Promise<DomResultsPerTeacher> createStudentResults(RestClearStudentDataForScoAndClass rest) {
+    	PromiseCallback<DomResultsPerTeacher> defer = new PromiseCallback<>();
+    	service.createStudentResults(PathId.getId(rest.getRestContext()), rest, defer);
+    	return defer.getPromise();
+    }
 }
