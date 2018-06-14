@@ -1700,9 +1700,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			setButtonCursor(buttons.get(currentOpdracht));
 		}
 
-		currentOpdracht = opdracht;
 		BUS.removeHandlers();
 		entry.clearContentPanel();
+		currentOpdracht = opdracht;
 		if (states[currentActiviteit][currentOpdracht] == null)
 			entry.zetVolgendeOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
 		else
