@@ -1810,6 +1810,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		}
 		
 		List<Object> states = JSONUtilities.toArrayList(h.get("interactiePanelStates"));
+		if (states == null)
+			states = Collections.EMPTY_LIST;
 		int size = interactionViewObjects.size();
 		if(size != states.size())
 			Logger.getLogger("TextVakPanel").severe("sizes " + size + " " + states.size());
