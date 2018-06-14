@@ -358,52 +358,18 @@
 				<inputDir>target/${project.build.finalName}/dwo</inputDir> <outputFile>target/${project.build.finalName}/dwo/index.xml</outputFile> 
 				</configuration> </execution> </executions> </plugin> -->
 
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.6.0</version>
-				<executions>
-					<execution>
-						<id>local-index</id>
-						<goals>
-							<goal>java</goal>
-						</goals>
-						<phase>process-resources</phase>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>fi.microserver</groupId>
-						<artifactId>MicroIndex</artifactId>
-						<version>0.0.1-SNAPSHOT</version>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<mainClass>fi.microserver.microindex.Main</mainClass>
-					<includeProjectDependencies>false</includeProjectDependencies>
-					<includePluginDependencies>true</includePluginDependencies>
-					<addOutputToClasspath>false</addOutputToClasspath>
-					<addResourcesToClasspath>false</addResourcesToClasspath>
-					<arguments>
-						<argument>target/${project.build.finalName}/dwo</argument>
-					</arguments>
-
-				</configuration>
-
-			</plugin>
-
-		</plugins>
-	</build>
-	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<DWOplayerVersion>2.2.4</DWOplayerVersion>
-		<DWOmAccessVersion>0.0.9</DWOmAccessVersion>
-		<RegisterVersion>2.1.23</RegisterVersion>
-		<DWOGwtClientVersion>0.10.13</DWOGwtClientVersion>
-	</properties>
-	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</developerConnection>
-		<connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</connection>
-	</scm>
+        </plugins>
+    </build>
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <DWOplayerVersion>2.2.4</DWOplayerVersion>
+        <DWOmAccessVersion>0.0.9</DWOmAccessVersion>
+        <RegisterVersion>2.1.23</RegisterVersion>
+        <DWOGwtClientVersion>0.10.14-SNAPSHOT</DWOGwtClientVersion>
+    </properties>
+    <scm>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</developerConnection>
+        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</connection>
+    </scm>
 </project>
