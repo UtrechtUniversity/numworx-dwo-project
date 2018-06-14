@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO-GWT</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>1.0</version>
 		<relativePath>../DWO-GWT</relativePath>
 	</parent>
 	<groupId>fi.writemathgwt</groupId>
