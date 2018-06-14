@@ -51,11 +51,11 @@ public class PresenterFactoryGwt implements PresenterFactory {
     private final CopyOrMoveStudentToSchoolclassPresenter copyOrMoveStudentToSchoolclassPresenter;
     private final AddTeacherToSchoolclassPresenter addTeacherToSchoolclassPresenter;
     private final ModulesOfSchoolclassPresenter modulesOfSchoolclassPresenter;
-    private final ModulesPresenter modulesPresenter;
-    private final ResultsPresenter resultsPresenter;
-    private final SelectedResultsPresenter selectedResultsPresenter;
-    private final SelectStudentResultsPresenter selectStudentResultsPresenter;
-    private final StudentScoResultPresenter studentScoResultPresenter;
+    @Inject ModulesPresenter modulesPresenter;
+    @Inject ResultsPresenter resultsPresenter;
+    @Inject SelectedResultsPresenter selectedResultsPresenter;
+    @Inject SelectStudentResultsPresenter selectStudentResultsPresenter;
+    @Inject StudentScoResultPresenter studentScoResultPresenter;
 
     private final PersonsPresenter personsPresenter;
     private final AddStudentPresenter addStudentPresenter;
@@ -82,11 +82,11 @@ public class PresenterFactoryGwt implements PresenterFactory {
         copyOrMoveStudentToSchoolclassPresenter = new CopyOrMoveStudentToSchoolclassPresenter(eventBus, dwoGlobalVars);
         addTeacherToSchoolclassPresenter = new AddTeacherToSchoolclassPresenter(eventBus, dwoGlobalVars);
         modulesOfSchoolclassPresenter = new ModulesOfSchoolclassPresenter(eventBus, dwoGlobalVars);
-        modulesPresenter = new ModulesPresenter(eventBus, dwoGlobalVars);
-        resultsPresenter = new ResultsPresenter(eventBus, dwoGlobalVars);
-        selectedResultsPresenter = new SelectedResultsPresenter(eventBus, dwoGlobalVars);
-        studentScoResultPresenter = new StudentScoResultPresenter(eventBus, dwoGlobalVars);
-        selectStudentResultsPresenter = new SelectStudentResultsPresenter(eventBus, dwoGlobalVars);
+        //modulesPresenter = new ModulesPresenter(eventBus, dwoGlobalVars);
+        //resultsPresenter = new ResultsPresenter(eventBus, dwoGlobalVars);
+        //selectedResultsPresenter = new SelectedResultsPresenter(eventBus, dwoGlobalVars);
+        //studentScoResultPresenter = new StudentScoResultPresenter(eventBus, dwoGlobalVars);
+        //selectStudentResultsPresenter = new SelectStudentResultsPresenter(eventBus, dwoGlobalVars);
         personsPresenter = new PersonsPresenter(anEventBus, aDwoGlobalVars);
         addStudentPresenter = new AddStudentPresenter(anEventBus, aDwoGlobalVars);
         importPersonsPresenter = new ImportPersonsPresenter(anEventBus, aDwoGlobalVars);

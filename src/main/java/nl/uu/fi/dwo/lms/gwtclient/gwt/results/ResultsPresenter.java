@@ -7,6 +7,9 @@ import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
@@ -30,6 +33,8 @@ import org.osgi.util.promise.Success;
  */
 public class ResultsPresenter {
 
+  
+  
     private static final Logger LOG = Logger.getLogger(ResultsPresenter.class.getName());
 
     private final EventBus eventBus;
@@ -37,7 +42,7 @@ public class ResultsPresenter {
     private final Failure FAILURE;
 
     private Display view;
-    private ResultsService resultService;
+    @Inject ResultsService resultService;
     //model
     private DomResultTree resultTree;
     private DomResultPlotMatrix resultMatrix;
@@ -56,10 +61,10 @@ public class ResultsPresenter {
 
     }
 
-    public ResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject ResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-        resultService = new ResultsService(dwoGlobalVars);
+        //resultService = new ResultsService(dwoGlobalVars);
         FAILURE = new LoggingFailure(LOG, anEventBus);
 
     }
@@ -99,10 +104,10 @@ public class ResultsPresenter {
     }
 
     @JsMethod
-    public void selectStudentResults() {
+    public void selectStudentResults(JavaScriptObject resultState) {
         LOG.log(Level.SEVERE, "Select StudentResults");
         eventBus.fireEvent(
-                new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTSTUDENTRESULTS, resultTree)
+                new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTSTUDENTRESULTS, resultTree, resultState)
         );
     }
 

@@ -13,7 +13,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import jsinterop.annotations.JsMethod;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +21,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import javax.inject.Inject;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
@@ -34,6 +35,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -59,7 +62,7 @@ public class SelectedResultsPresenter {
     private final DwoGlobalVars dwoGlobalVars;
 
     private Display view;
-    private ResultsService resultService;
+    @Inject ResultsService resultService;
     private JavaScriptObject resultState;
     //model
     private DomResultTree resultTree;
@@ -78,10 +81,10 @@ public class SelectedResultsPresenter {
 
     }
 
-    public SelectedResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject SelectedResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-        resultService = new ResultsService(dwoGlobalVars);
+        //resultService = new ResultsService(dwoGlobalVars);
         FAILURE = new LoggingFailure(LOG, eventBus);
     }
 
@@ -120,9 +123,9 @@ public class SelectedResultsPresenter {
 	@JsMethod
     public void sealModuleActivities(String courseID, String classid) {
     	PersistenceId schoolclass = new PersistenceId(classid);
-    	DomResultTeacher studentTree = resultTree.getStudentTree();
-    	DomResultSchoolClass domschoolclass = studentTree.getChildren().get(schoolclass);
-    	List<DomStudent> students = new ArrayList<>(domschoolclass.getChildren().values()); // all students
+    	DomResultTeacher<DomResultStudent> studentTree = resultTree.getStudentTree();
+    	DomResultSchoolClass<DomResultStudent> domschoolclass = studentTree.getChildren().get(schoolclass);
+    	List<DomStudent> students = domschoolclass.getChildren().values().stream().map(DomResultStudent::getStudent).collect(Collectors.toList());
 
     	PersistenceId course = new PersistenceId(courseID);
     	DomResultSchoolClass<?> domclassresults = resultTree.getResultTree().getChildren().get(schoolclass);
@@ -146,9 +149,9 @@ public class SelectedResultsPresenter {
 	@JsMethod
 	public void sealSingleActivity(String scoId, String classid) {
 		PersistenceId schoolclass = new PersistenceId(classid);
-		DomResultTeacher studentTree = resultTree.getStudentTree();
-		DomResultSchoolClass domschoolclass = studentTree.getChildren().get(schoolclass);
-		List<DomStudent> students = new ArrayList<>(domschoolclass.getChildren().values()); // all students
+        DomResultTeacher<DomResultStudent> studentTree = resultTree.getStudentTree();
+        DomResultSchoolClass<DomResultStudent> domschoolclass = studentTree.getChildren().get(schoolclass);
+        List<DomStudent> students = domschoolclass.getChildren().values().stream().map(DomResultStudent::getStudent).collect(Collectors.toList());
 
 		PersistenceId scoid = new PersistenceId(scoId);
 		DomScoContext sco = new DomScoContext();
@@ -164,35 +167,33 @@ public class SelectedResultsPresenter {
     	return null;
     }
     
-    private static final Collection<String> keys = Arrays.asList(
-            "cmi.suspend_data",
-            "cmi.location",
-            //"cmi.score.raw",
-            //ResultsService.COMPLETION_STATUS,
-            "cmi.comments_from_lms.0.comment"
-    );
     @JsMethod 
-    public void showStudentResults (String scoid, String studentid, String classid) {
+    public void showStudentResults (JavaScriptObject context, String scoid, String studentid, String classid) {
 		PersistenceId schoolclass = new PersistenceId(classid);
-		DomResultTeacher studentTree = resultTree.getStudentTree();
-		@SuppressWarnings("rawtypes")
-		DomResultSchoolClass domschoolclass = studentTree.getChildren().get(schoolclass);
+		DomResultTeacher<DomResultStudent> studentTree = resultTree.getStudentTree();
+		DomResultSchoolClass<DomResultStudent> domschoolclass = studentTree.getChildren().get(schoolclass);
 		PersistenceId key = new PersistenceId(studentid);
-		DomStudent student = (DomStudent) domschoolclass.getChildren().get(key);
+		DomStudent student = domschoolclass.getChildren().get(key).getStudent();
 		DomScoContext sco = new DomScoContext(); sco.setId(new PersistenceId(scoid));
 		Promise<DomStudentScoContext> p1 = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), Collections.singletonList(student))
 		.map(p -> p.getStudentScoContexts().get(0).getValue());		
 		Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(sco, domschoolclass.getSchoolClass());		
-		Promise<Map<String,String>> p3 = p1.then(  p-> resultService.getValues(p.getValue(), keys));
+		Promise<Map<String,String>> p3 = p1.then(  p-> resultService.getValues(p.getValue(), ResultsService.keys));
     	
 		Promises.all(p1,p2,p3).then(new Success<Object, Object>() {
 
 			@Override
 			public Promise<Object> call(Promise<Object> resolved) throws Exception {
-				eventBus.fireEvent(new SwitchViewEvent(SelectedView.RESULTSSTUDENT, p1.getValue(), p2.getValue().toString(), p3.getValue()));
+			    DomResultStudentScoContext ssc = new DomResultStudentScoContext(p1.getValue(), student);
+				String launch_data = p2.getValue().toString();
+                Map<String, String> userState = p3.getValue();
+                userState.put("cmi.launch_data", launch_data);
+                userState.put(ResultsService.COMPLETION_STATUS, p1.getValue().getCompletionStatus());
+                userState.put("cmi.score.raw", Double.toString(p1.getValue().getScore()));
+                updateResultTree(Promises.resolved(Collections.singletonList(p1.getValue())));
+                eventBus.fireEvent(new SwitchViewEvent(SelectedView.RESULTSSTUDENT, resultTree, ssc, context, userState));
 				return null;
 			}
-			
 		}, FAILURE);
 				
     	

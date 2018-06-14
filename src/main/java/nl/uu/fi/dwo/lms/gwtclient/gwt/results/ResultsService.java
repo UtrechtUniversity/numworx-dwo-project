@@ -5,11 +5,14 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherResultsManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherScormValuesManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
@@ -52,8 +55,16 @@ class ResultsService {
     private SecuredStudentScoDataManager scoData = new SecuredStudentScoDataManager();
     
     private final DwoGlobalVars dwoGlobalVars;
+
+    static final Collection<String> keys = Arrays.asList(
+            "cmi.suspend_data",
+            "cmi.location",
+            //"cmi.score.raw",
+            //ResultsService.COMPLETION_STATUS,
+            "cmi.comments_from_lms.0.comment"
+    );
     
-    public ResultsService(DwoGlobalVars aDwoGlobalVars){
+   @Inject ResultsService(DwoGlobalVars aDwoGlobalVars){
         dwoGlobalVars=aDwoGlobalVars;
     }
     
@@ -109,4 +120,8 @@ class ResultsService {
 	public Promise<Map<String, String>> getValues(DomStudentScoContext dom, Collection<String> keys) {
 		return scormValues.getValues(dom, getContext(), keys);
 	}
+
+  public Promise<DomStudentScoContext> setValues(DomStudentScoContext studentSco, Map<String, String> userState) {
+      return scormValues.setValues(studentSco, getContext(), userState);
+  }
 }

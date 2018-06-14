@@ -33,4 +33,9 @@ public class JsStudentScoResultView implements StudentScoResultPresenter.Display
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public void openUrl(String url) {
+      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

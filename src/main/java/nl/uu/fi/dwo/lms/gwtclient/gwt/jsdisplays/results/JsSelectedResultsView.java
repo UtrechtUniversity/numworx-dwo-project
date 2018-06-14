@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
@@ -131,6 +132,9 @@ public class JsSelectedResultsView implements SelectedResultsPresenter.Display {
                     JSONObject students = new JSONObject();
                     for (Object so : ((DomResultSchoolClass) o).getChildren().values()) {
                         //for each student
+                        if (so instanceof DomResultStudent) {
+                          so = ((DomResultStudent) so).getStudent();
+                        }
                         if (so instanceof DomStudent) {
                             DomStudent s = (DomStudent) so;
                             students.put("children", DomStudentCodec.CODEC.encode(s));

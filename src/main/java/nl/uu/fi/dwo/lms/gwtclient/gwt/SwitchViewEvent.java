@@ -7,6 +7,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
@@ -78,7 +79,9 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     private DomResultStudent resultStudent;
     private DomResultScoContext resultScoContext;
     private DomResultTree resultTree;
+    private DomResultStudentScoContext resultStudentScoContext;
     private JavaScriptObject moduleIds;
+    private Map<String,String> userState;
 
     public static Type<SwitchViewEventHandler> TYPE = new Type<SwitchViewEventHandler>();
     public static SelectedView eventValue;
@@ -122,8 +125,10 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         schoolClass = aSchoolClass;
     }
 
-    public SwitchViewEvent(SelectedView resultsstudent, DomStudentScoContext value, String launchdata, Map<String, String> map) {
-		this(resultsstudent);
+    public SwitchViewEvent(SelectedView resultsstudent, DomResultTree tree, DomResultStudentScoContext value, JavaScriptObject context, Map<String, String> map) {
+		this(resultsstudent, tree, context);
+		resultStudentScoContext = value;
+		userState = map;	
 	}
 
 	@Override
@@ -183,5 +188,13 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
      */
     protected JavaScriptObject getResultState() {
         return moduleIds;
+    }
+
+    public DomResultStudentScoContext getResultStudentScoContext() {
+      return resultStudentScoContext;
+    }
+
+    public Map<String,String> getUserState() {
+      return userState;
     }
 }

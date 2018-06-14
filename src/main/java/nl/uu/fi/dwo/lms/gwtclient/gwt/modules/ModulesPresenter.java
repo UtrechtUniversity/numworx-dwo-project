@@ -9,6 +9,8 @@ import fi.dwo.gwt.lib.rest.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
@@ -52,7 +54,7 @@ public class ModulesPresenter {
         public void openUrl(String url);
     }
 
-    public ModulesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject ModulesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         account = new AccountService(dwoGlobalVars); // alleen voor getBearerToken.

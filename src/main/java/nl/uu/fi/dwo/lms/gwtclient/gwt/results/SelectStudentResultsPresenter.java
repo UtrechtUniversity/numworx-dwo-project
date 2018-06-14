@@ -3,9 +3,15 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
+import org.osgi.util.promise.Failure;
+
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
@@ -22,9 +28,10 @@ public class SelectStudentResultsPresenter {
 
     private final EventBus eventBus;
     private final DwoGlobalVars dwoGlobalVars;
+    private final Failure FAILURE;
 
     private Display view;
-    private ResultsService resultService;
+    @Inject ResultsService resultService;
     private DomResultTree resultTree;
     public interface Display {
 
@@ -38,11 +45,10 @@ public class SelectStudentResultsPresenter {
 
     }
 
-    public SelectStudentResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject SelectStudentResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-        resultService = new ResultsService(dwoGlobalVars);
-
+        FAILURE = new LoggingFailure(LOG,anEventBus);
     }
 
     public void init(DomResultTree aResultTree) {
