@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
@@ -38,8 +39,8 @@ public class DomResultTree {
 
     private static final Logger LOG = Logger.getLogger(DomResultTree.class.getName());
 
-    private DomResultTeacher resultTree;
-    private DomResultTeacher studentTree;
+    private DomResultTeacher<DomResultCourseInClass> resultTree;
+    private DomResultTeacher<DomResultStudent> studentTree;
     private int newNodeId = 0;
     private List<DomResultScore> nodeList = new ArrayList<DomResultScore>();
 
@@ -67,7 +68,7 @@ public class DomResultTree {
      *
      * or
      *
-     * studentTree: DomResultTeacher, DomResultSchoolClass, DomStudent
+     * studentTree: DomResultTeacher, DomResultSchoolClass, DomResultStudent
      *
      * @param resultData
      */
@@ -79,17 +80,17 @@ public class DomResultTree {
          */
 
         //set the resultTree teacher
-        setResultTree(new DomResultTeacher(resultData.getTeacher()));
-        setStudentTree(new DomResultTeacher(resultData.getTeacher()));
+        setResultTree(new DomResultTeacher<>(resultData.getTeacher()));
+        setStudentTree(new DomResultTeacher<>(resultData.getTeacher()));
         //set the schoolclasses of the teacher
-        Map<PersistenceId, DomResultSchoolClass> schoolClasses = new HashMap<PersistenceId, DomResultSchoolClass>(resultData.getSchoolClasses().size());
-        Map<PersistenceId, DomResultSchoolClass> studentClasses = new HashMap<PersistenceId, DomResultSchoolClass>(resultData.getSchoolClasses().size());
+        Map<PersistenceId, DomResultSchoolClass<DomResultCourseInClass>> schoolClasses = new HashMap<>(resultData.getSchoolClasses().size());
+        Map<PersistenceId, DomResultSchoolClass<DomResultStudent>> studentClasses = new HashMap<>(resultData.getSchoolClasses().size());
         getResultTree().setChildren(schoolClasses);
         getStudentTree().setChildren(studentClasses);
         //create schoolClass maps for studentTree and resultTree
         for (PersistenceId key : resultData.getSchoolClasses().keySet()) {
-            DomResultSchoolClass resultValue = new DomResultSchoolClass(resultData.getSchoolClasses().get(key));
-            DomResultSchoolClass classValue = new DomResultSchoolClass(resultData.getSchoolClasses().get(key));
+            DomResultSchoolClass<DomResultCourseInClass> resultValue = new DomResultSchoolClass<>(resultData.getSchoolClasses().get(key));
+            DomResultSchoolClass<DomResultStudent> classValue = new DomResultSchoolClass<>(resultData.getSchoolClasses().get(key));
             //set child to parent
             resultValue.setParent(getResultTree());
             classValue.setParent(getStudentTree());
@@ -108,7 +109,7 @@ public class DomResultTree {
                 //fetch student
                 DomStudent student = resultData.getStudents().get(sId);
                 //add student to parent.
-                studentClasses.get(soc.getClassId()).getChildren().put(sId, student);
+                studentClasses.get(soc.getClassId()).getChildren().put(sId, new DomResultStudent(student));
             }
         }
 
@@ -191,28 +192,28 @@ public class DomResultTree {
     /**
      * @return the resultTree
      */
-    public DomResultTeacher getResultTree() {
+    public DomResultTeacher<DomResultCourseInClass> getResultTree() {
         return resultTree;
     }
 
     /**
      * @param resultTree the resultTree to set
      */
-    public void setResultTree(DomResultTeacher resultTree) {
+    public void setResultTree(DomResultTeacher<DomResultCourseInClass> resultTree) {
         this.resultTree = resultTree;
     }
 
     /**
      * @return the studentTree
      */
-    public DomResultTeacher getStudentTree() {
+    public DomResultTeacher<DomResultStudent> getStudentTree() {
         return studentTree;
     }
 
     /**
      * @param studentTree the studentTree to set
      */
-    public void setStudentTree(DomResultTeacher studentTree) {
+    public void setStudentTree(DomResultTeacher<DomResultStudent> studentTree) {
         this.studentTree = studentTree;
     }
 
