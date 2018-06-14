@@ -1,6 +1,9 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results;
 
 import java.util.logging.Logger;
+
+import com.google.gwt.core.client.JavaScriptObject;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 
@@ -36,6 +39,12 @@ public class JsStudentScoResultView implements StudentScoResultPresenter.Display
     @Override
     public void openUrl(String url) {
       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void init(JavaScriptObject aResultState) {
+      // TODO Auto-generated method stub
+      
     }
 
 }

@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.FAIL;
@@ -36,6 +37,7 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
  *
  * @author Gert van der Plas
  */
+//@Singleton
 public class BootPanelController {
 
     private static final Logger LOG = Logger.getLogger(BootPanelController.class.getName());
