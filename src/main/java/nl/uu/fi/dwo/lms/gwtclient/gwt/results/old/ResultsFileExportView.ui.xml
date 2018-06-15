@@ -1,16 +1,16 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui" >
-    <ui:style field="dwoStyle" src="../css/dwostyle.css" />
+    <ui:style field="dwoStyle"  />
     <ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
-    <g:FlowPanel addStyleNames='{dwoStyle.dwoDialogPanel}'>
+    <g:FlowPanel >
         <g:Grid>
             <g:row>
                 <g:customCell>
                     <g:Label><ui:text from='{rb.GUI_Label_SelectAFile}'/>:</g:Label>
                 </g:customCell>
                 <g:customCell>
-                    <g:FileUpload addStyleNames='{dwoStyle.dwoTextBox}' ui:field='fileUpload'/>
+                    <g:FileUpload  ui:field='fileUpload'/>
                 </g:customCell>
             </g:row>
             <g:row></g:row>

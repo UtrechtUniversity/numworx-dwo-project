@@ -2,19 +2,19 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui" 
              xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
-    <ui:style field="dwoStyle" src="../css/dwostyle.css" />
+    <ui:style field="dwoStyle" />
     <ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
-    <g:FlowPanel  styleName="{dwoStyle.fullPanel}">
-     <g:FlowPanel styleName="{dwoStyle.scrollPanel}">
+    <g:FlowPanel  >
+     <g:FlowPanel>
         <g:FlowPanel>
-            <g:Button addStyleNames='{dwoStyle.dwoButton}'  ui:field='backBtn'><ui:text from='{rb.GUI_Button_Back}'/></g:Button>            
-            <g:Button addStyleNames='{dwoStyle.dwoButton}'  ui:field='sealBtn'><ui:text from='{rb.GUI_Button_Seal}'/></g:Button>            
-            <g:Button addStyleNames='{dwoStyle.dwoButton}'  ui:field='clearResultsBtn'><ui:text from='{rb.GUI_Button_ClearAllStudentResults}'/></g:Button>            
-            <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget} {dwoStyle.dwoMinWidth}' ui:field='dataTable'/>            
-            <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}'  ui:field='pager' />
+            <g:Button  ui:field='backBtn'><ui:text from='{rb.GUI_Button_Back}'/></g:Button>            
+            <g:Button   ui:field='sealBtn'><ui:text from='{rb.GUI_Button_Seal}'/></g:Button>            
+            <g:Button  ui:field='clearResultsBtn'><ui:text from='{rb.GUI_Button_ClearAllStudentResults}'/></g:Button>            
+            <c:CellTable  ui:field='dataTable'/>            
+            <c:SimplePager   ui:field='pager' />
         </g:FlowPanel>
         <!-- add some wiskopdr stuff here -->
-        <g:Frame ui:field="frame" styleName="{dwoStyle.frame}"></g:Frame>
+        <g:Frame ui:field="frame" ></g:Frame>
 	  </g:FlowPanel>
     </g:FlowPanel>
 </ui:UiBinder> 

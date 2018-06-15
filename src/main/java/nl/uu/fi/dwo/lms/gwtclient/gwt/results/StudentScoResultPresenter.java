@@ -6,7 +6,9 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -78,6 +80,7 @@ public class StudentScoResultPresenter {
   public void init(DomResultTree aResultTree, DomResultStudentScoContext ssc, JavaScriptObject context, Map<String,String> userState) {
     resultTree = aResultTree;
     this.userState = userState;
+    this.ssc = ssc;
     userState.put("cmi.mode", "review");
     setAPI(this);
     view.init(context);    
@@ -181,9 +184,9 @@ public class StudentScoResultPresenter {
     return "true";
   }
   private String Finish(String dummy) {
-    Map<String,String> userState = this.userState;
+    Map<String,String> userState = new HashMap<> (this.userState);
+    userState.keySet().retainAll(Arrays.asList("cmi.score.raw","cmi.comments_from_lms.0.comment"));
     resultService.setValues(ssc.getStudentSco(), userState).map(this::updateResultTree).then(null,FAILURE);
-    
     return "true";
   }
   

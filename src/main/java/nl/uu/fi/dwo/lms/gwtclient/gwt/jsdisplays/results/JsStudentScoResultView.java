@@ -1,8 +1,10 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONObject;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
@@ -18,33 +20,40 @@ public class JsStudentScoResultView implements StudentScoResultPresenter.Display
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JsStudentScoResultDisplay.clear();
     }
 
     @Override
     public void setResultTree(DomResultTree data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      LOG.log(Level.INFO, "tree data has " + data.getStudentTree().getChildren().values().size() + " student classes.");
+      LOG.log(Level.INFO, "tree data has " + data.getResultTree().getChildren().values().size() + "  result classes.");
+      LOG.log(Level.INFO, "Building result tree in json.");
+      JSONObject results = Util.buildSubResultTree(data.getResultTree());
+      LOG.log(Level.INFO, "resultTree json string is:\n " + results.toString());
+      LOG.log(Level.INFO, "Building student tree in json.");
+      JSONObject students = Util.buildSubStudentTree(data.getStudentTree());
+      LOG.log(Level.INFO, "studentTree json string is:\n " + students.toString());
+      JsStudentScoResultDisplay.updateResultTree(results.getJavaScriptObject(),students.getJavaScriptObject());
     }
 
     @Override
     public void setEmptyTableMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      JsStudentScoResultDisplay.setEmptyTableMessage();
     }
 
     @Override
     public void setLoadingTableMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      JsStudentScoResultDisplay.setLoadingTableMessage();
     }
 
     @Override
     public void openUrl(String url) {
-      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      JsStudentScoResultDisplay.openUrl(url);
     }
 
     @Override
-    public void init(JavaScriptObject aResultState) {
-      // TODO Auto-generated method stub
-      
+    public void init(JavaScriptObject context) {
+      JsStudentScoResultDisplay.init(context);     
     }
 
 }

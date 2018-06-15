@@ -7,6 +7,8 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.web.bindery.event.shared.EventBus;
+
+import dagger.Reusable;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.Dwo2LocaleMessageGWTTranslator;
@@ -38,6 +40,7 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
  * @author Gert van der Plas
  */
 //@Singleton
+@Reusable
 public class BootPanelController {
 
     private static final Logger LOG = Logger.getLogger(BootPanelController.class.getName());

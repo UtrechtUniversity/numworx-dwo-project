@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresen
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsView;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.modules.JsModulesView;
@@ -60,14 +61,15 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
  *
  * @author G.A.J. van der Plas
  */
+@Singleton
 public class ViewFactoryJs implements ViewFactory {
 
     private final MainPresenter.Display mainView;
     private final LoginPresenter.Display loginView;
     @Inject JsResultsView resultsView;
     @Inject JsSelectedResultsView resultsSelectsView;
-    private final SelectStudentResultsPresenter.Display selectStudentResultsView;
-    private final StudentScoResultPresenter.Display studentScoResultView;
+    private final JsSelectStudentResultsView selectStudentResultsView;
+    @Inject JsStudentScoResultView studentScoResultView;
     private final SchoolclassesPresenter.Display schoolclassesView;
     private final AddStudentToSchoolclassPresenter.Display addStudentToSchoolclassView;
     private final CopyOrMoveStudentToSchoolclassPresenter.Display copyOrMoveStudentToSchoolclassView;
@@ -106,7 +108,7 @@ public class ViewFactoryJs implements ViewFactory {
         //resultsView = new JsResultsView();
         //resultsSelectsView = new JsSelectedResultsView();
         selectStudentResultsView = new JsSelectStudentResultsView();
-        studentScoResultView = new JsStudentScoResultView();
+        //studentScoResultView = new JsStudentScoResultView();
         
         personsView= new JsPersonsView();
         editStudentView= new JsEditStudentView();

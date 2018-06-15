@@ -2,27 +2,27 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
-    <ui:style field="dwoStyle" src="../css/dwostyle.css" />
+    <ui:style field="dwoStyle" />
     <ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
     <!--        <g:ScrollPanel styleName="{dwoStyle.fullPanel}">
         <g:FlowPanel>
             <g:FlexTable styleName="{dwoStyle.flexTable}" ui:field="resultTable"/>
         </g:FlowPanel>
     </g:ScrollPanel>-->
-    <g:DockLayoutPanel  unit="EM" addStyleNames='{dwoStyle.dwoWidgetPanel}'>
-        <g:north addStyleNames="{dwoStyle.horizontalFloat}" size='3'>
-            <g:Button addStyleNames='{dwoStyle.dwoButton}' ui:field="exportBtn"><ui:text from='{rb.GUI_Button_Export}'/></g:Button>
+    <g:DockLayoutPanel  unit="EM" >
+        <g:north  size='3'>
+            <g:Button  ui:field="exportBtn"><ui:text from='{rb.GUI_Button_Export}'/></g:Button>
         </g:north>
         <g:center>
             <g:DockLayoutPanel >
                     <g:north  size='36'>
                         <g:FlowPanel>
-                        <c:SimplePager addStyleNames='{dwoStyle.dwoDataGridPager}' ui:field='pager'/>
+                        <c:SimplePager  ui:field='pager'/>
                         </g:FlowPanel>
                     </g:north>
                 <g:center> 
-                    <g:ScrollPanel addStyleNames='{dwoStyle.dwoWidgetPanel}' height="auto" >
-                        <c:CellTable addStyleNames='{dwoStyle.dwoDataGridWidget}'  width='auto' ui:field='dataGrid'/>
+                    <g:ScrollPanel  height="auto" >
+                        <c:CellTable   width='auto' ui:field='dataGrid'/>
                         </g:ScrollPanel>
                 </g:center>
             </g:DockLayoutPanel>

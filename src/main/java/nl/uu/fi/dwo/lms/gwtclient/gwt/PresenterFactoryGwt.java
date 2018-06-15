@@ -5,6 +5,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -37,6 +38,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
  *
  * @author G.A.J. van der Plas
  */
+@Singleton // one per boot component
 public class PresenterFactoryGwt implements PresenterFactory {
 
     private final DwoGlobalVars dwoGlobalVars;
