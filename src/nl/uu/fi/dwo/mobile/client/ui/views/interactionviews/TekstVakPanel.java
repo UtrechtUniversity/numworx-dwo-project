@@ -4556,21 +4556,22 @@ private Object CamelCase(String name) {
 			}
 		};
 		
-		// preinitialize width/height?
+		// determine height
+		int height = 0;
 		
-		if (knopImageView1 != null && DWOplayer.DWO_BUNDLE.klapuit1().getWidth() > 0 && DWOplayer.DWO_BUNDLE.klapuit1().getHeight() > 0)
+		if (knopImageView1 != null)
 		{
-			//layoutPanel.insert(klapUitButton,0);
+			height = knopImageView1.getHeight();
+		}
+		else if (DWOplayer.DWO_BUNDLE.klapuit1().getHeight() > 0)
+		{
+			height = DWOplayer.DWO_BUNDLE.klapuit1().getHeight();
+		}
+		
+		if (height > 0)
+		{
 			layoutPanel.insert(klapUitPanel, 0);
-			int width = DWOplayer.DWO_BUNDLE.klapuit1().getWidth();
-// neem max.
-			width = Math.max(width, DWOplayer.DWO_BUNDLE.klapuit2().getWidth());
-			
-			int height = DWOplayer.DWO_BUNDLE.klapuit1().getHeight();
-			//setSizeUitklapButton(breedtePanel, Math.max(height, hoogtes.get(0).intValue()));
-			
-			//klapUitButton.setPixelSize(width, hoogtes.get(0).intValue());		
-			//setPositionUitklapButton(layoutPanel, inklapKnopPos, width, height);
+
 			setPositionUitklapButton(layoutPanel, breedtePanel, height);
 		}
 		else if (masterView.getWidth() > 0)
