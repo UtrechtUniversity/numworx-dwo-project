@@ -55,6 +55,10 @@ public class JsMainDisplay {
     public static native void  showSelectedResultsView();
     /** Show the results of student panel. */
     public static native void  showStudentResultsView();
+    /** Show the selected select the result for a student panel. */
+    public static native void  showSelectStudentResultsView();
+    /** Show the student sco (activity by a student) panel. */
+    public static native void  showStudentScoResultView();
     /** Show the school classes panel. */
     public static native void  showSchoolclassesView();
     /** Show the edit school class panel. */

@@ -62,9 +62,20 @@ public class JsMainView implements MainPresenter.Display{
     
     @Override
     public void showStudentResultsView() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JsMainDisplay.showStudentResultsView();
     }
 
+
+    @Override
+    public void showSelectStudentResultsView() {
+        JsMainDisplay.showSelectStudentResultsView();
+    }
+
+    @Override
+    public void showStudentScoResultView() {
+        JsMainDisplay.showStudentScoResultView();
+    }
+    
     @Override
     public void showSchoolclassesView() {
         JsMainDisplay.showSchoolclassesView();
@@ -74,20 +85,6 @@ public class JsMainView implements MainPresenter.Display{
     public void showEditSchoolclassView() {
         JsMainDisplay.showEditSchoolclassView();
     }
-//
-//    @Override
-//    public void showStudentsInSchoolclassView() {
-//        JsMainDisplay.showStudentsInSchoolclassView();
-//    }
-//
-//    @Override
-//    public void showTeachersInSchoolclassView() {
-//        JsMainDisplay.showTeachersInSchoolclassView();
-//    }
-//    @Override
-//    public void showCoursesOfSchoolClassView() {
-//    JsMainDisplay.showCoursesOfSchoolclassView();
-//    }
 
     @Override
     public void showAddStudentToSchoolClassView() {
@@ -138,4 +135,5 @@ public class JsMainView implements MainPresenter.Display{
     public void showImportPersonsView() {
         JsMainDisplay.showImportPersonsView();
     }
+
 }

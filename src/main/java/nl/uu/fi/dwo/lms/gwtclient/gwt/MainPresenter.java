@@ -40,6 +40,10 @@ public class MainPresenter {
 
         public void showStudentResultsView();
 
+        public void showSelectStudentResultsView();
+
+        public void showStudentScoResultView();
+        
         public void showSchoolclassesView(); // has AddSchoolClass function
 
         public void showEditSchoolclassView();
