@@ -3,10 +3,8 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
-import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.BootComponent;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.DaggerBootComponent;
-
 import java.util.logging.Logger;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.DaggerBootComponent;
 
 /**
  * BootPanel, boots the app, initializes with the server, requests a login.

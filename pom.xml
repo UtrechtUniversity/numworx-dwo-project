@@ -134,10 +134,10 @@
             <version>0.14.2</version>
             <scope>provided</scope>
             <exclusions>
-            	<exclusion>
-            		<groupId>com.squareup</groupId>
-            		<artifactId>javapoet</artifactId>
-            	</exclusion>
+                <exclusion>
+                    <groupId>com.squareup</groupId>
+                    <artifactId>javapoet</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -331,9 +331,17 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.6.1</version>
                 <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>com.google.dagger</groupId>
+                            <artifactId>dagger-compiler</artifactId>
+                            <version>${daggerVersion}</version>
+                        </path>
+                    </annotationProcessorPaths>
                     <!-- exclude angular 2 dir: /src/main/ngapp -->
                     <exclude>ngapp/**</exclude>                
                 </configuration>
+                
 
             </plugin>
             <!--            <plugin>

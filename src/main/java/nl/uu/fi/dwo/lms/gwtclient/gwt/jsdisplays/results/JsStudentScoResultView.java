@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
+import javax.inject.Inject;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
@@ -56,4 +57,5 @@ public class JsStudentScoResultView implements StudentScoResultPresenter.Display
       JsStudentScoResultDisplay.init(context);     
     }
 
+     @Inject JsStudentScoResultView() {}
 }
