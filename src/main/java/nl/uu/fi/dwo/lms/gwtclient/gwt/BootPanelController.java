@@ -280,7 +280,10 @@ public class BootPanelController {
                             viewFactory.getMainView().showSelectedResultsView();
                             break;
                         case RESULTSSTUDENT:
-                            eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+                            //eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+                            viewFactory.getMainView().showStudentScoResultView();
+                            presenterFactory.getStudentScoResultPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultStudentScoContext(), switchViewEvent.getResultState(), switchViewEvent.getUserState());
+                            
                             break;
                         case SCHOOLCLASSES:
                             presenterFactory.getSchoolclassesPresenter().init();

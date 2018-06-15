@@ -117,6 +117,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         modulesPresenter.setView(viewFactory.getModulesView());
         resultsPresenter.setView(viewFactory.getResultsView());
         selectedResultsPresenter.setView(viewFactory.getSelectedResultsView());
+        studentScoResultPresenter.setView(viewFactory.getStudentScoResultView());
 
         personsPresenter.setView(viewFactory.getPersonsView());
         addStudentPresenter.setView(viewFactory.getAddPersonView());

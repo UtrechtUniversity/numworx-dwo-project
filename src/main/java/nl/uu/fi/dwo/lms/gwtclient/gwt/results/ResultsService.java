@@ -32,6 +32,8 @@ import org.osgi.util.promise.Success;
 
 import com.google.gwt.json.client.JSONValue;
 
+import dagger.Reusable;
+
 /**
  * Persistent model service for Teacher results. Retrieves DomResultsPerTeacher data.
  * In the future it may cache this data and merge updates into it. it may also request
@@ -40,6 +42,7 @@ import com.google.gwt.json.client.JSONValue;
  * 
  * @author Gert van der Plas
  */
+@Reusable 
 class ResultsService {
 
     private static final Logger LOG = Logger.getLogger(ResultsService.class.getName());
@@ -106,6 +109,7 @@ class ResultsService {
     	rest.setClearStudentDataForScoAndClass(new DomClearStudentDataForScoAndClass());
     	rest.getClearStudentDataForScoAndClass().setDomSchoolClass(schoolclass);
     	rest.getClearStudentDataForScoAndClass().setDomStudentList(students);
+    	rest.getClearStudentDataForScoAndClass().setDomScoContext(sco);
     	return dwoGlobalVars.getProfile().then(p -> { 
         	rest.getClearStudentDataForScoAndClass().setDomProfile(p.getValue());
         	return manager.createStudentResults(rest);

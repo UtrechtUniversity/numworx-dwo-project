@@ -310,7 +310,7 @@ public class ViewFactoryJs implements ViewFactory {
     /**
      * @return the studentScoResultView
      */
-    protected StudentScoResultPresenter.Display getStudentScoResultView() {
+    public StudentScoResultPresenter.Display getStudentScoResultView() {
         return studentScoResultView;
     }
 

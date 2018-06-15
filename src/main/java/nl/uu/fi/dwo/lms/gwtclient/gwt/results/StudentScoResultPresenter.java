@@ -78,12 +78,15 @@ public class StudentScoResultPresenter {
   }
 
   public void init(DomResultTree aResultTree, DomResultStudentScoContext ssc, JavaScriptObject context, Map<String,String> userState) {
+    LOG.fine("entering init");
     resultTree = aResultTree;
     this.userState = userState;
     this.ssc = ssc;
     userState.put("cmi.mode", "review");
     setAPI(this);
-    view.init(context);    
+    LOG.info("view.init " + context + "  " + view);
+    view.init(context);   
+    LOG.info("update Frame for " + ssc.getStudentSco().getScoID());
     updateFrame(ssc.getStudentSco());
   }
 
@@ -96,6 +99,12 @@ public class StudentScoResultPresenter {
     view.setResultTree(resultTree);
     return null;
   }
+  
+  @JsMethod 
+  public void close() {
+    LOG.fine("calling close");
+  }
+  
   
   @JsMethod 
   public void showStudentResults (JavaScriptObject context, String scoid, String studentid, String classid) {
@@ -147,10 +156,10 @@ public class StudentScoResultPresenter {
 				return ""
 			},
 			"LMSCommit" : function(dummy) {
-				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::Commit(Ljava/lang/String;)(key)
+				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::Commit(Ljava/lang/String;)(dummy)
 			},
 			"LMSFinish" : function(dummy) {
-				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::Finish(Ljava/lang/String;)(key)
+				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::Finish(Ljava/lang/String;)(dummy)
 			},
 			"LMSSetValue" : function(key, value) {
 				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::setValue(Ljava/lang/String;Ljava/lang/String;)(key, value)
@@ -169,21 +178,26 @@ public class StudentScoResultPresenter {
 
   private String getValue(String key) {
     LOG.info("GetValue " + key);
-    String value = userState.getOrDefault(key, "");
+    String value = userState.get(key);
+    if(value == null) value = "";
     String shortValue = value.length() > 10 ? value.substring(0, 10) + "..." : value;
     LOG.info("result GetValue: " + shortValue);
     return value;
   }
 
   private String setValue(String key, String value) {
+    String shortValue = value.length() > 10 ? value.substring(0, 10) + "..." : value;
+    LOG.info("SetValue " + key + ", " + shortValue);
     userState.put(key,value);
     return "true";
   }
 
   private String Commit(String dummy) {
+    LOG.info("Commit " + dummy);
     return "true";
   }
   private String Finish(String dummy) {
+    LOG.info("Finish " + dummy);
     Map<String,String> userState = new HashMap<> (this.userState);
     userState.keySet().retainAll(Arrays.asList("cmi.score.raw","cmi.comments_from_lms.0.comment"));
     resultService.setValues(ssc.getStudentSco(), userState).map(this::updateResultTree).then(null,FAILURE);
@@ -210,6 +224,7 @@ public class StudentScoResultPresenter {
         + "&profile="
         + profile
         + "&t=" + random + "#cmi.launch_data:"+scoId;
+    LOG.info("openUrl " + url);
     view.openUrl(url);
 }
 
