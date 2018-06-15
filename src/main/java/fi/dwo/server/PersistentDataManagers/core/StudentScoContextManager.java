@@ -102,7 +102,7 @@ public class StudentScoContextManager {
                 ssc.getStudentSco();
             } catch (EntityNotFoundException e) {
                 LOG.log(Level.FINE, "The PersistentStudentScoContext with " + id + " no longer exists.", e);
-                throw new PersistenceException(e);
+                throw e;
             }
             em.remove(ssc);
             em.getTransaction().commit();

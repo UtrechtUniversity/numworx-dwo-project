@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.security.PermitAll;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.persistence.RollbackException;
 import javax.ws.rs.PUT;
@@ -155,9 +156,13 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 					sd.setLaunchdatabytes(scoData.getLaunchdatabytes());
 // Destroy all studentSco's			
 				List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(pc);
-				for(PersistentStudentScoContext item:list) {
-					StudentScoDataManager.destroy(item.getStudentSco());
-					StudentScoContextManager.destroy(item.getStudentSco());
+				for(PersistentStudentScoContext ssc:list) {
+                  try {
+                    StudentScoDataManager.destroy(ssc.getStudentSco()); //  non-fatal. studentscodata
+                  } catch (EntityNotFoundException e1) {}
+                  try {
+                    StudentScoContextManager.destroy(ssc.getStudentSco());
+                  } catch (EntityNotFoundException e) {}
 				}				
 // Destroy all studentModels of that sco.
 				List<PersistentStudentModelData> list2 = StudentModelDataManager.findEntity(pc);

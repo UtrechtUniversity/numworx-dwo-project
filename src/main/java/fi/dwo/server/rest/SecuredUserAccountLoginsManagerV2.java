@@ -44,6 +44,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -405,8 +406,12 @@ public class SecuredUserAccountLoginsManagerV2 {
         }
         List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
         for (PersistentStudentScoContext ssc : sscList) {
-            StudentScoDataManager.destroy(ssc.getStudentSco());
+          try {
+            StudentScoDataManager.destroy(ssc.getStudentSco()); //  non-fatal. studentscodata
+          } catch (EntityNotFoundException e1) {}
+          try {
             StudentScoContextManager.destroy(ssc.getStudentSco());
+          } catch (EntityNotFoundException e) {}
         }
         //Remove StudentOf and TeacherOf
         List<PersistentStudentOfClass> soList = StudentOfClassManager.findEntities(hr.getPersistentHasRolePK());

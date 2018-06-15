@@ -35,6 +35,9 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.persistence.EntityNotFoundException;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
@@ -629,10 +632,14 @@ public class CascadingPersistenceBuilder {
                 PersistentHasRolePK key = new PersistentHasRolePK(soc.getPersistentStudentOfClassPK().getUserID(), soc.getPersistentStudentOfClassPK().getSchoolGroupID());
                 List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(instance.context.scoContext, key);
                 for (PersistentStudentScoContext ssc : sscList) {
-                    String msg = MessageFormat.format("Username {0} is learing studentSco id {1} for userid  {2} schoolgroupid {3} and course {4} {5}.", new Object[]{instance.context.user.getUsername(), ssc.getScoID(), ssc.getPersistentHasRolePK().getUserID(), ssc.getPersistentHasRolePK().getSchoolGroupID(), instance.context.course.getCourseID(), instance.context.course.getName()});
+                    String msg = MessageFormat.format("Username {0} is clearing studentSco id {1} for userid  {2} schoolgroupid {3} and course {4} {5}.", new Object[]{instance.context.user.getUsername(), ssc.getScoID(), ssc.getPersistentHasRolePK().getUserID(), ssc.getPersistentHasRolePK().getSchoolGroupID(), instance.context.course.getCourseID(), instance.context.course.getName()});
                     LOG.log(Level.INFO, msg);
-                    StudentScoDataManager.destroy(ssc.getStudentSco());
-                    StudentScoContextManager.destroy(ssc.getStudentSco());
+                    try {
+                      StudentScoDataManager.destroy(ssc.getStudentSco()); //  non-fatal. studentscodata
+                    } catch (EntityNotFoundException e1) {}
+                    try {
+                      StudentScoContextManager.destroy(ssc.getStudentSco());
+                    } catch (EntityNotFoundException e) {}
                 }
             }
             return true;

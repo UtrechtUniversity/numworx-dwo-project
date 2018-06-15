@@ -41,6 +41,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.security.PermitAll;
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -440,8 +441,12 @@ public class SecuredUserAccountManager {
         for (PersistentHasRole hr : hrList) {
             List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
             for (PersistentStudentScoContext ssc : sscList) {
-                StudentScoDataManager.destroy(ssc.getStudentSco());
+              try {
+                StudentScoDataManager.destroy(ssc.getStudentSco()); //  non-fatal. studentscodata
+              } catch (EntityNotFoundException e1) {}
+              try {
                 StudentScoContextManager.destroy(ssc.getStudentSco());
+              } catch (EntityNotFoundException e) {}
             }
             //Remove StudentOf and TeacherOf
             List<PersistentStudentOfClass> soList = StudentOfClassManager.findEntities(hr.getPersistentHasRolePK());
