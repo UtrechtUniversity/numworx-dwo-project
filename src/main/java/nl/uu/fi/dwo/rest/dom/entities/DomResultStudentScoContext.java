@@ -4,7 +4,7 @@ package nl.uu.fi.dwo.rest.dom.entities;
  * Student's results on a Sco
  * @author G.A.J. van der Plas  email: G.A.J.vanderPlas@uu.nl
  */
-public class DomResultStudentScoContext extends DomResultScore<DomResultScore> {
+public class DomResultStudentScoContext extends DomResultScore<DomResultStudentScoPage> {
     private DomStudentScoContext studentSco;
 
     public DomResultStudentScoContext(DomStudentScoContext aSco, DomStudent student){
@@ -24,6 +24,11 @@ public class DomResultStudentScoContext extends DomResultScore<DomResultScore> {
      */
     public void setStudentSco(DomStudentScoContext studentSco) {
         this.studentSco = studentSco;
+    }
+
+    @Override
+    public String getId() {
+      return getStudentSco().getId().getIdString();
     }
         
 }

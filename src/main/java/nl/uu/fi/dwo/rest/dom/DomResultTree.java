@@ -3,8 +3,10 @@ package nl.uu.fi.dwo.rest.dom;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
@@ -272,5 +274,43 @@ public class DomResultTree {
         } else {
             return null;
         }
+    }
+
+    public void updateResultStudentSco(Collection<DomStudentScoContext> set) {
+        Map<PersistenceId, DomStudentScoContext> map = new HashMap<>();
+        set.stream().forEach(item -> map.put(item.getId(), item));
+        findAndUpdateResultStudentSco(resultTree, map);
+        resultTree.calculateSumOfSubtreeScore();
+    }
+
+    private boolean findAndUpdateResultStudentSco(DomResultScore<? extends DomResultScore> item,
+        Map<PersistenceId, DomStudentScoContext> map) {
+      if(item instanceof DomResultStudentScoContext) {
+        DomResultStudentScoContext rssc = (DomResultStudentScoContext) item;
+        PersistenceId pid = rssc.getStudentSco().getId();
+        DomStudentScoContext studentSco = map.remove(pid);
+        if(studentSco != null)
+        {
+          rssc.setStudentSco(studentSco);
+          return true;
+        } else { 
+          return false;
+        }
+      }
+      item.getChildren().values().stream().forEach(child -> findAndUpdateResultStudentSco(child, map));
+      if(item instanceof DomResultScoContext) {
+        DomResultScoContext rsc = (DomResultScoContext) item;
+        Iterator<DomStudentScoContext> it = map.values().iterator();
+        while (it.hasNext()) {
+          DomStudentScoContext ssc = it.next();
+          if(ssc.getScoID().equals(rsc.getScoContext().getId()))
+          {
+              DomStudent student = new DomStudent();
+              student.setId(ssc.getUserID());
+              rsc.getChildren().put(ssc.getId(), new DomResultStudentScoContext(ssc, student));
+          }          
+        };
+      }
+      return false;
     }
 }

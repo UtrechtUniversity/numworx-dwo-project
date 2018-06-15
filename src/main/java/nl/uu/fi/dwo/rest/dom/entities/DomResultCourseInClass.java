@@ -71,4 +71,9 @@ public class DomResultCourseInClass<T extends DomResultScore> extends DomResultS
         }
     }
 
+    @Override
+    public String getId() {
+      return getCourse().getId().getIdString();
+    }
+
 }

@@ -25,5 +25,11 @@ public class DomResultScoContext extends DomResultScore<DomResultStudentScoConte
     public void setScoContext(DomScoContext scoContext) {
         this.scoContext = scoContext;
     }
+
+    @Override
+    public String getId() {
+      // TODO Auto-generated method stub
+      return getScoContext().getId().getIdString();
+    }
         
 }

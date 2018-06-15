@@ -452,4 +452,8 @@ public abstract class DomResultScore<T extends DomResultScore> {
         return nodeId;
     }
 
+    public String getId() {
+      return "";
+    }
+
 }

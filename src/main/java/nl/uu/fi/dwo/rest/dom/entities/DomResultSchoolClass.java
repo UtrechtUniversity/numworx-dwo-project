@@ -27,4 +27,9 @@ public class DomResultSchoolClass <T extends DomResultScore> extends DomResultSc
         this.schoolClass = schoolClass;
     }
 
+    @Override
+    public String getId() {
+      return getSchoolClass().getId().getIdString();
+    }
+
 }
