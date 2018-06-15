@@ -95,7 +95,7 @@ public class StudentScoResultPresenter {
   }
 
   Void updateResultTree(DomStudentScoContext ssc) {    
-    // resultTree.update(Collections.singleton(ssc));
+    resultTree.updateResultStudentSco(Collections.singleton(ssc));
     view.setResultTree(resultTree);
     return null;
   }
