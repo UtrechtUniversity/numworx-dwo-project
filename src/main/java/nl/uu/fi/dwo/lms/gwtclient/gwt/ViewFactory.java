@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
@@ -45,6 +46,7 @@ public interface ViewFactory {
     public AlertDialogWithConfirmCancelPresenter.Display getAlertDialogWithConfirmCancelView();
     public AlertDialogWithOKPresenter.Display getAlertDialogWithOKView();
     public MessageDialogWithOKPresenter.Display getMessageDialogWithOKView();
+//    public PromisedDialogWithOKPresenter.Display getPromisedDialogWithOKView();
 //    public MsgClickedDialogPresenter.Display getMsgClickedDialogView();
     public FileUploadStudentsPresenter.Display getFileUploadStudentsView();
     public ProgressDialogWithAbortPresenter.Display getProgressDialogView();

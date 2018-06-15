@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.login;
 
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
@@ -10,6 +11,8 @@ import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithConfirmPromise;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedMessageDialogWithConfirmEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -17,6 +20,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 /**
@@ -106,12 +110,13 @@ public class LoginPresenter {
      */
     @JsMethod
     public void loginClicked(String user, String password, final Boolean switchRole) {
+        MessageDialogWithConfirmPromise d;
         Promise<DwoGlobalVars.DwoGlobalVarsState> loginUser;
         try {
             loginUser = dwoGlobalVars.initUser(user, password);
-            loginUser.then(new Success<DwoGlobalVars.DwoGlobalVarsState, Void>() {
+            loginUser.then(new Success<DwoGlobalVars.DwoGlobalVarsState, Boolean>() {
                 @Override
-                public Promise<Void> call(Promise<DwoGlobalVars.DwoGlobalVarsState> resolved) throws Exception {
+                public Promise<Boolean> call(Promise<DwoGlobalVars.DwoGlobalVarsState> resolved) throws Exception {
                     if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
                         if (!dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
                             eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
@@ -131,16 +136,33 @@ public class LoginPresenter {
                             eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_WELCOME));
                         }
                         LOG.log(Level.INFO, "login succeeded. Firing Login success event.");
-                    } else {                        
+                        //true means we are done
+                        return Promises.resolved(false);
+                    } else {
                         dwoGlobalVars.clearCurrentUser();
-                        LOG.log(Level.INFO, "login failed. Firing Login fail event.");
-                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));    
+                        LOG.log(Level.INFO, "login failed.");
+                        //show dialog
+                        MessageDialogWithConfirmPromise dialogPromise = new MessageDialogWithConfirmPromise(DwoLocalesForGWT.instance.GUI_Dialog_User_ConfirmPasswordSwitch());
+                        PromisedMessageDialogWithConfirmEvent event = new PromisedMessageDialogWithConfirmEvent(PromisedMessageDialogWithConfirmEvent.EventType.ConfirmDialog, dialogPromise);
+                        //eventBus.fireEvent(event);
+                        eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "wrong credentials.")));
+                        return dialogPromise.getPromise();
+//                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));    
 //                        eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Wrong login state.")));
                         // TODO fix login stuff
 //                        Window.Location.assign("");
-
                     }
-                    return null;
+                }
+            }).then(new Success<Boolean, Void>() {
+                @Override
+                public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                    if(resolved.getValue()){
+                        //failed login
+                        Window.Location.assign("");
+                        return null;
+                    }else{
+                        return null;
+                    }
                 }
             },
                     new Failure() {
@@ -150,14 +172,14 @@ public class LoginPresenter {
                     if (fail instanceof Dwo2Exception) {
                         //Login failed
                         LOG.log(Level.SEVERE, fail.getMessage());
-                        dwoGlobalVars.clearCurrentUser();                        
+                        dwoGlobalVars.clearCurrentUser();
                         //note the order of the events in case of an exception
                         //that might break the running thread.
                         eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Wrong login state.")));
                         eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
                     } else {
                         LOG.log(Level.SEVERE, fail.getMessage());
-                        dwoGlobalVars.clearCurrentUser();                        
+                        dwoGlobalVars.clearCurrentUser();
                         eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
                     }
                 }
@@ -187,5 +209,5 @@ public class LoginPresenter {
             Date now = new Date();
             return now.before(s.getExpire());
         }
-    }   
+    }
 }

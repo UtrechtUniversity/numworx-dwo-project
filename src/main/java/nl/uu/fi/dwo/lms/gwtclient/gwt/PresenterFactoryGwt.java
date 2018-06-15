@@ -31,6 +31,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
@@ -68,6 +69,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     private final MessageDialogWithOKPresenter messageDialogWithOKPresenter;
     private final AlertDialogWithOKPresenter alertDialogWithOKPresenter;
     private final AlertDialogWithConfirmCancelPresenter alertDialogWithConfirmCancelPresenter;
+//    private final PromisedDialogWithOKPresenter promisedDialogWithOKPresenter;
     private final FileUploadStudentsPresenter fileUploadStudentsPresenter;
     private final ProgressDialogWithAbortPresenter progressDialogPresenter;
 
@@ -99,6 +101,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         fileUploadStudentsPresenter = new FileUploadStudentsPresenter(eventBus, dwoGlobalVars);
         alertDialogWithOKPresenter = new AlertDialogWithOKPresenter(eventBus);
         alertDialogWithConfirmCancelPresenter = new AlertDialogWithConfirmCancelPresenter(eventBus);
+//        promisedDialogWithOKPresenter = new PromisedDialogWithOKPresenter(eventBus);
         progressDialogPresenter = new ProgressDialogWithAbortPresenter(eventBus);
 
     }
@@ -129,6 +132,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         messageDialogWithOKPresenter.setView(viewFactory.getMessageDialogWithOKView());
         alertDialogWithOKPresenter.setView(viewFactory.getAlertDialogWithOKView());
         alertDialogWithConfirmCancelPresenter.setView(viewFactory.getAlertDialogWithConfirmCancelView());
+//        promisedDialogWithOKPresenter.setView(viewFactory.getPromisedDialogWithOKView());
         progressDialogPresenter.setView(viewFactory.getProgressDialogView());
         //last!
         mainPresenter.setView(viewFactory.getMainView());
@@ -373,5 +377,10 @@ public class PresenterFactoryGwt implements PresenterFactory {
     public ImportPersonsPresenter getImportPersonsPresenter() {
         return importPersonsPresenter;
     }
+//
+//    @Override
+//    public PromisedDialogWithOKPresenter getPromisedDialogWithOKPresenter() {
+//        return promisedDialogWithOKPresenter;
+//    }
 
 }
