@@ -54,6 +54,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.security.PermitAll;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -372,10 +373,12 @@ public class SecuredDwoAdminSchoolManager {
                         //Loop StudentScoContext in hasRole
                         List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(phr.getPersistentHasRolePK());
                         for (PersistentStudentScoContext ssc : sscList) {
-                            //Remove StudentScoData
-                            StudentScoDataManager.destroy(ssc.getStudentSco());
-                            //Remove StudentScoContext
+                          try {
+                            StudentScoDataManager.destroy(ssc.getStudentSco()); //  non-fatal. studentscodata
+                          } catch (EntityNotFoundException e1) {}
+                          try {
                             StudentScoContextManager.destroy(ssc.getStudentSco());
+                          } catch (EntityNotFoundException e) {}
                         }
                         //Remove hasRole
                         HasRoleManager.destroy(phr.getPersistentHasRolePK());

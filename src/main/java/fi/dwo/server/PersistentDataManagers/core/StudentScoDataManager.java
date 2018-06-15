@@ -103,7 +103,7 @@ public class StudentScoDataManager {
                 ssd.getStudentSco();
             } catch (EntityNotFoundException e) {
                 LOG.log(Level.FINE, "The PersistentStudentScoData with " + id + " no longer exists.", e);
-                throw new PersistenceException(e);
+                throw e;
             }
             em.remove(ssd);
             em.getTransaction().commit();

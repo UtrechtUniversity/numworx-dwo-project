@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.persistence.RollbackException;
 
@@ -136,8 +137,12 @@ public class MySQLScoContextActions {
     // Destroy all studentSco's
     List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(pc);
     for (PersistentStudentScoContext item : list) {
-      StudentScoDataManager.destroy(item.getStudentSco());
-      StudentScoContextManager.destroy(item.getStudentSco());
+      try {
+        StudentScoDataManager.destroy(item.getStudentSco()); //  non-fatal. studentscodata
+      } catch (EntityNotFoundException e1) {}
+      try {
+        StudentScoContextManager.destroy(item.getStudentSco());
+      } catch (EntityNotFoundException e) {}
     }
     // Destroy all studentModels of that sco.
     List<PersistentStudentModelData> list2 = StudentModelDataManager.findEntity(pc);
