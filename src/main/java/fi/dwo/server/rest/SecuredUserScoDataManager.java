@@ -181,6 +181,8 @@ public class SecuredUserScoDataManager {
      	Long scocontextid = MySQLPersistenceId.getNativeId(rest.getDomScormValues().getScoContext());
      	LOG.log(Level.INFO, "getValues " + sc.getUserPrincipal().getName() + " " + scocontextid);
 		PersistentScoContext scoContext = ScoContextManager.findEntity(scocontextid);
+		if(scoContext == null) // Non existent
+		  return Response.ok(rest.getDomScormValues(), MediaType.APPLICATION_JSON_TYPE).build();
 		List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
 		if(list.isEmpty()) {
 			return Response.ok(rest.getDomScormValues(), MediaType.APPLICATION_JSON_TYPE).build();
@@ -335,6 +337,11 @@ public class SecuredUserScoDataManager {
 		Long classID = MySQLPersistenceId.getNativeId(domClassID);
 		try {
 			scoContext = ScoContextManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomScormValues().getScoContext()));
+            if(scoContext == null)
+            {
+              LOG.warning("Scocontext missing " + rest.getDomScormValues().getScoContext().getId());
+              return Response.ok(Boolean.FALSE, MediaType.APPLICATION_JSON_TYPE).build();
+            }
      	LOG.log(Level.INFO, "setValues starts " + sc.getUserPrincipal().getName() + " " + scoContext.getScoID());
 		List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
 		Scorm2Xml xml = null;
