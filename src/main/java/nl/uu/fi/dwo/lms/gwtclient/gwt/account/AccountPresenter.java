@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.account;
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
+import fi.dwo.gwt.lib.rest.util.StringFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -139,14 +140,14 @@ public class AccountPresenter {
         LOG.log(Level.INFO, "role " + role + " schoolLogin " + schoolLogin);
         Promise<Boolean> promise = accountService.addASchoolLogin(role, schoolLogin, accessCode);
 
-        promise.then(new Success<Boolean, Void>() {
+        promise.then(new Success<Boolean, DomSchoolsRolesAndClassesV2>() {
             @Override
-            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                //flip back to schoolclasses screen 
-                eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
+            public Promise<DomSchoolsRolesAndClassesV2> call(Promise<Boolean> resolved) throws Exception {
+                //Role added, clear ui input.
                 view.clearAddSchoolLogin();
- //               return accountService.updateSchoolLogins();
-                return null;
+                //get role Update.
+                Promise<DomSchoolsRolesAndClassesV2> update = accountService.getSchoolLogins();
+                return update;
             }
         },
                 new Failure() {
@@ -162,39 +163,77 @@ public class AccountPresenter {
                     //throw directly
                 }
             }
-        }).then(new Success<Void, Void>() {
-            @Override
-            public Promise<Void> call(Promise<Void> resolved) throws Exception {
-                //flip back to schoolclasses screen 
-                eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
-                view.clearAddSchoolLogin();
-                return null;
-            }
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        });
+        }).then(new Success<DomSchoolsRolesAndClassesV2, Void>() {
+                    @Override
+                    public Promise<Void> call(Promise<DomSchoolsRolesAndClassesV2> resolved) throws Exception {
+                        DomSchoolsRolesAndClassesV2 result = resolved.getValue();
+                        //update schoolRoles
+                        dwoGlobalVars.setSchoolLogins(result);
+                        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
+                        return null;
+                    }
+                },
+                        new Failure() {
+                    @Override
+                    public void fail(Promise<?> resolved) throws Exception {
+                        Throwable fail = resolved.getFailure();
+                        if (fail instanceof Dwo2Exception) {
+                            LOG.log(Level.SEVERE, fail.getMessage());
+                            eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                        } else {
+                            LOG.log(Level.SEVERE, fail.getMessage());
+                            eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                            //throw directly
+                        }
+                    }
+                });
     }
+
 
     @JsMethod
     public void removeASchoolLogin(String hasRoleId) {
         LOG.log(Level.INFO, "Removing schoolLogin " + hasRoleId);
-        Promise<Boolean> promise = accountService.removeASchoolLogin(sracData.get(hasRoleId));
-        promise.then(new Success<Boolean, Void>() {
+        Promise<Boolean> p = Promises.resolved(true); //empty promise
+        p.then(new Success<Boolean, Boolean>() {
             @Override
-            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                //flip back to schoolclasses screen 
+            //Are you sure?
+            public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
+                String msg = StringFormatter.format(DwoLocalesForGWT.instance.GUI_Dialog_User_ConfirmSchoolLoginDelete(),sracData.get(hasRoleId).getSchool().getSchoolName(),sracData.get(hasRoleId).getRole().getRoleName());
+                AlertDialogWithConfirmCancelPromise dialogPromise = new AlertDialogWithConfirmCancelPromise(msg);
+                AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
+                eventBus.fireEvent(event);
+                return dialogPromise.getPromise();
+            }
+        }).then(new Success<Boolean, Boolean>() {
+            //sure so remove
+            @Override
+            public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {
+                if (resolved.getValue()) {
+                    Promise<Boolean> promise = accountService.removeASchoolLogin(sracData.get(hasRoleId));
+                    return promise;
+                } else {
+                    LOG.log(Level.INFO, "update user cancelled.");
+                    return Promises.failed(null);
+                }
+            }
+        }).then(new Success<Boolean, DomSchoolsRolesAndClassesV2>() {
+            //clear input and fetch update
+            @Override
+            public Promise<DomSchoolsRolesAndClassesV2> call(Promise<Boolean> resolved) throws Exception {
+                //Role added, clear ui input.
+                view.clearAddSchoolLogin();
+                //get role Update.
+                Promise<DomSchoolsRolesAndClassesV2> update = accountService.getSchoolLogins();
+                return update;
+            }
+        }).then(new Success<DomSchoolsRolesAndClassesV2, Void>() {
+            //update succeeded, update dwoGlobals and UI
+            @Override
+            public Promise<Void> call(Promise<DomSchoolsRolesAndClassesV2> resolved) throws Exception {
+                DomSchoolsRolesAndClassesV2 result = resolved.getValue();
+                //update schoolRoles
+                dwoGlobalVars.setSchoolLogins(result);
+                //set ui
                 eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
                 return null;
             }
@@ -272,50 +311,49 @@ public class AccountPresenter {
             eventBus.fireEvent(event);
             return dialogPromise.getPromise();
         })
-        // if dialog has success update user data
-        .then((resolved) -> {
-            Boolean doIt = resolved.getValue();
-            if(doIt){
-                LOG.log(Level.INFO, "update user requested.");
-            //All is well, proceed with REST-request
-            Promise<DomUserFull> promisedUser;
-            promisedUser = accountService.UpdateUserData(user);
-            return promisedUser;
-            } else{
-                LOG.log(Level.INFO, "update user cancelled.");
-                return Promises.failed(null);
-            }
-        }).then(
-                    new Success<DomUserFull, Void>() {
-                @Override
-                public Promise<Void> call(Promise<DomUserFull> resolved) throws Exception {
-                    //calculate tree and call plotting
-                    LOG.log(Level.INFO, "DomUser returned.");
-                    DomUserFull u = resolved.getValue();
-                    dwoGlobalVars.setCurrentUser(u);
-                    view.clear();
-                    view.updateUserView(u);
-                    eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Dialog_User_ConfirmChangeCommited()));
-                    return null;
-                }
-            },
-                    new Failure() {
-                @Override
-                public void fail(Promise<?> resolved) throws Exception {
-                    Throwable fail = resolved.getFailure();
-                    if (fail instanceof Dwo2Exception) {
-                        LOG.log(Level.SEVERE, fail.getMessage());
-                        eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
+                // if dialog has success update user data
+                .then((resolved) -> {
+                    Boolean doIt = resolved.getValue();
+                    if (doIt) {
+                        LOG.log(Level.INFO, "update user requested.");
+                        //All is well, proceed with REST-request
+                        Promise<DomUserFull> promisedUser;
+                        promisedUser = accountService.UpdateUserData(user);
+                        return promisedUser;
                     } else {
-                        LOG.log(Level.SEVERE, fail.getMessage());
-                        eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                        //throw directly
+                        LOG.log(Level.INFO, "update user cancelled.");
+                        return Promises.failed(null);
                     }
+                }).then(
+                new Success<DomUserFull, Void>() {
+            @Override
+            public Promise<Void> call(Promise<DomUserFull> resolved) throws Exception {
+                //calculate tree and call plotting
+                LOG.log(Level.INFO, "DomUser returned.");
+                DomUserFull u = resolved.getValue();
+                dwoGlobalVars.setCurrentUser(u);
+                view.clear();
+                view.updateUserView(u);
+                eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Dialog_User_ConfirmChangeCommited()));
+                return null;
+            }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
+                    //throw directly
                 }
             }
-            );
-         
-       
+        }
+        );
+
     }
 
     @JsMethod
@@ -335,7 +373,9 @@ public class AccountPresenter {
                 srac.setNullSchool(dwoGlobalVars.getSchoolLogins().getNullSchool());
                 srac.setActiveSchoolRoleAndClass(dwoGlobalVars.getActiveSchoolRoleAndClass());
                 List<DomSchoolRoleAndClassV2> sracList = new ArrayList<>(sracData.size());
-                sracData.forEach((k,v) -> {sracList.add(v);});
+                sracData.forEach((k, v) -> {
+                    sracList.add(v);
+                });
                 srac.setSchoolsRolesAndClassesList(sracList);
                 view.updateSchoolLoginsView(srac);
                 return null;

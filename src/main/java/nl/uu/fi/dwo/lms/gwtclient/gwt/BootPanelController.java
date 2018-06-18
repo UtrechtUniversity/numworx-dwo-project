@@ -1,10 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -24,15 +21,17 @@ import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.FAIL;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.LOGOUT;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.SUCCESS_RESULTS;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPromise;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 import org.osgi.util.promise.Promise;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
+import org.osgi.util.promise.Failure;
+import org.osgi.util.promise.Success;
 
 /**
  * Controller for Login.
@@ -45,9 +44,12 @@ public class BootPanelController {
 
     private static final Logger LOG = Logger.getLogger(BootPanelController.class.getName());
 
-    @Inject ViewFactory viewFactory;
-    @Inject PresenterFactoryGwt presenterFactory;
-    @Inject DwoGlobalVars dwoGlobalVars;
+    @Inject
+    ViewFactory viewFactory;
+    @Inject
+    PresenterFactoryGwt presenterFactory;
+    @Inject
+    DwoGlobalVars dwoGlobalVars;
     private int profile;
     private boolean hideGwtGui;
     private boolean testIsOn;
@@ -114,7 +116,7 @@ public class BootPanelController {
 
         //    testRestyMapConverter();
         parseUrlParam();
-        if(!testIsOn){
+        if (!testIsOn) {
             Window.Location.replace("http://www.dwo.nl");
         }
         LOG.log(Level.INFO, "profile=" + profile + ".");
@@ -124,9 +126,9 @@ public class BootPanelController {
 
         //intialize our global and environmental variables instance.
 //        try {
-            //dwoGlobalVars = new DwoGlobalVars(); // INJECTED
-            Promise<DomDwoProfileFull> promise = new PublicProfileManager().get(profile);
-            dwoGlobalVars.setProfile(promise);
+        //dwoGlobalVars = new DwoGlobalVars(); // INJECTED
+        Promise<DomDwoProfileFull> promise = new PublicProfileManager().get(profile);
+        dwoGlobalVars.setProfile(promise);
 //        } catch (Dwo2Exception e) {
 //            //ugly emergency code in case server fails.
 //            String msg = "Fatal server error! " + e.getDwo2Message();
@@ -183,34 +185,34 @@ public class BootPanelController {
                         // presenterFactory.getSwitchSchoolPresenter().updateTree();
                         // break;
                         case FAIL:
-                            LOG.log(Level.INFO, "Login failed.");
-//                            Window.Location.replace(Window.Location.getHref());
-                            eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Login failed.")));
-//                                    
-//                            AlertDialogWithConfirmCancelPromise p = new AlertDialogWithConfirmCancelPromise(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_AuthenticationError));
-//                            viewFactory.getAlertDialogWithConfirmCancelView().showDialog(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_AuthenticationError));
-//                            LOG.log(Level.INFO, "promise on.");
-//                            p.getPromise().then(new Success<Boolean, Void>() {
-//                                @Override
-//                                public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-//                                    LOG.log(Level.INFO, "returned value" + resolved.getValue());
-//                                    return null;
-//                                }
-//                            }, new Failure() {
-//                                @Override
-//                                public void fail(Promise<?> resolved) throws Exception {
-//                                    Window.Location.replace(Window.Location.getHref());
-//                                }
-//                            }
-//                            );
-//                            eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_AuthenticationError)));
+                            LOG.log(Level.INFO, "Login failed, showing dialog.");
+                            AlertDialogWithConfirmCancelPromise p = new AlertDialogWithConfirmCancelPromise(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_AuthenticationError));
+                            viewFactory.getAlertDialogWithConfirmCancelView().showDialog(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_AuthenticationError));
+                            p.getPromise().then(new Success<Boolean, Void>() {
+                                @Override
+                                public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                                    if (resolved.getValue()) {
+                                        Window.Location.replace(Window.Location.getHref());
+                                    } else {
+                                        Window.Location.replace(Window.Location.getHref());
+                                    }
+                                    return null;
+                                }
+                            }, new Failure() {
+                                @Override
+                                public void fail(Promise<?> resolved) throws Exception {
+                                    eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_InternalError)));
+                                }
+                            }
+                            );
+                            eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_AuthenticationError)));
                             //presenterFactory.getLoginPresenter().getView().ini;
                             break;
                         case LOGOUT:
                             dwoGlobalVars.clearCurrentUser();
                             // viewFactory.getMainView().hideMenuButton();
 //                            presenterFactory.getMainPresenter().onSwitchViewEvent(new SwitchViewEvent(SwitchViewEvent.eventValue.LOGIN));
-                             eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN));
+                            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN));
                             break;
                         default:
                             LOG.log(Level.SEVERE, "Login handling failed in app controller.");
