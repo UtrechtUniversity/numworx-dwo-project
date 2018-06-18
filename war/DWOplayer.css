@@ -151,19 +151,19 @@ div.listItem-dwo-separator {
 	display: inline-block;
 	margin-right: 0px;
 	margin-top: 0px;
-	margin-bottom: 4px;
+	margin-bottom: 0px;
 	padding: 0px;
-	padding-top: 1px;
-	padding-bottom: 2px;
-	background-color: white;
 	border-radius: 0px;
 	border-width: 0px;
 	border-style: solid;
 	border-color: white;
-	cursor: pointer;
-	color: #B3C2E5;
+	color: #FFFFFF;
 	/*font-weight: bold;*/
-	font-size: 30px;
+ 	font-size: 0px;
+	width: 18px;
+	height: 34px;
+  	background-image: linear-gradient(180deg, 
+ 		#ffffff, #ffffff 16px, #b3c2e5 16px, #b3c2e5 18px, #ffffff 18px, #ffffff 34px); 
 }
 
 .statusBarLabel {
@@ -246,8 +246,20 @@ div.listItem-dwo-separator {
 	font-size: 12px;
 }
 
+/* Paginabolletje */
 .scoreBtn {
 	float: left;
+	position: relative;
+	overflow: visible;
+}
+
+/* Paginabolletje - vinkje */
+.scoreBtn .v {
+	display: none;
+}
+
+/* Paginabolletje - nummer */
+.scoreBtn .nr { 
 	display: inline-block;
 	margin-left: 0px;
 	margin-right: 0px;
@@ -278,52 +290,53 @@ div.listItem-dwo-separator {
 	color: #1D71B8;
 }
 
-.scoreBtn-max0 {
-	background-color: #C0C0C0
+.scoreBtn-max0 .nr {
+	background-color: #C0C0C0;
 }
 
-.scoreBtn-disabled {
+.scoreBtn-disabled .nr {
 	background-color: white;
 }
 
-.scoreBtn-correct {
-	background-color: #96C896;
+.scoreBtn-correct .nr {
 	margin-left: 0px;
-	margin-right: 0px;
 	margin-top: 5px;
-	color: green;
 	font-weight: bold;
-	
 }
 
-.scoreBtn-selectedcorrect {
+.scoreBtn-correct .v { 
+	position: absolute;
+	top: 0px;
+	right: -5px;
+	width: 15px;
+	height: 15px;
+	display: block;
+ 	background-image: url("images/resources/goed-numworx.svg") !important;
+	background-repeat: no-repeat !important;
+	background-position: right top !important;
+	background-color: transparent;
+}
+
+.scoreBtn-selectedcorrect .nr {
 	background-color: #96C896;
 	border-color: #1D71B8;
-	border-width: 3px;
 	border-style: solid;
 	margin-right: 0px;
 	color: green;
 	font-weight: bold;
-	
 }
 
-.scoreBtn-cursor {
-/*	
-	border-width: 3px;
-	border-color: #484848;
-	margin-top: 0px;
-*/	margin-top: 2px;
-	border-width: 3px;
+.scoreBtn-cursor .nr {
+	margin-top: 5px;
 	border-style: solid;
 	border-color: #1D71B8;
-	color: #1D71B8;
-	
+	color: #FFFFFF;
+	background-color: #1D71B8;
 }
 
 .gwt-Tree .gwt-TreeItem-selected {
 	text-decoration: underline;
 	font-weight: bold;
-	
 }
 
 
@@ -394,5 +407,3 @@ div.listItem-dwo-separator {
 .gwt-DialogBox .Caption {
    cursor: auto !important;
 }
-
-
