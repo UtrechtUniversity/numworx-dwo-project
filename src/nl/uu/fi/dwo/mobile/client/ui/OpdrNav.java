@@ -9,8 +9,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
-
 import nl.uu.fi.dwo.account.client.StudentModelView;
 import nl.uu.fi.dwo.formule.client.formuleobjects.TouchButton;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
@@ -810,7 +808,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	}
 
 	/**
-	 * Zet button j. Currentshift bepaalt of de button zichtbaar is.
+	 * Voeg button j toe aan fp_opdrachten. Currentshift bepaalt of de button zichtbaar is.
 	 * 
 	 * @param j
 	 */
@@ -838,9 +836,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			button.addStyleDependentName("disabled");
 		}
 		
-		String nul = j<9 ? "0" : "";
-		button.setText("" + nul + (j + 1) + "");
-		space.setText("−");
+		String nul = j < 9 ? "0" : "";
+		// style nr voor paginanummer en v voor feedback-vinkje
+		button.getElement().setInnerHTML("<div class='nr'>" + nul + (j + 1) + "</div><div class='v'></div>");
+		space.setText("-"); // iets zodat hij niet verdwijnt, streep wordt gezet in css met linear-gradient
 		if (currentOpdracht == j)
 		{
 			setButtonCursor(button);
@@ -848,6 +847,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		addButtonHandler(button, j);
 		
 		buttons.add(button);
+		
 		if (aantalOpdrachten[currentActiviteit] > 1
 			&& j > currentShift - 1 
 			&& j < aantalOpdrachten[currentActiviteit] 
@@ -1032,8 +1032,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			{
 				popupTimer = null;
 				btn.setStyleDependentName("popupTime", false);
-				String nul = index<9 ? "0" : "";
-				btn.setText(nul + Integer.toString(index + 1));
+				String nul = index < 9 ? "0" : "";
+				// style nr voor paginanummer en v voor feedback-vinkje
+				btn.getElement().setInnerHTML("<div class='nr'>" + nul + (index + 1) + "</div><div class='v'></div>");
 				// logger.info("timer for "+ index + " fired");
 			}
 		};
@@ -1071,7 +1072,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	}
 
-	/**
+    /**
 	 * 
 	 * @param button
 	 * @param b
