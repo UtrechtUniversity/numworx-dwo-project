@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 public class CopyOrMoveStudentToSchoolclassPresenter {
@@ -209,13 +210,10 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
         }
     }
 
+
     @JsMethod
-    public void CopyStudentsToClassA(String a) {
-        LOG.log(Level.INFO,"input is "+a);
-        List<String> idList=null;
-        //show progress dialog
-        CopyStudent(idList, 0, schoolClassB, schoolClassA);
-        //close progress dialog
+    public void CopyStudentsToClassA(String idList[]) {
+        CopyStudent(idList, 0, schoolClassB,schoolClassA);
     }
 
     /**
@@ -226,16 +224,16 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
      * @param from
      * @param to
      */
-    public void CopyStudent(List<String> idList, int i, DomSchoolClass from, DomSchoolClass to) {
+    public void CopyStudent(String idList[], int i, DomSchoolClass from, DomSchoolClass to) {
         Promise<Boolean> promise;
         DomSubmitStudentToSchoolClass submit = new DomSubmitStudentToSchoolClass();
         submit.setSchoolClassFrom(from);
         submit.setSchoolClassTo(to);
         DomStudent s;
         if (from.equals(schoolClassB)) {
-            s = studentMapB.get(idList.get(i));
+            s = studentMapB.get(idList[i]);
         } else {
-            s = studentMapA.get(idList.get(i));
+            s = studentMapA.get(idList[i]);
         }
         submit.setStudent(s);
         final int next = i + 1;
@@ -243,11 +241,16 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
         promise.then(new Success<Boolean, Void>() {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                LOG.log(Level.INFO, "Copying student "+idList.get(next)+".");
+                if(next<idList.length){
+                LOG.log(Level.INFO, "Copying student "+idList[next]+".");
+                LOG.log(Level.INFO, "Completed: "+100.0*next/idList.length+"%.");
                 CopyStudent(idList, next, from, to);
+                }else{
+                    //hide progressbar.
+                    refreshViewData();
+                }
                 return null;
             }
-
         },
                 new Failure() {
             @Override
@@ -267,32 +270,32 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
     }
 
     @JsMethod
-    public void CopyStudentsToClassB(List<String> idList) {
+    public void CopyStudentsToClassB(String idList[]) {
         CopyStudent(idList, 0, schoolClassA, schoolClassB);
     }
 
     @JsMethod
-    public void MoveStudentsToClassA(List<String> idList) {
+    public void MoveStudentsToClassA(String idList[]) {
         //Add to Class A
         MoveStudent(idList, 0, schoolClassB, schoolClassA);
     }
 
     @JsMethod
-    public void MoveStudentsToClassB(List<String> idList) {
+    public void MoveStudentsToClassB(String idList[]) {
         //Add to Class B
         MoveStudent(idList, 0, schoolClassA, schoolClassB);
     }
 
-    public void MoveStudent(List<String> idList, int i, DomSchoolClass from, DomSchoolClass to) {
+    public void MoveStudent(String idList[], int i, DomSchoolClass from, DomSchoolClass to) {
         Promise<Boolean> promise;
         DomMoveStudentToSchoolClass submit = new DomMoveStudentToSchoolClass();
         submit.setSchoolClassFrom(from);
         submit.setSchoolClassTo(to);
         DomStudent s;
         if (from.equals(schoolClassB)) {
-            s = studentMapB.get(idList.get(i));
+            s = studentMapB.get(idList[i]);
         } else {
-            s = studentMapA.get(idList.get(i));
+            s = studentMapA.get(idList[i]);
         }
         submit.setStudent(s);
         final int next = i + 1;
@@ -300,8 +303,14 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
         promise.then(new Success<Boolean, Void>() {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                LOG.log(Level.INFO, "Moving student "+idList.get(next)+".");
-                CopyStudent(idList, next, from, to);
+                if(next<idList.length){
+                LOG.log(Level.INFO, "Copying student "+idList[next]+".");
+                LOG.log(Level.INFO, "Completed: "+100.0*next/idList.length+"%.");
+                MoveStudent(idList, next, from, to);
+                }else{
+                    //hide progressbar.
+                    refreshViewData();
+                }
                 return null;
             }
 
