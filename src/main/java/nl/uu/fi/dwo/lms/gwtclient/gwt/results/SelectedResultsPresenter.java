@@ -187,6 +187,7 @@ public class SelectedResultsPresenter {
 			@Override
 			public Promise<Object> call(Promise<Object> resolved) throws Exception {
 			    DomResultStudentScoContext ssc = new DomResultStudentScoContext(p1.getValue(), student);
+			    ssc.setParent(domschoolclass);
 				String launch_data = p2.getValue().toString();
                 Map<String, String> userState = p3.getValue();
                 userState.put("cmi.launch_data", launch_data);

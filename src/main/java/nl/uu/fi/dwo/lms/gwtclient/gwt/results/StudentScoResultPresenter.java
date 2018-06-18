@@ -9,8 +9,10 @@ import com.google.web.bindery.event.shared.EventBus;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -28,6 +30,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.old.ScoResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
@@ -55,6 +58,7 @@ public class StudentScoResultPresenter {
   private DomResultTree resultTree;
   private DomResultStudentScoContext ssc;
   private Map<String,String> userState;
+  private DomResultSchoolClass parent;
 
   public interface Display {
 
@@ -68,6 +72,7 @@ public class StudentScoResultPresenter {
     void setEmptyTableMessage();
 
     void setLoadingTableMessage();
+    void hide();
 
   }
 
@@ -87,6 +92,7 @@ public class StudentScoResultPresenter {
     LOG.info("view.init " + context + "  " + view);
     view.init(context);   
     LOG.info("update Frame for " + ssc.getStudentSco().getScoID());
+    parent = ssc.getAncestralSchoolClass();
     updateFrame(ssc.getStudentSco());
   }
 
@@ -94,39 +100,46 @@ public class StudentScoResultPresenter {
     view = aView;
   }
 
-  Void updateResultTree(DomStudentScoContext ssc) {    
+  DomStudentScoContext updateResultTree(DomStudentScoContext ssc) {    
     resultTree.updateResultStudentSco(Collections.singleton(ssc));
     view.setResultTree(resultTree);
-    return null;
+    return ssc;
   }
   
   @JsMethod 
-  public void close() {
-    LOG.fine("calling close");
+  public void close(JavaScriptObject resultState) {
+    LOG.severe("calling close ");
+    view.clear();
+    view.hide();
+    SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTS, resultTree, resultState);   
+    eventBus.fireEvent(event);
   }
   
   
   @JsMethod 
-  public void showStudentResults (JavaScriptObject context, String scoid, String studentid, String classid) {
+  public void showStudentResults (JavaScriptObject context, String studentid) {
       view.clear();
-      PersistenceId schoolclass = new PersistenceId(classid);
-      DomResultTeacher<DomResultStudent> studentTree = resultTree.getStudentTree();
-      DomResultSchoolClass<DomResultStudent> domschoolclass = studentTree.getChildren().get(schoolclass);
+      
+      @SuppressWarnings("unchecked")
+      DomResultSchoolClass<DomResultStudent> domschoolclass = parent;
       PersistenceId key = new PersistenceId(studentid);
       DomStudent student = domschoolclass.getChildren().get(key).getStudent();
-      DomScoContext sco = new DomScoContext(); sco.setId(new PersistenceId(scoid));
+      PersistenceId scoid = ssc.getStudentSco().getScoID();
+      DomScoContext sco = new DomScoContext(); sco.setId(scoid);
       Promise<DomStudentScoContext> p1 = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), Collections.singletonList(student))
       .map(p -> p.getStudentScoContexts().get(0).getValue());     
       Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(sco, domschoolclass.getSchoolClass());     
       Promise<Map<String,String>> p3 = p1.then(  p-> resultService.getValues(p.getValue(), ResultsService.keys));
-      
+      String location = userState.get("cmi.location");
       Promises.all(p1,p2,p3).then(new Success<Object, Object>() {
 
           @Override
           public Promise<Object> call(Promise<Object> resolved) throws Exception {
               DomResultStudentScoContext ssc = new DomResultStudentScoContext(p1.getValue(), student);
+              ssc.setParent(parent);
               String launch_data = p2.getValue().toString();
               Map<String, String> userState = p3.getValue();
+              if(location != null) userState.put("cmi.location", location);
               userState.put("cmi.launch_data", launch_data);
               userState.put(ResultsService.COMPLETION_STATUS, p1.getValue().getCompletionStatus());
               userState.put("cmi.score.raw", Double.toString(p1.getValue().getScore()));
@@ -227,5 +240,17 @@ public class StudentScoResultPresenter {
     LOG.info("openUrl " + url);
     view.openUrl(url);
 }
+
+  @JsMethod
+  public void sealSingleActivity(boolean value) {
+    DomStudentScoContext dssc = ssc.getStudentSco();    
+    resultService.seal(dssc, value)
+    .map(this::updateResultTree)
+    .then( p-> {
+      setValue(ResultsService.COMPLETION_STATUS, p.getValue().getCompletionStatus());
+      updateFrame(p.getValue()); 
+      return null;
+      }, FAILURE);
+  }
 
 }

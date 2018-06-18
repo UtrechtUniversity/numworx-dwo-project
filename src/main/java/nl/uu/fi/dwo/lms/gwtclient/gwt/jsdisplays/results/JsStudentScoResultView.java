@@ -58,4 +58,9 @@ public class JsStudentScoResultView implements StudentScoResultPresenter.Display
     }
 
      @Inject JsStudentScoResultView() {}
+
+    @Override
+    public void hide() {
+      JsStudentScoResultDisplay.hide();
+    }
 }

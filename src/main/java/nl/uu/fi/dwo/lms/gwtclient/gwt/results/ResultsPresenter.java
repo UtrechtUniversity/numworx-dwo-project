@@ -84,7 +84,7 @@ public class ResultsPresenter {
                 LOG.log(Level.INFO, "ResultTree obtained.");// plots the result tree.
                 view.setResultTree(resultTree);
                 LOG.log(Level.INFO, "plotted ResultMatrix.");
-                return null;
+             return null;
             }
         },
                 FAILURE

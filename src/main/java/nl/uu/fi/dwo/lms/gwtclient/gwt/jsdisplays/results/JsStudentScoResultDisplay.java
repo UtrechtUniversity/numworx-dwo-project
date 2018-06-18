@@ -24,4 +24,5 @@ public class JsStudentScoResultDisplay{
     public static native void setLoadingTableMessage();
     /** load frame with player */
     public static native void openUrl(String url);
+    public static native void hide();
 }
