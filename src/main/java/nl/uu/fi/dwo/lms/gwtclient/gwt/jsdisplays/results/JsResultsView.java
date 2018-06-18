@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results;
 
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -68,6 +69,7 @@ public class JsResultsView implements ResultsPresenter.Display {
 			json.put("totalTime", new JSONString(totalTime));
         }else if (node instanceof DomResultCourseInClass){
             String viewState = ((DomResultCourseInClass) node).getViewState().name();
+            json.put("sequence", new JSONNumber(((DomResultCourseInClass) node).getCourse().getSequenceNr()));
             json.put("viewState", new JSONString(viewState));
         }
 //        json.put("node-id", new JSONNumber(node.getNodeId()));

@@ -114,6 +114,9 @@ public class BootPanelController {
 
         //    testRestyMapConverter();
         parseUrlParam();
+        if(!testIsOn){
+            Window.Location.replace("http://www.dwo.nl");
+        }
         LOG.log(Level.INFO, "profile=" + profile + ".");
         LOG.log(Level.INFO, "testIsOn=" + testIsOn + ".");
         parseGwtParam();
