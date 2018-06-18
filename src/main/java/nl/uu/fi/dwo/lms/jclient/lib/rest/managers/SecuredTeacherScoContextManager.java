@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScoContextFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 /**
  * CRUD for teachers on courses.
@@ -43,7 +44,7 @@ public class SecuredTeacherScoContextManager extends AbstractScoContextManager {
     rest.setRestContext(context);
     rest.setDomDwoProfile(dwoProfile);
     DomScoContextFull result = StoredRestManager.getInstance()
-        .put("rest/secure/teacher/scoContext/update", DomScoContextFull.class, rest);
+        .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/scoContext/update", DomScoContextFull.class, rest);
     LOG.log(Level.FINE, "Updated sco for the teacher with username {0}.",
         new Object[] {RestAuthenticator.getInstance().getUsername()});
     return result;
@@ -57,7 +58,7 @@ public class SecuredTeacherScoContextManager extends AbstractScoContextManager {
     rest.setDomScoData(data);
     rest.setDomDwoProfile(dwoProfile);
     DomScoContextFull result = StoredRestManager.getInstance()
-        .put("rest/secure/teacher/scoContext/add", DomScoContextFull.class, rest);
+        .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/scoContext/add", DomScoContextFull.class, rest);
     LOG.log(Level.FINE, "Added sco for the teacher with username {0}.",
         new Object[] {RestAuthenticator.getInstance().getUsername()});
     return result;
@@ -68,7 +69,7 @@ public class SecuredTeacherScoContextManager extends AbstractScoContextManager {
     rest.setDomDwoProfile(profile);
     rest.setDomScoContext(sco);
     rest.setRestContext(context);
-    Boolean result = StoredRestManager.getInstance().put("rest/secure/teacher/scoContext/remove",
+    Boolean result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/scoContext/remove",
         Boolean.class, rest);
     LOG.log(Level.FINE, "Removed sco for the teacher with username {0}.",
         new Object[] {RestAuthenticator.getInstance().getUsername()});

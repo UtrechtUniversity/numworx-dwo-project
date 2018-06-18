@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestCourseFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 /**
  * CRUD for teachers on courses.
@@ -41,7 +42,7 @@ public class SecuredTeacherCourseManager extends AbstractCourseManager {
     rest.setRestContext(getContext());
     rest.setDomCourse(edit);
     DomCourseFull result =
-        manager.put("rest/secure/teacher/course/update", DomCourseFull.class, rest);
+        manager.put("rest/sec:" + PathId.getId(getContext()) + "/teacher/course/update", DomCourseFull.class, rest);
     LOG.log(Level.FINE, "Updated course for the teacher with username {0}.",
         new Object[] {manager.getAuthenticator().getUsername()});
     return result;
@@ -51,7 +52,7 @@ public class SecuredTeacherCourseManager extends AbstractCourseManager {
     RestCourseFull rest = new RestCourseFull();
     rest.setRestContext(getContext());
     rest.setDomCourse(edit);
-    DomCourseFull result = manager.put("rest/secure/teacher/course/add", DomCourseFull.class, rest);
+    DomCourseFull result = manager.put("rest/sec:" + PathId.getId(getContext()) + "/teacher/course/add", DomCourseFull.class, rest);
     LOG.log(Level.FINE, "Updated course for the teacher with username {0}.",
         new Object[] {manager.getAuthenticator().getUsername()});
     return result;
@@ -63,7 +64,7 @@ public class SecuredTeacherCourseManager extends AbstractCourseManager {
     rest.setDomCourse(course);
     rest.setDomDwoProfile(profile);
     rest.setRestContext(getContext());
-    Boolean result = manager.put("rest/secure/teacher/course/remove", Boolean.class, rest);
+    Boolean result = manager.put("rest/sec:" + PathId.getId(getContext()) + "/teacher/course/remove", Boolean.class, rest);
     LOG.log(Level.FINE, "Removed course for the teacher with username {0}.",
         new Object[] {manager.getAuthenticator().getUsername()});
     return result;

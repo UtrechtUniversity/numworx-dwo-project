@@ -10,6 +10,10 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 public abstract class AbstractScoContextManager {
   protected final DomContext context;
 
+  protected DomContext getContext() {
+    return context;
+  }
+
   AbstractScoContextManager(DomContext context) {
     this.context = context;
   }
