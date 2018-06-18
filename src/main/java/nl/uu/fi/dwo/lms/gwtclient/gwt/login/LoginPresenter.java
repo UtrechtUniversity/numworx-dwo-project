@@ -10,9 +10,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPromise;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithConfirmPromise;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedMessageDialogWithConfirmEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -142,10 +143,10 @@ public class LoginPresenter {
                         dwoGlobalVars.clearCurrentUser();
                         LOG.log(Level.INFO, "login failed.");
                         //show dialog
-                        MessageDialogWithConfirmPromise dialogPromise = new MessageDialogWithConfirmPromise(DwoLocalesForGWT.instance.GUI_Dialog_User_ConfirmPasswordSwitch());
-                        PromisedMessageDialogWithConfirmEvent event = new PromisedMessageDialogWithConfirmEvent(PromisedMessageDialogWithConfirmEvent.EventType.ConfirmDialog, dialogPromise);
+                        AlertDialogWithConfirmCancelPromise dialogPromise = new AlertDialogWithConfirmCancelPromise(DwoLocalesForGWT.instance.GUI_Dialog_User_ConfirmPasswordSwitch());
+                        AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
                         //eventBus.fireEvent(event);
-                        eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "wrong credentials.")));
+                        eventBus.fireEvent(event);
                         return dialogPromise.getPromise();
 //                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));    
 //                        eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Wrong login state.")));
