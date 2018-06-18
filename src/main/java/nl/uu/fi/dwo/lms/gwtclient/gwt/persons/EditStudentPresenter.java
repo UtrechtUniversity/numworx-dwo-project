@@ -84,43 +84,42 @@ public class EditStudentPresenter {
     public void init(DomUser aUser) {
         view.clear();
         view.setEmptyTableMessage();
-//        setStudentInView(aUser);
         initView(aUser);
 //        setSchoolClassesInView(aUser);
     }
 
-    public void setStudentInView(DomUser aUser) {
-        Promise<DomSingleSchoolStudent> userPromise;
-        DomGetSingleSchoolStudent getStudent = new DomGetSingleSchoolStudent();
-        getStudent.setDomStudent(new DomStudent(aUser));
-        //getStudent.setDomSchoolClass();
-        userPromise = manager.getSingleSchoolStudent(getStudent);
-
-        // onSuccess calculate results and show.
-        userPromise.then(new Success<DomUserFull, Void>() {
-            @Override
-            public Promise<Void> call(Promise<DomUserFull> resolved) throws Exception {
-                // calculate tree and call plotting
-                LOG.log(Level.INFO, "DomFullUser data returned.");
-                user = resolved.getValue();
-                view.setUser(user);
-                return null;
-            }
-        }, new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                    // throw directly
-                }
-            }
-        });
-    }
+//    public void setStudentInView(DomUser aUser) {
+//        Promise<DomSingleSchoolStudent> userPromise;
+//        DomGetSingleSchoolStudent getStudent = new DomGetSingleSchoolStudent();
+//        getStudent.setDomStudent(new DomStudent(aUser));
+//        //getStudent.setDomSchoolClass();
+//        userPromise = manager.getSingleSchoolStudent(getStudent);
+//
+//        // onSuccess calculate results and show.
+//        userPromise.then(new Success<DomUserFull, Void>() {
+//            @Override
+//            public Promise<Void> call(Promise<DomUserFull> resolved) throws Exception {
+//                // calculate tree and call plotting
+//                LOG.log(Level.INFO, "DomFullUser data returned.");
+//                user = resolved.getValue();
+//                view.setSingleSchoolStudent(user);
+//                return null;
+//            }
+//        }, new Failure() {
+//            @Override
+//            public void fail(Promise<?> resolved) throws Exception {
+//                Throwable fail = resolved.getFailure();
+//                if (fail instanceof Dwo2Exception) {
+//                    LOG.log(Level.SEVERE, fail.getMessage());
+//                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
+//                } else {
+//                    LOG.log(Level.SEVERE, fail.getMessage());
+//                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
+//                    // throw directly
+//                }
+//            }
+//        });
+//    }
 
     public void initView(DomUser aUser) {
         Promise p = Promises.resolved(null);
