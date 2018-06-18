@@ -78,12 +78,15 @@ public class StudentScoResultPresenter {
   }
 
   public void init(DomResultTree aResultTree, DomResultStudentScoContext ssc, JavaScriptObject context, Map<String,String> userState) {
+    LOG.fine("entering init");
     resultTree = aResultTree;
     this.userState = userState;
     this.ssc = ssc;
     userState.put("cmi.mode", "review");
     setAPI(this);
-    view.init(context);    
+    LOG.info("view.init " + context + "  " + view);
+    view.init(context);   
+    LOG.info("update Frame for " + ssc.getStudentSco().getScoID());
     updateFrame(ssc.getStudentSco());
   }
 
@@ -92,10 +95,19 @@ public class StudentScoResultPresenter {
   }
 
   Void updateResultTree(DomStudentScoContext ssc) {    
-    // resultTree.update(Collections.singleton(ssc));
+    resultTree.updateResultStudentSco(Collections.singleton(ssc));
     view.setResultTree(resultTree);
     return null;
   }
+  
+  @JsMethod 
+  public void close(JavaScriptObject resultState) {
+    LOG.fine("calling close");
+    view.clear();
+    SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTS, resultTree, resultState);   
+    eventBus.fireEvent(event);
+  }
+  
   
   @JsMethod 
   public void showStudentResults (JavaScriptObject context, String scoid, String studentid, String classid) {
@@ -110,7 +122,7 @@ public class StudentScoResultPresenter {
       .map(p -> p.getStudentScoContexts().get(0).getValue());     
       Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(sco, domschoolclass.getSchoolClass());     
       Promise<Map<String,String>> p3 = p1.then(  p-> resultService.getValues(p.getValue(), ResultsService.keys));
-      
+      String location = userState.get("cmi.location");
       Promises.all(p1,p2,p3).then(new Success<Object, Object>() {
 
           @Override
@@ -118,6 +130,7 @@ public class StudentScoResultPresenter {
               DomResultStudentScoContext ssc = new DomResultStudentScoContext(p1.getValue(), student);
               String launch_data = p2.getValue().toString();
               Map<String, String> userState = p3.getValue();
+              if(location != null) userState.put("cmi.location", location);
               userState.put("cmi.launch_data", launch_data);
               userState.put(ResultsService.COMPLETION_STATUS, p1.getValue().getCompletionStatus());
               userState.put("cmi.score.raw", Double.toString(p1.getValue().getScore()));
@@ -147,10 +160,10 @@ public class StudentScoResultPresenter {
 				return ""
 			},
 			"LMSCommit" : function(dummy) {
-				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::Commit(Ljava/lang/String;)(key)
+				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::Commit(Ljava/lang/String;)(dummy)
 			},
 			"LMSFinish" : function(dummy) {
-				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::Finish(Ljava/lang/String;)(key)
+				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::Finish(Ljava/lang/String;)(dummy)
 			},
 			"LMSSetValue" : function(key, value) {
 				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::setValue(Ljava/lang/String;Ljava/lang/String;)(key, value)
@@ -169,21 +182,26 @@ public class StudentScoResultPresenter {
 
   private String getValue(String key) {
     LOG.info("GetValue " + key);
-    String value = userState.getOrDefault(key, "");
+    String value = userState.get(key);
+    if(value == null) value = "";
     String shortValue = value.length() > 10 ? value.substring(0, 10) + "..." : value;
     LOG.info("result GetValue: " + shortValue);
     return value;
   }
 
   private String setValue(String key, String value) {
+    String shortValue = value.length() > 10 ? value.substring(0, 10) + "..." : value;
+    LOG.info("SetValue " + key + ", " + shortValue);
     userState.put(key,value);
     return "true";
   }
 
   private String Commit(String dummy) {
+    LOG.info("Commit " + dummy);
     return "true";
   }
   private String Finish(String dummy) {
+    LOG.info("Finish " + dummy);
     Map<String,String> userState = new HashMap<> (this.userState);
     userState.keySet().retainAll(Arrays.asList("cmi.score.raw","cmi.comments_from_lms.0.comment"));
     resultService.setValues(ssc.getStudentSco(), userState).map(this::updateResultTree).then(null,FAILURE);
@@ -210,6 +228,7 @@ public class StudentScoResultPresenter {
         + "&profile="
         + profile
         + "&t=" + random + "#cmi.launch_data:"+scoId;
+    LOG.info("openUrl " + url);
     view.openUrl(url);
 }
 

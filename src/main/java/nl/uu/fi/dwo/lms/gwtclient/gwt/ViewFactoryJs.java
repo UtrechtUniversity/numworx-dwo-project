@@ -37,6 +37,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsCopyOrMoveStude
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsModulesOfSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsAlertDialogWithOKView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsMessageDialogWithOKView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsPromisedDialogWithOKView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
@@ -54,6 +55,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
@@ -66,10 +68,13 @@ public class ViewFactoryJs implements ViewFactory {
 
     private final MainPresenter.Display mainView;
     private final LoginPresenter.Display loginView;
-    @Inject JsResultsView resultsView;
-    @Inject JsSelectedResultsView resultsSelectsView;
+    @Inject
+    JsResultsView resultsView;
+    @Inject
+    JsSelectedResultsView resultsSelectsView;
     private final JsSelectStudentResultsView selectStudentResultsView;
-    @Inject JsStudentScoResultView studentScoResultView;
+    @Inject
+    JsStudentScoResultView studentScoResultView;
     private final SchoolclassesPresenter.Display schoolclassesView;
     private final AddStudentToSchoolclassPresenter.Display addStudentToSchoolclassView;
     private final CopyOrMoveStudentToSchoolclassPresenter.Display copyOrMoveStudentToSchoolclassView;
@@ -78,22 +83,24 @@ public class ViewFactoryJs implements ViewFactory {
     private final AccountPresenter.Display accountView;
     private final WelcomePresenter.Display welcomeView;
     private final EditSchoolclassPresenter.Display editSchoolclassView;
-    @Inject JsModulesView modulesView; // non final non private, concrete class for @Inject
-
+    @Inject
+    JsModulesView modulesView; // non final non private, concrete class for @Inject
 
     private final PersonsPresenter.Display personsView;
     private final AddPersonPresenter.Display addPersonView;
     private final EditStudentPresenter.Display editStudentView;
     private final EditTeacherPresenter.Display editTeacherView;
     private final ImportPersonsPresenter.Display importPersonsView;
-    
+
     private final AlertDialogWithOKPresenter.Display alertDialogWithOKView;
     private final MessageDialogWithOKPresenter.Display messageDialogWithOKView;
+//    private final PromisedDialogWithOKPresenter.Display promisedDialogWithOKView;
     private final AlertDialogWithConfirmCancelPresenter.Display alertDialogWithConfirmCancelView;
     private final FileUploadStudentsPresenter.Display fileUploadStudentsView;
     private final ProgressDialogWithAbortPresenter.Display progressDialogView;
 
-    @Inject ViewFactoryJs(PresenterFactory pf) {
+    @Inject
+    ViewFactoryJs(PresenterFactory pf) {
         mainView = new JsMainView();
         loginView = new JsLoginView();
         welcomeView = new JsWelcomeView();
@@ -109,19 +116,19 @@ public class ViewFactoryJs implements ViewFactory {
         //resultsSelectsView = new JsSelectedResultsView();
         selectStudentResultsView = new JsSelectStudentResultsView();
         //studentScoResultView = new JsStudentScoResultView();
-        
-        personsView= new JsPersonsView();
-        editStudentView= new JsEditStudentView();
-        editTeacherView= new JsEditTeacherView();
-        addPersonView= new JsAddPersonView();
-        importPersonsView= new JsImportPersonsView();
 
+        personsView = new JsPersonsView();
+        editStudentView = new JsEditStudentView();
+        editTeacherView = new JsEditTeacherView();
+        addPersonView = new JsAddPersonView();
+        importPersonsView = new JsImportPersonsView();
 
         alertDialogWithOKView = new JsAlertDialogWithOKView();
         messageDialogWithOKView = new JsMessageDialogWithOKView();
         alertDialogWithConfirmCancelView = new JsAlertDialogWithConfirmCancelView();
         progressDialogView = new JsProgressDialogWithAbortView();
         fileUploadStudentsView = new FileUploadStudentsView(pf.getFileUploadStudentsPresenter());
+//        promisedDialogWithOKView = new JsPromisedDialogWithOKView();
     }
 
     @Override
@@ -154,7 +161,6 @@ public class ViewFactoryJs implements ViewFactory {
 //    public ScoResultsPresenter.Display getScoResultsView() {
 //        return scoResultsView;
 //    }
-
     @Override
     public SchoolclassesPresenter.Display getSchoolclassesView() {
         return schoolclassesView;
@@ -269,9 +275,9 @@ public class ViewFactoryJs implements ViewFactory {
     public ModulesOfSchoolclassPresenter.Display getModulesOfSchoolclassView() {
         return modulesOfSchoolclassView;
     }
-    
+
     @Override
-    public ModulesPresenter.Display getModulesView(){
+    public ModulesPresenter.Display getModulesView() {
         return modulesView;
     }
 
@@ -310,8 +316,13 @@ public class ViewFactoryJs implements ViewFactory {
     /**
      * @return the studentScoResultView
      */
-    protected StudentScoResultPresenter.Display getStudentScoResultView() {
+    public StudentScoResultPresenter.Display getStudentScoResultView() {
         return studentScoResultView;
     }
+
+//    @Override
+//    public PromisedDialogWithOKPresenter.Display getPromisedDialogWithOKView() {
+//        return promisedDialogWithOKView;
+//    }
 
 }

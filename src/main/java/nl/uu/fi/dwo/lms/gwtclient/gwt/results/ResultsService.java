@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -15,6 +16,9 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEventHandler;
 import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -25,12 +29,16 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.entities.RestClearStudentDataForScoAndClass;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.json.client.JSONValue;
+import com.google.web.bindery.event.shared.EventBus;
+
+import dagger.Reusable;
 
 /**
  * Persistent model service for Teacher results. Retrieves DomResultsPerTeacher data.
@@ -40,7 +48,8 @@ import com.google.gwt.json.client.JSONValue;
  * 
  * @author Gert van der Plas
  */
-class ResultsService {
+@Reusable 
+class ResultsService implements SwitchViewEventHandler {
 
     private static final Logger LOG = Logger.getLogger(ResultsService.class.getName());
     
@@ -64,6 +73,11 @@ class ResultsService {
             "cmi.comments_from_lms.0.comment"
     );
     
+
+   @Inject void setEventBus(EventBus eventBus) {
+     eventBus.addHandler(SwitchViewEvent.TYPE, this);
+   }
+
    @Inject ResultsService(DwoGlobalVars aDwoGlobalVars){
         dwoGlobalVars=aDwoGlobalVars;
     }
@@ -106,15 +120,24 @@ class ResultsService {
     	rest.setClearStudentDataForScoAndClass(new DomClearStudentDataForScoAndClass());
     	rest.getClearStudentDataForScoAndClass().setDomSchoolClass(schoolclass);
     	rest.getClearStudentDataForScoAndClass().setDomStudentList(students);
+    	rest.getClearStudentDataForScoAndClass().setDomScoContext(sco);
     	return dwoGlobalVars.getProfile().then(p -> { 
         	rest.getClearStudentDataForScoAndClass().setDomProfile(p.getValue());
         	return manager.createStudentResults(rest);
     	});
     }
     
+    Map<PersistenceId, Promise<JSONValue>> launchDataCache = new HashMap<>();
+    
     public Promise<JSONValue> getJSONLaunchDataBytes(DomScoContext sco, DomSchoolClassId schoolClass) {
-    	return dwoGlobalVars.getProfile().then(
+        Promise<JSONValue> cache = launchDataCache.get(sco.getId());
+        if(cache != null) return cache;
+        
+    	cache =  dwoGlobalVars.getProfile().then(
     			p-> scoData.getJSONLaunchDataBytes(sco, p.getValue(), schoolClass, getContext()));
+    	
+    	launchDataCache.put(sco.getId(), cache);
+    	return cache;
     }
 
 	public Promise<Map<String, String>> getValues(DomStudentScoContext dom, Collection<String> keys) {
@@ -123,5 +146,15 @@ class ResultsService {
 
   public Promise<DomStudentScoContext> setValues(DomStudentScoContext studentSco, Map<String, String> userState) {
       return scormValues.setValues(studentSco, getContext(), userState);
+  }
+
+// FIXME caching policy
+  
+  @Override
+  public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
+    LOG.fine("sniffing " + switchViewEvent.getEventValue());
+    // if switch to
+    if(SelectedView.RESULTS == switchViewEvent.getEventValue())
+      launchDataCache.clear();
   }
 }

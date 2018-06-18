@@ -84,7 +84,6 @@ public class SelectedResultsPresenter {
     @Inject SelectedResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-        //resultService = new ResultsService(dwoGlobalVars);
         FAILURE = new LoggingFailure(LOG, eventBus);
     }
 
@@ -163,12 +162,15 @@ public class SelectedResultsPresenter {
 	}
     
     Promise<Object> updateResultTree(Promise<List<DomStudentScoContext>> p) {
+        if(!p.isDone() || p.getFailure() != null) return null;
+        resultTree.updateResultStudentSco(p.getValue());
     	view.updateResultTree(resultTree);
     	return null;
     }
     
     @JsMethod 
     public void showStudentResults (JavaScriptObject context, String scoid, String studentid, String classid) {
+        LOG.fine("entering showStudentResults " + context + "," + scoid);
 		PersistenceId schoolclass = new PersistenceId(classid);
 		DomResultTeacher<DomResultStudent> studentTree = resultTree.getStudentTree();
 		DomResultSchoolClass<DomResultStudent> domschoolclass = studentTree.getChildren().get(schoolclass);

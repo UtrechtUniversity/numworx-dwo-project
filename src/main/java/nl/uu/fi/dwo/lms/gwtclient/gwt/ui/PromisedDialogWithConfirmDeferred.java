@@ -3,16 +3,16 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.ui;
 import org.osgi.util.promise.Deferred;
 
 /**
- * An interface that defines of a AlertWithConfirmCancelDialog has been confirmed or rejected. True means
+ * An interface that defines when a MessageDialog has been confirmed. True means
  * accept. False rejects.
  * 
  * @author G.A.J. van der Plas
  */
-public class AlertDialogWithConfirmCancelPromise extends Deferred<Boolean> {
+public class PromisedDialogWithConfirmDeferred extends Deferred<Boolean> {
     private Boolean value;
     private String msg;
 
-    public AlertDialogWithConfirmCancelPromise(String aMsg) {
+    public PromisedDialogWithConfirmDeferred(String aMsg) {
         msg = aMsg;        
     }
 

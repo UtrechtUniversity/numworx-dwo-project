@@ -14,7 +14,7 @@ import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPromise;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
@@ -160,7 +160,7 @@ public class EditSchoolclassPresenter {
 
     @JsMethod
     public void removeSchoolClass() {
-        AlertDialogWithConfirmCancelPromise p = new AlertDialogWithConfirmCancelPromise("Are you sure you want to remove schoolclass" + schoolClass.getSchoolClassName() + ".");
+        AlertDialogWithConfirmCancelDeferred p = new AlertDialogWithConfirmCancelDeferred("Are you sure you want to remove schoolclass" + schoolClass.getSchoolClassName() + ".");
         p.getPromise().then(new Success<Boolean, Void>() {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {

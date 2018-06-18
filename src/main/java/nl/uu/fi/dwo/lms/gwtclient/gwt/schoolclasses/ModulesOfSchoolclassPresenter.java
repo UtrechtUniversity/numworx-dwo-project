@@ -188,81 +188,82 @@ public class ModulesOfSchoolclassPresenter {
                 }
             }
         });
-
     }
-
-    public ClassCourseItem getRootNode() {
-        DomTree<DomCourseOfClass> c = tree.getCourseTree();
-        if (c.getObject().getClassCourse() == null) {
-            ClassCourseItem item = new ClassCourseItem(null, c.getObject().getCourse().getName());
-            return item;
-        } else {
-//            /String aKey, CourseItem aParent, List<CourseItem> myChildren, String aName, Boolean hasData, String aType, Date aFrom, Date aTo
-            ClassCourseItem item = new ClassCourseItem("root",
-                    c.getObject().getCourse().getName(),
-                    false,
-                    c.getObject().getClassCourse().getCourseType().name(),
-                    c.getObject().getClassCourse().getNotBefore(),
-                    c.getObject().getClassCourse().getNotAfter(),
-                    c.getObject().getClassCourse().getAccessKey()
-            );
-            return item;
-        }
-
-    }
-
-    public ClassCourseItem getNode(String key) {
-        DomTree<DomCourseOfClass> c = tree.getNode(key);
-        if (c.getObject().getClassCourse() == null) {
-            ClassCourseItem item = new ClassCourseItem(null, c.getObject().getCourse().getName());
-            item.setHasStudentData(false);
-            if (c.getChildren() == null || c.getChildren().size() == 0) {
-                item.setIsLeaf(true);
-            }
-            return item;
-        } else {
-//            /String aKey, CourseItem aParent, List<CourseItem> myChildren, String aName, Boolean hasData, String aType, Date aFrom, Date aTo
-            ClassCourseItem item = new ClassCourseItem(key,
-                    c.getObject().getCourse().getName(),
-                    (c.getObject().getClassCourse().getViewState() != ViewState.invisible),
-                    c.getObject().getClassCourse().getCourseType().name(),
-                    c.getObject().getClassCourse().getNotBefore(),
-                    c.getObject().getClassCourse().getNotAfter(),
-                    c.getObject().getClassCourse().getAccessKey()
-            );
-            if (c.getChildren() == null || c.getChildren().size() == 0) {
-                item.setIsLeaf(true);
-            }
-            return item;
-        }
-    }
-
-    public List<ClassCourseItem> getNodeChildren(String key) {
-        if (tree == null) {
-            return new ArrayList<ClassCourseItem>();
-        }
-        DomTree<DomCourseOfClass> c = tree.getNode(key);
-
-        List<ClassCourseItem> itemList = new ArrayList<ClassCourseItem>(c.getChildren().size());
-        for (DomTree<DomCourseOfClass> coc : c.getChildren().values()) {
-            ClassCourseItem item = new ClassCourseItem(coc.getObject().getCourse().getId().getIdString(), coc.getObject().getCourse().getName());
-            if (coc.getObject().getClassCourse() != null) {
-                item.setHasStudentData((coc.getObject().getClassCourse().getViewState() != ViewState.invisible));
-            } else {
-                item.setHasStudentData(false);
-            }
-            if (!coc.getObject().getCourse().getWithChildren()) {
-                item.setIsLeaf(true);
-            }
-            itemList.add(item);
-        }
-
-        return itemList;
-    }
-
-    public String[] getTableHeaders() {
-        return tableHeaders;
-    }
+    
+    
+//
+//    public ClassCourseItem getRootNode() {
+//        DomTree<DomCourseOfClass> c = tree.getCourseTree();
+//        if (c.getObject().getClassCourse() == null) {
+//            ClassCourseItem item = new ClassCourseItem(null, c.getObject().getCourse().getName());
+//            return item;
+//        } else {
+////            /String aKey, CourseItem aParent, List<CourseItem> myChildren, String aName, Boolean hasData, String aType, Date aFrom, Date aTo
+//            ClassCourseItem item = new ClassCourseItem("root",
+//                    c.getObject().getCourse().getName(),
+//                    false,
+//                    c.getObject().getClassCourse().getCourseType().name(),
+//                    c.getObject().getClassCourse().getNotBefore(),
+//                    c.getObject().getClassCourse().getNotAfter(),
+//                    c.getObject().getClassCourse().getAccessKey()
+//            );
+//            return item;
+//        }
+//
+//    }
+//
+//    public ClassCourseItem getNode(String key) {
+//        DomTree<DomCourseOfClass> c = tree.getNode(key);
+//        if (c.getObject().getClassCourse() == null) {
+//            ClassCourseItem item = new ClassCourseItem(null, c.getObject().getCourse().getName());
+//            item.setHasStudentData(false);
+//            if (c.getChildren() == null || c.getChildren().size() == 0) {
+//                item.setIsLeaf(true);
+//            }
+//            return item;
+//        } else {
+////            /String aKey, CourseItem aParent, List<CourseItem> myChildren, String aName, Boolean hasData, String aType, Date aFrom, Date aTo
+//            ClassCourseItem item = new ClassCourseItem(key,
+//                    c.getObject().getCourse().getName(),
+//                    (c.getObject().getClassCourse().getViewState() != ViewState.invisible),
+//                    c.getObject().getClassCourse().getCourseType().name(),
+//                    c.getObject().getClassCourse().getNotBefore(),
+//                    c.getObject().getClassCourse().getNotAfter(),
+//                    c.getObject().getClassCourse().getAccessKey()
+//            );
+//            if (c.getChildren() == null || c.getChildren().size() == 0) {
+//                item.setIsLeaf(true);
+//            }
+//            return item;
+//        }
+//    }
+//
+//    public List<ClassCourseItem> getNodeChildren(String key) {
+//        if (tree == null) {
+//            return new ArrayList<ClassCourseItem>();
+//        }
+//        DomTree<DomCourseOfClass> c = tree.getNode(key);
+//
+//        List<ClassCourseItem> itemList = new ArrayList<ClassCourseItem>(c.getChildren().size());
+//        for (DomTree<DomCourseOfClass> coc : c.getChildren().values()) {
+//            ClassCourseItem item = new ClassCourseItem(coc.getObject().getCourse().getId().getIdString(), coc.getObject().getCourse().getName());
+//            if (coc.getObject().getClassCourse() != null) {
+//                item.setHasStudentData((coc.getObject().getClassCourse().getViewState() != ViewState.invisible));
+//            } else {
+//                item.setHasStudentData(false);
+//            }
+//            if (!coc.getObject().getCourse().getWithChildren()) {
+//                item.setIsLeaf(true);
+//            }
+//            itemList.add(item);
+//        }
+//
+//        return itemList;
+//    }
+//
+//    public String[] getTableHeaders() {
+//        return tableHeaders;
+//    }
 //
 //    @JsMethod
 //    void setSelectedItem(String id) {

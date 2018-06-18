@@ -128,7 +128,7 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     public SwitchViewEvent(SelectedView resultsstudent, DomResultTree tree, DomResultStudentScoContext value, JavaScriptObject context, Map<String, String> map) {
 		this(resultsstudent, tree, context);
 		resultStudentScoContext = value;
-		userState = map;	
+		userState = map;
 	}
 
 	@Override

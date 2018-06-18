@@ -3,7 +3,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.web.bindery.event.shared.EventBus;
 
-import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +19,6 @@ import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -86,7 +84,7 @@ public class ResultsPresenter {
                 LOG.log(Level.INFO, "ResultTree obtained.");// plots the result tree.
                 view.setResultTree(resultTree);
                 LOG.log(Level.INFO, "plotted ResultMatrix.");
-                return null;
+             return null;
             }
         },
                 FAILURE

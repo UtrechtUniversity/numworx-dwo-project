@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectedResultsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddStudentToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddTeacherToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CopyOrMoveStudentToSchoolclassPresenter;
@@ -21,6 +22,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
@@ -44,6 +46,7 @@ public interface ViewFactory {
     public AlertDialogWithConfirmCancelPresenter.Display getAlertDialogWithConfirmCancelView();
     public AlertDialogWithOKPresenter.Display getAlertDialogWithOKView();
     public MessageDialogWithOKPresenter.Display getMessageDialogWithOKView();
+//    public PromisedDialogWithOKPresenter.Display getPromisedDialogWithOKView();
 //    public MsgClickedDialogPresenter.Display getMsgClickedDialogView();
     public FileUploadStudentsPresenter.Display getFileUploadStudentsView();
     public ProgressDialogWithAbortPresenter.Display getProgressDialogView();
@@ -54,4 +57,5 @@ public interface ViewFactory {
     public EditTeacherPresenter.Display getEditTeacherView();
     public AddStudentPresenter.Display getAddPersonView();
     public ImportPersonsPresenter.Display getImportPersonsView();
+    public StudentScoResultPresenter.Display getStudentScoResultView();
 }

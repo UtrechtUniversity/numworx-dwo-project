@@ -10,13 +10,13 @@ import jsinterop.annotations.JsMethod;
  * 
  * @author plas0006
  */
-public class AlertDialogWithConfirmCancelPresenter implements AlertDialogWithConfirmCancelEventHandler{
+public class PromisedDialogWithOKPresenter implements PromisedDialogWithConfirmEventHandler {
 
-    private static final Logger LOG = Logger.getLogger(AlertDialogWithConfirmCancelPresenter.class.getName());
+    private static final Logger LOG = Logger.getLogger(PromisedDialogWithOKPresenter.class.getName());
     
     private EventBus eventBus;
     private Display view;
-    private AlertDialogWithConfirmCancelDeferred promise;
+    private PromisedDialogWithConfirmDeferred promise;
 
     public interface Display {
 
@@ -26,15 +26,15 @@ public class AlertDialogWithConfirmCancelPresenter implements AlertDialogWithCon
         void hideDialog();
     }
 
-    public AlertDialogWithConfirmCancelPresenter(EventBus anEventBus) {
+    public PromisedDialogWithOKPresenter(EventBus anEventBus) {
         eventBus = anEventBus;
-        eventBus.addHandler(AlertDialogWithConfirmCancelEvent.TYPE, this);
+        eventBus.addHandler(PromisedMessageDialogWithConfirmEvent.TYPE, this);
     }
 
     @Override
-    public void onDialogEvent(AlertDialogWithConfirmCancelEvent aDialogEvent) {
+    public void onDialogEvent(PromisedMessageDialogWithConfirmEvent aDialogEvent) {
         LOG.log(Level.INFO,"AlertDialogWithConfirmCancelEvent does: "+aDialogEvent.getEventValue()+ " with "+aDialogEvent.getPromise().getMsg());
-        if (aDialogEvent.getEventValue()==AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog){
+        if (aDialogEvent.getEventValue()==PromisedMessageDialogWithConfirmEvent.EventType.ConfirmDialog){
             promise = aDialogEvent.getPromise();
             view.showDialog(promise.getMsg());
         }

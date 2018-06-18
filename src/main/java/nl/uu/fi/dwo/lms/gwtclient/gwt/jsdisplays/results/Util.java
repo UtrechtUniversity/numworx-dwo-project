@@ -1,11 +1,14 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results;
 
+import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
 import fi.dwo.gwt.lib.rest.util.DomStudentCodec;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
@@ -37,8 +40,25 @@ class Util {
   			String totalTime = studentSco.getTotalTime();
   			if (totalTime == null) totalTime = "00:00:00";
   			json.put("totalTime", new JSONString(totalTime));
+         } else if (node instanceof DomResultCourseInClass){
+             DomResultCourseInClass<?> resultCourse = (DomResultCourseInClass<?>) node;
+             String viewState = resultCourse.getViewState().name();
+             json.put("viewState", new JSONString(viewState));
+             Long sequenceNr = resultCourse.getCourse().getSequenceNr();
+             if (sequenceNr != null )
+               json.put("sequence", new JSONNumber(sequenceNr));
+             else 
+               json.put("sequence", new JSONNumber(Integer.MAX_VALUE));
+         } else if (node instanceof DomResultScoContext) {
+             DomResultScoContext resultSco = (DomResultScoContext) node;
+             Long sequencenr = resultSco.getScoContext().getSequencenr();
+             if (sequencenr != null) {
+               json.put("sequence", new JSONNumber(sequencenr));
+             } else {
+               json.put("sequence", new JSONNumber(Integer.MAX_VALUE));
+             }
          }
-  //        json.put("node-id", new JSONNumber(node.getNodeId()));
+///        json.put("node-id", new JSONNumber(node.getNodeId()));
           //Add children.
           if (node.getChildren() != null && !node.getChildren().isEmpty()) {
               //there are children

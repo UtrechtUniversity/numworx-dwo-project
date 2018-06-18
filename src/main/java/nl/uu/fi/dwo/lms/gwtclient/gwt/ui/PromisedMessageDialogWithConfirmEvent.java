@@ -7,14 +7,14 @@ import com.google.web.bindery.event.shared.Event;
  *
  * @author Gert van der Plas
  */
-public class AlertDialogWithConfirmCancelEvent extends Event<AlertDialogWithConfirmCancelEventHandler> {
+public class PromisedMessageDialogWithConfirmEvent extends Event<PromisedDialogWithConfirmEventHandler> {
 
 
-    public static Type<AlertDialogWithConfirmCancelEventHandler> TYPE = new Type<AlertDialogWithConfirmCancelEventHandler>();
+    public static Type<PromisedDialogWithConfirmEventHandler> TYPE = new Type<PromisedDialogWithConfirmEventHandler>();
     public static EventType eventValue;
-    AlertDialogWithConfirmCancelDeferred promise;
+    PromisedDialogWithConfirmDeferred promise;
 
-    public AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType type, AlertDialogWithConfirmCancelDeferred aPromise) {
+    public PromisedMessageDialogWithConfirmEvent(PromisedMessageDialogWithConfirmEvent.EventType type, PromisedDialogWithConfirmDeferred aPromise) {
         eventValue = type;
         promise = aPromise;
         
@@ -22,7 +22,7 @@ public class AlertDialogWithConfirmCancelEvent extends Event<AlertDialogWithConf
     }
 
     @Override
-    public Type<AlertDialogWithConfirmCancelEventHandler> getAssociatedType() {
+    public Type<PromisedDialogWithConfirmEventHandler> getAssociatedType() {
         return TYPE;
     }
     
@@ -31,7 +31,7 @@ public class AlertDialogWithConfirmCancelEvent extends Event<AlertDialogWithConf
     }
     
     @Override
-    protected void dispatch(AlertDialogWithConfirmCancelEventHandler handler) {
+    protected void dispatch(PromisedDialogWithConfirmEventHandler handler) {
         handler.onDialogEvent(this);
     }
 
@@ -43,7 +43,7 @@ public class AlertDialogWithConfirmCancelEvent extends Event<AlertDialogWithConf
         return eventValue;
     }
     
-    public AlertDialogWithConfirmCancelDeferred getPromise(){
+    public PromisedDialogWithConfirmDeferred getPromise(){
         return promise;
     }
 }

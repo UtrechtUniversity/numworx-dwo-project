@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import org.osgi.util.promise.Promise;
@@ -53,5 +54,9 @@ public class AccountService {
     
     public Promise<String> getBearerToken() {
       return accountManager.getBearerToken();
+    }
+    
+    public Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins(){
+        return schoolLoginManager.getSchoolLogins();
     }
  }
