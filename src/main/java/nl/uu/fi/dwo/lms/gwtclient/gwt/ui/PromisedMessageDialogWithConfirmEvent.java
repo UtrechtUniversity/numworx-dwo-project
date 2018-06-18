@@ -12,9 +12,9 @@ public class PromisedMessageDialogWithConfirmEvent extends Event<PromisedDialogW
 
     public static Type<PromisedDialogWithConfirmEventHandler> TYPE = new Type<PromisedDialogWithConfirmEventHandler>();
     public static EventType eventValue;
-    MessageDialogWithConfirmPromise promise;
+    PromisedDialogWithConfirmDeferred promise;
 
-    public PromisedMessageDialogWithConfirmEvent(PromisedMessageDialogWithConfirmEvent.EventType type, MessageDialogWithConfirmPromise aPromise) {
+    public PromisedMessageDialogWithConfirmEvent(PromisedMessageDialogWithConfirmEvent.EventType type, PromisedDialogWithConfirmDeferred aPromise) {
         eventValue = type;
         promise = aPromise;
         
@@ -43,7 +43,7 @@ public class PromisedMessageDialogWithConfirmEvent extends Event<PromisedDialogW
         return eventValue;
     }
     
-    public MessageDialogWithConfirmPromise getPromise(){
+    public PromisedDialogWithConfirmDeferred getPromise(){
         return promise;
     }
 }

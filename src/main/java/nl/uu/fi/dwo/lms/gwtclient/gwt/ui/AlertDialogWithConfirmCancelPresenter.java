@@ -16,7 +16,7 @@ public class AlertDialogWithConfirmCancelPresenter implements AlertDialogWithCon
     
     private EventBus eventBus;
     private Display view;
-    private AlertDialogWithConfirmCancelPromise promise;
+    private AlertDialogWithConfirmCancelDeferred promise;
 
     public interface Display {
 

@@ -8,11 +8,11 @@ import org.osgi.util.promise.Deferred;
  * 
  * @author G.A.J. van der Plas
  */
-public class MessageDialogWithConfirmPromise extends Deferred<Boolean> {
+public class PromisedDialogWithConfirmDeferred extends Deferred<Boolean> {
     private Boolean value;
     private String msg;
 
-    public MessageDialogWithConfirmPromise(String aMsg) {
+    public PromisedDialogWithConfirmDeferred(String aMsg) {
         msg = aMsg;        
     }
 

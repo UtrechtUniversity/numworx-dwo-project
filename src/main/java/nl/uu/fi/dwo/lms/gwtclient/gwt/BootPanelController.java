@@ -21,7 +21,7 @@ import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.FAIL;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.LOGOUT;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.SUCCESS_RESULTS;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPromise;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -186,7 +186,7 @@ public class BootPanelController {
                         // break;
                         case FAIL:
                             LOG.log(Level.INFO, "Login failed, showing dialog.");
-                            AlertDialogWithConfirmCancelPromise p = new AlertDialogWithConfirmCancelPromise(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_AuthenticationError));
+                            AlertDialogWithConfirmCancelDeferred p = new AlertDialogWithConfirmCancelDeferred(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_AuthenticationError));
                             viewFactory.getAlertDialogWithConfirmCancelView().showDialog(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_AuthenticationError));
                             p.getPromise().then(new Success<Boolean, Void>() {
                                 @Override

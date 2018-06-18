@@ -8,11 +8,11 @@ import org.osgi.util.promise.Deferred;
  * 
  * @author G.A.J. van der Plas
  */
-public class AlertDialogWithConfirmCancelPromise extends Deferred<Boolean> {
+public class AlertDialogWithConfirmCancelDeferred extends Deferred<Boolean> {
     private Boolean value;
     private String msg;
 
-    public AlertDialogWithConfirmCancelPromise(String aMsg) {
+    public AlertDialogWithConfirmCancelDeferred(String aMsg) {
         msg = aMsg;        
     }
 

@@ -16,7 +16,7 @@ public class PromisedDialogWithOKPresenter implements PromisedDialogWithConfirmE
     
     private EventBus eventBus;
     private Display view;
-    private MessageDialogWithConfirmPromise promise;
+    private PromisedDialogWithConfirmDeferred promise;
 
     public interface Display {
 

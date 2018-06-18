@@ -12,9 +12,9 @@ public class AlertDialogWithConfirmCancelEvent extends Event<AlertDialogWithConf
 
     public static Type<AlertDialogWithConfirmCancelEventHandler> TYPE = new Type<AlertDialogWithConfirmCancelEventHandler>();
     public static EventType eventValue;
-    AlertDialogWithConfirmCancelPromise promise;
+    AlertDialogWithConfirmCancelDeferred promise;
 
-    public AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType type, AlertDialogWithConfirmCancelPromise aPromise) {
+    public AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType type, AlertDialogWithConfirmCancelDeferred aPromise) {
         eventValue = type;
         promise = aPromise;
         
@@ -43,7 +43,7 @@ public class AlertDialogWithConfirmCancelEvent extends Event<AlertDialogWithConf
         return eventValue;
     }
     
-    public AlertDialogWithConfirmCancelPromise getPromise(){
+    public AlertDialogWithConfirmCancelDeferred getPromise(){
         return promise;
     }
 }

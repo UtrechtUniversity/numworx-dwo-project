@@ -14,7 +14,7 @@ import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPromise;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
@@ -199,7 +199,7 @@ public class AccountPresenter {
             //Are you sure?
             public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
                 String msg = StringFormatter.format(DwoLocalesForGWT.instance.GUI_Dialog_User_ConfirmSchoolLoginDelete(),sracData.get(hasRoleId).getSchool().getSchoolName(),sracData.get(hasRoleId).getRole().getRoleName());
-                AlertDialogWithConfirmCancelPromise dialogPromise = new AlertDialogWithConfirmCancelPromise(msg);
+                AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(msg);
                 AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
                 eventBus.fireEvent(event);
                 return dialogPromise.getPromise();
@@ -306,7 +306,7 @@ public class AccountPresenter {
         Promise<Boolean> p = Promises.resolved(true); //empty promise
         p.then((resolved) -> {
             //do dialog check
-            AlertDialogWithConfirmCancelPromise dialogPromise = new AlertDialogWithConfirmCancelPromise(DwoLocalesForGWT.instance.GUI_Dialog_User_ConfirmPasswordSwitch());
+            AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(DwoLocalesForGWT.instance.GUI_Dialog_User_ConfirmPasswordSwitch());
             AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
             eventBus.fireEvent(event);
             return dialogPromise.getPromise();
