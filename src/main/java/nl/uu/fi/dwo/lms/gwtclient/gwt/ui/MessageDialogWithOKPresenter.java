@@ -61,6 +61,11 @@ public class MessageDialogWithOKPresenter  implements MessageDialogWithOKEventHa
     public Display getView() {
         return view;
     }
+
+    @JsMethod
+    public void confirm() {
+        hide();
+    }
     
     @JsMethod
     public void hide() {

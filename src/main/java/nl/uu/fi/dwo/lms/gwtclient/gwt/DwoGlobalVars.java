@@ -15,6 +15,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
@@ -248,8 +249,16 @@ public class DwoGlobalVars {
                 clearCurrentUser();
                 state = DwoGlobalVarsState.NotLoggedIn;
                 LOG.log(Level.INFO, "Login failed for user.");
-                statePromise.fail(fail.getFailure());
-                
+                Throwable failure = fail.getFailure();
+                if (failure instanceof Dwo2Exception) {
+                        LOG.log(Level.SEVERE, failure.getMessage());
+                        statePromise.fail(failure);
+//                        eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
+                    } else {
+                        LOG.log(Level.SEVERE, failure.getMessage());
+//                        eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
+                        //throw directly
+                    }                //statePromise.fail(fail.getFailure());
             }
         }
         );

@@ -58,6 +58,11 @@ public class AlertDialogWithOKPresenter  implements AlertDialogWithOKEventHandle
     }
     
     @JsMethod
+    public void confirm() {
+        hide();
+    }
+    
+    @JsMethod
     public void hide() {
         view.hideDialog();
     }

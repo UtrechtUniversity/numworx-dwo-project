@@ -13,6 +13,7 @@ import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresenter;
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
+import javax.inject.Singleton;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;

@@ -177,7 +177,7 @@ public class LoginPresenter {
                         //note the order of the events in case of an exception
                         //that might break the running thread.
                         eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "Wrong login state.")));
-                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
+                       // eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
                     } else {
                         LOG.log(Level.SEVERE, fail.getMessage());
                         dwoGlobalVars.clearCurrentUser();
