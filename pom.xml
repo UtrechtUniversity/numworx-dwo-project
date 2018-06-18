@@ -217,10 +217,10 @@
 		</dependency>
 	</dependencies>
 	<parent>
-		<groupId>fi.parentgwt</groupId>
-		<artifactId>ParentGWT</artifactId>
-		<version>0.0.6</version>
-		<relativePath>../ParentGWT</relativePath>
+		<groupId>nl.uu.fi.dwo</groupId>
+		<artifactId>DWO-GWT</artifactId>
+		<version>1.0</version>
+		<relativePath>../DWO-GWT</relativePath>
 	</parent>
 	<properties>
 		<maven.test.skip>true</maven.test.skip>
@@ -232,6 +232,7 @@
 		<accountVersion>0.0.23</accountVersion>
 		<gwtVersion>2.8.2</gwtVersion>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
 	</properties>
 	<profiles>
 		<profile>
