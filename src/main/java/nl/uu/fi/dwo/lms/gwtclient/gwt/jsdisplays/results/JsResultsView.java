@@ -69,7 +69,9 @@ public class JsResultsView implements ResultsPresenter.Display {
 			json.put("totalTime", new JSONString(totalTime));
         }else if (node instanceof DomResultCourseInClass){
             String viewState = ((DomResultCourseInClass) node).getViewState().name();
-            json.put("sequence", new JSONNumber(((DomResultCourseInClass) node).getCourse().getSequenceNr()));
+            
+            Long sequence = ((DomResultCourseInClass) node).getCourse().getSequenceNr();
+            json.put("sequence", new JSONNumber(sequence == null ? Integer.MAX_VALUE : sequence.intValue()));
             json.put("viewState", new JSONString(viewState));
         }
 //        json.put("node-id", new JSONNumber(node.getNodeId()));
@@ -172,14 +174,18 @@ public class JsResultsView implements ResultsPresenter.Display {
 
     @Override
     public void setResultTree(DomResultTree data) {
-        LOG.log(Level.INFO, "tree data has " + data.getStudentTree().getChildren().values().size() + " student classes.");
-        LOG.log(Level.INFO, "tree data has " + data.getResultTree().getChildren().values().size() + "  result classes.");
-        LOG.log(Level.INFO, "Building result tree in json.");
-        JSONObject results = buildSubResultTree(data.getResultTree());
-        LOG.log(Level.INFO, "resultTree json string is:\n " + results.toString());
-        LOG.log(Level.INFO, "Building student tree in json.");
-        JSONObject students = buildSubStudentTree(data.getStudentTree());
-        LOG.log(Level.INFO, "studentTree json string is:\n " + students.toString());
-        JsResultsDisplay.setResultTree(results.getJavaScriptObject(), students.getJavaScriptObject());
+        try {
+          LOG.log(Level.INFO, "tree data has " + data.getStudentTree().getChildren().values().size() + " student classes.");
+          LOG.log(Level.INFO, "tree data has " + data.getResultTree().getChildren().values().size() + "  result classes.");
+          LOG.log(Level.INFO, "Building result tree in json.");
+          JSONObject results = buildSubResultTree(data.getResultTree());
+          LOG.log(Level.INFO, "resultTree json string is:\n " + results.toString());
+          LOG.log(Level.INFO, "Building student tree in json.");
+          JSONObject students = buildSubStudentTree(data.getStudentTree());
+          LOG.log(Level.INFO, "studentTree json string is:\n " + students.toString());
+          JsResultsDisplay.setResultTree(results.getJavaScriptObject(), students.getJavaScriptObject());
+        } catch (Exception e) {
+          LOG.log(Level.SEVERE, "set result tree", e);
+        }
     }
 }
