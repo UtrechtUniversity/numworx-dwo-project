@@ -7,7 +7,6 @@ import org.osgi.util.promise.Promise;
 import com.google.gwt.core.shared.GWT;
 
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentStudentModelRestCaller;
-import fi.dwo.gwt.lib.rest.util.PathId;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -15,6 +14,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 public class SecuredStudentStudentModelManager {
 

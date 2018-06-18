@@ -11,10 +11,10 @@ import org.fusesource.restygwt.client.RestService;
 
 import com.google.gwt.core.shared.GWT;
 
-import fi.dwo.gwt.lib.rest.util.PathId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 public class SecuredUserScoContext2RestCaller implements ScoContextRestCaller {
 

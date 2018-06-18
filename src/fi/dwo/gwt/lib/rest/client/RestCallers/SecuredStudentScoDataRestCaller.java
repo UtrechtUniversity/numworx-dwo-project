@@ -8,14 +8,13 @@ import javax.ws.rs.PathParam;
 import nl.uu.fi.dwo.rest.dom.entities.DomScormValues;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScormValues;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONValue;
-
-import fi.dwo.gwt.lib.rest.util.PathId;
 
 public class SecuredStudentScoDataRestCaller implements ScoDataRestCaller {
 

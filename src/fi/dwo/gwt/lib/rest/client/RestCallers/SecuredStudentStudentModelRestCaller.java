@@ -11,11 +11,11 @@ import org.fusesource.restygwt.client.RestService;
 
 import com.google.gwt.core.client.GWT;
 
-import fi.dwo.gwt.lib.rest.util.PathId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContextId;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 public interface SecuredStudentStudentModelRestCaller extends RestService{
 	

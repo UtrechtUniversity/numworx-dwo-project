@@ -8,7 +8,6 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.json.client.JSONValue;
 
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredUserCourseRestCaller;
-import fi.dwo.gwt.lib.rest.util.PathId;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
@@ -17,6 +16,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 public class SecuredUserCourseManager implements CourseManager {
 
