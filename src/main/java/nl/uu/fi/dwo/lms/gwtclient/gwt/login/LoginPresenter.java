@@ -84,6 +84,20 @@ public class LoginPresenter {
          * Sets the password in the ui box.
          */
         public void setPassword(String password);
+        /**
+         * Sets a response message in the ui box. For example when a user
+         * fails to login
+         */
+        public void showMessage(String message);
+        /**
+         * Sets a warning text in the ui box. For example when the client can not
+         * reach the remote server.
+         */
+        public void showWarning(String warning);
+        /**
+         * Hides the message or warning box.
+         */
+        public void hideMsgBox();
     }
 
     public LoginPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {

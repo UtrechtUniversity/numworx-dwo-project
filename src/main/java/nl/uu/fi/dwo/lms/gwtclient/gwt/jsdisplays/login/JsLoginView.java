@@ -22,4 +22,18 @@ public class JsLoginView implements LoginPresenter.Display{
         JsLoginDisplay.setPassword(password);
     }
 
+    @Override
+    public void showMessage(String message) {
+         JsLoginDisplay.showMessage(message);
+    }
+
+    @Override
+    public void showWarning(String warning) {
+         JsLoginDisplay.showWarning(warning);
+    }
+
+    @Override
+    public void hideMsgBox() {
+         JsLoginDisplay.hideMsgBox();
+    }
 }

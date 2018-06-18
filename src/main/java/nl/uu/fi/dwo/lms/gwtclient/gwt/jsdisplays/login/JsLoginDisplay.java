@@ -29,4 +29,10 @@ public class JsLoginDisplay{
     public static native void setPassword(String password);
     /** Returns the password field value. */
     public static native String getPassword();
+    /** Shows a message to the user. */
+    public static native String showMessage(String msg);
+    /** Shows a warning to the user. */
+    public static native String showWarning(String warning);
+    /** hides the message or warning */
+    public static native String hideMsgBox();
 }
