@@ -76,7 +76,7 @@ public class AccountPresenter {
 
     public void init() {
         view.init();
-        view.setHelp("helppage/helpindex.html#account");
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#account"));
         sracData = getAccountRoles();
         updateUserDataInView();
     }

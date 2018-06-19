@@ -57,6 +57,7 @@ public class DwoGlobalVars {
     private DomSchoolsRolesAndClassesV2 schoolLogins;
     private DomSchoolRoleAndClassV2 activeSchoolRoleAndClass;
     private Promise<DomDwoProfileFull> profile;
+    private static final String helpUrlPrefix = "helppage/helpindex.html";
 
     /**
      * DwoGlobalStates that define which functions can be called without
@@ -409,5 +410,9 @@ public class DwoGlobalVars {
     }
     public String cloneMsg(String msg){
         return msg;
+    }
+    
+    public String buildHelpUrl(String tag){
+        return helpUrlPrefix+tag;
     }
 }
