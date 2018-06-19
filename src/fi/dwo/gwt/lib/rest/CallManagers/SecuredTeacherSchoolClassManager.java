@@ -40,6 +40,7 @@ import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
+import nl.uu.fi.dwo.rest.entities.RestTeacher;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.osgi.util.promise.Promise;
@@ -380,6 +381,15 @@ public class SecuredTeacherSchoolClassManager {
     
     private void getTeachersClassesOfStudent(RestStudent restData, MethodCallback<List<DomSchoolClassId>> callBack) {
         service.getTeachersClassesOfStudent(restData, (callBack));
+    }            
+
+    public Promise<List<DomSchoolClassId>> getSharedTeacherClasses(RestTeacher rest) {
+        PromiseCallback<List<DomSchoolClassId>> defer = new PromiseCallback<List<DomSchoolClassId>>();
+        this.getSharedTeacherClasses(rest, defer);
+        return defer.getPromise();
+    }
+        private void getSharedTeacherClasses(RestTeacher restData, MethodCallback<List<DomSchoolClassId>> callBack) {
+        service.getSharedTeacherClasses(restData, (callBack));
     }            
 
 }
