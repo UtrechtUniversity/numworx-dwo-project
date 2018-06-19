@@ -659,7 +659,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				shiftButtonLeft.setStylePrimaryName("shiftBtn");
 				addScrollButtonHandler(shiftButtonLeft,-1);
 	//			shiftButtonLeft.setText("◀◀"); // lelijk icoon op ipad
-				shiftButtonLeft.setText("\u27EA"); // <<, dun, hoog
+//				shiftButtonLeft.setText("\u27EA"); // <<, dun, hoog; niet zichtbaar op android tablet
+				shiftButtonLeft.setText("<<");
 				//if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar) // niet, anders heeft hij geen maat
 					fp_opdrachten.add(shiftButtonLeft);
 				spaceStart = new Label();
@@ -688,7 +689,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				shiftButtonRight.setStylePrimaryName("shiftBtn");
 				addScrollButtonHandler(shiftButtonRight,1);
 	//			shiftButtonRight.setText("▶▶"); // lelijk icoon op ipad
-				shiftButtonRight.setText("\u27EB"); // >>, dun, hoog
+//				shiftButtonRight.setText("\u27EB"); // >>, dun, hoog; niet zichtbaar op android tablet
+				shiftButtonRight.setText(">>");
 				fp_opdrachten.add(shiftButtonRight);
 			}
 			
@@ -729,7 +731,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				shiftButtonLeft.setStylePrimaryName("shiftBtn");
 				addScrollButtonHandler(shiftButtonLeft,-1);
 	//			shiftButtonLeft.setText("◀◀"); // lelijk icoon op ipad
-				shiftButtonLeft.setText("\u27EA"); // <<, dun, hoog
+//				shiftButtonLeft.setText("\u27EA"); // <<, dun, hoog; niet zichtbaar op android tablet
+				shiftButtonLeft.setText("<<");
 				fp_opdrachten.add(shiftButtonLeft);
 				spaceStart = new Label();
 				spaceStart.setStylePrimaryName("spaceShiftLabel");
@@ -756,7 +759,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				shiftButtonRight.setStylePrimaryName("shiftBtn");
 				addScrollButtonHandler(shiftButtonRight,1);
 	//			shiftButtonRight.setText("▶▶"); // lelijk icoon op ipad
-				shiftButtonRight.setText("\u27EB"); // >>, dun, hoog
+//				shiftButtonRight.setText("\u27EB"); // >>, dun, hoog; niet zichtbaar op android tablet
+				shiftButtonRight.setText(">>");
 				fp_opdrachten.add(shiftButtonRight);
 			}
 
