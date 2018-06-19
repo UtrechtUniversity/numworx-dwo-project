@@ -12,6 +12,7 @@ import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
@@ -19,6 +20,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.entities.RestTeacher;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
@@ -86,7 +88,13 @@ public class EditTeacherPresenter {
             List<DomSchoolClass> classList = (List<DomSchoolClass>) resolved.getValue();
             taggedSchoolClassMap = new HashMap<String, TaggedDomSchoolClass>(classList.size());
             classList.forEach((v) -> taggedSchoolClassMap.put(v.getId().getIdString(), new TaggedDomSchoolClass(v)));
-            return Promises.resolved(null);
+            DomTeacher teacher = new DomTeacher(aUser);
+            RestTeacher rest = new RestTeacher();
+            rest.setDomTeacher(teacher);
+            DomContext ctx = new DomContext();
+            ctx.setDomHasRole(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
+            rest.setRestContext(ctx);
+            return manager.getSharedTeacherClasses(rest);
         }).then((resolved) -> {
             List<DomSchoolClassId> studentClassList = (List<DomSchoolClassId>) resolved.getValue();
             studentClassList.forEach((v) -> {
