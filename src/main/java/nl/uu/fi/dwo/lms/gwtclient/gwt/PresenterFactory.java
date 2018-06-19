@@ -6,7 +6,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import com.google.web.bindery.event.shared.EventBus;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresenter;
-import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
@@ -24,7 +23,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.ModulesOfSchoolclassPresente
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedDialogWithOKPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
@@ -60,7 +59,7 @@ public interface PresenterFactory {
     public AlertDialogWithOKPresenter getAlertDialogWithOKPresenter();
     public MessageDialogWithOKPresenter getMessageDialogWithOKPresenter();
 //    public PromisedDialogWithOKPresenter getPromisedDialogWithOKPresenter();
-    public ProgressDialogPresenter getProgressDialogPresenter();
+    public ProgressDialogWithAbortPresenter getProgressDialogWithAbortPresenter();
     public FileUploadStudentsPresenter getFileUploadStudentsPresenter();
     public void bindViewFactory(ViewFactory viewFactory);
 }

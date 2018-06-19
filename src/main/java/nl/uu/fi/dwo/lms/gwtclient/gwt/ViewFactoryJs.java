@@ -37,7 +37,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsCopyOrMoveStude
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsModulesOfSchoolclassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsAlertDialogWithOKView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsMessageDialogWithOKView;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsPromisedDialogWithOKView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
@@ -55,7 +54,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
@@ -97,7 +95,7 @@ public class ViewFactoryJs implements ViewFactory {
 //    private final PromisedDialogWithOKPresenter.Display promisedDialogWithOKView;
     private final AlertDialogWithConfirmCancelPresenter.Display alertDialogWithConfirmCancelView;
     private final FileUploadStudentsPresenter.Display fileUploadStudentsView;
-    private final ProgressDialogWithAbortPresenter.Display progressDialogView;
+    private final ProgressDialogWithAbortPresenter.Display progressDialogWithAbortView;
 
     @Inject
     ViewFactoryJs(PresenterFactory pf) {
@@ -126,7 +124,7 @@ public class ViewFactoryJs implements ViewFactory {
         alertDialogWithOKView = new JsAlertDialogWithOKView();
         messageDialogWithOKView = new JsMessageDialogWithOKView();
         alertDialogWithConfirmCancelView = new JsAlertDialogWithConfirmCancelView();
-        progressDialogView = new JsProgressDialogWithAbortView();
+        progressDialogWithAbortView = new JsProgressDialogWithAbortView();
         fileUploadStudentsView = new FileUploadStudentsView(pf.getFileUploadStudentsPresenter());
 //        promisedDialogWithOKView = new JsPromisedDialogWithOKView();
     }
@@ -239,8 +237,8 @@ public class ViewFactoryJs implements ViewFactory {
 //    }
 
     @Override
-    public ProgressDialogPresenter.Display getProgressDialogView() {
-        return progressDialogView;
+    public ProgressDialogWithAbortPresenter.Display getProgressDialogWithAbortView() {
+        return progressDialogWithAbortView;
     }
 
     @Override

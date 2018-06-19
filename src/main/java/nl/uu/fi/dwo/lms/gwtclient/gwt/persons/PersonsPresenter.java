@@ -159,6 +159,11 @@ public class PersonsPresenter {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDPERSON));
     }
 
+   @JsMethod
+    public boolean hasImportPersons(){
+        return false;
+    }
+    
     @JsMethod
     public void importPersons() {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.IMPORTPERSONS));

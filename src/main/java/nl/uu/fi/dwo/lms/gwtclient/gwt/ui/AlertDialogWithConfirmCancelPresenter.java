@@ -16,7 +16,7 @@ public class AlertDialogWithConfirmCancelPresenter implements AlertDialogWithCon
     
     private EventBus eventBus;
     private Display view;
-    private AlertDialogWithConfirmCancelDeferred promise;
+    private AlertDialogWithConfirmCancelDeferred deferred;
 
     public interface Display {
 
@@ -35,8 +35,8 @@ public class AlertDialogWithConfirmCancelPresenter implements AlertDialogWithCon
     public void onDialogEvent(AlertDialogWithConfirmCancelEvent aDialogEvent) {
         LOG.log(Level.INFO,"AlertDialogWithConfirmCancelEvent does: "+aDialogEvent.getEventValue()+ " with "+aDialogEvent.getPromise().getMsg());
         if (aDialogEvent.getEventValue()==AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog){
-            promise = aDialogEvent.getPromise();
-            view.showDialog(promise.getMsg());
+            deferred = aDialogEvent.getPromise();
+            view.showDialog(deferred.getMsg());
         }
     }
     
@@ -55,7 +55,7 @@ public class AlertDialogWithConfirmCancelPresenter implements AlertDialogWithCon
     public void confirm(){
         view.hideDialog();
 LOG.log(Level.INFO, "do it");
-        promise.resolve(Boolean.TRUE);
+        deferred.resolve(Boolean.TRUE);
     }
 
     @JsMethod
@@ -63,6 +63,6 @@ LOG.log(Level.INFO, "do it");
         view.hideDialog();
 //        promise.fail(null);
 LOG.log(Level.INFO, "cancel");
-        promise.resolve(Boolean.FALSE);       
+        deferred.resolve(Boolean.FALSE);       
     }    
 }

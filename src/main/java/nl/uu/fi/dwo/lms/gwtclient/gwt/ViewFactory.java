@@ -49,7 +49,7 @@ public interface ViewFactory {
 //    public PromisedDialogWithOKPresenter.Display getPromisedDialogWithOKView();
 //    public MsgClickedDialogPresenter.Display getMsgClickedDialogView();
     public FileUploadStudentsPresenter.Display getFileUploadStudentsView();
-    public ProgressDialogWithAbortPresenter.Display getProgressDialogView();
+    public ProgressDialogWithAbortPresenter.Display getProgressDialogWithAbortView();
     public ModulesPresenter.Display getModulesView();
 
     public PersonsPresenter.Display getPersonsView();

@@ -2,7 +2,8 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
-import fi.dwo.gwt.lib.rest.ui.DialogEvent;
+import fi.dwo.gwt.lib.rest.ui.ProgressDialogEvent;
+import fi.dwo.gwt.lib.rest.ui.ProgressDialogPromise;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,8 @@ import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortDeferred;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -19,7 +22,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 public class CopyOrMoveStudentToSchoolclassPresenter {
@@ -67,13 +69,13 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
 
     }
 
-        /**
+    /**
      * @param view the view to set
      */
     public void setView(CopyOrMoveStudentToSchoolclassPresenter.Display view) {
         this.view = view;
     }
-    
+
     public CopyOrMoveStudentToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
@@ -211,12 +213,6 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
         }
     }
 
-
-    @JsMethod
-    public void CopyStudentsToClassA(String idList[]) {
-        CopyStudent(idList, 0, schoolClassB,schoolClassA);
-    }
-
     /**
      * Tail recursion.
      *
@@ -242,12 +238,17 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
         promise.then(new Success<Boolean, Void>() {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                if(next<idList.length){
-                LOG.log(Level.INFO, "Copying student "+idList[next]+".");
-                LOG.log(Level.INFO, "Completed: "+100.0*next/idList.length+"%.");
-                CopyStudent(idList, next, from, to);
-                }else{
+                if (next < idList.length) {
+                    LOG.log(Level.INFO, "Copying student " + idList[next] + ".");
+                    LOG.log(Level.INFO, "Completed: " + 100.0 * next / idList.length + "%.");
+                    double r = (100.0 * next / idList.length);
+                    ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Update, (int) r, " copying ", null);
+                    eventBus.fireEvent(e);
+                    CopyStudent(idList, next, from, to);
+                } else {
                     //hide progressbar.
+                    ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Complete, (int) 100, " done ", null);
+                    eventBus.fireEvent(e);
                     refreshViewData();
                 }
                 return null;
@@ -271,19 +272,37 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
     }
 
     @JsMethod
+    public void CopyStudentsToClassA(String idList[]) {
+        ProgressDialogWithAbortDeferred deferred = new ProgressDialogWithAbortDeferred("promise text");
+        ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, "starting copy ", deferred);
+        eventBus.fireEvent(e);
+        CopyStudent(idList, 0, schoolClassB, schoolClassA);
+    }
+
+    @JsMethod
     public void CopyStudentsToClassB(String idList[]) {
+        ProgressDialogWithAbortDeferred deferred = new ProgressDialogWithAbortDeferred("promise text");
+        ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, "starting copy ", deferred);
+        eventBus.fireEvent(e);
         CopyStudent(idList, 0, schoolClassA, schoolClassB);
     }
 
     @JsMethod
     public void MoveStudentsToClassA(String idList[]) {
         //Add to Class A
+        ProgressDialogWithAbortDeferred deferred = new ProgressDialogWithAbortDeferred("promise text");
+        ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, "starting copy ", deferred);
+        eventBus.fireEvent(e);
         MoveStudent(idList, 0, schoolClassB, schoolClassA);
+
     }
 
     @JsMethod
     public void MoveStudentsToClassB(String idList[]) {
         //Add to Class B
+        ProgressDialogWithAbortDeferred deferred = new ProgressDialogWithAbortDeferred("promise text");
+        ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, "starting copy ", deferred);
+        eventBus.fireEvent(e);
         MoveStudent(idList, 0, schoolClassA, schoolClassB);
     }
 
@@ -304,12 +323,17 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
         promise.then(new Success<Boolean, Void>() {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                if(next<idList.length){
-                LOG.log(Level.INFO, "Copying student "+idList[next]+".");
-                LOG.log(Level.INFO, "Completed: "+100.0*next/idList.length+"%.");
-                MoveStudent(idList, next, from, to);
-                }else{
+                if (next < idList.length) {
+                    LOG.log(Level.INFO, "Copying student " + idList[next] + ".");
+                    LOG.log(Level.INFO, "Completed: " + 100.0 * next / idList.length + "%.");
+                    double r = (100.0 * next / idList.length);
+                    ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Update, (int) r, " copying ", null);
+                    eventBus.fireEvent(e);
+                    MoveStudent(idList, next, from, to);
+                } else {
                     //hide progressbar.
+                    ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Complete, (int) 100, " done ", null);
+                    eventBus.fireEvent(e);
                     refreshViewData();
                 }
                 return null;
