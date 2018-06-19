@@ -207,4 +207,18 @@ public class SelectedResultsPresenter {
       resultState = aResultState;
       view.updateResultTree(resultTree);
     }
+    
+    
+    @JsMethod
+    public boolean hasCompareClasses(){
+        return false;
+    }
+    
+    @JsMethod
+    public void compareSchoolClasses(JavaScriptObject resultState) {
+        LOG.log(Level.SEVERE, "Select StudentResults");
+        eventBus.fireEvent(
+                new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTSSCHOOLCLASSES, resultTree, resultState)
+        );
+    }
 }
