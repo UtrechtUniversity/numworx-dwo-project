@@ -79,7 +79,7 @@ class Util {
        * @param node
        * @return
        */
-      static JSONObject buildSubStudentTree(DomResultScore node) {
+      static JSONObject buildSubStudentTree(DomResultScore<?> node) {
           JSONObject json = new JSONObject();
           String classType = node.getClass().getSimpleName();
           json.put("classType", new JSONString(classType));
@@ -91,15 +91,16 @@ class Util {
           if (node.getChildren() != null && !node.getChildren().isEmpty()) {
               //there are schoolclasses
               JSONObject schoolClasses = new JSONObject();
-              for (Object o : node.getChildren().values()) {
+              for (DomResultScore o : node.getChildren().values()) {
                   //for each schoolclass
                   //child node
                   String id;
                   if (o instanceof DomResultSchoolClass) {
                       //for each schoolclass
                       JSONObject schoolClass = new JSONObject();
+                      classType = o.getClass().getSimpleName();
                       schoolClass.put("classType", new JSONString(classType));
-                      schoolClass.put("label", new JSONString(node.getLabel()));
+                      schoolClass.put("label", new JSONString(o.getLabel()));
                       schoolClass.put("sumScore", new JSONNumber(node.getScore()));
                       schoolClass.put("scoCount", new JSONNumber(node.getScoCount()));
                       schoolClass.put("studentScoCount", new JSONNumber(node.getStudentScoCount()));
