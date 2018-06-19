@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestCourseFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 public class SecureDwoAdminCourseManager extends AbstractCourseManager {
   private static final Logger LOG = Logger.getLogger(SecuredTeacherCourseManager.class.getName());
@@ -28,7 +29,7 @@ public class SecureDwoAdminCourseManager extends AbstractCourseManager {
     rest.setRestContext(getContext());
     rest.setDomCourse(edit);
     DomCourseFull result =
-        manager.put("rest/secure/dwoadmin/course/update", DomCourseFull.class, rest);
+        manager.put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/course/update", DomCourseFull.class, rest);
     LOG.log(Level.FINE, "Updated course for the dwoadmin with username {0}.",
         new Object[] {manager.getAuthenticator().getUsername()});
     return result;
@@ -39,7 +40,7 @@ public class SecureDwoAdminCourseManager extends AbstractCourseManager {
     rest.setRestContext(getContext());
     rest.setDomCourse(edit);
     DomCourseFull result =
-        manager.put("rest/secure/dwoadmin/course/add", DomCourseFull.class, rest);
+        manager.put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/course/add", DomCourseFull.class, rest);
     LOG.log(Level.FINE, "Updated course for the dwoadmin with username {0}.",
         new Object[] {manager.getAuthenticator().getUsername()});
     return result;
@@ -51,7 +52,7 @@ public class SecureDwoAdminCourseManager extends AbstractCourseManager {
     rest.setDomCourse(course);
     rest.setDomDwoProfile(profile);
     rest.setRestContext(getContext());
-    Boolean result = manager.put("rest/secure/dwoadmin/course/remove", Boolean.class, rest);
+    Boolean result = manager.put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/course/remove", Boolean.class, rest);
     LOG.log(Level.FINE, "Removed course for the dwoadmin with username {0}.",
         new Object[] {manager.getAuthenticator().getUsername()});
     return result;

@@ -1,12 +1,14 @@
 package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
 
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.util.PathId;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
@@ -23,24 +25,28 @@ public class SecureTeacherStudentModelManager {
 
   public static List<DomStudentModelContext> getList() throws Dwo2Exception {
     RestContext rest = new RestContext();
-    rest.setRestContext(RestAuthenticator.getInstance().getContext());
+    rest.setRestContext(getContext());
     List<DomStudentModelContext> src =
-        StoredRestManager.getInstance().getPutList("rest/secure/teacher/studentmodel/getList",
+        StoredRestManager.getInstance().getPutList("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/getList",
             RestListClassTypes.DomStudentModelContext, rest);
     LOG.log(Level.FINE, "Retrieved list of studentmodels of the teacher with username {0}.",
         new Object[] {RestAuthenticator.getInstance().getUsername()});
     return src;
   }
 
+  static DomContext getContext() {
+    return RestAuthenticator.getInstance().getContext();
+  }
+
   public static DomStudentModelContext addModel(DomStudentModelContext submit)
       throws Dwo2Exception {
     DomStudentModelContext src;
     RestStudentModelContext rest = new RestStudentModelContext();
-    rest.setRestContext(RestAuthenticator.getInstance().getContext());
+    rest.setRestContext(getContext());
     rest.setDomStudentModelContext(submit);
 
     DomStudentModelContext result = StoredRestManager.getInstance()
-        .put("rest/secure/teacher/studentmodel/add", DomStudentModelContext.class, rest);
+        .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/add", DomStudentModelContext.class, rest);
     LOG.log(Level.FINE, "Added studentmodel of teacher with username {0} to his school.",
         new Object[] {RestAuthenticator.getInstance().getUsername()});
     return result;

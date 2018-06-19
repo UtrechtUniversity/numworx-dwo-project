@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 public class PublicScoContextManager implements ScoContextManager {
 
@@ -55,7 +56,7 @@ public class PublicScoContextManager implements ScoContextManager {
   public DomScoContext get(DomScoContext domScoId, DomDwoProfile profile,
       DomSchoolClassId schoolClass) throws Dwo2Exception {
     RestScoContext rest = new RestScoContext();
-    rest.setRestContext(RestAuthenticator.getInstance().getContext());
+    rest.setRestContext(getContext());
     rest.setDomDwoProfile(profile);
     rest.setDomScoContext(domScoId);
     rest.setSchoolClassID(schoolClass);
@@ -70,7 +71,7 @@ public class PublicScoContextManager implements ScoContextManager {
 
   private String pfx() {
     if (RestAuthenticator.getInstance().isAuthenticated()) {
-      return "rest/secure/user";
+      return "rest/sec:" + PathId.getId(getContext()) + "/user";
     }
     return "rest/public";
   }
@@ -87,7 +88,7 @@ public class PublicScoContextManager implements ScoContextManager {
     RestCourse rest = new RestCourse();
     rest.setDomDwoProfile(profile);
     rest.setDomCourse(course);
-    rest.setRestContext(RestAuthenticator.getInstance().getContext());
+    rest.setRestContext(getContext());
     rest.setSchoolClassID(schoolClass);
     List<DomScoContext> result = StoredRestManager.getInstance()
         .getPutList(pfx() + "/scoContext/getScos", RestListClassTypes.DomScoContext, rest);

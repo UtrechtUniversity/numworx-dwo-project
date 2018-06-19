@@ -9,15 +9,17 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.entities.RestAppletConfig;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 public class SecureDwoAdminConfigManager {
   private static final Logger LOG = Logger.getLogger(SecureDwoAdminConfigManager.class.getName());
 
   public static List<DomAppletConfig> getConfigurations(Locale locale) throws Dwo2Exception {
     List<DomAppletConfig> src;
-    src = StoredRestManager.getInstance().getList("rest/secure/dwoadmin/config/getList/" + locale,
+    src = StoredRestManager.getInstance().getList("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/config/getList/" + locale,
         RestListClassTypes.DomAppletConfig);
     LOG.log(Level.FINE, "Retrieved list of appletconfigs for the dwoadmin with username {0}.",
         new Object[] {RestAuthenticator.getInstance().getUsername()});
@@ -28,18 +30,22 @@ public class SecureDwoAdminConfigManager {
     Boolean result = Boolean.FALSE;
     RestAppletConfig rest = new RestAppletConfig();
     rest.setDomAppletConfig(config);
-    rest.setRestContext(RestAuthenticator.getInstance().getContext());
-    result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/config/update",
+    rest.setRestContext(getContext());
+    result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/config/update",
         Boolean.class, rest);
     return result;
+  }
+
+  static DomContext getContext() {
+    return RestAuthenticator.getInstance().getContext();
   }
 
   public static Boolean submitConfig(DomAppletConfig profile) throws Dwo2Exception {
     Boolean result = Boolean.FALSE;
     RestAppletConfig rest = new RestAppletConfig();
     rest.setDomAppletConfig(profile);
-    rest.setRestContext(RestAuthenticator.getInstance().getContext());
-    result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/config/submit",
+    rest.setRestContext(getContext());
+    result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/config/submit",
         Boolean.class, rest);
     return result;
   }
@@ -48,8 +54,8 @@ public class SecureDwoAdminConfigManager {
     Boolean result = Boolean.FALSE;
     RestAppletConfig rest = new RestAppletConfig();
     rest.setDomAppletConfig(profile);
-    rest.setRestContext(RestAuthenticator.getInstance().getContext());
-    result = StoredRestManager.getInstance().put("rest/secure/dwoadmin/config/remove",
+    rest.setRestContext(getContext());
+    result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/config/remove",
         Boolean.class, rest);
     return result;
   }
