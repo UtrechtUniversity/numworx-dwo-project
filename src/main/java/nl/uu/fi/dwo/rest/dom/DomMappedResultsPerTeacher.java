@@ -57,7 +57,7 @@ public class DomMappedResultsPerTeacher {
         }else{
             students = new HashMap<PersistenceId, DomStudent>();
         }
-        if (results.getStudentsOfClasses() != null && !results.getStudentsOfClasses().equals(Collections.EMPTY_MAP)) {
+        if (results.getStudentsOfClasses() != null && !results.getStudentsOfClasses().isEmpty()) {
             studentsOfClasses = new HashMap<PersistenceId, DomStudentOfClass>(results.getStudentsOfClasses().size());
             for (DomMapEntry<PersistenceId, DomStudentOfClass> soc : results.getStudentsOfClasses()) {
                 studentsOfClasses.put(soc.getKey(), soc.getValue());
