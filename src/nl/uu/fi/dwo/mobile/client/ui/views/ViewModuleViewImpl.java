@@ -95,6 +95,8 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
+import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchEndHandler;
 import com.googlecode.mgwt.dom.client.recognizer.swipe.SwipeEndEvent;
 import com.googlecode.mgwt.dom.client.recognizer.swipe.SwipeEndHandler;
 import com.googlecode.mgwt.ui.client.MGWT;
@@ -489,14 +491,21 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 			// add totaalscore and keer nagekeken labels
 			sb.addLabel(scoreNav.getKeerNagekekenLabel());
-			// laatste label wordt bij te weinig ruimte heel smal gemaakt, pas als hij verdwijnt, is offsetwidth weer de gewenste breedte 
+			// Laatste label wordt bij te weinig ruimte heel smal gemaakt, pas als hij verdwijnt, is offsetwidth weer de gewenste breedte.
 			widthKeerNagekeken = Math.max(50, scoreNav.getKeerNagekekenLabel().getOffsetWidth());
+			// Kan ook buitensporig groot worden
+			if (widthKeerNagekeken > 500)
+				widthKeerNagekeken = 100;
 		}
+		
 		if (on.isVerzegeld())
 		{
 			Label verzegeld = new Label(Text.constants.lockToetsLabel());
 			sb.addLabel(verzegeld);
 			widthVerzegeld = Math.max(50, verzegeld.getOffsetWidth());
+			// Kan ook buitensporig groot worden
+			if (widthVerzegeld > 500)
+				widthVerzegeld = 100;
 		}
 
 		if (on.isReview())
@@ -508,6 +517,17 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		int availableWidth = sb.asWidget().getOffsetWidth();
 		width = widthScore + widthOnp + widthOpnieuw + widthAllesOpnieuw + widthKijkNaKnop + widthZelftoetsGeschiedenis + widthVolgende + widthVorige 
 			 + widthKeerNagekeken + widthVerzegeld;
+		logger.info("ViewModuleViewImpl.setupView(): availableWidth = " + availableWidth + ", width = " + width 
+			+ ", widthScore = " + widthScore 
+			+ ", widthOnp = " + widthOnp 
+			+ ", widthOpnieuw = " + widthOpnieuw 
+			+ ", widthAllesOpnieuw = " + widthAllesOpnieuw 
+			+ ", widthKijkNaKnop = " + widthKijkNaKnop 
+			+ ", widthZelftoetsGeschiedenis = " + widthZelftoetsGeschiedenis 
+			+ ", widthVolgende = " + widthVolgende 
+			+ ", widthVorige = " + widthVorige 
+			+ ", widthKeerNagekeken = " + widthKeerNagekeken
+			+ ", widthVerzegeld = " + widthVerzegeld);
 		if (width > availableWidth)
 		{
 			int newMaxOnBar = 0;
@@ -518,7 +538,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			int availableForOpdrachtenRij = availableWidth - width + widthOnp; 
 			if (widthOpdrachtBol + widthOpdrachtSpace > 0)
 			{
-				newMaxOnBar = (availableForOpdrachtenRij - 2 * widthShiftButton - widthSpaceStartButton) / (widthOpdrachtBol + widthOpdrachtSpace);
+				newMaxOnBar = Math.max(
+					(availableForOpdrachtenRij - 2 * widthShiftButton - widthSpaceStartButton) / (widthOpdrachtBol + widthOpdrachtSpace),
+					2);
+				logger.info("ViewModuleViewImpl.setupView(): newMaxOnBar = " + newMaxOnBar);
 				on.setMaxOnBar(newMaxOnBar + 2);
 			}
 		}
@@ -1862,7 +1885,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 //		contentPanel.setHeight("100%");
 // FIXME Hier moeten we een gesture recognizer maken:
 
-		if(TouchEvent.isSupported()) {
+		if(TouchEvent.isSupported())
+		{
 			TouchDelegate touchDelegate = new TouchDelegate(contentScrollPanel);
 			//touchDelegate.addPinchHandler(new PinchContent());
 			
@@ -1878,6 +1902,16 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 					}
 					
 				}
+			});
+			
+			touchDelegate.addTouchEndHandler(new TouchEndHandler() {
+
+				@Override
+				public void onTouchEnd(TouchEndEvent event)
+				{
+					logger.info("ViewModuleViewImpl.touchDelegate.onTouchEnd()");
+				}
+				
 			});
 		}
 		//ipv addContentPanelTouchListener(contentPanel);
