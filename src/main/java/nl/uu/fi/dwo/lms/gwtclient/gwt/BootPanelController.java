@@ -284,7 +284,11 @@ public class BootPanelController {
                             presenterFactory.getSelectedResultsPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultState());
                             viewFactory.getMainView().showSelectedResultsView();
                             break;
-                        case RESULTSSTUDENT:
+                        case SELECTEDRESULTSRETURN:
+                          presenterFactory.getSelectedResultsPresenter().reinit(switchViewEvent.getResultTree(), switchViewEvent.getResultState());
+                          viewFactory.getMainView().showSelectedResultsView();
+                          break;
+                       case RESULTSSTUDENT:
                             //eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                             viewFactory.getMainView().showStudentScoResultView();
                             presenterFactory.getStudentScoResultPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultStudentScoContext(), switchViewEvent.getResultState(), switchViewEvent.getUserState());

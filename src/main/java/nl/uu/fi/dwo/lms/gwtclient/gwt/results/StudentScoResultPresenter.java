@@ -111,7 +111,7 @@ public class StudentScoResultPresenter {
     LOG.severe("calling close ");
     view.clear();
     view.hide();
-    SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTS, resultTree, resultState);   
+    SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTSRETURN, resultTree, resultState);   
     eventBus.fireEvent(event);
   }
   

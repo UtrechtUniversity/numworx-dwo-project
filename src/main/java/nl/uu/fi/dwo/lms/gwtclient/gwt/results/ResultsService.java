@@ -138,7 +138,7 @@ class ResultsService implements SwitchViewEventHandler {
     	cache =  dwoGlobalVars.getProfile().then(
     			p-> scoData.getJSONLaunchDataBytes(sco, p.getValue(), schoolClass, getContext()));
     	
-    	launchDataCache.put(sco.getId(), cache);
+    	//launchDataCache.put(sco.getId(), cache);
     	return cache;
     }
 

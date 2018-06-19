@@ -201,4 +201,10 @@ public class SelectedResultsPresenter {
     	
     	
     }
+
+    public void reinit(DomResultTree aResultTree, JavaScriptObject aResultState) {
+      resultTree = aResultTree;
+      resultState = aResultState;
+      view.updateResultTree(resultTree);
+    }
 }
