@@ -14,6 +14,7 @@ import jsinterop.annotations.JsType;
 public class JsStudentScoResultDisplay{
     /** Clears the results in the ui. */
     public static native void clear();
+    public static native void setHelp(String url);
     /** Inits the view */
     public static native void init(JavaScriptObject resultState);
     /** Fills the result table with the results.*/

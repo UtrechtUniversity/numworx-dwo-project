@@ -26,6 +26,12 @@ public class JsAddTeacherToSchoolclassView implements AddTeacherToSchoolclassPre
     public void clear() {
         JsAddTeacherToSchoolclassDisplay.clear();
     }
+
+    @Override
+    public void setHelp(String url) {
+        JsAddTeacherToSchoolclassDisplay.setHelp(url);
+    }
+    
 //
 //    @Override
 //    public void setSchoolClass(DomSchoolClassFull schoolClass) {

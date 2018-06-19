@@ -25,6 +25,11 @@ public class JsStudentScoResultView implements StudentScoResultPresenter.Display
     }
 
     @Override
+    public void setHelp(String url) {
+        JsStudentScoResultDisplay.setHelp(url);
+    }    
+
+    @Override
     public void setResultTree(DomResultTree data) {
       LOG.log(Level.INFO, "tree data has " + data.getStudentTree().getChildren().values().size() + " student classes.");
       LOG.log(Level.INFO, "tree data has " + data.getResultTree().getChildren().values().size() + "  result classes.");
@@ -63,4 +68,5 @@ public class JsStudentScoResultView implements StudentScoResultPresenter.Display
     public void hide() {
       JsStudentScoResultDisplay.hide();
     }
+
 }

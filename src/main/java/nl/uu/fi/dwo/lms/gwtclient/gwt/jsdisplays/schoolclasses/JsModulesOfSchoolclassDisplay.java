@@ -29,6 +29,7 @@ import jsinterop.annotations.JsType;
  */
 public class JsModulesOfSchoolclassDisplay{
     public static native void clear();
+    public static native void setHelp(String url);
     public static native void init();
     public static native void setEmptyTableMessageModules();
     public static native void setLoadingTableMessageModules();

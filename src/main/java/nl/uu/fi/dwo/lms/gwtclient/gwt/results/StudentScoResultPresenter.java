@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.old.ScoResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
@@ -60,9 +61,8 @@ public class StudentScoResultPresenter {
   private Map<String,String> userState;
   private DomResultSchoolClass parent;
 
-  public interface Display {
+  public interface Display  extends BasicDisplay{
 
-    void clear();
     void openUrl(String url);
     void init(JavaScriptObject aResultState);
 

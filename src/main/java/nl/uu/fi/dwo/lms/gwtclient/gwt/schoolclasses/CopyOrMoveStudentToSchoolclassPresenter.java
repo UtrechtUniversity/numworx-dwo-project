@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -36,7 +37,7 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
     private DomSchoolClass schoolClassB;
     //private Map<String, DomStudent> students = new HashMap();
 
-    public interface Display {
+    public interface Display extends BasicDisplay {
 
         void clear();
 

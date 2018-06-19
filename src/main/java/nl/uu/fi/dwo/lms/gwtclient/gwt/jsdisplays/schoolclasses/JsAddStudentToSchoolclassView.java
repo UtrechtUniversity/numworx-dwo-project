@@ -55,5 +55,10 @@ public class JsAddStudentToSchoolclassView implements AddStudentToSchoolclassPre
         JSONValue sc = DomSchoolClassCodec.CODEC.encode(schoolClass);
         JsAddStudentToSchoolclassDisplay.setSchoolClass(sc);
     }
+
+    @Override
+    public void setHelp(String url) {
+        JsAddStudentToSchoolclassDisplay.setHelp(url);
+    }
     
 }

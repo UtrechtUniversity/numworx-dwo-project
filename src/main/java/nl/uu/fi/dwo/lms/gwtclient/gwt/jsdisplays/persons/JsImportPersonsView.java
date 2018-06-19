@@ -11,6 +11,12 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUser;
  */
 public class JsImportPersonsView implements ImportPersonsPresenter.Display{
 
+
+    @Override
+    public void setHelp(String url) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     @Override
     public void clear() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

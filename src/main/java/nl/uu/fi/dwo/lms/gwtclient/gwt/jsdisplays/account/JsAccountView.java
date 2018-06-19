@@ -41,4 +41,9 @@ public class JsAccountView implements AccountPresenter.Display{
         JsAccountDisplay.clearAddSchoolLogin();
     }
 
+    @Override
+    public void setHelp(String url) {
+        JsAccountDisplay.setHelp(url);
+    }
+
 }

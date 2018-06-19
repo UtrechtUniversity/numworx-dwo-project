@@ -38,6 +38,11 @@ public class JsResultsView implements ResultsPresenter.Display {
     }
 
     @Override
+    public void setHelp(String url) {
+        JsResultsDisplay.setHelp(url);
+    }
+    
+    @Override
     public void setEmptyTableMessage() {
         JsResultsDisplay.setEmptyTableMessage();
     }
@@ -188,4 +193,5 @@ public class JsResultsView implements ResultsPresenter.Display {
           LOG.log(Level.SEVERE, "set result tree", e);
         }
     }
+
 }

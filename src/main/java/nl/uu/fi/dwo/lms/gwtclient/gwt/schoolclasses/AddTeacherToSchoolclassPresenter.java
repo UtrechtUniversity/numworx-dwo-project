@@ -13,6 +13,7 @@ import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
@@ -37,7 +38,7 @@ public class AddTeacherToSchoolclassPresenter {
     private DomSchoolClass schoolClass;
     private Map<String, DomTeacher> teachers = new HashMap();
 
-    public interface Display {
+    public interface Display extends BasicDisplay {
 
         void clear();
 

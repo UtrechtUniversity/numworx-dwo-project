@@ -20,6 +20,11 @@ public class JsAddPersonView implements AddPersonPresenter.Display{
     }
 
     @Override
+    public void setHelp(String url) {
+        JsAddPersonDisplay.setHelp(url);
+    }
+
+    @Override
     public void init(String role) {
         JsAddPersonDisplay.init(role);
     }

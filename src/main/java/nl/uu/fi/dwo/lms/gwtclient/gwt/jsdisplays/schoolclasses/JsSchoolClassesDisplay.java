@@ -23,6 +23,7 @@ import jsinterop.annotations.JsType;
 public class JsSchoolClassesDisplay{
     /** Clears the list of school classes in the ui. */
     public static native void clear();
+    public static native void setHelp(String url);
     /** Initialize the ui to the default state with an empty list of school classes. */
     public static native void init();
     /** Fills the school classes view with the list of school classes. It requires a map

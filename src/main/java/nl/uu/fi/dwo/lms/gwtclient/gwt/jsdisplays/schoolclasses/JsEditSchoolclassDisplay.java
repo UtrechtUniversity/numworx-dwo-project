@@ -42,6 +42,7 @@ import jsinterop.annotations.JsType;
 public class JsEditSchoolclassDisplay{
     /** Clears all the edit schoolclass fields of their values. */
     public static native void clear();
+    public static native void setHelp(String url);    
     /** Clears all the edit schoolclass  field of its value. */
     public static native void init();
     /**  Sets the values for the schoolclass */

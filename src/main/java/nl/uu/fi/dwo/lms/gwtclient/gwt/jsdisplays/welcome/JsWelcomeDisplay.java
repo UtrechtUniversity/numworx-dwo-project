@@ -16,6 +16,8 @@ import jsinterop.annotations.JsType;
 public class JsWelcomeDisplay{
     /** Clears Welcome text. */
     public static native void clear();
+    /** Set the url for the welcome module */
+    public static native void setHelp(String url);
     /** Sets the welcome text. */
     public static native void setWelcomeText(String html);
     /** Sets the default welcome text depending on nl or en language, hard-coded in the html/javascript code. */

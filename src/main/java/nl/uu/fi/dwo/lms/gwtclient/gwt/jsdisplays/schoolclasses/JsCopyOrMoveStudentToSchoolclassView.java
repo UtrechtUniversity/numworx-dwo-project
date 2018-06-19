@@ -23,6 +23,11 @@ public class JsCopyOrMoveStudentToSchoolclassView implements CopyOrMoveStudentTo
     }
 
     @Override
+    public void setHelp(String url) {
+        JsAddStudentToSchoolclassDisplay.setHelp(url);
+    }
+    
+    @Override
     public void init() {
         JsAddStudentToSchoolclassDisplay.init();
     }

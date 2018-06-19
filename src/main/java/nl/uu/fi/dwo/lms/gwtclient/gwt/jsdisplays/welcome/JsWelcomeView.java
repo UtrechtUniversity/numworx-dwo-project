@@ -10,6 +10,11 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 public class JsWelcomeView implements WelcomePresenter.Display{
 
     @Override
+    public void setHelp(String url) {
+        JsWelcomeDisplay.setHelp(url);
+    }
+
+    @Override
     public void clear(){
         JsWelcomeDisplay.clear();
     }
@@ -22,5 +27,6 @@ public class JsWelcomeView implements WelcomePresenter.Display{
     public void setWelcomeText(String html){
         JsWelcomeDisplay.setWelcomeText(html);
     }
+
 
 }

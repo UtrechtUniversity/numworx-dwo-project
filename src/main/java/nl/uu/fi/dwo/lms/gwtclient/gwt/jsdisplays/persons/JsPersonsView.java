@@ -14,6 +14,11 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 public class JsPersonsView implements PersonsPresenter.Display{
 
     @Override
+    public void setHelp(String url) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
     public void clear() {
         JsPersonsDisplay.clear();
     }
@@ -41,5 +46,6 @@ public class JsPersonsView implements PersonsPresenter.Display{
         }
         JsPersonsDisplay.showPersons(object.getJavaScriptObject());
     }
+
 
 }

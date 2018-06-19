@@ -4,6 +4,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
@@ -48,10 +49,10 @@ public class WelcomePresenter {
         this.resourceBindings = resourceBindings;
     }
 
-    public interface Display {
+    public interface Display extends BasicDisplay {
 
         public void clear();
-
+        public void setHelp(String url);
         public void setDefaultText();
         public void setWelcomeText(String html);
     }

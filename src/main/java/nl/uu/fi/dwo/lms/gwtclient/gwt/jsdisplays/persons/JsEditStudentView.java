@@ -24,6 +24,11 @@ public class JsEditStudentView implements EditStudentPresenter.Display {
     }
 
     @Override
+    public void setHelp(String url) {
+        JsEditPersonDisplay.setHelp(url);
+    }
+    
+    @Override
     public void setSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses) {
         JSONObject json = new JSONObject();
         schoolClasses.forEach((k,v) -> {json.put(k, TaggedDomSchoolClassCodec.CODEC.encode(v).isObject());});        
@@ -49,5 +54,6 @@ public class JsEditStudentView implements EditStudentPresenter.Display {
     public void setSingleSchoolStudent(DomUserFull student) {
         JsEditPersonDisplay.setSingleSchoolStudent(DomUserFullCodec.CODEC.encode(student).isObject().getJavaScriptObject());
     }
+
 
 }

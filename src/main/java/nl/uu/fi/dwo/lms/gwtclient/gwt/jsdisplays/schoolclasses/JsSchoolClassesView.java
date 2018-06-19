@@ -18,6 +18,11 @@ public class JsSchoolClassesView implements SchoolclassesPresenter.Display{
     }
 
     @Override
+    public void setHelp(String url) {
+        JsSchoolClassesDisplay.setHelp(url);
+    }
+    
+    @Override
     public void init() {
         JsSchoolClassesDisplay.init();
     }

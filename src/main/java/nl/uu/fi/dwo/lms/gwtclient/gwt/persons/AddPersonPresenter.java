@@ -4,6 +4,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import java.util.Map;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 
 /**
  *
@@ -19,9 +20,7 @@ public class AddPersonPresenter {
 
     
 
-    public interface Display {
-
-        void clear();
+    public interface Display extends BasicDisplay {
 
         void init(String role); //Supports "TEACHER", "SCHOOLADMIN"
 

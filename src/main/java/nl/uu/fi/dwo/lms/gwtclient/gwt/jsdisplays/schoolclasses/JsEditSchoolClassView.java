@@ -30,6 +30,11 @@ public class JsEditSchoolClassView implements EditSchoolclassPresenter.Display{
     }
 
     @Override
+    public void setHelp(String url) {
+        JsEditSchoolclassDisplay.setHelp(url);
+    }
+    
+    @Override
     public void init() {
         JsEditSchoolclassDisplay.init();
     }

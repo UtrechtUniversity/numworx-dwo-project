@@ -26,6 +26,7 @@ public class JsEditPersonDisplay {
      * Clears all UI states
      */
     public static native void clear();
+    public static native void setHelp(String url);
     /** User data in case one may not change settings */
     public static native void setUser(String role, JavaScriptObject data);
 

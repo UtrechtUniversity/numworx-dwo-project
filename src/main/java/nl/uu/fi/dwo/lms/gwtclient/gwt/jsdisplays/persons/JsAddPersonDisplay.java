@@ -24,6 +24,8 @@ public class JsAddPersonDisplay {
      */
     public static native void clear();
 
+    public static native void setHelp(String url);
+    
     /**
      * Initializes the UI, either for the TEACHER view or the SCHOOLADMIN view. Teacher
      * view allows adding a student and selecting a single class. The schooladmin

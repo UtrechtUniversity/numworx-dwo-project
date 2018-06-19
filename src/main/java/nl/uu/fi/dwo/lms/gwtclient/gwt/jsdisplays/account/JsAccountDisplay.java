@@ -23,12 +23,16 @@ import jsinterop.annotations.JsType;
  */
 @JsType(isNative = true, name = "jsAccountDisplay", namespace = JsPackage.GLOBAL)
 public class JsAccountDisplay {
-
     /**
      * Clears all the account fields of their values.
      */
     public static native void clear();
-
+    /**
+     * Set's help url. Supports hashtag.
+     * 
+     * @param url 
+     */
+    public static native void setHelp(String url);
     /**
      * Clears the password field of its value.
      */

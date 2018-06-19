@@ -26,7 +26,7 @@ public class JsCopyOrMoveStudentToSchoolclassDisplay {
      * Clears the ui.
      */
     public static native void clear();
-
+    public static native void setHelp(String url);
     /**
      * Initializes the ui, puts all students in the list.
      */

@@ -14,6 +14,7 @@ import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -47,9 +48,7 @@ public class EditStudentPresenter {
     private Map<String, TaggedDomSchoolClass> taggedSchoolClassMap;
     private DomUserFull user;
 
-    public interface Display {
-
-        void clear();
+    public interface Display extends BasicDisplay {
 
         void setUser(DomUser student);
 

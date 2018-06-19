@@ -14,6 +14,7 @@ import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
@@ -47,9 +48,7 @@ public class ResultsPresenter {
     private DomResultCourseInClass course = null; //null means all courses.
     private DomResultSchoolClass schoolClass = null; //null means all classes.
 
-    public interface Display {
-
-        void clear();
+    public interface Display extends BasicDisplay{
 
         void setResultTree(DomResultTree data);
 

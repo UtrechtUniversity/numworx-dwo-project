@@ -17,6 +17,11 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 public class JsEditTeacherView implements EditTeacherPresenter.Display{
 
     @Override
+    public void setHelp(String url) {
+        JsEditPersonDisplay.setHelp(url);
+    }
+    
+    @Override
     public void clear() {
         JsEditPersonDisplay.clear();
     }

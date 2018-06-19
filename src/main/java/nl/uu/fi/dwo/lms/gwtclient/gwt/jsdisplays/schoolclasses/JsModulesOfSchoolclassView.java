@@ -25,6 +25,11 @@ public class JsModulesOfSchoolclassView implements ModulesOfSchoolclassPresenter
     }
 
     @Override
+    public void setHelp(String url) {
+        JsModulesOfSchoolclassDisplay.setHelp(url);
+    }
+    
+    @Override
     public void init() {
         JsModulesOfSchoolclassDisplay.init();
     }

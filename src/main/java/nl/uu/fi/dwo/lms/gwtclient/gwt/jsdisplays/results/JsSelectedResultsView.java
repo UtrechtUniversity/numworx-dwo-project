@@ -28,6 +28,11 @@ public class JsSelectedResultsView implements SelectedResultsPresenter.Display {
     }
 
     @Override
+    public void setHelp(String url) {
+        JsResultsDisplay.setHelp(url);
+    }
+    
+    @Override
         public void setEmptyTableMessage() {
         JsSelectedResultsDisplay.setEmptyTableMessage();
     }
@@ -57,4 +62,5 @@ public class JsSelectedResultsView implements SelectedResultsPresenter.Display {
     }
     
     @Inject JsSelectedResultsView() {}
+
 }
