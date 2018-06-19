@@ -2333,7 +2333,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	
 	private boolean readonly;
-	private Promise<DomStudentModelContext> studentModel;
+	protected Promise<DomStudentModelContext> studentModel;
 
 	/**
 	 * @return the readonly
