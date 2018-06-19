@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ public class AddStudentToSchoolclassPresenter {
     private Display view;
     private DomSchoolClass schoolClass;
     private Map<String, DomStudent> students = new HashMap();
+    private List<DomStudent> studentsInClass;
 
     public interface Display extends BasicDisplay {
 
@@ -68,12 +70,23 @@ public class AddStudentToSchoolclassPresenter {
         view.setLoadingTableMessage();
         Promise<List<DomStudent>> promise;
         promise = manager.getTeachersStudents();
-        // onSuccess update view
-        promise.then(new Success<List<DomStudent>, Void>() {
+        promise.then(new Success<List<DomStudent>, List<DomStudent>>() {
             @Override
-            public Promise<Void> call(Promise<List<DomStudent>> resolved) throws Exception {
+            public Promise<List<DomStudent>> call(Promise<List<DomStudent>> resolved) throws Exception {
                 students = new HashMap<>(resolved.getValue().size());
                 resolved.getValue().forEach((k -> students.put(k.getId().getIdString(), k)));
+                return manager.getStudentsInSchoolClass(schoolClass);
+            }
+        }).then(new Success<List<DomStudent>, Void>() {
+            @Override
+            public Promise<Void> call(Promise<List<DomStudent>> resolved) throws Exception {
+                List<DomStudent> cantAdd = resolved.getValue();
+
+                cantAdd.forEach((v) -> {
+                    if (students.containsKey(v.getId().getIdString())) {
+                        students.remove(v.getId().getIdString());
+                    }
+                });
                 view.showStudents(students);
                 return null;
             }
@@ -148,6 +161,7 @@ public class AddStudentToSchoolclassPresenter {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                 eventBus.fireEvent(new MessageDialogWithOKEvent("Success"));
+                updateViewData();
                 return null;
             }
         },

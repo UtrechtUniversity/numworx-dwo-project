@@ -72,11 +72,23 @@ public class AddTeacherToSchoolclassPresenter {
         Promise<List<DomTeacher>> promise;
         promise = manager.getTeachersInSchool();
         // onSuccess update view
-        promise.then(new Success<List<DomTeacher>, Void>() {
+         promise.then(new Success<List<DomTeacher>, List<DomTeacher>>() {
+            @Override
+            public Promise<List<DomTeacher>> call(Promise<List<DomTeacher>> resolved) throws Exception {
+                teachers = new HashMap<>(resolved.getValue().size());
+                resolved.getValue().forEach((k -> teachers.put(k.getId().getIdString(), k)));
+                return manager.getTeachersInSchoolClass(schoolClass);
+            }
+        }).then(new Success<List<DomTeacher>, Void>() {
             @Override
             public Promise<Void> call(Promise<List<DomTeacher>> resolved) throws Exception {
-                teachers = new HashMap<>();
-                resolved.getValue().forEach((k -> teachers.put(k.getId().getIdString(), k)));
+                List<DomTeacher> cantAdd = resolved.getValue();
+
+                cantAdd.forEach((v) -> {
+                    if (teachers.containsKey(v.getId().getIdString())) {
+                        teachers.remove(v.getId().getIdString());
+                    }
+                });
                 view.showTeachers(teachers);
                 return null;
             }
@@ -119,7 +131,7 @@ public class AddTeacherToSchoolclassPresenter {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                 eventBus.fireEvent(new MessageDialogWithOKEvent("Success"));
-
+                updateViewData();
                 return null;
             }
         },
