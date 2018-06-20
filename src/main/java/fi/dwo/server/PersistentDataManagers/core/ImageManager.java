@@ -1,8 +1,6 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
-import fi.dwo.commons.persistence.entities.PersistentCourseSequence;
 import fi.dwo.commons.persistence.entities.PersistentImage;
-import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
 
 import java.util.List;
@@ -122,9 +120,9 @@ public class ImageManager {
     private static List<PersistentImage> findEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(PersistentCourseSequence.class));
-            Query q = em.createQuery(cq);
+            CriteriaQuery<PersistentImage> cq = em.getCriteriaBuilder().createQuery(PersistentImage.class);
+            cq.select(cq.from(PersistentImage.class));
+            TypedQuery<PersistentImage> q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
                 q.setFirstResult(firstResult);
