@@ -87,7 +87,7 @@ public class EditStudentPresenter {
         view.clear();
         initView(aUser);
         user = aUser;
-        view.setHelp(dwoGlobalVars.buildHelpUrl("#editStudent"));        
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#editStudent"));
         view.setEmptyTableMessage();
 //        setSchoolClassesInView(aUser);
     }
@@ -124,7 +124,6 @@ public class EditStudentPresenter {
 //            }
 //        });
 //    }
-
     public void initView(DomUser aUser) {
         Promise p = Promises.resolved(null);
 
@@ -159,7 +158,7 @@ public class EditStudentPresenter {
                         DomGetSingleSchoolStudent student = new DomGetSingleSchoolStudent(new DomStudent(aUser));
                         student.setDomSchoolClass(sc.getSchoolClass());
                         return manager.getSingleSchoolStudent(student);
-                    }else{
+                    } else {
                         return Promises.resolved(null);
                     }
                 }
@@ -203,64 +202,25 @@ public class EditStudentPresenter {
         for (TaggedDomSchoolClass s : taggedSchoolClassMap.values()) {
             if (s.isTag() && !s.getSchoolClass().getId().getIdString().equals(schoolClassId)) {
                 from = s;
-                DomSchoolClass to = taggedSchoolClassMap.get(schoolClassId).getSchoolClass();
-                DomSubmitStudentToSchoolClass data = new DomSubmitStudentToSchoolClass();
-                data.setSchoolClassFrom(from.getSchoolClass());
-                data.setSchoolClassTo(to);
-                data.setStudent(new DomStudent(user));
-                Promise<Boolean> p = manager.submitStudentToSchoolClass(data);
-                p.then((resolved) -> {
-                    this.initView(user);
-                    return Promises.resolved(true);
-                });
-                p.then(null, (failure) -> {
-                    eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
-                });
                 break;
             }
-
         }
+        DomSchoolClass to = taggedSchoolClassMap.get(schoolClassId).getSchoolClass();
+        DomSubmitStudentToSchoolClass data = new DomSubmitStudentToSchoolClass();
+        data.setSchoolClassFrom(from.getSchoolClass());
+        data.setSchoolClassTo(to);
+        data.setStudent(new DomStudent(user));
+        Promise<Boolean> p = manager.submitStudentToSchoolClass(data);
+        p.then((resolved) -> {
+            this.initView(user);
+            return Promises.resolved(true);
+        });
+        p.then(null, (failure) -> {
+            eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
+        });
+
     }
 
-//    
-//    /**
-//     * Retrieves a list of all school classes and displays the stuff
-//     */
-//    private void setSchoolClassesInView(DomUser aUser) {
-//        Promise<List<DomSchoolClass>> promise;
-//        promise = manager.getTeachersSchoolClasses();
-//        // onSuccess update view
-//        promise.then(new Success<List<DomSchoolClass>, Void>() {
-//            @Override
-//            public Promise<Void> call(Promise<List<DomSchoolClass>> resolved) throws Exception {
-//                //flip back to schoolclasses screen 
-//                taggedSchoolClassMap = new HashMap<String, TaggedDomSchoolClass>();
-//                for (DomSchoolClass sc : resolved.getValue()) {
-//                    TaggedDomSchoolClass tsc = new TaggedDomSchoolClass();
-//                    tsc.setSchoolClass(sc);
-//                    tsc.setTag(false);
-//                    taggedSchoolClassMap.put(sc.getId().getIdString(), tsc);
-//                }
-//                view.setSchoolClasses(taggedSchoolClassMap);
-//                return null;
-//            }
-//
-//        },
-//                new Failure() {
-//            @Override
-//            public void fail(Promise<?> resolved) throws Exception {
-//                Throwable fail = resolved.getFailure();
-//                if (fail instanceof Dwo2Exception) {
-//                    LOG.log(Level.SEVERE, fail.getMessage());
-//                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
-//                } else {
-//                    LOG.log(Level.SEVERE, fail.getMessage());
-//                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
-//                    //throw directly
-//                }
-//            }
-//        });
-//    }
     @JsMethod
     public void saveUser(String givenName, String insertion, String familyName, String email, String curPassword, String newPassword, String newPasswordAgain) {
         if (!MD5.md5(curPassword).equals(fullUser.getPassword())) {

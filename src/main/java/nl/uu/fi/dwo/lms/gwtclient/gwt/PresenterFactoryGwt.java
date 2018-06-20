@@ -187,36 +187,12 @@ public class PresenterFactoryGwt implements PresenterFactory {
         return selectedResultsPresenter;
     }
 
-//    /**
-//     * @return the switchSchoolPresenter
-//     */
-//    @JsMethod    
-//    public SwitchSchoolPresenter getSwitchSchoolPresenter() {
-//        return switchSchoolPresenter;
-//    }
-//
-//    /**
-//     * @return the scoResultsPresenter
-//     */
-////    @JsMethod    
-//    public ScoResultsPresenter getScoResultsPresenter() {
-//        return scoResultsPresenter;
-//    }
     @JsMethod
     @Override
     public SchoolclassesPresenter getSchoolclassesPresenter() {
         return schoolclassesPresenter;
     }
-//
-////    @JsMethod    
-//    public CoursesOfSchoolclassPresenter getCoursesOfSchoolclassPresenter() {
-//        return coursesOfSchoolclassPresenter;
-//    }
-//
-////    @JsMethod    
-//    public StudentsInSchoolclassPresenter getStudentsInSchoolclassPresenter() {
-//        return studentsInSchoolclassPresenter;
-//    }
+
 
     /**
      * @return the accountPresenter
@@ -244,14 +220,6 @@ public class PresenterFactoryGwt implements PresenterFactory {
     public EditSchoolclassPresenter getEditSchoolclassPresenter() {
         return editSchoolclassPresenter;
     }
-//
-//    /**
-//     * @return the editStudentPresenter
-//     */
-//    @JsMethod    
-//    public EditStudentPresenter getEditStudentPresenter() {
-//        return editStudentPresenter;
-//    }
 
     /**
      * @return the messageDialogWithOKPresenter
@@ -377,10 +345,5 @@ public class PresenterFactoryGwt implements PresenterFactory {
     public ImportPersonsPresenter getImportPersonsPresenter() {
         return importPersonsPresenter;
     }
-//
-//    @Override
-//    public PromisedDialogWithOKPresenter getPromisedDialogWithOKPresenter() {
-//        return promisedDialogWithOKPresenter;
-//    }
 
 }

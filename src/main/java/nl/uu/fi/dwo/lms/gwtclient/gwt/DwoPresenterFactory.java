@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import jsinterop.annotations.JsMethod;
-import jsinterop.annotations.JsPackage;
 //import jsinterop.annotations.JsType;
 
 /**
