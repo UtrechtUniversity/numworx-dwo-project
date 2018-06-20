@@ -37,7 +37,7 @@ public class EditTeacherPresenter {
     private Display view;
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
     private Map<String, TaggedDomSchoolClass> taggedSchoolClassMap;
-    private DomUserFull user;
+    private DomUser user;
 
     public interface Display extends BasicDisplay {
 
@@ -71,10 +71,11 @@ public class EditTeacherPresenter {
 
     public void init(DomUser aUser) {
         view.clear();
-        initView(aUser);
         view.setHelp(dwoGlobalVars.buildHelpUrl("#editTeacher"));                
         view.setEmptyTableMessage();
         view.setUser(aUser);
+        user = aUser;
+        initView(aUser);
 //        setSchoolClassesInView(aUser);
     }
 

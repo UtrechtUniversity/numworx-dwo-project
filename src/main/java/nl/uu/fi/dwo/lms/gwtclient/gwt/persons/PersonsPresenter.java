@@ -141,7 +141,7 @@ public class PersonsPresenter {
 
     @JsMethod
     public void editStudent(String id) {
-        LOG.log(Level.INFO, "Editing person: " + id);
+        LOG.log(Level.INFO, "Editing student: " + id);
         DomUser person = personen.get(id);
         eventBus.fireEvent(
                 new SwitchViewEvent(SwitchViewEvent.SelectedView.EDITSTUDENT, person));
@@ -149,7 +149,7 @@ public class PersonsPresenter {
 
     @JsMethod
     public void editTeacher(String id) {
-        LOG.log(Level.INFO, "Editing person: " + id);
+        LOG.log(Level.INFO, "Editing teacher: " + id);
         DomUser person = personen.get(id);
         eventBus.fireEvent(
                 new SwitchViewEvent(SwitchViewEvent.SelectedView.EDITTEACHER, person));

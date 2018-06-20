@@ -48,7 +48,8 @@ public class EditStudentPresenter {
     private Display view;
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
     private Map<String, TaggedDomSchoolClass> taggedSchoolClassMap;
-    private DomUserFull user;
+    private DomUserFull fullUser;
+    private DomUser user;
 
     public interface Display extends BasicDisplay {
 
@@ -85,6 +86,7 @@ public class EditStudentPresenter {
     public void init(DomUser aUser) {
         view.clear();
         initView(aUser);
+        user = aUser;
         view.setHelp(dwoGlobalVars.buildHelpUrl("#editStudent"));        
         view.setEmptyTableMessage();
 //        setSchoolClassesInView(aUser);
@@ -166,6 +168,7 @@ public class EditStudentPresenter {
 
             }).then((resolved) -> {
                 DomSingleSchoolStudent student = (DomSingleSchoolStudent) resolved.getValue();
+                fullUser = student;
                 view.setSingleSchoolStudent(student);
                 return Promises.resolved(null);
             });
@@ -260,14 +263,14 @@ public class EditStudentPresenter {
 //    }
     @JsMethod
     public void saveUser(String givenName, String insertion, String familyName, String email, String curPassword, String newPassword, String newPasswordAgain) {
-        if (!MD5.md5(curPassword).equals(user.getPassword())) {
+        if (!MD5.md5(curPassword).equals(fullUser.getPassword())) {
             eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven)));
             //DwoViewer.showMessage(Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven);
             return;
         }
 
         DomSingleSchoolStudent changedUser = new DomSingleSchoolStudent();
-        changedUser.setUserName(user.getUserName());
+        changedUser.setUserName(fullUser.getUserName());
         //set freely allowed values
         if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(curPassword, familyName, givenName)) {
             LOG.log(Level.INFO, "valid required fields.");
@@ -293,7 +296,7 @@ public class EditStudentPresenter {
 
         if (!SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPassword)
                 && !SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPasswordAgain)) {
-            changedUser.setPassword(user.getPassword());
+            changedUser.setPassword(fullUser.getPassword());
         } else if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPassword)
                 && SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPasswordAgain)
                 && newPassword.compareTo(newPasswordAgain) == 0) {
