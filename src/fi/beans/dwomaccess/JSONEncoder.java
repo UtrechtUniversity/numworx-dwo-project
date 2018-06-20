@@ -16,9 +16,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.json.simple.JSONAware;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONStreamAware;
+import org.json.fimple.JSONAware;
+import org.json.fimple.JSONObject;
+import org.json.fimple.JSONStreamAware;
 
 import fi.beans.base64code.StringCodeObject;
 
