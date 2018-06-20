@@ -12,4 +12,23 @@ public class DomResultStudentScoPage extends DomResultScore {
     return getLabel();
   }
 
+  double maxScore, correctie;
+
+public double getMaxScore() {
+	return maxScore;
+}
+
+public void setMaxScore(double maxScore) {
+	this.maxScore = maxScore;
+}
+
+public double getCorrectie() {
+	return correctie;
+}
+
+public void setCorrectie(double correctie) {
+	this.correctie = correctie;
+}
+  
+  
 }
