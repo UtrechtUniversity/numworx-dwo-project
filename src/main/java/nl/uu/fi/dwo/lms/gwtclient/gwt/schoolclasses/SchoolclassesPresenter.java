@@ -94,6 +94,7 @@ public class SchoolclassesPresenter {
 
     public void init() {
         view.init();
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#schoolclasses"));
         updateViewData();
     }
 

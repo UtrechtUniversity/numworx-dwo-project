@@ -10,7 +10,7 @@ import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessageCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
- * Translator access for javascript via jsinteropt.
+ * Translator access for javascript via jsinteropt For messages not Exceptions.
  *
  * @author Gert van der Plas
  */
@@ -26,7 +26,7 @@ public class DwoTranslator {
      * @return
      */
     @JsMethod
-    public List<String> getTranslationList() {
+        public List<String> getTranslationList() {
         // For Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
         List<String> result = new ArrayList<>();
         Dwo2LocaleMessageCode codeList[] = Dwo2LocaleMessageCode.values();

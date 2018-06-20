@@ -4,7 +4,6 @@ import nl.uu.fi.dwo.rest.dom.DomCoursesOfSchoolclassTree;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.i18n.client.DateTimeFormat;
 
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,7 +55,6 @@ public class ModulesOfSchoolclassPresenter {
         void init();
 
 //        void updateTable(List<ClassCourseItem> item);
-
         void setTree(DomTree<DomCourseOfClass> tree);
 
         void setEmptyTableMessageModules();
@@ -148,6 +146,7 @@ public class ModulesOfSchoolclassPresenter {
     public void init(DomSchoolClass aSchoolClass) {
         schoolClass = aSchoolClass;
         view.init();
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#schoolClassModuleManagement"));
         view.setEmptyTableMessageModules();
         view.setEmptyTableMessageSelected();
         updateViewData();
@@ -169,7 +168,7 @@ public class ModulesOfSchoolclassPresenter {
                 tree = new DomCoursesOfSchoolclassTree(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool(), value);
                 //ClassCourseItem item = new ClassCourseItem(null, "root");
                 //parse results into a tree.
-                view.setTree(tree.getCourseTree());                
+                view.setTree(tree.getCourseTree());
                 return null;
             }
 
@@ -190,8 +189,7 @@ public class ModulesOfSchoolclassPresenter {
             }
         });
     }
-    
-    
+
 //
 //    public ClassCourseItem getRootNode() {
 //        DomTree<DomCourseOfClass> c = tree.getCourseTree();
@@ -306,7 +304,6 @@ public class ModulesOfSchoolclassPresenter {
 //            LOG.log(Level.INFO, "Selected item " + id);
 //        }
 //    }
-
     void goBackToSchoolClasses() {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
     }
@@ -347,11 +344,13 @@ public class ModulesOfSchoolclassPresenter {
                 return setAccessKey(key, accessKey);
             });
         }
-        p.then((resolved) ->{
-           updateViewData();
-           return resolved;
+        p.then((resolved) -> {
+            updateViewData();
+            return resolved;
         });
-        p.then(null,(failure) -> {eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));} );
+        p.then(null, (failure) -> {
+            eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
+        });
     }
 
     private Promise<Boolean> setCourseType(String key, String typeString) {

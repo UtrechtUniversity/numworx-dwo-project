@@ -61,6 +61,7 @@ public class AddTeacherToSchoolclassPresenter {
 
     public void init(DomSchoolClass aSchoolClass) {
         view.init();
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#addTeacherToClass"));
         view.setEmptyTableMessage();
         schoolClass = aSchoolClass;
         view.setSchoolClass(schoolClass);

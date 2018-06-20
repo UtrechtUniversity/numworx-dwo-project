@@ -71,9 +71,10 @@ public class EditTeacherPresenter {
 
     public void init(DomUser aUser) {
         view.clear();
+        initView(aUser);
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#editTeacher"));                
         view.setEmptyTableMessage();
         view.setUser(aUser);
-        initView(aUser);
 //        setSchoolClassesInView(aUser);
     }
 

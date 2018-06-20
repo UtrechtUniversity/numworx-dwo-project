@@ -52,6 +52,7 @@ public class SelectStudentResultsPresenter {
 
     public void init(DomResultTree aResultTree) {
         resultTree = aResultTree;
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#editStudent"));        
     }
 
     public void setView(Display aView) {

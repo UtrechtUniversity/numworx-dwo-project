@@ -70,7 +70,9 @@ public class ImportPersonsPresenter {
 //    @JsMethod not required unless testing stuff.
     public void init() {
         view.clear();
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#importPersons"));        
         view.setEmptyTableMessage();
+
     }
 
     @JsMethod

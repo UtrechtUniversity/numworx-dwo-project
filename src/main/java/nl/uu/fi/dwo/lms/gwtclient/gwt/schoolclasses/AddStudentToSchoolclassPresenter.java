@@ -55,11 +55,12 @@ public class AddStudentToSchoolclassPresenter {
 
     public AddStudentToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
-        dwoGlobalVars = aDwoGlobalVars;
+        dwoGlobalVars = aDwoGlobalVars;        
     }
 
     public void init(DomSchoolClass aSchoolClass) {
         view.init();
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#addStudentToClass"));
         view.setEmptyTableMessage();
         schoolClass = aSchoolClass;
         view.setSchoolClass(schoolClass);

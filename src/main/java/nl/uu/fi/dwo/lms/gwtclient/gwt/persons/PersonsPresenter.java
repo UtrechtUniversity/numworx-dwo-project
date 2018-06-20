@@ -53,7 +53,7 @@ public class PersonsPresenter {
     public interface Display extends BasicDisplay {
 
         void init();
-
+        
 //        void setSchoolClass(DomSchoolClassFull schoolClass);
         void showPersonen(Map<String, DomUser> personen);
 
@@ -70,6 +70,7 @@ public class PersonsPresenter {
 //    @JsMethod not required unless testing stuff.
     public void init() {
         view.clear();
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#persons"));
         view.setEmptyTableMessage();
     }
 

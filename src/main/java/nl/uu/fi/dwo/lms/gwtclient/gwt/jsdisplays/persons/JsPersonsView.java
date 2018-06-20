@@ -15,7 +15,7 @@ public class JsPersonsView implements PersonsPresenter.Display{
 
     @Override
     public void setHelp(String url) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JsPersonsDisplay.setHelp(url);
     }
     
     @Override
