@@ -2819,10 +2819,10 @@ private Object CamelCase(String name) {
 	{
 		locationX = (int) x;
 		locationY = (int) y;
-		
-		if(parent != null && zwevend)
+		Widget divparent = asWidget().getParent();
+		if(parent == divparent && parent != null && zwevend)
 		{	parent.remove(this.asWidget());
-			parent.add(this.asWidget());
+			parent.add(this.asWidget()); // herplaats aan de top.
 			parent.setWidgetLeftWidth(this.asWidget(), locationX, Style.Unit.PX, breedte, Style.Unit.PX);
 			parent.setWidgetTopHeight(this.asWidget(), locationY, Style.Unit.PX, hoogte, Style.Unit.PX);
 		}

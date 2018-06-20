@@ -1337,7 +1337,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 
   public void mergeIntoReview(int currentActiviteit, int currentOpdracht,
       HashMap<String, Object> state) {
-    JSONObject reviewPage = strip(JSONUtilities.wrapMap(state), 0);
+    JSONObject reviewPage = strip(JSONUtilities.wrapMap(state), 5);
     JSONObject r = new JSONObject();
     JSONArray  statei = new JSONArray(); r.put(OPDR_CONT_STATES, statei);
     JSONArray statej = new JSONArray();  statei.set(currentActiviteit, statej);
@@ -1353,9 +1353,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
     ObjectList interactionsIn = state.getObjectList(INTERACTIE_PANEL_STATES);
     if(interactionsIn != null) {
       JSONArray  interactionsOut = new JSONArray();
-      for(int i = 0; i < interactionsIn.size(); i++) {
-        JSONObject item = strip(interactionsIn.getObjectMap(i),5);
-        interactionsOut.set(i+off, item);
+      for(int i = off; i < interactionsIn.size(); i++) {
+        JSONObject item = strip(interactionsIn.getObjectMap(i),0);
+        interactionsOut.set(i-off, item);
       }
       result.put(INTERACTIE_PANEL_STATES, interactionsOut);
     }
