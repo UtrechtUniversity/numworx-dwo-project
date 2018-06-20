@@ -59,7 +59,7 @@ public class StudentScoContextManager {
      * Update
      *
      * @param studentOf
-     * @throws Exception
+     * @throws PersistenceException
      */
     public static PersistentStudentScoContext edit(PersistentStudentScoContext studentOf) throws PersistenceException {
         EntityManager em = null;
@@ -69,7 +69,11 @@ public class StudentScoContextManager {
             studentOf = em.merge(studentOf);
             em.getTransaction().commit();
             return studentOf;
-        } catch (Exception e) {
+        } catch(PersistenceException e) { 
+          LOG.log(Level.SEVERE, "Can't edit the PersistentStudentScoContext.", e);
+          throw e;
+        }
+        catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Long id = studentOf.getScoID();

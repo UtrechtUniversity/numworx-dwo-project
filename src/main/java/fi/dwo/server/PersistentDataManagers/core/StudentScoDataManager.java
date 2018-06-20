@@ -60,7 +60,7 @@ public class StudentScoDataManager {
      *
      * @param ssd studentScoData
      * @return merged ssd
-     * @throws Exception
+     * @throws PersistenceException
      */
     public static PersistentStudentScoData edit(PersistentStudentScoData ssd) throws PersistenceException {
         EntityManager em = null;
@@ -69,6 +69,9 @@ public class StudentScoDataManager {
             em.getTransaction().begin();
             ssd = em.merge(ssd);
             em.getTransaction().commit();
+        } catch(PersistenceException e) { 
+          LOG.log(Level.SEVERE, "Can't edit the PersistentStudentScoData.", e);
+          throw e;
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
