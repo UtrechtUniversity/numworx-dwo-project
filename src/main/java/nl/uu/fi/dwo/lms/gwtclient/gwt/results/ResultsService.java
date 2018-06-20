@@ -138,7 +138,7 @@ class ResultsService implements SwitchViewEventHandler {
     	cache =  dwoGlobalVars.getProfile().then(
     			p-> scoData.getJSONLaunchDataBytes(sco, p.getValue(), schoolClass, getContext()));
     	
-    	//launchDataCache.put(sco.getId(), cache);
+    	launchDataCache.put(sco.getId(), cache);
     	return cache;
     }
 
@@ -152,11 +152,15 @@ class ResultsService implements SwitchViewEventHandler {
 
 // FIXME caching policy
   
+  void clearCache() { 
+    launchDataCache.clear();
+  }
+  
+  
   @Override
   public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
-    LOG.fine("sniffing " + switchViewEvent.getEventValue());
-    // if switch to
+    // if switch to RESULTS clear cache
     if(SelectedView.RESULTS == switchViewEvent.getEventValue())
-      launchDataCache.clear();
+      clearCache();
   }
 }

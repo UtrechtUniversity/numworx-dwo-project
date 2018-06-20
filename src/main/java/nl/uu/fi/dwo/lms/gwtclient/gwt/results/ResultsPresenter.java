@@ -71,6 +71,7 @@ public class ResultsPresenter {
         LOG.log(Level.INFO, "DwoGlobalVarsState = " + dwoGlobalVars.getState().name());
         course = null;
         schoolClass = null;
+        resultService.clearCache();
         Promise<DomResultsPerTeacher> promResults;
         promResults = resultService.getResultsPerTeacher();
         // onSuccess calculate results and show.
