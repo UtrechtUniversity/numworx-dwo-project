@@ -51,7 +51,7 @@ import dagger.Reusable;
  * @author Gert van der Plas
  */
 @Reusable 
-class ResultsService implements SwitchViewEventHandler {
+public class ResultsService implements SwitchViewEventHandler {
 
     private static final Logger LOG = Logger.getLogger(ResultsService.class.getName());
     
