@@ -21,8 +21,8 @@ public class BootPanel implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-    	//init app controller and GO!
+        //init app controller and GO!
         DaggerBootComponent.create().controller().go(RootLayoutPanel.get());
-     }
+    }
 
 }

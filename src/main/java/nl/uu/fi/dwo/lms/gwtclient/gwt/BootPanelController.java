@@ -37,8 +37,7 @@ import org.osgi.util.promise.Success;
  *
  * @author Gert van der Plas
  */
-//@Singleton
-@Reusable
+//@Singleton not required.
 public class BootPanelController {
 
     private static final Logger LOG = Logger.getLogger(BootPanelController.class.getName());
