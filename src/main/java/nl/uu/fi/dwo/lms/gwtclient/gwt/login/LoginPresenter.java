@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.login;
 import com.google.web.bindery.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
+import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import java.util.Date;
 
 import java.util.logging.Level;
@@ -14,7 +15,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -165,7 +168,7 @@ public class LoginPresenter {
                         //Login failed
                         LOG.log(Level.INFO, "dwo2exception thrown: " + fail.getMessage());
                         dwoGlobalVars.clearCurrentUser();
-                        view.showWarning(((Dwo2Exception) fail).getDwo2Message());
+                        view.showWarning(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_AuthenticationError());
                     } else {
                         dwoGlobalVars.clearCurrentUser();
                         LOG.log(Level.INFO, "none dwo2exception thrown: " + fail.getMessage());
@@ -176,7 +179,13 @@ public class LoginPresenter {
             );
         } catch (Dwo2Exception ex) {
             Logger.getLogger(LoginPresenter.class.getName()).log(Level.SEVERE, null, ex);
-            eventBus.fireEvent(new DialogEvent(ex));
+            dwoGlobalVars.clearCurrentUser();
+            view.showWarning(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_AuthenticationError());
+        } catch (Exception ex) {
+            //Somehow not all exceptions are caught here.
+            Logger.getLogger(LoginPresenter.class.getName()).log(Level.SEVERE, null, ex);
+            dwoGlobalVars.clearCurrentUser();
+            view.showWarning(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_InternalError());
         }
     }
 

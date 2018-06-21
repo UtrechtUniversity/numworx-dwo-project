@@ -3,7 +3,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.jsutil;
 import jsinterop.annotations.JsMethod;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
-import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
+import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessageCode;
 
 /**
@@ -15,7 +15,7 @@ public class UserFieldValidator {
 
     @JsMethod
     public boolean checkUsername(String username) {
-        return ValidUserFieldsChecker.isValidUserName(username);
+        return SimpleValidUserFieldsChecker.isValidUserName(username);
     }
 
     @JsMethod
@@ -25,7 +25,8 @@ public class UserFieldValidator {
     
     @JsMethod
     public boolean checkEmail (String email) {
-        return ValidUserFieldsChecker.isValidEmail(email);
+        return SimpleValidUserFieldsChecker.isValidEmail(email);
+//        return true;
     }
 //
 //    @JsMethod
@@ -35,7 +36,7 @@ public class UserFieldValidator {
 
     @JsMethod
     public boolean checkPassword(String password) {
-        return ValidUserFieldsChecker.isValidUserName(password);
+        return SimpleValidUserFieldsChecker.isValidUserName(password);
     }
 
     @JsMethod
