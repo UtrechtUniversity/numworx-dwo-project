@@ -14,7 +14,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.FAIL;
@@ -51,6 +50,7 @@ public class BootPanelController {
     @Inject
     DwoGlobalVars dwoGlobalVars;
     private int profile;
+    private int stage;
     private boolean hideGwtGui;
     private boolean testIsOn;
 
@@ -69,6 +69,7 @@ public class BootPanelController {
         testIsOn = false;
         hideGwtGui = false;
         profile = 77;
+        stage=1;
 
     }
 
@@ -95,6 +96,10 @@ public class BootPanelController {
         value = com.google.gwt.user.client.Window.Location.getParameter("test");
         if (value != null && value.matches("on")) {
             testIsOn = true;
+        }
+        value = com.google.gwt.user.client.Window.Location.getParameter("stage");
+        if (value != null && value.matches("on")) {
+            stage = Integer.parseInt(value);
         }
     }
 
@@ -258,6 +263,7 @@ public class BootPanelController {
                             break;
                         case PERSONS:
                             presenterFactory.getPersonsPresenter().init();
+                            presenterFactory.getPersonsPresenter().setStage(stage);
                             viewFactory.getMainView().showPersonsView();
                             break;
                         case ADDPERSON:

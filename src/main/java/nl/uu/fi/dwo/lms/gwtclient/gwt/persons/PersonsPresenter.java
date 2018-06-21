@@ -35,6 +35,7 @@ public class PersonsPresenter {
     private Display view;
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
     private Map<String, DomUser> personen;
+    private int stage=0;
 
     /**
      * @return the view
@@ -48,6 +49,10 @@ public class PersonsPresenter {
      */
     public void setView(Display view) {
         this.view = view;
+    }
+
+    public void setStage(int aStage) {
+        stage = aStage;
     }
 
     public interface Display extends BasicDisplay {
@@ -162,7 +167,7 @@ public class PersonsPresenter {
 
    @JsMethod
     public boolean hasImportPersons(){
-        return false;
+        return (stage ==2) ? true : false;
     }
     
     @JsMethod
