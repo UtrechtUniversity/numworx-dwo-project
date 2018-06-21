@@ -108,7 +108,7 @@ public class ImportPersonsPresenter {
      * Students are imported as single school.
      */
     @JsMethod
-    public void importStudents() {
+    public void importStudents(List<DomSingleSchoolStudent> students) {
         eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
     }
 
@@ -117,7 +117,7 @@ public class ImportPersonsPresenter {
      *
      */
     @JsMethod
-    public void importTeachers() {
+    public void importTeachers(List<DomSingleSchoolStudent> teachers) {
         eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
     }
 

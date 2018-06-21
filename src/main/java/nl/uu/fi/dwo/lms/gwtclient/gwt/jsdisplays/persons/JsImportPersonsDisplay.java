@@ -8,6 +8,12 @@ import jsinterop.annotations.JsType;
  * JsImportPersonsDisplay UI interface.
  * 
  * @author G.A.J. van der Plas
+ * 
+ * Callbacks: 
+ * 
+ * importStudents(List<DomSingleSchoolStudent> students) 
+ * importTeachers(List<DomSingleSchoolStudent> teachers) 
+ * 
  */
 @JsType(isNative = true, name = "jsImportPersonsDisplay", namespace = JsPackage.GLOBAL)
 public class JsImportPersonsDisplay {
