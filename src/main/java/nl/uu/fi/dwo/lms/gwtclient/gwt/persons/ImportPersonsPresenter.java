@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.persons;
 
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,14 +14,17 @@ import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
+import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
-import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
-import nl.uu.fi.dwo.rest.dom.entities.DomUser;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
+import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
-import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Success;
+import org.osgi.util.promise.Promises;
 
 /**
  * Login Presenter.
@@ -34,7 +38,9 @@ public class ImportPersonsPresenter {
     private EventBus eventBus;
     private Display view;
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
-    private Map<String, DomUser> personen;
+    private List<DomSingleSchoolStudent> persons;
+    private String fileName;
+    private Map<String, TaggedDomSchoolClass> taggedSchoolClasses;
 
     /**
      * @return the view
@@ -52,14 +58,21 @@ public class ImportPersonsPresenter {
 
     public interface Display extends BasicDisplay {
 
-        void init();
+        void clear();
 
-//        void setSchoolClass(DomSchoolClassFull schoolClass);
-        void showPersonen(Map<String, DomUser> personen);
+        String fetchFileName();
 
-        void setEmptyTableMessage();
+        void setPersonImportList(List<DomSingleSchoolStudent> persons);
 
-        void setLoadingTableMessage();
+        void showSchoolClasses(Map<String,TaggedDomSchoolClass> schoolClasses);
+
+        void setEmptyPeopleTableMessage();
+
+        void setLoadingPeopleTableMessage();
+
+        void setEmptySchoolClassesTableMessage();
+
+        void setLoadingSchoolClassesTableMessage();
     }
 
     public ImportPersonsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -70,95 +83,78 @@ public class ImportPersonsPresenter {
 //    @JsMethod not required unless testing stuff.
     public void init() {
         view.clear();
-        view.setHelp(dwoGlobalVars.buildHelpUrl("#importPersons"));        
-        view.setEmptyTableMessage();
-
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#importPersons"));
+        view.setEmptyPeopleTableMessage();
+        view.setEmptySchoolClassesTableMessage();
+        fileName = view.fetchFileName();
+        persons = loadFile(fileName);
+        view.setPersonImportList(persons);
+        showTeachersSchoolClasses();
     }
 
-    @JsMethod
-    public void showStudentList() {
-        view.setLoadingTableMessage();
-        Promise<List<DomStudent>> promise;
-        promise = manager.getTeachersStudents();
-        // onSuccess update view
-        promise.then(new Success<List<DomStudent>, Void>() {
-            @Override
-            public Promise<Void> call(Promise<List<DomStudent>> resolved) throws Exception {
-                personen = new HashMap<>(resolved.getValue().size());
-                resolved.getValue().forEach((k -> personen.put(k.getId().getIdString(), k)));
-                return null;
-            }
-
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
+    private void showTeachersSchoolClasses() {
+        Promise<List<DomSchoolClass>> promise;
+        promise = manager.getTeachersSchoolClasses();
+        promise.then((resolved) -> {
+            List<DomSchoolClass> classList = (List<DomSchoolClass>) resolved.getValue();
+            taggedSchoolClasses = new HashMap<String, TaggedDomSchoolClass>(classList.size());
+            classList.forEach((v) -> taggedSchoolClasses.put(v.getId().getIdString(), new TaggedDomSchoolClass(v)));
+            view.showSchoolClasses(taggedSchoolClasses);
+            return null;
         });
     }
 
+    /**
+     * Students are imported as single school.
+     */
     @JsMethod
-    public void showTeacherList() {
-        view.setLoadingTableMessage();
-        Promise<List<DomTeacher>> promise;
-        promise = manager.getTeachersInSchool();
-        // onSuccess update view
-        promise.then(new Success<List<DomTeacher>, Void>() {
-            @Override
-            public Promise<Void> call(Promise<List<DomTeacher>> resolved) throws Exception {
-                personen = new HashMap<>(resolved.getValue().size());
-                resolved.getValue().forEach((k -> personen.put(k.getId().getIdString(), k)));
-                return null;
+    public void importStudents() {
+        eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+    }
+
+    /**
+     * Teacher are granted a full account.
+     *
+     */
+    @JsMethod
+    public void importTeachers() {
+        eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+    }
+
+    private List<DomSingleSchoolStudent> loadFile(String file) {
+        //tokenize import file.
+        String[][] importData;
+        String[] lines = file.split("\n");
+        LOG.log(Level.INFO, "Read " + lines.length + " lines.");
+        importData = new String[lines.length][];
+        List<DomSingleSchoolStudent> personList = new ArrayList<>(importData.length);
+        for (int i = 0; i < lines.length; i++) {
+            String[] cols = lines[i].split("\t");
+            importData[i] = cols;
+            LOG.log(Level.INFO, "Read " + cols.length + " columns.");
+            if (cols.length != 6) {
+                eventBus.fireEvent(new AlertDialogWithOKEvent("Invalid format"));
+                return personList;
             }
-
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                    //throw directly
-                }
+            for (String field : cols) {
+                LOG.log(Level.INFO, "Read >" + field + "< field.");
             }
-        });
+        }
+        //convert to SingleSchoolStudent which is subclassed of DomUserFull and 
+        //works for teachers too.
+
+        //username, givenname, insertion, familyname, email, password.
+        for (int i = 0; i < importData.length; i++) {
+            DomNewSingleSchoolStudent s = new DomNewSingleSchoolStudent();
+            s.getDomSingleSchoolStudent().setUserName(importData[0][0]);
+            s.getDomSingleSchoolStudent().setGivenName(importData[0][1]);
+            s.getDomSingleSchoolStudent().setInsertion(importData[0][2]);
+            s.getDomSingleSchoolStudent().setFamilyName(importData[0][3]);
+            s.getDomSingleSchoolStudent().setEmail(importData[0][4]);
+            s.getDomSingleSchoolStudent().setPassword(importData[0][5]);
+            s.getDomSingleSchoolStudent().setSingleSchool(true);
+        }
+        return personList;
     }
 
-    @JsMethod
-    public void editPerson(String id) {
-        LOG.log(Level.INFO, "Editing person: " + id);
-        eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
-//        eventBus.fireEvent(
-//                new SwitchViewEvent(SwitchViewEvent.SelectedView.EditUser, )
-//        );
-    }
-
-    @JsMethod
-    public void addPerson() {
-        eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
-//        eventBus.fireEvent(
-//                new SwitchViewEvent(SwitchViewEvent.SelectedView.EditUser, )
-//        );
-    }
-    
-    @JsMethod
-    public void importPersons() {        
-        eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
-//        eventBus.fireEvent(
-//                new SwitchViewEvent(SwitchViewEvent.SelectedView.EditUser, )
-//        );
-    }
 }

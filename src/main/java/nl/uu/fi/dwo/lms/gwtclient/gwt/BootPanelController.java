@@ -33,7 +33,7 @@ import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Success;
 
 /**
- * Controller for Login.
+ * TeacherApplication
  *
  * @author Gert van der Plas
  */
