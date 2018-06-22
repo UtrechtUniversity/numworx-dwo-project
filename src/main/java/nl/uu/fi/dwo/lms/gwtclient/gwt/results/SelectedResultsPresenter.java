@@ -15,6 +15,7 @@ import jsinterop.annotations.JsMethod;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,9 +36,11 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoPage;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -174,12 +177,15 @@ public class SelectedResultsPresenter {
 		DomResultTeacher<DomResultStudent> studentTree = resultTree.getStudentTree();
 		DomResultSchoolClass<DomResultStudent> domschoolclass = studentTree.getChildren().get(schoolclass);
 		PersistenceId key = new PersistenceId(studentid);
+		
+		
 		DomStudent student = domschoolclass.getChildren().get(key).getStudent();
 		DomScoContext sco = new DomScoContext(); sco.setId(new PersistenceId(scoid));
+		preparePages(schoolclass, sco.getId()).then(p-> {view.updateResultTree(resultTree);return null;}, p-> LOG.log(Level.SEVERE, "preparePages", p.getFailure()));
 		Promise<DomStudentScoContext> p1 = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), Collections.singletonList(student))
 		.map(p -> p.getStudentScoContexts().get(0).getValue());		
 		Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(sco, domschoolclass.getSchoolClass());		
-		Promise<Map<String,String>> p3 = p1.then(  p-> resultService.getValues(p.getValue(), ResultsService.keys));
+		Promise<Map<String,String>> p3 = p1.then(  p-> resultService.getValues(p.getValue()));
     	
 		Promises.all(p1,p2,p3).then(new Success<Object, Object>() {
 
@@ -200,6 +206,46 @@ public class SelectedResultsPresenter {
 				
     	
     	
+    }
+
+ 
+    Promise<Void> preparePages(PersistenceId schoolclass, PersistenceId scoid) {
+      // find studentscocontexts:
+      DomResultSchoolClass<DomResultCourseInClass> cc = resultTree.getResultTree().getChildren().get(schoolclass);
+      Map<PersistenceId, DomResultCourseInClass> children = cc.getChildren();
+      for(DomResultCourseInClass<DomResultScoContext> cic: children.values()) {
+        Map<PersistenceId, DomResultScoContext> items = cic.getChildren();
+        DomResultScoContext sco = items.get(scoid);
+        if(sco != null) {
+          Iterator<DomResultStudentScoContext> iterator = sco.getChildren().values().iterator();
+          return preparePages(cc.getSchoolClass(), sco.getScoContext(), iterator);
+          
+        }
+      }
+      return Promises.failed(new RuntimeException("not found"));
+    }
+
+    private Promise<Void> preparePages(DomSchoolClass schoolclass,
+                                       DomScoContext  scocontext,
+                                       Iterator<DomResultStudentScoContext> iterator) {
+      if(iterator.hasNext()) {
+        DomResultStudentScoContext ssc = iterator.next();
+        Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(scocontext, schoolclass);     
+        Promise<Map<String,String>> p3 = resultService.getValues(ssc.getStudentSco());
+
+        return Promises.all(p2, p3).then(new Success<Object, Void>() {
+
+          @Override
+          public Promise<Void> call(Promise<Object> resolved) throws Exception {
+            JSONValue launchdata = p2.getValue();
+            String review_data  = p3.getValue().get(ResultsService.REVIEW_DATA);
+            String suspend_data = p3.getValue().get(ResultsService.SUSPEND_DATA);
+            Map<PersistenceId, DomResultStudentScoPage> children = Util.getPages(launchdata, suspend_data, review_data);
+            ssc.setChildren(children);
+            return preparePages(schoolclass, scocontext, iterator);
+          }}).recoverWith(p -> preparePages(schoolclass,scocontext, iterator));
+      }
+      return null;
     }
 
     public void reinit(DomResultTree aResultTree, JavaScriptObject aResultState) {

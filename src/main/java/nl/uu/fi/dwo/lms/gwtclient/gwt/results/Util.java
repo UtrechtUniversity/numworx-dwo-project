@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -50,7 +51,7 @@ class Util {
               LOG.log(Level.FINE, "score " + i + " = " + number);
               scores[i] = number;
           } catch (Exception e) {
-              LOG.log(Level.FINE, "score " + i, e);
+              LOG.log(Level.WARNING, "score " + i, e);
           }
       }
       return scores;
@@ -60,16 +61,23 @@ class Util {
     HashMap<PersistenceId, DomResultStudentScoPage> result = new HashMap<>();
     
     int aantal = getAantalOpdrachten(launchdata);
+    LOG.info("getPages aantal = " + aantal);
+    
     JSONNumber scores[] = getScores(suspend_data, aantal);
+    LOG.info("getPages scores = " + Arrays.asList(scores));
     JSONNumber maxScores[] = getMaxScores(launchdata, aantal);
+    LOG.info("getPages maxscores = " + Arrays.asList(maxScores));
     JSONNumber correctie[] = getCorrectie(review_data, aantal);
+    LOG.info("getPages correctie = " + Arrays.asList(correctie));
     
     for(int i = 0; i < aantal; i++) {
       String label = String.valueOf(i+1);
       DomResultStudentScoPage item = new DomResultStudentScoPage(label);
-      item.setScore(scores[i].doubleValue());
+      if (i < scores.length)
+        item.setScore(scores[i].doubleValue());
       item.setMaxScore(maxScores[i].doubleValue());
-      item.setCorrectie(correctie[i].doubleValue());
+      if (i < correctie.length)
+        item.setCorrectie(correctie[i].doubleValue());
     }
     
     return result;
@@ -77,11 +85,17 @@ class Util {
   }
 
   private static JSONNumber[] getCorrectie(String review_data, int aantal) {
+    LOG.info("getCorrectie " + review_data);
+    if(review_data == null || !review_data.startsWith("{"))
+        return new JSONNumber[0];
+    
+    JSONObject review = JSONParser.parseLenient(review_data).isObject();
+    //JSONArray  data = review.get("xxx").isArray();
     JSONNumber[] result = new JSONNumber[aantal];
     for(int i = 0; i < aantal; i++) {
       result[i] = new JSONNumber(0); // TODO ....
     }
-    return null;
+    return result;
   }
 
   private static JSONNumber[] getMaxScores(JSONValue launchdata, int aantal) {

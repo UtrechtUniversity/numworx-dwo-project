@@ -53,6 +53,9 @@ import dagger.Reusable;
 @Reusable 
 public class ResultsService implements SwitchViewEventHandler {
 
+    static final String SUSPEND_DATA = "cmi.suspend_data";
+    static final String REVIEW_DATA =  "cmi.comments_from_lms.0.comment";
+
     private static final Logger LOG = Logger.getLogger(ResultsService.class.getName());
     
     private final static String COMPLETED = "completed";
@@ -68,11 +71,9 @@ public class ResultsService implements SwitchViewEventHandler {
     private final DwoGlobalVars dwoGlobalVars;
 
     static final Collection<String> keys = Arrays.asList(
-            "cmi.suspend_data",
+            SUSPEND_DATA,
             "cmi.location",
-            //"cmi.score.raw",
-            //ResultsService.COMPLETION_STATUS,
-            "cmi.comments_from_lms.0.comment"
+            REVIEW_DATA
     );
     
 
@@ -142,7 +143,7 @@ public class ResultsService implements SwitchViewEventHandler {
     	return cache;
     }
 
-	public Promise<Map<String, String>> getValues(DomStudentScoContext dom, Collection<String> keys) {
+	public Promise<Map<String, String>> getValues(DomStudentScoContext dom) {
 		return scormValues.getValues(dom, getContext(), keys);
 	}
 

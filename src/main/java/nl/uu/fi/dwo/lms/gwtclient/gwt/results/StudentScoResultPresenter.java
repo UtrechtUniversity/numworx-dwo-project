@@ -128,7 +128,7 @@ public class StudentScoResultPresenter {
       Promise<DomStudentScoContext> p1 = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), Collections.singletonList(student))
       .map(p -> p.getStudentScoContexts().get(0).getValue());     
       Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(sco, domschoolclass.getSchoolClass());     
-      Promise<Map<String,String>> p3 = p1.then(  p-> resultService.getValues(p.getValue(), ResultsService.keys));
+      Promise<Map<String,String>> p3 = p1.then(  p-> resultService.getValues(p.getValue()));
       String location = userState.get("cmi.location");
       Promises.all(p1,p2,p3).then(new Success<Object, Object>() {
 
@@ -149,6 +149,8 @@ public class StudentScoResultPresenter {
       }, FAILURE);
   }
 
+  
+  
 
   private native static void setAPI(StudentScoResultPresenter view) /*-{
 		var api = {
@@ -208,6 +210,7 @@ public class StudentScoResultPresenter {
     LOG.info("Commit " + dummy);
     return "true";
   }
+
   private String Finish(String dummy) {
     LOG.info("Finish " + dummy);
     Map<String,String> userState = new HashMap<> (this.userState);
@@ -250,6 +253,19 @@ public class StudentScoResultPresenter {
       updateFrame(p.getValue()); 
       return null;
       }, FAILURE);
+  }
+
+  @JsMethod
+  public void log(JavaScriptObject context) {
+    LOG.info("calling log");
+  }
+  @JsMethod
+  public void download(JavaScriptObject context) {
+    LOG.info("calling download");
+  }
+  @JsMethod
+  public void print(JavaScriptObject context) {
+    LOG.info("calling print");
   }
 
 }
