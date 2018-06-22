@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoPage;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
@@ -143,7 +144,7 @@ public class DomResultTree {
             //build the subtrees
             DomClassCourse4Teacher cc = resultData.getClassCourses().get(key);
             //           if (cc.getViewState() == ViewState.invisible || cc.getViewState() == ViewState.studentsAndTeachers || cc.getViewState() == ViewState.teachers) {
-            if (cc.getViewState() == ViewState.studentsAndTeachers || cc.getViewState() == ViewState.teachers) {
+            if (cc.getViewState() == ViewState.studentsAndTeachers || cc.getViewState() == ViewState.teachers || cc.getViewState() == ViewState.invisible) {
                 DomResultCourseInClass resultCourse = new DomResultCourseInClass(resultData.getCourses().get(cc.getCourseId()), cc.getViewState());
                 //attach to class
                 schoolClasses.get(cc.getClassId()).getChildren().put(cc.getCourseId(), resultCourse); //add course to parent
@@ -282,6 +283,8 @@ public class DomResultTree {
         findAndUpdateResultStudentSco(resultTree, map);
         resultTree.calculateSumOfSubtreeScore();
     }
+    
+   
 
     private boolean findAndUpdateResultStudentSco(DomResultScore<? extends DomResultScore> item,
         Map<PersistenceId, DomStudentScoContext> map) {
@@ -313,4 +316,30 @@ public class DomResultTree {
       }
       return false;
     }
+    
+    public void updateResultStudentScoPages(PersistenceId sscid, Map<PersistenceId, DomResultStudentScoPage> children) {
+      findAndUpdateRestultStudentScoPages(resultTree, sscid, children);
+  }
+
+    private void findAndUpdateRestultStudentScoPages(
+        DomResultScore<?>item,
+        PersistenceId sscid, Map<PersistenceId, DomResultStudentScoPage> children) {
+      if(item instanceof DomResultStudentScoContext) {
+        DomResultStudentScoContext context = (DomResultStudentScoContext) item;
+        if( sscid.equals(context.getStudentSco().getId())) {
+          context.setChildren(children);
+        }
+        return;
+      }
+      if (item instanceof DomResultScoContext) {
+        DomResultScoContext context = (DomResultScoContext) item;
+        item = context.getChildren().get(sscid);
+        if(item != null)
+          findAndUpdateRestultStudentScoPages(item, sscid, children);
+        return;
+      }
+      
+      item.getChildren().values().stream().forEach(child -> findAndUpdateRestultStudentScoPages(child, sscid, children));
+    }
+
 }
