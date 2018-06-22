@@ -18,9 +18,8 @@ NUM_Button_Confirm,
 NUM_Button_Abort,
 NUM_Button_Update,
 
-
 NUM_Dialog_User_ConfirmLogout,
-
+NUM_Dialog_User_NoTeacher,
 
 /** Old tags for java */
 GUI_Button_Ok,  
