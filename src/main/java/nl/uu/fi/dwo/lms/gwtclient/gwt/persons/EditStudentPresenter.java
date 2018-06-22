@@ -4,6 +4,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
+import fi.dwo.gwt.lib.rest.util.StringFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,8 +14,11 @@ import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
@@ -29,7 +33,9 @@ import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
+import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -222,17 +228,11 @@ public class EditStudentPresenter {
     }
 
     @JsMethod
-    public void saveUser(String givenName, String insertion, String familyName, String email, String curPassword, String newPassword, String newPasswordAgain) {
-        if (!MD5.md5(curPassword).equals(fullUser.getPassword())) {
-            eventBus.fireEvent(new DialogEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven)));
-            //DwoViewer.showMessage(Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven);
-            return;
-        }
-
+    public void saveUser(String givenName, String insertion, String familyName, String email, String password) {
         DomSingleSchoolStudent changedUser = new DomSingleSchoolStudent();
         changedUser.setUserName(fullUser.getUserName());
         //set freely allowed values
-        if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(curPassword, familyName, givenName)) {
+        if ((password == null && SimpleValidUserFieldsChecker.isNonEmptyNorNull(familyName, givenName)) || SimpleValidUserFieldsChecker.isNonEmptyNorNull(password, familyName, givenName)) {
             LOG.log(Level.INFO, "valid required fields.");
             changedUser.setFamilyName(familyName.trim());
             changedUser.setGivenName(givenName.trim());
@@ -253,36 +253,53 @@ public class EditStudentPresenter {
         } else {
             changedUser.setEmail(email.trim());
         }
-
-        if (!SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPassword)
-                && !SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPasswordAgain)) {
+        if (password == null) {
             changedUser.setPassword(fullUser.getPassword());
-        } else if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPassword)
-                && SimpleValidUserFieldsChecker.isNonEmptyNorNull(newPasswordAgain)
-                && newPassword.compareTo(newPasswordAgain) == 0) {
-            if (!SimpleValidUserFieldsChecker.isValidPassword(newPassword)) {
-                //invalid password format
-                eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_NewPasswordsDoNotMatch)));
-            } else {
-                changedUser.setPassword(MD5.md5(newPassword));
-            }
+        } else if (!SimpleValidUserFieldsChecker.isValidPassword(password)) {
+            changedUser.setPassword(MD5.md5(password));
         } else {
-            eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_NewPasswordsDoNotMatch)));
+            //invalid password format
+            eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven)));
             return;
         }
 
-        //All is well, proceed with REST-request
-        Promise<Boolean> promisedUser;
-        promisedUser = manager.updateSingleSchoolStudent(changedUser);
-        // onSuccess calculate results and show.
-        promisedUser.then(new Success<Boolean, Void>() {
+        Promise<Boolean> p = Promises.resolved(true); //empty promise
+
+        p.then(
+                new Success<Boolean, Boolean>() {
+            @Override
+            //Are you sure?
+            public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
+                AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(DwoLocalesForGWT.instance.NUM_Dialog_User_ConfirmPasswordSwitch());
+                AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
+                eventBus.fireEvent(event);
+                return dialogPromise.getPromise();
+            }
+        }
+        ).then(
+                new Success<Boolean, Boolean>() {
+            //sure so remove
+            @Override
+            public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {
+                if (resolved.getValue()) {
+                    Promise<Boolean> promisedUser;
+                    promisedUser = manager.updateSingleSchoolStudent(changedUser);
+                    return promisedUser;
+                } else {
+                    LOG.log(Level.INFO, "update user cancelled.");
+                    return Promises.failed(null);
+                }
+            }
+        }
+        ).then(
+                new Success<Boolean, Void>() {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                 //calculate tree and call plotting
                 LOG.log(Level.INFO, "DomUser returned.");
                 view.clear();
                 view.setUser(changedUser);
-                eventBus.fireEvent(new AlertDialogWithOKEvent("Success"));
+                eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_Dialog_User_ConfirmChangeCommited()));
                 return null;
             }
         },
@@ -299,7 +316,8 @@ public class EditStudentPresenter {
                     //throw directly
                 }
             }
-        });
+        }
+        );
     }
 
 }
