@@ -183,40 +183,15 @@ public class BootPanelController {
                             eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
                             // viewFactory.getMainView().showPostLoginWidgets();
                             break;
-                        // case SUCCESS_ROLE:
-                        // LOG.log(Level.INFO, "Login succeeded. Showing switch role view.");
-                        // eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SWITCHSCHOOL));
-                        // presenterFactory.getSwitchSchoolPresenter().updateTree();
-                        // break;
                         case FAIL:
                             LOG.log(Level.INFO, "Login failed, showing dialog.");
-                            AlertDialogWithConfirmCancelDeferred p = new AlertDialogWithConfirmCancelDeferred(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_AuthenticationError));
-                            viewFactory.getAlertDialogWithConfirmCancelView().showDialog(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_AuthenticationError));
-                            p.getPromise().then(new Success<Boolean, Void>() {
-                                @Override
-                                public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                                    if (resolved.getValue()) {
-                                        Window.Location.replace(Window.Location.getHref());
-                                    } else {
-                                        Window.Location.replace(Window.Location.getHref());
-                                    }
-                                    return null;
-                                }
-                            }, new Failure() {
-                                @Override
-                                public void fail(Promise<?> resolved) throws Exception {
-                                    eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_InternalError)));
-                                }
-                            }
-                            );
-                            eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.User_AuthenticationError)));
-                            //presenterFactory.getLoginPresenter().getView().ini;
+                            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN));
                             break;
                         case LOGOUT:
                             dwoGlobalVars.clearCurrentUser();
-                            // viewFactory.getMainView().hideMenuButton();
-//                            presenterFactory.getMainPresenter().onSwitchViewEvent(new SwitchViewEvent(SwitchViewEvent.eventValue.LOGIN));
-                            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN));
+                            //we should also clear user, view and presenter states, but that is never bug free.
+                            //however a reload works too.
+                            Window.Location.replace(Window.Location.getHref());
                             break;
                         default:
                             LOG.log(Level.SEVERE, "Login handling failed in app controller.");

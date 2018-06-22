@@ -174,6 +174,7 @@ public class LoginPresenter {
                         LOG.log(Level.INFO, "none dwo2exception thrown: " + fail.getMessage());
                         view.showWarning(fail.getMessage());
                     }
+                    eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
                 }
             }
             );

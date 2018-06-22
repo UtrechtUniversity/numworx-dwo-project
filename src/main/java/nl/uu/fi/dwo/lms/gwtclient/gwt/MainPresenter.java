@@ -2,9 +2,20 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.event.shared.EventBus;
+import fi.dwo.gwt.lib.rest.util.StringFormatter;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
+import org.osgi.util.promise.Failure;
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+import org.osgi.util.promise.Success;
 
 /**
  * Handler for BootPanel actions.
@@ -35,7 +46,7 @@ public class MainPresenter {
         public void showLoginView();
 
         public void showResultsView();
-        
+
         public void showSelectedResultsView();
 
         public void showStudentResultsView();
@@ -43,7 +54,7 @@ public class MainPresenter {
         public void showSelectStudentResultsView();
 
         public void showStudentScoResultView();
-        
+
         public void showSchoolclassesView(); // has AddSchoolClass function
 
         public void showEditSchoolclassView();
@@ -61,12 +72,14 @@ public class MainPresenter {
 //        public void showTeachersInSchoolclassView();
 //
 //        public void showCoursesOfSchoolClassView();
-
         public void setCurrentPanelName(String panel);
 
         public void showPersonsView();
+
         public void showAddPersonView();
+
         public void showEditPersonView();
+
         public void showImportPersonsView();
 
         public void showModulesView();
@@ -94,19 +107,6 @@ public class MainPresenter {
     public void setView(MainPresenter.Display display) {
         this.display = display;
     }
-//
-//    void goLogin() {
-//        display.showLoginView();
-//    }
-    //
-    // @JsMethod
-    // public void menuButtonClicked() {
-    // if (display.isMenuVisible()) {
-    // display.hideMenuView();
-    // } else {
-    // display.showMenuView();
-    // }
-    // }
 
     @JsMethod
     public void selectView(String selectedView) {
@@ -117,97 +117,43 @@ public class MainPresenter {
         eventBus.fireEvent(new SwitchViewEvent(selectedView));
     }
 
-//////    @Override
-//////    public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
-////////        onSwitchViewEvent(switchViewEvent.getEventValue());
-//////    }
-////
-////    private void onSwitchViewEvent(SwitchViewEvent.SelectedView selectedView) {
-////        if (selectedView != selectedView.LOGIN) {
-////            try {
-////                display.setSchoolName(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
-////                display.setPresentationName(dwoGlobalVars.getCurrentUser().getDisplayName());
-////                // display.showPostLoginWidgets();
-////            } catch (Exception e) {
-////            }
-////        }
-////        if (SwitchViewEvent.eventValue != SwitchViewEvent.eventValue.LOGIN
-////                        && (dwoGlobalVars.getActiveSchoolRoleAndClass() == null
-////                        || dwoGlobalVars.getActiveSchoolRoleAndClass().getRole() == null
-////                        || !dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name()))) {
-////                    LOG.log(Level.INFO, "Showing account view, because not a teacher.");
-////                    //eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_SwitchTeacher()));
-////                    display.showAccountView();
-////                } else {
-//////        if (dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())) {
-////            switch (selectedView) {
-////                case LOGIN:
-////                    display.showLoginView();
-////                    break;
-////                case WELCOME:
-////                    display.showWelcomeView();
-////                    break;
-////                case ACCOUNT:
-////                    display.showAccountView();
-////                    break;
-////                case PEOPLE:
-////                    display.showPersonsView();
-////                    break;
-////                case SCHOOLCLASSES:
-////                    display.showSchoolclassesView();
-////                    break;
-////                case EDITSCHOOLCLASS:
-////                    display.showEditSchoolclassView();
-////                    break;
-////                case ADDSTUDENTTOSCHOOLCLASS:
-////                    display.showAddStudentToSchoolClassView();
-////                    break;
-////                case COPYORMOVESTUDENTTOSCHOOLCLASS:
-////                    display.showCopyOrMoveStudentToSchoolClassView();
-////                    break;
-////                case ADDTEACHERTOSCHOOLCLASS:
-////                    display.showAddTeacherToSchoolClassView();
-////                    break;
-////                case EDITCOURSESOFSCHOOLCLASS:
-////                    display.showEditCoursesOfSchoolClassView();
-////                    break;
-////                case RESULTS:
-////                    display.showResultsView();
-////                    break;
-////                case SELECTEDRESULTS:
-////                    display.showSelectedResultsView();
-////                    break;
-////                case RESULTSSTUDENT:
-////                    display.showStudentResultsView();
-////                    break;
-////                case MODULES:
-////                    display.showModulesView();
-////                    break;
-////                case ORGANISATION:
-////                    display.showOrganisationView();
-////                    break;
-////                // case ADDSTUDENTS:
-////                // display.showAddStudentsView();
-////                // break;
-////                // case TEACHERSINSCHOOLCLASS:
-////                // display.showTeachersInSchoolclassView();
-////                // break;
-////                // case SCORESULTS:
-////                // display.showScoResultsView();
-////            }
-//////        } else {
-//////            display.showAccountView();
-////        }
-////    }
-//
-//    @Override
-//    public void onLoginEvent(LoginEvent loginEvent
-//    ) {
-//        /// display.showPostLoginWidgets();
-//    }
-//
-//    @JsMethod
-//    public String getTranslation(String key) {
-//        return rb.getString(key);
-//    }
+    @JsMethod
+    public void logout() {
+        LOG.log(Level.INFO, "Logging out");
+        Promise<Boolean> p = Promises.resolved(true); //empty promise
+        p.then(new Success<Boolean, Boolean>() {
+            @Override
+            //Are you sure?
+            public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
+                AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(DwoLocalesForGWT.instance.GUI_Dialog_User_ConfirmLogout());
+                AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
+                eventBus.fireEvent(event);
+                return dialogPromise.getPromise();
+            }
+        }).then(new Success<Boolean, Void>() {
+            @Override
+            //Are you sure?
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                if (resolved.getValue()) {
+                    eventBus.fireEvent(new LoginEvent(LoginEvent.State.LOGOUT));
+                } else {
+                }
+                return null;
+            }
+        },
+                new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        });
+    }
 }
