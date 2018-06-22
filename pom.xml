@@ -18,6 +18,18 @@
 		</resources>
 		<plugins>
 			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.6.1</version>
+				<configuration>
+<!-- 		<annotationProcessorPaths> -->
+<!-- 			<path> -->
+<!-- 			<groupId>com.google.dagger</groupId> -->
+<!-- 			<artifactId>dagger-compiler</artifactId> -->
+<!-- 			<version>${daggerVersion}</version> -->
+<!-- 			</path> -->
+<!-- 		</annotationProcessorPaths> -->
+				</configuration>
+			</plugin>			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>buildnumber-maven-plugin</artifactId>
 				<version>1.3</version>
@@ -215,6 +227,17 @@
 			<classifier>sources</classifier>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.google.dagger</groupId>
+			<artifactId>dagger-gwt</artifactId>
+			<version>${daggerVersion}</version>
+		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.google.dagger</groupId> -->
+<!-- 			<artifactId>dagger-compiler</artifactId> -->
+<!-- 			<version>${daggerVersion}</version> -->
+<!-- 			<scope>provided</scope> -->
+<!-- 		</dependency> -->
 	</dependencies>
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
@@ -223,8 +246,9 @@
 		<relativePath>../DWO-GWT</relativePath>
 	</parent>
 	<properties>
+		<daggerVersion>2.11</daggerVersion>
 		<maven.test.skip>true</maven.test.skip>
-		<gwtModule>${project.groupId}.DWO2player</gwtModule>
+		<gwtModule>${project.groupId}.DWO2playerDebug</gwtModule>
 		<finalName>${project.artifactId}</finalName>
 		<runTarget>${project.artifactId}.html</runTarget>
 		<warClassifier />
