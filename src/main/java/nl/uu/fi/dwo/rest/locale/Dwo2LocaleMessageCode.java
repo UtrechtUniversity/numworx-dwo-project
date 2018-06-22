@@ -9,8 +9,26 @@ package nl.uu.fi.dwo.rest.locale;
  * @author Gert van der Plas
  */
 public enum Dwo2LocaleMessageCode {
+    /** Numworx message codes */
+NUM_Button_Ok,  
+NUM_Button_Cancel,
+NUM_Button_Save,
+NUM_Button_Apply,
+NUM_Button_Confirm,
+NUM_Button_Abort,
+NUM_Button_Update,
+
+
+NUM_Dialog_User_ConfirmLogout,
+
+
+/** Old tags for java */
 GUI_Button_Ok,  
 GUI_Button_Cancel,
+GUI_Button_Save,
+GUI_Button_Apply,
+GUI_Button_Confirm,
+GUI_Button_Abort,
 GUI_Button_Update,
 GUI_Button_AddTeachersToClass,
 GUI_Button_StudentModels,
@@ -45,6 +63,7 @@ GUI_Dialog_User_ConfirmRoleSwitch,
 GUI_Dialog_User_ConfirmSchoolClassSwitch,
 GUI_Dialog_User_ConfirmSchoolDelete,
 GUI_Dialog_User_ConfirmSchoolLoginDelete,
+GUI_Dialog_User_ConfirmLogout,
 GUI_Dialog_User_ConfirmChangeCommited,
 GUI_Dialog_User_ConfirmSingleSchoolStudentDelete,
 GUI_Dialog_User_ConfirmRegularSchoolStudentDelete,
