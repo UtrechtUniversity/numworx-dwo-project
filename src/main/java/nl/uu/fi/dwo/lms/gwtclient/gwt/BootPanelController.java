@@ -21,15 +21,18 @@ import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.LOGOUT;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.SUCCESS_RESULTS;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 import org.osgi.util.promise.Promise;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import org.osgi.util.promise.Failure;
+import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 /**
@@ -165,7 +168,7 @@ public class BootPanelController {
         eventBus.addHandler(LoginEvent.TYPE, new LoginEventHandler() {
             @Override
             public void onLoginEvent(LoginEvent loginEvent) {
-                if (loginEvent.getState() == FAIL || dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name())) {
+                if (loginEvent.getState() == FAIL || loginEvent.getState() == LOGOUT || dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name())) {
                     switch (loginEvent.getState()) {
                         case SUCCESS:
                         case SUCCESS_WELCOME:
@@ -215,8 +218,9 @@ public class BootPanelController {
                         || dwoGlobalVars.getActiveSchoolRoleAndClass().getRole() == null
                         || !dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name()))) {
                     LOG.log(Level.INFO, "Showing account view, because not a teacher.");
-                    //eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_SwitchTeacher()));
+                    
                     presenterFactory.getAccountPresenter().init();
+                    viewFactory.getMainView().showAccountView();
                 } else {
                     if (SwitchViewEvent.eventValue != SwitchViewEvent.eventValue.LOGIN) {
                         viewFactory.getMainView().setSchoolName(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
