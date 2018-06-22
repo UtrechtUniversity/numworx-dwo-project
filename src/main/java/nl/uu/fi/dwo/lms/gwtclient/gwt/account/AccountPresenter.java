@@ -335,7 +335,7 @@ public class AccountPresenter {
                 dwoGlobalVars.setCurrentUser(u);
                 view.clear();
                 view.updateUserView(u);
-                eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Dialog_User_ConfirmChangeCommited()));
+                eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_Dialog_User_ConfirmChangeCommited()));
                 return null;
             }
         },
