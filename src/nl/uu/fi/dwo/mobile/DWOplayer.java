@@ -265,6 +265,7 @@ public class DWOplayer implements EntryPoint
 		settings.setPreventScrolling(true);
 		MGWT.applySettings(settings);
 
+		inject();
 		//GWT Settings//
 		clientfactory = createClientFactory();
 		AppPlaceHistoryMapper historyMapper = GWT.create(AppPlaceHistoryMapper.class);
@@ -316,6 +317,10 @@ public class DWOplayer implements EntryPoint
 
 	}
 
+	protected void inject() {
+	  //nl.uu.fi.dwo.mobile.client.dagger.DaggerPlayerComponent.create().inject(this);
+	}
+	
 	private void setupResources()
 	{
 //		resources.put("SelectionColor", "#88f");

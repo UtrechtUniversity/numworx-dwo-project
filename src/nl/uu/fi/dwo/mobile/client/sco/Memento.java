@@ -101,7 +101,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	public static final String LEARNER_NAME = "cmi.learner_name";
 	public static final String LEARNER_PREFERENCE_LANGUAGE = "cmi.learner_preference.language";
 	public static final String LOCATION = "cmi.location";
-	private static final String REVIEW_DATA = "cmi.comments_from_lms.0.comment";
+	static final String REVIEW_DATA = "cmi.comments_from_lms.0.comment";
 	
 	public static final String LESSON_MODE = "cmi.mode";
 	public static final String SHARE_MAP = "shareMap";
@@ -165,9 +165,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		this.view = view;
 		this.pmodel = studentModel;
 		_instance = this;
-		registration[0] = Window.addWindowClosingHandler(this);
-		registration[1] = Window.addCloseHandler(this);
-		registration[2] = DWOplayer.clientfactory.getEventBus().addHandler(CBookEvent.TYPE, this);
+		register();
 		initialize();
 		String value;
 		scoreRaw = getValue(SCORE_RAW);
@@ -235,6 +233,12 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		ShareFacade.setSharedState(shareMap);
 		StudentModelLogger.destroy();
 	}
+
+  void register() {
+    registration[0] = Window.addWindowClosingHandler(this);
+		registration[1] = Window.addCloseHandler(this);
+		registration[2] = DWOplayer.clientfactory.getEventBus().addHandler(CBookEvent.TYPE, this);
+  }
 
 	private void incAantalSessies() {
 		if(isEindtoetsVerzegeld()||isReview()) return;
