@@ -170,6 +170,17 @@ public class SelectedResultsPresenter {
     	return null;
     }
     
+    @JsMethod public void preparePages(JavaScriptObject context, String scoid, String classid) {
+      PersistenceId sco = new PersistenceId(scoid);
+      PersistenceId schoolclass = new PersistenceId(classid);
+      preparePages(schoolclass, sco ).then(p-> {view.updateResultTree(resultTree);return null;}, p-> LOG.log(Level.SEVERE, "preparePages", p.getFailure()))
+      .then(p-> {
+        eventBus.fireEvent(new SwitchViewEvent(SelectedView.SELECTEDRESULTS, resultTree, context));
+        return null;
+      });
+    }
+    
+    
     @JsMethod 
     public void showStudentResults (JavaScriptObject context, String scoid, String studentid, String classid) {
         LOG.fine("entering showStudentResults " + context + "," + scoid);
@@ -181,7 +192,7 @@ public class SelectedResultsPresenter {
 		
 		DomStudent student = domschoolclass.getChildren().get(key).getStudent();
 		DomScoContext sco = new DomScoContext(); sco.setId(new PersistenceId(scoid));
-		preparePages(schoolclass, sco.getId()).then(p-> {view.updateResultTree(resultTree);return null;}, p-> LOG.log(Level.SEVERE, "preparePages", p.getFailure()));
+        preparePages(schoolclass, sco.getId()).then(p-> {view.updateResultTree(resultTree);return null;}, p-> LOG.log(Level.SEVERE, "preparePages", p.getFailure()));
 		Promise<DomStudentScoContext> p1 = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), Collections.singletonList(student))
 		.map(p -> p.getStudentScoContexts().get(0).getValue());		
 		Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(sco, domschoolclass.getSchoolClass());		
@@ -241,6 +252,7 @@ public class SelectedResultsPresenter {
             String review_data  = p3.getValue().get(ResultsService.REVIEW_DATA);
             String suspend_data = p3.getValue().get(ResultsService.SUSPEND_DATA);
             Map<PersistenceId, DomResultStudentScoPage> children = Util.getPages(launchdata, suspend_data, review_data);
+            LOG.info("setChildren for " + ssc.getId() + " " + children);
             ssc.setChildren(children);
             return preparePages(schoolclass, scocontext, iterator);
           }}).recoverWith(p -> preparePages(schoolclass,scocontext, iterator));

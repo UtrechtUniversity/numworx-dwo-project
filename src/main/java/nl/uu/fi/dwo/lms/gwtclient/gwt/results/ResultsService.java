@@ -131,6 +131,7 @@ public class ResultsService implements SwitchViewEventHandler {
     }
     
     Map<PersistenceId, Promise<JSONValue>> launchDataCache = new HashMap<>();
+    Map<PersistenceId,Promise<Map<String,String>>> suspendDataCache = new HashMap<>();
     
     public Promise<JSONValue> getJSONLaunchDataBytes(DomScoContext sco, DomSchoolClassId schoolClass) {
         Promise<JSONValue> cache = launchDataCache.get(sco.getId());
@@ -143,17 +144,28 @@ public class ResultsService implements SwitchViewEventHandler {
     	return cache;
     }
 
-	public Promise<Map<String, String>> getValues(DomStudentScoContext dom) {
-		return scormValues.getValues(dom, getContext(), keys);
-	}
+  public Promise<Map<String, String>> getValues(DomStudentScoContext dom) {
+    Promise<Map<String, String>> values;
+    values = suspendDataCache.get(dom.getId());
+    if (values == null || (values.isDone() && values.getFailure() != null) ) {
+      values = scormValues.getValues(dom, getContext(), keys);
+      suspendDataCache.put(dom.getId(), values);
+    }
+    return values;
+  }
 
   public Promise<DomStudentScoContext> setValues(DomStudentScoContext studentSco, Map<String, String> userState) {
+      Promise<Map<String,String>> promise = suspendDataCache.get(studentSco.getId());
+      if(promise != null && promise.isDone() && promise.getFailure() == null) {
+        promise.getValue().putAll(userState);
+      }
       return scormValues.setValues(studentSco, getContext(), userState);
   }
 
 // FIXME caching policy
   
-  void clearCache() { 
+  void clearCache() {
+    suspendDataCache.clear();
     launchDataCache.clear();
   }
   

@@ -51,13 +51,14 @@ public class StudentScoResultPresenter {
   private static final Logger LOG = Logger.getLogger(StudentScoResultPresenter.class.getName());
   private final Failure FAILURE;
   private final EventBus eventBus;
-  private final DwoGlobalVars dwoGlobalVars;
+  //private final DwoGlobalVars dwoGlobalVars;
 
   private Display view;
   @Inject ResultsService resultService;
   private DomResultTree resultTree;
   private DomResultStudentScoContext ssc;
   private Map<String,String> userState;
+  @SuppressWarnings("rawtypes")
   private DomResultSchoolClass parent;
 
   public interface Display  extends BasicDisplay{
@@ -77,7 +78,7 @@ public class StudentScoResultPresenter {
 
   @Inject StudentScoResultPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
     eventBus = anEventBus;
-    dwoGlobalVars = aDwoGlobalVars;
+    //dwoGlobalVars = aDwoGlobalVars;
     FAILURE = new LoggingFailure(LOG, anEventBus);
   }
 
@@ -107,7 +108,6 @@ public class StudentScoResultPresenter {
   
   @JsMethod 
   public void close(JavaScriptObject resultState) {
-    LOG.severe("calling close ");
     view.clear();
     view.hide();
     SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTSRETURN, resultTree, resultState);   
@@ -215,7 +215,8 @@ public class StudentScoResultPresenter {
     LOG.info("Finish " + dummy);
     Map<String,String> userState = new HashMap<> (this.userState);
     userState.keySet().retainAll(Arrays.asList("cmi.score.raw","cmi.comments_from_lms.0.comment"));
-    resultService.setValues(ssc.getStudentSco(), userState).map(this::updateResultTree).then(null,FAILURE);
+    LOG.info( "update Score/Review " + userState);
+    //resultService.setValues(ssc.getStudentSco(), userState).map(this::updateResultTree).then(null,FAILURE);
     return "true";
   }
   

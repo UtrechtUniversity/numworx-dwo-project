@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoPage;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 
@@ -57,6 +58,12 @@ class Util {
              } else {
                json.put("sequence", new JSONNumber(Integer.MAX_VALUE));
              }
+         } else if (node instanceof DomResultStudentScoPage) {
+             DomResultStudentScoPage page = (DomResultStudentScoPage) node;
+             json.put("maxScore", new JSONNumber(page.getMaxScore()));
+             json.put("bonus", new JSONNumber(page.getCorrectie()));
+             json.put("label", new JSONString(page.getLabel()));
+             json.put("sequence", new JSONNumber(page.getNodeId()));
          }
   //        json.put("node-id", new JSONNumber(node.getNodeId()));
           //Add children.

@@ -64,7 +64,8 @@ class Util {
     LOG.info("getPages aantal = " + aantal);
     
     JSONNumber scores[] = getScores(suspend_data, aantal);
-    LOG.info("getPages scores = " + Arrays.asList(scores));
+    int ls = scores.length;
+    LOG.info("getPages scores = " + Arrays.asList(scores)   + " " + ls);
     JSONNumber maxScores[] = getMaxScores(launchdata, aantal);
     LOG.info("getPages maxscores = " + Arrays.asList(maxScores));
     JSONNumber correctie[] = getCorrectie(review_data, aantal);
@@ -73,13 +74,15 @@ class Util {
     for(int i = 0; i < aantal; i++) {
       String label = String.valueOf(i+1);
       DomResultStudentScoPage item = new DomResultStudentScoPage(label);
-      if (i < scores.length)
+      item.setNodeId(i);
+      if (i < ls)
         item.setScore(scores[i].doubleValue());
       item.setMaxScore(maxScores[i].doubleValue());
       if (i < correctie.length)
         item.setCorrectie(correctie[i].doubleValue());
+      PersistenceId key = new PersistenceId("LOCAL;none;" + label);
+      result.put(key, item);
     }
-    
     return result;
     
   }
@@ -90,18 +93,54 @@ class Util {
         return new JSONNumber[0];
     
     JSONObject review = JSONParser.parseLenient(review_data).isObject();
-    //JSONArray  data = review.get("xxx").isArray();
-    JSONNumber[] result = new JSONNumber[aantal];
-    for(int i = 0; i < aantal; i++) {
+    JSONArray  data = review.get("opdrContStates").isArray().get(0).isArray();
+    JSONNumber[] result = new JSONNumber[data.size()];
+    for(int i = 0; i < result.length; i++) {
       result[i] = new JSONNumber(0); // TODO ....
+      JSONValue value = data.get(i);
+      if(value != null) {
+        result[i] = new JSONNumber(sumCorrectie(value));
+      }
     }
     return result;
   }
 
+  private static double sumCorrectie(JSONValue value) {
+    if(value == null) return 0;
+    JSONArray a = value.isArray();
+    if(a != null) {
+      double result = 0;
+      for(int i=0; i < a.size(); i++) {
+        result += sumCorrectie(a.get(i));
+      }
+      return result;
+    }
+    JSONObject o = value.isObject();
+    if(o != null) {
+      double result = 0;
+      value = o.get("interactiePanelStates");
+      if(value != null) {
+        result += sumCorrectie(value);
+      }
+      value = o.get("review...");
+      if (value != null) 
+        result += value.isNumber().doubleValue();
+      return result;
+    }
+    return 0;
+  }
+
   private static JSONNumber[] getMaxScores(JSONValue launchdata, int aantal) {
-    JSONNumber[] result = new JSONNumber[aantal];
+    JSONNumber[] result = new JSONNumber[aantal];   
     for(int i = 0; i < aantal; i++) {
-      result[i] = new JSONNumber(10); // TODO ....
+      result[i] = new JSONNumber(10);
+      JSONValue value = launchdata.isObject().get("opdracht_1_" + (i+1));
+      if(value == null) continue;
+      JSONObject opdracht = value.isObject();
+      value = opdracht.get("scoreMax");
+      if(value != null) {
+        result[i] = value.isNumber();
+      }     
     }
     return result;
   }
