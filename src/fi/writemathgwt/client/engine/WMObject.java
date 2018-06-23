@@ -48,6 +48,12 @@ public class WMObject {
 		makeBox();
 	}
 	
+	public WMObject(ArrayList<Stroke> strokes, String teken) {
+		this.strokes = strokes;
+		this.teken = teken;
+		makeBox();
+	}
+	
 	public WMObject(WMObject wo) {
 		strokes = wo.getStrokes();
 		this.teken = wo.getTekenRaw();
@@ -229,4 +235,6 @@ public class WMObject {
 	public void scale(double cx, double cy,double factor) {
 		box.scale(cx, cy, factor);
 	}
+	
+	
 }

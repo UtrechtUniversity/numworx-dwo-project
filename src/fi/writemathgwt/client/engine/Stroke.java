@@ -1,7 +1,10 @@
 package fi.writemathgwt.client.engine;
 
-import java.awt.Graphics;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -10,6 +13,8 @@ import com.google.gwt.canvas.dom.client.CssColor;
 import fi.writemathgwt.client.engine.DoublePoint;
 import fi.writemathgwt.client.engine.DoubleRectangle;
 import fi.writemathgwt.client.engine.Point;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 
 public class Stroke {
@@ -22,6 +27,29 @@ public class Stroke {
 	protected double[] angles;
 	protected double[] dAngles;
 	private long timeStamp;
+	
+	public static Stroke setState(Map<String, Object> map) {
+		ObjectMap h = JSONUtilities.wrapMap(map);
+		
+		List<Double> parsePointsX = null;
+		List<Double> parsePointsY = null;
+		
+		if(h.containsKey("parsePointsX")) 
+			parsePointsX = h.getDoubleList("parsePointsX");
+		if(h.containsKey("parsePointsY")) 
+			parsePointsY = h.getDoubleList("parsePointsY");
+		
+		if(parsePointsX==null)
+			return null;
+		
+		ArrayList<DoublePoint> parsePoints = new ArrayList<DoublePoint>();
+		for (int i = 0; i < parsePointsX.size(); i++) {
+			double x = ((Number) parsePointsX.get(i)).doubleValue();
+			double y = ((Number) parsePointsY.get(i)).doubleValue();
+			parsePoints.add(new DoublePoint(x,y));
+		}
+		return new Stroke(parsePoints, true);
+	}
 	
 	public Stroke() {
 		
@@ -53,6 +81,19 @@ public class Stroke {
 		angles = new double[parsePoints.size()-1];
 		makeAngles();
 		makeDAngles();
+	}
+	
+	public HashMap<String,Object> getState() {
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		ArrayList<Double> parsePointsX = new ArrayList<Double>();
+		ArrayList<Double> parsePointsY = new ArrayList<Double>();
+		for(int i = 0 ; i < parsePoints.size() ; i++) {
+			parsePointsX.add(parsePoints.get(i).x);
+			parsePointsY.add(parsePoints.get(i).y);
+		}
+		h.put("parsePointsX", parsePointsX);
+		h.put("parsePointsY", parsePointsY);
+		return h;
 	}
 	
 	public void extendRight(Stroke extension) {

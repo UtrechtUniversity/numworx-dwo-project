@@ -1,8 +1,11 @@
 package fi.writemathgwt.client.engine;
 
 import java.awt.Graphics;
+import java.util.List;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -10,6 +13,8 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import fi.writemathgwt.client.engine.filters.FourStrokeProcessor;
 import fi.writemathgwt.client.engine.filters.ThreeStrokeProcessor;
 import fi.writemathgwt.client.engine.filters.TwoStrokeProcessor;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 
 public class StrokeContainer {
@@ -26,6 +31,7 @@ public class StrokeContainer {
 	public StrokeContainer() {
 		strokes = new ArrayList<Stroke>();
 		wmObjects = new ArrayList<WMObject>();
+		
 	}
 	
 	public void addStroke(Stroke stroke) {
@@ -291,6 +297,74 @@ public class StrokeContainer {
 		if(parseArea!=null)
 			return parseArea.getDiagonal();
 		return 0;
+	}
+	
+	public HashMap<String,Object> getState() {
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		
+		ArrayList<Map<String,Object>> strokeList = new ArrayList<Map<String,Object>>();
+		ArrayList<Object> wmStrokeIndicesList = new ArrayList<Object>();
+		ArrayList<String> wmStrokeTekenList = new ArrayList<String>();
+		for (int i = 0; i < strokes.size(); i++) {
+			strokeList.add(strokes.get(i).getState());
+		}
+		for (int i = 0; i < wmObjects.size(); i++) {
+			ArrayList<Stroke> wmStrokes = wmObjects.get(i).getStrokes();
+			ArrayList<Integer> wmStrokeIndices = new ArrayList<Integer>();
+			for (int j = 0; j < wmStrokes.size(); j++) {
+				wmStrokeIndices.add(strokes.indexOf(wmStrokes.get(j)));
+			}
+			wmStrokeIndicesList.add(wmStrokeIndices);
+			wmStrokeTekenList.add(wmObjects.get(i).getTekenRaw());
+		}
+		
+		h.put("strokeList", strokeList);
+		h.put("wmStrokeIndicesList", wmStrokeIndicesList);
+		h.put("wmStrokeTekenList", wmStrokeTekenList);
+		h.put("formulaString", formulaString);
+		return h;
+	}
+	
+	public void setState(Map<String,Object> map) {
+		if(map == null || map.isEmpty())
+			return;
+		
+		logger.info(map.toString());
+		ObjectMap launchState = JSONUtilities.wrapMap(map);
+		List<Map<String,Object>> strokeList = new ArrayList<Map<String,Object>>();
+		List<Object> wmStrokeIndicesList = new ArrayList<Object>();
+		List<String> wmStrokeTekenList = new ArrayList<String>();
+		
+		if (launchState.containsKey("strokeList"))
+			strokeList = launchState.getMapList("strokeList");
+		if (launchState.containsKey("wmStrokeIndicesList"))
+			wmStrokeIndicesList =launchState. getList("wmStrokeIndicesList");
+		if (launchState.containsKey("wmStrokeTekenList"))
+			wmStrokeTekenList = launchState.getStringList("wmStrokeTekenList");
+		if (launchState.containsKey("formulaString"))
+			formulaString = launchState.getString("formulaString");
+		
+		
+		for (int i = 0; i < strokeList.size(); i++)	{	
+			Stroke stroke = Stroke.setState(strokeList.get(i));
+			if(stroke!=null)
+				strokes.add(stroke);
+		}
+		for (int i = 0; i < wmStrokeIndicesList.size(); i++)	{	
+			List<Object> wmStrokeIndices = JSONUtilities.toArrayList(wmStrokeIndicesList.get(i));
+			
+			ArrayList<Object> indices = new ArrayList<Object>(wmStrokeIndices);
+			ArrayList<Stroke> wmStrokes = new ArrayList<Stroke>();
+			for (int j = 0; j < indices.size(); j++) {
+				int index = ((Number)indices.get(j)).intValue();
+				wmStrokes.add(strokes.get(index));
+			}
+			WMObject wmObject = new WMObject(wmStrokes,wmStrokeTekenList.get(i));
+			wmObjects.add(wmObject);
+		}
+		
+		makeParseArea();
+		
 	}
 	
 	
