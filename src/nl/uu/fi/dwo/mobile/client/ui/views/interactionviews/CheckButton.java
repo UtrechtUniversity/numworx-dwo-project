@@ -113,7 +113,9 @@ public class CheckButton implements InteractionStub, CBookEventListener
 			if(!editable) return;
 			event.stopPropagation();
 			logger.warning("CheckButton actieAfronden");
-			confirm().then(new Success<Boolean, Void>() {
+			//confirm()
+			Promises.resolved(Boolean.TRUE)
+			.then(new Success<Boolean, Void>() {
 
 				@Override
 				public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
