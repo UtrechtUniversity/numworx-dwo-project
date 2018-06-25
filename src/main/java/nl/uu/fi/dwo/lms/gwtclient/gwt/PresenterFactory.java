@@ -5,7 +5,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import com.google.web.bindery.event.shared.EventBus;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
@@ -60,6 +59,5 @@ public interface PresenterFactory {
     public MessageDialogWithOKPresenter getMessageDialogWithOKPresenter();
 //    public PromisedDialogWithOKPresenter getPromisedDialogWithOKPresenter();
     public ProgressDialogWithAbortPresenter getProgressDialogWithAbortPresenter();
-    public FileUploadStudentsPresenter getFileUploadStudentsPresenter();
     public void bindViewFactory(ViewFactory viewFactory);
 }

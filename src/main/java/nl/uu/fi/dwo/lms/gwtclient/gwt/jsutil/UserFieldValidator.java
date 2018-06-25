@@ -10,7 +10,7 @@ import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessageCode;
  *
  * @author Gert van der Plas
  */
-@JsType(name = "jsUserFieldValidator", namespace = JsPackage.GLOBAL)
+@JsType(name = "jsUserFieldValidator", namespace="dwoAPI")
 public class UserFieldValidator {
 
     @JsMethod

@@ -5,14 +5,11 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import com.google.web.bindery.event.shared.EventBus;
 
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresenter;
-import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import javax.inject.Singleton;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddStudentPresenter;
@@ -70,7 +67,6 @@ public class PresenterFactoryGwt implements PresenterFactory {
     private final AlertDialogWithOKPresenter alertDialogWithOKPresenter;
     private final AlertDialogWithConfirmCancelPresenter alertDialogWithConfirmCancelPresenter;
 //    private final PromisedDialogWithOKPresenter promisedDialogWithOKPresenter;
-    private final FileUploadStudentsPresenter fileUploadStudentsPresenter;
     private final ProgressDialogWithAbortPresenter progressDialogWithAbortPresenter;
 
     @Inject public PresenterFactoryGwt(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -98,7 +94,6 @@ public class PresenterFactoryGwt implements PresenterFactory {
         editTeacherPresenter = new EditTeacherPresenter(anEventBus, aDwoGlobalVars);
 
         messageDialogWithOKPresenter = new MessageDialogWithOKPresenter(eventBus);
-        fileUploadStudentsPresenter = new FileUploadStudentsPresenter(eventBus, dwoGlobalVars);
         alertDialogWithOKPresenter = new AlertDialogWithOKPresenter(eventBus);
         alertDialogWithConfirmCancelPresenter = new AlertDialogWithConfirmCancelPresenter(eventBus);
 //        promisedDialogWithOKPresenter = new PromisedDialogWithOKPresenter(eventBus);
@@ -128,7 +123,6 @@ public class PresenterFactoryGwt implements PresenterFactory {
         editTeacherPresenter.setView(viewFactory.getEditTeacherView());
         editStudentPresenter.setView(viewFactory.getEditStudentView());
 
-        fileUploadStudentsPresenter.setView(viewFactory.getFileUploadStudentsView());
         messageDialogWithOKPresenter.setView(viewFactory.getMessageDialogWithOKView());
         alertDialogWithOKPresenter.setView(viewFactory.getAlertDialogWithOKView());
         alertDialogWithConfirmCancelPresenter.setView(viewFactory.getAlertDialogWithConfirmCancelView());
@@ -246,12 +240,6 @@ public class PresenterFactoryGwt implements PresenterFactory {
     @Override
     public AlertDialogWithOKPresenter getAlertDialogWithOKPresenter() {
         return alertDialogWithOKPresenter;
-    }
-
-//    @JsMethod    
-    @Override
-    public FileUploadStudentsPresenter getFileUploadStudentsPresenter() {
-        return fileUploadStudentsPresenter;
     }
 
     @JsMethod

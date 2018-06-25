@@ -3,8 +3,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.persons;
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
-import fi.dwo.gwt.lib.rest.ui.DialogEvent;
-import fi.dwo.gwt.lib.rest.util.StringFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,12 +28,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
+import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
-import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -159,17 +158,23 @@ public class EditStudentPresenter {
         //if singleschool fetch user
         if (aUser.getSingleSchool()) {
             p.then((resolved) -> {
+                DomContext ctx = new DomContext();
+                DomGetSingleSchoolStudent student = new DomGetSingleSchoolStudent(new DomStudent(aUser));
+                ctx.setDomHasRole(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
                 for (TaggedDomSchoolClass sc : taggedSchoolClassMap.values()) {
                     if (sc.isTag()) {
-                        DomGetSingleSchoolStudent student = new DomGetSingleSchoolStudent(new DomStudent(aUser));
                         student.setDomSchoolClass(sc.getSchoolClass());
-                        return manager.getSingleSchoolStudent(student);
-                    } else {
-                        return Promises.resolved(null);
+                        break;
                     }
                 }
-                DomGetSingleSchoolStudent student = new DomGetSingleSchoolStudent(new DomStudent(aUser));
-                return manager.getSingleSchoolStudent(student);
+                if (student.getDomSchoolClass() != null) {
+                    RestGetSingleSchoolStudent restData = new RestGetSingleSchoolStudent();
+                    restData.setRestContext(ctx);
+                    restData.setDomGetSingleSchoolStudent(student);
+                    return manager.getSingleSchoolStudent(restData);
+                } else {
+                    return Promises.resolved(null);
+                }
 
             }).then((resolved) -> {
                 DomSingleSchoolStudent student = (DomSingleSchoolStudent) resolved.getValue();
@@ -283,7 +288,13 @@ public class EditStudentPresenter {
             public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {
                 if (resolved.getValue()) {
                     Promise<Boolean> promisedUser;
-                    promisedUser = manager.updateSingleSchoolStudent(changedUser);
+                    DomContext ctx = new DomContext();
+                    RestSingleSchoolStudent rest = new RestSingleSchoolStudent();
+                    rest.setRestContext(ctx);
+                    rest.setDomSingleSchoolStudent(changedUser);
+                    ctx.setDomHasRole(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
+
+                    promisedUser = manager.updateSingleSchoolStudent(rest);
                     return promisedUser;
                 } else {
                     LOG.log(Level.INFO, "update user cancelled.");

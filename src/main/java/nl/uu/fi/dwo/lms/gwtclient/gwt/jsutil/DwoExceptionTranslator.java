@@ -14,7 +14,7 @@ import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessageCode;
  *
  * @author Gert van der Plas
  */
-@JsType(name = "jsDwoExceptionTranslator", namespace = JsPackage.GLOBAL)
+@JsType(name = "jsDwoExceptionTranslator", namespace="dwoAPI")
 public class DwoExceptionTranslator {
 
     private static final Dwo2ExceptionsForGWT rb = GWT.create(Dwo2ExceptionsForGWT.class);

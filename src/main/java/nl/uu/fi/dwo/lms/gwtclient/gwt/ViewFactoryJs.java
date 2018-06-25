@@ -15,13 +15,10 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.welcome.JsWelcomeView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsView;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.modules.JsModulesView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.persons.JsAddPersonView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.persons.JsEditStudentView;
@@ -94,7 +91,6 @@ public class ViewFactoryJs implements ViewFactory {
     private final MessageDialogWithOKPresenter.Display messageDialogWithOKView;
 //    private final PromisedDialogWithOKPresenter.Display promisedDialogWithOKView;
     private final AlertDialogWithConfirmCancelPresenter.Display alertDialogWithConfirmCancelView;
-    private final FileUploadStudentsPresenter.Display fileUploadStudentsView;
     private final ProgressDialogWithAbortPresenter.Display progressDialogWithAbortView;
 
     @Inject
@@ -125,7 +121,6 @@ public class ViewFactoryJs implements ViewFactory {
         messageDialogWithOKView = new JsMessageDialogWithOKView();
         alertDialogWithConfirmCancelView = new JsAlertDialogWithConfirmCancelView();
         progressDialogWithAbortView = new JsProgressDialogWithAbortView();
-        fileUploadStudentsView = new FileUploadStudentsView(pf.getFileUploadStudentsPresenter());
 //        promisedDialogWithOKView = new JsPromisedDialogWithOKView();
     }
 
@@ -224,12 +219,6 @@ public class ViewFactoryJs implements ViewFactory {
 //        return addStudentsView;
 //    }
 
-    /**
-     * @return the fileUploadStudentsView
-     */
-    public FileUploadStudentsPresenter.Display getFileUploadStudentsView() {
-        return fileUploadStudentsView;
-    }
 //
 //    @Override
 //    public MsgClickedDialogPresenter.Display getMsgClickedDialogView() {

@@ -17,12 +17,10 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.AddTeacherToSchoolclassPrese
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.CopyOrMoveStudentToSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.ModulesOfSchoolclassPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.old.FileUploadStudentsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
 /**
@@ -48,7 +46,6 @@ public interface ViewFactory {
     public MessageDialogWithOKPresenter.Display getMessageDialogWithOKView();
 //    public PromisedDialogWithOKPresenter.Display getPromisedDialogWithOKView();
 //    public MsgClickedDialogPresenter.Display getMsgClickedDialogView();
-    public FileUploadStudentsPresenter.Display getFileUploadStudentsView();
     public ProgressDialogWithAbortPresenter.Display getProgressDialogWithAbortView();
     public ModulesPresenter.Display getModulesView();
 

@@ -14,7 +14,7 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
  *
  * @author Gert van der Plas
  */
-@JsType(name = "jsDwoMessageTranslator", namespace = JsPackage.GLOBAL)
+@JsType(name = "jsDwoMessageTranslator", namespace="dwoAPI")
 public class DwoMessageTranslator {
 
     private static final DwoLocalesForGWT rb = GWT.create(DwoLocalesForGWT.class);
