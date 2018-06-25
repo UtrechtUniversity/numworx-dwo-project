@@ -153,8 +153,8 @@ public class LoginPresenter {
                         //true means we are done
                         return Promises.resolved(false);
                     } else {
-                        dwoGlobalVars.clearCurrentUser();
                         LOG.log(Level.INFO, "login failed, wrong login state: "+resolved.getValue().name());
+                        dwoGlobalVars.clearCurrentUser();
                         view.showWarning(defaultUsername);
                         return Promises.resolved(true);
                     }
