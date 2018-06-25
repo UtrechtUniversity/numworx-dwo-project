@@ -931,7 +931,10 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                         schoolClass.getClassID(),
                         shr.getPersistentHasRolePK().getSchoolGroupID()));
 
-        if (student.isSingleSchoolAccount() && teacherInSchoolClass.getPersistentTeacherOfClassPK().getClassID().equals(studentInSchoolClass.getPersistentStudentOfClassPK().getClassID())) {
+        if (student.isSingleSchoolAccount() 
+                && teacherInSchoolClass.getPersistentTeacherOfClassPK().getClassID()!=null
+                && studentInSchoolClass.getPersistentStudentOfClassPK().getClassID()!=null
+                && teacherInSchoolClass.getPersistentTeacherOfClassPK().getClassID().longValue()==studentInSchoolClass.getPersistentStudentOfClassPK().getClassID().longValue()) {
             return student.buildDomSingleSchoolStudent();
         } else {
             LOG.log(Level.SEVERE, "User {0} tried to access full userdata of user {1}.", new Object[]{phr.getPersistentHasRolePK().toString(), shr.getUser().getId()});
