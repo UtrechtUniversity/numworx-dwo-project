@@ -20,20 +20,13 @@ import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.FAIL;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.LOGOUT;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.SUCCESS_RESULTS;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 import org.osgi.util.promise.Promise;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
-import org.osgi.util.promise.Failure;
-import org.osgi.util.promise.Promises;
-import org.osgi.util.promise.Success;
 
 /**
  * TeacherApplication
@@ -228,67 +221,66 @@ public class BootPanelController {
                     }
                     switch (switchViewEvent.getEventValue()) {
                         case LOGIN:
-                            presenterFactory.getLoginPresenter().init();
                             viewFactory.getMainView().showLoginView();
+                            presenterFactory.getLoginPresenter().init();
                             break;
                         case WELCOME:
-                            presenterFactory.getWelcomePresenter().init();
                             viewFactory.getMainView().showWelcomeView();
+                            presenterFactory.getWelcomePresenter().init();
                             break;
                         case ACCOUNT:
-                            presenterFactory.getAccountPresenter().init();
                             viewFactory.getMainView().showAccountView();
+                            presenterFactory.getAccountPresenter().init();
                             break;
                         case PERSONS:
-                            presenterFactory.getPersonsPresenter().init();
-                            presenterFactory.getPersonsPresenter().setStage(stage);
                             viewFactory.getMainView().showPersonsView();
+                            presenterFactory.getPersonsPresenter().setStage(stage);
+                            presenterFactory.getPersonsPresenter().init();
                             break;
                         case ADDPERSON:
-                            presenterFactory.getAddStudentPresenter().init();
                             viewFactory.getMainView().showAddPersonView();
+                            presenterFactory.getAddStudentPresenter().init();
                             break;
                         case EDITSTUDENT:
-                            presenterFactory.getEditStudentPresenter().init(switchViewEvent.getUser());
                             viewFactory.getMainView().showEditPersonView();
+                            presenterFactory.getEditStudentPresenter().init(switchViewEvent.getUser());
                             break;
                         case EDITTEACHER:
-                            presenterFactory.getEditTeacherPresenter().init(switchViewEvent.getUser());
                             viewFactory.getMainView().showEditPersonView();
+                            presenterFactory.getEditTeacherPresenter().init(switchViewEvent.getUser());
                             break;
                         case IMPORTPERSONS:
-                            presenterFactory.getPersonsPresenter().init();
                             viewFactory.getMainView().showImportPersonsView();
+                            presenterFactory.getPersonsPresenter().init();
                             break;
                         case RESULTS:
-                            presenterFactory.getResultsPresenter().init();
                             viewFactory.getMainView().showResultsView();
+                            presenterFactory.getResultsPresenter().init();
                             break;
                         case SELECTEDRESULTS:
-                            presenterFactory.getSelectedResultsPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultState());
                             viewFactory.getMainView().showSelectedResultsView();
+                            presenterFactory.getSelectedResultsPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultState());
                             break;
                         case SELECTEDRESULTSRETURN:
-                          presenterFactory.getSelectedResultsPresenter().reinit(switchViewEvent.getResultTree(), switchViewEvent.getResultState());
                           viewFactory.getMainView().showSelectedResultsView();
+                          presenterFactory.getSelectedResultsPresenter().reinit(switchViewEvent.getResultTree(), switchViewEvent.getResultState());
                           break;
                        case RESULTSSTUDENT:
                             //eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                             viewFactory.getMainView().showStudentScoResultView();
-                            presenterFactory.getStudentScoResultPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultStudentScoContext(), switchViewEvent.getResultState(), switchViewEvent.getUserState());
-                            
+                            presenterFactory.getStudentScoResultPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultStudentScoContext(), switchViewEvent.getResultState(), switchViewEvent.getUserState());                            
                             break;
                         case SCHOOLCLASSES:
-                            presenterFactory.getSchoolclassesPresenter().init();
                             viewFactory.getMainView().showSchoolclassesView();
+                            presenterFactory.getSchoolclassesPresenter().init();
                             break;
                         case EDITSCHOOLCLASS:
-                            presenterFactory.getEditSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
                             viewFactory.getMainView().showEditSchoolclassView();
+                            presenterFactory.getEditSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
                             break;
                         case ADDSTUDENTTOSCHOOLCLASS:
-                            presenterFactory.getAddStudentToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
                             viewFactory.getMainView().showAddStudentToSchoolClassView();
+                            presenterFactory.getAddStudentToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
                             break;
                         case COPYORMOVESTUDENTTOSCHOOLCLASS:
                             viewFactory.getMainView().showCopyOrMoveStudentToSchoolClassView();
