@@ -1706,6 +1706,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		BUS.removeHandlers();
 		entry.clearContentPanel();
 		currentOpdracht = opdracht;
+		memento.setCurrentOpdracht(opdracht);
 		if (states[currentActiviteit][currentOpdracht] == null)
 			entry.zetVolgendeOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
 		else

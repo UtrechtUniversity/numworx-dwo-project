@@ -339,7 +339,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	boolean setValue(String key, String value)
 	{
 		try
-		{	if (!isEindtoetsVerzegeld())
+		{	if (!isEindtoetsVerzegeld()||isReview())
 				return "true".equals(api.SetValue(key, value));
 		}
 		catch (Exception e)
