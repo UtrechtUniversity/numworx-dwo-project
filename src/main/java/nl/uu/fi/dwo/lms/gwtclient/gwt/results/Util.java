@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  *
  */
 class Util {
+  private static final JSONNumber[] EMPTY_NUMBERS = new JSONNumber[0];
   private static final Logger LOG = Logger.getLogger(Util.class.getName());
 
   private Util() {}
@@ -42,8 +43,16 @@ class Util {
   static JSONNumber[] getScores(String suspend_data, int aantalOpdrachten) {
       try {
         JSONObject sd = JSONParser.parseLenient(suspend_data).isObject();
-        JSONObject onsState = sd.get("onsState").isObject();
-        JSONArray orScores = onsState.get("orScores").isArray().get(0).isArray();
+        JSONValue value = sd.get("onsState");
+        if(value == null || value.isNull() != null) return EMPTY_NUMBERS;
+        JSONObject onsState = value.isObject();
+        value = onsState.get("orScores");
+        if(value == null || value.isNull() != null) return EMPTY_NUMBERS;
+        JSONArray array = value.isArray();
+        if(array.size() == 0) return EMPTY_NUMBERS;
+        value = array.get(0);
+        if(value == null || value.isNull() != null) return EMPTY_NUMBERS;
+        JSONArray orScores = value.isArray();
         int max = Math.min(aantalOpdrachten, orScores.size());
         JSONNumber[] scores = new JSONNumber[max];
         for (int i = 0; i < max; i++) {
@@ -56,9 +65,9 @@ class Util {
             }
         }
         return scores;
-      } catch (Exception e) {
-        LOG.log(Level.FINE, "getScores", e);
-        return new JSONNumber[0];
+      } catch (Throwable e) {
+        LOG.log(Level.FINE, "getScores\n"+e);
+        return EMPTY_NUMBERS;
       }
   }
   
@@ -95,7 +104,7 @@ class Util {
   private static JSONNumber[] getCorrectie(String review_data, int aantal) {
     LOG.info("getCorrectie " + review_data);
     if(review_data == null || !review_data.startsWith("{"))
-        return new JSONNumber[0];
+        return EMPTY_NUMBERS;
     
     JSONObject review = JSONParser.parseLenient(review_data).isObject();
     JSONArray  data = review.get("opdrContStates").isArray().get(0).isArray();

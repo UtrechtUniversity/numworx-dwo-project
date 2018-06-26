@@ -61,6 +61,7 @@ public class JsSelectedResultsView implements SelectedResultsPresenter.Display {
         JsSelectedResultsDisplay.init(aResultState);
     }
     
+  
     @Inject JsSelectedResultsView() {}
 
 }

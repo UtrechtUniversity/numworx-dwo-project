@@ -26,7 +26,7 @@ class Util {
           node.calculateSumOfSubtreeScore();
           //set course data in node.
           String classType = node.getClass().getSimpleName();
-          json.put("classType", new JSONString(classType));
+          json.put("classType", buildTime(classType));
           json.put("label", new JSONString(node.getLabel()));
           json.put("sumScore", new JSONNumber(node.getScore()));
           json.put("scoCount", new JSONNumber(node.getScoCount()));
@@ -34,17 +34,17 @@ class Util {
           if (node instanceof DomResultStudentScoContext) {
               DomStudentScoContext studentSco = ((DomResultStudentScoContext) node).getStudentSco();
   			String userIdString = studentSco.getUserID().getIdString();
-              json.put("user-id", new JSONString(userIdString));
+              json.put("user-id", buildTime(userIdString));
               String completionStatus = studentSco.getCompletionStatus(); // XXX What if not present? null of "" of unknown?
               if(completionStatus == null) completionStatus = "unknown";
-  			json.put("completionStatus", new JSONString(completionStatus));
+  			json.put("completionStatus", buildTime(completionStatus));
   			String totalTime = studentSco.getTotalTime();
   			if (totalTime == null) totalTime = "00:00:00";
-  			json.put("totalTime", new JSONString(totalTime));
+  			json.put("totalTime", buildTime(totalTime));
          } else if (node instanceof DomResultCourseInClass){
              DomResultCourseInClass<?> resultCourse = (DomResultCourseInClass<?>) node;
              String viewState = resultCourse.getViewState().name();
-             json.put("viewState", new JSONString(viewState));
+             json.put("viewState", buildTime(viewState));
              Long sequenceNr = resultCourse.getCourse().getSequenceNr();
              if (sequenceNr != null )
                json.put("sequence", new JSONNumber(sequenceNr));
@@ -80,6 +80,23 @@ class Util {
           return json;
       }
 
+  private static JSONString buildTime(String totalTime) {
+    if("00:00:00".equals(totalTime))
+      return new JSONString("0s");
+    if(totalTime.startsWith("00:00:0"))
+      totalTime = totalTime.substring(7) + "s";
+    else if (totalTime.startsWith("00:00:"))
+      totalTime = totalTime.substring(6) + "s";
+    else if (totalTime.startsWith("00:0"))
+      totalTime = totalTime.substring(4, 5) + "m";
+    else if (totalTime.startsWith("00:"))
+      totalTime = totalTime.substring(3, 5) + "m";
+    else if (totalTime.startsWith("0"))
+      totalTime = totalTime.substring(1,2) + "h";
+    
+    return new JSONString(totalTime);
+  }
+
   /**
        * Assumes DomResultTeacher with DomResultSchoolClasses with DomResultStudents
        *
@@ -89,7 +106,7 @@ class Util {
       static JSONObject buildSubStudentTree(DomResultScore<?> node) {
           JSONObject json = new JSONObject();
           String classType = node.getClass().getSimpleName();
-          json.put("classType", new JSONString(classType));
+          json.put("classType", buildTime(classType));
           json.put("label", new JSONString(node.getLabel()));
           json.put("sumScore", new JSONNumber(node.getScore()));
           json.put("scoCount", new JSONNumber(node.getScoCount()));
@@ -106,7 +123,7 @@ class Util {
                       //for each schoolclass
                       JSONObject schoolClass = new JSONObject();
                       classType = o.getClass().getSimpleName();
-                      schoolClass.put("classType", new JSONString(classType));
+                      schoolClass.put("classType", buildTime(classType));
                       schoolClass.put("label", new JSONString(o.getLabel()));
                       schoolClass.put("sumScore", new JSONNumber(node.getScore()));
                       schoolClass.put("scoCount", new JSONNumber(node.getScoCount()));

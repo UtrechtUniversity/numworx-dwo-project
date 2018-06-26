@@ -71,7 +71,7 @@ public class SelectedResultsPresenter {
     //model
     private DomResultTree resultTree;
 
-    public interface Display  extends BasicDisplay{
+    public interface Display extends BasicDisplay {
 
         void updateResultTree(DomResultTree data);
 
@@ -90,9 +90,11 @@ public class SelectedResultsPresenter {
     }
 
     public void init(DomResultTree aResultTree, JavaScriptObject aResultState) {
+        view.clear();
         resultTree = aResultTree;
         resultState = aResultState;
         view.init(aResultState);
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#selectedResults"));        
     }
 
     public void updateTree() {
@@ -171,13 +173,14 @@ public class SelectedResultsPresenter {
     }
     
     @JsMethod public void preparePages(JavaScriptObject context, String scoid, String classid) {
+      LOG.log(Level.FINE, "scoid = " + scoid + " classid = " + classid);
       PersistenceId sco = new PersistenceId(scoid);
       PersistenceId schoolclass = new PersistenceId(classid);
       preparePages(schoolclass, sco ).then(p-> {view.updateResultTree(resultTree);return null;}, p-> LOG.log(Level.SEVERE, "preparePages", p.getFailure()))
       .then(p-> {
-        eventBus.fireEvent(new SwitchViewEvent(SelectedView.SELECTEDRESULTS, resultTree, context));
+        //eventBus.fireEvent(new SwitchViewEvent(SelectedView.SELECTEDRESULTS, resultTree, context));
         return null;
-      });
+      }, FAILURE);
     }
     
     
@@ -192,7 +195,10 @@ public class SelectedResultsPresenter {
 		
 		DomStudent student = domschoolclass.getChildren().get(key).getStudent();
 		DomScoContext sco = new DomScoContext(); sco.setId(new PersistenceId(scoid));
-        preparePages(schoolclass, sco.getId()).then(p-> {view.updateResultTree(resultTree);return null;}, p-> LOG.log(Level.SEVERE, "preparePages", p.getFailure()));
+        preparePages(schoolclass, sco.getId()).then(p-> {
+          LOG.log(Level.FINE, "prepare pages done\n" + resultTree.getResultTree());
+          view.updateResultTree(resultTree);
+        return null;}, p-> LOG.log(Level.WARNING, "preparePages", p.getFailure()));
 		Promise<DomStudentScoContext> p1 = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), Collections.singletonList(student))
 		.map(p -> p.getStudentScoContexts().get(0).getValue());		
 		Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(sco, domschoolclass.getSchoolClass());		
@@ -241,6 +247,10 @@ public class SelectedResultsPresenter {
                                        Iterator<DomResultStudentScoContext> iterator) {
       if(iterator.hasNext()) {
         DomResultStudentScoContext ssc = iterator.next();
+
+        if(!ssc.getChildren().isEmpty()) // skip if non-empty
+          return preparePages(schoolclass, scocontext, iterator);
+        
         Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(scocontext, schoolclass);     
         Promise<Map<String,String>> p3 = resultService.getValues(ssc.getStudentSco());
 
@@ -257,7 +267,7 @@ public class SelectedResultsPresenter {
             return preparePages(schoolclass, scocontext, iterator);
           }}).recoverWith(p -> preparePages(schoolclass,scocontext, iterator));
       }
-      return null;
+      return Promises.resolved(null);
     }
 
     public void reinit(DomResultTree aResultTree, JavaScriptObject aResultState) {

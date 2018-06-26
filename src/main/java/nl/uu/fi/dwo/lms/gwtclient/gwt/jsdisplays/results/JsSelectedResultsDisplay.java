@@ -28,4 +28,6 @@ public class JsSelectedResultsDisplay{
     public static native void setEmptyTableMessage();
     /** setEmptyTableMessage show an indicator that we are fetching data. */
     public static native void setLoadingTableMessage();
+    /** set Help */
+    public static native void setHelp(String url);
 }
