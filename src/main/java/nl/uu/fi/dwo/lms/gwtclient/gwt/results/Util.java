@@ -136,7 +136,11 @@ class Util {
       if(value != null) {
         result += sumCorrectie(value);
       }
-      value = o.get("review...");
+      value = o.get("reviewInteractieData");
+      if(value != null) {
+        result += sumCorrectie(value);
+      }
+      value = o.get("reviewScoreCorrectie");
       if (value != null) 
         result += value.isNumber().doubleValue();
       return result;

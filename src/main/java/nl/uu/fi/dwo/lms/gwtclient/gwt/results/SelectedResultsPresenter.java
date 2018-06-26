@@ -172,7 +172,7 @@ public class SelectedResultsPresenter {
     	return null;
     }
     
-    @JsMethod public void preparePages(JavaScriptObject context, String scoid, String classid) {
+    @JsMethod public void preparePages(String scoid, String classid) {
       LOG.log(Level.FINE, "scoid = " + scoid + " classid = " + classid);
       PersistenceId sco = new PersistenceId(scoid);
       PersistenceId schoolclass = new PersistenceId(classid);
