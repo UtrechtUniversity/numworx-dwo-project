@@ -199,7 +199,7 @@ public class AccountPresenter {
             @Override
             //Are you sure?
             public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
-                String msg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_Dialog_User_ConfirmSchoolLoginDelete(),sracData.get(hasRoleId).getSchool().getSchoolName(),sracData.get(hasRoleId).getRole().getRoleName());
+                String msg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_User_ConfirmSchoolLoginDelete(),sracData.get(hasRoleId).getSchool().getSchoolName(),sracData.get(hasRoleId).getRole().getRoleName());
                 AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(msg);
                 AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
                 eventBus.fireEvent(event);
@@ -335,7 +335,7 @@ public class AccountPresenter {
                 dwoGlobalVars.setCurrentUser(u);
                 view.clear();
                 view.updateUserView(u);
-                eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_Dialog_User_ConfirmChangeCommited()));
+                eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_User_ConfirmChangeCommited()));
                 return null;
             }
         },
@@ -380,7 +380,7 @@ public class AccountPresenter {
                 srac.setSchoolsRolesAndClassesList(sracList);
                 view.updateSchoolLoginsView(srac);
                 if(!srac.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())){
-                eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_Dialog_User_NoTeacher()));
+                eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_User_NoTeacher()));
                 }
                 return null;
             }

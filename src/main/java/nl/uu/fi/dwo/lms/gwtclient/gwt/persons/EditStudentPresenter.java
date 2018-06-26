@@ -275,7 +275,7 @@ public class EditStudentPresenter {
             @Override
             //Are you sure?
             public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
-                AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(DwoLocalesForGWT.instance.NUM_Dialog_User_ConfirmPasswordSwitch());
+                AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(DwoLocalesForGWT.instance.NUM_DLG_User_ConfirmPasswordSwitch());
                 AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
                 eventBus.fireEvent(event);
                 return dialogPromise.getPromise();
@@ -310,7 +310,7 @@ public class EditStudentPresenter {
                 LOG.log(Level.INFO, "DomUser returned.");
                 view.clear();
                 view.setUser(changedUser);
-                eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_Dialog_User_ConfirmChangeCommited()));
+                eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_User_ConfirmChangeCommited()));
                 return null;
             }
         },
