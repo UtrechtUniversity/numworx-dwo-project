@@ -83,7 +83,7 @@ public class EditTeacherPresenter {
         Promise p = Promises.resolved(null);
 
         //fetch schoolclasses
-        p.then((resolved) -> {
+        p=p.then((resolved) -> {
             return manager.getTeachersSchoolClasses();
 
         }).then((resolved) -> {
@@ -104,9 +104,7 @@ public class EditTeacherPresenter {
             });
             view.setSchoolClasses(taggedSchoolClassMap);
             return Promises.resolved(null);
-        });
-
-        p.then(null, (failure) -> {
+        }).then(null, (failure) -> {
             eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
         });
     }
@@ -121,8 +119,7 @@ public class EditTeacherPresenter {
         p.then((resolved) -> {
             this.initView(user);
             return Promises.resolved(true);
-        });
-        p.then(null, (failure) -> {
+        }).then(null, (failure) -> {
             eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
         });
     }
@@ -137,8 +134,7 @@ public class EditTeacherPresenter {
         p.then((resolved) -> {
             this.initView(user);
             return Promises.resolved(true);
-        });
-        p.then(null, (failure) -> {
+        }).then(null, (failure) -> {
             eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
         });
     }

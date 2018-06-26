@@ -92,8 +92,8 @@ public class EditStudentPresenter {
         view.clear();
         view.setEmptyTableMessage();
         view.setHelp(dwoGlobalVars.buildHelpUrl("#editStudent"));
-        initView(aUser);
         user = aUser;
+        initView(aUser);
 //        setSchoolClassesInView(aUser);
     }
 
@@ -133,7 +133,7 @@ public class EditStudentPresenter {
         Promise p = Promises.resolved(null);
 
         //fetch schoolclasses
-        p.then((resolved) -> {
+        p =p.then((resolved) -> {
             return manager.getTeachersSchoolClasses();
 
         }).then((resolved) -> {
@@ -157,7 +157,7 @@ public class EditStudentPresenter {
         });
         //if singleschool fetch user
         if (aUser.getSingleSchool()) {
-            p.then((resolved) -> {
+            p=p.then((resolved) -> {
                 DomContext ctx = new DomContext();
                 DomGetSingleSchoolStudent student = new DomGetSingleSchoolStudent(new DomStudent(aUser));
                 ctx.setDomHasRole(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
@@ -201,8 +201,7 @@ public class EditStudentPresenter {
         p.then((resolved) -> {
             this.initView(user);
             return Promises.resolved(true);
-        });
-        p.then(null, (failure) -> {
+        }).then(null, (failure) -> {
             eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
         });
     }
@@ -225,8 +224,7 @@ public class EditStudentPresenter {
         p.then((resolved) -> {
             this.initView(user);
             return Promises.resolved(true);
-        });
-        p.then(null, (failure) -> {
+        }).then(null, (failure) -> {
             eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
         });
 
