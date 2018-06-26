@@ -9,7 +9,7 @@ package nl.uu.fi.dwo.rest.locale;
  * @author Gert van der Plas
  */
 public enum Dwo2LocaleMessageCode {
-    /** Numworx message codes */
+//generic buttons
 NUM_Button_Ok,  
 NUM_Button_Cancel,
 NUM_Button_Save,
@@ -20,6 +20,48 @@ NUM_Button_Update,
 
 NUM_Dialog_User_ConfirmLogout,
 NUM_Dialog_User_NoTeacher,
+
+//generic labels
+ NUM_LBL_STUDENT,
+ NUM_LBL_TEACHER,
+ NUM_LBL_SCHOOLADMIN,
+ NUM_LBL_ADMIN,
+ NUM_TBL_USERNAME,
+ NUM_TBL_FIRSTNAME,
+ NUM_TBL_INSERTION,
+ NUM_TBL_FAMILYNAME,
+ NUM_TBL_SINGLE_SCHOOL,
+ NUM_TBL_EMAIL,
+ NUM_TBL_ROLE,
+
+//login scherm
+ NUM_BTN_LOGIN,
+ NUM_LBL_Q_PASWORD_FORGOTTEN,
+ NUM_LBL_Q_NO_ACCOUNT,
+ NUM_LBL_MORE_ON_NUMWORX,
+ NUM_LBL_MANAGE_ACCOUNT,
+ NUM_LBL_LOGOUT,
+
+//main menu
+ NUM_MNU_RESULTS,
+ NUM_MNU_PEOPLE,
+ MUM_MNU_CLASSES,
+ NUM_MNU_MODULES,
+ NUM_MNU_ORGANIZATION,
+ NUM_MNU_HELP,
+
+//account
+ NUM_PNL_ACCOUNT,
+
+ NUM_SEC_ACCOUNT_CHANGE,
+ NUM_SEC_ACCOUNT_SCHOOLLOGINS,
+ NUM_SEC_ACCOUNT_SCHOOLLOGIN_ADD,
+
+ NUM_LBL_CUR_PASSWORD,
+ NUM_LBL_NEW_PASSWORD,
+ NUM_LBL_RPT_NEW_PASSWORD,
+ NUM_LBL_SCHOOLLOGIN,
+ NUM_LBL_SCHOOLPASSWORD,
 
 /** Old tags for java */
 GUI_Button_Ok,  
