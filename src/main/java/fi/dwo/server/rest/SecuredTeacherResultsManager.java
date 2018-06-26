@@ -330,11 +330,11 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 //                    studentScosMap.putIfAbsent(studentSco.getStudentSco(), studentSco);
 //                });
 //            });
-            HashMap<Long, PersistentStudentScoContext> studentScosMap = new HashMap<>();
+            HashMap<String, PersistentStudentScoContext> studentScosMap = new HashMap<>();
             schoolClasses.forEach((cc) -> { 
  //           classCoursesMap.values().forEach((cc) -> {
                 List<PersistentStudentScoContext> ssList = StudentScoInClassManager.findEntities(cc);
-                ssList.forEach((ss) -> {studentScosMap.putIfAbsent(ss.getStudentSco(), ss);}) ;
+                ssList.forEach((ss) -> {studentScosMap.putIfAbsent(ss.getStudentSco().toString(), ss);}) ;
             });
 //            for (PersistentScoContext sco : scosMap.values()) {
 //                for (PersistentHasRolePK hasRoleKey : studentHasRoleSet) {
@@ -346,6 +346,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 //                }
 //            }
 
+            //convert
             HashMap<PersistenceId, DomStudentScoContext> domStudentScoContexts = new HashMap<>(studentScosMap.size());
             studentScosMap.entrySet().stream().forEach((keyValuePair) -> {
                 DomStudentScoContext s = keyValuePair.getValue().buildDomStudentScoContext();
