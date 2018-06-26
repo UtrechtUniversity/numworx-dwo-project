@@ -24,7 +24,7 @@ public class MsgDialogPromise<T> implements ClickHandler, Success<T,T>, Failure{
     private Promise<T> promise;
     private String msg;
     private DialogBox dialogBox = new DialogBox();
-    Button cancelButton = new Button(DwoLocalesForGWT.instance.GUI_Button_Cancel());
+    Button cancelButton = new Button(DwoLocalesForGWT.instance.GUI_BTN_Cancel());
     
     public void onClick(ClickEvent event) {
         if (event.getSource() == cancelButton) {
