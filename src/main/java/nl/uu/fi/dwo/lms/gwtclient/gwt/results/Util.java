@@ -40,21 +40,26 @@ class Util {
   }
 
   static JSONNumber[] getScores(String suspend_data, int aantalOpdrachten) {
-      JSONObject sd = JSONParser.parseLenient(suspend_data).isObject();
-      JSONObject onsState = sd.get("onsState").isObject();
-      JSONArray orScores = onsState.get("orScores").isArray().get(0).isArray();
-      int max = Math.min(aantalOpdrachten, orScores.size());
-      JSONNumber[] scores = new JSONNumber[max];
-      for (int i = 0; i < max; i++) {
-          try {
-              JSONNumber number = orScores.get(i).isNumber();
-              LOG.log(Level.FINE, "score " + i + " = " + number);
-              scores[i] = number;
-          } catch (Exception e) {
-              LOG.log(Level.WARNING, "score " + i, e);
-          }
+      try {
+        JSONObject sd = JSONParser.parseLenient(suspend_data).isObject();
+        JSONObject onsState = sd.get("onsState").isObject();
+        JSONArray orScores = onsState.get("orScores").isArray().get(0).isArray();
+        int max = Math.min(aantalOpdrachten, orScores.size());
+        JSONNumber[] scores = new JSONNumber[max];
+        for (int i = 0; i < max; i++) {
+            try {
+                JSONNumber number = orScores.get(i).isNumber();
+                LOG.log(Level.FINE, "score " + i + " = " + number);
+                scores[i] = number;
+            } catch (Exception e) {
+                LOG.log(Level.WARNING, "score " + i, e);
+            }
+        }
+        return scores;
+      } catch (Exception e) {
+        LOG.log(Level.FINE, "getScores", e);
+        return new JSONNumber[0];
       }
-      return scores;
   }
   
   static Map<PersistenceId, DomResultStudentScoPage> getPages(JSONValue launchdata, String suspend_data, String review_data) {

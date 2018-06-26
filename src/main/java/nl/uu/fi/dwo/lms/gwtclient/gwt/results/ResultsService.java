@@ -40,8 +40,6 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Reusable;
 
-import dagger.Reusable;
-
 /**
  * Persistent model service for Teacher results. Retrieves DomResultsPerTeacher data.
  * In the future it may cache this data and merge updates into it. it may also request
