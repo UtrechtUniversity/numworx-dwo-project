@@ -392,6 +392,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			
 			if(launchState != null) 
 			{
+              if(launchState.containsKey("scoreMax"))
+              {
+                  scoreMax = launchState.getInt("scoreMax");
+              }
 				if(launchState.containsKey("check") )
 				{
 					check = launchState.getBoolean("check");
@@ -415,8 +419,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 						DWOLogger dwoLogger = new DWOLogger();
 						if(launchState.containsKey("scoreMax"))
 						{
-							int max = launchState.getInt("scoreMax");
-							dwoLogger.setMaxScore(max);
+							dwoLogger.setMaxScore(scoreMax);
 						}
 						if(launchState.containsKey("logIDLabel"))
 							dwoLogger.setLogIDLabel(launchState.getString("logIDLabel"));

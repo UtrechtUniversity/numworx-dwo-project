@@ -59,6 +59,9 @@
   <source />
   <entry-point class='nl.uu.fi.dwo.mobile.DWO2player'/>
 
+   	<replace-with class="nl.uu.fi.dwo.mobile.client.sco.CorrectieReview">
+ 		<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade" />
+ 	</replace-with> 
   
    <!-- Use ClientFactoryImpl by default -->
     <replace-with class="nl.uu.fi.dwo.ui.ClientFactoryImpl">
