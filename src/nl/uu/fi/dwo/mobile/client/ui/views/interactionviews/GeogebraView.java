@@ -104,6 +104,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	private Map<String, Object> geogebraParams = new HashMap<String,Object>();
 	private int attemptsCount;
 	private int errorCount;
+    private int foutStraf = 2;
 	private CorrectieFacade correctie;
 	/**
 	 * Houdt bij of er iets veranderd is, t.b.v. errorCount.
@@ -703,6 +704,9 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 	@Override
 	public int getScore()
 	{
+		if (mode == OpdrNavIF.OEFENEN_STRAFPUNTEN)
+			return Math.max(0, score - errorCount * foutStraf);
+
 		return score;
 	}
 	
