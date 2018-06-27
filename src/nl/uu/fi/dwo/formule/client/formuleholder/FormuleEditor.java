@@ -26,6 +26,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Panel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
@@ -466,5 +467,18 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	{
 		
 	}
+
+	private HandlerRegistration registration;
+
+	@Override
+	public void removeTouchHandler() {
+		if ( registration != null) 
+			registration.removeHandler();
+		registration = null;
+	}
 	
+	public void register(HandlerRegistration r) {
+		removeTouchHandler();
+		registration = r;
+	}
 }
