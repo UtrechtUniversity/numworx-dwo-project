@@ -42,6 +42,7 @@ class Util {
 
   static JSONNumber[] getScores(String suspend_data, int aantalOpdrachten) {
       try {
+        if(suspend_data.isEmpty()) return EMPTY_NUMBERS;        
         JSONObject sd = JSONParser.parseLenient(suspend_data).isObject();
         JSONValue value = sd.get("onsState");
         if(value == null || value.isNull() != null) return EMPTY_NUMBERS;
