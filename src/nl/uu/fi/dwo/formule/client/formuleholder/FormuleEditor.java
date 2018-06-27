@@ -184,6 +184,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 
 	public void endSelection(int selectionEndX, int selectionEndY)
 	{
+		super.endSelection(selectionEndX, selectionEndY);
 		//swap?
 		int selectionStartX = this.selectionStartX;
 		int selectionStartY = this.selectionStartY;
