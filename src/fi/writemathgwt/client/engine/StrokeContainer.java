@@ -24,7 +24,7 @@ public class StrokeContainer {
 	private ArrayList<Stroke> strokes;
 	private ArrayList<WMObject> wmObjects;
 	private String formulaString = "";
-	public static double averageHeight = 50;
+	public double averageHeight = 50;
 	private DoubleRectangle parseArea;
 	
 	
@@ -47,6 +47,11 @@ public class StrokeContainer {
 	public ArrayList<Stroke> getStrokes() {
 		return strokes;
 	}
+	
+	public ArrayList<WMObject> getWMObjects() {
+		return wmObjects;
+	}
+
 	
 	public DoubleRectangle getBoundingBox() {
 		return parseArea;
@@ -114,7 +119,7 @@ public class StrokeContainer {
 		if(s==null && strokes.size()>1 &&wmObjects.size()>0 && wmObjects.get(wmObjects.size()-1).isOneStroke()) {
 			Stroke stroke1 = strokes.get(strokes.size()-2);
 			Stroke stroke2 = strokes.get(strokes.size()-1);
-			s = TwoStrokeProcessor.findTwoStrokeTeken(stroke1, stroke2);
+			s = TwoStrokeProcessor.findTwoStrokeTeken(this, stroke1, stroke2);
 			if(s!=null) {
 				WMObject wo = new WMObject(stroke1, stroke2, s);
 				wmObjects.remove(wmObjects.size()-1);
@@ -138,7 +143,7 @@ public class StrokeContainer {
 				}
 			}
 		}
-		formulaString = FormulaProcessor.parseFormule(wmObjects, parseArea);
+		formulaString = FormulaProcessor.parseFormule(this, parseArea);
 		
 	}
 	
@@ -248,7 +253,7 @@ public class StrokeContainer {
 			if(wmObjects.get(i).isOneStroke()) {
 				stroke1 = wmObjects.get(i).getStrokes().get(0);
 				
-				String s = TwoStrokeProcessor.findTwoStrokeTeken(stroke1, stroke2);
+				String s = TwoStrokeProcessor.findTwoStrokeTeken(this, stroke1, stroke2);
 				if(s!=null) {
 					wmObjects.remove(wmObjects.get(i));
 					WMObject wo = new WMObject(stroke1, stroke2, s);

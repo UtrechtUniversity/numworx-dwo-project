@@ -7,7 +7,8 @@ public class TwoStrokeProcessor {
 
 	private static double averageHeight = 50;
 	
-	public static String findTwoStrokeTeken(Stroke stroke1, Stroke stroke2) {
+	public static String findTwoStrokeTeken(StrokeContainer strokeContainer, Stroke stroke1, Stroke stroke2) {
+		averageHeight = strokeContainer.averageHeight;
 		
 		//y = \ (klein) + /
 		if (checkStrokes(stroke1,"yH1",stroke2,"yH2"))
@@ -171,16 +172,16 @@ public class TwoStrokeProcessor {
 		return null;
 	}
 	
-	public static void setAverageHeight(double height) {
-		averageHeight = height;
-	}
+//	public static void setAverageHeight(double height) {
+//		averageHeight = height;
+//	}
 	
 	private static boolean checkStrokes(Stroke stroke1, String teken1, Stroke stroke2, String teken2) {
 		return TwoStrokeDirFilter.checkDir(stroke1,teken1) && TwoStrokeDirFilter.checkDir(stroke2,teken2);
 	}
 		
 	public static boolean hasCloseDistance(Stroke stroke1, Stroke stroke2, int distMin, int min1, int max1, int min2, int max2) {
-		double dMin = distMin*StrokeContainer.averageHeight/100;
+		double dMin = distMin*averageHeight/100;
 		double distance = 1000;
 		for(int i=min1 ; i<max1+1 ; i++) {
 			for(int j=min2 ; j<max2+1 ; j++) {
@@ -196,8 +197,8 @@ public class TwoStrokeProcessor {
 		return false;
 	}
 	
-	public static boolean hasCloseXDistance(Stroke stroke1, Stroke stroke2, int distMin,int min1, int max1, int min2, int max2) {
-		double dMin = distMin*StrokeContainer.averageHeight/100;
+	private static boolean hasCloseXDistance(Stroke stroke1, Stroke stroke2, int distMin,int min1, int max1, int min2, int max2) {
+		double dMin = distMin*averageHeight/100;
 		double distance = 1000;
 		for(int i=min1 ; i<max1 ; i++) {
 			for(int j=min2 ; j<max2 ; j++) {
@@ -211,8 +212,8 @@ public class TwoStrokeProcessor {
 		return false;
 	}
 	
-	public static boolean hasCloseYDistance(Stroke stroke1, Stroke stroke2, int distMin, int min1, int max1, int min2, int max2) {
-		double dMin = distMin*StrokeContainer.averageHeight/100;
+	private static boolean hasCloseYDistance(Stroke stroke1, Stroke stroke2, int distMin, int min1, int max1, int min2, int max2) {
+		double dMin = distMin*averageHeight/100;
 		double distance = 1000;
 		for(int i=min1 ; i<max1 ; i++) {
 			for(int j=min2 ; j<max2 ; j++) {
@@ -226,9 +227,9 @@ public class TwoStrokeProcessor {
 		return false;
 	}
 	
-	public static boolean hasYDistance(Stroke stroke1, Stroke stroke2, int dist, int distMin, int min1, int max1, int min2, int max2) {
-		double dMin = distMin*StrokeContainer.averageHeight/100;
-		dist = (int)(dist*StrokeContainer.averageHeight/100);
+	private static boolean hasYDistance(Stroke stroke1, Stroke stroke2, int dist, int distMin, int min1, int max1, int min2, int max2) {
+		double dMin = distMin*averageHeight/100;
+		dist = (int)(dist*averageHeight/100);
 		double distance = 1000;
 		for(int i=min1 ; i<max1 ; i++) {
 			for(int j=min2 ; j<max2 ; j++) {

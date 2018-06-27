@@ -12,7 +12,8 @@ public class FormulaProcessor {
 	
 	
 
-	public static String parseFormule(ArrayList<WMObject> wmObjects, DoubleRectangle parseArea) {		
+	public static String parseFormule(StrokeContainer strokeContainer, DoubleRectangle parseArea) {		
+		ArrayList<WMObject> wmObjects = strokeContainer.getWMObjects();
 		ArrayList<WMObject> wmObjectsToDo = new ArrayList<WMObject>();
 		// make a compact deep copy
 		for (int i = 0; i < wmObjects.size(); i++) {	
@@ -236,7 +237,7 @@ public class FormulaProcessor {
 		
 //      Changed scope of the writePanel, size is now inifinite (as fars as that is possible within the int parameters)
 //		return parseBox(new Rectangle(Integer.MIN_VALUE / 2, Integer.MIN_VALUE / 2, Integer.MAX_VALUE, Integer.MAX_VALUE), writeObjectsToDo, null, null);
-				return parseBox(new DoubleRectangle(cPanelAreaMin, cPanelAreaMin, cPanelAreaDelta, cPanelAreaDelta), wmObjectsToDo, null, null);
+				return parseBox(new DoubleRectangle(cPanelAreaMin, cPanelAreaMin, cPanelAreaDelta, cPanelAreaDelta), strokeContainer, wmObjectsToDo, null, null);
 				//return parseBox(parseArea, wmObjectsToDo, null, null);
 				//		return parseBox(new DoubleRectangle(0, 0, width, height), writeObjectsToDo, null, null);
 	}
@@ -342,7 +343,7 @@ public class FormulaProcessor {
 		return insideObjects;
 	}
 	
-	public static String parseBox(DoubleRectangle box, ArrayList<WMObject> writeObjectsToDo, WMObject lastWriteObject, WMObject boxOwner) {
+	public static String parseBox(DoubleRectangle box, StrokeContainer strokeContainer,  ArrayList<WMObject> writeObjectsToDo, WMObject lastWriteObject, WMObject boxOwner) {
 		String string = "";
 		DoubleRectangle correctedBox = null;
 
@@ -385,11 +386,11 @@ public class FormulaProcessor {
 			if (nextWriteObject.isBreuk()) {
 				String teller = "";
 				String noemer = "";
-				teller = parseBox(nextWriteObject.getTellerBox(), writeObjectsToDoNow, null, nextWriteObject);
-				noemer = parseBox(nextWriteObject.getNoemerBox(), writeObjectsToDoNow, null, nextWriteObject);
+				teller = parseBox(nextWriteObject.getTellerBox(), strokeContainer, writeObjectsToDoNow, null, nextWriteObject);
+				noemer = parseBox(nextWriteObject.getNoemerBox(), strokeContainer, writeObjectsToDoNow, null, nextWriteObject);
 
-				if ((lastWriteObject != null) && isMacht(lastWriteObject, nextWriteObject))
-					string = string + processMacht(lastWriteObject, nextWriteObject, "$b" + teller + "$n" + noemer + "@@"); 
+				if ((lastWriteObject != null) && isMacht(strokeContainer, lastWriteObject, nextWriteObject))
+					string = string + processMacht(strokeContainer, lastWriteObject, nextWriteObject, "$b" + teller + "$n" + noemer + "@@"); 
 				else	
 					string = string + "$b" + teller + "$n" + noemer + "@@";
 	
@@ -402,27 +403,27 @@ public class FormulaProcessor {
 				DoubleRectangle wBox = nextWriteObject.getWortelBox(); 
 				nextWriteObject.setVerwerkt(true);
 				removeIsOnderWortel(writeObjectsToDoNow, wBox, nextWriteObject);
-				String operand = parseBox(wBox, writeObjectsToDoNow, null,nextWriteObject);
+				String operand = parseBox(wBox, strokeContainer, writeObjectsToDoNow, null,nextWriteObject);
 
-				if ((lastWriteObject != null) && isMacht(lastWriteObject, nextWriteObject))
-					string = string + processMacht(lastWriteObject, nextWriteObject, "$w" + operand + "@"); 
+				if ((lastWriteObject != null) && isMacht(strokeContainer, lastWriteObject, nextWriteObject))
+					string = string + processMacht(strokeContainer, lastWriteObject, nextWriteObject, "$w" + operand + "@"); 
 				else	
 					string = string + "$w" + operand + "@";
 				zetAllInBoxVerwerkt(writeObjectsToDo, wBox, true);
 			}
 			//macht 
-			else if(lastWriteObject != null && isMacht(lastWriteObject, nextWriteObject)){
+			else if(lastWriteObject != null && isMacht(strokeContainer, lastWriteObject, nextWriteObject)){
 				// isMacht = false betekent 1) verboden situatie of 
 				// 2) nextWriteObject staat niet boven lastWriteObject en 
 				// lastWriteObject is geen macht
 			
-				if (staatBoven(lastWriteObject, nextWriteObject)) {
+				if (staatBoven(strokeContainer, lastWriteObject, nextWriteObject)) {
 					nextWriteObject.setIsMachtVan(lastWriteObject);
 					// open de macht
 					string = string + "$m" + nextWriteObject.getTeken();
 					nextWriteObject.setVerwerkt(true);
 				}
-				else if (staatNaast(lastWriteObject, nextWriteObject)) {
+				else if (staatNaast(strokeContainer, lastWriteObject, nextWriteObject)) {
 					if (lastWriteObject.isMachtVan() != null) {
 						nextWriteObject.setIsMachtVan(lastWriteObject.isMachtVan());
 						string = string + nextWriteObject.getTeken();
@@ -432,7 +433,7 @@ public class FormulaProcessor {
 				}
 				// staat lager en zou weer bij een eerdere macht kunnen horen
 				else { // maak dit maar redundant
-					if ((lastWriteObject.isMachtVan() != null) && staatNaast(lastWriteObject.isMachtVan(), nextWriteObject)) {
+					if ((lastWriteObject.isMachtVan() != null) && staatNaast(strokeContainer, lastWriteObject.isMachtVan(), nextWriteObject)) {
 						if (lastWriteObject.isMachtVan().isMachtVan() == null) {
 							// macht afsluiten
 							string = string + "@" + nextWriteObject.getTeken();
@@ -447,7 +448,7 @@ public class FormulaProcessor {
 							nextWriteObject.setVerwerkt(true);
 						}	
 					}
-					if ((lastWriteObject.isMachtVan() != null) && (lastWriteObject.isMachtVan().isMachtVan() != null) && staatNaast(lastWriteObject.isMachtVan().isMachtVan(), nextWriteObject)) {
+					if ((lastWriteObject.isMachtVan() != null) && (lastWriteObject.isMachtVan().isMachtVan() != null) && staatNaast(strokeContainer, lastWriteObject.isMachtVan().isMachtVan(), nextWriteObject)) {
 						if (lastWriteObject.isMachtVan().isMachtVan().isMachtVan() == null)	{
 							// macht 2 keer (!) afsluiten
 							string = string + "@@" + nextWriteObject.getTeken();
@@ -465,7 +466,7 @@ public class FormulaProcessor {
 					if ((lastWriteObject.isMachtVan() != null) && 
 						(lastWriteObject.isMachtVan().isMachtVan() != null) &&
 						(lastWriteObject.isMachtVan().isMachtVan().isMachtVan() != null) &&
-						staatNaast(lastWriteObject.isMachtVan().isMachtVan().isMachtVan(), nextWriteObject)) {
+						staatNaast(strokeContainer, lastWriteObject.isMachtVan().isMachtVan().isMachtVan(), nextWriteObject)) {
 								
 						if (lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan() == null) {
 							// macht 3 keer (!) afsluiten
@@ -485,7 +486,7 @@ public class FormulaProcessor {
 						(lastWriteObject.isMachtVan().isMachtVan() != null) &&
 						(lastWriteObject.isMachtVan().isMachtVan().isMachtVan() != null) &&
 						(lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan() != null) &&
-						staatNaast(lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan(), nextWriteObject)) {
+						staatNaast(strokeContainer, lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan(), nextWriteObject)) {
 									
 						if (lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan().isMachtVan() == null) {
 							// macht 4 keer (!) afsluiten
@@ -508,7 +509,7 @@ public class FormulaProcessor {
 				double py = nextWriteObject.getBoxMid().y;
 				if (lastWriteObject != null) {	
 					double ly = lastWriteObject.getBox().y;
-					if (py > ly + 2 * StrokeContainer.averageHeight / 3)
+					if (py > ly + 2 * strokeContainer.averageHeight / 3)
 						string = string + ".";
 					else
 						string = string + "*";
@@ -584,9 +585,9 @@ public class FormulaProcessor {
 		}
 	}
 	
-	private static boolean isMacht(WMObject lastWo, WMObject wo) {
+	private static boolean isMacht(StrokeContainer strokeContainer, WMObject lastWo, WMObject wo) {
 		// lastWo^{".","=","+",")","/"} kan/mag niet
-		if (staatBoven(lastWo,wo) &&
+		if (staatBoven(strokeContainer, lastWo,wo) &&
 			(".".equals(wo.getTeken()) || 
 			 "=".equals(wo.getTeken()) || 
 			 "+".equals(wo.getTeken()) || 
@@ -595,7 +596,7 @@ public class FormulaProcessor {
 		   )
 			return false;
 		//{".","=","+","-",")","/"}^wo kan niet
-		else if (staatBoven(lastWo,wo) &&
+		else if (staatBoven(strokeContainer, lastWo,wo) &&
 			(".".equals(lastWo.getTeken()) || 
 			 "=".equals(lastWo.getTeken()) || 
 			 "+".equals(lastWo.getTeken()) || 
@@ -605,35 +606,35 @@ public class FormulaProcessor {
 			)
 			return false;
 		
-		boolean isMacht = staatBoven(lastWo,wo) || (lastWo.isMachtVan() != null);
+		boolean isMacht = staatBoven(strokeContainer, lastWo,wo) || (lastWo.isMachtVan() != null);
 		return isMacht;
 	}
 	
-	private static boolean staatBoven(WMObject lastWo, WMObject wo) {
-		return (wo.getBoxMid().y + StrokeContainer.averageHeight / 2 < lastWo.getBoxMid().y) && (wo.getBox().x > lastWo.getBoxMid().x);
+	private static boolean staatBoven(StrokeContainer strokeContainer, WMObject lastWo, WMObject wo) {
+		return (wo.getBoxMid().y + strokeContainer.averageHeight / 2 < lastWo.getBoxMid().y) && (wo.getBox().x > lastWo.getBoxMid().x);
 	}
 	
-	private static boolean staatNaast(WMObject lastWo, WMObject wo) {	
+	private static boolean staatNaast(StrokeContainer strokeContainer, WMObject lastWo, WMObject wo) {	
 		if (wo.getTeken().equals("-"))
 			return (wo.getBoxMid().y > lastWo.getBox().y) && 
 				   (wo.getBoxMid().y < (lastWo.getBox().y + lastWo.getBox().height)) && 
 				   (wo.getBox().x > lastWo.getBoxMid().x);
 		else
-			return (Math.abs(wo.getBoxMid().y - lastWo.getBoxMid().y) < StrokeContainer.averageHeight / 3) && 
+			return (Math.abs(wo.getBoxMid().y - lastWo.getBoxMid().y) < strokeContainer.averageHeight / 3) && 
 			   	   (wo.getBox().x > lastWo.getBoxMid().x);
 	}
 	
-	private static String processMacht(WMObject lastWriteObject, WMObject nextWriteObject, String objectString) {
+	private static String processMacht(StrokeContainer strokeContainer, WMObject lastWriteObject, WMObject nextWriteObject, String objectString) {
 		String string = "";
 		
-		if (staatBoven(lastWriteObject, nextWriteObject)) {
+		if (staatBoven(strokeContainer, lastWriteObject, nextWriteObject)) {
 			nextWriteObject.setIsMachtVan(lastWriteObject);
 			// open de macht
 			string = string + "$m" + objectString;
 			nextWriteObject.setVerwerkt(true);
 			
 		}
-		else if (staatNaast(lastWriteObject, nextWriteObject)) {
+		else if (staatNaast(strokeContainer, lastWriteObject, nextWriteObject)) {
 			if (lastWriteObject.isMachtVan() != null) {
 				nextWriteObject.setIsMachtVan(lastWriteObject.isMachtVan());
 				string = string + objectString;
@@ -645,7 +646,7 @@ public class FormulaProcessor {
 		else {
 			// maak dit maar redundant
 		
-			if ((lastWriteObject.isMachtVan() != null) && staatNaast(lastWriteObject.isMachtVan(), nextWriteObject)) {
+			if ((lastWriteObject.isMachtVan() != null) && staatNaast(strokeContainer, lastWriteObject.isMachtVan(), nextWriteObject)) {
 				if (lastWriteObject.isMachtVan().isMachtVan() == null) {
 					// macht afsluiten
 					string = string + "@" + objectString;
@@ -663,7 +664,7 @@ public class FormulaProcessor {
 			
 			if ((lastWriteObject.isMachtVan() != null) && 
 				(lastWriteObject.isMachtVan().isMachtVan() != null) &&
-				staatNaast(lastWriteObject.isMachtVan().isMachtVan(), nextWriteObject)) {
+				staatNaast(strokeContainer, lastWriteObject.isMachtVan().isMachtVan(), nextWriteObject)) {
 				
 				if (lastWriteObject.isMachtVan().isMachtVan().isMachtVan() == null) {
 					// macht 2 keer (!) afsluiten
@@ -682,7 +683,7 @@ public class FormulaProcessor {
 			if ((lastWriteObject.isMachtVan() != null) && 
 				(lastWriteObject.isMachtVan().isMachtVan() != null) &&
 				(lastWriteObject.isMachtVan().isMachtVan().isMachtVan() != null) &&
-				staatNaast(lastWriteObject.isMachtVan().isMachtVan().isMachtVan(), nextWriteObject)) {
+				staatNaast(strokeContainer, lastWriteObject.isMachtVan().isMachtVan().isMachtVan(), nextWriteObject)) {
 					
 				if (lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan() == null) {
 					// macht 3 keer (!) afsluiten
@@ -704,7 +705,7 @@ public class FormulaProcessor {
 				(lastWriteObject.isMachtVan().isMachtVan() != null) &&
 				(lastWriteObject.isMachtVan().isMachtVan().isMachtVan() != null) &&
 				(lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan() != null) &&
-				staatNaast(lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan(), nextWriteObject)) {
+				staatNaast(strokeContainer, lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan(), nextWriteObject)) {
 						
 				if (lastWriteObject.isMachtVan().isMachtVan().isMachtVan().isMachtVan().isMachtVan() == null) {
 					// macht 4 keer (!) afsluiten
