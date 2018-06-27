@@ -189,10 +189,10 @@ public class ProfilePanel extends VerticalPanel implements ClickHandler {
         g.setWidget(8, 1, newPasswordAgain);
 
         // Just for good measure, let's put a button in the center.
-        cnlBtn = new Button(DwoLocalesForGWT.instance.GUI_Button_Cancel());
+        cnlBtn = new Button(DwoLocalesForGWT.instance.GUI_BTN_Cancel());
         cnlBtn.addClickHandler(this);
         g.setWidget(9, 0, cnlBtn);
-        updateBtn = new Button(DwoLocalesForGWT.instance.GUI_Button_Update());
+        updateBtn = new Button(DwoLocalesForGWT.instance.GUI_BTN_Update());
         updateBtn.addClickHandler(this);
         g.setWidget(9, 1, updateBtn);
         // You can use the CellFormatter to affect the layout of the grid's cells.
