@@ -1313,7 +1313,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		
 		
 
-		if (fews != null)
+		if (fews != null && getScore() != fews.getScoreMax()) // alleen als niet al de maximumscore is behaald
 		{	
 			boolean stapCorrect = fews.controleerStap();
 			if (!stapCorrect)
