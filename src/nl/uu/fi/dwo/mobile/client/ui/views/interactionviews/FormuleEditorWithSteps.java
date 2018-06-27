@@ -1487,7 +1487,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		p.add(tp);
 		p.setWidgetLeftWidth(tp, hasPrefix?prefixViewer.getWidth() + 23:23, Style.Unit.PX, editor.getMainRegel().getWidth(), Style.Unit.PX);
 		p.setWidgetTopHeight(tp, hasPrefix?Math.max(prefixViewer.getAsHoogte() - editor.getAsHoogte(), 0):0, Style.Unit.PX, Math.max(hasPrefix?prefixViewer.getHeight():0, editor.getMainRegel().getHeight()), Style.Unit.PX);
-		addFormulePanelListeners(tp, editor);
+		if(bordjesMethode)
+		{
+			addFormulePanelListeners(tp, editor);
+		}
 		return editor;
 	}
 	
@@ -1619,7 +1622,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable)
+				if(!editable || !isStapOk())
 					return;
 				maakStap("+");
 			}
@@ -1631,7 +1634,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable)
+				if(!editable || !isStapOk())
 					return;
 				maakStap("-");
 			}
@@ -1643,7 +1646,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable)
+				if(!editable || !isStapOk())
 					return;
 				maakStap("*");
 			}
@@ -1655,7 +1658,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable)
+				if(!editable || !isStapOk())
 					return;
 				maakStap(":");
 			}
@@ -1667,7 +1670,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	
-				if(!editable)
+				if(!editable || !isStapOk())
 					return;
 				maakStap("haakjes");
 				maakBewerkingStap();
@@ -1680,7 +1683,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable)
+				if(!editable || !isStapOk())
 					return;
 				maakStap("herleid");
 				maakBewerkingStap();
@@ -1693,7 +1696,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	
-				if(!editable)
+				if(!editable || !isStapOk())
 					return;
 				maakStap("ontbind");
 				maakBewerkingStap();
@@ -1708,7 +1711,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable)
+				if(!editable || !isStapOk())
 					return;
 				maakStap("splits");
 				maakBewerkingStap();
@@ -1722,7 +1725,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable)
+				if(!editable || !isStapOk())
 					return;
 				maakStap("wortel");
 				maakBewerkingStap();
@@ -2369,7 +2372,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				{	
 					VergelijkingMeerv verg = FormuleParser.parseVergelijking("$f" + fv.toString() + "@");
 					if (linStrategieVersie 
-						|| (bordjesMethode && (verg != null) && verg.isEindOplossing(verg.geefVergelijkingVar()) && (correct != null? correct: false))) 
+						|| (bordjesMethode && (verg != null) && verg.isEindOplossing(verg.geefVergelijkingVar()) && (correct != null? correct: false)))
 						// de eindoplossing moet natuurlijk wel goed zijn
 						// als correct null is, wordt verderop een nieuwe editor gemaakt met de laatste stap en nagekeken
 					{	
@@ -3237,6 +3240,13 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if(!teltMee)
 			return 0;
 		return score;
+	}
+	
+	int getScoreMax()
+	{
+		if (!teltMee)
+			return 0;
+		return scoreMax;
 	}
 	
 	@Override
