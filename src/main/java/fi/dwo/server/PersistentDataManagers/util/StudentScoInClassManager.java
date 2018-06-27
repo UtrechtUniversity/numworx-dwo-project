@@ -40,8 +40,7 @@ public class StudentScoInClassManager {
     public static List<PersistentStudentScoContext> findEntities(PersistentSchoolClass schoolClass){
          EntityManager em = getEntityManager();
         try {
-            javax.persistence.Query q = em.createQuery("SELECT ss FROM PersistentStudentScoContext ss, PersistentScoContext s, PersistentClassCourse cc "
-                    + "where  s.courseID=cc.courseID and ss.scoID = s.scoID and cc.classID = :classID");
+            javax.persistence.Query q = em.createQuery("SELECT ss FROM PersistentStudentScoContext ss, PersistentScoContext s, PersistentClassCourse cc where  s.courseID=cc.courseID and ss.scoID = s.scoID and cc.classID = :classID and (ss.userid, ss.groupid) in (select (userid, groupid) from tblstudentof soc where cc.classid = soc.classid)");
             q.setParameter("classID", schoolClass.getClassID());
             List<PersistentStudentScoContext> list = q.getResultList();
             LOG.log(Level.FINE, "StudentScoInClassManager retrieved {0} PersistentStudentScoContext for classId {1}", new Object[]{list.size(), schoolClass.getClassID()});

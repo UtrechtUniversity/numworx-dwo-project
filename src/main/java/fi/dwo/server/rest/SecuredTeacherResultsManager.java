@@ -36,7 +36,6 @@ import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.CourseInClassManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
-import fi.dwo.server.PersistentDataManagers.util.StudentScoInClassManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -159,7 +158,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             List<PersistentSchoolClass> schoolClasses = SchoolClassUtilManager.getSchoolClassesOfTeacher(phr);
             HashMap<PersistenceId, DomSchoolClass> domSchoolClasses = new HashMap<>(schoolClasses.size());
             HashMap<PersistentStudentOfClassPK, PersistentStudentOfClass> socMap = new HashMap<>();
-            HashMap<Long, PersistentUser> studentMap = new HashMap<>();
+            HashMap<String, PersistentUser> studentMap = new HashMap<>();
             //create the DomSchoolClasses
             schoolClasses.stream().map((schoolClass) -> {
                 DomSchoolClass s = schoolClass.buildDomSchoolClass();
@@ -169,7 +168,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 List<PersistentStudentInClass> cicList = StudentInClassManager.findEntities(schoolClass);
                 for (PersistentStudentInClass sic : cicList) {
                     socMap.putIfAbsent(sic.getStudentOfClass().getPersistentStudentOfClassPK(), sic.getStudentOfClass());
-                    studentMap.putIfAbsent(sic.getUser().getId(), sic.getUser());
+                    studentMap.putIfAbsent(sic.getUser().getId().toString(), sic.getUser());
                 }
                 
 //                
@@ -230,8 +229,8 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             //Fetch courses for all classes ClassCourses. No filtering occurs on
             //CourseType, notBefore and notAfter for results. Filtering of Courses
             //occurs on Profile.
-            HashMap<Long, PersistentClassCourse> classCoursesMap = new HashMap<>();
-            HashMap<Long, PersistentCourse> coursesMap = new HashMap<>();
+            HashMap<PersistenceId, PersistentClassCourse> classCoursesMap = new HashMap<>();
+            HashMap<PersistenceId, PersistentCourse> coursesMap = new HashMap<>();
             schoolClasses.stream().forEach((schoolClass) -> {
                 List<PersistentCourseInClass> cicList;
                 try {
@@ -241,8 +240,8 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                     throw new Dwo2RestException(ex);
                 }
                 for (PersistentCourseInClass cic : cicList) {
-                    classCoursesMap.putIfAbsent(cic.getClassCourse().getClassCourseID(), cic.getClassCourse());
-                    coursesMap.putIfAbsent(cic.getCourse().getCourseID(), cic.getCourse());
+                    classCoursesMap.putIfAbsent(cic.getClassCourse().buildPersistenceId(), cic.getClassCourse());
+                    coursesMap.putIfAbsent(cic.getCourse().buildPersistenceId(), cic.getCourse());
                 }
             });
 
@@ -260,9 +259,9 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             results.setClassCourses(dccList);
 
             HashMap<PersistenceId, DomCourse> domCourses = new HashMap<>();
-            Map<Long, PersistentCourse> courses = new HashMap<>();
+            Map<PersistenceId, PersistentCourse> courses = new HashMap<>();
             Queue<PersistentCourse> courseQueue = new LinkedList<>();
-            Map<Long, PersistentCourse> leaves = new HashMap<>();
+            Map<PersistenceId, PersistentCourse> leaves = new HashMap<>();
             courseQueue.addAll(coursesMap.values());//note this is a set!
 
             //Danger Will Robinson, circular reference will hang thread forever.
@@ -270,7 +269,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             //Trying to get the queue empty.
             while (!courseQueue.isEmpty()) {
                 PersistentCourse course = courseQueue.remove();
-                PersistentCourse r = courses.putIfAbsent(course.getCourseID(), course);
+                PersistentCourse r = courses.putIfAbsent(course.buildPersistenceId(), course);
                 if (r == null && course.isWithChildren()) {
                     //put current course in the courseMap
                     //put kids on the queue
@@ -279,7 +278,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                     //if not in map add to queue
                     courseQueue.addAll(childrenCourses);
                 } else {//course is aleave
-                    leaves.putIfAbsent(course.getCourseID(), course);
+                    leaves.putIfAbsent(course.buildPersistenceId(), course);
                 }
             }
             //export courses to result.
@@ -299,11 +298,11 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             LOG.log(Level.INFO, "course in class fetch and convert: " + (curTime - prevTime));
             
             //process leaves and fill hashmap scoContext
-            HashMap<Long, PersistentScoContext> scosMap = new HashMap<>();
+            HashMap<PersistenceId, PersistentScoContext> scosMap = new HashMap<>();
             leaves.entrySet().stream().forEach((keyValuePair) -> {
                 List<PersistentScoContext> scoContexts = ScoContextManager.findEntities(keyValuePair.getValue());
                 scoContexts.forEach((scoContext) -> {
-                    scosMap.putIfAbsent(scoContext.getScoID(), scoContext);
+                    scosMap.putIfAbsent(scoContext.buildPersistenceId(), scoContext);
                 });
             });
             HashMap<PersistenceId, DomScoContext> domScoContexts = new HashMap<>(scosMap.size());
@@ -322,20 +321,27 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             curTime = DwoDateUtilities.getCurrentDwoUnixTimeStamp();
             LOG.log(Level.INFO, "scocontext fetch and convert: " + (curTime - prevTime));
 
+            long sgId = SchoolGroupManager.findEntity(school, RoleType.STUDENT).getSchoolGroupID();
             //fill hashmap studentSco for each student x sco
-//            HashMap<Long, PersistentStudentScoContext> studentScosMap = new HashMap<>();
-//            scosMap.entrySet().forEach((sco) -> {
-//                List<PersistentStudentScoContext> studentScos = StudentScoContextManager.findLeaveEntities(sco.getValue());
-//                studentScos.forEach((studentSco) -> {
-//                    studentScosMap.putIfAbsent(studentSco.getStudentSco(), studentSco);
-//                });
-//            });
-            HashMap<String, PersistentStudentScoContext> studentScosMap = new HashMap<>();
-            schoolClasses.forEach((cc) -> { 
- //           classCoursesMap.values().forEach((cc) -> {
-                List<PersistentStudentScoContext> ssList = StudentScoInClassManager.findEntities(cc);
-                ssList.forEach((ss) -> {studentScosMap.putIfAbsent(ss.getStudentSco().toString(), ss);}) ;
+            HashMap<PersistenceId, PersistentStudentScoContext> studentScosMap = new HashMap<>();
+            scosMap.entrySet().forEach((sco) -> {
+                List<PersistentStudentScoContext> studentScos = StudentScoContextManager.findEntities(sco.getValue(),sgId);
+                studentScos.forEach((studentSco) -> {
+                    //note each studentsco must be a student in a school class. Hence it must exist in the student list.
+                    //quick and hasty fetch.
+                    
+                    if(studentMap.containsKey(studentSco.getPersistentHasRolePK().getUserID().toString())){
+                    studentScosMap.putIfAbsent(studentSco.buildPersistenceId(), studentSco);
+                    }
+                });
             });
+//            HashMap<Long, PersistentStudentScoContext> studentScosMap = new HashMap<>();
+//            schoolClasses.forEach((cc) -> { 
+// //           classCoursesMap.values().forEach((cc) -> {
+//                List<PersistentStudentScoContext> ssList = StudentScoInClassManager.findEntities(cc);
+//                ssList.forEach((ss) -> {studentScosMap.putIfAbsent(ss.getStudentSco(), ss);}) ;
+//            });
+            
 //            for (PersistentScoContext sco : scosMap.values()) {
 //                for (PersistentHasRolePK hasRoleKey : studentHasRoleSet) {
 //                    //TODO optimize
@@ -346,7 +352,6 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 //                }
 //            }
 
-            //convert
             HashMap<PersistenceId, DomStudentScoContext> domStudentScoContexts = new HashMap<>(studentScosMap.size());
             studentScosMap.entrySet().stream().forEach((keyValuePair) -> {
                 DomStudentScoContext s = keyValuePair.getValue().buildDomStudentScoContext();
