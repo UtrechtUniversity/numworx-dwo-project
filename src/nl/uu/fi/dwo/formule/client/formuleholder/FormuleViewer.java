@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
@@ -34,6 +35,7 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 	Image checkimg;
 	
 	boolean selectable = true;
+	private HandlerRegistration registration;
 	
 
 	public FormuleViewer(String formule)
@@ -50,7 +52,7 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 		checkimg.setVisible(false);
 		sp.add(checkimg);
 		sp.add(this.getCanvas());
-		sp.addTouchHandler(new FormuleEditorTouchHandler(this));
+		registration = sp.addTouchHandler(new FormuleEditorTouchHandler(this));
 		setCurrentRegel(getMainRegel());
 		
 	}
@@ -87,8 +89,8 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 		checkimg = new Image(FORMULE_BUNDLE.goedkrul().getSafeUri());
 		checkimg.setVisible(false);
 		sp.add(this.getCanvas());
-		sp.add(checkimg);
-		sp.addTouchHandler(new FormuleEditorTouchHandler(this));
+		sp.add(checkimg); // waarom een ouderwetse onzichtbare krul?
+		registration = sp.addTouchHandler(new FormuleEditorTouchHandler(this));
 		setCurrentRegel(getMainRegel());
 	}
 
@@ -233,5 +235,11 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 	public void setSelectable(boolean b)
 	{
 		selectable = b;
+	}
+	
+	public void removeTouchHandler() {
+		if ( registration != null) 
+			registration.removeHandler();
+		registration = null;
 	}
 }
