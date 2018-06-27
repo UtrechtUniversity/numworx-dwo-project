@@ -2067,12 +2067,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (b && editable)
 		{
 			sp.removeStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().insert_formule_readonly());
+			register(sp.addTouchHandler(new FormuleEditorTouchHandler(this)));
 			this.requestFocus();
 		}
 		else
 		{
 			sp.addStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().insert_formule_readonly());
-
+			removeTouchHandler();
 			// zorg dat de formule editor geen focus heeft
 			if (getKeyboard() != null)
 			{
