@@ -327,6 +327,7 @@ public class StrokeContainer {
 		h.put("wmStrokeIndicesList", wmStrokeIndicesList);
 		h.put("wmStrokeTekenList", wmStrokeTekenList);
 		h.put("formulaString", formulaString);
+		h.put("averageHeight", new Double(averageHeight));
 		return h;
 	}
 	
@@ -348,6 +349,8 @@ public class StrokeContainer {
 			wmStrokeTekenList = launchState.getStringList("wmStrokeTekenList");
 		if (launchState.containsKey("formulaString"))
 			formulaString = launchState.getString("formulaString");
+		if (launchState.containsKey("averageHeight"))
+			averageHeight = launchState.getDouble("averageHeight");
 		
 		
 		for (int i = 0; i < strokeList.size(); i++)	{	
