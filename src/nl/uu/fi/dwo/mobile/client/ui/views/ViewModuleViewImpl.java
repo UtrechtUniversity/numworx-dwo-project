@@ -1822,6 +1822,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		mainPanel.setStylePrimaryName("mainPanel");
 		mainPanel.addStyleDependentName(DWOplayer.PARAMETERS.keyboardStyle());
 		mainPanel.setStyleDependentName("standalone", standalone);
+		mainPanel.setStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().review(), on.isReview());
 
 //		Style contentStyle = contentScrollPanel.getElement().getStyle();
 //		contentStyle.setOverflowX(Overflow.HIDDEN);

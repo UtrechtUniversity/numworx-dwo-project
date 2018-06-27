@@ -48,4 +48,6 @@ public interface DWOplayerCss extends CssResource {
 	String opdrachtbollen();
 	
 	String DWOkeyboard();
+	
+	String review();
 }

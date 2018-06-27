@@ -660,7 +660,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//checkPanel.getElement().getStyle().setBackgroundColor("red");
 			//prefixPanel.getElement().getStyle().setBackgroundColor("yellow");
 			//this.getMainRegel().getCanvas().getElement().getStyle().setBackgroundColor("blue");
-			sp.addTouchHandler(new FormuleEditorTouchHandler(this));
+			register(sp.addTouchHandler(new FormuleEditorTouchHandler(this)));
 			lastanswer = "$f" + toString() + "@"; // initialize lastanswer voor kijkna not sending
 		
 		}
@@ -2066,12 +2066,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	{
 		if (b && editable)
 		{
-			sp.getElement().getStyle().clearProperty("pointerEvents");
+			sp.removeStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().insert_formule_readonly());
 			this.requestFocus();
 		}
 		else
 		{
-			sp.getElement().getStyle().setProperty("pointerEvents", "none");
+			sp.addStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().insert_formule_readonly());
 
 			// zorg dat de formule editor geen focus heeft
 			if (getKeyboard() != null)
