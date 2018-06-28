@@ -54,7 +54,6 @@ public class JsAddTeacherToSchoolclassView implements AddTeacherToSchoolclassPre
     @Override
     public void setSchoolClass(DomSchoolClass schoolClass) {
         JSONValue sc = DomSchoolClassCodec.CODEC.encode(schoolClass);       
-        JsAddTeacherToSchoolclassDisplay.setSchoolClass(sc);
-        
+        JsAddTeacherToSchoolclassDisplay.setSchoolClass(sc);       
     }    
 }
