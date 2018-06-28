@@ -244,6 +244,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 	}
 	
 	public void readFormula(String s) {
+		strokeContainer.averageHeight = 30;
 		// trim $f...@
 		if (s.length() >= 3) {	
 			String begin = s.substring(0,2);
