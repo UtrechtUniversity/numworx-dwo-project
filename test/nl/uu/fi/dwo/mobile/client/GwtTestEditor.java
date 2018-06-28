@@ -6,7 +6,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 
 import org.junit.Test;
 
-public class EditorTests extends BaseCase
+public class GwtTestEditor extends BaseCase
 {
 	@Test
 	public void test_true()
