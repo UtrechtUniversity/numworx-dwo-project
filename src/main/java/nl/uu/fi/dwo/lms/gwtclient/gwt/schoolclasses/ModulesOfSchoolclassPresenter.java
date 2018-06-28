@@ -257,7 +257,7 @@ public class ModulesOfSchoolclassPresenter {
         } else {
             try {
                 date = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm").parse(dateString);
-                LOG.log(Level.FINE, "Setting From-date to: " + DateTimeFormat.getFullDateTimeFormat().format(date));
+               LOG.log(Level.FINE, "Setting From-date to: " + DateTimeFormat.getFullDateTimeFormat().format(date));
             } catch (Exception e) {
 
                 eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));

@@ -631,6 +631,7 @@
                                     <includes>
                                         <include>css/**</include>
                                         <include>js/**</include>
+                                        <include>third-party/**</include>
                                         <include>images/**</include>
                                         <include>index.html</include>
                                         <include>library.html</include>
