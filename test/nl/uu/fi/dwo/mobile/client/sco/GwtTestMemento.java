@@ -16,7 +16,7 @@ import com.google.gwt.core.client.testing.StubScheduler;
 import com.google.gwt.junit.client.GWTTestCase;
 
 import nl.numworx.gwtpatch.client.GWTPatch;
-import nl.uu.fi.dwo.mobile.client.BaseTestCase;
+import nl.numworx.gwtpatch.client.JSONBuilder;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.promise.client.PromiseImpl;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -32,16 +32,17 @@ public class GwtTestMemento extends GWTTestCase {
   SCORM_guest api;
   ViewModuleView view;
   PromiseImpl<DomStudentModelContext> defer;
-  Map<String,String> map = new HashMap<>();
-  GWTPatch patch = new GWTPatch();
+  Map<String,String> map;
+  GWTPatch patch;
   Scheduler scheduler;
   
-  public void getSetUp() throws Exception {
+  public void gwtSetUp() throws Exception {
+    patch = new GWTPatch(new JSONBuilder());
+    map  = new HashMap<>();
     api = new SCORM_guest() {
 
       @Override
       public String GetValue(String name) {
-        // TODO Auto-generated method stub
         return map.getOrDefault(name, "");
       }
 
@@ -51,14 +52,14 @@ public class GwtTestMemento extends GWTTestCase {
         return super.SetValue(name, value);
       } };
 
-//      scheduler = Scheduler.get();
-//      defer = new PromiseImpl<>(scheduler);
-//      m = new Memento(api, view, defer) {
-//
-//        @Override
-//        void register() { // whipeout registrations
-//          
-//        } } ;
+      scheduler = new StubScheduler();
+      defer = new PromiseImpl<>(scheduler);
+      m = new Memento(api, view, defer) {
+
+        @Override
+        void register() { // whipeout registrations
+          
+        } } ;
   }
 
   public void gwtTearDown() throws Exception {}
@@ -71,12 +72,10 @@ public class GwtTestMemento extends GWTTestCase {
       api.SetValue(Memento.REVIEW_DATA, review);
       api.SetValue(Memento.SUSPEND_DATA, suspend_data);
       api.SetValue(Memento.COMPLETION_STATUS, Memento.COMPLETED);
-//      HashMap<String, Object>[][] state = new HashMap[1][1];
-//      m.getOpdrContStates(state);
-//      m.mergeIntoReview(0, 0, state[0][0]);
+      HashMap<String, Object>[][] state = new HashMap[1][1];
+      m.getOpdrContStates(state);
+      m.mergeIntoReview(0, 0, state[0][0]);
       String result = api.GetValue(Memento.REVIEW_DATA);
-      
-      
       String test = patch.createPatch(review, result);
       assertEquals("patch equals", "[]", test);
   }

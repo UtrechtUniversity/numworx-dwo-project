@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.google.gwt.junit.client.GWTTestCase;
 
-public class FontTests extends GWTTestCase
+public class GwtTestFont extends GWTTestCase
 {
 	@Override
 	public String getModuleName()
