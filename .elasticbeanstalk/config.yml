@@ -2,7 +2,7 @@ branch-defaults:
   default:
     environment: testebserver
 deploy:
-  artifact: target/EBServer-2.2.2.war
+  artifact: target/EBServer-2.2.6-SNAPSHOT.war
 environment-defaults:
   appebserver:
     branch: null
