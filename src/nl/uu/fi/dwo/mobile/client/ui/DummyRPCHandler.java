@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
@@ -34,9 +36,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
-class DummyRPCHandler implements RPCHandler {
+public class DummyRPCHandler implements RPCHandler {
+ 
+	@Inject public DummyRPCHandler() {
+      super();
+    }
 
-	@Override
+  @Override
 	public Promise<Void> logout() {
 		return null;
 
@@ -44,103 +50,86 @@ class DummyRPCHandler implements RPCHandler {
 
 	@Override
 	public Promise<DomDwoProfileFull> getDwoProfile() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Promise<DomCoursesOfSchoolClass> getCoursesClass(DomSchoolClass schoolClass) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Promise<List<DomCourseStudent>> getCoursesSchool(DomSchool school) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Promise<List<DomCourseStudent>> getCourses() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public XmlRpcClient getClient() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Promise<DomCourseStudent> getCourse(Object id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Promise<DomScoContext> getSco(Object id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Promise<DomResultsPerStudentCourse> getUserResults(Object courseID, Object userID) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Promise<List<DomScoContext>> getScos(Object id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Promise<List<DomCourseStudent>> getCourses(Object parentID) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Promise<DomUserFullwLoginContext> samlLogin(String user_id, String org_id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Promise<DomUserFullwLoginContext> getUserFromAuthToken(String authToken) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Promise<DomUserFullwLoginContext> login(String username, String password) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Promise<DomUserFullwLoginContext> loginMD5(String username, String password) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Promise<Map<String, String>> getValues(Object scoID, Collection<String> keys) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Promise<?> setValues(Object scoID, Map<String, String> values) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -213,13 +202,11 @@ class DummyRPCHandler implements RPCHandler {
 
 	@Override
 	public Promise<DomCoursesOfSchoolClass> getCourseClass(Object course, DomSchoolClass schoolClass) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Promise<DomCoursesOfSchoolClass> getScoContextClass(Object sco, DomSchoolClass schoolClass) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

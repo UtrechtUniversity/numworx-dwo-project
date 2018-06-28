@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
@@ -14,7 +13,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -25,17 +26,24 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
+@Singleton
 public class DummyClientFactory implements ClientFactory {
 
-	private static EventBus eventBus = new SimpleEventBus();
-	private static RPCHandler handler = new DummyRPCHandler();
+	final private EventBus eventBus;
+	final private RPCHandler handler;
 	private ViewModuleView entryView;
 	private IsWidget logoutWidget;
 	
 	public DummyClientFactory() {
+	  this(new SimpleEventBus(),new DummyRPCHandler());
 	}
 
-	@Override
+	@Inject DummyClientFactory(EventBus eventBus, RPCHandler handler) {
+      this.eventBus = eventBus;
+      this.handler = handler;
+    }
+
+  @Override
 	public EventBus getEventBus() {
 		return eventBus;
 	}
