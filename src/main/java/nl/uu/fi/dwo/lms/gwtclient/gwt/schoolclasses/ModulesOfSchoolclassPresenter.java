@@ -46,6 +46,7 @@ public class ModulesOfSchoolclassPresenter {
     private int requests = 0;
 
     public interface Display extends BasicDisplay {
+      public final static String LOCAL_TIME = "yyyy-MM-dd HH:mm"; // common met jsmodulesofSchool
 
         void clear();
 
@@ -208,30 +209,30 @@ public class ModulesOfSchoolclassPresenter {
         }
         Promise<Boolean> p = Promises.resolved(null);
         if (typeString != null) {
-            p.then((resolved) -> {
+            p=p.then((resolved) -> {
                 return setCourseType(key, typeString);
             });
         }
         if (fromData != null) {
-            p.then((resolved) -> {
+            p=p.then((resolved) -> {
                 return setFromDate(key, fromData);
             });
         }
         if (toData != null) {
-            p.then((resolved) -> {
+            p=p.then((resolved) -> {
                 return setToDate(key, toData);
             });
         }
         if (accessKey != null) {
-            p.then((resolved) -> {
+            p=p.then((resolved) -> {
                 return setAccessKey(key, accessKey);
             });
         }
-        p.then((resolved) -> {
+        p=p.then((resolved) -> {
             updateViewData();
             return resolved;
         });
-        p.then(null, (failure) -> {
+        p=p.then(null, (failure) -> {
             eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
         });
     }
@@ -281,7 +282,7 @@ public class ModulesOfSchoolclassPresenter {
             date = null;
         } else {
             try {
-                date = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm").parse(dateString);
+                date = DateTimeFormat.getFormat(Display.LOCAL_TIME).parse(dateString);
                 LOG.log(Level.FINE, "Setting To-date to: " + DateTimeFormat.getFullDateTimeFormat().format(date));
             } catch (Exception e) {
                 eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));

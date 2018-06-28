@@ -1,8 +1,13 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
+
 import fi.dwo.gwt.lib.rest.util.DomCourseOfClassCodec;
+
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.ModulesOfSchoolclassPresenter;
@@ -64,13 +69,31 @@ public class JsModulesOfSchoolclassView implements ModulesOfSchoolclassPresenter
 
     }
 
+    
     private JSONObject buildSubTree(DomTree<DomCourseOfClass> node) {
         JSONObject json = new JSONObject();
         //set course data in node.
-        if (node.getObject() != null) {
-            json.put("data", DomCourseOfClassCodec.CODEC.encode(node.getObject()));
-        } else {
-            json.put("data", DomCourseOfClassCodec.CODEC.encode(new DomCourseOfClass()));
+        DomCourseOfClass object = node.getObject();
+//        if (object == null) {
+//            object = (new DomCourseOfClass());
+//        }
+ 
+        json.put("data", DomCourseOfClassCodec.CODEC.encode(object));
+        
+        if(object.getClassCourse() != null) {
+        // patch notAfter and notBefore
+        Date notAfter = object.getClassCourse().getNotAfter();
+        if (notAfter != null) {
+          String formatted = DateTimeFormat.getFormat(LOCAL_TIME).format(notAfter);
+          json.get("data").isObject()
+          .get("classCourse").isObject().put("notAfter", new JSONString(formatted));
+        }
+ 
+        Date notBefore = object.getClassCourse().getNotBefore();
+        if (notBefore != null) {
+          String formatted = DateTimeFormat.getFormat(LOCAL_TIME).format(notBefore);
+          json.get("data").isObject().get("classCourse").isObject().put("notBefore", new JSONString(formatted));
+        }
         }
         //Add children.
         if (node.getChildren() != null && !node.getChildren().isEmpty()) {
