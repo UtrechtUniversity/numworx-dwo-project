@@ -93,14 +93,14 @@ public class JsCopyOrMoveStudentToSchoolclassView implements CopyOrMoveStudentTo
     @Override
     public void SetClassA(DomSchoolClass schoolClass) {
         JSONValue sc = DomSchoolClassCodec.CODEC.encode(schoolClass);
-        JsAddTeacherToSchoolclassDisplay.setSchoolClass(sc);
+        //JsAddTeacherToSchoolclassDisplay.setSchoolClass(sc);
         JsCopyOrMoveStudentToSchoolclassDisplay.setSchoolClassA(sc.isObject().getJavaScriptObject());
    }
 
     @Override
     public void SetClassB(DomSchoolClass schoolClass) {
         JSONValue sc = DomSchoolClassCodec.CODEC.encode(schoolClass);
-        JsAddTeacherToSchoolclassDisplay.setSchoolClass(sc);
+        //JsAddTeacherToSchoolclassDisplay.setSchoolClass(sc);
         JsCopyOrMoveStudentToSchoolclassDisplay.setSchoolClassB(sc.isObject().getJavaScriptObject());
     }
 

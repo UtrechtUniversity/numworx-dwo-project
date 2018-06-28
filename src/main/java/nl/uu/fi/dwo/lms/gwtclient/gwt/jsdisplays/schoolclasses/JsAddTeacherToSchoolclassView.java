@@ -32,12 +32,6 @@ public class JsAddTeacherToSchoolclassView implements AddTeacherToSchoolclassPre
         JsAddTeacherToSchoolclassDisplay.setHelp(url);
     }
     
-//
-//    @Override
-//    public void setSchoolClass(DomSchoolClassFull schoolClass) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-
     @Override
     public void showTeachers(Map<String, DomTeacher> teachers) {
         JSONObject object = new JSONObject();
