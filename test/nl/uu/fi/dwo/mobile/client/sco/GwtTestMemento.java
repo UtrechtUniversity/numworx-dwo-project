@@ -80,4 +80,21 @@ public class GwtTestMemento extends GWTTestCase {
       assertEquals("patch equals", "[]", test);
   }
 
+  @SuppressWarnings("unchecked")
+  @Test 
+  public void testRealdata() {
+    String suspend_data = "{\"onsState\":{\"opdrContStates\":[[{\"interactiePanelStates\":[null,null,null,null,null,{\"hoogtes\":[27],\"interactiePanelStates\":[{\"formuleVakInhouden\":[\"$f40+2@\"],\"antwoordString\":\"$f40+2@\",\"ingevuld\":true,\"nagekeken\":false,\"editable\":true,\"isVeranderdNaNakijken\":false,\"errorCount\":0}],\"selected\":false,\"ingeklapt\":false,\"popupUsed\":false,\"nagekeken\":false,\"visible\":true,\"goedHalfFoutStatistiek\":4,\"feedbackStatistiek\":\"\"}],\"RandomVarNamen\":[],\"RandomVarWaarden\":{}},{\"interactiePanelStates\":[null,null,null,null,null,{\"hoogtes\":[27],\"interactiePanelStates\":[{\"formuleVakInhouden\":[\"$f7*6@\"],\"antwoordString\":\"$f7*6@\",\"ingevuld\":true,\"nagekeken\":false,\"editable\":true,\"isVeranderdNaNakijken\":false,\"errorCount\":0}],\"selected\":false,\"ingeklapt\":false,\"popupUsed\":false,\"nagekeken\":false,\"visible\":true,\"goedHalfFoutStatistiek\":4,\"feedbackStatistiek\":\"\"}],\"RandomVarNamen\":[],\"RandomVarWaarden\":{}}]],\"aantalSessies\":1,\"activiteitNr\":0,\"orScores\":[[5,10]],\"bezocht\":[[true,true]],\"zelftoetsNagekeken\":false,\"tempotoetsLocked\":false,\"tempotoetsSecondsLeft\":0,\"scoresZelftoets\":[[0,0]],\"isCorrectZelftoets\":[[false,false]],\"nakijkenZelftoetsPending\":[[false,false]]}}";
+    String review = "{\"opdrContStates\":[[{\"interactiePanelStates\":[null,null,null,null,null,{\"reviewInteractieData\":{\"reviewScoreCorrectie\":15}}]},{\"interactiePanelStates\":[null,null,null,null,null,{\"reviewInteractieData\":{\"reviewScoreCorrectie\":10}}]}]]}";
+    api.SetValue(Memento.REVIEW_DATA, review);
+    api.SetValue(Memento.SUSPEND_DATA, suspend_data);
+    api.SetValue(Memento.COMPLETION_STATUS, Memento.COMPLETED);
+    HashMap<String, Object>[][] state = new HashMap[1][1];
+    m.getOpdrContStates(state);
+    m.mergeIntoReview(0, 0, state[0][0]);
+    String result = api.GetValue(Memento.REVIEW_DATA);
+    String test = patch.createPatch(review, result);
+    assertEquals("patch equals", "[]", test);
+   
+  } 
+  
 }
