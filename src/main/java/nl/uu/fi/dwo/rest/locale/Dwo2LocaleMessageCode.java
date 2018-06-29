@@ -9,10 +9,18 @@ package nl.uu.fi.dwo.rest.locale;
  * @author Gert van der Plas
  */
 public enum Dwo2LocaleMessageCode {
+//App names
+NUM_APP_TEACHER,
+NUM_APP_STUDENT,
+NUM_APP_SCHOOLADMIN,    
+NUM_APP_DWOADMIN,    
+    
 //generic buttons
 NUM_BTN_Ok,  
 NUM_BTN_Cancel,
+NUM_BTN_Add,
 NUM_BTN_Save,
+NUM_BTN_Edit,
 NUM_BTN_Apply,
 NUM_BTN_Confirm,
 NUM_BTN_Abort,
@@ -26,6 +34,10 @@ NUM_DLG_User_ConfirmChangeCommited,
 NUM_DLG_User_ConfirmPasswordSwitch,
 
 //generic labels
+ NUM_LBL_YES,
+ NUM_LBL_NO,
+ NUM_LBL_ON,
+ NUM_LBL_OFF,
  NUM_LBL_STUDENTLETTER,
  NUM_LBL_TEACHERLETTER,
  NUM_LBL_SCHOOLADMINLETTER,
@@ -37,7 +49,6 @@ NUM_DLG_User_ConfirmPasswordSwitch,
  NUM_LBL_CUR_PASSWORD,
  NUM_LBL_NEW_PASSWORD,
  NUM_LBL_RPT_NEW_PASSWORD,
-
 
  NUM_TBL_USERNAME,
  NUM_TBL_GIVENNAME,
@@ -77,6 +88,16 @@ NUM_DLG_User_ConfirmPasswordSwitch,
  NUM_TBL_STARTWITHSCHOOLLOGIN,
  NUM_TBL_REMOVESCHOOLLOGIN,
  
+//klassen beheer
+ NUM_PNL_CLASSES,
+
+ NUM_SEC_CLASSES_EDIT,
+ NUM_SEC_CLASSES_ADD,
+ 
+ NUM_LBL_CLASSES_SELECTTOEDIT,
+ NUM_TBL_CLASSES_CLASSNAME,
+ NUM_LBL_CLASSES_TREESTRUCT,
+ NUM_LBL_CLASSES_ACCESSKEY,
  
 /** Old tags for java */
 GUI_Button_Ok,  
