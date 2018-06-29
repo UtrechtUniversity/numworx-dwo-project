@@ -210,7 +210,7 @@ public class WMObject {
 	
 	public boolean hasAscent()
 	{	
-		if (getTeken().equals("b") || getTeken().equals("d") || getTeken().equals("h") || getTeken().equals("k") ||
+		if (getTeken().equals("f") || getTeken().equals("b") || getTeken().equals("d") || getTeken().equals("h") || getTeken().equals("k") ||
 			getTeken().equals("l") || getTeken().equals("t") || getTeken().equals("6") || getTeken().equals("8"))
 		{	return true;
 		}

@@ -1,6 +1,7 @@
 package fi.writemathgwt.client.engine;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import fi.writemathgwt.client.engine.WMObject;
 
@@ -10,7 +11,17 @@ public class FormulaProcessor {
 	private static int cPanelAreaMax = 50000;
 	private static int cPanelAreaDelta = cPanelAreaMax - cPanelAreaMin;
 	
+	private static Logger logger = Logger.getLogger("FormulaProcessor");
 	
+	public static String addContext(String formuleString) {
+		logger.info("formuleString = "+formuleString);
+		formuleString = formuleString.replaceAll("c0s", "cos");
+		formuleString = formuleString.replaceAll("l0g", "log");
+		formuleString = formuleString.replace("("+"0s", "cos");
+		formuleString = formuleString.replace("s1n", "sin");
+		formuleString = formuleString.replace("$"+"m1"+"@", "'");
+		return formuleString;
+	}
 
 	public static String parseFormule(StrokeContainer strokeContainer, DoubleRectangle parseArea) {		
 		ArrayList<WMObject> wmObjects = strokeContainer.getWMObjects();
@@ -544,7 +555,7 @@ public class FormulaProcessor {
 				
 		} // while
 		string = removeHalfObjects(string);
-		return string;
+		return addContext(string);
 	}
 
 

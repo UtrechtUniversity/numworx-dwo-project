@@ -60,7 +60,7 @@ public class TwoStrokeDirFilter {
 		if("4H1".equals(teken)) {int[][] data = {{240, 40, 1, 20, 10},{0, 30, 22, 39, 6}};return data;}
 		if("4H2".equals(teken)) {int[][] data = {{260, 30, 1, 39, 24}};return data;}
 		
-		if("+H1".equals(teken)) {int[][] data = {{260, 30, 1, 39, 32}};return data;}
+		if("+H1".equals(teken)) {int[][] data = {{260, 30, 1, 39, 32},{260, 50, 1, 39, 37}};return data;}
 		if("+H2".equals(teken)) {int[][] data = {{0, 30, 1, 39, 28}};return data;}
 		if("+H2+".equals(teken)) {int[][] data = {{180, 20, 1, 39, 32}};return data;}
 		if("7H1".equals(teken)) {int[][] data = {{0, 45, 1, 14, 6},{250, 20, 14, 39, 16}};return data;}
@@ -77,7 +77,7 @@ public class TwoStrokeDirFilter {
 		if("=H1+".equals(teken)) {int[][] data = {{180, 30, 1, 39, 30}};return data;}
 		if("=H2".equals(teken)) {int[][] data = {{0, 30, 1, 39, 30}};return data;}
 		if("=H2+".equals(teken)) {int[][] data = {{180, 30, 1, 39, 30}};return data;}
-		if("fH1".equals(teken)) {int[][] data = {{180, 45, 1, 10, 4},{260, 25, 10, 39, 20}};return data;}
+		if("fH1".equals(teken)) {int[][] data = {{180, 55, 1, 10, 4},{260, 35, 10, 39, 20}};return data;}
 		if("fH2".equals(teken)) {int[][] data = {{0, 20, 1, 39, 28}};return data;}
 		if("fH2+".equals(teken)) {int[][] data = {{180, 20, 1, 39, 32}};return data;}
 		
