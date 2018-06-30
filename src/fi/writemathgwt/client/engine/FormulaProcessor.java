@@ -20,6 +20,7 @@ public class FormulaProcessor {
 		formuleString = formuleString.replace("("+"0s", "cos");
 		formuleString = formuleString.replace("s1n", "sin");
 		formuleString = formuleString.replace("$"+"m1"+"@", "'");
+		formuleString = formuleString.replace("$"+"ml"+"@", "'");
 		return formuleString;
 	}
 
