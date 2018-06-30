@@ -1886,6 +1886,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		comRoot.addCBookEventListener("equation", this);
 		comRoot.addCBookEventListener("expression", this);
 		comRoot.addCBookEventListener("action.setNotEditable", this);
+		comRoot.addCBookEventListener("action.check", this);
 
 		if (logging != null) 
 			logging.setCommunicationRoot(comRoot);
@@ -1981,8 +1982,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if ("action.setNotEditable".equals(event.getCommand())) {
 			setEditable(false);
 			return;
-		} else 
-		if ("balansvergelijking".equals(event.getCommand()))
+		}
+		else if ("action.check".equals(event.getCommand())) {
+			kijkNa();
+			return;
+		}
+		else if ("balansvergelijking".equals(event.getCommand()))
 		{
 			message = event.getParameter("balansvergelijking").toString();
 		}
