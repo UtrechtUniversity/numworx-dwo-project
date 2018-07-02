@@ -25,6 +25,12 @@ NUM_BTN_Apply,
 NUM_BTN_Confirm,
 NUM_BTN_Abort,
 NUM_BTN_Update,
+NUM_BTN_Remove,
+NUM_BTN_Show,
+NUM_BTN_Search,
+NUM_BTN_Modify,
+NUM_BTN_Connect,
+NUM_BTN_RefreshList,
 
 //dialogs
 NUM_DLG_User_ConfirmLogout,
@@ -49,6 +55,9 @@ NUM_DLG_User_ConfirmPasswordSwitch,
  NUM_LBL_CUR_PASSWORD,
  NUM_LBL_NEW_PASSWORD,
  NUM_LBL_RPT_NEW_PASSWORD,
+ NUM_LBL_MODULES,
+ NUM_LBL_STUDENTS,
+ NUM_LBL_TEACHERS,
 
  NUM_TBL_USERNAME,
  NUM_TBL_GIVENNAME,
@@ -57,6 +66,10 @@ NUM_DLG_User_ConfirmPasswordSwitch,
  NUM_TBL_SINGLE_SCHOOL,
  NUM_TBL_EMAIL,
  NUM_TBL_ROLE,
+ NUM_TBL_STUDENTS,
+ NUM_TBL_TEACHERS,
+ NUM_TBL_MODULES,
+ 
 
 //login scherm
  NUM_BTN_LOGIN,
@@ -88,17 +101,26 @@ NUM_DLG_User_ConfirmPasswordSwitch,
  NUM_TBL_STARTWITHSCHOOLLOGIN,
  NUM_TBL_REMOVESCHOOLLOGIN,
  
-//klassen beheer
+//klassenbeheer
  NUM_PNL_CLASSES,
 
  NUM_SEC_CLASSES_EDIT,
  NUM_SEC_CLASSES_ADD,
  
+ NUM_LBL_CLASSES_CLASSNAME,
  NUM_LBL_CLASSES_SELECTTOEDIT,
  NUM_TBL_CLASSES_CLASSNAME,
  NUM_LBL_CLASSES_TREESTRUCT,
  NUM_LBL_CLASSES_ACCESSKEY,
  
+ //Klasbeheer
+ NUM_LBL_ClassAssignements,
+ NUM_BTN_MOVECOPY, 
+ NUM_BTN_ShowStudents,
+ NUM_BTN_ShowTeachers,
+ NUM_BTN_ShowModules,
+
+
 /** Old tags for java */
 GUI_Button_Ok,  
 GUI_Button_Cancel,
