@@ -24,12 +24,12 @@ public class JsSelectedResultsView implements SelectedResultsPresenter.Display {
 
     @Override
     public void clear() {
-        JsResultsDisplay.clear();
+      JsSelectedResultsDisplay.clear();
     }
 
     @Override
     public void setHelp(String url) {
-        JsResultsDisplay.setHelp(url);
+      JsSelectedResultsDisplay.setHelp(url);
     }
     
     @Override
