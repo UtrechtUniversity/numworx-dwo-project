@@ -85,6 +85,10 @@ public class EditSchoolclassPresenter {
                 //flip back to schoolclasses screen 
                 schoolClass = resolved.getValue();
                 view.showSchoolClass(schoolClass);
+                showStudents();
+                showTeachers();
+                showModules();
+
                 return null;
             }
 
@@ -301,9 +305,9 @@ public class EditSchoolclassPresenter {
                 moduleData.getCourses().forEach((k) -> courseMap.put(k.getKey().getIdString(), k.getValue()));
                 Map<String, DomClassCourse4Teacher> ccMap = new HashMap<>();
                 moduleData.getClassCourses().forEach((k) -> {
-                    if (k.getValue().getViewState()==ViewState.studentsAndTeachers && courseMap.get(k.getValue().getCourseId().getIdString())!=null &&!courseMap.get(k.getValue().getCourseId().getIdString()).getWithChildren()) {
+                    if (k.getValue().getViewState() == ViewState.studentsAndTeachers && courseMap.get(k.getValue().getCourseId().getIdString()) != null && !courseMap.get(k.getValue().getCourseId().getIdString()).getWithChildren()) {
                         courseList.add(courseMap.get(k.getValue().getCourseId().getIdString()));
-                        LOG.log(Level.INFO,"Course attached to class: "+courseMap.get(k.getValue().getCourseId().getIdString()).getName());
+                        LOG.log(Level.INFO, "Course attached to class: " + courseMap.get(k.getValue().getCourseId().getIdString()).getName());
                     }
                 });
                 view.showModules(courseList);
