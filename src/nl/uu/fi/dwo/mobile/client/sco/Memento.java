@@ -22,6 +22,8 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.json.client.JSONArray;
@@ -92,7 +94,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private static final String TOTAL_TIME = "cmi.total_time";
 	static final String COMPLETION_STATUS = "cmi.completion_status";
 	static final String COMPLETED = "completed";
-	private static final String CMI_MODE = "cmi.mode";
+	static final String CMI_MODE = "cmi.mode";
 	public static final String STUDENT_MODEL = "dme.student_model";
 
 	static final String EXIT_NORMAL = "normal";
@@ -150,7 +152,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private JSONBoolean zelftoetsNagekeken, zelftoetsGeenCorr;
 	private JSONBoolean tempotoetsLocked;
 	private JSONNumber tempotoetsSecondsLeft;
-	private JSONNumber aantalSessies;
+	//private JSONNumber aantalSessies;
 
 	private String scoreRaw;
 	final private Date startDate = new Date();
@@ -1342,11 +1344,38 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
   public void mergeIntoReview(int currentActiviteit, int currentOpdracht,
       HashMap<String, Object> state) {
     JSONObject reviewPage = strip(JSONUtilities.wrapMap(state), 5);
-    JSONObject r = new JSONObject();
-    JSONArray  statei = new JSONArray(); r.put(OPDR_CONT_STATES, statei);
-    JSONArray statej = new JSONArray();  statei.set(currentActiviteit, statej);
+    if(reviewPage != null) {
+      reviewPage = reviewPage.get("interactiePanelStates").isArray().get(0).isObject();
+      JSONArray array = reviewPage.get("interactiePanelStates").isArray();
+      // insert 5x null
+      JsArray jsa = array.getJavaScriptObject().cast();
+      jsa.unshift(null);jsa.unshift(null);jsa.unshift(null);jsa.unshift(null);jsa.unshift(null);
+  
+      reviewPage.put("interactiePanelStates", array);
+    }
+    String reviewData = api.GetValue(REVIEW_DATA);
+    JSONObject r;
+    JSONArray  statei;
+    if (reviewData.startsWith("{") ) {
+      r = JSONParser.parseStrict(reviewData).isObject();
+      JSONValue v = r.get(OPDR_CONT_STATES);
+      statei = v == null ? null : v.isArray();
+      if(statei == null) {
+        statei = new JSONArray(); r.put(OPDR_CONT_STATES, statei);
+      }
+    }
+    else {
+      r = new JSONObject();
+      statei = new JSONArray(); r.put(OPDR_CONT_STATES, statei);
+    }
+    JSONValue v = statei.get(currentActiviteit);
+    JSONArray statej = v == null ? null : v.isArray();
+    if(statej == null) {
+      statej = new JSONArray();  statei.set(currentOpdracht, statej);
+    }
     statej.set(currentOpdracht, reviewPage);
-    String reviewData = r.toString();
+
+    reviewData = r.toString();
     if(isReview())
     	api.SetValue(REVIEW_DATA, reviewData); 
   }

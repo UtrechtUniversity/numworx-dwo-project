@@ -4,13 +4,16 @@ import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.testing.StubScheduler;
 import com.google.gwt.junit.client.GWTTestCase;
@@ -35,31 +38,33 @@ public class GwtTestMemento extends GWTTestCase {
   Map<String,String> map;
   GWTPatch patch;
   Scheduler scheduler;
+  int getter, setter;
   
+  private Logger LOG;
   public void gwtSetUp() throws Exception {
+    LOG = Logger.getLogger("Memento");
+
     patch = new GWTPatch(new JSONBuilder());
     map  = new HashMap<>();
     api = new SCORM_guest() {
 
       @Override
       public String GetValue(String name) {
+        LOG.fine("getting  " + name);
+        getter++;
         return map.getOrDefault(name, "");
       }
 
       @Override
       public String SetValue(String name, String value) {
+        LOG.fine("setting " + name + ", " + value);
         map.put(name, value);
+        setter++;
         return super.SetValue(name, value);
       } };
 
       scheduler = new StubScheduler();
       defer = new PromiseImpl<>(scheduler);
-      m = new Memento(api, view, defer) {
-
-        @Override
-        void register() { // whipeout registrations
-          
-        } } ;
   }
 
   public void gwtTearDown() throws Exception {}
@@ -68,16 +73,26 @@ public class GwtTestMemento extends GWTTestCase {
   @Test
   public void test() {
       String review = "{}";
+      String review2 = "{\"opdrContStates\":[[null]]}";
       String suspend_data = "{}";
       api.SetValue(Memento.REVIEW_DATA, review);
       api.SetValue(Memento.SUSPEND_DATA, suspend_data);
       api.SetValue(Memento.COMPLETION_STATUS, Memento.COMPLETED);
-      HashMap<String, Object>[][] state = new HashMap[1][1];
+      api.SetValue(Memento.CMI_MODE, CmiMode.review.name());
+      m = new Memento(api, view, defer) {
+
+        @Override
+        void register() { // whipeout registrations
+          
+        } } ;
+     HashMap<String, Object>[][] state = new HashMap[1][1];
       m.getOpdrContStates(state);
       m.mergeIntoReview(0, 0, state[0][0]);
       String result = api.GetValue(Memento.REVIEW_DATA);
-      String test = patch.createPatch(review, result);
+      String test = patch.createPatch(review2, result);
       assertEquals("patch equals", "[]", test);
+      assertEquals("getter", 8, getter);
+      assertEquals("setter", 5, setter);
   }
 
   @SuppressWarnings("unchecked")
@@ -88,13 +103,25 @@ public class GwtTestMemento extends GWTTestCase {
     api.SetValue(Memento.REVIEW_DATA, review);
     api.SetValue(Memento.SUSPEND_DATA, suspend_data);
     api.SetValue(Memento.COMPLETION_STATUS, Memento.COMPLETED);
-    HashMap<String, Object>[][] state = new HashMap[1][1];
+    api.SetValue(Memento.CMI_MODE, CmiMode.review.name());
+    m = new Memento(api, view, defer) {
+
+      @Override
+      void register() { // whipeout registrations
+        
+      } } ;
+   HashMap<String, Object>[][] state = new HashMap[1][2];
     m.getOpdrContStates(state);
     m.mergeIntoReview(0, 0, state[0][0]);
+    m.mergeIntoReview(0, 1, state[0][1]);
+
     String result = api.GetValue(Memento.REVIEW_DATA);
     String test = patch.createPatch(review, result);
     assertEquals("patch equals", "[]", test);
-   
+    assertEquals("review ", review, result);
+    assertEquals("getter", 9, getter);
+    assertEquals("setter", 6, setter);
+    
   } 
   
 }
