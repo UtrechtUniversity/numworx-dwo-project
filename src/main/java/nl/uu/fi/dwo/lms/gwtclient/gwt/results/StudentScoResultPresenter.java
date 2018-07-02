@@ -214,9 +214,9 @@ public class StudentScoResultPresenter {
   private String Finish(String dummy) {
     LOG.info("Finish " + dummy);
     Map<String,String> userState = new HashMap<> (this.userState);
-    userState.keySet().retainAll(Arrays.asList("cmi.score.raw","cmi.comments_from_lms.0.comment"));
+    userState.keySet().retainAll(Arrays.asList(/*"cmi.score.raw",*/"cmi.comments_from_lms.0.comment"));
     LOG.info( "update Score/Review " + userState);
-    //resultService.setValues(ssc.getStudentSco(), userState).map(this::updateResultTree).then(null,FAILURE);
+    resultService.setValues(ssc.getStudentSco(), userState).map(this::updateResultTree).then(null,FAILURE);
     return "true";
   }
   

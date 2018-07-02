@@ -15,11 +15,13 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.FAIL;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.LOGOUT;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.SUCCESS_RESULTS;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -48,6 +50,7 @@ public class BootPanelController {
     private int stage;
     private boolean hideGwtGui;
     private boolean testIsOn;
+    private String authToken;
 
     static {
         //Initialize an Exception translator.imply removing all DOM elements can cause issues with other elements in the page.
@@ -57,6 +60,8 @@ public class BootPanelController {
 
     EventBus eventBus;
     HasWidgets rootPanel;
+
+    private SelectedView initialView;
 
     @Inject
     BootPanelController(EventBus eventBus) {
@@ -96,6 +101,15 @@ public class BootPanelController {
         if (value != null && value.matches("on")) {
             stage = Integer.parseInt(value);
         }
+// features: login with authToken, switch after login to initialview
+        value = com.google.gwt.user.client.Window.Location.getParameter("a");
+        authToken = value;
+        value = Window.Location.getParameter("view");
+        try { 
+          initialView = SelectedView.valueOf(value);
+        } catch(Exception ignore) { 
+          initialView = SelectedView.WELCOME;
+        };
     }
 
 //    public void testRestyMapConverter() {
@@ -320,5 +334,15 @@ public class BootPanelController {
         LOG.log(Level.FINE, "Initiated Main presenter.");
         SwitchViewEvent ev = new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN);
         eventBus.fireEvent(ev);
+        
+        bootFromAuthToken();
     }
+
+  private void bootFromAuthToken() {
+    if(authToken != null) {
+        LoginPresenter presenter = presenterFactory.getLoginPresenter();
+        //presenter.loginFromAuthToken(authToken);
+    }
+    
+  }
 }
