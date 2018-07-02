@@ -999,8 +999,15 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 
 	public void verhoogErrorCount()
 	{
-		if(changed)
+		if (formuleMode && formuleVak.isChanged())
+		{
 			errorCount++;
+			formuleVak.setChanged(false);
+		}
+		else if(changed)
+		{
+			errorCount++;
+		}
 		setChanged(false);
 	}
 	
