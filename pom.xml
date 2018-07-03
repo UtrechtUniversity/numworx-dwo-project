@@ -335,6 +335,7 @@
 							<Implementation-Build>${buildNumber}</Implementation-Build>
 							<JavaClient-Version>${project.version}</JavaClient-Version>
 							<HtmlClient-Version>${DWOGwtClientVersion}</HtmlClient-Version>
+							<DWOplayer-Version>${DWOplayerVersion}</DWOplayer-Version>
 							<Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
 							<Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
 						</manifestEntries>
@@ -350,12 +351,37 @@
 					<tagBase>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/tags/</tagBase>
 				</configuration>
 			</plugin>
-			<!-- <plugin> <groupId>biz.aQute.bnd</groupId> <artifactId>bnd-indexer-maven-plugin</artifactId> 
-				<version>3.3.0</version> <executions> <execution> <id>local-index</id> <goals> 
-				<goal>local-index</goal> </goals> <phase>package</phase> <configuration> 
-				<inputDir>target/${project.build.finalName}/dwo</inputDir> <outputFile>target/${project.build.finalName}/dwo/index.xml</outputFile> 
-				</configuration> </execution> </executions> </plugin> -->
-
+			<plugin> <!-- NIET ZOMAAR WEGGOOIEN! -->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+						<id>local-index</id>
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<phase>process-resources</phase>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>fi.microserver</groupId>
+						<artifactId>MicroIndex</artifactId>
+						<version>0.0.1-SNAPSHOT</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<mainClass>fi.microserver.microindex.Main</mainClass>
+					<includeProjectDependencies>false</includeProjectDependencies>
+					<includePluginDependencies>true</includePluginDependencies>
+					<addOutputToClasspath>false</addOutputToClasspath>
+					<addResourcesToClasspath>false</addResourcesToClasspath>
+					<arguments>
+						<argument>target/${project.build.finalName}/dwo</argument>
+					</arguments>
+				</configuration>
+			</plugin>
         </plugins>
     </build>
     <properties>
