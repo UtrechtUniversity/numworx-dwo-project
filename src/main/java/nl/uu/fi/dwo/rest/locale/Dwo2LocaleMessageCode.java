@@ -28,6 +28,7 @@ NUM_BTN_Update,
 NUM_BTN_Remove,
 NUM_BTN_Show,
 NUM_BTN_Search,
+NUM_BTN_Reset,
 NUM_BTN_Modify,
 NUM_BTN_Connect,
 NUM_BTN_RefreshList,
@@ -65,6 +66,7 @@ NUM_DLG_User_ConfirmPasswordSwitch,
  NUM_TBL_FAMILYNAME,
  NUM_TBL_SINGLE_SCHOOL,
  NUM_TBL_EMAIL,
+ NUM_TBL_PASSWORD,
  NUM_TBL_ROLE,
  NUM_TBL_STUDENTS,
  NUM_TBL_TEACHERS,
@@ -114,12 +116,30 @@ NUM_DLG_User_ConfirmPasswordSwitch,
  NUM_LBL_CLASSES_ACCESSKEY,
  
  //Klasbeheer
- NUM_LBL_ClassAssignements,
+ NUM_LBL_ClassAssignments,
  NUM_BTN_MOVECOPY, 
  NUM_BTN_ShowStudents,
  NUM_BTN_ShowTeachers,
  NUM_BTN_ShowModules,
-
+ 
+ //add student to class
+ NUM_SEC_AssignStudentToClass,
+ 
+ //add teacher to class
+ NUM_SEC_AssignTeacherToClass,
+ 
+ //add modules to class
+ NUM_SEC_AssignModulesToClass,
+ NUM_LBL_AssignModulesToClass,
+ NUM_LBL_ModulesVisibleForClass,
+ NUM_CLASSMODULES_Visible,
+ NUM_CLASSMODULES_InVisible,
+ NUM_CLASSMODULES_NeverAssigned,
+ NUM_CLASSMODULES_FindAModule,
+ NUM_CLASSMODULES_SettingsModules,
+ NUM_CLASSMODULES_AccessPeriod,
+ NUM_CLASSMODULES_CourseType,
+ 
 
 /** Old tags for java */
 GUI_Button_Ok,  
