@@ -224,7 +224,12 @@ public class SelectedResultsPresenter {
     	
     }
 
- 
+    @JsMethod 
+    public void showStudentResultsPage  (JavaScriptObject context, String scoid, String studentid, String classid, int page) {
+      LOG.fine("entering showStudentResultsPage " + page);
+      showStudentResults(context, scoid, studentid, classid);
+    }
+
     Promise<Void> preparePages(PersistenceId schoolclass, PersistenceId scoid) {
       // find studentscocontexts:
       DomResultSchoolClass<DomResultCourseInClass> cc = resultTree.getResultTree().getChildren().get(schoolclass);
