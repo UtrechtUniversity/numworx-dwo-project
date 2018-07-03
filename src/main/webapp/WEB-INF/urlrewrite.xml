@@ -57,7 +57,7 @@
     </rule>
     
     <rule>
-    	<note>/rest/userid+schoolid/*</note>
+    	<note>/rest/userid+schoolgroupid/* moet persistence id base-64 encoded zijn </note>
     	<from>^/rest/sec:[^/]+/(.*)$</from>
     	<to>/rest/secure/$1</to>   
     </rule>
