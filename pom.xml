@@ -202,6 +202,7 @@
 					</execution>
 					<execution>
 						<id>unpack</id>
+						<phase>process-resources</phase>
 						<goals>
 							<goal>unpack</goal>
 						</goals>
@@ -378,7 +379,7 @@
 					<addOutputToClasspath>false</addOutputToClasspath>
 					<addResourcesToClasspath>false</addResourcesToClasspath>
 					<arguments>
-						<argument>target/${project.build.finalName}/dwo</argument>
+						<argument>${project.build.directory}/${project.build.finalName}/dwo</argument>
 					</arguments>
 				</configuration>
 			</plugin>
