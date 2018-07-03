@@ -51,6 +51,8 @@ public class BootPanelController {
     private boolean hideGwtGui;
     private boolean testIsOn;
     private String authToken;
+    private boolean session = false;
+
 
     static {
         //Initialize an Exception translator.imply removing all DOM elements can cause issues with other elements in the page.
@@ -111,6 +113,8 @@ public class BootPanelController {
           initialView = SelectedView.WELCOME;
         };
     }
+    
+    
 
 //    public void testRestyMapConverter() {
 //        RestyMapCodec codec = GWT.create(RestyMapCodec.class);
@@ -179,16 +183,19 @@ public class BootPanelController {
                     switch (loginEvent.getState()) {
                         case SUCCESS:
                         case SUCCESS_WELCOME:
+                            setSession(true);
                             LOG.log(Level.INFO, "Login succeeded. Showing welcome view.");
                             eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.WELCOME));
                             // viewFactory.getMainView().showPostLoginWidgets();
                             break;
                         case SUCCESS_RESULTS:
+                            setSession(true);
                             LOG.log(Level.INFO, "Login succeeded. Showing results view.");
                             eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
                             // viewFactory.getMainView().showPostLoginWidgets();
                             break;
                         case SUCCESS_SCHOOLCLASSES:
+                            setSession(true);
                             LOG.log(Level.INFO, "Login succeeded. Showing schoolclasses view.");
                             eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
                             // viewFactory.getMainView().showPostLoginWidgets();
@@ -201,6 +208,7 @@ public class BootPanelController {
                             dwoGlobalVars.clearCurrentUser();
                             //we should also clear user, view and presenter states, but that is never bug free.
                             //however a reload works too.
+                            setSession(false);
                             Window.Location.replace(Window.Location.getHref());
                             break;
                         default:
@@ -345,4 +353,18 @@ public class BootPanelController {
     }
     
   }
+
+    /**
+     * @return the session
+     */
+    protected boolean isSession() {
+        return session;
+    }
+
+    /**
+     * @param session the session to set
+     */
+    protected void setSession(boolean session) {
+        this.session = session;
+    }
 }
