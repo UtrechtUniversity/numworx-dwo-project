@@ -23,7 +23,8 @@ public class JsSelectedResultsDisplay{
     /** Inits the view */
     public static native void init(JavaScriptObject resultState);
     /** Fills the result table with the results.*/
-     public static native void updateResultTree(JavaScriptObject resultsTree, JavaScriptObject studentsTree);    
+     public static native void updateResultTree(JavaScriptObject resultsTree, JavaScriptObject studentsTree);  
+     public static native void showPages(JavaScriptObject resultsTree);
     /** setEmptyTableMessage show an indicator that the table is empty. */
     public static native void setEmptyTableMessage();
     /** setEmptyTableMessage show an indicator that we are fetching data. */

@@ -77,6 +77,8 @@ public class SelectedResultsPresenter {
 
         void setLoadingTableMessage();
 
+        public void showPages(DomResultTree resultTree);
+
     }
 
     @Inject SelectedResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -174,6 +176,7 @@ public class SelectedResultsPresenter {
       PersistenceId schoolclass = new PersistenceId(classid);
       preparePages(schoolclass, sco ).then(p-> {view.updateResultTree(resultTree);return null;}, p-> LOG.log(Level.SEVERE, "preparePages", p.getFailure()))
       .then(p-> {
+          view.showPages(resultTree);
         //eventBus.fireEvent(new SwitchViewEvent(SelectedView.SELECTEDRESULTS, resultTree, context));
         return null;
       }, FAILURE);

@@ -64,4 +64,17 @@ public class JsSelectedResultsView implements SelectedResultsPresenter.Display {
   
     @Inject JsSelectedResultsView() {}
 
+    @Override
+    public void showPages(DomResultTree resultTree) {
+//        LOG.log(Level.INFO, "tree data has " + data.getStudentTree().getChildren().values().size() + " student classes.");
+//        LOG.log(Level.INFO, "tree data has " + data.getResultTree().getChildren().values().size() + "  result classes.");
+        LOG.log(Level.INFO, "Building result tree in json.");
+        JSONObject results = Util.buildSubResultTree(resultTree.getResultTree());
+        LOG.log(Level.INFO, "resultTree json string is:\n " + results.toString());
+//        LOG.log(Level.INFO, "Building student tree in json.");
+//        JSONObject students = Util.buildSubStudentTree(data.getStudentTree());
+//        LOG.log(Level.INFO, "studentTree json string is:\n " + students.toString());
+        JsSelectedResultsDisplay.showPages(results.getJavaScriptObject());//,students.getJavaScriptObject());
+    }        
+
 }
