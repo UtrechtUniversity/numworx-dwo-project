@@ -148,6 +148,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 				if(location != null) {
 					view.getApi().SetValue(Memento.LOCATION, location);
 				}
+				started = ! Memento.COMPLETED.equals(view.getApi().GetValue(Memento.COMPLETION_STATUS));
 				view.setupModule(sco.getName(), sco.getFile());
 				//panel.setWidget(view);
 			}

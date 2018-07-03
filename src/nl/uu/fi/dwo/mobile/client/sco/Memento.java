@@ -92,8 +92,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	static final String EXIT_STATUS = "cmi.exit";
 	private static final String SESSION_TIME = "cmi.session_time";
 	private static final String TOTAL_TIME = "cmi.total_time";
-	static final String COMPLETION_STATUS = "cmi.completion_status";
-	static final String COMPLETED = "completed";
+	public static final String COMPLETION_STATUS = "cmi.completion_status";
+	public static final String COMPLETED = "completed";
 	static final String CMI_MODE = "cmi.mode";
 	public static final String STUDENT_MODEL = "dme.student_model";
 

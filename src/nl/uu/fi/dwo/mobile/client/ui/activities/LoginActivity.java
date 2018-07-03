@@ -50,6 +50,7 @@ public class LoginActivity extends MGWTAbstractActivity
 		
 		@Override
 		public void fail(Promise<?> promise) throws Exception {
+			panel.setWidget(view);
 			Throwable caught = promise.getFailure();
 			LOG.log(Level.WARNING, "login failure ", caught);
 			if (caught instanceof NoSuchElementException)
@@ -70,6 +71,7 @@ public class LoginActivity extends MGWTAbstractActivity
 
 		@Override
 		public void fail(Promise<?> resolved) throws Exception {
+			panel.setWidget(view);
 			Throwable caught = resolved.getFailure();
 			LOG.log(Level.SEVERE, "login failure2 ", caught);
 			if(clientFactory.withUser())
@@ -141,6 +143,7 @@ public class LoginActivity extends MGWTAbstractActivity
 	ClientFactory clientFactory;
 	private Place next;
 	LoginView view;
+	AcceptsOneWidget panel;
 
 	private Deferred<DomUserFullwLoginContext> defer;
 
@@ -157,6 +160,7 @@ public class LoginActivity extends MGWTAbstractActivity
 	@Override
 	public void start(final AcceptsOneWidget panel, EventBus eventBus)
 	{
+		this.panel = panel;
 		final boolean logout = DWOplayer.withUser();
 		WaitScreen.instance().w();
 		clientFactory.getHeaderView().hide();
@@ -224,7 +228,9 @@ public class LoginActivity extends MGWTAbstractActivity
 					String authToken = Window.Location.getParameter("a");
 					if (authToken != null && !authToken.isEmpty()) {
 						if (!logout)
+						{	panel.setWidget(new Label());
 							promise = clientFactory.getRPCHandler().getUserFromAuthToken(authToken);
+						}
 						else {
 							// redirect to zonder ?a=
 							UrlBuilder builder = Window.Location.createUrlBuilder();
@@ -236,6 +242,7 @@ public class LoginActivity extends MGWTAbstractActivity
 					} else {
 						defer = new Deferred<>();
 						promise = defer.getPromise();
+						panel.setWidget(view);
 					}
 					addHandlerRegistration(view.getLoginBtn().addTapHandler(new TapHandler() {
 
@@ -273,7 +280,6 @@ public class LoginActivity extends MGWTAbstractActivity
 						}
 					}));
 
-					panel.setWidget(view);
 				}
 				Logger.getLogger("DWOplayer").log(Level.FINE, "Done with panel");
 				rearm(promise);

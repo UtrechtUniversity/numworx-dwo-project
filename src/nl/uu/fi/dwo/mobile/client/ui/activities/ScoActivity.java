@@ -170,7 +170,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 					@Override
 					public Promise<Void> call(Promise<Void> resolved)
 							throws Exception {
-						started = true;
+						started = ! Memento.COMPLETED.equals(view.getApi().GetValue(Memento.COMPLETION_STATUS));
 						if(location != null) {
 							view.getApi().SetValue(Memento.LOCATION, location);
 						}
