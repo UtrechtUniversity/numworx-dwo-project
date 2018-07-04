@@ -19,7 +19,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.FAIL;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.LOGOUT;
-import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.SUCCESS_RESULTS;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
@@ -63,7 +62,7 @@ public class BootPanelController {
     EventBus eventBus;
     HasWidgets rootPanel;
 
-    private SelectedView initialView;
+    private SelectedView initialView = SelectedView.WELCOME;
 
     @Inject
     BootPanelController(EventBus eventBus) {
@@ -88,23 +87,24 @@ public class BootPanelController {
     }
 
     private void parseUrlParam() {
+        LOG.info("url?" + Window.Location.getQueryString());
         //parse profile if it exists.
-        String value = com.google.gwt.user.client.Window.Location.getParameter("profile");
+        String value = Window.Location.getParameter("profile");
         try {
             profile = Integer.parseInt(value);
         } catch (Exception e) {
             profile = 77;
         }
-        value = com.google.gwt.user.client.Window.Location.getParameter("test");
+        value = Window.Location.getParameter("test");
         if (value != null && value.matches("on")) {
             testIsOn = true;
         }
-        value = com.google.gwt.user.client.Window.Location.getParameter("stage");
+        value = Window.Location.getParameter("stage");
         if (value != null && value.matches("on")) {
             stage = Integer.parseInt(value);
         }
 // features: login with authToken, switch after login to initialview
-        value = com.google.gwt.user.client.Window.Location.getParameter("a");
+        value = Window.Location.getParameter("a");
         authToken = value;
         value = Window.Location.getParameter("view");
         try { 
@@ -185,7 +185,9 @@ public class BootPanelController {
                         case SUCCESS_WELCOME:
                             setSession(true);
                             LOG.log(Level.INFO, "Login succeeded. Showing welcome view.");
-                            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.WELCOME));
+                            SelectedView view = initialView;
+                            initialView = SelectedView.WELCOME;
+                            eventBus.fireEvent(new SwitchViewEvent(view));
                             // viewFactory.getMainView().showPostLoginWidgets();
                             break;
                         case SUCCESS_RESULTS:
@@ -245,6 +247,11 @@ public class BootPanelController {
                         case LOGIN:
                             viewFactory.getMainView().showLoginView();
                             presenterFactory.getLoginPresenter().init();
+                            if(authToken != null) {
+                              String token = authToken;
+                              authToken = null;
+                              presenterFactory.getLoginPresenter().tokenLogin(token);
+                            }
                             break;
                         case WELCOME:
                             viewFactory.getMainView().showWelcomeView();

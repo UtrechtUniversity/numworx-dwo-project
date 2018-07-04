@@ -185,7 +185,10 @@ public class SelectedResultsPresenter {
     
     @JsMethod 
     public void showStudentResults (JavaScriptObject context, String scoid, String studentid, String classid) {
-        LOG.fine("entering showStudentResults " + context + "," + scoid);
+      LOG.fine("entering showStudentResults " + context + "," + scoid);
+      showStudentResults(context, scoid, studentid, classid, null);
+    }  
+    public void showStudentResults (JavaScriptObject context, String scoid, String studentid, String classid, String location) {  
 		PersistenceId schoolclass = new PersistenceId(classid);
 		DomResultTeacher<DomResultStudent> studentTree = resultTree.getStudentTree();
 		DomResultSchoolClass<DomResultStudent> domschoolclass = studentTree.getChildren().get(schoolclass);
@@ -194,16 +197,16 @@ public class SelectedResultsPresenter {
 		
 		DomStudent student = domschoolclass.getChildren().get(key).getStudent();
 		DomScoContext sco = new DomScoContext(); sco.setId(new PersistenceId(scoid));
-        preparePages(schoolclass, sco.getId()).then(p-> {
+        Promise<Object> p0 = preparePages(schoolclass, sco.getId()).then(p-> {
           LOG.log(Level.FINE, "prepare pages done\n" + resultTree.getResultTree());
           view.updateResultTree(resultTree);
-        return null;}, p-> LOG.log(Level.WARNING, "preparePages", p.getFailure()));
+        return null;}, p-> LOG.log(Level.WARNING, "preparePages", p.getFailure())).fallbackTo(Promises.resolved(null));
 		Promise<DomStudentScoContext> p1 = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), Collections.singletonList(student))
 		.map(p -> p.getStudentScoContexts().get(0).getValue());		
 		Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(sco, domschoolclass.getSchoolClass());		
 		Promise<Map<String,String>> p3 = p1.then(  p-> resultService.getValues(p.getValue()));
     	
-		Promises.all(p1,p2,p3).then(new Success<Object, Object>() {
+		Promises.all(p0,p1,p2,p3).then(new Success<Object, Object>() {
 
 			@Override
 			public Promise<Object> call(Promise<Object> resolved) throws Exception {
@@ -214,6 +217,9 @@ public class SelectedResultsPresenter {
                 userState.put("cmi.launch_data", launch_data);
                 userState.put(ResultsService.COMPLETION_STATUS, p1.getValue().getCompletionStatus());
                 userState.put("cmi.score.raw", Double.toString(p1.getValue().getScore()));
+                if(location != null) {
+                  userState.put("cmi.location", location);
+                }
                 updateResultTree(Promises.resolved(Collections.singletonList(p1.getValue())));
                 eventBus.fireEvent(new SwitchViewEvent(SelectedView.RESULTSSTUDENT, resultTree, ssc, context, userState));
 				return null;
@@ -227,7 +233,7 @@ public class SelectedResultsPresenter {
     @JsMethod 
     public void showStudentResultsPage  (JavaScriptObject context, String scoid, String studentid, String classid, int page) {
       LOG.fine("entering showStudentResultsPage " + page);
-      showStudentResults(context, scoid, studentid, classid);
+      showStudentResults(context, scoid, studentid, classid, String.valueOf(page));
     }
 
     Promise<Void> preparePages(PersistenceId schoolclass, PersistenceId scoid) {
