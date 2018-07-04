@@ -8,6 +8,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
+
+import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -20,7 +23,9 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -28,7 +33,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.DeckLayoutPanel;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ResizeComposite;
@@ -39,6 +47,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SingleSelectionModel;
 
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
+import fi.dwo.gwt.lib.rest.util.Base64;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
@@ -54,7 +64,9 @@ import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
  */
 public class NavigationViewNumworx extends ResizeComposite implements NavigationView {
 
-	class NavCell extends AbstractCell<SelectModuleItem> {
+	private static final Logger LOG = java.util.logging.Logger.getLogger("NavigationView");
+
+  class NavCell extends AbstractCell<SelectModuleItem> {
 
 		@Override
 		public void render(Context context, SelectModuleItem value,
@@ -125,20 +137,22 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	
 	private static NavigationViewNumworxUiBinder uiBinder = GWT.create(NavigationViewNumworxUiBinder.class);
 
-	interface NavigationViewNumworxUiBinder extends UiBinder<Widget, NavigationViewNumworx> {
+	interface NavigationViewNumworxUiBinder extends UiBinder<DockLayoutPanel, NavigationViewNumworx> {
 	}
 
 	@UiField(provided=true) CellList<SelectModuleItem> cells;
 	@UiField Tree tree;
 	@UiField FlowPanel deck;
 	@UiField TreeModuleViewNumworxCss style;
-
+	@UiField FlowPanel beheer;
+	
 	GotoController presenter;
 	private String SCHOOL_MODULES;
 	private TreeItem schoolMap;
 	private TreeItem standardMap;
 	Map<SelectModuleItem,TreeItem> inverseMap = new HashMap<SelectModuleItem, TreeItem>();
 	private Widget root;
+	private DockLayoutPanel dock;
 	private double width;
 	/**
 	 * Because this class has a default constructor, it can
@@ -159,7 +173,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		cells.setSelectionModel(new SingleSelectionModel<SelectModuleItem>(keyprovider));
 		cells.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 		cells.addStyleName(cellResources.cellListStyle().navCellList());
-		initWidget(uiBinder.createAndBindUi(this));
+		initWidget(dock = uiBinder.createAndBindUi(this));
 		// tree stuff		
 		standardMap = new TreeItem(toSafeHTML(Text.constants.standaardModules()));
 		standardMap.setState(true);
@@ -328,4 +342,52 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		
 	}
 
+	
+	@Inject SecuredUserAccountManager account = new SecuredUserAccountManager();
+	
+	@UiHandler("results")
+	void onResults(ClickEvent e) {
+	  LOG.info("goto results");
+	  gotoGwtClient("RESULTS");
+	
+	}
+    private void gotoGwtClient(String page) {
+      final String url = "/gwtclient/";
+      account.getBearerToken().then(
+        resolved-> {
+          String token = "2\f" + resolved.getValue(); //format 2
+          StringBuilder u = new StringBuilder(url);
+          u.append( "?a=" ) .append (Base64.btoa(token)); // User Auth Token
+          u.append( "&test=on");
+          String profile = String.valueOf(DWOplayer.PROFILE_ID);
+          u.append("&profile=").append(profile);
+          String locale = LocaleInfo.getCurrentLocale().getLocaleName();
+          if ("default".equals(locale) ) locale =  "nl";
+          u.append("&locale=").append(locale);
+          u.append("&view=").append(page);
+          String string = u.toString();
+          LOG.info("open URL " + string);
+          Window.Location.replace(string);
+          return null;
+        }     
+       );
+      
+    
+  }
+
+    @UiHandler("persons")
+    void onPersons(ClickEvent e) {
+      LOG.info("goto persons");
+      gotoGwtClient("PERSONS");
+    }
+    @UiHandler("classes")
+    void onClasses(ClickEvent e) {
+      LOG.info("goto classes");
+      gotoGwtClient("SCHOOLCLASSES");
+   }
+
+    public void setBeheer(boolean visible) {
+      dock.setWidgetHidden(beheer, !visible);
+    }
+	
 }

@@ -645,4 +645,9 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 //			return o1.getName().compareTo(o2.getName()); // FIXME NIET GOED
 	}
 
+  @Override
+  public void setBeheer(boolean b) {
+    westPanel.setBeheer(b);
+  }
+
 }

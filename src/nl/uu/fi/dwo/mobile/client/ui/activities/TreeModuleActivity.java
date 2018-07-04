@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerStudentCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 import com.google.gwt.event.shared.EventBus;
@@ -47,6 +48,9 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements GotoCont
 	public void start(final AcceptsOneWidget panel, final EventBus eventBus)
 	{
 		view = clientFactory.getTreeModuleView();
+		
+		view.setBeheer(clientFactory.getRoleType() == RoleType.TEACHER);
+		
 		//if(true)
 		view.setMenuWidget(clientFactory.getMenuWidget());
 		if(item.getType() == Type.MODULE && DWOplayer.withUser()) {

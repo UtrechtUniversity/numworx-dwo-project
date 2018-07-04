@@ -734,4 +734,10 @@ public class TreeModuleViewImplTablet  extends TreeModuleBase implements ViewMod
 }
 	}
 
+  @Override
+  public void setBeheer(boolean b) {
+    // TODO Auto-generated method stub
+    
+  }
+
 }

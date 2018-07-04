@@ -16,7 +16,8 @@ public interface TreeModuleView extends IsWidget
 
 	void close();
 	void setPresenter(GotoController presenter);
-
-	void setMenuWidget(IsWidget w);    
+ 
+	void setMenuWidget(IsWidget w);
+    void setBeheer(boolean b);    
 	    
 }

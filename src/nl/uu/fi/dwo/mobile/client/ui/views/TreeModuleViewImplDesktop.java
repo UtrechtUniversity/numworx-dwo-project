@@ -766,6 +766,12 @@ public class TreeModuleViewImplDesktop  extends TreeModuleBase implements ViewMo
 		}
 	}
 
+  @Override
+  public void setBeheer(boolean b) {
+    // TODO Auto-generated method stub
+    
+  }
+
 //	@Override
 //	public void setSortModel(Comparator<SelectModuleItem> sorter) {
 //		this.sortModel = sorter;
