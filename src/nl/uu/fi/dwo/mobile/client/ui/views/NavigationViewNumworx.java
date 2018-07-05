@@ -154,6 +154,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	private Widget root;
 	private DockLayoutPanel dock;
 	private double width;
+	private boolean none;
 	/**
 	 * Because this class has a default constructor, it can
 	 * be used as a binder template. In other words, it can be used in other
@@ -178,6 +179,11 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		standardMap = new TreeItem(toSafeHTML(Text.constants.standaardModules()));
 		standardMap.setState(true);
 		standardMap.setUserObject(SelectModuleItem.ROOT);
+		none = "none".equals(Location.getParameter("header"));
+		if(!none) {
+		  none = !"test".equals(Location.getParameter("dwo_env"));
+		}
+		if(!none) setBeheer(false);
 	}
 
 	public void showCells() {
@@ -387,7 +393,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
    }
 
     public void setBeheer(boolean visible) {
-      dock.setWidgetHidden(beheer, !visible);
+      dock.setWidgetHidden(beheer, none||!visible);
     }
 	
 }
