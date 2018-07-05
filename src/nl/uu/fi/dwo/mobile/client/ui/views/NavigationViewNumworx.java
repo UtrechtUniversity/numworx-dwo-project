@@ -358,7 +358,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	
 	}
     private void gotoGwtClient(String page) {
-      final String url = "/gwtclient/";
+      final String url = "/gwtclient/index.html";
       account.getBearerToken().then(
         resolved-> {
           String token = "2\f" + resolved.getValue(); //format 2
