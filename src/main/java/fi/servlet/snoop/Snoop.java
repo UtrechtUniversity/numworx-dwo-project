@@ -21,6 +21,8 @@ package fi.servlet.snoop;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
@@ -65,7 +67,7 @@ public class Snoop extends HttpServlet {
 		}
 		out.println();
 
-		out.println("Context attributes:");
+/*		out.println("Context attributes:");
 		enum1 = context.getAttributeNames();
 		while (enum1.hasMoreElements()) {
 			String key = (String) enum1.nextElement();
@@ -73,7 +75,7 @@ public class Snoop extends HttpServlet {
 			out.println("   " + key + " = " + value);
 		}
 		out.println();
-
+*/
 		out.println("Request attributes:");
 		e = request.getAttributeNames();
 		while (e.hasMoreElements()) {
@@ -81,6 +83,27 @@ public class Snoop extends HttpServlet {
 			Object value = request.getAttribute(key);
 			out.println("   " + HTMLFilter.filter(key) + " = " + value);
 		}
+// AJP stuff
+		Collection<String> ajp = Arrays.asList(
+		  "Shib-Handler",
+		  "Shib-Application-ID",
+		  "Shib-Session-ID",
+		  "Shib-Identity-Provider",
+		  "Shib-Authentication-Instant",
+		  "Shib-Authentication-Method",
+		  "Shib-AuthnContext-Class",
+		  "Shib-Session-Index",
+		  "givenName",
+		  "mail",
+		  "sn",
+		  "uid"
+		    );
+		for(String key: ajp) {
+          Object value = request.getAttribute(key);
+          out.println("   " + HTMLFilter.filter(key) + " = " + HTMLFilter.filter(String.valueOf(value)));
+		}
+		
+		
 		out.println();
 		out.println("Servlet Name: " + getServletName());
 		out.println("Protocol: " + request.getProtocol());
