@@ -41,6 +41,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
@@ -418,7 +419,11 @@ public class CheckButton implements InteractionStub, CBookEventListener
 	public void zetMode(int mode)
 	{
 		this.mode = mode;
-		checkButton.setVisible(mode==0 || mode==1);
+		boolean zichtbaar = true;
+// alleen zichtbaar in nakijken modus als het geen toets is.
+		if (nakijkenPagina||nakijkenVak||nakijkenXWidget)
+	       zichtbaar = mode==OpdrNav.OEFENEN || mode==OpdrNav.OEFENEN_STRAFPUNTEN;	  
+      checkButton.setVisible(zichtbaar);
 	}
 	
 	public void zetNagekeken(boolean b) {
