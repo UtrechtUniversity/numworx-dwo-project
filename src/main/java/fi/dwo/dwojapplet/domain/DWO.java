@@ -2731,7 +2731,11 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         // return PersistenceFacade.instance().editSchool(schoolID, schoolName,
         // schoolLogin, studentPassw, teacherPassw);
       DomSchoolFull school = new DomSchoolFull();
-      school.setExpire(date);
+// safe the date in UTC:
+      @SuppressWarnings("deprecation")
+      Date date0 = new Date(Date.UTC(date.getYear(), date.getMonth(), date.getDate(), 0, 0, 0));
+
+      school.setExpire(date0);
       school.setSchoolLogin(schoolLogin);
       school.setSchoolName(schoolName);
       ArrayList<DomMapEntry<RoleType,String>> passwords = new ArrayList<>();
@@ -2744,8 +2748,21 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
       school.setId(PersistentSchool.buildPersistenceId(Long.valueOf(schoolID)));
       try {
         schoolManager.updateSchool(school);
+        school.setExpire(date);
         int id = MySQLPersistenceId.getNativeId(school).intValue();
-        return (School) PersistenceFacade.instance().get(id, School.class);
+        School newSchool = (School) PersistenceFacade.instance().get(id, School.class); // FROM CACHE
+        newSchool.setExpire(date);
+        newSchool.setName(schoolName);
+        newSchool.setSchoolLogin(schoolLogin);
+        SchoolGroup[] pw = newSchool.getSchoolGroupList();
+        HashMap<Integer,String> hash = new HashMap<>();
+        passwords.stream().forEach(e -> hash.put(e.getKey().ordinal(), e.getValue()));
+        for(SchoolGroup p : pw) {
+          String value = hash.get(p.getGroupID());
+          if(value != null)
+            p.setPasswd(value);
+        }
+        return newSchool;
       } catch (PersistenceException e) {
         throw new SchoolException(SchoolException.EX_XML_RPC);
       } catch (Dwo2Exception e) {
