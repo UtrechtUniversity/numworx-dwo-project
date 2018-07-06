@@ -481,15 +481,15 @@
                             <asWebapp>true</asWebapp> 
                             <contextPath>/dwo/apps</contextPath>
                         </webapp>
-                        <webapp>
+<!--                        <webapp>
                             <groupId>nl.uu.fi.dwo.mobile</groupId>
                             <artifactId>DWOplayer</artifactId>
                             <version>2.2.7-SNAPSHOT</version>
-                            <classifier>dwo2</classifier>
+                            <classifier>dwo</classifier>
                             <type>war</type>
                             <contextPath>/dwo/tablet</contextPath>
                             <asWebapp>true</asWebapp>
-                        </webapp>
+                        </webapp>-->
                     </webapps>                         
                 </configuration> 
                 <dependencies>

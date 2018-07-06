@@ -11,6 +11,8 @@ import java.util.logging.Level;
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import static nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter.LOG;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
@@ -75,10 +77,10 @@ public class AddStudentPresenter extends AddPersonPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                        eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                        eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }
@@ -121,10 +123,10 @@ public class AddStudentPresenter extends AddPersonPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                        eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                        eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }

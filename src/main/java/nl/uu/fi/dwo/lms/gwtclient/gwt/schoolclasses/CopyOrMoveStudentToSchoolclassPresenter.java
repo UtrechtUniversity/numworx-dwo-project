@@ -82,6 +82,7 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
     }
 
     public void init(DomSchoolClass aSchoolClass) {
+        view.clear();
         view.init();
         view.setHelp(dwoGlobalVars.buildHelpUrl("#CopyOrMoveStudentToClass"));
         view.setEmptyTableMessageClasses();

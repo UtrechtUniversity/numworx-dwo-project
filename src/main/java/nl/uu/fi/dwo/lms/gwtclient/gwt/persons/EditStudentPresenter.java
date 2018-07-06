@@ -6,12 +6,14 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
@@ -130,7 +132,7 @@ public class EditStudentPresenter {
 //        });
 //    }
     public void initView(DomUser aUser) {
-        Promise p = Promises.resolved(null);
+        Promise p = Promises.resolved(true);
 
         //fetch schoolclasses
         p =p.then((resolved) -> {
@@ -148,16 +150,24 @@ public class EditStudentPresenter {
             rest.setRestContext(ctx);
             return manager.getTeachersClassesOfStudent(rest);
         }).then((resolved) -> {
-            List<DomSchoolClassId> studentClassList = (List<DomSchoolClassId>) resolved.getValue();
-            studentClassList.forEach((v) -> {
-                taggedSchoolClassMap.get(v.getId().getIdString()).setTag(true);
-            });
-            view.setSchoolClasses(taggedSchoolClassMap);
-            return Promises.resolved(null);
+            if (resolved.getValue() != null) {
+                List<DomSchoolClassId> studentClassList = (List<DomSchoolClassId>) resolved.getValue();
+                studentClassList.forEach((v) -> {
+                    taggedSchoolClassMap.get(v.getId().getIdString()).setTag(true);
+                });
+                view.setSchoolClasses(taggedSchoolClassMap);
+                Predicate<TaggedDomSchoolClass> p1 = e -> e.isTag() == true;
+                if (taggedSchoolClassMap.values().stream().filter(p1).count() < 1) {
+                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.PERSONS));
+                    return Promises.resolved(false);
+                }
+            }
+            return Promises.resolved(true);
         });
         //if singleschool fetch user
         if (aUser.getSingleSchool()) {
-            p=p.then((resolved) -> {
+            p = p.then((resolved) -> {
+                if(resolved.getValue()!=null && resolved.getValue().equals(true)){
                 DomContext ctx = new DomContext();
                 DomGetSingleSchoolStudent student = new DomGetSingleSchoolStudent(new DomStudent(aUser));
                 ctx.setDomHasRole(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
@@ -175,7 +185,8 @@ public class EditStudentPresenter {
                 } else {
                     return Promises.resolved(null);
                 }
-
+                }
+                return Promises.resolved(null);
             }).then((resolved) -> {
                 DomSingleSchoolStudent student = (DomSingleSchoolStudent) resolved.getValue();
                 fullUser = student;
@@ -186,19 +197,48 @@ public class EditStudentPresenter {
             view.setUser(aUser);
         }
 
-        p.then(null, (failure) -> {
-            eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
+        p.then(null, (fail) -> {
+            if (fail instanceof Dwo2Exception) {
+                LOG.log(Level.SEVERE, ((Dwo2Exception) fail).getDwo2Message());
+                eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
+            } else if (fail.getFailure() != null) {
+                LOG.log(Level.SEVERE, fail.getFailure().getMessage());
+                eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getFailure().getMessage()));
+            } //throw directly
         });
     }
 
     @JsMethod
     public void removeStudentFromSchoolClass(String schoolClassId) {
-        DomSchoolClass sc = taggedSchoolClassMap.get(schoolClassId).getSchoolClass();
-        DomRemoveStudentFromSchoolClass data = new DomRemoveStudentFromSchoolClass();
-        data.setSchoolClass(sc);
-        data.setStudent(new DomStudent(user));
-        Promise<Boolean> p = manager.removeStudentFromSchoolClass(data);
+        Promise<Boolean> p = Promises.resolved(true); //empty promise
+        Predicate<TaggedDomSchoolClass> p1 = e -> e.isTag() == true;
+        //taggedSchoolClassMap.values().stream().anyMatch(p1);
+        if (taggedSchoolClassMap.values().stream().filter(p1).count() <= 1) {
+            p = p.then(new Success<Boolean, Boolean>() {
+                @Override
+                //Are you sure?
+                public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
+                    //String msg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_User_ConfirmSchoolLoginDelete(), sracData.get(hasRoleId).getSchool().getSchoolName(), sracData.get(hasRoleId).getRole().getRoleName());
+                    String msg = "If you do this you no longer have access tot his students data.";
+                    AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(msg);
+                    AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
+                    eventBus.fireEvent(event);
+                    return dialogPromise.getPromise();
+                }
+            });
+        }
+
         p.then((resolved) -> {
+            if (resolved.getValue() == false) {
+                return Promises.resolved(true);
+            }
+            DomSchoolClass sc = taggedSchoolClassMap.get(schoolClassId).getSchoolClass();
+            DomRemoveStudentFromSchoolClass data = new DomRemoveStudentFromSchoolClass();
+            data.setSchoolClass(sc);
+            data.setStudent(new DomStudent(user));
+            return manager.removeStudentFromSchoolClass(data);
+        }).then((resolved) -> {
+            //update new state
             this.initView(user);
             return Promises.resolved(true);
         }).then(null, (failure) -> {
