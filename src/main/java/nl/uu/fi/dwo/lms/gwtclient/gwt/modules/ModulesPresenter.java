@@ -4,6 +4,7 @@ import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
 
+import dagger.Lazy;
 import fi.dwo.gwt.lib.rest.util.Base64;
 
 import java.util.logging.Level;
@@ -14,6 +15,7 @@ import javax.inject.Inject;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.BootPanelController;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountService;
@@ -32,8 +34,9 @@ public class ModulesPresenter {
     private EventBus eventBus;
     private Display view;
     private String url="/dwo/tablet/DWOplayer.html";
-    private AccountService account;
+    @Inject AccountService account;
     private Promise<String> init;
+    @Inject Lazy<BootPanelController> controller; // lazy anders cycle
 
     /**
      * @return the view
@@ -57,7 +60,6 @@ public class ModulesPresenter {
     @Inject ModulesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-        account = new AccountService(dwoGlobalVars); // alleen voor getBearerToken.
     }
 
 //    @JsMethod not required unless testing stuff.
@@ -84,7 +86,8 @@ public class ModulesPresenter {
      String token = "2\f" + resolved.getValue(); //format 2
      StringBuilder u = new StringBuilder(url);
      u.append( "?a=" ) .append (Base64.btoa(token)); // User Auth Token
-     u.append( "&header=none");
+     //u.append( "&header=none");
+     u.append("&dwo_env=test");
      String profile = Location.getParameter("profile");
      if(profile == null || profile.isEmpty()) profile = "77";
      u.append("&profile=").append(profile);
@@ -93,7 +96,9 @@ public class ModulesPresenter {
      u.append("&locale=").append(locale);
      String string = u.toString();
      LOG.info("open URL " + string);
-     view.openUrl(string);
+     //view.openUrl(string);
+     controller.get().setSession(false); // LEAVING.....
+     Location.replace(string);
      return Promises.resolved(string);
     }
     

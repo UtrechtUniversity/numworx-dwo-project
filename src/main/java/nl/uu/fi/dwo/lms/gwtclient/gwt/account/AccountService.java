@@ -3,6 +3,9 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.account;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
@@ -11,11 +14,14 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import org.osgi.util.promise.Promise;
 
+import dagger.Reusable;
+
 
 /**
  *
  * @author G.A.J. van der Plas
  */
+@Reusable
 public class AccountService {
     
     private static final Logger LOG = Logger.getLogger(AccountService.class.getName());
@@ -25,7 +31,7 @@ public class AccountService {
 
     private final DwoGlobalVars dwoGlobalVars;
     
-    public AccountService(DwoGlobalVars aDwoGlobalVars){
+    @Inject public AccountService(DwoGlobalVars aDwoGlobalVars){
         dwoGlobalVars = aDwoGlobalVars; // for future use (hasRole fetch i.e.)
     }
    public Promise<DomUserFull> getUserData() {

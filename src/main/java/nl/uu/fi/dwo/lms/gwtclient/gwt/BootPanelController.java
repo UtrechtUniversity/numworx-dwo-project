@@ -364,14 +364,14 @@ public class BootPanelController {
     /**
      * @return the session
      */
-    protected boolean isSession() {
+    public boolean isSession() {
         return session;
     }
 
     /**
      * @param session the session to set
      */
-    protected void setSession(boolean session) {
+    public void setSession(boolean session) {
         this.session = session;
     }
 }
