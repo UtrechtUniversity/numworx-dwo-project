@@ -308,10 +308,10 @@ div.listItem-dwo-separator {
 	position: absolute;
 	top: 0px;
 	right: -5px;
-	width: 15px;
-	height: 15px;
+	width: 18px;
+	height: 18px;
 	display: block;
- 	background-image: url("images/resources/goed-numworx.svg") !important;
+ 	background-image: url("images/numworx/goed-numworx.svg") !important;
 	background-repeat: no-repeat !important;
 	background-position: right top !important;
 	background-color: transparent;
