@@ -159,14 +159,15 @@
             <scope>runtime</scope>
             comment scope for elastic beanstalk
         </dependency>-->
-        <dependency>
+<!--         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWOServer</artifactId>
             <type>war</type>
             <version>2.2.7-SNAPSHOT</version>
             <scope>runtime</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.google.jsinterop/jsinterop-annotations -->
+ -->
+         <!-- https://mvnrepository.com/artifact/com.google.jsinterop/jsinterop-annotations -->
         <!--<dependency>
             <groupId>com.google.jsinterop</groupId>
             <artifactId>jsinterop-annotations</artifactId>
@@ -323,6 +324,7 @@
                     <warSourceDirectory>war</warSourceDirectory>
                     <attachClasses>true</attachClasses>
                     <webappDirectory>${webappDirectory}</webappDirectory> 
+                    <packagingExcludes>WEB-INF/lib/**,WEB-INF/classes/**</packagingExcludes>
                     <!-- exclude angular 2 dir: /src/main/ngapp -->
                     <exclude>ngapp/**</exclude>                
                 </configuration>
@@ -481,15 +483,15 @@
                             <asWebapp>true</asWebapp> 
                             <contextPath>/dwo/apps</contextPath>
                         </webapp>
-<!--                        <webapp>
+                       <webapp>
                             <groupId>nl.uu.fi.dwo.mobile</groupId>
                             <artifactId>DWOplayer</artifactId>
-                            <version>2.2.7-SNAPSHOT</version>
-                            <classifier>dwo</classifier>
+                            <version>2.2.6</version>
+                            <classifier>dwo2</classifier>
                             <type>war</type>
                             <contextPath>/dwo/tablet</contextPath>
                             <asWebapp>true</asWebapp>
-                        </webapp>-->
+                        </webapp>
                     </webapps>                         
                 </configuration> 
                 <dependencies>
