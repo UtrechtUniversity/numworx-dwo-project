@@ -181,7 +181,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		standardMap.setUserObject(SelectModuleItem.ROOT);
 		none = "none".equals(Location.getParameter("header"));
 		if(!none) {
-		  none = !"test".equals(Location.getParameter("dwo_env"));
+		  none = !"test".equals(DWOplayer.PARAMETERS.getDwoEnv());
 		}
 		if(!none) setBeheer(false);
 	}
