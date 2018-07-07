@@ -55,13 +55,19 @@ public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstant
 	private static native String getSecureMode0() /*-{
 		return $wnd.SECURE_MODE;
 	}-*/;
+
+	private static native String getDwoEnv0() /*-{
+		return $wnd.dwo_env
+	}-*/;
 	
+
 	@Override
 	public String getDwoEnv() {
-		String parameter = Window.Location.getParameter("dwo_env");
-		if(parameter == null) 
+		try {
+			return getDwoEnv0();
+		} catch (Exception e) {
 			return super.getDwoEnv();
-        return parameter;
+		}
 	}
 	
 	
