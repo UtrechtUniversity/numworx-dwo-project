@@ -21,6 +21,11 @@ public class DoubleRectangle {
 			       (p.y >= y) && (p.y <= (y + height));
 	}
 	
+	public boolean contains(DoubleRectangle r) {
+		return (r.x >= x) && (r.x+r.width <= (x + width)) &&
+			       (r.y >= y) && (r.y+r.height <= (y + height));
+	}
+	
 	public void translate(double dx, double dy) {
 		this.x += dx;
 		this.y += dy;

@@ -91,13 +91,13 @@ public class Stroke {
 			doublePoints = insertPoints(doublePoints);
 		}
 		length = getLength(doublePoints);
-		if(length>250) {
+		//if(length>250) {
 			doublePoints = averageSmooth(doublePoints);
-			parsePoints = standardizeToLength((int)(10*length/40),doublePoints);
+			parsePoints = standardizeToLength((int)(length/2),doublePoints);
 			parsePointsBox = makeParsingBox(parsePoints);
 			parseable = false;
 			return;
-		}
+		//}
 	}
 	
 	public Stroke(ArrayList<DoublePoint> points, boolean fromParsePoints) {
