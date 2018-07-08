@@ -153,11 +153,13 @@ public class TwoStrokeProcessor {
 		
 		// i
 		if (checkStrokes(stroke1,"iH1",stroke2,"iH2"))
-			if(hasYDistance(stroke1, stroke2, -40,25,0,2,0,2) && hasCloseXDistance(stroke1, stroke2, 30,0,2,0,2))
+			if(hasYDistance(stroke1, stroke2, -40,25,0,2,0,2) && hasCloseXDistance(stroke1, stroke2, 30,0,2,0,2)
+				&& stroke2.getParsePointsbox().width<4 && stroke2.getParsePointsbox().height<4)
 				return "i";
 		
 		if (checkStrokes(stroke1,"iH1+",stroke2,"iH2"))
-			if(hasYDistance(stroke1, stroke2, -40,25,0,2,0,2) && hasCloseXDistance(stroke1, stroke2, 30,0,2,0,2))
+			if(hasYDistance(stroke1, stroke2, -40,25,0,2,0,2) && hasCloseXDistance(stroke1, stroke2, 30,0,2,0,2)
+					&& stroke2.getParsePointsbox().width<4 && stroke2.getParsePointsbox().height<4)
 				return "i";
 		// k
 		if (checkStrokes(stroke1,"kH1",stroke2,"kH2"))
