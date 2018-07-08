@@ -81,7 +81,7 @@ public class StrokeMatcher {
 		return gevondenTekens.toArray(new String[20]);		
 	}
 	
-	public static String findTeken(Stroke stroke) {
+	public static String findTeken(StrokeContainer strokeContainer, Stroke stroke) {
 		String teken = findMatches(stroke)[0];
 		if(teken==null)
 			return null;
@@ -94,16 +94,28 @@ public class StrokeMatcher {
 			teken = teken.substring(0,index);
 		if("of".equals(teken))
 			teken = " of ";
+		if("/".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight)
+			teken = "1";
+		if(")".equals(teken) && stroke.getParsePointsbox().height<0.7*strokeContainer.averageHeight)
+			teken = "1";
+		if("(".equals(teken) && stroke.getParsePointsbox().height<0.7*strokeContainer.averageHeight)
+			teken = "1";
 		
 		return teken;
 	}
 	
-	public static String findTekenRaw(Stroke stroke) {
+	public static String findTekenRaw(StrokeContainer strokeContainer, Stroke stroke) {
 		String teken = findMatches(stroke)[0];
 		if(stroke.getParsePointsbox().width<4 && stroke.getParsePointsbox().height<4)
 			teken = ".";
 		if("sqrt_1".equals(teken) && stroke.getParsePointsbox().height<15)
 			teken = "-";
+		if("/".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight)
+			teken = "1";
+		if(")".equals(teken) && stroke.getParsePointsbox().height<0.7*strokeContainer.averageHeight)
+			teken = "1";
+		if("(".equals(teken) && stroke.getParsePointsbox().height<0.7*strokeContainer.averageHeight)
+			teken = "1";
 		return teken;
 	}
 	

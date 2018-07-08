@@ -59,7 +59,7 @@ public class StrokeContainer {
 	
 	private boolean checkStrokeParseable(Stroke stroke) {
 		double length = stroke.getLength();
-		boolean magLang = "back".equals(StrokeMatcher.findTeken(stroke)) || "-".equals(StrokeMatcher.findTeken(stroke)) || "sqrt".equals(StrokeMatcher.findTeken(stroke));
+		boolean magLang = "back".equals(StrokeMatcher.findTeken(this,stroke)) || "-".equals(StrokeMatcher.findTeken(this,stroke)) || "sqrt".equals(StrokeMatcher.findTeken(this,stroke));
 		if(length/averageHeight>7 && !magLang)
 			return false;
 		return true;
@@ -172,7 +172,7 @@ public class StrokeContainer {
 			else if(tryDelayedTwoStroke(strokes.get(strokes.size()-1))){
 			}
 			else {
-				s = StrokeMatcher.findTekenRaw(strokes.get(strokes.size()-1));
+				s = StrokeMatcher.findTekenRaw(this,strokes.get(strokes.size()-1));
 				WMObject wo = new WMObject(strokes.get(strokes.size()-1), s);
 				if("back".equals(s)) 
 					doBack(wo);
@@ -265,7 +265,7 @@ public class StrokeContainer {
 				if(TwoStrokeProcessor.hasCloseDistance(stroke, extension, 10, 37, 39, 0, 1)) {
 					stroke.extendRight(extension);
 					wmObjects.remove(wmObjects.get(i));
-					String tekenNew = StrokeMatcher.findTekenRaw(stroke);
+					String tekenNew = StrokeMatcher.findTekenRaw(this,stroke);
 					if(tekenNew.equals("back"))
 						tekenNew = "-";
 					WMObject wmObjectNew = new WMObject(stroke, tekenNew);
@@ -275,7 +275,7 @@ public class StrokeContainer {
 				if(TwoStrokeProcessor.hasCloseDistance(stroke, extension, 10, 0, 2, 0, 1)) {
 					stroke.extendLeft(extension);
 					wmObjects.remove(wmObjects.get(i));
-					String tekenNew = StrokeMatcher.findTekenRaw(stroke);
+					String tekenNew = StrokeMatcher.findTekenRaw(this,stroke);
 					if(tekenNew.equals("back"))
 						tekenNew = "-";
 					WMObject wmObjectNew = new WMObject(stroke, tekenNew);
