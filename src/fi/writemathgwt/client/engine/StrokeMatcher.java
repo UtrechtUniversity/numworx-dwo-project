@@ -96,11 +96,12 @@ public class StrokeMatcher {
 			teken = " of ";
 		if("/".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight)
 			teken = "1";
-		if(")".equals(teken) && stroke.getParsePointsbox().height<0.7*strokeContainer.averageHeight)
+		if(")".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight && 3*stroke.getParsePointsbox().width<stroke.getParsePointsbox().height)
 			teken = "1";
-		if("(".equals(teken) && stroke.getParsePointsbox().height<0.7*strokeContainer.averageHeight)
+		if("(".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight && 3*stroke.getParsePointsbox().width<stroke.getParsePointsbox().height)
 			teken = "1";
-		
+		if("l".equals(teken) && stroke.getParsePointsbox().height<1.2*strokeContainer.averageHeight && 3*stroke.getParsePointsbox().width<stroke.getParsePointsbox().height)
+			teken = "1";
 		return teken;
 	}
 	
@@ -112,9 +113,11 @@ public class StrokeMatcher {
 			teken = "-";
 		if("/".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight)
 			teken = "1";
-		if(")".equals(teken) && stroke.getParsePointsbox().height<0.7*strokeContainer.averageHeight)
+		if(")".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight && 3*stroke.getParsePointsbox().width<stroke.getParsePointsbox().height)
 			teken = "1";
-		if("(".equals(teken) && stroke.getParsePointsbox().height<0.7*strokeContainer.averageHeight)
+		if("(".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight && 3*stroke.getParsePointsbox().width<stroke.getParsePointsbox().height)
+			teken = "1";
+		if("l".equals(teken) && stroke.getParsePointsbox().height<1.2*strokeContainer.averageHeight && 3*stroke.getParsePointsbox().width<stroke.getParsePointsbox().height)
 			teken = "1";
 		return teken;
 	}

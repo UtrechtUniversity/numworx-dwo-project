@@ -39,7 +39,7 @@ public class FormulaProcessor {
 			for (int i = 1; i < wmObjectsToDo.size(); i++) {	
 				WMObject wo1 = wmObjectsToDo.get(i-1);
 				WMObject wo2 = wmObjectsToDo.get(i);
-				if (wo1.getBox().x > wo2.getBox().x) {	
+				if (wo1.getBoxMid().x > wo2.getBoxMid().x) {	
 					wmObjectsToDo.set(i-1, wo2);
 					wmObjectsToDo.set(i, wo1);
 					swapped = true;
