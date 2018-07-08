@@ -26,6 +26,7 @@ public class StrokeContainer {
 	private String formulaString = "";
 	public double averageHeight = 50;
 	private DoubleRectangle parseArea;
+	private boolean parseable = true;
 	
 	
 	public StrokeContainer() {
@@ -34,10 +35,34 @@ public class StrokeContainer {
 		
 	}
 	
-	public void addStroke(Stroke stroke) {
+	public boolean addStroke(Stroke stroke) {
 		strokes.add(stroke);
 		updateParseArea(stroke);
-		parseStrokes();
+		if(stroke.isParseable() && checkStrokeParseable(stroke)) {
+			parseStrokes();
+			return true;
+		}
+		else {
+			if(!stroke.isParseable()){
+				wmObjects.add(new WMObject(stroke, ""));
+				parseable = false;
+				return false;
+			}
+			else {
+				strokes.remove(stroke);
+				makeParseArea();
+				return false;
+			}
+		}
+		
+	}
+	
+	private boolean checkStrokeParseable(Stroke stroke) {
+		double length = stroke.getLength();
+		boolean magLang = "back".equals(StrokeMatcher.findTeken(stroke)) || "-".equals(StrokeMatcher.findTeken(stroke)) || "sqrt".equals(StrokeMatcher.findTeken(stroke));
+		if(length/averageHeight>7 && !magLang)
+			return false;
+		return true;
 	}
 	
 	public String getFormulaString() {
@@ -55,6 +80,20 @@ public class StrokeContainer {
 	
 	public DoubleRectangle getBoundingBox() {
 		return parseArea;
+	}
+	
+	public void updateParseable() {
+		parseable = true;
+		for (int i = 0; i < strokes.size(); i++) {
+			if(!strokes.get(i).isParseable()) {
+				parseable = false;
+				return;
+			}
+		}
+	}
+	
+	public boolean isParseable() {
+		return parseable;
 	}
 	
 	public void wis() {
@@ -179,6 +218,7 @@ public class StrokeContainer {
 		else {
 			strokes.remove(strokes.size()-1);
 			makeParseArea();
+			updateParseable();
 		}
 	}
 	
@@ -328,6 +368,7 @@ public class StrokeContainer {
 		h.put("wmStrokeTekenList", wmStrokeTekenList);
 		h.put("formulaString", formulaString);
 		h.put("averageHeight", new Double(averageHeight));
+		h.put("parseable", new Boolean(parseable));
 		return h;
 	}
 	
@@ -351,6 +392,8 @@ public class StrokeContainer {
 			formulaString = launchState.getString("formulaString");
 		if (launchState.containsKey("averageHeight"))
 			averageHeight = launchState.getDouble("averageHeight");
+		if (launchState.containsKey("parseable"))
+			parseable = launchState.getBoolean("parseable");
 		
 		
 		for (int i = 0; i < strokeList.size(); i++)	{	

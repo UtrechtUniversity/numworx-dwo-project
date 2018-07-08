@@ -27,6 +27,8 @@ public class Stroke {
 	protected double[] angles;
 	protected double[] dAngles;
 	private long timeStamp;
+	private boolean parseable = true;
+	private double length;
 	
 	public static Stroke setState(Map<String, Object> map) {
 		ObjectMap h = JSONUtilities.wrapMap(map);
@@ -63,6 +65,14 @@ public class Stroke {
 		while (doublePoints.size() < standardizeLengthNumber+5)	{	
 			doublePoints = insertPoints(doublePoints);
 		}
+		length = getLength(doublePoints);
+//		if(length>250) {
+//			doublePoints = averageSmooth(doublePoints);
+//			parsePoints = standardizeToLength((int)(10*length/40),doublePoints);
+//			parsePointsBox = makeParsingBox(parsePoints);
+//			parseable = false;
+//			return;
+//		}
 		doublePoints = averageSmooth(doublePoints);
 		parsePoints = standardizeToLength(40,doublePoints);
 		parsePointsBox = makeParsingBox(parsePoints);
@@ -70,6 +80,24 @@ public class Stroke {
 		makeAngles();
 		makeDAngles();
 		timeStamp = System.currentTimeMillis();
+	}
+	
+	public Stroke(ArrayList<Point> points, String teken) {
+		ArrayList<DoublePoint> doublePoints = new ArrayList<DoublePoint>();
+		for(int i = 0 ; i < points.size() ; i++) {
+			doublePoints.add(new DoublePoint(points.get(i).getX(), points.get(i).getY()));
+		}
+		while (doublePoints.size() < standardizeLengthNumber+5)	{	
+			doublePoints = insertPoints(doublePoints);
+		}
+		length = getLength(doublePoints);
+		if(length>250) {
+			doublePoints = averageSmooth(doublePoints);
+			parsePoints = standardizeToLength((int)(10*length/40),doublePoints);
+			parsePointsBox = makeParsingBox(parsePoints);
+			parseable = false;
+			return;
+		}
 	}
 	
 	public Stroke(ArrayList<DoublePoint> points, boolean fromParsePoints) {
@@ -142,6 +170,10 @@ public class Stroke {
 	
 	public double[] getDAngles() {
 		return dAngles;
+	}
+	
+	public boolean isParseable() {
+		return parseable;
 	}
 	
 	public DoubleRectangle getParsePointsbox() {
@@ -250,6 +282,18 @@ public class Stroke {
 		return length/(pointCount-1);
 	}
 	
+	private double getLength(ArrayList<DoublePoint> object) {
+		double length = 0;
+		for(int j = 1 ; j < object.size() ; j++) {
+			length += distance(object.get(j-1), object.get(j));
+		}
+		return length;
+	}
+	
+	public double getLength() {
+		return length;
+	}
+
 	private DoubleRectangle makeParsingBox(ArrayList<DoublePoint> points) {
 		double xMin = 1000;
 		double xMax = 0;

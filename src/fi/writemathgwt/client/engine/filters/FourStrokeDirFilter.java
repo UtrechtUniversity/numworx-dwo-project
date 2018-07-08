@@ -13,6 +13,8 @@ public class FourStrokeDirFilter {
 	}
 	
 	public static boolean checkDir(Stroke stroke, String teken) {
+		if(!stroke.isParseable())
+			return false;
 		boolean[] dirBooleans = getDirBooleans(stroke,teken);
 		boolean check = true;
 		for(int i=0 ; i<dirBooleans.length ; i++) {
