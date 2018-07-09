@@ -60,7 +60,7 @@ public class StrokeContainer {
 	private boolean checkStrokeParseable(Stroke stroke) {
 		double length = stroke.getLength();
 		boolean magLang = "back".equals(StrokeMatcher.findTeken(this,stroke)) || "-".equals(StrokeMatcher.findTeken(this,stroke)) || "sqrt".equals(StrokeMatcher.findTeken(this,stroke));
-		if(length/averageHeight>7 && !magLang)
+		if(length/averageHeight>9 && !magLang)
 			return false;
 		return true;
 	}
