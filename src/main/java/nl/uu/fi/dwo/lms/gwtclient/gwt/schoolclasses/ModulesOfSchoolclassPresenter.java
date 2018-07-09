@@ -205,6 +205,7 @@ public class ModulesOfSchoolclassPresenter {
      */
     @JsMethod
     void addModule(String key, String typeString, String fromData, String toData, String accessKey) {
+        //TODO FIX sloppy addModule implementation
         if (key == null) {
             eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "Internal error, key not given.")));
             return;
