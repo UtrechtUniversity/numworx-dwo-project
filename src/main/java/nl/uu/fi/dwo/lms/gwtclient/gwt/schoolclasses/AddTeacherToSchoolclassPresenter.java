@@ -44,14 +44,12 @@ public class AddTeacherToSchoolclassPresenter {
 
         void init();
 
-//        void setSchoolClass(DomSchoolClass schoolClass);
+        void setSchoolClass(DomSchoolClass schoolClass);
         void showTeachers(Map<String, DomTeacher> teachers);
 
         void setEmptyTableMessage();
 
         void setLoadingTableMessage();
-
-        public void setSchoolClass(DomSchoolClass schoolClass);
     }
 
     public AddTeacherToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
