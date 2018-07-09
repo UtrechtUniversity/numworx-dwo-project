@@ -192,6 +192,56 @@ public class ModulesOfSchoolclassPresenter {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
     }
 
+        
+    
+    /**
+     * Course parameters that are not null are updated with their values. A
+     * valid key is required.
+     *
+     * @param key Must not be null.
+     * @param typeString
+     * @param fromData
+     * @param toData
+     */
+    @JsMethod
+    void addModule(String key, String typeString, String fromData, String toData, String accessKey) {
+        if (key == null) {
+            eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "Internal error, key not given.")));
+            return;
+        }
+        Promise<Boolean> p;
+        p = service.attachCourseToClass(schoolClass, tree.getNode(key).getObject().getCourse());
+        
+        if (typeString != null) {
+            p=p.then((resolved) -> {
+                return setCourseType(key, typeString);
+            });
+        }
+        if (fromData != null) {
+            p=p.then((resolved) -> {
+                return setFromDate(key, fromData);
+            });
+        }
+        if (toData != null) {
+            p=p.then((resolved) -> {
+                return setToDate(key, toData);
+            });
+        }
+        if (accessKey != null) {
+            p=p.then((resolved) -> {
+                return setAccessKey(key, accessKey);
+            });
+        }
+        p=p.then((resolved) -> {
+            updateViewData();
+            return resolved;
+        });
+        p=p.then(null, (failure) -> {
+            eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
+        });
+    }
+    
+    
     /**
      * Course parameters that are not null are updated with their values. A
      * valid key is required.
