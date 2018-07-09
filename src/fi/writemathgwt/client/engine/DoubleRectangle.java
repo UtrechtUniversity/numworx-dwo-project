@@ -21,6 +21,11 @@ public class DoubleRectangle {
 			       (p.y >= y) && (p.y <= (y + height));
 	}
 	
+	public boolean contains(DoubleRectangle r, double marginX, double marginY) {
+		return (r.x - x > marginX) && ( (x + width) - (r.x+r.width) > marginX) &&
+			       (r.y - y > marginY) && ((y + height) - (r.y+r.height) > marginY);
+	}
+	
 	public boolean contains(DoubleRectangle r) {
 		return (r.x >= x) && (r.x+r.width <= (x + width)) &&
 			       (r.y >= y) && (r.y+r.height <= (y + height));

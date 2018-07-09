@@ -97,13 +97,13 @@ public class WMObject {
 	}
 	
 	public DoubleRectangle getBox() {
-		if (teken!=null && (teken.equals("-") || teken.equals("back")))	{	
-			int height = 2;
-			if (box.height < height)
-				return new DoubleRectangle(box.x - height, box.y - height / 2, box.width + 2 * height, height);
-			else
-				return new DoubleRectangle(box.x - box.height, box.y, box.width + 2 * box.height, box.height);
-		}
+//		if (teken!=null && (teken.equals("-") || teken.equals("back")))	{	
+//			int height = 2;
+//			if (box.height < height)
+//				return new DoubleRectangle(box.x - height, box.y - height / 2, box.width + 2 * height, height);
+//			else
+//				return new DoubleRectangle(box.x - box.height, box.y, box.width + 2 * box.height, box.height);
+//		}
 		return box;
 	}
 	
