@@ -58,7 +58,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -77,8 +76,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
-import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
-import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
@@ -1185,6 +1182,35 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         return result;
 
     }
+    
+    //DomClassCourse4Teacher
+//    /**
+//     * Attaches a leaf course that a class in a school can see.
+//     *
+//     * @param sc
+//     * @param rest
+//     * @return
+//     * @throws Dwo2Exception
+//     */
+//    @PUT
+//    @Produces({"application/json"})
+//    @Path("/attachCourseToClass")
+//    public Boolean attachCourseToClass(@Context SecurityContext sc, RestClassCourseWProfile rest) throws Dwo2Exception {
+//        //secure builder to detach course by setting it invisible.
+//        try {
+//            TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+//                    .setHasRole(rest.getRestContext().getDomHasRole())
+//                    //.setDefaultHasRole()
+//                    .buildSchoolAdminTeacher()
+//                    .setTeacher()
+//                    .addProfile(rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile())
+//                    .addSchoolClass(rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass())
+//                    .addCourse(rest.getDomSchoolClassCourseAndProfile().getCourse());
+//            return build.attachCourseToClass(from,to, key, exam, viewState);
+//        } catch (Dwo2Exception e) {
+//            throw new Dwo2RestException(e);
+//        }
+//    }
 
     /**
      * Attaches a leaf course that a class in a school can see.
