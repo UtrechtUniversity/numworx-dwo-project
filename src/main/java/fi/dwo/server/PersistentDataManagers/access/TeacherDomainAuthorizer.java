@@ -13,6 +13,7 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherPersistentContext;
 import fi.dwo.server.PersistentDataManagers.actions.MySQLTeacherActions;
 import fi.dwo.server.PersistentDataManagers.actions.TeacherActions;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
@@ -278,6 +279,9 @@ public class TeacherDomainAuthorizer {
         TeacherState_C_CC_HR_P_R_S_SC_SCO_SG_U addScoContext(DomScoContext s) throws Dwo2Exception;
         
         Boolean attachCourseToClass()  throws Dwo2Exception;
+        
+        Boolean addCourseToClass(Date from, Date to, String accessKey)  throws Dwo2Exception;
+        
         Boolean detachCourseFromClass()  throws Dwo2Exception;
     }
 

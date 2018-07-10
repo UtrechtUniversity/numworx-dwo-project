@@ -1,4 +1,6 @@
-/** Copyrighted Mar 13, 2018 */
+/**
+ * Copyrighted Mar 13, 2018
+ */
 package fi.dwo.server.PersistentDataManagers.access;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -32,6 +34,7 @@ import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -212,11 +215,13 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
                 String msg = MessageFormat.format("Username {0} is learing studentSco id {1} for userid  {2} schoolgroupid {3} and course {4} {5}.", new Object[]{instance.getContext().getUserCtx().getUser().getUsername(), ssc.getScoID(), ssc.getPersistentHasRolePK().getUserID(), ssc.getPersistentHasRolePK().getSchoolGroupID(), instance.getContext().getTeacherCtx().getCourse().getCourseID(), instance.getContext().getTeacherCtx().getCourse().getName()});
                 LOG.log(Level.INFO, msg);
                 try {
-                  StudentScoDataManager.destroy(ssc.getStudentSco()); //  non-fatal. studentscodata
-                } catch (EntityNotFoundException e1) {}
+                    StudentScoDataManager.destroy(ssc.getStudentSco()); //  non-fatal. studentscodata
+                } catch (EntityNotFoundException e1) {
+                }
                 try {
-                  StudentScoContextManager.destroy(ssc.getStudentSco());
-                } catch (EntityNotFoundException e) {}
+                    StudentScoContextManager.destroy(ssc.getStudentSco());
+                } catch (EntityNotFoundException e) {
+                }
             }
         }
         return true;
@@ -243,11 +248,13 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
                 String msg = MessageFormat.format("Username {0} is learing studentSco id {1} for userid  {2} schoolgroupid {3} and course {4} {5}.", new Object[]{instance.getContext().getUserCtx().getUser().getUsername(), ssc.getScoID(), ssc.getPersistentHasRolePK().getUserID(), ssc.getPersistentHasRolePK().getSchoolGroupID(), instance.getContext().getTeacherCtx().getCourse().getCourseID(), instance.getContext().getTeacherCtx().getCourse().getName()});
                 LOG.log(Level.INFO, msg);
                 try {
-                  StudentScoDataManager.destroy(ssc.getStudentSco()); //  non-fatal. studentscodata
-                } catch (EntityNotFoundException e1) {}
+                    StudentScoDataManager.destroy(ssc.getStudentSco()); //  non-fatal. studentscodata
+                } catch (EntityNotFoundException e1) {
+                }
                 try {
-                  StudentScoContextManager.destroy(ssc.getStudentSco());
-                } catch (EntityNotFoundException e) {}
+                    StudentScoContextManager.destroy(ssc.getStudentSco());
+                } catch (EntityNotFoundException e) {
+                }
             }
         }
         //remove classcourse to ensure no new attachments occur.
@@ -471,6 +478,15 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
     @Override
     public Boolean attachCourseToClass() throws Dwo2Exception {
         return instance.teacherActions.attachCourseToClass(instance.getContext());
+    }
+
+    @Override
+    public Boolean addCourseToClass(Date from, Date to, String accessKey) throws Dwo2Exception {
+        if (from.before(to)) {
+            return instance.teacherActions.addCourseToClass(instance.getContext(), from, to, accessKey);
+        } else {
+            throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "Date range is invalid.");
+        }
     }
 
     @Override

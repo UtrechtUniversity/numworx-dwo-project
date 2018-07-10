@@ -79,6 +79,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.entities.RestMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfileNew;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewAccessKey;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewFrom;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewTo;
@@ -1212,6 +1213,36 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
 //        }
 //    }
 
+    /**
+     * Attaches a leaf course that a class in a school can see.
+     *
+     * @param sc
+     * @param rest
+     * @return
+     * @throws Dwo2Exception
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/addCourseToClass")
+    public Boolean addCourseToClass(@Context SecurityContext sc, RestSchoolClassCourseAndProfileNew rest) throws Dwo2Exception {
+        //secure builder to detach course by setting it invisible.
+        try {
+            TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+                    .setHasRole(rest.getRestContext().getDomHasRole())
+                    //.setDefaultHasRole()
+                    .buildSchoolAdminTeacher()
+                    .setTeacher()
+                    .addProfile(rest.getDomSchoolClassCourseAndProfileNew().getDomDwoProfile())
+                    .addSchoolClass(rest.getDomSchoolClassCourseAndProfileNew().getDomSchoolClass())
+                    .addCourse(rest.getDomSchoolClassCourseAndProfileNew().getCourse());
+            return build.addCourseToClass(rest.getDomSchoolClassCourseAndProfileNew().getFrom(),
+                    rest.getDomSchoolClassCourseAndProfileNew().getTo(),
+                    rest.getDomSchoolClassCourseAndProfileNew().getAccessKey());
+        } catch (Dwo2Exception e) {
+            throw new Dwo2RestException(e);
+        }
+    }
+    
     /**
      * Attaches a leaf course that a class in a school can see.
      *
