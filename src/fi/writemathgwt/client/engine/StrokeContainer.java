@@ -38,22 +38,22 @@ public class StrokeContainer {
 	public boolean addStroke(Stroke stroke) {
 		strokes.add(stroke);
 		updateParseArea(stroke);
-		if(stroke.isParseable() && checkStrokeParseable(stroke)) {
+		//if(stroke.isParseable() && checkStrokeParseable(stroke)) {
 			parseStrokes();
 			return true;
-		}
-		else {
-			if(!stroke.isParseable()){
-				wmObjects.add(new WMObject(stroke, ""));
-				parseable = false;
-				return false;
-			}
-			else {
-				strokes.remove(stroke);
-				makeParseArea();
-				return false;
-			}
-		}
+//		}
+//		else {
+//			if(!stroke.isParseable()){
+//				wmObjects.add(new WMObject(stroke, ""));
+//				parseable = false;
+//				return false;
+//			}
+//			else {
+//				strokes.remove(stroke);
+//				makeParseArea();
+//				return false;
+//			}
+//		}
 		
 	}
 	
