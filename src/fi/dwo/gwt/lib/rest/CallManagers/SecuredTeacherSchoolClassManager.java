@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
-import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
@@ -31,6 +30,7 @@ import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfileNew;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewAccessKey;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewFrom;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewTo;
@@ -301,6 +301,17 @@ public class SecuredTeacherSchoolClassManager {
         service.getModules(restData, (callBack));
     }
 
+    public Promise<Boolean> addCourseToClass(RestSchoolClassCourseAndProfileNew rest) {
+        PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
+        this.addCourseToClass(rest, defer);
+        return defer.getPromise();
+    }
+    
+    private void addCourseToClass(RestSchoolClassCourseAndProfileNew restData, MethodCallback<Boolean> callBack) {
+        service.addCourseToClass(restData, (callBack));
+    }            
+    
+    
     public Promise<Boolean> attachCourseToClass(RestSchoolClassCourseAndProfile rest) {
         PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
         this.attachCourseToClass(rest, defer);
