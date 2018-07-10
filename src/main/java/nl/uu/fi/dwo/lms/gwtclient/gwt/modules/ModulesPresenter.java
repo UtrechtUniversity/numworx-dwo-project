@@ -29,8 +29,9 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  */
 public class ModulesPresenter {
 
+    private final static boolean IFRAME = false;
+    
     private static final Logger LOG = Logger.getLogger(ModulesPresenter.class.getName());
-    private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
     private Display view;
     private String url="/dwo/tablet/DWOplayer.html";
@@ -59,7 +60,6 @@ public class ModulesPresenter {
 
     @Inject ModulesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
-        dwoGlobalVars = aDwoGlobalVars;
     }
 
 //    @JsMethod not required unless testing stuff.
@@ -85,8 +85,9 @@ public class ModulesPresenter {
     public Promise<String> gotToken(Promise<String> resolved) {
      String token = "2\f" + resolved.getValue(); //format 2
      StringBuilder u = new StringBuilder(url);
-     u.append( "?a=" ) .append (Base64.btoa(token)); // User Auth Token
-     //u.append( "&header=none");
+     u.append( "?a=" ).append(Base64.btoa(token)); // User Auth Token
+     if(IFRAME)
+       u.append( "&header=none");
      u.append("&dwo_env=test");
      String profile = Location.getParameter("profile");
      if(profile == null || profile.isEmpty()) profile = "77";
@@ -96,9 +97,12 @@ public class ModulesPresenter {
      u.append("&locale=").append(locale);
      String string = u.toString();
      LOG.info("open URL " + string);
-     //view.openUrl(string);
-     controller.get().setSession(false); // LEAVING.....
-     Location.replace(string);
+     if(IFRAME)
+       view.openUrl(string);
+     else {
+       controller.get().setSession(false); // LEAVING.....
+       Location.replace(string);
+     }
      return Promises.resolved(string);
     }
     
