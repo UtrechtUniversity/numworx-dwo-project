@@ -306,8 +306,8 @@ div.listItem-dwo-separator {
 
 .scoreBtn-correct .v { 
 	position: absolute;
-	top: 0px;
-	right: -5px;
+	top: -3px;
+	right: -8px;
 	width: 18px;
 	height: 18px;
 	display: block;
