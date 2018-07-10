@@ -43,6 +43,7 @@
         <gwt.style>PRETTY</gwt.style>
         <maven.test.skip>true</maven.test.skip>
         <tomcat7.version>7.0.76</tomcat7.version>
+        <context.xml>context-dwo_devel.xml</context.xml>
     </properties>
 
     <scm>
@@ -436,7 +437,7 @@
                     </deployables>
                     <configfiles>
                         <configfile>
-                            <file>src/test/tomcat/context-dwo_devel.xml</file>
+                            <file>src/test/tomcat/${context.xml}</file>
                             <todir>${project.build.directory}/apache-tomcat/conf/Catalina/localhost/</todir>
                             <tofile>context.xml.default</tofile>
                         </configfile>     
@@ -473,7 +474,7 @@
                             <type>war</type>    
                             <asWebapp>true</asWebapp> 
                             <contextPath>/dwo</contextPath>
-                            <contextFile>src/test/tomcat/context-dwo_devel.xml</contextFile>
+                            <contextFile>src/test/tomcat/${context.xml}</contextFile>
                         </webapp>
                         <webapp>
                             <groupId>fi.dwo</groupId>
@@ -486,7 +487,7 @@
                        <webapp>
                             <groupId>nl.uu.fi.dwo.mobile</groupId>
                             <artifactId>DWOplayer</artifactId>
-                            <version>2.2.6</version>
+                            <version>2.2.6-p2</version>
                             <classifier>dwo2</classifier>
                             <type>war</type>
                             <contextPath>/dwo/tablet</contextPath>

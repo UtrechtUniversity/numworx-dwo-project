@@ -67,7 +67,7 @@ public class ResultsPresenter {
     }
 
     public void init() {
-        //view.clear();
+        view.clear();
         LOG.log(Level.INFO, "DwoGlobalVarsState = " + dwoGlobalVars.getState().name());
         view.setHelp(dwoGlobalVars.buildHelpUrl("#results"));        
 

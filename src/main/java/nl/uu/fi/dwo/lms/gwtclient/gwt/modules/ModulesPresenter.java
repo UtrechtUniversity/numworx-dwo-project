@@ -29,12 +29,12 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  */
 public class ModulesPresenter {
 
-    private final static boolean IFRAME = false;
+    private final static boolean IFRAME = true;
     
     private static final Logger LOG = Logger.getLogger(ModulesPresenter.class.getName());
     private EventBus eventBus;
     private Display view;
-    private String url="/dwo/tablet/DWOplayer.html";
+    private String url="/dwo/tablet/DWOplayer.jsp";
     @Inject AccountService account;
     private Promise<String> init;
     @Inject Lazy<BootPanelController> controller; // lazy anders cycle
