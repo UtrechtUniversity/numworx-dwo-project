@@ -339,8 +339,14 @@ public class PublicUserManager {
                 List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
                 for (PersistentLoginContext l : loginContextList) {
                     if (TOTP.verifyTOTP(authFields[1], DatatypeConverter.printHexBinary(l.getSecretKey()), "8")) {
-                        return u.buildDomUserFullwLoginContext(l);
-                    }
+                        //return u.buildDomUserFullwLoginContext(l);
+                        try {
+                          return u.buildDomUserFullwLoginContext(LoginContextUtilManager.forceNewLoginContextSession(u));
+                        } catch (Dwo2Exception e) {
+                          LOG.log(Level.SEVERE, "Unexpected error", e);
+                          throw new Dwo2RestException(e);
+                        }
+                   }
                 }
                 break;
                 
@@ -983,7 +989,7 @@ public class PublicUserManager {
     	token.setToken_type(DomToken.APARAM);
     	token.setExpires_in(300); // seconds
     	String auth_token;
-    	auth_token = "1\f" + System.currentTimeMillis() + "\f" + username + "\f" + password;
+    	auth_token = "1\f" + System.currentTimeMillis() + "\f" + username + "\f" + password; // FIXME naar format2: user zie secureuseraccounManager.getbearertoken
     	byte[] auth_token_bytes = auth_token.getBytes(StandardCharsets.UTF_8);
 		auth_token = Base64.getUrlEncoder().encodeToString(auth_token_bytes);
     	token.setAccess_token(auth_token);
