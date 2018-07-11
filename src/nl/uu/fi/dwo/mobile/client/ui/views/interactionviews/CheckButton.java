@@ -20,6 +20,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -60,24 +61,42 @@ public class CheckButton implements InteractionStub, CBookEventListener
 
   boolean editable = true;
 	
-	final class NakijkenVak implements ClickHandler {
-		public void onClick(ClickEvent e)
-		{	
-			if(!editable) return;
-			e.stopPropagation();
-			logger.warning("CheckButton nakijkenVak");
-			comRoot.pause();
-			for (int i = 0; i < lijst.size(); i++)
-			{	Object object = lijst.get(i);
-				if(object instanceof InteractionView) {
-					InteractionView view = (InteractionView) object;
-					view.kijkNa();
-				}
-			}
-			comRoot.unpause();				
-			logger.warning("CheckButton click end");
-		}
-	}
+  final class NakijkenVak implements ClickHandler {
+    public void onClick(ClickEvent e) {
+      if (!editable) return;
+      e.stopPropagation();
+      logger.warning("CheckButton nakijkenVak");
+      comRoot.pause();
+      TekstVakPanel ideasStatistiekPanel =
+          findParentRegel().getTekstVak().getTekstVakParent().isInIdeasStatistiek();
+      if (ideasStatistiekPanel != null) {
+        // log answers from all FormuleEditorWithAnswer boxes
+        for (int i = 0; i < lijst.size(); i++) {
+          Object object = lijst.get(i);
+          if (object instanceof FormuleEditorWithAnswer) {
+            ((FormuleEditorWithAnswer) object).logAttempt();
+          }
+        }
+        ideasStatistiekPanel.kijkNaIdeasStatistiek().then(
+          (Promise<RuleIF> resolved) -> {
+            if (logging != null) {
+              logging.log(buildLog(resolved.getValue()));
+            }
+            return resolved;
+          });
+      } else {
+        for (int i = 0; i < lijst.size(); i++) {
+          Object object = lijst.get(i);
+          if (object instanceof InteractionView) {
+            InteractionView view = (InteractionView) object;
+            view.kijkNa();
+          }
+        }
+      }
+      comRoot.unpause();
+      logger.warning("CheckButton click end");
+    }
+  }
 
 	public static final String CHECK = "check";
 	public static final String AFRONDEN = "action.seal";
@@ -231,6 +250,7 @@ public class CheckButton implements InteractionStub, CBookEventListener
 	    }
 	}
 	
+	private List<HandlerRegistration> registrations = new ArrayList<>(3);
 	private void initialize(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
 		basisPanel = new LayoutPanel();
@@ -288,64 +308,9 @@ public class CheckButton implements InteractionStub, CBookEventListener
 		} else
 			logger.fine("await checkbutton loaded " + imWidth + " x " + imHeight);
 			
-		checkButton.addClickHandler(new ClickHandler(){
-
-			public void onClick(ClickEvent e)
-			{	e.stopPropagation();
-//				correct = Boolean.TRUE;
-				logger.warning("CheckButton click start");
-				comRoot.pause();
-				TekstVakPanel ideasStatistiekPanel = findParentRegel().getTekstVak().getTekstVakParent().isInIdeasStatistiek();
-				if(ideasStatistiekPanel != null)
-				{
-					//log answers from all FormuleEditorWithAnswer boxes
-					for (int i = 0; i < lijst.size(); i++)
-					{	Object object = lijst.get(i);
-						if(object instanceof FormuleEditorWithAnswer) {
-							((FormuleEditorWithAnswer) object).logAttempt();
-						}
-					}
-					ideasStatistiekPanel.kijkNaIdeasStatistiek().then(new Success<RuleIF, RuleIF>(){
-
-						@Override
-						public Promise<RuleIF> call(Promise<RuleIF> resolved)
-								throws Exception {
-							if(logging != null) {
-								logging.log(buildLog(resolved.getValue()));
-							}
-							
-							
-							
-							return resolved;
-						}
-
-						});
-				}
-				else
-				{
-					for (int i = 0; i < lijst.size(); i++)
-					{	Object object = lijst.get(i);
-						if(object instanceof InteractionView) {
-							InteractionView view = (InteractionView) object;
-							view.kijkNa();
-							//view.zetNagekeken(true); 
-		//						Boolean check = view.isCorrect();
-		//						if(check == null) correct = null;
-		//						if(check == Boolean.FALSE) {
-		//							correct = check; 
-		//							return; // early out.
-		//						}
-						}
-					}
-				}
-				comRoot.unpause();				
-				logger.warning("CheckButton click end");
-			}
-		});
-		
-		if(nakijkenVak) checkButton.addClickHandler(new NakijkenVak());
-		if(nakijkenPagina) checkButton.addClickHandler(new NakijkenPagina());
-		if(nakijkenXWidget) checkButton.addClickHandler(new NakijkenXWidget());
+		if(nakijkenVak) registrations.add(checkButton.addClickHandler(new NakijkenVak()));
+		if(nakijkenPagina) registrations.add(checkButton.addClickHandler(new NakijkenPagina()));
+		if(nakijkenXWidget) registrations.add(checkButton.addClickHandler(new NakijkenXWidget()));
 		if(actieBewaren) checkButton.addClickHandler(new ActieBewaren());
 		if(actieAfronden) checkButton.addClickHandler(new ActieAfronden());		
         if(actionNextPage) checkButton.addClickHandler(new ActionNextPage());
@@ -421,8 +386,14 @@ public class CheckButton implements InteractionStub, CBookEventListener
 		this.mode = mode;
 		boolean zichtbaar = true;
 // alleen zichtbaar in nakijken modus als het geen toets is.
+// altijd zichtbaar als een actie, maar dan geen kijkna handlers bij toets
 		if (nakijkenPagina||nakijkenVak||nakijkenXWidget)
-	       zichtbaar = mode==OpdrNav.OEFENEN || mode==OpdrNav.OEFENEN_STRAFPUNTEN;	  
+		{  zichtbaar = mode==OpdrNav.OEFENEN || mode==OpdrNav.OEFENEN_STRAFPUNTEN;
+		   if (!zichtbaar) {
+		     registrations.forEach(HandlerRegistration::removeHandler);
+		   }
+		   zichtbaar = zichtbaar || actionNextPage||actieBewaren||actieAfronden;	
+		}
       checkButton.setVisible(zichtbaar);
 	}
 	
