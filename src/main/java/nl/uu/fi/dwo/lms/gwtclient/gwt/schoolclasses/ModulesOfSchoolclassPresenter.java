@@ -48,10 +48,6 @@ public class ModulesOfSchoolclassPresenter {
     public interface Display extends BasicDisplay {
       public final static String LOCAL_TIME = "yyyy-MM-dd HH:mm"; // common met jsmodulesofSchool
 
-        void clear();
-
-        void init();
-
 //        void updateTable(List<ClassCourseItem> item);
         void setTree(DomTree<DomCourseOfClass> tree);
 
@@ -143,6 +139,7 @@ public class ModulesOfSchoolclassPresenter {
 
     public void init(DomSchoolClass aSchoolClass) {
         schoolClass = aSchoolClass;
+        view.clear();
         view.init();
         view.setHelp(dwoGlobalVars.buildHelpUrl("#schoolClassModuleManagement"));
         view.setEmptyTableMessageModules();

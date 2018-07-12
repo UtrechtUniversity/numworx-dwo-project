@@ -59,9 +59,6 @@ public class AccountPresenter {
     }
 
     public interface Display extends BasicDisplay{
-
-        void init();
-
         void updateSchoolLoginsView(DomSchoolsRolesAndClassesV2 schoolLogins);
 
         void updateUserView(DomUserFull user);
@@ -76,6 +73,7 @@ public class AccountPresenter {
     }
 
     public void init() {
+        view.clear();
         view.init();
         view.setHelp(dwoGlobalVars.buildHelpUrl("#account"));
         sracData = getAccountRoles();

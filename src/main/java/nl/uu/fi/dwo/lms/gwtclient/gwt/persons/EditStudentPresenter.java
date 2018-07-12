@@ -92,6 +92,7 @@ public class EditStudentPresenter {
 
     public void init(DomUser aUser) {
         view.clear();
+        view.init();
         view.setEmptyTableMessage();
         view.setHelp(dwoGlobalVars.buildHelpUrl("#editStudent"));
         user = aUser;

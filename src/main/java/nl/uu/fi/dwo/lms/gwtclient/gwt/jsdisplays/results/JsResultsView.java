@@ -194,4 +194,9 @@ public class JsResultsView implements ResultsPresenter.Display {
         }
     }
 
+    @Override
+    public void init() {
+        JsResultsDisplay.init();
+    }
+
 }

@@ -41,8 +41,6 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
 
     public interface Display extends BasicDisplay {
 
-        void clear();
-
         void init();
 
         void showStudentsClassA(Map<String, DomStudent> students);

@@ -14,6 +14,12 @@ public class JsWelcomeView implements WelcomePresenter.Display{
         JsWelcomeDisplay.setHelp(url);
     }
 
+
+    @Override
+    public void init(){
+        JsWelcomeDisplay.init();
+    }
+
     @Override
     public void clear(){
         JsWelcomeDisplay.clear();

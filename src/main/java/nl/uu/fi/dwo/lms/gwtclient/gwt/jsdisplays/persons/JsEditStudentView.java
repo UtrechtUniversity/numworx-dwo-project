@@ -24,6 +24,11 @@ public class JsEditStudentView implements EditStudentPresenter.Display {
     }
 
     @Override
+    public void init() {
+        JsEditPersonDisplay.init();
+    }
+    
+    @Override
     public void setHelp(String url) {
         JsEditPersonDisplay.setHelp(url);
     }

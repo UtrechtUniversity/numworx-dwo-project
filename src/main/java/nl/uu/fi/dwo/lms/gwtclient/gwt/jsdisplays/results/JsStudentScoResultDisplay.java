@@ -12,7 +12,8 @@ import jsinterop.annotations.JsType;
  */
 @JsType(isNative = true, name = "jsStudentScoResultDisplay", namespace = JsPackage.GLOBAL)
 public class JsStudentScoResultDisplay{
-    /** Clears the results in the ui. */
+     public static native void init();
+   /** Clears the results in the ui. */
     public static native void clear();
     public static native void setHelp(String url);
     /** Inits the view */

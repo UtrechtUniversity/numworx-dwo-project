@@ -18,7 +18,8 @@ import jsinterop.annotations.JsType;
  */
 @JsType(isNative = true, name = "jsSelectedResultsDisplay", namespace = JsPackage.GLOBAL)
 public class JsSelectedResultsDisplay{
-    /** Clears the results in the ui. */
+     public static native void init();
+   /** Clears the results in the ui. */
     public static native void clear();
     /** Inits the view */
     public static native void init(JavaScriptObject resultState);

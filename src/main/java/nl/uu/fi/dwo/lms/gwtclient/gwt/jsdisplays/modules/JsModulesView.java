@@ -22,4 +22,14 @@ public class JsModulesView implements ModulesPresenter.Display{
     
     @Inject JsModulesView() {}
 
+    @Override
+    public void init() {
+        JsModulesDisplay.init();
+    }
+
+    @Override
+    public void setHelp(String url) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

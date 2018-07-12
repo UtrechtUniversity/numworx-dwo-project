@@ -18,6 +18,7 @@ import jsinterop.annotations.JsType;
 @JsType(isNative = true, name = "jsAddPersonDisplay", namespace = JsPackage.GLOBAL)
 //@JsType(isNative = false, namespace = JsPackage.GLOBAL)
 public class JsAddPersonDisplay {
+    public static native void init();
 
     /**
      * Clears all UI states

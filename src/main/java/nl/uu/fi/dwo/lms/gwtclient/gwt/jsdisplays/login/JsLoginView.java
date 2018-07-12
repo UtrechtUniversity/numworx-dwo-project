@@ -10,8 +10,14 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 public class JsLoginView implements LoginPresenter.Display{
 
     @Override
+    public void init() {
+//        JsLoginDisplay.init();
+    }
+
+
+    @Override
     public void clear(){
-        JsLoginDisplay.clear();
+      //  JsLoginDisplay.clear();
     }
     @Override
     public void setUsername(String username){
@@ -35,5 +41,10 @@ public class JsLoginView implements LoginPresenter.Display{
     @Override
     public void hideMsgBox() {
          JsLoginDisplay.hideMsgBox();
+    }
+
+    @Override
+    public void setHelp(String url) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

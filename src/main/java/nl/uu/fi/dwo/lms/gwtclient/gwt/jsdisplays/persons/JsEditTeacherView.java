@@ -27,6 +27,11 @@ public class JsEditTeacherView implements EditTeacherPresenter.Display{
     }
 
     @Override
+    public void init() {
+        JsEditPersonDisplay.init();
+    }
+
+    @Override
     public void setUser(DomUser user) {
         JsEditPersonDisplay.setUser(RoleType.TEACHER.name(), DomUserCodec.CODEC.encode(user).isObject().getJavaScriptObject());
     }

@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
@@ -53,8 +54,7 @@ public class ModulesPresenter {
         this.view = view;
     }
 
-    public interface Display {
-        public void clear();
+    public interface Display extends BasicDisplay{
         public void openUrl(String url);
     }
 
@@ -76,6 +76,7 @@ public class ModulesPresenter {
 
     public void init() {
       view.clear();
+      view.init();
       init = account.getBearerToken().then(this::gotToken,this::fail);
     }
 

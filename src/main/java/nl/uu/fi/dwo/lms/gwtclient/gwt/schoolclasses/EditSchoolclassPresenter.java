@@ -70,6 +70,7 @@ public class EditSchoolclassPresenter {
     }
 
     public void init(DomSchoolClass aSchoolClass) {
+        view.clear();
         view.init();
         view.setHelp(dwoGlobalVars.buildHelpUrl("#editSchoolclass"));
         updateViewData(aSchoolClass);

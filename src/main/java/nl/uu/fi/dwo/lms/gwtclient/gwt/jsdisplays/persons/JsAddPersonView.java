@@ -51,4 +51,9 @@ public class JsAddPersonView implements AddPersonPresenter.Display{
         JsAddPersonDisplay.setLoadingTableMessage();
     }
 
+    @Override
+    public void init() {
+        return;
+    }
+
 }

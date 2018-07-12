@@ -91,6 +91,7 @@ public class SelectedResultsPresenter {
 
     public void init(DomResultTree aResultTree, JavaScriptObject aResultState) {
         view.clear();
+        view.init();
         resultTree = aResultTree;
         resultState = aResultState;
         view.init(aResultState);

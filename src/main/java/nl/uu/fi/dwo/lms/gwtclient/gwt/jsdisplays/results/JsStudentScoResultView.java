@@ -58,6 +58,11 @@ public class JsStudentScoResultView implements StudentScoResultPresenter.Display
     }
 
     @Override
+    public void init() {
+      JsStudentScoResultDisplay.init();     
+    }
+    
+    @Override
     public void init(JavaScriptObject context) {
       JsStudentScoResultDisplay.init(context);     
     }

@@ -10,8 +10,6 @@ import javax.inject.Inject;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectedResultsPresenter;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 
 /**
  * Mapper to allow java interface implementation.
@@ -76,5 +74,10 @@ public class JsSelectedResultsView implements SelectedResultsPresenter.Display {
 //        LOG.log(Level.INFO, "studentTree json string is:\n " + students.toString());
         JsSelectedResultsDisplay.showPages(results.getJavaScriptObject());//,students.getJavaScriptObject());
     }        
+
+    @Override
+    public void init() {
+        JsSelectedResultsDisplay.init();
+    }
 
 }

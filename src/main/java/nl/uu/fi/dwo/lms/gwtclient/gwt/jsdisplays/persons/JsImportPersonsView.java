@@ -18,6 +18,11 @@ public class JsImportPersonsView implements ImportPersonsPresenter.Display{
 
     @Override
     public void clear() {
+        JsImportPersonsDisplay.clear();
+    }
+
+    @Override
+    public void init() {
         JsImportPersonsDisplay.init();
     }
 

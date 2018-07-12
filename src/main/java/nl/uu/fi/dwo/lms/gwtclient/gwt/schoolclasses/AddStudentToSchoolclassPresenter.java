@@ -40,9 +40,6 @@ public class AddStudentToSchoolclassPresenter {
     private List<DomStudent> studentsInClass;
 
     public interface Display extends BasicDisplay {
-
-        void init();
-
 //        void setSchoolClass(DomSchoolClassFull schoolClass);
         void showStudents(Map<String, DomStudent> students);
 

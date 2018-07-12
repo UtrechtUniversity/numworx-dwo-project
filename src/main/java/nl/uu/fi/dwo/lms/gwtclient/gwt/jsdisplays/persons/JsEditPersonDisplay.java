@@ -21,6 +21,7 @@ import jsinterop.annotations.JsType;
  */
 @JsType(isNative = true, name = "jsEditPersonDisplay", namespace = JsPackage.GLOBAL)
 public class JsEditPersonDisplay {
+    public static native void init();
 
     /**
      * Clears all UI states

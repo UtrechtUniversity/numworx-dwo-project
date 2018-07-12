@@ -19,7 +19,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
-import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -71,6 +70,7 @@ public class EditTeacherPresenter {
 
     public void init(DomUser aUser) {
         view.clear();
+        view.init();
         view.setHelp(dwoGlobalVars.buildHelpUrl("#editTeacher"));                
         view.setEmptyTableMessage();
         view.setUser(aUser);

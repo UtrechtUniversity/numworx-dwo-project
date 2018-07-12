@@ -19,8 +19,9 @@ import jsinterop.annotations.JsType;
 @JsType(isNative = true, name = "jsLoginDisplay", namespace = JsPackage.GLOBAL)
 //@JsType(isNative = false, namespace = JsPackage.GLOBAL)
 public class JsLoginDisplay{
+    public static native void init();
     /** Clears username and password fields of values. */
-    public static native void clear();
+//    public static native void clear();
     /** Sets the username field. */
     public static native void setUsername(String username);
     /** Returns the username field value. */

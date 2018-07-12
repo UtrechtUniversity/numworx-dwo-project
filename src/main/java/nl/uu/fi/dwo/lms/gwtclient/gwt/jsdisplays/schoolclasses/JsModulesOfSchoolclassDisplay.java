@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.json.client.JSONValue;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 

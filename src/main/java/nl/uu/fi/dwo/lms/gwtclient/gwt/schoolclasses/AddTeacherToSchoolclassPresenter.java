@@ -39,11 +39,6 @@ public class AddTeacherToSchoolclassPresenter {
     private Map<String, DomTeacher> teachers = new HashMap();
 
     public interface Display extends BasicDisplay {
-
-        void clear();
-
-        void init();
-
         void setSchoolClass(DomSchoolClass schoolClass);
         void showTeachers(Map<String, DomTeacher> teachers);
 

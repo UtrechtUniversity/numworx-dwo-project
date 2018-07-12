@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedDialogWithConfirmDeferred;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
@@ -69,13 +70,7 @@ public class LoginPresenter {
         this.resourceBindings = resourceBindings;
     }
 
-    public interface Display {
-
-        /**
-         * Clears the username and password in the ui.
-         */
-        public void clear();
-
+    public interface Display extends BasicDisplay{
         /**
          * Sets the username in the ui box.
          */
@@ -108,6 +103,8 @@ public class LoginPresenter {
     }
 
     final public void init() {
+//    view.init();
+//    view.clear();
 //        getView().setUsername(defaultUsername);
 //        getView().setPassword(defaultPassword);
     }

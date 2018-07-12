@@ -11,6 +11,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.ui;
  * @author plas0006
  */
 public interface BasicDisplay {
+    public void init();
     public void clear();
     public void setHelp(String url);
 

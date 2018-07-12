@@ -14,6 +14,7 @@ import jsinterop.annotations.JsType;
 @JsType(isNative = true, name = "jsWelcomeDisplay", namespace = JsPackage.GLOBAL)
 //@JsType(isNative = false, namespace = JsPackage.GLOBAL)
 public class JsWelcomeDisplay{
+    public static native void init();
     /** Clears Welcome text. */
     public static native void clear();
     /** Set the url for the welcome module */

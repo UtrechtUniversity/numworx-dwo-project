@@ -18,6 +18,7 @@ import jsinterop.annotations.JsType;
  */
 @JsType(isNative = true, name = "jsResultsDisplay", namespace = JsPackage.GLOBAL)
 public class JsResultsDisplay{
+    public static native void init();
     /** Clears the results in the ui. */
     public static native void clear();
     public static native void setHelp(String url);

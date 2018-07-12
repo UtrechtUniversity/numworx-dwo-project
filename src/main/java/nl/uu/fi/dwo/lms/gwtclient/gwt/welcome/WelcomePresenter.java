@@ -50,9 +50,6 @@ public class WelcomePresenter {
     }
 
     public interface Display extends BasicDisplay {
-
-        public void clear();
-        public void setHelp(String url);
         public void setDefaultText();
         public void setWelcomeText(String html);
     }
@@ -65,6 +62,7 @@ public class WelcomePresenter {
 //    @JsMethod not required unless testing stuff.
     public void init() {
         view.clear();
+        view.init();
         view.setWelcomeText("<h1>Welkom</h1>\n"
                 + "            \n"
                 + "            <p>Rechtsboven vind u een menu knop achter uw naam. In het menu vind u de volgende opties:</p>"
