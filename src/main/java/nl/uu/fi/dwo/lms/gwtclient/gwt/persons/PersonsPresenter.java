@@ -76,6 +76,7 @@ public class PersonsPresenter {
         view.init();
         view.setHelp(dwoGlobalVars.buildHelpUrl("#persons"));
         view.setEmptyTableMessage();
+        showStudentList();
     }
 
     @JsMethod
