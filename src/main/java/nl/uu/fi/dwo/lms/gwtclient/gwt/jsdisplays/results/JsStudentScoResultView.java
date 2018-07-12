@@ -59,7 +59,7 @@ public class JsStudentScoResultView implements StudentScoResultPresenter.Display
 
     @Override
     public void init() {
-      JsStudentScoResultDisplay.init();     
+      JsStudentScoResultDisplay.init0();     
     }
     
     @Override

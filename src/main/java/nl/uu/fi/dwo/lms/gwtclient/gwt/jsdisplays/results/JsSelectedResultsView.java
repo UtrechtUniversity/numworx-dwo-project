@@ -77,7 +77,7 @@ public class JsSelectedResultsView implements SelectedResultsPresenter.Display {
 
     @Override
     public void init() {
-        JsSelectedResultsDisplay.init();
+        JsSelectedResultsDisplay.init0();
     }
 
 }

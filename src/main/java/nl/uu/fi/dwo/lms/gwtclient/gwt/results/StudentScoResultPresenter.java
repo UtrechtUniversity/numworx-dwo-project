@@ -77,7 +77,6 @@ public class StudentScoResultPresenter {
   }
 
   public void init(DomResultTree aResultTree, DomResultStudentScoContext ssc, JavaScriptObject context, Map<String,String> userState) {
-    view.init();
     LOG.fine("entering init");
     resultTree = aResultTree;
     this.userState = userState;
