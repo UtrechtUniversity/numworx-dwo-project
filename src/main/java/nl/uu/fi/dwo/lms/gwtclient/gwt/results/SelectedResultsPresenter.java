@@ -55,6 +55,8 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  */
 public class SelectedResultsPresenter {
 
+    private static final long PREPARE_TIMEOUT = 1000L;
+
     private static final Logger LOG = Logger.getLogger(SelectedResultsPresenter.class.getName());
 
 	private final LoggingFailure FAILURE;
@@ -170,14 +172,18 @@ public class SelectedResultsPresenter {
     	return null;
     }
     
+    long prepareStart = Long.MAX_VALUE;
+    
     @JsMethod public void preparePages(String scoid, String classid) {
+      prepareStart = System.currentTimeMillis();
+      view.setLoadingTableMessage();
       LOG.log(Level.FINE, "scoid = " + scoid + " classid = " + classid);
       PersistenceId sco = new PersistenceId(scoid);
       PersistenceId schoolclass = new PersistenceId(classid);
       preparePages(schoolclass, sco ).then(p-> {view.updateResultTree(resultTree);return null;}, p-> LOG.log(Level.SEVERE, "preparePages", p.getFailure()))
       .then(p-> {
+          prepareStart = Long.MAX_VALUE;
           view.showPages(resultTree);
-        //eventBus.fireEvent(new SwitchViewEvent(SelectedView.SELECTEDRESULTS, resultTree, context));
         return null;
       }, FAILURE);
     }
@@ -197,16 +203,12 @@ public class SelectedResultsPresenter {
 		
 		DomStudent student = domschoolclass.getChildren().get(key).getStudent();
 		DomScoContext sco = new DomScoContext(); sco.setId(new PersistenceId(scoid));
-        Promise<Object> p0 = preparePages(schoolclass, sco.getId()).then(p-> {
-          LOG.log(Level.FINE, "prepare pages done\n" + resultTree.getResultTree());
-          view.updateResultTree(resultTree);
-        return null;}, p-> LOG.log(Level.WARNING, "preparePages", p.getFailure())).fallbackTo(Promises.resolved(null));
 		Promise<DomStudentScoContext> p1 = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), Collections.singletonList(student))
 		.map(p -> p.getStudentScoContexts().get(0).getValue());		
 		Promise<JSONValue> p2 = resultService.getJSONLaunchDataBytes(sco, domschoolclass.getSchoolClass());		
 		Promise<Map<String,String>> p3 = p1.then(  p-> resultService.getValues(p.getValue()));
     	
-		Promises.all(p0,p1,p2,p3).then(new Success<Object, Object>() {
+		Promises.all(p2,p3).then(new Success<Object, Object>() {
 
 			@Override
 			public Promise<Object> call(Promise<Object> resolved) throws Exception {
@@ -224,7 +226,17 @@ public class SelectedResultsPresenter {
                 eventBus.fireEvent(new SwitchViewEvent(SelectedView.RESULTSSTUDENT, resultTree, ssc, context, userState));
 				return null;
 			}
-		}, FAILURE);
+		}, FAILURE)
+		.onResolve(() -> {
+		  preparePages(schoolclass, sco.getId()).then(
+		    p-> {
+              LOG.log(Level.FINE, "prepare pages done");
+              view.updateResultTree(resultTree);
+              return null;
+          }, 
+		    p-> LOG.log(Level.WARNING, "preparePages", p.getFailure()));
+		  
+		});
 				
     	
     	
@@ -274,6 +286,12 @@ public class SelectedResultsPresenter {
             Map<PersistenceId, DomResultStudentScoPage> children = Util.getPages(launchdata, suspend_data, review_data);
             LOG.info("setChildren for " + ssc.getId() + " " + children);
             ssc.setChildren(children);
+            if (System.currentTimeMillis() - PREPARE_TIMEOUT > prepareStart ) {
+              LOG.info("timeout: showPages");
+              view.showPages(resultTree);
+              prepareStart = System.currentTimeMillis();
+            }
+            
             return preparePages(schoolclass, scocontext, iterator);
           }}).recoverWith(p -> preparePages(schoolclass,scocontext, iterator));
       }
