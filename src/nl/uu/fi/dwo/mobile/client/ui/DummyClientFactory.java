@@ -78,6 +78,7 @@ public class DummyClientFactory implements ClientFactory {
 		return handler;
 	}
 
+	@Inject
 	public void setEntryView(ViewModuleView entryView) {
 		this.entryView = entryView;
 	}
