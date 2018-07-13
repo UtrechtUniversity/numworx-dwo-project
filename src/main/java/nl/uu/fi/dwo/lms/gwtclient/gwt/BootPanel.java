@@ -1,9 +1,11 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.DaggerBootComponent;
 
@@ -21,8 +23,27 @@ public class BootPanel  implements EntryPoint, Window.ClosingHandler{
         //nothing is nice.
     }
 
+    private static native void jsInitMainApp() /*-{
+        $wnd.jsInitMainApp()
+    }-*/;
+    
+    int cnt;
     @Override
     public void onModuleLoad() {
+        try {
+          jsInitMainApp();
+        } catch(Exception oops) {
+          LOG.log(Level.SEVERE, "jsInitMainApp", oops);
+          Timer t = new Timer() {
+
+            @Override
+            public void run() {
+                if(cnt++ < 10) 
+                onModuleLoad(); // retry
+            }};
+          t.schedule(100);
+          return;
+        }
         //init teacher app
         controller = DaggerBootComponent.create().controller();
         controller.go(RootLayoutPanel.get());
