@@ -61,7 +61,6 @@ public class ResultsPresenter {
     @Inject ResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-        //resultService = new ResultsService(dwoGlobalVars);
         FAILURE = new LoggingFailure(LOG, anEventBus);
 
     }

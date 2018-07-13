@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  *
  */
 class Util {
+  private static final JSONNumber NUMBER_NUL = new JSONNumber(0);
   private static final JSONNumber[] EMPTY_NUMBERS = new JSONNumber[0];
   private static final Logger LOG = Logger.getLogger(Util.class.getName());
 
@@ -107,17 +108,22 @@ class Util {
     if(review_data == null || !review_data.startsWith("{"))
         return EMPTY_NUMBERS;
     
-    JSONObject review = JSONParser.parseLenient(review_data).isObject();
-    JSONArray  data = review.get("opdrContStates").isArray().get(0).isArray();
-    JSONNumber[] result = new JSONNumber[data.size()];
-    for(int i = 0; i < result.length; i++) {
-      result[i] = new JSONNumber(0); // TODO ....
-      JSONValue value = data.get(i);
-      if(value != null) {
-        result[i] = new JSONNumber(sumCorrectie(value));
+    try {
+      JSONObject review = JSONParser.parseLenient(review_data).isObject();
+      JSONArray  data = review.get("opdrContStates").isArray().get(0).isArray();
+      JSONNumber[] result = new JSONNumber[data.size()];
+      for(int i = 0; i < result.length; i++) {
+        result[i] = NUMBER_NUL; // TODO ....
+        JSONValue value = data.get(i);
+        if(value != null) {
+          result[i] = new JSONNumber(sumCorrectie(value));
+        }
       }
+      return result;
+    } catch (Exception e) {
+        LOG.log(Level.WARNING, "getCorrectie catch", e);
+        return EMPTY_NUMBERS;
     }
-    return result;
   }
 
   private static double sumCorrectie(JSONValue value) {

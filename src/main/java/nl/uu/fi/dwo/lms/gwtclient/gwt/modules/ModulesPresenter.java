@@ -1,22 +1,26 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.modules;
 
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Lazy;
 import fi.dwo.gwt.lib.rest.util.Base64;
+import jsinterop.annotations.JsMethod;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
+import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.BootPanelController;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
@@ -33,7 +37,12 @@ public class ModulesPresenter {
     private final static boolean IFRAME = true;
     
     private static final Logger LOG = Logger.getLogger(ModulesPresenter.class.getName());
-    private EventBus eventBus;
+
+    private static final String SHOWMAINNAV = "showMainNav";
+    private static final String HIDEMAINNAV = "hideMainNav";
+
+    private final Failure FAILURE;
+    private final EventBus eventBus;
     private Display view;
     private String url="/dwo/tablet/DWOplayer.jsp";
     @Inject AccountService account;
@@ -56,10 +65,15 @@ public class ModulesPresenter {
 
     public interface Display extends BasicDisplay{
         public void openUrl(String url);
+
+        public void setMainNavVisible(boolean b);
+        public boolean isMainNavVisible();
     }
 
     @Inject ModulesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
+        FAILURE = new LoggingFailure(LOG, anEventBus);
+        injectEventListener(this);
     }
 
 //    @JsMethod not required unless testing stuff.
@@ -77,7 +91,7 @@ public class ModulesPresenter {
     public void init() {
       view.clear();
       view.init();
-      init = account.getBearerToken().then(this::gotToken,this::fail);
+      init = account.getBearerToken().then(this::gotToken,FAILURE);
     }
 
     /*
@@ -85,21 +99,31 @@ public class ModulesPresenter {
      */
     public Promise<String> gotToken(Promise<String> resolved) {
      String token = "2\f" + resolved.getValue(); //format 2
-     StringBuilder u = new StringBuilder(url);
-     u.append( "?a=" ).append(Base64.btoa(token)); // User Auth Token
+     UrlBuilder u = new UrlBuilder();
+     u.setPath(url);
+     u.setProtocol(Location.getProtocol());
+     u.setHost(Location.getHost());
+     u.setParameter("a",Base64.btoa(token)); // User Auth Token
      if(IFRAME)
-       u.append( "&header=none");
-     u.append("&dwo_env=test");
+       u.setParameter( "header","none");
+     u.setParameter("dwo_env","test");
+     String base = Location.getParameter("base");
+     if(base != null) {
+       u.setParameter("base",base);
+     }
      String profile = Location.getParameter("profile");
      if(profile == null || profile.isEmpty()) profile = "77";
-     u.append("&profile=").append(profile);
+     u.setParameter("profile",profile);
      String locale = LocaleInfo.getCurrentLocale().getLocaleName();
      if ("default".equals(locale) ) locale =  "nl";
-     u.append("&locale=").append(locale);
-     String string = u.toString();
+     u.setParameter("locale",locale);
+     String string = u.buildString();
      LOG.info("open URL " + string);
      if(IFRAME)
+     {
+       view.setMainNavVisible(false);
        view.openUrl(string);
+     }
      else {
        controller.get().setSession(false); // LEAVING.....
        Location.replace(string);
@@ -107,18 +131,46 @@ public class ModulesPresenter {
      return Promises.resolved(string);
     }
     
-    /*
-     * send failure event.
-     */
-    public void fail(Promise<?> resolved) {
-      Throwable fail = resolved.getFailure();
-      if (fail instanceof Dwo2Exception) {
-          LOG.log(Level.SEVERE, fail.getMessage());
-          eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail)); // FIXME which event type?
-      } else {
-          LOG.log(Level.SEVERE, fail.getMessage());
-          eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-      }
-  }
+//    /*
+//     * send failure event.
+//     */
+//    public void fail(Promise<?> resolved) {
+//      Throwable fail = resolved.getFailure();
+//      if (fail instanceof Dwo2Exception) {
+//          LOG.log(Level.SEVERE, fail.getMessage());
+//          eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail)); // FIXME which event type?
+//      } else {
+//          LOG.log(Level.SEVERE, fail.getMessage());
+//          eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
+//      }
+//  }
 
+    private native void injectEventListener(ModulesPresenter p) /*-{
+      function postMessageListener(e) {
+          var curUrl = $wnd.location.protocol + "//" + $wnd.location.hostname;
+          //if (e.origin !== curUrl) return; // security check to verify that we receive event from trusted source
+          p.@nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter::onMessage(Ljava/lang/String;)(e.data); // call function with the name
+      }
+      // Listen to message from child window
+      if (window.addEventListener) {
+          // "Normal" browsers
+          $wnd.addEventListener("message", postMessageListener, false);
+      } else {
+          // fucking IE
+          $wnd.attachEvent("onmessage", postMessageListener, false);
+      }
+    }-*/;
+
+    
+    
+    @JsMethod
+    public void onMessage(String message) {
+        LOG.fine("onMessage " + message);
+        if (SHOWMAINNAV.equals(message)) {
+          view.setMainNavVisible(true);
+        } else
+        if (HIDEMAINNAV.equals(message)) {
+          view.setMainNavVisible(false);
+        }
+    }
 }

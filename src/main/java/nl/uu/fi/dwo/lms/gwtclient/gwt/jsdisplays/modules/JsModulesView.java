@@ -32,4 +32,14 @@ public class JsModulesView implements ModulesPresenter.Display{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public void setMainNavVisible(boolean b) {
+        JsModulesDisplay.setMainNavVisible(b);
+      
+    }
+
+    @Override
+    public boolean isMainNavVisible() {
+        return JsModulesDisplay.isMainNavVisible();
+    }
 }

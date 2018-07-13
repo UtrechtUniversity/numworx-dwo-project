@@ -20,4 +20,8 @@ public class JsModulesDisplay {
     public static native void clear();
 
     public static native void openUrl(String url);
+
+    public static native void setMainNavVisible(boolean b);
+
+    public static native boolean isMainNavVisible();
 }
