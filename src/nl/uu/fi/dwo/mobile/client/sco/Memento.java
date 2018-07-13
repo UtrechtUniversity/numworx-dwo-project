@@ -274,7 +274,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 				
 			}
 		} catch (Exception e) {
-			logger.log(Level.SEVERE,"mergeReviewData", e);
+			logger.log(Level.WARNING,"mergeReviewData catch", e);
 		}
 		return opdrContStates;
 	}
