@@ -9,9 +9,17 @@
 	String profile = request.getParameter("profile");
 	if(profile == null) profile="77";
 	String dwo_env = System.getProperty("DWO_ENV", "app");
+	String base = request.getParameter("base");
+// FIXME too much urls allowed
+	if(base == null || base.contains("'")) 
+	  base = "";
+	else {
+	  base = "<base href='" + base + "'>"; 
+	}
 %>
 <html>
   <head>
+    <%=base %>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
     <link type="text/css" rel="stylesheet" href="DWOplayer.css">
