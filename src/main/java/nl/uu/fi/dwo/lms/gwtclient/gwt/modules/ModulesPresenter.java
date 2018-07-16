@@ -4,6 +4,7 @@ import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import dagger.Lazy;
 import fi.dwo.gwt.lib.rest.util.Base64;
@@ -22,6 +23,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.BootPanelController;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEventHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
@@ -32,7 +35,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  *
  * @author G.A.J. van der Plas
  */
-public class ModulesPresenter {
+public class ModulesPresenter implements SwitchViewEventHandler {
 
     private final static boolean IFRAME = true;
     
@@ -48,6 +51,8 @@ public class ModulesPresenter {
     @Inject AccountService account;
     private Promise<String> init;
     @Inject Lazy<BootPanelController> controller; // lazy anders cycle
+
+    private HandlerRegistration register;
 
     /**
      * @return the view
@@ -82,6 +87,10 @@ public class ModulesPresenter {
         init();
       } 
         init.then(p-> {
+          view.setMainNavVisible(false);
+          if(register == null)
+            register = eventBus.addHandler(SwitchViewEvent.TYPE, this);
+
           LOG.info("switch to modules view " + p.getValue());
           eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.MODULESVIEW));
           return null;
@@ -121,7 +130,6 @@ public class ModulesPresenter {
      LOG.info("open URL " + string);
      if(IFRAME)
      {
-       view.setMainNavVisible(false);
        view.openUrl(string);
      }
      else {
@@ -172,5 +180,18 @@ public class ModulesPresenter {
         if (HIDEMAINNAV.equals(message)) {
           view.setMainNavVisible(false);
         }
+    }
+
+    @Override
+    public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
+      SelectedView select = switchViewEvent.getEventValue();
+      if(select == SelectedView.MODULES||select == SelectedView.MODULESVIEW)
+        return;
+// switch to other view.     
+      LOG.info("switch " + select);
+      if(register != null) {
+        register.removeHandler();register = null;
+      }
+      view.setMainNavVisible(true);
     }
 }
