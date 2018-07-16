@@ -1,11 +1,11 @@
 package nl.uu.fi.dwo.mobile;
 
-import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
-
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
+
+import nl.uu.fi.dwo.mobile.client.dagger.DaggerWiskOpdrComponent;
 
 public class NoordhoffPlayer extends WiskOpdrPlayer {
 
@@ -27,9 +27,13 @@ public class NoordhoffPlayer extends WiskOpdrPlayer {
 		view.zetMaatNoordhoff();
 	}
 
-	@Override
-	protected ViewModuleViewImpl createEntryVlew() {
-		return new ViewModuleViewImpl(true).initialize();
-	}
+	  protected void inject() {
+
+	    DaggerWiskOpdrComponent.builder()
+	    .moduleView(new ModuleViewModuleImpl(true))
+	    .build()
+	    .inject(this);
+	  }
+
 	
 }

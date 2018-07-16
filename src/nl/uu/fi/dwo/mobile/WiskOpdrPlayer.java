@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.mobile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -22,9 +24,12 @@ import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 import fi.dwo.gwt.lib.rest.DwoConstants;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.mobile.client.dagger.DaggerWiskOpdrComponent;
+import nl.uu.fi.dwo.mobile.client.dagger.ModuleViewModule;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.sco.WiskOpdrMemento;
+import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.DummyClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
@@ -46,8 +51,14 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 	
 	private static final String LAUNCH_DATA = "cmi.launch_data";
 	private static Logger logger = Logger.getLogger("WiskOpdrPlayer");
-	protected ViewModuleViewImpl view;
 
+	@Inject protected ViewModuleViewImpl view;
+	@Inject void setClientFactory(ClientFactory f) {
+	  DWOplayer.clientfactory = f;
+	}
+	
+	
+	
 	@Override
 	public void onModuleLoad() {
 		setupConsole();  // neem console op
@@ -64,17 +75,12 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 //			RootPanel.get().add(customLogArea);
 //		}
 
-		DummyClientFactory dummyClientFactory = new DummyClientFactory();
-		DWOplayer.clientfactory = dummyClientFactory;
-		
-		dummyClientFactory.getEventBus().addHandler(CBookEvent.TYPE, this);
-		MGWTsetup();
-		
-		DWOplayer.DWO_BUNDLE.dwoplayercss().ensureInjected();
-		
-		view = createEntryVlew();
-
-		dummyClientFactory.setEntryView(view);
+		inject();
+				
+		DWOplayer.clientfactory.getEventBus().addHandler(CBookEvent.TYPE, this);
+        MGWTsetup();
+        
+        DWOplayer.DWO_BUNDLE.dwoplayercss().ensureInjected();
 
 		zetMaat();
 		
@@ -109,12 +115,43 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 		
 	}
 
+
+
+  protected void inject() {
+//    DummyClientFactory dummyClientFactory = new DummyClientFactory();
+//    DWOplayer.clientfactory = dummyClientFactory;
+//    view = createEntryView(false);
+//    dummyClientFactory.setEntryView(view);
+
+    DaggerWiskOpdrComponent.builder().moduleView(new ModuleViewModuleImpl()).build().inject(this);
+  }
+
 	/**
 	 * Factory method pattern. Initialize clientFactory
 	 * @return
 	 */
-	protected ViewModuleViewImpl createEntryVlew() {
-		return new ViewModuleViewImpl(false) {
+	
+	class ModuleViewModuleImpl extends ModuleViewModule {
+	    boolean header = false;
+
+	    ModuleViewModuleImpl() {
+      }
+
+
+      ModuleViewModuleImpl(boolean header) {
+        this.header = header;
+      }
+
+
+      @Override
+    protected ViewModuleViewImpl getViewModuleView() {
+      return createEntryView(header);
+    }
+	  
+	}
+		
+	protected final ViewModuleViewImpl createEntryView(boolean header) {
+		return new ViewModuleViewImpl(header) {
 			@Override
 			protected Memento createMemento() {
 				return new WiskOpdrMemento(getApi(), this, studentModel); // terminate at close, no "almost" close
