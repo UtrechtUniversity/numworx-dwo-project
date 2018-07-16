@@ -374,7 +374,7 @@ public class SecuredUserScoDataManager {
 
 		if(match != null) {
 	      String etag = buildETag(pssc, pssd);
-	        if (!etag.equals(match.getValue()))
+	        if (!etag.equals(normalizeETag(match.getValue())))
 	                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Wrong if-match", Response.Status.PRECONDITION_FAILED);
 	    }
 
@@ -499,6 +499,7 @@ public class SecuredUserScoDataManager {
 		if (match != null) {
 		  EntityTag t = EntityTag.valueOf(match);
 		  match = t.getValue();
+		  match = normalizeETag(match);
 		}
 		DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
         PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
@@ -551,6 +552,13 @@ public class SecuredUserScoDataManager {
 				.tag(etag)
 				.build();
 	}
+
+
+  private String normalizeETag(String match) {
+    if(match.endsWith("-gzip")) // Apache adds -gzip to etag 
+      match = match.substring(0, match.length()-5);
+    return match;
+  }
 
 	private String buildETag(PersistentStudentScoContext ssContext, PersistentStudentScoData ssData) {
 		if (ssContext == null | ssData == null)
