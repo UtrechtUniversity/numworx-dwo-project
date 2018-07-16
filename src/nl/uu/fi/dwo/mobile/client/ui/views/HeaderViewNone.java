@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -37,9 +38,10 @@ public class HeaderViewNone extends HTML implements HeaderView {
   
   @Override
   public void hide() {
+      Actions.hideMainNav.execute();
       LayoutPanel p = RootLayoutPanel.get(); // parent of header
       p.setWidgetVisible(this, false);
-      navigation.show();
+      navigation.hide();
       p.setWidgetTopBottom(root, -50, Unit.PX, 0, Unit.PX);     
       p.setWidgetTopBottom(navigation, 0, Unit.PX, 0, Unit.PX);
   }

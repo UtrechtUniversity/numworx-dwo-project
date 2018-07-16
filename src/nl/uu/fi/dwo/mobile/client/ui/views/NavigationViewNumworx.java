@@ -51,6 +51,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.util.Base64;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -396,4 +397,8 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
       dock.setWidgetHidden(beheer, none||!visible);
     }
 	
+    @UiHandler("bibliotheek") void onModules(ClickEvent e) {
+    	if(Actions.isAvailable())
+    		Actions.showMainNav.execute();
+    }
 }

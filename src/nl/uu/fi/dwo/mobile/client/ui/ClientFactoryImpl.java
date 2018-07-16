@@ -88,7 +88,7 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	final Provider<HeaderView> headerView;
 		
 	{
-	  if ("none".equals(Location.getParameter("header")) )
+	  if (Actions.isAvailable() )
 	  {
 	    HeaderViewNone headerViewNone = new HeaderViewNone();
 	    headerView = () -> headerViewNone;

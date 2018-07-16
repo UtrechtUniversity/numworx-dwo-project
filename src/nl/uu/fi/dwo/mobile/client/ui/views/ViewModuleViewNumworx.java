@@ -35,6 +35,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
@@ -76,6 +77,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		if(DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB) {
 			removeBtns();
 		}
+		up2Btn.setVisible(Actions.isAvailable());
 		root.forceLayout();
 	}
 
@@ -112,7 +114,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	@UiField
 	FocusPanel homeBtn;
 	@UiField
-	FocusPanel upBtn;
+	FocusPanel upBtn,up2Btn;
 	@UiField Label loginLabel;
 //	@UiField ToggleButton fullBtn;
 	@UiField Label title;
@@ -266,7 +268,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	
 	private Object upId;
 	private Presenter presenter;
-	@UiHandler("upBtn")
+	@UiHandler({"upBtn","up2Btn"})
 	void onUpBtn(ClickEvent ev) {
 		Object parent = upId;
 		if(parent == null) parent = "0";
