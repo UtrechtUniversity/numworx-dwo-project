@@ -8,6 +8,7 @@
 	<inherits name="nl.uu.fi.dwo.mobile.DWOplayer-module" />
 	<inherits name="nl.uu.fi.dwo.keyboard.KeyboardGWT-DWO" />
   	<inherits name="nl.uu.fi.dwo.account.Account-DWO" />
+  	<inherits name="dagger.Dagger" />
 	
 	<add-linker name='xsiframe' />
 	

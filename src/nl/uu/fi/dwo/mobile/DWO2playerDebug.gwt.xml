@@ -27,6 +27,7 @@
    <inherits name="nl.uu.fi.dwo.mobile.DWOplayer-module"/>
 	<inherits name="nl.uu.fi.dwo.keyboard.KeyboardGWT-DWO" />
    <inherits name='nl.numworx.gwtpatch.GWTPatch' />
+   <inherits name="dagger.Dagger" />
 
 <!--  <inherits name="fi.kladjegwt.KladjeGWT-DWO" /> --> 
 <!--  <inherits name="fi.balansfruitgwt.BalansFruitGWT-DWO" /> -->
