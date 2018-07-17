@@ -42,4 +42,10 @@ public class JsModulesView implements ModulesPresenter.Display{
     public boolean isMainNavVisible() {
         return JsModulesDisplay.isMainNavVisible();
     }
+
+    @Override
+    public void sendMessage(String message) {
+      JsModulesDisplay.sendMessage(message);
+      
+    }
 }

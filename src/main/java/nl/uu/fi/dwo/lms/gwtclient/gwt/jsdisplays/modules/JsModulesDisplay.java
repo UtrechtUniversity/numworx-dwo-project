@@ -24,4 +24,6 @@ public class JsModulesDisplay {
     public static native void setMainNavVisible(boolean b);
 
     public static native boolean isMainNavVisible();
+
+    public static native void sendMessage(String message);
 }

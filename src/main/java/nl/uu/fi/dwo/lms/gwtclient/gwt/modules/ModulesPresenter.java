@@ -43,6 +43,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
 
     private static final String SHOWMAINNAV = "showMainNav";
     private static final String HIDEMAINNAV = "hideMainNav";
+    private static final String ISMAINNAVVISIBLE = "isMainNavVisible";
 
     private final Failure FAILURE;
     private final EventBus eventBus;
@@ -73,6 +74,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
 
         public void setMainNavVisible(boolean b);
         public boolean isMainNavVisible();
+        public void sendMessage(String message);
     }
 
     @Inject ModulesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -93,6 +95,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
 
           LOG.info("switch to modules view " + p.getValue());
           eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.MODULESVIEW));
+          view.sendMessage(HIDEMAINNAV);
           return null;
         });
     }
@@ -115,7 +118,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
      u.setParameter("a",Base64.btoa(token)); // User Auth Token
      if(IFRAME)
        u.setParameter( "header","none");
-     u.setParameter("dwo_env","test");
+     //u.setParameter("dwo_env","test");
      String base = Location.getParameter("base");
      if(base != null) {
        u.setParameter("base",base);
@@ -176,9 +179,14 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         LOG.fine("onMessage " + message);
         if (SHOWMAINNAV.equals(message)) {
           view.setMainNavVisible(true);
+          view.sendMessage(SHOWMAINNAV);
         } else
         if (HIDEMAINNAV.equals(message)) {
           view.setMainNavVisible(false);
+          view.sendMessage(HIDEMAINNAV);
+        }
+        if (ISMAINNAVVISIBLE.equals(message)) {
+          view.sendMessage( view.isMainNavVisible() ? SHOWMAINNAV : HIDEMAINNAV);
         }
     }
 
@@ -193,5 +201,6 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         register.removeHandler();register = null;
       }
       view.setMainNavVisible(true);
+      view.sendMessage(SHOWMAINNAV);
     }
 }
