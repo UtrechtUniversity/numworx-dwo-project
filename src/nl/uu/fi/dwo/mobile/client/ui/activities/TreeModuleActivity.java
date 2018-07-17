@@ -11,7 +11,10 @@ import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
+import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
@@ -30,7 +33,7 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 
-public class TreeModuleActivity extends MGWTAbstractActivity implements GotoController
+public class TreeModuleActivity extends MGWTAbstractActivity implements GotoController, MessageEventHandler
 {
 
 	ClientFactory clientFactory;
@@ -49,10 +52,14 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements GotoCont
 	{
 		view = clientFactory.getTreeModuleView();
 		
-		view.setBeheer(clientFactory.getRoleType() == RoleType.TEACHER);
+		boolean teacher = clientFactory.getRoleType() == RoleType.TEACHER;
+        view.setBeheer(teacher);
+ 
+        if(teacher) {
+          eventBus.addHandler(MessageEvent.TYPE, this);
+          onMessage(MessageEvent.getLastEvent());          
+        }
 		
-		//if(true)
-		view.setMenuWidget(clientFactory.getMenuWidget());
 		if(item.getType() == Type.MODULE && DWOplayer.withUser()) {
 			Object userID = DWOplayer.clientfactory.getUserID();
 		if(userID != null && item.getPromisedScoreMap() == null) {
@@ -116,5 +123,15 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements GotoCont
 	public void goTo(Place place) {
 		clientFactory.getPlaceController().goTo(place);
 	}
+
+  @Override
+  public void onMessage(MessageEvent event) {
+      String message = event.getMessage();
+      if(Actions.showMainNav.getCommand().equals(message))
+          view.showIcon(false);
+      if(Actions.hideMainNav.getCommand().equals(message))
+        view.showIcon(true);
+    
+  }
 
 }

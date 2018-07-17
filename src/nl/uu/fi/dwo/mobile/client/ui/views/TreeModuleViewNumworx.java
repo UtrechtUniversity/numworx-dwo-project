@@ -575,11 +575,6 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	}
 
 	@Override
-	public void setMenuWidget(IsWidget w) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
 	public void gotoUrl(String href) {
 		gotoSelected(href, selection);		
 	}
@@ -650,4 +645,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
     westPanel.setBeheer(b);
   }
 
+  @Override
+  public void showIcon(boolean b) {
+    westPanel.showIcon(b);
+  }
 }

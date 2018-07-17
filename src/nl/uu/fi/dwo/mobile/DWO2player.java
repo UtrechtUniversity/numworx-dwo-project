@@ -34,8 +34,10 @@ import nl.uu.fi.dwo.account.client.UserBar;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO4;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
+import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
+import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -86,42 +88,42 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 	}
 	
 	
-	@Override
-	public void setupDWOPlayer() {
-		super.setupDWOPlayer();
-		if( MGWT.getOsDetection().isAndroid() )
-			getUserBar().getElement().getStyle().setColor("white");
-        getUserBar().setResetLogin(new Command() {
-        	Place place = new ReloginPlace(); // FIXME met een hash?
-        	
-			@Override
-			public void execute() {
-				clientfactory.getPlaceController().goTo(place);
-			}
-        	
-        });
+//	@Override
+//	public void setupDWOPlayer() {
+//		super.setupDWOPlayer();
+//		if( MGWT.getOsDetection().isAndroid() )
+//			getUserBar().getElement().getStyle().setColor("white");
+//        getUserBar().setResetLogin(new Command() {
+//        	Place place = new ReloginPlace(); // FIXME met een hash?
+//        	
+//			@Override
+//			public void execute() {
+//				clientfactory.getPlaceController().goTo(place);
+//			}
+//        	
+//        });
+//
+//	}
 
-	}
 
-
-	private UserBar userBar;
-
-	protected UserBar getUserBar() {
-		if (userBar == null) 
-			userBar = new UserBar(clientfactory.getEventBus());
-		return userBar;
-	}
+//	private UserBar userBar;
+//
+//	protected UserBar getUserBar() {
+//		if (userBar == null) 
+//			userBar = new UserBar(clientfactory.getEventBus());
+//		return userBar;
+//	}
 
 	
 	protected ClientFactory createClientFactory() {
 		ClientFactoryImpl factory = new ClientFactoryImpl() { 
 			
-			private IsWidget  menuWidget;
+//			private IsWidget  menuWidget;
 			private TrafficAgent agent = new TrafficAgent();
-			@Override
-			public IsWidget getMenuWidget() {
-				return menuWidget;
-			}
+//			@Override
+//			public IsWidget getMenuWidget() {
+//				return menuWidget;
+//			}
 			
 			@Override
 			public void addBarrier(Promise<?> p) {
@@ -135,9 +137,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			@Override
 			public LoginView getLoginView()
 			{
-				if (loginView == null)
-					if(NUMWORX) loginView = new Login3ViewImpl(); else
-					loginView = new Login2ViewImpl();
+				if (loginView == null) loginView = new Login3ViewImpl();
 				return loginView;
 			}
 			private Promise<Void> superLogout() {
@@ -151,7 +151,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 
 							@Override
 							public Promise<Void> call(Promise<Void> resolved) throws Exception {
-								menuWidget = null;
+//								menuWidget = null;
 								if(withUser()) {
 									return getRPCHandler().logout();
 								}
@@ -176,13 +176,13 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 				SCORM_guest api;
 				if(!withUser()) {
 					api = new SCORM_guest();
-					menuWidget = null;
+//					menuWidget = null;
 				} else {					
 					api = new SCORM_DWO4();
-					menuWidget = getUserBar();
-					
-					userBar.setRole(getRoleType());
-
+//					menuWidget = getUserBar();
+//					
+//					userBar.setRole(getRoleType());
+//
 				}
 				return api;
 			}
@@ -244,7 +244,8 @@ public class DWO2player extends DWOplayer implements EntryPoint {
         style.ensureInjected();
         MsgDialogView mdv = new MsgDialogView(mdp, style);
         
-		
+		MessageEvent.initialize(factory.getEventBus());
+		Actions.isMainNavVisible.execute();
 		return factory;
 	}
 

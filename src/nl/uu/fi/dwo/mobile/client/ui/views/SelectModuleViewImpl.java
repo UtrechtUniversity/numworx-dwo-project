@@ -227,7 +227,6 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView,
 		return list.addCellSelectedHandler(cellSelectedHandler);
 	}
 
-	@Override
 	public void setMenuWidget(IsWidget w) {
 		header.setRightWidget(Widget.asWidgetOrNull(w));
 	}

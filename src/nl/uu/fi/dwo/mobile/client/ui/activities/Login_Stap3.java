@@ -1,12 +1,19 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
+import javax.inject.Inject;
+
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.user.client.Window;
 
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
+import fi.dwo.gwt.lib.rest.util.Base64;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -15,7 +22,32 @@ final class Login_Stap3 implements Success<Void, Void> {
 
 	ClientFactory clientFactory;
 	Place next;
-	
+
+	@Inject SecuredUserAccountManager account = new SecuredUserAccountManager();
+    
+  private Promise<Void> gotoGwtClient(String page) {
+    final String url = "/gwtclient/index.html";
+    return account.getBearerToken().then(
+      resolved-> {
+        String token = "2\f" + resolved.getValue(); //format 2
+        StringBuilder u = new StringBuilder(url);
+        u.append( "?a=" ) .append (Base64.btoa(token)); // User Auth Token
+        u.append( "&test=on");
+        String profile = String.valueOf(DWOplayer.PROFILE_ID);
+        u.append("&profile=").append(profile);
+        String locale = LocaleInfo.getCurrentLocale().getLocaleName();
+        if ("default".equals(locale) ) locale =  "nl";
+        u.append("&locale=").append(locale);
+        u.append("&view=").append(page);
+        String base = Window.Location.getParameter("base");
+        if(base != null && !base.isEmpty()) 
+          u.append("&base=").append(base);
+        String string = u.toString();
+        Window.Location.replace(string);
+        return null;
+      }     
+     );    
+}	
 	Login_Stap3(ClientFactory clientFactory, Place next) {
 		super();
 		this.clientFactory = clientFactory;
@@ -30,7 +62,13 @@ final class Login_Stap3 implements Success<Void, Void> {
 		clientFactory.getHeaderView().setUserAndRole(currentUser, roleType);
 		if(next == null)
 		{
-			DWOplayer.gotoCourses();
+		  boolean test = "test".equals(DWOplayer.PARAMETERS.getDwoEnv());
+		  boolean teacher = RoleType.TEACHER == roleType;
+		  if ( teacher && test && ! Actions.isAvailable())
+		  {
+		    return gotoGwtClient("WELCOME");
+		  }
+		  DWOplayer.gotoCourses();
 		}
 		else
 			clientFactory.getPlaceController().goTo(next);

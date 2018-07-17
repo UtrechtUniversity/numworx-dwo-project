@@ -9,4 +9,6 @@ public interface NavigationView extends IsWidget {
 
 	void show();
 	void hide();
+	
+	void showIcon(boolean show);
 }

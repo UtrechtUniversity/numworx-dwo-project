@@ -36,6 +36,7 @@
     <!-- If you add any GWT meta tags, they must   -->
     <!-- be added before this line.                -->
     <!--                                           -->
+    <script type="text/javascript" src="/dwo/apps/deploy.jsp" ></script>
     <script type="text/javascript" language="javascript" src="DWOplayer/DWOplayer.nocache.js"></script>
   </head>
   <body id="main">

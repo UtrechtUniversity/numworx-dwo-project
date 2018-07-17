@@ -59,8 +59,6 @@ public class SelectModuleActivity extends MGWTAbstractActivity
 	{
 		final SelectModuleView view = clientFactory.getHomeView();
 		view.setLogout(false);
-		if(true)
-			view.setMenuWidget(clientFactory.getMenuWidget());
 
 		currentModel = SelectModuleItemHolder.getItems();
 		if(item == null || item == SelectModuleItem.ROOT)

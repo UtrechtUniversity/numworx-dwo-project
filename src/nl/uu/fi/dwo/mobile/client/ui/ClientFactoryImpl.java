@@ -16,8 +16,6 @@ import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
-import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplDesktop;
-import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplTablet;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
@@ -33,12 +31,9 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
-import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
-import com.googlecode.mgwt.ui.client.MGWT;
-import com.googlecode.mgwt.ui.client.OsDetection;
 
 /**
  * @see GWT
@@ -70,19 +65,19 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 		
 	};
 	
-	class ViewModuleHolder implements Provider<ViewModuleView> {
-		final ViewModuleView hold;
-
-		@Override
-		public ViewModuleView get() {
-			return hold;
-		}
-
-		public ViewModuleHolder(ViewModuleView hold) {
-			this.hold = hold;
-		}
-		
-	}
+//	class ViewModuleHolder implements Provider<ViewModuleView> {
+//		final ViewModuleView hold;
+//
+//		@Override
+//		public ViewModuleView get() {
+//			return hold;
+//		}
+//
+//		public ViewModuleHolder(ViewModuleView hold) {
+//			this.hold = hold;
+//		}
+//		
+//	}
 		
 	// singleton pattern.
 	final Provider<HeaderView> headerView;
@@ -124,8 +119,6 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	private RPCHandler handler;
 	private IsWidget logoutWidget;
 	
-	protected final static boolean NUMWORX = true;
-
 	public ClientFactoryImpl()
 	{
 	}
@@ -176,24 +169,10 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	public TreeModuleView getTreeModuleView()
 	{
 		if (treeModuleView == null){
-			if(NUMWORX)
 			{
 				
 				entryView = NUMWORX_VIEW;				
 				return this.treeModuleView = new TreeModuleViewNumworx(getHeaderView(), navigationView.get());
-			}
-			
-			
-			
-			
-			OsDetection detection = MGWT.getOsDetection();
-			if(detection.isDesktop()
-					//&& false
-					//|| true
-					) {
-				this.treeModuleView = new TreeModuleViewImplDesktop();
-			} else {
-				this.treeModuleView = new TreeModuleViewImplTablet();
 			}
 			
 		}
@@ -209,10 +188,10 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 		this.handler = handler;
 	}
 
-	@Override
-	public void setEntryView(ViewModuleView view) {
-		entryView = new ViewModuleHolder(view);
-	}
+//	@Override
+//	public void setEntryView(ViewModuleView view) {
+//		entryView = new ViewModuleHolder(view);
+//	}
 	
 	public SCORM_guest setupAPI() {
 		SCORM_guest api;
@@ -225,18 +204,18 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 		return api;
 	}
 	
-	@Override
-	public IsWidget getMenuWidget() {
-		return null;
-	}
-
-	public IsWidget getLogoutWidget() {
-		return logoutWidget;
-	}
-
-	public void setLogoutWidget(IsWidget logoutWidget) {
-		this.logoutWidget = logoutWidget;
-	}
+//	@Override
+//	public IsWidget getMenuWidget() {
+//		return null;
+//	}
+//
+//	public IsWidget getLogoutWidget() {
+//		return logoutWidget;
+//	}
+//
+//	public void setLogoutWidget(IsWidget logoutWidget) {
+//		this.logoutWidget = logoutWidget;
+//	}
 	
 	@Override
 	public Promise<Void> logout() {

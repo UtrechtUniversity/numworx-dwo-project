@@ -270,6 +270,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	private Presenter presenter;
 	@UiHandler({"upBtn","up2Btn"})
 	void onUpBtn(ClickEvent ev) {
+	    ev.stopPropagation();
 		Object parent = upId;
 		if(parent == null) parent = "0";
 		goTo(new TreeModulePlace(parent));
@@ -293,4 +294,14 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 			delegate.setModel(studentModel);
 		
 	}
+
+  @Override
+  public void showIcon(boolean b) {
+      if(Actions.isAvailable())
+      headerBottom.setStyleName("modules-icon2", b);    
+  }
+  
+  @UiHandler("scoType") void onModules(ClickEvent e) {
+    Actions.showMainNav.execute();
+  }
 }

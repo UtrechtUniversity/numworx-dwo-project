@@ -45,10 +45,12 @@ public interface DWOplayerParameters {
 	String keyboardStyle();
 	/**
 	 * Header style
+	 * @deprecated
 	 */
 	HeaderCss headercss();
 	/**
 	 * Navigational css 
+	 * @deprecated
 	 */
 	NavigationCss navigationcss();
 	/**

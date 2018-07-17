@@ -62,8 +62,6 @@ public class CourseActivity extends MGWTAbstractActivity implements Activity {
 	{
 		final SelectModuleView view = clientFactory.getHomeView();
 		clientFactory.getHeaderView().hide();
-		if(true)
-			view.setMenuWidget(clientFactory.getMenuWidget());
 
 		view.setLogout(true); // terug of logout
 		final Place next = 

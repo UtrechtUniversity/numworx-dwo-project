@@ -58,11 +58,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 		next = new LoginPlace(where);
 		location = where.getLocation();
 	}
-	
-//	public ScoActivity(ClientFactory clientFactory, SelectModuleItem item) {
-//		this(clientFactory, item, (s) clientFactory.getPlaceController().getWhere());
-//	}
-	
+		
 	public ScoActivity(ClientFactory clientFactory, SelectModuleItem item, s where) {
 		this.item = item;
 		placeController = clientFactory.getPlaceController();

@@ -14,6 +14,7 @@
 	@def color14 #1B75BB;
 	@def medium 500;
 	@def regular 400;
+	@external .modules-icon2;
 	
 	.headerPanel {
 		background-color: color10;
@@ -47,7 +48,9 @@
 		color: color13 !important;
 	}
 		
-	
+		.modules-icon2 .title {
+				left: 172px;
+		}
 		.title {
 			color: color14;
 			font-family: Ubuntu;

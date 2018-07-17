@@ -11,7 +11,10 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
+import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
@@ -23,6 +26,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
+import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
@@ -42,7 +46,8 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
  * @author Danny Hendrix
  * 
  */
-public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorContext, ViewModuleView.Presenter, CBookEventListener
+public class ViewModuleActivity extends AbstractActivity implements AnchorContext, ViewModuleView.Presenter, 
+  CBookEventListener, MessageEventHandler
 {
 	private ClientFactory clientFactory;
 	private ViewModuleView view;
@@ -65,12 +70,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 		this.clientFactory = clientFactory;
 		this.sco = sco;
 		this.location = where.getLocation();
-
 	}
-
-	
-	
-	
 	
 	@Override
 	public void start(final AcceptsOneWidget panel, EventBus eventBus)
@@ -100,13 +100,13 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 			tm.schedule((int)timeToGo); 
 		}			
 // All systems go
-		
-		
-		
+        view = clientFactory.getEntryView();
+		eventBus.addHandler(MessageEvent.TYPE, this);
+		onMessage(MessageEvent.getLastEvent());
+
 		started = true;
-		addHandlerRegistration(eventBus.addHandler(CBookEvent.TYPE, this));
+		eventBus.addHandler(CBookEvent.TYPE, this);
 		clientFactory.getHeaderView().hide();
-		view = clientFactory.getEntryView();
 		panel.setWidget(view); // terug naar af. problemen met gekke scrolls
 		{
 			final String id = sco.getID().toString();
@@ -154,17 +154,6 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 			}
 		};
 		view.getApi().Initialize(callback);
-			
-			addHandlerRegistration(view.getBackButton().addTapHandler(new TapHandler()
-			{
-
-				@Override
-				public void onTap(TapEvent event)
-				{
-					started = false;
-					History.back();
-				}
-			}));
 		}
 	}
 
@@ -260,6 +249,15 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
       }
     }
     
+  }
+
+  @Override
+  public void onMessage(MessageEvent event) {
+    String message = event.getMessage();
+    if(Actions.showMainNav.getCommand().equals(message))
+        view.showIcon(false);
+    if(Actions.hideMainNav.getCommand().equals(message))
+      view.showIcon(true);
   }
 	
 }

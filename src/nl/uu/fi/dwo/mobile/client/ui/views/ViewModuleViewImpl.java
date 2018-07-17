@@ -2554,4 +2554,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		if(on != null)
 			on.setStudentModel(studentModel);
 	}
+
+  @Override
+  public void showIcon(boolean b) {
+    // TODO Auto-generated method stub
+    
+  }
 }

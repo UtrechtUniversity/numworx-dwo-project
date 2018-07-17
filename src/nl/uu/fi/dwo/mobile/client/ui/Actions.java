@@ -3,7 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import com.google.gwt.user.client.Window.Location;
 
 public enum Actions {
-  showMainNav, hideMainNav;
+  showMainNav, hideMainNav, isMainNavVisible;
   private String command;
 
   Actions() {
@@ -18,6 +18,10 @@ public enum Actions {
 
   public void execute() {
     sendParent(command);
+  }
+
+  public String getCommand() {
+    return command;
   }
 
   public static boolean isAvailable() {

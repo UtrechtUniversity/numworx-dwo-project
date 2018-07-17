@@ -38,6 +38,7 @@ import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.DeckLayoutPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -146,7 +147,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	@UiField FlowPanel deck;
 	@UiField TreeModuleViewNumworxCss style;
 	@UiField FlowPanel beheer;
-	
+	@UiField HTML bibliotheek;
 	GotoController presenter;
 	private String SCHOOL_MODULES;
 	private TreeItem schoolMap;
@@ -180,11 +181,14 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		standardMap = new TreeItem(toSafeHTML(Text.constants.standaardModules()));
 		standardMap.setState(true);
 		standardMap.setUserObject(SelectModuleItem.ROOT);
-		none = "none".equals(Location.getParameter("header"));
+		none = Actions.isAvailable();
 		if(!none) {
 		  none = !"test".equals(DWOplayer.PARAMETERS.getDwoEnv());
 		}
 		if(!none) setBeheer(false);
+
+		showIcon(true);
+
 	}
 
 	public void showCells() {
@@ -400,5 +404,13 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
     @UiHandler("bibliotheek") void onModules(ClickEvent e) {
     	if(Actions.isAvailable())
     		Actions.showMainNav.execute();
+    	showIcon(false);
     }
+
+    @Override
+    public void showIcon(boolean show) {
+        bibliotheek.setStyleName("modules-icon", show);
+    }
+    
+    
 }

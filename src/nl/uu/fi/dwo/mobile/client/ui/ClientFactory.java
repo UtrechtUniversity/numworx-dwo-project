@@ -47,16 +47,15 @@ public interface ClientFactory
 	
 	RPCHandler getRPCHandler();
 	
-	IsWidget getMenuWidget();
-	IsWidget getLogoutWidget();
-	void setLogoutWidget(IsWidget widget);
+//	IsWidget getLogoutWidget();
+//	void setLogoutWidget(IsWidget widget);
 	
 	/**
 	 * FIXME deze moet weer weg als TreeModuleView één view gebruikt in plaats van steeds een nieuwe.
 	 * @param view
 	 */
-	@Deprecated
-	void setEntryView(ViewModuleView view);
+//	@Deprecated
+//	void setEntryView(ViewModuleView view);
 	
 	public SCORM_guest setupAPI();
 

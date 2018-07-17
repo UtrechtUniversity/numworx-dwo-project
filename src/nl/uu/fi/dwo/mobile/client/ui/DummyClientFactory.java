@@ -88,20 +88,15 @@ public class DummyClientFactory implements ClientFactory {
 		return GWT.create(SCORM_guest.class);
 	}
 
-	@Override
-	public IsWidget getMenuWidget() {
-		return null;
-	}
-
-	@Override
-	public IsWidget getLogoutWidget() {
-		return logoutWidget;
-	}
-
-	@Override
-	public void setLogoutWidget(IsWidget widget) {
-		logoutWidget = widget;
-	}
+//	@Override
+//	public IsWidget getLogoutWidget() {
+//		return logoutWidget;
+//	}
+//
+//	@Override
+//	public void setLogoutWidget(IsWidget widget) {
+//		logoutWidget = widget;
+//	}
 
 	@Override
 	public Promise<Void> logout() {

@@ -58,4 +58,5 @@ public interface ViewModuleView extends IsWidget
 	void setModel(Promise<DomStudentModelContext> studentModel);
 	
 	boolean nextPageAction();
+    void showIcon(boolean b);
 }

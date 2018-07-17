@@ -403,6 +403,24 @@ div.listItem-dwo-separator {
 	background-color: transparent;
 }
 
+.modules-icon {
+	background-image: url("images/numworx/modules.svg");
+	background-repeat: no-repeat;
+	background-position: 8px 38px;
+	padding-left: 40px !important;
+	background-size: 24px 24px;
+}
+
+.modules-icon2 {
+	background-image: url("images/numworx/modules.svg");
+	background-repeat: no-repeat;
+	background-position: 8px 8px;
+	padding-left: 40px !important;
+	background-size: 24px 24px;
+	
+	
+}
+
 
 .gwt-DialogBox .Caption {
    cursor: auto !important;
