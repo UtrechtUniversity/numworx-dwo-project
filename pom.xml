@@ -44,7 +44,7 @@
         <maven.test.skip>true</maven.test.skip>
         <tomcat7.version>7.0.76</tomcat7.version>
         <context.xml>context-dwo_devel.xml</context.xml>
-        <copy.ui>true</copy.ui>
+        <copy.ui.skip>false</copy.ui.skip>
     </properties>
 
     <scm>
@@ -635,7 +635,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                        	<skip>${copy.ui}</skip>
+                        	<skip>${copy.ui.skip}</skip>
                             <outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
                             <overwrite>true</overwrite>
                             <resources>
