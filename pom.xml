@@ -44,6 +44,7 @@
         <maven.test.skip>true</maven.test.skip>
         <tomcat7.version>7.0.76</tomcat7.version>
         <context.xml>context-dwo_devel.xml</context.xml>
+        <copy.ui>true</copy.ui>
     </properties>
 
     <scm>
@@ -190,6 +191,13 @@
             <artifactId>dagger-compiler</artifactId>
             <version>${daggerVersion}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+        	<groupId>nl.uu.fi.dwo.lms</groupId>
+        	<artifactId>DwoGwtClientHtmlUi</artifactId>
+        	<version>0.1-SNAPSHOT</version>
+        	<scope>runtime</scope>
+        	<type>war</type>
         </dependency>
     </dependencies>
     
@@ -627,6 +635,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
+                        	<skip>${copy.ui}</skip>
                             <outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
                             <overwrite>true</overwrite>
                             <resources>
