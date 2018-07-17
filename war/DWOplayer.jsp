@@ -22,7 +22,7 @@
     <%=base %>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
-    <link type="text/css" rel="stylesheet" href="DWOplayer.css">
+    <link type="text/css" rel="stylesheet" href="/dwo/tablet/DWOplayer.css">
     <meta name="gwt:property" content="locale=nl" >
     <script>
     	DWO_PROFILE_ID = <%=profile%>
@@ -37,7 +37,7 @@
     <!-- be added before this line.                -->
     <!--                                           -->
     <script type="text/javascript" src="/dwo/apps/deploy.jsp" ></script>
-    <script type="text/javascript" language="javascript" src="DWOplayer/DWOplayer.nocache.js"></script>
+    <script type="text/javascript" language="javascript" src="/dwo/tablet/DWOplayer/DWOplayer.nocache.js"></script>
   </head>
   <body id="main">
 
