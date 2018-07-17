@@ -186,9 +186,6 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		  none = !"test".equals(DWOplayer.PARAMETERS.getDwoEnv());
 		}
 		if(!none) setBeheer(false);
-
-		showIcon(true);
-
 	}
 
 	public void showCells() {
