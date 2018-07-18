@@ -91,6 +91,12 @@
             <!-- "provided" so that we don't deploy -->
             <scope>provided</scope>
         </dependency>
+		<dependency>
+			<groupId>com.googlecode.mgwt</groupId>
+			<artifactId>MGWT</artifactId>
+			<scope>provided</scope>
+			<version>1.1.2</version>
+		</dependency>
 
         <!-- Unit tests -->
         <dependency>

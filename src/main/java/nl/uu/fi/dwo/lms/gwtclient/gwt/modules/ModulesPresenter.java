@@ -5,11 +5,14 @@ import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.googlecode.mgwt.ui.client.MGWT;
+import com.googlecode.mgwt.ui.client.OsDetection;
 
 import dagger.Lazy;
 import fi.dwo.gwt.lib.rest.util.Base64;
 import jsinterop.annotations.JsMethod;
 
+import java.sql.SQLClientInfoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,6 +58,14 @@ public class ModulesPresenter implements SwitchViewEventHandler {
 
     private HandlerRegistration register;
 
+    private static final boolean tablet;
+    static {
+      OsDetection osDetection = MGWT.getOsDetection();
+// a tablet is a ipad, iphone, android, not a desktop
+      tablet = !osDetection.isDesktop();
+      LOG.fine("OsDetection " + tablet);
+    }
+
     /**
      * @return the view
      */
@@ -89,13 +100,18 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         init();
       } 
         init.then(p-> {
-          view.setMainNavVisible(false);
           if(register == null)
             register = eventBus.addHandler(SwitchViewEvent.TYPE, this);
 
           LOG.info("switch to modules view " + p.getValue());
           eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.MODULESVIEW));
-          view.sendMessage(HIDEMAINNAV);
+          if(tablet) {
+            view.setMainNavVisible(false);
+            view.sendMessage(HIDEMAINNAV);
+          } else {
+            view.setMainNavVisible(true);
+            view.sendMessage(SHOWMAINNAV);
+          }
           return null;
         });
     }
@@ -184,10 +200,23 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         if (HIDEMAINNAV.equals(message)) {
           view.setMainNavVisible(false);
           view.sendMessage(HIDEMAINNAV);
-        }
+        } else
         if (ISMAINNAVVISIBLE.equals(message)) {
           view.sendMessage( view.isMainNavVisible() ? SHOWMAINNAV : HIDEMAINNAV);
+        } else 
+        if (select(SelectedView.RESULTS, message) || select(SelectedView.PERSONS,message) || select(SelectedView.SCHOOLCLASSES,message)) {
+          
+        } else {
+          
         }
+    }
+
+    private boolean select(SelectedView select, String message) {
+      if(select.name().equals(message)) {
+        eventBus.fireEvent(new SwitchViewEvent(select));
+        return true;
+      }
+      return false;
     }
 
     @Override
