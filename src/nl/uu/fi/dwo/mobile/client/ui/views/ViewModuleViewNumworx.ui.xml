@@ -81,6 +81,17 @@
 			margin-top: 5px;
 		}
 
+		.modules {
+			display: none;
+			height: 40px;
+			width: 40px;
+			float: left;
+		}
+		.modules-icon2 .modules {
+			display: inline-block;
+		}
+
+
 	</ui:style>
 	<g:DockLayoutPanel unit='PX' styleName='{t.rootPanel}'>
 		<g:north size="90">
@@ -109,6 +120,7 @@
 				<g:FocusPanel ui:field='homeBtn' styleName='{t.nav}'><g:Image url='{pfx}images/numworx/home-numworx.svg'/></g:FocusPanel>
 			  </g:FlowPanel>
 			  <g:FlowPanel ui:field="headerBottom" styleName='{style.headerBottom}' addStyleNames='{t.lesstof}'>
+			  		<g:FocusPanel ui:field='modules' styleName='{style.modules}' />
 			  		<g:Label styleName='{style.knop}' ui:field='scoType'><ui:text from='{rb.LESSTOF}'/></g:Label>
 			  		<g:Image styleName='{style.icon}' addStyleNames='{t.toets}' url="{pfx}images/numworx/zelftoets-numworx.svg"/>
 			  		<g:Image styleName='{style.icon}' addStyleNames='{t.lesstof}' url='{pfx}images/numworx/lesstof-numworx.svg' />

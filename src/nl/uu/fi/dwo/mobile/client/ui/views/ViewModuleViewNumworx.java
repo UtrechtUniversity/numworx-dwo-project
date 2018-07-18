@@ -301,7 +301,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
       headerBottom.setStyleName("modules-icon2", b);    
   }
   
-  @UiHandler("scoType") void onModules(ClickEvent e) {
+  @UiHandler({"scoType","modules"}) void onModules(ClickEvent e) {
     Actions.showMainNav.execute();
   }
 }
