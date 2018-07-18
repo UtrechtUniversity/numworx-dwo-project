@@ -38,7 +38,7 @@ public class HeaderViewNone extends HTML implements HeaderView {
   
   @Override
   public void hide() {
-      Actions.hideMainNav.execute();
+      //Actions.hideMainNav.execute();
       LayoutPanel p = RootLayoutPanel.get(); // parent of header
       p.setWidgetVisible(this, false);
       navigation.hide();

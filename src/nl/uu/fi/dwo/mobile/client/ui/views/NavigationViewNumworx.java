@@ -356,7 +356,10 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	@UiHandler("results")
 	void onResults(ClickEvent e) {
 	  LOG.info("goto results");
-	  gotoGwtClient("RESULTS");
+	  if(Actions.isAvailable())
+		  Actions.RESULTS.execute();
+	  else
+		  gotoGwtClient("RESULTS");
 	
 	}
     private void gotoGwtClient(String page) {
@@ -386,16 +389,23 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
     @UiHandler("persons")
     void onPersons(ClickEvent e) {
       LOG.info("goto persons");
-      gotoGwtClient("PERSONS");
+      if(Actions.isAvailable())
+    	  Actions.PERSONS.execute();
+      else
+    	  gotoGwtClient("PERSONS");
     }
     @UiHandler("classes")
     void onClasses(ClickEvent e) {
       LOG.info("goto classes");
-      gotoGwtClient("SCHOOLCLASSES");
+      if(Actions.isAvailable())
+    	  Actions.SCHOOLCLASSES.execute();
+      else
+    	  gotoGwtClient("SCHOOLCLASSES");
    }
 
+    private boolean icon;
     public void setBeheer(boolean visible) {
-      dock.setWidgetHidden(beheer, none||!visible);
+      dock.setWidgetHidden(beheer, !(visible&&icon));
     }
 	
     @UiHandler("bibliotheek") void onModules(ClickEvent e) {
@@ -406,7 +416,9 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 
     @Override
     public void showIcon(boolean show) {
-        bibliotheek.setStyleName("modules-icon", show);
+    	this.icon = show;
+    	setBeheer(show);
+    	//bibliotheek.setStyleName("modules-icon", show);
     }
     
     

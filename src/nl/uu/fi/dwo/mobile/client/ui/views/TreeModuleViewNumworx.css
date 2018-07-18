@@ -106,6 +106,7 @@
 		width: 140px;
 		display: inline-block;
 		vertical-align: top;
+		overflow: hidden;
 	}
 		.search {
 			width: 40px;

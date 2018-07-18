@@ -3,7 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import com.google.gwt.user.client.Window.Location;
 
 public enum Actions {
-  showMainNav, hideMainNav, isMainNavVisible;
+  showMainNav, hideMainNav, isMainNavVisible, RESULTS, PERSONS, SCHOOLCLASSES;
   private String command;
 
   Actions() {
@@ -17,6 +17,7 @@ public enum Actions {
   }-*/;
 
   public void execute() {
+	java.util.logging.Logger.getLogger(Actions.class.getName()).fine("execute " + command);
     sendParent(command);
   }
 

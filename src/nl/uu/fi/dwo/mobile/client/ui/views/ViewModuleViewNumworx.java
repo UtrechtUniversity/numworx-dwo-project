@@ -297,8 +297,8 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 
   @Override
   public void showIcon(boolean b) {
-      if(Actions.isAvailable())
-      headerBottom.setStyleName("modules-icon2", b);    
+//      if(Actions.isAvailable())
+//      headerBottom.setStyleName("modules-icon2", b);    
   }
   
   @UiHandler({"scoType","modules"}) void onModules(ClickEvent e) {
