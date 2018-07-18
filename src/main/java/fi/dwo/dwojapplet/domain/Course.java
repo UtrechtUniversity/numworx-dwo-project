@@ -3,10 +3,15 @@
 package fi.dwo.dwojapplet.domain;
 
 import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.CoursePanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 import java.awt.Image;
 import java.util.Arrays;
@@ -572,4 +577,50 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
         this.notVisible = notVisible;
     }
 
+    /** load a course via a DomCourseStudent.
+     * missing export.
+     * @param sample domcoursestudent to copy
+     */
+    public void setDomCourseStudent(DomCourseStudent sample) {
+      setDwoProfile(DWO.getDwoProfileID());
+      try {
+        setCourseID(MySQLPersistenceId.getNativeId(sample).intValue());
+      } catch (Dwo2Exception e) {
+      }
+      setDescription(sample.getDescription());
+      setNotVisible(sample.isNotVisible());
+      setName(sample.getName());
+      setImageData(sample.getImageData());
+      setImageUrl(sample.getImage());
+      if(sample.getSequenceNr() != null)
+        sequencenr = sample.getSequenceNr().intValue();
+      else
+        sequencenr = null;
+ 
+      if(sample.getWithChildren()) {
+        setChildren(NO_CHILDREN);
+      } else {
+        setChildren(null);
+      }
+      if( sample.getSchoolId() == null) {
+        setSchoolID(0);
+      } else {
+        DomSchoolId o = new DomSchoolId(sample.getSchoolId());
+        try {
+          setSchoolID(MySQLPersistenceId.getNativeId(o).intValue());
+        } catch (Dwo2Exception e) {
+        }
+      }
+      if (sample.getParentID() == null) {
+        setParentID(0);
+      } else {
+        DomCourse o = new DomCourse();o.setId(sample.getParentID());
+        try {
+          setParentID(MySQLPersistenceId.getNativeId(o).intValue());
+        } catch (Dwo2Exception e) {
+        }
+      }
+    }
+    
+    
 }
