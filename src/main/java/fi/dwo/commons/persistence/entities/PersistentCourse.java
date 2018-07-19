@@ -58,6 +58,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentCourse.findByImage", query = "SELECT p FROM PersistentCourse p WHERE p.image = :image"),
     @NamedQuery(name = "PersistentCourse.findByDwoProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.dwoProfileID = :dwoProfileID"),
     @NamedQuery(name = "PersistentCourse.findByExport", query = "SELECT p FROM PersistentCourse p WHERE p.export = :export"),
+    @NamedQuery(name = "PersistentCourse.findByExportOfSchoolID", query = "SELECT p FROM PersistentCourse p WHERE p.export = 1 AND p.schoolID = :schoolID AND p.dwoProfileID = :dwoProfileID"),
     @NamedQuery(name = "PersistentCourse.findByWithChildren", query = "SELECT p FROM PersistentCourse p WHERE p.withChildren = :withChildren"),
     @NamedQuery(name = "PersistentCourse.findByParentIDAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.dwoProfileID = :dwoProfileID AND p.parentID = :parentID"),
     @NamedQuery(name = "PersistentCourse.findByParentID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = :parentID")})

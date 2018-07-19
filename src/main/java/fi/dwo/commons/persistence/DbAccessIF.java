@@ -60,14 +60,14 @@ public interface DbAccessIF  {
 //    public boolean deSelectCoursesForClass(int classID, int courseID) throws IOException, XmlRpcException, SQLException;
 //    ////peter
 
-    /**
-     * Returns all the available courses for the specified user.
-     *
-     * @param userID The user where for the courses must selected.
-     * @return A Vector containing hash tables with the course data.
-     * @throws java.sql.SQLException
-     */
-    public Vector getCourses(int profileValue) throws IOException, XmlRpcException, SQLException;
+//    /**
+//     * Returns all the available courses for the specified user.
+//     *
+//     * @param userID The user where for the courses must selected.
+//     * @return A Vector containing hash tables with the course data.
+//     * @throws java.sql.SQLException
+//     */
+//    public Vector getCourses(int profileValue) throws IOException, XmlRpcException, SQLException;
 
 //    /**
 //     * Returns all the available course for the specified user.
@@ -655,8 +655,8 @@ public interface DbAccessIF  {
 
     public Vector<Object> getHasRoleUser(int uid, int sgid) throws IOException, XmlRpcException, SQLException;
 
-	public Vector getCoursesJS(int profileValue) throws IOException, XmlRpcException,
-	SQLException;
+//	public Vector getCoursesJS(int profileValue) throws IOException, XmlRpcException,
+//	SQLException;
 
 	//Alleen sorteren binnen één parent.	
 //	public Vector getCoursesForClassJS(int classID) throws IOException,
