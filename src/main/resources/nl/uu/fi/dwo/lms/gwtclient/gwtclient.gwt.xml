@@ -44,6 +44,10 @@
         value="com.example.CustomRestySerializerGenerator2"/>-->
 <!--  chrome only -->
 <set-property name="user.agent" value="safari" />
+<!-- desktop only (verwijderen in productie) -->
+<set-property name="mgwt.os" value="desktop" />
+<set-property name="mobile.user.agent" value="not_mobile" />
+
 <!--<extend-property name="user.agent" values="ie8" />
 <extend-property name="user.agent" values="ie9" fallback-value="ie8" />-->
 </module>
