@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
+import javax.persistence.PersistenceException;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -14,6 +15,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentFromTo;
 import fi.dwo.commons.persistence.entities.PersistentFromToPK;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
@@ -21,13 +24,18 @@ import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_P_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.core.CourseManager;
+import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.FromToManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFromTo;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestSchoolAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFromTo;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
@@ -108,5 +116,19 @@ public class SecuredTeacherFromToManager {
           .collect(Collectors.toList());
     }
  
-    
+    @PUT
+    @Path("getCourses")
+    @Produces({"application/json"})
+    public List<DomCourse> getCourses(@Context SecurityContext sc, RestSchoolAndProfile rest) throws PersistenceException, Dwo2Exception {
+      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+          .setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher();
+      //TeacherState_HR_P_R_S_SG_U teacher = state.setTeacher().addProfile(rest.getDomSchoolAndProfile().getDomDwoProfile());
+      
+      PersistentSchool school = SchoolManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomSchoolAndProfile().getDomSchool()));
+      PersistentDwoProfile profile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomSchoolAndProfile().getDomDwoProfile()));
+// FIXME SECURITY....
+      
+      List<PersistentCourse> list = CourseManager.findExportsOf(school, profile);
+      return list.stream().map(PersistentCourse::buildDomCourse).collect(Collectors.toList());
+    }
 }

@@ -16,9 +16,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
@@ -26,11 +28,14 @@ import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFromTo;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestSchoolAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFromTo;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -143,4 +148,31 @@ public class SecuredTeacherFromToManagerIT {
     
   }
 
+  @Test public void getCourses() throws Dwo2Exception {
+    SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+    RestSchoolAndProfile rest = new RestSchoolAndProfile();
+    DomContext context = new DomContext();
+    DomHasRole domHasRole = null;
+    PersistentUser pUser = UserManager.findByUserName("user07");
+    PersistentSchool pSchool = SchoolManager.findBySchoolLogin("school01");//id =3
+    PersistentDwoProfile profile = DwoProfileManager.findEntity(1L);
+    try {
+      PersistentHasRole pHasRole = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, pSchool, RoleType.TEACHER);
+      domHasRole = pHasRole.buildDomHasRole();
+  } catch (Dwo2Exception ex) {
+      Logger.getLogger(SecuredTeacherResultsManagerIT.class.getName()).log(Level.SEVERE, null, ex);
+      fail("Could not find teacher's hasRole");
+  }
+  context.setDomHasRole(domHasRole);
+  rest.setRestContext(context);
+  rest.setDomSchoolAndProfile(new DomSchoolAndProfile());
+  rest.getDomSchoolAndProfile().setDomDwoProfile(profile.buildDomDwoProfile());
+  rest.getDomSchoolAndProfile().setDomSchool(pSchool.buildDomSchool());
+  List<DomCourse> result = manager.getCourses(sc, rest);
+  
+  assertNotNull(result);
+  assertFalse(result.isEmpty());
+  
+  
+  }
 }

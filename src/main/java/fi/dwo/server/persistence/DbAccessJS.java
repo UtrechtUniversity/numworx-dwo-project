@@ -8,8 +8,8 @@ import java.util.Vector;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 public interface DbAccessJS {
-	public Vector getCoursesJS(int profileValue) throws IOException, XmlRpcException,
-	SQLException;
+//	public Vector getCoursesJS(int profileValue) throws IOException, XmlRpcException,
+//	SQLException;
 
 	//Alleen sorteren binnen één parent.	
 //	public Vector getCoursesForClassJS(int classID) throws IOException,

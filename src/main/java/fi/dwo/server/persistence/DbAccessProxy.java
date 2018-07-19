@@ -63,7 +63,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     @Override
     public Vector getCourses(int profileValue) throws IOException, XmlRpcException,
             SQLException {
-        return getDelegate().getCourses(profileValue);
+        return getDelegateObsolete().getCourses(profileValue);
     }
 
 //	public Vector getCourses(int userID, boolean showAll) throws IOException,
@@ -662,7 +662,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     @Override
     public Vector getCoursesJS(int profileValue) throws IOException,
             XmlRpcException, SQLException {
-        return getDbAccessJS().getCoursesJS(profileValue);
+        return getDelegateObsolete().getCoursesJS(profileValue);
     }
 
 //    @Override

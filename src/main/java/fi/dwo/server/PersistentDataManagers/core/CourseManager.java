@@ -189,7 +189,24 @@ public class CourseManager {
     	
     }
     
-    
+    public static List<PersistentCourse> findExportsOf(PersistentSchool school, PersistentDwoProfile p) {
+      EntityManager em = getEntityManager();
+      try {
+          Long schoolID = school.getSchoolID();
+          
+          javax.persistence.TypedQuery<PersistentCourse> q;
+          q = em.createNamedQuery("PersistentCourse.findByExportOfSchoolID", PersistentCourse.class);
+          q.setParameter("dwoProfileID", p.getDwoProfileID());
+          q.setParameter("schoolID", schoolID);
+          List<PersistentCourse> list = q.getResultList();
+          LOG.log(Level.FINE, "Course-manager retrieved {0} PersistentCourse children of school with id {1} in profile {2}.", new Object[]{list.size(), schoolID, p.getDwoProfileID()});
+          return list;
+      }
+      finally {
+          em.close();
+      }
+      
+    }
         
     public static List<PersistentCourse> findEntities(PersistentSchool s) {
         EntityManager em = getEntityManager();

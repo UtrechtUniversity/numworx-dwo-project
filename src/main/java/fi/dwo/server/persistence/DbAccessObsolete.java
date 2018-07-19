@@ -11,6 +11,16 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 
 public interface DbAccessObsolete {
+  public Vector getCoursesJS(int profileValue) throws IOException, XmlRpcException,
+  SQLException;
+  /**
+   * Returns all the available courses for the specified user.
+   *
+   * @param userID The user where for the courses must selected.
+   * @return A Vector containing hash tables with the course data.
+   * @throws java.sql.SQLException
+   */
+  public Vector getCourses(int profileValue) throws IOException, XmlRpcException, SQLException;
 
 /*  Hashtable login(String username, String password)
       throws SQLException, DwoXmlRpcException, IOException, XmlRpcException;
