@@ -980,7 +980,7 @@ public class GuiCreator {
     }
 
     public CenterSubPanel getCourseManagementPanel(CourseMap c) {
-        return getCourseManagementPanel();
+        return null;
     }
 
     public CenterSubPanel getCourseChoisePanel(Course c) {

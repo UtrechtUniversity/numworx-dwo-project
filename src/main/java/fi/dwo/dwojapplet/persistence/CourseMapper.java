@@ -468,10 +468,20 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>{
         Arrays.sort(result,this);
         return result;
       }
-      cachemap.put(key, data);        
+      if(!data.isEmpty() && data.get(0) instanceof DomCourse)
+      {
+        Course[] result = createArray(data.size());
+        for (int i = 0; i < result.length; i++) {
+          result[i] = getObjectFromReturn( (DomCourse) data.get(i));
+        }
+        Arrays.sort(result,this);
+        return result;
+      }
+       cachemap.put(key, data);        
         return super.getObjectFromReturn(data);
     }
 
+    
     private Course getObjectFromReturn(DomCourseStudent data) {
       int id = PersistenceFacade.idOf(data.getId());
       Course c = objects.get(Integer.valueOf(id));
@@ -479,6 +489,25 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>{
           c = new LazyCourse();
       }
       c.setDomCourseStudent(data);
+      if(c.isWithChildren() && ! (c instanceof LazyCourse)) {
+        // prefetch children
+        try {
+          c.setChildren(get(c)); // Not Lazy, .... jammer dan.
+      } catch (Exception e) {
+          c.setChildren(Course.NO_CHILDREN);
+      }
+      }
+      objects.putIfAbsent(Integer.valueOf(id), c);
+      return c;
+    }
+ 
+    private Course getObjectFromReturn(DomCourse data) {
+      int id = PersistenceFacade.idOf(data.getId());
+      Course c = objects.get(Integer.valueOf(id));
+      if (c == null) {
+          c = new LazyCourse();
+      }
+      c.setDomCourse(data);
       if(c.isWithChildren() && ! (c instanceof LazyCourse)) {
         // prefetch children
         try {

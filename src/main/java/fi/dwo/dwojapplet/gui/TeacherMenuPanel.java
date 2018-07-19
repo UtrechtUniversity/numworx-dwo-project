@@ -37,7 +37,7 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
     private static final Border TITLE_BORDER = BorderFactory.createEmptyBorder(0, 10, 0, 0);
     private static final Border CLASS_BORDER = BorderFactory.createEmptyBorder(0, 20, 0, 0);
     private JButton classManagementButton;
-    private JButton courseManagementButton;
+//    private JButton courseManagementButton;
     private JButton studentModelButton;
 
     private ClassLinkedLabel[] classLinkedList;
@@ -67,11 +67,11 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
         if (GuiCreator.instance().getDWO().getCourseViewNr() > 0 || !GuiCreator.instance().getDWO().getUser().hasRight(User.MODIFY_MODULES_RIGHT) || CenterPanel.isIconizer()) {
             return;
         }
-        createGap();
-        /* Add CourseManagement Button */
-        courseManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_COURSE_MANAGEMENT));
-        courseManagementButton.addActionListener(this);
-        add(courseManagementButton);
+//        createGap();
+//        /* Add CourseManagement Button */
+//        courseManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_COURSE_MANAGEMENT));
+//        courseManagementButton.addActionListener(this);
+//        add(courseManagementButton);
 
     }
 
@@ -184,13 +184,13 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
             center.loadCenter(cp);
             instance.setReady();
             return;
-        } else if (src == courseManagementButton) {
-            instance.setWait();
-            CenterSubPanel cp = instance.getCourseManagementPanel();
-            center.loadCenter(cp);
-            center.setStrategy(this);
-            instance.setReady();
-            return;
+//        } else if (src == courseManagementButton) {
+//            instance.setWait();
+//            CenterSubPanel cp = instance.getCourseManagementPanel();
+//            center.loadCenter(cp);
+//            center.setStrategy(this);
+//            instance.setReady();
+//            return;
         } else if (src == studentModelButton) {
             instance.setWait();
             CenterSubPanel cp = instance.getStudentModelPanel();

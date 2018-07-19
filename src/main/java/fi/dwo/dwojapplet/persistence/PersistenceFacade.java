@@ -12,6 +12,7 @@ import fi.dwo.commons.exceptions.ScoException;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.DbAccessLogin;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
@@ -37,11 +38,14 @@ import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.persistence.cache.ReadOnly;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicCourseManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherFromToManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherResultsManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -1123,9 +1127,13 @@ public class PersistenceFacade {
     public Course[] getImportCourses(School s, School school, int profileID) throws PersistenceException {
         try {
             Vector v;
-            v = DbAccessCreator.instance().getImportCourses(s.getSchoolID(), school.getSchoolID(), profileID);
-            MapperIF mapper = MapperCreator.instance(Course.class);
-            return (Course[]) mapper.getObjectFromReturn(v);
+            DomSchoolAndProfile dom = new DomSchoolAndProfile();
+            dom.setDomDwoProfile(DWO.getDwoProfile());
+            dom.setDomSchool(new DomSchoolId(PersistentSchool.buildPersistenceId(Long.valueOf(s.getSchoolID()))));
+            //v = DbAccessCreator.instance().getImportCourses(s.getSchoolID(), school.getSchoolID(), profileID);
+            v = new Vector<>(SecureTeacherFromToManager.getCourses(dom));
+            MapperIF<Course> mapper = MapperCreator.instance(Course.class);
+            return mapper.getObjectFromReturn(v);
         }
         catch (IOException e) {
             throw new PersistenceException(PersistenceException.EX_IO, e);
@@ -1136,6 +1144,8 @@ public class PersistenceFacade {
         catch (SQLException e) {
             LOG.log(Level.SEVERE, null, e);
             throw new PersistenceException(PersistenceException.EX_DB, e);
+        } catch (Dwo2Exception e) {
+          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         }
 
     }
@@ -1278,71 +1288,71 @@ public class PersistenceFacade {
 //
 //    }
 
-    /**
-     * Returns all the courses which can be edited by the teacher.
-     *
-     * @param user
-     * @return The courses which can be edited by the specified teacher.
-     * @throws PersistenceException
-     */
-    public Course[] getEditableCourses(User user)
-            throws PersistenceException {
-        if (user instanceof Teacher) {
-            Teacher teacher = (Teacher) user;
-            try {
-                Vector v;
-                v = DbAccessCreator.instance().getEditableCourses(
-                        teacher.getSchool().getSchoolID());
-                if (user.hasRight(User.PROFILE_ADMIN_RIGHT) && !GuiConstants.GUI_ICONIZED) {
-                    Vector v2 = DbAccessCreator.instance().getEditableCoursesAdmin();
-                    v.addAll(v2);
-                }
-
-                MapperIF mapper = MapperCreator.instance(Course.class);
-                return (Course[]) mapper.getObjectFromReturn(v);
-            }
-            catch (IOException e) {
-                System.out.println(e.getMessage());
-                LOG.log(Level.SEVERE, null, e);
-                throw new PersistenceException(PersistenceException.EX_IO, e);
-            }
-            catch (XmlRpcException e) {
-                System.out.println(e.getMessage());
-                LOG.log(Level.SEVERE, null, e);
-                throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-            }
-            catch (SQLException e) {
-                System.out.println(e.getMessage());
-                LOG.log(Level.SEVERE, null, e);
-                throw new PersistenceException(PersistenceException.EX_DB, e);
-            }
-        } else if (user instanceof Admin) {
-            try {
-                Vector v;
-                v = DbAccessCreator.instance().getEditableCoursesAdmin();
-                MapperIF mapper = MapperCreator.instance(Course.class);
-                return (Course[]) mapper.getObjectFromReturn(v);
-            }
-            catch (IOException e) {
-                System.out.println(e.getMessage());
-                LOG.log(Level.SEVERE, null, e);
-                throw new PersistenceException(PersistenceException.EX_IO, e);
-            }
-            catch (XmlRpcException e) {
-                System.out.println(e.getMessage());
-                LOG.log(Level.SEVERE, null, e);
-                throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-            }
-            catch (SQLException e) {
-                System.out.println(e.getMessage());
-                LOG.log(Level.SEVERE, null, e);
-                throw new PersistenceException(PersistenceException.EX_DB, e);
-            }
-        } else {
-            return null;
-        }
-
-    }
+//    /**
+//     * Returns all the courses which can be edited by the teacher.
+//     *
+//     * @param user
+//     * @return The courses which can be edited by the specified teacher.
+//     * @throws PersistenceException
+//     */
+//    public Course[] getEditableCourses(User user)
+//            throws PersistenceException {
+//        if (user instanceof Teacher) {
+//            Teacher teacher = (Teacher) user;
+//            try {
+//                Vector v;
+//                v = DbAccessCreator.instance().getEditableCourses(
+//                        teacher.getSchool().getSchoolID());
+//                if (user.hasRight(User.PROFILE_ADMIN_RIGHT) && !GuiConstants.GUI_ICONIZED) {
+//                    Vector v2 = DbAccessCreator.instance().getEditableCoursesAdmin();
+//                    v.addAll(v2);
+//                }
+//
+//                MapperIF mapper = MapperCreator.instance(Course.class);
+//                return (Course[]) mapper.getObjectFromReturn(v);
+//            }
+//            catch (IOException e) {
+//                System.out.println(e.getMessage());
+//                LOG.log(Level.SEVERE, null, e);
+//                throw new PersistenceException(PersistenceException.EX_IO, e);
+//            }
+//            catch (XmlRpcException e) {
+//                System.out.println(e.getMessage());
+//                LOG.log(Level.SEVERE, null, e);
+//                throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//            }
+//            catch (SQLException e) {
+//                System.out.println(e.getMessage());
+//                LOG.log(Level.SEVERE, null, e);
+//                throw new PersistenceException(PersistenceException.EX_DB, e);
+//            }
+//        } else if (user instanceof Admin) {
+//            try {
+//                Vector v;
+//                v = DbAccessCreator.instance().getEditableCoursesAdmin();
+//                MapperIF mapper = MapperCreator.instance(Course.class);
+//                return (Course[]) mapper.getObjectFromReturn(v);
+//            }
+//            catch (IOException e) {
+//                System.out.println(e.getMessage());
+//                LOG.log(Level.SEVERE, null, e);
+//                throw new PersistenceException(PersistenceException.EX_IO, e);
+//            }
+//            catch (XmlRpcException e) {
+//                System.out.println(e.getMessage());
+//                LOG.log(Level.SEVERE, null, e);
+//                throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//            }
+//            catch (SQLException e) {
+//                System.out.println(e.getMessage());
+//                LOG.log(Level.SEVERE, null, e);
+//                throw new PersistenceException(PersistenceException.EX_DB, e);
+//            }
+//        } else {
+//            return null;
+//        }
+//
+//    }
 
     /**
      * Creates a new course for the specified school.
@@ -1468,7 +1478,7 @@ public class PersistenceFacade {
 //    }
 
     public Course[] getCourseFromMapper(Object o) throws IOException, SQLException, XmlRpcException {
-        return (Course[]) MapperCreator.instance(Course.class).get(o);
+        return MapperCreator.instance(Course.class).get(o);
     }
 
 

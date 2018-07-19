@@ -154,7 +154,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     @Override
     public CenterSubPanel getCourseManagementPanel() {
-        Course[] editableCourses = dwo.getEditableCourses();
+        CourseMap[] editableCourses = ModuleTreePanel.STANDAARD_DWO_MAP.getChildren();
         if (editableCourses != null) {
             return new CourseManagementPanel(editableCourses, ModuleTreePanel.STANDAARD_DWO_MODULES);
         } else {

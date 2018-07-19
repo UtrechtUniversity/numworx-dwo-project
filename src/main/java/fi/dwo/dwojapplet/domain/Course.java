@@ -585,6 +585,48 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
         this.notVisible = notVisible;
     }
 
+    public void setDomCourse(DomCourse sample) {
+      setDwoProfile(DWO.getDwoProfileID());
+      setExport(null);  // by default NOT exported.
+      try {
+        setCourseID(MySQLPersistenceId.getNativeId(sample).intValue());
+      } catch (Dwo2Exception e) {
+      }
+      //setDescription(null);
+      //setNotVisible(false);
+      setName(sample.getName());
+      //setImageData(null);
+      //setImageUrl(null);
+      if(sample.getSequenceNr() != null)
+        sequencenr = sample.getSequenceNr().intValue();
+      else
+        sequencenr = null;
+ 
+      if(sample.getWithChildren()) {
+        setChildren(NO_CHILDREN);
+      } else {
+        setChildren(null);
+      }
+      if( sample.getSchoolId() == null) {
+        setSchoolID(0);
+      } else {
+        DomSchoolId o = new DomSchoolId(sample.getSchoolId());
+        try {
+          setSchoolID(MySQLPersistenceId.getNativeId(o).intValue());
+        } catch (Dwo2Exception e) {
+        }
+      }
+      if (sample.getParentID() == null) {
+        setParentID(0);
+      } else {
+        DomCourse o = new DomCourse();o.setId(sample.getParentID());
+        try {
+          setParentID(MySQLPersistenceId.getNativeId(o).intValue());
+        } catch (Dwo2Exception e) {
+        }
+      }
+      
+    }
     /** load a course via a DomCourseStudent.
      * missing export.
      * @param sample domcoursestudent to copy

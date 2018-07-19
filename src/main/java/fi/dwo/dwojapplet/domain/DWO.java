@@ -1965,19 +1965,19 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         resultsModule = null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     */
-    public Course[] getEditableCourses() {
-        try {
-            courseList = PersistenceFacade.instance().getEditableCourses(DwoHelper.getCurrentFacadeUser());
-            return (selectDwoProfileCourses(courseList));
-        } catch (PersistenceException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-            return null;
-        }
-    }
+//    /*
+//     * (non-Javadoc)
+//     * 
+//     */
+//    public Course[] getEditableCourses() {
+//        try {
+//            courseList = PersistenceFacade.instance().getEditableCourses(DwoHelper.getCurrentFacadeUser());
+//            return (selectDwoProfileCourses(courseList));
+//        } catch (PersistenceException e) {
+//            JOptionPane.showMessageDialog(this, e.getMessage());
+//            return null;
+//        }
+//    }
 
 //    /**
 //     * Alle aangepaste sco's van een school binnen dit profiel. TODO als de

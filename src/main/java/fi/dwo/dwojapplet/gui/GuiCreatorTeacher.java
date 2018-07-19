@@ -220,7 +220,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      */
     @Override
     public CenterSubPanel getCourseManagementPanel() {
-        Course[] editableCourses = dwo.getEditableCourses();
+        CourseMap[] editableCourses = ModuleTreePanel.SCHOOL_MAP.getChildren();
         if (editableCourses != null) {
             return new CourseManagementPanel(editableCourses, ModuleTreePanel.SCHOOL_MODULES);
         } else {
@@ -243,33 +243,33 @@ public class GuiCreatorTeacher extends GuiCreator {
      *
      * @return LazyAppletConfig[]
      */
-    public AppletConfig[] getAppletConfigFromTeacher_oud() {
-        Vector ac = new Vector();
-        LazyAppletConfig config;
-        Course[] courses = dwo.getEditableCourses();
-        for (int i = 0; i < courses.length; i++) {
-
-            Course course = courses[i];
-            course.loadScos();
-            Sco[] scos = course.getScoList();
-            for (int j = 0; j < scos.length; j++) {
-                config = new LazyAppletConfig();
-                Sco sco = scos[j];
-                String name = sco.getScoName();
-                int aid = sco.getAppletID();
-                int sid = sco.getScoID();
-                config.setSco(sco);
-                config.setAppletID(aid);
-                config.setAppletConfigID(-sid); // HACK HACK negatief = scoid
-                config.setName(name);
-                ac.addElement(config);
-            }
-        }
-        // TODO sorteren....
-        AppletConfig[] result = new AppletConfig[ac.size()];
-        ac.toArray(result);
-        return result;
-    }
+//    public AppletConfig[] getAppletConfigFromTeacher_oud() {
+//        Vector ac = new Vector();
+//        LazyAppletConfig config;
+//        Course[] courses = dwo.getEditableCourses();
+//        for (int i = 0; i < courses.length; i++) {
+//
+//            Course course = courses[i];
+//            course.loadScos();
+//            Sco[] scos = course.getScoList();
+//            for (int j = 0; j < scos.length; j++) {
+//                config = new LazyAppletConfig();
+//                Sco sco = scos[j];
+//                String name = sco.getScoName();
+//                int aid = sco.getAppletID();
+//                int sid = sco.getScoID();
+//                config.setSco(sco);
+//                config.setAppletID(aid);
+//                config.setAppletConfigID(-sid); // HACK HACK negatief = scoid
+//                config.setName(name);
+//                ac.addElement(config);
+//            }
+//        }
+//        // TODO sorteren....
+//        AppletConfig[] result = new AppletConfig[ac.size()];
+//        ac.toArray(result);
+//        return result;
+//    }
 
 //    @Override
 //    public AppletConfig[] getAppletConfigFromTeacher() {

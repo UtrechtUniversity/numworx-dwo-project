@@ -6,6 +6,7 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.commons.exceptions.CourseException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.system.TextMapper;
@@ -21,6 +22,10 @@ import fi.dwo.dwojapplet.gui.GuiCreatorTeacher.LazyAppletConfig;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherFromToManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserCourseManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFromTo;
@@ -163,10 +168,10 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                 Course[] courses;
                 if (map == null) {
 //                    courses = (Course[]) MapperCreator.instance(Course.class).get(s);
-                    courses = (Course[]) PersistenceFacade.instance().getCourseFromMapper(s);
+                    courses = PersistenceFacade.instance().getCourseFromMapper(s);
                 } else {
 //                    courses = (Course[]) MapperCreator.instance(Course.class).get(map);
-                    courses = (Course[]) PersistenceFacade.instance().getCourseFromMapper(map);
+                    courses = PersistenceFacade.instance().getCourseFromMapper(map);
                 }
                 for (Course course : courses) {
                     set.add(course.getName());
@@ -179,6 +184,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
             for (int i = 0; i < model.getCourses().length && fuse; i++) {
                 if (Boolean.TRUE.equals(model.getValueAt(i, 0))) {
                     Course c = model.getCourses()[i];
+                    expand(c);
                     Course newc = null;
                     String name = c.getName();
                     String description = c.getDescription();
@@ -328,11 +334,14 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
         @Override
         public void actionPerformed(ActionEvent e) {
             if (listener != null) {
-                ActionEvent ae = new ActionEvent(model.courses[row], ActionEvent.ACTION_PERFORMED, command);
+                Course source = model.courses[row];
+                expand(source);
+                ActionEvent ae = new ActionEvent(source, ActionEvent.ACTION_PERFORMED, command);
                 listener.actionPerformed(ae);
             }
             fireEditingCanceled();
         }
+
 
         @Override
         public Object getCellEditorValue() {
@@ -1031,7 +1040,17 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
         initialize();
     }
 
-    /**
+    private void expand(Course source) {
+      DomCourse course = new DomCourse();
+      course.setId(PersistentCourse.buildPersistenceId(Long.valueOf(source.getID())));
+      try {
+        DomCourseStudent dom = SecureUserCourseManager.getCourse(course, DWO.getDwoProfile());
+        source.setDomCourseStudent(dom);
+      } catch (Dwo2Exception e1) {
+        
+      }
+    }
+   /**
      * @param e
      * @throws HeadlessException
      */
