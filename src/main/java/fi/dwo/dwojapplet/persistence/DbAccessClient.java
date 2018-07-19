@@ -49,20 +49,20 @@ class DbAccessClient extends Client implements DbAccessIF {
 //        return ((Boolean) object).booleanValue();
 //    }
 
-    @Override
-    public java.util.Vector getCourses(int a) throws IOException, XmlRpcException {
-        Vector vv = new Vector(1);
-        vv.addElement(new Integer(a));
-        Object object = invoke("getCourses", vv);
-        return (java.util.Vector) object;
-    }
-    @Override
-    public java.util.Vector getCoursesJS(int a) throws IOException, XmlRpcException {
-        Vector vv = new Vector(1);
-        vv.addElement(new Integer(a));
-        Object object = invoke("getCoursesJS", vv);
-        return (java.util.Vector) object;
-    }
+//    @Override
+//    public java.util.Vector getCourses(int a) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(1);
+//        vv.addElement(new Integer(a));
+//        Object object = invoke("getCourses", vv);
+//        return (java.util.Vector) object;
+//    }
+//    @Override
+//    public java.util.Vector getCoursesJS(int a) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(1);
+//        vv.addElement(new Integer(a));
+//        Object object = invoke("getCoursesJS", vv);
+//        return (java.util.Vector) object;
+//    }
 
     @Override
     public java.util.Vector getEditableCoursesAdmin() throws IOException, XmlRpcException {

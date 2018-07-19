@@ -3,6 +3,7 @@
 package fi.dwo.dwojapplet.persistence;
 
 import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.dwojapplet.domain.ClassCourse;
 import fi.dwo.dwojapplet.domain.Course;
 import static fi.dwo.dwojapplet.domain.Course.NO_CHILDREN;
@@ -13,9 +14,17 @@ import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicCourseManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserCourseManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -27,7 +36,7 @@ import java.util.logging.Logger;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-class CourseMapper extends XmlRpcMapper {
+class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>{
     private static final Logger LOG = Logger.getLogger(CourseMapper.class.getName());
 
     private static final String TABLENAME = "tblCourse";
@@ -58,13 +67,13 @@ class CourseMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public void put(int oid, Object obj)  {
+    public void put(int oid, Course obj)  {
         objects.put(new Integer(oid), obj);
         cachemap.clear();
     }
 
     @Override
-    public Object get(int uid, Integer sgid) {
+    public Course get(int uid, Integer sgid) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -100,7 +109,7 @@ class CourseMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public Object getObjectFromReturn(Hashtable data) {
+    public Course getObjectFromReturn(Hashtable data) {
         Course c = null;
         if (data.get("courseID") == null) { //We don't know enough to make a
             // courseobject
@@ -143,17 +152,41 @@ class CourseMapper extends XmlRpcMapper {
      * @throws java.sql.SQLException
      */
     @Override
-    public Object[] get(Object obj) throws IOException, SQLException,
+    public Course[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
         Hashtable ht = new Hashtable();
         if (obj instanceof Course) {
             Course course = (Course) obj;
+            if(course.getSchoolID() == 0 && DwoHelper.getCurrentUser()==null) {
+              DomCourse domcourse = new DomCourse();
+              domcourse.setId(PersistentCourse.buildPersistenceId(Long.valueOf(course.getID())));
+              try {
+                return getObjectFromReturn(new Vector<DomCourseStudent>(PublicCourseManager.getCourses(domcourse, DWO.getDwoProfile())));
+              } catch (Dwo2Exception e) {
+                LOG.log(Level.SEVERE, "getCourses of course", e);
+              }
+            } else if (DwoHelper.getCurrentUser() != null) {
+              DomCourse domcourse = new DomCourse();
+              domcourse.setId(PersistentCourse.buildPersistenceId(Long.valueOf(course.getID())));
+              try {
+                return getObjectFromReturn(new Vector<DomCourseStudent>(SecureUserCourseManager.getCourses(domcourse, DWO.getDwoProfile())));
+              } catch (Dwo2Exception e) {
+                LOG.log(Level.SEVERE, "getCourses of course", e);
+              }
+            }
+            
             ht.put("parentID", new Integer(course.getID()));
         } else if (obj instanceof SchoolClass) {
             SchoolClass sc = (SchoolClass) obj;
             ht.put("classID", new Integer(sc.getID()));
         } else if (obj instanceof School) {
             School s = (School) obj;
+            // must be your own school....
+            try {
+              return getObjectFromReturn(new Vector<>(SecureUserCourseManager.getCoursesSchool(DWO.getDwoProfile())));
+            } catch (Dwo2Exception e) {
+              LOG.log(Level.SEVERE, "getCourses of course", e);
+            }
             ht.put("schoolID", new Integer(s.getSchoolID()));
             ht.put("parentID", new Integer(0));
             int profileID = DWO.getDwoProfileID();
@@ -166,10 +199,10 @@ class CourseMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#get(int)
      */
     @Override
-    public Object get(int oid) throws IOException, XmlRpcException,
+    public Course get(int oid) throws IOException, XmlRpcException,
             SQLException {
         Integer Oid = new Integer(oid);
-        Object result = objects.get(Oid);
+        Course result = objects.get(Oid);
         if (result != null) {
             return result;
         }
@@ -187,7 +220,7 @@ class CourseMapper extends XmlRpcMapper {
             }
 
         }
-        Object object = super.get(oid);
+        Course object = super.get(oid);
         if (object != null) 
         	put(oid, object);
 		return object;
@@ -201,7 +234,7 @@ class CourseMapper extends XmlRpcMapper {
      * @throws SQLException
      */
     @SuppressWarnings("rawtypes")
-	private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
+	private Course[] cached(Hashtable ht) throws IOException, XmlRpcException,
             SQLException {
         Vector v;
         v = (Vector) cachemap.get(ht);
@@ -322,7 +355,7 @@ class CourseMapper extends XmlRpcMapper {
      */
 
     @Override
-    protected Object update(Object obj, Hashtable data) {
+    protected Course update(Course obj, Hashtable data) {
         Course c = (Course) obj;
         c.setCourseID(((Integer) data.get("courseID")).intValue());
         c.setName((String) data.get("name"));
@@ -388,7 +421,7 @@ class CourseMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
     @Override
-    protected Object[] createArray(int size) {
+    protected Course[] createArray(int size) {
         return new Course[size];
     }
     /* (non-Javadoc)
@@ -424,9 +457,50 @@ class CourseMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#getObjectFromReturn(java.util.Vector)
      */
     @Override
-    public Object[] getObjectFromReturn(Vector data) throws IOException,
+    public Course[] getObjectFromReturn(Vector data) throws IOException,
             SQLException, XmlRpcException {
-        cachemap.put(key, data);
+      if(!data.isEmpty() && data.get(0) instanceof DomCourseStudent)
+      {
+        Course[] result = createArray(data.size());
+        for (int i = 0; i < result.length; i++) {
+          result[i] = getObjectFromReturn( (DomCourseStudent) data.get(i));
+        }
+        Arrays.sort(result,this);
+        return result;
+      }
+      cachemap.put(key, data);        
         return super.getObjectFromReturn(data);
+    }
+
+    private Course getObjectFromReturn(DomCourseStudent data) {
+      int id = PersistenceFacade.idOf(data.getId());
+      Course c = objects.get(Integer.valueOf(id));
+      if (c == null) {
+          c = new LazyCourse();
+      }
+      c.setDomCourseStudent(data);
+      if(c.isWithChildren() && ! (c instanceof LazyCourse)) {
+        // prefetch children
+        try {
+          c.setChildren(get(c)); // Not Lazy, .... jammer dan.
+      } catch (Exception e) {
+          c.setChildren(Course.NO_CHILDREN);
+      }
+      }
+      objects.putIfAbsent(Integer.valueOf(id), c);
+      return c;
+    }
+
+    @Override
+    public int compare(Course o1, Course o2) {
+      if(o1.sequencenr != null && o2.sequencenr != null) {
+        int sort = o1.sequencenr.compareTo(o2.sequencenr);
+        if(sort == 0)
+          return o1.getName().compareTo(o2.getName());
+        return sort;
+      }
+      if(o1.sequencenr == null) return -1;
+      if(o2.sequencenr == null) return +1;
+      return o1.getName().compareTo(o2.getName());
     }
 }

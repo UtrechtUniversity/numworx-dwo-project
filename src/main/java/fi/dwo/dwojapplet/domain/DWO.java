@@ -2071,7 +2071,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 		pc.setDescription(course.getDescription());
 		pc.setName(course.getName());
 		pc.setDwoProfileID(Long.valueOf(getDwoProfileID()));
-		pc.setExport(course.isExport());
+		pc.setExport(course.getExport());
 		pc.setImage(course.getImageUrl());
 		pc.setImageData(course.getImageData());
 		pc.setParentID(Long.valueOf(course.getParentID()));

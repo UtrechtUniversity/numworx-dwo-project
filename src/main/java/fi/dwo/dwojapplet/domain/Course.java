@@ -49,7 +49,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
     private int dwoProfile;
 
     private int schoolID;
-    private boolean export;
+    private Boolean export;
     private CourseMap[] children;
     private int parentID;
     private boolean newParent;
@@ -428,16 +428,24 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      * @param export the export to set
      */
     public void setExport(boolean export) {
-        this.export = export;
+        this.export = Boolean.valueOf(export);
     }
-
+    public void setExport(Boolean export) {
+      this.export = export;
+    }
+    
     /**
      * @return the export
      */
     public boolean isExport() {
-        return export;
+        return export != null && export.booleanValue(); // default no export
     }
 
+    public Boolean getExport() {
+      return export;
+    }
+    
+    
     @Override
     public String toString() {
         return getName();
@@ -583,6 +591,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      */
     public void setDomCourseStudent(DomCourseStudent sample) {
       setDwoProfile(DWO.getDwoProfileID());
+      setExport(null);  // by default NOT exported.
       try {
         setCourseID(MySQLPersistenceId.getNativeId(sample).intValue());
       } catch (Dwo2Exception e) {

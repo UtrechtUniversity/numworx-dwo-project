@@ -36,6 +36,8 @@ import fi.dwo.dwojapplet.domain.UserResultList;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.persistence.cache.ReadOnly;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicCourseManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherResultsManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
@@ -58,6 +60,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -987,24 +990,27 @@ public class PersistenceFacade {
      */
     public Course[] getCoursesJS(User user) throws PersistenceException {
         try {
-            MapperIF mapper = MapperCreator.instance(Course.class);
+            MapperIF<Course> mapper = MapperCreator.instance(Course.class);
             Vector v;
             int profileId = getDwoProfileID();
             int guestID = PROFILEOFFSET - profileId;
-            if (user == null) {
-                v = DbAccessCreator.instance().getCoursesJS(guestID);
+            if (user == null || user instanceof Guest) {
+               // v = DbAccessCreator.instance().getCoursesJS(guestID);
+              v = new Vector<>(PublicCourseManager.getCourses(DWO.getDwoProfile()));
             } else {
                 if (user instanceof Teacher) {
                     //              v = DbAccessCreator.instance().getCourses(user.getUserID());
                     Object[] schoolCourses = mapper.get(user.getSchool());
-                    Object[] dwoCourses = mapper.getObjectFromReturn(DbAccessCreator.instance().getCoursesJS(guestID));
+                    Object[] dwoCourses = mapper.getObjectFromReturn(new Vector<>(SecureUserCourseManager.getCourses(DWO.getDwoProfile())));
                     // caching side effect. UNDO, we doen nu lazy....
                     //MapperCreator.instance(Sco.class).get(new Object[] { user.getSchool(), ((DwoIF) DwoHelper.getApplet()).getDwoProfile()} );
                     return (Course[]) combine_(dwoCourses, schoolCourses);
                 } else {
                     SchoolClass schoolClass = user.getInClass();
                     if (schoolClass == null) {
-                        v = DbAccessCreator.instance().getCoursesJS(guestID);
+                        //v = DbAccessCreator.instance().getCoursesJS(guestID);
+                        v = new Vector<>(SecureUserCourseManager.getCourses(DWO.getDwoProfile()));
+
                     } else {
                         v = DbAccessCreator.instance().getCoursesForClass(
                                 schoolClass.getID());
@@ -1020,7 +1026,7 @@ public class PersistenceFacade {
                     }
                 }
             }
-            return (Course[]) mapper.getObjectFromReturn(v);
+            return mapper.getObjectFromReturn(v);
         }
         catch (IOException e) {
             LOG.log(Level.SEVERE, null, e);
@@ -1033,7 +1039,10 @@ public class PersistenceFacade {
         catch (SQLException e) {
             LOG.log(Level.SEVERE, null, e);
             throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
+        } catch (Dwo2Exception e) {
+          LOG.log(Level.SEVERE, null, e);
+          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+       }
 
    	
     }
@@ -1041,70 +1050,75 @@ public class PersistenceFacade {
     
     
     
-    /**
-     * Returns all the courses for the specified user. A teacher could select
-     * some courses for a schoolclass. A student sees active selected courses
-     * from his schoolclass or a profile.
-     *
-     * @param user The user to select courses from.
-     * @return The courses for the specified user.
-     * @throws PersistenceException If a database or xml-rpc exception occurs.
-     */
-    public Course[] getCourses(User user) throws PersistenceException {
-//        throw new RuntimeException("This routine must be rewriten to use DbAccessCreator.instance().getCourses(SchoolID)");
-        try {
-            MapperIF mapper = MapperCreator.instance(Course.class);
-            Vector v;
-            int profileId = getDwoProfileID();
-            int guestID = PROFILEOFFSET - profileId;
-            if (user == null) {
-                v = DbAccessCreator.instance().getCourses(guestID);
-            } else {
-                if (user instanceof Teacher) {
-                    //              v = DbAccessCreator.instance().getCourses(user.getUserID());
-                    Object[] schoolCourses = mapper.get(user.getSchool());
-                    Object[] dwoCourses = mapper.getObjectFromReturn(DbAccessCreator.instance().getCourses(guestID));
-                    // caching side effect. UNDO, we doen nu lazy....
-                    //MapperCreator.instance(Sco.class).get(new Object[] { user.getSchool(), ((DwoIF) DwoHelper.getApplet()).getDwoProfile()} );
-                    return combineCourse(dwoCourses, schoolCourses);
-                } else {
-                    SchoolClass schoolClass = user.getInClass();
-                    if (schoolClass == null) {
-                        v = DbAccessCreator.instance().getCourses(guestID);
-                    } else {
-                        v = DbAccessCreator.instance().getCoursesForClass(
-                                schoolClass.getID());
-                        if(v.size()==0) return new Course[0];
-// FIXME aanzetten als clipBeforeAfter weer in gebruik wordt genomen.
-// Het XML-RPC protocol doet niet aan TIMEZONES 
-// dat betekent dat date(0) niet werkt voor 'notAfter'
-                        v = clipBeforeAfter(v);
-                        Course[] courses = (Course[]) mapper.getObjectFromReturn(v);
-// FIXME hier maken we de caching effecten ongedaan.
-                        undoCachingEffect(courses);
-                        return courses;
-                    }
-                }
-            }
-            return (Course[]) mapper.getObjectFromReturn(v);
-        }
-        catch (IOException e) {
-            System.out.println(e.getMessage());
-            LOG.log(Level.SEVERE, null, e);
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (XmlRpcException e) {
-            System.out.println(e.getMessage());
-            LOG.log(Level.SEVERE, null, e);
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (SQLException e) {
-            System.out.println(e.getMessage());
-            LOG.log(Level.SEVERE, null, e);
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-
-    }
+//    /**
+//     * Returns all the courses for the specified user. A teacher could select
+//     * some courses for a schoolclass. A student sees active selected courses
+//     * from his schoolclass or a profile.
+//     *
+//     * @param user The user to select courses from.
+//     * @return The courses for the specified user.
+//     * @throws PersistenceException If a database or xml-rpc exception occurs.
+//     */
+//    public Course[] getCourses(User user) throws PersistenceException {
+////        throw new RuntimeException("This routine must be rewriten to use DbAccessCreator.instance().getCourses(SchoolID)");
+//        try {
+//            MapperIF<Course> mapper = MapperCreator.instance(Course.class);
+//            Vector<?> v;
+//            int profileId = getDwoProfileID();
+//            int guestID = PROFILEOFFSET - profileId;
+//            if (user == null) {
+//            //    v = DbAccessCreator.instance().getCourses(guestID);
+//                v = new Vector<>(PublicCourseManager.getCourses(DWO.getDwoProfile()));
+//            } else {
+//                if (user instanceof Teacher) {
+//                    //              v = DbAccessCreator.instance().getCourses(user.getUserID());
+//                    Object[] schoolCourses = mapper.get(user.getSchool());
+//                    Object[] dwoCourses = mapper.getObjectFromReturn(DbAccessCreator.instance().getCourses(guestID));
+//                    // caching side effect. UNDO, we doen nu lazy....
+//                    //MapperCreator.instance(Sco.class).get(new Object[] { user.getSchool(), ((DwoIF) DwoHelper.getApplet()).getDwoProfile()} );
+//                    return combineCourse(dwoCourses, schoolCourses);
+//                } else {
+//                    SchoolClass schoolClass = user.getInClass();
+//                    if (schoolClass == null) {
+//                        v = DbAccessCreator.instance().getCourses(guestID);
+//                    } else {
+//                        v = DbAccessCreator.instance().getCoursesForClass(
+//                                schoolClass.getID());
+//                        if(v.size()==0) return new Course[0];
+//// FIXME aanzetten als clipBeforeAfter weer in gebruik wordt genomen.
+//// Het XML-RPC protocol doet niet aan TIMEZONES 
+//// dat betekent dat date(0) niet werkt voor 'notAfter'
+//                        v = clipBeforeAfter(v);
+//                        Course[] courses = (Course[]) mapper.getObjectFromReturn(v);
+//// FIXME hier maken we de caching effecten ongedaan.
+//                        undoCachingEffect(courses);
+//                        return courses;
+//                    }
+//                }
+//            }
+//            return mapper.getObjectFromReturn(v);
+//        }
+//        catch (IOException e) {
+//            System.out.println(e.getMessage());
+//            LOG.log(Level.SEVERE, null, e);
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (XmlRpcException e) {
+//            System.out.println(e.getMessage());
+//            LOG.log(Level.SEVERE, null, e);
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//        catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//            LOG.log(Level.SEVERE, null, e);
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        } catch (Dwo2Exception e) {
+//          System.out.println(e.getMessage());
+//          LOG.log(Level.SEVERE, null, e);
+//          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//       }
+//
+//    }
 
     public Course[] getImportCourses(School s, School school, int profileID) throws PersistenceException {
         try {

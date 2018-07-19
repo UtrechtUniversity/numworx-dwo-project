@@ -108,7 +108,7 @@ public class MapperCreator {
      * @param c The class wherefrom the mapper must be returned.
      * @return The corresponding mapper.
      */
-    public static MapperIF instance(Class c) {
+    public static <T> MapperIF<T> instance(Class<T> c) {
         if (mapperList == null) {
             mapperList = new Hashtable();
             createClasses();
