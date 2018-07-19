@@ -463,10 +463,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		
 		// vorige/volgende knop toevoegen
 		scoreNav.setVorigeVisible(vorigeKnopZichtbaar);
-		if (vorigeKnopZichtbaar)
+		if (vorigeKnopZichtbaar && scoreNav.getPrevButton() != null)
 			widthVorige = scoreNav.getPrevButton().getOffsetWidth() + margin;
 		scoreNav.setVolgendeVisible(volgendeKnopZichtbaar);
-		if (volgendeKnopZichtbaar)
+		if (volgendeKnopZichtbaar && scoreNav.getNextButton() != null)
 			widthVolgende = scoreNav.getNextButton().getOffsetWidth() + margin;
 		
 		scoreNav.setNextPrevHandler(this);
@@ -482,21 +482,22 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		{
 			scoreNav.setTotaalScoreLabel((int) on.getScore()); // toon percentagescore
 			// nu de score gezet is kunnen we de breedte bepalen
-			widthScore = score.getOffsetWidth() + margin;
+			if (score != null) widthScore = score.getOffsetWidth() + margin;
 		}
 		
 		if (mode == OpdrNav.ZELFTOETS)
 		{
-			// set values
-			scoreNav.setKeerNagekekenLabel(on.getKeerNagekeken());
-
-			// add totaalscore and keer nagekeken labels
-			sb.addLabel(scoreNav.getKeerNagekekenLabel());
-			// Laatste label wordt bij te weinig ruimte heel smal gemaakt, pas als hij verdwijnt, is offsetwidth weer de gewenste breedte.
-			widthKeerNagekeken = Math.max(50, scoreNav.getKeerNagekekenLabel().getOffsetWidth());
-			// Kan ook buitensporig groot worden
-			if (widthKeerNagekeken > 500)
-				widthKeerNagekeken = 100;
+          // set values
+          scoreNav.setKeerNagekekenLabel(on.getKeerNagekeken());
+          if (scoreNav.getKeerNagekekenLabel() != null) {
+            // add totaalscore and keer nagekeken labels
+            sb.addLabel(scoreNav.getKeerNagekekenLabel());
+            // Laatste label wordt bij te weinig ruimte heel smal gemaakt, pas als hij verdwijnt, is
+            // offsetwidth weer de gewenste breedte.
+            widthKeerNagekeken = Math.max(50, scoreNav.getKeerNagekekenLabel().getOffsetWidth());
+            // Kan ook buitensporig groot worden
+            if (widthKeerNagekeken > 500) widthKeerNagekeken = 100;
+          }
 		}
 		
 		if (on.isVerzegeld())
