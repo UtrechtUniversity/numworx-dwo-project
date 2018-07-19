@@ -89,7 +89,7 @@ public interface DbAccessIF  {
      * @throws XmlRpcException
      * @throws SQLException
      */
-    public Vector getEditableCoursesAdmin() throws IOException, XmlRpcException, SQLException;
+//    public Vector getEditableCoursesAdmin() throws IOException, XmlRpcException, SQLException;
 
     /**
      * Returns all the courses which can be edited by a teacher of the specified
@@ -101,7 +101,7 @@ public interface DbAccessIF  {
      * @throws XmlRpcException
      * @throws SQLException
      */
-    public Vector getEditableCourses(int schoolID) throws IOException, XmlRpcException, SQLException;
+//    public Vector getEditableCourses(int schoolID) throws IOException, XmlRpcException, SQLException;
 
     /**
      * Returns one single record out the database, from the specified table, and
@@ -556,7 +556,7 @@ public interface DbAccessIF  {
 
 //    public boolean editSchoolRights(int schoolID, String rights) throws IOException, SQLException, XmlRpcException;
 
-    public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID) throws IOException, XmlRpcException, SQLException;
+//    public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID) throws IOException, XmlRpcException, SQLException;
 
 //    public Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, Hashtable passwd)
 //            throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
