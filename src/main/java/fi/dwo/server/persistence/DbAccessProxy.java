@@ -70,17 +70,17 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 //			XmlRpcException, SQLException {
 //		return getDelegate().getCourses(userID, showAll);
 //	}
-    @Override
-    public Vector getEditableCoursesAdmin() throws IOException,
-            XmlRpcException, SQLException {
-        return getDelegate().getEditableCoursesAdmin();
-    }
-
-    @Override
-    public Vector getEditableCourses(int schoolID) throws IOException,
-            XmlRpcException, SQLException {
-        return getDelegate().getEditableCourses(schoolID);
-    }
+//    @Override
+//    public Vector getEditableCoursesAdmin() throws IOException,
+//            XmlRpcException, SQLException {
+//        return getDelegate().getEditableCoursesAdmin();
+//    }
+//
+//    @Override
+//    public Vector getEditableCourses(int schoolID) throws IOException,
+//            XmlRpcException, SQLException {
+//        return getDelegate().getEditableCourses(schoolID);
+//    }
 
     @Override
     public Hashtable getRecord(String tableName, String idCol, int oid)
@@ -447,7 +447,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     @Override
     public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID)
             throws IOException, XmlRpcException, SQLException {
-        return getDelegate().getImportCourses(schoolFrom, schoolTo, profileID);
+        return getDelegateObsolete().getImportCourses(schoolFrom, schoolTo, profileID);
     }
 
     @Override

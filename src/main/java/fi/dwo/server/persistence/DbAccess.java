@@ -2886,8 +2886,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * 
      * @see fi.dwo.client.persistence.DbAccessIF#getEditableCourses(int)
      */
-    @Override
-    public Vector getEditableCourses(int schoolID) throws IOException,
+    //@Override
+    private Vector getEditableCourses(int schoolID) throws IOException,
             XmlRpcException, SQLException {
 
         PreparedStatement ps;
@@ -2901,8 +2901,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * 
      * @see fi.dwo.client.persistence.DbAccessIF#getEditableCoursesAdmin()
      */
-    @Override
-    public Vector getEditableCoursesAdmin() throws IOException,
+    //@Override
+    private Vector getEditableCoursesAdmin() throws IOException,
             XmlRpcException, SQLException {
 
         PreparedStatement ps;
