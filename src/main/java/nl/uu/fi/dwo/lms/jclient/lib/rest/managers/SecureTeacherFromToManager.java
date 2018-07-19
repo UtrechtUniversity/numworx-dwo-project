@@ -1,12 +1,17 @@
 package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFromTo;
+import nl.uu.fi.dwo.rest.entities.RestSchoolAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFromTo;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
@@ -29,4 +34,13 @@ public class SecureTeacherFromToManager {
     return RestAuthenticator.getInstance().getContext();
   }
 
+  public static List<DomCourse> getCourses(DomSchoolAndProfile dom)  throws Dwo2Exception {
+    RestSchoolAndProfile rest = new RestSchoolAndProfile();
+    rest.setRestContext(getContext());
+    rest.setDomSchoolAndProfile(dom);
+    RestListClassTypes type = RestListClassTypes.DomCourse;
+    List<DomCourse> result =
+      StoredRestManager.getInstance().getPutList("rest/sec:" + PathId.getId(getContext()) + "/teacher/fromto/getCourses", type, rest);
+    return result;
+  }
 }
