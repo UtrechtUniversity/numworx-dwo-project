@@ -89,6 +89,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
+				<version>3.0.0</version>
 				<configuration>
 					<warSourceDirectory>war</warSourceDirectory>
 					<warSourceIncludes>DWOplayer.jsp,KeyboardGWT.css,DWOplayer.css,${runTarget},GeoGebra.html,MCSquared.jsp,images/**,scripts/**,WEB-INF/lib/*,WEB-INF/web.xml</warSourceIncludes>
@@ -320,6 +321,7 @@
 				<warClassifier>xapi</warClassifier>
 				<maven.war.webxml>war/WEB-INF/web-dwo2.xml</maven.war.webxml>
 				<gwt.copyWebapp>false</gwt.copyWebapp>
+				<gwt.style>PRETTY</gwt.style>
 			</properties>
 		</profile>
 		<profile>

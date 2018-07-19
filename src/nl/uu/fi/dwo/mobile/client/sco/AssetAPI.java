@@ -8,6 +8,7 @@ import org.osgi.util.promise.Promises;
 
 import nl.uu.fi.dwo.interaction.client.Role;
 
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -39,6 +40,8 @@ public class AssetAPI implements Scorm2004IF {
 	}-*/;
 	
 	private String lastScore = "";
+
+  private boolean completed;
 	public AssetAPI() {
 		guid = Window.Location.getParameter("guid");
 		if(guid == null) guid = DEFAULT_GUID;
@@ -46,7 +49,7 @@ public class AssetAPI implements Scorm2004IF {
 
 	@Override
 	public Promise<String> Commit() {
-		SetScore(guid,lastScore); // force commit in Noordhoff software.
+		if(!completed) SetScore(guid,lastScore); // force commit in Noordhoff software.
 		return Promises.resolved("");
 	}
 
@@ -54,14 +57,30 @@ public class AssetAPI implements Scorm2004IF {
 	public String GetValue(String name) {
 		if(Memento.SUSPEND_DATA.equals(name))
 			try {
-				return GetAssetData(guid);
+				String assetData = GetAssetData(guid);
+				grabCompleted(assetData);
+                return assetData;
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, "getValue " + e);
 			}
+		  if(Memento.COMPLETION_STATUS.equals(name))
+		      return completed ? Memento.COMPLETED : "";
 		return "";
 	}
 
-	@Override
+	private void grabCompleted(String assetData) {
+      try {
+        completed = JSONParser.parseLenient(assetData).isObject()
+            .get("reviewData").isObject()
+            .get("toetsLocked").isBoolean()
+            .booleanValue();
+      } catch(Throwable t) {
+        
+      }
+    
+  }
+
+  @Override
 	public String GetLastError() {
 		return "";
 	}
@@ -69,9 +88,9 @@ public class AssetAPI implements Scorm2004IF {
 	@Override
 	public String SetValue(String name, String value) {
 		try {
-			if(Memento.SCORE_RAW.equals(name))
+			if(Memento.SCORE_RAW.equals(name) && !completed)
 				SetScore(guid, lastScore = toScore(value));
-			else if(Memento.SUSPEND_DATA.equals(name))
+			else if(Memento.SUSPEND_DATA.equals(name) && !completed)
 				SetAssetData(guid, value);
 //			else if(Memento.EXIT_STATUS.equals(name))
 //			{
@@ -81,9 +100,9 @@ public class AssetAPI implements Scorm2004IF {
 //					SetCompleted(guid, equals);
 //			} 
 			else if ( Memento.COMPLETION_STATUS.equals(name)) {
-				boolean equals = Memento.COMPLETED.equals(value);
-				logger.info("setCompleted(" + value  + " ) " + equals);
-				SetCompleted(guid, equals);
+				completed = Memento.COMPLETED.equals(value);
+				logger.info("setCompleted(" + value  + " ) " + completed);
+				SetCompleted(guid, completed);
 			}
 			else
 				return "false";
