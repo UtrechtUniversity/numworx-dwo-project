@@ -305,14 +305,14 @@ public interface DbAccessIF  {
 //            throws DwoXmlRpcException, IOException, XmlRpcException,
 //            SQLException;
 
-    public String LMSGetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement) throws IOException, XmlRpcException,
-            SQLException;
+//    public String LMSGetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement) throws IOException, XmlRpcException,
+//            SQLException;
 
 //    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement, String iValue) throws IOException, XmlRpcException,
 //            SQLException;
 
-    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement, String iValue, String random) throws IOException, XmlRpcException,
-            SQLException;
+//    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement, String iValue, String random) throws IOException, XmlRpcException,
+//            SQLException;
 
 //    /**
 //     * @param username
@@ -645,7 +645,7 @@ public interface DbAccessIF  {
 
 //    public Vector<Object> getClassesOfStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 
-    public Vector getToSchoolsFrom(int schoolID) throws IOException, XmlRpcException, SQLException;
+//    public Vector getToSchoolsFrom(int schoolID) throws IOException, XmlRpcException, SQLException;
 
 //    public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 
