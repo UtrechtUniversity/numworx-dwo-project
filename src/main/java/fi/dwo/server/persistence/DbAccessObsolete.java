@@ -14,6 +14,10 @@ public interface DbAccessObsolete {
   public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID) throws IOException, XmlRpcException, SQLException;
   public Vector getCoursesJS(int profileValue) throws IOException, XmlRpcException,
   SQLException;
+  public String LMSGetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement) throws IOException, XmlRpcException,
+  SQLException;
+  public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement, String iValue, String random) throws IOException, XmlRpcException,
+  SQLException;
   /**
    * Returns all the available courses for the specified user.
    *
@@ -22,6 +26,7 @@ public interface DbAccessObsolete {
    * @throws java.sql.SQLException
    */
   public Vector getCourses(int profileValue) throws IOException, XmlRpcException, SQLException;
+  public Vector getToSchoolsFrom(int schoolID) throws IOException, XmlRpcException, SQLException;
 
 /*  Hashtable login(String username, String password)
       throws SQLException, DwoXmlRpcException, IOException, XmlRpcException;

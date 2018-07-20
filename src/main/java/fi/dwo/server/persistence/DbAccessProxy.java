@@ -152,7 +152,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     @Override
     public String LMSGetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement)
             throws IOException, XmlRpcException, SQLException {
-        return getDelegate().LMSGetValue(scoID, userID, schoolGroupID, iDataModelElement);
+        return getDelegateObsolete().LMSGetValue(scoID, userID, schoolGroupID, iDataModelElement);
     }
 
 //    @Override
@@ -165,7 +165,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement,
             String iValue, String random) throws IOException, XmlRpcException,
             SQLException {
-        return getDelegate().LMSSetValue(scoID, userID, schoolGroupID, iDataModelElement, iValue,
+        return getDelegateObsolete().LMSSetValue(scoID, userID, schoolGroupID, iDataModelElement, iValue,
                 random);
     }
 
@@ -564,7 +564,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 
     @Override
     public Vector getToSchoolsFrom(int schoolID) throws IOException, XmlRpcException, SQLException {
-        return getDelegate().getToSchoolsFrom(schoolID);
+        return getDelegateObsolete().getToSchoolsFrom(schoolID);
     }
 
 //    @Override
