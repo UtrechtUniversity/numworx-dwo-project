@@ -860,14 +860,15 @@ public class PersistenceFacade {
      * @throws PersistenceException If a database exception, or XML-RPC
      * exception occurres.
      */
-    public String LMSGetValue(ScoBase sco, User user, String iDataModelElement)
+    public String LMSGetValue(ScoBase sco, User user, SchoolClass cls, String iDataModelElement)
             throws PersistenceException {
         if (user != null && !(user instanceof Guest)) {
             int uid = user.getUserID();
             int scoid = sco.getScoID();
             int sgid = idOf(user.getSchoolGroupID());
+            int clsid = cls==null?0:cls.getID();
             String key = mapDataModel(iDataModelElement);
-            return StoreCreator.instance().getValue(uid, scoid, sgid, key);
+            return StoreCreator.instance().getValue(uid, scoid, sgid, clsid, key);
         } else {
             return "";
         }
@@ -1489,7 +1490,7 @@ public class PersistenceFacade {
      * @return 
      */
     private static int getDwoProfileID() {
-        return ((DWO) DwoHelper.getApplet()).getDwoProfileID();
+        return DWO.getDwoProfileID();
     }
 
     /**
@@ -2847,29 +2848,29 @@ public class PersistenceFacade {
 //        return courses;
 //    }
 
-    /**
-     * =============================================================================
-     * FROMTO FUNCTIONALITY
-     * =============================================================================
-     * @return 
-     */
-    public Vector getToSchoolsFrom(int schoolID)
-            throws IOException, XmlRpcException, SQLException, PersistenceException {
-        try {
-            Vector v = DbAccessCreator.instance().getToSchoolsFrom(schoolID);
-            return v;
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-
-    }
+//    /**
+//     * =============================================================================
+//     * FROMTO FUNCTIONALITY
+//     * =============================================================================
+//     * @return 
+//     */
+//    public Vector getToSchoolsFrom(int schoolID)
+//            throws IOException, XmlRpcException, SQLException, PersistenceException {
+//        try {
+//            Vector v = DbAccessCreator.instance().getToSchoolsFrom(schoolID);
+//            return v;
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//
+//    }
 
 //    /**
 //     * =============================================================================

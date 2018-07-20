@@ -23,11 +23,11 @@ public class ReadOnly extends NoCache {
 	}
 	
     @Override
-    public String getValue(int uid, int scoid, int sgid, String key) throws PersistenceException {
+    public String getValue(int uid, int scoid, int sgid, int clsid, String key) throws PersistenceException {
         if ("suspendData".equals(key) && !hasSuspendData) {
             return "";
         }
-        return super.getValue(uid, scoid, sgid, key);
+        return super.getValue(uid, scoid, sgid, clsid, key);
     }
 
 }

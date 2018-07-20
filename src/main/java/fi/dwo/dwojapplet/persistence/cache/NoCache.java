@@ -41,7 +41,7 @@ public class NoCache implements IStore {
     private DbAccessIF dbAccess;
 
     @Override
-    public String getValue(int uid, int scoid, int sgid, String key) throws PersistenceException {
+    public String getValue(int uid, int scoid, int sgid, int clsid, String key) throws PersistenceException {
         String result = null;
         try {
           PersistenceId schoolGroupId = PersistentSchoolGroup.buildPersistenceId(Long.valueOf(sgid));
@@ -57,14 +57,22 @@ public class NoCache implements IStore {
             result = SecuredStudentScoDataManager.get(dom).getValues().get(0).getValue();
           } else {
             // Student Of Teacher
-            result = dbAccess.LMSGetValue(scoid, uid, sgid, key);
+            //result = dbAccess.LMSGetValue(scoid, uid, sgid, key);
+            // Student Of Teacher
+            DomClearStudentDataForScoAndClass dom = new DomClearStudentDataForScoAndClass();
+            dom.setDomProfile(DWO.getDwoProfile());
+            DomSchoolClass domSchoolClass = new DomSchoolClass();
+            domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId((long)clsid));
+            dom.setDomSchoolClass(domSchoolClass);
+            DomScoContext scoContext  = new DomScoContext();
+            scoContext.setId(PersistentScoContext.buildPersistenceId(Long.valueOf(scoid)));
+            dom.setDomScoContext(scoContext);
+            DomStudent domStudent = new DomStudent();
+            domStudent.setId(PersistentUser.buildPersistenceId((long)uid));
+            dom.setDomStudentList(Collections.singletonList(domStudent));
+            DomStudentScoContext ssc = SecuredTeacherResultsManager.createStudentResults(dom).getStudentScoContexts().get(0).getValue();
+            result = SecuredTeacherResultsManager.getValues(ssc, Collections.singleton(key)).get(key);
           }
-        } catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        } catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        } catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
         } catch (Dwo2Exception e) {
           throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         }

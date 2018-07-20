@@ -1705,7 +1705,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * @param iDataModelElement The parameter to ask for.
      * @return The value representing for the specified sco, user and parameter.
      */
-    public String LMSGetValue(ScoBase sco, User user, String iDataModelElement) {
+    public String LMSGetValue(ScoBase sco, User user, SchoolClass cls, String iDataModelElement) {
         if (LEARNER_ID.equals(iDataModelElement)) {
             if (user == null) {
                 return Guest.instance().getUsername();
@@ -1730,7 +1730,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 
         } else {
             try {
-                return PersistenceFacade.instance().LMSGetValue(sco, user, iDataModelElement);
+                return PersistenceFacade.instance().LMSGetValue(sco, user, cls, iDataModelElement);
             } catch (PersistenceException e) {
                 JOptionPane.showMessageDialog(this, e.getMessage());
                 return "";

@@ -10,7 +10,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 public interface IStore {
 
-    String getValue(int uid, int scoid, int sgid, String key) throws PersistenceException;
+    String getValue(int uid, int scoid, int sgid, int clsid, String key) throws PersistenceException;
 
     String setValue(int uid, int scoid, int sgid, int clsid, String key, String value) throws PersistenceException;
 

@@ -208,16 +208,16 @@ class DbAccessClient extends Client implements DbAccessIF {
 //        return ((Boolean) object).booleanValue();
 //    }
 
-    @Override
-    public java.lang.String LMSGetValue(int a, int b, int c, java.lang.String d) throws IOException, XmlRpcException {
-        Vector vv = new Vector(3);
-        vv.addElement(new Integer(a));
-        vv.addElement(new Integer(b));
-        vv.addElement(new Integer(c));
-        vv.addElement(d);
-        Object object = invoke("LMSGetValue", vv);
-        return (java.lang.String) object;
-    }
+//    @Override
+//    public java.lang.String LMSGetValue(int a, int b, int c, java.lang.String d) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(3);
+//        vv.addElement(new Integer(a));
+//        vv.addElement(new Integer(b));
+//        vv.addElement(new Integer(c));
+//        vv.addElement(d);
+//        Object object = invoke("LMSGetValue", vv);
+//        return (java.lang.String) object;
+//    }
 
 //    @Override
 //    public java.lang.String LMSSetValue(int a, int b, int c,  java.lang.String d, java.lang.String e) throws IOException, XmlRpcException {
@@ -231,18 +231,18 @@ class DbAccessClient extends Client implements DbAccessIF {
 //        return (java.lang.String) object;
 //    }
 
-    @Override
-    public java.lang.String LMSSetValue(int a, int b, int c, java.lang.String d, java.lang.String e, java.lang.String f) throws IOException, XmlRpcException {
-        Vector vv = new Vector(5);
-        vv.addElement(new Integer(a));
-        vv.addElement(new Integer(b));
-        vv.addElement(new Integer(c));
-        vv.addElement(d);
-        vv.addElement(e);
-        vv.addElement(f);
-        Object object = invoke("LMSSetValue", vv);
-        return (java.lang.String) object;
-    }
+//    @Override
+//    public java.lang.String LMSSetValue(int a, int b, int c, java.lang.String d, java.lang.String e, java.lang.String f) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(5);
+//        vv.addElement(new Integer(a));
+//        vv.addElement(new Integer(b));
+//        vv.addElement(new Integer(c));
+//        vv.addElement(d);
+//        vv.addElement(e);
+//        vv.addElement(f);
+//        Object object = invoke("LMSSetValue", vv);
+//        return (java.lang.String) object;
+//    }
 
 //    @Override
 //    public boolean register(java.lang.String a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e, java.lang.String f, java.lang.String g, int h, java.lang.String i) throws IOException, XmlRpcException {
@@ -969,13 +969,13 @@ class DbAccessClient extends Client implements DbAccessIF {
 //        return ((Boolean) object);
 //    }
 
-    @Override
-    public Vector getToSchoolsFrom(int schoolID) throws IOException, XmlRpcException, SQLException {
-        Vector vv = new Vector(1);
-        vv.addElement(new Integer(schoolID));
-        Object object = invoke("getToSchoolsFrom", vv);
-        return (java.util.Vector) object;
-    }
+//    @Override
+//    public Vector getToSchoolsFrom(int schoolID) throws IOException, XmlRpcException, SQLException {
+//        Vector vv = new Vector(1);
+//        vv.addElement(new Integer(schoolID));
+//        Object object = invoke("getToSchoolsFrom", vv);
+//        return (java.util.Vector) object;
+//    }
 
     @Override
     public Vector<Object> getHasRoleUser(int uid, int sgid) throws  IOException, XmlRpcException, SQLException{

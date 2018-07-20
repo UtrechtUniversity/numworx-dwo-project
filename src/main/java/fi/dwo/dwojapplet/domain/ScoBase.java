@@ -278,7 +278,7 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
         // session_ en total_time in 1.2 format.
         if (CMI_SESSION_TIME.equals(iDataModelElement) || CMI_TOTAL_TIME.equals(iDataModelElement)) {
             iDataModelElement = iDataModelElement.substring(4); // skip cmi.
-            return ok(to2004Time(from1_2Time(dwo.LMSGetValue(this, user, iDataModelElement))));
+            return ok(to2004Time(from1_2Time(dwo.LMSGetValue(this, user, cls, iDataModelElement))));
         }
 // MC2 feature
         if(iDataModelElement.startsWith("dme."))
@@ -289,7 +289,7 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
         	}
         	return ko("");
         }
-        return ok(dwo.LMSGetValue(this, user, iDataModelElement));  // null -> 101 else ok()
+        return ok(dwo.LMSGetValue(this, user, cls, iDataModelElement));  // null -> 101 else ok()
     }
 
     /**
@@ -316,7 +316,7 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
         if (lessonLocation != null) {
             return lessonLocation;
         }
-        return dwo.LMSGetValue(this, user, LESSON_LOCATION);
+        return dwo.LMSGetValue(this, user, cls, LESSON_LOCATION);
     }
 
     /**

@@ -541,24 +541,24 @@ public class ResultLogger extends JPanel implements ActionListener,
 
 	private Properties getCMIData(User u, Sco s) throws PersistenceException {
 		final PersistenceFacade instance = PersistenceFacade.instance();
-		String r = instance.LMSGetValue(s, u, Scorm2Xml.COCD);
+		String r = instance.LMSGetValue(s, u, schoolClass, Scorm2Xml.COCD);
 		final Scorm2Xml xml = new Scorm2Xml(r);
 		String extra; // extra
 		String key;
 
 		key = "cmi.core.score.raw";
-		extra = instance.LMSGetValue(s, u, key);
+		extra = instance.LMSGetValue(s, u, schoolClass, key);
 		if (extra.length() > 0)
 			xml.setValue(key, extra);
 
 		key = "cmi.core.total_time";
-		extra = instance.LMSGetValue(s, u, key);
+		extra = instance.LMSGetValue(s, u, schoolClass, key);
 		if (extra.length() > 0)
 			xml.setValue(key, extra);
 
 		key = "cmi.core.session_time"; // ????
 		if (extra.length() > 0)
-			extra = instance.LMSGetValue(s, u, key);
+			extra = instance.LMSGetValue(s, u, schoolClass, key);
 		xml.setValue(key, extra);
 
 		return xml.toProperties();
@@ -826,7 +826,7 @@ public class ResultLogger extends JPanel implements ActionListener,
 	}
 
 	private String getSuspendData(User u, Sco s) throws PersistenceException {
-		return PersistenceFacade.instance().LMSGetValue(s, u, SUSPEND_DATA);
+		return PersistenceFacade.instance().LMSGetValue(s, u, schoolClass, SUSPEND_DATA);
 	}
 
 	public class LogTable extends JTable {

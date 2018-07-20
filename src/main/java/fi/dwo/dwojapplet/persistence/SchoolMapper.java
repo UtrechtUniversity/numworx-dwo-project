@@ -2,24 +2,30 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\SchoolMapper.java
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherFromToManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-class SchoolMapper extends XmlRpcMapper {
+class SchoolMapper extends XmlRpcMapper<School> {
     private static final Logger LOG = Logger.getLogger(SchoolMapper.class.getName());
 
     @Override
-    public Object get(int uid, Integer sgid) {
+    public School get(int uid, Integer sgid) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -125,7 +131,7 @@ class SchoolMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public void put(int oid, Object obj)  {
+    public void put(int oid, School obj)  {
         System.err.println("SchoolMapper.put() Not yet implemented!");
 
     }
@@ -139,7 +145,7 @@ class SchoolMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException {
+    public School getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException {
         School s = null;
         if (data.get("schoolID") == null) { //We don't know enough to make a
             // schoolobject
@@ -168,12 +174,34 @@ class SchoolMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public Object[] get(Object obj) throws IOException, SQLException,
+    public School[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
         if (Boolean.TRUE.equals(obj)) {
-            Hashtable h = new Hashtable();
-            h.put("export", obj);
-            return super.get(h);
+//            Hashtable h = new Hashtable();
+//            h.put("export", obj);
+//            return super.get(h);
+          try {
+            List<DomSchoolFrom> list = SecureTeacherFromToManager.getExports();
+            School[] result = createArray(list.size());
+            for (int i = 0; i < result.length; i++) {
+              int id = MySQLPersistenceId.getNativeId(list.get(i)).intValue();
+              School s;
+              if (objects.containsKey(Integer.valueOf(id))) {
+                s = objects.get(Integer.valueOf(id));
+                s.setName(list.get(i).getSchoolName());
+              } else {
+                s = new LazySchool();
+                s.setName(list.get(i).getSchoolName());
+                objects.put(Integer.valueOf(id), s);
+              }
+              result[i] = s;
+            }
+          } catch (Dwo2Exception e) {
+            throw new IOException(e.getDwo2Message(), e);
+          }
+        
+        
+        
         }
         return get();
     }
@@ -205,7 +233,7 @@ class SchoolMapper extends XmlRpcMapper {
      *      java.util.Hashtable)
      */
     @Override
-    protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
+    protected School update(School obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
         School s = (School) obj;
         s.setSchoolID(((Integer) data.get("schoolID")).intValue());
         s.setName((String) data.get("schoolName"));
@@ -246,7 +274,7 @@ class SchoolMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
     @Override
-    protected Object[] createArray(int size) {
+    protected School[] createArray(int size) {
         return new School[size];
     }
 

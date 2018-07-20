@@ -114,9 +114,9 @@ public class CachingStore implements IStore, Runnable {
     }
 
     @Override
-    public String getValue(int uid, int scoid, int sgid, String key)
+    public String getValue(int uid, int scoid, int sgid, int clsid, String key)
             throws PersistenceException {
-        Bucket b = new Bucket(uid, scoid, sgid, 0, key, "");
+        Bucket b = new Bucket(uid, scoid, sgid, clsid, key, "");
         synchronized (this) {
             Bucket v = (Bucket) work.get(b);
             if (v == null) {
@@ -127,7 +127,7 @@ public class CachingStore implements IStore, Runnable {
                     return value;
                 }
                 try {
-                    return delegate.getValue(uid, scoid, sgid, key);
+                    return delegate.getValue(uid, scoid, sgid, clsid, key);
                 } catch (PersistenceException e) {
                     LOG.log(Level.SEVERE,null,e);
                     throw e;

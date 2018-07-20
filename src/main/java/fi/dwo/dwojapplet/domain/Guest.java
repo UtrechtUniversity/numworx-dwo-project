@@ -17,7 +17,7 @@ public class Guest extends User {
 
     private static User _instance;
 
-    protected Guest() {
+    private Guest() {
         super();
     }
 

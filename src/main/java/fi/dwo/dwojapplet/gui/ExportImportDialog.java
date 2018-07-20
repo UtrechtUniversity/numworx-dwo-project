@@ -917,32 +917,44 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 
     private void initializeExportSchoolModels(
             ExportSchoolModel exportSchoolModel, ButtonModel model) {
-        Hashtable wheredef = new Hashtable();
-        wheredef.put("schoolFrom", user.getSchool().getSchoolID());
+//        Hashtable wheredef = new Hashtable();
+//        wheredef.put("schoolFrom", user.getSchool().getSchoolID());
         try {
-            Vector result = PersistenceFacade.instance().getToSchoolsFrom(user.getSchool().getSchoolID());
-            //DbAccessCreator.instance().getTable("tblfromto", wheredef);
-            Enumeration e = result.elements();
-            while (e.hasMoreElements()) {
-                Hashtable row = (Hashtable) e.nextElement();
-                int to = ((Number) row.get("schoolTo")).intValue();
-                if (to == ALLE_SCHOLEN.getSchoolID()) {
-                    model.setSelected(true);
-                } else {
-                    int index = exportSchoolModel.getIndex(to);
-                    if (index >= 0) {
-                        exportSchoolModel.export[index] = Boolean.TRUE;
-                    }
-                }
+//            Vector result = PersistenceFacade.instance().getToSchoolsFrom(user.getSchool().getSchoolID());
+//            //DbAccessCreator.instance().getTable("tblfromto", wheredef);
+//            Enumeration e = result.elements();
+//            while (e.hasMoreElements()) {
+//                Hashtable row = (Hashtable) e.nextElement();
+//                int to = ((Number) row.get("schoolTo")).intValue();
+//                if (to == ALLE_SCHOLEN.getSchoolID()) {
+//                    model.setSelected(true);
+//                } else {
+//                    int index = exportSchoolModel.getIndex(to);
+//                    if (index >= 0) {
+//                        exportSchoolModel.export[index] = Boolean.TRUE;
+//                    }
+//                }
+//            }
+            
+            DomSchoolFromTo schools = SecureTeacherFromToManager.get();
+            model.setSelected(schools.getAll().booleanValue());
+            for( DomSchoolFrom s: schools.getSchools()) {
+              int to = MySQLPersistenceId.getNativeId(s).intValue();
+              int index = exportSchoolModel.getIndex(to);
+              if(index>=0)
+                  exportSchoolModel.export[index] = Boolean.TRUE;
             }
-        } catch (PersistenceException e) {
-            LOG.log(Level.SEVERE, null, e);
-        } catch (IOException e) {
-            LOG.log(Level.SEVERE, null, e);
-        } catch (XmlRpcException e) {
-            LOG.log(Level.SEVERE, null, e);
-        } catch (SQLException e) {
-            LOG.log(Level.SEVERE, null, e);
+            
+//        } catch (PersistenceException e) {
+//            LOG.log(Level.SEVERE, null, e);
+//        } catch (IOException e) {
+//            LOG.log(Level.SEVERE, null, e);
+//        } catch (XmlRpcException e) {
+//            LOG.log(Level.SEVERE, null, e);
+//        } catch (SQLException e) {
+//            LOG.log(Level.SEVERE, null, e);
+        } catch (Dwo2Exception e1) {
+          LOG.log(Level.SEVERE, "initializeExportSchoolModels", e1);
         }
     }
 
