@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClasses;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -253,6 +254,9 @@ class RestManager extends RestyDateTimeFormat {
         case DomSchoolAdmin:
           return (List<T>) genson.deserialize(json.toString(),
               new GenericType<List<DomSchoolAdmin>>() {});
+        case DomSchoolFrom:
+          return (List<T>) genson.deserialize(json.toString(),
+              new GenericType<List<DomSchoolFrom>>() {});
         case DomSchool4DwoAdmin:
           return (List<T>) genson.deserialize(json.toString(),
               new GenericType<List<DomSchool4DwoAdmin>>() {});

@@ -10,7 +10,9 @@ import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAndProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFromTo;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestSchoolAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFromTo;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -43,4 +45,22 @@ public class SecureTeacherFromToManager {
       StoredRestManager.getInstance().getPutList("rest/sec:" + PathId.getId(getContext()) + "/teacher/fromto/getCourses", type, rest);
     return result;
   }
+  
+  public static DomSchoolFromTo get() throws Dwo2Exception {
+    RestContext rest = new RestContext();
+    rest.setRestContext(getContext());
+    DomSchoolFromTo result = 
+        StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/fromto/get", DomSchoolFromTo.class, rest);
+    return result;
+  }
+  
+  public static List<DomSchoolFrom> getExports() throws Dwo2Exception {
+    RestContext rest = new RestContext();
+    rest.setRestContext(getContext());
+    List<DomSchoolFrom> result = 
+        StoredRestManager.getInstance().getPutList("rest/sec:" + PathId.getId(getContext()) + "/teacher/fromto/getExports", RestListClassTypes.DomSchoolFrom, rest);
+    return result;
+   
+  }
+  
 }

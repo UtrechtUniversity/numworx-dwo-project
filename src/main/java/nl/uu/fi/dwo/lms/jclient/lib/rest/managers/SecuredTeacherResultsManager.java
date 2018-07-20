@@ -3,9 +3,12 @@ package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -86,4 +89,21 @@ public class SecuredTeacherResultsManager {
     return true;
   }
 
+  public static Map<String,String> getValues(DomStudentScoContext ssc, Collection<String> keys) throws Dwo2Exception {
+    RestTeacherScormValues rest = new RestTeacherScormValues();
+    DomTeacherScormValues values = new DomTeacherScormValues();
+    rest.setDomTeacherScormValues(values);
+    rest.setRestContext(getContext());
+    values.setStudentScoContext(ssc);
+    ArrayList<DomMapEntry<String,String>> list = new ArrayList<DomMapEntry<String,String>>(keys.size());
+    for(String entry: keys) {
+        list.add(new DomMapEntry<String,String>(entry, ""));
+    }
+    values.setValues(list);
+    DomTeacherScormValues result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/scormValues/get",
+      DomTeacherScormValues.class, rest);
+    Map<String,String> map = new HashMap<>();
+    result.getValues().forEach(e -> map.put(e.getKey(),e.getValue()));
+    return map;
+  }
 }
