@@ -31,7 +31,7 @@
 				var hash = location.hash || "";
 				var id = search + hash;
 				var element = document.getElementsByTagName("iframe")[0];
-				element.setAttribute("src", "/dwo/tabler/DWOplayer.jsp"+id);
+				element.setAttribute("src", "/dwo/tablet/DWOplayer.jsp"+id);
 		    }
 		</script>
     </head>
