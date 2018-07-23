@@ -2724,6 +2724,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * @throws fi.dwo.commons.exceptions.SchoolException
      *
      */
+    @SuppressWarnings("deprecation")
     public School editSchool(int schoolID, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap,
             Date date, SecureDwoAdminSchoolManager schoolManager) throws SchoolException {
         // String studentPassw = schoolPasswdMap.getPasswd(SchoolGroup.STUDENT);
@@ -2732,8 +2733,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         // schoolLogin, studentPassw, teacherPassw);
       DomSchoolFull school = new DomSchoolFull();
 // safe the date in UTC:
-      @SuppressWarnings("deprecation")
-      Date date0 = new Date(Date.UTC(date.getYear(), date.getMonth(), date.getDate(), 0, 0, 0));
+      Date date0 = null;
+      if(date != null)
+        date0 = new Date(Date.UTC(date.getYear(), date.getMonth(), date.getDate(), 0, 0, 0));
 
       school.setExpire(date0);
       school.setSchoolLogin(schoolLogin);

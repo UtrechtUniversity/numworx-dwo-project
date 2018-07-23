@@ -113,7 +113,14 @@ class SchoolDwoAdminPanelTableModel extends AbstractTableModel {
     @Override
     public void setValueAt(Object value, int row, int col) {
         //don't change any setting, but update selected values.
-        setSelectedRow(row);
+      switch (col) {
+        case 0: 
+        case 1:
+          data[row][col] = value;
+      }
+      
+      
+      setSelectedRow(row);
         setSelectedColumn(col);
     }
 

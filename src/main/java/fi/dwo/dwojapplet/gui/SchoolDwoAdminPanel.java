@@ -112,6 +112,8 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
                 try {
                     School s = AddSchoolDialog.editSchool(SchoolDwoAdminPanel.this.center, oldSchool);
                     if (s != null) {
+                        tableModel.setValueAt(s.getSchoolLogin(), lclRow, 1);
+                        tableModel.setValueAt(s.getName(), lclRow, 0);
                         model.fireTableRowsUpdated(lclRow, lclRow);
                     }
                 }
