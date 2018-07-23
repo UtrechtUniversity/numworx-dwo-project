@@ -1,4 +1,14 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<% 
+	int profile = 100;
+	String query = request.getQueryString();
+	if(query == null)
+	 	query = "?base=/en/he/&locale=en&profile=" + profile;
+	else 
+	  	query = "?base=/en/he/&locale=en&profile=" + profile + "&" + query;
+%>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
 		<meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,17 +27,17 @@
         </style>
 		<script type="text/javascript">
 	 		function load() {
-				var search = location.search || "";
+				var search = "<%=query%>"
 				var hash = location.hash || "";
 				var id = search + hash;
 				var element = document.getElementsByTagName("iframe")[0];
-				element.setAttribute("src", "player.html"+id);
+				element.setAttribute("src", "/dwo/tablet/DWOplayer.jsp"+id);
 		    }
 		</script>
     </head>
     <body onload ="load()">
         <div id="content">
-            <iframe width="100%" height="100%" frameborder="0" src="player.html" ></iframe>
+            <iframe width="100%" height="100%" frameborder="0" src="" ></iframe>
         </div>
     </body>
 </html>

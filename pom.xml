@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
@@ -119,6 +121,42 @@
 			<artifactId>DWOJClient</artifactId>
 			<version>2.2.7-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>fi.dwo</groupId>
+			<artifactId>DWO-apps</artifactId>
+			<version>2.0.5</version>
+			<scope>runtime</scope>
+			<type>war</type>
+		</dependency>
+	<dependency>
+		<groupId>nl.uu.fi.dwo.mobile</groupId>
+		<artifactId>DWOplayer</artifactId>
+		<version>${DWOplayerVersion}</version>
+		<type>war</type>
+		<classifier>dwo2</classifier>
+		<scope>runtime</scope>
+	</dependency>
+	<dependency>
+		<groupId>nl.uu.fi.dwo.lms</groupId>
+		<artifactId>DWOGwtClient</artifactId>
+		<version>${DWOGwtClientVersion}</version>
+		<type>war</type>
+		<scope>runtime</scope>
+	</dependency>
+	<dependency>
+		<groupId>nl.uu.fi.dwo.register</groupId>
+		<artifactId>Register</artifactId>
+		<version>${RegisterVersion}</version>
+		<type>war</type>
+		<scope>runtime</scope>
+	</dependency>
+	<dependency>
+		<groupId>fi.servlet</groupId>
+		<artifactId>DWOmAccess</artifactId>
+		<version>${DWOmAccessVersion}</version>
+		<type>war</type>
+		<scope>runtime</scope>
+	</dependency>
 	</dependencies>
 	<build>
 		<resources>
@@ -197,57 +235,6 @@
 							</artifactItems>
 							<outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
 							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-						</configuration>
-					</execution>
-					<execution>
-						<id>unpack</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>fi.dwo</groupId>
-									<artifactId>DWO-apps</artifactId>
-									<version>2.0.5</version>
-									<type>war</type>
-									<outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/apps/</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>nl.uu.fi.dwo.mobile</groupId>
-									<artifactId>DWOplayer</artifactId>
-									<version>${DWOplayerVersion}</version>
-									<type>war</type>
-									<classifier>dwo2</classifier>
-									<outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/tablet/</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>nl.uu.fi.dwo.register</groupId>
-									<artifactId>Register</artifactId>
-									<version>${RegisterVersion}</version>
-									<type>war</type>
-									<outputDirectory>${project.build.directory}/${project.build.finalName}/dwo/register</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>fi.servlet</groupId>
-									<artifactId>DWOmAccess</artifactId>
-									<version>${DWOmAccessVersion}</version>
-									<type>war</type>
-									<excludes>WEB-INF/**</excludes>
-									<outputDirectory>${project.build.directory}/${project.build.finalName}/DWOmAccess</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>nl.uu.fi.dwo.lms</groupId>
-									<artifactId>DWOGwtClient</artifactId>
-									<version>${DWOGwtClientVersion}</version>
-									<type>war</type>
-									<excludes>WEB-INF/**</excludes>
-									<outputDirectory>${project.build.directory}/${project.build.finalName}/gwtclient</outputDirectory>
-								</artifactItem>
-							</artifactItems>
-							<overWriteReleases>true</overWriteReleases>
 							<overWriteSnapshots>true</overWriteSnapshots>
 						</configuration>
 					</execution>
@@ -341,6 +328,35 @@
 							<Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
 						</manifestEntries>
 					</archive>
+					<overlays>
+						<overlay>
+							<groupId>fi.dwo</groupId>
+							<artifactId>DWO-apps</artifactId>
+							<targetPath>/dwo/apps</targetPath>
+						</overlay>
+						<overlay>
+							<groupId>nl.uu.fi.dwo.mobile</groupId>
+							<artifactId>DWOplayer</artifactId>
+							<classifier>dwo2</classifier>
+							<targetPath>/dwo/tablet</targetPath>		
+						</overlay>
+						<overlay>
+							<groupId>nl.uu.fi.dwo.lms</groupId>
+							<artifactId>DWOGwtClient</artifactId>
+							<targetPath>/gwtclient</targetPath>
+						</overlay>
+						<overlay>
+							<groupId>nl.uu.fi.dwo.register</groupId>
+							<artifactId>Register</artifactId>
+							<targetPath>/dwo/register</targetPath>
+						</overlay>
+						<overlay>
+							<groupId>fi.servlet</groupId>
+							<artifactId>DWOmAccess</artifactId>
+							<targetPath>/DWOmAccess</targetPath>
+							<excludes>WEB-INF/**</excludes>
+						</overlay>
+					</overlays>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -383,18 +399,30 @@
 					</arguments>
 				</configuration>
 			</plugin>
-        </plugins>
-    </build>
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <DWOplayerVersion>2.2.7-SNAPSHOT</DWOplayerVersion>
-        <DWOmAccessVersion>0.0.9</DWOmAccessVersion>
-        <RegisterVersion>2.1.23</RegisterVersion>
-        <DWOGwtClientVersion>0.10.16-SNAPSHOT</DWOGwtClientVersion>
-    </properties>
-    <scm>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</developerConnection>
-        <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</connection>
-    </scm>
+			<plugin>
+				<groupId>com.github.davidmoten</groupId>
+				<artifactId>aws-maven-plugin</artifactId>
+				<version>0.2.18</version>
+				<configuration>
+					<serverId>prod</serverId>
+					<artifact>${project.build.directory}/${project.build.finalName}.war</artifact>
+					<applicationName>DWO-EBServer</applicationName>
+					<environmentName>testebserver</environmentName>
+					<region>eu-west-1</region>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<DWOplayerVersion>2.2.7-SNAPSHOT</DWOplayerVersion>
+		<DWOmAccessVersion>0.0.9</DWOmAccessVersion>
+		<RegisterVersion>2.1.23</RegisterVersion>
+		<DWOGwtClientVersion>0.10.16-SNAPSHOT</DWOGwtClientVersion>
+	</properties>
+	<scm>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</developerConnection>
+		<connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</connection>
+	</scm>
 </project>

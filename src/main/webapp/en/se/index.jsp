@@ -2,12 +2,12 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <% 
-	int profile = 77;
+	int profile = 92;
 	String query = request.getQueryString();
 	if(query == null)
-	 	query = "?base=/vo/&profile=" + profile;
+	 	query = "?base=/en/se/&locale=en&profile=" + profile;
 	else 
-	  	query = "?base=/vo/&profile=" + profile + "&" + query;
+	  	query = "?base=/en/se/&locale=en&profile=" + profile + "&" + query;
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
