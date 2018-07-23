@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -211,7 +212,10 @@ public class BootPanelController {
                             //we should also clear user, view and presenter states, but that is never bug free.
                             //however a reload works too.
                             setSession(false);
-                            Window.Location.replace(Window.Location.getHref());
+                            UrlBuilder url = Window.Location.createUrlBuilder();
+                            url.removeParameter("a");
+                            url.removeParameter("view");
+                            Window.Location.replace(url.buildString());
                             break;
                         default:
                             LOG.log(Level.SEVERE, "Login handling failed in app controller.");
