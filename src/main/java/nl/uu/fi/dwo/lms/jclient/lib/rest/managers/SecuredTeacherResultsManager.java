@@ -102,7 +102,7 @@ public class SecuredTeacherResultsManager {
     values.setValues(list);
     DomTeacherScormValues result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/scormValues/get",
       DomTeacherScormValues.class, rest);
-    Map<String,String> map = new HashMap<>();
+    final Map<String,String> map = new HashMap<>();
     result.getValues().forEach(e -> map.put(e.getKey(),e.getValue()));
     return map;
   }
