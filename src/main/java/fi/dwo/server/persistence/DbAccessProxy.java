@@ -404,14 +404,14 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     @Override
     public Vector getUserResults(int courseID, int userID, int schoolGroupID) throws IOException,
             XmlRpcException, SQLException {
-        return getDelegate().getUserResults(courseID, userID, schoolGroupID);
+        return getDelegateObsolete().getUserResults(courseID, userID, schoolGroupID);
     }
 
-    @Override
-    public Vector getUserResults(Vector courses, int i) throws SQLException,
-            IOException, XmlRpcException {
-        return getDelegate().getUserResults(courses, i);
-    }
+//    @Override
+//    public Vector getUserResults(Vector courses, int i) throws SQLException,
+//            IOException, XmlRpcException {
+//        return getDelegate().getUserResults(courses, i);
+//    }
 
     @Override
     public Vector getUserResults(Vector courses, int i, int j) throws SQLException,
