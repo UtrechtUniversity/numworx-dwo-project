@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 
 /**
  * This is the plain and direct restManager. Please use the {@Link StoredRestManager} to minimize
@@ -489,6 +490,8 @@ class RestManager extends RestyDateTimeFormat {
         case DomTeacherAndHasRole:
           return (List<T>) genson.deserialize(json.toString(),
               new GenericType<List<DomTeacherAndHasRole>>() {});
+        case DomStudentScoContext:
+          return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomStudentScoContext>>() {});
         default:
           String msg = "Programming error, trying to get an unsupported dataType.";
           LOG.log(Level.SEVERE, msg);
