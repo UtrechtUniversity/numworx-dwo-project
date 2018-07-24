@@ -615,25 +615,25 @@ class DbAccessClient extends Client implements DbAccessIF {
 //        return (java.util.Hashtable) object;
 //    }
 
-    @Override
-    public java.util.Vector getUserResults(int a, int b, int c) throws IOException, XmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(new Integer(a));
-        vv.addElement(new Integer(b));
-        vv.addElement(new Integer(c));
-        Object object = invoke("getUserResults", vv);
-        return (java.util.Vector) object;
-    }
+//    @Override
+//    public java.util.Vector getUserResults(int a, int b, int c) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(new Integer(a));
+//        vv.addElement(new Integer(b));
+//        vv.addElement(new Integer(c));
+//        Object object = invoke("getUserResults", vv);
+//        return (java.util.Vector) object;
+//    }
 
-    @Override
-    @Deprecated
-    public java.util.Vector getUserResults(java.util.Vector a, int b) throws IOException, XmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(a);
-        vv.addElement(new Integer(b));
-        Object object = invoke("getUserResults", vv);
-        return (java.util.Vector) object;
-    }
+//    @Override
+//    @Deprecated
+//    public java.util.Vector getUserResults(java.util.Vector a, int b) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(a);
+//        vv.addElement(new Integer(b));
+//        Object object = invoke("getUserResults", vv);
+//        return (java.util.Vector) object;
+//    }
 
     @Override
     public java.util.Vector getUserResults(java.util.Vector a, int b, int c) throws IOException, XmlRpcException {

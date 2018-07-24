@@ -8,6 +8,7 @@ import fi.beans.loader.Loader;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
 
+import java.applet.Applet;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Hashtable;
@@ -20,7 +21,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  * @author M.J.B. Kupers
  *
  */
-class AppletMapper extends XmlRpcMapper {
+class AppletMapper extends XmlRpcMapper<Class<Applet>> {
 
     private static final Logger LOG = Logger.getLogger(AppletMapper.class.getName());
 
@@ -48,7 +49,7 @@ class AppletMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public void put(int oid, Object obj)  {
+    public void put(int oid, Class<Applet> obj)  {
         System.err.println("AppletMapper.put() Not yet implemented!");
     }
 
@@ -61,16 +62,16 @@ class AppletMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException {
+    public Class<Applet> getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException {
         Class a = null;
         if (data.get("appletID") == null) { //We don't know enough to make a
             // appletObject
             return null;
         } else if (objects.containsKey(data.get("appletID"))) { // Did we know
             // the applet?
-            a = (Class) objects.get(data.get("appletID"));
+            a = (Class<Applet>) objects.get(data.get("appletID"));
         } else {
-            a = (Class) update(a, data);
+            a = (Class<Applet>) update(a, data);
         }
         if (!objects.containsKey(data.get("appletID"))) {
             //objects.put(data.get("appletID"), a);
@@ -87,7 +88,7 @@ class AppletMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public Object[] get(Object obj) throws IOException, SQLException,
+    public Class[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
         return get();
     }
@@ -120,14 +121,14 @@ class AppletMapper extends XmlRpcMapper {
      */
     @Override
     @SuppressWarnings({ "unused", "rawtypes" })
-    protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
+    protected Class<Applet> update(Class<Applet> obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
         Class a = null;
         String jarname = (String) data.get("jarname");
         String className = (String) data.get("classname");
 
         //Try loading class from remote server.
         try {
-        	if(false) return Class.forName(className); // if debugging.
+        	if(false) return (Class<Applet>) Class.forName(className); // if debugging.
 // caching:
         	if(jarname.equals(WiskOpdrCache.WISKOPDR_JAR) && className.equals(WiskOpdrCache.WISKOPDR))
         		a = WiskOpdrCache.getInstance();
@@ -154,7 +155,7 @@ class AppletMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
     @Override
-    protected Object[] createArray(int size) {
+    protected Class<Applet>[] createArray(int size) {
         return new Class[size];
     }
     /* (non-Javadoc)
@@ -170,9 +171,9 @@ class AppletMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#get(int)
      */
     @Override
-    public Object get(int oid) throws IOException, XmlRpcException,
+    public Class<Applet> get(int oid) throws IOException, XmlRpcException,
             SQLException {
-        Object object = super.get(oid);
+        Class<Applet> object = super.get(oid);
         if (object != null) {
             objects.put(oid, object);
         }
@@ -180,7 +181,7 @@ class AppletMapper extends XmlRpcMapper {
     }
 
     @Override
-    public Object get(int uid, Integer sgid) {
+    public Class<Applet> get(int uid, Integer sgid) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

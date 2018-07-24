@@ -389,12 +389,8 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      */
     @Override
     public void reset() {
-        MapperIF m = MapperCreator.instance(UserResultList.class);
-
-        if (m instanceof UserResultListMapper) {
-            ((UserResultListMapper) m).setResultsModule(this);
-        }
-        currentlyZoomedLesson = null;
+      PersistenceFacade.instance().setResultsModule(this);
+      currentlyZoomedLesson = null;
         currentlyZoomedUser = null;
         currentlyOrderedUser = null;
         currentlyOrderedLesson = null;

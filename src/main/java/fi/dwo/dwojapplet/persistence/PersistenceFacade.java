@@ -26,6 +26,9 @@ import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
 import fi.dwo.dwojapplet.domain.Guest;
+import fi.dwo.dwojapplet.domain.ResultScore;
+import fi.dwo.dwojapplet.domain.ResultsModule;
+import fi.dwo.dwojapplet.domain.ResultsModuleIF;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.SchoolPasswdMap;
@@ -40,14 +43,17 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherFromToManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserCourseManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserResultsManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherResultsManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -58,6 +64,8 @@ import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -65,6 +73,8 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,6 +92,12 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  */
 public class PersistenceFacade {
 
+    private static final SimpleDateFormat TOTAL_TIME_FORMAT = new SimpleDateFormat("HH:mm:ss", Locale.US);
+    static {
+      TOTAL_TIME_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
+      TOTAL_TIME_FORMAT.setLenient(true);
+
+    }
     private static final Logger LOG = Logger.getLogger(PersistenceFacade.class.getName());
 
     private static final Sco[] EMPTY_SCOS = new Sco[0];
@@ -166,8 +182,8 @@ public class PersistenceFacade {
      * @throws fi.dwo.commons.exceptions.PersistenceException
      *
      */
-    public Object get(int oid, java.lang.Class c) throws PersistenceException {
-        MapperIF mapper = MapperCreator.instance(c);
+    public <T> T get(int oid, java.lang.Class<T> c) throws PersistenceException {
+        MapperIF<T> mapper = MapperCreator.instance(c);
 
         try {
             return mapper.get(oid);
@@ -2491,28 +2507,69 @@ public class PersistenceFacade {
      * student.
      *
      * @param course The course where from the SCO's results must returned.
-     * @param user The student.
      * @return The result for the student and for the specified course.
      * @throws PersistenceException
      */
-    public Vector getUserResults(Course course,
-            User user) throws PersistenceException {
-        StoreCreator.instance().commit(user.getUserID(), 0, "");
+    public Vector<UserResultList> getUserResults(Course course) throws PersistenceException {
+      User user = DwoHelper.getCurrentFacadeUser();
+      StoreCreator.instance().commit(user.getUserID(), 0, "");
         try {
-            Vector v = DbAccessCreator.instance().getUserResults(course.getID(),
-                    user.getUserID(), idOf(user.getSchoolGroupID()));
-            MapperIF mapper = MapperCreator.instance(UserResultList.class);
-            return (Vector) (mapper.getObjectFromReturn(v)[0]);
+           {
+            DomCourse dc = new DomCourse();
+            dc.setId(PersistentCourse.buildPersistenceId(Long.valueOf(course.getID())));
+            List<DomStudentScoContext> ssc = SecureUserResultsManager.getCourseResults(dc, DWO.getDwoProfile());
+            UserResultList list = new UserResultList();
+            ResultScore[] scores = new ResultScore[ssc.size()];
+            for (int i = 0; i < ssc.size(); i++) {
+              ResultScore r = new ResultScore();
+              DomStudentScoContext s = ssc.get(i);
+              r.setUserResultList(list);
+              r.setScore((float)s.getScore());
+              r.setTotaal(1);
+              r.setCorrTotaal(0);
+              r.setUserGroup(user);
+              long total_time = toTimeInMillis(s.getTotalTime());
+              r.setTotal_time(total_time);
+              PersistenceId pid = s.getScoID();
+              Sco sco = get( idOf(pid), Sco.class);
+              r.setLessonGroup(sco);
+              scores[sco.getSequencenr()-1] = r;
+            }
+            list.setResultScore(scores);
+            list.setResultsModule(resultsModule);
+            Vector<UserResultList> vector = new Vector<>();
+            vector.add(list);
+            return vector;
+          }
+  // KOMT DIT VOOR??????        
+          
+          
+//          Vector v = DbAccessCreator.instance().getUserResults(course.getID(),
+//                    user.getUserID(), idOf(user.getSchoolGroupID()));
+//            MapperIF mapper = MapperCreator.instance(UserResultList.class);
+//            return (Vector<UserResultList>) (mapper.getObjectFromReturn(v)[0]);
         }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        } 
+        catch (Dwo2Exception e) {
+          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
+    }
+
+    private long toTimeInMillis(String totalTime) {
+      try {
+          return TOTAL_TIME_FORMAT.parse(totalTime).getTime();
+      } catch (ParseException e) {
+          LOG.log(Level.SEVERE,"toTimeInMillis " + totalTime,e);
+      }
+      return 0;
     }
 
     /**
@@ -3029,6 +3086,15 @@ public class PersistenceFacade {
             }
         }
         return element;
+    }
+
+    private ResultsModuleIF resultsModule;
+    public void setResultsModule(ResultsModuleIF resultsModule) {
+      this.resultsModule = resultsModule;
+      MapperIF m = MapperCreator.instance(UserResultList.class);
+      if (m instanceof UserResultListMapper) {
+          ((UserResultListMapper) m).setResultsModule(resultsModule);
+      }
     }
 
 }

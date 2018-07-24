@@ -2646,7 +2646,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         if (DwoHelper.getCurrentFacadeUser() instanceof Guest) {
             return null;
         }
-        return new UserResultsModule(course, DwoHelper.getCurrentFacadeUser(), this);
+        return new UserResultsModule(course, this);
     }
 
     /*

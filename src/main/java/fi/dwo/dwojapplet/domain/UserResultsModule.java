@@ -21,25 +21,25 @@ import javax.swing.JOptionPane;
  * @see ResultsModule
  *
  */
-public class UserResultsModule implements Comparator, ResultsModuleIF {
+public class UserResultsModule implements Comparator<UserResultList>, ResultsModuleIF {
 
     private Course[] courses;
-    private User user;
+    private final User user;
     private DWO dwo;
     private LessonGroup currentlyZoomedLesson;
     private UserGroup currentlyZoomedUser;
     private UserGroup currentlyOrderedUser;
     private Object currentlyOrderedLesson;
     private int orderedLessonIndex;
-    private Vector userResultList = new Vector();
+    private Vector<UserResultList> userResultList = new Vector<>();
     private int orderedWay;
 
-    public UserResultsModule(Course course, User user, DWO dwo) {
-        this(new Course[]{course}, user, dwo);
+    public UserResultsModule(Course course, DWO dwo) {
+        this(new Course[]{course}, DwoHelper.getCurrentFacadeUser(), dwo);
         currentlyZoomedLesson = course;
     }
 
-    public UserResultsModule(Course[] courses, User user, DWO dwo) {
+    private UserResultsModule(Course[] courses, User user, DWO dwo) {
         this.courses = courses;
         this.user = user;
         this.dwo = dwo;
@@ -52,10 +52,8 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
     }
 
     @Override
-    public int compare(Object o1, Object o2) {
-        UserResultList url1 = (UserResultList) o1;
-        UserResultList url2 = (UserResultList) o2;
-
+    public int compare(UserResultList url1, UserResultList url2) {
+        
         if (currentlyOrderedLesson != null) {
             if (orderedLessonIndex != -1) {
                 if (orderedWay == ResultsModuleIF.ASC) {
@@ -70,7 +68,7 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
                         break;
                     }
                 }
-                return compare(o1, o2);
+                return compare(url1, url2);
             }
         } else if (currentlyOrderedUser != null) {
             if (orderedWay == ResultsModuleIF.ASC) {
@@ -107,7 +105,7 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
     public Vector getResults() {
         if (currentlyZoomedLesson != null) {
             try {
-                userResultList = PersistenceFacade.instance().getUserResults((Course) currentlyZoomedLesson, user);
+                userResultList = PersistenceFacade.instance().getUserResults((Course) currentlyZoomedLesson);
             } catch (PersistenceException e) {
                 JOptionPane.showMessageDialog(dwo, e.getMessage());
             }
@@ -159,11 +157,7 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
     @Override
     public void reset() {
         PersistenceFacade.instance().clearCurrentMapperDataCache(UserResultList.class);
-        MapperIF m = MapperCreator.instance(UserResultList.class);
-
-        if (m instanceof UserResultListMapper) {
-            ((UserResultListMapper) m).setResultsModule(this);
-        }
+        PersistenceFacade.instance().setResultsModule(this);
         currentlyZoomedLesson = null;
         currentlyZoomedUser = null;
         currentlyOrderedUser = null;

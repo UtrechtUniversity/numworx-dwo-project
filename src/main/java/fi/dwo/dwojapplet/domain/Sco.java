@@ -169,9 +169,10 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
             Applet lastApplet = applet;
             //lessonLocation = null;
             if (applet == null) {
-                Class clazz = (Class) PersistenceFacade.instance().get(appletID, Applet.class);
+                Class o = PersistenceFacade.instance().get(appletID, Class.class);
+                Class<Applet> clazz = (Class<Applet>) o;
                 try {
-                    applet = (Applet) clazz.newInstance();
+                    applet = clazz.newInstance();
                 } catch (InstantiationException e) {
                     throw new PersistenceException(PersistenceException.EX_UNKNOWN_ERROR, e);
                 } catch (IllegalAccessException e) {
