@@ -529,9 +529,9 @@ public interface DbAccessIF  {
 
 //    public Hashtable getFidentitySchools() throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
 
-    public Vector getUserResults(int courseID, int userID, int schoolGroupID) throws IOException, XmlRpcException, SQLException;
+//    public Vector getUserResults(int courseID, int userID, int schoolGroupID) throws IOException, XmlRpcException, SQLException;
 
-    public Vector getUserResults(Vector courses, int i) throws SQLException, IOException, XmlRpcException;
+//    public Vector getUserResults(Vector courses, int i) throws SQLException, IOException, XmlRpcException;
 
     public Vector getUserResults(Vector courses, int i, int j) throws SQLException, IOException, XmlRpcException;
 
