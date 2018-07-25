@@ -149,7 +149,7 @@ public class Text_nl extends ListResourceBundle {
 			{ TextMapper.GUIW_MSG_REGISTER_NEW, "Nieuwe gebruiker" },
 			{ TextMapper.GUIW_MSG_REGISTER_EXISTING, "Bestaande gebruiker" },
 			{ TextMapper.GUIW_BTN_GUESTLOGIN, "Login als Gast" },
-			{ TextMapper.GUIW_BTN_LOGIN, "Inloggen" },
+			{ TextMapper.GUIW_BTN_LOGIN, "AANMELDEN" },
 			{ TextMapper.GUIW_BTN_REGISTER, "Aanmelden" },
 			{ TextMapper.GUIW_ERR_LOGIN, "Usernaam of wachtwoord klopt niet." },
 			{ TextMapper.GUIW_ERR_NEW_SCHOOLLOGIN, "De schoolauthentication is verkeerd." },
