@@ -19,7 +19,8 @@ public interface DbAccessObsolete {
   public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement, String iValue, String random) throws IOException, XmlRpcException,
   SQLException;
   public Vector getUserResults(int courseID, int userID, int schoolGroupID) throws IOException, XmlRpcException, SQLException;
-  /**
+  public Vector getCoursesForClass(int classID) throws IOException, XmlRpcException, SQLException;
+ /**
    * Returns all the available courses for the specified user.
    *
    * @param userID The user where for the courses must selected.
