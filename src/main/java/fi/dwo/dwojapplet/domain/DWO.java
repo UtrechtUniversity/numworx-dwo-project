@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
@@ -35,6 +36,7 @@ import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JApplet;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.UIDefaults;
@@ -89,6 +91,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
@@ -2799,6 +2802,28 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         }
 
         return "false";
+    }
+
+    public void switchProfile(int p, String lang) {
+      try {
+        String old = dwoProfile.getDwoProfileName();
+        dwoProfile = PublicProfileManager.get(p);
+        dwoProfileID = p;
+        firePropertyChange("profile", old, dwoProfile.getDwoProfileName());
+        old = getLocale().getLanguage();
+        Locale locale = new Locale(lang);
+        DwoHelper.setLocale(new DwoLocale(lang));
+        setLocale(locale);
+        JComponent.setDefaultLocale(locale);
+        DwoHelper.setProfileRights(dwoProfile.getDwoProfileRights());
+        GuiConstants.setDwoProfile(p, "");
+        TextMapper.setLanguage(lang);
+        fi.dwo.dwojapplet.parameters.system.TextMapper.setLanguage(lang);
+        firePropertyChange("language", old, lang);
+      } catch(Exception oops) {
+        LOG.log(Level.WARNING, "switch to " + p + " " + lang, oops);
+      }
+      
     }
 
 }

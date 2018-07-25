@@ -11,6 +11,7 @@ import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.exceptions.ScoException;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.DbAccessLogin;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -42,16 +43,19 @@ import fi.dwo.dwojapplet.persistence.cache.ReadOnly;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherFromToManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserResultsManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredStudentCoursesOfSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherResultsManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -60,6 +64,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.DomCourseInClass;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -979,20 +984,40 @@ public class PersistenceFacade {
             throws PersistenceException {
         try {
             Vector v;
-            {
-                v = DbAccessCreator.instance().getCoursesForClass(
-                        schoolClass.getID());
+            DomSchoolClass domSchoolClass = new DomSchoolClass();
+            domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId((long)schoolClass.getID()));
+            DomCoursesOfSchoolClass4Teacher result = 
+                SecureTeacherSchoolClassManager.getModules(domSchoolClass, DWO.getDwoProfile());
+            Map<Integer, DomClassCourse4Teacher> cc = new HashMap<>();
+            result.getClassCourses().forEach(
+                entry -> {
+                  DomClassCourse4Teacher dcc = entry.getValue();
+                  int id = idOf(dcc.getCourseId());
+                  cc.put(id, dcc);
+                });
+            v = result.getCourses().stream().map(DomMapEntry::getValue).filter(p->!p.getWithChildren().booleanValue() && cc.containsKey(idOf(p.getId())))
+                .collect(()->{ return new Vector();}, (l,e) -> l.add(e), (l,ee)-> l.addAll(ee));
+            MapperIF<Course> mapper = MapperCreator.instance(Course.class);
+            Course[] courses = mapper.getObjectFromReturn(v);
+            for (Course course : courses) {
+              int id = course.getID();
+              DomClassCourse4Teacher dcc = cc.get(id);
+              if(dcc != null && dcc.getViewState() == ViewState.studentsAndTeachers) {
+                course.link = new ClassCourse();
+                course.link.setNotAfter(dcc.getNotAfter());
+                course.link.setNotBefore(dcc.getNotBefore());
+                Integer type = dcc.getType();
+                if(type != null) course.link.setType(type);
+                course.link.setAccessKey(dcc.getAccessKey());
+                course.link.setClassCourseID(idOf(dcc.getId()));
+                course.link.setCourseID(id);
+                course.link.setViewState(dcc.getViewState().ordinal());
+                course.link.setClassID(schoolClass.getID());               
+              } else {
+                course.link = null;
+              }
             }
-// geen mappen hier teruggeven! alleen modules
-            for (Iterator iterator = v.iterator(); iterator.hasNext();) {
-                Hashtable map = (Hashtable) iterator.next();
-                if (Boolean.TRUE.equals(map.get("withChildren"))) // FIXME CONSTANT
-                {
-                    iterator.remove();
-                }
-            }
-            MapperIF mapper = MapperCreator.instance(Course.class);
-            return (Course[]) mapper.getObjectFromReturn(v);
+              return courses;
         }
         catch (IOException e) {
             System.out.println(e.getMessage());
@@ -1008,6 +1033,10 @@ public class PersistenceFacade {
             System.out.println(e.getMessage());
             LOG.log(Level.SEVERE, null, e);
             throw new PersistenceException(PersistenceException.EX_DB, e);
+        } catch (Dwo2Exception e) {
+          System.out.println(e.getMessage());
+          LOG.log(Level.SEVERE, null, e);
+          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         }
 
     }

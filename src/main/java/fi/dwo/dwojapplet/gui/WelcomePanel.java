@@ -8,6 +8,7 @@ import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.BUILD;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
@@ -33,12 +34,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -50,6 +53,14 @@ import javax.swing.SwingConstants;
  *
  */
 public class WelcomePanel extends ContentPanel implements ActionListener {
+
+    private static final int HE_ID = 100;
+
+    private static final int SE_ID = 92;
+
+    private static final int HO_ID = 99;
+
+    private static final int VO_ID = 77;
 
     private static final Logger LOG = Logger.getLogger(WelcomePanel.class.getName());
 
@@ -67,6 +78,14 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
     JPanel dialog;
 
     private JCheckBox linkcheck;
+
+    private JRadioButton vo;
+
+    private JRadioButton ho;
+
+    private JRadioButton se;
+
+    private JRadioButton he;
 
     /**
      * Layout manager voor de fiButton. Hou de fiButton in de rechtsbovenhoek.
@@ -136,6 +155,10 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
     public WelcomePanel(boolean loginOnly, Map linkdata) {
         super(null, true);
+        
+        loginOnly = true;
+        
+        
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setLayout(null);
         this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
@@ -144,7 +167,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
         dialog = new JPanel(null);
         dialog.setOpaque(false);
-        dialog.setBounds(getWidth() / 2 - 350, 0, 700, getHeight());
+        dialog.setBounds(getWidth() / 2 - 350, loginOnly?100:0, 700, getHeight());
         this.add(dialog);
 
         String version = BUILD.version;
@@ -222,13 +245,39 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
             dialog.remove(l);
         }
 
+        p = new JPanel(null);
+        p.setBounds(dialog.getWidth() / 2 - 175, 110, 340, 100);
+        Color PANEL_BACKGROUND = Color.decode("#314770");
+        Color ITEM_BACKGROUND = Color.decode("#1b75bb");
+        p.setBackground(PANEL_BACKGROUND);
+        vo = new JRadioButton("VO");
+        if(DWO.getDwoProfileID() == VO_ID) vo.setSelected(true);
+        vo.setSize(vo.getPreferredSize());vo.setLocation(20, 20);
+        ho = new JRadioButton("HO");
+        if(DWO.getDwoProfileID() == HO_ID) ho.setSelected(true);
+        ho.setSize(ho.getPreferredSize());ho.setLocation(20, 60);
+        se = new JRadioButton("SE (English)");
+        if(DWO.getDwoProfileID() == SE_ID) se.setSelected(true);
+        se.setSize(se.getPreferredSize());se.setLocation(160, 20);
+        he = new JRadioButton("HE (English)");
+        if(DWO.getDwoProfileID() == HE_ID) he.setSelected(true);
+        he.setSize(he.getPreferredSize());he.setLocation(160, 60);
+        ButtonGroup grp  = new ButtonGroup();
+        grp.add(he);grp.add(se);grp.add(ho);grp.add(vo);
+        ho.setForeground(Color.WHITE);
+        vo.setForeground(Color.WHITE);
+        he.setForeground(Color.WHITE);
+        se.setForeground(Color.WHITE);
+        
+        p.add(ho); p.add(vo);p.add(se);p.add(he);
+        dialog.add(p);
         /* Add Login-panel */
         p = new JPanel(null);
         //p.setFocusCycleRoot(true);
-        p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
-        p.setBackground(GuiConstants.SUB_BACKGROUND);
+        //p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
+        p.setBackground(PANEL_BACKGROUND);
         //p.setBorderColor(new Color(52,90,126));
-        p.setBounds(dialog.getWidth() / 2 - 175, 110, 340, 155);
+        p.setBounds(dialog.getWidth() / 2 - 175, 110+100, 340, 155);
         dialog.add(p);
 
         /* Inlogdata label */
@@ -237,11 +286,11 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         l.setFont(GuiConstants.RED_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
-        p.add(l);
+        //p.add(l);
 
         /* Username label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIW_USERNAME) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(Color.white);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 30);
@@ -251,12 +300,14 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         /* Username field */
         loginname = new JTextField(DwoHelper.getDefaultUsername());
         loginname.setBounds(130, 28, 120, 20);
+        loginname.setBackground(ITEM_BACKGROUND);
+        loginname.setForeground(Color.WHITE);
         loginname.addActionListener(this);
         p.add(loginname);
 
         /* Password label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIW_PASSWORD) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(Color.WHITE);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 55);
@@ -265,6 +316,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
         /* Password field */
         password = new JPasswordField(DwoHelper.getDefaultPassword());
+        password.setBackground(ITEM_BACKGROUND);
+        password.setForeground(Color.WHITE);
         password.setBounds(130, 53, 120, 20);
         password.setEchoChar('*');
         password.addActionListener(this);
@@ -295,12 +348,11 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
         /* Register label */
         JButton button = new JButton();
-        button.setText("<HTML><p color=\"red\"> <FONT color=\"#000099\"><U>" + Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(),
+        button.setText("<HTML><p color=\"red\"> <FONT color=\"#FFFFFF\"><U>" + Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(),
                 Dwo2ExceptionCode.User_Q_ForgotPassword) + "</U></FONT></HTML>");
         button.setHorizontalAlignment(SwingConstants.LEFT);
         button.setBorderPainted(false);
         button.setOpaque(false);
-        button.setBackground(Color.WHITE);
         URI uri;
         try {
             try {
@@ -418,7 +470,11 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
         if ((src == loginButton) || (src == loginname) || (src == password)) {
-            try {
+          switchProfile();
+          
+          
+          
+          try {
                 //Fetch LoginContext to see if there is already a session.
                 DomLoginContext loginContext = SecureUserAccountManager.getLoginContext(loginname.getText(), MD5.getHashString(String.valueOf(password.getPassword())));
 // XXX uitgezet, te verwarrend
@@ -454,6 +510,18 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
             GuiCreator.instance().toRegisterNewUser();
         }
     }
+
+    private void switchProfile() {
+      DWO dwo = GuiCreator.instance().getDWO();
+      if(vo.isSelected() && DWO.getDwoProfileID() != VO_ID)
+        dwo.switchProfile(VO_ID,"nl");
+      else if (ho.isSelected() && DWO.getDwoProfileID() != HO_ID)
+        dwo.switchProfile(HO_ID, "nl");
+      else if (se.isSelected() && DWO.getDwoProfileID() != SE_ID)
+        dwo.switchProfile(SE_ID, "en");
+      else if (he.isSelected() && DWO.getDwoProfileID() != HE_ID)
+        dwo.switchProfile(HE_ID, "en");
+     }
 
     public void setUsername(String username) {
         this.loginname.setText(username);

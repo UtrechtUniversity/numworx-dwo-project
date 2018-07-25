@@ -587,7 +587,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
 
     public void setDomCourse(DomCourse sample) {
       setDwoProfile(DWO.getDwoProfileID());
-      setExport(null);  // by default NOT exported.
+      //setExport(null);  // by default NOT exported.
       try {
         setCourseID(MySQLPersistenceId.getNativeId(sample).intValue());
       } catch (Dwo2Exception e) {
@@ -603,7 +603,8 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
         sequencenr = null;
  
       if(sample.getWithChildren()) {
-        setChildren(NO_CHILDREN);
+        if(children == null)
+          setChildren(NO_CHILDREN);
       } else {
         setChildren(null);
       }
@@ -633,7 +634,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      */
     public void setDomCourseStudent(DomCourseStudent sample) {
       setDwoProfile(DWO.getDwoProfileID());
-      setExport(null);  // by default NOT exported.
+      //setExport(null);  // by default NOT exported.
       try {
         setCourseID(MySQLPersistenceId.getNativeId(sample).intValue());
       } catch (Dwo2Exception e) {
@@ -649,7 +650,8 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
         sequencenr = null;
  
       if(sample.getWithChildren()) {
-        setChildren(NO_CHILDREN);
+        if (children == null)
+          setChildren(NO_CHILDREN);
       } else {
         setChildren(null);
       }
