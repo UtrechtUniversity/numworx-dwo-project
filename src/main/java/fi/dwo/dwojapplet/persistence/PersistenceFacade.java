@@ -44,16 +44,22 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherFromToManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserResultsManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredStudentCoursesOfSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherResultsManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.DomCourseInClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -70,14 +76,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
@@ -1033,14 +1043,43 @@ public class PersistenceFacade {
                         v = new Vector<>(SecureUserCourseManager.getCourses(DWO.getDwoProfile()));
 
                     } else {
-                        v = DbAccessCreator.instance().getCoursesForClass(
-                                schoolClass.getID());
+//                        v = DbAccessCreator.instance().getCoursesForClass(
+//                                schoolClass.getID());
+                        DomSchoolClass domschoolClass = new DomSchoolClass();
+                        domschoolClass.setId(PersistentSchoolClass.buildPersistenceId((long)schoolClass.getID()));
+                        DomCoursesOfSchoolClass coursesClass = SecuredStudentCoursesOfSchoolManager.getCoursesClass(domschoolClass, DWO.getDwoProfile());
+                        Map<Integer, DomClassCourse> cc = new HashMap<>();
+                        coursesClass.getClassCourses().forEach(
+                            entry -> {
+                              DomClassCourse dcc = entry.getValue();
+                              int id = idOf(dcc.getCourseId());
+                              cc.put(id, dcc);
+                            });
+                        Stream<DomCourseStudent> stream = coursesClass.getCourses().stream()
+                           .map(DomMapEntry::getValue);
+                        if(!schoolClass.hasIconizer())
+                            stream = stream.filter(item -> !item.getWithChildren().booleanValue());
+                        v = new Vector(stream.collect(Collectors.toList()));
+                        
+                        
+                        
                         if(v.size()==0) return new Course[0];
 // FIXME aanzetten als clipBeforeAfter weer in gebruik wordt genomen.
 // Het XML-RPC protocol doet niet aan TIMEZONES 
 // dat betekent dat date(0) niet werkt voor 'notAfter'
-                        v = clipBeforeAfter(v);
-                        Course[] courses = (Course[]) mapper.getObjectFromReturn(v);
+                        /*v = clipBeforeAfter(v);*/
+                        Course[] courses = mapper.getObjectFromReturn(v);
+                        for (Course course : courses) {
+                          int id = course.getID();
+                          DomClassCourse dcc = cc.get(id);
+                          if(dcc != null) {
+                            course.link = new ClassCourse();
+                            course.link.setNotAfter(dcc.getNotAfter());
+                            course.link.setNotBefore(dcc.getNotBefore());
+                            Integer type = dcc.getType();
+                            if(type != null) course.link.setType(type);
+                          }
+                        }
 // FIXME hier maken we de caching effecten ongedaan.
                         undoCachingEffect(courses);
                         return courses;
@@ -2519,14 +2558,16 @@ public class PersistenceFacade {
             dc.setId(PersistentCourse.buildPersistenceId(Long.valueOf(course.getID())));
             List<DomStudentScoContext> ssc = SecureUserResultsManager.getCourseResults(dc, DWO.getDwoProfile());
             UserResultList list = new UserResultList();
-            ResultScore[] scores = new ResultScore[ssc.size()];
+            if(course.getScoList()==null)course.loadScos();
+            ResultScore[] scores = new ResultScore[course.getScoList().length];
+            for (int i = 0; i < scores.length; i++) {
+              scores[i] = new ResultScore();
+            }
             for (int i = 0; i < ssc.size(); i++) {
               ResultScore r = new ResultScore();
               DomStudentScoContext s = ssc.get(i);
               r.setUserResultList(list);
               r.setScore((float)s.getScore());
-              r.setTotaal(1);
-              r.setCorrTotaal(0);
               r.setUserGroup(user);
               long total_time = toTimeInMillis(s.getTotalTime());
               r.setTotal_time(total_time);

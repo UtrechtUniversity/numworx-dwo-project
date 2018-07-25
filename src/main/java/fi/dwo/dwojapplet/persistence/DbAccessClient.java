@@ -15,13 +15,13 @@ class DbAccessClient extends Client implements DbAccessIF {
         super(u);
     }
 
-    @Override
-    public java.util.Vector getCoursesForClass(int a) throws IOException, XmlRpcException {
-        Vector vv = new Vector(1);
-        vv.addElement(new Integer(a));
-        Object object = invoke("getCoursesForClass", vv);
-        return (java.util.Vector) object;
-    }
+//    @Override
+//    public java.util.Vector getCoursesForClass(int a) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(1);
+//        vv.addElement(new Integer(a));
+//        Object object = invoke("getCoursesForClass", vv);
+//        return (java.util.Vector) object;
+//    }
 
 //    @Override
 //    public java.util.Vector getCoursesForClassJS(int a) throws IOException, XmlRpcException {
