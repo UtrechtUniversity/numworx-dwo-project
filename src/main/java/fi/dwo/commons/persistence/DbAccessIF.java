@@ -33,7 +33,7 @@ public interface DbAccessIF  {
      * @throws XmlRpcException
      * @throws SQLException
      */
-    public Vector getCoursesForClass(int classID) throws IOException, XmlRpcException, SQLException;
+//    public Vector getCoursesForClass(int classID) throws IOException, XmlRpcException, SQLException;
 
 //    /**
 //     * Select a course for the specified class.
