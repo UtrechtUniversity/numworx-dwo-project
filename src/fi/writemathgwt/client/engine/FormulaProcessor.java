@@ -30,6 +30,10 @@ public class FormulaProcessor {
 		// make a compact deep copy
 		for (int i = 0; i < wmObjects.size(); i++) {	
 			WMObject wo = new WMObject(wmObjects.get(i));
+			wo.setIsMachtVan(null);
+			wo.setIsTellerVan(null);
+			wo.setIsNoemerVan(null);
+			wo.setIsOnderWortel(null);
 			wmObjectsToDo.add(wo);
 		}
 		// bubble sort op links-positie

@@ -24,7 +24,8 @@ public class StrokeContainer {
 	private ArrayList<Stroke> strokes;
 	private ArrayList<WMObject> wmObjects;
 	private String formulaString = "";
-	public double averageHeight = 50;
+	public double defaultAverageHeight = 50;
+	public double averageHeight = defaultAverageHeight;
 	private DoubleRectangle parseArea;
 	private boolean parseable = true;
 	
@@ -139,10 +140,11 @@ public class StrokeContainer {
 					teller -= wmObjects.get(wmObjects.size()-1).getStrokes().size();
 					wmObjects.remove(wmObjects.size()-1); 
 				}
-				updateAverageHeight(wo);
 				wmObjects.add(wo);
+				//updateAverageHeight();
 			}
-		}if(strokes.size()>2 && wmObjects.size()>1 && wmObjects.get(wmObjects.size()-1).isOneStroke() && wmObjects.get(wmObjects.size()-2).isOneStroke()) {
+		}
+		if(strokes.size()>2 && wmObjects.size()>1 && wmObjects.get(wmObjects.size()-1).isOneStroke() && wmObjects.get(wmObjects.size()-2).isOneStroke()) {
 			Stroke stroke1 = strokes.get(strokes.size()-3);
 			Stroke stroke2 = strokes.get(strokes.size()-2);
 			Stroke stroke3 = strokes.get(strokes.size()-1);
@@ -151,8 +153,8 @@ public class StrokeContainer {
 				WMObject wo = new WMObject(stroke1, stroke2, stroke3, s);
 				wmObjects.remove(wmObjects.size()-1);
 				wmObjects.remove(wmObjects.size()-1);
-				updateAverageHeight(wo);
 				wmObjects.add(wo);
+				//updateAverageHeight();
 			}
 		}
 		if(s==null && strokes.size()>1 &&wmObjects.size()>0 && wmObjects.get(wmObjects.size()-1).isOneStroke()) {
@@ -162,8 +164,8 @@ public class StrokeContainer {
 			if(s!=null) {
 				WMObject wo = new WMObject(stroke1, stroke2, s);
 				wmObjects.remove(wmObjects.size()-1);
-				updateAverageHeight(wo);
 				wmObjects.add(wo);
+				//updateAverageHeight();
 			}
 		}
 		if(s==null && strokes.size()>0) {
@@ -177,12 +179,13 @@ public class StrokeContainer {
 				if("back".equals(s)) 
 					doBack(wo);
 				else {
-					updateAverageHeight(wo);
 					wmObjects.add(wo);
+					//updateAverageHeight();
 				}
 			}
 		}
 		formulaString = FormulaProcessor.parseFormule(this, parseArea);
+		updateAverageHeight();
 		
 	}
 	
@@ -212,8 +215,8 @@ public class StrokeContainer {
 		int objectsAfter = wmObjects.size();
 		if (objectsBefore == objectsAfter) {	
 			wo = new WMObject(strokes.get(strokes.size()-1),"-");
-			updateAverageHeight(wo);
 			wmObjects.add(wo);
+			updateAverageHeight();
 		}
 		else {
 			strokes.remove(strokes.size()-1);
@@ -222,13 +225,36 @@ public class StrokeContainer {
 		}
 	}
 	
-	private void updateAverageHeight(WMObject wo) {
-		if ("-".equals(wo.getTeken())|| 
-			".".equals(wo.getTeken())|| 
-			"sqrt".equals(wo.getTeken()) || 
-			"=".equals(wo.getTeken())) 
-			return;
-		averageHeight = (wmObjects.size()*averageHeight + wo.getBox().height)/(wmObjects.size()+1);	
+	private void updateAverageHeight() {
+//		if ("-".equals(wo.getTeken())|| 
+//			".".equals(wo.getTeken())|| 
+//			"sqrt".equals(wo.getTeken()) || 
+//			"=".equals(wo.getTeken())) 
+//			return;
+//		averageHeight = (wmObjects.size()*averageHeight + wo.getBox().height)/(wmObjects.size()+1);	
+		
+		double heightSum = 0;
+		int cnt = 0;
+		for (int i = 0; i < wmObjects.size(); i++) {
+			if ("-".equals(wmObjects.get(i).getTeken())
+					|| ".".equals(wmObjects.get(i).getTeken())
+					|| "sqrt".equals(wmObjects.get(i).getTeken()) 
+					|| "=".equals(wmObjects.get(i).getTeken())
+					)
+				;
+			else {
+				heightSum += wmObjects.get(i).getXHeight();
+				logger.info("Teken: "+wmObjects.get(i).getTeken());
+				logger.info("isMacht: "+wmObjects.get(i).isMachtVan());
+				logger.info("isAsc: "+wmObjects.get(i).hasAscent());
+				logger.info("isDesc: "+wmObjects.get(i).hasDescent());
+				cnt++;
+			}
+		}
+		if(cnt>0)
+			averageHeight = heightSum/cnt;
+		else 
+			averageHeight = defaultAverageHeight;
 	}
 	
 	private void updateParseArea(Stroke stroke) {
@@ -297,8 +323,8 @@ public class StrokeContainer {
 				if(s!=null) {
 					wmObjects.remove(wmObjects.get(i));
 					WMObject wo = new WMObject(stroke1, stroke2, s);
-					updateAverageHeight(wo);
 					wmObjects.add(wo);
+					updateAverageHeight();
 					return true;
 				}
 			}

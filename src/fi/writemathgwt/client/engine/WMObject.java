@@ -18,9 +18,20 @@ public class WMObject {
 	private DoubleRectangle noemerBox = null;
 	private DoubleRectangle wortelBox = null;
 	
+	private String[] ascFonts = {"b","d","f","h","k","l","t","6","8"};
+	private String[] descFonts = {"g","j","p","q","y","7","9"};
+	
+	private boolean hasAscent;
+	private boolean hasDescent;
+	
+	private WMObject copyFrom;
+	
+	
 	public WMObject(Stroke stroke, String teken) {
 		strokes.add(stroke);
 		this.teken = teken;
+		hasAscent = isAscFont(teken);
+		hasDescent = isDescFont(teken);
 		makeBox();
 	}
 	
@@ -28,6 +39,8 @@ public class WMObject {
 		strokes.add(stroke1);
 		strokes.add(stroke2);
 		this.teken = teken;
+		hasAscent = isAscFont(teken);
+		hasDescent = isDescFont(teken);
 		makeBox();
 	}
 	
@@ -36,6 +49,8 @@ public class WMObject {
 		strokes.add(stroke2);
 		strokes.add(stroke3);
 		this.teken = teken;
+		hasAscent = isAscFont(teken);
+		hasDescent = isDescFont(teken);
 		makeBox();
 	}
 	
@@ -45,6 +60,8 @@ public class WMObject {
 		strokes.add(stroke3);
 		strokes.add(stroke4);
 		this.teken = teken;
+		hasAscent = isAscFont(teken);
+		hasDescent = isDescFont(teken);
 		makeBox();
 	}
 	
@@ -58,7 +75,13 @@ public class WMObject {
 		strokes = wo.getStrokes();
 		this.teken = wo.getTekenRaw();
 		this.box = new DoubleRectangle(wo.getBox().x , wo.getBox().y , wo.getBox().width , wo.getBox().height);
+		this.copyFrom = wo;
 	}
+	
+	public WMObject getCopyFrom() {
+		return copyFrom;
+	}
+	
 
 	public boolean isOneStroke() {
 		return strokes.size()==1;
@@ -126,8 +149,39 @@ public class WMObject {
 		box = new DoubleRectangle(minx, miny, maxx-minx, maxy-miny);
 	}
 	
+	public boolean hasAscent() {
+		return hasAscent;
+	}
+	
+	public boolean hasDescent() {
+		return hasDescent;
+	}
+	
+	public boolean isAscFont(String teken ) {
+		for(int i=0 ; i<ascFonts.length ; i++) {
+			if(ascFonts[i].equals(teken))
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean isDescFont(String teken ) {
+		for(int i=0 ; i<descFonts.length ; i++) {
+			if(descFonts[i].equals(teken))
+				return true;
+		}
+		return false;
+	}
+	
 	public void setIsTellerVan(WMObject wo) {
 		isTellerVan = wo;
+		
+		if(copyFrom!=null) {
+			if(wo==null)
+				copyFrom.setIsTellerVan(null);
+			else
+				copyFrom.setIsTellerVan(wo.getCopyFrom());
+		}
 	}
 	
 	public WMObject isTellerVan() {
@@ -136,6 +190,13 @@ public class WMObject {
 	
 	public void setIsNoemerVan(WMObject wo) {
 		isNoemerVan = wo;
+		
+		if(copyFrom!=null) {
+			if(wo==null)
+				copyFrom.setIsNoemerVan(null);
+			else
+				copyFrom.setIsNoemerVan(wo.getCopyFrom());
+		}
 	}
 	
 	public WMObject isNoemerVan() {
@@ -144,6 +205,13 @@ public class WMObject {
 	
 	public void setIsMachtVan(WMObject wo) {
 		isMachtVan = wo;
+		
+		if(copyFrom!=null) {
+			if(wo==null)
+				copyFrom.setIsMachtVan(null);
+			else
+				copyFrom.setIsMachtVan(wo.getCopyFrom());
+		}
 	}
 	
 	public WMObject isMachtVan() {
@@ -152,6 +220,13 @@ public class WMObject {
 	
 	public void setIsOnderWortel(WMObject wo) {
 		isOnderWortel = wo;
+		
+		if(copyFrom!=null) {
+			if(wo==null)
+				copyFrom.setIsOnderWortel(null);
+			else
+				copyFrom.setIsOnderWortel(wo.getCopyFrom());
+		}
 	}
 	
 	public WMObject isOnderWortel() {
@@ -198,6 +273,27 @@ public class WMObject {
 		return isBreuk;
 	}
 	
+	public double getXHeight() {
+		double factor = 1;
+		if(hasDescent || hasAscent)
+			factor /= 1.5;
+		if(isMachtVan!=null)
+			factor /= 0.5;
+//		if(isTellerVan!=null)
+//			factor /= 0.75;
+//		if(isNoemerVan!=null)
+//			factor /= 0.75;
+		return getBox().height*factor;
+	}
+	
+	public DoubleRectangle getXBox() {
+		double x = box.x;
+		double y = hasAscent ? box.y+box.height/3 : box.y;
+		double width = box.width;
+		double height = hasAscent||hasDescent ? 2*box.height/3 : box.height;
+		return new DoubleRectangle(x,y,width,height);
+	}
+	
 	public DoublePoint getBoxMid() 
 	{
 		if (hasAscent())
@@ -208,25 +304,25 @@ public class WMObject {
 			return new DoublePoint(box.x + box.width / 2, box.y + box.height / 2);
 	}
 	
-	public boolean hasAscent()
-	{	
-		if (getTeken().equals("f") || getTeken().equals("b") || getTeken().equals("d") || getTeken().equals("h") || getTeken().equals("k") ||
-			getTeken().equals("l") || getTeken().equals("t") || getTeken().equals("6") || getTeken().equals("8"))
-		{	return true;
-		}
-		else 
-			return false;
-	}
-	
-	public boolean hasDescent()
-	{	
-		if (getTeken().equals("f") || getTeken().equals("g") || getTeken().equals("j") || getTeken().equals("p") ||
-			getTeken().equals("q") || getTeken().equals("y") || getTeken().equals("7") || getTeken().equals("9"))
-		{	return true;
-		}
-		else
-			return false;
-	}
+//	public boolean hasAscent()
+//	{	
+//		if (getTeken().equals("f") || getTeken().equals("b") || getTeken().equals("d") || getTeken().equals("h") || getTeken().equals("k") ||
+//			getTeken().equals("l") || getTeken().equals("t") || getTeken().equals("6") || getTeken().equals("8"))
+//		{	return true;
+//		}
+//		else 
+//			return false;
+//	}
+//	
+//	public boolean hasDescent()
+//	{	
+//		if (getTeken().equals("f") || getTeken().equals("g") || getTeken().equals("j") || getTeken().equals("p") ||
+//			getTeken().equals("q") || getTeken().equals("y") || getTeken().equals("7") || getTeken().equals("9"))
+//		{	return true;
+//		}
+//		else
+//			return false;
+//	}
 	
 	public void translate(double dx, double dy) {
 		box.translate(dx, dy);
