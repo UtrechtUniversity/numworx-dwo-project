@@ -1,11 +1,14 @@
 package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewAccessKey;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewFrom;
@@ -25,6 +28,7 @@ import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewAccessKey;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewFrom;
@@ -65,7 +69,7 @@ public class SecureTeacherSchoolClassManager {
     src = getRestManager().getList("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/getList",
         RestListClassTypes.DomSchoolClass);
     LOG.log(Level.FINE, "Retrieved list of schoolclasses of the teacher with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername()});
+        new Object[] {getUserName()});
     return src;
   }
 
@@ -75,8 +79,12 @@ public class SecureTeacherSchoolClassManager {
         RestListClassTypes.DomTeacher);
     LOG.log(Level.FINE,
         "Retrieved list of teachers in the school for the teacher with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername()});
+        new Object[] {getUserName()});
     return src;
+  }
+
+  private static String getUserName() {
+    return getRestManager().getAuthenticator().getUsername();
   }
 
   public static List<DomStudent> getStudentsInSchool() throws Dwo2Exception {
@@ -85,7 +93,7 @@ public class SecureTeacherSchoolClassManager {
         RestListClassTypes.DomStudent);
     LOG.log(Level.FINE,
         "Retrieved list of single school students in the school for the teacher with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername()});
+        new Object[] {getUserName()});
     return src;
   }
 
@@ -96,7 +104,7 @@ public class SecureTeacherSchoolClassManager {
     Boolean result =
         getRestManager().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/submit", Boolean.class, rest);
     LOG.log(Level.FINE, "Submitted schoolclass {1} for teacher with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername(),
+        new Object[] {getUserName(),
             rest.getDomSchoolClassFull().getSchoolClassName()});
     return result;
   }
@@ -110,7 +118,7 @@ public class SecureTeacherSchoolClassManager {
         "rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/getTeacherList", RestListClassTypes.DomTeacher, rest);
     LOG.log(Level.FINE,
         "Retrieved {1} teachers that are in schoolclass {2} for user with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername(), result.size(),
+        new Object[] {getUserName(), result.size(),
             rest.getDomSchoolClass().getId()});
     return result;
   }
@@ -124,7 +132,7 @@ public class SecureTeacherSchoolClassManager {
         "rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/getStudentList", RestListClassTypes.DomStudent, rest);
     LOG.log(Level.FINE,
         "Retrieved {1} students that are in schoolclass {2} for user with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername(), result.size(),
+        new Object[] {getUserName(), result.size(),
             rest.getDomSchoolClass().getId()});
     return result;
   }
@@ -137,7 +145,7 @@ public class SecureTeacherSchoolClassManager {
         getRestManager().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/remove", Boolean.class, rest);
     LOG.log(Level.FINE, "Removed schoolclass with username {0} for user with id {1}.",
         new Object[] {rest.getDomSchoolClass().getId(),
-            RestAuthenticator.getInstance().getUsername()});
+            getUserName()});
     return result;
   }
 
@@ -149,7 +157,7 @@ public class SecureTeacherSchoolClassManager {
     Boolean result =
         getRestManager().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/submitTeacher", Boolean.class, rest);
     LOG.log(Level.FINE, "Submitted teacher {1} to schoolclass {2} for user with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername(),
+        new Object[] {getUserName(),
             rest.getDomSubmitTeacherToSchoolClass().getTeacher().getId(),
             rest.getDomSubmitTeacherToSchoolClass().getSchoolClass().getId()});
     return result;
@@ -163,7 +171,7 @@ public class SecureTeacherSchoolClassManager {
     Boolean result =
         getRestManager().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/submitStudent", Boolean.class, rest);
     LOG.log(Level.FINE, "Submitted student {1} to schoolclass {2} for user with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername(),
+        new Object[] {getUserName(),
             rest.getDomSubmitStudentToSchoolClass().getStudent().getId(),
             rest.getDomSubmitStudentToSchoolClass().getSchoolClassTo().getId()});
     return result;
@@ -176,7 +184,7 @@ public class SecureTeacherSchoolClassManager {
     Boolean result =
         getRestManager().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/update", Boolean.class, rest);
     LOG.log(Level.FINE, "Updated schoolclass {1} for teacher with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername(),
+        new Object[] {getUserName(),
             rest.getDomSchoolClassFull().getSchoolClassName()});
     return result;
   }
@@ -189,7 +197,7 @@ public class SecureTeacherSchoolClassManager {
     DomSchoolClassFull result = getRestManager().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/getFull",
         DomSchoolClassFull.class, rest);
     LOG.log(Level.FINE, "Retrieved full schoolclass {1} for teacher with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername(),
+        new Object[] {getUserName(),
             rest.getDomSchoolClass().getSchoolClassName()});
     return result;
   }
@@ -203,7 +211,7 @@ public class SecureTeacherSchoolClassManager {
         getRestManager().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/removeTeacher", Boolean.class, rest);
     LOG.log(Level.FINE,
         "Submitted teacher {1} to remove from schoolclass {2} for user with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername(),
+        new Object[] {getUserName(),
             rest.getDomRemoveTeacherFromSchoolClass().getTeacher().getId(),
             rest.getDomRemoveTeacherFromSchoolClass().getSchoolClass().getId()});
     return result;
@@ -218,7 +226,7 @@ public class SecureTeacherSchoolClassManager {
         getRestManager().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/removeStudent", Boolean.class, rest);
     LOG.log(Level.FINE,
         "Submitted student {1} to remove from schoolclass {2} for user with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername(),
+        new Object[] {getUserName(),
             rest.getDomRemoveStudentFromSchoolClass().getStudent().getId(),
             rest.getDomRemoveStudentFromSchoolClass().getSchoolClass().getId()});
     return result;
@@ -231,7 +239,7 @@ public class SecureTeacherSchoolClassManager {
         RestListClassTypes.DomStudent);
     LOG.log(Level.FINE,
         "Retrieved list of single school students in the school for the teacher with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername()});
+        new Object[] {getUserName()});
     return src;
   }
 
@@ -243,7 +251,7 @@ public class SecureTeacherSchoolClassManager {
     Boolean result = getRestManager()
         .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/submitSingleSchoolStudent", Boolean.class, rest);
     LOG.log(Level.FINE, "Submitted teacher {1} to schoolclass {2} for user with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername(),
+        new Object[] {getUserName(),
             rest.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getId(),
             rest.getDomNewSingleSchoolStudent().getDomSchoolClass().getId()});
     return result;
@@ -258,7 +266,7 @@ public class SecureTeacherSchoolClassManager {
         getRestManager().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/getSingleSchoolStudent",
             DomSingleSchoolStudent.class, rest);
     LOG.log(Level.FINE, "Retrieved full single school student {1} for  teacher with username {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername(),
+        new Object[] {getUserName(),
             rest.getDomGetSingleSchoolStudent().getDomStudent().getId()});
     return result;
   }
@@ -271,7 +279,7 @@ public class SecureTeacherSchoolClassManager {
     Boolean result = getRestManager()
         .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/updateSingleSchoolStudent", Boolean.class, rest);
     LOG.log(Level.FINE, "Updated acount data for singlschoolstudent {1} by user {0}.",
-        new Object[] {RestAuthenticator.getInstance().getUsername(),
+        new Object[] {getUserName(),
             rest.getDomSingleSchoolStudent().getId()});
     return result;
   }
@@ -344,4 +352,25 @@ public class SecureTeacherSchoolClassManager {
     return result;
   }
 
+  public static DomCoursesOfSchoolClass4Teacher getModules(DomSchoolClassAndProfile submit) throws Dwo2Exception {
+    RestSchoolClassAndProfile restData = new RestSchoolClassAndProfile();
+    restData.setRestContext(getContext());
+    restData.setDomSchoolClassAndProfile(submit);
+    DomCoursesOfSchoolClass4Teacher result;
+    
+    result = getRestManager().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/getModules",
+      DomCoursesOfSchoolClass4Teacher.class, restData);
+    
+    return result;
+  }
+
+  /** utility method */
+  public static DomCoursesOfSchoolClass4Teacher getModules(DomSchoolClass schoolClass, DomDwoProfile profile) throws Dwo2Exception {
+    DomSchoolClassAndProfile submit = new DomSchoolClassAndProfile();
+    submit.setDomDwoProfile(profile);
+    submit.setDomSchoolClass(schoolClass);
+    return getModules(submit);
+  }
+  
+  
 }
