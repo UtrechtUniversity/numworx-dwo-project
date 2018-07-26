@@ -84,6 +84,7 @@ abstract class XmlRpcMapper<T> implements MapperIF<T> {
         }
     }
 
+    @Deprecated
     public Object get(int uid, int sgid) throws IOException, XmlRpcException,
             SQLException {
         System.err.println("UserMapper.put() Not yet implemented!");

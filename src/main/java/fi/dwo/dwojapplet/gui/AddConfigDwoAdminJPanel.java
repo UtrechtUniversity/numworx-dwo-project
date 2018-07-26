@@ -132,7 +132,7 @@ class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
 		list[0].setId(config.getAppletID());
 		list[0].setAppletName("");
 		try {
-			list = (AppletData[]) PersistenceFacade.instance().get(AppletData.class);
+			list = PersistenceFacade.instance().getAppletData();
 		} catch (PersistenceException e) {
 		}
 		Arrays.sort(list, this);

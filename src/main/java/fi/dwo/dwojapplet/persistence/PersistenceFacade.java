@@ -20,6 +20,7 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.AppletConfig;
+import fi.dwo.dwojapplet.domain.AppletData;
 import fi.dwo.dwojapplet.domain.ClassCourse;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
@@ -225,8 +226,8 @@ public class PersistenceFacade {
      * @throws fi.dwo.commons.exceptions.PersistenceException
      *
      */
-    public Object[] get(java.lang.Class c) throws PersistenceException {
-        MapperIF mapper = MapperCreator.instance(c);
+     private <T> T[] get(java.lang.Class<T> c) throws PersistenceException {
+        MapperIF<T> mapper = MapperCreator.instance(c);
         try {
             return mapper.get();
         }
@@ -240,7 +241,19 @@ public class PersistenceFacade {
             throw new PersistenceException(PersistenceException.EX_DB, e);
         }
     }
-
+// choose one:
+     public Group[] getGroup() throws PersistenceException {
+       return get(Group.class);
+     }
+     
+     public School[] getSchool() throws PersistenceException {
+       return get(School.class);
+     }
+     
+     public AppletData[] getAppletData() throws PersistenceException {
+       return get(AppletData.class);
+     }
+     
     /**
      * Returns all the objects of the specified class with the restriction of
      * the specified object.<br>

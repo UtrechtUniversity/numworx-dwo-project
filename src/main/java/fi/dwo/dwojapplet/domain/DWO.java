@@ -853,7 +853,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      */
     public Group[] getGroups() {
         try {
-            return (Group[]) PersistenceFacade.instance().get(Group.class);
+            return PersistenceFacade.instance().getGroup();
         } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
@@ -2298,7 +2298,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      */
     public School[] getSchool() {
         try {
-            School[] sc = (School[]) PersistenceFacade.instance().get(School.class);
+            School[] sc = PersistenceFacade.instance().getSchool();
             return sc;
         } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
