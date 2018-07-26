@@ -1,9 +1,11 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.welcome;
 
+import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.event.shared.EventBus;
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
@@ -19,7 +21,6 @@ public class WelcomePresenter {
     private EventBus eventBus;
     private Display view;
     private DwoLocalesForGWT resourceBindings = DwoLocalesForGWT.instance;
-
     /**
      * @return the view
      */
@@ -63,14 +64,18 @@ public class WelcomePresenter {
     public void init() {
         view.clear();
         view.init();
-        view.setWelcomeText("<h1>Welkom</h1>\n"
-                + "            \n"
-                + "            <p>Rechtsboven vind u een menu knop achter uw naam. In het menu vind u de volgende opties:</p>"
-                + "<ul><li>In <b>account-settings</b> kunt u uw naam, email-adres en wachtwoord"
-                + " wijzigen.</li><li> In <b>docentrollen</b> kunt u van school veranderen.</li><li> In <b>mijn "
-                + "klassen</b> kunt klassen, studenten, docenten en modules beheren.</liliul>"
-                + "<li>In de <b>resultatenbrowser</b> vind u het overzicht van de resultaten "
-                + "van de klassen voor toegekende modules.</li></ul>");
+//        view.setWelcomeText("<h1>Welkom</h1>\n"
+//                + "            \n"
+//                + "            <p>Rechtsboven vind u een menu knop achter uw naam. In het menu vind u de volgende opties:</p>"
+//                + "<ul><li>In <b>account-settings</b> kunt u uw naam, email-adres en wachtwoord"
+//                + " wijzigen.</li><li> In <b>docentrollen</b> kunt u van school veranderen.</li><li> In <b>mijn "
+//                + "klassen</b> kunt klassen, studenten, docenten en modules beheren.</liliul>"
+//                + "<li>In de <b>resultatenbrowser</b> vind u het overzicht van de resultaten "
+//                + "van de klassen voor toegekende modules.</li></ul>");
+
+        GwtClientMessages rb;
+        rb = GWT.create(GwtClientMessages.class);
+        view.setWelcomeText(rb.welcomeText());
     }
 
 }
