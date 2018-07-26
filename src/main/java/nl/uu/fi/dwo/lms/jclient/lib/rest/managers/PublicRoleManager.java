@@ -30,7 +30,7 @@ public class PublicRoleManager {
   public static List<DomRole> getRoles() throws Dwo2Exception {
     // login to rest service
     List<DomRole> roles;
-    roles = StoredRestManager.getInstance().getList("rest/public/roles/getlist",
+    roles = StoredRestManager.getInstance().getList("rest/public/roles/getList",
         RestListClassTypes.DomRole);
     return roles;
 
