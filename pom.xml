@@ -45,6 +45,7 @@
         <tomcat7.version>7.0.76</tomcat7.version>
         <context.xml>context-dwo_devel.xml</context.xml>
         <copy.ui.skip>false</copy.ui.skip>
+        <registerVersion>2.1.23</registerVersion>
     </properties>
 
     <scm>
@@ -506,6 +507,14 @@
                             <classifier>dwo2</classifier>
                             <type>war</type>
                             <contextPath>/dwo/tablet</contextPath>
+                            <asWebapp>true</asWebapp>
+                        </webapp>
+                        <webapp>
+                        	<groupId>nl.uu.fi.dwo.register</groupId>
+							<artifactId>Register</artifactId>
+							<version>${registerVersion}</version>
+                            <type>war</type>
+                            <contextPath>/dwo/register</contextPath>
                             <asWebapp>true</asWebapp>
                         </webapp>
                     </webapps>                         
