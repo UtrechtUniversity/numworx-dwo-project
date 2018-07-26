@@ -63,6 +63,9 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 	public void onModuleLoad() {
 		setupConsole();  // neem console op
 		
+	    String  build = "Version " + BUILD.version + "." + BUILD.buildNumber;
+	    logger.severe(build);
+		
 //		VerticalPanel customLogArea = null;
 //		if( LogConfiguration.loggingIsEnabled())	
 //		{
