@@ -2685,33 +2685,34 @@ public class PersistenceFacade {
         }
     }
 
-    public Vector getUserResults(Course[] courses, User user) throws PersistenceException {
-        Vector courseIDs = new Vector();
-
-        for (int i = 0; i < courses.length; i++) {
-            courseIDs.addElement(new Integer(courses[i].getID()));
-        }
-        try {
-            Vector v = DbAccessCreator.instance().getUserResults(courseIDs,
-                    user.getUserID(),idOf(user.getSchoolGroupID()));
-            MapperIF mapper = MapperCreator.instance(UserResultList.class);
-            Object[] oa = mapper.getObjectFromReturn(v);
-            if (oa.length > 0) {
-                return (Vector) (oa[0]);
-            } else {
-                return new Vector();
-            }
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-    }
+//    public Vector getUserResults(Course[] courses) throws PersistenceException {
+//        User user = DwoHelper.getCurrentFacadeUser();
+//        Vector courseIDs = new Vector();
+//
+//        for (int i = 0; i < courses.length; i++) {
+//            courseIDs.addElement(new Integer(courses[i].getID()));
+//        }
+//        try {
+//            Vector v = DbAccessCreator.instance().getUserResults(courseIDs,
+//                    user.getUserID(),idOf(user.getSchoolGroupID()));
+//            MapperIF mapper = MapperCreator.instance(UserResultList.class);
+//            Object[] oa = mapper.getObjectFromReturn(v);
+//            if (oa.length > 0) {
+//                return (Vector) (oa[0]);
+//            } else {
+//                return new Vector();
+//            }
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//    }
 
     public Vector getResultCount(int dwoProfile, int id) throws PersistenceException {
         try {

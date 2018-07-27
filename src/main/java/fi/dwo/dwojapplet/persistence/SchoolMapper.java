@@ -6,7 +6,9 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherFromToManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
@@ -23,11 +25,6 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 class SchoolMapper extends XmlRpcMapper<School> {
     private static final Logger LOG = Logger.getLogger(SchoolMapper.class.getName());
-
-    @Override
-    public School get(int uid, Integer sgid) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
 	// lazy evaluation.
     // DIT STAAT NU AAN!
@@ -50,7 +47,7 @@ class SchoolMapper extends XmlRpcMapper<School> {
                 return classes;
             }
             try {
-                setClassList((SchoolClass[]) MapperCreator.instance(SchoolClass.class).get(this));
+                setClassList(MapperCreator.instance(SchoolClass.class).get(this));
             } catch (IOException e) {
 
                 LOG.log(Level.SEVERE,null,e);
@@ -74,7 +71,7 @@ class SchoolMapper extends XmlRpcMapper<School> {
         public SchoolGroup[] getSchoolGroupList() {
             if (super.getSchoolGroupList() == null) {
                 try {
-                    setSchoolGroupList((SchoolGroup[]) MapperCreator.instance(SchoolGroup.class).get(this));
+                    setSchoolGroupList(MapperCreator.instance(SchoolGroup.class).get(this));
                 } catch (IOException e) {
     
                     LOG.log(Level.SEVERE,null,e);
@@ -154,11 +151,11 @@ class SchoolMapper extends XmlRpcMapper<School> {
             return null;
         } else if (objects.containsKey(data.get("schoolID"))) { // Did we knew
             // the school?
-            s = (School) objects.get(data.get("schoolID"));
+            s = objects.get(data.get("schoolID"));
         } else {
             s = new LazySchool();
         }
-        s = (School) update(s, data);
+        s = update(s, data);
         if (!objects.containsKey(new Integer(s.getSchoolID()))) {
             objects.put(new Integer(s.getSchoolID()), s);
         }
@@ -199,9 +196,6 @@ class SchoolMapper extends XmlRpcMapper<School> {
           } catch (Dwo2Exception e) {
             throw new IOException(e.getDwo2Message(), e);
           }
-        
-        
-        
         }
         return get();
     }
@@ -285,4 +279,32 @@ class SchoolMapper extends XmlRpcMapper<School> {
     protected String getOrderbyCol() {
         return ORDERCOL;
     }
+
+    @Override
+    public School[] get() throws IOException {
+      try {
+        List<DomSchool4DwoAdmin> list = SecureDwoAdminSchoolManager.getSchoolList();
+        School[] schools = createArray(list.size());
+        for (int i = 0; i < schools.length; i++) {
+          schools[i] = getObjectFromReturn(list.get(i));
+        }
+        return schools;
+      } catch (Dwo2Exception e) {
+          throw new IOException(e.getDwo2Message(),e);
+      }
+    }
+
+    private School getObjectFromReturn(DomSchool4DwoAdmin full) {
+      int id = PersistenceFacade.idOf(full.getId());
+      School s = objects.get(id);
+      if(s == null) {
+        s = new LazySchool();
+      }
+      s.setDomSchool(full);
+      s.setSchoolLogin(full.getSchoolLogin());   
+      objects.putIfAbsent(id, s);
+      return s;
+    }
+    
+    
 }

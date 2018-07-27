@@ -1,19 +1,25 @@
 package fi.dwo.dwojapplet.persistence;
 
 import fi.dwo.dwojapplet.domain.AppletData;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminAppletManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomAppletFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Hashtable;
+import java.util.List;
+
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-class AppletDataMapper extends XmlRpcMapper {
+class AppletDataMapper extends XmlRpcMapper<AppletData> {
 
     private static final String TABLENAME = "tblApplet";
     private static final String IDCOL = "appletID";
     private static final String ORDERCOL = "classname";
 
     @Override
-    protected Object[] createArray(int size) {
+    protected AppletData[] createArray(int size) {
         return new AppletData[size];
     }
 
@@ -33,8 +39,8 @@ class AppletDataMapper extends XmlRpcMapper {
     }
 
     @Override
-    protected Object update(Object obj, Hashtable data) {
-        AppletData applet = (AppletData) obj;
+    protected AppletData update(AppletData obj, Hashtable data) {
+        AppletData applet = obj;
         applet.setId((((Number) data.get(IDCOL)).intValue()));
         applet.setAppletName((String) data.get("appletName"));
         applet.setClassName((String) data.get(ORDERCOL));
@@ -44,13 +50,13 @@ class AppletDataMapper extends XmlRpcMapper {
     }
 
     @Override
-    public Object[] get(Object obj) throws IOException, SQLException,
+    public AppletData[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
         return get();
     }
 
     @Override
-    public Object getObjectFromReturn(Hashtable data) throws IOException,
+    public AppletData getObjectFromReturn(Hashtable data) throws IOException,
             SQLException, XmlRpcException {
         AppletData s = null;
         if (data.get("appletID") == null) { //We don't know enough to make a
@@ -60,11 +66,11 @@ class AppletDataMapper extends XmlRpcMapper {
             return null;
         } else if (objects.containsKey(data.get("appletID"))) { // Did we knew
             // the applet?
-            s = (AppletData) objects.get(data.get("appletID"));
+            s = objects.get(data.get("appletID"));
         } else {
             s = new AppletData();
         }
-        s = (AppletData) update(s, data);
+        s = update(s, data);
         if (!objects.containsKey(new Integer(s.getId()))) {
             objects.put(new Integer(s.getId()), s);
         }
@@ -72,14 +78,36 @@ class AppletDataMapper extends XmlRpcMapper {
     }
 
     @Override
-    public void put(int oid, Object obj)  {
+    public void put(int oid, AppletData obj)  {
         System.err.println("AppletDataMapper.put() Not yet implemented!");
-
     }
 
     @Override
-    public Object get(int uid, Integer sgid) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public AppletData[] get() throws IOException {
+      try {
+        List<DomAppletFull> list = SecureDwoAdminAppletManager.getApplets();
+        AppletData[] result = createArray(list.size());
+        for (int i = 0; i < result.length; i++) {
+          result[i] = getObjectFromReturn(list.get(i));
+        }
+        return result;
+      } catch (Dwo2Exception e) {
+        throw new IOException(e.getDwo2Message(),e);
+      }
+    }
+
+    private AppletData getObjectFromReturn(DomAppletFull dom) {
+      int id = PersistenceFacade.idOf(dom.getId());
+      AppletData s = objects.get(id);
+      if(s == null) 
+        s = new AppletData();
+      s.setId(id);
+      s.setAppletName(dom.getAppletName());
+      s.setClassName(dom.getClassname());
+      s.setFeatures(dom.getFeatures());
+      s.setJarName(dom.getJarname());
+      objects.putIfAbsent(id, s);
+      return s;
     }
 
 }

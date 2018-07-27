@@ -23,7 +23,7 @@ public interface ResultsModuleIF {
      * @return The current list of results.
      *
      */
-    public Vector zoomIn(UserGroup ug);
+    //public Vector zoomIn(UserGroup ug);
 
     /**
      * Zooms out from the usergroup.
@@ -31,7 +31,7 @@ public interface ResultsModuleIF {
      * @param ug The usergroup to zoom out.
      * @return The current list of results.
      */
-    public Vector zoomOut(UserGroup ug);
+    //public Vector zoomOut(UserGroup ug);
 
     /**
      * Zooms in to the specified lessongroup.
@@ -40,7 +40,7 @@ public interface ResultsModuleIF {
      * @return The current list of results.
      *
      */
-    public Vector zoomIn(LessonGroup lg);
+    //public Vector zoomIn(LessonGroup lg);
 
     /**
      * Zooms out from the lessongroup.
@@ -48,7 +48,7 @@ public interface ResultsModuleIF {
      * @param lg The lessongroup to zoom out.
      * @return The current list of results.
      */
-    public Vector zoomOut(LessonGroup lg);
+    //public Vector zoomOut(LessonGroup lg);
 
     /**
      * Returns the currently zoomed UserGroup.
@@ -129,7 +129,7 @@ public interface ResultsModuleIF {
     /**
      * Reset the ResultsModule. The zoom and order values are reset.
      */
-    public void reset();
+    //public void reset();
 
     public void showResult(ResultScore rs);
 }

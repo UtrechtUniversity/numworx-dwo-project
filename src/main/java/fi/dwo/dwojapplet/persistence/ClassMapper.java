@@ -136,7 +136,7 @@ class ClassMapper extends XmlRpcMapper<SchoolClass> {
 		for (int i = 0; i < array.length; i++) {
 			DomSchoolClass item = list.get(i);
 			int id = MySQLPersistenceId.getNativeId(item).intValue();
-			SchoolClass cls = (SchoolClass) objects.get(id);
+			SchoolClass cls = objects.get(id);
 			if (cls == null) {
 				cls = new SchoolClass();
 			}
@@ -200,12 +200,6 @@ class ClassMapper extends XmlRpcMapper<SchoolClass> {
 	@Override
 	protected String getOrderbyCol() {
 		return ORDERCOL;
-	}
-
-	@Override
-	public SchoolClass get(int uid, Integer sgid) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
 	}
 
 	@Override

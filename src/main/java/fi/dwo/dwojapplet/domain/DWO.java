@@ -1240,7 +1240,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * @return The current results module.
      *
      */
-    public ResultsModuleIF getResultsModule() {
+    public ResultsModule getResultsModule() {
         return getResultsModule(getCourses(), false);
     }
 
@@ -1251,7 +1251,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * @return The current results module.
      *
      */
-    public ResultsModuleIF getResultsModule(Course[] courses) {
+    public ResultsModule getResultsModule(Course[] courses) {
         return getResultsModule(courses, true);
     }
 
@@ -1263,7 +1263,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * @return The current results module.
      *
      */
-    public ResultsModuleIF getResultsModule(SchoolClass schoolClass) {
+    public ResultsModule getResultsModule(SchoolClass schoolClass) {
         if (resultsModule == null) {
             resultsModule = new ResultsModule(new Course[0], (Teacher) DwoHelper.getCurrentFacadeUser(), this);
         }
@@ -1281,7 +1281,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * @return The current results module.
      *
      */
-    public ResultsModuleIF getResultsModule(Course[] courses, boolean showSco) {
+    public ResultsModule getResultsModule(Course[] courses, boolean showSco) {
         if (resultsModule == null) {
             resultsModule = new ResultsModule(new Course[0], (Teacher) DwoHelper.getCurrentFacadeUser(), this);
         }

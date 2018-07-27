@@ -41,8 +41,9 @@ abstract class XmlRpcMapper<T> implements MapperIF<T> {
      */
     @Override
     public T[] get() throws IOException, XmlRpcException, SQLException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        return getObjectFromReturn(dbAccess.getTable(getTableName(), getOrderbyCol()));
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        return getObjectFromReturn(dbAccess.getTable(getTableName(), getOrderbyCol()));
+      return createArray(0); // not supported
     }
 
     /**
@@ -85,9 +86,9 @@ abstract class XmlRpcMapper<T> implements MapperIF<T> {
     }
 
     @Deprecated
-    public Object get(int uid, int sgid) throws IOException, XmlRpcException,
+    public T get(int uid, Integer sgid) throws IOException, XmlRpcException,
             SQLException {
-        System.err.println("UserMapper.put() Not yet implemented!");
+        System.err.println("UserMapper.get(u,s) Not implemented!");
         return null;
     }
 

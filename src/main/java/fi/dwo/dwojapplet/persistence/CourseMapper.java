@@ -72,11 +72,6 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>{
         cachemap.clear();
     }
 
-    @Override
-    public Course get(int uid, Integer sgid) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     class LazyCourse extends Course {
 
         private boolean loaded;
@@ -92,7 +87,7 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>{
         public CourseMap[] getChildren() {
             if (!loaded) {
                 try {
-                    setChildren(((Course[]) get(this)));
+                    setChildren(get(this));
                 } catch (Exception e) {
     
                     LOG.log(Level.SEVERE,null,e);

@@ -103,19 +103,21 @@ public class UserResultsModule implements Comparator<UserResultList>, ResultsMod
      */
     @Override
     public Vector getResults() {
-        if (currentlyZoomedLesson != null) {
+ //       if (true || currentlyZoomedLesson != null)
+        {
             try {
                 userResultList = PersistenceFacade.instance().getUserResults((Course) currentlyZoomedLesson);
             } catch (PersistenceException e) {
                 JOptionPane.showMessageDialog(dwo, e.getMessage());
             }
-        } else {
-            try {
-                userResultList = PersistenceFacade.instance().getUserResults(courses, user);
-            } catch (PersistenceException e) {
-                JOptionPane.showMessageDialog(dwo, e.getMessage());
-            }
-        }
+        } 
+//        else {
+//            try {
+//                userResultList = PersistenceFacade.instance().getUserResults(courses);
+//            } catch (PersistenceException e) {
+//                JOptionPane.showMessageDialog(dwo, e.getMessage());
+//            }
+//        }
         return userResultList;
     }
 
@@ -154,8 +156,8 @@ public class UserResultsModule implements Comparator<UserResultList>, ResultsMod
         return userResultList;
     }
 
-    @Override
-    public void reset() {
+    //@Override
+    private void reset() {
         PersistenceFacade.instance().clearCurrentMapperDataCache(UserResultList.class);
         PersistenceFacade.instance().setResultsModule(this);
         currentlyZoomedLesson = null;
@@ -208,56 +210,56 @@ public class UserResultsModule implements Comparator<UserResultList>, ResultsMod
         }
     }
 
-    @Override
-    public Vector zoomIn(UserGroup ug) {
-        orderedLessonIndex = -1;
-        currentlyZoomedUser = ug;
-        currentlyOrderedUser = null;
-        Vector<Object> list = getResults();
-        List<UserResultList> urList = (List<UserResultList>) list.get(0);
-        for(UserResultList l: urList){
-            l.setResultsModule(this);
-        }
-        return list;
-    }
+//    @Override
+//    public Vector zoomIn(UserGroup ug) {
+//        orderedLessonIndex = -1;
+//        currentlyZoomedUser = ug;
+//        currentlyOrderedUser = null;
+//        Vector<Object> list = getResults();
+//        List<UserResultList> urList = (List<UserResultList>) list.get(0);
+//        for(UserResultList l: urList){
+//            l.setResultsModule(this);
+//        }
+//        return list;
+//    }
 
-    @Override
-    public Vector zoomIn(LessonGroup lg) {
-        orderedLessonIndex = -1;
-        currentlyZoomedLesson = lg;
-        currentlyOrderedLesson = null;
-        Vector<Object> list = getResults();
-        List<UserResultList> urList = (List<UserResultList>) list.get(0);
-        for(UserResultList l: urList){
-            l.setResultsModule(this);
-        }
-        return list;
-    }
+//    @Override
+//    public Vector zoomIn(LessonGroup lg) {
+//        orderedLessonIndex = -1;
+//        currentlyZoomedLesson = lg;
+//        currentlyOrderedLesson = null;
+//        Vector<Object> list = getResults();
+//        List<UserResultList> urList = (List<UserResultList>) list.get(0);
+//        for(UserResultList l: urList){
+//            l.setResultsModule(this);
+//        }
+//        return list;
+//    }
 
-    @Override
-    public Vector zoomOut(UserGroup ug) {
-        orderedLessonIndex = -1;
-        currentlyZoomedUser = null;
-        currentlyOrderedUser = null;
-        Vector<Object> list = getResults();
-        List<UserResultList> urList = (List<UserResultList>) list.get(0);
-        for(UserResultList l: urList){
-            l.setResultsModule(this);
-        }
-        return list;
-    }
+//    @Override
+//    public Vector zoomOut(UserGroup ug) {
+//        orderedLessonIndex = -1;
+//        currentlyZoomedUser = null;
+//        currentlyOrderedUser = null;
+//        Vector<Object> list = getResults();
+//        List<UserResultList> urList = (List<UserResultList>) list.get(0);
+//        for(UserResultList l: urList){
+//            l.setResultsModule(this);
+//        }
+//        return list;
+//    }
 
-    @Override
-    public Vector zoomOut(LessonGroup lg) {
-        orderedLessonIndex = -1;
-        currentlyZoomedLesson = null;
-        currentlyOrderedLesson = null;
-        Vector<Object> list = getResults();
-        List<UserResultList> urList = (List<UserResultList>) list.get(0);
-        for(UserResultList l: urList){
-            l.setResultsModule(this);
-        }
-        return list;
-    }
+//    @Override
+//    public Vector zoomOut(LessonGroup lg) {
+//        orderedLessonIndex = -1;
+//        currentlyZoomedLesson = null;
+//        currentlyOrderedLesson = null;
+//        Vector<Object> list = getResults();
+//        List<UserResultList> urList = (List<UserResultList>) list.get(0);
+//        for(UserResultList l: urList){
+//            l.setResultsModule(this);
+//        }
+//        return list;
+//    }
 
 }

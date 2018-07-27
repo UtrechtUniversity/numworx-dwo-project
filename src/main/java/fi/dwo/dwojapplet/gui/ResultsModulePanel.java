@@ -8,6 +8,7 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.LessonGroup;
 import fi.dwo.dwojapplet.domain.ResultScore;
 import fi.dwo.dwojapplet.domain.ResultScoreIF;
+import fi.dwo.dwojapplet.domain.ResultsModule;
 import fi.dwo.dwojapplet.domain.ResultsModuleIF;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Sco;
@@ -631,7 +632,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
         JLabel empty = new JLabel();
     }
 
-    private ResultsModuleIF domain;
+    private final ResultsModule domain;
 
     private JButton selectCoursesButton, copyButton;
 
@@ -647,7 +648,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
      *
      * @param rm
      */
-    public ResultsModulePanel(ResultsModuleIF rm) {
+    public ResultsModulePanel(ResultsModule rm) {
         //keep, required for comparing gui data with new REST-results
 //        DomResultsPerTeacher results;
 //        try {

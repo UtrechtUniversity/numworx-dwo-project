@@ -126,7 +126,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @return The current list of results.
      *
      */
-    @Override
+    //@Override
     public Vector zoomIn(UserGroup ug) {
         orderedLessonIndex = -1;
         currentlyZoomedUser = ug;
@@ -140,7 +140,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @param ug The usergroup to zoom out.
      * @return The current list of results.
      */
-    @Override
+    //@Override
     public Vector zoomOut(UserGroup ug) {
         orderedLessonIndex = -1;
         currentlyZoomedUser = null;
@@ -155,7 +155,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @return The current list of results.
      *
      */
-    @Override
+    //@Override
     public Vector zoomIn(LessonGroup lg) {
         orderedLessonIndex = -1;
         currentlyZoomedLesson = lg;
@@ -169,7 +169,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @param lg The lessongroup to zoom out.
      * @return The current list of results.
      */
-    @Override
+    //@Override
     public Vector zoomOut(LessonGroup lg) {
         orderedLessonIndex = -1;
         currentlyZoomedLesson = null;
@@ -385,9 +385,8 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
     /**
      * Reset the ResultsModule. The zoom and order values are reset.
      *
-     * @see fi.dwo.client.domain.ResultsModuleIF#reset()
      */
-    @Override
+    //@Override
     public void reset() {
       PersistenceFacade.instance().setResultsModule(this);
       currentlyZoomedLesson = null;
