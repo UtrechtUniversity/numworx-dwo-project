@@ -3846,8 +3846,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @return
      * @throws SQLException
      */
-    @Override
-    public Vector getUserResults(Vector courses, int userID, int schoolGroupID) throws SQLException {
+    //@Override
+    private Vector getUserResults(Vector courses, int userID, int schoolGroupID) throws SQLException {
         int i;
         StringBuilder courseString = new StringBuilder();
         if (courses.size() > 0) {
