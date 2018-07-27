@@ -6,6 +6,7 @@ import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
+import nl.uu.fi.dwo.rest.dom.entities.DomAppletFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
@@ -492,6 +493,8 @@ class RestManager extends RestyDateTimeFormat {
               new GenericType<List<DomTeacherAndHasRole>>() {});
         case DomStudentScoContext:
           return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomStudentScoContext>>() {});
+        case DomApplet:
+          return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomAppletFull>>() {});
         default:
           String msg = "Programming error, trying to get an unsupported dataType.";
           LOG.log(Level.SEVERE, msg);
