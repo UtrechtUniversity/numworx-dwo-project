@@ -10,7 +10,7 @@
 		<!-- Topbar Navigation Area -->
 		<mgwt:HeaderPanel >
 			<mgwt:center>
-				<g:Label ui:field="nav_title" >Aanmelden</g:Label>
+				<g:Label ui:field="nav_title" ><ui:text from='{rb.GUIR_REGISTER}' /></g:Label>
 			</mgwt:center>
 		</mgwt:HeaderPanel>
 		<!-- Main interaction Area -->
@@ -53,6 +53,10 @@
 	    	       		<td colspan="2" ><ui:text from="{rb.GUIR_MSG_PROVIDED_SCHOOL}" /></td>
 	    	       </tr>
 	    	       <tr>
+	    	       	<td><ui:text from="{rb.GUIR_SCHOOLGROUP}" /></td>
+	    	       	<td><g:ListBox ui:field="schoolGroup" /></td>
+	    	       </tr>
+	    	       <tr>
 	    	       	<td><ui:text from="{rb.GUI_SchoolLogin}" /></td>
 	    	        <td><g:TextBox  ui:field="schoolLogin" /></td>
 	    	       </tr>
@@ -65,8 +69,8 @@
 	    	       </tr>
 	    	       
 	    	       <tr>
-	    	       	<td><mgwt:Button ui:field="register" text="{rb.GUI_Button_Ok}" /></td>
-	    	       	<td><mgwt:Button ui:field="cancel" text="{rb.GUI_Button_Cancel}" /></td>
+	    	       	<td><mgwt:Button ui:field="register" text="{rb.GUI_BTN_Ok}" /></td>
+	    	       	<td><mgwt:Button ui:field="cancel" text="{rb.GUI_BTN_Cancel}" /></td>
 	    	       </tr>
 	    	    </table>
 	    	   </div>

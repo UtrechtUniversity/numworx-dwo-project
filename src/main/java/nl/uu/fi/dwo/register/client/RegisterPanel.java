@@ -1,14 +1,17 @@
 package nl.uu.fi.dwo.register.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.ui.client.widget.Button;
 
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
@@ -28,19 +31,27 @@ public class RegisterPanel extends Composite {
 
 	public RegisterPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
+		schoolGroup.addItem(rb.NULLSCHOOL(), RoleType.STUDENT.name());
+		schoolGroup.addItem(rb.STUDENT(), RoleType.STUDENT.name());
+		schoolGroup.addItem(rb.TEACHER(), RoleType.TEACHER.name());
+		schoolGroup.addItem(rb.SCHOOLADMIN(), RoleType.SCHOOLADMIN.name());
 		controller = new RegisterController();
+//		register.addTapHandler(this::onRegister);
+//		cancel.addTapHandler(this::onCancel);
 	}
 
 	private RegisterController controller;
 	
+	@UiField Button register, cancel;
+	
 	@UiField
-	DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
-
-	@UiField
-	Button cancel, register;
+	DwoLocalesForGWT rb;
+	
 	@UiField
 	HasText username, password, givenName, insertion, familyName, email, passwordAgain, schoolCode, schoolLogin;
 
+	@UiField ListBox schoolGroup;
+	
 	@UiHandler("cancel")
 	void onCancel(TapEvent e) {
 		getController().getNext().execute();
@@ -55,6 +66,8 @@ public class RegisterPanel extends Composite {
 		domUser.setGivenName(givenName.getText());
 		domUser.setInsertion(insertion.getText());
 		domUser.setUsername(username.getText());
+		if(!schoolGroup.getSelectedValue().isEmpty())
+		domUser.setRole(RoleType.valueOf(schoolGroup.getSelectedValue()));
 		
 		String p1 = password.getText();
 		String p2 = passwordAgain.getText();
@@ -86,7 +99,6 @@ public class RegisterPanel extends Composite {
 		
 		domUser.setPassword(MD5.md5(password.getText()));
 		
-		domUser.setRole(RoleType.STUDENT);
 		String sLogin = schoolLogin.getText();
 		String sCode = schoolCode.getText();
 		if(sLogin.isEmpty()) {
