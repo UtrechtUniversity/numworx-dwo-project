@@ -15,6 +15,8 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import nl.uu.fi.dwo.rest.dom.entities.DomAppletFull;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -160,5 +162,20 @@ public class PersistentApplet implements Serializable {
         id.setIdString(String.format("MYSQL;%s;%020d",
                 PersistenceClassType.PersistentApplet.name(), anAppletId));
         return id;
+    }
+    
+    public DomAppletFull buildDomAppletFull() {
+        DomAppletFull applet = new DomAppletFull();
+        fillDomAppletFull(applet);
+        return applet;
+    }
+
+    private void fillDomAppletFull(DomAppletFull applet) {
+      applet.setAppletName(appletName);
+      applet.setClassname(classname);
+      applet.setFeatures(features);
+      applet.setId(buildPersistenceId());
+      applet.setJarname(jarname);
+      applet.setOptLock(Long.valueOf(0));  // FIXME NOT IN DATABASE!!!!!!
     }
 }

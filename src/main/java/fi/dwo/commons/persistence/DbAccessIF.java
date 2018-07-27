@@ -129,18 +129,18 @@ public interface DbAccessIF  {
 //    public Vector getTable(String tableName) throws IOException,
 //            XmlRpcException, SQLException;
 
-    /**
-     * Returns all the records of the specified table ordered by the specified
-     * column.
-     *
-     * @param tableName The name of the table to select the data.
-     * @param orderCol The column name to order the data by.
-     * @return A Vector contains hashtables where the column-values are mapped
-     * on the columnnames.
-     * @throws java.sql.SQLException
-     */
-    public Vector getTable(String tableName, String orderCol) throws IOException,
-            XmlRpcException, SQLException;
+//    /**
+//     * Returns all the records of the specified table ordered by the specified
+//     * column.
+//     *
+//     * @param tableName The name of the table to select the data.
+//     * @param orderCol The column name to order the data by.
+//     * @return A Vector contains hashtables where the column-values are mapped
+//     * on the columnnames.
+//     * @throws java.sql.SQLException
+//     */
+//    public Vector getTable(String tableName, String orderCol) throws IOException,
+//            XmlRpcException, SQLException;
 
     /**
      * Returns all the records of the specified table with the specified
@@ -533,7 +533,7 @@ public interface DbAccessIF  {
 
 //    public Vector getUserResults(Vector courses, int i) throws SQLException, IOException, XmlRpcException;
 
-    public Vector getUserResults(Vector courses, int i, int j) throws SQLException, IOException, XmlRpcException;
+//    public Vector getUserResults(Vector courses, int i, int j) throws SQLException, IOException, XmlRpcException;
 
 //    public boolean setLogo(int id, byte[] image) throws SQLException, IOException, XmlRpcException;
 
