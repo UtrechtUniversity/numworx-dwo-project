@@ -5,11 +5,14 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -20,8 +23,11 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
+import org.osgi.util.promise.Success;
 
 /**
  * Login Presenter.
@@ -83,7 +89,7 @@ public class EditTeacherPresenter {
         Promise p = Promises.resolved(null);
 
         //fetch schoolclasses
-        p=p.then((resolved) -> {
+        p = p.then((resolved) -> {
             return manager.getTeachersSchoolClasses();
 
         }).then((resolved) -> {
@@ -111,12 +117,41 @@ public class EditTeacherPresenter {
 
     @JsMethod
     public void removeTeacherFromSchoolClass(String schoolClassId) {
-        DomSchoolClass sc = taggedSchoolClassMap.get(schoolClassId).getSchoolClass();
-        DomRemoveTeacherFromSchoolClass data = new DomRemoveTeacherFromSchoolClass();
-        data.setSchoolClass(sc);
-        data.setTeacher(new DomTeacher(user));
-        Promise<Boolean> p = manager.removeTeacherFromSchoolClass(data);
-        p.then((resolved) -> {
+        Promise<Boolean> p = Promises.resolved(true); //empty promise
+        
+        //ask to be sure if removing yourself!
+        if (user.getId().getIdString().equals(dwoGlobalVars.getCurrentUser().getId().getIdString())) {
+            p = p.then(new Success<Boolean, Boolean>() {
+                @Override
+                //Are you sure?
+                public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
+//                String msg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_User_ConfirmSchoolLoginDelete(),sracData.get(hasRoleId).getSchool().getSchoolName(),sracData.get(hasRoleId).getRole().getRoleName());
+                    AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred("You can not undo this. Are you sure?");
+                    AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
+                    eventBus.fireEvent(event);
+                    return dialogPromise.getPromise();
+                }
+            });
+        };
+
+        //remove
+        p.then(new Success<Boolean, Boolean>() {
+            //sure so remove
+            @Override
+            public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {
+                if (resolved.getValue()) {
+                    DomSchoolClass sc = taggedSchoolClassMap.get(schoolClassId).getSchoolClass();
+                    DomRemoveTeacherFromSchoolClass data = new DomRemoveTeacherFromSchoolClass();
+                    data.setSchoolClass(sc);
+                    data.setTeacher(new DomTeacher(user));
+                    Promise<Boolean> p = manager.removeTeacherFromSchoolClass(data);
+                    return p;
+                } else {
+                    LOG.log(Level.INFO, "Unsubscribe schoolclass cancelled.");
+                    return Promises.failed(new Dwo2Exception(Dwo2ExceptionCode.User_Cancelled_RemoveTeacherFromSchoolClass, "Unsubscribe schoolclass cancelled."));
+                }
+            }
+        }).then((resolved) -> {
             this.initView(user);
             return Promises.resolved(true);
         }).then(null, (failure) -> {

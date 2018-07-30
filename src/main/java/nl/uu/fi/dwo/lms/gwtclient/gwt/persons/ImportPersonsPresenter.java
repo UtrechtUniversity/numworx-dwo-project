@@ -14,17 +14,11 @@ import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
-import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
-import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
-import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
 
 /**
  * Login Presenter.

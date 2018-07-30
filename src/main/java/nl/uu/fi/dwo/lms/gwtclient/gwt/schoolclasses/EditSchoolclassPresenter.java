@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
+import fi.dwo.gwt.lib.rest.util.Dwo2LocaleMessageGWTTranslator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessageCode;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -50,8 +53,6 @@ public class EditSchoolclassPresenter {
     private DomSchoolClassFull schoolClass;
 
     public interface Display extends BasicDisplay {
-
-        void clear();
 
         void init();
 
@@ -142,7 +143,7 @@ public class EditSchoolclassPresenter {
                 //flip back to schoolclasses screen 
                 if (resolved.getValue() == true) {
                     updateViewData(schoolClass);
-                    //eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+                    eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_Class_ConfirmChangeCommited()));
                     return null;
                 } else {
                     throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Rest request failed for unknown reasons.");

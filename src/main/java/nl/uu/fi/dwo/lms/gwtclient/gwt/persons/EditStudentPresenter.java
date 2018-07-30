@@ -136,7 +136,7 @@ public class EditStudentPresenter {
         Promise p = Promises.resolved(true);
 
         //fetch schoolclasses
-        p =p.then((resolved) -> {
+        p = p.then((resolved) -> {
             return manager.getTeachersSchoolClasses();
 
         }).then((resolved) -> {
@@ -168,30 +168,32 @@ public class EditStudentPresenter {
         //if singleschool fetch user
         if (aUser.getSingleSchool()) {
             p = p.then((resolved) -> {
-                if(resolved.getValue()!=null && resolved.getValue().equals(true)){
-                DomContext ctx = new DomContext();
-                DomGetSingleSchoolStudent student = new DomGetSingleSchoolStudent(new DomStudent(aUser));
-                ctx.setDomHasRole(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
-                for (TaggedDomSchoolClass sc : taggedSchoolClassMap.values()) {
-                    if (sc.isTag()) {
-                        student.setDomSchoolClass(sc.getSchoolClass());
-                        break;
+                if (resolved.getValue() != null && resolved.getValue().equals(true)) {
+                    DomContext ctx = new DomContext();
+                    DomGetSingleSchoolStudent student = new DomGetSingleSchoolStudent(new DomStudent(aUser));
+                    ctx.setDomHasRole(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
+                    for (TaggedDomSchoolClass sc : taggedSchoolClassMap.values()) {
+                        if (sc.isTag()) {
+                            student.setDomSchoolClass(sc.getSchoolClass());
+                            break;
+                        }
                     }
-                }
-                if (student.getDomSchoolClass() != null) {
-                    RestGetSingleSchoolStudent restData = new RestGetSingleSchoolStudent();
-                    restData.setRestContext(ctx);
-                    restData.setDomGetSingleSchoolStudent(student);
-                    return manager.getSingleSchoolStudent(restData);
-                } else {
-                    return Promises.resolved(null);
-                }
+                    if (student.getDomSchoolClass() != null) {
+                        RestGetSingleSchoolStudent restData = new RestGetSingleSchoolStudent();
+                        restData.setRestContext(ctx);
+                        restData.setDomGetSingleSchoolStudent(student);
+                        return manager.getSingleSchoolStudent(restData);
+                    } else {
+                        return Promises.resolved(null);
+                    }
                 }
                 return Promises.resolved(null);
             }).then((resolved) -> {
+                if (resolved.getValue() != null){
                 DomSingleSchoolStudent student = (DomSingleSchoolStudent) resolved.getValue();
                 fullUser = student;
                 view.setSingleSchoolStudent(student);
+                }
                 return Promises.resolved(null);
             });
         } else {
@@ -219,8 +221,8 @@ public class EditStudentPresenter {
                 @Override
                 //Are you sure?
                 public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
-                    //String msg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_User_ConfirmSchoolLoginDelete(), sracData.get(hasRoleId).getSchool().getSchoolName(), sracData.get(hasRoleId).getRole().getRoleName());
-                    String msg = "If you do this you no longer have access tot his students data.";
+                    //String msg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_EDITSTUDENT_Q_RemoveClassFromStudent(), sracData.get(hasRoleId).getSchool().getSchoolName());
+                    String msg = DwoLocalesForGWT.instance.NUM_DLG_EDITSTUDENT_Q_RemoveClassFromStudent();
                     AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(msg);
                     AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
                     eventBus.fireEvent(event);
@@ -231,18 +233,19 @@ public class EditStudentPresenter {
 
         p.then((resolved) -> {
             if (resolved.getValue() == false) {
-                return Promises.resolved(true);
+                return Promises.failed(new Dwo2Exception(Dwo2ExceptionCode.User_Cancelled_RemoveStudentFromSchoolClass, "Unsubscribe schoolclass cancelled."));
+            } else {
+                DomSchoolClass sc = taggedSchoolClassMap.get(schoolClassId).getSchoolClass();
+                DomRemoveStudentFromSchoolClass data = new DomRemoveStudentFromSchoolClass();
+                data.setSchoolClass(sc);
+                data.setStudent(new DomStudent(user));
+                return manager.removeStudentFromSchoolClass(data);
             }
-            DomSchoolClass sc = taggedSchoolClassMap.get(schoolClassId).getSchoolClass();
-            DomRemoveStudentFromSchoolClass data = new DomRemoveStudentFromSchoolClass();
-            data.setSchoolClass(sc);
-            data.setStudent(new DomStudent(user));
-            return manager.removeStudentFromSchoolClass(data);
         }).then((resolved) -> {
             //update new state
             this.initView(user);
             return Promises.resolved(true);
-        }).then(null, (failure) -> {
+        }, (failure) -> {
             eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
         });
     }
