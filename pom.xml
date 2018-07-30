@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.2.7-SNAPSHOT</version>
+		<version>2.2.7</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<artifactId>EBServer</artifactId>
@@ -28,7 +26,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
 			<artifactId>DWOServer</artifactId>
-			<version>2.2.7-SNAPSHOT</version>
+			<version>2.2.7</version>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>
@@ -119,7 +117,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
 			<artifactId>DWOJClient</artifactId>
-			<version>2.2.7-SNAPSHOT</version>
+			<version>2.2.7</version>
 		</dependency>
 		<dependency>
 			<groupId>fi.dwo</groupId>
@@ -131,7 +129,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.mobile</groupId>
 		<artifactId>DWOplayer</artifactId>
-		<version>${DWOplayerVersion}</version>
+		<version>2.2.7</version>
 		<type>war</type>
 		<classifier>dwo2</classifier>
 		<scope>runtime</scope>
@@ -139,7 +137,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.lms</groupId>
 		<artifactId>DWOGwtClient</artifactId>
-		<version>${DWOGwtClientVersion}</version>
+		<version>0.10.16-SNAPSHOT</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -422,7 +420,7 @@
 		<DWOGwtClientVersion>0.10.16-SNAPSHOT</DWOGwtClientVersion>
 	</properties>
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</developerConnection>
-		<connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</connection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/tags/EBServer-2.2.7</developerConnection>
+		<connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/tags/EBServer-2.2.7</connection>
 	</scm>
 </project>
