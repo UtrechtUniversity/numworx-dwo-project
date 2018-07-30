@@ -2,8 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
-import fi.dwo.gwt.lib.rest.ui.ProgressDialogEvent;
-import fi.dwo.gwt.lib.rest.ui.ProgressDialogPromise;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,7 +106,14 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
             @Override
             public Promise<Void> call(Promise<List<DomSchoolClass>> resolved) throws Exception {
                 classMap = new HashMap<>();
-                resolved.getValue().forEach((k -> classMap.put(k.getId().getIdString(), k)));
+//                List<DomSchoolClass> classList = new ArrayList<>();
+                resolved.getValue().forEach((k -> {
+                    if (!k.getId().getIdString().equals(schoolClassA.getId().getIdString())) {
+                        classMap.put(k.getId().getIdString(), k);
+//                        resolved.getValue().remove(k);
+                    }
+                }));
+                resolved.getValue().removeIf(k->k.getId().getIdString().equals(schoolClassA.getId().getIdString()));
                 view.SetClassList(resolved.getValue());
                 return null;
             }
