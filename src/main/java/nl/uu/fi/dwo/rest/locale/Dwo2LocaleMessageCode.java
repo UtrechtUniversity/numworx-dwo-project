@@ -44,6 +44,7 @@ NUM_DLG_User_NoTeacher,
 NUM_DLG_User_ConfirmSchoolLoginDelete,
 NUM_DLG_User_ConfirmChangeCommited,
 NUM_DLG_User_ConfirmPasswordSwitch,
+NUM_DLG_Class_ConfirmChangeCommited,
 
 //generic labels
  NUM_LBL_YES,
@@ -130,9 +131,13 @@ NUM_DLG_User_ConfirmPasswordSwitch,
  NUM_BTN_ShowStudents,
  NUM_BTN_ShowTeachers,
  NUM_BTN_ShowModules,
- 
+ NUM_BTN_AddStudents,
+ NUM_BTN_AddTeachers,
+ NUM_BTN_AssignModules,
+
  //add student to class
  NUM_SEC_AssignStudentToClass,
+ 
  
  //add teacher to class
  NUM_SEC_AssignTeacherToClass,
@@ -165,6 +170,9 @@ NUM_BTN_PERSONS_EDIT,
 NUM_SEC_PERSONS_ADD,
 NUM_LBL_PERSONS_ADD,
 NUM_BTN_PERSONS_ADD,
+
+//Edit Students
+NUM_DLG_EDITSTUDENT_Q_RemoveClassFromStudent,
  
 /** Old tags for java */
 GUI_Button_Ok,  
