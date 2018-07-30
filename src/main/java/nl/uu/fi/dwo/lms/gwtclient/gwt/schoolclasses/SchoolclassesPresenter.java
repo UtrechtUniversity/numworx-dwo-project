@@ -93,6 +93,7 @@ public class SchoolclassesPresenter {
     }
 
     public void init() {
+        view.clear();
         view.init();
         view.setHelp(dwoGlobalVars.buildHelpUrl("#schoolclasses"));
         updateViewData();

@@ -99,6 +99,7 @@ public class LoginPresenter {
     public LoginPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+        // broken calling view.clear();
         init();
     }
 

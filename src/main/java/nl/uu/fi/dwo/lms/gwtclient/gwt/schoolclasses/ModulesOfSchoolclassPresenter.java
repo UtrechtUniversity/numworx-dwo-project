@@ -46,7 +46,8 @@ public class ModulesOfSchoolclassPresenter {
     private int requests = 0;
 
     public interface Display extends BasicDisplay {
-      public final static String LOCAL_TIME = "yyyy-MM-dd HH:mm"; // common met jsmodulesofSchool
+
+        public final static String LOCAL_TIME = "yyyy-MM-dd HH:mm"; // common met jsmodulesofSchool
 
 //        void updateTable(List<ClassCourseItem> item);
         void setTree(DomTree<DomCourseOfClass> tree);
@@ -189,57 +190,73 @@ public class ModulesOfSchoolclassPresenter {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
     }
 
-        
-    
-    /**
-     * Course parameters that are not null are updated with their values. A
-     * valid key is required.
-     *
-     * @param key Must not be null.
-     * @param typeString
-     * @param fromData
-     * @param toData
-     */
     @JsMethod
-    void addModule(String key, String typeString, String fromData, String toData, String accessKey) {
+    void addModule(String key, String typeString, String fromDate, String toDate, String accessKey) {
         //TODO FIX sloppy addModule implementation
         if (key == null) {
             eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "Internal error, key not given.")));
             return;
         }
         Promise<Boolean> p;
-        p = service.attachCourseToClass(schoolClass, tree.getNode(key).getObject().getCourse());
-        
+
+        //convert and test parameters.
+        //type
+        CourseType type = CourseType.normal;
         if (typeString != null) {
-            p=p.then((resolved) -> {
-                return setCourseType(key, typeString);
-            });
+            try {
+                type = CourseType.valueOf(typeString);
+            } catch (Exception e) {
+                eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "Unknown course type submitted.")));
+            }
         }
-        if (fromData != null) {
-            p=p.then((resolved) -> {
-                return setFromDate(key, fromData);
-            });
+
+        //from
+        Date from;
+        if (fromDate.isEmpty()) {
+            from = null;
+        } else {
+            try {
+                from = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm").parse(fromDate);
+                LOG.log(Level.FINE, "Setting From-date to: " + DateTimeFormat.getFullDateTimeFormat().format(from));
+            } catch (Exception e) {
+
+                eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + fromDate + " is not a valid dateString.")));
+                return;
+            }
         }
-        if (toData != null) {
-            p=p.then((resolved) -> {
-                return setToDate(key, toData);
-            });
+        //to
+        Date to;
+        if (toDate.isEmpty()) {
+            to = null;
+        } else {
+            try {
+                to = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm").parse(toDate);
+                LOG.log(Level.FINE, "Setting To-date to: " + DateTimeFormat.getFullDateTimeFormat().format(to));
+            } catch (Exception e) {
+                eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + toDate + " is not a valid dateString.")));
+                return;
+            }
         }
-        if (accessKey != null) {
-            p=p.then((resolved) -> {
-                return setAccessKey(key, accessKey);
-            });
+
+        if (from != null && to != null && from.after(to)) {
+            eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "date range is not a valid range.")));
+        } else {
+            ;
         }
-        p=p.then((resolved) -> {
-            updateViewData();
-            return resolved;
-        });
-        p=p.then(null, (failure) -> {
+
+        p = service.addCourseToClass(schoolClass, tree.getNode(key).getObject().getCourse(), type, from, to, accessKey);
+
+        p.then(new Success<Boolean, Void>() {
+            @Override
+            public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
+                updateViewData();
+                return null;
+            }
+        }, (failure) -> {
             eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
         });
     }
-    
-    
+
     /**
      * Course parameters that are not null are updated with their values. A
      * valid key is required.
@@ -257,30 +274,30 @@ public class ModulesOfSchoolclassPresenter {
         }
         Promise<Boolean> p = Promises.resolved(null);
         if (typeString != null) {
-            p=p.then((resolved) -> {
+            p = p.then((resolved) -> {
                 return setCourseType(key, typeString);
             });
         }
         if (fromData != null) {
-            p=p.then((resolved) -> {
+            p = p.then((resolved) -> {
                 return setFromDate(key, fromData);
             });
         }
         if (toData != null) {
-            p=p.then((resolved) -> {
+            p = p.then((resolved) -> {
                 return setToDate(key, toData);
             });
         }
         if (accessKey != null) {
-            p=p.then((resolved) -> {
+            p = p.then((resolved) -> {
                 return setAccessKey(key, accessKey);
             });
         }
-        p=p.then((resolved) -> {
+        p = p.then((resolved) -> {
             updateViewData();
             return resolved;
         });
-        p=p.then(null, (failure) -> {
+        p = p.then(null, (failure) -> {
             eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
         });
     }
@@ -306,7 +323,7 @@ public class ModulesOfSchoolclassPresenter {
         } else {
             try {
                 date = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm").parse(dateString);
-               LOG.log(Level.FINE, "Setting From-date to: " + DateTimeFormat.getFullDateTimeFormat().format(date));
+                LOG.log(Level.FINE, "Setting From-date to: " + DateTimeFormat.getFullDateTimeFormat().format(date));
             } catch (Exception e) {
 
                 eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
@@ -330,7 +347,7 @@ public class ModulesOfSchoolclassPresenter {
             date = null;
         } else {
             try {
-                date = DateTimeFormat.getFormat(Display.LOCAL_TIME).parse(dateString);
+                date = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm").parse(dateString);
                 LOG.log(Level.FINE, "Setting To-date to: " + DateTimeFormat.getFullDateTimeFormat().format(date));
             } catch (Exception e) {
                 eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "dateString " + dateString + " is not a valid dateString.")));
