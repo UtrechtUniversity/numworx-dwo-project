@@ -11,6 +11,7 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
 import java.util.Date;
 import java.util.List;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -27,7 +28,7 @@ public interface TeacherActions  {
     public void addStudent(TeacherDomainAuthorizer.Context context, PersistentSchoolClass schoolClass, PersistentHasRole student) throws Dwo2Exception;
     public List<PersistenceId> getSharedTeacherClasses(TeacherDomainAuthorizer.Context context, PersistentUser user) throws Dwo2Exception;
     public List<PersistenceId> getTeachersClassesOfStudent(TeacherDomainAuthorizer.Context context, PersistentSchoolGroup studentSg, PersistentUser user) throws Dwo2Exception;
-    public Boolean addCourseToClass(TeacherDomainAuthorizer.Context context, Date from, Date to, String accessKey) throws Dwo2Exception;
+    public Boolean addCourseToClass(TeacherDomainAuthorizer.Context context, CourseType courseType, Date from, Date to, String accessKey) throws Dwo2Exception;
     public Boolean attachCourseToClass(TeacherDomainAuthorizer.Context context) throws Dwo2Exception;
     public Boolean detachCourseFromClass(TeacherDomainAuthorizer.Context context) throws Dwo2Exception;
 

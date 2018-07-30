@@ -119,7 +119,7 @@ public class MySQLTeacherActions implements TeacherActions {
     }
     
     @Override
-    public Boolean addCourseToClass(TeacherDomainAuthorizer.Context context, Date from, Date to, String accessKey) throws Dwo2Exception {
+    public Boolean addCourseToClass(TeacherDomainAuthorizer.Context context, CourseType courseType, Date from, Date to, String accessKey) throws Dwo2Exception {
         //Loop up the course tree and find the tree path
         Deque<PersistentCourse> treePath = new LinkedList<>();
         PersistentCourse curCourse = context.getTeacherCtx().getCourse();
@@ -146,7 +146,7 @@ public class MySQLTeacherActions implements TeacherActions {
                 cc.setNotAfter(to);
                 cc.setNotBefore(from);
                 cc.setAccessKey(accessKey);
-                cc.setType(CourseType.normal.ordinal());
+                cc.setType(courseType.ordinal());
                 cc.setViewState(ViewState.studentsAndTeachers);
                 ClassCourseManager.insertOrUpdateViewState(cc);
 //                    LOG.log(Level.INFO, "created cc of "+ccResult);

@@ -1235,7 +1235,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                     .addProfile(rest.getDomSchoolClassCourseAndProfileNew().getDomDwoProfile())
                     .addSchoolClass(rest.getDomSchoolClassCourseAndProfileNew().getDomSchoolClass())
                     .addCourse(rest.getDomSchoolClassCourseAndProfileNew().getCourse());
-            return build.addCourseToClass(rest.getDomSchoolClassCourseAndProfileNew().getFrom(),
+            return build.addCourseToClass(rest.getDomSchoolClassCourseAndProfileNew().getCourseType(), rest.getDomSchoolClassCourseAndProfileNew().getFrom(),
                     rest.getDomSchoolClassCourseAndProfileNew().getTo(),
                     rest.getDomSchoolClassCourseAndProfileNew().getAccessKey());
         } catch (Dwo2Exception e) {

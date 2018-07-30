@@ -19,13 +19,13 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
@@ -280,7 +280,7 @@ public class TeacherDomainAuthorizer {
         
         Boolean attachCourseToClass()  throws Dwo2Exception;
         
-        Boolean addCourseToClass(Date from, Date to, String accessKey)  throws Dwo2Exception;
+        Boolean addCourseToClass(CourseType courseType, Date from, Date to, String accessKey)  throws Dwo2Exception;
         
         Boolean detachCourseFromClass()  throws Dwo2Exception;
     }

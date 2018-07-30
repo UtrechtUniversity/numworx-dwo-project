@@ -50,6 +50,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -481,9 +482,9 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
     }
 
     @Override
-    public Boolean addCourseToClass(Date from, Date to, String accessKey) throws Dwo2Exception {
+    public Boolean addCourseToClass(CourseType courseType, Date from, Date to, String accessKey) throws Dwo2Exception {
         if (from.before(to)) {
-            return instance.teacherActions.addCourseToClass(instance.getContext(), from, to, accessKey);
+            return instance.teacherActions.addCourseToClass(instance.getContext(), courseType, from, to, accessKey);
         } else {
             throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "Date range is invalid.");
         }
