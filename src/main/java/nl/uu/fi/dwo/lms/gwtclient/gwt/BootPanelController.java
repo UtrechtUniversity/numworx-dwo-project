@@ -212,7 +212,8 @@ public class BootPanelController {
                             //we should also clear user, view and presenter states, but that is never bug free.
                             //however a reload works too.
                             setSession(false);
-                            UrlBuilder url = Window.Location.createUrlBuilder();
+                            UrlBuilder url = Window.Location.createUrlBuilder();              
+                            url.setPath("/dwo/tablet/DWOplayer.jsp"); // switch to  /leerling
                             url.removeParameter("a");
                             url.removeParameter("view");
                             Window.Location.replace(url.buildString());
