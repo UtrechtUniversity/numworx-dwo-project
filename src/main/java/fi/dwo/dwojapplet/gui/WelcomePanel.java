@@ -156,7 +156,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
     public WelcomePanel(boolean loginOnly, Map linkdata) {
         super(null, true);
         
-        loginOnly = true;
+        loginOnly = loginOnly || "test".equals(DwoHelper.getApplet().getParameter("dwo_env"));
         
         
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
@@ -246,7 +246,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         }
 
         p = new JPanel(null);
-        p.setBounds(dialog.getWidth() / 2 - 175, 110, 340, 100);
+        p.setBounds(dialog.getWidth() / 2 - 175, 110+100, 340, 100);
         Color PANEL_BACKGROUND = Color.decode("#314770");
         Color ITEM_BACKGROUND = Color.decode("#1b75bb");
         p.setBackground(PANEL_BACKGROUND);
@@ -277,7 +277,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         //p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
         p.setBackground(PANEL_BACKGROUND);
         //p.setBorderColor(new Color(52,90,126));
-        p.setBounds(dialog.getWidth() / 2 - 175, 110+100, 340, 155);
+        p.setBounds(dialog.getWidth() / 2 - 175, 110+100+100, 340, 155);
         dialog.add(p);
 
         /* Inlogdata label */
@@ -383,15 +383,15 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         }
         /* Add GuestLogin-panel */
         p = new JPanel(null);
-        p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
-        p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(dialog.getWidth() / 2 - 175, 275 + h, 340, 85);
+        //p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
+        p.setBackground(PANEL_BACKGROUND);
+        p.setBounds(dialog.getWidth() / 2 - 175, 275 + h+100+100, 340, 85);
         //p.setBorderColor(new Color(52,90,126));
         dialog.add(p);
 
         /* Guestlogin label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIW_GUESTLOGIN) + ":");
-        l.setForeground(GuiConstants.RED_COLOR);
+        l.setForeground(Color.WHITE);
         l.setFont(GuiConstants.RED_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
@@ -408,6 +408,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         /* GuestLogin message */
         l = new JLabel(TextMapper.getText(TextMapper.GUIW_MSG_WORK_NOT_SAVE));
         l.setFont(GuiConstants.NORMAL_TEXT);
+        l.setForeground(Color.WHITE);
         fm = l.getFontMetrics(l.getFont());
         l.setSize(fm.stringWidth(l.getText()), fm.getHeight());
         l.setLocation((p.getSize().width / 2) - (l.getSize().width / 2), 60);
@@ -416,15 +417,15 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
         /* Add Register-panel */
         p = new JPanel(null);
-        p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
-        p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(dialog.getWidth() / 2 - 175, 370 + h, 340, 65);
+        //p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
+        p.setBackground(PANEL_BACKGROUND);
+        p.setBounds(dialog.getWidth() / 2 - 175, 370 + h+100+100, 340, 65);
         //p.setBorderColor(new Color(52,90,126));
         dialog.add(p);
 
         /* Register label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIW_REGISTER) + ":");
-        l.setForeground(GuiConstants.RED_COLOR);
+        l.setForeground(Color.WHITE);
         l.setFont(GuiConstants.RED_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());

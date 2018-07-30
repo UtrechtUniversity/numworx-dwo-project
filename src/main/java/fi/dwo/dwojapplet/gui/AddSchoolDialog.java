@@ -10,6 +10,8 @@ import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
 import fi.dwo.dwojapplet.domain.SchoolPasswdMap;
 import fi.dwo.dwojapplet.gui.action.CopyLabel;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -166,6 +168,13 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
 //        dateField.setMinimumSize(new Dimension());
         form.add(dateField);
 
+        l = new JLabel("Abonnement");
+        l.setFont(GuiConstants.NORMAL_TEXT);
+        form.add(l);
+        aboField = new JComboBox<>(AboType.values());
+        form.add(aboField);
+        
+        
         //this.setSize(460, 280);
         Box okbox = Box.createHorizontalBox();
         okbox.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -423,6 +432,8 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
     private Vector schoolIdVector = new Vector();
 
     private JDateChooser dateField;
+    
+    private JComboBox<AboType> aboField;
 
     private int getSchoolId() {
         if (schoolNameField instanceof JComboBox) {

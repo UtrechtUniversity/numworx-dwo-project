@@ -238,7 +238,7 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
     public AppletData getAppletData() {
         if (appletData == null) {
             try {
-                appletData = (AppletData) PersistenceFacade.instance().get(appletID, AppletData.class);
+                appletData = PersistenceFacade.instance().get(appletID, AppletData.class);
             } catch (PersistenceException e) {
                 LOG.log(Level.SEVERE,null,e);
             }

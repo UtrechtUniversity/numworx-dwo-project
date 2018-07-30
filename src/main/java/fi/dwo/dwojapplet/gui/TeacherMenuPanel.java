@@ -87,7 +87,9 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
 
         try {
             School school = (School) PersistenceFacade.instance().get(DwoHelper.getActiveSchoolId(), School.class);
-            hasAdminRight = school.hasRight(User.PROFILE_ADMIN_RIGHT);
+            hasAdminRight = 
+                DwoHelper.getCurrentFacadeUser().hasRight(User.PROFILE_ADMIN_RIGHT);
+                //school.hasRight(User.PROFILE_ADMIN_RIGHT);
             schoolID = DwoHelper.getActiveSchoolId();
         }
         catch (PersistenceException ex) {
