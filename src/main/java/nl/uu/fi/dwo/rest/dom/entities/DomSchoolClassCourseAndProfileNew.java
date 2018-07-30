@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
+import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 
 
 /**
@@ -11,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class DomSchoolClassCourseAndProfileNew extends DomSchoolClassAndProfile{
     private DomCourse course;
+    private CourseType courseType;
     private Date from;
     private Date to;
     private String accessKey;
@@ -72,5 +74,19 @@ public class DomSchoolClassCourseAndProfileNew extends DomSchoolClassAndProfile{
      */
     public void setAccessKey(String accessKey) {
         this.accessKey = accessKey;
+    }
+
+    /**
+     * @return the courseType
+     */
+    public CourseType getCourseType() {
+        return courseType;
+    }
+
+    /**
+     * @param courseType the courseType to set
+     */
+    public void setCourseType(CourseType courseType) {
+        this.courseType = courseType;
     }
 }
