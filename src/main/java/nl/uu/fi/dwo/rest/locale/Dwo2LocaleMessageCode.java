@@ -174,7 +174,10 @@ NUM_LBL_Q_WHICH2ROLES,
 
 //Edit Students
 NUM_DLG_EDITSTUDENT_Q_RemoveClassFromStudent,
- 
+NUM_SEC_PERSONS_EDIT,
+NUM_SEC_PERSONS_EDITCLASSES,
+
+
 /** Old tags for java */
 GUI_Button_Ok,  
 GUI_Button_Cancel,
