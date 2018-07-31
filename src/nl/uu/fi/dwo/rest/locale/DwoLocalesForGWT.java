@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.rest.locale;
 
-import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages;
 import com.google.gwt.core.client.GWT;
 
 /**
