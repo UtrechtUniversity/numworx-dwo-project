@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
+import com.google.gwt.i18n.client.LocaleInfo;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,9 +26,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
-import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Success;
 
 /**
  * Stores global variables The class is state is initialized by calls in
@@ -55,7 +54,7 @@ public class DwoGlobalVars {
     private DomSchoolsRolesAndClassesV2 schoolLogins;
     private DomSchoolRoleAndClassV2 activeSchoolRoleAndClass;
     private Promise<DomDwoProfileFull> profile;
-    private static final String helpUrlPrefix = "helppage/helpindex.html";
+    private static String helpUrlPrefix ;
 
     /**
      * DwoGlobalStates that define which functions can be called without
@@ -188,6 +187,9 @@ public class DwoGlobalVars {
         setServer(DwoConstants.constants.server());
         LOG.log(Level.INFO, "restserver=" + server + ".");
         LOG.log(Level.INFO, "Done initProperties():");
+        String locale = LocaleInfo.getCurrentLocale().getLocaleName();
+         String url = "helppage/helpindex_"+locale+".html";
+         helpUrlPrefix = url;
     }
 
     /**
