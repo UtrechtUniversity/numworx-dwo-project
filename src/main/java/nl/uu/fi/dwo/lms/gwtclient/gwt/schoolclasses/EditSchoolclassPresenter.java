@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.util.Dwo2LocaleMessageGWTTranslator;
+import fi.dwo.gwt.lib.rest.util.StringFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -168,7 +169,8 @@ public class EditSchoolclassPresenter {
 
     @JsMethod
     public void removeSchoolClass() {
-        AlertDialogWithConfirmCancelDeferred p = new AlertDialogWithConfirmCancelDeferred("Are you sure you want to remove schoolclass" + schoolClass.getSchoolClassName() + ".");
+         String msg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_Class_ConfirmRemoveSchoolClass(),schoolClass.getSchoolClassName());
+        AlertDialogWithConfirmCancelDeferred p = new AlertDialogWithConfirmCancelDeferred(msg);
         p.getPromise().then(new Success<Boolean, Void>() {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
@@ -211,7 +213,7 @@ public class EditSchoolclassPresenter {
                 if (result != true) {
                     throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "system error, try again please report.");
                 }
-                MessageDialogWithOKEvent evt = new MessageDialogWithOKEvent("bla");
+                MessageDialogWithOKEvent evt = new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_Class_Removed());
                 eventBus.fireEvent(evt);
                 eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
                 return null;
