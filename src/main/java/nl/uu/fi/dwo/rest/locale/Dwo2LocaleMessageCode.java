@@ -45,6 +45,7 @@ NUM_DLG_User_ConfirmSchoolLoginDelete,
 NUM_DLG_User_ConfirmChangeCommited,
 NUM_DLG_User_ConfirmPasswordSwitch,
 NUM_DLG_Class_ConfirmChangeCommited,
+NUM_DLG_User_StudentAdded,
 
 //generic labels
  NUM_LBL_YES,
