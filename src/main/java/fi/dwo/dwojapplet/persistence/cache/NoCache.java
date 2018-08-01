@@ -132,12 +132,13 @@ public class NoCache implements IStore {
     }
 
     private void log(String result) {
-        try {
-            dbAccess.log(result);
-        } catch (Exception e) {
-            System.err.println(result);
-            LOG.log(Level.SEVERE,null,e);
-        }
+//        try {
+//            dbAccess.log(result);
+//        } catch (Exception e) {
+//            System.err.println(result);
+//            LOG.log(Level.SEVERE,null,e);
+//        }
+        LOG.severe(result);
     }
 
     @Override

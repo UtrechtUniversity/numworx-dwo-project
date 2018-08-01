@@ -271,9 +271,9 @@ public class PersistenceFacade {
      * @throws fi.dwo.commons.exceptions.PersistenceException
      *
      */
-    public Object[] get(java.lang.Class c, Object obj)
+    public <T> T[] get(java.lang.Class<T> c, Object obj)
             throws PersistenceException {
-        MapperIF mapper = MapperCreator.instance(c);
+        MapperIF<T> mapper = MapperCreator.instance(c);
         try {
             return mapper.get(obj);
         }
@@ -290,55 +290,55 @@ public class PersistenceFacade {
 
     /**
      * This method saves an object in the database.<br>
-     *
+     * school/schoolclass
      *
      * @param oid
      * @param obj
      * @throws fi.dwo.commons.exceptions.PersistenceException
      *
      */
-    public void put(int oid, Object obj)
+    public <T> void put(int oid, T obj, Class<T> clz)
             throws PersistenceException {
-        MapperIF mapper = MapperCreator.instance(obj.getClass());
+        MapperIF<T> mapper = MapperCreator.instance(clz);
         mapper.put(oid, obj);
 
     }
 
-    public Hashtable getRecord(String tableName, String idCol, int oid)
-            throws IOException, XmlRpcException, SQLException, PersistenceException {
-        try {
-            Hashtable h = DbAccessCreator.instance().getRecord(tableName, idCol, oid);
-            return h;
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
+//    public Hashtable getRecord(String tableName, String idCol, int oid)
+//            throws IOException, XmlRpcException, SQLException, PersistenceException {
+//        try {
+//            Hashtable h = DbAccessCreator.instance().getRecord(tableName, idCol, oid);
+//            return h;
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//
+//    }
 
-    }
-
-    public Vector getRecord(String tableName, Hashtable restriction, String seq)
-            throws IOException, XmlRpcException, SQLException, PersistenceException {
-        try {
-            Vector h = DbAccessCreator.instance().getTable(tableName, restriction, seq);
-            return h;
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-
-    }
+//    public Vector getRecord(String tableName, Hashtable restriction, String seq)
+//            throws IOException, XmlRpcException, SQLException, PersistenceException {
+//        try {
+//            Vector h = DbAccessCreator.instance().getTable(tableName, restriction, seq);
+//            return h;
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//
+//    }
 
     /**
      * =============================================================================
@@ -514,22 +514,22 @@ public class PersistenceFacade {
 //    
 //    }
 
-    public Vector getScos(Hashtable restriction, String SEQUENCE_NR)
-            throws IOException, XmlRpcException, SQLException, PersistenceException {
-        try {
-            Vector v = DbAccessCreator.instance().getTable("tblScoView", restriction, SEQUENCE_NR);
-            return v;
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-    }
+//    public Vector getScos(Hashtable restriction, String SEQUENCE_NR)
+//            throws IOException, XmlRpcException, SQLException, PersistenceException {
+//        try {
+//            Vector v = DbAccessCreator.instance().getTable("tblScoView", restriction, SEQUENCE_NR);
+//            return v;
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//    }
 
 //    /**
 //     * Adds a sco to the specified course.
@@ -1073,7 +1073,7 @@ public class PersistenceFacade {
             MapperIF<Course> mapper = MapperCreator.instance(Course.class);
             Vector v;
             int profileId = getDwoProfileID();
-            int guestID = PROFILEOFFSET - profileId;
+            //int guestID = PROFILEOFFSET - profileId;
             if (user == null || user instanceof Guest) {
                // v = DbAccessCreator.instance().getCoursesJS(guestID);
               v = new Vector<>(PublicCourseManager.getCourses(DWO.getDwoProfile()));
@@ -1708,47 +1708,47 @@ public class PersistenceFacade {
 //        return login_intern(username, password, DbAccessCreator.instance());
 //    }
 
-    /**
-     * @param username
-     * @param password
-     * @param dbAccess
-     * @return user/null?
-     * @throws LoginException
-     */
-    private User login_intern(String username, String password, DbAccessLogin dbAccess) throws LoginException {
-        try {
-            try {
-                MapperIF mapper = MapperCreator.instance(User.class);
-                Hashtable h = dbAccess.login(username, password);
-                return (User) mapper.getObjectFromReturn(h);
-            }
-            catch (IOException e) {
-                LOG.log(Level.SEVERE, null, e);
-                throw new LoginException(LoginException.EX_IO, e);
-            }
-            catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    //LOG.log(Level.SEVERE,null,e);
-                    throw (LoginException) getException(e, e.code);
-                } else {
-                    LOG.log(Level.SEVERE, null, e);
-                    throw new LoginException(LoginException.EX_XML_RPC, e);
-                }
-            }
-            catch (SQLException e) {
-                LOG.log(Level.SEVERE, null, e);
-                throw new LoginException(LoginException.EX_DB, e);
-            }
-            catch (DwoXmlRpcException e) {
-                LOG.log(Level.SEVERE, null, e);
-                throw (LoginException) getException(e, e.code);
-            }
-        }
-        catch (PersistenceException e) {
-            LOG.log(Level.SEVERE, null, e);
-            throw new LoginException(LoginException.EX_UNKNOWN_ERROR, e);
-        }
-    }
+//    /**
+//     * @param username
+//     * @param password
+//     * @param dbAccess
+//     * @return user/null?
+//     * @throws LoginException
+//     */
+//    private User login_intern(String username, String password, DbAccessLogin dbAccess) throws LoginException {
+//        try {
+//            try {
+//                MapperIF mapper = MapperCreator.instance(User.class);
+//                Hashtable h = dbAccess.login(username, password);
+//                return (User) mapper.getObjectFromReturn(h);
+//            }
+//            catch (IOException e) {
+//                LOG.log(Level.SEVERE, null, e);
+//                throw new LoginException(LoginException.EX_IO, e);
+//            }
+//            catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    //LOG.log(Level.SEVERE,null,e);
+//                    throw (LoginException) getException(e, e.code);
+//                } else {
+//                    LOG.log(Level.SEVERE, null, e);
+//                    throw new LoginException(LoginException.EX_XML_RPC, e);
+//                }
+//            }
+//            catch (SQLException e) {
+//                LOG.log(Level.SEVERE, null, e);
+//                throw new LoginException(LoginException.EX_DB, e);
+//            }
+//            catch (DwoXmlRpcException e) {
+//                LOG.log(Level.SEVERE, null, e);
+//                throw (LoginException) getException(e, e.code);
+//            }
+//        }
+//        catch (PersistenceException e) {
+//            LOG.log(Level.SEVERE, null, e);
+//            throw new LoginException(LoginException.EX_UNKNOWN_ERROR, e);
+//        }
+//    }
 
 //    /**
 //     * Changes the account of the user.
@@ -2721,17 +2721,25 @@ public class PersistenceFacade {
 //    }
 
     public Vector getResultCount(int dwoProfile, int id) throws PersistenceException {
+      
+      
         try {
-            Vector v = DbAccessCreator.instance().getResultCount(dwoProfile, id);
+            Vector v;
+            //v = DbAccessCreator.instance().getResultCount(dwoProfile, id);
+            v = new Vector();
+            DomSchoolClass schoolclass = new DomSchoolClass();
+            schoolclass.setId(PersistentSchoolClass.buildPersistenceId(Long.valueOf(id)));
+            DomCoursesOfSchoolClass4Teacher result = SecureTeacherSchoolClassManager.getModules(schoolclass, DWO.getDwoProfile());
+            result.getClassCourses().forEach(entry -> {
+              DomClassCourse4Teacher dcc = entry.getValue();
+              int cid = idOf(dcc.getCourseId());
+              Hashtable h = new Hashtable();
+              h.put("courseID", cid);
+              v.add(h);
+            });
             return v;
         }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-        catch (XmlRpcException e) {
+        catch (Dwo2Exception e) {
             throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         }
     }
@@ -2911,10 +2919,10 @@ public class PersistenceFacade {
         if (courses.length == 0) {
             return;
         }
-        Vector vector = new Vector(courses.length);
+//        Vector vector = new Vector(courses.length);
         for (int i = 0; i < courses.length; i++) {
             Course course = (Course) courses[i];
-			vector.add(new Integer(course.getID()));
+//			vector.add(new Integer(course.getID()));
 			course.sequencenr = i; // install sequencenr
 
 			DomCourseFull edit = new DomCourseFull();
@@ -2930,9 +2938,9 @@ public class PersistenceFacade {
             }
         
         }
-        int schoolID = 0;
-        int classID = 0;
-        DbAccessIF access = DbAccessCreator.instance();
+//        int schoolID = 0;
+        //int classID = 0;
+        //DbAccessIF access = DbAccessCreator.instance();
 
         int parent = 0;
         // selected courses are flat
@@ -2940,17 +2948,17 @@ public class PersistenceFacade {
             parent = ((Course) courses[0]).getParentID();
             if (parent != ((Course) courses[courses.length - 1]).getParentID()) {
                 try {
-                    access.log("Sequence error " + school);
+                    LOG.severe("Sequence error " + school);
                 }
                 catch (Exception e) {
                 }
             }
 
         }
-        int profileID = getDwoProfileID();
-        if (school != null) {
-            schoolID = school.getSchoolID();
-        }
+        //int profileID = getDwoProfileID();
+//        if (school != null) {
+//            schoolID = school.getSchoolID();
+//        }
 //        MapperIF instance = MapperCreator.instance(CourseSequence.class);
 //        instance.removeAllObjects();
 //        try {
@@ -3106,7 +3114,7 @@ public class PersistenceFacade {
      * @param c Class
      * @param id
      */
-    public void clearObjectInMapperCache(Class c, int id) {
+    public void clearObjectInMapperCache(Class<?> c, int id) {
         MapperCreator.instance(c).removeObject(id);
     }
 
@@ -3117,7 +3125,7 @@ public class PersistenceFacade {
      * @param courses
      */
     private void undoCachingEffect(Course[] courses) {
-        MapperIF mapper = MapperCreator.instance(Course.class);
+        MapperIF<Course> mapper = MapperCreator.instance(Course.class);
 //        sequence(courses);
         for (int i = 0; i < courses.length; i++) {
             Course c = courses[i];
@@ -3131,7 +3139,7 @@ public class PersistenceFacade {
                 CourseMap parent = c.getParentMap();
                 if (parent == null) {
                     try {
-                        parent = (CourseMap) mapper.get(c.getParentID()); // deze komt toch uit de cache?
+                        parent = mapper.get(c.getParentID()); // deze komt toch uit de cache?
                     }
                     catch (Exception e) {
                         continue;
@@ -3142,33 +3150,33 @@ public class PersistenceFacade {
         }
     }
 
-    private Vector clipBeforeAfter(Vector v) {
-        Iterator iter = v.iterator();
-        long now = System.currentTimeMillis() + DwoHelper.getCurrentFacadeUser().getTimeZone();
-        while (iter.hasNext()) {
-            Hashtable ht = (Hashtable) iter.next();
-            Object o = ht.get("notBefore");
-            if (o instanceof Date) {
-                if (now < ((Date) o).getTime()) {
-                    iter.remove();
-                    continue;
-                }
-            }
-            o = ht.get("notAfter");
-            if (o instanceof Date) {
-                if (now > ((Date) o).getTime()) {
-                    iter.remove();
-                    continue;
-                }
-            }
-//            o = ht.get("type");
-//            if (Integer.valueOf(2).equals(o)) { // INVISIBLE
-//            	iter.remove();
-//            	continue;
+//    private Vector clipBeforeAfter(Vector v) {
+//        Iterator iter = v.iterator();
+//        long now = System.currentTimeMillis() + DwoHelper.getCurrentFacadeUser().getTimeZone();
+//        while (iter.hasNext()) {
+//            Hashtable ht = (Hashtable) iter.next();
+//            Object o = ht.get("notBefore");
+//            if (o instanceof Date) {
+//                if (now < ((Date) o).getTime()) {
+//                    iter.remove();
+//                    continue;
+//                }
 //            }
-        }
-        return v;
-    }
+//            o = ht.get("notAfter");
+//            if (o instanceof Date) {
+//                if (now > ((Date) o).getTime()) {
+//                    iter.remove();
+//                    continue;
+//                }
+//            }
+////            o = ht.get("type");
+////            if (Integer.valueOf(2).equals(o)) { // INVISIBLE
+////            	iter.remove();
+////            	continue;
+////            }
+//        }
+//        return v;
+//    }
 
     private String mapDataModel(String element) {
         for (int i = 0; i < scormDatabaseLink.length; i++) {

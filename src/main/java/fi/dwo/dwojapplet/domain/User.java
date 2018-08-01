@@ -161,7 +161,7 @@ public class User implements UserGroup, Comparable {
 					setSchool(s);
 				} else {
 					s = new School(); s.setDomSchool(dom.getActiveSchoolRoleAndClass().getSchool());
-					PersistenceFacade.instance().put(s.getSchoolID(), s);
+					PersistenceFacade.instance().put(s.getSchoolID(), s, School.class);
 				}
 				DomSchoolClass domSchoolClass = dom.getActiveSchoolRoleAndClass().getSchoolClass();
 				if(domSchoolClass != null) {
@@ -169,7 +169,7 @@ public class User implements UserGroup, Comparable {
 					if(cls == null) {
 						cls = new SchoolClass();
 						cls.setDomSchoolClass(domSchoolClass);
-						PersistenceFacade.instance().put(cls.getID(), cls);
+						PersistenceFacade.instance().put(cls.getID(), cls, SchoolClass.class);
 					}
 					inClass = cls;
 				} 

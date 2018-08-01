@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -34,6 +36,7 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentApplet;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
+import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
@@ -76,14 +79,15 @@ class ManifestFile {
     Hashtable configMap = new Hashtable();
 
     public void createIMSManifest(int course, int scoid, OutputStream out) throws ParserConfigurationException, TransformerException, SQLException, IOException, XmlRpcException, PersistenceException {
-        Hashtable record = PersistenceFacade.instance().getRecord("tblCourse", "courseID", course);
+        Course record = PersistenceFacade.instance().get( course, Course.class);
         Hashtable restriction;
         restriction = new Hashtable();
-        restriction.put("courseID", record.get("courseID"));
+        restriction.put("courseID", record.getID());
         if (scoid != -1) {
             // insert scoid in restriction.
         }
-        Vector scos = PersistenceFacade.instance().getScos(restriction, SEQUENCE_NR);
+        record.loadScos();
+        List<Sco> scos = Arrays.asList(record.getScoList());
 
         DocumentBuilderFactory factory;
         factory = DocumentBuilderFactory.newInstance();
@@ -114,38 +118,38 @@ class ManifestFile {
         appendNL(organization);
 // Course:
         Element title = document.createElementNS(IMSCP, TITLE);
-        title.appendChild(document.createTextNode((String) record.get(COURSE_TITLE)));
+        title.appendChild(document.createTextNode((String) record.getName()));
         organization.appendChild(title);
         appendNL(organization);
         // onderdeel van metadata....
         Element description = document.createElementNS(LOM, "imsmd:description");
-        description.appendChild(document.createTextNode((String) record.get(DESCRIPTION)));
+        description.appendChild(document.createTextNode((String) record.getDescription()));
         organization.appendChild(description);
         appendNL(organization);
 // items
-        Iterator iter;
+        Iterator<Sco> iter;
         iter = scos.iterator();
         while (iter.hasNext()) {
-            Hashtable sco = (Hashtable) iter.next();
+            Sco sco = iter.next();
             Element item = document.createElementNS(IMSCP, "item");
             appendNL(item);
 // sco.title
             title = document.createElementNS(IMSCP, TITLE);
-            title.appendChild(document.createTextNode(sco.get("sconame").toString()));
+            title.appendChild(document.createTextNode(sco.getScoName()));
             item.appendChild(title);
             appendNL(item);
 // sco.description
             description = document.createElementNS(LOM, "imsmd:description");
-            description.appendChild(document.createTextNode(sco.get(DESCRIPTION).toString()));
+            description.appendChild(document.createTextNode(sco.getDescription()));
             item.appendChild(description);
             appendNL(item);
 // sco.appletID
             Attr appletID = document.createAttributeNS(DWO, "dwo:appletID");
-            appletID.setValue(sco.get("appletID").toString());
+            appletID.setValue(String.valueOf(sco.getAppletID()));
             item.setAttributeNodeNS(appletID);
 // sco.launchdata
             Element launchdata = document.createElementNS(ADLCP, "adlcp:datafromlms");
-            launchdata.appendChild(document.createTextNode(sco.get(LAUNCHDATA).toString()));
+            launchdata.appendChild(document.createTextNode(sco.getLaunchdataString()));
             item.appendChild(launchdata);
             appendNL(item);
 
@@ -333,7 +337,7 @@ class ManifestFile {
     	            
 // legacy?
     			int scoid = MySQLPersistenceId.getNativeId(scoContext).intValue();
-    			Sco newsco = (Sco) PersistenceFacade.instance().get(scoid, Sco.class);
+    			Sco newsco = PersistenceFacade.instance().get(scoid, Sco.class);
    
 			
 			

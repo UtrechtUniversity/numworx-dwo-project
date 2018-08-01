@@ -428,13 +428,13 @@ class DbAccessClient extends Client implements DbAccessIF {
 //        return ((Boolean) object).booleanValue();
 //    }
 
-    @Override
-    public boolean log(java.lang.String a) throws IOException, XmlRpcException {
-        Vector vv = new Vector(1);
-        vv.addElement(a);
-        Object object = invoke("log", vv);
-        return ((Boolean) object).booleanValue();
-    }
+//    @Override
+//    public boolean log(java.lang.String a) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(1);
+//        vv.addElement(a);
+//        Object object = invoke("log", vv);
+//        return ((Boolean) object).booleanValue();
+//    }
 
 //    @Override
 //    public boolean log(Level l, java.lang.String a) throws IOException, XmlRpcException {
@@ -742,14 +742,14 @@ class DbAccessClient extends Client implements DbAccessIF {
 //        return ((Boolean) object).booleanValue();
 //    }
 
-    @Override
-    public java.util.Vector getResultCount(int a, int b) throws IOException, XmlRpcException {
-        Vector vv = new Vector(2);
-        vv.addElement(new Integer(a));
-        vv.addElement(new Integer(b));
-        Object object = invoke("getResultCount", vv);
-        return (java.util.Vector) object;
-    }
+//    @Override
+//    public java.util.Vector getResultCount(int a, int b) throws IOException, XmlRpcException {
+//        Vector vv = new Vector(2);
+//        vv.addElement(new Integer(a));
+//        vv.addElement(new Integer(b));
+//        Object object = invoke("getResultCount", vv);
+//        return (java.util.Vector) object;
+//    }
 
 //    @Override
 //    public java.lang.String setRights(int uid, int schoolGroup, int b, java.lang.String c) throws IOException, XmlRpcException {
