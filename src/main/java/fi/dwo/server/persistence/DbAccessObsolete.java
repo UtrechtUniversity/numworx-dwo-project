@@ -22,6 +22,9 @@ public interface DbAccessObsolete {
   public Vector getCoursesForClass(int classID) throws IOException, XmlRpcException, SQLException;
   public Vector getTable(String tableName, String orderCol) throws IOException,
   XmlRpcException, SQLException;
+  public Vector getResultCount(int profile, int classId)
+      throws SQLException, IOException, XmlRpcException;
+  public boolean log(String s) throws IOException, XmlRpcException;
  /**
    * Returns all the available courses for the specified user.
    *

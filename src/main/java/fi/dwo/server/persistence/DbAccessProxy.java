@@ -278,7 +278,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 //    }
     @Override
     public boolean log(String s) throws IOException, XmlRpcException {
-        return getDelegate().log(s);
+        return getDelegateObsolete().log(s);
     }
 
 //    @Override
@@ -485,7 +485,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
     @Override
     public Vector getResultCount(int profile, int classId) throws SQLException,
             IOException, XmlRpcException {
-        return getDelegate().getResultCount(profile, classId);
+        return getDelegateObsolete().getResultCount(profile, classId);
     }
 
 //    @Override
