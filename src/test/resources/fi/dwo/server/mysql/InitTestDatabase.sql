@@ -507,6 +507,7 @@ CREATE TABLE `tblschool` (
   `optlock` int(11) DEFAULT '0',
   `lastChangeTimeStamp` bigint(20) DEFAULT '0',
   `del` tinyint(4) NOT NULL DEFAULT '0',
+  `aboType` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`schoolID`),
   UNIQUE KEY `AK_IDENTIFIER_1` (`schoollogin`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
@@ -518,7 +519,7 @@ CREATE TABLE `tblschool` (
 
 LOCK TABLES `tblschool` WRITE;
 /*!40000 ALTER TABLE `tblschool` DISABLE KEYS */;
-INSERT INTO `tblschool` VALUES (0,'DwoSchool','dwo','',1,'_',NULL,NULL,0,0,0),(1,'NULL','null','',0,'_',NULL,NULL,0,0,0),(3,'School01','school01','',0,'_',NULL,NULL,0,0,0),(4,'School02','school02','',0,'_c',NULL,NULL,0,0,0);
+INSERT INTO `tblschool` VALUES (0,'DwoSchool','dwo','',1,'_',NULL,NULL,0,0,0,0),(1,'NULL','null','',0,'_',NULL,NULL,0,0,0,0),(3,'School01','school01','',0,'_',NULL,NULL,0,0,0,0),(4,'School02','school02','',0,'_c',NULL,NULL,0,0,0,0);
 /*!40000 ALTER TABLE `tblschool` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -259,6 +259,9 @@ public class SecuredDwoAdminSchoolManager {
         editSchool.setImage(school.getImage());
         editSchool.setSchoolLogin(school.getSchoolLogin());
         editSchool.setSchoolName(school.getSchoolName());
+        if(school.getAboType() != null) {
+          editSchool.setAboType(school.getAboType());
+        }
         // editSchool.setSchoolRights(school.getSchoolRights());
         SchoolManager.edit(editSchool);
         List<DomMapEntry<RoleType, String>> passwords = school.getPasswords();
