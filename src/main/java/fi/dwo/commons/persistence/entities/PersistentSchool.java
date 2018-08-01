@@ -5,6 +5,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,6 +23,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -78,7 +81,15 @@ public class PersistentSchool implements Serializable {
     @Column(name = "expire")
     @Temporal(TemporalType.DATE)
     private Date expire;
-
+// since 1.5.0
+    @Column(name = "optlock")
+    @Version 
+    private Long optlock;
+// since 1.5.3
+    @NotNull
+    @Column(name= "aboType")
+    private AboType aboType = AboType.standard;
+    
     public PersistentSchool() {
     }
 
@@ -146,6 +157,16 @@ public class PersistentSchool implements Serializable {
 
     public void setExpire(Date expire) {
         this.expire = expire;
+    }
+
+    public AboType getAboType() {
+      return aboType;
+    }
+
+    public void setAboType(AboType aboType) {
+      if(aboType == null) 
+        aboType = AboType.standard;
+      this.aboType = aboType;
     }
 
     @Override
@@ -234,6 +255,7 @@ public class PersistentSchool implements Serializable {
         //TODO One should filter the rights depending on the security level
         school.setSchoolRights(schoolRights);
         school.setExpire(expire);
+        school.setAboType(aboType);
    }
 
     public DomSchool4DwoAdmin buildDomSchool4DwoAdmin() {
