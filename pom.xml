@@ -45,7 +45,7 @@
         <tomcat7.version>7.0.76</tomcat7.version>
         <context.xml>context-dwo_devel.xml</context.xml>
         <copy.ui.skip>false</copy.ui.skip>
-        <registerVersion>2.1.23</registerVersion>
+        <registerVersion>2.2.7</registerVersion>
     </properties>
 
     <scm>
@@ -168,14 +168,6 @@
             <scope>runtime</scope>
             comment scope for elastic beanstalk
         </dependency>-->
-<!--         <dependency>
-            <groupId>nl.uu.fi.dwo</groupId>
-            <artifactId>DWOServer</artifactId>
-            <type>war</type>
-            <version>2.2.7-SNAPSHOT</version>
-            <scope>runtime</scope>
-        </dependency>
- -->
          <!-- https://mvnrepository.com/artifact/com.google.jsinterop/jsinterop-annotations -->
         <!--<dependency>
             <groupId>com.google.jsinterop</groupId>
