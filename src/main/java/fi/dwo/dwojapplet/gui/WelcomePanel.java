@@ -156,7 +156,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
     public WelcomePanel(boolean loginOnly, Map linkdata) {
         super(null, true);
         
-        loginOnly = loginOnly || "test".equals(DwoHelper.getApplet().getParameter("dwo_env"));
+        //loginOnly = loginOnly || "test".equals(DwoHelper.getApplet().getParameter("dwo_env"));
         
         
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
@@ -167,7 +167,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
         dialog = new JPanel(null);
         dialog.setOpaque(false);
-        dialog.setBounds(getWidth() / 2 - 350, loginOnly?100:0, 700, getHeight());
+        dialog.setBounds(getWidth() / 2 - 350, 0, 700, getHeight());
         this.add(dialog);
 
         String version = BUILD.version;
@@ -249,17 +249,23 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p.setBounds(dialog.getWidth() / 2 - 175, 110+100, 340, 100);
         Color PANEL_BACKGROUND = Color.decode("#314770");
         Color ITEM_BACKGROUND = Color.decode("#1b75bb");
+        Font  PLAIN = new Font("Ubuntu",Font.PLAIN, 13);
+        Font  BOLD  = new Font("Ubuntu", Font.BOLD, 13);
         p.setBackground(PANEL_BACKGROUND);
         vo = new JRadioButton("VO");
+        vo.setBackground(PANEL_BACKGROUND);vo.setFont(PLAIN);
         if(DWO.getDwoProfileID() == VO_ID) vo.setSelected(true);
         vo.setSize(vo.getPreferredSize());vo.setLocation(20, 20);
         ho = new JRadioButton("HO");
+        ho.setBackground(PANEL_BACKGROUND);ho.setFont(PLAIN);
         if(DWO.getDwoProfileID() == HO_ID) ho.setSelected(true);
         ho.setSize(ho.getPreferredSize());ho.setLocation(20, 60);
         se = new JRadioButton("SE (English)");
+        se.setBackground(PANEL_BACKGROUND);se.setFont(PLAIN);
         if(DWO.getDwoProfileID() == SE_ID) se.setSelected(true);
         se.setSize(se.getPreferredSize());se.setLocation(160, 20);
         he = new JRadioButton("HE (English)");
+        he.setBackground(PANEL_BACKGROUND);he.setFont(PLAIN);
         if(DWO.getDwoProfileID() == HE_ID) he.setSelected(true);
         he.setSize(he.getPreferredSize());he.setLocation(160, 60);
         ButtonGroup grp  = new ButtonGroup();
@@ -283,7 +289,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         /* Inlogdata label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIW_LOGINDATA) + ":");
         l.setForeground(GuiConstants.RED_COLOR);
-        l.setFont(GuiConstants.RED_TEXT);
+        l.setFont(BOLD);
         fm = l.getFontMetrics(l.getFont());
         l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
         //p.add(l);
@@ -291,7 +297,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         /* Username label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIW_USERNAME) + ":");
         l.setForeground(Color.white);
-        l.setFont(GuiConstants.NORMAL_TEXT);
+        l.setFont(PLAIN);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 30);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
@@ -308,7 +314,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         /* Password label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIW_PASSWORD) + ":");
         l.setForeground(Color.WHITE);
-        l.setFont(GuiConstants.NORMAL_TEXT);
+        l.setFont(PLAIN);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 55);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
@@ -338,6 +344,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
         /* Login button */
         loginButton = new JButton(TextMapper.getText(TextMapper.GUIW_BTN_LOGIN));//, GuiConstants.SUB_BACKGROUND);
+        loginButton.setFont(BOLD);
         fm = loginButton.getFontMetrics(loginButton.getFont());
         loginButton.setSize(loginButton.getPreferredSize());
         loginButton.setLocation((p.getSize().width / 2)
@@ -353,6 +360,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         button.setHorizontalAlignment(SwingConstants.LEFT);
         button.setBorderPainted(false);
         button.setOpaque(false);
+        button.setBackground(PANEL_BACKGROUND);
         URI uri;
         try {
             try {
