@@ -478,16 +478,16 @@ public interface DbAccessIF  {
 //    public boolean disconnectFromClass(int userID, int classID) throws IOException,
 //            XmlRpcException, SQLException;
 
-    /**
-     * Logs a string to the error-log at the server (just for debugging
-     * perpose).
-     *
-     * @param s The string to log.
-     * @return
-     * @throws IOException
-     * @throws XmlRpcException
-     */
-    public boolean log(String s) throws IOException, XmlRpcException;
+//    /**
+//     * Logs a string to the error-log at the server (just for debugging
+//     * perpose).
+//     *
+//     * @param s The string to log.
+//     * @return
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     */
+//    public boolean log(String s) throws IOException, XmlRpcException;
 
 //    public boolean log(Level level, String s) throws IOException, XmlRpcException;
 
@@ -582,18 +582,18 @@ public interface DbAccessIF  {
 //    public boolean deleteCourseDataFromClass(int courseID, int classID)
 //            throws SQLException, IOException, XmlRpcException;
 
-    /**
-     * get courses with resultdata from a class.
-     *
-     * @param profile
-     * @param classId
-     * @return
-     * @throws SQLException
-     * @throws IOException
-     * @throws XmlRpcException
-     */
-    public Vector getResultCount(int profile, int classId)
-            throws SQLException, IOException, XmlRpcException;
+//    /**
+//     * get courses with resultdata from a class.
+//     *
+//     * @param profile
+//     * @param classId
+//     * @return
+//     * @throws SQLException
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     */
+//    public Vector getResultCount(int profile, int classId)
+//            throws SQLException, IOException, XmlRpcException;
 
 //    /**
 //     * Zet de rechten van een gebruiker voor één profiel.
