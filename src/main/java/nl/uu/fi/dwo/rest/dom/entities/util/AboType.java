@@ -4,5 +4,6 @@ public enum AboType {
   standard,
   free,
   limited,
-  premium
+  premium,
+  demo
 }

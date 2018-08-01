@@ -5,6 +5,8 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.beans.Transient;
 import java.util.Date;
+
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -18,6 +20,7 @@ public class DomSchool extends DomSchoolId {
     private String schoolName;
     private String schoolRights;
     private Date expire;
+    private AboType aboType;
 
     public DomSchool(){
         
@@ -79,6 +82,14 @@ public class DomSchool extends DomSchoolId {
             Date now = new Date();
             return now.before(this.getExpire());
         }
+    }
+
+    public AboType getAboType() {
+      return aboType;
+    }
+
+    public void setAboType(AboType aboType) {
+      this.aboType = aboType;
     }  
     
 }
