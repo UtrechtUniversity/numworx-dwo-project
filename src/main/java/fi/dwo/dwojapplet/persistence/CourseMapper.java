@@ -18,7 +18,9 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserCourseManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -27,9 +29,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -526,5 +531,24 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>{
       if(o1.sequencenr == null) return -1;
       if(o2.sequencenr == null) return +1;
       return o1.getName().compareTo(o2.getName());
+    }
+    
+    void insertCache(List<DomMapEntry<PersistenceId, DomCourse>> all) {
+      Map<PersistenceId, DomCourse> allcourses = new HashMap<>();
+      all.forEach(e -> allcourses.put(e.getKey(), e.getValue()));
+      Map<PersistenceId, Set<PersistenceId>> children = new HashMap<>();
+      allcourses.values().forEach(course -> {
+        PersistenceId parent = course.getParentID();
+        Set<PersistenceId> set = children.get(parent);
+        if(set == null) {
+          set = new HashSet<>();
+          children.put(parent,  set);
+        }
+        set.add(course.getId());
+      });
+      
+
+      
+      
     }
 }

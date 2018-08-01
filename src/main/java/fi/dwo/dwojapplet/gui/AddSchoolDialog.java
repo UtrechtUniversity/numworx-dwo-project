@@ -86,7 +86,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
     }
 
     public AddSchoolDialog(Component owner, String windowTitle, String schoolName, String schoolLogin,
-            SchoolPasswdMap spm, Date expire) {
+            SchoolPasswdMap spm, Date expire, AboType aboType) {
         super(DwoHelper.getFrameForComponent(owner),
                 windowTitle, true);
         this.setMinimumSize(new Dimension(400, 300));
@@ -172,6 +172,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         l.setFont(GuiConstants.NORMAL_TEXT);
         form.add(l);
         aboField = new JComboBox<>(AboType.values());
+        aboField.setSelectedItem(aboType);
         form.add(aboField);
         
         
@@ -236,14 +237,14 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      * @throws fi.dwo.commons.exceptions.SchoolException
      */
     public static School addSchool(Component owner) throws SchoolException {
-        AddSchoolDialog asd = new AddSchoolDialog(owner, "Nieuwe school", "", "", new SchoolPasswdMap(), null);
+        AddSchoolDialog asd = new AddSchoolDialog(owner, "Nieuwe school", "", "", new SchoolPasswdMap(), null, AboType.standard);
         School s=null;
         boolean flagReShow = true;
         while (flagReShow) {
             asd.show();
             if (asd.isConfirmed()) {
                 try {
-                    s = GuiCreator.instance().addSchool(asd.getSchoolId(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap(), asd.dateField.getDate());
+                    s = GuiCreator.instance().addSchool(asd.getSchoolId(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap(), asd.dateField.getDate(), (AboType) asd.aboField.getSelectedItem());
                     if (s != null) { //something went wrong, reshow the dialog
                         flagReShow = false;
                     }
@@ -272,8 +273,8 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         String sl = school.getSchoolLogin();
         SchoolPasswdMap spm = new SchoolPasswdMap(school);
         Date expire = school.getExpire();
-
-        AddSchoolDialog asd = new AddSchoolDialog(owner, "Schoolgegevens wijzigen", sn, sl, spm, expire);
+        AboType aboType = school.getAboType();
+        AddSchoolDialog asd = new AddSchoolDialog(owner, "Schoolgegevens wijzigen", sn, sl, spm, expire, aboType);
 
         String id = String.valueOf(school.getSchoolID());
         JLabel label = new JLabel(id);
@@ -281,7 +282,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         asd.addNorth(label);
         asd.show();
         if (asd.isConfirmed()) {
-            School s = GuiCreator.instance().editSchool(school.getSchoolID(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap(), asd.dateField.getDate());
+            School s = GuiCreator.instance().editSchool(school.getSchoolID(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap(), asd.dateField.getDate(), (AboType) asd.aboField.getSelectedItem());
             if (s == null) { //something went wrong, reshow the dialog
                 s = editSchool(owner, school);
             }

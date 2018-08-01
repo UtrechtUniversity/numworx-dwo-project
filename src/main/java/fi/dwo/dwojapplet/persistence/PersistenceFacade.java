@@ -83,11 +83,13 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -139,7 +141,7 @@ public class PersistenceFacade {
     /**
      * Empty constructor
      */
-    public PersistenceFacade() {
+    private PersistenceFacade() {
 
     }
 
@@ -1001,6 +1003,7 @@ public class PersistenceFacade {
             domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId((long)schoolClass.getID()));
             DomCoursesOfSchoolClass4Teacher result = 
                 SecureTeacherSchoolClassManager.getModules(domSchoolClass, DWO.getDwoProfile());
+            
             Map<Integer, DomClassCourse4Teacher> cc = new HashMap<>();
             result.getClassCourses().forEach(
                 entry -> {
@@ -1010,8 +1013,11 @@ public class PersistenceFacade {
                 });
             v = result.getCourses().stream().map(DomMapEntry::getValue).filter(p->!p.getWithChildren().booleanValue() && cc.containsKey(idOf(p.getId())))
                 .filter(p-> cc.get(idOf(p.getId())).getViewState() != ViewState.invisible) // remove invisible classcourses
-                .collect(()->{ return new Vector();}, (l,e) -> l.add(e), (l,ee)-> l.addAll(ee));
+                .collect(()->{ return new Vector<DomCourse>();}, (l,e) -> l.add(e), (l,ee)-> l.addAll(ee));
             MapperIF<Course> mapper = MapperCreator.instance(Course.class);
+            if(mapper instanceof CourseMapper) {
+              ((CourseMapper) mapper).insertCache(result.getCourses());
+            }
             Course[] courses = mapper.getObjectFromReturn(v);
             for (Course course : courses) {
               int id = course.getID();

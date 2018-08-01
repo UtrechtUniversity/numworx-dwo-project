@@ -7,6 +7,7 @@ import java.util.Date;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
@@ -35,6 +36,8 @@ public class School {
     private String rights = DEFAULT_RIGHTS;
 
     private Date expire;
+
+    private AboType aboType = AboType.standard;
 
     /**
      * Creates a new School object.
@@ -253,6 +256,7 @@ public class School {
 		name = school.getSchoolName();
 		rights = school.getSchoolRights();
 		schoolLogin = ""; // MISSING
+		aboType = school.getAboType();
 		try {
 			schoolID = MySQLPersistenceId.getNativeId(school).intValue();
 		} catch (Dwo2Exception e) {
@@ -260,5 +264,14 @@ public class School {
 		}
 		
 	}
+
+  public AboType getAboType() {
+    return this.aboType;
+  }
+
+  public void setAboType(AboType aboType) {
+    if(aboType == null) aboType = AboType.standard;
+    this.aboType = aboType;
+  }
 
 }

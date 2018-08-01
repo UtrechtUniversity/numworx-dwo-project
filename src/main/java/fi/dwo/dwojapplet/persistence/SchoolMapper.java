@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherFromToManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 import java.io.IOException;
@@ -228,7 +229,7 @@ class SchoolMapper extends XmlRpcMapper<School> {
      */
     @Override
     protected School update(School obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
-        School s = (School) obj;
+        School s = obj;
         s.setSchoolID(((Integer) data.get("schoolID")).intValue());
         s.setName((String) data.get("schoolName"));
         s.setSchoolLogin((String) data.get("schoollogin"));
@@ -244,6 +245,10 @@ class SchoolMapper extends XmlRpcMapper<School> {
             s.setClassList((SchoolClass[]) MapperCreator.instance(SchoolClass.class).get(s));
         } else if (s instanceof LazySchool) {
             s.setClassList(null);
+        }
+        
+        if (data.containsKey("aboType")) {
+          s.setAboType(AboType.values()[ (Integer) data.get("aboType")]);
         }
 
         //if(s.getClassList() == null) {

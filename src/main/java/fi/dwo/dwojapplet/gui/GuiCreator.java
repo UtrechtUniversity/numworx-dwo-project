@@ -36,6 +36,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.LoginManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
@@ -691,12 +692,13 @@ public class GuiCreator {
      * @param schoolLogin
      * @param date
      * @param schoolPasswdMap
+     * @param aboType 
      *
      * @return edited School
      * @throws fi.dwo.commons.exceptions.SchoolException
      *
      */
-    public School editSchool(int schoolID, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {
+    public School editSchool(int schoolID, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date, AboType aboType) throws SchoolException {
         return null;
     }
 
@@ -708,13 +710,14 @@ public class GuiCreator {
      * @param schoolLogin
      * @param date
      * @param schoolPasswdMap
+     * @param aboType 
      *
      * @return boolean Indicates if the school is added, or the operation is
      * canceled.
      * @throws fi.dwo.commons.exceptions.SchoolException
      *
      */
-    public School addSchool(int id, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {
+    public School addSchool(int id, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date, AboType aboType) throws SchoolException {
         return null;
     }
 

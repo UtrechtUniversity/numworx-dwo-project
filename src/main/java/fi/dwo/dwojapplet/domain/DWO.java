@@ -103,6 +103,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -2678,6 +2679,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * @param schoolLogin The configurePanelsForUser name of the new school.
      * @param schoolPasswdMap
      * @param date
+     * @param aboType 
      * @param schoolManager 
      * @return
      * @pschool is successfully inserted it returns true. Otherwise it returns
@@ -2685,13 +2687,14 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * @throws fi.dwo.commons.exceptions.SchoolException
      *
      */
-    public School addSchool(int id, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date, SecureDwoAdminSchoolManager schoolManager)
+    public School addSchool(int id, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date, AboType aboType, SecureDwoAdminSchoolManager schoolManager)
             throws SchoolException {
         
         DomSchoolFull school = new DomSchoolFull();
         school.setExpire(date);
         school.setSchoolLogin(schoolLogin);
         school.setSchoolName(schoolName);
+        school.setAboType(aboType);
         ArrayList<DomMapEntry<RoleType,String>> passwords = new ArrayList<>();
         for(Map.Entry<String, String> entry: schoolPasswdMap.entrySet()) {
           RoleType role = RoleType.values()[Integer.parseInt(entry.getKey())];
@@ -2723,13 +2726,14 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * @param schoolLogin The new configurePanelsForUser name of the school.
      * @param schoolPasswdMap
      * @param date
+     * @param aboType 
      * @return school
      * @throws fi.dwo.commons.exceptions.SchoolException
      *
      */
     @SuppressWarnings("deprecation")
     public School editSchool(int schoolID, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap,
-            Date date, SecureDwoAdminSchoolManager schoolManager) throws SchoolException {
+            Date date, AboType aboType, SecureDwoAdminSchoolManager schoolManager) throws SchoolException {
         // String studentPassw = schoolPasswdMap.getPasswd(SchoolGroup.STUDENT);
         // String teacherPassw = schoolPasswdMap.getPasswd(SchoolGroup.TEACHER);
         // return PersistenceFacade.instance().editSchool(schoolID, schoolName,
@@ -2743,6 +2747,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
       school.setExpire(date0);
       school.setSchoolLogin(schoolLogin);
       school.setSchoolName(schoolName);
+      school.setAboType(aboType);
       ArrayList<DomMapEntry<RoleType,String>> passwords = new ArrayList<>();
       for(Map.Entry<String, String> entry: schoolPasswdMap.entrySet()) {
         RoleType role = RoleType.values()[Integer.parseInt(entry.getKey())];
@@ -2759,6 +2764,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         newSchool.setExpire(date);
         newSchool.setName(schoolName);
         newSchool.setSchoolLogin(schoolLogin);
+        newSchool.setAboType(aboType);
         SchoolGroup[] pw = newSchool.getSchoolGroupList();
         HashMap<Integer,String> hash = new HashMap<>();
         passwords.stream().forEach(e -> hash.put(e.getKey().ordinal(), e.getValue()));

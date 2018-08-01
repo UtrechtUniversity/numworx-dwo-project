@@ -42,6 +42,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminScoContextManage
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
@@ -58,9 +59,9 @@ public class GuiCreatorAdmin extends GuiCreator {
 
     @Override
   public School editSchool(int schoolID, String schoolName, String schoolLogin,
-      SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {
+      SchoolPasswdMap schoolPasswdMap, Date date, AboType aboType) throws SchoolException {
     // TODO Auto-generated method stub
-    return dwo.editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap, date, schoolManager);
+    return dwo.editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap, date, aboType, schoolManager);
   }
 
     private static final Logger LOG = Logger.getLogger(GuiCreatorAdmin.class.getName());
@@ -285,8 +286,9 @@ public class GuiCreatorAdmin extends GuiCreator {
     public boolean deleteSchool(School sc) {
         return dwo.deleteSchool(sc, schoolManager);
     }
-    public School addSchool(int id, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {
-      return dwo.addSchool(id, schoolName, schoolLogin, schoolPasswdMap, date, schoolManager);
+    @Override
+    public School addSchool(int id, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date, AboType aboType) throws SchoolException {
+      return dwo.addSchool(id, schoolName, schoolLogin, schoolPasswdMap, date, aboType, schoolManager);
   }
 
     /**
