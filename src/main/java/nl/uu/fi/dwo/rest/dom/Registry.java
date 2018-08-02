@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.rest.dom;
 
-import java.lang.ref.Reference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
