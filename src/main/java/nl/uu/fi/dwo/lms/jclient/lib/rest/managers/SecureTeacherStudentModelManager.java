@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
-import nl.uu.fi.dwo.rest.dom.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
 
 /**

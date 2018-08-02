@@ -1,17 +1,15 @@
 package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
-import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
-import nl.uu.fi.dwo.rest.dom.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
 
