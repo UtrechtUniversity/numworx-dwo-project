@@ -129,7 +129,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.mobile</groupId>
 		<artifactId>DWOplayer</artifactId>
-		<version>2.2.7</version>
+		<version>${DWOplayerVersion}</version>
 		<type>war</type>
 		<classifier>dwo2</classifier>
 		<scope>runtime</scope>
@@ -414,7 +414,7 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<DWOplayerVersion>2.2.7</DWOplayerVersion>
+		<DWOplayerVersion>2.2.8-SNAPSHOT</DWOplayerVersion>
 		<DWOmAccessVersion>0.0.9</DWOmAccessVersion>
 		<RegisterVersion>2.2.7</RegisterVersion>
 		<DWOGwtClientVersion>0.10.16-SNAPSHOT</DWOGwtClientVersion>
