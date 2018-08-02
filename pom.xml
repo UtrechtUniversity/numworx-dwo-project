@@ -402,10 +402,10 @@
 				<artifactId>aws-maven-plugin</artifactId>
 				<version>0.2.18</version>
 				<configuration>
-					<serverId>prod</serverId>
+					<serverId>${aws.serverId}</serverId>
 					<artifact>${project.build.directory}/${project.build.finalName}.war</artifact>
-					<applicationName>DWO-EBServer</applicationName>
-					<environmentName>testebserver</environmentName>
+					<applicationName>${aws.applicationName}</applicationName>
+					<environmentName>${aws.environmentName}</environmentName>
 					<region>eu-west-1</region>
 				</configuration>
 			</plugin>
@@ -418,9 +418,22 @@
 		<DWOmAccessVersion>0.0.9</DWOmAccessVersion>
 		<RegisterVersion>2.2.7</RegisterVersion>
 		<DWOGwtClientVersion>0.10.16-SNAPSHOT</DWOGwtClientVersion>
+		<aws.serverId>prod</aws.serverId>
+		<aws.applicationName>DWO-EBServer</aws.applicationName>
+		<aws.environmentName>testebserver</aws.environmentName>
 	</properties>
 	<scm>
 		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</developerConnection>
 		<connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</connection>
 	</scm>
+	<profiles>
+		<profile>
+			<id>teuniz</id>
+			<properties>
+				<aws.serverId>dev</aws.serverId>
+				<aws.applicationName>teuniz</aws.applicationName>
+				<aws.environmentName>teuniz2</aws.environmentName>
+			</properties>
+		</profile>
+	</profiles>
 </project>
