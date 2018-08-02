@@ -25,6 +25,11 @@ public enum Actions {
     return command;
   }
 
+  /**
+   * true if embedded in gwtclient.
+   * header is gehalveerd.
+   * @return
+   */
   public static boolean isAvailable() {
     return "none".equals(Location.getParameter("header"));
   }

@@ -62,9 +62,9 @@ final class Login_Stap3 implements Success<Void, Void> {
 		clientFactory.getHeaderView().setUserAndRole(currentUser, roleType);
 		if(next == null)
 		{
-		  boolean test = "test".equals(DWOplayer.PARAMETERS.getDwoEnv());
+		  boolean test = "test".equals(DWOplayer.PARAMETERS.getDwoEnv()); // FIXME GERT test = true dan altijd een switch bij docent
 		  boolean teacher = RoleType.TEACHER == roleType;
-		  if ( teacher && test && ! Actions.isAvailable())
+		  if ( teacher && test && ! Actions.isAvailable()) // switch naar gwtclient bij test, als teacher en niet embedded in gwtclient
 		  {
 		    return gotoGwtClient("WELCOME");
 		  }
