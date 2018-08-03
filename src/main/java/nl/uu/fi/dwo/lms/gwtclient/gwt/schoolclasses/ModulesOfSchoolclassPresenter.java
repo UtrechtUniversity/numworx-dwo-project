@@ -2,15 +2,18 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import nl.uu.fi.dwo.rest.dom.DomCoursesOfSchoolclassTree;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.DomTree;
@@ -39,12 +42,9 @@ public class ModulesOfSchoolclassPresenter {
     private EventBus eventBus;
     private ModulesOfSchoolclassService service;
 
-    private String[] tableHeaders = {"module name", "assigned", "type", "from [?]", "to [?]", "password"};
     private DomSchoolClass schoolClass;
     private DomCoursesOfSchoolclassTree tree;
     private Display view;
-    private int requests = 0;
-
     public interface Display extends BasicDisplay {
 
         public final static String LOCAL_TIME = "yyyy-MM-dd HH:mm"; // common met jsmodulesofSchool
@@ -148,6 +148,8 @@ public class ModulesOfSchoolclassPresenter {
         updateViewData();
     }
 
+    private GwtClientMessages rb = GWT.create(GwtClientMessages.class);
+    
     private void updateViewData() {
         //MsgDialogPromise
         view.setLoadingTableMessageModules();
@@ -162,6 +164,9 @@ public class ModulesOfSchoolclassPresenter {
                 //flip back to schoolclasses screen 
                 DomCoursesOfSchoolClass4Teacher value = resolved.getValue();
                 tree = new DomCoursesOfSchoolclassTree(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool(), value);
+ // patch "public"
+                tree.getNode(DomCoursesOfSchoolclassTree.PUBLIC_ROOT).getObject().getCourse().setName(rb.standaardModules());
+                
                 //ClassCourseItem item = new ClassCourseItem(null, "root");
                 //parse results into a tree.
                 view.setTree(tree.getCourseTree());
