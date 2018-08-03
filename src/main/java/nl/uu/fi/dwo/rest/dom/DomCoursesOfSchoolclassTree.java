@@ -20,6 +20,10 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  */
 public class DomCoursesOfSchoolclassTree {
 
+    public static final String SCHOOL_ROOT = "LOCAL;PersistentCourse;schoolRoot";
+
+    public static final String PUBLIC_ROOT = "LOCAL;PersistentCourse;publicRoot";
+
     private static final Logger LOG = Logger.getLogger(DomCoursesOfSchoolclassTree.class.getName());
 
     private DomTree<DomCourseOfClass> courseTree;
@@ -54,7 +58,7 @@ public class DomCoursesOfSchoolclassTree {
 
         DomTree<DomCourseOfClass> publicRoot = new DomTree<DomCourseOfClass>(new DomCourseOfClass());
         DomCourse publicRootCourse = new DomCourse();
-        publicRootCourse.setId(new PersistenceId("MYSQL;PersistentCourse;publicRoot"));
+        publicRootCourse.setId(new PersistenceId(PUBLIC_ROOT));
         publicRootCourse.setName("public");
         publicRootCourse.setWithChildren(true);
         publicRootCourse.setSchoolId(null);
@@ -65,7 +69,7 @@ public class DomCoursesOfSchoolclassTree {
         DomTree<DomCourseOfClass> schoolRoot = new DomTree<DomCourseOfClass>(new DomCourseOfClass());
         DomCourse schoolRootCourse = new DomCourse();
         schoolRootCourse.setName(school.getSchoolName());
-        schoolRootCourse.setId(new PersistenceId("MYSQL;PersistentCourse;schoolRoot"));
+        schoolRootCourse.setId(new PersistenceId(SCHOOL_ROOT));
         schoolRootCourse.setWithChildren(true);
         schoolRootCourse.setSchoolId(school.getId());
         schoolRoot.setParent(root);
