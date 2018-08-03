@@ -28,7 +28,7 @@ import javax.swing.JOptionPane;
  *
  * @author M.J.B. Kupers
  */
-public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
+public class Course implements LessonGroup, Comparable<Course>, CourseMap, Descriptor {
     private static final Logger LOG = Logger.getLogger(Course.class.getName());
 
     private int courseID;
@@ -419,9 +419,12 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      * @see fi.dwo.client.system.Comparable#compareTo(java.lang.Object)
      */
     @Override
-    public int compareTo(Object o) {
-        Course c = (Course) o;
-        return getName().toLowerCase().compareTo(c.getName().toLowerCase());
+    public int compareTo(Course o) {
+        if (sequencenr == null && o.sequencenr == null)
+          return getName().compareToIgnoreCase(o.getName());
+        if (sequencenr == null) return +1;
+        if (o.sequencenr == null) return -1;
+        return sequencenr.compareTo(o.sequencenr);
     }
 
     /**
