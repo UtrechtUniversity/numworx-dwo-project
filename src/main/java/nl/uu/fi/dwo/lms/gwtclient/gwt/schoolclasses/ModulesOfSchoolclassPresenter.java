@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.DomTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -165,7 +166,11 @@ public class ModulesOfSchoolclassPresenter {
                 DomCoursesOfSchoolClass4Teacher value = resolved.getValue();
                 tree = new DomCoursesOfSchoolclassTree(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool(), value);
  // patch "public"
-                tree.getNode(DomCoursesOfSchoolclassTree.PUBLIC_ROOT).getObject().getCourse().setName(rb.standaardModules());
+                DomCourse course = tree.getNode(DomCoursesOfSchoolclassTree.PUBLIC_ROOT).getObject().getCourse();
+ // welke smaak: profile of "standaard"
+ // in deze "then" weten we dat profile.getValue() geresolved en valid is.
+                course.setName(dwoGlobalVars.getProfile().getValue().getDwoProfileDescription()); 
+                // course.setName(rb.standaardModules());
                 
                 //ClassCourseItem item = new ClassCourseItem(null, "root");
                 //parse results into a tree.
