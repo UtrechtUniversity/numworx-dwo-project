@@ -2724,20 +2724,10 @@ public class PersistenceFacade {
       
       
         try {
-            Vector v;
-            //v = DbAccessCreator.instance().getResultCount(dwoProfile, id);
-            v = new Vector();
             DomSchoolClass schoolclass = new DomSchoolClass();
             schoolclass.setId(PersistentSchoolClass.buildPersistenceId(Long.valueOf(id)));
             DomCoursesOfSchoolClass4Teacher result = SecureTeacherSchoolClassManager.getModules(schoolclass, DWO.getDwoProfile());
-            result.getClassCourses().forEach(entry -> {
-              DomClassCourse4Teacher dcc = entry.getValue();
-              int cid = idOf(dcc.getCourseId());
-              Hashtable h = new Hashtable();
-              h.put("courseID", cid);
-              v.add(h);
-            });
-            return v;
+            return getResultCount(result);
         }
         catch (Dwo2Exception e) {
             throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
@@ -3194,6 +3184,19 @@ public class PersistenceFacade {
       if (m instanceof UserResultListMapper) {
           ((UserResultListMapper) m).setResultsModule(resultsModule);
       }
+    }
+
+    public Vector getResultCount(DomCoursesOfSchoolClass4Teacher result) {
+      Vector v;
+      v = new Vector();
+      result.getClassCourses().forEach(entry -> {
+        DomClassCourse4Teacher dcc = entry.getValue();
+        int cid = idOf(dcc.getCourseId());
+        Hashtable h = new Hashtable();
+        h.put("courseID", cid);
+        v.add(h);
+      });
+      return v;
     }
 
 }

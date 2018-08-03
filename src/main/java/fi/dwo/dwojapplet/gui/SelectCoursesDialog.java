@@ -36,9 +36,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -73,6 +77,9 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeNode;
+
+import org.osgi.util.promise.Deferred;
+import org.osgi.util.promise.Promise;
 
 class CourseData implements CourseMap {
 
@@ -1196,8 +1203,19 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         return selectedCourses;
     }
 
+    
+    
+    
+    /**
+     * @deprecated Use {@link #selectCourses(ClassTeacherPanel,Course[],Course[],SchoolClass,Promise)} instead
+     */
     public static Course[] selectCourses(ClassTeacherPanel parent,
             Course[] allCourses, Course[] selectedCourses, final SchoolClass sc) {
+              return selectCourses(parent, allCourses, selectedCourses, sc, getResultCount(sc));
+            }
+
+    public static Course[] selectCourses(ClassTeacherPanel parent,
+            Course[] allCourses, Course[] selectedCourses, final SchoolClass sc, Promise<List> rc) {
         String title = TextMapper.getText(TextMapper.GUISC_TITLE);
         allCourses
                 = GuiCreator.instance().dwo.sequence(allCourses, sc);
@@ -1209,29 +1227,50 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         scd.sc = sc;
         final int dwoProfile = allCourses[0].getDwoProfile();
 
-        new Thread() {
-            @Override
-            public void run() {
-                // persistencefacade....'
-                try {
-                    Vector result = PersistenceFacade.instance().getResultCount(
-                            dwoProfile, sc.getID());
-                    Enumeration e = result.elements();
-                    CourseData[] cd = scd.cd;
-                    while (e.hasMoreElements()) {
-                        Hashtable object = (Hashtable) e.nextElement();
-                        int courseID = ((Number) object.get("courseID")).intValue();
-                        scd.setResults(courseID, cd);
-                        scd.coursesModel.fireTableDataChanged();
-                    }
-
-                } catch (Exception e) {
-                    Logger.getGlobal().log(Level.SEVERE, null, e);
-                }
-            }
-        }.start();
+        Promise<List> resultCount = rc;
+        ast(scd, resultCount);
         scd.show();
         return scd.getSelectedCourses();
+    }
+
+    private static Promise<List> getResultCount(final SchoolClass sc) {
+      Deferred<List> defer = new Deferred<>();
+      ExecutorService executor = Executors.newSingleThreadExecutor();
+      executor.execute(() ->
+        {
+          try {
+            defer.resolve(PersistenceFacade.instance().getResultCount(DWO.getDwoProfileID(), sc.getID()));
+          } catch (PersistenceException e) {
+            defer.fail(e);
+          }
+        });
+      return defer.getPromise();
+    }
+    
+    
+    private static void ast(final SelectCoursesDialog scd,
+        Promise<List> resultcount) {
+      Runnable r = new Runnable() {
+          @Override
+          public void run() {
+              // persistencefacade....'
+              try {
+                  List result = resultcount.getValue();
+                  Iterator e = result.iterator();
+                  CourseData[] cd = scd.cd;
+                  while (e.hasNext()) {
+                      Hashtable object = (Hashtable) e.next();
+                      int courseID = ((Number) object.get("courseID")).intValue();
+                      scd.setResults(courseID, cd);
+                      scd.coursesModel.fireTableDataChanged();
+                  }
+
+              } catch (Exception e) {
+                  Logger.getGlobal().log(Level.SEVERE, null, e);
+              }
+          }
+      };
+      resultcount.onResolve(r);
     }
 
     private boolean setResults(int courseID, CourseData[] cd) {

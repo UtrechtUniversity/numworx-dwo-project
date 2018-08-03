@@ -11,6 +11,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
@@ -162,9 +165,11 @@ final class ClassTeacherModules {
   void edit(DomSchoolClass schoolClass, ClassTeacherPanel parent) {
     MyCourse[] allCourses = null;
     MyCourse[] selectedSchoolCourses = null;
+    Promise<List> rc = Promises.failed(new IllegalArgumentException());
     try {
       GuiCreator.instance().getDWO().setWait();
       DomCoursesOfSchoolClass4Teacher csct0 = SecureTeacherSchoolClassManager.getModules(schoolClass, DWO.getDwoProfile());
+      rc = Promises.resolved(PersistenceFacade.instance().getResultCount(csct0));
       DomSchool school = DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool();
       csct = new DomCoursesOfSchoolclassTree(school, csct0);
       DomTree<DomCourseOfClass> root = csct.getCourseTree();
@@ -195,7 +200,7 @@ final class ClassTeacherModules {
     } finally {
         GuiCreator.instance().getDWO().setReady();
     }
-    Course[] selectedCourses = SelectCoursesDialog.selectCourses(parent, allCourses, selectedSchoolCourses, sc);
+    Course[] selectedCourses = SelectCoursesDialog.selectCourses(parent, allCourses, selectedSchoolCourses, sc, rc);
     if (selectedCourses != null) {
         GuiCreator.instance().getDWO().setWait();
         try {
