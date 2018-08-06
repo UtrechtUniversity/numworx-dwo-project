@@ -42,7 +42,17 @@ public class CourseManager {
             em.getTransaction().begin();
             em.persist(course);
             em.getTransaction().commit();
-        } catch (Exception e) {
+        }
+        catch(RollbackException e) {
+          LOG.log(Level.WARNING, "Can't create the PersistentCourse.", e);
+          throw e;
+        }
+        catch(PersistenceException e)
+        {
+          LOG.log(Level.SEVERE, "Can't create the PersistentCourse.", e);
+          throw e;
+        }
+        catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentCourse.", e);
             throw new PersistenceException(e);
         } finally {

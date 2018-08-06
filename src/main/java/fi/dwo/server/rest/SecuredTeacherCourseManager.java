@@ -185,6 +185,8 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 				pc.setParentID(0L);
 			CourseManager.create(pc);
 			course = pc.buildDomCourseFull();
+    	} catch (RollbackException e) {
+    	  throw new Dwo2RestException(Dwo2ExceptionCode.Rest_CourseNameExists, e.getMessage());
 		} catch (Dwo2Exception e) {
 			throw new Dwo2RestException(e);
 		}
