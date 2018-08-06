@@ -246,7 +246,7 @@ public class EditStudentPresenter {
             this.initView(user);
             return Promises.resolved(true);
         }, (failure) -> {
-            eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
+            eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) failure.getFailure()));
         });
     }
 
