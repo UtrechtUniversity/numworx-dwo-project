@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.web.bindery.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
+import fi.dwo.gwt.lib.rest.CallManagers.PublicStatusManager;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.Dwo2LocaleMessageGWTTranslator;
 import java.util.logging.Level;
@@ -21,14 +22,15 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.FAIL;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.LOGOUT;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomHeartBeat;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 import org.osgi.util.promise.Promise;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
+import org.osgi.util.promise.Success;
 
 /**
  * TeacherApplication
@@ -49,7 +51,7 @@ public class BootPanelController {
     private int profile;
     private int stage;
     private boolean hideGwtGui;
-    private boolean testIsOn;
+    private boolean loadFresh = false;
     private String authToken;
     private boolean session = false;
 
@@ -67,7 +69,7 @@ public class BootPanelController {
     @Inject
     BootPanelController(EventBus eventBus) {
         this.eventBus = eventBus;
-        testIsOn = false;
+        loadFresh = false;
         hideGwtGui = false;
         profile = 77;
         stage = 1;
@@ -95,9 +97,9 @@ public class BootPanelController {
         } catch (Exception e) {
             profile = 77;
         }
-        value = Window.Location.getParameter("test");
+        value = Window.Location.getParameter("forceNewVersion");
         if (value != null && value.matches("on")) {
-            testIsOn = true;
+            loadFresh = true;
         }
         value = Window.Location.getParameter("stage");
         if (value != null && value.matches("on")) {
@@ -125,14 +127,11 @@ public class BootPanelController {
 //        Map other = codec.decode(json);
 //        System.out.println(other);
 //    }
+    public static native void forceReload() /*-{
+      $wnd.location.reload(true);
+    }-*/;
+
     public void go(RootLayoutPanel rootPanel) {
-        //fetch current version
-        String softwareVersion = fi.dwo.dwojapplet.BUILD.version;
-        String svnRevision = fi.dwo.dwojapplet.BUILD.buildNumber;
-        String buildTimeStamp = fi.dwo.dwojapplet.BUILD.timeStamp;
-        LOG.log(Level.INFO, "Software version {0},  subversion revision {1}, build timestamp {2}",
-                new Object[]{softwareVersion, svnRevision, buildTimeStamp});
-        //fetch remote version
         //todo dwo/rest/public/status/getHeartBeat
         //force reload if not current
         //todo
@@ -141,13 +140,49 @@ public class BootPanelController {
          */
         //    testRestyMapConverter();
         parseUrlParam();
-        if (!testIsOn) {
-            Window.Location.replace("http://www.dwo.nl");
-        }
+
+        //fetch current version
+        String softwareVersion = BUILD.version;
+        String svnRevision = BUILD.buildNumber;
+        String buildTimeStamp = BUILD.timeStamp;
+        LOG.log(Level.INFO, "Software version " + softwareVersion + " subversion revision " + svnRevision + " build timestamp " + buildTimeStamp + ".");
+        LOG.log(Level.INFO, "forceANewAersion = " + loadFresh + ".");
+        final int flag = 0;
+        //fetch remote version
+        PublicStatusManager statusManager = new PublicStatusManager();
+        Promise<DomHeartBeat> p = statusManager.getHeartBeat();
+        p.then(new Success<DomHeartBeat, Void>() {
+            @Override
+            public Promise<Void> call(Promise<DomHeartBeat> resolved) throws Exception {
+                DomHeartBeat beat = resolved.getValue();
+                if (flag == 0) {
+                    LOG.log(Level.FINE, "unmatching version");
+                    Window.alert("outdated version, reloading");
+                    forceReload();
+                }
+                if (beat.getHtmlClientVersion() == null
+                        || (BUILD.version != null && BUILD.version.equals(beat.getHtmlClientVersion()))) {
+                    //equals server version
+                    LOG.log(Level.FINE, "matching version");
+                } else {
+                    //incompatible version
+                    LOG.log(Level.FINE, "unmatching version");
+                    Window.alert("outdated version, reloading");
+                    forceReload();
+                    //return false;
+                }
+                return null;
+            }
+
+        });
+
+//        if (!testIsOn) {
+//            Window.Location.replace("http://www.dwo.nl");
+//        }
         LOG.log(Level.INFO, "profile=" + profile + ".");
-        LOG.log(Level.INFO, "testIsOn=" + testIsOn + ".");
+//        LOG.log(Level.INFO, "testIsOn=" + testIsOn + ".");
         parseGwtParam();
-        LOG.log(Level.INFO, "HideGwt=" + hideGwtGui + ".");
+//        LOG.log(Level.INFO, "HideGwt=" + hideGwtGui + ".");
 
         //intialize our global and environmental variables instance.
 //        try {
@@ -361,16 +396,16 @@ public class BootPanelController {
         SwitchViewEvent ev = new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN);
         eventBus.fireEvent(ev);
 
-        bootFromAuthToken();
+        // bootFromAuthToken();
     }
-
-    private void bootFromAuthToken() {
-        if (authToken != null) {
-            LoginPresenter presenter = presenterFactory.getLoginPresenter();
-            //presenter.loginFromAuthToken(authToken);
-        }
-
-    }
+//
+//    private void bootFromAuthToken() {
+//        if (authToken != null) {
+//            LoginPresenter presenter = presenterFactory.getLoginPresenter();
+//            //presenter.loginFromAuthToken(authToken);
+//        }
+//
+//    }
 
     /**
      * @return the session
