@@ -4,36 +4,28 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import fi.dwo.gwt.lib.rest.GwtRestVars;
-import fi.dwo.gwt.lib.rest.client.RestCallers.PublicUserRestCaller;
+import fi.dwo.gwt.lib.rest.client.RestCallers.PublicStatusRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
-import nl.uu.fi.dwo.rest.dom.entities.DomContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
-import nl.uu.fi.dwo.rest.entities.RestNewUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomHeartBeat;
 import org.osgi.util.promise.Promise;
 
-public class PublicUserManager {
+public class PublicStatusManager {
 
-    PublicUserRestCaller caller = GWT.create(PublicUserRestCaller.class);
-
-    public Promise<Boolean> RegisterNewUser(DomNewUser domNewUser) {
-        PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
-        this.RegisterNewUser(domNewUser, defer);
-        return defer.getPromise();
-    }
-
-    public void RegisterNewUser(DomNewUser domNewUser,
-            AsyncCallback<Boolean> asyncCallback) {
-        RestNewUser user = new RestNewUser();
-        user.setDomNewUser(domNewUser);
-        user.setRestContext(new DomContext());
-        instance.setCurrentUser(null);
-        caller.submitNewUser(user, new Callback<Boolean>(asyncCallback));
-
-    }
+    PublicStatusRestCaller caller = GWT.create(PublicStatusRestCaller.class);
 
     GwtRestVars instance;
 
-    public PublicUserManager() {
+    public Promise<DomHeartBeat> getHeartBeat() {
+        PromiseCallback<DomHeartBeat> defer = new PromiseCallback<DomHeartBeat>();
+        this.getHeartBeat(defer);
+        return defer.getPromise();
+    }
+
+    public void getHeartBeat(AsyncCallback<DomHeartBeat> asyncCallback) {
+        caller.getHeartBeat(new Callback<DomHeartBeat>(asyncCallback));
+    }
+    
+    public PublicStatusManager() {
         instance = GwtRestVars.instance();
     }
 }
