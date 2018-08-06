@@ -68,7 +68,7 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 // editable fields?
 			if(course.getName() != null) pc.setName(course.getName());
 			if(course.getDescription() != null) pc.setDescription(course.getDescription());
-			if(course.getImage() != null) pc.setImage(course.getImage());
+			//if(course.getImage() != null) pc.setImage(course.getImage()); // course.getImage is NOT EDITABLE
 			if(course.getImageData()!=null) pc.setImageData(course.getImageData());
 			pc.setNotVisible(course.isNotVisible());
 			if(course.getExport() != null)
@@ -144,7 +144,7 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 // editable fields?
 			if(course.getName() != null) pc.setName(course.getName());
 			if(course.getDescription() != null) pc.setDescription(course.getDescription());
-			if(course.getImage() != null) pc.setImage(course.getImage());
+			//if(course.getImage() != null) pc.setImage(course.getImage()); course.getImage is not editable
 			if(course.getImageData()!=null) pc.setImageData(course.getImageData());
 			pc.setNotVisible(course.isNotVisible());
 			if(course.getExport() != null)

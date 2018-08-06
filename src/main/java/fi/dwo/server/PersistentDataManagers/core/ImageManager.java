@@ -98,7 +98,7 @@ public class ImageManager {
                 image.getCourseID();
             } catch (EntityNotFoundException e) {
                 LOG.log(Level.FINE, "The PersistentImage with " + id + " no longer exists.", e);
-                throw new PersistenceException(e);
+                throw e;
             }
             em.remove(image);
             em.getTransaction().commit();
