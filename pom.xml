@@ -700,4 +700,5 @@
             </build>
         </profile>-->
     </profiles> 
+    <version>2.2.7-p1</version>
 </project>

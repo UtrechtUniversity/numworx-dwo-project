@@ -229,6 +229,12 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
               pc.setModelID(model);
 			}
 			ScoContextManager.create(pc);
+			if ( ImageManager.findEntity(pc.getScoID())!= null)
+			  try {
+			    ImageManager.destroy(pc.getScoID());
+			  } catch (Exception e) {
+			    LOG.log(Level.WARNING, "destroy destroyed image" + e);			    
+			  }
 			PersistentScoData sd = new PersistentScoData(pc.getScoID(), scoContext.getDescription());
 			if( sd.getDescription() == null) sd.setDescription("");
 			if(rest.getDomScoData() != null) {
@@ -253,7 +259,7 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
 					Long imageid = MySQLPersistenceId.getNativeId(scid);
 					PersistentImage img = ImageManager.findEntity(imageid);
 					if(img != null) {
-						img.setCourseID(pc.getScoID());
+					    img = new PersistentImage(pc.getScoID(), img.getImage()); // need a fresh copy
 						ImageManager.create(img);
 						scoContext.setUrnId(scoContext.getId());
 					} else {
