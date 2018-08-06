@@ -294,7 +294,9 @@ public class SecuredUserScoDataManager {
 					if(pssd == null) 
 						pssd = new PersistentStudentScoData();
 				}
-				entry.setValue(String.valueOf(pssd.getSuspendData()));
+                String suspendData = pssd.getSuspendData();
+                if(suspendData == null) suspendData = "";
+                entry.setValue((suspendData));
 				break;
 			}
 			logEntry("get", entry, pssc.getPersistentHasRolePK().getUserID(), pssc.getScoID());
