@@ -147,7 +147,7 @@ public class BootPanelController {
         String buildTimeStamp = BUILD.timeStamp;
         LOG.log(Level.INFO, "Software version " + softwareVersion + " subversion revision " + svnRevision + " build timestamp " + buildTimeStamp + ".");
         LOG.log(Level.INFO, "forceANewAersion = " + loadFresh + ".");
-        final int flag = 0;
+        final int flag = 1;
         //fetch remote version
         PublicStatusManager statusManager = new PublicStatusManager();
         Promise<DomHeartBeat> p = statusManager.getHeartBeat();
