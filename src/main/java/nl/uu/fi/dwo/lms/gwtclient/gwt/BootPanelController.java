@@ -53,7 +53,6 @@ public class BootPanelController {
     private String authToken;
     private boolean session = false;
 
-
     static {
         //Initialize an Exception translator.imply removing all DOM elements can cause issues with other elements in the page.
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
@@ -71,7 +70,7 @@ public class BootPanelController {
         testIsOn = false;
         hideGwtGui = false;
         profile = 77;
-        stage=1;
+        stage = 1;
 
     }
 
@@ -108,14 +107,12 @@ public class BootPanelController {
         value = Window.Location.getParameter("a");
         authToken = value;
         value = Window.Location.getParameter("view");
-        try { 
-          initialView = SelectedView.valueOf(value);
-        } catch(Exception ignore) { 
-          initialView = SelectedView.WELCOME;
+        try {
+            initialView = SelectedView.valueOf(value);
+        } catch (Exception ignore) {
+            initialView = SelectedView.WELCOME;
         };
     }
-    
-    
 
 //    public void testRestyMapConverter() {
 //        RestyMapCodec codec = GWT.create(RestyMapCodec.class);
@@ -129,10 +126,19 @@ public class BootPanelController {
 //        System.out.println(other);
 //    }
     public void go(RootLayoutPanel rootPanel) {
+        //fetch current version
+        String softwareVersion = fi.dwo.dwojapplet.BUILD.version;
+        String svnRevision = fi.dwo.dwojapplet.BUILD.buildNumber;
+        String buildTimeStamp = fi.dwo.dwojapplet.BUILD.timeStamp;
+        LOG.log(Level.INFO, "Software version {0},  subversion revision {1}, build timestamp {2}",
+                new Object[]{softwareVersion, svnRevision, buildTimeStamp});
+        //fetch remote version
+        //todo dwo/rest/public/status/getHeartBeat
+        //force reload if not current
+        //todo
         /**
          * Testing stuff
          */
-
         //    testRestyMapConverter();
         parseUrlParam();
         if (!testIsOn) {
@@ -212,7 +218,7 @@ public class BootPanelController {
                             //we should also clear user, view and presenter states, but that is never bug free.
                             //however a reload works too.
                             setSession(false);
-                            UrlBuilder url = Window.Location.createUrlBuilder();              
+                            UrlBuilder url = Window.Location.createUrlBuilder();
                             url.setPath("/dwo/tablet/DWOplayer.jsp"); // switch to  /leerling
                             url.removeParameter("a");
                             url.removeParameter("view");
@@ -240,7 +246,7 @@ public class BootPanelController {
                         || dwoGlobalVars.getActiveSchoolRoleAndClass().getRole() == null
                         || !dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name()))) {
                     LOG.log(Level.INFO, "Showing account view, because not a teacher.");
-                    
+
                     presenterFactory.getAccountPresenter().init();
                     viewFactory.getMainView().showAccountView();
                 } else {
@@ -252,10 +258,10 @@ public class BootPanelController {
                         case LOGIN:
                             viewFactory.getMainView().showLoginView();
                             presenterFactory.getLoginPresenter().init();
-                            if(authToken != null) {
-                              String token = authToken;
-                              authToken = null;
-                              presenterFactory.getLoginPresenter().tokenLogin(token);
+                            if (authToken != null) {
+                                String token = authToken;
+                                authToken = null;
+                                presenterFactory.getLoginPresenter().tokenLogin(token);
                             }
                             break;
                         case WELCOME:
@@ -296,13 +302,13 @@ public class BootPanelController {
                             presenterFactory.getSelectedResultsPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultState());
                             break;
                         case SELECTEDRESULTSRETURN:
-                          viewFactory.getMainView().showSelectedResultsView();
-                          presenterFactory.getSelectedResultsPresenter().reinit(switchViewEvent.getResultTree(), switchViewEvent.getResultState());
-                          break;
-                       case RESULTSSTUDENT:
+                            viewFactory.getMainView().showSelectedResultsView();
+                            presenterFactory.getSelectedResultsPresenter().reinit(switchViewEvent.getResultTree(), switchViewEvent.getResultState());
+                            break;
+                        case RESULTSSTUDENT:
                             //eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                             viewFactory.getMainView().showStudentScoResultView();
-                            presenterFactory.getStudentScoResultPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultStudentScoContext(), switchViewEvent.getResultState(), switchViewEvent.getUserState());                            
+                            presenterFactory.getStudentScoResultPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultStudentScoContext(), switchViewEvent.getResultState(), switchViewEvent.getUserState());
                             break;
                         case SCHOOLCLASSES:
                             viewFactory.getMainView().showSchoolclassesView();
@@ -354,17 +360,17 @@ public class BootPanelController {
         LOG.log(Level.FINE, "Initiated Main presenter.");
         SwitchViewEvent ev = new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN);
         eventBus.fireEvent(ev);
-        
+
         bootFromAuthToken();
     }
 
-  private void bootFromAuthToken() {
-    if(authToken != null) {
-        LoginPresenter presenter = presenterFactory.getLoginPresenter();
-        //presenter.loginFromAuthToken(authToken);
+    private void bootFromAuthToken() {
+        if (authToken != null) {
+            LoginPresenter presenter = presenterFactory.getLoginPresenter();
+            //presenter.loginFromAuthToken(authToken);
+        }
+
     }
-    
-  }
 
     /**
      * @return the session

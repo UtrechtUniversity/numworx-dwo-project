@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.lms.gwtclient.gwt;
+package fi.dwo.dwojapplet;
 
 public interface BUILD {
 	String buildNumber = "${buildNumber}";
