@@ -140,19 +140,19 @@ public class GuiCreatorTeacher extends GuiCreator {
         return csb;
     }
 
-    /**
-     * Returns a panel with results for users of the classes of the teacher. The
-     * teacher can analyse these results.
-     *
-     * @return A panel with results for users of the classes of the teacher.
-     */
-    @Override
-    public CenterSubPanel getResultPanel() {
-        dwo.setWait();
-        CenterSubPanel csp = new ResultsModulePanel(dwo.getResultsModule());
-        dwo.setReady();
-        return csp;
-    }
+//    /**
+//     * Returns a panel with results for users of the classes of the teacher. The
+//     * teacher can analyse these results.
+//     *
+//     * @return A panel with results for users of the classes of the teacher.
+//     */
+//    @Override
+//    public CenterSubPanel getResultPanel() {
+//        dwo.setWait();
+//        CenterSubPanel csp = new ResultsModulePanel(dwo.getResultsModule());
+//        dwo.setReady();
+//        return csp;
+//    }
 
     /**
      * Returns a panel with results for users of the classes of the teacher. The

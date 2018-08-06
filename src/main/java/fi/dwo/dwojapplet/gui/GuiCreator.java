@@ -745,15 +745,15 @@ public class GuiCreator {
 //        return dwo.deleteClass(c);
 //    }
 
-    /**
-     * Returns a panel with results for users of the classes of the teacher. The
-     * teacher can analyse these results.
-     *
-     * @return A panel with results for users of the classes of the teacher.
-     */
-    public CenterSubPanel getResultPanel() {
-        return null;
-    }
+//    /** NOTUSED
+//     * Returns a panel with results for users of the classes of the teacher. The
+//     * teacher can analyse these results.
+//     *
+//     * @return A panel with results for users of the classes of the teacher.
+//     */
+//    public CenterSubPanel getResultPanel() {
+//        return null;
+//    }
 
     /**
      * Returns a panel with results for users of the classes of the teacher. The

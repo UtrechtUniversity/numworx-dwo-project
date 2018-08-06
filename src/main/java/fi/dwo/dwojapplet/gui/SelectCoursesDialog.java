@@ -1225,8 +1225,6 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         }
         final SelectCoursesDialog scd = new SelectCoursesDialog(parent, title, true, allCourses, selectedCourses, cnt);
         scd.sc = sc;
-        final int dwoProfile = allCourses[0].getDwoProfile();
-
         Promise<List> resultCount = rc;
         ast(scd, resultCount);
         scd.show();
