@@ -13,7 +13,7 @@
     <head>
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=1024">
-        <title>DWO</title>
+        <title>Numworx Hoger Onderwijs</title>
 		<style type="text/css">
             body, html
             {
