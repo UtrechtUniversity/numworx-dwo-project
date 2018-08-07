@@ -408,11 +408,11 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
       dock.setWidgetHidden(beheer, !(visible&&icon));
     }
 	
-    @UiHandler("bibliotheek") void onModules(ClickEvent e) {
-    	if(Actions.isAvailable())
-    		Actions.showMainNav.execute();
-    	showIcon(false);
-    }
+//    @UiHandler("bibliotheek") void onModules(ClickEvent e) {
+//    	if(Actions.isAvailable())
+//    		Actions.showMainNav.execute();
+//    	showIcon(false);
+//    }
 
     @Override
     public void showIcon(boolean show) {
