@@ -51,7 +51,7 @@ public class BootPanelController {
     private int profile;
     private int stage;
     private boolean hideGwtGui;
-    private boolean loadFresh = false;
+    private boolean test = false;
     private String authToken;
     private boolean session = false;
 
@@ -69,7 +69,7 @@ public class BootPanelController {
     @Inject
     BootPanelController(EventBus eventBus) {
         this.eventBus = eventBus;
-        loadFresh = false;
+        test = false;
         hideGwtGui = false;
         profile = 77;
         stage = 1;
@@ -97,9 +97,9 @@ public class BootPanelController {
         } catch (Exception e) {
             profile = 77;
         }
-        value = Window.Location.getParameter("forceNewVersion");
+        value = Window.Location.getParameter("test");
         if (value != null && value.matches("on")) {
-            loadFresh = true;
+            test = true;
         }
         value = Window.Location.getParameter("stage");
         if (value != null && value.matches("on")) {
@@ -131,6 +131,15 @@ public class BootPanelController {
       $wnd.location.reload(true);
     }-*/;
 
+    /**
+     * Sets a tooltip on the logo for the current version.
+     */
+    public static native void setLogoVersionTip(String version) /*-{
+            $wnd.document.getElementById('logo').title=version;
+            $wnd.document.getElementById('loginLinks').title=version;
+    }-*/;
+    
+    
     public void go(RootLayoutPanel rootPanel) {
         //todo dwo/rest/public/status/getHeartBeat
         //force reload if not current
@@ -146,7 +155,9 @@ public class BootPanelController {
         String svnRevision = BUILD.buildNumber;
         String buildTimeStamp = BUILD.timeStamp;
         LOG.log(Level.INFO, "Software version " + softwareVersion + " subversion revision " + svnRevision + " build timestamp " + buildTimeStamp + ".");
-        LOG.log(Level.INFO, "forceANewAersion = " + loadFresh + ".");
+        LOG.log(Level.INFO, "forceNewAersion = " + test + ".");
+        setLogoVersionTip(softwareVersion);
+        
         final int flag = 1;
         //fetch remote version
         PublicStatusManager statusManager = new PublicStatusManager();
@@ -250,6 +261,9 @@ public class BootPanelController {
                             break;
                         case LOGOUT:
                             dwoGlobalVars.clearCurrentUser();
+                            if(test){
+                                Window.Location.reload();
+                            }else{
                             //we should also clear user, view and presenter states, but that is never bug free.
                             //however a reload works too.
                             setSession(false);
@@ -258,6 +272,7 @@ public class BootPanelController {
                             url.removeParameter("a");
                             url.removeParameter("view");
                             Window.Location.replace(url.buildString());
+                            }
                             break;
                         default:
                             LOG.log(Level.SEVERE, "Login handling failed in app controller.");
