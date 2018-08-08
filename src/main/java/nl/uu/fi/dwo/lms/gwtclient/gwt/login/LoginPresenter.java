@@ -2,16 +2,14 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.login;
 
 import com.google.web.bindery.event.shared.EventBus;
 
-import fi.dwo.gwt.lib.rest.ui.DialogEvent;
-import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import java.util.Date;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedDialogWithConfirmDeferred;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
@@ -20,7 +18,6 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
-import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -133,7 +130,7 @@ public class LoginPresenter {
                 public Promise<Boolean> call(Promise<DwoGlobalVars.DwoGlobalVarsState> resolved) throws Exception {
                     if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
                         if (!dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
-                            eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
+                            eventBus.fireEvent(new MessageDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
                         };
                         boolean switchR = true;
                         LOG.log(Level.INFO, "login succeeded for user:" + dwoGlobalVars.getCurrentUser().getUniqueDisplayName());
@@ -195,7 +192,7 @@ public class LoginPresenter {
         dwoGlobalVars.initUserWithToken(token).then(resolved -> {
                   if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
                       if (!dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
-                          eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
+                          eventBus.fireEvent(new MessageDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
                       };
                       boolean switchR = true;
                       LOG.log(Level.INFO, "login succeeded for user:" + dwoGlobalVars.getCurrentUser().getUniqueDisplayName());

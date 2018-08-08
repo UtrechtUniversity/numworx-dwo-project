@@ -129,7 +129,7 @@ public class AccountPresenter {
             });
         } else {
             //jump to app.dwo.nl/leerling
-            eventBus.fireEvent(new DialogEvent(new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "Internal error")));
+            eventBus.fireEvent(new MessageDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "Internal error")));
             //LOG.log(Level.SEVERE, "Switching to other roles than teacher currently not supported.");
         }
     }
@@ -155,10 +155,10 @@ public class AccountPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    eventBus.fireEvent(new MessageDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    eventBus.fireEvent(new MessageDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }
@@ -178,10 +178,10 @@ public class AccountPresenter {
                         Throwable fail = resolved.getFailure();
                         if (fail instanceof Dwo2Exception) {
                             LOG.log(Level.SEVERE, fail.getMessage());
-                            eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                            eventBus.fireEvent(new MessageDialogWithOKEvent((Dwo2Exception) fail));
                         } else {
                             LOG.log(Level.SEVERE, fail.getMessage());
-                            eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                            eventBus.fireEvent(new MessageDialogWithOKEvent(fail.getMessage()));
                             //throw directly
                         }
                     }
@@ -243,10 +243,10 @@ public class AccountPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    eventBus.fireEvent(new MessageDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    eventBus.fireEvent(new MessageDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }

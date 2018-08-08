@@ -134,10 +134,10 @@ public class AddStudentToSchoolclassPresenter {
 //                Throwable fail = resolved.getFailure();
 //                if (fail instanceof Dwo2Exception) {
 //                    LOG.log(Level.SEVERE, fail.getMessage());
-//                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+//                    eventBus.fireEvent(new MessageDialogWithOKEvent((Dwo2Exception) fail));
 //                } else {
 //                    LOG.log(Level.SEVERE, fail.getMessage());
-//                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+//                    eventBus.fireEvent(new MessageDialogWithOKEvent(fail.getMessage()));
 //                    //throw directly
 //                }
 //            }

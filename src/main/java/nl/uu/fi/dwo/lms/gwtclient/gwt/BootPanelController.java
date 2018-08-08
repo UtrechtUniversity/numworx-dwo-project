@@ -281,7 +281,7 @@ public class BootPanelController {
                     LOG.log(Level.INFO, "Login succeeded. Showing account view for teacher.");
                     eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
                     DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
-                    //eventBus.fireEvent(new DialogEvent(DwoLocalesForGWT.instance.GUI_SwitchTeacher()));
+                    //eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_SwitchTeacher()));
                     //viewFactory.getMainView().showPostLoginWidgets();
                 }
             }

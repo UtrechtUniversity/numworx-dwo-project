@@ -12,7 +12,6 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherScormValuesManager;
 import fi.dwo.gwt.lib.rest.CallManagers.StudentScoDataManager;
 import fi.dwo.gwt.lib.rest.ui.ConfirmDialogEvent;
 import fi.dwo.gwt.lib.rest.ui.ConfirmDialogPromise;
-import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,6 +32,7 @@ import org.osgi.util.promise.Success;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.old.ScoResultsPresenter.StudentItem;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
@@ -87,10 +87,10 @@ public class ScoResultsPresenter {
             Throwable fail = resolved.getFailure();
             if (fail instanceof Dwo2Exception) {
                 LOG.log(Level.SEVERE, fail.getMessage());
-                eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                eventBus.fireEvent(new MessageDialogWithOKEvent((Dwo2Exception) fail));
             } else {
                 LOG.log(Level.SEVERE, fail.getMessage());
-                eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                eventBus.fireEvent(new MessageDialogWithOKEvent(fail.getMessage()));
                 //throw directly
             }
         }
@@ -485,7 +485,7 @@ public class ScoResultsPresenter {
                         @Override
                         public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                             eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
-                            eventBus.fireEvent(new DialogEvent(("Done.")));
+                            eventBus.fireEvent(new MessageDialogWithOKEvent(("Done.")));
                             return null;
                         }
                     },
@@ -495,10 +495,10 @@ public class ScoResultsPresenter {
                             Throwable fail = resolved.getFailure();
                             if (fail instanceof Dwo2Exception) {
                                 LOG.log(Level.SEVERE, fail.getMessage());
-                                eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                                eventBus.fireEvent(new MessageDialogWithOKEvent((Dwo2Exception) fail));
                             } else {
                                 LOG.log(Level.SEVERE, fail.getMessage());
-                                eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                                eventBus.fireEvent(new MessageDialogWithOKEvent(fail.getMessage()));
                                 //throw directly
                             }
                         }
@@ -515,10 +515,10 @@ public class ScoResultsPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent((Dwo2Exception) fail));
+                    eventBus.fireEvent(new MessageDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new DialogEvent(fail.getMessage()));
+                    eventBus.fireEvent(new MessageDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }
