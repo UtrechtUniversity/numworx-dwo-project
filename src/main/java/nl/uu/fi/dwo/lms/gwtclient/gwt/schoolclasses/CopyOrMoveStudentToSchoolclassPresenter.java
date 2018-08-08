@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +18,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -248,12 +248,12 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
                     LOG.log(Level.INFO, "Copying student " + idList[next] + ".");
                     LOG.log(Level.INFO, "Completed: " + 100.0 * next / idList.length + "%.");
                     double r = (100.0 * next / idList.length);
-                    ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Update, (int) r, " copying ", null);
+                    ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Update, (int) r, DwoLocalesForGWT.instance.NUM_DLG_Class_CopyingStudents(), null);
                     eventBus.fireEvent(e);
                     CopyStudent(idList, next, from, to);
                 } else {
                     //hide progressbar.
-                    ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Complete, (int) 100, " done ", null);
+                    ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Complete, (int) 100, DwoLocalesForGWT.instance.NUM_DLG_Class_CopyingStudentsCompleted(), null);
                     eventBus.fireEvent(e);
                     refreshViewData();
                 }
@@ -279,16 +279,16 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
 
     @JsMethod
     public void CopyStudentsToClassA(String idList[]) {
-        ProgressDialogWithAbortDeferred deferred = new ProgressDialogWithAbortDeferred("promise text");
-        ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, "starting copy ", deferred);
+        ProgressDialogWithAbortDeferred deferred = new ProgressDialogWithAbortDeferred(DwoLocalesForGWT.instance.NUM_DLG_Class_CopyingStudentsTitle());
+        ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, DwoLocalesForGWT.instance.NUM_DLG_Class_StartingCopyStudents(), deferred);
         eventBus.fireEvent(e);
         CopyStudent(idList, 0, schoolClassB, schoolClassA);
     }
 
     @JsMethod
     public void CopyStudentsToClassB(String idList[]) {
-        ProgressDialogWithAbortDeferred deferred = new ProgressDialogWithAbortDeferred("promise text");
-        ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, "starting copy ", deferred);
+        ProgressDialogWithAbortDeferred deferred = new ProgressDialogWithAbortDeferred(DwoLocalesForGWT.instance.NUM_DLG_Class_CopyingStudentsTitle());
+        ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, DwoLocalesForGWT.instance.NUM_DLG_Class_StartingCopyStudents(), deferred);
         eventBus.fireEvent(e);
         CopyStudent(idList, 0, schoolClassA, schoolClassB);
     }
@@ -296,8 +296,8 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
     @JsMethod
     public void MoveStudentsToClassA(String idList[]) {
         //Add to Class A
-        ProgressDialogWithAbortDeferred deferred = new ProgressDialogWithAbortDeferred("promise text");
-        ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, "starting copy ", deferred);
+        ProgressDialogWithAbortDeferred deferred = new ProgressDialogWithAbortDeferred(DwoLocalesForGWT.instance.NUM_DLG_Class_MovingStudentsTitle());
+        ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, DwoLocalesForGWT.instance.NUM_DLG_Class_StartingMovingStudents(), deferred);
         eventBus.fireEvent(e);
         MoveStudent(idList, 0, schoolClassB, schoolClassA);
 
@@ -306,8 +306,8 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
     @JsMethod
     public void MoveStudentsToClassB(String idList[]) {
         //Add to Class B
-        ProgressDialogWithAbortDeferred deferred = new ProgressDialogWithAbortDeferred("promise text");
-        ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, "starting copy ", deferred);
+        ProgressDialogWithAbortDeferred deferred = new ProgressDialogWithAbortDeferred(DwoLocalesForGWT.instance.NUM_DLG_Class_MovingStudentsTitle());
+        ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, DwoLocalesForGWT.instance.NUM_DLG_Class_StartingMovingStudents(), deferred);
         eventBus.fireEvent(e);
         MoveStudent(idList, 0, schoolClassA, schoolClassB);
     }
@@ -330,15 +330,15 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                 if (next < idList.length) {
-                    LOG.log(Level.INFO, "Copying student " + idList[next] + ".");
+                    LOG.log(Level.INFO, "Moving student " + idList[next] + ".");
                     LOG.log(Level.INFO, "Completed: " + 100.0 * next / idList.length + "%.");
                     double r = (100.0 * next / idList.length);
-                    ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Update, (int) r, " copying ", null);
+                    ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Update, (int) r, DwoLocalesForGWT.instance.NUM_DLG_Class_MovingStudents(), null);
                     eventBus.fireEvent(e);
                     MoveStudent(idList, next, from, to);
                 } else {
                     //hide progressbar.
-                    ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Complete, (int) 100, " done ", null);
+                    ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Complete, (int) 100, DwoLocalesForGWT.instance.NUM_DLG_Class_MovingStudentsCompleted(), null);
                     eventBus.fireEvent(e);
                     refreshViewData();
                 }

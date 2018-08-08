@@ -1,8 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.ui;
 
 import com.google.web.bindery.event.shared.EventBus;
-import fi.dwo.gwt.lib.rest.ui.DialogEvent;
-import fi.dwo.gwt.lib.rest.ui.DialogEventHandler;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
