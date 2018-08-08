@@ -4,14 +4,20 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
+import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -20,10 +26,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.DomMappedResultsPerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.entities.RestClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -143,5 +153,40 @@ public class SecuredTeacherResultsManagerIT {
         assertEquals(2, mapResult.getStudentScoContexts().size());
         assertEquals(true, mapResult.getStudentScoContexts().containsKey(new PersistenceId("MYSQL;PersistentStudentScoContext;00000000000000000001")));
         assertEquals(true, mapResult.getStudentScoContexts().containsKey(new PersistenceId("MYSQL;PersistentStudentScoContext;00000000000000000002")));
+    }
+    
+    
+    
+    @Test
+    public void testClearStudentResults() throws Exception {
+      
+      PersistentClassCourse scc = ClassCourseManager.findEntity(5L);
+      scc.setViewState(ViewState.invisible);
+      ClassCourseManager.edit(scc);
+      
+      SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+      SecuredTeacherResultsManager instance = new SecuredTeacherResultsManager();
+      
+      RestClearStudentDataForScoAndClass rest = new RestClearStudentDataForScoAndClass();
+      DomContext restContext = new DomContext();
+      DomHasRole domHasRole;
+      PersistentUser pUser = UserManager.findByUserName("user07");
+      PersistentSchool pSchool = SchoolManager.findBySchoolLogin("school01");//id =3
+      PersistentHasRole pHasRole = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, pSchool, RoleType.TEACHER);
+      domHasRole = pHasRole.buildDomHasRole();
+      restContext.setDomHasRole(domHasRole);      
+      rest.setRestContext(restContext);
+      
+      DomClearStudentDataForScoAndClass dom = new DomClearStudentDataForScoAndClass();
+      DomDwoProfile domProfile = DwoProfileManager.findEntity(1L).buildDomDwoProfile();
+      dom.setDomProfile(domProfile);
+      DomSchoolClass domSchoolClass = SchoolClassManager.findEntity(2L).buildDomSchoolClass();
+      dom.setDomSchoolClass(domSchoolClass);
+      DomScoContext domScoContext = ScoContextManager.findEntity(1L).buildDomScoContext();
+      dom.setDomScoContext(domScoContext);
+      rest.setClearStudentDataForScoAndClass(dom);
+      Boolean result = instance.clearStudentResults(sc, rest);
+      
+      assertEquals("schoolclasscourse not wiped", Boolean.TRUE, result);
     }
 }

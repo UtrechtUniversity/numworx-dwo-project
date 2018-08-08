@@ -25,6 +25,7 @@ import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SCO_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
@@ -47,8 +48,10 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
+import javax.persistence.PersistenceException;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -69,6 +72,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -388,6 +392,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     public Boolean clearStudentResults(@Context SecurityContext sc, RestClearStudentDataForScoAndClass rest) throws Dwo2RestException {
         //clear results, FIXME classcourse wordt niet gedeleted, issue in DWOJCLIENT (Wim)
         try {
+            @SuppressWarnings("deprecation")
             CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SCO_SG_U build = CascadingPersistenceBuilder.user(sc.getUserPrincipal().getName())
                     .addHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.TEACHER)
                     .addSchoolClass(rest.getClearStudentDataForScoAndClass().getDomSchoolClass())
@@ -395,6 +400,39 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                     .addScoContext(rest.getClearStudentDataForScoAndClass().getDomScoContext());
             boolean result = build.removeStudentScoWithClassCourse();
             //TODO clear all excess classcourses.
+            
+            PersistentClassCourse cc = build.getClassCourse();
+            if(cc.getViewState() == ViewState.invisible) {
+              // check for studentscocontexts in sco_of_course X student_of_class
+              PersistentCourse pc = build.getCourse();
+              List<PersistentScoContext> scos = ScoContextManager.findEntities(pc);
+              List<PersistentStudentOfClass> students = StudentOfClassManager.findEntities(build.getSchoolClass());
+              if( ! students.isEmpty() && scos.size() > 0 ) { // kan >1 zijn, als de bovenstaande clear goed z'n best doet.
+                long sgId = students.get(0).getPersistentStudentOfClassPK().getSchoolGroupID().longValue();
+                Set<Long> users = students.stream().map(s -> s.getPersistentStudentOfClassPK().getUserID()).collect(Collectors.toSet());
+                for ( PersistentScoContext scoContext: scos) {
+// Bulk: all students results of a school
+                  List<PersistentStudentScoContext> ss = StudentScoContextManager.findEntities(scoContext, sgId);
+                  boolean match = ss.stream().anyMatch(pss -> 
+                      {
+                        Long uid = pss.getPersistentHasRolePK().getUserID();
+                        return users.contains(uid);
+                      }
+                      
+                      );
+                  
+                  if (match) return false;
+                }
+                try {
+                  ClassCourseManager.destroy(cc.getClassCourseID());
+                } catch (PersistenceException e) {
+                  LOG.log(Level.WARNING, "destroy classcourse " + cc.getClassCourseID(), e);
+                  return false;
+                }
+                return true;
+              }
+            }
+            
         } catch (Dwo2Exception e) {
             throw new Dwo2RestException(e);
         }
