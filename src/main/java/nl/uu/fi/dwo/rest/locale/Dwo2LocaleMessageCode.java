@@ -40,6 +40,9 @@ NUM_BTN_MoveRight,
  
 
 //dialogs
+NUM_DLG_User_Progress,
+NUM_DLG_User_Alert,
+NUM_DLG_User_Message,
 NUM_DLG_User_ConfirmLogout,
 NUM_DLG_User_NoTeacher,
 NUM_DLG_User_ConfirmSchoolLoginDelete,
