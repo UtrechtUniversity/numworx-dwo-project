@@ -52,12 +52,13 @@ public class DomResultTree {
         nodeList.add(score);
     }
 
+    public DomResultTree(DomMappedResultsPerTeacher resultData) {
+      LOG.log(Level.INFO, "Initializing a DomResultTree.");
+      buildResultTree(resultData);
+    }
+    
     public DomResultTree(DomResultsPerTeacher resultData) {
-
-        //restData = resultData;
-        LOG.log(Level.INFO, "Initializing a DomResultTree.");
-        buildResultTree(new DomMappedResultsPerTeacher(resultData));
-        //reCalculateResults();
+      this(new DomMappedResultsPerTeacher(resultData));
     }
 
     /**
@@ -150,7 +151,9 @@ public class DomResultTree {
                 schoolClasses.get(cc.getClassId()).getChildren().put(cc.getCourseId(), resultCourse); //add course to parent
                 resultCourse.setParent(schoolClasses.get(cc.getClassId())); //add parent to course
                 //attach sco-type children to it
-                for (DomScoContext sco : scoParentIndex.get(resultCourse.getCourse().getId())) {
+                List<DomScoContext> scoList = scoParentIndex.get(resultCourse.getCourse().getId());
+                if(scoList != null)
+                for (DomScoContext sco : scoList) {
                     DomResultScoContext resultSco = new DomResultScoContext(sco);
                     resultCourse.getChildren().put(sco.getId(), resultSco);//add sco to parent
                     resultSco.setParent(resultCourse);//set parent in sco
