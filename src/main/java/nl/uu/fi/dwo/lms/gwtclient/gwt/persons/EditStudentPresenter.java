@@ -189,10 +189,10 @@ public class EditStudentPresenter {
                 }
                 return Promises.resolved(null);
             }).then((resolved) -> {
-                if (resolved.getValue() != null){
-                DomSingleSchoolStudent student = (DomSingleSchoolStudent) resolved.getValue();
-                fullUser = student;
-                view.setSingleSchoolStudent(student);
+                if (resolved.getValue() != null) {
+                    DomSingleSchoolStudent student = (DomSingleSchoolStudent) resolved.getValue();
+                    fullUser = student;
+                    view.setSingleSchoolStudent(student);
                 }
                 return Promises.resolved(null);
             });
@@ -302,13 +302,15 @@ public class EditStudentPresenter {
         }
         if (password == null) {
             changedUser.setPassword(fullUser.getPassword());
-        } else if (!SimpleValidUserFieldsChecker.isValidPassword(password)) {
+        } else if (SimpleValidUserFieldsChecker.isValidPassword(password)) {
             changedUser.setPassword(MD5.md5(password));
         } else {
             //invalid password format
             eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven)));
             return;
         }
+
+        changedUser.setId(fullUser.getId());
 
         Promise<Boolean> p = Promises.resolved(true); //empty promise
 
@@ -351,7 +353,22 @@ public class EditStudentPresenter {
                 //calculate tree and call plotting
                 LOG.log(Level.INFO, "DomUser returned.");
                 view.clear();
-                view.setUser(changedUser);
+                if (changedUser.getGivenName() != null) {
+                    fullUser.setGivenName(changedUser.getGivenName());
+                }
+                if (changedUser.getInsertion() != null) {
+                    fullUser.setInsertion(changedUser.getInsertion());
+                }
+                if (changedUser.getFamilyName() != null) {
+                    fullUser.setFamilyName(changedUser.getFamilyName());
+                }
+                if (changedUser.getPassword() != null) {
+                    fullUser.setPassword(changedUser.getPassword());
+                }
+                if (changedUser.getEmail() != null) {
+                    fullUser.setEmail(changedUser.getEmail());
+                }
+                initView(fullUser);
                 eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_User_ConfirmChangeCommited()));
                 return null;
             }
