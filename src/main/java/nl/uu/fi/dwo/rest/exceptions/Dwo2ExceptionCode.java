@@ -47,6 +47,7 @@ public enum Dwo2ExceptionCode {
     Rest_ObjectAlreadyExists,
     Rest_ScoNameExists, // add sco contraint failed. rollback occurred, possible cause duplicate sconame
     Rest_CourseNameExists,
+    Rest_CanNotAddStudentToClass,
     // REST LoginContext errors
     Rest_LoginContext_exists,
     Rest_No_LoginContext_exists,
@@ -66,7 +67,6 @@ public enum Dwo2ExceptionCode {
     Rest_Submitted_SchoolClass_exists,//A school
     Rest_Registration_Password_Invalid, 
     Rest_Active_SchoolClass_Not_Set, //schoolclassid in hasRole is null!
-    Rest_CanNotAddStudentToClass, //schoolclassid in hasRole is null!
     //GUI
     GUI_NoUserIsSignedIn,
     GUI_AnIncorrectPasswordWasGiven,
