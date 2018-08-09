@@ -261,12 +261,13 @@ public class BootPanelController {
                             break;
                         case LOGOUT:
                             dwoGlobalVars.clearCurrentUser();
+                            setSession(false);
                             if(test){
                                 Window.Location.reload();
                             }else{
                             //we should also clear user, view and presenter states, but that is never bug free.
                             //however a reload works too.
-                            setSession(false);
+                            
                             UrlBuilder url = Window.Location.createUrlBuilder();
                             url.setPath("/dwo/tablet/DWOplayer.jsp"); // switch to  /leerling
                             url.removeParameter("a");
