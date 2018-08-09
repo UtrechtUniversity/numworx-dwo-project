@@ -65,6 +65,7 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentApplet;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.BUILD;
@@ -89,6 +90,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicUserManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherResultsManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.DwoLocale;
@@ -96,7 +98,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
@@ -1266,7 +1270,19 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      */
     public ResultsModule getResultsModule(SchoolClass schoolClass) {
         if (resultsModule == null) {
-            resultsModule = new ResultsModule(new Course[0], (Teacher) DwoHelper.getCurrentFacadeUser(), this);
+ //           resultsModule = new ResultsModule(new Course[0], (Teacher) DwoHelper.getCurrentFacadeUser(), this);
+         try {
+          DomResultsPerTeacher results = SecuredTeacherResultsManager.getTeachersResults(getDwoProfile());
+            DomSchoolClassId sc = new DomSchoolClassId(PersistentSchoolClass.buildPersistenceId(Long.valueOf(schoolClass.getID())));
+            return new ResultsModule(results, this, sc);
+        } catch (Dwo2Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        } catch (PersistenceException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+
         }
 
         resultsModule.reset();

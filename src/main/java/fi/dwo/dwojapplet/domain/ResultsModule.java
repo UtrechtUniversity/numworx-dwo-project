@@ -3,13 +3,36 @@
 package fi.dwo.dwojapplet.domain;
 
 import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.gui.ClassTeacherModules;
 import fi.dwo.dwojapplet.gui.ScoDialog;
 import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.MapperIF;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.UserResultListMapper;
+import nl.uu.fi.dwo.rest.dom.DomMappedResultsPerTeacher;
+import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
+import nl.uu.fi.dwo.rest.dom.DomResultTree;
+import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Vector;
@@ -30,13 +53,13 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
 
     private LessonGroup currentlyZoomedLesson;
 
-    private UserGroup currentlyZoomedUser;
+    private SchoolClass currentlyZoomedUser;
 
     private UserGroup currentlyOrderedUser;
 
     private LessonGroup currentlyOrderedLesson;
 
-    private Vector userResultList;
+    private Vector<UserResultList> userResultList;
 
     private Course[] courses;
 
@@ -44,6 +67,107 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
 
     protected DWO dwo;
 
+    private DomResultsPerTeacher domresults;
+    private DomResultTree resulttree;
+    private DomResultPlotMatrix matrix;
+
+    private DomMappedResultsPerTeacher mappedresults;
+
+    ResultsModule(DomResultsPerTeacher domresults, DWO dwo)
+    {
+      this.dwo = dwo;
+      this.domresults = domresults;
+      this.mappedresults = new DomMappedResultsPerTeacher(domresults);
+      this.resulttree = new DomResultTree(mappedresults);
+      reset();
+    }
+    public ResultsModule(DomResultsPerTeacher domresults, DWO dwo, DomSchoolClassId domclass) throws Dwo2Exception, PersistenceException
+    {
+      this(domresults, dwo);
+      int id = MySQLPersistenceId.getNativeId(domclass).intValue();
+      currentlyZoomedUser = PersistenceFacade.instance().get(id, SchoolClass.class);      
+      calculateCoursesByStudents(domclass);
+    }
+    private void calculateCoursesByStudents(DomSchoolClassId domclass)
+        throws Dwo2Exception, PersistenceException {
+      DomResultSchoolClass<DomResultCourseInClass> resultclass = resulttree.getResultTree().getChildren().get(domclass.getId());
+      matrix = ResultTreeCalculator.GetScoreOfLeafCoursesByStudentsInClass(resulttree, resultclass);
+      calculateUserResultList();
+    }
+    private void calculateUserResultList() throws Dwo2Exception, PersistenceException {
+      userResultList = new Vector<>();
+      int vSize = matrix.getvSize();
+      int hSize = matrix.gethSize();
+      if(hSize == 0) 
+        return;
+      for(int i = 0; i < vSize; i++) {
+          UserResultList list = new UserResultList();
+          list.setResultsModule(this);
+          UserGroup userGroup = getUser(matrix.getvIndex(i));
+          ResultScore[] scores = new ResultScore[hSize];
+          list.setResultScore(scores);
+          for(int j = 0; j < hSize; j++) {
+            ResultScore scoresj = new ResultScore();
+            scores[j] = scoresj;
+            DomResultScore mark = matrix.getMark(i, j);
+            if (mark != null) 
+            {
+              scoresj.setScore(mark.getScore().floatValue());
+            }
+            scoresj.setUserResultList(list);
+            LessonGroup lessonGroup = getCourse(matrix.gethIndex(j));
+            scoresj.setLessonGroup(lessonGroup);
+            scoresj.setUserGroup(userGroup);
+          }
+          userResultList.add(list);
+      }
+    }
+    
+    
+    private User getUser(DomResultStudent student) throws Dwo2Exception, PersistenceException {
+      DomStudent s = student.getStudent();
+      int uid = MySQLPersistenceId.getNativeId(s).intValue();
+      return PersistenceFacade.instance().get(uid, User.class);
+    }
+    
+    private UserGroup getUser(DomResultSchoolClass sc) throws Dwo2Exception, PersistenceException {
+      DomSchoolClass s = sc.getSchoolClass();
+      int uid = MySQLPersistenceId.getNativeId(s).intValue();
+      return PersistenceFacade.instance().get(uid, SchoolClass.class);
+   }
+    
+    private UserGroup getUser(DomResultScore r) throws Dwo2Exception, PersistenceException {
+      if ( r instanceof DomResultStudent) {
+        return getUser( (DomResultStudent) r);
+      }
+      if( r instanceof DomResultSchoolClass) {
+        return getUser( (DomResultSchoolClass) r);
+      }
+      
+      String id = r.getId();
+      DomStudent student = mappedresults.getStudents().get(new PersistenceId(id));
+      int uid = MySQLPersistenceId.getNativeId(student).intValue();
+      return PersistenceFacade.instance().get(uid, User.class);
+      //return DwoHelper.getCurrentFacadeUser();
+    }
+
+    private LessonGroup getCourse(DomResultScore r) throws Dwo2Exception, PersistenceException {
+      String id = r.getId();
+      PersistenceId pid = new PersistenceId(id);
+      if (pid.getType() == PersistenceClassType.PersistentCourse)
+      {
+        DomCourse course = mappedresults.getCourses().get(pid);
+        int cid = MySQLPersistenceId.getNativeId(course).intValue();
+        return PersistenceFacade.instance().get(cid, Course.class);
+      } 
+      if (pid.getType() == PersistenceClassType.PersistentScoContext)
+      {
+        DomScoContext sco = mappedresults.getScoContexts().get(pid);
+        int sid = MySQLPersistenceId.getNativeId(sco).intValue();
+        return PersistenceFacade.instance().get(sid, Sco.class);
+      }
+      return null;
+    }
     /**
      * Creates a new ResultsModule Object.
      *
@@ -124,13 +248,45 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      *
      * @param ug The usergroup to zoom in.
      * @return The current list of results.
+     * @throws PersistenceException 
+     * @throws Dwo2Exception 
      *
      */
     //@Override
-    public Vector zoomIn(UserGroup ug) {
+    public Vector zoomIn(UserGroup ug)  {
         orderedLessonIndex = -1;
-        currentlyZoomedUser = ug;
+        currentlyZoomedUser = (SchoolClass) ug;
         currentlyOrderedUser = null;
+        
+        if (currentlyZoomedLesson == null) {
+          PersistenceId cid = PersistentSchoolClass.buildPersistenceId(Long.valueOf(ug.getID()));
+          DomSchoolClass domclass = mappedresults.getSchoolClasses().get(cid);
+          try {
+            calculateCoursesByStudents(domclass);
+          } catch (Dwo2Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          } catch (PersistenceException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+        } else {
+          PersistenceId sid = PersistentSchoolClass.buildPersistenceId(Long.valueOf(currentlyZoomedUser.getID()));
+          PersistenceId cid = PersistentCourse.buildPersistenceId(Long.valueOf(currentlyZoomedLesson.getID()));
+          DomResultSchoolClass<DomResultCourseInClass> resultClass = resulttree.getResultTree().getChildren().get(sid);
+          DomResultCourseInClass resultCourse = resultClass.getChildren().get(cid);
+          matrix = ResultTreeCalculator.GetScoreOfActivitiesOfCourseByStudentsInClass(resulttree, resultCourse, resultClass);
+          try {
+            calculateUserResultList();
+          } catch (Dwo2Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          } catch (PersistenceException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+        }
+        
         return getResults();
     }
 
@@ -145,6 +301,27 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
         orderedLessonIndex = -1;
         currentlyZoomedUser = null;
         currentlyOrderedUser = null;
+        
+        if(currentlyZoomedLesson == null) {
+          matrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(resulttree);
+        } else {
+          PersistenceId cid = PersistentCourse.buildPersistenceId(Long.valueOf(currentlyZoomedLesson.getID()));
+          DomCourse aCourse = new DomCourse();
+          aCourse.setId(cid);
+          DomResultCourseInClass resultCourse = new DomResultCourseInClass(aCourse, ViewState.teachers);          
+          matrix = ResultTreeCalculator.GetScoreOfTeacherClassesByActivitiesOfCourse(resulttree, resultCourse);
+        }
+        try {
+          calculateUserResultList();
+        } catch (Dwo2Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        } catch (PersistenceException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+        
+        
         return getResults();
     }
 
@@ -160,6 +337,30 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
         orderedLessonIndex = -1;
         currentlyZoomedLesson = lg;
         currentlyOrderedLesson = null;
+        if(currentlyZoomedUser != null) {
+          PersistenceId sid = PersistentSchoolClass.buildPersistenceId(Long.valueOf(currentlyZoomedUser.getID()));
+          PersistenceId cid = PersistentCourse.buildPersistenceId(Long.valueOf(lg.getID()));
+          DomResultSchoolClass<DomResultCourseInClass> resultClass = resulttree.getResultTree().getChildren().get(sid);
+          DomResultCourseInClass resultCourse = resultClass.getChildren().get(cid);
+          matrix = ResultTreeCalculator.GetScoreOfActivitiesOfCourseByStudentsInClass(resulttree, resultCourse, resultClass);
+        } else {
+          PersistenceId cid = PersistentCourse.buildPersistenceId(Long.valueOf(currentlyZoomedLesson.getID()));
+          DomCourse aCourse = new DomCourse();
+          aCourse.setId(cid);
+          DomResultCourseInClass resultCourse = new DomResultCourseInClass(aCourse, ViewState.teachers);          
+            matrix = ResultTreeCalculator.GetScoreOfTeacherClassesByActivitiesOfCourse(resulttree, resultCourse);
+        }
+        try {
+          calculateUserResultList();
+        } catch (Dwo2Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        } catch (PersistenceException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+     
+        
         return getResults();
     }
 
@@ -174,6 +375,32 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
         orderedLessonIndex = -1;
         currentlyZoomedLesson = null;
         currentlyOrderedLesson = null;
+        if(currentlyZoomedUser != null) {
+          PersistenceId sid = PersistentSchoolClass.buildPersistenceId(Long.valueOf(currentlyZoomedUser.getID()));
+          DomSchoolClassId sc = new DomSchoolClassId(sid);
+          try {
+            calculateCoursesByStudents(sc); // FIXME use "courses"
+          } catch (Dwo2Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          } catch (PersistenceException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+        } else {
+          matrix = ResultTreeCalculator.GetScoreOfTeacherClassesByLeafCourses(resulttree);
+          try {
+            calculateUserResultList();
+          } catch (Dwo2Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          } catch (PersistenceException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+        }
+        
+        
         return getResults();
     }
 
@@ -221,6 +448,9 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      */
     @Override
     public Vector getResults() {
+        if(true) return userResultList;
+      
+      
         if ((currentlyZoomedLesson == null) && (currentlyZoomedUser == null)) {
             try {
                 userResultList = PersistenceFacade.instance().getResults(courses, teacher);
