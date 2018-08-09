@@ -32,6 +32,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * Login Presenter.
@@ -54,9 +55,12 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     private String url="/dwo/tablet/DWOplayer.jsp";
     @Inject AccountService account;
     private Promise<String> init;
+    private PersistenceId roleId;
     @Inject Lazy<BootPanelController> controller; // lazy anders cycle
 
     private HandlerRegistration register;
+
+    private DwoGlobalVars dwoGlobalVars;
 
     private static final boolean tablet;
     static {
@@ -92,6 +96,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         eventBus = anEventBus;
         FAILURE = new LoggingFailure(LOG, anEventBus);
         injectEventListener(this);
+        this.dwoGlobalVars = aDwoGlobalVars;
     }
 
 //    @JsMethod not required unless testing stuff.
@@ -119,6 +124,8 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     public void init() {
       view.clear();
       view.init();
+      roleId = dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole().getId();
+      LOG.fine("role = " + roleId);
       init = account.getBearerToken().then(this::gotToken,FAILURE);
     }
 
@@ -222,13 +229,27 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     @Override
     public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
       SelectedView select = switchViewEvent.getEventValue();
+      if(select == SelectedView.WELCOME) {
+        LOG.fine( "old role "  + roleId);
+        PersistenceId newRole = dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole().getId();
+        LOG.fine(" new role " + newRole);
+        if (!newRole.equals(roleId))
+        { LOG.info("hasRole changed"); 
+          roleId = null;
+          init = null;
+          view.clear();
+          if(register != null) {
+            register.removeHandler();register = null;
+          }
+        }
+      }
+      
+      
+      
       if(select == SelectedView.MODULES||select == SelectedView.MODULESVIEW)
         return;
 // switch to other view.     
       LOG.info("switch " + select);
-      if(register != null) {
-        register.removeHandler();register = null;
-      }
       view.setMainNavVisible(true);
       view.sendMessage(SHOWMAINNAV);
     }
