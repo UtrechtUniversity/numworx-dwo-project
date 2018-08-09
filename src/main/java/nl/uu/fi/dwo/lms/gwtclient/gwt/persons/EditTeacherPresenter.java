@@ -156,7 +156,16 @@ public class EditTeacherPresenter {
             this.initView(user);
             return Promises.resolved(true);
         }).then(null, (failure) -> {
-            eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
+           if (failure instanceof Dwo2Exception) {
+                Dwo2Exception fail = (Dwo2Exception) failure;
+                        LOG.log(Level.SEVERE, fail.getMessage());
+                        eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
+                    } else {
+                Throwable fail = failure.getFailure();
+                        LOG.log(Level.SEVERE, fail.getMessage());
+                        eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
+                        //throw directly
+                    }// eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
         });
     }
 

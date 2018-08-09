@@ -19,17 +19,17 @@ public class JsCopyOrMoveStudentToSchoolclassView implements CopyOrMoveStudentTo
 
     @Override
     public void clear() {
-        JsAddStudentToSchoolclassDisplay.clear();
+        JsCopyOrMoveStudentToSchoolclassDisplay.clear();
     }
 
     @Override
     public void setHelp(String url) {
-        JsAddStudentToSchoolclassDisplay.setHelp(url);
+        JsCopyOrMoveStudentToSchoolclassDisplay.setHelp(url);
     }
     
     @Override
     public void init() {
-        JsAddStudentToSchoolclassDisplay.init();
+        JsCopyOrMoveStudentToSchoolclassDisplay.init();
     }
 
     @Override

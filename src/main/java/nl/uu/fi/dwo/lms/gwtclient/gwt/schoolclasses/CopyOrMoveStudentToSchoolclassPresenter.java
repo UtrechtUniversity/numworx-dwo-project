@@ -113,7 +113,7 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
 //                        resolved.getValue().remove(k);
                     }
                 }));
-                resolved.getValue().removeIf(k->k.getId().getIdString().equals(schoolClassA.getId().getIdString()));
+                resolved.getValue().removeIf(k -> k.getId().getIdString().equals(schoolClassA.getId().getIdString()));
                 view.SetClassList(resolved.getValue());
                 return null;
             }
@@ -299,7 +299,7 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
         ProgressDialogWithAbortDeferred deferred = new ProgressDialogWithAbortDeferred(DwoLocalesForGWT.instance.NUM_DLG_Class_MovingStudentsTitle());
         ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, DwoLocalesForGWT.instance.NUM_DLG_Class_StartingMovingStudents(), deferred);
         eventBus.fireEvent(e);
-        MoveStudent(idList, 0, schoolClassB, schoolClassA);
+        MoveStudent(idList, 0, schoolClassB, schoolClassA, deferred.getPromise());
 
     }
 
@@ -309,10 +309,10 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
         ProgressDialogWithAbortDeferred deferred = new ProgressDialogWithAbortDeferred(DwoLocalesForGWT.instance.NUM_DLG_Class_MovingStudentsTitle());
         ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, DwoLocalesForGWT.instance.NUM_DLG_Class_StartingMovingStudents(), deferred);
         eventBus.fireEvent(e);
-        MoveStudent(idList, 0, schoolClassA, schoolClassB);
+        MoveStudent(idList, 0, schoolClassA, schoolClassB, deferred.getPromise());
     }
 
-    public void MoveStudent(String idList[], int i, DomSchoolClass from, DomSchoolClass to) {
+    public void MoveStudent(String idList[], int i, DomSchoolClass from, DomSchoolClass to, Promise abortPromise) {
         Promise<Boolean> promise;
         DomMoveStudentToSchoolClass submit = new DomMoveStudentToSchoolClass();
         submit.setSchoolClassFrom(from);
@@ -329,13 +329,13 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
         promise.then(new Success<Boolean, Void>() {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                if (next < idList.length) {
+                if (!abortPromise.isDone() && next < idList.length) {
                     LOG.log(Level.INFO, "Moving student " + idList[next] + ".");
                     LOG.log(Level.INFO, "Completed: " + 100.0 * next / idList.length + "%.");
                     double r = (100.0 * next / idList.length);
                     ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Update, (int) r, DwoLocalesForGWT.instance.NUM_DLG_Class_MovingStudents(), null);
                     eventBus.fireEvent(e);
-                    MoveStudent(idList, next, from, to);
+                    MoveStudent(idList, next, from, to, abortPromise);
                 } else {
                     //hide progressbar.
                     ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Complete, (int) 100, DwoLocalesForGWT.instance.NUM_DLG_Class_MovingStudentsCompleted(), null);
@@ -353,6 +353,8 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
                 //close progress panel.
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
+                    ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Complete, (int) 100, DwoLocalesForGWT.instance.NUM_DLG_Class_MovingStudentsCompleted(), null);
+                    eventBus.fireEvent(e);
                     eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());

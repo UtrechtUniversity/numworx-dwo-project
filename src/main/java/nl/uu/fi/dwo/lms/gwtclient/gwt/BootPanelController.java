@@ -262,7 +262,7 @@ public class BootPanelController {
                         case LOGOUT:
                             dwoGlobalVars.clearCurrentUser();
                             setSession(false);
-                            if(test){
+                            if(!test){
                                 Window.Location.reload();
                             }else{
                             //we should also clear user, view and presenter states, but that is never bug free.
