@@ -227,7 +227,7 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
      * @param from
      * @param to
      */
-    public void CopyStudent(String idList[], int i, DomSchoolClass from, DomSchoolClass to) {
+    public void CopyStudent(String idList[], int i, DomSchoolClass from, DomSchoolClass to, Promise abortPromise) {
         Promise<Boolean> promise;
         DomSubmitStudentToSchoolClass submit = new DomSubmitStudentToSchoolClass();
         submit.setSchoolClassFrom(from);
@@ -244,13 +244,13 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
         promise.then(new Success<Boolean, Void>() {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                if (next < idList.length) {
+                if (!abortPromise.isDone() && next < idList.length) {
                     LOG.log(Level.INFO, "Copying student " + idList[next] + ".");
                     LOG.log(Level.INFO, "Completed: " + 100.0 * next / idList.length + "%.");
                     double r = (100.0 * next / idList.length);
                     ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Update, (int) r, DwoLocalesForGWT.instance.NUM_DLG_Class_CopyingStudents(), null);
                     eventBus.fireEvent(e);
-                    CopyStudent(idList, next, from, to);
+                    CopyStudent(idList, next, from, to, abortPromise);
                 } else {
                     //hide progressbar.
                     ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Complete, (int) 100, DwoLocalesForGWT.instance.NUM_DLG_Class_CopyingStudentsCompleted(), null);
@@ -282,7 +282,7 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
         ProgressDialogWithAbortDeferred deferred = new ProgressDialogWithAbortDeferred(DwoLocalesForGWT.instance.NUM_DLG_Class_CopyingStudentsTitle());
         ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, DwoLocalesForGWT.instance.NUM_DLG_Class_StartingCopyStudents(), deferred);
         eventBus.fireEvent(e);
-        CopyStudent(idList, 0, schoolClassB, schoolClassA);
+        CopyStudent(idList, 0, schoolClassB, schoolClassA, deferred.getPromise());
     }
 
     @JsMethod
@@ -290,7 +290,7 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
         ProgressDialogWithAbortDeferred deferred = new ProgressDialogWithAbortDeferred(DwoLocalesForGWT.instance.NUM_DLG_Class_CopyingStudentsTitle());
         ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, DwoLocalesForGWT.instance.NUM_DLG_Class_StartingCopyStudents(), deferred);
         eventBus.fireEvent(e);
-        CopyStudent(idList, 0, schoolClassA, schoolClassB);
+        CopyStudent(idList, 0, schoolClassA, schoolClassB, deferred.getPromise());
     }
 
     @JsMethod
