@@ -246,12 +246,13 @@ public class EditStudentPresenter {
             this.initView(user);
             return Promises.resolved(true);
         }, (failure) -> {
-            if (failure instanceof Dwo2Exception) {
-                Dwo2Exception fail = (Dwo2Exception) failure;
-                        LOG.log(Level.SEVERE, fail.getMessage());
-                        eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                    } else {
                 Throwable fail = failure.getFailure();
+            if (fail instanceof Dwo2Exception) {                
+                Dwo2Exception f = (Dwo2Exception) fail;
+                        LOG.log(Level.SEVERE, f.getDwo2Message());
+                        eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) f));
+                    } else {
+                //Throwable fail = failure.getFailure();
                         LOG.log(Level.SEVERE, fail.getMessage());
                         eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                         //throw directly
