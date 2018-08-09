@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
@@ -77,7 +78,7 @@ public class EditTeacherPresenter {
     public void init(DomUser aUser) {
         view.clear();
         view.init();
-        view.setHelp(dwoGlobalVars.buildHelpUrl("#editTeacher"));                
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#editTeacher"));
         view.setEmptyTableMessage();
         view.setUser(aUser);
         user = aUser;
@@ -118,15 +119,15 @@ public class EditTeacherPresenter {
     @JsMethod
     public void removeTeacherFromSchoolClass(String schoolClassId) {
         Promise<Boolean> p = Promises.resolved(true); //empty promise
-        
+
         //ask to be sure if removing yourself!
         if (user.getId().getIdString().equals(dwoGlobalVars.getCurrentUser().getId().getIdString())) {
             p = p.then(new Success<Boolean, Boolean>() {
                 @Override
                 //Are you sure?
                 public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
-//                String msg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_User_ConfirmSchoolLoginDelete(),sracData.get(hasRoleId).getSchool().getSchoolName(),sracData.get(hasRoleId).getRole().getRoleName());
-                    AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred("You can not undo this. Are you sure?");
+                    String msg = DwoLocalesForGWT.instance.NUM_DLG_EDITTEACHER_Q_RemoveClassFromTeacher();
+                    AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(msg);
                     AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
                     eventBus.fireEvent(event);
                     return dialogPromise.getPromise();
