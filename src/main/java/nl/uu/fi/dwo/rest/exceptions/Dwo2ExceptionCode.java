@@ -38,6 +38,7 @@ public enum Dwo2ExceptionCode {
     
     //REST interface errors
     Rest_ConnectionTimeout, //Connection time-out to REST-interface.
+    Rest_CanNotReachServer, //Server did not respond
     Rest_InternalError, //Internal software error, a stack trace should be acquired.
     Rest_InterfaceError, // Error due to an improper REST-interface.
     Rest_FormatError, // Usually error in the object data send in the message body 
