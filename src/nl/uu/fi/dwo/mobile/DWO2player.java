@@ -72,7 +72,125 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 //		
 //	}
 	
-	private final class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandlerV3 implements RPCHandler {
+	private static final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
+		//			private IsWidget  menuWidget;
+		private TrafficAgent agent = new TrafficAgent();
+//			@Override
+//			public IsWidget getMenuWidget() {
+//				return menuWidget;
+//			}
+
+		@Override
+		public void addBarrier(Promise<?> p) {
+			agent.addBarrier(p);
+		}
+
+		@Override
+		public Promise<Void> barrier() {
+			return agent.barrier();
+		}
+
+		@Override
+		public LoginView getLoginView()
+		{
+			if (loginView == null) loginView = new Login3ViewImpl();
+			return loginView;
+		}
+
+		private Promise<Void> superLogout() {
+			return super.logout();
+		}
+
+		@Override
+		public Promise<Void> logout() {
+			return barrier().
+					then(new Success<Void,Void>(){
+
+						@Override
+						public Promise<Void> call(Promise<Void> resolved) throws Exception {
+//								menuWidget = null;
+							if(withUser()) {
+								return getRPCHandler().logout();
+							}
+							return resolved;
+						}}).
+					then(new Success<Void,Void>() {
+
+						@Override
+						public Promise<Void> call(Promise<Void> resolved) throws Exception {
+							return superLogout();
+						}}).
+					then(new Success<Void,Void>() {
+
+						@Override
+						public Promise<Void> call(Promise<Void> resolved) throws Exception {
+							treeModuleView = null;
+							return null;
+						}});
+		}
+
+		public SCORM_guest setupAPI() {
+			SCORM_guest api;
+			if(!withUser()) {
+				api = new SCORM_guest();
+//					menuWidget = null;
+			} else {					
+				api = new SCORM_DWO4();
+//					menuWidget = getUserBar();
+//					
+//					userBar.setRole(getRoleType());
+//
+			}
+			return api;
+		}
+
+		@Override
+		public boolean withUser() {
+			return DwoGlobalVars.instance().getCurrentUser() != null;
+		}
+
+		@Override
+		public DomSchool getSchool() {
+			try {
+				return DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool();
+			} catch (Exception e) {
+				return null;
+			}
+		}
+
+		@Override
+		public DomSchoolClass getSchoolClass() {
+			return DwoGlobalVars.instance().getCurrentSchoolClass();
+		}
+
+		@Override
+		public boolean isIconizer() {
+			try {
+				return getSchoolClass().getIconizer().booleanValue();
+			} catch (Exception e) {
+				return true;
+			}
+		}
+
+		@Override
+		public RoleType getRoleType() {
+			try {
+				String roleName = DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName();
+				return RoleType.valueOf(roleName);
+			} catch (Exception e) {
+				return RoleType.ANONYMOUS;
+			}
+		}
+
+		@Override
+		public Object getUserID() {
+			PersistenceId id = DwoGlobalVars.instance().getCurrentUser().getId();
+			return PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentUser);
+		}
+	}
+
+
+	private final static class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandlerV3 implements RPCHandler {
 		private DWO2RPCHandler(String server, int profile) {
 			super(server, profile, false);
 		}
@@ -82,9 +200,6 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 	public DWO2player() {
         //Initialize an Exception translator.
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
-        
-        
-        
 	}
 	
 	
@@ -116,124 +231,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 
 	
 	protected ClientFactory createClientFactory() {
-		ClientFactoryImpl factory = new ClientFactoryImpl() { 
-			
-//			private IsWidget  menuWidget;
-			private TrafficAgent agent = new TrafficAgent();
-//			@Override
-//			public IsWidget getMenuWidget() {
-//				return menuWidget;
-//			}
-			
-			@Override
-			public void addBarrier(Promise<?> p) {
-				agent.addBarrier(p);
-			}
-			@Override
-			public Promise<Void> barrier() {
-				return agent.barrier();
-			}
-			
-			@Override
-			public LoginView getLoginView()
-			{
-				if (loginView == null) loginView = new Login3ViewImpl();
-				return loginView;
-			}
-			private Promise<Void> superLogout() {
-				return super.logout();
-			}
-			
-			@Override
-			public Promise<Void> logout() {
-				return barrier().
-						then(new Success<Void,Void>(){
-
-							@Override
-							public Promise<Void> call(Promise<Void> resolved) throws Exception {
-//								menuWidget = null;
-								if(withUser()) {
-									return getRPCHandler().logout();
-								}
-								return resolved;
-							}}).
-						then(new Success<Void,Void>() {
-
-							@Override
-							public Promise<Void> call(Promise<Void> resolved) throws Exception {
-								return superLogout();
-							}}).
-						then(new Success<Void,Void>() {
-
-							@Override
-							public Promise<Void> call(Promise<Void> resolved) throws Exception {
-								treeModuleView = null;
-								return null;
-							}});
-			}
-
-			public SCORM_guest setupAPI() {
-				SCORM_guest api;
-				if(!withUser()) {
-					api = new SCORM_guest();
-//					menuWidget = null;
-				} else {					
-					api = new SCORM_DWO4();
-//					menuWidget = getUserBar();
-//					
-//					userBar.setRole(getRoleType());
-//
-				}
-				return api;
-			}
-
-			@Override
-			public boolean withUser() {
-				return DwoGlobalVars.instance().getCurrentUser() != null;
-			}
-
-			
-			@Override
-			public DomSchool getSchool() {
-				try {
-					return DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool();
-				} catch (Exception e) {
-					return null;
-				}
-			}
-			
-			@Override
-			public DomSchoolClass getSchoolClass() {
-				return DwoGlobalVars.instance().getCurrentSchoolClass();
-			}
-			
-			
-			@Override
-			public boolean isIconizer() {
-				try {
-					return getSchoolClass().getIconizer().booleanValue();
-				} catch (Exception e) {
-					return true;
-				}
-			}
-
-			@Override
-			public RoleType getRoleType() {
-				try {
-					String roleName = DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName();
-					return RoleType.valueOf(roleName);
-				} catch (Exception e) {
-					return RoleType.ANONYMOUS;
-				}
-			}
-
-			@Override
-			public Object getUserID() {
-				PersistenceId id = DwoGlobalVars.instance().getCurrentUser().getId();
-				return PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentUser);
-			}
-
-		};
+		ClientFactoryImpl factory = new DWO2ClientFactoryImpl();
 		String host = PARAMETERS.getHost();
 		String http = Window.Location.getProtocol();
 		factory.setRPCHandler(new DWO2RPCHandler(http + "//" + host + "/dwo/xmlrpc", PROFILE_ID));

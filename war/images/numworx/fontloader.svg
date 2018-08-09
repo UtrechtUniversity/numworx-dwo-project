@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg 
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 0 75 46"
+	style="width: 75px; height: 46px; fill: rgba(0,0,0,0.0) ; position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px;"
+	width="75px" height="46px">
+	<text
+		style="font-size: 12px; font-style: normal; font-weight: bold; font-family: Ubuntu; white-space: pre;"
+		x="0" y="37">BOLD</text>
+	<text
+		style="font-size: 12px; font-style: normal; font-weight: normal; font-family: Ubuntu; white-space: pre;"
+		x="0" y="24">plain</text>
+	<text style="font-size: 12px; font-style: normal; font-weight: normal; font-family: omega_0; white-space: pre;" x="0" y="17">JHI&lt;C1234567890!%^&amp;*()</text>
+</svg>
