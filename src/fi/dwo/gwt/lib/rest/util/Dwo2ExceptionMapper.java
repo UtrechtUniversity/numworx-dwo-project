@@ -36,7 +36,9 @@ public class Dwo2ExceptionMapper extends ExceptionMapper {
 				return new Dwo2Exception(code, message);
 			} catch (Exception e) {
 			}		
-		}
+		}else{
+                    return new Dwo2Exception(Dwo2ExceptionCode.Rest_CanNotReachServer, response.getStatusText());
+                }
 		return super.createFailedStatusException(method, response);
 	}
 
