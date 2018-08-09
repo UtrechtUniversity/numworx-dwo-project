@@ -7,6 +7,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+
 @Provider
 public class ExceptionProvider implements javax.ws.rs.ext.ExceptionMapper<Exception> {
 	static Logger LOG = Logger.getLogger(ExceptionProvider.class.getName());
@@ -14,6 +17,10 @@ public class ExceptionProvider implements javax.ws.rs.ext.ExceptionMapper<Except
 	@Override
 	public Response toResponse(Exception exception) {
 		LOG.log(Level.SEVERE, "Unhandled exception", exception);
+        if (exception instanceof Dwo2Exception) {
+          // wrap
+          exception = new Dwo2RestException( (Dwo2Exception) exception );
+        }
 		if(exception instanceof WebApplicationException ) {
 			return ((WebApplicationException) exception).getResponse();
 		}
