@@ -135,10 +135,10 @@ public class SchoolclassesPresenter {
                 Throwable fail = resolved.getFailure();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new MessageDialogWithOKEvent((Dwo2Exception) fail));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
                 } else {
                     LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new MessageDialogWithOKEvent(fail.getMessage()));
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
             }
