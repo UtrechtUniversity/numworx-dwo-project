@@ -649,6 +649,7 @@
                                 <resource>
                                     <directory>../DwoGwtClientHtmlUi/src/main/html</directory>
                                     <includes>
+                                        <include>helppage/**</include>
                                         <include>css/**</include>
                                         <include>js/**</include>
                                         <include>third-party/**</include>
