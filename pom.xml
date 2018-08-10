@@ -352,7 +352,10 @@
 							<groupId>fi.servlet</groupId>
 							<artifactId>DWOmAccess</artifactId>
 							<targetPath>/DWOmAccess</targetPath>
-							<excludes>WEB-INF/**</excludes>
+							<excludes>
+								<exclude>WEB-INF/**</exclude>
+								<exclude>META-INF/**</exclude>
+							</excludes>
 						</overlay>
 					</overlays>
 				</configuration>
