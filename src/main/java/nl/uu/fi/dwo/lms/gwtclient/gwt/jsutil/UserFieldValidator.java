@@ -36,7 +36,7 @@ public class UserFieldValidator {
 
     @JsMethod
     public boolean checkPassword(String password) {
-        return SimpleValidUserFieldsChecker.isValidUserName(password);
+        return SimpleValidUserFieldsChecker.isValidPassword(password);
     }
 
     @JsMethod
