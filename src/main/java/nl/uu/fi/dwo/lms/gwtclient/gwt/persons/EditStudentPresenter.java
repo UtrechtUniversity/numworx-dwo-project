@@ -325,18 +325,20 @@ public class EditStudentPresenter {
 
         Promise<Boolean> p = Promises.resolved(true); //empty promise
 
-        p.then(
-                new Success<Boolean, Boolean>() {
-            @Override
-            //Are you sure?
-            public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
-                AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(DwoLocalesForGWT.instance.NUM_DLG_User_ConfirmPasswordSwitch());
-                AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
-                eventBus.fireEvent(event);
-                return dialogPromise.getPromise();
-            }
-        }
-        ).then(
+        p
+//                .then(
+//                new Success<Boolean, Boolean>() {
+//            @Override
+//            //Are you sure?
+//            public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
+//                AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(DwoLocalesForGWT.instance.NUM_DLG_User_ConfirmPasswordSwitch());
+//                AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
+//                eventBus.fireEvent(event);
+//                return dialogPromise.getPromise();
+//            }
+//        }
+//        )
+                .then(
                 new Success<Boolean, Boolean>() {
             //sure so remove
             @Override
