@@ -177,6 +177,7 @@ public class AccountPresenter {
                         DomSchoolsRolesAndClassesV2 result = resolved.getValue();
                         //update schoolRoles
                         dwoGlobalVars.setSchoolLogins(result);
+                        //dwoGlobalVars.setActiveSchoolRoleAndClass(result.getActiveSchoolRoleAndClass());
                         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
                         return null;
                     }
@@ -242,6 +243,7 @@ public class AccountPresenter {
                 DomSchoolsRolesAndClassesV2 result = resolved.getValue();
                 //update schoolRoles
                 dwoGlobalVars.setSchoolLogins(result);
+                //dwoGlobalVars.setActiveSchoolRoleAndClass(result.getActiveSchoolRoleAndClass());
                 //set ui
                 eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
                 return null;

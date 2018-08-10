@@ -398,6 +398,8 @@ public class DwoGlobalVars {
      */
     public void setSchoolLogins(DomSchoolsRolesAndClassesV2 schoolLogins) {
         this.schoolLogins = schoolLogins;
+        this.setActiveSchoolRoleAndClass(schoolLogins.getActiveSchoolRoleAndClass());
+
     }
 
     /**
