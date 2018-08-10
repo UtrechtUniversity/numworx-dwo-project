@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseAndProfileNew;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewAccessKey;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewFrom;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewTo;
@@ -30,6 +31,7 @@ import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
+import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfileNew;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewAccessKey;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewFrom;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewTo;
@@ -42,8 +44,6 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 
 /**
  * Manages the school roles and classes registered in HasRole.
@@ -294,6 +294,15 @@ public class SecureTeacherSchoolClassManager {
     return result;
   }
 
+  public static Boolean addCourseToClass(DomSchoolClassCourseAndProfileNew dom) throws Dwo2Exception {
+    RestSchoolClassCourseAndProfileNew rest = new RestSchoolClassCourseAndProfileNew();
+    rest.setDomSchoolClassCourseAndProfileNew(dom);
+    rest.setRestContext(getContext());
+    Boolean result = getRestManager().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/addCourseToClass",
+      Boolean.class, rest);
+    return result;
+  }
+   
   private static StoredRestManager getRestManager() {
     return StoredRestManager.getInstance();
   }
