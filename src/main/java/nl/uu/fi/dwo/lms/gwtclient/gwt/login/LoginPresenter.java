@@ -152,7 +152,7 @@ public class LoginPresenter {
                     } else {
                         LOG.log(Level.INFO, "login failed, wrong login state: "+resolved.getValue().name());
                         dwoGlobalVars.clearCurrentUser();
-                        view.showWarning(defaultUsername);
+                        view.showWarning(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_AuthenticationError());
                         return Promises.resolved(true);
                     }
                 }
