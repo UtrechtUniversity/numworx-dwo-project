@@ -70,7 +70,7 @@ public class ResultsPresenter {
         view.init();
         LOG.log(Level.INFO, "DwoGlobalVarsState = " + dwoGlobalVars.getState().name());
         view.setHelp(dwoGlobalVars.buildHelpUrl("#results"));        
-
+        view.setLoadingTableMessage();
         course = null;
         schoolClass = null;
         resultService.clearCache();
@@ -82,15 +82,21 @@ public class ResultsPresenter {
             public Promise<Void> call(Promise<DomResultsPerTeacher> resolved) throws Exception {
                 //calculate tree and call plotting
                 LOG.log(Level.INFO, "DomResults returned.");
-                resultTree = new DomResultTree(resolved.getValue());
+                DomResultsPerTeacher value = resolved.getValue();
+                resultTree = new DomResultTree(value);
                 LOG.log(Level.INFO, "ResultTree obtained.");// plots the result tree.
                 view.setResultTree(resultTree);
                 LOG.log(Level.INFO, "plotted ResultMatrix.");
-             return null;
+                if(value.getSchoolClasses().isEmpty())
+                  view.setEmptyTableMessage();
+                return null;
             }
         },
                 FAILURE
-        );
+        ).recover(p -> {
+          view.setEmptyTableMessage();
+          return null;
+        });
     }
 
     public void setView(Display aView) {
