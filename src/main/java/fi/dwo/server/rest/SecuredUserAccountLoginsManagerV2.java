@@ -296,6 +296,9 @@ public class SecuredUserAccountLoginsManagerV2 {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "Authentication for " + sc.getUserPrincipal().getName() + " failed.");
         }
         //invariant: have user data
+        if(user.isSingleSchoolAccount()){
+          throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
 
         //fetch schoolgroup id.     
         PersistentSchoolGroup sg;
@@ -378,6 +381,11 @@ public class SecuredUserAccountLoginsManagerV2 {
         }
         PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
 
+        if(user.isSingleSchoolAccount()){
+          throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
+
+        
         Long userId=null;
         Long schoolGroupId=null;
         try {
