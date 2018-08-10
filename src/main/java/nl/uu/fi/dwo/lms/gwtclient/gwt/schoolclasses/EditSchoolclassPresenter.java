@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
-import fi.dwo.gwt.lib.rest.util.Dwo2LocaleMessageGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.StringFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +32,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
-import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessageCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
@@ -59,9 +57,21 @@ public class EditSchoolclassPresenter {
 
         void showSchoolClass(DomSchoolClassFull schoolClass);
 
+        void setEmptyStudentTableMessage();
+
+        void setLoadingStudentTableMessage();
+
         void showStudents(List<DomStudent> students);
 
+        void setEmptyTeacherTableMessage();
+
+        void setLoadingTeacherTableMessage();
+
         void showTeachers(List<DomTeacher> teachers);
+
+        void setEmptyModulesTableMessage();
+
+        void setLoadingModulesTableMessage();
 
         void showModules(List<DomCourse> modules);
     }
@@ -169,7 +179,7 @@ public class EditSchoolclassPresenter {
 
     @JsMethod
     public void removeSchoolClass() {
-         String msg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_Class_ConfirmRemoveSchoolClass(),schoolClass.getSchoolClassName());
+        String msg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_Class_ConfirmRemoveSchoolClass(), schoolClass.getSchoolClassName());
         AlertDialogWithConfirmCancelDeferred p = new AlertDialogWithConfirmCancelDeferred(msg);
         p.getPromise().then(new Success<Boolean, Void>() {
             @Override
@@ -239,7 +249,9 @@ public class EditSchoolclassPresenter {
     @JsMethod
     public void showTeachers() {
         Promise<List<DomTeacher>> promise;
+        view.setLoadingTeacherTableMessage();
         promise = manager.getTeachersInSchoolClass(schoolClass);
+
         // onSuccess update view
         promise.then(new Success<List<DomTeacher>, Void>() {
             @Override
@@ -252,6 +264,7 @@ public class EditSchoolclassPresenter {
             @Override
             public void fail(Promise<?> resolved) throws Exception {
                 Throwable fail = resolved.getFailure();
+                view.setEmptyTeacherTableMessage();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
                     eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
@@ -268,6 +281,7 @@ public class EditSchoolclassPresenter {
     @JsMethod
     public void showStudents() {
         Promise<List<DomStudent>> promise;
+        view.setLoadingStudentTableMessage();
         promise = manager.getStudentsInSchoolClass(schoolClass);
         // onSuccess update view
         promise.then(new Success<List<DomStudent>, Void>() {
@@ -281,6 +295,7 @@ public class EditSchoolclassPresenter {
             @Override
             public void fail(Promise<?> resolved) throws Exception {
                 Throwable fail = resolved.getFailure();
+                view.setEmptyStudentTableMessage();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
                     eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
@@ -298,6 +313,7 @@ public class EditSchoolclassPresenter {
     public void showModules() {
         Promise<DomCoursesOfSchoolClass4Teacher> promise;
         DomCoursesOfSchoolClass4Teacher result;
+        view.setEmptyModulesTableMessage();
         promise = this.getModules(schoolClass);
         // onSuccess update view
         promise.then(new Success<DomCoursesOfSchoolClass4Teacher, Void>() {
@@ -322,6 +338,7 @@ public class EditSchoolclassPresenter {
             @Override
             public void fail(Promise<?> resolved) throws Exception {
                 Throwable fail = resolved.getFailure();
+                view.setEmptyModulesTableMessage();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
                     eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));

@@ -49,4 +49,8 @@ public class JsAccountDisplay {
     public static native void updateUserView(JavaScriptObject user);
     
     public static native void clearAddSchoolLogin();
+    
+    public static native void setLoadingTableMessage();
+
+    public static native void setEmptyTableMessage();
 }

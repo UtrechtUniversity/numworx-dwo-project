@@ -53,6 +53,7 @@ public class AddTeacherToSchoolclassPresenter {
     }
 
     public void init(DomSchoolClass aSchoolClass) {
+        view.clear();
         view.init();
         view.setHelp(dwoGlobalVars.buildHelpUrl("#addTeacherToClass"));
         view.setEmptyTableMessage();

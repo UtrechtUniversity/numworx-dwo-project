@@ -46,4 +46,14 @@ public class JsAccountView implements AccountPresenter.Display{
         JsAccountDisplay.setHelp(url);
     }
 
+    @Override
+    public void setEmptyTableMessage() {
+        JsAccountDisplay.setEmptyTableMessage();
+    }
+
+    @Override
+    public void setLoadingTableMessage() {
+        JsAccountDisplay.setLoadingTableMessage();
+    }
+
 }

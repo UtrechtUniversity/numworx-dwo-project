@@ -58,8 +58,13 @@ public class AccountPresenter {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
     }
 
-    public interface Display extends BasicDisplay{
+    public interface Display extends BasicDisplay {
+
         void updateSchoolLoginsView(DomSchoolsRolesAndClassesV2 schoolLogins);
+
+        void setEmptyTableMessage();
+
+        void setLoadingTableMessage();
 
         void updateUserView(DomUserFull user);
 
@@ -75,8 +80,10 @@ public class AccountPresenter {
     public void init() {
         view.clear();
         view.init();
+        view.setEmptyTableMessage();
         view.setHelp(dwoGlobalVars.buildHelpUrl("#account"));
         sracData = getAccountRoles();
+        view.setLoadingTableMessage();
         updateUserDataInView();
     }
 
@@ -145,6 +152,7 @@ public class AccountPresenter {
                 //Role added, clear ui input.
                 view.clearAddSchoolLogin();
                 //get role Update.
+                view.setLoadingTableMessage();
                 Promise<DomSchoolsRolesAndClassesV2> update = accountService.getSchoolLogins();
                 return update;
             }
@@ -153,6 +161,7 @@ public class AccountPresenter {
             @Override
             public void fail(Promise<?> resolved) throws Exception {
                 Throwable fail = resolved.getFailure();
+                view.setEmptyTableMessage();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
                     eventBus.fireEvent(new MessageDialogWithOKEvent((Dwo2Exception) fail));
@@ -176,6 +185,7 @@ public class AccountPresenter {
                     @Override
                     public void fail(Promise<?> resolved) throws Exception {
                         Throwable fail = resolved.getFailure();
+                        view.setEmptyTableMessage();
                         if (fail instanceof Dwo2Exception) {
                             LOG.log(Level.SEVERE, fail.getMessage());
                             eventBus.fireEvent(new MessageDialogWithOKEvent((Dwo2Exception) fail));
@@ -188,7 +198,6 @@ public class AccountPresenter {
                 });
     }
 
-
     @JsMethod
     public void removeASchoolLogin(String hasRoleId) {
         LOG.log(Level.INFO, "Removing schoolLogin " + hasRoleId);
@@ -197,7 +206,7 @@ public class AccountPresenter {
             @Override
             //Are you sure?
             public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
-                String msg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_User_ConfirmSchoolLoginDelete(),sracData.get(hasRoleId).getSchool().getSchoolName(),sracData.get(hasRoleId).getRole().getRoleName());
+                String msg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_User_ConfirmSchoolLoginDelete(), sracData.get(hasRoleId).getSchool().getSchoolName(), sracData.get(hasRoleId).getRole().getRoleName());
                 AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(msg);
                 AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
                 eventBus.fireEvent(event);
@@ -208,6 +217,7 @@ public class AccountPresenter {
             @Override
             public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {
                 if (resolved.getValue()) {
+                    view.setLoadingTableMessage();
                     Promise<Boolean> promise = accountService.removeASchoolLogin(sracData.get(hasRoleId));
                     return promise;
                 } else {
@@ -241,6 +251,7 @@ public class AccountPresenter {
             @Override
             public void fail(Promise<?> resolved) throws Exception {
                 Throwable fail = resolved.getFailure();
+                view.setEmptyTableMessage();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
                     eventBus.fireEvent(new MessageDialogWithOKEvent((Dwo2Exception) fail));
@@ -358,6 +369,7 @@ public class AccountPresenter {
     @JsMethod
     public void updateUserDataInView() {
         Promise<DomUserFull> userPromise;
+        view.setLoadingTableMessage();
         userPromise = accountService.getUserData();
         // onSuccess calculate results and show.
         userPromise.then(new Success<DomUserFull, Void>() {
@@ -377,8 +389,8 @@ public class AccountPresenter {
                 });
                 srac.setSchoolsRolesAndClassesList(sracList);
                 view.updateSchoolLoginsView(srac);
-                if(!srac.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())){
-                eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_User_NoTeacher()));
+                if (!srac.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())) {
+                    eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_User_NoTeacher()));
                 }
                 return null;
             }
@@ -386,6 +398,7 @@ public class AccountPresenter {
             @Override
             public void fail(Promise<?> resolved) throws Exception {
                 Throwable fail = resolved.getFailure();
+                view.setEmptyTableMessage();
                 if (fail instanceof Dwo2Exception) {
                     LOG.log(Level.SEVERE, fail.getMessage());
                     eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));

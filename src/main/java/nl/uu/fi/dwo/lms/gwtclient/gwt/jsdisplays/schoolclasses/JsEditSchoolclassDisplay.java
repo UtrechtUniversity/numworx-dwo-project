@@ -49,8 +49,15 @@ public class JsEditSchoolclassDisplay{
     public static native void showSchoolClass(JavaScriptObject schoolClass);
     /**  Shows a list of students */
     public static native void showStudents(JavaScriptObject schoolClass);
+    public static native void setEmptyStudentTableMessage();
+    public static native void setLoadingStudentTableMessage();
     /**  Shows a list of teachers */
     public static native void showTeachers(JavaScriptObject schoolClass);
-    /**  Shows a list of modules */
+    public static native void setEmptyTeacherTableMessage();
+    public static native void setLoadingTeacherTableMessage();
+    /**  Shows a list of modules */    
     public static native void showShowModels(JavaScriptObject schoolClass);
+    public static native void setEmptyModulesTableMessage();
+    public static native void setLoadingModulesTableMessage();
+    
 }

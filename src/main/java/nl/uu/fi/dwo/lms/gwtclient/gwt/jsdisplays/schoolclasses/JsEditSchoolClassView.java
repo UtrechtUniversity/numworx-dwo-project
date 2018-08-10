@@ -72,4 +72,34 @@ public class JsEditSchoolClassView implements EditSchoolclassPresenter.Display{
 	JsEditSchoolclassDisplay.showShowModels(object.getJavaScriptObject());
     }
 
+    @Override
+    public void setEmptyStudentTableMessage() {
+        JsEditSchoolclassDisplay.setEmptyStudentTableMessage();
+    }
+
+    @Override
+    public void setLoadingStudentTableMessage() {
+        JsEditSchoolclassDisplay.setLoadingStudentTableMessage();
+    }
+
+    @Override
+    public void setEmptyTeacherTableMessage() {
+        JsEditSchoolclassDisplay.setEmptyTeacherTableMessage();
+    }
+
+    @Override
+    public void setLoadingTeacherTableMessage() {
+        JsEditSchoolclassDisplay.setLoadingTeacherTableMessage();
+    }
+
+    @Override
+    public void setEmptyModulesTableMessage() {
+        JsEditSchoolclassDisplay.setEmptyModulesTableMessage();
+    }
+
+    @Override
+    public void setLoadingModulesTableMessage() {
+        JsEditSchoolclassDisplay.setLoadingModulesTableMessage();
+    }
+
 }
