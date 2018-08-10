@@ -243,6 +243,10 @@ public class BootPanelController {
                             eventBus.fireEvent(new SwitchViewEvent(view));
                             // viewFactory.getMainView().showPostLoginWidgets();
                             break;
+                        case SUCCESS_ROLE:
+                            LOG.log(Level.INFO, "Login succeeded. Showing account view for teacher.");
+                            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
+                            break;
                         case SUCCESS_RESULTS:
                             setSession(true);
                             LOG.log(Level.INFO, "Login succeeded. Showing results view.");
@@ -281,7 +285,7 @@ public class BootPanelController {
                 } else {
                     LOG.log(Level.INFO, "Login succeeded. Showing account view for teacher.");
                     eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
-                    DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
+                    //DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
                     //eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_SwitchTeacher()));
                     //viewFactory.getMainView().showPostLoginWidgets();
                 }
