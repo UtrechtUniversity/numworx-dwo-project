@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.persons;
 
 import com.google.web.bindery.event.shared.EventBus;
+
+import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import java.util.HashMap;
@@ -96,7 +98,8 @@ public class AddStudentPresenter extends AddPersonPresenter {
         student.setFamilyName(familyName);
         student.setGivenName(givenName);
         student.setInsertion(insertion);
-        student.setPassword(password);
+ // MD5 password
+        student.setPassword(MD5.md5(password));
         student.setUserName(username);
         DomSchoolClass schoolClass = taggedSchoolClasses.get(schoolClassId).getSchoolClass();
         submitSingleSchoolStudent(schoolClass, student);
