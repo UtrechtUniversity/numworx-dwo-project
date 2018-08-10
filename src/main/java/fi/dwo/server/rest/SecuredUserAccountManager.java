@@ -437,6 +437,9 @@ public class SecuredUserAccountManager {
         if (u == null) {
             return true;
         }
+        if(u.isSingleSchoolAccount()){
+                    throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
         List<PersistentHasRole> hrList = HasRoleManager.findEntities(u);
         for (PersistentHasRole hr : hrList) {
             List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
