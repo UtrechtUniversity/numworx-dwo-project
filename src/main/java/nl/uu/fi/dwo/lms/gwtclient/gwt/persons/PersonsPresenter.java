@@ -108,7 +108,8 @@ public class PersonsPresenter {
                     //throw directly
                 }
             }
-        });
+        })
+        .recover((p) -> { view.setEmptyTableMessage(); return null; });
     }
 
     @JsMethod
@@ -141,7 +142,8 @@ public class PersonsPresenter {
                     //throw directly
                 }
             }
-        });
+        })
+        .recover((p) -> { view.setEmptyTableMessage(); return null; });
     }
 
     @JsMethod

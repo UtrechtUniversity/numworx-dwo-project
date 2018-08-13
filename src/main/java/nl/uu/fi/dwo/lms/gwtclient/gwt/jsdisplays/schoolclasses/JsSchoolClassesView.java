@@ -38,12 +38,12 @@ public class JsSchoolClassesView implements SchoolclassesPresenter.Display{
 
     @Override
         public void setEmptyTableMessage() {
-        JsResultsDisplay.setEmptyTableMessage();
+          JsSchoolClassesDisplay.setEmptyTableMessage();
     }
 
     @Override
         public void setLoadingTableMessage() {
-        JsResultsDisplay.setLoadingTableMessage();
+          JsSchoolClassesDisplay.setLoadingTableMessage();
     }
 
 

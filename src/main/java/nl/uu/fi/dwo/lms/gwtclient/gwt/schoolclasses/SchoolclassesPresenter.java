@@ -111,6 +111,7 @@ public class SchoolclassesPresenter {
     }
 
     private void updateViewData() {
+        view.setLoadingTableMessage();
         Promise<List<DomSchoolClass>> promise;
         promise = manager.getTeachersSchoolClasses();
         // onSuccess update view
@@ -125,6 +126,8 @@ public class SchoolclassesPresenter {
                     viewData.put(sc.getId().getIdString(), new ClassItem(sc.getId().getIdString(), sc.getSchoolClassName()));
                 }
                 view.updateView(viewData);
+                if(viewData.isEmpty())
+                  view.setEmptyTableMessage();
                 return null;
             }
 
@@ -142,7 +145,10 @@ public class SchoolclassesPresenter {
                     //throw directly
                 }
             }
-        });
+        })
+        .recover((p) -> { view.setEmptyTableMessage(); return null; });
+
+        ;
     }
     
     /** Adds a SchoolClass to the school and refreshes the panel */
