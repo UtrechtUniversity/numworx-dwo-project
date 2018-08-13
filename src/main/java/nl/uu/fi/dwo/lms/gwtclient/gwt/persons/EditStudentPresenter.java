@@ -200,13 +200,14 @@ public class EditStudentPresenter {
             view.setUser(aUser);
         }
 
-        p.then(null, (fail) -> {
+        p.then(null, (resolved) -> {
+            Throwable fail = resolved.getFailure();
             if (fail instanceof Dwo2Exception) {
                 LOG.log(Level.SEVERE, ((Dwo2Exception) fail).getDwo2Message());
                 eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-            } else if (fail.getFailure() != null) {
-                LOG.log(Level.SEVERE, fail.getFailure().getMessage());
-                eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getFailure().getMessage()));
+            } else if (fail != null) {
+                LOG.log(Level.SEVERE, fail.getMessage());
+                eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
             } //throw directly
         });
     }
@@ -257,6 +258,7 @@ public class EditStudentPresenter {
                         eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                         //throw directly
                     }
+            initView(user);
             //eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) failure.getFailure()));
         });
     }
@@ -398,6 +400,7 @@ public class EditStudentPresenter {
                     eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                     //throw directly
                 }
+                initView(fullUser);
             }
         }
         );
