@@ -149,19 +149,18 @@ public class EditTeacherPresenter {
                     return p;
                 } else {
                     LOG.log(Level.INFO, "Unsubscribe schoolclass cancelled.");
-                    return Promises.failed(new Dwo2Exception(Dwo2ExceptionCode.User_Cancelled_RemoveTeacherFromSchoolClass, "Unsubscribe schoolclass cancelled."));
+                    throw new Dwo2Exception(Dwo2ExceptionCode.User_Cancelled_RemoveTeacherFromSchoolClass, "Unsubscribe schoolclass cancelled.");
                 }
             }
         }).then((resolved) -> {
             this.initView(user);
             return Promises.resolved(true);
         }).then(null, (failure) -> {
-           if (failure instanceof Dwo2Exception) {
-                Dwo2Exception fail = (Dwo2Exception) failure;
+            Throwable fail = failure.getFailure();
+           if (fail instanceof Dwo2Exception) {                
                         LOG.log(Level.SEVERE, fail.getMessage());
                         eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                    } else {
-                Throwable fail = failure.getFailure();
+                    } else {                
                         LOG.log(Level.SEVERE, fail.getMessage());
                         eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                         //throw directly
