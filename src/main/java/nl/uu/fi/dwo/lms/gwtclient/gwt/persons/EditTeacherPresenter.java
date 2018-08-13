@@ -165,7 +165,8 @@ public class EditTeacherPresenter {
                         LOG.log(Level.SEVERE, fail.getMessage());
                         eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
                         //throw directly
-                    }// eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
+                    }
+                this.initView(user);// eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
         });
     }
 
