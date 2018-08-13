@@ -91,6 +91,8 @@ public class PersonsPresenter {
                 personen = new HashMap<>(resolved.getValue().size());
                 resolved.getValue().forEach((k -> personen.put(k.getId().getIdString(), k)));
                 view.showPersonen(personen);
+                if(personen.isEmpty())
+                  view.setEmptyTableMessage();
                 return null;
             }
 
@@ -124,7 +126,8 @@ public class PersonsPresenter {
                 personen = new HashMap<>(resolved.getValue().size());
                 resolved.getValue().forEach((k -> personen.put(k.getId().getIdString(), k)));
                 view.showPersonen(personen);
-
+                if(personen.isEmpty())
+                  view.setEmptyTableMessage();
                 return null;
             }
 
