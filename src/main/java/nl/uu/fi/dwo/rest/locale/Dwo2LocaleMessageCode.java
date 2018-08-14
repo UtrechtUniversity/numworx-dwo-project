@@ -193,6 +193,8 @@ NUM_DLG_EDITTEACHER_Q_RemoveClassFromTeacher,
 NUM_SEC_PERSONS_EDIT,
 NUM_SEC_PERSONS_EDITCLASSES,
 
+//SelectedResults
+NUM_LBL_SELECTEDRESULTS_BACKTOSELECT,
 
 /** Old tags for java */
 GUI_Button_Ok,  
