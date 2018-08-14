@@ -84,7 +84,7 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
         view.setHelp(dwoGlobalVars.buildHelpUrl("#CopyOrMoveStudentToClass"));
         view.setEmptyTableMessageClasses();
         view.setEmptyTableMessageA();
-        view.setEmptyTableMessageB();
+        //view.setEmptyTableMessageB();
         schoolClassA = aSchoolClass;
         schoolClassB = null;
         view.SetClassA(aSchoolClass);
@@ -207,7 +207,7 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
                 }
             });
         } else {
-            view.setEmptyTableMessageB();
+           // view.setEmptyTableMessageB();
         }
     }
 
