@@ -325,23 +325,48 @@ public class SelectedResultsPresenter {
                 new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTSSCHOOLCLASSES, resultTree, resultState)
         );
     }
-//
-//    @JsMethod
-//    public void clearStudentScoResults(String scoId, String classId) {
-//        LOG.fine("clearing studentResults for classid " + classId + " and scoId" + scoId + ".");
-//
-//    }
-//
-//    @JsMethod
-//    public void clearCourseResults(String idList[], String classId) {
-//        ProgressDialogWithAbortDeferred deferred = new ProgressDialogWithAbortDeferred("promise text");
-//        ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, "starting copy ", deferred);
-//        eventBus.fireEvent(e);
-//        CopyStudent(idList, 0, schoolClassB, schoolClassA);
-//    }
 
     @JsMethod
-    public void back(JavaScriptObject context){
+    public void clearStudentScoResults(String courseID, String classId) {
+        PersistenceId schoolclass = new PersistenceId(classId);
+        DomResultTeacher<DomResultStudent> studentTree = resultTree.getStudentTree();
+        DomResultSchoolClass<DomResultStudent> domschoolclass = studentTree.getChildren().get(schoolclass);
+        List<DomStudent> students = domschoolclass.getChildren().values().stream().map(DomResultStudent::getStudent).collect(Collectors.toList());
+
+        PersistenceId course = new PersistenceId(courseID);
+        DomResultSchoolClass<?> domclassresults = resultTree.getResultTree().getChildren().get(schoolclass);
+        DomResultScore<?> courseResults = domclassresults.getChildren().get(course);
+        Set<PersistenceId> scos = courseResults.getChildren().keySet();
+        // TODO verzegel course, dus alle activitetien
+        Collection<Promise<Object>> promises = new ArrayList<>();
+        for (PersistenceId scoid : scos) {
+            DomScoContext sco = new DomScoContext();
+            sco.setId(scoid);
+            promises.add(resultService.clearStudentResults(sco, domschoolclass.getSchoolClass(), students)
+                    .then(new Success<Boolean, Boolean>() {
+                        @Override
+                        public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {
+                            //calculate tree and call plotting
+                            LOG.log(Level.INFO, "Results clear resolved.");
+                            Boolean result = resolved.getValue();
+                            LOG.log(Level.INFO, "Returned " + result + ".");// plots the result tree.
+                            return Promises.resolved(result);
+                        }
+                    }));
+        };
+
+        Promises.all(promises).then(new Success<Object, Void>() {
+                        @Override
+                        public Promise<Void> call(Promise<Object> resolved) throws Exception {
+                            //calculate tree and call plotting
+                            new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS);
+                            return null;
+                        }
+                    }, FAILURE);
+    }
+
+    @JsMethod
+    public void back(JavaScriptObject context) {
         LOG.log(Level.SEVERE, "Select Back from SelectedResults to Results");
         eventBus.fireEvent(
                 new SwitchViewEvent(SwitchViewEvent.SelectedView.BACKTORESULTS, resultTree, resultState)
