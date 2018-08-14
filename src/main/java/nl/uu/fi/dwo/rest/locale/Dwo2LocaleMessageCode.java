@@ -60,6 +60,9 @@ NUM_DLG_Class_CopyingStudents,
 NUM_DLG_Class_MovingStudents,
 NUM_DLG_Class_StartingCopyStudents,
 NUM_DLG_Class_StartingMovingStudents,
+NUM_DLG_Class_StartClearingStudentResults,
+NUM_DLG_Class_ClearingStudentResults,
+NUM_DLG_Class_ClearingStudentResultsCompleted,
 
 //generic labels
  NUM_LBL_YES,
