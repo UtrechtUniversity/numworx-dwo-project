@@ -1,10 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results;
 
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
-import fi.dwo.gwt.lib.rest.util.DomStudentCodec;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,14 +9,6 @@ import javax.inject.Inject;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 
 /**
  * Mapper to allow java interface implementation.
@@ -193,6 +182,25 @@ public class JsResultsView implements ResultsPresenter.Display {
           LOG.log(Level.SEVERE, "set result tree", e);
         }
     }
+    
+    
+    @Override
+    public void setResultTreeWithContext(DomResultTree data,  JavaScriptObject context) {
+        try {
+          LOG.log(Level.INFO, "tree data has " + data.getStudentTree().getChildren().values().size() + " student classes.");
+          LOG.log(Level.INFO, "tree data has " + data.getResultTree().getChildren().values().size() + "  result classes.");
+          LOG.log(Level.INFO, "Building result tree in json.");
+          JSONObject results = Util.buildSubResultTree(data.getResultTree());
+          LOG.log(Level.INFO, "resultTree json string is:\n " + results.toString());
+          LOG.log(Level.INFO, "Building student tree in json.");
+          JSONObject students = Util.buildSubStudentTree(data.getStudentTree());
+          LOG.log(Level.INFO, "studentTree json string is:\n " + students.toString());
+          JsResultsDisplay.setResultTreeWithContext(results.getJavaScriptObject(), students.getJavaScriptObject(), context);
+        } catch (Exception e) {
+          LOG.log(Level.SEVERE, "set result tree", e);
+        }        
+    }
+    
 
     @Override
     public void init() {

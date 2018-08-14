@@ -339,4 +339,12 @@ public class SelectedResultsPresenter {
 //        eventBus.fireEvent(e);
 //        CopyStudent(idList, 0, schoolClassB, schoolClassA);
 //    }
+
+    @JsMethod
+    public void back(JavaScriptObject context){
+        LOG.log(Level.SEVERE, "Select Back from SelectedResults to Results");
+        eventBus.fireEvent(
+                new SwitchViewEvent(SwitchViewEvent.SelectedView.BACKTORESULTS, resultTree, resultState)
+        );
+    }
 }

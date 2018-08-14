@@ -23,6 +23,7 @@ public class JsResultsDisplay{
     public static native void clear();
     public static native void setHelp(String url);
     public static native void setResultTree(JavaScriptObject resultTree, JavaScriptObject studentTree);    
+    public static native void setResultTreeWithContext(JavaScriptObject resultTree, JavaScriptObject studentTree, JavaScriptObject context);    
     /** setEmptyTableMessage show an indicator that the table is empty. */
     public static native void setEmptyTableMessage();
     /** setEmptyTableMessage show an indicator that we are fetching data. */

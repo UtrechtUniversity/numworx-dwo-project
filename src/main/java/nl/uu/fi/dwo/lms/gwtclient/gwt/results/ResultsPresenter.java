@@ -51,7 +51,7 @@ public class ResultsPresenter {
     public interface Display extends BasicDisplay{
 
         void setResultTree(DomResultTree data);
-
+        void setResultTreeWithContext(DomResultTree data,  JavaScriptObject context);
         void setEmptyTableMessage();
 
         void setLoadingTableMessage();
@@ -97,8 +97,14 @@ public class ResultsPresenter {
           view.setEmptyTableMessage();
           return null;
         });
-    }
+    }    
 
+    
+    public void init(JavaScriptObject context){
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#results"));        
+        view.setResultTreeWithContext(resultTree, context);
+    }
+    
     public void setView(Display aView) {
         view = aView;
     }

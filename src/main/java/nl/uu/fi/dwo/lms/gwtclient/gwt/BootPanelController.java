@@ -356,6 +356,10 @@ public class BootPanelController {
                             viewFactory.getMainView().showSelectedResultsView();
                             presenterFactory.getSelectedResultsPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultState());
                             break;
+                        case BACKTORESULTS:
+                            viewFactory.getMainView().showResultsView();
+                            presenterFactory.getResultsPresenter().init(switchViewEvent.getResultState());
+                            
                         case SELECTEDRESULTSRETURN:
                             viewFactory.getMainView().showSelectedResultsView();
                             presenterFactory.getSelectedResultsPresenter().reinit(switchViewEvent.getResultTree(), switchViewEvent.getResultState());
