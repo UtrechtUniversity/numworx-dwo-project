@@ -67,7 +67,8 @@ public class LoginPresenter {
         this.resourceBindings = resourceBindings;
     }
 
-    public interface Display extends BasicDisplay{
+    public interface Display extends BasicDisplay {
+
         /**
          * Sets the username in the ui box.
          */
@@ -77,16 +78,19 @@ public class LoginPresenter {
          * Sets the password in the ui box.
          */
         public void setPassword(String password);
+
         /**
-         * Sets a response message in the ui box. For example when a user
-         * fails to login
+         * Sets a response message in the ui box. For example when a user fails
+         * to login
          */
         public void showMessage(String message);
+
         /**
-         * Sets a warning text in the ui box. For example when the client can not
-         * reach the remote server.
+         * Sets a warning text in the ui box. For example when the client can
+         * not reach the remote server.
          */
         public void showWarning(String warning);
+
         /**
          * Hides the message or warning box.
          */
@@ -149,8 +153,13 @@ public class LoginPresenter {
                         LOG.log(Level.INFO, "login succeeded. Firing Login success event.");
                         //true means we are done
                         return Promises.resolved(false);
+                    } else if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn && dwoGlobalVars.getCurrentUser().getSingleSchool()) {
+                        LOG.log(Level.INFO, "login failed, you are a single schoolstudent: " + resolved.getValue().name());
+                        dwoGlobalVars.clearCurrentUser();
+                        view.showWarning(DwoLocalesForGWT.instance.NUM_DLG_User_NoAccessForYourAccount());
+                        return Promises.resolved(true);
                     } else {
-                        LOG.log(Level.INFO, "login failed, wrong login state: "+resolved.getValue().name());
+                        LOG.log(Level.INFO, "login failed, wrong login state: " + resolved.getValue().name());
                         dwoGlobalVars.clearCurrentUser();
                         view.showWarning(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_AuthenticationError());
                         return Promises.resolved(true);
@@ -188,70 +197,66 @@ public class LoginPresenter {
     }
 
     public void tokenLogin(String token) {
-      try {
-        dwoGlobalVars.initUserWithToken(token).then(resolved -> {
-                  if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
-                      if (!dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
-                          eventBus.fireEvent(new MessageDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
-                      };
-                      boolean switchR = true;
-                      LOG.log(Level.INFO, "login succeeded for user:" + dwoGlobalVars.getCurrentUser().getUniqueDisplayName());
-                      try {
-                          if (dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())) {
-                              switchR = false;
-                          }
-                      } catch (Exception e) {
-                          switchR = true;
-                      }
-                      if (switchR) {
-                          eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_ROLE));
-                      } else {
-                          eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_WELCOME));
-                      }
-                      LOG.log(Level.INFO, "login succeeded. Firing Login success event.");
-                      //true means we are done
-                      return Promises.resolved(Boolean.FALSE);
-                  } else {
-                      LOG.log(Level.INFO, "login failed, wrong login state: "+resolved.getValue().name());
-                      dwoGlobalVars.clearCurrentUser();
-                      view.showWarning("login failed");
-                      return Promises.resolved(Boolean.TRUE);
-                  }
-              }
-          ,
-                  resolved -> {
-                  Throwable fail = resolved.getFailure();
-                  dwoGlobalVars.clearCurrentUser();
-                  if (fail instanceof Dwo2Exception) {
-                      //Login failed
-                      LOG.log(Level.INFO, "dwo2exception thrown: " + fail.getMessage());
-                      Dwo2ExceptionCode code = ((Dwo2Exception) fail).getDwo2Code();
-                      DwoLocale locale = DwoGlobalVars.getDwoLocale();
-                      //view.hideMsgBox();
-                  } else {
-                      dwoGlobalVars.clearCurrentUser();
-                      LOG.log(Level.INFO, "none dwo2exception thrown: " + fail.getMessage());
-                      view.showWarning(fail.getMessage());
-                  }
-                  eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
-              }
-          );
-      } catch (Dwo2Exception ex) {
-          LOG.log(Level.SEVERE, null, ex);
-          dwoGlobalVars.clearCurrentUser();
-          view.showWarning(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_AuthenticationError());
-      } catch (Exception ex) {
-          //Somehow not all exceptions are caught here.
-          LOG.log(Level.SEVERE, null, ex);
-          dwoGlobalVars.clearCurrentUser();
-          view.showWarning(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_InternalError());
-      }
-      
+        try {
+            dwoGlobalVars.initUserWithToken(token).then(resolved -> {
+                if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
+                    if (!dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
+                        eventBus.fireEvent(new MessageDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
+                    };
+                    boolean switchR = true;
+                    LOG.log(Level.INFO, "login succeeded for user:" + dwoGlobalVars.getCurrentUser().getUniqueDisplayName());
+                    try {
+                        if (dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())) {
+                            switchR = false;
+                        }
+                    } catch (Exception e) {
+                        switchR = true;
+                    }
+                    if (switchR) {
+                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_ROLE));
+                    } else {
+                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_WELCOME));
+                    }
+                    LOG.log(Level.INFO, "login succeeded. Firing Login success event.");
+                    //true means we are done
+                    return Promises.resolved(Boolean.FALSE);
+                } else {
+                    LOG.log(Level.INFO, "login failed, wrong login state: " + resolved.getValue().name());
+                    dwoGlobalVars.clearCurrentUser();
+                    view.showWarning("login failed");
+                    return Promises.resolved(Boolean.TRUE);
+                }
+            },
+                    resolved -> {
+                        Throwable fail = resolved.getFailure();
+                        dwoGlobalVars.clearCurrentUser();
+                        if (fail instanceof Dwo2Exception) {
+                            //Login failed
+                            LOG.log(Level.INFO, "dwo2exception thrown: " + fail.getMessage());
+                            Dwo2ExceptionCode code = ((Dwo2Exception) fail).getDwo2Code();
+                            DwoLocale locale = DwoGlobalVars.getDwoLocale();
+                            //view.hideMsgBox();
+                        } else {
+                            dwoGlobalVars.clearCurrentUser();
+                            LOG.log(Level.INFO, "none dwo2exception thrown: " + fail.getMessage());
+                            view.showWarning(fail.getMessage());
+                        }
+                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.FAIL));
+                    }
+            );
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            dwoGlobalVars.clearCurrentUser();
+            view.showWarning(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_AuthenticationError());
+        } catch (Exception ex) {
+            //Somehow not all exceptions are caught here.
+            LOG.log(Level.SEVERE, null, ex);
+            dwoGlobalVars.clearCurrentUser();
+            view.showWarning(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_InternalError());
+        }
+
     }
-    
-    
-    
-    
+
     /**
      * Sets the default username and password in the login ui.
      *
