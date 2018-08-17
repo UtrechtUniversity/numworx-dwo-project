@@ -605,7 +605,7 @@ public class Course implements LessonGroup, Comparable<Course>, CourseMap, Descr
       else
         sequencenr = null;
  
-      if(sample.getWithChildren()) {
+      if(sample.getWithChildren() != null && sample.getWithChildren()) {
         if(children == null)
           setChildren(NO_CHILDREN);
       } else {
