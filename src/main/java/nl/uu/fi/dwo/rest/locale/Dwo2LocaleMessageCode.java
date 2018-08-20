@@ -199,6 +199,7 @@ NUM_SEC_PERSONS_EDITCLASSES,
 
 //SelectedResults
 NUM_LBL_SELECTEDRESULTS_BACKTOSELECT,
+NUM_TBL_SELECTEDRESULTS_AllModules,
 
 /** Old tags for java */
 GUI_Button_Ok,  
