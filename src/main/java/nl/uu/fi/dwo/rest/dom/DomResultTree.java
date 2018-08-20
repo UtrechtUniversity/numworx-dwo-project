@@ -120,7 +120,7 @@ public class DomResultTree {
         //Built an index for DomCourses with the same parentID. Memory efficient.
         Map<PersistenceId, List<DomScoContext>> scoParentIndex = new HashMap<PersistenceId, List<DomScoContext>>();
         for (DomScoContext sco : resultData.getScoContexts().values()) {
-            if (resultData.getCourses().containsKey(sco.getCourseId())) { //ifit is an existing course
+            if (resultData.getCourses().containsKey(sco.getCourseId())) { //if it is an existing course
                 if (!scoParentIndex.containsKey(sco.getCourseId())) {
                     scoParentIndex.put(sco.getCourseId(), new ArrayList<DomScoContext>());
                 }

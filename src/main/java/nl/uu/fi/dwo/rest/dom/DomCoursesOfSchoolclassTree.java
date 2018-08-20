@@ -89,7 +89,8 @@ public class DomCoursesOfSchoolclassTree {
             if (pId == null) {// ref to root course
                 //add to root node if not root node
                 if (!root.getChildren().containsKey(n.getObject().getCourse().getId().getIdString())
-                        && n.getObject().getCourse().getWithChildren()) {
+                        //&& n.getObject().getCourse().getWithChildren()
+                        ) {
                     DomCourseOfClass coc = n.getObject();
                     DomCourse c = coc.getCourse();
                     //proxy the new maps with fake persistence id's, ugly but effective.
