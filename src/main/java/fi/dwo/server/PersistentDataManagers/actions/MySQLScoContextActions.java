@@ -241,7 +241,15 @@ public class MySQLScoContextActions {
   public static void remove(PersistentScoContext pc, PersistentCourse c) {
     destroyStudentWork(pc);
     final long seq = pc.getSequencenr().longValue();
+    //in some cases there is no scodata!
+    try{
     ScoDataManager.destroy(pc.getScoID());
+    }catch(EntityNotFoundException e){
+        
+    } catch (PersistenceException ex){
+        LOG.log(Level.SEVERE, "unexpected error", ex);
+          throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
+    }
     ScoContextManager.destroy(pc.getScoID());
 
     List<PersistentScoContext> list = ScoContextManager.findEntities(c);
