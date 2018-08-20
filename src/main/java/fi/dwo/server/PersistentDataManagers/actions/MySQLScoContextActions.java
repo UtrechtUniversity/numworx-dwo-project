@@ -256,12 +256,12 @@ public class MySQLScoContextActions {
         try {
             ScoDataManager.destroy(pc.getScoID());
         } catch (PersistenceException ex) {
-            if (ex instanceof EntityNotFoundException) {
-            }else{
-                LOG.log(Level.SEVERE, "unexpected error", ex);
-                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
-                //
-            }
+//            if (ex instanceof EntityNotFoundException) {
+//            }else{
+//                LOG.log(Level.SEVERE, "unexpected error", ex);
+//                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
+//                //
+//            }
 
         }
         ScoContextManager.destroy(pc.getScoID());
