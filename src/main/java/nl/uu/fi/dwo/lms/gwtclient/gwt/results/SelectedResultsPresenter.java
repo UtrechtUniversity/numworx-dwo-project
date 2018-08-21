@@ -337,7 +337,6 @@ public class SelectedResultsPresenter {
         DomResultSchoolClass<?> domclassresults = resultTree.getResultTree().getChildren().get(schoolclass);
         DomResultScore<?> courseResults = domclassresults.getChildren().get(course);
         Set<PersistenceId> scos = courseResults.getChildren().keySet();
-        // TODO verzegel course, dus alle activitetien
         Collection<Promise<Object>> promises = new ArrayList<>();
         for (PersistenceId scoid : scos) {
             DomScoContext sco = new DomScoContext();
@@ -346,10 +345,9 @@ public class SelectedResultsPresenter {
                     .then(new Success<Boolean, Boolean>() {
                         @Override
                         public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {
-                            //calculate tree and call plotting
                             LOG.log(Level.INFO, "Results clear resolved.");
                             Boolean result = resolved.getValue();
-                            LOG.log(Level.INFO, "Returned " + result + ".");// plots the result tree.
+                            LOG.log(Level.INFO, "Returned " + result + ".");
                             return Promises.resolved(result);
                         }
                     }));
