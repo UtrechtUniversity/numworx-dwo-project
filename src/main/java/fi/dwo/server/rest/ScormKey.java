@@ -19,6 +19,7 @@ enum ScormKey {
     static Map<String,ScormKey> keys = new TreeMap<String,ScormKey>();
     static {
     	keys.put("cmi.score.raw", SCORE);
+    	keys.put("score", SCORE);
     	keys.put("cmi.completion_status", COMPLETION_STATUS);
     	keys.put("completionStatus", COMPLETION_STATUS);
 
