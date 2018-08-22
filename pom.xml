@@ -420,7 +420,7 @@
 		<DWOplayerVersion>2.2.8-SNAPSHOT</DWOplayerVersion>
 		<DWOmAccessVersion>0.0.9</DWOmAccessVersion>
 		<RegisterVersion>2.2.7</RegisterVersion>
-		<DWOGwtClientVersion>0.10.17-SNAPSHOT</DWOGwtClientVersion>
+		<DWOGwtClientVersion>0.10.16-SNAPSHOT</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testebserver</aws.environmentName>
