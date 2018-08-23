@@ -25,13 +25,17 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.web.bindery.event.shared.EventBus;
+import fi.dwo.gwt.lib.rest.util.StringFormatter;
 
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
@@ -47,7 +51,10 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import org.osgi.util.promise.Failure;
 
 /**
  *
@@ -331,36 +338,76 @@ public class SelectedResultsPresenter {
         PersistenceId schoolclass = new PersistenceId(classId);
         DomResultTeacher<DomResultStudent> studentTree = resultTree.getStudentTree();
         DomResultSchoolClass<DomResultStudent> domschoolclass = studentTree.getChildren().get(schoolclass);
-        List<DomStudent> students = domschoolclass.getChildren().values().stream().map(DomResultStudent::getStudent).collect(Collectors.toList());
-
         PersistenceId course = new PersistenceId(courseID);
         DomResultSchoolClass<?> domclassresults = resultTree.getResultTree().getChildren().get(schoolclass);
         DomResultScore<?> courseResults = domclassresults.getChildren().get(course);
-        Set<PersistenceId> scos = courseResults.getChildren().keySet();
-        Collection<Promise<Object>> promises = new ArrayList<>();
-        for (PersistenceId scoid : scos) {
-            DomScoContext sco = new DomScoContext();
-            sco.setId(scoid);
-            promises.add(resultService.clearStudentResults(sco, domschoolclass.getSchoolClass(), students)
-                    .then(new Success<Boolean, Boolean>() {
-                        @Override
-                        public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {
-                            LOG.log(Level.INFO, "Results clear resolved.");
-                            Boolean result = resolved.getValue();
-                            LOG.log(Level.INFO, "Returned " + result + ".");
-                            return Promises.resolved(result);
-                        }
-                    }));
-        };
 
-        Promises.all(promises).then(new Success<Object, Void>() {
-                        @Override
-                        public Promise<Void> call(Promise<Object> resolved) throws Exception {
-                            //calculate tree and call plotting
-                            new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS);
-                            return null;
-                        }
-                    }, FAILURE);
+        //Verify purpose
+        Promise<Boolean> p = Promises.resolved(true); //empty promise
+        p = p.then(new Success<Boolean, Boolean>() {
+            @Override
+            //Are you sure?
+            public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
+                String msg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_Results_ConfirmClearingStudentResults(), domschoolclass.getLabel(), courseResults.getLabel());
+                AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(msg);
+                AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
+                eventBus.fireEvent(event);
+                return dialogPromise.getPromise();
+            }
+        }, new Failure() {
+            @Override
+            public void fail(Promise<?> resolved) throws Exception {
+                Throwable fail = resolved.getFailure();
+                view.setEmptyTableMessage();
+                if (fail instanceof Dwo2Exception) {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new MessageDialogWithOKEvent((Dwo2Exception) fail));
+                } else {
+                    LOG.log(Level.SEVERE, fail.getMessage());
+                    eventBus.fireEvent(new MessageDialogWithOKEvent(fail.getMessage()));
+                    //throw directly
+                }
+            }
+        }).then(new Success<Boolean,Boolean >() {
+            //sure so remove
+            @Override
+            public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {
+                if (resolved.getValue()) {
+
+                    List<DomStudent> students = domschoolclass.getChildren().values().stream().map(DomResultStudent::getStudent).collect(Collectors.toList());
+
+                    Set<PersistenceId> scos = courseResults.getChildren().keySet();
+                    Collection<Promise<Object>> promises = new ArrayList<>();
+                    for (PersistenceId scoid : scos) {
+                        DomScoContext sco = new DomScoContext();
+                        sco.setId(scoid);
+                        promises.add(resultService.clearStudentResults(sco, domschoolclass.getSchoolClass(), students)
+                                .then(new Success<Boolean, Boolean>() {
+                                    @Override
+                                    public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {
+                                        LOG.log(Level.INFO, "Results clear resolved.");
+                                        Boolean result = resolved.getValue();
+                                        LOG.log(Level.INFO, "Returned " + result + ".");
+                                        return Promises.resolved(result);
+                                    }
+                                }));
+                    };
+                    return Promises.all(promises).then(null, FAILURE);
+                } else {
+                    LOG.log(Level.INFO, "update user cancelled.");
+                    return Promises.failed(null);
+                }
+            }
+        });
+//
+//        Promises.all(promises).then(new Success<Object, Void>() {
+//                        @Override
+//                        public Promise<Void> call(Promise<Object> resolved) throws Exception {
+//                            //calculate tree and call plotting
+//                            new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS);
+//                            return null;
+//                        }
+//                    }, FAILURE);
     }
 
     @JsMethod
