@@ -5,9 +5,9 @@
 	int profile = 77;
 	String query = request.getQueryString();
 	if(query == null)
-	 	query = "?base=/en/he/&locale=en&profile=" + profile;
+	 	query = "?base=/vo/&locale=en&profile=" + profile;
 	else 
-	  	query = "?base=/en/he/&locale=en&profile=" + profile + "&" + query;
+	  	query = "?base=/vo/&locale=en&profile=" + profile + "&" + query;
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>

@@ -2,12 +2,12 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <% 
-	int profile = 77;
+	int profile = 99;
 	String query = request.getQueryString();
 	if(query == null)
-	 	query = "?base=/en/he/&locale=en&profile=" + profile;
+	 	query = "?base=/ho/&locale=en&profile=" + profile;
 	else 
-	  	query = "?base=/en/he/&locale=en&profile=" + profile + "&" + query;
+	  	query = "?base=/ho/&locale=en&profile=" + profile + "&" + query;
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -30,15 +30,14 @@
 				var search = "<%=query%>"
 				var hash = location.hash || "";
 				var id = search + hash;
-				var element = document.getElementsByTagName("meta")[0];
-				element.setAttribute("content", "0; URL='/gwtclient/index.html'"+id);
+				var element = document.getElementsByTagName("iframe")[0];
+				element.setAttribute("src", "/gwtclient/index.html"+id);
 		    }
 		</script>
     </head>
     <body onload ="load()">
         <div id="content">
-            <meta http-equiv="refresh" content="0; URL='/gwtclient/index.html?locale=en&profile=100'" />
-            
+            <iframe width="100%" height="100%" frameborder="0" src="" ></iframe>
         </div>
     </body>
 </html>
