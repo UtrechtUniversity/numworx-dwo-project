@@ -100,10 +100,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
 	public static final String ACTION_FALSE2 = "action.false_2";
+	public static final String ACTION_HALF = "action.half";
 
 	private static final CBookEvent EVENT_CORRECT = new CBookEvent(ACTION_CORRECT); 
 	private static final CBookEvent EVENT_FALSE = new CBookEvent(ACTION_FALSE); 
 	private static final CBookEvent EVENT_FALSE2 = new CBookEvent(ACTION_FALSE2); 
+	private static final CBookEvent EVENT_HALF = new CBookEvent(ACTION_HALF); 
 
 	private static final String DECIMAL = LocaleInfo.getCurrentLocale().getNumberConstants().decimalSeparator();
 	private static final char PERIOD = '.';
@@ -1388,6 +1390,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				fireEvent(EVENT_FALSE2);
 			else if (goedHalfFout == AntwoordVakChecker.FOUT)
 				fireEvent(EVENT_FALSE);
+			else if (goedHalfFout == AntwoordVakChecker.HALF || goedHalfFout == AntwoordVakChecker.DOOR)
+				fireEvent(EVENT_HALF);
 		}
 	}
 	
