@@ -37,6 +37,8 @@ public class StrokeContainer {
 	}
 	
 	public boolean addStroke(Stroke stroke) {
+		if(isOutOfLine(stroke))
+			return true;
 		strokes.add(stroke);
 		updateParseArea(stroke);
 		//if(stroke.isParseable() && checkStrokeParseable(stroke)) {
@@ -368,6 +370,15 @@ public class StrokeContainer {
 		if(parseArea!=null)
 			return parseArea.getDiagonal();
 		return 0;
+	}
+	
+	public boolean isOutOfLine(Stroke stroke) {
+		if(strokes.size()==0)
+			return false;
+		if(stroke.getParsePointsbox().x - (parseArea.x+parseArea.width) > 2.5*averageHeight
+				|| parseArea.x - (stroke.getParsePointsbox().x+stroke.getParsePointsbox().width)  > 5*averageHeight) 
+			return true;
+		return false;
 	}
 	
 	public HashMap<String,Object> getState() {
