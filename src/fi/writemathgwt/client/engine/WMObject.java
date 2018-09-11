@@ -68,6 +68,8 @@ public class WMObject {
 	public WMObject(ArrayList<Stroke> strokes, String teken) {
 		this.strokes = strokes;
 		this.teken = teken;
+		hasAscent = isAscFont(teken);
+		hasDescent = isDescFont(teken);
 		makeBox();
 	}
 	
