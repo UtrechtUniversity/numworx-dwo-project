@@ -14,7 +14,7 @@ public class FormulaProcessor {
 	private static Logger logger = Logger.getLogger("FormulaProcessor");
 	
 	public static String addContext(String formuleString) {
-		logger.info("formuleString = "+formuleString);
+		//logger.info("formuleString = "+formuleString);
 		formuleString = formuleString.replaceAll("c0s", "cos");
 		formuleString = formuleString.replaceAll("l0g", "log");
 		formuleString = formuleString.replace("("+"0s", "cos");
@@ -324,7 +324,7 @@ public class FormulaProcessor {
 		}
 		for (int i = 0; i < writeObjectsToDo.size(); i++) {	
 			WMObject wmObject = writeObjectsToDo.get(i);
-			if (wo.getTellerBox().contains(wmObject.getBox(),-5,-wo.getBox().height))	{	
+			if (wo!=wmObject && wo.getTellerBox().contains(wmObject.getBox(),-5,-wo.getBox().height))	{	
 				hasTeller = true;
 				wmObject.setIsTellerVan(wo);
 				wmObject.setIsNoemerVan(null);
@@ -332,7 +332,7 @@ public class FormulaProcessor {
 		}
 		for (int i = 0; i < writeObjectsToDo.size(); i++) {	
 			WMObject wmObject = writeObjectsToDo.get(i);
-			if (wo.getNoemerBox().contains(wmObject.getBox(),-5,-wo.getBox().height)) {	
+			if (wo!=wmObject && wo.getNoemerBox().contains(wmObject.getBox(),-5,-wo.getBox().height)) {	
 				hasNoemer = true;
 				wmObject.setIsNoemerVan(wo);
 				wmObject.setIsTellerVan(null);
