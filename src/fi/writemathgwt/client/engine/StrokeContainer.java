@@ -246,10 +246,10 @@ public class StrokeContainer {
 				;
 			else {
 				heightSum += wmObjects.get(i).getXHeight();
-				logger.info("Teken: "+wmObjects.get(i).getTeken());
-				logger.info("isMacht: "+wmObjects.get(i).isMachtVan());
-				logger.info("isAsc: "+wmObjects.get(i).hasAscent());
-				logger.info("isDesc: "+wmObjects.get(i).hasDescent());
+				//logger.info("Teken: "+wmObjects.get(i).getTeken());
+				//logger.info("isMacht: "+wmObjects.get(i).isMachtVan());
+				//logger.info("isAsc: "+wmObjects.get(i).hasAscent());
+				//logger.info("isDesc: "+wmObjects.get(i).hasDescent());
 				cnt++;
 			}
 		}
@@ -412,8 +412,9 @@ public class StrokeContainer {
 	public void setState(Map<String,Object> map) {
 		if(map == null || map.isEmpty())
 			return;
+		wis();
 		
-		logger.info(map.toString());
+		//logger.info(map.toString());
 		ObjectMap launchState = JSONUtilities.wrapMap(map);
 		List<Map<String,Object>> strokeList = new ArrayList<Map<String,Object>>();
 		List<Object> wmStrokeIndicesList = new ArrayList<Object>();
@@ -448,6 +449,7 @@ public class StrokeContainer {
 				wmStrokes.add(strokes.get(index));
 			}
 			WMObject wmObject = new WMObject(wmStrokes,wmStrokeTekenList.get(i));
+			//logger.info("WMObject nr:"+i+" Teken:"+wmStrokeTekenList.get(i));
 			wmObjects.add(wmObject);
 		}
 		
