@@ -111,11 +111,13 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	public static final String TVP_KLAPIN = "action.fold";
 	public static final String TVP_SELECT = "action.select";
 	public static final String TVP_DESELECT = "action.deselect";
+	public static final String TVP_CLICK = "action.click";
 	
 	private static final CBookEvent KLAPUIT_EVENT = new CBookEvent(TVP_KLAPUIT); 
 	private static final CBookEvent KLAPIN_EVENT = new CBookEvent(TVP_KLAPIN); 
 	private static final CBookEvent SELECT_EVENT = new CBookEvent(TVP_SELECT); 
 	private static final CBookEvent DESELECT_EVENT = new CBookEvent(TVP_DESELECT);
+	private static final CBookEvent CLICK_EVENT = new CBookEvent(TVP_CLICK);
 	
 	public static Map<String,Map<String,Object>> styles;
 	
@@ -3702,6 +3704,10 @@ private Object CamelCase(String name) {
 		
 	public void mouseDownTouchStartAction(int eventX, int eventY)
 	{
+		if(comRoot.hasListeners(TVP_CLICK)) {
+			fireEvent(CLICK_EVENT);
+		}
+		
 		if(selectable && !sleepbaar)
 		{
 			selected = !selected;
