@@ -2246,7 +2246,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				{
 					// i == stapNr == 0
 					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2, false);
-					if (pijlVak != null) // er is iets misgegaan...
+					if (pijlVak != null && pijlVak.getEditor()!=null) // er is iets misgegaan...
 						pijlVak.getEditor().requestFocus();
 					scrollToBottom();
 					
@@ -2348,7 +2348,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				{
 					openstaandePijl = true;
 					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + fv.getHeightWithImage()/2, false);
-					pijlVak.getEditor().requestFocus();
+					if(pijlVak.getEditor()!=null)
+						pijlVak.getEditor().requestFocus();
 					scrollToBottom();
 				}
 					
@@ -3459,8 +3460,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			pijlVak.setPijlVisible(pijl);
 			pijlVak.paintComponent();
 			pijlVakken.add(pijlVak);
-			
-			pijlVak.getEditor().requestFocus();
+			if(pijlVak.getEditor()!=null)
+				pijlVak.getEditor().requestFocus();
 			scrollToBottom();
 		}
 	}
