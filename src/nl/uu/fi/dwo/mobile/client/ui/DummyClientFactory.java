@@ -33,14 +33,16 @@ public class DummyClientFactory implements ClientFactory {
 	final private RPCHandler handler;
 	private ViewModuleView entryView;
 	private IsWidget logoutWidget;
+	private TrafficAgent agent;
 	
 	public DummyClientFactory() {
-	  this(new SimpleEventBus(),new DummyRPCHandler());
+	  this(new SimpleEventBus(),new DummyRPCHandler(), new TrafficAgent());
 	}
 
-	@Inject DummyClientFactory(EventBus eventBus, RPCHandler handler) {
+	@Inject DummyClientFactory(EventBus eventBus, RPCHandler handler, TrafficAgent agent) {
       this.eventBus = eventBus;
       this.handler = handler;
+      this.agent = agent;
     }
 
   @Override
@@ -147,11 +149,12 @@ public class DummyClientFactory implements ClientFactory {
 
 	@Override
 	public Promise<Void> barrier() {
-		return Promises.resolved(null);
+		return agent.barrier();
 	}
 
 	@Override
 	public void addBarrier(Promise<?> p) {
+		agent.addBarrier(p);
 	}
 
 	@Override

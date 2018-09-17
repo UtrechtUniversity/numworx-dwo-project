@@ -6,18 +6,24 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.osgi.util.function.Function;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
+@Singleton
 public class TrafficAgent implements Failure, Success<Object, Void> { 
 
 	List<Promise<?>> list = new ArrayList<>();
 	private Deferred<Void> defer;
 	
+	@Inject public TrafficAgent() {
+	}
+
 	@SuppressWarnings("unchecked")
 	public Promise<Void> barrier() {
 		if(defer != null) {
