@@ -114,9 +114,11 @@ public class ImageView implements IsWidget, TekstElement
 		ImageView.map = map;
 	}
 
+	private Widget widget; // idempotent
 	@Override
 	public Widget asWidget() {
-		return getImage();
+		if( widget != null) return widget;
+		return widget = getImage();
 	}
 
 	@Override
