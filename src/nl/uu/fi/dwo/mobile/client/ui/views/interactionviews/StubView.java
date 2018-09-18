@@ -361,6 +361,9 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		wnd.setFocus = function(b, viewer) {
 			viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::setFocus(Z)(b)
 		}
+		wnd.setFocus2 = function(b, soft, viewer) {
+			viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::setFocus(ZZ)(b,soft)
+		}
 		wnd.getMode = function(viewer) {
 			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getMode()()
 		}
@@ -396,14 +399,20 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		return wnd.inner;
 	}-*/;
 
-	public void setFocus(boolean b) {
-		comRoot.getKeyboard().setEditor( b ? this : null);
+	private void setFocus(boolean b, boolean soft) {
+		final FormuleKeyboardIF kb = comRoot.getKeyboard();
+		kb.setEditor( b ? this : null);
 		
-		// FIXME extra parameter soft of hard focus
-		if (b) 
-			comRoot.getKeyboard().softFocus(); 
-		else 
-			comRoot.getKeyboard().blur();
+		// extra parameter 'soft' of hard focus
+		if (b) {
+			if(soft) kb.softFocus();
+			else kb.focus();
+		} else 
+			kb.blur();
+	}
+	
+	private void setFocus(boolean b) {
+		setFocus(b,true);
 	}
 	
 	private void setEnterType(String type) {
