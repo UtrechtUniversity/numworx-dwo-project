@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.rest.dom;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,6 +10,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -34,18 +36,33 @@ public class DomCoursesOfSchoolclassTree {
         courseTree = buildCourseTree(school, resultData);
         //reCalculateResults();
     }
+    
+    public DomCoursesOfSchoolclassTree(DomSchool school, DomResultsPerTeacher resultData) {
+      LOG.log(Level.INFO, "Initializing a DomCoureTree.");
+      courseTree = buildCourseTree(school, resultData);
+    }
+
+    private DomTree<DomCourseOfClass> buildCourseTree(DomSchool school,
+        DomResultsPerTeacher resultData) {
+      return buildCourseTree(school, resultData.getCourses(), resultData.getClassCourses());
+    }
 
     private DomTree<DomCourseOfClass> buildCourseTree(DomSchool school, DomCoursesOfSchoolClass4Teacher resultData) {
-        //built hashmaps for classcourses and courses from lists
-        cocMap = new HashMap<String, DomTree>(resultData.getCourses().size());
-        Map<String, DomClassCourse4Teacher> classCourseMap = new HashMap<String, DomClassCourse4Teacher>(resultData.getClassCourses().size());
+        return buildCourseTree(school, resultData.getCourses(), resultData.getClassCourses());
+    }
 
-        for (DomMapEntry<PersistenceId, DomCourse> courseEntry : resultData.getCourses()) {
+    private DomTree<DomCourseOfClass> buildCourseTree(DomSchool school,
+        final List<DomMapEntry<PersistenceId, DomCourse>> courses,
+        final List<DomMapEntry<PersistenceId, DomClassCourse4Teacher>> classCourses) {
+      cocMap = new HashMap<String, DomTree>(courses.size());
+      Map<String, DomClassCourse4Teacher> classCourseMap = new HashMap<String, DomClassCourse4Teacher>(classCourses.size());
+
+        for (DomMapEntry<PersistenceId, DomCourse> courseEntry : courses) {
 
             cocMap.put(courseEntry.getKey().getIdString(), new DomTree<DomCourseOfClass>(new DomCourseOfClass(courseEntry.getValue())));
         }
 
-        for (DomMapEntry<PersistenceId, DomClassCourse4Teacher> ccEntry : resultData.getClassCourses()) {
+        for (DomMapEntry<PersistenceId, DomClassCourse4Teacher> ccEntry : classCourses) {
             classCourseMap.put(ccEntry.getValue().getCourseId().getIdString(), ccEntry.getValue());
         }
 
