@@ -22,6 +22,7 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	
 	private InteractionStub view;
 	private static FormuleEditorIF editor;
+	private static boolean soft = true;
 	private static Logger logger = Logger.getLogger("Stub");
 	private Stub(InteractionStub view) {
 		this.view = view;
@@ -178,12 +179,17 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	public void setEditor(FormuleEditorIF formuleEditor) {
 		editor = formuleEditor;
 		try {
-			setFocus0(formuleEditor != null);
+			setFocus2(formuleEditor != null, soft);
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "setEditor", e);
 		}
 	}
 
+	private static native void setFocus2(boolean b, boolean soft) 
+	/*-{
+	 	$wnd.setFocus2(b,soft, $wnd.outer)
+	}-*/;
+	
 	private static native void setFocus0(boolean b)
 	/*-{
 		$wnd.setFocus(b, $wnd.outer)
@@ -269,11 +275,15 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	}
 
 	@Override
-	public void focus() {		
+	public void focus() {
+		soft = false;
+		setFocus2(editor != null, false);
 	}
 	
 	@Override
-	public void softFocus() {		
+	public void softFocus() {
+		soft = true;
+		setFocus2(editor != null, true);
 	}
 	
 	@Override
