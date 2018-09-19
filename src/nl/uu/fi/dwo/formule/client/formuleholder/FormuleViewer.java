@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Image;
@@ -214,7 +215,7 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 		FormuleRegel l = this.getMainRegel().selection(selectionStartX, selectionStartY, selectionEndX, selectionEndY);
 		hasSelection = l.hasSelection();
 		setCurrentRegel(l);
-		this.paint();
+		deferredPaintSelection();
 	}
 
 	@Override

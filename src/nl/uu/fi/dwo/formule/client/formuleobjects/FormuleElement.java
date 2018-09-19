@@ -593,5 +593,8 @@ public abstract class FormuleElement implements TekstElement
 		svg.appendChild(image);
 	}
 
+	public void paintSelection() {
+	}
+
 
 }

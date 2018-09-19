@@ -1672,8 +1672,11 @@ public class FormuleRegel extends FormuleElement
 		}
 	}
 
+	
+	private OMSVGRectElement selectionRect;
 	protected void paintComponent(OMSVGElement svg) {
 		//ignore if the formule is not editable
+		selectionRect = null; // clear rect.
 		if (holder instanceof FormuleEditor)
 			if (holder.getCurrentRegel() == this && this.parent != null)
 			{
@@ -1681,6 +1684,7 @@ public class FormuleRegel extends FormuleElement
 				OMSVGRectElement rect = new OMSVGRectElement(x,y,width,height,0, 0);
 				rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "#EEEEEE");
 				svg.appendChild(rect);
+				selectionRect = rect;
 			}
 
 		if (this.children.isEmpty() && holder.isInputNeeded())
@@ -1692,9 +1696,52 @@ public class FormuleRegel extends FormuleElement
 			style.setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1");
 			style.setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "none");
 			svg.appendChild(rect);
+			selectionRect = rect;
+		}
+// transparant if not needed (yet)		
+		if (selectionRect == null) {
+			OMSVGRectElement rect = new OMSVGRectElement();
+			rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, SVGConstants.CSS_NONE_VALUE);
+			svg.appendChild(rect);
+			selectionRect = rect;			
 		}
 		
-		
+	}
+
+	private void paintSelection0( ) {
+// manipulate selectionRect as if paintComponent(svg) was called.	
+		selectionRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, SVGConstants.CSS_NONE_VALUE);
+		selectionRect.getStyle().clearSVGProperty(SVGConstants.CSS_STROKE_PROPERTY);
+		if (holder instanceof FormuleEditor)
+			if (holder.getCurrentRegel() == this && this.parent != null)
+			{
+				selectionRect.getX().getBaseVal().setValue(x);
+				selectionRect.getY().getBaseVal().setValue(y);
+				selectionRect.getWidth().getBaseVal().setValue(width);
+				selectionRect.getHeight().getBaseVal().setValue(height);				
+				//draw background
+				selectionRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "#EEEEEE");
+			}
+
+		if (this.children.isEmpty() && holder.isInputNeeded())
+		{
+			//draw square if line is empty
+			//OMSVGRectElement rect = new OMSVGRectElement(x+0.5f,y+0.5f,width-1,height-1,0, 0);
+			selectionRect.getX().getBaseVal().setValue(x+0.5f);
+			selectionRect.getY().getBaseVal().setValue(y+0.5f);
+			selectionRect.getWidth().getBaseVal().setValue(width-1);
+			selectionRect.getHeight().getBaseVal().setValue(height-1);				
+			OMSVGStyle style = selectionRect.getStyle();
+			style.setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, "#888888");
+			style.setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1");
+			style.setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "none");
+		}		
+	}
+	
+	
+	public void paintSelection() {
+		paintSelection0();
+		for ( FormuleElement c: children) c.paintSelection();
 	}
 
 	

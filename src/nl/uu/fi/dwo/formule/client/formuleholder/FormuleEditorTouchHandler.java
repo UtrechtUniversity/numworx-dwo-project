@@ -29,6 +29,7 @@ public class FormuleEditorTouchHandler implements TouchHandler
 	int x,y;
 	boolean soft;
 	Element capture;
+	private static Logger LOG = Logger.getLogger("FormuleEditorTouchHandler");
 	
 	public FormuleEditorTouchHandler(FormuleHolder editor)
 	{
@@ -41,11 +42,15 @@ public class FormuleEditorTouchHandler implements TouchHandler
 	@Override
 	public void onTouchStart(TouchStartEvent event)
 	{
+		try
+		{
+		LOG.info("onTouchStart " + event.getTouches().length()  + ", " + event.getTouches().get(0).getIdentifier() + ", " + event.getTouches().get(0).getPageX());
 		if(isSupported())
 		{
 			event.preventDefault();
 			event.stopPropagation();
-		} else {
+		} 
+		{
 			EventTarget target = event.getNativeEvent().getEventTarget();
 			boolean when = Element.is(target) && (Element.as(target) == editor.getCanvas().getElement());
 			if(when) {
@@ -54,8 +59,6 @@ public class FormuleEditorTouchHandler implements TouchHandler
 			}
 		}
 		
-		try
-		{
 			editor.requestFocus();
 			int x = event.getTouches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
 			int y = event.getTouches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
@@ -72,7 +75,7 @@ public class FormuleEditorTouchHandler implements TouchHandler
 		catch (Exception e)
 		{
 			//Window.alert("Error: " + e.getMessage());
-			Logger.getLogger("FormuleEditorTouchHandler").log(Level.SEVERE, "onTouchStart: " + e, e);
+			LOG.log(Level.SEVERE, "onTouchStart: " + e, e);
 		}
 
 	}
@@ -93,6 +96,7 @@ public class FormuleEditorTouchHandler implements TouchHandler
 		}
 		try
 		{
+			LOG.info("onTouchMove " + event.getTouches().length()  + ", " + event.getTouches().get(0).getIdentifier() + ", " + event.getTouches().get(0).getPageX());
 			int x = event.getTouches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
 			
 			int y = event.getTouches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
@@ -106,6 +110,7 @@ public class FormuleEditorTouchHandler implements TouchHandler
 		catch (Exception e)
 		{
 			//Window.alert("Error: " + e.getMessage());
+			LOG.log(Level.SEVERE, "onTouchMove: " + e, e);
 		}
 
 	}
@@ -113,14 +118,15 @@ public class FormuleEditorTouchHandler implements TouchHandler
 	@Override
 	public void onTouchEnd(TouchEndEvent event)
 	{
-		if(isSupported())
-		{
-			event.preventDefault();
-			event.stopPropagation();
-		}
-		release();
 		try
 		{
+			LOG.info("onTouchEnd " + event.getChangedTouches().length()  + ", " + event.getChangedTouches().get(0).getIdentifier() + ", " + event.getChangedTouches().get(0).getPageX());
+			if(isSupported())
+			{
+				event.preventDefault();
+				event.stopPropagation();
+			}
+			release();
 			int x = event.getChangedTouches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
 			int y = event.getChangedTouches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
 			editor.endSelection(x, y);
@@ -129,6 +135,7 @@ public class FormuleEditorTouchHandler implements TouchHandler
 		catch (Exception e)
 		{
 			//Window.alert("Error: " + e.getMessage());
+			LOG.log(Level.SEVERE, "onTouchEnd: " + e, e);
 		}
 		
 	}
@@ -141,7 +148,12 @@ public class FormuleEditorTouchHandler implements TouchHandler
 	@Override
 	public void onTouchCanceled(TouchCancelEvent event)
 	{
-		release();
+		try {
+			LOG.info("onTouchCanceled " + event.getChangedTouches().length()  + ", " + event.getChangedTouches().get(0).getIdentifier() + ", " + event.getChangedTouches().get(0).getPageX());
+			release();
+		} catch (Exception e) {
+			LOG.log(Level.SEVERE, "onTouchCancel: " + e, e);
+		}
 	}
 
 	private void release() {

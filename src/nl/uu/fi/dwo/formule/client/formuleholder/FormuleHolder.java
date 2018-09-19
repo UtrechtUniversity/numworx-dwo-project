@@ -8,10 +8,14 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
 
+import com.google.gwt.animation.client.AnimationScheduler;
+import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
+import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
@@ -70,6 +74,8 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	protected int selectionStartY = 0;
 	protected int selectionEndX = -1;
 	protected int selectionEndY = 0;
+
+	private AnimationHandle animator;
 	
 
 	public FormuleHolder()
@@ -484,4 +490,17 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	}
 
 	public void removeTouchHandler() { }  // alleen in viewer
+
+	protected void deferredPaintSelection() {
+		if (animator == null && getMainRegel().isChanged()) {
+			Element element = getMainRegel().asWidget().getElement();
+			animator = AnimationScheduler.get().requestAnimationFrame(new AnimationCallback() {
+				@Override
+				public void execute(double timestamp) {
+					animator = null;
+					getMainRegel().paintSelection();
+				}
+			}, element);
+		}
+	}
 }

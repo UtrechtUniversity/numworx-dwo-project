@@ -26,6 +26,8 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 
 	private int currentChild = 0;
 
+	protected OMSVGRectElement selectedRect;
+
 	public FormuleElementWithChildren(FormuleElement holder)
 	{
 		super(holder);
@@ -242,13 +244,23 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 	}
 	
 	protected void paintComponent(OMSVGElement svg) {
+		selectedRect = new OMSVGRectElement(x,y,width,height,0, 0);
+		paintSelection0();
+		svg.appendChild(selectedRect);
+	}
+	
+	private void paintSelection0() {
 		if (isSelected()) {
-			OMSVGRectElement rect = new OMSVGRectElement(x,y,width,height,0, 0);
-			rect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "#AAAAFF");
-			svg.appendChild(rect);
+			selectedRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "#AAAAFF");
+		} else {
+			selectedRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, SVGConstants.CSS_NONE_VALUE);
 		}
 	}
 	
+	public void paintSelection() {
+		paintSelection0();
+		for(FormuleElement e: children) e.paintSelection();
+	}
 
 	@Override
 	public String toString() {

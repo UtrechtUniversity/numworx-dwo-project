@@ -214,7 +214,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 //		this.selectionStartY = selectionStartY;
 //		this.selectionEndY = selectionEndY;
 		setCurrentRegel(l);
-		this.paint();
+		deferredPaintSelection();
 	}
 
 	public void clearSelection()

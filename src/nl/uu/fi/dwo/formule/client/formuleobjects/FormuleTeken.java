@@ -40,6 +40,7 @@ public class FormuleTeken extends FormuleElement
 	private boolean combined;
 	private boolean selected;
 	private boolean functieTeken;
+	private OMSVGRectElement selectedRect;
 	private static boolean maalteken;
 	private static boolean diffOperatoren;
 
@@ -482,13 +483,28 @@ public class FormuleTeken extends FormuleElement
 		return String.valueOf(this.character);
 	}
 	
+
+	private void createSelection(OMSVGElement svg) {
+		selectedRect = new OMSVGRectElement(x,y,width,height,0, 0);
+		paintSelection();
+		svg.appendChild(selectedRect);
+	}
+	
+	public void paintSelection() {
+		if (isSelected()) {
+			selectedRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "#AAAAFF");
+		} else {
+			selectedRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, SVGConstants.CSS_NONE_VALUE);
+		}
+		selectedRect.getWidth().getBaseVal().setValue(width);
+		selectedRect.getX().getBaseVal().setValue(x);
+		
+		drawCursor((OMSVGElement)null);
+	}
+	
 	@Override
 	public void draw(OMSVGElement svg) {
-		if(isSelected()) {
-			OMSVGRectElement r = new OMSVGRectElement(x, y, width, height, 0, 0);
-			r.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY,"#AAAAFF");
-			svg.appendChild(r);
-		}
+		createSelection(svg);
 
 		if(teken != null) {
 			int dx = x;
@@ -519,7 +535,31 @@ public class FormuleTeken extends FormuleElement
 			buildChar(new SvgBuilder(svg, x, y));
 		}
 
-		drawCursor(svg);
+		//drawCursor(svg);
 	}
 
+	protected void drawCursor(OMSVGElement svg) {
+		drawCursor(width, svg);
+	}
+	
+	protected void drawCursor(int width, OMSVGElement notused) {
+		if (this.isCurrent() == false || this.isSelected() || this.holder.hasSelection())
+			return;
+		selectedRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "#00F");
+		selectedRect.getWidth().getBaseVal().setValue(2f);
+		selectedRect.getX().getBaseVal().setValue(x+width-2);
+	}
+
+//	protected void drawCursor(int x, PathBuilder pb) {
+//		pb.setLineWidth(2);
+//		pb.setStrokeStyle("#00f");
+//		if (x - 1 < 0)
+//			x += 2;
+//		pb.beginPath();
+//		pb.moveTo(x - 1, 2);
+//		pb.lineTo(x - 1, height - 2);
+//		pb.stroke();
+//	}
+
+	
 }

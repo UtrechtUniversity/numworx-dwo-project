@@ -107,5 +107,4 @@ public class MainFormuleRegel extends FormuleRegel implements IsWidget {
 		svg.setWidth(Unit.PX, width);
 		svg.setViewBox(0, 0, width, height);
 	}
-
 }
