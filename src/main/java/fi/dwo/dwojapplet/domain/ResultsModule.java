@@ -14,6 +14,7 @@ import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.MapperIF;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.UserResultListMapper;
+import nl.uu.fi.dwo.rest.dom.DomCoursesOfSchoolclassTree;
 import nl.uu.fi.dwo.rest.dom.DomMappedResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
@@ -24,6 +25,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
@@ -69,6 +71,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
 
     private DomResultsPerTeacher domresults;
     private DomResultTree resulttree;
+    private DomCoursesOfSchoolclassTree coursetree;
     private DomResultPlotMatrix matrix;
 
     private DomMappedResultsPerTeacher mappedresults;
@@ -79,6 +82,8 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
       this.domresults = domresults;
       this.mappedresults = new DomMappedResultsPerTeacher(domresults);
       this.resulttree = new DomResultTree(mappedresults);
+      DomSchool school = DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool();
+      this.coursetree = new DomCoursesOfSchoolclassTree(school, domresults);
       reset();
     }
     public ResultsModule(DomResultsPerTeacher domresults, DWO dwo, DomSchoolClassId domclass) throws Dwo2Exception, PersistenceException
