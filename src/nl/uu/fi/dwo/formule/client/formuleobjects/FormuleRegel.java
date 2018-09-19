@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.vectomatic.dom.svg.OMSVGElement;
 import org.vectomatic.dom.svg.OMSVGGElement;
 import org.vectomatic.dom.svg.OMSVGImageElement;
+import org.vectomatic.dom.svg.OMSVGLineElement;
 import org.vectomatic.dom.svg.OMSVGRectElement;
 import org.vectomatic.dom.svg.OMSVGStyle;
 import org.vectomatic.dom.svg.OMSVGTransform;
@@ -1666,14 +1667,34 @@ public class FormuleRegel extends FormuleElement
 		int x = this.width;
 		if (this.currentPosition == -1 || this.children.isEmpty())
 			x = 0;
-		if(this.selectionStart == -1) //in dit geval geen selectie?
+//		if(this.selectionStart == -1) //in dit geval geen selectie?
 		{	
 			this.drawCursor(x,svg);
 		}
 	}
 
+	protected void drawCursor(int x, OMSVGElement svg) {
+      if (x - 1 < 0)
+        x += 2;
+	  cursorLine = new OMSVGLineElement(x-1, 2, x-1, height-2);
+	  cursorLine.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "2");
+	  positionCursor();
+	  svg.appendChild(cursorLine);
+	}
+	
+	private void positionCursor() {
+	      String color;
+	     if (this.isCurrent() == false || this.isSelected() || this.holder.hasSelection())
+             color = SVGConstants.CSS_NONE_VALUE;
+	     else if (selectionStart == -1) {
+	         color = "#00F";
+	     } else 
+	       color = SVGConstants.CSS_NONE_VALUE;
+	     cursorLine.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, color); 
+	}
 	
 	private OMSVGRectElement selectionRect;
+	private OMSVGLineElement cursorLine;
 	protected void paintComponent(OMSVGElement svg) {
 		//ignore if the formule is not editable
 		selectionRect = null; // clear rect.
@@ -1736,6 +1757,8 @@ public class FormuleRegel extends FormuleElement
 			style.setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1");
 			style.setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "none");
 		}		
+// position cursor
+		positionCursor();
 	}
 	
 	
