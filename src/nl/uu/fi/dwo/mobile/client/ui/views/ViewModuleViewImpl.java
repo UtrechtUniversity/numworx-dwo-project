@@ -194,7 +194,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	public boolean zelftoetsNagekeken = false;
 	
-	private Panel kbp = null;
+	//private Panel kbp = null;
 	private HeaderButton hb;
 	private HeaderPanel hp;
 	private WaitScreen waitscreen = WaitScreen.instance();
@@ -248,13 +248,16 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		kb.blur();
 	}
 
-	public void removeTitle() {
+	private void removeTitle() {
 		hp.removeFromParent();
 		setWindowTop(0);
 //		int h = mainPanel.getOffsetHeight();
 //		sb.setScrollPanel(this, h);
 	}
-	
+	private void addTitle() {
+	  if (standalone) headerView.setWidget(hp);
+	  setWindowTop(extraHeight);
+	}
 	
 	
 	public void setupView(HashMap<String, Object> launchData)
@@ -327,7 +330,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			if (standalone && !bolletjesZichtbaar && !volgendeKnopZichtbaar
 				&& !vorigeKnopZichtbaar && aantalOpdrachten == 1)
 				removeTitle();
-			
+			else {
+			  addTitle();
+			}
 			FlowPanel onp = (FlowPanel) on.getAsPanel();
 			
 			onp.setStyleName(dwoplayercss.opdrachtbollen(), true);
@@ -1866,26 +1871,14 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			hb = new HeaderButton(DWOplayer.PARAMETERS.headercss());
 			hb.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.menuIcon().getSafeUri().asString() + "')");
 			hp.setLeftWidget(hb);
-			headerView.setWidget(hp);
-			setWindowTop(extraHeight);
+//			headerView.setWidget(hp);
+//			setWindowTop(extraHeight);
 		}
-//		contentScrollPanel = new LayoutPanel();
-//		contentScrollPanel.addStyleName("contentScrollPanel");
-//		contentScrollPanel.setWidth("100%");
-//		contentScrollPanel.setHeight("100%");
-//		contentScrollPanel.getElement().getStyle().setOverflowY(Overflow.HIDDEN);
-//		contentScrollPanel.getElement().getStyle().setOverflowX(Overflow.HIDDEN);
-//		contentScrollPanel.setAlwaysShowScrollBars(false);
-//
-//		contentPanel = new FlowPanel();contentPanel.setStylePrimaryName("contentPanel");
-//		contentPanel.getElement().getStyle().setProperty("display", "inline-block");
+
 		contentPanel = content;
 // smooth scroll on ios devices:
 		setWebkitScrolling(true);
-		//contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
-//		contentPanel.setWidth("100%"); // hoeveel is 100% - 30px ?
-//		contentPanel.setHeight("100%");
-// FIXME Hier moeten we een gesture recognizer maken:
+// Hier moeten we een gesture recognizer maken:
 
 		if(TouchEvent.isSupported())
 		{

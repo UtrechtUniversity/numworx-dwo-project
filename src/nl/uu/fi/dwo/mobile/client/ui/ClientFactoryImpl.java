@@ -2,8 +2,8 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import javax.inject.Provider;
 
-import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
-import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
+//import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
+//import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNone;
@@ -31,7 +31,7 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
-import com.google.gwt.user.client.ui.IsWidget;
+//import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
@@ -64,21 +64,7 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 		}
 		
 	};
-	
-//	class ViewModuleHolder implements Provider<ViewModuleView> {
-//		final ViewModuleView hold;
-//
-//		@Override
-//		public ViewModuleView get() {
-//			return hold;
-//		}
-//
-//		public ViewModuleHolder(ViewModuleView hold) {
-//			this.hold = hold;
-//		}
-//		
-//	}
-		
+			
 	// singleton pattern.
 	final Provider<HeaderView> headerView;
 		
@@ -117,7 +103,6 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	protected LoginView loginView;
 	protected TreeModuleView treeModuleView;
 	private RPCHandler handler;
-	private IsWidget logoutWidget;
 	
 	public ClientFactoryImpl()
 	{
@@ -187,36 +172,18 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	public void setRPCHandler(RPCHandler handler) {
 		this.handler = handler;
 	}
-
-//	@Override
-//	public void setEntryView(ViewModuleView view) {
-//		entryView = new ViewModuleHolder(view);
-//	}
 	
-	public SCORM_guest setupAPI() {
-		SCORM_guest api;
-		if(!withUser()) {
-			api = new SCORM_guest();
-		} else {
-			Integer userID = (Integer) getUserID();
-			api = new SCORM_DWOmAccess(userID.intValue());
-		}
-		return api;
-	}
-	
-//	@Override
-//	public IsWidget getMenuWidget() {
-//		return null;
+//	public SCORM_guest setupAPI() {
+//		SCORM_guest api;
+//		if(!withUser()) {
+//			api = new SCORM_guest();
+//		} else {
+//			Integer userID = (Integer) getUserID();
+//			api = new SCORM_DWOmAccess(userID.intValue());
+//		}
+//		return api;
 //	}
-//
-//	public IsWidget getLogoutWidget() {
-//		return logoutWidget;
-//	}
-//
-//	public void setLogoutWidget(IsWidget logoutWidget) {
-//		this.logoutWidget = logoutWidget;
-//	}
-	
+		
 	@Override
 	public Promise<Void> logout() {
 		return Promises.resolved(null);

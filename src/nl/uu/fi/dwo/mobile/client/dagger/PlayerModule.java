@@ -16,7 +16,6 @@ import dagger.Module;
 import dagger.Provides;
 import nl.uu.fi.dwo.mobile.client.ui.AppPlaceHistoryMapper;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
-import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 
 @Module
 public abstract class PlayerModule {

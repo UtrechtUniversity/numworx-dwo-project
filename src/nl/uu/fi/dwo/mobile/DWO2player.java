@@ -75,10 +75,6 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 	private static final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 		//			private IsWidget  menuWidget;
 		private TrafficAgent agent = new TrafficAgent();
-//			@Override
-//			public IsWidget getMenuWidget() {
-//				return menuWidget;
-//			}
 
 		@Override
 		public void addBarrier(Promise<?> p) {
@@ -133,13 +129,8 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			SCORM_guest api;
 			if(!withUser()) {
 				api = new SCORM_guest();
-//					menuWidget = null;
 			} else {					
 				api = new SCORM_DWO4();
-//					menuWidget = getUserBar();
-//					
-//					userBar.setRole(getRoleType());
-//
 			}
 			return api;
 		}
@@ -202,34 +193,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
 	}
 	
-	
-//	@Override
-//	public void setupDWOPlayer() {
-//		super.setupDWOPlayer();
-//		if( MGWT.getOsDetection().isAndroid() )
-//			getUserBar().getElement().getStyle().setColor("white");
-//        getUserBar().setResetLogin(new Command() {
-//        	Place place = new ReloginPlace(); // FIXME met een hash?
-//        	
-//			@Override
-//			public void execute() {
-//				clientfactory.getPlaceController().goTo(place);
-//			}
-//        	
-//        });
-//
-//	}
-
-
-//	private UserBar userBar;
-//
-//	protected UserBar getUserBar() {
-//		if (userBar == null) 
-//			userBar = new UserBar(clientfactory.getEventBus());
-//		return userBar;
-//	}
-
-	
+		
 	protected ClientFactory createClientFactory() {
 		ClientFactoryImpl factory = new DWO2ClientFactoryImpl();
 		String host = PARAMETERS.getHost();
@@ -466,7 +430,6 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 				}});
 			return;
 		
-		//super.gotoCourses_impl();
 	}
 
 }
