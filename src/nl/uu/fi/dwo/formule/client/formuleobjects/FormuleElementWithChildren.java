@@ -249,7 +249,7 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 		svg.appendChild(selectedRect);
 	}
 	
-	private void paintSelection0() {
+	protected void paintSelection0() {
 		if (isSelected()) {
 			selectedRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "#AAAAFF");
 		} else {

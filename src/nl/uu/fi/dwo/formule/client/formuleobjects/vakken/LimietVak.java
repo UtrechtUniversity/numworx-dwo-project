@@ -190,4 +190,11 @@ public class LimietVak extends FormuleElementWithChildren{
 		drawCursor(svg);
 	}
 
+	public void paintSelection() {
+		paintSelection0();
+		children.get(0).paintSelection();
+		children.get(1).paintSelection();
+		children.get(2).paintSelection();
+	}
+
 }
