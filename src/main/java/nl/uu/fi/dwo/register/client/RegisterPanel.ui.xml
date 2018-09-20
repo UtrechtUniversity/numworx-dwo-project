@@ -3,7 +3,14 @@
     xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:with type="nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT" field="rb" />
-	<ui:style>
+	<ui:style type="nl.uu.fi.dwo.register.client.RegisterCSS" field='css'>
+		.free {
+		}
+		
+		.isfree .free {
+			display: none;
+		}
+	
 	</ui:style>
 	<g:HTMLPanel>
 	<mgwt:LayoutPanel height="800px" width="100%" >
@@ -15,7 +22,7 @@
 		</mgwt:HeaderPanel>
 		<!-- Main interaction Area -->
 	  	<g:HTMLPanel>
-			<div style="width: 400px; height: 470px; display: block; margin: 20px auto; border: solid black 1px">
+			<div style="width: 400px; display: block; margin: 20px auto; border: solid black 1px">
 	    	    <div style="padding: 10px" >
 	    	    <table>
 	    	       <tr>
@@ -49,22 +56,22 @@
 	    	       <tr>
 	    	       		<td>&#x00a0;</td>
 	    	       </tr>
-	    	       <tr>
+	    	       <tr class="{css.free}">
 	    	       		<td colspan="2" ><ui:text from="{rb.GUIR_MSG_PROVIDED_SCHOOL}" /></td>
 	    	       </tr>
-	    	       <tr>
+	    	       <tr class="{css.free}">
 	    	       	<td><ui:text from="{rb.GUIR_SCHOOLGROUP}" /></td>
 	    	       	<td><g:ListBox ui:field="schoolGroup" /></td>
 	    	       </tr>
-	    	       <tr>
-	    	       	<td><ui:text from="{rb.GUI_SchoolLogin}" /></td>
+	    	       <tr class="{css.free}">
+	    	       	<td><ui:text from="{rb.GUI_SchoolLogin}" />*</td>
 	    	        <td><g:TextBox  ui:field="schoolLogin" /></td>
 	    	       </tr>
-	    	       <tr>
-	    	       	<td><ui:text from="{rb.SCHOOLCODE}" /></td>
+	    	       <tr class="{css.free}">
+	    	       	<td><ui:text from="{rb.SCHOOLCODE}" />*</td>
 	    	        <td><g:PasswordTextBox  ui:field="schoolCode" /></td>
 	    	       </tr>
-	    	       <tr>
+	    	       <tr class="{css.free}">
 	    	       		<td>&#x00a0;</td>
 	    	       </tr>
 	    	       

@@ -1,17 +1,16 @@
 package nl.uu.fi.dwo.register.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.ui.client.widget.Button;
 
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
@@ -25,24 +24,31 @@ public class RegisterPanel extends Composite {
 
 	private static RegisterPanelUiBinder uiBinder = GWT
 			.create(RegisterPanelUiBinder.class);
+	private static RegisterBundle bundle = GWT.create(RegisterBundle.class);
 
 	interface RegisterPanelUiBinder extends UiBinder<Widget, RegisterPanel> {
 	}
 
-	public RegisterPanel() {
+	final private boolean isfree;
+	
+	public RegisterPanel(boolean isfree) {
+	    this.isfree = isfree;
 		initWidget(uiBinder.createAndBindUi(this));
-		schoolGroup.addItem(rb.NULLSCHOOL(), RoleType.STUDENT.name());
+		//schoolGroup.addItem(rb.NULLSCHOOL(), RoleType.STUDENT.name());
 		schoolGroup.addItem(rb.STUDENT(), RoleType.STUDENT.name());
 		schoolGroup.addItem(rb.TEACHER(), RoleType.TEACHER.name());
 		schoolGroup.addItem(rb.SCHOOLADMIN(), RoleType.SCHOOLADMIN.name());
 		controller = new RegisterController();
+		nav_title.setText(isfree ? bundle.REGISTER_FREE() : bundle.REGISTER());
 //		register.addTapHandler(this::onRegister);
 //		cancel.addTapHandler(this::onCancel);
+		setStyleName(css.isfree(), isfree);
 	}
 
 	private RegisterController controller;
 	
 	@UiField Button register, cancel;
+	@UiField Label nav_title;
 	
 	@UiField
 	DwoLocalesForGWT rb;
@@ -51,6 +57,8 @@ public class RegisterPanel extends Composite {
 	HasText username, password, givenName, insertion, familyName, email, passwordAgain, schoolCode, schoolLogin;
 
 	@UiField ListBox schoolGroup;
+	
+	@UiField RegisterCSS css;
 	
 	@UiHandler("cancel")
 	void onCancel(TapEvent e) {
@@ -66,7 +74,7 @@ public class RegisterPanel extends Composite {
 		domUser.setGivenName(givenName.getText());
 		domUser.setInsertion(insertion.getText());
 		domUser.setUsername(username.getText());
-		if(!schoolGroup.getSelectedValue().isEmpty())
+		if(!schoolGroup.getSelectedValue().isEmpty() && !isfree)
 		domUser.setRole(RoleType.valueOf(schoolGroup.getSelectedValue()));
 		
 		String p1 = password.getText();
@@ -101,8 +109,15 @@ public class RegisterPanel extends Composite {
 		
 		String sLogin = schoolLogin.getText();
 		String sCode = schoolCode.getText();
-		if(sLogin.isEmpty()) {
+		if(isfree) {
 			sLogin = sCode = null;
+			domUser.setRole(RoleType.STUDENT);
+		} else {
+	        if ( ! SimpleValidUserFieldsChecker.isNonEmptyNorNull(sLogin,sCode))
+	        {
+	            Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_Required_Fields());
+	            return;
+	        }
 		}
 		domUser.setSchoolCode(sCode);
 		domUser.setSchoolLogin(sLogin);		

@@ -13,14 +13,17 @@ public class Register implements EntryPoint, Command {
 	private RegisterPanel content;
 	private String newURL = "/leerling/";
 	
+	private static native boolean getFree() /*-{
+	  return $wnd.free
+    }-*/;
 
 	public void onModuleLoad() {
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
         String next = Window.Location.getParameter("next");
         if(next != null)
         	newURL = next;
-        
-		content = new RegisterPanel();
+        boolean free = getFree();
+		content = new RegisterPanel(free);
 		content.getController().setNext(this);
 		RootPanel.get().add(content);
 		
