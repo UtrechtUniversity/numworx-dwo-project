@@ -1673,21 +1673,26 @@ public class FormuleRegel extends FormuleElement
 		}
 	}
 
-	protected void drawCursor(int x, OMSVGElement svg) {
-      if (x - 1 < 0)
-        x += 2;
-	  cursorLine = new OMSVGLineElement(x-1, 2, x-1, height-2);
+	protected void drawCursor(int p, OMSVGElement svg) {
+      if (p - 1 < 0)
+        p += 2;
+	  cursorLine = new OMSVGLineElement(x+p-1, y+2, x+p-1, y+height-2);
 	  cursorLine.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "2");
-	  positionCursor();
+	  positionCursor(p);
 	  svg.appendChild(cursorLine);
 	}
 	
-	private void positionCursor() {
+	private void positionCursor(int p) {
 	      String color;
 	     if (this.isCurrent() == false || this.isSelected() || this.holder.hasSelection())
              color = SVGConstants.CSS_NONE_VALUE;
 	     else if (selectionStart == -1) {
-	         color = "#00F";
+	    	 {
+	    	      if (p - 1 < 0) p += 2;
+	    		 color = "#00F";
+	    		 cursorLine.getX1().getBaseVal().setValue(x+p-1);
+	    		 cursorLine.getX2().getBaseVal().setValue(x+p-1);
+	    	 }
 	     } else 
 	       color = SVGConstants.CSS_NONE_VALUE;
 	     cursorLine.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, color); 
@@ -1758,7 +1763,10 @@ public class FormuleRegel extends FormuleElement
 			style.setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "none");
 		}		
 // position cursor
-		positionCursor();
+		int x = this.width;
+		if (this.currentPosition == -1 || this.children.isEmpty())
+			x = 0;
+		positionCursor(x);
 	}
 	
 	

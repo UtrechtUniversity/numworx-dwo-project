@@ -255,6 +255,17 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 		} else {
 			selectedRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, SVGConstants.CSS_NONE_VALUE);
 		}
+		selectedRect.getWidth().getBaseVal().setValue(width);
+		selectedRect.getX().getBaseVal().setValue(x);
+		drawCursor((OMSVGElement)null);
+	}
+
+	protected void drawCursor(int width, OMSVGElement notused) {
+		if (this.isCurrent() == false || this.isSelected() || this.holder.hasSelection())
+			return;
+		selectedRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "#00F");
+		selectedRect.getWidth().getBaseVal().setValue(2f);
+		selectedRect.getX().getBaseVal().setValue(x+width-2);
 	}
 	
 	public void paintSelection() {
