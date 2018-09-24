@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,6 +16,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Role;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.JSONObjectMapImpl;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
@@ -394,6 +396,9 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		}
 		wnd.setEnterType = function(type, viewer) {
 			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::setEnterType(Ljava/lang/String;)(type)
+		}
+		wnd.getConfiguration = function(viewer) {
+			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getConfiguration0()()
 		}
 		
 		return wnd.inner;
@@ -867,6 +872,18 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		return null;
 	}
 
+	public JavaScriptObject getConfiguration0() {
+		ObjectMap map = getConfiguration();
+		if(map instanceof JSONObjectMapImpl) {
+			return ((JSONObjectMapImpl) map).unwrap().getJavaScriptObject();
+		} else if (map instanceof Map) {
+			return JSONUtilities.toJSONObject( (Map) map).isObject().getJavaScriptObject();
+		}
+		else {
+			return null;
+		}
+	}
+	
 	@Override
 	public void acceptCBookEvent(CBookEvent event) {
 		if("action.setNotEditable".equals(event.getCommand())) {
