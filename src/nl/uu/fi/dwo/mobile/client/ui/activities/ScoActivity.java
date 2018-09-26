@@ -13,6 +13,7 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
@@ -23,11 +24,14 @@ import nl.uu.fi.dwo.mobile.client.ui.places.s;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
@@ -52,6 +56,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 	@Inject nl.uu.fi.dwo.mobile.client.ui.RPCHandler rpcHandler;
 	private boolean started;
     @Inject DomSchoolClass schoolClass;
+    DomSchool school;
     @Inject Provider<NoCourseView> noCourseView;
 
 	@Inject ScoActivity(s where) {
@@ -69,6 +74,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 		location = where.getLocation();
 		schoolClass = clientFactory.getSchoolClass();
 		noCourseView = clientFactory.getNoCourseView();
+		school = clientFactory.getSchool();
 	}
 
 	@Override
@@ -104,7 +110,15 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 			  .filter(p-> p.getClassCourses().get(0).getValue().getCourseType() != CourseType.assesment)
 			  .map(p -> p.getScoContexts().get(0).getValue());
 			} else {
-	            sco = rpcHandler.getSco(item.getID());
+	            sco = rpcHandler.getSco(item.getID())
+	            // temporary		
+	            .filter( ssc -> {
+	            	PersistenceId schoolID = ssc.getSchoolId();
+	            	if(schoolID == null) return true;
+	            	if (school == null) return false;
+	            	return school.getId().equals(schoolID);
+	            })
+	            ;
 	  
 			}
 			namePromise = 
