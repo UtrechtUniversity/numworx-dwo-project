@@ -69,7 +69,7 @@ public class SCORM_DWO4 extends SCORM_guest {
 	
 
 	static final Logger logger = Logger.getLogger("SCORM_DWO4");
-	StudentScoDataManager scoDataManager = new SecuredStudentScoDataManager(DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB && false);
+	StudentScoDataManager scoDataManager = new SecuredStudentScoDataManager(DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB && false); // not supported!
 	private DomSchoolClassId schoolClassID = DWOplayer.clientfactory.getSchoolClass();
 	private DomContext context = new DomContext();
 
