@@ -102,6 +102,7 @@ public class StrokeContainer {
 	public void wis() {
 		strokes.clear();
 		wmObjects.clear();
+		formulaString="";
 	}
 	
 	public void addWriteObject(String teken, Stroke stroke) {
@@ -272,6 +273,8 @@ public class StrokeContainer {
 	}
 	
 	private void makeParseArea() {
+		if(strokes.size()==0)
+			parseArea = null;
 		double xMin = 10000;
 		double xMax = -10000;
 		double yMin = 10000;
@@ -341,7 +344,8 @@ public class StrokeContainer {
 		for (int i = 0; i < wmObjects.size(); i++) {
 			wmObjects.get(i).translate(dx, dy);
 		}
-		parseArea.translate(dx, dy);
+		if(parseArea!=null)
+			parseArea.translate(dx, dy);
 	}
 	
 	public void scale(double factor) {
@@ -356,7 +360,8 @@ public class StrokeContainer {
 		for (int i = 0; i < wmObjects.size(); i++) {
 			wmObjects.get(i).scale(cx, cy, factor);
 		}
-		parseArea.scale(cx, cy, factor);
+		if(parseArea!=null)
+			parseArea.scale(cx, cy, factor);
 		averageHeight *= factor;
 	}
 	
