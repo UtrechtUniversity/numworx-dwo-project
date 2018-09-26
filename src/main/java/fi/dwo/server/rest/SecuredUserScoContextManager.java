@@ -169,7 +169,7 @@ public class SecuredUserScoContextManager {
 			if (parent.getSchoolID().longValue() != school.getSchoolID().longValue())
 			{
 	            LOG.log(Level.SEVERE, "school mismatch " + sc.getUserPrincipal().getName() );		
-				//return null;
+				throw new Dwo2Exception(Dwo2ExceptionCode.Rest_LoginNeeded, "wrong credentials");
 			}
 		} else {
 			if (profile.getDwoProfileRights().contains(LIMITED)) {
@@ -180,7 +180,7 @@ public class SecuredUserScoContextManager {
 		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
 		{
             LOG.log(Level.SEVERE, "user mismatch " + sc.getUserPrincipal().getName() );
-			//return null;
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Hasrole mismatch " + sc.getUserPrincipal().getName() + " .");
 		}
 		String hasRoleId = phr.buildPersistenceId().getIdString();
 		return builder(scoContext, parent, info, hasRoleId);    	

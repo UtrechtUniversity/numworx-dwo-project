@@ -143,6 +143,8 @@ public class PublicUserManager {
             newUserReg.getDomNewUser().setSchoolLogin("null"); //TODO retrieve the null school login and code from the DwoSystemParameters.
             newUserReg.getDomNewUser().setSchoolCode("null");
         }
+        boolean singleschool; // true if a student from a paying school.
+        singleschool = RoleType.STUDENT == newUserReg.getDomNewUser().getRole() && ! "null".equals(newUserReg.getDomNewUser().getSchoolLogin());
 
         //TODO user EntityManager APIs
         try {
@@ -185,7 +187,7 @@ public class PublicUserManager {
         user.setRegisterDate(now);
         user.setUsername(newUserReg.getDomNewUser().getUsername());
         user.setSchoolGroupId(sg.getSchoolGroupID());
-        user.setSingleSchoolAccount(false);
+        user.setSingleSchoolAccount(singleschool);
         //add user
         try {
             UserManager.create(user);
