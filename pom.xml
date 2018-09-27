@@ -45,7 +45,7 @@
         <tomcat7.version>7.0.76</tomcat7.version>
         <context.xml>context-dwo_devel.xml</context.xml>
         <copy.ui.skip>false</copy.ui.skip>
-        <registerVersion>2.2.7</registerVersion>
+        <registerVersion>2.2.8</registerVersion>
     </properties>
 
     <scm>
@@ -111,23 +111,23 @@
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.2.8-SNAPSHOT</version>
+            <version>2.2.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.2.8-SNAPSHOT</version>
+            <version>2.2.9-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo.rest</groupId>
             <artifactId>DWO-rest-lib</artifactId>
-            <version>2.2.8-SNAPSHOT</version>
+            <version>2.2.9-SNAPSHOT</version>
         </dependency>      
         <dependency>
             <groupId>nl.uu.fi.dwo.rest</groupId>
             <artifactId>DWO-rest-lib</artifactId>
-            <version>2.2.8-SNAPSHOT</version>
+            <version>2.2.9-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
         
@@ -478,7 +478,7 @@
                         <webapp>
                             <groupId>nl.uu.fi.dwo</groupId>
                             <artifactId>DWOServer</artifactId> 
-                            <version>2.2.8-SNAPSHOT</version> 
+                            <version>2.2.9-SNAPSHOT</version> 
                             <type>war</type>    
                             <asWebapp>true</asWebapp> 
                             <contextPath>/dwo</contextPath>
@@ -495,7 +495,7 @@
                        <webapp>
                             <groupId>nl.uu.fi.dwo.mobile</groupId>
                             <artifactId>DWOplayer</artifactId>
-                            <version>2.2.8-SNAPSHOT</version>
+                            <version>2.2.8</version>
                             <classifier>dwo2</classifier>
                             <type>war</type>
                             <contextPath>/dwo/tablet</contextPath>
