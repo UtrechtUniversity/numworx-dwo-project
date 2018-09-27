@@ -86,6 +86,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import static java.lang.Thread.sleep;
 
@@ -979,13 +981,13 @@ public class PublicUserManager {
     {
     	if(!"password".equals(type))
     	{
-    		throw new WebApplicationException();
+    		throw new WebApplicationException(Response.Status.BAD_REQUEST);
     	}
     	password = MD5.getHashString(password);
     	PersistentUser u = UserManager.login(username, password);
     	if(u == null)
     	{
-    		throw new WebApplicationException();
+    		throw new WebApplicationException(Response.Status.UNAUTHORIZED);
     	}
     	DomToken token = new DomToken();
     	token.setToken_type(DomToken.APARAM);
