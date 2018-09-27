@@ -14,9 +14,15 @@ import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
 
+import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
 
 
 public class PasteAction extends GuiAction
@@ -174,6 +180,38 @@ public class PasteAction extends GuiAction
 				c.setImageData(course.getImageData());
 				c.setImageUrl(course.getImageUrl());
 				c.setCourseLogo(course.getCourseLogo());
+				if(c.getImageUrl() != null && !c.getImageUrl().isEmpty() && c.getImageData() == null) {
+				   try {
+			            ByteArrayOutputStream output = new ByteArrayOutputStream();
+			            BufferedImage img = ImageIO.read(new URL(c.getImageUrl()));
+			            Image reduced;
+			            int w = img.getWidth();
+			            int h = img.getHeight();
+			            if (w <= 252 && h <= 160) {
+			                reduced = img;
+			            } else {
+			                float scalex = w/252f;
+			                float scaley = h/160f;
+			                float scale = Math.max(scalex, scaley);
+			                w = Math.round(w/scale);
+			                h = Math.round(h/scale);
+			                reduced = img.getScaledInstance(w, h, Image.SCALE_SMOOTH);
+			            }
+			            if (reduced instanceof BufferedImage) {
+			                img = (BufferedImage) reduced;
+			            } else {
+			                img = new BufferedImage(Math.min(252, w), Math.min(160, h), BufferedImage.TYPE_INT_ARGB);
+			                img.createGraphics().drawImage(reduced, 0, 0, null);
+			            }
+			            ImageIO.write(img, "png", output);
+			            output.close();
+			            byte[] data = output.toByteArray();
+			            c.setImageData(data);
+				   
+				   } catch (Exception e) {
+				     e.printStackTrace(); // TODO LOG.log(Level.WARNING, ...
+				   }
+				}
 				instance().updateLogo(c);
 			}
 			

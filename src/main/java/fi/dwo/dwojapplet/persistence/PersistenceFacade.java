@@ -1011,7 +1011,10 @@ public class PersistenceFacade {
                   int id = idOf(dcc.getCourseId());
                   cc.put(id, dcc);
                 });
-            v = result.getCourses().stream().map(DomMapEntry::getValue).filter(p->!p.getWithChildren().booleanValue() && cc.containsKey(idOf(p.getId())))
+            v = result.getCourses().stream().map(DomMapEntry::getValue).filter(
+              // p.getWithChildren can be null, meaning false
+                p-> (p.getWithChildren() == null || !p.getWithChildren().booleanValue())
+                && cc.containsKey(idOf(p.getId())))
                 .filter(p-> cc.get(idOf(p.getId())).getViewState() != ViewState.invisible) // remove invisible classcourses
                 .collect(()->{ return new Vector<DomCourse>();}, (l,e) -> l.add(e), (l,ee)-> l.addAll(ee));
             MapperIF<Course> mapper = MapperCreator.instance(Course.class);
