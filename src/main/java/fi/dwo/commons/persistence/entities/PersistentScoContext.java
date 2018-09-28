@@ -247,7 +247,10 @@ public class PersistentScoContext implements Serializable {
         scoContext.setId(buildPersistenceId());
         scoContext.setAppletId(PersistentApplet.buildPersistenceId(this.appletID));
         scoContext.setCourseId(PersistentCourse.buildPersistenceId(this.courseID));
-        scoContext.setSchoolId(PersistentSchool.buildPersistenceId(this.schoolID));
+        if (this.schoolID == null) 
+          scoContext.setSchoolId(null); // like PersistentCourse, schoolID may be null
+        else
+          scoContext.setSchoolId(PersistentSchool.buildPersistenceId(this.schoolID));
         scoContext.setStudentModelContext(PersistentStudentModelContext.buildPersistenceId(modelID));
         
         scoContext.setScoName(sconame);
