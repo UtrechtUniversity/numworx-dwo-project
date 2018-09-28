@@ -145,7 +145,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 				Throwable t = resolved.getFailure();
 				if(t instanceof Dwo2Exception) {
 					Dwo2Exception e = (Dwo2Exception) t;
-					if( e.getDwo2Code() == Dwo2ExceptionCode.Rest_LoginNeeded)
+					if( e.getDwo2Code() == Dwo2ExceptionCode.Rest_LoginNeeded && school == null)
 					{	item.setFromSchool(true);
 						started = false;
 						gotoNext();
