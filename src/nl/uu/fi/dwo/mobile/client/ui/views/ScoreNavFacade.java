@@ -139,12 +139,10 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 	}
 
 	@Override
-	public void setKijkNaEnabled(boolean enable) {
+	public void setKijkNaEnabled(boolean enable)
+	{
 		nakijkKnop.setEnabled(enable);	
-		if(!enable)
-			nakijkKnop.addStyleName(MYPUSHBUTTON_DISABLED);
-		else
-			nakijkKnop.removeStyleDependentName(MYPUSHBUTTON_DISABLED);
+		nakijkKnop.setStyleName(MYPUSHBUTTON_DISABLED, !enable);
 	}
 
 	@Override
