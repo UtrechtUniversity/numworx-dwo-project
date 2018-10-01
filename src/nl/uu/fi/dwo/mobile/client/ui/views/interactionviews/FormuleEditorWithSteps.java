@@ -2730,21 +2730,22 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		if (formule == null)
 			formule = "";
-		if (formuleMin1 == null)
-			return; // er valt niets na te kijken als de vorige null is
+		// formuleMin1 kan null zijn als het antwoord op de eerste regel staat
 
 		// verwijder een eventuele prefix
 		if (hasPrefix)
 		{
 			formule = removePrefix(formule);
-			formuleMin1 = removePrefix(formuleMin1);
+			if (formuleMin1 != null)
+				formuleMin1 = removePrefix(formuleMin1);
 		}
 		formule = removeIsTeken(formule);
-		formuleMin1 = removeIsTeken(formuleMin1);
+		if (formuleMin1 != null)
+			formuleMin1 = removeIsTeken(formuleMin1);
 
 		// checkAnswer() verwacht gecodeerde formules
 		String formuleCoded = "$f" + formule + "@";
-		String formuleMin1Coded = "$f" + formuleMin1 + "@";
+		String formuleMin1Coded = formuleMin1 == null ? null : "$f" + formuleMin1 + "@";
 		checkResults = avChecker.checkAnswer(formuleCoded, formuleMin1Coded, getSubstitutie(), getGebruikersSubstituties());
 
 		this.correct = (Boolean) checkResults.get("correct");
