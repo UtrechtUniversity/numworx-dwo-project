@@ -2197,6 +2197,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     	}
 		try {
 // TODO this needs refactoring
+            PersistenceFacade.instance().clearObjectInMapperCache(Sco.class, sco.getID()); // ons kent ons, zowel de oude als de nieuwe course cache moet worden gecleart
 		    manager.update(scoContext, scoData, getDwoProfile());
 			sco.setImageData(null);
 			sco.setCourseChanged(false);
@@ -2205,7 +2206,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
             GuiCreator.instance().ShowErrorDialog(this, e);
             return false;
 		}
-    	
 			return true;
 //        try {
 //            return PersistenceFacade.instance().updateSco(sco);
