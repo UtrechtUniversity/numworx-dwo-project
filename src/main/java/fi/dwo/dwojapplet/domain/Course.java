@@ -291,8 +291,20 @@ public class Course implements LessonGroup, Comparable<Course>, CourseMap, Descr
         this.scoList = scoList;
         if (scoList != null) {
             Arrays.sort(this.scoList);
+            fixSnr();
         }
         coursePanel = null;
+    }
+
+    // FIXME fix sequence nr, database is buggy in this case.
+    private void fixSnr() {
+      for (int i = 0; i < scoList.length; i++) {
+        if(scoList[i].getSequencenr() != (i+1)) {
+          LOG.severe("FIX SEQUENCENRS FOR " + courseID + "." + i);
+          scoList[i].setSequencenr(i+1);
+        }
+      }
+      
     }
 
     /**
@@ -399,6 +411,7 @@ public class Course implements LessonGroup, Comparable<Course>, CourseMap, Descr
     public void loadScos() {
         try {
             scoList = PersistenceFacade.instance().get(Sco.class, this);
+            if(scoList != null) fixSnr(); // FIXME check sequencenr is correct.
             coursePanel = null;
         } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
