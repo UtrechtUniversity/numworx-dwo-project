@@ -44,7 +44,7 @@ public class StelselRekenVak extends LayoutPanel  {
 	LayoutPanel contentPanel;
 	FlowPanel headerPanel;
 	
-	Image ic;
+	//Image ic;
 	private OpdrNavIF comRoot;
 	
 	public StelselRekenVak(StelselAntwoordVak antwoordVak, HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)

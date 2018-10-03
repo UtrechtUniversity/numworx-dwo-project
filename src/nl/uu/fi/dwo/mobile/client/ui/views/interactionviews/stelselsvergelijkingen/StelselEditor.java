@@ -157,7 +157,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 		return hoofdPanel;
 	}
 	
-	public void splits() throws RestartException
+	public void splits(boolean backStep, boolean show, boolean setState) throws RestartException
 	{
 		VergelijkingMeerv vergelijkingen = FormuleParser.parseVergelijking("$f" + editor.toString() + "@");
 		hoogte = bepaalHoogte();
@@ -215,17 +215,24 @@ public class StelselEditor extends FormuleEditorWithSteps
 					teller++;
 				}
 			}
+			boolean takCorrect = true;
 			for(int j = 0; j < eindOplossingenVoorSplits.length; j++)
 			{
 				for(int n = 0; n < eindOplossingenVoorSplits[j].length; n++)
 				{
 					eindOplossingenVoorSplits[j][n] = eindOplossingen[j][n];
+					if(!eindOplossingen[j][n])
+						takCorrect = false;
 				}
 					
 			}
+			
+			
 			stelselEditor.zetOplossingen(oplossingenKind, eindOplossingen, eindOplossingenVoorSplits);//eindOplossingenStelsel, eindOplossingenExact);
 			
 			kinderen[i] = stelselEditor;
+			if(takCorrect)
+				kinderen[i].correct = true;
 			hoofdPanel.contentPanel.add(kinderen[i]);
 			stelselEditor.editor.clearAll();
 			stelselEditor.editor.insert(vergelijking.toString());
@@ -235,11 +242,21 @@ public class StelselEditor extends FormuleEditorWithSteps
 			stelselEditor.editor.setCurrentElementRepaint();
 			pijlen[i] = new StelselPijl(xBegin, stelselEditor.editor.getWidth()/3); //wat hier op de tweede plek staat maakt niets uit, dat regel je nog in plaatsEditors.
 			hoofdPanel.contentPanel.add(pijlen[i].getCanvas()); //stond nog in: ,0)
+			if(takCorrect)
+			{
+				stelselEditor.vervangEditorDoorViewer("$f @", show, setState);
+				stelselEditor.latest_answer_viewer.showResult(FormuleViewer.CORRECT);
+				stelselEditor.setAndAddFeedback(rb.feedbackTekst22());
+			}
 		}
 		hoofdPanel.plaatsEditors();
-		kinderen[0].editor.setCurrent(0, 0); //om te zorgen dat cursor ook getekend wordt.
-		kinderen[0].requestFocus(false);
-		
+		if(kinderen[0].isCorrect())
+			kinderen[0].geefFocusDoor();
+		else
+		{
+			kinderen[0].editor.setCurrent(0, 0); //om te zorgen dat cursor ook getekend wordt.
+			kinderen[0].requestFocus(false);
+		}
 		
 	}
 	
@@ -430,6 +447,20 @@ public class StelselEditor extends FormuleEditorWithSteps
 			formuleVakInhoudenEditor[i] = formuleVakInhouden[formuleTeller + i];
 		//eindOplossingExactGevonden = exactArrays[editorTeller];
 		zetOplossingen(oplossingen, oplossingArrays[editorTeller], voorSplitsArrays[editorTeller]); //voor nakijken editor al zorgen dat eindOplossingGevonden up to date is
+		boolean takCorrect = true;
+		for(int i = 0; i < voorSplitsArrays[editorTeller].length; i++)
+		{
+			for(int j = 0; j<voorSplitsArrays[editorTeller][i].length; j++)
+			{
+				if(!voorSplitsArrays[editorTeller][i][j])
+				{	takCorrect = false;
+					break;
+				}
+			}
+			if(!takCorrect)
+				break;
+		}
+		
 		//eindOplossingGevonden = oplossingArrays[editorTeller];
 		//eindOplossingGevondenVoorSplits = voorSplitsArrays[editorTeller];
 		
@@ -457,7 +488,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 		formuleTeller += stapNrs[editorTeller] + 1;
 		editorTeller++;
 		//dan: setStateEditorEnKinderen voor de kinderen aanroepen
-		if (kinderen != null)
+		if (kinderen != null && aantalKinderen[editorTeller - 1] > 0)
 		{
 			for(int i = 0; i < kinderen.length; i++)
 			{
@@ -466,6 +497,14 @@ public class StelselEditor extends FormuleEditorWithSteps
 				editorTeller = tellers[1];
 			}
 		}
+		else if(takCorrect)
+		{
+			correct = true;
+			vervangEditorDoorViewer("$f @", true, true);
+			latest_answer_viewer.showResult(FormuleViewer.CORRECT);
+			setAndAddFeedback(rb.feedbackTekst22());
+		}
+		
 		int[] tellers = new int[2];
 		tellers[0] = formuleTeller;
 		tellers[1] = editorTeller;
@@ -724,7 +763,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 		if(parent != null)
 			parent.latest_answer_viewer.showResult(FormuleViewer.NONE);
 		if(isGelijkwaardig && editor.getGoedHalfFout() != AntwoordVakChecker.GOED && FormuleParser.parseVergelijking("$f" + editor.toString() + "@").geefAantal() > 1)
-			splits();
+			splits(backStep, show, setState);
 		else
 		{	
 			//hier juiste feedback bepalen?
@@ -923,8 +962,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 					for(int i = 1; i < parent.kinderen.length; i++)
 					{
 						if(parent.kinderen[i].heeftFocus)
-						{	parent.kinderen[i-1].vervangViewerDoorEditor(setState);
-							parent.kinderen[i-1].requestFocus(false);
+						{	parent.kinderen[i-1].focusBackStep(setState);
 							break;
 						}
 					}
@@ -970,7 +1008,23 @@ public class StelselEditor extends FormuleEditorWithSteps
 		zetFocusFalse();
 	}
 	
-	
+	public void focusBackStep(boolean setState)
+	{
+		if(kinderen == null)
+		{
+			if(editor == null && latest_answer_viewer != null)
+				vervangViewerDoorEditor(setState);
+			if(editor != null)
+			{	editor.setCurrent(0, 0); //om te zorgen dat cursor ook getekend wordt.
+				requestFocus(false);
+			
+			}
+		}
+		else
+		{
+			kinderen[kinderen.length - 1].focusBackStep(setState);
+		}
+	}
 	
 	
 	
