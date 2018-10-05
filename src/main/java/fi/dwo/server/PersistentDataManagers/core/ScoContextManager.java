@@ -153,7 +153,7 @@ public class ScoContextManager {
     public static List<PersistentScoContext> findEntities(PersistentCourse c) {
         EntityManager em = getEntityManager();
         try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentScoContext.findByCourseID");
+            javax.persistence.TypedQuery<PersistentScoContext> q = em.createNamedQuery("PersistentScoContext.findByCourseID", PersistentScoContext.class);
             q.setParameter("courseID", c.getCourseID());
             List<PersistentScoContext> list = q.getResultList();
             LOG.log(Level.FINE, "PersistentScoContext-manager retrieved {0} PersistentScoContext with course id {1}", new Object[]{list.size(), c.getCourseID()});
