@@ -19,6 +19,10 @@ import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -259,6 +263,24 @@ public class PasteAction extends GuiAction
 				String name = sco.getScoName();
 				name = CourseManagementPanel.replaceDuplicate(name, course.getScoNames());
 				sco.setName(name);
+			} else {
+			  int seq = sco.getSequencenr()-1;
+			  if(course.getScoList() == null) course.loadScos(); // should not happen;
+			  List<Sco> scos = new LinkedList<>(Arrays.asList(course.getScoList()));
+			  int os = scos.indexOf(sco);
+			  scos.remove(sco);
+			  if(seq <= os)
+			    scos.add(seq, sco);
+			  else
+			    scos.add(seq-1, sco);
+			  seq = 1;
+			  for(Sco s: scos) {
+			    if (s.getSequencenr() != seq) {
+			      s.setSequencenr(seq);
+			      if(s != sco) instance().updateSco(s);
+			    }
+			    seq ++;
+			  } 
 			}
 			instance().updateSco(sco);
 //			old.loadScos(); course.loadScos(); // refresh sco's (zonder dbaccess mogelijk?)
