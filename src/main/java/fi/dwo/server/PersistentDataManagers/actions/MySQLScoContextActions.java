@@ -17,6 +17,7 @@ import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.server.PersistentDataManagers.core.AppletManager;
+import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.ImageManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
@@ -87,6 +88,27 @@ public class MySQLScoContextActions {
                         .getNativeId(new DomStudentModelContextId(scoContext.getStudentModelContext()));
                 pc.setModelID(model);
             }
+
+            if(scoContext.getCourseId() != null) {
+              DomCourse dc = new DomCourse();
+              dc.setId(scoContext.getCourseId());
+              Long newcourseID = MySQLPersistenceId.getNativeId(dc);
+              Long oldCourseID = pc.getCourseID();
+              if (!oldCourseID .equals(newcourseID)) {
+                // 1) update sequence nrs old Course.scos
+                Long oldseq = pc.getSequencenr();
+                Long newseq = scoContext.getSequencenr();
+                if (newseq == null) newseq = oldseq;
+                PersistentCourse course;
+                course = CourseManager.findEntity(oldCourseID);
+                relocateScos(course, oldseq.longValue(), -1L);
+                // 2) make room in new Course.scos
+                course = CourseManager.findEntity(newcourseID);
+                relocateScos(course, newseq.longValue()-1L, +1L);                
+              }
+              
+            }
+            
             if (scoContext.getSequencenr() != null) {
                 pc.setSequencenr(scoContext.getSequencenr());
             }
@@ -265,21 +287,24 @@ public class MySQLScoContextActions {
 
         }
         ScoContextManager.destroy(pc.getScoID());
+        relocateScos(c, seq, -1L);
+    }
 
-        List<PersistentScoContext> list = ScoContextManager.findEntities(c);
-        list.stream().forEach(item -> {
-            long s = item.getSequencenr().longValue();
-            if (s > seq) {
-                item.setSequencenr(Long.valueOf(s - 1));
-                try {
-                    ScoContextManager.edit(item);
-                } catch (PersistenceException e) {
-                    LOG.log(Level.SEVERE, "relocate sco", e);
-                    throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
-                }
-            }
+    private static void relocateScos(PersistentCourse c, final long seq, final long incr) {
+      List<PersistentScoContext> list = ScoContextManager.findEntities(c);
+      list.forEach(item -> {
+          long s = item.getSequencenr().longValue();
+          if (s > seq) {
+              item.setSequencenr(Long.valueOf(s + incr));
+              try {
+                  ScoContextManager.edit(item);
+              } catch (PersistenceException e) {
+                  LOG.log(Level.SEVERE, "relocate sco", e);
+                  throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+              }
+          }
 
-        });
+      });
     }
 
 }

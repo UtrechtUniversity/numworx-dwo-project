@@ -13,7 +13,10 @@ import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer.AnonState;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
 import fi.dwo.server.PersistentDataManagers.actions.MySQLScoContextActions;
 import fi.dwo.server.PersistentDataManagers.core.AppletManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
@@ -84,7 +87,21 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
     @PUT
     @Path("update")
     @Produces({"application/json"})
-    public DomScoContextFull update(@Context SecurityContext sc, RestScoContextFull rest) {
+    public DomScoContextFull update(@Context SecurityContext sc, RestScoContextFull rest) throws Dwo2Exception {
+      AnonState s0 = AnonDomainAuthorizer.build();
+      UserState_U s1 = s0.submitUser(sc.getUserPrincipal().getName());
+      UserState_HR_R_S_SG_U s2 = s1.setHasRole(rest.getRestContext().getDomHasRole());
+      SchoolAdminTeacherState_HR_R_S_SG_U state = s2.buildSchoolAdminTeacher();
+      
+      DomScoContextFull scoContext = rest.getDomScoContext();
+      DomScoData scoData = rest.getDomScoData();
+      Long scoID = MySQLPersistenceId.getNativeId(scoContext);
+      PersistentScoContext pc = ScoContextManager.findEntity(scoID);
+      PersistentScoData sd = ScoDataManager.findEntity(scoID);
+      return MySQLScoContextActions.update(pc, sd, scoContext, scoData, true);
+    }
+      
+    public DomScoContextFull updateOLD(@Context SecurityContext sc, RestScoContextFull rest) {
 		DomScoContextFull scoContext = rest.getDomScoContext();
 		DomScoData    	  scoData = rest.getDomScoData();
     	try {

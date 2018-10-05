@@ -28,6 +28,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScoContextFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -66,7 +67,7 @@ public class SecuredTeacherScoContextManagerIT {
 	}
 
 	@Test
-	public void testUpdate() {
+	public void testUpdate() throws Exception {
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
 		RestScoContextFull rest = new RestScoContextFull();
 		DomDwoProfile domDwoProfile = new DomDwoProfile();
@@ -166,6 +167,8 @@ public class SecuredTeacherScoContextManagerIT {
 			fail("should fail");
 		} catch (Dwo2RestException e) {
 			assertEquals(Dwo2ExceptionCode.Rest_ScoNameExists, e.getDwo2Code());
+		} catch (Dwo2Exception e) {
+          assertEquals(Dwo2ExceptionCode.Rest_ScoNameExists, e.getDwo2Code());
 		}
 	}
 	
