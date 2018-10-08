@@ -159,6 +159,10 @@ public class MatrixVak extends FormuleElementWithChildren
 		}
 	}
 
+	/**
+	 * Geeft de rij- en kolomindex van het kind met focus.
+	 * @return
+	 */
 	public int[] bepaalKindMetFocus()
 	{
 		int[] kindMetFocus = {0, 0};
@@ -198,8 +202,8 @@ public class MatrixVak extends FormuleElementWithChildren
 	public void focusKindLinks()
 	{
 		int[] kindMetFocus = bepaalKindMetFocus();
-		if (kindMetFocus[1] > 0)
-			matrixChildren.get(kindMetFocus[0]).get(kindMetFocus[1] - 1).neemFocus("rechts");
+//		if (kindMetFocus[1] > 0)
+//			matrixChildren.get(kindMetFocus[0]).get(kindMetFocus[1] - 1).neemFocus("rechts");
 	}
 
 	public void focusKindRechts()
@@ -211,7 +215,7 @@ public class MatrixVak extends FormuleElementWithChildren
 			zetMaat();
 			paint();
 		}
-		matrixChildren.get(kindMetFocus[0]).get(kindMetFocus[1] + 1).neemFocus("rechts");
+//		matrixChildren.get(kindMetFocus[0]).get(kindMetFocus[1] + 1).neemFocus("rechts");
 	}
 
 	/**
@@ -236,10 +240,9 @@ public class MatrixVak extends FormuleElementWithChildren
 		
 		for (int kolom = 0; kolom < aantalKolommen; kolom++)
 		{
-			FormuleRegel kind = new FormuleRegel(formuleVak);
+			FormuleRegel kind = new FormuleRegel(this);
 			kind.setFont(getFont());
 			rij.add(kind);
-			add(kind);
 		}
 		matrixChildren.add(rij);
 		aantalRijen++;
@@ -289,11 +292,10 @@ public class MatrixVak extends FormuleElementWithChildren
 				char ch1 = s.charAt(1);
 				if (ch1 == 'k')
 				{
-					FormuleRegel kind = new FormuleRegel(formuleVak);
+					FormuleRegel kind = new FormuleRegel(this);
 					kind.setFont(getFont());
 					kind.insert(s.substring(2, eind));
 					rij.add(kind);
-					add(kind);
 					s = s.substring(eind);
 				}
 			}
@@ -311,10 +313,9 @@ public class MatrixVak extends FormuleElementWithChildren
 	{
 		for (int rij = 0; rij < matrixChildren.size(); rij++)
 		{
-			FormuleRegel kind = new FormuleRegel(formuleVak);
+			FormuleRegel kind = new FormuleRegel(this);
 			kind.setFont(getFont());
 			matrixChildren.get(rij).addElement(kind);
-			add(kind);
 		}
 		aantalKolommen++;
 		
@@ -334,8 +335,6 @@ public class MatrixVak extends FormuleElementWithChildren
 		for (int j = 0; j < aantalKolommen; j++)
 		{
 			FormuleRegel kind = (FormuleRegel) matrixChildren.get(kindMetFocus[0]).get(j);
-			kind.removeAll();
-			remove(kind);
 		}
 		
 		matrixChildren.remove(kindMetFocus[0]);
@@ -364,8 +363,6 @@ public class MatrixVak extends FormuleElementWithChildren
 		for (int j = 0; j < aantalKolommen; j++)
 		{
 			FormuleRegel kind = (FormuleRegel) matrixChildren.get(rijIndex).get(j);
-			kind.removeAll();
-			remove(kind);
 		}
 		
 		matrixChildren.remove(rijIndex);
@@ -394,8 +391,6 @@ public class MatrixVak extends FormuleElementWithChildren
 		for (int i = 0; i < aantalRijen; i++)
 		{
 			FormuleRegel kind = (FormuleRegel) matrixChildren.get(i).get(kindMetFocus[1]);
-			kind.removeAll();
-			remove(kind);
 			matrixChildren.get(i).remove(kindMetFocus[1]);
 		}
 		
@@ -424,8 +419,6 @@ public class MatrixVak extends FormuleElementWithChildren
 		for (int i = 0; i < aantalRijen; i++)
 		{
 			FormuleRegel kind = (FormuleRegel) matrixChildren.get(i).get(kolomIndex);
-			kind.removeAll();
-			remove(kind);
 			matrixChildren.get(i).remove(kolomIndex);
 		}
 		
@@ -620,9 +613,10 @@ public class MatrixVak extends FormuleElementWithChildren
 	    	while (i2.hasNext())
 	    	{
 		    	FormuleRegel kind = (FormuleRegel) i2.next();
-		    	kind.removeAll();
-		    	remove(kind);
+		    	((Vector) i.next()).remove(kind);
 	    	}
+	    	
+	    	matrixChildren.remove(i.next());
 	    }
 	    
 	    aantalRijen = 0;

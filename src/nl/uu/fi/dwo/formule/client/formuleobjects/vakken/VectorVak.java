@@ -70,7 +70,12 @@ public class VectorVak extends FormuleElementWithChildren
 		ctx.beginPath();
 
 		// haak ervoor
-		ctx.arc(5, 1, 5, 90, 180, true); // eerste bochtje
+		ctx.setStrokeStyle("red");		
+		ctx.arc(10, 6, 5, Math.PI, 1.5*Math.PI, false); // eerste bochtje
+		ctx.stroke();
+		
+		ctx.beginPath();
+		ctx.setStrokeStyle(color);
 //		g.drawArc(5, 1, 10, 10, 90, 90); // eerste bochtje
 		ctx.moveTo(5, 6);
 		ctx.lineTo(5, height - 6); // 1 lange lijn
