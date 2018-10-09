@@ -3,6 +3,10 @@ package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+
 import com.google.gwt.canvas.dom.client.Context2d;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -44,6 +48,35 @@ public class VectorVak extends FormuleElementWithChildren
 		build(new CanvasBuilder(ctx));		
 	}
 
+	@Override
+	protected void paintComponent(OMSVGElement svg)
+	{
+		super.paintComponent(svg);
+		SvgBuilder builder = new SvgBuilder(svg, x, y);
+		build(builder);
+	}
+
+	@Override
+	public void draw(OMSVGElement svg)
+	{
+		paintComponent(svg);
+		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+		if (x != 0 || y != 0)
+		{
+			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+		}
+		
+		for (int i = 0; i < getChildrenSize(); i++)
+		{
+			getChild(i).draw(g);
+		}
+		
+		drawCursor(svg);
+	}
+
 	public void paintObject()
 	{
 		for (int i = 0; i < getChildrenSize(); i++)
@@ -70,27 +103,20 @@ public class VectorVak extends FormuleElementWithChildren
 		ctx.beginPath();
 
 		// haak ervoor
-		ctx.setStrokeStyle("red");		
-		ctx.arc(10, 6, 5, Math.PI, 1.5*Math.PI, false); // eerste bochtje
-		ctx.stroke();
-		
-		ctx.beginPath();
-		ctx.setStrokeStyle(color);
-//		g.drawArc(5, 1, 10, 10, 90, 90); // eerste bochtje
+		ctx.arc(10, 6, 5, Math.PI, 1.5 * Math.PI, false); // eerste bochtje
 		ctx.moveTo(5, 6);
 		ctx.lineTo(5, height - 6); // 1 lange lijn
-//		g.drawLine(5, 6, 5, getSize().height - 6); // 1 lange lijn
-		ctx.arc(5, height - 12, 5, 180, 270, true); // laatste bochtje 
-//		g.drawArc(5, getSize().height - 12, 10, 10, 180, 90); // laatste bochtje 
+
+		ctx.arc(10, height - 7, 5, Math.PI, Math.PI / 2, true); // laatste bochtje 
 		
+		ctx.stroke();
+		ctx.beginPath();
+
 		// haak erna
-		ctx.arc(width - 12, 1, 5, 90, 180, false); // eerste bochtje
-//		g.drawArc(getSize().width - 12, 1, 10, 10, 90, -90); // eerste bochtje
+		ctx.arc(width - 7, 6, 5, 0, 1.5 * Math.PI, true); // eerste bochtje
 		ctx.moveTo(width - 2, 6);
 		ctx.lineTo(width - 2, height - 6); // 1 lange lijn
-//		g.drawLine(getSize().width - 2, 6, getSize().width - 2, getSize().height - 6); // 1 lange lijn
-		ctx.arc(width - 12, height - 12, 5, 0, 90, false); // laatste bochtje 
-//		g.drawArc(getSize().width - 12, getSize().height - 12, 10, 10, 0, -90); // laatste bochtje 
+		ctx.arc(width - 7, height - 7, 5, 0, Math.PI / 2, false); // laatste bochtje 
 
 		ctx.stroke();
 	}
@@ -101,10 +127,11 @@ public class VectorVak extends FormuleElementWithChildren
 
 		height = 5;
 		width = 10;
+		
 		for (int i = 0; i < children.size(); i++)
 		{
-			height += children.get(i).height + 5;
-			width = Math.max(width, 10 + children.get(i).width);
+			height += getChild(i).height + 5;
+			width = Math.max(width, 10 + getChild(i).width);
 		}
 		
 		// extra breedte voor afsluitende haak
@@ -116,8 +143,8 @@ public class VectorVak extends FormuleElementWithChildren
 		int kindHoogte = 5;
 		for (int i = 0; i < children.size(); i++)
 		{
-			children.get(i).setPosition(10, kindHoogte);
-			kindHoogte += children.get(i).height + 5;
+			getChild(i).setPosition((int) (0.5 * width - 0.5 * getChild(i).width), kindHoogte);
+			kindHoogte += getChild(i).height + 5;
 		}
 	}
 
@@ -164,7 +191,7 @@ public class VectorVak extends FormuleElementWithChildren
 	public void deleteKind()
 	{
 		int kindMetFocus = bepaalKindMetFocus();
-		FormuleRegel kind = children.get(kindMetFocus);
+		FormuleRegel kind = getChild(kindMetFocus);
 		// testen of kind leeg is.
 		// Als het kind leeg is: kind verwijderen.
 		if (kind.toString().length() > 0)
@@ -188,7 +215,7 @@ public class VectorVak extends FormuleElementWithChildren
 	public void setEditable(boolean b)
 	{
 		for (int i = 0; i < children.size(); i++)
-			children.get(i).setEditable(b);
+			getChild(i).setEditable(b);
 	}
 
 	public void vulVak(String s)
@@ -231,14 +258,14 @@ public class VectorVak extends FormuleElementWithChildren
 				if (ch1 == 'n')
 				{
 					maakNieuwKind();
-					children.get(children.size() - 1).insert(s.substring(2, eind));
+					getChild(children.size() - 1).insert(s.substring(2, eind));
 					s = s.substring(eind);
 				}
 			}
 		}
 		for (int i = 0; i < children.size(); i++)
 		{
-			children.get(i).zetMaat();
+			getChild(i).zetMaat();
 		}
 	}
 
@@ -262,7 +289,7 @@ public class VectorVak extends FormuleElementWithChildren
 		if (children.size() > 0)
 		{
 			for (int i = 0; i < children.size(); i++)
-				string = string + "$n" + children.get(i).toString() + "@";
+				string = string + "$n" + getChild(i).toString() + "@";
 		}
 		
 		string = string + "@";
