@@ -2,6 +2,9 @@ package fi.servlet.lti;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +49,70 @@ public class DbAccess {
 	private static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
 	private static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
 	
-	public void setCookie(HttpServletRequest request, HttpServletResponse response) {
+	public boolean setUUSAMLCookie(HttpServletRequest request, HttpServletResponse response, String schoolid, String organization) {
+	  Object lti_id = request.getAttribute("uid");
+// uuspecifiek: pick first, should be: user chooses.
+	  String user_id = s(request.getAttribute("studentNumber"));
+	  user_id = user_id.split(";")[0];
+	  if (user_id.isEmpty())
+	    user_id = s(lti_id);
+
+	  Object name_given = request.getAttribute("givenName");
+	  Object name_family = request.getAttribute("sn");
+	  Object name_prefix = request.getAttribute("insertion");
+	  String email = s(request.getAttribute("mail"));
+// pick first, multiple valued
+	  email = email.split(";")[0];
+
+	  String path = "/";
+	  
+      Cookie user = new Cookie(DWO_SAML_USER_ID, s(lti_id));
+      user.setPath(path);
+      String orgidStr = "saml:" + schoolid;
+      Cookie orgid = new Cookie(DWO_SAML_ORGANIZATION_ID, orgidStr);
+      orgid.setPath(path);
+      orgidStr = "\"" + orgidStr + "\"";
+      Cookie org = new Cookie(DWO_SAML_ORGANIZATION, organization);
+      org.setPath(path);
+      response.addCookie(user);
+      response.addCookie(orgid);
+      response.addCookie(org);
+      String roles = s(request.getAttribute("unscoped-affiliation"));
+      String role = "STUDENT";
+      if(roles != null && roles.toLowerCase().contains("employee"))
+          role = "TEACHER";
+      String authTokenStr;
+      try {
+          authTokenStr = rest.registerSAML(
+                  s(user_id),
+                  s(lti_id),
+                  (orgidStr),
+                  s(name_given), s(name_prefix), s(name_family),
+                  s(email),
+                  role,
+                  schoolid,
+                  ""
+                  );
+          Cookie authToken = new Cookie(DWO_SAML_AUTH_TOKEN, authTokenStr);
+          authToken.setPath(path);
+          response.addCookie(authToken);
+      } catch (IOException e) {
+          logger.log(Level.SEVERE, "registerSAML", e);
+      }
+
+  
+  
+	  return false;
+	}
+	
+	
+	
+	private String s(Object o) {
+    if(o == null) return "";
+    return String.valueOf(o);
+  }
+
+  public void setCookie(HttpServletRequest request, HttpServletResponse response) {
 // persoonsgegevens:
 		String user_id = request.getParameter("custom_userid");
 		String lti_id = request.getParameter("user_id");
@@ -184,6 +250,7 @@ public class DbAccess {
 	
 	private static final String SCO = "/sco/";
 	private static final String COURSE = "/course/";
+  private final Logger logger = Logger.getLogger(getClass().getName());
 	public String getDeepLink(String info) {
 		if(info == null) return "";
 		if(info.startsWith(SCO))

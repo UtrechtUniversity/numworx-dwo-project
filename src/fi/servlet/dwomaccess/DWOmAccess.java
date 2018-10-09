@@ -71,7 +71,8 @@ import fi.dwo.dwojapplet.persistence.ScoMapperBridge;
  * @author velth101
  *
  */
-public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF {
+@Deprecated
+public class DWOmAccess extends Servlet implements AppletContext {
 
 	private static final String UTF_8 = "UTF-8";
 	/**
@@ -279,52 +280,9 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		return sco.getLaunchdata();
 	}
 	
-	byte[] getLaunchDataBytes( int scoid ) throws IOException, XmlRpcException, SQLException 
-	{
-		byte[] bytes = extraScoMapper.getLaunchDataBytes( scoid );
-		if(bytes.length == 0)
-		{
-// SLOW.....
-			log("take slow route for " + scoid);
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			GZIPOutputStream zip = new GZIPOutputStream(bos);
-			OutputStreamWriter out = new OutputStreamWriter(zip, UTF_8);
-			getJSONLaunchData(scoid, out);
-			bytes = bos.toByteArray();
-			log("taken slow route for " + scoid + " " + bytes.length + " bytes");
-			setLaunchDataBytes(scoid);
-		}
-		return bytes;
-	}
 	
 	private ExecutorService executor = null;
 	
-	private void setLaunchDataBytes(final int scoid) {
-		Runnable run = new Runnable() {
-			public void run() {
-				try {
-					long tim = -System.currentTimeMillis();
-					Sco sco = (Sco) extraScoMapper.get(scoid);
-					if(sco == null) return;
-					String scoName = sco.getScoName();
-					String description = sco.getDescription();
-					boolean showScore = sco.isShowScore();
-					ByteArrayOutputStream bos = new ByteArrayOutputStream();
-					GZIPOutputStream zip = new GZIPOutputStream(bos);
-					OutputStreamWriter out = new OutputStreamWriter(zip, UTF_8);
-					getJSONLaunchData(scoid, out);
-					byte[] bytes = bos.toByteArray();
-					access.changeSco(scoid, scoName, description, false, bytes,
-							showScore);
-					tim += System.currentTimeMillis();
-					log("setLaunchDataBytes "+scoid+", " + scoName + " in " + tim + "ms");
-				} catch (Exception _) {
-					log("setLaunchDataBytes("+scoid+")", _);
-				}
-			}
-		};
-		executor.execute(run);
-	}
 
 	@SuppressWarnings({ "rawtypes" })
 	private Hashtable getCourseDescription_int( int courseid) throws IOException, XmlRpcException, SQLException
@@ -362,7 +320,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
     
     
 	@SuppressWarnings("serial")
-	class ScormDecorator extends JPanel implements SCORM12APIInterface 
+	class ScormDecorator extends JPanel  
 	{
 
 		private int scoid, userid;
@@ -402,27 +360,6 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		}
 
 
-		public String LMSGetValue(String key) {
-			if(LESSON_MODE.equals(key))
-				return "review";
-			if(LESSON_LOCATION.equals(key))
-				return location;
-			if(LAUNCH_DATA.equals(key))
-				try {
-					return getLauchDataString();
-				} catch (Exception e) {
-					e.printStackTrace();
-					return "";
-				} 
-			String result = "";
-			key = keymap.getProperty(key, key);
-			try {
-				result = access.LMSGetValue(scoid, userid, sgid, key);
-			} catch (Exception e) {
-				e.printStackTrace();
-			} 
-			return result;
-		}
 
 		public String getLauchDataString() throws IOException, XmlRpcException, SQLException
 		{
@@ -639,12 +576,12 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			doImage(req, resp);
 //		else if(command.endsWith("getLaunchData"))
 //			doLaunchData(req,resp);
-		else if(command.endsWith("getCourseDescription"))
-			doCourseDescription(req,resp);
-		else if(command.endsWith("getJSONLaunchData"))
-			doJSONLaunchData(req, resp);
-		else if(command.endsWith("getJSONLaunchDataBytes"))
-			doJSONLaunchData_copy(req, resp);
+//		else if(command.endsWith("getCourseDescription"))
+//			doCourseDescription(req,resp);
+//		else if(command.endsWith("getJSONLaunchData"))
+//			doJSONLaunchData(req, resp);
+//		else if(command.endsWith("getJSONLaunchDataBytes"))
+//			doJSONLaunchData_copy(req, resp);
 	}
 
 	void doCourseDescription(HttpServletRequest req,
@@ -709,33 +646,6 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	}
 	
 	@Deprecated
-	private void doJSONLaunchData_fast(HttpServletRequest req, HttpServletResponse resp ) throws IOException {
-		String s = req.getParameter("s");
-		String encoding = req.getHeader("Accept-Encoding");		
-		resp.setContentType("application/json");
-		resp.setHeader("Access-Control-Allow-Origin" ,"*");
-		resp.setCharacterEncoding(UTF_8);
-		OutputStream out = resp.getOutputStream();
-		try {
-			byte[] data = getLaunchDataBytes(Integer.parseInt(s));
-			if( encoding != null && encoding.contains("gzip")) {
-				resp.setHeader("Content-Encoding", "gzip");
-				out.write(data);
-			} else {
-				InputStream in = new GZIPInputStream(new ByteArrayInputStream(data));
-				if (encoding != null && encoding.contains("deflate")) {
-					resp.setHeader("Content-Encoding", "deflate");
-					out = new DeflaterOutputStream(resp.getOutputStream());
-				}
-				copy(in,out);
-				in.close();			
-			}
-			out.close();
-		} catch (Exception e) {
-			log("doLaunchData", e);
-			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		} 
-	}
 	
 	
 
@@ -874,24 +784,6 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	public void showDocument(URL url, String target) {
 	}
 
-	@SuppressWarnings("unchecked")
-	public Vector getScoreMapList(int sco, int user) throws Exception {
-		Applet wiskopdr = createApplet(sco);
-		ScormDecorator api = new ScormDecorator(wiskopdr, sco, user, "");
-		List list = ((fi.beans.scorm.PartialScoreIF) wiskopdr).getScoreMapList(api);
-// convert to vector of hashtable
-		Vector result = new Vector(list.size());
-		Iterator iter = list.iterator();
-		while (iter.hasNext()) {
-			Map map = (Map) iter.next();
-			for(Object item: map.entrySet())
-			{ Entry entry = (Entry) item;
-			  if(entry.getValue() == null) entry.setValue("");
-			}
-			result.add(new Hashtable<Object,Object>(map));
-		}
-		return result;
-	}
 
 	public String getLaunchData(int scoID) throws Exception {
 		StringWriter out = new StringWriter();

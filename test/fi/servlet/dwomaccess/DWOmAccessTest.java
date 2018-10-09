@@ -216,14 +216,14 @@ public class DWOmAccessTest extends TestCase {
 		access.destroy();
 	}
 
-	public void testGetLaunchDataBytes() throws IOException, XmlRpcException, SQLException {
-		int sco = 105645; // wim kladje test
-		sco = 10612;
-		OutputStream out = new FileOutputStream("test.json.gz");
-		out.write(access.getLaunchDataBytes(sco));
-		out.close();
-		// TODO verity no base64 strings in text.xml.
-		access.copy( new GZIPInputStream(new FileInputStream("test.json.gz")), System.out);
-	}
+//	public void testGetLaunchDataBytes() throws IOException, XmlRpcException, SQLException {
+//		int sco = 105645; // wim kladje test
+//		sco = 10612;
+//		OutputStream out = new FileOutputStream("test.json.gz");
+//		out.write(access.getLaunchDataBytes(sco));
+//		out.close();
+//		// TODO verity no base64 strings in text.xml.
+//		access.copy( new GZIPInputStream(new FileInputStream("test.json.gz")), System.out);
+//	}
 
 }

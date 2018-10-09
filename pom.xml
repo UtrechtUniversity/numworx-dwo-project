@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>fi.servlet</groupId>
     <artifactId>DWOmAccess</artifactId>
-    <version>0.0.9</version>
+    <version>0.1.0-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>DWOmAccess</name>
     <description>HTML5 access to dwo-server</description>
@@ -16,7 +16,7 @@
         <ideas>/ideas/IdeasServlet</ideas>
         <comment>amazon, *.dwo.nl</comment>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <dwoVersion>2.1.11</dwoVersion>
+        <dwoVersion>2.2.8</dwoVersion>
     </properties>
     <dependencies>
         <dependency>
