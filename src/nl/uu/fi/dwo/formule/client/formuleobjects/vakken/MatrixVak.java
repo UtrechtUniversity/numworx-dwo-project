@@ -3,6 +3,10 @@ package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.vectomatic.dom.svg.OMSVGElement;
+import org.vectomatic.dom.svg.OMSVGGElement;
+import org.vectomatic.dom.svg.OMSVGTransform;
+
 import com.google.gwt.canvas.dom.client.Context2d;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -47,20 +51,69 @@ public class MatrixVak extends FormuleElementWithChildren
 
 	public void paintObject()
 	{
-		for (int i = 0; i < getChildrenSize(); i++)
+		for (int i = 0; i < aantalRijen; i++)
 		{
-			getChild(i).paint();
+			for (int j = 0; j < aantalKolommen; j++)
+			{			
+				getMatrixChild(i, j).paint();
+			}
 		}
 
 		zetMaat();
 		paintComponent(ctx);
 		
-		for (int i = 0; i < getChildrenSize(); i++)
+		for (int i = 0; i < aantalRijen; i++)
 		{
-			getChild(i).draw(ctx);
+			for (int j = 0; j < aantalKolommen; j++)
+			{			
+				getMatrixChild(i, j).draw(ctx);
+			}
 		}
 		
 		this.drawCursor();
+	}
+	
+	@Override
+	protected void paintComponent(OMSVGElement svg)
+	{
+		super.paintComponent(svg);
+		SvgBuilder builder = new SvgBuilder(svg, x, y);
+		build(builder);
+	}
+
+	@Override
+	public void draw(OMSVGElement svg)
+	{
+		paintComponent(svg);
+		OMSVGGElement g = new OMSVGGElement();
+		svg.appendChild(g);
+		if (x != 0 || y != 0)
+		{
+			OMSVGTransform transform = getSVGSVGElement(svg).createSVGTransform();
+			transform.setTranslate(x, y);
+			g.getTransform().getBaseVal().appendItem(transform);
+		}
+		
+		for (int i = 0; i < aantalRijen; i++)
+		{
+			for (int j = 0; j < aantalKolommen; j++)
+			{			
+				getMatrixChild(i, j).draw(g);
+			}
+		}
+		
+		drawCursor(svg);
+	}
+
+	/**
+	 * 
+	 * @param rowIndex
+	 * @param columnIndex
+	 * @return
+	 */
+	private FormuleRegel getMatrixChild(int rowIndex, int columnIndex)
+	{
+		return matrixChildren.get(rowIndex).get(columnIndex);
 	}
 	
 	protected void build(PathBuilder ctx)
@@ -71,22 +124,19 @@ public class MatrixVak extends FormuleElementWithChildren
 		ctx.beginPath();
 
 		// haak ervoor
-		ctx.arc(5, 1, 5, 90, 180, true); // eerste bochtje
-//		g.drawArc(5, 1, 10, 10, 90, 90); // eerste bochtje
+		ctx.arc(10, 6, 5, Math.PI, 1.5 * Math.PI, false); // eerste bochtje
 		ctx.moveTo(5, 6);
 		ctx.lineTo(5, height - 6); // 1 lange lijn
-//		g.drawLine(5, 6, 5, getSize().height - 6); // 1 lange lijn
-		ctx.arc(5, height - 12, 5, 180, 270, true); // laatste bochtje 
-//		g.drawArc(5, getSize().height - 12, 10, 10, 180, 90); // laatste bochtje 
+		ctx.arc(10, height - 7, 5, Math.PI, Math.PI / 2, true); // laatste bochtje 
 		
+		ctx.stroke();
+		ctx.beginPath();
+
 		// haak erna
-		ctx.arc(width - 12, 1, 5, 90, 180, false); // eerste bochtje
-//		g.drawArc(getSize().width - 12, 1, 10, 10, 90, -90); // eerste bochtje
+		ctx.arc(width - 7, 6, 5, 0, 1.5 * Math.PI, true); // eerste bochtje
 		ctx.moveTo(width - 2, 6);
 		ctx.lineTo(width - 2, height - 6); // 1 lange lijn
-//		g.drawLine(getSize().width - 2, 6, getSize().width - 2, getSize().height - 6); // 1 lange lijn
-		ctx.arc(width - 12, height - 12, 5, 0, 90, false); // laatste bochtje 
-//		g.drawArc(getSize().width - 12, getSize().height - 12, 10, 10, 0, -90); // laatste bochtje 
+		ctx.arc(width - 7, height - 7, 5, 0, Math.PI / 2, false); // laatste bochtje 
 
 		ctx.stroke();
 	}
@@ -141,18 +191,18 @@ public class MatrixVak extends FormuleElementWithChildren
 		setSize(width, height);
 //		System.out.println("MatrixVak.maakMaat(): na setSize(width, height): width = " + width + ", getSize().width = " + getSize().width);
 
-		setAsHoogte(height / 2 - fm.getDescent());
+		setAsHoogte(height / 2 - fm.getDescent()); 
 		
 		int kindY = 5;
 		for (int i = 0; i < matrixChildren.size(); i++) // rijen
 		{
 			for (int j = 0; j < matrixChildren.get(i).size(); j++) // kolommen
 			{
-				matrixChildren.get(i).get(j).setPosition(xPosities[j], kindY + (maxRijHoogte[i] - matrixChildren.get(i).get(j).height) / 2);
-				matrixChildren.get(i).get(j).setAsHoogte(maxRijAshoogte[i]); // wat helpt dit?
-
-//				System.out.println("MatrixVak.maakMaat(): (" + i + ", " + j + "), kind.width = " + kinderen.get(i).get(j).getSize().width + ", setLocation(" 
-//					+ xPosities[j] + ", " + (kindY + (maxRijHoogte[i] - kinderen.get(i).get(j).getSize().height) / 2) + ")");
+				int x = (int) (xPosities[j] + 0.5 * maxKolomBreedte[j] - 0.5 * getMatrixChild(i, j).width);
+				int y = kindY + (maxRijAshoogte[i] - getMatrixChild(i, j).getAsHoogte());
+				
+				getMatrixChild(i, j).setPosition(x, y);
+				//getMatrixChild(i, j).setAsHoogte(maxRijAshoogte[i]); // wat helpt dit?
 			}
 
 			kindY += maxRijHoogte[i] + 5;
@@ -171,7 +221,7 @@ public class MatrixVak extends FormuleElementWithChildren
 		{
 			for (int j = 0; j < matrixChildren.get(i).size(); j++) // kolommen
 			{
-//				if (matrixChildren.get(i).get(j).hasFocus())
+//				if (getMatrixChild(i, j).hasFocus())
 //				{
 //					kindMetFocus[0] = i;
 //					kindMetFocus[1] = j;
@@ -462,7 +512,7 @@ public class MatrixVak extends FormuleElementWithChildren
 
 		for (int i = 0; i < matrixChildren.size(); i++) // rijen
 		{
-			FormuleRegel kind = matrixChildren.get(i).get(kolomIndex);
+			FormuleRegel kind = getMatrixChild(i, kolomIndex);
 			if (kind.toString().length() > 0)
 			{
 				isLeeg = false;
@@ -486,7 +536,7 @@ public class MatrixVak extends FormuleElementWithChildren
 
 		for (int i = 0; i < aantalKolommen; i++) // loop door de kolommen
 		{
-			FormuleRegel kind = matrixChildren.get(rijIndex).get(i);
+			FormuleRegel kind = getMatrixChild(rijIndex, i);
 			if (kind.toString().length() > 0)
 			{
 				isLeeg = false;
@@ -538,7 +588,7 @@ public class MatrixVak extends FormuleElementWithChildren
 		{
 			for (int j = 0; j < aantalKolommen; j++)
 			{
-				matrixChildren.get(i).get(j).setEditable(b);
+				getMatrixChild(i, j).setEditable(b);
 			}
 		}
 	}
@@ -595,7 +645,7 @@ public class MatrixVak extends FormuleElementWithChildren
 		{
 			for (int j = 0; j < aantalKolommen; j++)
 			{
-				matrixChildren.get(i).get(j).zetMaat();
+				getMatrixChild(i, j).zetMaat();
 			}
 		}
 	}
@@ -605,20 +655,23 @@ public class MatrixVak extends FormuleElementWithChildren
 	 */
 	private void removeKinderen()
 	{
-		Iterator i = matrixChildren.iterator();
+		if (matrixChildren != null)
+		{
+			Iterator i = matrixChildren.iterator();
+			
+		    while (i.hasNext())
+		    {
+		    	Iterator i2 = ((Vector) i.next()).iterator();
+		    	while (i2.hasNext())
+		    	{
+			    	FormuleRegel kind = (FormuleRegel) i2.next();
+			    	((Vector) i.next()).remove(kind);
+		    	}
+		    	
+		    	matrixChildren.remove(i.next());
+		    }
+		}
 		
-	    while (i.hasNext())
-	    {
-	    	Iterator i2 = ((Vector) i.next()).iterator();
-	    	while (i2.hasNext())
-	    	{
-		    	FormuleRegel kind = (FormuleRegel) i2.next();
-		    	((Vector) i.next()).remove(kind);
-	    	}
-	    	
-	    	matrixChildren.remove(i.next());
-	    }
-	    
 	    aantalRijen = 0;
 	    aantalKolommen = 0;
 	}
@@ -633,7 +686,7 @@ public class MatrixVak extends FormuleElementWithChildren
 				string = string + "$n"; // begin rij
 				for (int j = 0; j < aantalKolommen; j++)
 				{
-					string = string + "$k" + matrixChildren.get(i).get(j).toString() + "@";
+					string = string + "$k" + getMatrixChild(i, j).toString() + "@";
 				}
 				string = string + "@"; // eind rij
 			}
