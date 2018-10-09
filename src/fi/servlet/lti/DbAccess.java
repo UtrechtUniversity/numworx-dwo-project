@@ -1,22 +1,23 @@
 package fi.servlet.lti;
 
-import java.util.Hashtable;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import fi.dwo.client.domain.Group;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.SchoolGroup;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.persistence.DbAccessCreator;
-import fi.dwo.client.persistence.DbAccessIF;
-import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.LoginException;
-import fi.dwo.client.system.PersistenceException;
-import fi.dwo.server.persistence.DwoXmlRpcException;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.SchoolGroup;
+import fi.dwo.dwojapplet.persistence.DbAccessBridge;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import fi.servlet.dwomaccess.DbAccessFactory;
 
 public class DbAccess {
 	
@@ -25,16 +26,93 @@ public class DbAccess {
 	 */
 	public DbAccess(DbAccessIF dbaccess) {
 		this.dbaccess = dbaccess;
-		DbAccessCreator.setInstance(dbaccess);
+		DbAccessBridge.setInstance(dbaccess);
+	}
+	
+	public DbAccess(ServletContext context) {
+		this(DbAccessFactory.getDbAccess(context));
+		String dbrest_url = context.getInitParameter("dbrest.url");
+		if(dbrest_url != null)
+			try {
+				rest = new RestHandler(dbrest_url);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 	
 	DbAccessIF dbaccess;
+	RestHandler rest = new RestHandler();
 	
     private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
     private static final String DWO_SAML_ORGANIZATION = "dwoSAMLOrganization";    
 	private static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
+	private static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
 	
-	public void setCookie(HttpServletRequest request, HttpServletResponse response) {
+	public boolean setUUSAMLCookie(HttpServletRequest request, HttpServletResponse response, String schoolid, String organization) {
+	  Object lti_id = request.getAttribute("uid");
+// uuspecifiek: pick first, should be: user chooses.
+	  String user_id = s(request.getAttribute("studentNumber"));
+	  user_id = user_id.split(";")[0];
+	  if (user_id.isEmpty())
+	    user_id = s(lti_id);
+
+	  Object name_given = request.getAttribute("givenName");
+	  Object name_family = request.getAttribute("sn");
+	  Object name_prefix = request.getAttribute("insertion");
+	  String email = s(request.getAttribute("mail"));
+// pick first, multiple valued
+	  email = email.split(";")[0];
+
+	  String path = "/";
+	  
+      Cookie user = new Cookie(DWO_SAML_USER_ID, s(lti_id));
+      user.setPath(path);
+      String orgidStr = "saml:" + schoolid;
+      Cookie orgid = new Cookie(DWO_SAML_ORGANIZATION_ID, orgidStr);
+      orgid.setPath(path);
+      orgidStr = "\"" + orgidStr + "\"";
+      Cookie org = new Cookie(DWO_SAML_ORGANIZATION, organization);
+      org.setPath(path);
+      response.addCookie(user);
+      response.addCookie(orgid);
+      response.addCookie(org);
+      String roles = s(request.getAttribute("unscoped-affiliation"));
+      String role = "STUDENT";
+      if(roles != null && roles.toLowerCase().contains("employee"))
+          role = "TEACHER";
+      String authTokenStr;
+      try {
+          authTokenStr = rest.registerSAML(
+                  s(user_id),
+                  s(lti_id),
+                  (orgidStr),
+                  s(name_given), s(name_prefix), s(name_family),
+                  s(email),
+                  role,
+                  schoolid,
+                  ""
+                  );
+          Cookie authToken = new Cookie(DWO_SAML_AUTH_TOKEN, authTokenStr);
+          authToken.setPath(path);
+          response.addCookie(authToken);
+      } catch (IOException e) {
+          logger.log(Level.SEVERE, "registerSAML", e);
+      }
+
+  
+  
+	  return false;
+	}
+	
+	
+	
+	private String s(Object o) {
+    if(o == null) return "";
+    return String.valueOf(o);
+  }
+
+  public void setCookie(HttpServletRequest request, HttpServletResponse response) {
 // persoonsgegevens:
 		String user_id = request.getParameter("custom_userid");
 		String lti_id = request.getParameter("user_id");
@@ -65,7 +143,7 @@ public class DbAccess {
 	    if(organization == null)organization = oauth_consumer_key;
 	    
 	    String path = request.getContextPath();
-	    
+	    if(path.isEmpty()) path = "/DWOmAccess"; // EBServer fix
 		Cookie user  = new Cookie(DWO_SAML_USER_ID, lti_id);
 		user.setPath(path);
 		String orgidStr = "lti:" + oauth_consumer_key;
@@ -77,48 +155,35 @@ public class DbAccess {
 		response.addCookie(user);
 		response.addCookie(orgid);
 		response.addCookie(org);
-		final PersistenceFacade facade = PersistenceFacade.instance();
-		Group group = getGroup(request.getParameter("roles"));
-		User u = null;
+		
+		String roles = request.getParameter("roles");
+		String role = "STUDENT";
+		if(roles != null && roles.toLowerCase().contains("instructor"))
+			role = "TEACHER";
+// teaching assistant
+		if(roles != null && roles.toLowerCase().contains("teaching"))
+			role = "TEACHER";
+		
+		String authTokenStr;
 		try {
-			u = mapUser(dbaccess.login_saml(lti_id, orgidStr));
-		} catch (Exception e) {
-			String schoolLogin = getRealm(oauth_consumer_key);
-			String username = user_id + "@" + schoolLogin;
-			String groupPassword = getSecret(oauth_consumer_key, group.getGroupID());
-			try {
-				dbaccess.register(username, "", name_given, name_prefix, name_family, email, schoolLogin, group.getGroupID(), groupPassword);
-			} 
-			catch(DwoXmlRpcException exists) {
-				System.err.println(exists);
-			}
-			catch(Exception e1) { e1.printStackTrace(); }
-			try {
-				u = mapUser(dbaccess.login(username, ""));
-				dbaccess.link_saml(lti_id, orgidStr, u.getID());
-			} catch (Exception e1) {
-				e1.printStackTrace();
-				return;
-			}
-		} 
-		if(group.getGroupID() == SchoolGroup.STUDENT)
-		{
-			try {
-				SchoolClass c = getSchoolClass(facade, oauth_consumer_key, context_label);
-				if(c != null)
-					facade.changeAccount(u, null, null, name_given, name_prefix, name_family, email, c);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			authTokenStr = rest.registerSAML(
+					user_id,
+					lti_id,
+					orgidStr,
+					name_given, name_prefix, name_family,
+					email,
+					role,
+					oauth_consumer_key,
+					context_label
+					);
+			Cookie authToken = new Cookie(DWO_SAML_AUTH_TOKEN, authTokenStr);
+			authToken.setPath(path);
+			response.addCookie(authToken);
+		} catch (IOException e) {
+			//TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
-	}
-
-	private User mapUser(Hashtable map) {
-		User u = new User();
-		int userID = ((Number)map.get("userID")).intValue();
-		u.setUserID(userID);
-		return u;
 	}
 
 	/**
@@ -144,16 +209,6 @@ public class DbAccess {
 		return null;
 	}
 	
-	private Group getGroup(String parameter) {
-		int id = SchoolGroup.STUDENT;
-		if(parameter != null && parameter.toLowerCase().contains("instructor"))
-			id = SchoolGroup.TEACHER;
-		Group g = new Group();
-		g.setGroupID(id);
-		g.setName(parameter);
-		return g;
-	}
-
 	public String getSecret(String key) {
 		return getSecret(key, SchoolGroup.STUDENT);
 	}
@@ -195,6 +250,7 @@ public class DbAccess {
 	
 	private static final String SCO = "/sco/";
 	private static final String COURSE = "/course/";
+  private final Logger logger = Logger.getLogger(getClass().getName());
 	public String getDeepLink(String info) {
 		if(info == null) return "";
 		if(info.startsWith(SCO))

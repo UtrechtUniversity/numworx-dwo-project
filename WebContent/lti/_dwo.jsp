@@ -1,5 +1,4 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@page import="fi.dwo.server.persistence.DbAccessLocal"%>
 <% request.setCharacterEncoding("UTF-8"); %>
 <html>
 <head>
@@ -38,7 +37,7 @@
 
 	private DbAccess getDbAccess() {
 		if(instance == null) {
-			instance = new DbAccess(DbAccessFactory.getDbAccess(getServletContext()));
+			instance = new DbAccess(getServletContext());
 		}
 		return instance;
 	}
@@ -63,6 +62,14 @@
 	}
 %>
 <%
+	String pathInfo = request.getPathInfo();
+	if(pathInfo != null && pathInfo.endsWith("DWO.properties"))
+	{
+	  	//response.sendError(HttpServletResponse.SC_NOT_FOUND);
+	  	response.sendRedirect("/dwo/DWO.properties");
+	 	return;
+	}
+
 /* * /
   Enumeration en = request.getParameterNames();
   while (en.hasMoreElements()) {
@@ -125,10 +132,10 @@
   	getDbAccess().setCookie(request, response);
 %>
 <applet
-	code="fi.dwo.client.domain.DWO"
+	code="fi.dwo.dwojapplet.domain.DWO"
 	width="<%=width %>"
 	height="<%=height %>"
-	archive="dwo.jar"
+	archive="../DWOJApplet.jar, wiskopdr.jar"
 	mayscript
 	id="API"
 	name="API"
@@ -142,10 +149,11 @@
 	<param name="profile" value="<%= profile %>" >
 	<param name='cookies' value='false' >
 	<param name='logoutURL' value="<%=logoutURL %>" >
-	<param name="SERVLET" value="<%=servlet %>" >
 	<param name="IDEAS" value="<%=ideas %>">
-	<param name="jnlp_href" value="/dwo/<%=profile%>/<%=language%>/dwo.jnlp" />
-	<param name="codebase_lookup" value="false">	
+<%-- 	<param name="jnlp_href" value="/dwo/<%=profile%>/<%=language%>/dwo.jnlp" /> --%>
+	<param name="codebase_lookup" value="false">
+	<param name="classloader_cache" value="false">
+		
 	<%= getDbAccess().getDeepLink(request.getPathInfo()) %>
 </applet>
 </body>

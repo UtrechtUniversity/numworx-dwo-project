@@ -51,6 +51,7 @@
         String height = request.getParameter("launch_presentation_height");
         if(height == null || height.isEmpty()) height="100%";
     	String contextPath = request.getContextPath();
+    	if(contextPath.isEmpty()) contextPath="/DWOmAccess"; // EBServer fix
 
 %>
 <body style="font-family:sans-serif; margin:0px; position: absolute; width: <%=width%>;height:<%=height%>;">
@@ -59,7 +60,7 @@ private DbAccess instance;
 
 private DbAccess getDbAccess() {
 	if(instance == null) {
-		instance = new DbAccess(DbAccessFactory.getDbAccess(getServletContext()));
+		instance = new DbAccess(getServletContext());
 	}
 	return instance;
 }
@@ -127,8 +128,9 @@ private void doReturn(HttpServletRequest request, HttpServletResponse response,
   String sconr = "#LoginPlace:";
   String info = request.getPathInfo();
   if(info != null) {
-  	if(info.startsWith("/sco/")) sconr = "#LoginPlace:s/" + info.substring(5);
-  	else if(info.startsWith("/course")) sconr = "#LoginPlace:c/" + info.substring(8);
+    int len = info.length();
+  	if(info.startsWith("/sco/") && len > 5) sconr = "#LoginPlace:s/" + info.substring(5);
+  	else if(info.startsWith("/course/") && len > 8) sconr = "#LoginPlace:c/" + info.substring(8);
   }
 	String language = request.getParameter("launch_presentation_locale");
 	if(language != null) {

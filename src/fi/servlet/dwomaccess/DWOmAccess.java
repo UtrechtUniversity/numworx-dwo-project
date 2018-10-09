@@ -19,7 +19,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
@@ -48,16 +50,17 @@ import javax.swing.WindowConstants;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.beans.base64code.Base64InputStream;
-import fi.beans.base64code.StringCodeObject;
 import fi.beans.dwomaccess.JSONEncoder;
+import fi.beans.private_base64code.Base64InputStream;
+import fi.beans.private_base64code.StringCodeObject;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.xmlrpc.Servlet;
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.persistence.CourseMapper;
-import fi.dwo.client.persistence.DbAccessIF;
-import fi.dwo.client.persistence.ScoMapper;
+import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.persistence.CourseMapperBridge;
+import fi.dwo.dwojapplet.persistence.ScoMapperBridge;
+
 /**
  * Servlet voor het achterhalen van de deelscores en screenshots. 
  * Methoden:
@@ -68,7 +71,8 @@ import fi.dwo.client.persistence.ScoMapper;
  * @author velth101
  *
  */
-public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF {
+@Deprecated
+public class DWOmAccess extends Servlet implements AppletContext {
 
 	private static final String UTF_8 = "UTF-8";
 	/**
@@ -107,7 +111,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		}
 	}
 	
-	public class ExtraScoMapper extends ScoMapper {
+	public class ExtraScoMapper extends ScoMapperBridge {
 		
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public byte[] getLaunchDataBytes(int scoid) throws IOException, XmlRpcException, SQLException {
@@ -236,7 +240,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	 */
 	ClassLoader getClassLoader() {
 		if(dwo_jar == null)
-			dwo_jar = Loader.create("dwo.jar"); // Helaas, wiskopdr.jar geen goede index.
+			dwo_jar = Loader.create("wiskopdr.jar"); // Helaas, wiskopdr.jar geen goede index.
 		return dwo_jar;
 	}
 
@@ -276,57 +280,14 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		return sco.getLaunchdata();
 	}
 	
-	byte[] getLaunchDataBytes( int scoid ) throws IOException, XmlRpcException, SQLException 
-	{
-		byte[] bytes = extraScoMapper.getLaunchDataBytes( scoid );
-		if(bytes.length == 0)
-		{
-// SLOW.....
-			log("take slow route for " + scoid);
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			GZIPOutputStream zip = new GZIPOutputStream(bos);
-			OutputStreamWriter out = new OutputStreamWriter(zip, UTF_8);
-			getJSONLaunchData(scoid, out);
-			bytes = bos.toByteArray();
-			log("taken slow route for " + scoid + " " + bytes.length + " bytes");
-			setLaunchDataBytes(scoid);
-		}
-		return bytes;
-	}
 	
 	private ExecutorService executor = null;
 	
-	private void setLaunchDataBytes(final int scoid) {
-		Runnable run = new Runnable() {
-			public void run() {
-				try {
-					long tim = -System.currentTimeMillis();
-					Sco sco = (Sco) extraScoMapper.get(scoid);
-					if(sco == null) return;
-					String scoName = sco.getScoName();
-					String description = sco.getDescription();
-					boolean showScore = sco.isShowScore();
-					ByteArrayOutputStream bos = new ByteArrayOutputStream();
-					GZIPOutputStream zip = new GZIPOutputStream(bos);
-					OutputStreamWriter out = new OutputStreamWriter(zip, UTF_8);
-					getJSONLaunchData(scoid, out);
-					byte[] bytes = bos.toByteArray();
-					access.changeSco(scoid, scoName, description, false, bytes,
-							showScore);
-					tim += System.currentTimeMillis();
-					log("setLaunchDataBytes "+scoid+", " + scoName + " in " + tim + "ms");
-				} catch (Exception _) {
-					log("setLaunchDataBytes("+scoid+")", _);
-				}
-			}
-		};
-		executor.execute(run);
-	}
 
 	@SuppressWarnings({ "rawtypes" })
 	private Hashtable getCourseDescription_int( int courseid) throws IOException, XmlRpcException, SQLException
 	{
-		CourseMapper mapper = new CourseMapper();
+		CourseMapperBridge mapper = new CourseMapperBridge();
 		Course course = (Course) mapper.get(courseid);
 		String description = course.getDescription();
 		Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(description);
@@ -359,11 +320,13 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
     
     
 	@SuppressWarnings("serial")
-	class ScormDecorator extends JPanel implements SCORM12APIInterface 
+	class ScormDecorator extends JPanel  
 	{
 
 		private int scoid, userid;
 		private String location;
+		private int sgid;
+
 		public ScormDecorator(Component comp, int scoid, int userid, String location) {
 			super(new GridLayout(1,1));
 			add(comp);
@@ -397,27 +360,6 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		}
 
 
-		public String LMSGetValue(String key) {
-			if(LESSON_MODE.equals(key))
-				return "review";
-			if(LESSON_LOCATION.equals(key))
-				return location;
-			if(LAUNCH_DATA.equals(key))
-				try {
-					return getLauchDataString();
-				} catch (Exception e) {
-					e.printStackTrace();
-					return "";
-				} 
-			String result = "";
-			key = keymap.getProperty(key, key);
-			try {
-				result = access.LMSGetValue(scoid, userid, key);
-			} catch (Exception e) {
-				e.printStackTrace();
-			} 
-			return result;
-		}
 
 		public String getLauchDataString() throws IOException, XmlRpcException, SQLException
 		{
@@ -634,12 +576,12 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			doImage(req, resp);
 //		else if(command.endsWith("getLaunchData"))
 //			doLaunchData(req,resp);
-		else if(command.endsWith("getCourseDescription"))
-			doCourseDescription(req,resp);
-		else if(command.endsWith("getJSONLaunchData"))
-			doJSONLaunchData(req, resp);
-		else if(command.endsWith("getJSONLaunchDataBytes"))
-			doJSONLaunchData_fast(req, resp);
+//		else if(command.endsWith("getCourseDescription"))
+//			doCourseDescription(req,resp);
+//		else if(command.endsWith("getJSONLaunchData"))
+//			doJSONLaunchData(req, resp);
+//		else if(command.endsWith("getJSONLaunchDataBytes"))
+//			doJSONLaunchData_copy(req, resp);
 	}
 
 	void doCourseDescription(HttpServletRequest req,
@@ -686,33 +628,24 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		
 	}
 	
-	private void doJSONLaunchData_fast(HttpServletRequest req, HttpServletResponse resp ) throws IOException {
+	private void doJSONLaunchData_copy(HttpServletRequest req, HttpServletResponse resp)
+	{
 		String s = req.getParameter("s");
-		String encoding = req.getHeader("Accept-Encoding");		
-		resp.setContentType("application/json");
-		resp.setHeader("Access-Control-Allow-Origin" ,"*");
-		resp.setCharacterEncoding(UTF_8);
-		OutputStream out = resp.getOutputStream();
 		try {
-			byte[] data = getLaunchDataBytes(Integer.parseInt(s));
-			if( encoding != null && encoding.contains("gzip")) {
-				resp.setHeader("Content-Encoding", "gzip");
-				out.write(data);
-			} else {
-				InputStream in = new GZIPInputStream(new ByteArrayInputStream(data));
-				if (encoding != null && encoding.contains("deflate")) {
-					resp.setHeader("Content-Encoding", "deflate");
-					out = new DeflaterOutputStream(resp.getOutputStream());
-				}
-				copy(in,out);
-				in.close();			
-			}
-			out.close();
+			URL org = new URL(getServletContext().getInitParameter("dbrest.url"));
+			org = new URL(org,"public/scoData/getJSONLaunchDataBytes?scoId=" + s);
+			URLConnection connection = org.openConnection();
+			String type = connection.getContentType();
+			resp.setContentType(type);
+			InputStream in = connection.getInputStream();
+			copy(in, resp.getOutputStream());
+			in.close();
 		} catch (Exception e) {
-			log("doLaunchData", e);
-			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		} 
+			log("doJSONLaunchData_copy", e);
+		}	
 	}
+	
+	@Deprecated
 	
 	
 
@@ -761,13 +694,21 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 //		}
 //		out.close();
 //	}
-	
+/* relay
+		launchData = http +"//"
+				+ host
+				+ "/dwo/rest/public/scoData/getJSONLaunchDataBytes?scoId=";
+		courseDescription = http + "//"
+				+ host
+				+ "/dwo/rest/public/course/getCourseDescription?courseId=";		
+
+*/	
 	@SuppressWarnings("rawtypes")
 	void getJSONLaunchData(int sco, Writer out) throws IOException {
 		Map map;
 		try {
 			map = extraScoMapper.getLaunchData(sco);
-			JSONEncoder.encode(map, out);
+			JSONEncoder.encode(map, out, getClassLoader());
 		} catch (XmlRpcException e) {
 			throw new IOException(e.getMessage());
 		} catch (SQLException e) {
@@ -787,7 +728,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			map = getCourseDescription_int(course);
 			OutputStreamWriter w = new OutputStreamWriter(out,"UTF-8");
 			if(map != null)
-				JSONEncoder.encode(map, w);
+				JSONEncoder.encode(map, w, getClassLoader());
 			w.flush();
 		} catch (XmlRpcException e) {
 			throw new IOException(e.getMessage());
@@ -843,24 +784,6 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	public void showDocument(URL url, String target) {
 	}
 
-	@SuppressWarnings("unchecked")
-	public Vector getScoreMapList(int sco, int user) throws Exception {
-		Applet wiskopdr = createApplet(sco);
-		ScormDecorator api = new ScormDecorator(wiskopdr, sco, user, "");
-		List list = ((fi.beans.scorm.PartialScoreIF) wiskopdr).getScoreMapList(api);
-// convert to vector of hashtable
-		Vector result = new Vector(list.size());
-		Iterator iter = list.iterator();
-		while (iter.hasNext()) {
-			Map map = (Map) iter.next();
-			for(Object item: map.entrySet())
-			{ Entry entry = (Entry) item;
-			  if(entry.getValue() == null) entry.setValue("");
-			}
-			result.add(new Hashtable<Object,Object>(map));
-		}
-		return result;
-	}
 
 	public String getLaunchData(int scoID) throws Exception {
 		StringWriter out = new StringWriter();
@@ -873,7 +796,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	public String getCourseDescription(int courseID) throws Exception {
 		Hashtable map = getCourseDescription_int(courseID);
 		StringWriter out = new StringWriter();
-		JSONEncoder.encode(map, out);
+		JSONEncoder.encode(map, out, getClassLoader());
 		out.close();
 		return out.toString();
 	}
