@@ -59,7 +59,8 @@ public class StelselRekenVak extends LayoutPanel  {
 		contentPanel.setPixelSize(scrollWidth - 3, contentHoogte); // wordt aangepast zodra hoogte hoofdEditor wordt aangepast.
 		scrollPane = new ScrollPanel();
 		scrollPane.setPixelSize(scrollWidth, scrollHoogte);
-		scrollPane.getElement().getStyle().setOverflow(Overflow.AUTO);
+		scrollPane.getElement().getStyle().setOverflowX(Overflow.HIDDEN); // zorgt dat geen horizontale scrollbar verschijnt zodra vertical scrollbar verschijnt.
+		scrollPane.getElement().getStyle().setOverflowY(Overflow.AUTO);
 		scrollPane.getElement().getStyle().setFloat(Style.Float.LEFT);
 		scrollPane.setWidget(contentPanel);
 		add(scrollPane);
@@ -165,9 +166,9 @@ public class StelselRekenVak extends LayoutPanel  {
 		int aantalKolommen = hoofdEditor.geefEindAantalKinderen();
 		int kolomBreedte = contentPanel.getOffsetWidth()/aantalKolommen;
 		hoofdEditor.setSizes(kolomBreedte);
+		int h = hoofdEditor.geefHoogteEditorEnKinderen(); //hierin wordt ook plaatsHoogte gedaan voor alle editors; daarom doen vóór zetten locaties.
 		if(hoofdEditor.heeftKinderen())
 			hoofdEditor.setLocations(-1, 0);
-		int h = hoofdEditor.geefHoogteEditorEnKinderen();
 		if(h > scrollHoogte)
 		{	contentHoogte = h;
 			contentPanel.setPixelSize(scrollWidth - 20, contentHoogte);
@@ -178,7 +179,8 @@ public class StelselRekenVak extends LayoutPanel  {
 		
 		}
 		contentPanel.setWidgetTopHeight(hoofdEditor, 0, Style.Unit.PX, hoofdEditor.geefHoogte(), Style.Unit.PX);
-		scrollPane.scrollToBottom();
+		scrollPane.scrollToBottom(); //Dit is te algemeen; je wil dat de editor die focus heeft goed in beeld komt. Die kan helemaal onderaan zitten, 
+		//maar kan ook ergens anders zitten. 
 	}
 	
 	public StelselAntwoordVak geefAntwoordVak()

@@ -654,6 +654,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 	
 	public int geefHoogteEditorEnKinderen()
 	{
+		hoogte = bepaalHoogte();
 		if(kinderen == null)
 			return hoogte;
 		else
@@ -920,14 +921,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 			
 		}
 	}
-	
-//	//Niet meer nodig?
-//	public int bepaalHoogte()
-//	{
-//		int hoogte = super.bepaalHoogte();
-//		return hoogte;
-//	}
-	
+		
 	public void backStep(boolean setState)
 	{
 		if(heeftFocus)
