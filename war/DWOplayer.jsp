@@ -27,6 +27,12 @@
     <script>
     	DWO_PROFILE_ID = <%=profile%>
     	dwo_env = "<%=dwo_env%>"
+    	
+    	function logout() {
+    		if (window != window.parent)
+    			window.parent.logout();
+    	}
+    	
     </script>
     
     <title>De Digitale Wiskunde Omgeving | Freudenthal Instituut </title>
