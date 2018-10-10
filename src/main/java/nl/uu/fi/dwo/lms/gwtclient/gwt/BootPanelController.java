@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import com.google.gwt.http.client.UrlBuilder;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -41,6 +42,9 @@ import org.osgi.util.promise.Success;
 public class BootPanelController {
 
     private static final Logger LOG = Logger.getLogger(BootPanelController.class.getName());
+    static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
+    static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
+    static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
 
     @Inject
     ViewFactory viewFactory;
@@ -52,7 +56,7 @@ public class BootPanelController {
     private int stage;
     private boolean hideGwtGui;
     private boolean test = false;
-    private String authToken;
+    private String authToken, user_id, org_id;
     private boolean session = false;
 
     static {
@@ -114,6 +118,15 @@ public class BootPanelController {
         } catch (Exception ignore) {
             initialView = SelectedView.WELCOME;
         };
+// Saml login, deprecated 
+        if(authToken == null) {
+          user_id = Cookies.getCookie(DWO_SAML_USER_ID);
+          org_id = Cookies.getCookie(DWO_SAML_ORGANIZATION_ID);
+          authToken = Cookies.getCookie(DWO_SAML_AUTH_TOKEN);
+          LOG.severe("SAML User " + user_id + " " + org_id + " " + authToken);
+        } else {
+          user_id = org_id = null; // modern authtoken.
+        }
     }
 
 //    public void testRestyMapConverter() {
@@ -198,7 +211,8 @@ public class BootPanelController {
         //intialize our global and environmental variables instance.
 //        try {
         //dwoGlobalVars = new DwoGlobalVars(); // INJECTED
-        Promise<DomDwoProfileFull> promise = new PublicProfileManager().get(profile);
+        Promise<DomDwoProfileFull> promise = new PublicProfileManager().get(profile)
+        .filter(v -> v != null);
         dwoGlobalVars.setProfile(promise);
 //        } catch (Dwo2Exception e) {
 //            //ugly emergency code in case server fails.
@@ -316,7 +330,7 @@ public class BootPanelController {
                             if (authToken != null) {
                                 String token = authToken;
                                 authToken = null;
-                                presenterFactory.getLoginPresenter().tokenLogin(token);
+                                presenterFactory.getLoginPresenter().tokenLogin(token, user_id, org_id);
                             }
                             break;
                         case WELCOME:

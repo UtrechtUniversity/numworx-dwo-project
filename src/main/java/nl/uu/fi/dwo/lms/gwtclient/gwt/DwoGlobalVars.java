@@ -43,7 +43,7 @@ public class DwoGlobalVars {
 
     private static final Logger LOG = Logger.getLogger(DwoGlobalVars.class.getName());
 
-    private SecuredUserAccountManager accountManager = new SecuredUserAccountManager();
+    private final SecuredUserAccountManager accountManager;
     private SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
 
     private DwoGlobalVarsState state = DwoGlobalVarsState.Unintialized;
@@ -168,7 +168,8 @@ public class DwoGlobalVars {
      * @throws Dwo2Exception
      */
     @Inject
-    public DwoGlobalVars() {
+    public DwoGlobalVars(SecuredUserAccountManager aman) {
+        accountManager = aman;
         //TODO define initialization stages: Unintialized, Initializing, NotLoggedIn, LoggedIn. Closing.
         setState(DwoGlobalVarsState.Initializing);
         initProperties();
@@ -283,6 +284,15 @@ public class DwoGlobalVars {
       login_step0();
       LOG.log(Level.INFO, "state=LoggingIn. Calling accountManager.getUserFromAuthToken.");
       return accountManager.getUserFromAuthToken(token).then(this::login_step1).then(this::login_step2, this::login_fail);
+    }
+
+    public Promise<DwoGlobalVarsState> initUserWithSaml(String user_id, String org_id,
+                                                        String token) throws Dwo2Exception {
+      login_step0();
+      Promise<DomUserFullwLoginContext> p1 = accountManager.updateAccountData(user_id, org_id, token);
+      Promise<DomSchoolsRolesAndClassesV2> p2 = p1.then(this::login_step1);
+      Promise<DwoGlobalVarsState> p3 = p2.then(this::login_step2, this::login_fail);
+      return p3;
     }
 
     //

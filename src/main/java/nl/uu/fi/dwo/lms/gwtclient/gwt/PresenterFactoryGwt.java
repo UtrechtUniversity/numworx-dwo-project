@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import com.google.web.bindery.event.shared.EventBus;
 
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import javax.inject.Singleton;
@@ -69,13 +70,13 @@ public class PresenterFactoryGwt implements PresenterFactory {
 //    private final PromisedDialogWithOKPresenter promisedDialogWithOKPresenter;
     private final ProgressDialogWithAbortPresenter progressDialogWithAbortPresenter;
 
-    @Inject public PresenterFactoryGwt(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject public PresenterFactoryGwt(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, SecuredUserAccountManager accountManager) {
         dwoGlobalVars = aDwoGlobalVars;
         eventBus = anEventBus;
         mainPresenter = new MainPresenter(eventBus, dwoGlobalVars);
         loginPresenter = new LoginPresenter(eventBus, dwoGlobalVars);
         welcomePresenter = new WelcomePresenter(eventBus, dwoGlobalVars);
-        accountPresenter = new AccountPresenter(eventBus, dwoGlobalVars);
+        accountPresenter = new AccountPresenter(eventBus, dwoGlobalVars, accountManager);
         schoolclassesPresenter = new SchoolclassesPresenter(eventBus, dwoGlobalVars);
         editSchoolclassPresenter = new EditSchoolclassPresenter(eventBus, dwoGlobalVars);
         addStudentToSchoolclassPresenter = new AddStudentToSchoolclassPresenter(eventBus, dwoGlobalVars);

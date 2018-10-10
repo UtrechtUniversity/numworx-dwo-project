@@ -26,12 +26,13 @@ public class AccountService {
     
     private static final Logger LOG = Logger.getLogger(AccountService.class.getName());
 
-    private SecuredUserAccountManager accountManager = new SecuredUserAccountManager();
+    private final SecuredUserAccountManager accountManager;
     private SecuredUserSchoolLoginManagerV2 schoolLoginManager = new SecuredUserSchoolLoginManagerV2();
 
     private final DwoGlobalVars dwoGlobalVars;
     
-    @Inject public AccountService(DwoGlobalVars aDwoGlobalVars){
+    @Inject public AccountService(DwoGlobalVars aDwoGlobalVars, SecuredUserAccountManager accountManager) {
+        this.accountManager = accountManager;
         dwoGlobalVars = aDwoGlobalVars; // for future use (hasRole fetch i.e.)
     }
    public Promise<DomUserFull> getUserData() {

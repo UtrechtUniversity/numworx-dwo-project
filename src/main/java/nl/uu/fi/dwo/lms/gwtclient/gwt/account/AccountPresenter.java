@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.account;
 
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import fi.dwo.gwt.lib.rest.util.StringFormatter;
 import java.util.ArrayList;
@@ -71,10 +72,10 @@ public class AccountPresenter {
         void clearAddSchoolLogin();
     }
 
-    public AccountPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    public AccountPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, SecuredUserAccountManager accountManager) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-        accountService = new AccountService(dwoGlobalVars);
+        accountService = new AccountService(dwoGlobalVars, accountManager);
     }
 
     public void init() {

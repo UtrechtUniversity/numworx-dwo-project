@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars.DwoGlobalVarsState;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedDialogWithConfirmDeferred;
@@ -196,9 +197,15 @@ public class LoginPresenter {
         }
     }
 
-    public void tokenLogin(String token) {
+    public void tokenLogin(String token, String user_id, String org_id) {
         try {
-            dwoGlobalVars.initUserWithToken(token).then(resolved -> {
+            Promise<DwoGlobalVarsState> statePromise;
+            if(user_id != null && org_id != null) {
+              statePromise = dwoGlobalVars.initUserWithSaml(user_id, org_id, token);
+            } else {
+              statePromise = dwoGlobalVars.initUserWithToken(token);
+            }
+            statePromise.then(resolved -> {
                 if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
                     if (!dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
                         eventBus.fireEvent(new MessageDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
