@@ -2502,17 +2502,17 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         LOG.log(Level.INFO,"Cookies: dwoSAMLUserID {0} dwoSAMLOrganizationID {1} dwoSAMLAuthToken {2}", new Object[]{samlUserID, samlOrgID, authToken});
 //      Test code for Jane Public
 //        if (true) {
-//            samlUserID = "292832126";
-//            samlOrgID = "\"lti:385\"";
+//            samlUserID = "Velth101";
+//            samlOrgID = "\"saml:385\"";
 //            samlOrg = "bla";
-//            authToken = "-1039";
+//            authToken = "-8539";
 //        }
 
         if (samlUserID != null && samlOrgID != null) {
             try {
                 DomUserFullwLoginContext user = PublicUserManager.samlLogin(samlUserID, samlOrgID, authToken);
+                DwoHelper.setCurrentLoginContext(user.getDomLoginContext()); // currentlogincontext is used in setCurrentUser
                 DwoHelper.setCurrentUser(user.getDomUserFull());
-                DwoHelper.setCurrentLoginContext(user.getDomLoginContext());
                 return DwoHelper.getCurrentFacadeUser();
             } catch (Dwo2Exception e) {
                 //TODO LOG.log(...)
