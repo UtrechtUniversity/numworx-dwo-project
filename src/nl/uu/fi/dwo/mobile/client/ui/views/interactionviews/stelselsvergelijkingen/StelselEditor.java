@@ -939,6 +939,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 			checkimg.removeFromParent();
 			if(editor != null)
 			{	editor.clearAll();
+				editor.zetGoedFout(AntwoordVakChecker.GEEN);
 				editor.paint();
 			}
 			if(this.getStapNr() == 0 && !isHoofdEditor())

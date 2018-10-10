@@ -1431,6 +1431,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 	public void zetGoedFout(int uitslag)
 	{
+		goedHalfFout = uitslag;
 		if (uitslag == AntwoordVakChecker.GOED)
 			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
 		else if (uitslag == AntwoordVakChecker.DOOR || uitslag == AntwoordVakChecker.HALF)
