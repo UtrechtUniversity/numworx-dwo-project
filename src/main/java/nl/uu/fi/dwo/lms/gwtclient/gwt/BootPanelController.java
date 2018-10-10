@@ -144,6 +144,10 @@ public class BootPanelController {
       $wnd.location.reload(true);
     }-*/;
 
+    native static void logout() /*-{
+      $wnd.logout();
+    }-*/;
+
     /**
      * Sets a tooltip on the logo for the current version.
      */
@@ -281,7 +285,10 @@ public class BootPanelController {
                             dwoGlobalVars.clearCurrentUser();
                             setSession(false);
                             if(!test){
-                                Window.Location.reload();
+                                if(org_id != null) // running under SAML protection
+                                  logout();
+                                else
+                                  Window.Location.reload();
                             }else{
                             //we should also clear user, view and presenter states, but that is never bug free.
                             //however a reload works too.
@@ -304,6 +311,7 @@ public class BootPanelController {
                     //viewFactory.getMainView().showPostLoginWidgets();
                 }
             }
+
         });
 
         //handle switch deckpanel events.
