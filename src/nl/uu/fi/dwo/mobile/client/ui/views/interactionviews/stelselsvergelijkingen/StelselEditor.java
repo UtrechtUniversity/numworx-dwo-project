@@ -160,11 +160,11 @@ public class StelselEditor extends FormuleEditorWithSteps
 	public void splits(boolean backStep, boolean show, boolean setState) throws RestartException
 	{
 		VergelijkingMeerv vergelijkingen = FormuleParser.parseVergelijking("$f" + editor.toString() + "@");
-		hoogte = bepaalHoogte();
 		checkimg.removeFromParent();
 		int breedteVergelijkingen = this.getAsPanel().getAbsoluteLeft() + this.editor.getAsPanel().getAbsoluteLeft();
 		
 		sluitRegelAf("$f" + editor.toString() + "@", true, false);
+		hoogte = bepaalHoogte();
 		
 		int k = vergelijkingen.geefAantal();
 		kinderen = new StelselEditor[k];
@@ -840,7 +840,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 			breedteVergelijkingen += hulpEditor.getMainRegel().getWidth() + 20;//20 correctie voor woordje 'of'.
 			pijlen[i].zetEindX(x + kinderen[i].getWidth()/3);
 			hoofdPanel.contentPanel.setWidgetLeftWidth(pijlen[i].getCanvas(), Math.min(pijlen[i].xBegin, pijlen[i].xEind), Style.Unit.PX, Math.max(5, Math.abs(pijlen[i].xBegin - pijlen[i].xEind)), Style.Unit.PX);
-			hoofdPanel.contentPanel.setWidgetTopHeight(pijlen[i].getCanvas(), y - 20, Style.Unit.PX, pijlen[i].hoogte, Style.Unit.PX);
+			hoofdPanel.contentPanel.setWidgetTopHeight(pijlen[i].getCanvas(), y - pijlen[i].hoogte, Style.Unit.PX, pijlen[i].hoogte, Style.Unit.PX);
 			if(kinderen[i].heeftKinderen())
 				kinderen[i].setLocations(x, y);
 			x += kinderen[i].getWidth();
@@ -921,11 +921,12 @@ public class StelselEditor extends FormuleEditorWithSteps
 		}
 	}
 	
-	public int bepaalHoogte()
-	{
-		int hoogte = super.bepaalHoogte();
-		return hoogte;
-	}
+//	//Niet meer nodig?
+//	public int bepaalHoogte()
+//	{
+//		int hoogte = super.bepaalHoogte();
+//		return hoogte;
+//	}
 	
 	public void backStep(boolean setState)
 	{

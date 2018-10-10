@@ -833,7 +833,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		if(feedbackPanel != null)
 		{	feedbackPanel.removeFromParent();
 			//25-11-2016: feedback leeg gezet om te zorgen dat in stelselEditor de feedback niet opnieuw verschijnt. 	
-			feedback = "";
+			//feedback = "";
+			setFeedback("");
+			
 		}
 		vervangEditorDoorViewer(useranswer, show, setState);
 		terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);

@@ -12,7 +12,7 @@ public class StelselPijl {
 	Canvas pijlCanvas;
 	Context2d g;
 	int xBegin, xEind;
-	int hoogte = 20;
+	int hoogte = 15;
 	
 	public StelselPijl(int x1, int x2)
 	{
