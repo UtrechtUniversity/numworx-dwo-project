@@ -34,6 +34,9 @@
 				var element = document.getElementsByTagName("iframe")[0];
 				element.setAttribute("src", "/gwtclient/index.html"+id);
 		    }
+	 		function logout() {
+	 			window.location = "/dwo/saml/logout.jsp"
+	 		}
 		</script>
     </head>
     <body onload ="load()">

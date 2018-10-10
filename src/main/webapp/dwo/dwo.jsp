@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="saml_util.jsp" %>
 <% Object SERVLET = request.getAttribute("SERVLET");
 	if(SERVLET == null)
 	{

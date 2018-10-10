@@ -16,6 +16,9 @@ if ("shibboleth".equals(request.getAuthType())) {
   String schoolid = "385";
   String organization = "Universiteit Utrecht";    
   if ( getDbAccess().setUUSAMLCookie(request, response, schoolid, organization))
-    return;	    
+    return;
+  String extras = "<param name='logoutURL' value='/dwo/saml/logout.jsp' >\n";
+  request.setAttribute("extras", extras);
+  
 }
 %>   
