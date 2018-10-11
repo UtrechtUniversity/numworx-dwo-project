@@ -81,7 +81,19 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 	@UiHandler("t4_3") void onT4_3(ClickEvent e) {getEditor().limiet1();}
 	@UiHandler("t4_4") void onT4_4(ClickEvent e) {getEditor().limiet2();}
 	@UiHandler("t4_6") void onT4_6(ClickEvent e) {getEditor().primitieve();}
-	@UiHandler("t4_7") void onT4_7(ClickEvent e) {getEditor().sigma();}
+	
+	@UiHandler("t4_7")
+	void onT4_7(ClickEvent e)
+	{
+		getEditor().sigma();
+	}
+	
+	@UiHandler("t3_15") 
+	void onT3_15(ClickEvent e)
+	{
+		getEditor().vector();
+	}
+	@UiHandler("t4_15") void onT4_15(ClickEvent e) {getEditor().matrix();}
 
 	@UiHandler({"t4_5", "t4_8", "t4_9", "t4_10", "t4_11", "t4_12"} )
 	void insert(ClickEvent e) {

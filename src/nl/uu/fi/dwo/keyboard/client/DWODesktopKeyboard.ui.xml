@@ -126,7 +126,13 @@
 			<my:IKey addStyleNames="key {style.image}" ui:field="t3_13" resource="{resources.conjug}" />
 			<my:IKey addStyleNames="key {style.image}" ui:field="t4_13" resource="{resources.partialdiff}" />
 		</g:FlowPanel>
-		<g:FlowPanel addStyleNames="dclm clm-13">
+		
+		<g:FlowPanel addStyleNames="dclm clm-14">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_15" resource="{resources.vector}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t4_15" resource="{resources.matrix}" />
+		</g:FlowPanel>
+		
+		<g:FlowPanel addStyleNames="dclm clm-14">
 			<my:FKey addStyleNames="key bg-dkgrey icon {style.lsymbol}" ui:field="t3_14">
 				αβ
 			</my:FKey>
