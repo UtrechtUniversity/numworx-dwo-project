@@ -214,7 +214,7 @@
         </profile>
     </profiles>
     <scm>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOmAccess/branches/dwo2</developerConnection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOmAccess/trunk</developerConnection>
     </scm>
     <parent>
     	<groupId>nl.uu.fi.dwo</groupId>
