@@ -15,7 +15,7 @@
     <!-- Adjust artifact, name and description for new projects -->
     <groupId>nl.uu.fi.dwo.lms</groupId>
     <artifactId>DWOGwtClient</artifactId>
-    <version>0.10.16</version>
+    <version>0.10.17-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>${project.build.finalName}</name>
@@ -49,7 +49,7 @@
     </properties>
 
     <scm>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOGwtClient/tags/DWOGwtClient-0.10.16</developerConnection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOGwtClient/trunk</developerConnection>
     </scm>
     <!-- Running with Maven -->
     <!-- mvn clean package -->
