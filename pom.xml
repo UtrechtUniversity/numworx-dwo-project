@@ -20,9 +20,15 @@
 			<version>${gwtVersion}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
+<!-- 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
 			<artifactId>interaction</artifactId>
+		</dependency>
+ -->		<dependency>
+			<groupId>nl.uu.fi.dwo.mobile</groupId>
+			<artifactId>interaction</artifactId>
+			<version>0.1.1-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
