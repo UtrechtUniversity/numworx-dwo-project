@@ -137,7 +137,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.lms</groupId>
 		<artifactId>DWOGwtClient</artifactId>
-		<version>0.10.16-SNAPSHOT</version>
+		<version>0.10.16</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -417,10 +417,11 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<DWOplayerVersion>2.2.9-SNAPSHOT</DWOplayerVersion>
-		<DWOmAccessVersion>0.1.0-SNAPSHOT</DWOmAccessVersion>
+		<DWOplayerVersion>2.2.9</DWOplayerVersion>
+		<DWOmAccessVersion>0.1.0</DWOmAccessVersion>
 		<RegisterVersion>2.2.8</RegisterVersion>
-		<DWOGwtClientVersion>0.10.16-SNAPSHOT</DWOGwtClientVersion>
+		<DWOGwtClientVersion>0.10.16</DWOGwtClientVersion>
+		<DWOJClientVersion>2.2.9</DWOJClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testebserver</aws.environmentName>
