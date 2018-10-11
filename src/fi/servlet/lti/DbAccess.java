@@ -198,10 +198,10 @@ public class DbAccess {
 			throws PersistenceException {
 		if(context_label != null) {
 	 		School s = getSchool(facade, oauth_consumer_key);
-			Object[] array = facade.get(SchoolClass.class, s);
+	 		SchoolClass[] array = facade.get(SchoolClass.class, s);
 			SchoolClass c;
 			for (int i = 0; i < array.length; i++) {
-				c = (SchoolClass) array[i];
+				c = array[i];
 				if(c.getName().equals(context_label))
 					return c;
 			}
@@ -233,7 +233,7 @@ public class DbAccess {
 	protected School getSchool(PersistenceFacade instance, String key)
 			throws PersistenceException {
 		int id = Integer.parseInt(key);
-		School result = (School)instance.get(id, School.class);
+		School result = instance.get(id, School.class);
 		return result;
 	}
 	

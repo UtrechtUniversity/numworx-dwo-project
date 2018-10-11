@@ -33,18 +33,18 @@
   
   
   <!-- Servlets -->
-  <servlet>
-    <servlet-name>image.png</servlet-name>
-  	<servlet-class>fi.servlet.dwomaccess.DWOmAccess</servlet-class>
-  </servlet>
-  <servlet>
-  	<servlet-name>dbaccess</servlet-name>
-  	<servlet-class>fi.servlet.dwomaccess.DbAccessServlet</servlet-class>
-  </servlet>
-  <servlet>
-  	<servlet-name>scormaccess</servlet-name>
-  	<servlet-class>fi.servlet.dwomaccess.ScormAccess</servlet-class>
-  </servlet>
+<!--   <servlet> -->
+<!--     <servlet-name>image.png</servlet-name> -->
+<!--   	<servlet-class>fi.servlet.dwomaccess.DWOmAccess</servlet-class> -->
+<!--   </servlet> -->
+<!--   <servlet> -->
+<!--   	<servlet-name>dbaccess</servlet-name> -->
+<!--   	<servlet-class>fi.servlet.dwomaccess.DbAccessServlet</servlet-class> -->
+<!--   </servlet> -->
+<!--   <servlet> -->
+<!--   	<servlet-name>scormaccess</servlet-name> -->
+<!--   	<servlet-class>fi.servlet.dwomaccess.ScormAccess</servlet-class> -->
+<!--   </servlet> -->
 
   	<servlet>
       <servlet-name>ProviderServlet</servlet-name>
@@ -81,38 +81,38 @@
       <url-pattern>/lti/app.jsp</url-pattern>
    </servlet-mapping>
   
-  <servlet-mapping>
-	<servlet-name>image.png</servlet-name>
-	<url-pattern>/image.png</url-pattern>
-  </servlet-mapping>
-   <servlet-mapping>
-	<servlet-name>image.png</servlet-name>
-	<url-pattern>/partialScore</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-	<servlet-name>image.png</servlet-name>
-	<url-pattern>/getLaunchData</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-	<servlet-name>image.png</servlet-name>
-	<url-pattern>/getJSONLaunchData</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-	<servlet-name>image.png</servlet-name>
-	<url-pattern>/getJSONLaunchDataBytes</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-	<servlet-name>image.png</servlet-name>
-	<url-pattern>/getCourseDescription</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-  	<servlet-name>dbaccess</servlet-name>
-  	<url-pattern>/dbaccess</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>scormaccess</servlet-name>
-    <url-pattern>/scormaccess</url-pattern>
-  </servlet-mapping>
+<!--   <servlet-mapping> -->
+<!-- 	<servlet-name>image.png</servlet-name> -->
+<!-- 	<url-pattern>/image.png</url-pattern> -->
+<!--   </servlet-mapping> -->
+<!--    <servlet-mapping> -->
+<!-- 	<servlet-name>image.png</servlet-name> -->
+<!-- 	<url-pattern>/partialScore</url-pattern> -->
+<!--   </servlet-mapping> -->
+<!--   <servlet-mapping> -->
+<!-- 	<servlet-name>image.png</servlet-name> -->
+<!-- 	<url-pattern>/getLaunchData</url-pattern> -->
+<!--   </servlet-mapping> -->
+<!--   <servlet-mapping> -->
+<!-- 	<servlet-name>image.png</servlet-name> -->
+<!-- 	<url-pattern>/getJSONLaunchData</url-pattern> -->
+<!--   </servlet-mapping> -->
+<!--   <servlet-mapping> -->
+<!-- 	<servlet-name>image.png</servlet-name> -->
+<!-- 	<url-pattern>/getJSONLaunchDataBytes</url-pattern> -->
+<!--   </servlet-mapping> -->
+<!--   <servlet-mapping> -->
+<!-- 	<servlet-name>image.png</servlet-name> -->
+<!-- 	<url-pattern>/getCourseDescription</url-pattern> -->
+<!--   </servlet-mapping> -->
+<!--   <servlet-mapping> -->
+<!--   	<servlet-name>dbaccess</servlet-name> -->
+<!--   	<url-pattern>/dbaccess</url-pattern> -->
+<!--   </servlet-mapping> -->
+<!--   <servlet-mapping> -->
+<!--     <servlet-name>scormaccess</servlet-name> -->
+<!--     <url-pattern>/scormaccess</url-pattern> -->
+<!--   </servlet-mapping> -->
       <servlet-mapping>
       <servlet-name>ProviderServlet</servlet-name>
       <url-pattern>/lti/provider/*</url-pattern>
