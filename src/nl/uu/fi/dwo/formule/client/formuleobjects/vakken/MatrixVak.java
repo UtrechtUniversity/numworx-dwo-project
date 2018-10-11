@@ -12,6 +12,7 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 public class MatrixVak extends FormuleElementWithChildren
 {
@@ -186,12 +187,13 @@ public class MatrixVak extends FormuleElementWithChildren
 		}
 		
 		// extra breedte voor afsluitende haak
-		width = width + 10;
+		width = width + 15;
 
 		setSize(width, height);
 //		System.out.println("MatrixVak.maakMaat(): na setSize(width, height): width = " + width + ", getSize().width = " + getSize().width);
 
-		setAsHoogte(height / 2 - fm.getDescent()); 
+		setAsHoogte(height / 2 - fm.getDescent());
+		System.out.println("MatrixVak.maakMaat(): setSize(" + width + ", " + height + "), ashoogte = " + getAsHoogte());
 		
 		int kindY = 5;
 		for (int i = 0; i < matrixChildren.size(); i++) // rijen
@@ -704,4 +706,27 @@ public class MatrixVak extends FormuleElementWithChildren
 //		if (matrixChildren != null && !matrixChildren.isEmpty())
 //			matrixChildren.get(0).get(0).neemFocus(richting);
 	}
+	
+	/* 
+	 * Set font overriden zodat matrixkinderen het goede font krijgen.
+	 * TODO matrixChildren niet Vector<Vector<FormuleRegel>, 
+	 * maar Vector<MatrixRij> 
+	 * waarbij MatrixRij extends FormuleRegel.
+	 */
+	@Override
+	public boolean setFont(FormuleFont fm)
+	{
+		boolean b = super.setFont(fm);
+		
+		for (int i = 0; i < aantalRijen; i++)
+		{
+			for (int j = 0; j < aantalKolommen; j++)
+			{
+				getMatrixChild(i, j).setFont(fm);
+			}
+		}
+
+		return b;
+	}
+
 }

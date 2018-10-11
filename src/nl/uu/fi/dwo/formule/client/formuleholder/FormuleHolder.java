@@ -482,6 +482,21 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	}
 
 	@Override
+	public void vectornotatie()
+	{
+	}
+
+	@Override
+	public void vector()
+	{
+	}
+
+	@Override
+	public void matrix()
+	{
+	}
+
+	@Override
 	public void tab() {
 	}
 
@@ -503,4 +518,5 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 			}, element);
 		}
 	}
+
 }

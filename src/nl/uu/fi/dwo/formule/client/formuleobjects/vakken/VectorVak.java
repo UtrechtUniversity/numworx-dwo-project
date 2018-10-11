@@ -12,6 +12,7 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 public class VectorVak extends FormuleElementWithChildren
 {
@@ -139,11 +140,12 @@ public class VectorVak extends FormuleElementWithChildren
 
 		setSize(width, height);
 		setAsHoogte(height / 2 - fm.getDescent());
+		System.out.println("VectorVak.maakMaat(): setSize(" + width + ", " + height + "), ashoogte = " + getAsHoogte());
 
 		int kindHoogte = 5;
 		for (int i = 0; i < children.size(); i++)
 		{
-			getChild(i).setPosition((int) (0.5 * width - 0.5 * getChild(i).width), kindHoogte);
+			getChild(i).setPosition((int) (0.5 * width - 0.5 * getChild(i).width + 2), kindHoogte);
 			kindHoogte += getChild(i).height + 5;
 		}
 	}
@@ -298,4 +300,5 @@ public class VectorVak extends FormuleElementWithChildren
 		
 		return string;
 	}
+
 }
