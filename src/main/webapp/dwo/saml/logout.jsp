@@ -13,6 +13,7 @@
 	Cookie token = new Cookie(DWO_SAML_AUTH_TOKEN, null);
 	token.setMaxAge(0);
 	token.setPath("/");
+	response.addCookie(token);
 	
 %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

@@ -117,7 +117,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
 			<artifactId>DWOJClient</artifactId>
-			<version>2.2.9</version>
+			<version>${DWOJClientVersion}</version>
 		</dependency>
 		<dependency>
 			<groupId>fi.dwo</groupId>
@@ -210,7 +210,7 @@
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
 									<artifactId>DWOJClient</artifactId>
-									<version>${project.version}</version>
+									<version>${DWOJClientVersion}</version>
 									<classifier>jar-with-dependencies</classifier>
 									<overWrite>true</overWrite>
 									<destFileName>dwo/DWOJApplet.jar</destFileName>
@@ -218,7 +218,7 @@
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
 									<artifactId>DWOJClient</artifactId>
-									<version>${project.version}</version>
+									<version>${DWOJClientVersion}</version>
 									<classifier>jar-with-dependencies</classifier>
 									<type>jar.pack.gz</type>
 									<overWrite>true</overWrite>
@@ -418,7 +418,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<DWOplayerVersion>2.2.9</DWOplayerVersion>
-		<DWOmAccessVersion>0.1.0</DWOmAccessVersion>
+		<DWOmAccessVersion>0.1.1-SNAPSHOT</DWOmAccessVersion>
 		<RegisterVersion>2.2.8</RegisterVersion>
 		<DWOGwtClientVersion>0.10.16</DWOGwtClientVersion>
 		<DWOJClientVersion>2.2.9</DWOJClientVersion>
