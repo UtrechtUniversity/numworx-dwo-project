@@ -84,4 +84,10 @@ public interface FormuleEditorIF {
 	
 	void tab();
 	void shiftTab();
+	
+	void vectornotatie();
+	
+	void vector();
+	
+	void matrix();
 }
