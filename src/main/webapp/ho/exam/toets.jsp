@@ -12,6 +12,7 @@
 <%
 	String requestHash = request.getHeader("X-SafeExamBrowser-RequestHash");
 	String host = request.getRemoteAddr();
+	String server = request.getHeader("host");
 
 	if(requestHash == null && needSEB ||  !Subnet.netMatchRange(IPRANGE, host) )
 	{
@@ -48,7 +49,7 @@
     	DWO_PROFILE_ID = 99
     	SECURE_MODE="SEB" // possibly others
     	function logout() {
-    		window.location = "https://app.dwo.nl/ho/exam/logout.html"
+    		window.location = "https://<%=server%>/ho/exam/logout.html"
     	}
     </script>
     <title>Save Exam Browser</title>
@@ -60,7 +61,7 @@
     <script type="text/javascript" language="javascript" src="/dwo/tablet/DWOplayer/DWOplayer.nocache.js"></script>
   </head>
   <body id="main">
-  	<a href='https://app.dwo.nl/ho/exam/logout.html' >Logout</a>
+  	<a href='https://<%=server %>/ho/exam/logout.html' >Logout</a>
     <!-- OPTIONAL: include this if you want history support -->
     <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
     

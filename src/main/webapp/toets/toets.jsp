@@ -1,6 +1,9 @@
 <%@page import="java.util.logging.Logger"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="fi.servlet.dwomaccess.Subnet" %>
+<%@ include file="/dwo/saml_util.jsp" %>
+<%@ include file='/dwo/toets_util.jsp' %>
 <!doctype html>
 <!-- The DOCTYPE declaration above will set the     -->
 <!-- browser's rendering engine into                -->
@@ -8,8 +11,12 @@
 <!-- with a "Quirks Mode" doctype is not supported. -->
 <%
 	String requestHash = request.getHeader("X-SafeExamBrowser-RequestHash");
-	if(requestHash == null)
+	String host = request.getRemoteAddr();
+	String server = request.getHeader("host");
+
+	if(requestHash == null && needSEB ||  !Subnet.netMatchRange(IPRANGE, host) )
 	{
+		Logger.getLogger("toets.jsp").severe(request.getRequestURL() +  " host = " + host);
 		response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		return;
 	}
@@ -23,9 +30,9 @@
 	for(String hash : hashes) {
 		if(hash.equals(requestHash)) failed = false;
 	}
-	if(failed)
+	if(failed && needSEB)
 	{
-		Logger.getLogger("toets.jsp").severe("hash = " + requestHash);
+		Logger.getLogger("toets.jsp").severe(request.getRequestURL() +" hash = " + requestHash);
 		response.sendError(HttpServletResponse.SC_FORBIDDEN);
 		return;
 	}
@@ -40,7 +47,7 @@
     	DWO_PROFILE_ID = 77
     	SECURE_MODE="SEB" // possibly others
     	function logout() {
-    		window.location = "https://app.dwo.nl/toets/logout.html"
+    		window.location = "https://<%=server%>/toets/logout.html"
     	}
     </script>
     <title>Save Exam Browser</title>
@@ -52,7 +59,7 @@
     <script type="text/javascript" language="javascript" src="/dwo/tablet/DWOplayer/DWOplayer.nocache.js"></script>
   </head>
   <body id="main">
-  	<a href='https://app.dwo.nl/toets/logout.html' >Logout</a>
+  	<a href='https://<%=server%>/toets/logout.html' >Logout</a>
     <!-- OPTIONAL: include this if you want history support -->
     <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
     

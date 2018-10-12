@@ -1,3 +1,7 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page import="fi.servlet.dwomaccess.Subnet" %>
+<%@ include file='/dwo/toets_util.jsp' %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,12 +11,31 @@
 <body>
 <h1>Start</h1>
 <p>
-<a href='sebs://app.dwo.nl/ho/en/exam/leerling.seb'>Start the safe <strong>exam</strong> environment</a>
+<%
+	String host = request.getRemoteAddr();
+	String server = request.getHeader("host");
+	if ( ! Subnet.netMatchRange(IPRANGE, host) ) {
+%>
+	The device at this address <%=host %> is not allowed for assessments. Use a secured device.
+<%	  
+	}
+	else if ( needSEB ) {
+%>
+<a href='sebs://<%=server %>/ho/en/exam/leerling.seb'>Start the safe <strong>exam</strong> environment</a>
+<%
+	} else {
+%>
+	  <a href='/ho/en/exam/toets.jsp'>Start the safe <strong>exam</strong> environment</a>
+<%	  
+	}
 
+	if ( needSEB ) {
+%>
 <h1>Install</h1>
 <ul>
 	<li><a href='https://www.dwo.nl/downloads/SafeExamBrowserInstaller.exe'>Safe Exam Browser Windows (2.1.7)</a></li>
 	<li><a href='https://www.dwo.nl/downloads/SafeExamBrowser-2.1.2.dmg'>Safe Exam Browser MacOs (2.1.2)</a></li>
 </ul>
+<% } %>
 </body>
 </html>
