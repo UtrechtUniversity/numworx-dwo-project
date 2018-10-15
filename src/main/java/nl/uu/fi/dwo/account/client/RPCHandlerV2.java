@@ -9,8 +9,6 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
-import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
-import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -93,13 +91,8 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      * @param schoolGroupID
      * @param getUserResultsCallback
      */
-    protected void getUserResultsHelper(Object courseID, Object userID, Object schoolGroupID,
-			AsyncCallback<List<Map<String,Object>>> getUserResultsCallback) {
-		Object[] params = { courseID, userID, schoolGroupID };
-		XmlRpcClient client = getClient();
-		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, "getUserResults", params, getUserResultsCallback);
-		request.execute();
-	}
+    protected abstract  void getUserResultsHelper(Object courseID, Object userID, Object schoolGroupID,
+			AsyncCallback<List<Map<String,Object>>> getUserResultsCallback);
 	
     /**
      *
@@ -115,66 +108,29 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      *
      * @param getCoursesCallback
      */
-    public void getCourses(
-			AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
-		
-		String method = "getCoursesJS"; // sort sequencenr
-		int profileID = getProfile();
-		int guestID = PROFILE_OFFSET - profileID;
-		
-		XmlRpcClient client = getClient();
-
-		Object[] params = { guestID };
-
-		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, getCoursesCallback);
-
-		request.execute();
-	}
+    public abstract void getCourses(
+			AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
 
     /**
      *
      * @param id
      * @param getCoursesCallback
      */
-    public void getCourses(Object id, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
-		HashMap<String, Object> g = new HashMap<String,Object>();
-		g.put("parentID", id);
-		String method = "getTableJS";
-		Object[] params = {"tblCourse", g, "name" };
-		XmlRpcClient client = getClient();
-		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, getCoursesCallback);
-		request.execute();
-	}
+    public abstract void getCourses(Object id, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
 
     /**
      *
      * @param schoolID
      * @param getCoursesCallback
      */
-    public void getCoursesSchool(Object schoolID, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
-		String method = "getTableJS";
-		HashMap<String,Object> g = new HashMap<String,Object>();
-		g.put("parentID", 0);
-		g.put("schoolID", schoolID);
-		g.put("dwoProfileID", getProfile());
-		Object[] params = {"tblCourse", g, "name" };
-		XmlRpcClient client = getClient();
-		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, getCoursesCallback);
-		request.execute();
-	}
+    public abstract void getCoursesSchool(Object schoolID, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
 
     /**
      *
      * @param classid
      * @param getCoursesCallback
      */
-    public void getCoursesClass(Object classid, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
-		String method = "getCoursesForClassJS";
-		Object[] params = { classid };
-		XmlRpcClient client = getClient();
-		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, filterProfile(getCoursesCallback));
-		request.execute();
-	}
+//    public abstract void getCoursesClass(Object classid, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
 
     /**
      *

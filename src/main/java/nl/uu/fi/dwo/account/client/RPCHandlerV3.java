@@ -138,7 +138,6 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		});
 	}
 
-	@Override
 	public Promise<DomCoursesOfSchoolClass> getCoursesClass(
 			final DomSchoolClass schoolclass) {
 		return profile.then(new Success<DomDwoProfile, DomCoursesOfSchoolClass>() {
@@ -191,7 +190,6 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		return result;
 	}
 
-	@Override
 	public Promise<DomCourseStudent> getCourse(Object courseID) {
 		final DomCourse course = toCourse(courseID);	
 		return profile.then(new Success<DomDwoProfile, DomCourseStudent>() {
@@ -235,7 +233,6 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		return context;
 	}
 
-	@Override
 	public Promise<DomScoContext> getSco(Object scoID) {
 		final DomScoContext dummy = toScoContext(scoID);
 		return profile.then(new Success<DomDwoProfile, DomScoContext>() {
@@ -409,5 +406,56 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			return Promises.failed(new IllegalArgumentException());
 		return studentModelManager.getStudentModelDataScore(getContext(), id);
 	}
+
+  @Override
+  protected void getUserResultsHelper(Object courseID, Object userID, Object schoolGroupID,
+      AsyncCallback<List<Map<String, Object>>> getUserResultsCallback) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void getCourses(AsyncCallback<List<Map<String, Object>>> getCoursesCallback) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void getCourses(Object id, AsyncCallback<List<Map<String, Object>>> getCoursesCallback) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void getCoursesSchool(Object schoolID,
+      AsyncCallback<List<Map<String, Object>>> getCoursesCallback) {
+    // TODO Auto-generated method stub
+    
+  }
+
+//  @Override
+//  public void getCoursesClass(Object classid,
+//      AsyncCallback<List<Map<String, Object>>> getCoursesCallback) {
+//    // TODO Auto-generated method stub
+//    
+//  }
+
+  @Override
+  protected void login(String name, String password, AsyncCallback<Map<String, Object>> callback) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  void getScos(Object id, AsyncCallback<List<Map<String, Object>>> getScosCallback) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  void getDwoProfile(AsyncCallback<Map<String, Object>> getProfileCallback) {
+    // TODO Auto-generated method stub
+    
+  }
 
 }

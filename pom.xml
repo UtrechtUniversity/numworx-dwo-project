@@ -122,12 +122,12 @@
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.2.6</version>
+            <version>2.2.10-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.2.6</version>
+            <version>2.2.10-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>        
         <dependency>
@@ -156,6 +156,7 @@
             <groupId>com.fredhat.gwt.xmlrpc</groupId>
             <artifactId>XmlRpcGWT</artifactId>
             <version>1.1.1</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
         	<groupId>com.google.gwt</groupId>

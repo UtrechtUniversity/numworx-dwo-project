@@ -14,8 +14,8 @@ import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
-import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
-import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
+//import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
+//import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -47,7 +47,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  *
  */
 @Deprecated
-public class RPCHandlerV1 {
+public abstract class RPCHandlerV1 {
 
 	private static final class ListFunction<D> implements Function<List<Map<String,Object>>, List<D>> {
 		private Function<Map<String, Object>, D> function;
@@ -91,11 +91,7 @@ public class RPCHandlerV1 {
      * @param password
      * @param callback
      */
-    protected void login(String name, String password, AsyncCallback<Map<String,Object>> callback)
-	{
-		String pwmd5 = MD5.md5(password);
-		loginMD5(name, pwmd5, callback);
-	}
+    protected abstract void login(String name, String password, AsyncCallback<Map<String,Object>> callback);
 
     /**
      *
@@ -126,17 +122,6 @@ public class RPCHandlerV1 {
 		return Promises.failed(new Error());
 	}
 	
-	private void loginMD5(String name, String pwmd5,
-			AsyncCallback<Map<String, Object>> callback) {
-		XmlRpcClient client = getClient();
-
-		String method = "login";
-		Object[] params = { name, pwmd5 };
-
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		XmlRpcRequest request = new XmlRpcRequest(client, method, params, callback);
-		request.execute();
-	}
 	
     /**
      *
@@ -157,7 +142,6 @@ public class RPCHandlerV1 {
 		return Promises.failed(new RuntimeException(""));
 	}
 
-	private XmlRpcClient xmlRpcClient;
 
 	/**
 	 * XML RPC Mapper voor DomDwoProfiles.
@@ -312,18 +296,6 @@ public class RPCHandlerV1 {
 				}
 			};
 			
-    /**
-     *
-     * @return
-     */
-    public XmlRpcClient getClient() {
-		if( xmlRpcClient == null)
-		{
-			xmlRpcClient = new XmlRpcClient(server);
-			xmlRpcClient.setTimeoutMillis(10000000);
-		}
-		return xmlRpcClient;
-	}
 
     /**
      *
@@ -343,21 +315,8 @@ public class RPCHandlerV1 {
      *
      * @param getCoursesCallback
      */
-    public void getCourses(
-			AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
-		
-		String method = "getCourses";
-		int profileID = getProfile();
-		int guestID = PROFILE_OFFSET - profileID;
-		
-		XmlRpcClient client = getClient();
-
-		Object[] params = { guestID };
-
-		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, getCoursesCallback);
-
-		request.execute();
-	}
+    public abstract void getCourses(
+			AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
 	
     /**
      *
@@ -374,17 +333,7 @@ public class RPCHandlerV1 {
      * @param schoolID
      * @param getCoursesCallback
      */
-    public void getCoursesSchool(Object schoolID, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
-		String method = "getTable";
-		HashMap<String,Object> g = new HashMap<String,Object>();
-		g.put("parentID", 0);
-		g.put("schoolID", schoolID);
-		g.put("dwoProfileID", getProfile());
-		Object[] params = {"tblCourse", g, "name" };
-		XmlRpcClient client = getClient();
-		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, getCoursesCallback);
-		request.execute();
-	}
+    public abstract void getCoursesSchool(Object schoolID, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
 	
     /**
      *
@@ -403,32 +352,26 @@ public class RPCHandlerV1 {
      * @param classid
      * @param getCoursesCallback
      */
-    public void getCoursesClass(Object classid, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
-		String method = "getCoursesForClass";
-		Object[] params = { classid };
-		XmlRpcClient client = getClient();
-		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, filterProfile(getCoursesCallback));
-		request.execute();
-	}
+//    public abstract void getCoursesClass(Object classid, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
 
     /**
      *
      * @param schoolclass
      * @return
      */
-    public Promise<DomCoursesOfSchoolClass> getCoursesClass(final DomSchoolClass schoolclass) {
-		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
-		Object id = PersistenceIdDecoderInterface.instance.idOf(schoolclass.getId(), PersistenceClassType.PersistentSchoolClass);
-		getCoursesClass(id, defer);
-		return defer.getPromise().map(TO_DOMCOURSESOFSCHOOLCLASS).map(new Function<DomCoursesOfSchoolClass, DomCoursesOfSchoolClass>() {
-
-			@Override
-			public DomCoursesOfSchoolClass apply(DomCoursesOfSchoolClass t) {
-				t.setSchoolClass(schoolclass);
-				return t;
-			}
-		});
-	}
+//    public Promise<DomCoursesOfSchoolClass> getCoursesClass(final DomSchoolClass schoolclass) {
+//		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
+//		Object id = PersistenceIdDecoderInterface.instance.idOf(schoolclass.getId(), PersistenceClassType.PersistentSchoolClass);
+//		getCoursesClass(id, defer);
+//		return defer.getPromise().map(TO_DOMCOURSESOFSCHOOLCLASS).map(new Function<DomCoursesOfSchoolClass, DomCoursesOfSchoolClass>() {
+//
+//			@Override
+//			public DomCoursesOfSchoolClass apply(DomCoursesOfSchoolClass t) {
+//				t.setSchoolClass(schoolclass);
+//				return t;
+//			}
+//		});
+//	}
 	
     /**
      *
@@ -473,15 +416,7 @@ public class RPCHandlerV1 {
      * @param id
      * @param getCoursesCallback
      */
-    public void getCourses(Object id, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
-		HashMap<String, Object> g = new HashMap<String,Object>();
-		g.put("parentID", id);
-		String method = "getTable";
-		Object[] params = {"tblCourse", g, "name" };
-		XmlRpcClient client = getClient();
-		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, getCoursesCallback);
-		request.execute();
-	}
+    public abstract void getCourses(Object id, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
 
     /**
      *
@@ -499,15 +434,7 @@ public class RPCHandlerV1 {
      * @param id
      * @param getScosCallback
      */
-    void getScos(Object id, AsyncCallback<List<Map<String,Object>>> getScosCallback) {
-		HashMap<String, Object> g = new HashMap<String,Object>();
-		g.put("courseID", id);
-		String method = "getTable";
-		Object[] params = {"tblSco", SCO_KEYS, g, "sequencenr" };
-		XmlRpcClient client = getClient();
-		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, getScosCallback);
-		request.execute();
-	}
+    abstract void getScos(Object id, AsyncCallback<List<Map<String,Object>>> getScosCallback);
 	
     /**
      *
@@ -526,62 +453,43 @@ public class RPCHandlerV1 {
      * @deprecated
      */
     @Deprecated
-	void getDwoProfile(AsyncCallback<Map<String,Object>> getProfileCallback) {
-		String method = "getRecord";
-		Object[] params = { "tblDwoProfile", "dwoProfileID", getProfile() };
-		XmlRpcClient client = getClient();
-		XmlRpcRequest<Map<String,Object>> request = new XmlRpcRequest<Map<String,Object>>(client, method, params, getProfileCallback);
-		request.execute();
-	}
+	abstract void getDwoProfile(AsyncCallback<Map<String,Object>> getProfileCallback);
 	
     /**
      *
      * @param courseID
      * @param getCourseCallback
      */
-    void getCourse(Object courseID, AsyncCallback<Map<String, Object>> getCourseCallback) {
-		String method = "getRecord";
-		Object[] params = { "tblCourse", "courseID", objectToKey(courseID) };
-		XmlRpcClient client = getClient();
-		XmlRpcRequest<Map<String, Object>> request = new XmlRpcRequest<Map<String, Object>>(client, method, params, getCourseCallback);
-		request.execute();
-	}
+//    abstract void getCourse(Object courseID, AsyncCallback<Map<String, Object>> getCourseCallback);
 
     /**
      *
      * @param courseID
      * @return
      */
-    public Promise<DomCourseStudent> getCourse(Object courseID) {
-		PromiseCallback<Map<String,Object>> defer = new PromiseCallback<>();
-		getCourse(courseID, defer);
-		return defer.getPromise().map(TO_DOMCOURSE);
-	}
+//    public Promise<DomCourseStudent> getCourse(Object courseID) {
+//		PromiseCallback<Map<String,Object>> defer = new PromiseCallback<>();
+//		getCourse(courseID, defer);
+//		return defer.getPromise().map(TO_DOMCOURSE);
+//	}
 
     /**
      *
      * @param scoID
      * @param callback
      */
-    void getSco(Object scoID, AsyncCallback<Map<String,Object>> callback) 
-	{
-		String method = "getRecord";
-		Object[] params = { "tblScoContext", "scoID", objectToKey(scoID) };
-		XmlRpcClient client = getClient();
-		XmlRpcRequest<Map<String,Object>> request = new XmlRpcRequest<Map<String,Object>>(client, method, params, callback);
-		request.execute();
-	}
+//    abstract void getSco(Object scoID, AsyncCallback<Map<String,Object>> callback);
 
-    /**
-     *
-     * @param scoID
-     * @return
-     */
-    public Promise<DomScoContext> getSco(Object scoID) {
-		PromiseCallback<Map<String,Object>> defer = new PromiseCallback<>();
-		getSco(scoID, defer);
-		return defer.getPromise().map(TO_DOMSCOCONTEXT);
-	}
+//    /**
+//     *
+//     * @param scoID
+//     * @return
+//     */
+//    public Promise<DomScoContext> getSco(Object scoID) {
+//		PromiseCallback<Map<String,Object>> defer = new PromiseCallback<>();
+//		getSco(scoID, defer);
+//		return defer.getPromise().map(TO_DOMSCOCONTEXT);
+//	}
 	
 // In Mc2 new String()
 
@@ -600,15 +508,7 @@ public class RPCHandlerV1 {
      * @param userID
      * @param getClassesCallback
      */
-    public <T> void getClasses(Object userID, AsyncCallback<T> getClassesCallback) {
-		HashMap<String, Object> g = new HashMap<String,Object>();
-		g.put("userID", userID);
-		String method = "getTable";
-		Object[] params = {"tblClass", g, "class"};
-		XmlRpcClient client = getClient();
-		XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getClassesCallback);
-		request.execute();
-	}
+//    public abstract <T> void getClasses(Object userID, AsyncCallback<T> getClassesCallback);
 	
     /**
      *
@@ -616,15 +516,7 @@ public class RPCHandlerV1 {
      * @param classID
      * @param getStudentsCallback
      */
-    public <T> void getStudents(int classID, AsyncCallback<T> getStudentsCallback) {
-		HashMap<String, Object> g = new HashMap<String,Object>();
-		g.put("classID", classID);
-		String method = "getTable";
-		Object[] params = {"tblUser", g, "username"};
-		XmlRpcClient client = getClient();
-		XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getStudentsCallback);
-		request.execute();
-	}
+//    abstract public <T> void getStudents(int classID, AsyncCallback<T> getStudentsCallback);
 	
     /**
      *
@@ -632,12 +524,7 @@ public class RPCHandlerV1 {
      * @param userID
      * @param getUserResultsCallback
      */
-    public void getUserResults(Object courseID, Object userID, AsyncCallback<List<Map<String,Object>>> getUserResultsCallback) {
-		Object[] params = { courseID, userID };
-		XmlRpcClient client = getClient();
-		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, "getUserResults", params, getUserResultsCallback);
-		request.execute();
-	}
+    public abstract void getUserResults(Object courseID, Object userID, AsyncCallback<List<Map<String,Object>>> getUserResultsCallback);
 
     /**
      *
