@@ -2,6 +2,7 @@ package fi.dwo.server.rest;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.ws.rs.core.SecurityContext;
@@ -16,13 +17,18 @@ import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.entities.PersistentApplet;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
 import fi.dwo.server.testutil.TestUriInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -69,7 +75,11 @@ public class SecuredTeacherScoContextManagerIT {
 	@Test
 	public void testUpdate() throws Exception {
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
-		RestScoContextFull rest = new RestScoContextFull();
+        PersistentUser user = UserManager.findByUserName("user07");
+        List<PersistentHasRole> list = HasRoleManager.findEntities(user);
+        DomHasRole dhr = list.get(0).buildDomHasRole();
+        
+        RestScoContextFull rest = new RestScoContextFull();
 		DomDwoProfile domDwoProfile = new DomDwoProfile();
 		PersistenceId id = PersistentDwoProfile.buildPersistenceId(Long.valueOf(1));
 		domDwoProfile.setId(id);
@@ -82,6 +92,7 @@ public class SecuredTeacherScoContextManagerIT {
 		
 		rest.setDomScoContext(domScoContext);
 		DomContext restContext = new DomContext();
+		restContext.setDomHasRole(dhr);
 		rest.setRestContext(restContext);
 		TestUriInfo info = new TestUriInfo();
 		DomScoContextFull result = manager.update(sc, rest);
@@ -95,6 +106,9 @@ public class SecuredTeacherScoContextManagerIT {
 	@Test
 	public void testAdd() {
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+        PersistentUser user = UserManager.findByUserName("user07");
+        List<PersistentHasRole> list = HasRoleManager.findEntities(user);
+        DomHasRole dhr = list.get(0).buildDomHasRole();
 		RestScoContextFull rest = new RestScoContextFull();
 		DomDwoProfile domDwoProfile = new DomDwoProfile();
 		PersistenceId id = PersistentDwoProfile.buildPersistenceId(Long.valueOf(1));
@@ -109,6 +123,7 @@ public class SecuredTeacherScoContextManagerIT {
 		domScoContext.setAppletId(Aid);
 		rest.setDomScoContext(domScoContext);
 		DomContext restContext = new DomContext();
+		restContext.setDomHasRole(dhr);
 		rest.setRestContext(restContext);
 		TestUriInfo info = new TestUriInfo();
 		DomScoContextFull result = manager.add(sc, rest);
@@ -127,7 +142,11 @@ public class SecuredTeacherScoContextManagerIT {
 
 	@Test public void testDuplicate() {
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
-		RestScoContextFull rest = new RestScoContextFull();
+        PersistentUser user = UserManager.findByUserName("user07");
+        List<PersistentHasRole> list = HasRoleManager.findEntities(user);
+        DomHasRole dhr = list.get(0).buildDomHasRole();
+
+        RestScoContextFull rest = new RestScoContextFull();
 		DomDwoProfile domDwoProfile = new DomDwoProfile();
 		PersistenceId id = PersistentDwoProfile.buildPersistenceId(Long.valueOf(1));
 		domDwoProfile.setId(id);
@@ -141,6 +160,7 @@ public class SecuredTeacherScoContextManagerIT {
 		domScoContext.setAppletId(Aid);
 		rest.setDomScoContext(domScoContext);
 		DomContext restContext = new DomContext();
+		restContext.setDomHasRole(dhr);
 		rest.setRestContext(restContext);
 		TestUriInfo info = new TestUriInfo();
 		DomScoContextFull result = manager.add(sc, rest);
