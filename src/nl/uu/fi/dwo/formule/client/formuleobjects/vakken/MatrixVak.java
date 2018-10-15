@@ -192,7 +192,7 @@ public class MatrixVak extends FormuleElementWithChildren
 		setSize(width, height);
 //		System.out.println("MatrixVak.maakMaat(): na setSize(width, height): width = " + width + ", getSize().width = " + getSize().width);
 
-		setAsHoogte(height / 2 - fm.getDescent());
+		setAsHoogte(height / 2 + fm.getAscent()/2 - fm.getDescent()/2);
 		System.out.println("MatrixVak.maakMaat(): setSize(" + width + ", " + height + "), ashoogte = " + getAsHoogte());
 		
 		int kindY = 5;
@@ -727,6 +727,12 @@ public class MatrixVak extends FormuleElementWithChildren
 		}
 
 		return b;
+	}
+	
+	public void paintSelection()
+	{
+		paintSelection0();
+		// TODO paint matrix children
 	}
 
 }
