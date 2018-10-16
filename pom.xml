@@ -95,15 +95,6 @@
                 </executions>
             </plugin>            
             <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <warSourceDirectory>war</warSourceDirectory>
-                    <attachClasses>true</attachClasses>
-                    <packagingIncludes>*.css,*gwt/**,${project.artifactId}.html</packagingIncludes>
-                </configuration>
-            </plugin>
-            <!--             jetty stuff -->
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
                 <version>${gwtVersion}</version>
