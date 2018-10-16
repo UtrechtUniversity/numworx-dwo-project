@@ -9,6 +9,7 @@ import java.util.Date;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * School transported over the REST interface.
@@ -21,8 +22,20 @@ public class DomSchool extends DomSchoolId {
     private String schoolRights;
     private Date expire;
     private AboType aboType;
+    
+    private static String defaultRights = "cCm"; // See dwojclient School
 
-    public DomSchool(){
+    @XmlTransient
+    public static String defaultRights() {
+		return defaultRights;
+	}
+
+    @XmlTransient
+    public static void defaultRights(String defaultRights) {
+		DomSchool.defaultRights = defaultRights;
+	}
+
+	public DomSchool(){
         
     }
     
@@ -55,7 +68,10 @@ public class DomSchool extends DomSchoolId {
     }
     
     public boolean studentsCanRegisterForSchoolClasses(){
-        return schoolRights.contains("c");
+        String r = schoolRights;
+        if (r == null || "_".equals(r))
+        	r = defaultRights;
+		return r.contains("c");
     }
 
 
