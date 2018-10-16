@@ -86,24 +86,23 @@ public class SecuredDwoAdminSchoolManager {
      * @param sc
      * @param restSchool
      * @return
+     * @throws Dwo2Exception 
      */
     @PUT
     @Produces({"application/json"})
     @Path("/submit")
-    public Boolean submitSchool(@Context SecurityContext sc, RestNewSchool restSchool) {
+    public Boolean submitSchool(@Context SecurityContext sc, RestNewSchool restSchool) throws Dwo2Exception {
         if (restSchool == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
-        PersistentHasRole hr = null;
-        DomNewSchool newSchool = restSchool.getDomNewSchool();
-        try {
-            hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        } catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
-            throw new Dwo2RestException(ex);
-        }
 
-        if (hr != null) {
+        DwoAdminState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName()).setHasRoleIfType(restSchool.getRestContext().getDomHasRole(), RoleType.ADMIN).buildDwoAdmin();
+        
+        
+        
+        DomNewSchool newSchool = restSchool.getDomNewSchool();
+
+        {
             // allowed user role
             PersistentSchool s = new PersistentSchool();
             s.setExpire(newSchool.getDomSchoolFull().getExpire());
@@ -112,6 +111,7 @@ public class SecuredDwoAdminSchoolManager {
             s.setSchoolLogin(newSchool.getDomSchoolFull().getSchoolLogin());
             s.setSchoolName(newSchool.getDomSchoolFull().getSchoolName());
             s.setSchoolRights(newSchool.getDomSchoolFull().getSchoolRights());
+            s.setAboType(newSchool.getDomSchoolFull().getAboType());
             try {
                 SchoolManager.create(s);
                 s = SchoolManager.findBySchoolLogin(newSchool.getDomSchoolFull().getSchoolLogin());
@@ -138,11 +138,8 @@ public class SecuredDwoAdminSchoolManager {
                     throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
                 }
             }
-        } else {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access dwoadmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
-        }
-        return true;
+        } 
+        return Boolean.TRUE;
     }
 
     /**
@@ -565,6 +562,7 @@ public class SecuredDwoAdminSchoolManager {
         ps.setExport(Boolean.FALSE); // no export
         school.setExport(Boolean.FALSE);
         ps.setExpire(school.getExpire());
+        ps.setAboType(school.getAboType());
         SchoolManager.create(ps);
         List<DomMapEntry<RoleType, String>> passwords = school.getPasswords();
         for(DomMapEntry<RoleType, String> entry: passwords) {

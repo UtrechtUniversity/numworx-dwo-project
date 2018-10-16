@@ -49,6 +49,7 @@ public class HasRoleUtilManager {
      * @param r
      * @return
      * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
+     * @deprecated use restContext.getDomHasRole()
      */
     public static PersistentHasRole getCurrentHasRole(String usercode, RoleType r) throws Dwo2Exception {
         PersistentUser u = (PersistentUser) UserManager.findByUserName(usercode);
