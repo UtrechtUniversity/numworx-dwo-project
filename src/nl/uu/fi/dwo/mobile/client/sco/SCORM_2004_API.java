@@ -9,6 +9,15 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SCORM_2004_API implements Scorm2004IF {
 
+	private native static void script(String item) /*-{
+		$wnd.script(item)	
+	}-*/;
+	
+	static {
+		script("scripts/SCORM_2004_APIwrapper.js"); 
+	}
+
+	
 	public native String Initialize() /*-{
 		return $wnd.doInitialize()
 	}-*/;

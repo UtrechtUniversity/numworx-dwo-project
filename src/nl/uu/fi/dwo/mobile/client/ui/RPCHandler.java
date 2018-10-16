@@ -43,7 +43,7 @@ public interface RPCHandler {
 //			AsyncCallback<List<Map<String, Object>>> callback_final);
 	Promise<List<DomCourseStudent>> getCourses();
 	
-	XmlRpcClient getClient();
+	//XmlRpcClient getClient();
 
 	Promise<DomCourseStudent> getCourse(Object id);
 	

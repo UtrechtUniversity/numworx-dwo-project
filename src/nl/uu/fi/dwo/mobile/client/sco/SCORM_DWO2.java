@@ -14,6 +14,7 @@ import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+@Deprecated
 public class SCORM_DWO2 extends SCORM_guest {
 
 	public SCORM_DWO2(int userid, int sgid) {
@@ -37,7 +38,7 @@ public class SCORM_DWO2 extends SCORM_guest {
 	private Map<String,String> dirty = new HashMap<String, String>();
 	
 	// Same URL als rpchandler.
-	private XmlRpcClient client = (XmlRpcClient) DWOplayer.clientfactory.getRPCHandler().getClient().clone();
+	private XmlRpcClient client = null;//(XmlRpcClient) DWOplayer.clientfactory.getRPCHandler().getClient().clone();
 		
 	public int getScoID() {
 		return scoID;

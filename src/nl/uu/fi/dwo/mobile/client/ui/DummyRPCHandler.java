@@ -68,10 +68,10 @@ public class DummyRPCHandler implements RPCHandler {
 		return null;
 	}
 
-	@Override
-	public XmlRpcClient getClient() {
-		return null;
-	}
+//	@Override
+//	public XmlRpcClient getClient() {
+//		return null;
+//	}
 
 	@Override
 	public Promise<DomCourseStudent> getCourse(Object id) {
