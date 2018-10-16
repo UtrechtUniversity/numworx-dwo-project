@@ -91,7 +91,7 @@ public abstract class RPCHandlerV1 {
      * @param password
      * @param callback
      */
-    protected abstract void login(String name, String password, AsyncCallback<Map<String,Object>> callback);
+//    protected abstract void login(String name, String password, AsyncCallback<Map<String,Object>> callback);
 
     /**
      *
@@ -315,37 +315,37 @@ public abstract class RPCHandlerV1 {
      *
      * @param getCoursesCallback
      */
-    public abstract void getCourses(
-			AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
-	
+//    public abstract void getCourses(
+//			AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
+//	
     /**
      *
      * @return
      */
-    public Promise<List<DomCourseStudent>> getCourses() {
-		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
-		getCourses(defer);
-		return defer.getPromise().map(TO_DOMCOURSELIST);
-	}
+//    public Promise<List<DomCourseStudent>> getCourses() {
+//		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
+//		getCourses(defer);
+//		return defer.getPromise().map(TO_DOMCOURSELIST);
+//	}
 	
     /**
      *
      * @param schoolID
      * @param getCoursesCallback
      */
-    public abstract void getCoursesSchool(Object schoolID, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
+//    public abstract void getCoursesSchool(Object schoolID, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
 	
     /**
      *
      * @param school
      * @return
      */
-    public Promise<List<DomCourseStudent>> getCoursesSchool(DomSchool school) {
-		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
-		Object id = PersistenceIdDecoderInterface.instance.idOf(school.getId(), PersistenceClassType.PersistentSchool);
-		getCoursesSchool(id, defer);
-		return defer.getPromise().map(TO_DOMCOURSELIST);
-	}
+//    public Promise<List<DomCourseStudent>> getCoursesSchool(DomSchool school) {
+//		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
+//		Object id = PersistenceIdDecoderInterface.instance.idOf(school.getId(), PersistenceClassType.PersistentSchool);
+//		getCoursesSchool(id, defer);
+//		return defer.getPromise().map(TO_DOMCOURSELIST);
+//	}
 		
     /**
      *
@@ -416,44 +416,44 @@ public abstract class RPCHandlerV1 {
      * @param id
      * @param getCoursesCallback
      */
-    public abstract void getCourses(Object id, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
+//    public abstract void getCourses(Object id, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
 
     /**
      *
      * @param id
      * @return
      */
-    public Promise<List<DomCourseStudent>> getCourses(Object id) {
-		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
-		getCourses(id, defer);
-		return defer.getPromise().map(TO_DOMCOURSELIST);
-	}
+//    public Promise<List<DomCourseStudent>> getCourses(Object id) {
+//		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
+//		getCourses(id, defer);
+//		return defer.getPromise().map(TO_DOMCOURSELIST);
+//	}
 	
     /**
      *
      * @param id
      * @param getScosCallback
      */
-    abstract void getScos(Object id, AsyncCallback<List<Map<String,Object>>> getScosCallback);
+//    abstract void getScos(Object id, AsyncCallback<List<Map<String,Object>>> getScosCallback);
 	
     /**
      *
      * @param id
      * @return
      */
-    public Promise<List<DomScoContext>> getScos(Object id) {
-		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
-		getScos(id, defer);
-		return defer.getPromise().map(TO_DOMSCOCONTEXTLIST);
-	}
+//    public Promise<List<DomScoContext>> getScos(Object id) {
+//		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
+//		getScos(id, defer);
+//		return defer.getPromise().map(TO_DOMSCOCONTEXTLIST);
+//	}
 	
     /**
      *
      * @param getProfileCallback
      * @deprecated
      */
-    @Deprecated
-	abstract void getDwoProfile(AsyncCallback<Map<String,Object>> getProfileCallback);
+//    @Deprecated
+//	abstract void getDwoProfile(AsyncCallback<Map<String,Object>> getProfileCallback);
 	
     /**
      *
@@ -524,7 +524,7 @@ public abstract class RPCHandlerV1 {
      * @param userID
      * @param getUserResultsCallback
      */
-    public abstract void getUserResults(Object courseID, Object userID, AsyncCallback<List<Map<String,Object>>> getUserResultsCallback);
+//    public abstract void getUserResults(Object courseID, Object userID, AsyncCallback<List<Map<String,Object>>> getUserResultsCallback);
 
     /**
      *
@@ -532,11 +532,11 @@ public abstract class RPCHandlerV1 {
      * @param userID
      * @return
      */
-    public Promise<DomResultsPerStudentCourse> getUserResults(Object courseID, Object userID) {
-		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
-		getUserResults(courseID, userID, defer);
-		return defer.getPromise().map(TO_RESULTS_PER_STUDENTCOURSE);
-	}
+//    public Promise<DomResultsPerStudentCourse> getUserResults(Object courseID, Object userID) {
+//		PromiseCallback<List<Map<String,Object>>> defer = new PromiseCallback<>();
+//		getUserResults(courseID, userID, defer);
+//		return defer.getPromise().map(TO_RESULTS_PER_STUDENTCOURSE);
+//	}
 	
     /**
      *
@@ -552,11 +552,11 @@ public abstract class RPCHandlerV1 {
 	 * @return a promise for the DwoProfile.
 	 */
 	
-	public Promise<DomDwoProfileFull> getDwoProfile() {
-		PromiseCallback<Map<String,Object>> defer = new PromiseCallback<>();
-		getDwoProfile(defer);
-		return defer.getPromise().map(TO_DWOPROFILE);
-	}
+//	public Promise<DomDwoProfileFull> getDwoProfile() {
+//		PromiseCallback<Map<String,Object>> defer = new PromiseCallback<>();
+//		getDwoProfile(defer);
+//		return defer.getPromise().map(TO_DWOPROFILE);
+//	}
 	
 	public Promise<Map<String,String>> getValues(Object scoID, Collection<String> keys) {
 		return Promises.failed(new IllegalArgumentException());

@@ -91,8 +91,8 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      * @param schoolGroupID
      * @param getUserResultsCallback
      */
-    protected abstract  void getUserResultsHelper(Object courseID, Object userID, Object schoolGroupID,
-			AsyncCallback<List<Map<String,Object>>> getUserResultsCallback);
+//    protected abstract  void getUserResultsHelper(Object courseID, Object userID, Object schoolGroupID,
+//			AsyncCallback<List<Map<String,Object>>> getUserResultsCallback);
 	
     /**
      *
@@ -100,30 +100,30 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      * @param userID
      * @param getUserResultsCallback
      */
-    @Override 
-	public abstract void getUserResults(Object courseID, Object userID,
-			AsyncCallback<List<Map<String,Object>>> getUserResultsCallback);
-	
+//    @Override 
+//	public abstract void getUserResults(Object courseID, Object userID,
+//			AsyncCallback<List<Map<String,Object>>> getUserResultsCallback);
+//	
     /**
      *
      * @param getCoursesCallback
      */
-    public abstract void getCourses(
-			AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
+//    public abstract void getCourses(
+//			AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
 
     /**
      *
      * @param id
      * @param getCoursesCallback
      */
-    public abstract void getCourses(Object id, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
+   // public abstract void getCourses(Object id, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
 
     /**
      *
      * @param schoolID
      * @param getCoursesCallback
      */
-    public abstract void getCoursesSchool(Object schoolID, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
+    //public abstract void getCoursesSchool(Object schoolID, AsyncCallback<List<Map<String,Object>>> getCoursesCallback);
 
     /**
      *

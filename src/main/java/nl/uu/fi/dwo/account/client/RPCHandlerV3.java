@@ -100,7 +100,6 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		;
 	}
 
-	@Override
 	public Promise<DomResultsPerStudentCourse> getUserResults(Object courseID, Object userID) {
 		final DomCourse course = toCourse(courseID);
 		return profile.then(new Success<DomDwoProfile, DomResultsPerStudentCourse>() {
@@ -112,7 +111,6 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		});
 	}
 
-	@Override
 	public Promise<List<DomCourseStudent>> getCourses() {
 		return profile.then(new Success<DomDwoProfile, List<DomCourseStudent>>() {
 
@@ -125,7 +123,6 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		});
 	}
 
-	@Override
 	public Promise<List<DomCourseStudent>> getCoursesSchool(DomSchool school) {
 		return profile.then(new Success<DomDwoProfile, List<DomCourseStudent>>() {
 
@@ -165,8 +162,6 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		);
 	}
 	
-	
-	@Override
 	public Promise<List<DomCourseStudent>> getCourses(Object id) {
 		final DomCourse parent = toCourse(id);	
 		return profile.then(new Success<DomDwoProfile, List<DomCourseStudent>>() {
@@ -206,7 +201,6 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	
 	
 
-	@Override
 	public Promise<DomDwoProfileFull> getDwoProfile() {
 		return profile;
 	}
@@ -215,8 +209,6 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		return DwoGlobalVars.instance().getCurrentSchoolClass();
 	}
 	
-	
-	@Override
 	public Promise<List<DomScoContext>> getScos(Object id) {
 		final DomCourse parent = toCourse(id);
 		return profile.then(new Success<DomDwoProfile, List<DomScoContext>>(){
@@ -302,12 +294,12 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		
 	}
 
-	@Override
-	@Deprecated
-	public void getUserResults(Object courseID, Object userID,
-			AsyncCallback<List<Map<String, Object>>> getUserResultsCallback) {
-		getUserResultsCallback.onFailure(new Error());
-	}
+//	@Override
+//	@Deprecated
+//	public void getUserResults(Object courseID, Object userID,
+//			AsyncCallback<List<Map<String, Object>>> getUserResultsCallback) {
+//		getUserResultsCallback.onFailure(new Error());
+//	}
 
 	@Override
 	public Promise<Map<String, String>> getValues(Object scoID,
@@ -407,55 +399,19 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		return studentModelManager.getStudentModelDataScore(getContext(), id);
 	}
 
-  @Override
-  protected void getUserResultsHelper(Object courseID, Object userID, Object schoolGroupID,
-      AsyncCallback<List<Map<String, Object>>> getUserResultsCallback) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void getCourses(AsyncCallback<List<Map<String, Object>>> getCoursesCallback) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void getCourses(Object id, AsyncCallback<List<Map<String, Object>>> getCoursesCallback) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void getCoursesSchool(Object schoolID,
-      AsyncCallback<List<Map<String, Object>>> getCoursesCallback) {
-    // TODO Auto-generated method stub
-    
-  }
-
 //  @Override
-//  public void getCoursesClass(Object classid,
-//      AsyncCallback<List<Map<String, Object>>> getCoursesCallback) {
+//  protected void getUserResultsHelper(Object courseID, Object userID, Object schoolGroupID,
+//      AsyncCallback<List<Map<String, Object>>> getUserResultsCallback) {
+//    // TODO Auto-generated method stub
+//    
+//  }
+//
+//  @Override
+//  public void getCourses(AsyncCallback<List<Map<String, Object>>> getCoursesCallback) {
 //    // TODO Auto-generated method stub
 //    
 //  }
 
-  @Override
-  protected void login(String name, String password, AsyncCallback<Map<String, Object>> callback) {
-    // TODO Auto-generated method stub
-    
-  }
 
-  @Override
-  void getScos(Object id, AsyncCallback<List<Map<String, Object>>> getScosCallback) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  void getDwoProfile(AsyncCallback<Map<String, Object>> getProfileCallback) {
-    // TODO Auto-generated method stub
-    
-  }
 
 }
