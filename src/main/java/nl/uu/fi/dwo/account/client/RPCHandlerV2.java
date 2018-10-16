@@ -46,8 +46,8 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      * @param server
      * @param profile
      */
-    public RPCHandlerV2(String server, int profile) {
-		super(server, profile);
+    RPCHandlerV2(int profile) {
+		super(profile);
 	}
 	
     /**

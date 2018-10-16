@@ -68,8 +68,8 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	protected Promise<DomDwoProfileFull> profile;
 	
 	
-	public RPCHandlerV3(String server, int profile, boolean secure) {
-		super(server, profile);
+	public RPCHandlerV3(String dummy, int profile, boolean secure) {
+		super(profile);
 		this.secure = secure;
 		scoManager = new PublicScoContextManager();
 		courseManager = new PublicCourseManager();
@@ -301,20 +301,17 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 //		getUserResultsCallback.onFailure(new Error());
 //	}
 
-	@Override
 	public Promise<Map<String, String>> getValues(Object scoID,
 			Collection<String> keys) {
 		DomScoContext sco = toScoContext(scoID);
 		return scormApi.getValues(sco, getSchoolClass(), getContext(), keys);
 	}
 
-	@Override
 	public Promise<?> setValues(Object scoID, Map<String, String> values) {
 		DomScoContext sco = toScoContext(scoID);
 		return scormApi.setValues(sco, getSchoolClass(), getContext(), values);
 	}
 
-	@Override
 	public Promise<JSONValue> getJSONLaunchDataBytes(Object scoID) {
 		final DomScoContext id = toScoContext(scoID);
 		Function<DomDwoProfile, Promise<? extends JSONValue>> t;
@@ -331,7 +328,6 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		return profile.flatMap(t);
 	}
 
-	@Override
 	public Promise<JSONValue> getCourseDescription(Object courseID) {
 		final DomCourse id = toCourse(courseID);
 		Function<DomDwoProfile, Promise<? extends JSONValue>>
