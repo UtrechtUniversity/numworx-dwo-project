@@ -420,7 +420,7 @@
 		<DWOplayerVersion>2.2.9</DWOplayerVersion>
 		<DWOmAccessVersion>0.1.1-SNAPSHOT</DWOmAccessVersion>
 		<RegisterVersion>2.2.8</RegisterVersion>
-		<DWOGwtClientVersion>0.10.16</DWOGwtClientVersion>
+		<DWOGwtClientVersion>0.10.17-SNAPSHOT</DWOGwtClientVersion>
 		<DWOJClientVersion>2.2.9</DWOJClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
