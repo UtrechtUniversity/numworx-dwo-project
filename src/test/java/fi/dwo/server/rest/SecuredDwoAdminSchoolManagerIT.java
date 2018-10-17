@@ -7,6 +7,7 @@ import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
@@ -72,9 +73,10 @@ public class SecuredDwoAdminSchoolManagerIT {
      * Test of submitSchool method, of class SecuredDwoAdminSchoolManager.
      *
      * Tests whether a new school can be submitted.
+     * @throws Dwo2Exception 
      */
     @Test
-    public void testSubmitSchool() {
+    public void testSubmitSchool() throws Dwo2Exception {
         System.out.println("submitSchool");
         SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
         PersistentSchool school = new PersistentSchool();
