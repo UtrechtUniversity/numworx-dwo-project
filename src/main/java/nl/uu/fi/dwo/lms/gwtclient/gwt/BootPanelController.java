@@ -106,7 +106,7 @@ public class BootPanelController {
             test = true;
         }
         value = Window.Location.getParameter("stage");
-        if (value != null && value.matches("on")) {
+        if (value != null) {
             stage = Integer.parseInt(value);
         }
 // features: login with authToken, switch after login to initialview
