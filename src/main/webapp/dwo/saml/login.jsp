@@ -1,14 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@page import="javax.servlet.http.Cookie" %>
+<%@ page import="javax.servlet.http.Cookie" %>
 <%@ page import="org.imsglobal.basiclti.BasicLTIUtil" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ include file="/dwo/saml_util.jsp" %>
+<!DOCTYPE html>
 <html>
 <%
 	String cookies = "document.cookie";
-	String token = "'bearer token'";
-	Cookie cookie = new Cookie("aap","noot");
-	response.addCookie(cookie);
 %>
 
 <head>
@@ -22,12 +20,9 @@
 
 function later() {
 	var cookies = (<%=cookies %>);
-	var token = (<%=token %>);
 	console.log(cookies);
-	console.log(token);
 	try {
 		doLMSInitialize();
-		doLMSSetValue("dme.token", token);
 		doLMSSetValue("dme.cookies", cookies);
 		doLMSSetValue("cmi.exit", "logout");
 		doLMSFinish("");
@@ -35,10 +30,10 @@ function later() {
 		alert(e);
 	}
 }
-setTimeout("later()",5)
+setTimeout("later()",1)
 </script>
 <%
-	String display = "W<i>m";
+	String display = String.valueOf(request.getAttribute("givenName"));
 	out.print("<h1>Welcome ");
 	out.print(BasicLTIUtil.htmlspecialchars(display));
 	out.println("</h1>");
