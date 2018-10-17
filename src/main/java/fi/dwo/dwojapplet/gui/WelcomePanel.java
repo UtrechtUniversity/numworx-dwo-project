@@ -3,6 +3,8 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.beans.copyright.FIButton;
+import fi.beans.loader.Loader;
+import fi.beans.scorm.SAMLLoginIF;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.MD5;
@@ -10,11 +12,13 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.BUILD;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import nl.numworx.samllogin.SamlLoginPanel;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Font;
@@ -30,13 +34,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -44,6 +49,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 /**
  * This class represents the panel that is been showed when you start the
@@ -285,7 +293,28 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         //p.setBorderColor(new Color(52,90,126));
         p.setBounds(dialog.getWidth() / 2 - 175, 110+100+100, 340, 155);
         dialog.add(p);
+        int h = 0;
 
+if(DwoHelper.isSamlLogin()) {
+    loginOnly = true;
+    p.setLayout(new BorderLayout());
+    SAMLLoginIF browser = getSAMLLogin();
+    browser.loadURL(DwoHelper.getServerUrlPath() + "saml/login.jsp");
+    browser.getPromise().then(pr -> {
+      GuiCreator.instance().dwo.loginViaSaml(pr.getValue());
+      return null;
+    }, 
+        fail -> {
+          final Throwable failure = fail.getFailure();
+          if(failure instanceof Dwo2Exception)
+            GuiCreator.instance().ShowErrorDialog(dialog, (Dwo2Exception) failure);
+          else
+            GuiCreator.instance().ShowWarningDialog(dialog, failure.getMessage());
+        }
+    );
+    p.add(browser.asComponent(), BorderLayout.CENTER);
+    p.setSize(p.getWidth(), browser.asComponent().getHeight());
+} else {
         /* Inlogdata label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIW_LOGINDATA) + ":");
         l.setForeground(GuiConstants.RED_COLOR);
@@ -331,7 +360,6 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
         /* linkdata */
         Object org = null;
-        int h = 0;
         if (linkdata != null && null != (org = linkdata.get("dwoSAMLOrganization"))) {
             linkcheck = new JCheckBox("Inloggen via '" + org + '\'');
             linkcheck.setBackground(p.getBackground());
@@ -385,7 +413,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 //        l.setBounds(10
 //                - (l.getSize().width / 2), p.getHeight() - 70, fm.stringWidth(l.getText()), fm.getHeight());
 //        p.add(l);
-
+}
         if (loginOnly) {
             return;
         }
@@ -464,8 +492,39 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 //        p.add(l);
         guestButton.addActionListener(this);
         registerNewUserButton.addActionListener(this);
-        loginButton.requestFocus();
+        if(loginButton != null)
+          loginButton.requestFocus();
 
+    }
+
+    private SAMLLoginIF getSAMLLogin()
+    {
+      try {
+        final String jar = "samllogin.jar";
+        final String className = "nl.numworx.samllogin.SamlLoginPanel";
+
+        return (SAMLLoginIF) Loader.create(jar).loadClass(className).newInstance();
+      } catch (Exception e) {
+        LOG.log(Level.SEVERE, "loading samllogin", e);
+        final JPanel empty = new JPanel();
+        return new SAMLLoginIF() {
+
+          @Override
+          public JComponent asComponent() {
+            return empty;
+          }
+
+          @Override
+          public Promise<Properties> getPromise() {
+            return Promises.failed(e);
+          }
+
+          @Override
+          public void loadURL(String url) {
+          }
+          
+        };
+      }
     }
 
     /**

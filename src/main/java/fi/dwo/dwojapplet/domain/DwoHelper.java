@@ -773,6 +773,8 @@ public final class DwoHelper {
 
 	private static String rights = "";
 
+  private static boolean samlLogin;
+
 	/**
 	 * @param rights the rights to set
 	 */
@@ -805,4 +807,10 @@ public final class DwoHelper {
         test = aTest;
     }
 
+    public static boolean isSamlLogin() {
+      return samlLogin;
+    }
+    public static void setSamlLogin(boolean b) {
+      samlLogin = b;
+    }
 }

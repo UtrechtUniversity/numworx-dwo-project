@@ -311,7 +311,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 
         if("test".equals(dwo_env))
             DwoHelper.setTest(true);
-        	Compressor.setSkip(false);
+        Compressor.setSkip(false);
+        if("saml".equals(dwo_env))
+            DwoHelper.setSamlLogin(true);
     }
 
     /**
@@ -2488,6 +2490,19 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         return value;
     }
 
+    
+    public void loginViaSaml(Properties p) throws Exception {
+       String samlUserID = p.getProperty(DWO_SAML_USER_ID);
+       String samlOrgID = p.getProperty(DWO_SAML_ORGANIZATION_ID);
+       String authToken = p.getProperty("dwoSAMLAuthToken");
+       LOG.log(Level.INFO,"Cookies: dwoSAMLUserID {0} dwoSAMLOrganizationID {1} dwoSAMLAuthToken {2}", new Object[]{samlUserID, samlOrgID, authToken});
+       DomUserFullwLoginContext user = PublicUserManager.samlLogin(samlUserID, samlOrgID, authToken);
+       String name = user.getDomUserFull().getUserName();
+       String pw = user.getDomUserFull().getPassword();
+       GuiCreator.instance().loginWithMd5(name, pw);
+    }
+    
+    
     /*
      * Beste Wim uit SURFnet Instelling, je gebruikersid:
      * c31d3bbc5b214528b90a0c72ce0240da11588d60@uu.nl, je schoolid: SURFIN
@@ -2702,17 +2717,11 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
           passwords.add(new DomMapEntry<RoleType, String>(role, pw));
         }
         school.setPasswords(passwords);
-        // String studentPassw = schoolPasswdMap.getPasswd(SchoolGroup.STUDENT);
-        // String teacherPassw = schoolPasswdMap.getPasswd(SchoolGroup.TEACHER);
-        // return PersistenceFacade.instance().addSchool(id, schoolName,
-        // schoolLogin, studentPassw, teacherPassw);
-        //return PersistenceFacade.instance().addSchool(id, schoolName, schoolLogin, schoolPasswdMap, date);
         try {
           school = schoolManager.addSchool(school);
-          id = MySQLPersistenceId.getNativeId(school).intValue();
-          return (School) PersistenceFacade.instance().get(id, School.class);
-        } catch (PersistenceException e) {
-          throw new SchoolException(SchoolException.EX_XML_RPC);
+          School s = new School();
+          s.setDomSchool(school); // DUMMY, null/nonnull
+          return s;
         } catch (Dwo2Exception e) {
            throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR);
         }
