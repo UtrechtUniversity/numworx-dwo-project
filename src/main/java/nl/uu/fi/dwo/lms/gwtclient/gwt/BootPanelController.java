@@ -162,10 +162,10 @@ public class BootPanelController {
         //force reload if not current
         //todo
         /**
-         * Testing stuff
+         * Testing stuff, stage = 1,2...
          */
-        //    testRestyMapConverter();
         parseUrlParam();
+        presenterFactory.getPersonsPresenter().setStage(stage);
 
         //fetch current version
         String softwareVersion = BUILD.version;
@@ -351,7 +351,6 @@ public class BootPanelController {
                             break;
                         case PERSONS:
                             viewFactory.getMainView().showPersonsView();
-                            presenterFactory.getPersonsPresenter().setStage(stage);
                             presenterFactory.getPersonsPresenter().init();
                             break;
                         case ADDPERSON:

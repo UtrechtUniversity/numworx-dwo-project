@@ -172,7 +172,7 @@ public class PersonsPresenter {
 
    @JsMethod
     public boolean hasImportPersons(){
-        return (stage ==2) ? true : false;
+        return (stage >=2);
     }
     
     @JsMethod
