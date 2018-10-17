@@ -25,6 +25,8 @@ import nl.uu.fi.dwo.rest.entities.RestAppletConfig;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.AppletConfigManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 
@@ -202,26 +204,24 @@ public class SecuredDwoAdminConfigManager {
 
   /**
    * remove applet config
+   * @throws Dwo2Exception 
    */
   @PUT
   @Produces({"application/json"})
   @Path("/remove")
-  public Boolean removeConfig(@Context SecurityContext sc, RestAppletConfig restConfig) {
-    if (restConfig == null) {
+  public Boolean removeConfig(@Context SecurityContext sc, RestAppletConfig rest) throws Dwo2Exception {
+    if (rest == null) {
       throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError,
           "Incorrect formatted REST-request.");
     }
-    PersistentHasRole hr = null;
-    DomAppletConfig config = restConfig.getDomAppletConfig();
-    try {
-      hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-    } catch (Dwo2Exception ex) {
-      Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, "", ex);
-      throw new Dwo2RestException(ex);
-    }
-    if (hr != null) {
+    DwoAdminState_HR_R_S_SG_U state = AnonDomainAuthorizer.build()
+        .submitUser(sc.getUserPrincipal().getName())
+        .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN)
+        .buildDwoAdmin();
+//TODO move to Action:
+      DomAppletConfig config = rest.getDomAppletConfig();
       try {
-        long id = MySQLPersistenceId.getNativeId(config);
+        Long id = MySQLPersistenceId.getNativeId(config);
         AppletConfigManager.destroy(id);
         return Boolean.TRUE;
       } catch (PersistenceException pe) {
@@ -232,12 +232,5 @@ public class SecuredDwoAdminConfigManager {
         throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError,
             "Failed to remove config with name " + config.getName() + " .");
       }
-    } else {
-      LOG.log(Level.WARNING,
-          "Username {0}: ILLEGAL USER-OPERATION: Trying to remove the appletconfig with name {1}.",
-          new Object[] {sc.getUserPrincipal().getName(), config.getName()});
-      throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction,
-          "You Don't Have Permission to remove the appletconfig data.");
-    }
   }
 }
