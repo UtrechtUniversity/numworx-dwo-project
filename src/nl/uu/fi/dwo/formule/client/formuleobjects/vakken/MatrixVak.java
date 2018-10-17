@@ -193,7 +193,7 @@ public class MatrixVak extends FormuleElementWithChildren
 //		System.out.println("MatrixVak.maakMaat(): na setSize(width, height): width = " + width + ", getSize().width = " + getSize().width);
 
 		setAsHoogte(height / 2 + fm.getAscent()/2 - fm.getDescent()/2);
-		System.out.println("MatrixVak.maakMaat(): setSize(" + width + ", " + height + "), ashoogte = " + getAsHoogte());
+		//System.out.println("MatrixVak.maakMaat(): setSize(" + width + ", " + height + "), ashoogte = " + getAsHoogte());
 		
 		int kindY = 5;
 		for (int i = 0; i < matrixChildren.size(); i++) // rijen

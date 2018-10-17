@@ -140,7 +140,7 @@ public class VectorVak extends FormuleElementWithChildren
 
 		setSize(width, height);
 		setAsHoogte(height / 2 + fm.getAscent()/2 - fm.getDescent()/2);
-		System.out.println("VectorVak.maakMaat(): setSize(" + width + ", " + height + "), ashoogte = " + getAsHoogte());
+		//System.out.println("VectorVak.maakMaat(): setSize(" + width + ", " + height + "), ashoogte = " + getAsHoogte());
 
 		int kindHoogte = 5;
 		for (int i = 0; i < children.size(); i++)
