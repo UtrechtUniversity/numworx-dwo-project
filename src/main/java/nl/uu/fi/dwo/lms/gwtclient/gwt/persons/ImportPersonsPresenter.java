@@ -9,16 +9,29 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+import javax.swing.text.View;
+
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
+
+import org.osgi.util.promise.Deferred;
+import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+import org.vectomatic.file.File;
+import org.vectomatic.file.FileReader;
+import org.vectomatic.file.events.AbortEvent;
+import org.vectomatic.file.events.AbortHandler;
 
 /**
  * Login Presenter.
@@ -28,12 +41,12 @@ import org.osgi.util.promise.Promise;
 public class ImportPersonsPresenter {
 
     private static final Logger LOG = Logger.getLogger(ImportPersonsPresenter.class.getName());
-    private DwoGlobalVars dwoGlobalVars;
-    private EventBus eventBus;
+    private final Failure FAILURE;
+    private final DwoGlobalVars dwoGlobalVars;
+    private final EventBus eventBus;
     private Display view;
-    private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
+    private final SecuredTeacherSchoolClassManager manager;
     private List<DomSingleSchoolStudent> persons;
-    private String fileName;
     private Map<String, TaggedDomSchoolClass> taggedSchoolClasses;
 
     /**
@@ -54,8 +67,6 @@ public class ImportPersonsPresenter {
 
         void clear();
 
-        String fetchFileName();
-
         void setPersonImportList(List<DomSingleSchoolStudent> persons);
 
         void showSchoolClasses(Map<String,TaggedDomSchoolClass> schoolClasses);
@@ -69,28 +80,55 @@ public class ImportPersonsPresenter {
         void setLoadingSchoolClassesTableMessage();
     }
 
-    public ImportPersonsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject ImportPersonsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, SecuredTeacherSchoolClassManager m) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+        manager = m;
+        FAILURE = new LoggingFailure(LOG,anEventBus);
     }
 
 //    @JsMethod not required unless testing stuff.
-    public void init() {
+    public void init(File file) {
+        view.init();
         view.clear();
         view.setHelp(dwoGlobalVars.buildHelpUrl("#importPersons"));
         view.setEmptyPeopleTableMessage();
         view.setEmptySchoolClassesTableMessage();
-        fileName = view.fetchFileName();
-        persons = loadFile(fileName);
-        view.setPersonImportList(persons);
-        showTeachersSchoolClasses();
+        
+        final Deferred<String> contents = new Deferred<>();
+        try {
+          FileReader reader = new FileReader();
+          reader.addAbortHandler( event -> contents.fail(new RuntimeException("aborted :" + file.getName())));
+          reader.addErrorHandler( event -> contents.fail(new RuntimeException("error: " + file.getName())));
+          reader.addLoadEndHandler(event -> contents.resolve(reader.getStringResult()));  
+          reader.readAsText(file);
+        } catch(Exception e) {
+          contents.fail(e);
+        }
+        Promise<Void> p1 = 
+        contents.getPromise()
+          .then(this::loadFile)
+          .then(
+            p -> {
+              persons = p.getValue();
+              view.setPersonImportList(persons);
+              return null;
+            }
+        );
+        Promise<Void> p2 = showTeachersSchoolClasses();
+        
+        Promises.all(p1, p2).then( 
+          this::enable,
+          FAILURE);
     }
 
-    private void showTeachersSchoolClasses() {
+    private Promise<Void> enable(Promise<List<Void>> p) { return null; }
+    
+    private Promise<Void> showTeachersSchoolClasses() {
         Promise<List<DomSchoolClass>> promise;
         promise = manager.getTeachersSchoolClasses();
-        promise.then((resolved) -> {
-            List<DomSchoolClass> classList = (List<DomSchoolClass>) resolved.getValue();
+        return promise.then((resolved) -> {
+            List<DomSchoolClass> classList = resolved.getValue();
             taggedSchoolClasses = new HashMap<String, TaggedDomSchoolClass>(classList.size());
             classList.forEach((v) -> taggedSchoolClasses.put(v.getId().getIdString(), new TaggedDomSchoolClass(v)));
             view.showSchoolClasses(taggedSchoolClasses);
@@ -115,39 +153,45 @@ public class ImportPersonsPresenter {
         eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
     }
 
+    private Promise<List<DomSingleSchoolStudent>> loadFile(Promise<String> file) {
+      try {
+        return Promises.resolved(loadFile(file.getValue()));
+      } catch (Exception e) {
+        return Promises.failed(e);
+      }
+    }
+        
     private List<DomSingleSchoolStudent> loadFile(String file) {
         //tokenize import file.
-        String[][] importData;
         String[] lines = file.split("\n");
         LOG.log(Level.INFO, "Read " + lines.length + " lines.");
-        importData = new String[lines.length][];
-        List<DomSingleSchoolStudent> personList = new ArrayList<>(importData.length);
+        List<DomSingleSchoolStudent> personList = new ArrayList<>(lines.length);
         for (int i = 0; i < lines.length; i++) {
             String[] cols = lines[i].split("\t");
-            importData[i] = cols;
             LOG.log(Level.INFO, "Read " + cols.length + " columns.");
-            if (cols.length != 6) {
-                eventBus.fireEvent(new AlertDialogWithOKEvent("Invalid format"));
-                return personList;
+            
+            if(cols.length < 6) {
+                String[] col = new String[6];
+                System.arraycopy(cols, 0, col, 0, cols.length);
+                cols = col;
             }
+            
             for (String field : cols) {
                 LOG.log(Level.INFO, "Read >" + field + "< field.");
             }
+            //convert to SingleSchoolStudent which is subclassed of DomUserFull and 
+            //works for teachers too.
+            DomSingleSchoolStudent s = new DomSingleSchoolStudent();
+            s.setUserName(cols[0]);
+            s.setGivenName(cols[1]);
+            s.setInsertion(cols[2]);
+            s.setFamilyName(cols[3]);
+            s.setEmail(cols[4]);
+            s.setPassword(cols[5]);
+            s.setSingleSchool(true);
+            personList.add(s);
         }
-        //convert to SingleSchoolStudent which is subclassed of DomUserFull and 
-        //works for teachers too.
 
-        //username, givenname, insertion, familyname, email, password.
-        for (int i = 0; i < importData.length; i++) {
-            DomNewSingleSchoolStudent s = new DomNewSingleSchoolStudent();
-            s.getDomSingleSchoolStudent().setUserName(importData[0][0]);
-            s.getDomSingleSchoolStudent().setGivenName(importData[0][1]);
-            s.getDomSingleSchoolStudent().setInsertion(importData[0][2]);
-            s.getDomSingleSchoolStudent().setFamilyName(importData[0][3]);
-            s.getDomSingleSchoolStudent().setEmail(importData[0][4]);
-            s.getDomSingleSchoolStudent().setPassword(importData[0][5]);
-            s.getDomSingleSchoolStudent().setSingleSchool(true);
-        }
         return personList;
     }
 

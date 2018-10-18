@@ -367,7 +367,7 @@ public class BootPanelController {
                             break;
                         case IMPORTPERSONS:
                             viewFactory.getMainView().showImportPersonsView();
-                            presenterFactory.getPersonsPresenter().init();
+                            presenterFactory.getImportPersonsPresenter().init(switchViewEvent.getFile());
                             break;
                         case RESULTS:
                             viewFactory.getMainView().showResultsView();

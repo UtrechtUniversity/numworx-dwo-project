@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.persons;
 
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import fi.dwo.gwt.lib.rest.util.DomSingleSchoolStudentCodec;
 import java.util.List;
@@ -27,29 +28,23 @@ public class JsImportPersonsView implements ImportPersonsPresenter.Display{
     }
 
     @Override
-    public String fetchFileName() {
-        return JsImportPersonsDisplay.fetchFileName();
-    }
-
-
-    @Override
     public void setEmptyPeopleTableMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      JsImportPersonsDisplay.setEmptyPeopleTableMessage();
     }
 
     @Override
     public void setLoadingPeopleTableMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      JsImportPersonsDisplay.setLoadingPeopleTableMessage();
     }
 
     @Override
     public void setEmptySchoolClassesTableMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      JsImportPersonsDisplay.setEmptySchoolClassesTableMessage();
     }
 
     @Override
     public void setLoadingSchoolClassesTableMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      JsImportPersonsDisplay.setLoadingSchoolClassesTableMessage();
     }
 
     @Override
@@ -59,19 +54,17 @@ public class JsImportPersonsView implements ImportPersonsPresenter.Display{
 
     @Override
     public void setPersonImportList(List<DomSingleSchoolStudent> persons) {
-        JSONObject json = new JSONObject();
-        for(int i=0;i<persons.size();i++){
-            json.put(""+i, DomSingleSchoolStudentCodec.CODEC.encode(persons.get(i)).isObject());        
-        }
-        
+        JSONArray json = new JSONArray();
+        for(int i=0;i<persons.size();i++) {
+            json.set(i, DomSingleSchoolStudentCodec.CODEC.encode(persons.get(i)));        
+        }       
         JsEditPersonDisplay.setSchoolClasses(json.getJavaScriptObject());
-
     }
 
     @Override
     public void showSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses) {
         JSONObject json = new JSONObject();
-        schoolClasses.forEach((k,v) -> {json.put(k, TaggedDomSchoolClassCodec.CODEC.encode(v).isObject());});        
+        schoolClasses.forEach((k,v) -> {json.put(k, TaggedDomSchoolClassCodec.CODEC.encode(v));});        
         JsEditPersonDisplay.setSchoolClasses(json.getJavaScriptObject());
     }
 

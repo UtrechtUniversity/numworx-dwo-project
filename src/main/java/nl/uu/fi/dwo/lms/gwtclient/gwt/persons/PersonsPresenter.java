@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.persons;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
+import org.vectomatic.file.File;
 
 /**
  * Login Presenter.
@@ -176,7 +178,7 @@ public class PersonsPresenter {
     }
     
     @JsMethod
-    public void importPersons() {
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.IMPORTPERSONS));
+    public void importPersons(JavaScriptObject file) {
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.IMPORTPERSONS, file));
     }
 }

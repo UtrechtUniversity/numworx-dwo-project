@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import java.util.Map;
 
+import org.vectomatic.file.File;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.GwtEvent;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
@@ -117,6 +119,10 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         resultTree = aResultTree;
         moduleIds = aModuleIds;
     }
+    public SwitchViewEvent(SelectedView aState, JavaScriptObject jso) {
+      this.setEventValue(aState);
+      moduleIds = jso;
+  }
 
     public SwitchViewEvent(SelectedView aState, DomResultTree aResultTree,
             DomResultScoContext aStudentSco, DomResultStudent aResultStudent,
@@ -199,5 +205,9 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
 
     public Map<String,String> getUserState() {
       return userState;
+    }
+    
+    protected File getFile() {
+      return moduleIds.cast();
     }
 }

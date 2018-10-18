@@ -9,6 +9,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import dagger.Reusable;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.PresenterFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.PresenterFactoryGwt;
@@ -25,5 +26,9 @@ abstract class BootModule {
 	
 	@Reusable @Provides static SecuredUserAccountManager accountManager() {
 	  return new SecuredUserAccountManager();
+	}
+	
+	@Reusable @Provides static SecuredTeacherSchoolClassManager schoolClassManager() {
+	  return new SecuredTeacherSchoolClassManager();
 	}
 }

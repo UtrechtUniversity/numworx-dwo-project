@@ -60,7 +60,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
 
     private final PersonsPresenter personsPresenter;
     private final AddStudentPresenter addStudentPresenter;
-    private final ImportPersonsPresenter importPersonsPresenter;
+    @Inject ImportPersonsPresenter importPersonsPresenter;
     private final EditStudentPresenter editStudentPresenter;
     private final EditTeacherPresenter editTeacherPresenter;
 
@@ -90,7 +90,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         //selectStudentResultsPresenter = new SelectStudentResultsPresenter(eventBus, dwoGlobalVars);
         personsPresenter = new PersonsPresenter(anEventBus, aDwoGlobalVars);
         addStudentPresenter = new AddStudentPresenter(anEventBus, aDwoGlobalVars);
-        importPersonsPresenter = new ImportPersonsPresenter(anEventBus, aDwoGlobalVars);
+        //importPersonsPresenter = new ImportPersonsPresenter(anEventBus, aDwoGlobalVars);
         editStudentPresenter = new EditStudentPresenter(anEventBus, aDwoGlobalVars);
         editTeacherPresenter = new EditTeacherPresenter(anEventBus, aDwoGlobalVars);
 

@@ -192,6 +192,11 @@
         	<scope>runtime</scope>
         	<type>war</type>
         </dependency>
+		<dependency>
+			<groupId>org.vectomatic</groupId>
+			<artifactId>lib-gwt-file</artifactId>
+			<version>0.3.8</version>
+		</dependency>
     </dependencies>
     
     <build>

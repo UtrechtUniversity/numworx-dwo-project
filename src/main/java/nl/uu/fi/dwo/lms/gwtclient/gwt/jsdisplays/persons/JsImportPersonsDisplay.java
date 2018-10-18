@@ -23,7 +23,6 @@ public class JsImportPersonsDisplay {
      */
     public static native void clear();
     public static native void init();
-    public static native String fetchFileName();    
     public static native void setSchoolClasses(JavaScriptObject data);
     public static native void setEmptyPeopleTableMessage();
     public static native void setLoadingPeopleTableMessage();
