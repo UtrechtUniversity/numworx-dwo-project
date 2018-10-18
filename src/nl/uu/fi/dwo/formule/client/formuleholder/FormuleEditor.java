@@ -466,6 +466,12 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	}
 
 	@Override
+	public void vector(int aantalRijen)
+	{
+		addElement(new VectorVak(getCurrentRegel(), aantalRijen));
+	}
+
+	@Override
 	public void matrix()
 	{
 		addElement(new MatrixVak(getCurrentRegel()));

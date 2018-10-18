@@ -24,20 +24,26 @@ public class MatrixVak extends FormuleElementWithChildren
 	{
 		super(holder, 1);
 		this.setChanged(true);
+		matrixChildren = new Vector<Vector<FormuleRegel>>();
+		// default 2x2
+		this.aantalKolommen = 2;
+		for (int i = 0; i < 2; i++)
+		{
+			maakNieuweRij();
+		}
+	}
+
+	public MatrixVak(FormuleElement holder, int aantalRijen, int aantalKolommen)
+	{
+		super(holder, 1);
+		this.setChanged(true);
 		
-//		formuleVak = fv;
-//		kinderen = new Vector<Vector<FormuleRegel>>();
-//		setLayout(null);
-//
-//		super.setFont(fv.getFont());
-//		fm = getFontMetrics(getFont());
-//
-//		// default 3x3 kinderen. In vulVak() worden deze weeggehaald.
-//		maakDefaultMatrix();
-//		maakMaat();
-//		kind1 = kinderen.get(0).get(0); // kind 1 moet niet null zijn... consistent met andere vakken
-//
-//		setOpaque(false);
+		matrixChildren = new Vector<Vector<FormuleRegel>>();
+		this.aantalKolommen = aantalKolommen;
+		for (int i = 0; i < aantalRijen; i++)
+		{
+			maakNieuweRij();
+		}
 	}
 
 	/* (non-Javadoc)

@@ -492,6 +492,11 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	}
 
 	@Override
+	public void vector(int aantalRijen)
+	{
+	}
+
+	@Override
 	public void matrix()
 	{
 	}

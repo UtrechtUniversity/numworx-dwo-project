@@ -20,23 +20,12 @@ public class VectorVak extends FormuleElementWithChildren
 	{
 		super(holder, 2);
 		this.setChanged(true);
-		
-//		formuleVak = fv;
-//		kinderen = new Vector<FormuleRegel>();
-//		setLayout(null);
-//
-//		super.setFont(fv.getFont());
-//		fm = getFontMetrics(getFont());
-//
-//		kind1 = new FormuleRegel(formuleVak);
-//		kind1.setLocation(10, 5);// iets met fm.getAscent en fm.getDescent
-//		kinderen.add(kind1);
-//		add(kind1);
-//		// default 2 kinderen. In vulVak() worden deze weeggehaald.
-//		maakNieuwKind();
-//		maakMaat();
-//
-//		setOpaque(false);
+	}
+
+	public VectorVak(FormuleElement holder, int aantalRijen)
+	{
+		super(holder, aantalRijen);
+		this.setChanged(true);
 	}
 
 	/* (non-Javadoc)
