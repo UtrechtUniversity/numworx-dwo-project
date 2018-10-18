@@ -132,6 +132,10 @@
 			<my:IKey addStyleNames="key {style.image}" ui:field="t4_15" resource="{resources.matrix}" />
 		</g:FlowPanel>
 		
+		<g:FlowPanel addStyleNames="dclm clm-15">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_16" resource="{resources.vectornotatie}" />
+		</g:FlowPanel>
+		
 		<g:FlowPanel addStyleNames="dclm clm-14">
 			<my:FKey addStyleNames="key bg-dkgrey icon {style.lsymbol}" ui:field="t3_14">
 				αβ
