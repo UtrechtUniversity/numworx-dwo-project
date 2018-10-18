@@ -14,6 +14,7 @@
   <inherits name="com.google.gwt.resources.Resources" />
   <inherits name="com.googlecode.mgwt.MGWTMin"/>
   <!--<inherits name="org.vectomatic.libgwtsvg" />-->
+  <inherits name='org.vectomatic.libgwtfile' />
   <inherits name='dagger.Dagger'/>
   
   <!--<set-property name="gwt.logging.popupHandler" value="DISABLED"/>-->  
@@ -30,9 +31,9 @@
     <when-type-is class="nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory"/>
     </replace-with>
   <!-- locale settings -->
-  <extend-property name="locale" values="en"/>
+<!--   <extend-property name="locale" values="en"/> -->
   <extend-property name="locale" values="nl"/>
-  <extend-property name="locale" values="fr"/>
+<!--   <extend-property name="locale" values="fr"/> -->
 <!--   <set-property-fallback name="locale" value="en"/> -->
   <add-linker name='xsiframe' />
 <set-configuration-property name="devModeRedirectEnabled" value="true"/>
@@ -43,10 +44,10 @@
         name="org.fusesource.restygwt.restyjsonserializergenerator"
         value="com.example.CustomRestySerializerGenerator2"/>-->
 <!--  chrome only -->
-<!-- <set-property name="user.agent" value="safari" /> -->
+<set-property name="user.agent" value="safari" />
 <!-- desktop only (verwijderen in productie) -->
-<!-- <set-property name="mgwt.os" value="desktop" /> -->
-<!-- <set-property name="mobile.user.agent" value="not_mobile" /> -->
+<set-property name="mgwt.os" value="desktop" />
+<set-property name="mobile.user.agent" value="not_mobile" />
 
 <!--<extend-property name="user.agent" values="ie8" />
 <extend-property name="user.agent" values="ie9" fallback-value="ie8" />-->
