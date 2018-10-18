@@ -1,8 +1,10 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.FailedPromisesException;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 
@@ -23,11 +25,28 @@ public class LoggingFailure implements Failure {
 	@Override
 	public void fail(Promise<?> resolved) throws Exception {
 	    Throwable fail = resolved.getFailure();
+	    
+	    if (fail instanceof FailedPromisesException)
+	    {
+	      FailedPromisesException fromPromises = (FailedPromisesException) fail;
+	      Collection<Promise<?>> collection = fromPromises.getFailedPromises();
+	      if(collection.size() == 1) {
+	        fail = collection.iterator().next().getFailure();
+	      } else {
+	        String message = "Multiple failures";
+	        for(Promise<?> item: collection) {
+	          message += "\n" + item.getFailure().getMessage();
+	        }
+	        LOG.log(Level.SEVERE, message, fromPromises);
+	        eventBus.fireEvent(new AlertDialogWithOKEvent(message));
+	        return;
+	      }
+	    }
 	    if (fail instanceof Dwo2Exception) {
-	        LOG.log(Level.SEVERE, fail.getMessage());
+	        LOG.log(Level.SEVERE, fail.getMessage(), fail);
 	        eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
 	    } else {
-	        LOG.log(Level.SEVERE, fail.getMessage());
+	        LOG.log(Level.SEVERE, fail.getMessage(), fail);
 	        eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
 	        //throw directly
 	    }
