@@ -26,6 +26,9 @@ public class VectorNotatieVak extends FormuleElementWithChildren
 
 	protected void build(PathBuilder ctx)
 	{
+		ctx.setStrokeStyle(color);
+		ctx.setLineWidth(fm.getStrokeWidth());
+
 		ctx.beginPath();
 
 		ctx.moveTo(2, 2);
