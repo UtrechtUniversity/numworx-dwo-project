@@ -27,9 +27,9 @@
   <!-- add entry point for each app in an external jar -->
 
   <!-- locale settings (toevoegen in productie) -->
-<!--   <extend-property name="locale" values="en"/> -->
+  <extend-property name="locale" values="en"/>
   <extend-property name="locale" values="nl"/>
-<!--   <extend-property name="locale" values="fr"/> -->
+  <extend-property name="locale" values="fr"/>
 <!--   <set-property-fallback name="locale" value="en"/> -->
   <add-linker name='xsiframe' />
 <set-configuration-property name="devModeRedirectEnabled" value="true"/>
@@ -40,10 +40,10 @@
         name="org.fusesource.restygwt.restyjsonserializergenerator"
         value="com.example.CustomRestySerializerGenerator2"/>-->
 <!--  chrome only (verwijderen in productie) -->
-<set-property name="user.agent" value="safari" />
+<!-- <set-property name="user.agent" value="safari" /> -->
 <!-- desktop only (verwijderen in productie) -->
-<set-property name="mgwt.os" value="desktop" />
-<set-property name="mobile.user.agent" value="not_mobile" />
+<!-- <set-property name="mgwt.os" value="desktop" /> -->
+<!-- <set-property name="mobile.user.agent" value="not_mobile" /> -->
 
 <!--<extend-property name="user.agent" values="ie8" />
 <extend-property name="user.agent" values="ie9" fallback-value="ie8" />-->
