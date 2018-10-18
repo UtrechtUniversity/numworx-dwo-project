@@ -28,6 +28,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.entities.RestAppletConfig;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfileFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.PersistentDataManagers.core.AppletConfigManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
@@ -138,7 +139,7 @@ public class SecuredDwoAdminConfigManagerIT {
 	}
 
 	@Test
-	public void testRemoveAppletConfig() {
+	public void testRemoveAppletConfig() throws Dwo2Exception {
         SecurityContext sc = new TestSecurityContext("dwoadmin", RoleType.ADMIN);
 		RestAppletConfig restConfig;
 		DomAppletConfig  config;
