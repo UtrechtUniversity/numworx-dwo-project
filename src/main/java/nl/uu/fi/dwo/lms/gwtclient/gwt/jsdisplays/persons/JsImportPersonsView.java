@@ -58,14 +58,14 @@ public class JsImportPersonsView implements ImportPersonsPresenter.Display{
         for(int i=0;i<persons.size();i++) {
             json.set(i, DomSingleSchoolStudentCodec.CODEC.encode(persons.get(i)));        
         }       
-        JsImportPersonsDisplay.setSchoolClasses(json.getJavaScriptObject());
+        JsImportPersonsDisplay.setPersonImportList(json.getJavaScriptObject());
     }
 
     @Override
     public void showSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses) {
         JSONObject json = new JSONObject();
         schoolClasses.forEach((k,v) -> {json.put(k, TaggedDomSchoolClassCodec.CODEC.encode(v));});        
-        JsImportPersonsDisplay.setSchoolClasses(json.getJavaScriptObject());
+        JsImportPersonsDisplay.showSchoolClasses(json.getJavaScriptObject());
     }
 
 

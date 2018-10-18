@@ -636,7 +636,7 @@
                 <executions>
                     <execution>
                         <id>copy-HtmlUi</id>
-                        <phase>generate-resources</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
