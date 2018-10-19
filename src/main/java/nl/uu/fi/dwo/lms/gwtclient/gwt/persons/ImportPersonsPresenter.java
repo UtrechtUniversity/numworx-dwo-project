@@ -1,7 +1,13 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.persons;
 
+import com.google.gson.JsonObject;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONValue;
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
+import fi.dwo.gwt.lib.rest.util.DomSingleSchoolStudentCodec;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,17 +23,21 @@ import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
+import org.osgi.util.promise.Success;
 import org.vectomatic.file.File;
 import org.vectomatic.file.FileReader;
 import org.vectomatic.file.events.AbortEvent;
@@ -195,4 +205,41 @@ public class ImportPersonsPresenter {
         return personList;
     }
 
+    
+    @JsMethod
+    void submitImportStudents(JavaScriptObject json, String schoolClassID) {
+      TaggedDomSchoolClass tagged = taggedSchoolClasses.get(schoolClassID);
+      if(tagged == null) {
+          eventBus.fireEvent(new AlertDialogWithOKEvent("no class"));
+          return;
+      }
+      JSONArray array = new JSONArray(json);
+      int size = array.size();
+      List<DomSingleSchoolStudent> personList = new ArrayList<>(size);  
+      for(int i = 0; i < size; i++ )   
+      {
+        JSONValue value = array.get(i);
+        DomSingleSchoolStudent student = DomSingleSchoolStudentCodec.CODEC.decode(value);
+        student.setSingleSchool(true);
+        personList.add(student);
+      }
+      DomSchoolClass schoolClass = tagged.getSchoolClass();
+
+      
+      List<Promise<Boolean>> promises = new ArrayList<>(size);
+      for(DomSingleSchoolStudent student: personList) {
+        Promise<Boolean> promise;
+        DomNewSingleSchoolStudent newStudent = new DomNewSingleSchoolStudent();
+        newStudent.setDomSingleSchoolStudent(student);
+        newStudent.setDomSchoolClass(schoolClass);
+        promise = manager.submitSingleSchoolStudent(newStudent);
+        promises.add(promise);
+      }
+      Promises.all(promises).then(p-> {
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.PERSONS));
+        return null;
+      }, FAILURE);
+      
+      
+    }
 }

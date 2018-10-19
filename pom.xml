@@ -40,6 +40,7 @@
         <context.xml>context-dwo_devel.xml</context.xml>
         <copy.ui.skip>false</copy.ui.skip>
         <registerVersion>2.2.8</registerVersion>
+        <gwtModule>nl.uu.fi.dwo.lms.gwtclient.gwtclient</gwtModule>
     </properties>
 
     <scm>
@@ -289,7 +290,7 @@
                             <codeserverArgs>
                                 <generateJsInteropExports>true</generateJsInteropExports>
                             </codeserverArgs>
-                            <module>nl.uu.fi.dwo.lms.gwtclient.gwtclient</module>
+                            <module>${gwtModule}</module>
                             <i18nConstantsBundles>
                                 <i18nConstantsBundle>nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages</i18nConstantsBundle>
                             </i18nConstantsBundles>
@@ -702,4 +703,14 @@
     </build>
 
     <description>DwoGwtClient</description>
+    
+    
+    <profiles>
+    	<profile>
+    		<id>debug</id>
+    		<properties>
+    			<gwtModule>nl.uu.fi.dwo.lms.gwtclient.gwtclientDebug</gwtModule>
+    		</properties>
+    	</profile>
+    </profiles>
 </project>
