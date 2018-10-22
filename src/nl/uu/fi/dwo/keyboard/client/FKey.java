@@ -21,7 +21,9 @@ import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.LegacyHandlerWrapper;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
@@ -89,6 +91,27 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseO
 		} else
 			image.addClickHandler(KEEP_FOCUS);
 	}
+	
+	FKey(DataResource resource) {
+      panel = new HTML();
+      SafeUri uri = resource.getSafeUri();
+      image = new Image(uri);
+      click = image;
+      touches = image;
+      mouses = image;
+      initWidget(image);
+      image.addMouseOverHandler(this);
+      image.addMouseOutHandler(this);
+      if(TouchEvent.isSupported())
+      {
+          image.addClickHandler(this);
+      } else
+          image.addClickHandler(KEEP_FOCUS);
+	  
+	}
+	
+	
+	
 	
 	
 	@Override
