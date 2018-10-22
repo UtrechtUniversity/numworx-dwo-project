@@ -421,7 +421,7 @@
 		<DWOmAccessVersion>0.1.1-SNAPSHOT</DWOmAccessVersion>
 		<RegisterVersion>2.2.8</RegisterVersion>
 		<DWOGwtClientVersion>0.10.17-SNAPSHOT</DWOGwtClientVersion>
-		<DWOJClientVersion>2.2.9</DWOJClientVersion>
+		<DWOJClientVersion>2.2.10-SNAPSHOT</DWOJClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testebserver</aws.environmentName>
