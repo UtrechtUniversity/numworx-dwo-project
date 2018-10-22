@@ -136,4 +136,10 @@ public class JsMainView implements MainPresenter.Display{
         JsMainDisplay.showImportPersonsView();
     }
 
+    @Override
+    public void showLogResultsView() {
+        JsMainDisplay.showLogResultView();
+      
+    }
+
 }

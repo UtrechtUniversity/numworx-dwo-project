@@ -7,12 +7,15 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.account.JsAccountView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsAlertDialogWithConfirmCancelView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.login.JsLoginView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMainView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsLogResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsSchoolClassesView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.schoolclasses.JsEditSchoolClassView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.ui.JsProgressDialogWithAbortView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.welcome.JsWelcomeView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.LogResultsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.LogResultsPresenter.Display;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 
@@ -70,6 +73,7 @@ public class ViewFactoryJs implements ViewFactory {
     private final JsSelectStudentResultsView selectStudentResultsView;
     @Inject
     JsStudentScoResultView studentScoResultView;
+    @Inject JsLogResultsView logResultsView;
     private final SchoolclassesPresenter.Display schoolclassesView;
     private final AddStudentToSchoolclassPresenter.Display addStudentToSchoolclassView;
     private final CopyOrMoveStudentToSchoolclassPresenter.Display copyOrMoveStudentToSchoolclassView;
@@ -94,7 +98,7 @@ public class ViewFactoryJs implements ViewFactory {
     private final ProgressDialogWithAbortPresenter.Display progressDialogWithAbortView;
 
     @Inject
-    ViewFactoryJs(PresenterFactory pf) {
+    ViewFactoryJs() {
         mainView = new JsMainView();
         loginView = new JsLoginView();
         welcomeView = new JsWelcomeView();
@@ -110,7 +114,6 @@ public class ViewFactoryJs implements ViewFactory {
         //resultsSelectsView = new JsSelectedResultsView();
         selectStudentResultsView = new JsSelectStudentResultsView();
         //studentScoResultView = new JsStudentScoResultView();
-
         personsView = new JsPersonsView();
         editStudentView = new JsEditStudentView();
         editTeacherView = new JsEditTeacherView();
@@ -305,6 +308,11 @@ public class ViewFactoryJs implements ViewFactory {
      */
     public StudentScoResultPresenter.Display getStudentScoResultView() {
         return studentScoResultView;
+    }
+
+    @Override
+    public LogResultsPresenter.Display getLogResultsView() {
+      return logResultsView;
     }
 
 //    @Override

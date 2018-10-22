@@ -7,6 +7,7 @@ import org.vectomatic.file.File;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.GwtEvent;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
@@ -29,12 +30,12 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         return resultStudent;
     }
 
-    /**
-     * @return the resultScoContext
-     */
-    public DomResultScoContext getResultScoContext() {
-        return resultScoContext;
-    }
+//    /**
+//     * @return the resultScoContext
+//     */
+//    public DomResultScoContext getResultScoContext() {
+//        return resultScoContext;
+//    }
 
     /**
      * @return the resultTree
@@ -63,6 +64,7 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         RESULTSSCHOOLCLASSES,
         SELECTSTUDENTRESULTS,
         RESULTSSTUDENT,
+        LOGRESULTS,
         SELECTEDRESULTSRETURN,
         MODULES,
         MODULESVIEW,
@@ -82,7 +84,7 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     private DomResultScoContext scoResult;
     private DomStudentScoContext studentScoResult;
     private DomResultStudent resultStudent;
-    private DomResultScoContext resultScoContext;
+//    private DomResultScoContext resultScoContext;
     private DomResultTree resultTree;
     private DomResultStudentScoContext resultStudentScoContext;
     private JavaScriptObject moduleIds;
@@ -124,15 +126,15 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
       moduleIds = jso;
   }
 
-    public SwitchViewEvent(SelectedView aState, DomResultTree aResultTree,
-            DomResultScoContext aStudentSco, DomResultStudent aResultStudent,
-            DomSchoolClass aSchoolClass) {
-        this.setEventValue(aState);
-        resultTree = aResultTree;
-        resultScoContext = aStudentSco;
-        resultStudent = aResultStudent;
-        schoolClass = aSchoolClass;
-    }
+//    public SwitchViewEvent(SelectedView aState, DomResultTree aResultTree,
+//            DomResultScoContext aStudentSco, DomResultStudent aResultStudent,
+//            DomSchoolClass aSchoolClass) {
+//        this.setEventValue(aState);
+//        resultTree = aResultTree;
+//        resultScoContext = aStudentSco;
+//        resultStudent = aResultStudent;
+//        schoolClass = aSchoolClass;
+//    }
 
     public SwitchViewEvent(SelectedView resultsstudent, DomResultTree tree, DomResultStudentScoContext value, JavaScriptObject context, Map<String, String> map) {
 		this(resultsstudent, tree, context);
@@ -140,7 +142,15 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
 		userState = map;
 	}
 
-	@Override
+	public SwitchViewEvent(SelectedView logresults, DomResultTree resultTree,
+        JavaScriptObject context, DomResultScoContext sco,
+        DomSchoolClass schoolclass) {
+	  this(logresults, resultTree, context);
+	  this.schoolClass = schoolclass;
+      this.scoResult = sco;
+    }
+
+  @Override
     public Type<SwitchViewEventHandler> getAssociatedType() {
         return TYPE;
     }

@@ -166,6 +166,7 @@ public class BootPanelController {
          */
         parseUrlParam();
         presenterFactory.getPersonsPresenter().setStage(stage);
+        presenterFactory.getSelectedResultsPresenter().setStage(stage);
 
         //fetch current version
         String softwareVersion = BUILD.version;
@@ -389,6 +390,10 @@ public class BootPanelController {
                             //eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                             viewFactory.getMainView().showStudentScoResultView();
                             presenterFactory.getStudentScoResultPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultStudentScoContext(), switchViewEvent.getResultState(), switchViewEvent.getUserState());
+                            break;
+                        case LOGRESULTS:
+                            viewFactory.getMainView().showLogResultsView();
+                            presenterFactory.getLogResultsPresenter().init(switchViewEvent.getResultTree(),switchViewEvent.getScoResult(),switchViewEvent.getSchoolClass(),switchViewEvent.getResultState());
                             break;
                         case SCHOOLCLASSES:
                             viewFactory.getMainView().showSchoolclassesView();

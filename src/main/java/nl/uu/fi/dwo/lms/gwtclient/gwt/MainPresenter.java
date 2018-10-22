@@ -85,6 +85,8 @@ public class MainPresenter {
         public void showModulesView();
 
         public void showOrganisationView();
+        
+        public void showLogResultsView();
     }
 
     private MainPresenter.Display display;

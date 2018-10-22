@@ -89,4 +89,6 @@ public class JsMainDisplay {
     public static native void  showModulesView();
     /** Show the organization panel. */
     public static native void  showOrganisationView();
+    /** Show the log results panel */
+    public static native void showLogResultView();
 }

@@ -15,6 +15,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.PresenterFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.PresenterFactoryGwt;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactoryJs;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsLogResultsView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.LogResultsPresenter;
 
 @Module
 abstract class BootModule {
@@ -31,4 +33,8 @@ abstract class BootModule {
 	@Reusable @Provides static SecuredTeacherSchoolClassManager schoolClassManager() {
 	  return new SecuredTeacherSchoolClassManager();
 	}
+	
+// Binds Views to Presenters
+	@Binds abstract LogResultsPresenter.Display logResultsView(JsLogResultsView view);
+	
 }

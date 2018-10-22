@@ -185,6 +185,8 @@ public class SelectedResultsPresenter {
 
     long prepareStart = Long.MAX_VALUE;
 
+    private int stage;
+
     @JsMethod
     public void preparePages(String scoid, String classid) {
         prepareStart = System.currentTimeMillis();
@@ -203,6 +205,24 @@ public class SelectedResultsPresenter {
                 }, FAILURE);
     }
 
+    @JsMethod
+    public void showLogResults(JavaScriptObject context, String scoid, String classid) {
+      LOG.fine("entering showLogResults " + context + ", " + scoid);
+      PersistenceId schoolclass = new PersistenceId(classid);
+      PersistenceId sco = new PersistenceId(scoid);
+      DomResultSchoolClass<DomResultStudent> domschoolclass = resultTree.getStudentTree().getChildren().get(schoolclass);
+      DomResultScoContext domsco = null;
+      DomResultSchoolClass<DomResultCourseInClass> coursetree = resultTree.getResultTree().getChildren().get(schoolclass);
+      Collection<DomResultCourseInClass> courses = coursetree.getChildren().values();
+      for( DomResultCourseInClass<DomResultScoContext> item: courses) {
+        domsco = item.getChildren().get(sco);
+        if(domsco != null) break;
+      }
+      SwitchViewEvent event = new SwitchViewEvent(SelectedView.LOGRESULTS, resultTree, context, domsco, domschoolclass.getSchoolClass());
+      eventBus.fireEvent(event);
+    }
+    
+    
     @JsMethod
     public void showStudentResults(JavaScriptObject context, String scoid, String studentid, String classid) {
         LOG.fine("entering showStudentResults " + context + "," + scoid);
@@ -416,5 +436,14 @@ public class SelectedResultsPresenter {
         eventBus.fireEvent(
                 new SwitchViewEvent(SwitchViewEvent.SelectedView.BACKTORESULTS, resultTree, resultState)
         );
+    }
+    
+    @JsMethod
+    public boolean hasLogResults() {
+      return stage >= 2;
+    }
+    
+    public void setStage(int stage) {
+      this.stage = stage;
     }
 }

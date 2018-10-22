@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditTeacherPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.ImportPersonsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.LogResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectStudentResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectedResultsPresenter;
@@ -48,6 +49,7 @@ public interface PresenterFactory {
     public SelectedResultsPresenter getSelectedResultsPresenter();
     public SelectStudentResultsPresenter getSelectStudentResultsPresenter();
     public StudentScoResultPresenter getStudentScoResultPresenter();
+    public LogResultsPresenter getLogResultsPresenter();
     public PersonsPresenter getPersonsPresenter();
     public AddStudentPresenter getAddStudentPresenter();
     public ImportPersonsPresenter getImportPersonsPresenter();
