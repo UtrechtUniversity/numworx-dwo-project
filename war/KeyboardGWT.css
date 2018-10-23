@@ -99,6 +99,8 @@
             margin-top: 3px; }
         .keyboard-container.touch .keyboard-abc .keys .row.row-1, .keyboard-container.touch .keyboard-abc .keys .row.row-3 {
           padding-left: 20px; }
+        .dwo .keyboard-container.touch .keyboard-abc .keys .row.row-1, .dwo .keyboard-container.touch .keyboard-abc .keys .row.row-3 {
+          padding-left: 90px; }
         .keyboard-container.touch .keyboard-abc .keys .row.row-2, .keyboard-container.touch .keyboard-abc .keys .row.row-4 {
           padding-left: 35px; }
       .keyboard-container.touch .keyboard-abc .keys.caps .row-1 .key, .keyboard-container.touch .keyboard-abc .keys.caps .row-2 .key, .keyboard-container.touch .keyboard-abc .keys.caps .row-3 .key {
