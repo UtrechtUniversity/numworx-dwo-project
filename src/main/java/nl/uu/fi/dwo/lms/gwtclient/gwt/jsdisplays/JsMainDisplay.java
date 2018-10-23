@@ -90,5 +90,5 @@ public class JsMainDisplay {
     /** Show the organization panel. */
     public static native void  showOrganisationView();
     /** Show the log results panel */
-    public static native void showLogResultView();
+    public static native void showLogResultsView();
 }

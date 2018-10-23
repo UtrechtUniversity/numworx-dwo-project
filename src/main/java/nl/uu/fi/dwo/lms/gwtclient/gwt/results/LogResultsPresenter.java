@@ -40,9 +40,10 @@ public class LogResultsPresenter {
     LOG.log(Level.INFO, "LogResultsPresenter constructed");
   }
 
-  public void init(DomResultTree resultTree, DomResultScoContext domResultScoContext,
-      DomSchoolClass domSchoolClass, JavaScriptObject context) {
+  public void init(DomResultTree resultTree, DomResultScoContext sco,
+      DomSchoolClass schoolClass, JavaScriptObject context) {
     this.resultTree = resultTree;
+    LOG.log(Level.INFO, "show logs for " + sco.getLabel() + " in class " + schoolClass.getSchoolClassName());
     view.init(context);
   }
 

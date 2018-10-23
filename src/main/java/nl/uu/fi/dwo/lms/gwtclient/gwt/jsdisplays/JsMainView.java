@@ -138,7 +138,7 @@ public class JsMainView implements MainPresenter.Display{
 
     @Override
     public void showLogResultsView() {
-        JsMainDisplay.showLogResultView();
+        JsMainDisplay.showLogResultsView();
       
     }
 
