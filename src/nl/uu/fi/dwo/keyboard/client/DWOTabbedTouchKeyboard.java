@@ -259,8 +259,10 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 			break;
 		default:	
 		case APPLY:
-			resource = DWOTabletKeyboardFactory.resources.apply();
+			DataResource resource_svg = DWOTabletKeyboardFactory.resources.apply_svg();
 			if (isEnter) switch123();
+			setEnterImage(resource_svg);
+			return;
 		}
 		setEnterImage(resource);
 	}

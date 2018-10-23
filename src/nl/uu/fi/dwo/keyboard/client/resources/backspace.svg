@@ -2,7 +2,7 @@
 <!-- Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 841.9 595.3" enable-background="new 0 0 841.9 595.3" xml:space="preserve">
+	 viewBox="160 40 500 500" enable-background="new 0 0 841.9 595.3" xml:space="preserve">
 <g id="Laag_1" display="none">
 	<path id="Toets" display="inline" fill="#E6E7E8" d="M654.8,477.2c0,31.8-25.8,57.6-57.6,57.6H224.8c-31.8,0-57.6-25.8-57.6-57.6
 		V104.8c0-31.8,25.8-57.6,57.6-57.6h372.4c31.8,0,57.6,25.8,57.6,57.6V477.2z"/>
@@ -430,9 +430,9 @@
 		 M342.3,362.9h59.3V163.5h-59.3V362.9z"/>
 </g>
 <g id="backspace_20">
-	<line fill="none" stroke="#231F20" stroke-width="20" stroke-miterlimit="10" x1="412.6" y1="354.8" x2="537.8" y2="229.6"/>
-	<line fill="none" stroke="#231F20" stroke-width="20" stroke-miterlimit="10" x1="538.3" y1="355.3" x2="412.8" y2="229.9"/>
-	<polyline fill="none" stroke="#000000" stroke-width="20" stroke-miterlimit="10" points="338.4,232.5 278.2,292.6 338.4,352.7 	
+	<line fill="none" stroke="#FFFFFF" stroke-width="20" stroke-miterlimit="10" x1="412.6" y1="354.8" x2="537.8" y2="229.6"/>
+	<line fill="none" stroke="#FFFFFF" stroke-width="20" stroke-miterlimit="10" x1="538.3" y1="355.3" x2="412.8" y2="229.9"/>
+	<polyline fill="none" stroke="#FFFFFF" stroke-width="20" stroke-miterlimit="10" points="338.4,232.5 278.2,292.6 338.4,352.7 	
 		"/>
 </g>
 <g id="check-run_20" display="none">
