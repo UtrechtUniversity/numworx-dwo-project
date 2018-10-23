@@ -76,26 +76,9 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseO
 			panel.addClickHandler(KEEP_FOCUS);
 	}
 
-	FKey(ImageResource resource) {
-		panel = new HTML();
-		image = new Image(resource);
-		click = image;
-		touches = image;
-		mouses = image;
-		initWidget(image);
-		image.addMouseOverHandler(this);
-		image.addMouseOutHandler(this);
-		if(TouchEvent.isSupported())
-		{
-			image.addClickHandler(this);
-		} else
-			image.addClickHandler(KEEP_FOCUS);
-	}
-	
-	FKey(DataResource resource) {
+	private FKey(Image image) {
       panel = new HTML();
-      SafeUri uri = resource.getSafeUri();
-      image = new Image(uri);
+      this.image = image;
       click = image;
       touches = image;
       mouses = image;
@@ -108,6 +91,14 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseO
       } else
           image.addClickHandler(KEEP_FOCUS);
 	  
+	}
+	
+	FKey(ImageResource resource) {
+		this(new Image(resource));
+	}
+	
+	FKey(DataResource resource) {
+      this(new Image(resource.getSafeUri()));
 	}
 	
 	

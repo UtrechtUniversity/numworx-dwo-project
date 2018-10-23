@@ -81,9 +81,16 @@ public interface DWOkeyboardBundle extends ClientBundle {
     @MimeType("image/svg+xml")
     DataResource VVV_svg();
     
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/backspace.svg")
+    @MimeType("image/svg+xml")
+    DataResource backspace_svg();
     
-
-    
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/check-vink.svg")
+    @MimeType("image/svg+xml")
+    DataResource apply_svg();
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/gesture.svg")
+    @MimeType("image/svg+xml")
+    DataResource hand_svg();
   
 	@Source("nl/uu/fi/dwo/keyboard/client/resources/mw_breuk.gif")
 	ImageResource breuk();
