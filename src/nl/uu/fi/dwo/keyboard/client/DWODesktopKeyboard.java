@@ -4,6 +4,7 @@
 package nl.uu.fi.dwo.keyboard.client;
 
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -136,7 +137,12 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 	FKey t4_1,t4_2,t4_3,t4_4, t4_5,t4_6,t4_7,t4_8, t4_9,t4_10,t4_11,t4_12, t4_13,t4_14, t4_15;//,t4_15;
 
 
-	@UiHandler("t3_1") void onT3_1(ClickEvent e) {getEditor().wortel();}
+	@UiHandler("t3_1")
+	void onT3_1(ClickEvent e)
+	{
+		getEditor().wortel();
+	}
+
 	@UiHandler("t3_2") void onT3_2(ClickEvent e) {getEditor().macht();}
 	@UiHandler("t3_3") void onT3_3(ClickEvent e) {getEditor().kwadraat();}
 	@UiHandler("t3_4") void onT3_4(ClickEvent e) {getEditor().breuk();}
@@ -217,6 +223,7 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 
 	void processVectorDimension(int aantalRijen)
 	{
+		FocusOnTouch.focus();
 		getEditor().vector(aantalRijen);
 		vectorDimensionDialog.hide();
 		t3_15.removeStyleName("hover");	
