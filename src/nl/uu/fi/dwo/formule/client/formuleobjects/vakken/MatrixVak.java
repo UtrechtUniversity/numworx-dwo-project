@@ -9,6 +9,7 @@ import org.vectomatic.dom.svg.OMSVGTransform;
 
 import com.google.gwt.canvas.dom.client.Context2d;
 
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
@@ -16,7 +17,8 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 public class MatrixVak extends FormuleElementWithChildren
 {
-	Vector<Vector<FormuleRegel>> matrixChildren;
+	//Vector<Vector<FormuleRegel>> matrixChildren;
+	Vector<MatrixRij> matrixChildren;
 	int aantalRijen;
 	int aantalKolommen;
 
@@ -24,7 +26,8 @@ public class MatrixVak extends FormuleElementWithChildren
 	{
 		super(holder, 1);
 		this.setChanged(true);
-		matrixChildren = new Vector<Vector<FormuleRegel>>();
+//		matrixChildren = new Vector<Vector<FormuleRegel>>();
+		matrixChildren = new Vector<MatrixRij>();
 		// default 2x2
 		this.aantalKolommen = 2;
 		for (int i = 0; i < 2; i++)
@@ -37,8 +40,9 @@ public class MatrixVak extends FormuleElementWithChildren
 	{
 		super(holder, 1);
 		this.setChanged(true);
-		
-		matrixChildren = new Vector<Vector<FormuleRegel>>();
+
+//		matrixChildren = new Vector<Vector<FormuleRegel>>();
+		matrixChildren = new Vector<MatrixRij>();
 		this.aantalKolommen = aantalKolommen;
 		for (int i = 0; i < aantalRijen; i++)
 		{
@@ -159,11 +163,11 @@ public class MatrixVak extends FormuleElementWithChildren
 		int[] maxRijHoogte = new int[aantalRijen];
 		int rijBreedte = 0;
 		
-		for (int i = 0; i < matrixChildren.size(); i++) // rijen
+		for (int i = 0; i < aantalRijen; i++) // rijen
 		{
 			int rijHoogte = 0;
 			
-			for (int j = 0; j < matrixChildren.get(i).size(); j++) // kolommen
+			for (int j = 0; j < aantalKolommen; j++) // kolommen
 			{
 				rijHoogte = Math.max(rijHoogte, matrixChildren.get(i).get(j).height + 5);
 				maxRijAshoogte[i] = Math.max(maxRijAshoogte[i], matrixChildren.get(i).get(j).getAsHoogte());
@@ -202,9 +206,9 @@ public class MatrixVak extends FormuleElementWithChildren
 		//System.out.println("MatrixVak.maakMaat(): setSize(" + width + ", " + height + "), ashoogte = " + getAsHoogte());
 		
 		int kindY = 5;
-		for (int i = 0; i < matrixChildren.size(); i++) // rijen
+		for (int i = 0; i < aantalRijen; i++) // rijen
 		{
-			for (int j = 0; j < matrixChildren.get(i).size(); j++) // kolommen
+			for (int j = 0; j < aantalKolommen; j++) // kolommen
 			{
 				int x = (int) (xPosities[j] + 0.5 * maxKolomBreedte[j] - 0.5 * getMatrixChild(i, j).width);
 				int y = kindY + (maxRijAshoogte[i] - getMatrixChild(i, j).getAsHoogte());
@@ -225,9 +229,9 @@ public class MatrixVak extends FormuleElementWithChildren
 	{
 		int[] kindMetFocus = {0, 0};
 		
-		for (int i = 0; i < matrixChildren.size(); i++) // rijen
+		for (int i = 0; i < aantalRijen; i++) // rijen
 		{
-			for (int j = 0; j < matrixChildren.get(i).size(); j++) // kolommen
+			for (int j = 0; j < aantalKolommen; j++) // kolommen
 			{
 //				if (getMatrixChild(i, j).hasFocus())
 //				{
@@ -267,7 +271,7 @@ public class MatrixVak extends FormuleElementWithChildren
 	public void focusKindRechts()
 	{
 		int[] kindMetFocus = bepaalKindMetFocus();
-		if (kindMetFocus[1] == matrixChildren.get(kindMetFocus[0]).size() - 1) // laatste kolom
+		if (kindMetFocus[1] == matrixChildren.get(kindMetFocus[0]).getAantalKolommen() - 1) // laatste kolom
 		{
 			maakNieuweKolom();
 			zetMaat();
@@ -294,13 +298,19 @@ public class MatrixVak extends FormuleElementWithChildren
 	 */
 	public void maakNieuweRij()
 	{
-		Vector<FormuleRegel> rij = new Vector<FormuleRegel>();
+//		Vector<FormuleRegel> rij = new Vector<FormuleRegel>();
+		MatrixRij rij = null;
 		
 		for (int kolom = 0; kolom < aantalKolommen; kolom++)
 		{
 			FormuleRegel kind = new FormuleRegel(this);
 			kind.setFont(getFont());
-			rij.add(kind);
+			
+			if (kolom == 0)
+				rij = new MatrixRij(kind);
+			else
+				rij.insert(kind);
+//			rij.add(kind);
 		}
 		matrixChildren.add(rij);
 		aantalRijen++;
@@ -316,7 +326,8 @@ public class MatrixVak extends FormuleElementWithChildren
 	 */
 	private void maakNieuweRij(String s)
 	{
-		Vector<FormuleRegel> rij = new Vector<FormuleRegel>();
+//		Vector<FormuleRegel> rij = new Vector<FormuleRegel>();
+		MatrixRij rij = null;
 		
 		while (s.length() > 0)
 		{
@@ -353,7 +364,11 @@ public class MatrixVak extends FormuleElementWithChildren
 					FormuleRegel kind = new FormuleRegel(this);
 					kind.setFont(getFont());
 					kind.insert(s.substring(2, eind));
-					rij.add(kind);
+					if (rij == null)
+						rij = new MatrixRij(kind);
+					else
+						rij.insert(kind);
+//					rij.add(kind);
 					s = s.substring(eind);
 				}
 			}
@@ -361,7 +376,8 @@ public class MatrixVak extends FormuleElementWithChildren
 		
 		matrixChildren.add(rij);
 		aantalRijen++;
-		aantalKolommen = rij.size();
+//		aantalKolommen = rij.size();
+		aantalKolommen = rij.getAantalKolommen();
 	}
 
 	/**
@@ -373,7 +389,8 @@ public class MatrixVak extends FormuleElementWithChildren
 		{
 			FormuleRegel kind = new FormuleRegel(this);
 			kind.setFont(getFont());
-			matrixChildren.get(rij).addElement(kind);
+//			matrixChildren.get(rij).addElement(kind);
+			matrixChildren.get(rij).insert(kind);
 		}
 		aantalKolommen++;
 		
@@ -609,7 +626,8 @@ public class MatrixVak extends FormuleElementWithChildren
 		// verwijder eerst de default kinderen
 		removeKinderen();
 		
-		matrixChildren = new Vector<Vector<FormuleRegel>>();
+//		matrixChildren = new Vector<Vector<FormuleRegel>>();
+		matrixChildren = new Vector<MatrixRij>();
 
 		while (s.length() > 0)
 		{
@@ -741,4 +759,56 @@ public class MatrixVak extends FormuleElementWithChildren
 		// TODO paint matrix children
 	}
 
+	/**
+	 * Klasse MatrixRij extend FormuleRegel zodat de children van
+	 * matrix het gebruikelijk type Vector<FormuleRegel> hebben. 
+	 * 
+	 * @author borku102
+	 *
+	 */
+	private class MatrixRij extends FormuleRegel
+	{
+
+		public MatrixRij(FormuleElement holder)
+		{
+			super(holder);
+			// TODO Auto-generated constructor stub
+		}
+
+		/**
+		 * @param holder
+		 */
+		public MatrixRij(FormuleHolder holder)
+		{
+			super(holder);
+			// TODO Auto-generated constructor stub
+		}
+		
+		/**
+		 * Het aantal kinderen in de matrixrij is het aantal kolommen.
+		 * 
+		 * @return
+		 */
+		public int getAantalKolommen()
+		{
+			return children.size();
+		}
+
+		public FormuleRegel get(int columnIndex)
+		{
+			return (FormuleRegel) children.get(columnIndex);
+		}
+
+		/**
+		 * Verwijder het kind met de gegeven index uit de rij.
+		 * 
+		 * @param i
+		 */
+		public void remove(int i)
+		{
+			children.remove(i);
+		}
+
+		
+	}
 }
