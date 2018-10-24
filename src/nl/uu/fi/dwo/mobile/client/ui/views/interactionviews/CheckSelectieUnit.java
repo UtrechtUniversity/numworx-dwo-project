@@ -36,7 +36,6 @@ import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.text.Text;
 import fi.wiskopdr.text.TextConstants;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
-import nl.uu.fi.dwo.ideas.client.AbstractRule;
 import nl.uu.fi.dwo.ideas.client.RuleIF;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -54,33 +53,6 @@ import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 
 public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMisconceptions, CBookEventListener
 {
-	private class SelectRule extends AbstractRule {
-		private final String id2;
-		private final String math;
-		final private Map<String, String> context;
-
-		private SelectRule(String id2, String math, Map<String, String> c) {
-			this.id2 = id2;
-			this.math = math;
-			this.context = c;
-		}
-
-		@Override
-		public String getExpr() {
-			return math;
-		}
-
-		@Override
-		public String getId() {
-			return id2;
-		}
-
-		@Override
-		public Map<String,String> getContext() {
-			return context;
-		}
-		
-	}
 
 	public static final String ACTION_CORRECT = "action.correct";
 	public static final String ACTION_FALSE = "action.false";
@@ -748,12 +720,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		RuleIF[] result = new RuleIF[ipList.length];
 		for(int i = 0; i < ipList.length; i++) {
 			TekstVakPanel t = ipList[i];
-			String id = base + (char) ('a'-1 + t.getIpId());
-			String math = String.valueOf(t.isIpSelected());
-			String label = t.getIpExpString();
-			Map<String,String> c = new HashMap<>(context);
-			c.put("label", label);
-			SelectRule r = new SelectRule(id, math,c);
+			RuleIF r = t.getSelectRule(base, context);
 			result[i] = r;
 		}
 		return result;

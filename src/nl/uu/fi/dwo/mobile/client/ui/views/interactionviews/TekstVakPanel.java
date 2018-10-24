@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.osgi.util.function.Function;
@@ -93,8 +94,10 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.AntwoordVergelijkingVakChecker;
+import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import fi.wiskopdr.AntwoordFormuleVakChecker;
 import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.expressies.Aftrekking;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
@@ -3712,6 +3715,7 @@ private Object CamelCase(String name) {
 		{
 			selected = !selected;
 			setSelected(selected);
+			adviseMe();
 			if(selected)
 				fireEvent(SELECT_EVENT);
 			else
@@ -4821,4 +4825,82 @@ private Object CamelCase(String name) {
 		this.editable = editable;	
 	}
 	
+	private class SelectRule extends AbstractRule {
+		private final String id2;
+		private final String math;
+		final private Map<String, String> context;
+
+		private SelectRule(String id2, String math, Map<String, String> c) {
+			this.id2 = id2;
+			this.math = math;
+			this.context = c;
+		}
+
+		@Override
+		public String getExpr() {
+			return math;
+		}
+
+		@Override
+		public String getId() {
+			return id2;
+		}
+
+		@Override
+		public Map<String,String> getContext() {
+			return context;
+		}
+		
+	}
+
+	RuleIF getSelectRule(String base, Map<String, String> context) {
+		String id = base + (char) ('a'-1 + this.getIpId());
+		String math = String.valueOf(this.isIpSelected());
+		String label = this.getIpExpString();
+		Map<String,String> c = new HashMap<>(context);
+		c.put("label", label);
+		SelectRule r = new SelectRule(id, math,c);
+		return r;
+	}
+
+	private void adviseMe() {
+		if (logOption) {
+			String id = dwologger.getLogID();
+			if(! id.startsWith("adviseMe:")) 
+				return;
+			String[] split = id.split(":");
+			String userid = DWOplayer.clientfactory.getUserID().toString();
+			String classid;
+			try {
+				classid = DWOplayer.clientfactory.getSchoolClass().getId().getIdString();
+			} catch (Exception e) {
+				classid = "";
+			}
+			String exerciseid = split[1];
+			String id2 = split[2];
+			Map<String,String> context = new HashMap<>();
+			context.put("userid", userid);
+			context.put("groupid", classid);
+			context.put("language", StubView.getLocale());
+			RuleIF[] math = new RuleIF[] { getSelectRule(id2, context) };
+			PromiseCallback<RuleIF> defer = new PromiseCallback<>();
+			WiskOpdr.ideas.adviseMe(math, exerciseid, defer );
+			DWOplayer.clientfactory.addBarrier(defer.getPromise());
+			defer.getPromise().onResolve(() -> { 
+				Promise<RuleIF> p = defer.getPromise();
+				Throwable t = p.getFailure();
+				if ( t != null) {
+					LOG.log(Level.SEVERE, "adviseMe", t);
+				} else {
+					RuleIF r = p.getValue();
+					if ( r.isException()) {
+						LOG.severe(r.getExpr());
+					} else {
+						LOG.info(r.getExpr());
+					}
+				}
+			} );
+		}
+	}
+
 }
