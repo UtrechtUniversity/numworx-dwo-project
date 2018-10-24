@@ -100,6 +100,9 @@ public class StrokeDAngleFilter {
 		if("sqrt_1".equals(teken)) {int[][] data = {};return data;}
 		if("of".equals(teken)) {int[][] data = {};return data;}
 		if("of_1".equals(teken)) {int[][] data = {};return data;}
+		if("[".equals(teken)) {int[][] data = {{-20,20,-20,20,12,28}};return data;}
+		if("]".equals(teken)) {int[][] data = {{-20,20,-20,20,12,28}};return data;}
+
 		
 		return new int[0][0];
 	}

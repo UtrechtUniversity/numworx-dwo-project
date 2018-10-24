@@ -53,9 +53,19 @@ private static HashMap<String,int[][]> cachedLocDAngleData = new HashMap<String,
 
 
 		if("μ".equals(teken)) {int[][] data = {{180,40,5,20}};return data;}
+		if("ɛ".equals(teken)) {int[][] data = {{-120,60,10,30}};return data;}
+
 
 		
 		if(">".equals(teken)) {int[][] data = {{-120,30,10,30}};return data;}
+		if("<".equals(teken)) {int[][] data = {{120,60,12,28}};return data;}
+
+		if("[".equals(teken)) {int[][] data = {{90,40,3,15},{90,40,25,37}};return data;}
+		if("]".equals(teken)) {int[][] data = {{-90,40,3,15},{-90,40,25,37}};return data;}
+		if("〈".equals(teken)) {int[][] data = {{70,40,15,25}};return data;}
+		if("〉".equals(teken)) {int[][] data = {{-70,40,15,25}};return data;}
+		
+
 
 
 

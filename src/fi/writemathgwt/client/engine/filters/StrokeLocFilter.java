@@ -88,6 +88,8 @@ public class StrokeLocFilter {
 		if("φ".equals(teken)) {int[][] data = {{0,75,20,100,25,39,10}};return data;}
 		if("μ".equals(teken)) {int[][] data = {{0,100,0,60,20,39,20}};return data;}
 		if("μ_1".equals(teken)) {int[][] data = {{0,100,0,60,10,39,27}};return data;}
+		if("ɛ".equals(teken)) {int[][] data = {{0,100,0,10,0,10,5},{0,100,10,100,30,39,5},{0,30,0,50,5,20,5},{0,30,50,100,20,34,5}};return data;}
+
 
 
 		
@@ -103,7 +105,12 @@ public class StrokeLocFilter {
 		if("sqrt_1".equals(teken)) {int[][] data = {{0,10,0,100,0,0,1},{0,100,0,20,30,39,10},{90,100,0,20,39,39,1}};return data;}
 		if("of".equals(teken)) {int[][] data = {{0,10,0,30,0,0,1},{90,100,0,30,39,39,1},{30,70,90,100,15,25,1}};return data;}
 		if("of_1".equals(teken)) {int[][] data = {{0,100,20,80,0,10,8},{50,100,30,70,39,39,1}};return data;}
-		
+		if("[".equals(teken)) {int[][] data = {{0,100,0,10,0,5,6},{0,100,90,100,34,39,6}};return data;}
+		if("]".equals(teken)) {int[][] data = {{0,100,0,10,0,5,6},{0,100,90,100,34,39,6}};return data;}
+		if("〈".equals(teken)) {int[][] data = {{70,100,0,10,0,1,1},{70,100,90,100,38,39,1},{0,10,30,70,15,25,1}};return data;}
+		if("〉".equals(teken)) {int[][] data = {{0,30,0,10,0,1,1},{0,30,90,100,38,39,1},{90,100,30,70,15,25,1}};return data;}
+
+
 		return new int[0][0];
 	}
 	
