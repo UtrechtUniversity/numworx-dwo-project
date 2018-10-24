@@ -200,16 +200,16 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         JLabel l;
         FontMetrics fm;
 
-        /* Add FI logo */
-        Image fiLogo = null;
-        fiLogo = DwoHelper.getResourceImage(GuiConstants.WISWEB_LOGO_LOCATION);
-
-        ImagePanel ip = new ImagePanel(fiLogo);
-        ip.setLocation(dialog.getWidth() / 2 - ip.getWidth() / 2, 440);
-        dialog.add(ip);
-        if (GuiConstants.GUI_IMAGE_BG) {
-            dialog.remove(ip);
-        }
+//        /* Add FI logo */
+//        Image fiLogo = null;
+//        fiLogo = DwoHelper.getResourceImage(GuiConstants.WISWEB_LOGO_LOCATION);
+//
+//        ImagePanel ip = new ImagePanel(fiLogo);
+//        ip.setLocation(dialog.getWidth() / 2 - ip.getWidth() / 2, 440);
+//        dialog.add(ip);
+//        if (GuiConstants.GUI_IMAGE_BG) {
+//            dialog.remove(ip);
+//        }
 
         /* Warning Label */
  /*l = new Label("Helaas zijn er problemen met de DWO. Wordt aan gewerkt.");
@@ -222,16 +222,16 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
          l.setVisible(true);*/
  /* Welcome Label */
         //l = new Label(TextMapper.getText(TextMapper.GUIW_WELCOME) + "!");
-        l = new JLabel(TextMapper.getText(TextMapper.GUIM_FI_NAME));
-        l.setFont(new Font("SansSerif", Font.BOLD, 26));
-        l.setForeground(new Color(3, 65, 123));
-        fm = l.getFontMetrics(l.getFont());
-        l.setBounds(dialog.getWidth() / 2 - fm.stringWidth(l.getText()) / 2, 520, fm.stringWidth(l.getText()) + 5, fm.getHeight());
-        dialog.add(l);
-        if (GuiConstants.GUI_IMAGE_BG) {
-            dialog.remove(l);
-        }
-
+//        l = new JLabel(TextMapper.getText(TextMapper.GUIM_FI_NAME));
+//        l.setFont(new Font("SansSerif", Font.BOLD, 26));
+//        l.setForeground(new Color(3, 65, 123));
+//        fm = l.getFontMetrics(l.getFont());
+//        l.setBounds(dialog.getWidth() / 2 - fm.stringWidth(l.getText()) / 2, 520, fm.stringWidth(l.getText()) + 5, fm.getHeight());
+//        dialog.add(l);
+//        if (GuiConstants.GUI_IMAGE_BG) {
+//            dialog.remove(l);
+//        }
+//
         l = new JLabel(TextMapper.getText(TextMapper.GUIM_DWO_SHORT));
         l.setFont(GuiConstants.HEADER_TEXT);
         l.setForeground(new Color(3, 65, 123));
