@@ -2,6 +2,7 @@ package fi.servlet.lti;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,25 +13,28 @@ import javax.servlet.http.HttpServletResponse;
 
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.DbAccessIF;
-import fi.dwo.dwojapplet.domain.School;
-import fi.dwo.dwojapplet.domain.SchoolClass;
-import fi.dwo.dwojapplet.domain.SchoolGroup;
-import fi.dwo.dwojapplet.persistence.DbAccessBridge;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.servlet.dwomaccess.DbAccessFactory;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolClassManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class DbAccess {
 	
 	/**
 	 * @param dbaccess
 	 */
-	public DbAccess(DbAccessIF dbaccess) {
-		this.dbaccess = dbaccess;
-		DbAccessBridge.setInstance(dbaccess);
+	public DbAccess() {
 	}
 	
 	public DbAccess(ServletContext context) {
-		this(DbAccessFactory.getDbAccess(context));
+		this();
 		String dbrest_url = context.getInitParameter("dbrest.url");
 		if(dbrest_url != null)
 			try {
@@ -41,7 +45,6 @@ public class DbAccess {
 			}
 	}
 	
-	DbAccessIF dbaccess;
 	RestHandler rest = new RestHandler();
 	
     private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
@@ -193,16 +196,16 @@ public class DbAccess {
 	 * @return
 	 * @throws PersistenceException
 	 */
-	protected SchoolClass getSchoolClass(final PersistenceFacade facade,
+	protected DomSchoolClass getSchoolClass(
 			String oauth_consumer_key, String context_label)
-			throws PersistenceException {
+			throws Dwo2Exception {
 		if(context_label != null) {
-	 		School s = getSchool(facade, oauth_consumer_key);
-			Object[] array = facade.get(SchoolClass.class, s);
-			SchoolClass c;
-			for (int i = 0; i < array.length; i++) {
-				c = (SchoolClass) array[i];
-				if(c.getName().equals(context_label))
+	 		DomSchool s = getSchool(oauth_consumer_key);
+	 		List<DomSchoolClass> array = SecureSchoolAdminSchoolClassManager.getSchoolClasses();
+			DomSchoolClass c;
+			for (int i = 0; i < array.size(); i++) {
+				c = array.get(i);
+				if(c.getSchoolClassName().equals(context_label))
 					return c;
 			}
 		}
@@ -210,16 +213,15 @@ public class DbAccess {
 	}
 	
 	public String getSecret(String key) {
-		return getSecret(key, SchoolGroup.STUDENT);
+		return getSecret(key, RoleType.STUDENT);
 	}
 
-	public String getSecret(String key, int gid) {
-		PersistenceFacade instance = PersistenceFacade.instance();
+	public String getSecret(String key, RoleType gid) {
 		try {
-			School result = getSchool(instance, key);
-			return result.getPasswd(gid);
+			DomSchoolFull result = getSchool(key);
+			return result.getPasswords().stream().filter(entry -> entry.getKey() == gid).findFirst().get().getValue();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "get secret " + key + "," + gid, e);
 		}
 		return null;
 	}
@@ -230,20 +232,22 @@ public class DbAccess {
 	 * @return
 	 * @throws PersistenceException
 	 */
-	protected School getSchool(PersistenceFacade instance, String key)
-			throws PersistenceException {
-		int id = Integer.parseInt(key);
-		School result = (School)instance.get(id, School.class);
+	protected DomSchoolFull getSchool(String key)
+			throws Dwo2Exception {
+		Long id = Long.valueOf(key);
+		DomSchool4DwoAdmin submit = new DomSchool4DwoAdmin();
+		PersistenceId pid = PersistentSchool.buildPersistenceId(id);
+		submit.setId(pid);
+		DomSchoolFull result = SecureDwoAdminSchoolManager.getSchool(submit);
 		return result;
 	}
 	
 	public String getRealm(String key) {
-		PersistenceFacade instance = PersistenceFacade.instance();
 		try {
-			School result = getSchool(instance, key);
+			DomSchoolFull result = getSchool(key);
 			return result.getSchoolLogin();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "getRealm for " + key, e);
 		}
 		return key;
 	}

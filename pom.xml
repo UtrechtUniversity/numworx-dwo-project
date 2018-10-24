@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>fi.servlet</groupId>
     <artifactId>DWOmAccess</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.1-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>DWOmAccess</name>
     <description>HTML5 access to dwo-server</description>
@@ -16,7 +16,7 @@
         <ideas>/ideas/IdeasServlet</ideas>
         <comment>amazon, *.dwo.nl</comment>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <dwoVersion>2.2.8</dwoVersion>
+        <dwoVersion>2.2.10-SNAPSHOT</dwoVersion>
     </properties>
     <dependencies>
         <dependency>
@@ -52,15 +52,19 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
+<!--         <dependency> -->
+<!--         	<groupId>nl.uu.fi.dwo</groupId> -->
+<!--         	<artifactId>DWOJClient</artifactId> -->
+<!--         	<version>${dwoVersion}</version> -->
+<!--         </dependency> -->
         <dependency>
-            <groupId>com.jamonapi</groupId>
-            <artifactId>jamon</artifactId>
-            <version>2.80</version>
-            <scope>provided</scope>
+        	<groupId>nl.uu.fi.dwo.rest</groupId>
+        	<artifactId>DWO-jclient-lib</artifactId>
+        	<version>${dwoVersion}</version>
         </dependency>
         <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
-        	<artifactId>DWOJClient</artifactId>
+        	<artifactId>DWO-commons-lib</artifactId>
         	<version>${dwoVersion}</version>
         </dependency>
     </dependencies>
@@ -220,7 +224,7 @@
         </profile>
     </profiles>
     <scm>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOmAccess/branches/dwo2</developerConnection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOmAccess/trunk</developerConnection>
     </scm>
     <parent>
     	<groupId>nl.uu.fi.dwo</groupId>
