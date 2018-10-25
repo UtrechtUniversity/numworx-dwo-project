@@ -14,6 +14,7 @@ import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 import java.applet.Applet;
@@ -602,7 +603,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
             }
         }
 // FIXME export schoolmodels
-        if ( DwoHelper.isTest() && "studentModelContexts".equals(name)) {
+        if ( DwoHelper.isTest() && DwoHelper.isPremium() && "studentModelContexts".equals(name)) {
         		try {
 				List<DomStudentModelContext> list = SecureTeacherStudentModelManager.getList();
 				Genson genson = StoredRestManager.getInstance().getGenson();
@@ -611,6 +612,15 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
 				LOG.log(Level.WARNING, "studentModelContexts", e);
 				return null;
 			}
+        }
+        
+        if ("abo_type".equals(name)) {
+          try {
+            String abo_type = DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getAboType().name();
+            return abo_type;
+          } catch (Exception e) {
+            return AboType.standard.name();
+          }
         }
         
         Hashtable ld = getLaunchdata();
