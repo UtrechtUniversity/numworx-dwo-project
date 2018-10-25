@@ -927,7 +927,9 @@ public class StelselEditor extends FormuleEditorWithSteps
 		if(heeftFocus)
 		{
 			if(this.getStapNr() > 0)
-			{	super.backStep(setState);
+			{	
+				adjustEindOplossingenOnBackStep();
+				super.backStep(setState);
 				return;
 			}
 			//nu: stapNr = 0, dus in eerste regel van de huidige editor. Deze regel leegmaken.
@@ -974,6 +976,41 @@ public class StelselEditor extends FormuleEditorWithSteps
 		}
 	}
 	
+	public void adjustEindOplossingenOnBackStep()
+	{
+		String antwoord = "";
+		if(editor != null)
+			antwoord = "$f" + editor.toString() + "@";
+		else if(latest_answer_viewer != null)
+			antwoord = "$f" + latest_answer_viewer.toString() + "@";
+		else
+			return;
+		VergelijkingMeerv antwoordIngevuld = FormuleParser.parseVergelijking(antwoord);
+		if(antwoordIngevuld == null)
+			return;
+		boolean eindOpl = false;
+		int eindOplVar = 0;
+		for(int i = 0; i < varNamen.length; i++)
+		{	if(antwoordIngevuld.isEindOplossing(varNamen[i]))
+			{	eindOpl = true;
+				eindOplVar = i;
+				break;
+			}
+		}
+		if(eindOpl)
+		{
+			for(int i = 0; i < eindOplossingGevonden.length; i++)
+			{
+				if(eindOplossingGevonden[i][eindOplVar] && !eindOplossingGevondenVoorSplits[i][eindOplVar])
+				{	eindOplossingGevonden[i][eindOplVar] = false;
+					break;
+				}
+			}
+		}
+	}
+	
+	
+	
 	public StelselEditor vindKindMetFocus()
 	{
 		if(heeftFocus)
@@ -1008,6 +1045,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 	{
 		if(kinderen == null)
 		{
+			adjustEindOplossingenOnBackStep();
 			if(editor == null && latest_answer_viewer != null)
 				vervangViewerDoorEditor(setState);
 			if(editor != null)
