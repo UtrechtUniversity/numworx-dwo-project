@@ -266,4 +266,8 @@ public class DbAccess {
 		return "";
 	}
 	
+	
+	public String getOrganization(String key) {
+	    return getRealm(key);
+	}
 }
