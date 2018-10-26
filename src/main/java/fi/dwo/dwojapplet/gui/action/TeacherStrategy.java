@@ -4,6 +4,8 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.Descriptor;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.LessonGroup;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
@@ -124,6 +126,15 @@ public class TeacherStrategy implements SelectStrategy {
             item.setActionCommand("copy");
             item.addActionListener(listener);
             m.add(item);
+
+            if (DwoHelper.isTest()) {
+              LessonGroup lg = (LessonGroup) object;                  
+              int id = lg.getID();
+              Action action = new ShareAction(id, lg.isDeepestLevel());
+              item = new JMenuItem(action);m.add(item);
+              action = new ShareHTMLAction(id, lg.isDeepestLevel());
+              item = new JMenuItem(action);m.add(item);
+            }
         }
         if (Clipboard.getClipboard() != null) {
             Object uo = Clipboard.getClipboard().getUserObject();

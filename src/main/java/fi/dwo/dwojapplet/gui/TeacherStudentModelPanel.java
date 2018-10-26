@@ -52,7 +52,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
     private JButton addModelButton;
     private JButton cancelButton;
     private JButton viewButton;
-    private JTextArea textArea;
+    private DomainModelEditor textArea;
 
     private JPanel jtbl;
     private TableRowSorter rowSorter;
@@ -116,71 +116,6 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                 String jsonModel = g.serialize(model.getModelStructure());
 
                 textArea.setText(jsonModel);
-//                try {
-//                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
-//                    ClassConfigurePanel panel = new ClassConfigurePanel();
-//                    DomSchoolClassFull fullSchoolClass = prop.getFullSchoolClass(sc);
-//                    panel.setSchoolClass(fullSchoolClass);
-//                    int result = JOptionPane.showConfirmDialog(SchoolClassesSchoolAdminPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
-//                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-//                    fullSchoolClass.setSchoolClassName(panel.getClassName());
-//                    fullSchoolClass.setRegistrationKey(panel.getRegistrationKey());
-//                    fullSchoolClass.setIconizer(panel.isIconizer());
-//                    //case OK persist returned values
-//                    if (result == JOptionPane.OK_OPTION) {
-//                        //persist returned values	
-//                        prop.updateSchoolClass(fullSchoolClass);
-//                        tableModel.init(prop, editImage, studentsImage, teachersImage, removeImage);
-//                        tableModel.fireTableDataChanged();
-//                    }
-//                }
-//                catch (Dwo2Exception ex) {
-//                    LOG.log(Level.FINE, "", ex);
-//                    JOptionPane.showMessageDialog(null, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-//                }
-//                finally {
-//                    fireEditingStopped();
-//                }
-//            } else if (value == studentsImage) {
-//                try {
-//                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
-//                    StudentsInSchoolClassSchoolAdminPanel panel = new StudentsInSchoolClassSchoolAdminPanel(sc);
-//                    center.loadCenter(panel);
-//                }
-//                catch (Dwo2Exception ex) {
-//                    Logger.getLogger(SchoolClassesSchoolAdminPanel.class.getName()).log(Level.SEVERE, "", ex);
-//                }
-//                fireEditingStopped();
-//            } else if (value == teachersImage) {
-//                try {
-//                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
-//                    TeachersInSchoolClassSchoolAdminPanel panel = new TeachersInSchoolClassSchoolAdminPanel(sc);
-//                    center.loadCenter(panel);
-//                }
-//                catch (Dwo2Exception ex) {
-//                    LOG.log(Level.SEVERE, "", ex);
-//                }
-//                fireEditingStopped();
-//            } else if (value == removeImage) {
-//                try {
-//                    DomSchoolClass sc = (DomSchoolClass) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
-//
-//                    String msg = MessageFormat.format(TextMapper.getText(TextMapper.DLG_Q_REMOVE_SCHOOLCLASS_BY_NAME),sc.getSchoolClassName());
-//                    if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), msg) == JOptionPane.OK_OPTION) {
-//                        //persist returned values	
-//                        prop.removeSchoolClass(sc);
-//                        tableModel.init(prop, editImage, studentsImage, teachersImage, removeImage);
-//                        tableModel.fireTableDataChanged();
-//                    }
-//                }
-//                catch (Dwo2Exception ex) {
-//                    LOG.log(Level.FINE, "", ex);
-//                    GuiCreator.instance().ShowErrorDialog(GuiCreator.instance().getMainPanel(), ex);
-//                }
-//                finally {
-//                    fireEditingStopped();
-//                }
-//            }
             }
         }
     }
@@ -282,7 +217,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         this.add(Box.createVerticalStrut(15));
         buildJTable();
         this.add(Box.createVerticalStrut(15));
-        textArea = new JTextArea();
+        textArea = new DomainModelEditor();
         textArea.setEditable(false);
         textArea.setBackground(Color.LIGHT_GRAY);
         JScrollPane scrollPane = new JScrollPane(textArea);

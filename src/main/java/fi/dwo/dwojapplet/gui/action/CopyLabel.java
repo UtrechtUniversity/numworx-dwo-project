@@ -11,11 +11,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JPopupMenu;
 
 public class CopyLabel extends AbstractAction implements MouseListener, ClipboardOwner, Transferable {
 
-    private static final DataFlavor[] DATA_FLAVORS = new DataFlavor[]{DataFlavor.stringFlavor};
+    static final DataFlavor[] DATA_FLAVORS = new DataFlavor[]{DataFlavor.stringFlavor};
     private String text;
     private JPopupMenu popup;
 
@@ -25,6 +26,10 @@ public class CopyLabel extends AbstractAction implements MouseListener, Clipboar
         this.popup = new JPopupMenu();
         this.popup.add(this);
     }
+
+    public void add(Action action) {
+      popup.add(action);
+  }
 
     @Override
     public void actionPerformed(ActionEvent e) {

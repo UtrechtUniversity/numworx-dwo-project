@@ -134,7 +134,7 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
      */
     public static Sco addSco(Component owner, Course course, AppletConfig appletConfig) {
         CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper
-                .getText(TextMapper.GUISDLG_TTL_ADD_SCO), 0, appletConfig.getName(), "", TextMapper.GUISDLG_SCO_NAME, TextMapper.GUISDLG_SCO_DESCRIPTION);
+                .getText(TextMapper.GUISDLG_TTL_ADD_SCO), 0, appletConfig.getName(), "", TextMapper.GUISDLG_SCO_NAME, TextMapper.GUISDLG_SCO_DESCRIPTION, true);
         cnd.setShowScore(true);
         JButton logobtn = cnd.addLogoBtn();
         LogoIconAction logoAction = new LogoIconAction();
@@ -174,7 +174,7 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
     public static boolean editSco(Sco sco, Component owner) {
         CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper
                 .getText(TextMapper.GUISDLG_TTL_EDIT_SCO), sco.getScoID(), sco.getScoName(),
-                sco.getDescription(), TextMapper.GUISDLG_SCO_NAME, TextMapper.GUISDLG_SCO_DESCRIPTION);
+                sco.getDescription(), TextMapper.GUISDLG_SCO_NAME, TextMapper.GUISDLG_SCO_DESCRIPTION, true);
         cnd.setShowScore(sco.isShowScore());
         JButton logobtn = cnd.addLogoBtn();
         LogoIconAction logoAction = new LogoIconAction(sco);

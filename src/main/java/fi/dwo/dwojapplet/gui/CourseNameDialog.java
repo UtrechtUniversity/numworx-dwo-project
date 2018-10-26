@@ -5,6 +5,9 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.action.CopyLabel;
+import fi.dwo.dwojapplet.gui.action.ShareAction;
+import fi.dwo.dwojapplet.gui.action.ShareHTMLAction;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -43,7 +46,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
     private JButton cancelButton;
     private JScrollPane pane;
 
-    CourseNameDialog(Component owner, String windowTitle, int courseID, String courseName, String courseDescription, String courseNameLabel, String courseDescriptionLabel) {
+    CourseNameDialog(Component owner, String windowTitle, int courseID, String courseName, String courseDescription, String courseNameLabel, String courseDescriptionLabel, boolean deepest) {
         super(DwoHelper.getFrameForComponent(owner), windowTitle, true);
         //this.setLayout(new FlowLayout());
         //this.setBackground(GuiConstants.MAIN_BACKGROUND);
@@ -61,7 +64,14 @@ public class CourseNameDialog extends JDialog implements ActionListener {
         l = new JLabel("" + courseID);
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
-        l.addMouseListener(new CopyLabel(l.getText()));
+        CopyLabel copyAction = new CopyLabel(l.getText());
+
+        if (DwoHelper.isTest()) {    
+            copyAction.add(new ShareAction(courseID, deepest));
+            copyAction.add(new ShareHTMLAction(courseID, deepest));
+        }
+        
+        l.addMouseListener(copyAction);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 5);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
@@ -166,7 +176,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
      * @return fi.dwo.client.domain.Course
      */
     public static Course addCourse(Component owner, String title, Course parent, boolean isMap) {
-        CourseNameDialog cnd = new CourseNameDialog(owner, title, 0, "", "", isMap ? TextMapper.GUICDLG_MAP_NAME : TextMapper.GUICDLG_COURSE_NAME, TextMapper.GUICDLG_COURSE_DESCRIPTION);
+        CourseNameDialog cnd = new CourseNameDialog(owner, title, 0, "", "", isMap ? TextMapper.GUICDLG_MAP_NAME : TextMapper.GUICDLG_COURSE_NAME, TextMapper.GUICDLG_COURSE_DESCRIPTION, false);
         cnd.show();
         if (cnd.isConfirmed()) {
             Course c = GuiCreator.instance().addCourse(cnd.getCourseName(), cnd.getCourseDescription(), parent, isMap);
@@ -192,7 +202,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
             tit = TextMapper.GUIC_TLTP_EDIT_MAP;
             id = TextMapper.GUICDLG_MAP_NAME;
         }
-        CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper.getText(tit), course.getID(), course.getName(), course.getDescription(), id, TextMapper.GUICDLG_COURSE_DESCRIPTION);
+        CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper.getText(tit), course.getID(), course.getName(), course.getDescription(), id, TextMapper.GUICDLG_COURSE_DESCRIPTION, false);
         cnd.show();
         if (cnd.isConfirmed()) {
             String oldName = course.getName();
