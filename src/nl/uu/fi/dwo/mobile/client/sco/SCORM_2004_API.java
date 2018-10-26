@@ -14,7 +14,7 @@ public class SCORM_2004_API implements Scorm2004IF {
 	}-*/;
 	
 	static {
-		script("scripts/SCORM_2004_APIwrapper.js"); 
+		script("scripts/SCORM_2004_APIWrapper.js"); 
 	}
 
 	
