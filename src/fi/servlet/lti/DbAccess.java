@@ -2,6 +2,7 @@ package fi.servlet.lti;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,33 +13,41 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
-import fi.servlet.dwomaccess.DbAccessFactory;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolClassManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemSchoolManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class DbAccess {
 	
+    RestAuthenticator authenticator;
+    StoredRestManager restManager;
+    SystemSchoolManager schoolManager;
+  
 	/**
 	 * @param dbaccess
 	 */
 	public DbAccess() {
+	  authenticator = new RestAuthenticator();
+	  restManager = new StoredRestManager(authenticator);
 	}
 	
 	public DbAccess(ServletContext context) {
 		this();
 		String dbrest_url = context.getInitParameter("dbrest.url");
+		
 		if(dbrest_url != null)
 			try {
+			    authenticator.setServerUrlPath(new URL(dbrest_url));
 				rest = new RestHandler(dbrest_url);
+				
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -201,7 +210,7 @@ public class DbAccess {
 			throws Dwo2Exception {
 		if(context_label != null) {
 	 		DomSchool s = getSchool(oauth_consumer_key);
-	 		List<DomSchoolClass> array = SecureSchoolAdminSchoolClassManager.getSchoolClasses();
+	 		List<DomSchoolClass> array = schoolManager.getSchoolClasses(s);
 			DomSchoolClass c;
 			for (int i = 0; i < array.size(); i++) {
 				c = array.get(i);
@@ -235,11 +244,20 @@ public class DbAccess {
 	protected DomSchoolFull getSchool(String key)
 			throws Dwo2Exception {
 		Long id = Long.valueOf(key);
-		DomSchool4DwoAdmin submit = new DomSchool4DwoAdmin();
 		PersistenceId pid = PersistentSchool.buildPersistenceId(id);
-		submit.setId(pid);
-		DomSchoolFull result = SecureDwoAdminSchoolManager.getSchool(submit);
+        DomSchoolId submit = new DomSchoolId(pid);
+		DomSchoolFull result = schoolManager.getSchool(submit);
 		return result;
+	}
+	
+	public String getOrganization(String key) {
+	  try {
+	      DomSchoolFull result = getSchool(key);
+	      return result.getSchoolName();
+	  } catch (Exception e) {
+	      logger.log(Level.SEVERE, "organization of " + key, e);
+	      return key;
+	  }
 	}
 	
 	public String getRealm(String key) {

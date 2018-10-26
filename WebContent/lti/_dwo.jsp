@@ -30,8 +30,6 @@
 <%@ page import="net.oauth.server.OAuthServlet" %>
 <%@ page import="net.oauth.signature.OAuthSignatureMethod" %>
 <%@ page import="fi.servlet.lti.DbAccess" %>
-<%@ page import="fi.servlet.dwomaccess.DbAccessFactory" %>
-
 <%!
 	private DbAccess instance;
 

@@ -44,7 +44,6 @@
 <%@ page import="net.oauth.server.OAuthServlet" %>
 <%@ page import="net.oauth.signature.OAuthSignatureMethod" %>
 <%@ page import="fi.servlet.lti.DbAccess" %>
-<%@ page import="fi.servlet.dwomaccess.DbAccessFactory" %>
 <%
         String width = request.getParameter("launch_presentation_width");
         if(width == null || width.isEmpty()) width="100%";
