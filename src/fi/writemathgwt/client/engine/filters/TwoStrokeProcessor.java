@@ -2,6 +2,7 @@ package fi.writemathgwt.client.engine.filters;
 
 import fi.writemathgwt.client.engine.Stroke;
 import fi.writemathgwt.client.engine.StrokeContainer;
+import fi.writemathgwt.client.engine.StrokeMatcher;
 
 public class TwoStrokeProcessor {
 
@@ -9,6 +10,9 @@ public class TwoStrokeProcessor {
 	
 	public static String findTwoStrokeTeken(StrokeContainer strokeContainer, Stroke stroke1, Stroke stroke2) {
 		averageHeight = strokeContainer.averageHeight;
+		
+		String teken1 = StrokeMatcher.findTekenRaw(strokeContainer,stroke1);
+		String teken2 = StrokeMatcher.findTekenRaw(strokeContainer,stroke2);
 		
 		//y = \ (klein) + /
 		if (checkStrokes(stroke1,"yH1",stroke2,"yH2"))
@@ -170,6 +174,22 @@ public class TwoStrokeProcessor {
 		if (checkStrokes(stroke1,"KH1",stroke2,"KH2"))
 			if(hasCloseDistance(stroke1, stroke2, 20,14,28,14,26) &&hasYDistance(stroke1, stroke2, 0, 15,  0, 2, 0, 2))
 				return "K";
+		
+		// theta
+		if ("0".equals(teken1) && "-".equals(teken2))
+			if(hasCloseDistance(stroke1, stroke2, 20,5,15,0,2) &&hasCloseDistance(stroke1, stroke2, 20, 25,  35, 38, 39))
+				return "θ";
+		if ("0".equals(teken1) && "back".equals(teken2))
+			if(hasCloseDistance(stroke1, stroke2, 20,25,35,0,2) &&hasCloseDistance(stroke1, stroke2, 20, 5,  15, 38, 39))
+				return "θ";
+		
+		// <- pijltje links
+		if ("-".equals(teken1) && ("<".equals(teken2) || "\u27e8".equals(teken2)))
+			if(hasCloseDistance(stroke1, stroke2, 10,0,1,15,25))
+				return "\u2190";
+		if ("back".equals(teken1) && ("<".equals(teken2) || "\u27e8".equals(teken2)))
+			if(hasCloseDistance(stroke1, stroke2, 10,38,39,15,25))
+				return "\u2190";
 		
 		return null;
 	}

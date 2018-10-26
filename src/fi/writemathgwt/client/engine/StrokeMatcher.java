@@ -117,6 +117,10 @@ public class StrokeMatcher {
 			teken = "1";
 		if("\\".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight)
 			teken = "1";
+		if(")".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight/2)
+			teken = ",";
+		if("\u27e9".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight/2)
+			teken = ",";
 		if(")".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight && 3*stroke.getParsePointsbox().width<stroke.getParsePointsbox().height)
 			teken = "1";
 		if("(".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight && 3*stroke.getParsePointsbox().width<stroke.getParsePointsbox().height)

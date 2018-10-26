@@ -607,17 +607,20 @@ public class FormulaProcessor {
 	
 	private static boolean isMacht(StrokeContainer strokeContainer, WMObject lastWo, WMObject wo) {
 		// lastWo^{".","=","+",")","/"} kan/mag niet
-		if (staatBoven(strokeContainer, lastWo,wo) &&
-			(".".equals(wo.getTeken()) || 
-			 "=".equals(wo.getTeken()) || 
-			 "+".equals(wo.getTeken()) || 
-			 ")".equals(wo.getTeken()) || 
-			 "/".equals(wo.getTeken()))
-		   )
-			return false;
+		
+//		if (staatBoven(strokeContainer, lastWo,wo) &&
+//			(".".equals(wo.getTeken()) || 
+//			 "=".equals(wo.getTeken()) || 
+//			 "+".equals(wo.getTeken()) || 
+//			 ")".equals(wo.getTeken()) || 
+//			 "/".equals(wo.getTeken()))
+//		   )
+//			return false;
+		
 		//{".","=","+","-",")","/"}^wo kan niet
-		else if (staatBoven(strokeContainer, lastWo,wo) &&
+		if (staatBoven(strokeContainer, lastWo,wo) &&
 			(".".equals(lastWo.getTeken()) || 
+			 ",".equals(lastWo.getTeken()) ||
 			 "=".equals(lastWo.getTeken()) || 
 			 "+".equals(lastWo.getTeken()) || 
 			 "-".equals(lastWo.getTeken()) || 
