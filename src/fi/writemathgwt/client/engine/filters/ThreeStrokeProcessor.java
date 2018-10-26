@@ -40,7 +40,7 @@ public class ThreeStrokeProcessor {
 		if (checkStrokes(stroke1,"piT1",stroke2,"piT2",stroke3,"piT3"))
 			if( TwoStrokeProcessor.hasCloseDistance(stroke1,stroke3,30,0,2,4,14)
 					&& TwoStrokeProcessor.hasCloseDistance(stroke2,stroke3,30,0,2,26,36))
-				return "pi";
+				return "\u03C0";
 		
 		
 		return null;

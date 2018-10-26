@@ -21,6 +21,10 @@ public class FormulaProcessor {
 		formuleString = formuleString.replace("s1n", "sin");
 		formuleString = formuleString.replace("$"+"m1"+"@", "'");
 		formuleString = formuleString.replace("$"+"ml"+"@", "'");
+		formuleString = formuleString.replaceAll("->", "\u2192");
+		//formuleString = formuleString.replaceAll("<-", "\u2190");
+		formuleString = formuleString.replaceAll("-\\u27e9", "\u2192");
+		//formuleString = formuleString.replaceAll("\u27e8-", "\u2190");
 		return formuleString;
 	}
 
