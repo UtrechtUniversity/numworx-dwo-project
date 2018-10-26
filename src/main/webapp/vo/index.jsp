@@ -9,6 +9,7 @@
 	 	query = "?base=/vo/&profile=" + profile;
 	else 
 	  	query = "?base=/vo/&profile=" + profile + "&" + query;
+	String hash = "";
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -29,7 +30,7 @@
 		<script type="text/javascript">
 	 		function load() {
 				var search = "<%=query%>"
-				var hash = location.hash || "";
+				var hash = location.hash || "<%=hash%>";
 				var id = search + hash;
 				var element = document.getElementsByTagName("iframe")[0];
 				element.setAttribute("src", "/dwo/tablet/DWOplayer.jsp"+id);

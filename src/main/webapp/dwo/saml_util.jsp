@@ -14,7 +14,8 @@
 <%
 if ("shibboleth".equals(request.getAuthType())) {
   String schoolid = System.getProperty("ENV_ORGID", "385");
-  String organization = "Numworx Solutions";    // schoolname van ORGID?
+  String organization = getDbAccess().getOrganization(schoolid);
+  
   if ( getDbAccess().setUUSAMLCookie(request, response, schoolid, organization))
     return;
   String extras = "<param name='logoutURL' value='/dwo/saml/logout.jsp' >\n";
