@@ -27,13 +27,18 @@ public class TwoStrokeProcessor {
 			
 		// x = / + \
 		if (checkStrokes(stroke1,"x2H1",stroke2,"x2H2"))
-			if(hasCloseDistance(stroke1, stroke2, 10,10,30,10,30))
+			if(hasCloseDistance(stroke1, stroke2, 10,14,26,14,26))
 				return "x";
 			
 		// x = \ + /
 		if (checkStrokes(stroke1,"x2H2",stroke2,"x2H1"))
 			if(hasCloseDistance(stroke1, stroke2, 10,16,24,16,24))
 				return "x";
+		
+		// x = \ + /
+		if (checkStrokes(stroke1,"labdaH1",stroke2,"labdaH2"))
+			if(hasCloseDistance(stroke1, stroke2, 10,16,28,0,2))
+				return "λ";
 				
 		// 5 = 5 + -
 		if (checkStrokes(stroke1,"5H1",stroke2,"5H2"))
@@ -183,6 +188,8 @@ public class TwoStrokeProcessor {
 			if(hasCloseDistance(stroke1, stroke2, 20,25,35,0,2) &&hasCloseDistance(stroke1, stroke2, 20, 5,  15, 38, 39))
 				return "θ";
 		
+		
+		
 		// <- pijltje links
 		if ("-".equals(teken1) && ("<".equals(teken2) || "\u27e8".equals(teken2)))
 			if(hasCloseDistance(stroke1, stroke2, 10,0,1,15,25))
@@ -191,6 +198,12 @@ public class TwoStrokeProcessor {
 			if(hasCloseDistance(stroke1, stroke2, 10,38,39,15,25))
 				return "\u2190";
 		
+		// ;
+			if (".".equals(teken1) && ",".equals(teken2))
+				if(hasCloseXDistance(stroke1, stroke2, 10,0,1,0,1) && hasYDistance(stroke1, stroke2, (int)averageHeight, 20,  0, 2, 0, 2))
+					return ";";
+		
+			
 		return null;
 	}
 	

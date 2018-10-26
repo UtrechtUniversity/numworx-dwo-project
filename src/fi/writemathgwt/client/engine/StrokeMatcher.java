@@ -85,7 +85,7 @@ public class StrokeMatcher {
 		String teken = findMatches(stroke)[0];
 		if(teken==null)
 			return null;
-		if(stroke.getParsePointsbox().width<4 && stroke.getParsePointsbox().height<4)
+		if(stroke.getParsePointsbox().width<5 && stroke.getParsePointsbox().height<5)
 			teken = ".";
 		if("sqrt_1".equals(teken) && stroke.getParsePointsbox().height<15)
 			teken = "-";

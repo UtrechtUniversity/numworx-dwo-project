@@ -103,6 +103,12 @@ public class StrokeDirFilter {
 		if("\\".equals(teken)) {int[][] data = {{310,20,1,39,25}};return data;}
 		if("/".equals(teken)) {int[][] data = {{ 230, 20, 1, 39, 32}};return data;}
 		
+		if("→".equals(teken)) {int[][] data = {{0,20,1,20,16},{135,30,20,39,3},{225,30,20,39,3}};return data;}
+		if("←".equals(teken)) {int[][] data = {{180,20,1,20,16},{45,30,20,39,3},{315,30,20,39,3}};return data;}
+
+
+
+		
 		
 		return new int[0][0];
 	}

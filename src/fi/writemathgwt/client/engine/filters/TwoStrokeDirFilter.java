@@ -54,6 +54,8 @@ public class TwoStrokeDirFilter {
 		
 		if("x2H1".equals(teken)) {int[][] data = {{310, 30, 1, 39, 20},{310, 90, 1, 39, 32}};return data;}	
 		if("x2H2".equals(teken)) {int[][] data = {{240, 30, 1, 39, 20},{240, 90, 1, 39, 32}};return data;}	
+		if("labdaH1".equals(teken)) {int[][] data = {{310, 40, 1, 39, 20},{310, 90, 1, 39, 32}};return data;}	
+		if("labdaH2".equals(teken)) {int[][] data = {{240, 40, 1, 39, 20},{240, 90, 1, 39, 32}};return data;}	
 		if("5H1".equals(teken)) {int[][] data = {{240, 60, 1, 8, 4},{0, 60, 10, 24, 6},{270, 90, 20, 39, 4},{180, 45, 30, 39, 4}};return data;}
 		if("5H2".equals(teken)) {int[][] data = {{0, 30, 1, 39, 26}};return data;}	
 		if("5H2+".equals(teken)) {int[][] data = {{180, 30, 1, 39, 32}};return data;}	

@@ -107,8 +107,8 @@ public class StrokeLocFilter {
 		if("of_1".equals(teken)) {int[][] data = {{0,100,20,80,0,10,8},{50,100,30,70,39,39,1}};return data;}
 		if("[".equals(teken)) {int[][] data = {{0,100,0,10,0,5,6},{0,100,90,100,34,39,6}};return data;}
 		if("]".equals(teken)) {int[][] data = {{0,100,0,10,0,5,6},{0,100,90,100,34,39,6}};return data;}
-		if("〈".equals(teken)) {int[][] data = {{70,100,0,10,0,1,1},{70,100,90,100,38,39,1},{0,10,30,70,15,25,1}};return data;}
-		if("〉".equals(teken)) {int[][] data = {{0,30,0,10,0,1,1},{0,30,90,100,38,39,1},{90,100,30,70,15,25,1}};return data;}
+		if("\u27e8".equals(teken)) {int[][] data = {{70,100,0,10,0,1,1},{70,100,90,100,38,39,1},{0,10,30,70,15,25,1}};return data;}
+		if("\u27e9".equals(teken)) {int[][] data = {{0,30,0,10,0,1,1},{0,30,90,100,38,39,1},{90,100,30,70,15,25,1}};return data;}
 
 
 		return new int[0][0];

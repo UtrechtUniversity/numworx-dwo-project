@@ -243,6 +243,8 @@ public class StrokeContainer {
 					|| ".".equals(wmObjects.get(i).getTeken())
 					|| "sqrt".equals(wmObjects.get(i).getTeken()) 
 					|| "=".equals(wmObjects.get(i).getTeken())
+					|| "\u2190".equals(wmObjects.get(i).getTeken())
+					|| "\u2192".equals(wmObjects.get(i).getTeken())
 					)
 				;
 			else {

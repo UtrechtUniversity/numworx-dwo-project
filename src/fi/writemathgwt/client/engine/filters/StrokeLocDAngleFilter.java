@@ -62,8 +62,8 @@ private static HashMap<String,int[][]> cachedLocDAngleData = new HashMap<String,
 
 		if("[".equals(teken)) {int[][] data = {{90,40,3,15},{90,40,25,37}};return data;}
 		if("]".equals(teken)) {int[][] data = {{-90,40,3,15},{-90,40,25,37}};return data;}
-		if("〈".equals(teken)) {int[][] data = {{70,40,15,25}};return data;}
-		if("〉".equals(teken)) {int[][] data = {{-70,40,15,25}};return data;}
+		if("\u27e8".equals(teken)) {int[][] data = {{70,40,15,25}};return data;}
+		if("\u27e9".equals(teken)) {int[][] data = {{-70,40,15,25}};return data;}
 		
 
 
