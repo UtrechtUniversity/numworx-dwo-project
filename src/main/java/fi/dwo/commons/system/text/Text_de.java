@@ -261,6 +261,8 @@ public class Text_de extends ListResourceBundle {
         {TextMapper.GUIPA_PARAMS_OF_SCO, "Parameter ({0})"},
         {"cut", "Ausschneiden"},
         {"copy", "Kopieren"},
+        { "copylink", "Copy Java link" },
+        { "copylinkhtml", "Copy HTML link" },
         {"paste", "Einfügen"},
         {"delete", "Löschen"},
         {"edit", "Bearbeiten"},
@@ -313,7 +315,14 @@ public class Text_de extends ListResourceBundle {
             + "Die ausgewählten Module werden in ihre eigene Modulansicht kopiert<br>"
             + "und können in der eigenen Schule benutzt werden."},
         {TextMapper.GUIEID_MSG2, "<html>Ich möchte mitmachen und in der Liste der teilnehmenden Schulen aufgeführt werden"},
-        {TextMapper.GUIEID_MSG3, "<html>(1) Module auswählen<br>(2) Schulen auswählen<br><br>Die ausgewählten Module stehen<br>den ausgewählten Schulen zur Verfügung."},};
+        {TextMapper.GUIEID_MSG3, "<html>(1) Module auswählen<br>(2) Schulen auswählen<br><br>Die ausgewählten Module stehen<br>den ausgewählten Schulen zur Verfügung."},
+        
+        {"OBJ_leerdoel", "Lernziel"},
+        {"OBJ_categorie", "Kategorie"},
+
+    
+    
+    };
 
     /**
      * @return Object[][]

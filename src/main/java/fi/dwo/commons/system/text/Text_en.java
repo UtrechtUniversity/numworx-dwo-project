@@ -415,6 +415,8 @@ public class Text_en extends ListResourceBundle {
 			{ TextMapper.GUIPA_PARAMS_OF_SCO, "Parameters ({0})" },
 			{ "cut", "Cut" },
 			{ "copy", "Copy" },
+	         { "copylink", "Copy Java link" },
+	         { "copylinkhtml", "Copy HTML link" },
 			{ "paste", "Paste" },
 			{ "delete", "Delete" },
 			{ "edit", "Edit" },
@@ -503,6 +505,9 @@ public class Text_en extends ListResourceBundle {
 			{ TextMapper.FSD_TIMEUP,
 					"The exam period has expired and your work has been submitted" },
 			{ TextMapper.FSD_START, "Start exam" },
+
+			{"OBJ_leerdoel", "Objective"},
+            {"OBJ_categorie", "Category"},
 
 	};
 

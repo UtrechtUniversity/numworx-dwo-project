@@ -428,6 +428,9 @@ public class Text_nl extends ListResourceBundle {
 			{ TextMapper.GUIPA_PARAMS_OF_SCO, "Parameters ({0})" },
 			{ "cut", "Knippen" },
 			{ "copy", "Kopiëren" },
+	         { "copylink", "Kopiëer Java URL" },
+	         { "copylinkhtml", "Kopiëer HTML URL" },
+
 			{ "paste", "Plakken" },
 			{ "delete", "Verwijderen" },
 			{ "edit", "Bewerken" },
@@ -480,6 +483,11 @@ public class Text_nl extends ListResourceBundle {
 
 			{ TextMapper.GUIC_DELETE_APPLETCONFIG, "Verwijder template" },
 			{ TextMapper.GUIC_MSG_DELETE_APPLETCONFIG, "Weet u zeker dat u het template wilt verwijderen" },
+
+            {"OBJ_leerdoel", "Leerdoel"},
+            {"OBJ_categorie", "Vul naam in van categorie"},
+
+	
 	};
 
 	public Text_nl() {

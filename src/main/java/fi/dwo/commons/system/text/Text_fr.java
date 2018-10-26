@@ -262,6 +262,8 @@ public class Text_fr extends ListResourceBundle {
         {TextMapper.GUIPA_PARAMS_OF_SCO, "Paramètres ({0})"},
         {"cut", "Couper"},
         {"copy", "Copier"},
+        { "copylink", "Copy Java link" },
+        { "copylinkhtml", "Copy HTML link" },
         {"paste", "Poller"},
         {"delete", "Supprimer"},
         {"edit", "Modifier"},
@@ -323,6 +325,9 @@ public class Text_fr extends ListResourceBundle {
         {TextMapper.LBL_ENTER_AUTHCODE_FOR_NEW_PASSWORD, "Entrez votre code d'authentification et un nouveau mot de passe pour le changer."},
         {TextMapper.LBL_ILLEGAL_AUTHCODE, "Le code d'authentification est invalide, il est possible qu'il ait expiré."},
         {TextMapper.LBL_EMAIL_WITH_AUTHCODE_SENT, "Un email avec le code d'authentification vous a été envoyé."},
+ 
+        {"OBJ_leerdoel", "Objectif"},
+        {"OBJ_categorie", "Catégorie"},
     
     };
 
