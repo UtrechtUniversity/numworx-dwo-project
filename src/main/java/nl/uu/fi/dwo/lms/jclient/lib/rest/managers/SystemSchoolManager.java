@@ -1,0 +1,58 @@
+package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.RestListClassTypes;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
+import nl.uu.fi.dwo.rest.entities.RestSchool;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.util.PathId;
+
+public class SystemSchoolManager {
+
+  final StoredRestManager manager;
+  private static final Logger LOG = Logger.getLogger(SystemSchoolManager.class.getName());
+
+  public SystemSchoolManager(StoredRestManager m) {
+    manager = m;
+  }
+
+  private DomContext getContext() {
+    return manager.getAuthenticator().getContext();
+  }
+
+  public DomSchoolFull getSchool(DomSchoolId submit) throws Dwo2Exception {
+    RestSchool rest = new RestSchool();
+    rest.setRestContext(getContext());
+    rest.setDomSchool(new DomSchool());
+    rest.getDomSchool().setId(submit.getId());
+    rest.getDomSchool().setOptLock(submit.getOptLock());
+    DomSchoolFull result =
+        manager.put("rest/system/school/get", DomSchoolFull.class, rest);
+    LOG.log(Level.FINE, "Retrieved full school with id {1} for system with username {0}.",
+        new Object[] {manager.getAuthenticator().getUsername(), rest.getDomSchool().getId()});
+    return result;
+  }
+
+  public List<DomSchoolClass> getSchoolClasses(DomSchoolId submit) throws Dwo2Exception {
+    RestSchool rest = new RestSchool();
+    rest.setRestContext(getContext());
+    rest.setDomSchool(new DomSchool());
+    rest.getDomSchool().setId(submit.getId());
+    rest.getDomSchool().setOptLock(submit.getOptLock());
+    List<DomSchoolClass> result =
+        manager.getPutList("rest/system/schoolclass/getList", RestListClassTypes.DomSchoolClass, rest);
+    LOG.log(Level.FINE, "Retrieved schoolclasses for id {1} for system with username {0}.",
+      new Object[] {manager.getAuthenticator().getUsername(), rest.getDomSchool().getId()});
+    return result;
+  }
+
+}
