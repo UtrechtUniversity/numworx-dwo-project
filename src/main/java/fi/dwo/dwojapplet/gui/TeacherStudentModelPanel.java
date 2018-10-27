@@ -111,11 +111,8 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 //            final GuiCreator instance = GuiCreator.instance();
             if (value == searchImage) {
                 DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
-                Genson g = new GensonBuilder().withConverters(new GensonMapConverter()).useIndentation(true).create();
-                String language = DwoHelper.getLocale().getLocale();
-                String jsonModel = g.serialize(model.getModelStructure());
 
-                textArea.setText(jsonModel);
+                textArea.setModel(model.getModelStructure());
             }
         }
     }
