@@ -36,6 +36,7 @@ import fi.dwo.server.PersistentDataManagers.core.RoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
@@ -46,6 +47,7 @@ public class SecuredDwoAdminConfigManagerIT {
 
     private static DatabaseManager instance = null;
     SecuredDwoAdminConfigManager manager;
+    DomContext context;
 
 	
 	
@@ -73,10 +75,17 @@ public class SecuredDwoAdminConfigManagerIT {
         AppletConfigManager.create(profile);
         
         manager = new SecuredDwoAdminConfigManager();
+        
+        PersistentUser pUser = UserManager.findByUserName("dwoadmin");
+        PersistentSchool pSchool = SchoolManager.findEntity(0L);
+        PersistentHasRole pHasRole = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, pSchool, RoleType.ADMIN);
+        context = new DomContext();
+        context.setDomHasRole(pHasRole.buildDomHasRole());
 	}
 
 	@After
 	public void tearDown() throws Exception {
+	    context = null;
         instance.ClearDatabase();
 	}
 
@@ -98,7 +107,7 @@ public class SecuredDwoAdminConfigManagerIT {
 		profile.setLanguage("la");
 		profile.setLaunchdata("launchdata");
 		restDwoProfile = new RestAppletConfig();
-		restDwoProfile.setRestContext(new DomContext());
+		restDwoProfile.setRestContext(context);
 		restDwoProfile.setDomAppletConfig(profile);
 		Boolean result = manager.submitAppletConfig(sc, restDwoProfile);
 		assertTrue("submit profile", result.booleanValue());
@@ -124,7 +133,7 @@ public class SecuredDwoAdminConfigManagerIT {
 		config.setLanguage("ot");
 		config.setLaunchdata("other data");
 		restConfig = new RestAppletConfig();
-		restConfig.setRestContext(new DomContext());
+		restConfig.setRestContext(context);
 		restConfig.setDomAppletConfig(config);
 		Boolean result = manager.updateConfig(sc, restConfig);
 		assertTrue("update profile", result.booleanValue());
@@ -150,7 +159,7 @@ public class SecuredDwoAdminConfigManagerIT {
 		config.setLanguage("ot");
 		config.setLaunchdata("other data");
 		restConfig = new RestAppletConfig();
-		restConfig.setRestContext(new DomContext());
+        restConfig.setRestContext(context);
 		restConfig.setDomAppletConfig(config);
 		Boolean result = manager.removeConfig(sc, restConfig);
 		assertTrue("remove config", result.booleanValue());

@@ -12,13 +12,17 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchool;
 import nl.uu.fi.dwo.rest.entities.RestNewSchool;
 import nl.uu.fi.dwo.rest.entities.RestSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
+import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
@@ -43,6 +47,8 @@ public class SecuredDwoAdminSchoolManagerIT {
 
     private static DatabaseManager instance = null;
 
+    private DomContext context;
+
     public SecuredDwoAdminSchoolManagerIT() {
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
     }
@@ -60,12 +66,18 @@ public class SecuredDwoAdminSchoolManagerIT {
     }
 
     @Before
-    public void setUp() {
+    public void setUp() throws Dwo2Exception {
         instance.IntializeTestDatabase();
+        PersistentUser pUser = UserManager.findByUserName("dwoadmin");
+        PersistentSchool pSchool = SchoolManager.findEntity(0L);
+        PersistentHasRole pHasRole = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, pSchool, RoleType.ADMIN);
+        context = new DomContext();
+        context.setDomHasRole(pHasRole.buildDomHasRole());
     }
 
     @After
     public void tearDown() {
+        context = null;
         instance.ClearDatabase();
     }
 
@@ -88,7 +100,7 @@ public class SecuredDwoAdminSchoolManagerIT {
         school.setImage(null);
         
         RestNewSchool restSchool = new RestNewSchool();
-        restSchool.setRestContext(new DomContext());
+        restSchool.setRestContext(context);
         DomNewSchool newSchool = new DomNewSchool();
         newSchool.setDomSchoolFull(school.buildDomSchoolFull());
         Set<RoleType> keySet = newSchool.getRoleTypePasswords().keySet();
@@ -124,7 +136,7 @@ public class SecuredDwoAdminSchoolManagerIT {
         PersistentSchool expResult = null;
         expResult = SchoolManager.findEntity(3L);
         RestSchool4DwoAdmin restSchool = new RestSchool4DwoAdmin();
-        restSchool.setRestContext(new DomContext());
+        restSchool.setRestContext(context);
         DomSchool4DwoAdmin dSchoolIn = expResult.buildDomSchool4DwoAdmin();
         DomSchoolFull dSchoolResult = expResult.buildDomSchoolFull();
         restSchool.setDomSchool4DwoAdmin(dSchoolIn);
@@ -170,7 +182,7 @@ public class SecuredDwoAdminSchoolManagerIT {
         school.setSchoolRights("_");
         school.setImage(null);
         RestSchoolFull restSchool = new RestSchoolFull();
-        restSchool.setRestContext(new DomContext());
+        restSchool.setRestContext(context);
         restSchool.setDomSchoolFull(school.buildDomSchoolFull());
 
         SecuredDwoAdminSchoolManager instance = new SecuredDwoAdminSchoolManager();
