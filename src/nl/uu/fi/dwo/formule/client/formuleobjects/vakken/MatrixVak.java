@@ -18,7 +18,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 public class MatrixVak extends FormuleElementWithChildren
 {
 	//Vector<Vector<FormuleRegel>> matrixChildren;
-	Vector<MatrixRij> matrixChildren;
+//	Vector<MatrixRij> matrixChildren;
 	int aantalRijen;
 	int aantalKolommen;
 
@@ -27,7 +27,7 @@ public class MatrixVak extends FormuleElementWithChildren
 		super(holder, 1);
 		this.setChanged(true);
 //		matrixChildren = new Vector<Vector<FormuleRegel>>();
-		matrixChildren = new Vector<MatrixRij>();
+		children = new Vector<FormuleRegel>();
 		// default 2x2
 		this.aantalKolommen = 2;
 		for (int i = 0; i < 2; i++)
@@ -42,7 +42,7 @@ public class MatrixVak extends FormuleElementWithChildren
 		this.setChanged(true);
 
 //		matrixChildren = new Vector<Vector<FormuleRegel>>();
-		matrixChildren = new Vector<MatrixRij>();
+		children = new Vector<FormuleRegel>();
 		this.aantalKolommen = aantalKolommen;
 		for (int i = 0; i < aantalRijen; i++)
 		{
@@ -124,7 +124,8 @@ public class MatrixVak extends FormuleElementWithChildren
 	 */
 	private FormuleRegel getMatrixChild(int rowIndex, int columnIndex)
 	{
-		return matrixChildren.get(rowIndex).get(columnIndex);
+//		return matrixChildren.get(rowIndex).get(columnIndex);
+		return ((MatrixRij) children.get(rowIndex)).get(columnIndex);
 	}
 	
 	protected void build(PathBuilder ctx)
@@ -169,10 +170,10 @@ public class MatrixVak extends FormuleElementWithChildren
 			
 			for (int j = 0; j < aantalKolommen; j++) // kolommen
 			{
-				rijHoogte = Math.max(rijHoogte, matrixChildren.get(i).get(j).height + 5);
-				maxRijAshoogte[i] = Math.max(maxRijAshoogte[i], matrixChildren.get(i).get(j).getAsHoogte());
-				maxRijHoogte[i] = Math.max(maxRijHoogte[i], matrixChildren.get(i).get(j).height);
-				maxKolomBreedte[j] = Math.max(maxKolomBreedte[j], matrixChildren.get(i).get(j).width + 10);
+				rijHoogte = Math.max(rijHoogte, getMatrixChild(i, j).height + 5);
+				maxRijAshoogte[i] = Math.max(maxRijAshoogte[i], getMatrixChild(i, j).getAsHoogte());
+				maxRijHoogte[i] = Math.max(maxRijHoogte[i], getMatrixChild(i, j).height);
+				maxKolomBreedte[j] = Math.max(maxKolomBreedte[j], getMatrixChild(i, j).width + 10);
 			}
 
 			height += rijHoogte;
@@ -254,7 +255,7 @@ public class MatrixVak extends FormuleElementWithChildren
 	public void focusKindOmlaag()
 	{
 		int[] kindMetFocus = bepaalKindMetFocus();
-		if (kindMetFocus[0] == matrixChildren.size() - 1) // onderste rij
+		if (kindMetFocus[0] == children.size() - 1) // onderste rij
 		{
 			maakNieuweRij();
 		}
@@ -271,7 +272,7 @@ public class MatrixVak extends FormuleElementWithChildren
 	public void focusKindRechts()
 	{
 		int[] kindMetFocus = bepaalKindMetFocus();
-		if (kindMetFocus[1] == matrixChildren.get(kindMetFocus[0]).getAantalKolommen() - 1) // laatste kolom
+		if (kindMetFocus[1] == ((MatrixRij) children.get(kindMetFocus[0])).getAantalKolommen() - 1) // laatste kolom
 		{
 			maakNieuweKolom();
 			zetMaat();
@@ -309,10 +310,11 @@ public class MatrixVak extends FormuleElementWithChildren
 			if (kolom == 0)
 				rij = new MatrixRij(kind);
 			else
-				rij.insert(kind);
+				rij.add(kind);
 //			rij.add(kind);
 		}
-		matrixChildren.add(rij);
+//		matrixChildren.add(rij);
+		children.add(rij);
 		aantalRijen++;
 
 		zetMaat();
@@ -374,7 +376,8 @@ public class MatrixVak extends FormuleElementWithChildren
 			}
 		}
 		
-		matrixChildren.add(rij);
+//		matrixChildren.add(rij);
+		children.add(rij);
 		aantalRijen++;
 //		aantalKolommen = rij.size();
 		aantalKolommen = rij.getAantalKolommen();
@@ -385,12 +388,12 @@ public class MatrixVak extends FormuleElementWithChildren
 	 */
 	public void maakNieuweKolom()
 	{
-		for (int rij = 0; rij < matrixChildren.size(); rij++)
+		for (int rij = 0; rij < aantalRijen; rij++)
 		{
 			FormuleRegel kind = new FormuleRegel(this);
 			kind.setFont(getFont());
 //			matrixChildren.get(rij).addElement(kind);
-			matrixChildren.get(rij).insert(kind);
+			((MatrixRij) children.get(rij)).add(kind);
 		}
 		aantalKolommen++;
 		
@@ -409,10 +412,10 @@ public class MatrixVak extends FormuleElementWithChildren
 
 		for (int j = 0; j < aantalKolommen; j++)
 		{
-			FormuleRegel kind = (FormuleRegel) matrixChildren.get(kindMetFocus[0]).get(j);
+			FormuleRegel kind = (FormuleRegel) getMatrixChild(kindMetFocus[0], j);
 		}
 		
-		matrixChildren.remove(kindMetFocus[0]);
+		children.remove(kindMetFocus[0]);
 		aantalRijen--;
 		
 		// verplaats focus naar boven
@@ -437,10 +440,10 @@ public class MatrixVak extends FormuleElementWithChildren
 
 		for (int j = 0; j < aantalKolommen; j++)
 		{
-			FormuleRegel kind = (FormuleRegel) matrixChildren.get(rijIndex).get(j);
+			FormuleRegel kind = (FormuleRegel) getMatrixChild(rijIndex, j);
 		}
 		
-		matrixChildren.remove(rijIndex);
+		children.remove(rijIndex);
 		
 		aantalRijen--;
 		
@@ -465,8 +468,8 @@ public class MatrixVak extends FormuleElementWithChildren
 
 		for (int i = 0; i < aantalRijen; i++)
 		{
-			FormuleRegel kind = (FormuleRegel) matrixChildren.get(i).get(kindMetFocus[1]);
-			matrixChildren.get(i).remove(kindMetFocus[1]);
+			FormuleRegel kind = (FormuleRegel) getMatrixChild(i, kindMetFocus[1]);
+			((MatrixRij) children.get(i)).remove(kindMetFocus[1]);
 		}
 		
 		aantalKolommen--;
@@ -493,8 +496,8 @@ public class MatrixVak extends FormuleElementWithChildren
 
 		for (int i = 0; i < aantalRijen; i++)
 		{
-			FormuleRegel kind = (FormuleRegel) matrixChildren.get(i).get(kolomIndex);
-			matrixChildren.get(i).remove(kolomIndex);
+			FormuleRegel kind = (FormuleRegel) getMatrixChild(i, kolomIndex);
+			((MatrixRij) children.get(i)).remove(kolomIndex);
 		}
 		
 		aantalKolommen--;
@@ -535,7 +538,7 @@ public class MatrixVak extends FormuleElementWithChildren
 	{
 		boolean isLeeg = true;
 
-		for (int i = 0; i < matrixChildren.size(); i++) // rijen
+		for (int i = 0; i < aantalRijen; i++) // rijen
 		{
 			FormuleRegel kind = getMatrixChild(i, kolomIndex);
 			if (kind.toString().length() > 0)
@@ -627,7 +630,7 @@ public class MatrixVak extends FormuleElementWithChildren
 		removeKinderen();
 		
 //		matrixChildren = new Vector<Vector<FormuleRegel>>();
-		matrixChildren = new Vector<MatrixRij>();
+		children = new Vector<FormuleRegel>();
 
 		while (s.length() > 0)
 		{
@@ -667,7 +670,7 @@ public class MatrixVak extends FormuleElementWithChildren
 			}
 		}
 		
-		for (int i = 0; i < matrixChildren.size(); i++)
+		for (int i = 0; i < aantalRijen; i++)
 		{
 			for (int j = 0; j < aantalKolommen; j++)
 			{
@@ -681,9 +684,9 @@ public class MatrixVak extends FormuleElementWithChildren
 	 */
 	private void removeKinderen()
 	{
-		if (matrixChildren != null)
+		if (children != null)
 		{
-			Iterator i = matrixChildren.iterator();
+			Iterator i = children.iterator();
 			
 		    while (i.hasNext())
 		    {
@@ -694,7 +697,7 @@ public class MatrixVak extends FormuleElementWithChildren
 			    	((Vector) i.next()).remove(kind);
 		    	}
 		    	
-		    	matrixChildren.remove(i.next());
+		    	children.remove(i.next());
 		    }
 		}
 		
@@ -705,9 +708,9 @@ public class MatrixVak extends FormuleElementWithChildren
 	public String toString()
 	{
 		String string = "$M";
-		if (matrixChildren.size() > 0)
+		if (children.size() > 0)
 		{
-			for (int i = 0; i < matrixChildren.size(); i++) // rijen
+			for (int i = 0; i < aantalRijen; i++) // rijen
 			{
 				string = string + "$n"; // begin rij
 				for (int j = 0; j < aantalKolommen; j++)
@@ -772,7 +775,7 @@ public class MatrixVak extends FormuleElementWithChildren
 		public MatrixRij(FormuleElement holder)
 		{
 			super(holder);
-			// TODO Auto-generated constructor stub
+			children.add(holder); // ?
 		}
 
 		/**
@@ -781,9 +784,13 @@ public class MatrixVak extends FormuleElementWithChildren
 		public MatrixRij(FormuleHolder holder)
 		{
 			super(holder);
-			// TODO Auto-generated constructor stub
 		}
 		
+		public void add(FormuleRegel kind)
+		{
+			children.add(kind);
+		}
+
 		/**
 		 * Het aantal kinderen in de matrixrij is het aantal kolommen.
 		 * 
@@ -794,9 +801,21 @@ public class MatrixVak extends FormuleElementWithChildren
 			return children.size();
 		}
 
+		/**
+		 * Geef het kind met de gegeven kolomindex in de matrixrij.
+		 * 
+		 * @param columnIndex
+		 * @return
+		 */
 		public FormuleRegel get(int columnIndex)
 		{
-			return (FormuleRegel) children.get(columnIndex);
+			FormuleRegel kolomKind = null;
+			if (children.get(columnIndex) instanceof FormuleRegel)
+				kolomKind = (FormuleRegel) children.get(columnIndex);
+			else
+				System.out.println("MatrixRij.get(" + columnIndex + "): instanceof " + children.get(columnIndex));
+			
+			return kolomKind;
 		}
 
 		/**
