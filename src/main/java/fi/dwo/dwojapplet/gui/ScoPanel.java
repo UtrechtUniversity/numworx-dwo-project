@@ -243,7 +243,14 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
                 tr.waitForAll();
             } catch (Exception e) {
             }
-            courseLogo = courseLogo.getScaledInstance(courseLogo.getWidth(null) / 2, courseLogo.getHeight(null) / 2, Image.SCALE_SMOOTH);
+            
+            int w = courseLogo.getWidth(null);
+            int s = 2;
+            int h = courseLogo.getHeight(null);
+            s  =  (h-1)/30+1; 
+// bepaal s zodat h/s < 30       
+            
+            courseLogo = courseLogo.getScaledInstance(w / s, h / s, Image.SCALE_SMOOTH);
             tr.addImage(courseLogo, 0);
             try {
                 tr.waitForAll();

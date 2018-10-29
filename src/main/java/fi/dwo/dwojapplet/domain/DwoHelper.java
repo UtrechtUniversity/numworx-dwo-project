@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import fi.dwo.commons.system.TextMapper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import fi.dwo.dwojapplet.gui.GuiCreator;
@@ -773,6 +774,8 @@ public final class DwoHelper {
 
 	private static String rights = "";
 
+  private static boolean samlLogin;
+
 	/**
 	 * @param rights the rights to set
 	 */
@@ -805,4 +808,18 @@ public final class DwoHelper {
         test = aTest;
     }
 
+    public static boolean isSamlLogin() {
+      return samlLogin;
+    }
+    public static void setSamlLogin(boolean b) {
+      samlLogin = b;
+    }
+
+    public static boolean isPremium() {
+      try {
+        return DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getAboType() == AboType.premium;
+      } catch (Exception e) {
+      }
+      return false;
+    }
 }

@@ -19,6 +19,10 @@ import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,6 +31,8 @@ import javax.imageio.ImageIO;
 
 public class PasteAction extends GuiAction
 	{
+        private static final Logger LOG = Logger.getLogger(PasteAction.class.getName());
+  
 		CourseMap map;
 
 		public void actionPerformed(ActionEvent e) {
@@ -142,6 +148,12 @@ public class PasteAction extends GuiAction
 			Course parent = b?new Course():null;
 			String description = course.getDescription();
 			Course c = instance().addCourse(name, description, parent, isMap);
+            if(c == null)
+            {
+                LOG.warning("copyCourseMap failed: "+course + ", " + map + ", " + isMap);
+                return;
+            }
+			updateLogo(course,c);
 			map.addChild(c);
 			if(isMap) {
 				copyCourseMap(c, course.getChildren());
@@ -171,19 +183,30 @@ public class PasteAction extends GuiAction
 			Course c = instance().addCourse(name, description, dest, isMap);
 			if(c == null)
 			{
-				System.err.println("copyCourseMap failed: "+course + ", " + dest + ", " + isMap);
+				LOG.warning("copyCourseMap failed: "+course + ", " + dest + ", " + isMap);
 				return null;
 			}
-// Wim: getImageUrl is "" 
+			updateLogo(course, c);
+			dest.addChild(c);
+			if(isMap) {
+				copyCourseMap(c, course.getChildren());
+			} else {
+				copySco(c, course);
+			}
+			return c;
+			
+		}
+    private void updateLogo(Course course, Course copy) {
+      // Wim: getImageUrl is "" 
 			if(course.getImageData() != null || course.getImageUrl() != null && course.getImageUrl().length() > 0)				
 			{
-				c.setImageData(course.getImageData());
-				c.setImageUrl(course.getImageUrl());
-				c.setCourseLogo(course.getCourseLogo());
-				if(c.getImageUrl() != null && !c.getImageUrl().isEmpty() && c.getImageData() == null) {
+				copy.setImageData(course.getImageData());
+				copy.setImageUrl(course.getImageUrl());
+				copy.setCourseLogo(course.getCourseLogo());
+				if(copy.getImageUrl() != null && !copy.getImageUrl().isEmpty() && copy.getImageData() == null) {
 				   try {
 			            ByteArrayOutputStream output = new ByteArrayOutputStream();
-			            BufferedImage img = ImageIO.read(new URL(c.getImageUrl()));
+			            BufferedImage img = ImageIO.read(new URL(copy.getImageUrl()));
 			            Image reduced;
 			            int w = img.getWidth();
 			            int h = img.getHeight();
@@ -206,26 +229,15 @@ public class PasteAction extends GuiAction
 			            ImageIO.write(img, "png", output);
 			            output.close();
 			            byte[] data = output.toByteArray();
-			            c.setImageData(data);
+			            copy.setImageData(data);
 				   
 				   } catch (Exception e) {
-				     e.printStackTrace(); // TODO LOG.log(Level.WARNING, ...
+				     LOG.log(Level.WARNING, "update logo", e);
 				   }
 				}
-				instance().updateLogo(c);
+				instance().updateLogo(copy);
 			}
-			
-			
-			
-			dest.addChild(c);
-			if(isMap) {
-				copyCourseMap(c, course.getChildren());
-			} else {
-				copySco(c, course);
-			}
-			return c;
-			
-		}
+    }
 		
 		private void copyCourseMap(Course dest, Course course, CourseMap map) {
 			Course c = copyCourseMap(dest, course);
@@ -259,6 +271,24 @@ public class PasteAction extends GuiAction
 				String name = sco.getScoName();
 				name = CourseManagementPanel.replaceDuplicate(name, course.getScoNames());
 				sco.setName(name);
+			} else {
+			  int seq = sco.getSequencenr()-1;
+			  if(course.getScoList() == null) course.loadScos(); // should not happen;
+			  List<Sco> scos = new LinkedList<>(Arrays.asList(course.getScoList()));
+			  int os = scos.indexOf(sco);
+			  scos.remove(sco);
+			  if(seq <= os)
+			    scos.add(seq, sco);
+			  else
+			    scos.add(seq-1, sco);
+			  seq = 1;
+			  for(Sco s: scos) {
+			    if (s.getSequencenr() != seq) {
+			      s.setSequencenr(seq);
+			      if(s != sco) instance().updateSco(s);
+			    }
+			    seq ++;
+			  } 
 			}
 			instance().updateSco(sco);
 //			old.loadScos(); course.loadScos(); // refresh sco's (zonder dbaccess mogelijk?)
