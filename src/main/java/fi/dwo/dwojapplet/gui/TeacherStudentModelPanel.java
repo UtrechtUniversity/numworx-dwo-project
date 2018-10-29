@@ -282,6 +282,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
             } else {
                 addModelButton.setText(TextMapper.getText(TextMapper.BTN_UPDATE));
+                textArea.setModel(null);
                 textArea.setEditable(true);
             }
         } else if (e.getSource() == cancelButton) {

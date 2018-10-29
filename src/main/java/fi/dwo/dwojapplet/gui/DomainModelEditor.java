@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -369,6 +370,13 @@ public class DomainModelEditor extends JPanel implements ActionListener
   private final static Genson GENSON = new GensonBuilder().withConverters(new GensonMapConverter()).useIndentation(true).create();
 
   public void setModel(DomStudentModelStructure modelStructure) {
+    if ( modelStructure == null) {
+      modelStructure = new DomStudentModelStructure();
+      modelStructure.setInfo(new DomStudentModelContextInfo(new TreeMap<>(), new TreeMap<>()));
+      modelStructure.setCategories(new LinkedList<>());
+      modelStructure.getCategories().add(newDomStudentModelCategory()); // start with a single category
+      modelStructure.getCategories().get(0).getObjectives().add(newDomStudentModelObj()); // and a single objective
+    }
     model = modelStructure;
     text = GENSON.serialize(modelStructure);
     extractModel(locale);
@@ -391,7 +399,7 @@ public class DomainModelEditor extends JPanel implements ActionListener
     makeGUI(aantalRijen, aantalKolommen);
     for (int i = 0; i < aantalKolommen; i++) {
       DomStudentModelCategory cat = list.get(i);
-      title = cat.getInfo().getTitle().getOrDefault(locale, "");
+      title = cat.getInfo().getTitle().getOrDefault(locale, columnLabel + " "  + (i+1));
       categoryTextFields[i].setText(title);
       descr = cat.getInfo().getDescription().get(locale);
       categoryTextFields[i].setToolTipText(descr);
