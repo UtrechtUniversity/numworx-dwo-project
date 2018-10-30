@@ -20,11 +20,13 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.DiffPartialVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.DiffVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.IntegraalVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.MatrixVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeLogVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeWortelVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrimitieveVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrvVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SubscriptVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.VectorVak;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
@@ -909,6 +911,22 @@ public class FormuleRegel extends FormuleElement
 				else
 					return;
 			}
+			else if (parent instanceof VectorVak)
+			{
+				int index = parent.children.indexOf(this);
+				if (index > 0)
+					parentRegel = parent.children.get(index - 1);
+				else
+					parentRegel = parent.children.get(parent.children.size() - 1);
+			}
+			else if (parent instanceof MatrixVak)
+			{
+				int index = parent.children.indexOf(this);
+				if (index - ((MatrixVak) parent).getAantalKolommen() > -1)
+					parentRegel = parent.children.get(index - ((MatrixVak) parent).getAantalKolommen());
+				else
+					parentRegel = parent.children.get(index - ((MatrixVak) parent).getAantalKolommen() + parent.getChildrenSize());
+			}
 			else
 				return;
 			holder.setCurrentRegel(parentRegel);
@@ -929,25 +947,41 @@ public class FormuleRegel extends FormuleElement
 			FormuleRegel parentRegel = null;
 			FormuleElementWithChildren parent = (FormuleElementWithChildren)this.parent;
 			
-			if(parent instanceof BinVak || parent instanceof BreukVak || parent instanceof DiffVak || parent instanceof DiffPartialVak)
+			if (parent instanceof BinVak || parent instanceof BreukVak || parent instanceof DiffVak || parent instanceof DiffPartialVak)
 			{
 				parentRegel = parent.children.get(1);
 				
 			}
-			else if(parent instanceof NdeLogVak || parent instanceof NdeWortelVak)
+			else if (parent instanceof NdeLogVak || parent instanceof NdeWortelVak)
 			{
 				parentRegel = parent.children.get(0);
 				
 			}
-			else if(parent instanceof IntegraalVak || parent instanceof PrvVak)
+			else if (parent instanceof IntegraalVak || parent instanceof PrvVak)
 			{
 				int index = parent.children.indexOf(this);
-				if(index == 0)
+				if (index == 0)
 					parentRegel = parent.children.get(1);
-				else if(index == 2)
+				else if (index == 2)
 					parentRegel = parent.children.get(0);
 				else 
 					return;
+			}
+			else if (parent instanceof VectorVak)
+			{
+				int index = parent.children.indexOf(this);
+				if (parent.children.size() > index + 1)
+					parentRegel = parent.children.get(index + 1);
+				else
+					parentRegel = parent.children.get(0);
+			}
+			else if (parent instanceof MatrixVak)
+			{
+				int index = parent.children.indexOf(this);
+				if (parent.children.size() > index + ((MatrixVak) parent).getAantalKolommen())
+					parentRegel = parent.children.get(index + ((MatrixVak) parent).getAantalKolommen());
+				else
+					parentRegel = parent.children.get(index + ((MatrixVak) parent).getAantalKolommen() - parent.getChildrenSize());
 			}
 			else
 				return;
