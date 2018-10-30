@@ -5,6 +5,7 @@ import java.util.TreeMap;
 
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -92,6 +93,7 @@ public class StudentModelLogger implements Logging {
 
 	@Override
 	public void setClassName(String string) {
+	  map.put("className", new JSONString(string));
 	}
 
 	@Override

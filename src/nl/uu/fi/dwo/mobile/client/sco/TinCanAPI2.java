@@ -191,11 +191,6 @@ public class TinCanAPI2 extends SCORM_guest implements Scorm2004IF {
 	}
 
 	@Override
-	public String Initialize() {
-		return super.Initialize();
-	}
-
-	@Override
 	public void Initialize(AsyncCallback<Void> callback) {
 		this.callback = callback;
 		if(true)

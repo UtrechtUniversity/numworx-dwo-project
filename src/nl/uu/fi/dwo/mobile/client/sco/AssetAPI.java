@@ -124,13 +124,13 @@ public class AssetAPI implements Scorm2004IF {
 	}
 
 	@Override
-	public String Initialize() {
+	public Promise<String> Initialize() {
 		try {
-			SetInitialize(guid, true);
+			return Promises.resolved(SetInitialize(guid, true));
 		} catch (Exception e) {
 			logger.severe("Initialize:"+e);
+			return Promises.failed(e);
 		}
-		return "";
 	}
 	
 	public void Initialize(final AsyncCallback<Void> callback) { if(callback!=null) callback.onSuccess(null); }

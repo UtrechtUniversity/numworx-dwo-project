@@ -18,7 +18,7 @@ public class SCORM_2004_API implements Scorm2004IF {
 	}
 
 	
-	public native String Initialize() /*-{
+	public native String Initialize0() /*-{
 		return $wnd.doInitialize()
 	}-*/;
 	
@@ -57,7 +57,7 @@ public class SCORM_2004_API implements Scorm2004IF {
 			String dworole = GetValue("USER_GROUP");
 			if("UG_TEACHER".equals(dworole))
 				return Role.Instructor;
-		} catch(Exception _) {}
+		} catch(Exception unused) {}
 		
 		return Role.Learner;
 	}
@@ -67,6 +67,15 @@ public class SCORM_2004_API implements Scorm2004IF {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	  public Promise<String> Initialize() {   
+	    try {
+	      return Promises.resolved(Initialize0());
+	    } catch (Exception e) {
+	      return Promises.failed(e);
+	    }
+	  }
 
 
 }

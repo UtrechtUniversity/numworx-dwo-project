@@ -18,7 +18,7 @@ public interface Scorm2004IF {
 
 	Promise<String> Terminate();
 	
-	String Initialize();
+	Promise<String> Initialize();
 
 // Bootstrap method, 
 	public void Initialize(final AsyncCallback<Void> callback);

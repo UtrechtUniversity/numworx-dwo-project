@@ -12,11 +12,12 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class SCORM_guest implements Scorm2004IF {
 
 	
-	private String location;
+	protected static final Promise<String> PROMISES = Promises.resolved("");
+    private String location;
 	
 	@Override
 	public Promise<String> Commit() {
-		return Promises.resolved("");
+		return PROMISES;
 	}
 
 	@Override
@@ -66,13 +67,13 @@ public class SCORM_guest implements Scorm2004IF {
 
 	@Override
 	public Promise<String> Terminate() {
-		return Promises.resolved("");
+		return PROMISES;
 	}
 
 	@Override
-	public String Initialize() {
+	public Promise<String> Initialize() {
 		location = "";
-		return "";
+		return PROMISES;
 	}
 
 	public void setScoID(String scoID) {

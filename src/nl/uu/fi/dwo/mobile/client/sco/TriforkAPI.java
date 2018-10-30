@@ -74,8 +74,8 @@ public class TriforkAPI implements Scorm2004IF {
 	}
 
 	@Override
-	public String Initialize() {
-		return "";
+	public Promise<String> Initialize() {
+      return Promises.resolved("");
 	}
 
 	public void Initialize(final AsyncCallback<Void> callback) { if(callback!=null) callback.onSuccess(null); }
