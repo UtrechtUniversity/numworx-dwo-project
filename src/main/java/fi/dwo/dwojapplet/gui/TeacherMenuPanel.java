@@ -59,7 +59,7 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
         /* Add StudentModel Button */
 //        studentModelButton = new MenuPanelButton(Dwo2LocaleMessageTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2LocaleMessageCode.GUI_Button_StudentModels));
         if(DwoHelper.isTest() && DwoHelper.isPremium()){
-          studentModelButton = new MenuPanelButton("StudentModels");
+          studentModelButton = new MenuPanelButton(TextMapper.getText("Studentmodels"));
         studentModelButton.addActionListener(this);
         this.add(studentModelButton);
         }

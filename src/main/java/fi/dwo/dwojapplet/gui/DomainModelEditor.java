@@ -352,13 +352,25 @@ public class DomainModelEditor extends JPanel implements ActionListener
 	  extractModel(locale);
 	}
 	
+	public DomStudentModelStructure getModel() {
+	  switchModel(locale);
+	  return model;
+	}
+	
 	public String getText() {
+	  switchModel(locale);
 	  text = GENSON.serialize(model);
 	  return text;
 	}
 
   public void setEditable(boolean b) {
     setEnabled(b);
+    modelTextField.setEditable(b);
+    for(JTextField item: categoryTextFields) item.setEditable(b);
+    for(JTextField[] items: objectiveTextFields) {
+      for (JTextField item: items)
+        item.setEditable(b);
+    }
   }
 
   public boolean isEditable() {
