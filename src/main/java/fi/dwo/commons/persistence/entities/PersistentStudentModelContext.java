@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -190,6 +192,7 @@ public class PersistentStudentModelContext implements Serializable {
     
     public void fillDomStudentModelContext(DomStudentModelContext context){
         context.setId(buildPersistenceId(modelID));
+        context.setOptLock(optlock);
         context.setModelStructure(modelStructure);
     }
 //    Future design
@@ -206,4 +209,11 @@ public class PersistentStudentModelContext implements Serializable {
 //    public void setClassType(StudentModelClassType classType) {
 //        this.classType = classType;
 //    }
+    
+    @PrePersist
+    @PreUpdate
+    void changeTimestamp() {
+        lastChangeTimeStamp = System.currentTimeMillis();
+    }
+
 }
