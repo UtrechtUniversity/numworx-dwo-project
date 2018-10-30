@@ -23,6 +23,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
@@ -448,5 +449,9 @@ public class DwoGlobalVars {
 
     public String buildHelpUrl(String tag) {
         return helpUrlPrefix + tag;
+    }
+
+    public boolean isPremium() {
+      return getActiveSchoolRoleAndClass().getSchool().getAboType() == AboType.premium;
     }
 }

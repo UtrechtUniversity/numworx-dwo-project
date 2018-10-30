@@ -388,4 +388,9 @@ public class ModulesOfSchoolclassPresenter {
         return null;
 
     }
+    
+    @JsMethod
+    public boolean hasToets() {
+      return dwoGlobalVars.isPremium();
+    }
 }

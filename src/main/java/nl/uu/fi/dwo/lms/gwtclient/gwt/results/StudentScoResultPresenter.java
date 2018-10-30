@@ -172,12 +172,30 @@ public class StudentScoResultPresenter {
 			"LMSSetValue" : function(key, value) {
 				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::setValue(Ljava/lang/String;Ljava/lang/String;)(key, value)
 			},
+            "Initialize" : function(dummy) {
+                return "true"
+            },
 			"GetValue" : function(key) {
 				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::getValue(Ljava/lang/String;)(key)
 			},
 			"SetValue" : function(key, value) {
 				return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::setValue(Ljava/lang/String;Ljava/lang/String;)(key, value)
 			},
+            "GetLastError" : function() {
+                return "0"
+            },
+            "GetDiagnostic" : function(dummy) {
+                return ""
+            },
+            "GetErrorString" : function(code) {
+                return ""
+            },
+            "Commit" : function(dummy) {
+                return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::Commit(Ljava/lang/String;)(dummy)
+            },
+            "Terminate" : function(dummy) {
+                return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter::Finish(Ljava/lang/String;)(dummy)
+            },
 		// TODO more to follow...			
 		};
 		$wnd.API = api;
