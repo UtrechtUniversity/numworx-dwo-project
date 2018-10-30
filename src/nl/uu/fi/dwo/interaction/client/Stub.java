@@ -37,13 +37,15 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		return String.valueOf(view.isCorrect());
 	}
 	
-	private void setState(String jso) {
+	@SuppressWarnings("deprecation")
+    private void setState(String jso) {
 		JSONObject js = JSONParser.parseLenient(jso).isObject();
 		HashMap<String,Object> result = JSONUtilities.wrapMap(js);
 		view.setState(result);
 	}
 	
-	private void init(int width, int height, String launchdata, JavaScriptObject randomValues) {
+	@SuppressWarnings("deprecation")
+  private void init(int width, int height, String launchdata, JavaScriptObject randomValues) {
 		Map<String, Number> numbers = new HashMap<String,Number>();
 		Map<String,Object> result;
 
@@ -220,7 +222,6 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	public void enter() {
 		if(editor != null)
 			editor.enter();
-			
 	}
 
 	@Override
@@ -357,7 +358,11 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 
 	@Override
 	public LessonMode getLessonMode() {
-		return LessonMode.normal; // TODO retrieve lesson_mode from 'StubView' 
+      try {
+        return LessonMode.valueOf(getContext().getString("lesson_mode"));
+      } catch (Throwable t) {
+        return LessonMode.normal; // retrieve lesson_mode from 'StubView' 
+      }
 	}
 
 	@Override
@@ -367,7 +372,11 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 
 	@Override
 	public Role getRole() {
-		return ROLE_LEARNER;
+	  try {
+	    return Role.valueOf(getContext().getString("roles"));
+	  } catch (Throwable t) {
+	    return ROLE_LEARNER;
+	  }
 	}
 
 	@Override
@@ -419,5 +428,23 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	public ObjectMap getConfiguration() {
 		return JSONUtilities.wrapMap(getConfiguration1());
 	}
+
+	private static native JavaScriptObject getContext0() /*-{
+	  return getContext($wnd.outer);
+	}-*/;
+	
+	private static JSONObject getContext1() {
+	  try {
+	    return new JSONObject(getContext0());
+	  } catch(Throwable t) {
+	    return null;
+	  }
+	}
+	
+	
+  @Override
+  public ObjectMap getContext() {
+    return JSONUtilities.wrapMap(getContext1());
+  }
 
 }

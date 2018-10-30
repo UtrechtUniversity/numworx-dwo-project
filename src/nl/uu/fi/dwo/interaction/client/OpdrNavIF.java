@@ -38,4 +38,5 @@ public interface OpdrNavIF
 	void unpause();
 	
 	ObjectMap getConfiguration(); // instellingen
+	ObjectMap getContext();       // context, bijv. isPremium
 }
