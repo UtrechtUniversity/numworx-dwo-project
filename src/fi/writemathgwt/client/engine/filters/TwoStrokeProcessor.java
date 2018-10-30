@@ -200,7 +200,7 @@ public class TwoStrokeProcessor {
 		
 		// ;
 			if (".".equals(teken1) && ",".equals(teken2))
-				if(hasCloseXDistance(stroke1, stroke2, 10,0,1,0,1) && hasYDistance(stroke1, stroke2, (int)averageHeight, 20,  0, 2, 0, 2))
+				if(hasCloseXDistance(stroke1, stroke2, 10,0,1,0,1) && hasYDistance(stroke1, stroke2, (int)averageHeight, 30,  0, 2, 0, 2))
 					return ";";
 		
 			

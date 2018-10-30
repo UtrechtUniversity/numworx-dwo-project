@@ -82,7 +82,11 @@ public class StrokeMatcher {
 	}
 	
 	public static String findTeken(StrokeContainer strokeContainer, Stroke stroke) {
-		String teken = findMatches(stroke)[0];
+		String teken = stroke.getOneStrokeTeken();
+		if(teken==null) {
+			teken = findMatches(stroke)[0];
+			stroke.setOneStrokeTeken(teken);
+		}
 		if(teken==null)
 			return null;
 		if(stroke.getParsePointsbox().width<5 && stroke.getParsePointsbox().height<5)
@@ -94,25 +98,25 @@ public class StrokeMatcher {
 			teken = teken.substring(0,index);
 		if("of".equals(teken))
 			teken = " of ";
-		if("/".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight)
-			teken = "1";
-		if("\\".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight)
-			teken = "1";
-		if(")".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight && 3*stroke.getParsePointsbox().width<stroke.getParsePointsbox().height)
-			teken = "1";
-		if("(".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight && 3*stroke.getParsePointsbox().width<stroke.getParsePointsbox().height)
-			teken = "1";
-		if("l".equals(teken) && stroke.getParsePointsbox().height<1.2*strokeContainer.averageHeight && 3*stroke.getParsePointsbox().width<stroke.getParsePointsbox().height)
-			teken = "1";
+		teken = filterOpMaat(strokeContainer, stroke, teken);
 		return teken;
 	}
 	
 	public static String findTekenRaw(StrokeContainer strokeContainer, Stroke stroke) {
-		String teken = findMatches(stroke)[0];
-		if(stroke.getParsePointsbox().width<4 && stroke.getParsePointsbox().height<4)
+		String teken = stroke.getOneStrokeTeken();
+		if(teken==null) {
+			teken = findMatches(stroke)[0];
+			stroke.setOneStrokeTeken(teken);
+		}
+		if(stroke.getParsePointsbox().width<5 && stroke.getParsePointsbox().height<5)
 			teken = ".";
 		if("sqrt_1".equals(teken) && stroke.getParsePointsbox().height<15)
 			teken = "-";
+		teken = filterOpMaat(strokeContainer, stroke, teken);
+		return teken;
+	}
+	
+	public static String filterOpMaat(StrokeContainer strokeContainer, Stroke stroke, String teken) {
 		if("/".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight)
 			teken = "1";
 		if("\\".equals(teken) && stroke.getParsePointsbox().height<strokeContainer.averageHeight)

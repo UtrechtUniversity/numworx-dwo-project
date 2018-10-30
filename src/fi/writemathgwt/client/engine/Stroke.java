@@ -29,6 +29,7 @@ public class Stroke {
 	private long timeStamp;
 	private boolean parseable = true;
 	private double length;
+	private String oneStrokeTeken = null;
 	
 	public static Stroke setState(Map<String, Object> map) {
 		ObjectMap h = JSONUtilities.wrapMap(map);
@@ -109,6 +110,14 @@ public class Stroke {
 		angles = new double[parsePoints.size()-1];
 		makeAngles();
 		makeDAngles();
+	}
+	
+	public void setOneStrokeTeken(String s) {
+		oneStrokeTeken = s;
+	}
+	
+	public String getOneStrokeTeken() {
+		return oneStrokeTeken;
 	}
 	
 	public HashMap<String,Object> getState() {
