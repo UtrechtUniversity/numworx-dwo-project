@@ -260,19 +260,19 @@ public class VectorVak extends FormuleElementWithChildren
 		}
 	}
 
-	/**
-	 * Verwijder alle kinderen.
-	 */
-	private void removeKinderen()
-	{
-		Iterator i = children.iterator();
-		
-	    while (i.hasNext())
-	    {
-	    	FormuleRegel kind = (FormuleRegel) i.next();
-	    	children.remove(kind);
-	    }
-	}
+//	/**
+//	 * Verwijder alle kinderen.
+//	 */
+//	private void removeKinderen()
+//	{
+//		Iterator i = children.iterator();
+//		
+//	    while (i.hasNext())
+//	    {
+//	    	FormuleRegel kind = (FormuleRegel) i.next();
+//	    	children.remove(kind);
+//	    }
+//	}
 
 	public String toString()
 	{
