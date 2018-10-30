@@ -40,7 +40,6 @@ public class SecureTeacherStudentModelManager {
 
   public static DomStudentModelContext addModel(DomStudentModelContext submit)
       throws Dwo2Exception {
-    DomStudentModelContext src;
     RestStudentModelContext rest = new RestStudentModelContext();
     rest.setRestContext(getContext());
     rest.setDomStudentModelContext(submit);
@@ -51,4 +50,30 @@ public class SecureTeacherStudentModelManager {
         new Object[] {RestAuthenticator.getInstance().getUsername()});
     return result;
   }
+
+  public static DomStudentModelContext updateModel(DomStudentModelContext submit)
+	      throws Dwo2Exception {
+	    RestStudentModelContext rest = new RestStudentModelContext();
+	    rest.setRestContext(getContext());
+	    rest.setDomStudentModelContext(submit);
+
+	    DomStudentModelContext result = StoredRestManager.getInstance()
+	        .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/update", DomStudentModelContext.class, rest);
+	    LOG.log(Level.FINE, "Updated studentmodel of teacher with username {0} to his school.",
+	        new Object[] {RestAuthenticator.getInstance().getUsername()});
+	    return result;
+	  }
+
+  public static Boolean removeModel(DomStudentModelContext submit)
+	      throws Dwo2Exception {
+	    RestStudentModelContext rest = new RestStudentModelContext();
+	    rest.setRestContext(getContext());
+	    rest.setDomStudentModelContext(submit);
+
+	    Boolean result = StoredRestManager.getInstance()
+	        .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/remove", Boolean.class, rest);
+	    LOG.log(Level.FINE, "Removed studentmodel of teacher with username {0} to his school.",
+	        new Object[] {RestAuthenticator.getInstance().getUsername()});
+	    return result;
+	  }
 }
