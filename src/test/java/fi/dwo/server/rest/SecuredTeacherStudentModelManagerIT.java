@@ -9,7 +9,9 @@ import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
@@ -108,9 +110,10 @@ public class SecuredTeacherStudentModelManagerIT {
     /**
      * Test of addStudentModel method, of class
      * SecuredTeacherStudentModelManager.
+     * @throws JSONException 
      */
     @Test
-    public void testAddStudentModel() {
+    public void testAddStudentModel() throws JSONException {
         System.out.println("addStudentModel");
 
         //build security context
@@ -177,20 +180,66 @@ public class SecuredTeacherStudentModelManagerIT {
         SecuredTeacherStudentModelManager instance = new SecuredTeacherStudentModelManager();
         expResult = instance.addStudentModel(sc, restModel);
 
-        //comparing structure attribute between submitted data and returned data.
-        Genson g = new GensonBuilder().withConverters(new GensonMapConverter()).create();        
-        String expModel = g.serialize(expResult.getModelStructure());
-        System.out.println(expModel);
-
-        String out = g.serialize(restModel);
-        String jsonModel = g.serialize(restModel.getDomStudentModelContext().getModelStructure());
-        System.out.println(jsonModel);
-        try {
-            JSONAssert.assertEquals(expModel, jsonModel, JSONCompareMode.NON_EXTENSIBLE);
-        } catch (JSONException ex) {
-            LOG.log(Level.SEVERE,"Returned added studentModelStructure differs from submitted.",ex);
-            fail("Json Exception.");
-        }
+        jsonAssert(restModel, expResult);
+        
     }
 
+    private void jsonAssert(RestStudentModelContext restModel, DomStudentModelContext expResult)
+        throws JSONException {
+      //comparing structure attribute between submitted data and returned data.
+      Genson g = new GensonBuilder().withConverters(new GensonMapConverter()).create();        
+      String expModel = g.serialize(expResult.getModelStructure());
+      System.out.println(expModel);
+
+      String out = g.serialize(restModel);
+      String jsonModel = g.serialize(restModel.getDomStudentModelContext().getModelStructure());
+      System.out.println(jsonModel);
+      JSONAssert.assertEquals(expModel, jsonModel, JSONCompareMode.NON_EXTENSIBLE);
+    }
+
+    @Test public void testRemoveStudentModels() throws Exception {
+      System.out.println("removeStudentModels");
+      SecurityContext sc = new TestSecurityContext("user03", RoleType.TEACHER);
+      DomHasRole hr = new DomHasRole();
+      //MYSQL;PersistentHasRole;00000000000000000010;00000000000000000003 TEACHER School01
+      PersistentHasRolePK key = new PersistentHasRolePK(10L, 3L);
+      PersistenceId id = PersistentHasRole.buildPersistenceId(key);
+      hr.setId(id);
+      hr.setUserId(PersistentUser.buildPersistenceId(10L));
+      hr.setSchoolGroupId(PersistentSchoolGroup.buildPersistenceId(10L));
+      DomContext context = new DomContext();
+      context.setDomHasRole(hr);
+      SecuredTeacherStudentModelManager instance = new SecuredTeacherStudentModelManager();
+      RestStudentModelContext model = new RestStudentModelContext();
+      model.setRestContext(context);
+      DomStudentModelContext dom = new DomStudentModelContext();
+      dom.setId(PersistentStudentModelContext.buildPersistenceId(1L));
+      model.setDomStudentModelContext(dom);
+      Boolean result = instance.removeStudentModel(sc, model);
+      assertTrue(result.booleanValue());
+      assertEquals("size", 1, StudentModelContextManager.findEntities().size());
+    }
+    
+    @Test public void testUpdateStudentModel() throws Exception {
+      System.out.println("updateStudentModels");
+      SecurityContext sc = new TestSecurityContext("user03", RoleType.TEACHER);
+      DomHasRole hr = new DomHasRole();
+      //MYSQL;PersistentHasRole;00000000000000000010;00000000000000000003 TEACHER School01
+      PersistentHasRolePK key = new PersistentHasRolePK(10L, 3L);
+      PersistenceId id = PersistentHasRole.buildPersistenceId(key);
+      hr.setId(id);
+      hr.setUserId(PersistentUser.buildPersistenceId(10L));
+      hr.setSchoolGroupId(PersistentSchoolGroup.buildPersistenceId(10L));
+      DomContext context = new DomContext();
+      context.setDomHasRole(hr);
+      SecuredTeacherStudentModelManager instance = new SecuredTeacherStudentModelManager();
+      RestStudentModelContext model = new RestStudentModelContext();
+      model.setRestContext(context);
+      DomStudentModelContext dom = StudentModelContextManager.findEntity(1L).buildDomStudentModelContext();
+      model.setDomStudentModelContext(dom);
+      dom.getModelStructure().getInfo().getTitle().put("jp", "?????");
+      DomStudentModelContext result = instance.updateStudentModel(sc, model);
+      jsonAssert(model,result);
+    }
+    
 }

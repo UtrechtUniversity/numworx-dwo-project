@@ -320,6 +320,10 @@ public class TeacherDomainAuthorizer {
 
         List<DomSchoolClassId> getSharedTeacherClasses(DomTeacher aTeacher) throws Dwo2Exception;
 
+        DomStudentModelContext updateStudentModel(DomStudentModelContext domStudentModelContext) throws Dwo2Exception;
+
+        Boolean removeStudentModel(DomStudentModelContext domStudentModelContext) throws Dwo2Exception;
+
 //        TeacherState_HR_R_S_SC_SG_U addASchoolClass(DomSchoolClass schoolClassFrom)  throws Dwo2Exception;
     }
 

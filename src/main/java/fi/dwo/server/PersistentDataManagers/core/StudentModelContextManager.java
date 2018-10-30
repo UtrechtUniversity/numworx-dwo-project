@@ -66,16 +66,26 @@ public class StudentModelContextManager {
             model.setLastChangeTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());            
             model = em.merge(model);
             em.getTransaction().commit();
+        } catch (PersistenceException e) {
+          String msg = e.getLocalizedMessage();
+          if (msg == null || msg.length() == 0) {
+              Long id = model.getModelID();
+              if (findEntity(id) == null) {
+                  LOG.log(Level.INFO, "The PersistentStudentModelContext with " + id + " no longer exists.", e);
+                  throw e;
+              }
+          }
+          throw e;
         } catch (Exception e) {
-            String msg = e.getLocalizedMessage();
-            if (msg == null || msg.length() == 0) {
-                Long id = model.getModelID();
-                if (findEntity(id) == null) {
-                    LOG.log(Level.INFO, "The PersistentStudentModelContext with " + id + " no longer exists.", e);
-                    throw new PersistenceException(e);
-                }
-            }
-            throw new PersistenceException(e);
+          String msg = e.getLocalizedMessage();
+          if (msg == null || msg.length() == 0) {
+              Long id = model.getModelID();
+              if (findEntity(id) == null) {
+                  LOG.log(Level.INFO, "The PersistentStudentModelContext with " + id + " no longer exists.", e);
+                  throw new PersistenceException(e);
+              }
+          }
+          throw new PersistenceException(e);
         } finally {
             if (em != null) {
                 em.close();
@@ -100,7 +110,7 @@ public class StudentModelContextManager {
                 model.getModelID();
             } catch (EntityNotFoundException e) {
                 LOG.log(Level.FINE, "The PersistentStudentModelContext with " + id + " no longer exists.", e);
-                throw new PersistenceException(e);
+                throw e;
             }
             em.remove(model);
             em.getTransaction().commit();

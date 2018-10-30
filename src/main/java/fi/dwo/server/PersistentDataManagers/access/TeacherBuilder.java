@@ -26,6 +26,7 @@ import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
@@ -356,6 +357,66 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
         }
     }
 
+    @Override
+    public DomStudentModelContext updateStudentModel(DomStudentModelContext model) throws Dwo2Exception {
+        try {
+            
+            Long id = MySQLPersistenceId.getNativeId(model);
+            PersistentStudentModelContext pModel = StudentModelContextManager.findEntity(id);
+            if ( pModel == null) {
+              throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Illegal operation");
+            }
+            //verify if course is in school
+            if ( !pModel.getSchoolID().equals(instance.getContext().getUserCtx().school.getSchoolID())) {
+                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested studentmode {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{this.instance.getContext().getUserCtx().getUser().getUsername(), instance.getContext().getUserCtx().getSchool().getSchoolID(), (pModel != null) ? pModel.getSchoolID() : "model==null"});
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + this.instance.getContext().getUserCtx().getUser().getUsername() + ".");
+            }
+            if ( model.getOptLock() != null && !pModel.getOptlock() .equals (model.getOptLock())) {
+              LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested studentmode {2} is from a different optlock that is registered for hasRole in school {1} with usercode {0}.", new Object[]{this.instance.getContext().getUserCtx().getUser().getUsername(), instance.getContext().getUserCtx().getSchool().getSchoolID(), (pModel != null) ? pModel.getSchoolID() : "model==null"});     
+              // throw HTTPERRORCODE CONFLICT
+            } else if (model.getOptLock() != null) {
+              pModel.setOptlock(model.getOptLock());
+            }
+            pModel.setModelStructure(model.getModelStructure());
+            //return instance.teacherActions.updateStudentModel(instance.getContext(), pModel).buildDomStudentModelContext();
+            
+            return StudentModelContextManager.edit(pModel).buildDomStudentModelContext(); // FIXME netjes maken!
+            
+        } catch (Dwo2Exception e) {
+            String msg = MessageFormat.format("Username {0}: Internal error: {1}", new Object[]{instance.getContext().getUserCtx().getUser().getUsername(), e.getMessage()});
+            LOG.log(Level.WARNING, msg, e);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
+        }
+    }
+   
+    @Override
+    public Boolean removeStudentModel(DomStudentModelContext model) throws Dwo2Exception {
+        try {
+          Long id = MySQLPersistenceId.getNativeId(model);
+          PersistentStudentModelContext pModel = StudentModelContextManager.findEntity(id);
+          if ( pModel == null) {
+            return Boolean.FALSE;
+          }
+          //verify if course is in school
+          if ( !pModel.getSchoolID().equals(instance.getContext().getUserCtx().school.getSchoolID())) {
+              LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Requested studentmode {2} is from a different school that is registered for hasRole in school {1} with usercode {0}.", new Object[]{this.instance.getContext().getUserCtx().getUser().getUsername(), instance.getContext().getUserCtx().getSchool().getSchoolID(), (pModel != null) ? pModel.getSchoolID() : "model==null"});
+              throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + this.instance.getContext().getUserCtx().getUser().getUsername() + ".");
+          }
+            //return instance.teacherActions.removeStudentModel(instance.getContext(), pModel).buildDomStudentModelContext();
+          StudentModelContextManager.destroy(id);
+          return Boolean.TRUE;
+        } catch (EntityNotFoundException e) {
+          return Boolean.FALSE;
+        } catch (Dwo2Exception e) {
+            String msg = MessageFormat.format("Username {0}: Internal error: {1}", new Object[]{instance.getContext().getUserCtx().getUser().getUsername(), e.getMessage()});
+            LOG.log(Level.WARNING, msg, e);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
+        }
+    }
+    
+    
+    
+    
     public TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U init(SchoolAdminTeacherDomainAuthorizer.Context ctx) throws Dwo2Exception {
         if (ctx.getUserCtx().roleType == RoleType.TEACHER) {
             this.instance.setContext(new TeacherDomainAuthorizer.Context(ctx));

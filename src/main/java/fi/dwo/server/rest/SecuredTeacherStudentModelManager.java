@@ -68,10 +68,39 @@ public class SecuredTeacherStudentModelManager {
         try {
             TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                     .setHasRole(model.getRestContext().getDomHasRole())
-                    //.setDefaultHasRole()
                     .buildSchoolAdminTeacher()
                     .setTeacher();
             return build.addStudentModel(model.getDomStudentModelContext());
+            
+        } catch (Dwo2Exception e) {
+            throw new Dwo2RestException(e);
+        }
+    }
+    @PUT
+    @Produces({"application/json"})
+    @Path("/update")
+    public DomStudentModelContext updateStudentModel(@Context SecurityContext sc, RestStudentModelContext model) {
+        try {
+            TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+                    .setHasRole(model.getRestContext().getDomHasRole())
+                    .buildSchoolAdminTeacher()
+                    .setTeacher();
+            return build.updateStudentModel(model.getDomStudentModelContext());
+            
+        } catch (Dwo2Exception e) {
+            throw new Dwo2RestException(e);
+        }
+    }
+    @PUT
+    @Produces({"application/json"})
+    @Path("/remove")
+    public Boolean removeStudentModel(@Context SecurityContext sc, RestStudentModelContext model) {
+        try {
+            TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+                    .setHasRole(model.getRestContext().getDomHasRole())
+                    .buildSchoolAdminTeacher()
+                    .setTeacher();
+            return build.removeStudentModel(model.getDomStudentModelContext());
             
         } catch (Dwo2Exception e) {
             throw new Dwo2RestException(e);
