@@ -8,15 +8,23 @@ import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Style.TextAlign;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -31,6 +39,13 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 	 */
 	private DialogBox vectorDimensionDialog;
 
+	/**
+	 * Dialoog om de dimensie van matrix te kiezen.
+	 */
+	private DialogBox matrixDimensionDialog;
+	private ListBox rijBox;
+	private ListBox kolomBox;
+
 	int getKeyboardHeight() {
 		return HEIGHT;
 	}
@@ -40,6 +55,7 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 
 	interface TabletKeyboardUiBinder extends UiBinder<Widget, DWODesktopKeyboard> {
 	}
+	
 
 	/**
 	 * Because this class has a default constructor, it can
@@ -66,6 +82,52 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 
 	private void initMatrixMenu()
 	{
+		FlexTable grid = new FlexTable();
+		grid.getFlexCellFormatter().setColSpan(1, 0, 3);
+		grid.getFlexCellFormatter().setAlignment(1, 0, HasHorizontalAlignment.ALIGN_CENTER, HasVerticalAlignment.ALIGN_MIDDLE);
+		matrixDimensionDialog = new DialogBox(true);
+		rijBox = new ListBox();
+		initListBox(rijBox);
+		rijBox.getElement().getStyle().setWidth(30, Unit.PX);
+		Label keerLabel = new Label("x");
+		kolomBox = new ListBox();
+		initListBox(kolomBox);
+		kolomBox.getElement().getStyle().setWidth(30, Unit.PX);
+		
+		ClickHandler handler = new ClickHandler() {
+			public void onClick(ClickEvent event)
+			{
+				processMatrixDimension(Integer.parseInt(rijBox.getSelectedItemText()), 
+					Integer.parseInt(kolomBox.getSelectedItemText()));
+			}
+		};
+		PushButton klaarButton = new PushButton("OK", handler);
+		klaarButton.getElement().getStyle().setWidth(30, Unit.PX);
+		klaarButton.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+		keerLabel.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+		
+		grid.setWidget(0, 0, rijBox);
+		grid.setWidget(0, 1, keerLabel);
+		grid.setWidget(0, 2, kolomBox);
+		grid.setWidget(1, 0, klaarButton);
+		matrixDimensionDialog.add(grid);
+	}
+
+	/**
+	 * Matrix is max 6 x 6.
+	 * 
+	 * @param list
+	 */
+	private void initListBox(ListBox list)
+	{
+		for (int i = 1; i < 7; i++)
+		{
+			list.addItem("" + i);
+		}
+		
+		list.setSelectedIndex(1);
+		list.setVisibleItemCount(list.getItemCount());
+
 	}
 
 	private void initVectorMenu()
@@ -130,7 +192,6 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 	@UiField(provided=true)
 	DWOkeyboardBundle resources = DWOTabletKeyboardFactory.resources;
 	
-	
 	@UiField
 	FKey t3_1,t3_2,t3_3,t3_4, t3_5,t3_6,t3_7,t3_8, t3_9,t3_10,t3_11,t3_12, t3_13,t3_14, t3_15;//,t3_15;
 	@UiField
@@ -179,7 +240,8 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 	@UiHandler("t4_15")
 	void onT4_15(ClickEvent e)
 	{
-		getEditor().matrix();
+		// toon dimensiekeuze
+		matrixDimensionDialog.showRelativeTo(this.t4_15);
 	}
 
 	@UiHandler("t3_16")
@@ -228,4 +290,13 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 		vectorDimensionDialog.hide();
 		t3_15.removeStyleName("hover");	
 	}
+	
+	protected void processMatrixDimension(int aantalRijen, int aantalKolommen)
+	{
+		FocusOnTouch.focus();
+		getEditor().matrix(aantalRijen, aantalKolommen);
+		matrixDimensionDialog.hide();
+		t4_15.removeStyleName("hover");	
+	}
+
 }
