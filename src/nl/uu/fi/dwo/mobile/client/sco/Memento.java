@@ -168,7 +168,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		this.pmodel = studentModel;
 		_instance = this;
 		register();
-		initialize();
+		//initialize(); is already done!
 		String value;
 		scoreRaw = getValue(SCORE_RAW);
 		String totalStr = getValue(TOTAL_TIME);
@@ -309,17 +309,17 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		}
 	}
 
-	private void initialize()
-	{
-		try
-		{
-			this.api.Initialize();
-		}
-		catch (Exception e)
-		{
-			logger.log(Level.SEVERE, "initialize Scorm API", e);
-		}
-	}
+//	private void initialize()
+//	{
+//		try
+//		{
+//			this.api.Initialize();
+//		}
+//		catch (Exception e)
+//		{
+//			logger.log(Level.SEVERE, "initialize Scorm API", e);
+//		}
+//	}
 
 	public double getScore()
 	{

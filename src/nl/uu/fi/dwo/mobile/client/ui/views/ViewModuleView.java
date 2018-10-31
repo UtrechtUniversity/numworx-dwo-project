@@ -33,8 +33,6 @@ public interface ViewModuleView extends IsWidget
 
 	public HeaderButton getBackButton();
 
-	void setApi(Scorm2004IF scorm_guest);
-
 	void close();
 	
 	AnchorContext getAnchorContext();

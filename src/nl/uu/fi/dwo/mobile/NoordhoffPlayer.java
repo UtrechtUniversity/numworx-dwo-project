@@ -1,11 +1,15 @@
 package nl.uu.fi.dwo.mobile;
 
+import org.osgi.util.promise.Promise;
+
+import com.google.gwt.core.client.GWT;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 
 import nl.uu.fi.dwo.mobile.client.dagger.DaggerWiskOpdrComponent;
+import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 
 public class NoordhoffPlayer extends WiskOpdrPlayer {
 
@@ -27,12 +31,12 @@ public class NoordhoffPlayer extends WiskOpdrPlayer {
 		view.zetMaatNoordhoff();
 	}
 
-	  protected void inject() {
-
-	    DaggerWiskOpdrComponent.builder()
-	    .moduleView(new ModuleViewModuleImpl(true))
-	    .build()
-	    .inject(this);
+	  protected Promise<String> inject() {
+	    Scorm2004IF api = GWT.create(Scorm2004IF.class);
+	    return api.Initialize().then( p -> {
+			DaggerWiskOpdrComponent.builder().api(api).moduleView(new ModuleViewModuleImpl(true)).premium(true).build().inject(this);
+			return p;
+	    });
 	  }
 
 	

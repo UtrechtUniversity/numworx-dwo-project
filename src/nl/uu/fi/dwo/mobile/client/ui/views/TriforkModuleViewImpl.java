@@ -5,14 +5,15 @@ import java.util.List;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.mobile.client.sco.FacetMemento;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
+import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 
 import com.google.gwt.user.client.Window;
 
 public class TriforkModuleViewImpl extends ViewModuleViewImpl implements
 		ViewModuleView , FacetAware {
 
-	public TriforkModuleViewImpl() {
-		super(false);
+	public TriforkModuleViewImpl(Scorm2004IF api) {
+		super(false,api);
 	}
 	
 	public void zetMaat() {

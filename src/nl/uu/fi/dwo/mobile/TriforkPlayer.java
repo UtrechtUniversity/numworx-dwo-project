@@ -5,24 +5,15 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.views.TriforkModuleViewImpl;
-import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
-import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
-
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.shared.GWT;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.logging.client.HasWidgetsLogHandler;
 import com.google.gwt.logging.client.LogConfiguration;
-import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
@@ -45,7 +36,7 @@ try {
 		logger.severe(getTarget());
 		
 		MGWTsetup();
-		view = new TriforkModuleViewImpl();
+		view = new TriforkModuleViewImpl(GWT.create(Scorm2004IF.class));
 		view.initialize();
 		view.zetMaat();
 		//RootPanel.get().add(view);

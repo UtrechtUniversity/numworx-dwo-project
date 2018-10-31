@@ -27,6 +27,8 @@ import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
+
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -486,6 +488,14 @@ public class DWOplayer implements EntryPoint
 			LinkElement link = style; style = null;
 			Element head = getHead();
 			head.removeChild(link);
+		}
+	}
+
+	public static boolean isPremium() {
+		try { 
+			return clientfactory.isPremium();
+		} catch (Throwable t){
+			return false;
 		}
 	}
 

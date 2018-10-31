@@ -209,15 +209,17 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private Widget next, prev, end;
 	private int[][][] beginStateMeasuredMisconceptions;
 
-	private Scorm2004IF api;
+	final private Scorm2004IF api;
 	private DWOLogger dwologger;
 
-	public ViewModuleViewImpl(boolean b) 
+	public ViewModuleViewImpl(boolean b, Scorm2004IF api) 
 	{
+		this(api);
 		standalone = b;
 	}
 	
-	public ViewModuleViewImpl() {
+	public ViewModuleViewImpl(Scorm2004IF api) {
+		this.api = api;
 	}
 
 	public HeaderButton getBackButton()
@@ -1823,7 +1825,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	public ViewModuleViewImpl initialize()
 	{
-		api = GWT.create(Scorm2004IF.class);
 		mainPanel = createAndBindUI();
 		//mainPanel = FocusOnTouch.wrap(mainPanel);
 		mainPanel.setStylePrimaryName("mainPanel");
@@ -2124,10 +2125,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	public Scorm2004IF getApi() {
 		return api;
-	}
-
-	public void setApi(Scorm2004IF api) {
-		this.api = api;
 	}
 
 	@Override

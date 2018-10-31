@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
@@ -31,18 +32,20 @@ public class DummyClientFactory implements ClientFactory {
 
 	final private EventBus eventBus;
 	final private RPCHandler handler;
+	final private boolean premium;
 	private ViewModuleView entryView;
 	private IsWidget logoutWidget;
 	private TrafficAgent agent;
 	
 	public DummyClientFactory() {
-	  this(new SimpleEventBus(),new DummyRPCHandler(), new TrafficAgent());
+	  this(new SimpleEventBus(),new DummyRPCHandler(), new TrafficAgent(), false);
 	}
 
-	@Inject DummyClientFactory(EventBus eventBus, RPCHandler handler, TrafficAgent agent) {
+	@Inject DummyClientFactory(EventBus eventBus, RPCHandler handler, TrafficAgent agent, @Named("premium") boolean premium) {
       this.eventBus = eventBus;
       this.handler = handler;
       this.agent = agent;
+      this.premium = premium;
     }
 
   @Override
@@ -184,4 +187,10 @@ public class DummyClientFactory implements ClientFactory {
     // TODO Auto-generated method stub
     return null;
   }
+  
+  
+	@Override
+	public boolean isPremium() {
+		return premium; // FIXME komt van buitenaf.
+	}
 }

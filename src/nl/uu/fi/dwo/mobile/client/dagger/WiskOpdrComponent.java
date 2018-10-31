@@ -1,9 +1,12 @@
 package nl.uu.fi.dwo.mobile.client.dagger;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
+import dagger.BindsInstance;
 import dagger.Component;
 import nl.uu.fi.dwo.mobile.WiskOpdrPlayer;
+import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 
 @Component(modules = { PlayerModule.class, DummyFactory.class, ModuleViewModule.class })
 @Singleton
@@ -13,5 +16,7 @@ public interface WiskOpdrComponent {
   interface Builder {
     WiskOpdrComponent build();
     Builder moduleView(ModuleViewModule module);
+    @BindsInstance Builder api(Scorm2004IF api);
+    @BindsInstance @Named("premium") Builder premium(boolean b);
   }
 }

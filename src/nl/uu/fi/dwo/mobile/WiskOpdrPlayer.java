@@ -5,7 +5,10 @@ import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
+import org.osgi.util.promise.Promise;
+
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LinkElement;
@@ -21,7 +24,7 @@ import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 
-import fi.dwo.gwt.lib.rest.DwoConstants;
+import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.client.dagger.DaggerWiskOpdrComponent;
@@ -30,7 +33,6 @@ import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.sco.WiskOpdrMemento;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
-import nl.uu.fi.dwo.mobile.client.ui.DummyClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
@@ -78,55 +80,62 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 //			RootPanel.get().add(customLogArea);
 //		}
 
-		inject();
-				
-		DWOplayer.clientfactory.getEventBus().addHandler(CBookEvent.TYPE, this);
-        MGWTsetup();
-        
-        DWOplayer.DWO_BUNDLE.dwoplayercss().ensureInjected();
+		Promise<String> inject = inject();
+		Promise<Void> v = inject.then(p -> {
 
-		zetMaat();
-		
-		Scorm2004IF api = view.getApi();
-		RootLayoutPanel.get().add(view);
-		
-		//History.addValueChangeHandler(this);
-		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+			DWOplayer.clientfactory.getEventBus().addHandler(CBookEvent.TYPE, this);
+			MGWTsetup();
 
-			@Override
-			public void onFailure(Throwable caught) {
-				logger.log(Level.SEVERE, "api.initialize()", caught);
+			DWOplayer.DWO_BUNDLE.dwoplayercss().ensureInjected();
+
+			zetMaat();
+
+			Scorm2004IF api = view.getApi();
+			RootLayoutPanel.get().add(view);
+			PromiseCallback<Void> init = new PromiseCallback<>();
+			api.Initialize(init); // need some extra async bootstrapping.
+			return init.getPromise();
+		});
+		v.then(result ->
+		{
+			Scorm2004IF api = view.getApi();
+			String target = Window.Location.getHash();
+			if (target.startsWith("#"))
+				target = target.substring(1);
+			int dot = target.lastIndexOf('.');
+			int colon = target.lastIndexOf(':');
+			if (dot > 0 && dot > colon) {
+				String location = target.substring(dot + 1);
+				target = target.substring(0, dot);
+				api.SetValue(Memento.LOCATION, location);
 			}
+			ValueChangeEvent<String> event = new InitialValueChangeEvent(target);
+			onValueChange(event);
+			return null;
+		}, fail -> {
+			logger.log(Level.SEVERE, "api.initialize()", fail.getFailure());
+		});
 
-			@Override
-			public void onSuccess(Void result) {
-				String target = Window.Location.getHash();
-				if(target.startsWith("#")) target = target.substring(1);
-				int dot = target.lastIndexOf('.');
-				int colon = target.lastIndexOf(':');
-				if(dot > 0 && dot > colon) {
-					String location = target.substring(dot+1);
-					target = target.substring(0, dot);
-					api.SetValue(Memento.LOCATION, location);
-				}
-				ValueChangeEvent<String> event = new InitialValueChangeEvent(target);
-				onValueChange(event);
-			}
-			
-		};
-		api.Initialize(callback); // need some async bootstrapping.	
-		
-	}
+}
 
 
 
-  protected void inject() {
+  protected Promise<String> inject() {
 //    DummyClientFactory dummyClientFactory = new DummyClientFactory();
 //    DWOplayer.clientfactory = dummyClientFactory;
 //    view = createEntryView(false);
 //    dummyClientFactory.setEntryView(view);
 
-    DaggerWiskOpdrComponent.builder().moduleView(new ModuleViewModuleImpl()).build().inject(this);
+    Scorm2004IF api = GWT.create(Scorm2004IF.class);
+    return api.Initialize().then( p -> {
+		DaggerWiskOpdrComponent.builder()
+			.api(api)
+			.premium("premium".equals(api.GetValue("dme.abo_type")))
+			.moduleView(new ModuleViewModuleImpl())
+			.build()
+			.inject(this);
+		return p;
+    });
   }
 
 	/**
@@ -137,7 +146,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 	class ModuleViewModuleImpl extends ModuleViewModule {
 	    boolean header = false;
 
-	    ModuleViewModuleImpl() {
+	  ModuleViewModuleImpl() {
       }
 
 
@@ -146,15 +155,15 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
       }
 
 
-      @Override
-    protected ViewModuleViewImpl getViewModuleView() {
-      return createEntryView(header);
+	@Override
+    protected ViewModuleViewImpl getViewModuleView(Scorm2004IF api) {
+      return createEntryView(header, api);
     }
 	  
 	}
 		
-	protected final ViewModuleViewImpl createEntryView(boolean header) {
-		return new ViewModuleViewImpl(header) {
+	protected final ViewModuleViewImpl createEntryView(boolean header, Scorm2004IF api) {
+		return new ViewModuleViewImpl(header, api) {
 			@Override
 			protected Memento createMemento() {
 				return new WiskOpdrMemento(getApi(), this, studentModel); // terminate at close, no "almost" close

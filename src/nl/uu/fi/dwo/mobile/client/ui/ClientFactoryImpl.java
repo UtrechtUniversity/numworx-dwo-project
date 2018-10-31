@@ -45,21 +45,21 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 {
 	private final EventBus eventBus = new SimpleEventBus();
 
-	final static Provider<ViewModuleView> NORMAL = new Provider<ViewModuleView>() {
+	final Provider<ViewModuleView> NORMAL = new Provider<ViewModuleView>() {
 
 		@Override
 		public ViewModuleView get() {
-			ViewModuleViewImpl impl = new ViewModuleViewImpl(true);
+			ViewModuleViewImpl impl = new ViewModuleViewImpl(true, setupAPI());
 			impl.initialize();
 			impl.zetMaat();
 			return impl;
 		}};
 	
-	final static Provider<ViewModuleView> NUMWORX_VIEW = new Provider<ViewModuleView>() {
+	final Provider<ViewModuleView> NUMWORX_VIEW = new Provider<ViewModuleView>() {
 
 		@Override
 		public ViewModuleView get() {
-			ViewModuleViewNumworx impl = new ViewModuleViewNumworx();
+			ViewModuleViewNumworx impl = new ViewModuleViewNumworx(setupAPI());
 			return impl.initialize();
 		}
 		
@@ -124,7 +124,6 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	public ViewModuleView getEntryView()
 	{
 		ViewModuleView view = entryView.get();
-		view.setApi(setupAPI());
 		return view;
 	}
 

@@ -1935,7 +1935,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		 * en niet alleen laatste status - Zichtbaarheid knop: alleen op laatste
 		 * pagina - Berekening en weergave categorie-score
 		 */
-		if(memento.getStudentModelStructure() != null) {
+		if(memento.getStudentModelStructure() != null && DWOplayer.isPremium()) {
 			StudentModelView view = StudentModelPanel.BUILDER.get();
 			view.setPopup(scoresObjectivesDialog);
 			view.setInitialStructure(memento.collectStudentModel());

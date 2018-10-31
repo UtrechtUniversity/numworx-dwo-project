@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 
 public class CorrectieFacade {
     private static CorrectieFacade instance = GWT.create(CorrectieFacade.class);
@@ -40,7 +41,7 @@ public class CorrectieFacade {
   }
     
   protected Widget prepareWidget(Widget view) {
-    if(Memento.instance().isEindtoetsVerzegeld()) 
+    if(Memento.instance().isEindtoetsVerzegeld() && DWOplayer.isPremium()) 
       return new CorrectieLayer(view);
     return (view);
   }

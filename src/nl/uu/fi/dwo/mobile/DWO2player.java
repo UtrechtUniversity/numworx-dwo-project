@@ -55,6 +55,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -178,6 +179,12 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			PersistenceId id = DwoGlobalVars.instance().getCurrentUser().getId();
 			return PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentUser);
 		}
+
+		@Override
+		public boolean isPremium() {
+			return withUser() && getSchool().getAboType() == AboType.premium;
+		}
+		
 	}
 
 

@@ -84,6 +84,8 @@ public interface ClientFactory
 
     Provider<NoCourseView> getNoCourseView();
 
+	boolean isPremium();
+
 // High level functions
 /*	Full varianten?
 	DomUserFull getUser();

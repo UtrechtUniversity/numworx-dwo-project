@@ -57,8 +57,8 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	private DockLayoutPanel root;
 	private MenuBar items = new MenuBar(true);
 	
-	public ViewModuleViewNumworx() {
-		delegate = new ViewModuleViewImpl(false);
+	public ViewModuleViewNumworx(Scorm2004IF api) {
+		delegate = new ViewModuleViewImpl(false, api);
 		pfx = DWOplayer.PARAMETERS.getResource("");
         final int correctie = 10; // width popup 
 		user = new MenuItem("<i class='fa fa-caret-down fa-2x'></i>", true, items) {
@@ -140,10 +140,6 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 
 	public HeaderButton getBackButton() {
 		return delegate.getBackButton();
-	}
-
-	public void setApi(Scorm2004IF scorm_guest) {
-		delegate.setApi(scorm_guest);
 	}
 
 	public void close() {
