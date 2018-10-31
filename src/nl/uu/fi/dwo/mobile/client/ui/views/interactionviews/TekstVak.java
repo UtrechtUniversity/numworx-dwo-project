@@ -729,8 +729,8 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				if(a.getParent() != this) {
 					this.add(a);
 				} else { 
-					a.removeFromParent();
-					this.add(a); // herplaats aan de top.
+//					a.removeFromParent();
+//					this.add(a); // herplaats aan de top.
 				}
 				this.setWidgetLeftWidth(a, panel.getLocationX(), Style.Unit.PX, panel.getBreedte(), Style.Unit.PX);
 				this.setWidgetTopHeight(a, panel.getLocationY(), Style.Unit.PX, panel.getHoogte(), Style.Unit.PX);
