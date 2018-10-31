@@ -93,4 +93,6 @@ public interface FormuleEditorIF {
 	void vector(int aantalRijen);
 	
 	void matrix();
+
+	void matrix(int aantalRijen, int aantalKolommen);
 }

@@ -203,4 +203,9 @@ public class AbstractEditor implements FormuleEditorIF {
 	{
 	}
 
+	@Override
+	public void matrix(int aantalRijen, int aantalKolommen)
+	{
+	}
+
 }
