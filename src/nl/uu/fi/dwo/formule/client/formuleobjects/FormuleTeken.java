@@ -315,7 +315,7 @@ public class FormuleTeken extends FormuleElement
 			} break;
 		case '[':
 			{
-				ctx.setLineWidth(0.6 * fm.getStrokeWidth());
+				ctx.setLineWidth(1.25 * fm.getStrokeWidth());
 				ctx.beginPath();
 				ctx.moveTo(3 * fm.getAscent() / 8, 0);
 				ctx.lineTo(fm.getAscent() / 8, 0);
@@ -326,7 +326,7 @@ public class FormuleTeken extends FormuleElement
 			} break;
 		case ']':
 			{
-				ctx.setLineWidth(0.6 * fm.getStrokeWidth());
+				ctx.setLineWidth(1.25 * fm.getStrokeWidth());
 				ctx.beginPath();
 				ctx.moveTo(fm.getAscent() / 8, 0);
 				ctx.lineTo(3 * fm.getAscent() / 8, 0);
