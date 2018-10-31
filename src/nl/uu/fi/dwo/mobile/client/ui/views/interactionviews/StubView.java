@@ -747,14 +747,13 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		return facade.wrapWidth(width);
 	}
 	
-	public void zetVolledigeBreedte(int breedte)
-	{
-		if(volledigeBreedte)
-		{
-			width = breedte;
-			initFrame();
-		}
-	}
+  public void zetVolledigeBreedte(int breedte) {
+    if (volledigeBreedte) {
+      volledigeBreedte = false; // one-shot, kan maar één keer worden aangeroepen.
+      width = breedte;
+      initFrame();
+    }
+  }
 
 	@Override
 	public void setAsHoogte(int ashoogte) {
