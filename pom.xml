@@ -16,7 +16,7 @@
         <ideas>/ideas/IdeasServlet</ideas>
         <comment>amazon, *.dwo.nl</comment>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <dwoVersion>2.2.10-SNAPSHOT</dwoVersion>
+        <dwoVersion>2.2.11-SNAPSHOT</dwoVersion>
     </properties>
     <dependencies>
         <dependency>

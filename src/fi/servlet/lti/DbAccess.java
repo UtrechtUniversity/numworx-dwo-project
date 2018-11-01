@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemSchoolManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
@@ -27,9 +27,11 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class DbAccess {
 	
+    private final static Logger LOG = Logger.getLogger(DbAccess.class.getName());
+  
     RestAuthenticator authenticator;
     StoredRestManager restManager;
-    SystemSchoolManager schoolManager;
+    SystemManager systemManager;
   
 	/**
 	 * @param dbaccess
@@ -49,8 +51,7 @@ public class DbAccess {
 				rest = new RestHandler(dbrest_url);
 				
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOG.log(Level.SEVERE, "dbrest.url", e);
 			}
 	}
 	
@@ -111,9 +112,6 @@ public class DbAccess {
       } catch (IOException e) {
           logger.log(Level.SEVERE, "registerSAML", e);
       }
-
-  
-  
 	  return false;
 	}
 	
@@ -210,7 +208,7 @@ public class DbAccess {
 			throws Dwo2Exception {
 		if(context_label != null) {
 	 		DomSchool s = getSchool(oauth_consumer_key);
-	 		List<DomSchoolClass> array = schoolManager.getSchoolClasses(s);
+	 		List<DomSchoolClass> array = systemManager.getSchoolClasses(s);
 			DomSchoolClass c;
 			for (int i = 0; i < array.size(); i++) {
 				c = array.get(i);
@@ -246,7 +244,7 @@ public class DbAccess {
 		Long id = Long.valueOf(key);
 		PersistenceId pid = PersistentSchool.buildPersistenceId(id);
         DomSchoolId submit = new DomSchoolId(pid);
-		DomSchoolFull result = schoolManager.getSchool(submit);
+		DomSchoolFull result = systemManager.getSchool(submit);
 		return result;
 	}
 	
