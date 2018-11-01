@@ -6,6 +6,7 @@ import fi.beans.scorm.ScormAdapter;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -286,6 +287,14 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
         	if("dme.team".equals(iDataModelElement))
         	{	if(user.getInClass() != null)
         		return ok(user.getInClass().getName());
+        	} else if ("dme.abo_type".equals(iDataModelElement))
+        	{
+        	  try {
+              return DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getAboType().name();
+            } catch (Exception e) {
+              LOG.log(Level.WARNING, "get dme.abo_type", e);
+              return AboType.standard.name();
+            }
         	}
         	return ko("");
         }
