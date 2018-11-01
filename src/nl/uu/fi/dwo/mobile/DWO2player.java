@@ -144,7 +144,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		@Override
 		public DomSchool getSchool() {
 			try {
-				return DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool();
+				return DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getSchool();
 			} catch (Exception e) {
 				return null;
 			}
@@ -167,7 +167,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		@Override
 		public RoleType getRoleType() {
 			try {
-				String roleName = DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName();
+				String roleName = DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getRole().getRoleName();
 				return RoleType.valueOf(roleName);
 			} catch (Exception e) {
 				return RoleType.ANONYMOUS;
