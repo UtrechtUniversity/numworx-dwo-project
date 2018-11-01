@@ -83,5 +83,16 @@ public interface FormuleEditorIF {
 	void stelsel();
 	
 	void tab();
+	
 	void shiftTab();
+	
+	void vectornotatie();
+	
+	void vector();
+
+	void vector(int aantalRijen);
+	
+	void matrix();
+
+	void matrix(int aantalRijen, int aantalKolommen);
 }

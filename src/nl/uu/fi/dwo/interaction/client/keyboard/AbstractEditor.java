@@ -183,4 +183,29 @@ public class AbstractEditor implements FormuleEditorIF {
 	public void shiftTab() {
 	}
 
+	@Override
+	public void vectornotatie()
+	{
+	}
+
+	@Override
+	public void vector()
+	{
+	}
+
+	@Override
+	public void matrix()
+	{
+	}
+
+	@Override
+	public void vector(int aantalRijen)
+	{
+	}
+
+	@Override
+	public void matrix(int aantalRijen, int aantalKolommen)
+	{
+	}
+
 }
