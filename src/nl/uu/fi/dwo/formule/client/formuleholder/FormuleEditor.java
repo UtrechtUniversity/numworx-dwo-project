@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.IntegraalVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Kwadraatvak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.LimietVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.MatrixVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeLogVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeWortelVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrimitieveVak;
@@ -21,6 +22,8 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrvVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SigmaVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.StelselVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SubscriptVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.VectorNotatieVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.VectorVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
@@ -456,6 +459,35 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		addElement(new StelselVak(getCurrentRegel()));
 	}
 
+	@Override
+	public void vector()
+	{
+		addElement(new VectorVak(getCurrentRegel()));
+	}
+
+	@Override
+	public void vector(int aantalRijen)
+	{
+		addElement(new VectorVak(getCurrentRegel(), aantalRijen));
+	}
+
+	@Override
+	public void matrix()
+	{
+		addElement(new MatrixVak(getCurrentRegel()));
+	}
+
+	@Override
+	public void matrix(int aantalRijen, int aantalKolommen)
+	{
+		addElement(new MatrixVak(getCurrentRegel(), aantalRijen, aantalKolommen));
+	}
+
+	@Override
+	public void vectornotatie()
+	{
+		addElement(new VectorNotatieVak(getCurrentRegel()));
+	}
 
 	public void clearMain() {
 		setCurrentElement(getMainRegel());

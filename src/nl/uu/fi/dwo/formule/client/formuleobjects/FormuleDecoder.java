@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Haakjesvak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.IntegraalVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.LimietVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.MatrixVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeLogVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeWortelVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.OptelVak;
@@ -20,6 +21,8 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrvVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SigmaVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.StelselVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SubscriptVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.VectorNotatieVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.VectorVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.VermenigvuldigingVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
 
@@ -60,6 +63,9 @@ public class FormuleDecoder
 		case 'c': return new ConjugVak(holder);
 		case 'y': return new BinVak(holder);
 		case 'Q': return new StelselVak(holder);
+		case 'Y': return new VectorVak(holder);
+		case 'M': return new MatrixVak(holder);
+		case 'z': return new VectorNotatieVak(holder);
 		default: return null;
 		}			
 		
