@@ -417,7 +417,7 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<DWOplayerVersion>2.2.10</DWOplayerVersion>
+		<DWOplayerVersion>2.3.0-SNAPSHOT</DWOplayerVersion>
 		<DWOmAccessVersion>2.2.11-SNAPSHOT</DWOmAccessVersion>
 		<RegisterVersion>2.2.8</RegisterVersion>
 		<DWOGwtClientVersion>2.2.10</DWOGwtClientVersion>
@@ -425,7 +425,7 @@
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testebserver</aws.environmentName>
-		<DWOServerVersion>2.2.10</DWOServerVersion>
+		<DWOServerVersion>2.2.11-SNAPSHOT</DWOServerVersion>
 	</properties>
 	<scm>
 		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</developerConnection>
