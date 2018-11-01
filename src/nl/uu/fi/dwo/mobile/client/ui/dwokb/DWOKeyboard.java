@@ -41,6 +41,7 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 			factory = new DWOTabletKeyboardFactory();
 		}
 		kb = factory.getKeyboard();
+		kb.setPremium(DWOplayer.isPremium()); // inject premium feature
 		add(kb);
 		staticPanel = new FlowPanel();
 		add(staticPanel);

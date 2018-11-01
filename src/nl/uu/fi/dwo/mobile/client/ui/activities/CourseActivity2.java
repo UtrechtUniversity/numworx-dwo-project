@@ -64,7 +64,6 @@ public class CourseActivity2 extends MGWTAbstractActivity implements Activity, G
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
 		final TreeModuleView view = clientFactory.getTreeModuleView();
-		clientFactory.getHeaderView().show();
 		clientFactory.getNavigationView().hide();
 		view.setBeheer(false);
 		view.setPresenter(this);
@@ -118,6 +117,7 @@ public class CourseActivity2 extends MGWTAbstractActivity implements Activity, G
 //					view.setDescription(item);
 					view.render(SelectModuleItemHolder.getItems());
 					view.selectModule(item);
+					clientFactory.getNavigationView().hide();
 					if(item.getCourseType() == CourseType.assesment) {
 						final UnSafeModuleView w = new UnSafeModuleView(clientFactory.getHeaderView());
 						w.selectItem(item);
@@ -177,6 +177,7 @@ public class CourseActivity2 extends MGWTAbstractActivity implements Activity, G
 //					view.setDescription(item);
 					view.render(SelectModuleItemHolder.getItems());
 					view.selectModule(item);
+					clientFactory.getNavigationView().hide();
 					return null;
 				}
 			}, failure);
@@ -184,7 +185,7 @@ public class CourseActivity2 extends MGWTAbstractActivity implements Activity, G
 		} else {
 			view.render(SelectModuleItemHolder.getItems());
 			view.selectModule(item);
-			
+			clientFactory.getNavigationView().hide();			
 		}
 //		view.setDescription(item);
 		panel.setWidget(view);
@@ -197,7 +198,7 @@ public class CourseActivity2 extends MGWTAbstractActivity implements Activity, G
 
 	@Override
 	public void goTo(Place place) {
-		// TODO Auto-generated method stub
-		
+		GWT.log(place.getClass().getName() + "  " + place.toString());
+		placeController.goTo(place);
 	}
 }

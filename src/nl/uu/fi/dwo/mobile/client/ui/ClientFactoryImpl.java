@@ -98,7 +98,7 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	
 	
 	private final PlaceController placeController = new PlaceController(eventBus);
-	private Provider<ViewModuleView> entryView = NORMAL;
+	private Provider<ViewModuleView> entryView = NUMWORX_VIEW;
 	private SelectModuleView selectModuleView;
 	protected LoginView loginView;
 	protected TreeModuleView treeModuleView;

@@ -4,6 +4,7 @@ import javax.inject.Provider;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.activities.CourseActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.CourseActivity2;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.FlatModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.GuestActivity;
@@ -61,12 +62,12 @@ public class TabletActivityMapper implements ActivityMapper
 				SelectModuleItemHolder.insert(item);
 			} else {
 				if(item.isExam()) {
-					Activity c = new CourseActivity(clientFactory, item);
+					Activity c = new CourseActivity2(clientFactory, item);
 					ExamModuleActivity e = new ExamModuleActivity(clientFactory, item, () -> c, false);
 					return e;
 				}
 			}
-			return new CourseActivity(clientFactory, item);
+			return new CourseActivity2(clientFactory, item);
 		}
 
 		if (place instanceof s) 

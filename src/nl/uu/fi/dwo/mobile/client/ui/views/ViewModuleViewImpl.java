@@ -924,7 +924,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			setupOldVersion(opdracht, tb);
 		}
 		
-		if(on.isVerzegeld()||on.isReview()) {
+		if(on.isVerzegeld() && !on.isReview() /*||on.isReview()*/) {
 			seal(); // push action.setNotEditable
 		}
 
