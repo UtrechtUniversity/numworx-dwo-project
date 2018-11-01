@@ -16,12 +16,12 @@ import nl.uu.fi.dwo.rest.entities.RestSchool;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
 
-public class SystemSchoolManager {
+public class SystemManager {
 
   final StoredRestManager manager;
-  private static final Logger LOG = Logger.getLogger(SystemSchoolManager.class.getName());
+  private static final Logger LOG = Logger.getLogger(SystemManager.class.getName());
 
-  public SystemSchoolManager(StoredRestManager m) {
+  public SystemManager(StoredRestManager m) {
     manager = m;
   }
 
