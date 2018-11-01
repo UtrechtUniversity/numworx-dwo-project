@@ -163,7 +163,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                 = new Column<DomSchoolClass, ImageResource>(new ImageResourceCell()) {
             @Override
             public ImageResource getValue(DomSchoolClass object) {
-                if (DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
+                if (DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
                     return AccountImageBundle.instance.delete();
                 } else {
                     return AccountImageBundle.instance.empty();
@@ -211,7 +211,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
                             resetLogin.execute();return null;}, failure);
                             break;
                         case 2:     //remove schoolclass and relogin if it was the active schoolclass.
-                            if (DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
+                            if (DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
 //                            if (sc.getId().equals(DwoGlobalVars.instance().getCurrentSchoolClass().getId())) {
                                 control.removeSchoolClass(sc, new AsyncCallback<Boolean>() {
                                     @Override
@@ -270,7 +270,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
         // Add the columns.
         table.addColumn(schoolClassColumn, DwoLocalesForGWT.instance.GUI_SchoolclassName());
         table.addColumn(loginColumn, DwoLocalesForGWT.instance.GUI_Login());
-        if (DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
+        if (DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
         table.addColumn(deleteColumn, DwoLocalesForGWT.instance.GUI_Delete());
         }
         dataProvider.addDataDisplay(table);
@@ -286,7 +286,7 @@ public class SchoolClassStudentPanel extends VerticalPanel implements ClickHandl
         closeBtn.addClickHandler(this);
 
         addBtn = new Button("Add");
-        if (DwoGlobalVars.instance().getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
+        if (DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getSchool().studentsCanRegisterForSchoolClasses()) {
             addBtn.setVisible(true);
         } else {
             addBtn.setVisible(false);
