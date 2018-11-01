@@ -155,5 +155,11 @@ public interface DWOkeyboardBundle extends ClientBundle {
 	@Source("nl/uu/fi/dwo/keyboard/client/resources/vinkje.png")
 	ImageResource vinkje();
 	
+	@Source("nl/uu/fi/dwo/keyboard/client/resources/vector.png")
+	ImageResource vector();
+	@Source("nl/uu/fi/dwo/keyboard/client/resources/matrix.png")
+	ImageResource matrix();
+	@Source("nl/uu/fi/dwo/keyboard/client/resources/vectornotatie.png")
+	ImageResource vectornotatie();
 	
 }

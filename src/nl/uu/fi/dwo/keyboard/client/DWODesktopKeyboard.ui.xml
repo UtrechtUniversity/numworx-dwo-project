@@ -141,7 +141,17 @@
 			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_13" resource="{resources.conjug_svg}" />
 			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_13" resource="{resources.partialdiff_svg}" />
 		</g:FlowPanel>
-		<g:FlowPanel addStyleNames="dclm clm-13">
+		
+		<g:FlowPanel addStyleNames="dclm clm-14">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_15" resource="{resources.vector}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t4_15" resource="{resources.matrix}" />
+		</g:FlowPanel>
+		
+		<g:FlowPanel addStyleNames="dclm clm-15">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_16" resource="{resources.vectornotatie}" />
+		</g:FlowPanel>
+		
+		<g:FlowPanel addStyleNames="dclm clm-14">
 			<my:FKey addStyleNames="key bg-dkgrey icon {style.lsymbol}" ui:field="t3_14">
 				αβ
 			</my:FKey>
