@@ -164,7 +164,7 @@ public class ModulesOfSchoolclassPresenter {
             public Promise<Void> call(Promise<DomCoursesOfSchoolClass4Teacher> resolved) throws Exception {
                 //flip back to schoolclasses screen 
                 DomCoursesOfSchoolClass4Teacher value = resolved.getValue();
-                tree = new DomCoursesOfSchoolclassTree(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool(), value);
+                tree = new DomCoursesOfSchoolclassTree(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool(), value);
  // patch "public"
                 DomCourse course = tree.getNode(DomCoursesOfSchoolclassTree.PUBLIC_ROOT).getObject().getCourse();
  // welke smaak: profile of "standaard"

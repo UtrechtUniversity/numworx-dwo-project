@@ -134,7 +134,7 @@ public class LoginPresenter {
                 @Override
                 public Promise<Boolean> call(Promise<DwoGlobalVars.DwoGlobalVarsState> resolved) throws Exception {
                     if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn && !dwoGlobalVars.getCurrentUser().getSingleSchool()) {
-                        if (!dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
+                        if (!dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
                             eventBus.fireEvent(new MessageDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
                         };
                         boolean switchR = true;
@@ -207,7 +207,7 @@ public class LoginPresenter {
             }
             statePromise.then(resolved -> {
                 if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
-                    if (!dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
+                    if (!dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
                         eventBus.fireEvent(new MessageDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
                     };
                     boolean switchR = true;

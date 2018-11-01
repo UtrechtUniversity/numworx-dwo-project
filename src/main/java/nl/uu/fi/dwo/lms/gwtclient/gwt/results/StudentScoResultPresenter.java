@@ -45,7 +45,7 @@ public class StudentScoResultPresenter {
   private static final Logger LOG = Logger.getLogger(StudentScoResultPresenter.class.getName());
   private final Failure FAILURE;
   private final EventBus eventBus;
-  //private final DwoGlobalVars dwoGlobalVars;
+  private final DwoGlobalVars dwoGlobalVars;
 
   private Display view;
   @Inject ResultsService resultService;
@@ -72,7 +72,7 @@ public class StudentScoResultPresenter {
 
   @Inject StudentScoResultPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
     eventBus = anEventBus;
-    //dwoGlobalVars = aDwoGlobalVars;
+    dwoGlobalVars = aDwoGlobalVars;
     FAILURE = new LoggingFailure(LOG, anEventBus);    
   }
 
@@ -82,6 +82,7 @@ public class StudentScoResultPresenter {
     this.userState = userState;
     this.ssc = ssc;
     userState.put("cmi.mode", "review");
+    userState.put("dme.abo_type", dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getAboType().name());
     setAPI(this);
     LOG.info("view.init " + context + "  " + view);
     view.init(context);   

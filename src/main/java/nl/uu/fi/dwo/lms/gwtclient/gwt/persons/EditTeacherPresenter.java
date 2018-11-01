@@ -101,7 +101,7 @@ public class EditTeacherPresenter {
             RestTeacher rest = new RestTeacher();
             rest.setDomTeacher(teacher);
             DomContext ctx = new DomContext();
-            ctx.setDomHasRole(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
+            ctx.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
             rest.setRestContext(ctx);
             return manager.getSharedTeacherClasses(rest);
         }).then((resolved) -> {

@@ -147,7 +147,7 @@ public class EditStudentPresenter {
             RestStudent rest = new RestStudent();
             rest.setDomStudent(student);
             DomContext ctx = new DomContext();
-            ctx.setDomHasRole(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
+            ctx.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
             rest.setRestContext(ctx);
             return manager.getTeachersClassesOfStudent(rest);
         }).then((resolved) -> {
@@ -171,7 +171,7 @@ public class EditStudentPresenter {
                 if (resolved.getValue() != null && resolved.getValue().equals(true)) {
                     DomContext ctx = new DomContext();
                     DomGetSingleSchoolStudent student = new DomGetSingleSchoolStudent(new DomStudent(aUser));
-                    ctx.setDomHasRole(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
+                    ctx.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
                     for (TaggedDomSchoolClass sc : taggedSchoolClassMap.values()) {
                         if (sc.isTag()) {
                             student.setDomSchoolClass(sc.getSchoolClass());
@@ -351,7 +351,7 @@ public class EditStudentPresenter {
                     RestSingleSchoolStudent rest = new RestSingleSchoolStudent();
                     rest.setRestContext(ctx);
                     rest.setDomSingleSchoolStudent(changedUser);
-                    ctx.setDomHasRole(dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getHasRole());
+                    ctx.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
 
                     promisedUser = manager.updateSingleSchoolStudent(rest);
                     return promisedUser;

@@ -418,7 +418,7 @@ public class DwoGlobalVars {
      * @return
      */
     public DomSchoolClass getCurrentSchoolClass() {
-        return schoolLogins.getActiveSchoolRoleAndClass().getSchoolClass();
+        return activeSchoolRoleAndClass.getSchoolClass();
     }
 
     /**
@@ -426,7 +426,7 @@ public class DwoGlobalVars {
      * @param currentSchoolClass
      */
     public void setCurrentSchoolClass(DomSchoolClass currentSchoolClass) {
-        schoolLogins.getActiveSchoolRoleAndClass().setSchoolClass(currentSchoolClass);
+      activeSchoolRoleAndClass.setSchoolClass(currentSchoolClass);
     }
 
     /**

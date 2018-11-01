@@ -112,7 +112,7 @@ public class AccountPresenter {
             promise.then(new Success<DomSchoolRoleAndClassV2, Void>() {
                 @Override
                 public Promise<Void> call(Promise<DomSchoolRoleAndClassV2> resolved) throws Exception {
-                    if (!dwoGlobalVars.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
+                    if (!dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
                         eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
                     };
                     //flip back to schoolclasses screen 
