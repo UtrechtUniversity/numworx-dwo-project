@@ -1,5 +1,6 @@
 package fi.wiskopdr;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -34,6 +35,7 @@ import fi.wiskopdr.expressies.Limiet;
 import fi.wiskopdr.expressies.Ln;
 import fi.wiskopdr.expressies.Log;
 import fi.wiskopdr.expressies.Macht;
+import fi.wiskopdr.expressies.Matrix;
 import fi.wiskopdr.expressies.Max;
 import fi.wiskopdr.expressies.Min;
 import fi.wiskopdr.expressies.NdeLog;
@@ -50,6 +52,7 @@ import fi.wiskopdr.expressies.SigRoundStandard;
 import fi.wiskopdr.expressies.Sigma;
 import fi.wiskopdr.expressies.Sinus;
 import fi.wiskopdr.expressies.Tangens;
+import fi.wiskopdr.expressies.VectorExpr;
 import fi.wiskopdr.expressies.Vergelijking;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.expressies.Vermenigvuldiging;
@@ -259,6 +262,8 @@ public class FormuleParser
 
 	public static String formuleString(String s)
 	{
+		String in = s;
+
 		s = "(" + s.substring(2, s.length() - 1) + ")";
 
 		int n = s.indexOf("$n");
@@ -353,6 +358,10 @@ public class FormuleParser
 				s = s.substring(0, n) + "_" + s.substring(n + 2, k) + "_" + s.substring(k + 2, l) + "_" + s.substring(l + 2, indexAtl) + ")" + s.substring(indexAt + 1);
 			else if (s.charAt(index$ + 1) == 'S')
 				s = s.substring(0, n) + "_" + s.substring(n + 2, k) + "_" + s.substring(k + 2, l) + "_" + s.substring(l + 2, indexAtl) + ")" + s.substring(indexAt + 1);
+			else if (s.charAt(index$ + 1) == 'Y')
+				s = s.substring(0, n) + "(" + s.substring(n + 2, indexAt) + ")" + s.substring(indexAt + 1);
+			else if (s.charAt(index$ + 1) == 'M')
+				s = s.substring(0, n) + "(" + s.substring(n + 2, indexAt) + ")" + s.substring(indexAt + 1);
 
 			n = s.indexOf("$n");
 
@@ -382,6 +391,23 @@ public class FormuleParser
 			s = s.substring(0, n) + "(bin(" + s.substring(n + 2);
 			n = s.indexOf("$y");
 
+		}
+		n = s.indexOf("$Y");
+		while (n>-1)
+		{
+			s = s.substring(0,n) + "vector(" + s.substring(n+2);
+			n = s.indexOf("$Y");
+		}
+		n = s.indexOf("$M"); // matrix
+		while (n > -1)
+		{
+			s = s.substring(0,n) + "matrix(" + s.substring(n+2);
+			n = s.indexOf("$M");
+		}
+		n = s.indexOf("$k"); // kolommen in rij van matrix
+		while (n > -1)
+		{	s = s.substring(0,n) + "(" + s.substring(n+2);
+			n = s.indexOf("$k");
 		}
 		n = s.indexOf("$d");
 		while (n > -1)
@@ -508,6 +534,9 @@ public class FormuleParser
 			s = s.substring(0, n) + "*" + s.substring(n + 1);
 			n = s.indexOf("\u00d7");
 		}
+		
+		//System.out.println("FormuleParser.formuleString(" + in + ") = " + s);
+
 		return s;
 	}
 
@@ -548,6 +577,9 @@ public class FormuleParser
 
 	public static String schoon(String s, boolean woordformule)
 	{
+		String in = s;
+		// in: (2*vector((x)((1((1)/(2)))x)))
+
 		s = vervangFunctieScheidingstekens(s, "normalcdf");
 		s = vervangFunctieScheidingstekens(s, "invNorm");
 		s = vervangFunctieScheidingstekens(s, "invnorm");
@@ -746,7 +778,9 @@ public class FormuleParser
 				"l*o*g*",
 				"l*o*g",
 				"l*n*",
-				"l*n"
+				"l*n",
+				"v*e*c*t*o*r*",
+				"m*a*t*r*i*x*"
 				};
 /*
 		index = 0;
@@ -1114,7 +1148,10 @@ public class FormuleParser
 				if(index>-1)index = index+lf;
 			}/**/	
 		}
-		return s;
+		
+		//System.out.println("FormuleParser.schoon(" + in + ", woordformule = " + woordformule + ") = " + s);
+
+		return s; // uit: (2*vector((x)*(((1+((1)/(2))))*x)))
 	}
 
 	public static String pel(String s)
@@ -2559,6 +2596,20 @@ public class FormuleParser
 				//System.out.println(e.toString());
 				return new Faculteit(e);
 			}/**/
+			else if (s.length() > 7 && s.substring(0, 7).equals("vector("))
+			{
+				ArrayList<Expressie> list = parseVectorKinderen(s.substring(7, s.length() - 1));
+				if (list == null)
+					return null;
+				return new VectorExpr(list);
+			}
+			else if (s.length() > 7 && s.substring(0, 7).equals("matrix("))
+			{
+				ArrayList<ArrayList<Expressie>> list = parseMatrixKinderen(s.substring(7, s.length() - 1));
+				if (list == null)
+					return null;
+				return new Matrix(list);
+			}
 
 		}
 		catch (Exception e)
@@ -2773,6 +2824,232 @@ public class FormuleParser
 
 	public static void setOfLabel(String ofLabel) {
 		FormuleParser.ofLabel = ofLabel;
+	}
+
+	/**
+	 * Kinderen binnen rijen zijn te onderscheiden doordat ze omsloten zijn door 
+	 * haken '(' en ')', haken gescheiden met '*'. 
+	 * Rijen zijn omsloten door haken en gescheiden met '*'. 
+	 * Retourneert in een arraylist de rij-arraylist 
+	 * en de string zonder de rij t.b.v. verder parsen.
+	 *  
+	 * @param s
+	 * @return
+	 */
+	private static ArrayList<Object> geefMatrixRij(String s)
+	{
+		ArrayList<Object> result = new ArrayList<Object>();
+		
+		int beginIndex = s.indexOf("(");
+		int endIndex = getIndexSluithaak(s, beginIndex);
+		String rijString = s.substring(beginIndex + 1, endIndex);
+		s = s.substring(s.indexOf(rijString) + rijString.length() + 1); // + 1 voor sluithaak ')'
+		// vectorkind-scheidingsteken '*'
+		int asterixIndex = s.indexOf("*"); 
+		if (asterixIndex > -1)
+			s = s.substring(asterixIndex + 1); // +1 voor '('
+		
+		ArrayList<Expressie> rij = parseMatrixRijKinderen(rijString);
+		result.add(rij); // rij-arraylist
+		result.add(s); // string zonder rij
+		
+		return result;
+	}
+
+	/**
+	 * Retourneert de index van de sluithaak die hoort bij de
+	 * openingshaak met de gegeven beginIndex in de string.
+	 * 
+	 * @param s
+	 * @param beginIndex
+	 * @return
+	 */
+	private static int getIndexSluithaak(String s, int beginIndex)
+	{
+		int endIndex = -1;
+		// houdt bij of er na beginIndex haakjes worden geopend die nog niet gesloten zijn
+		int haakjesGeopendCount = 0;
+		int i = beginIndex + 1;
+		
+		while (i < s.length())
+		{
+			if (s.charAt(i) == ')')
+			{
+				if (haakjesGeopendCount == 0)
+				{
+					// sluithaak gevonden
+					endIndex = i;
+					break;
+				}
+				else
+					haakjesGeopendCount--;
+			}
+			else
+			{
+				if (s.charAt(i) == '(')
+					haakjesGeopendCount++;
+			}
+
+			i++;
+		}
+		
+		return endIndex;
+	}
+
+	/**
+	 * Haal de matrix-rij kinderen uit de gegeven string.
+	 * @param s de matrix-rij
+	 * @return
+	 */
+	private static ArrayList<Expressie> parseMatrixRijKinderen(String s)
+	{
+//		System.out.println("FormuleParser.parseMatrixRijKinderen(" + s + ")");
+		
+		ArrayList<Expressie> kinderen = new ArrayList<Expressie>();
+		
+		ArrayList result = geefMatrixRijKind(s); 
+		Expressie kind = (Expressie) result.get(0);
+		s = (String) result.get(1); // string zonder kind
+		
+		while (kind != null && kind.toString() != "")
+		{
+			kinderen.add(kind);
+
+			if (!s.equals(""))
+			{
+				result = geefMatrixRijKind(s);
+				kind = (Expressie) result.get(0);
+				s = (String) result.get(1); // string zonder kind
+			}
+			else
+				break;
+		}
+		
+		return kinderen;
+	}
+
+	/**
+	 * Kinderen zijn te onderscheiden doordat ze omsloten zijn door haken '(' en ')',
+	 * haken gescheiden met '*'.
+	 * Retourneert in een arraylist de kindexpressie 
+	 * en de string zonder het kind t.b.v. verder parsen.
+	 *  
+	 * @param s
+	 * @return
+	 */
+	private static ArrayList<Object> geefMatrixRijKind(String s)
+	{
+		ArrayList<Object> result = new ArrayList<Object>();
+		
+		int beginIndex = s.indexOf("(");
+		int endIndex = getIndexSluithaak(s, beginIndex);
+		String kindString = s.substring(beginIndex + 1, endIndex);
+		s = s.substring(s.indexOf(kindString) + kindString.length() + 1); // + 1 voor sluithaak ')'
+		// vectorkind-scheidingsteken '*'
+		int asterixIndex = s.indexOf("*"); 
+		if (asterixIndex > -1)
+			s = s.substring(asterixIndex + 1); // +1 voor '('
+		
+		if ("".equals(kindString))
+			kindString = "0"; // als niets is ingevuld, dan vullen we 0 in
+		Expressie kind = parse(kindString); // in kindString staat geen formule ("1+1"), parse maakt er een Expressie van (Optelling)
+		result.add(kind); // het geparste kind
+		result.add(s); // string zonder kind
+		
+		return result;
+	}
+
+	/**
+	 * Kinderen zijn te onderscheiden doordat ze omsloten zijn door haken '(' en ')',
+	 * haken gescheiden met '*'.
+	 * Retourneert in een arraylist de kindexpressie 
+	 * en de string zonder het kind t.b.v. verder parsen.
+	 *  
+	 * @param s
+	 * @return
+	 */
+	private static ArrayList<Object> geefVectorKind(String s)
+	{
+		ArrayList<Object> result = new ArrayList<Object>();
+		
+		int beginIndex = s.indexOf("(");
+		int endIndex = getIndexSluithaak(s, beginIndex);
+		String kindString = s.substring(beginIndex + 1, endIndex);
+		s = s.substring(s.indexOf(kindString) + kindString.length() + 1); // + 1 voor sluithaak ')'
+		// vectorkind-scheidingsteken '*'
+		int asterixIndex = s.indexOf("*"); 
+		if (asterixIndex > -1)
+			s = s.substring(asterixIndex + 1); // +1 voor '('
+		
+		Expressie kind = parse(kindString); // in kindString staat geen formule ("1+1"), parse maakt er een Expressie van (Optelling)
+		result.add(kind); // het geparste kind
+		result.add(s); // string zonder kind
+		
+		return result;
+	}
+
+	/**
+	 * Haal de matrix kinderen uit de gegeven string.
+	 * @param s
+	 * @return
+	 */
+	private static ArrayList<ArrayList<Expressie>> parseMatrixKinderen(String s)
+	{
+		//System.out.println("FormuleParser.parseMatrixKinderen(" + s + ")");
+		
+		ArrayList<ArrayList<Expressie>> kinderen = new ArrayList<ArrayList<Expressie>>();
+		
+		ArrayList result = geefMatrixRij(s); 
+		ArrayList<Expressie> rij = (ArrayList<Expressie>) result.get(0);
+		s = (String) result.get(1); // string zonder rij
+		
+		while (rij != null && rij.toString() != "")
+		{
+			kinderen.add(rij);
+
+			if (!s.equals(""))
+			{
+				result = geefMatrixRij(s);
+				rij = (ArrayList<Expressie>) result.get(0);
+				s = (String) result.get(1); // string zonder rij
+			}
+			else
+				break;
+		}
+		
+		return kinderen;
+	}
+
+	/**
+	 * Haal de vector kinderen uit de gegeven string.
+	 * @param s
+	 * @return
+	 */
+	private static ArrayList<Expressie> parseVectorKinderen(String s)
+	{
+//		System.out.println("FormuleParser.parseVectorKinderen(" + s + ")");
+		
+		ArrayList<Expressie> kinderen = new ArrayList<Expressie>();
+		
+		ArrayList result = geefVectorKind(s); 
+		Expressie kind = (Expressie) result.get(0);
+		s = (String) result.get(1); // string zonder kind
+		
+		while (kind != null && kind.toString() != "")
+		{
+			kinderen.add(kind);
+
+			if (!s.equals(""))
+			{
+				result = geefVectorKind(s);
+				kind = (Expressie) result.get(0);
+				s = (String) result.get(1); // string zonder kind
+			}
+			else
+				break;
+		}
+		
+		return kinderen;
 	}
 
 }

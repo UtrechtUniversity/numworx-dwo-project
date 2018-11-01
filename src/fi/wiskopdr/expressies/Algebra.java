@@ -1,5 +1,6 @@
 package fi.wiskopdr.expressies;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import com.google.gwt.i18n.client.NumberFormat;
@@ -40,6 +41,43 @@ public class Algebra
 
 	public static boolean checkGelijkwaardig(Expressie e1, Expressie e2, String[] varNamen, double[] tryValues)
 	{
+		if (isVector(e1) && isVector(e2))
+		{
+			VectorExpr vector1, vector2;
+			if (e1 instanceof VectorExpr)
+				vector1 = (VectorExpr) e1;
+			else
+				vector1 = e1.geefVector();
+				
+			if (e2 instanceof VectorExpr)
+				vector2 = (VectorExpr) e2;
+			else
+				vector2 = e2.geefVector();
+			
+			if (vector1 == null || vector2 == null) // er is iets mis, ongeldige vector-expressie
+				return false;
+			else
+				return checkGelijkwaardigVectoren(vector1, vector2, varNamen, tryValues);
+		}
+		else if (isMatrix(e1) && isMatrix(e2))
+		{
+			Matrix matrix1, matrix2;
+			if (e1 instanceof Matrix)
+				matrix1 = (Matrix) e1;
+			else
+				matrix1 = e1.geefMatrix();
+				
+			if (e2 instanceof Matrix)
+				matrix2 = (Matrix) e2;
+			else
+				matrix2 = e2.geefMatrix();
+			
+			if (matrix1 == null || matrix2 == null) // er is iets mis, ongeldige matrix
+				return false;
+			else
+				return checkGelijkwaardigMatrices(matrix1, matrix2, varNamen, tryValues);
+		}
+		
 		double[] defaultTryIntValues =
 		{ 0.101, 1.102, 2.103, 3.104, 7.105 };
 		if (tryValues == null)
@@ -183,7 +221,16 @@ public class Algebra
 
 	public static boolean isGelijkwaardig(Expressie e1, Expressie e2)
 	{
-		String[] vars = geefVarNamen((new Optelling(e1, e2)));
+		String[] vars = new String[0];
+
+		if (isGeldigeOptelling(e1, e2)) // als vector of matrix dan niet altijd geldige optelling
+			vars = geefVarNamen((new Optelling(e1, e2)));
+		else
+		{
+			System.out.println("Algebra.isGelijkwaardig(" + e1 + ", " + e2 + "): GEEN GELDIGE optelling om varNamen te bepalen");
+			return false;
+		}
+		
 		String[] varsNieuw = null;
 		if (vars.length > 0)
 			varsNieuw = new String[vars.length - 1];
@@ -210,7 +257,8 @@ public class Algebra
 			tryIntValues = tryIntValuesBeperkt;
 		if (complex)
 			return checkGelijkwaardigComplex(e1, e2, varsNieuw, tryIntValues);
-		if (!domainTryValuesOK(e1, e2, vars, null))
+		if (!isVector(e1) && !isVector(e2) && !isMatrix(e1) && !isMatrix(e2) 
+			&& !domainTryValuesOK(e1, e2, vars, null)) // voor vectoren en matrices even geen complexe gelijkwaardigheid
 			return checkGelijkwaardigComplex(e1, e2, vars, tryIntValues);
 		return checkGelijkwaardig(e1, e2, vars, tryIntValues);
 	}
@@ -654,7 +702,48 @@ public class Algebra
 
 	public static boolean zijnGelijk(Expressie e1, Expressie e2)
 	{
-		return zijnGelijk(e1, e2, false);
+		boolean zijnGelijk = false;
+		
+		if (isVector(e1) && isVector(e2))
+		{
+			VectorExpr vector1, vector2;
+			if (e1 instanceof VectorExpr)
+				vector1 = (VectorExpr) e1;
+			else
+				vector1 = e1.geefVector();
+				
+			if (e2 instanceof VectorExpr)
+				vector2 = (VectorExpr) e2;
+			else
+				vector2 = e2.geefVector();
+			
+			if (vector1 == null || vector2 == null) // er is iets mis, ongeldige vector-expressie
+				zijnGelijk = false;
+			else
+				zijnGelijk = zijnGelijkVectoren(vector1, vector2);
+		}
+		else if (isMatrix(e1) && isMatrix(e2))
+		{
+			Matrix matrix1, matrix2;
+			if (e1 instanceof Matrix)
+				matrix1 = (Matrix) e1;
+			else
+				matrix1 = e1.geefMatrix();
+				
+			if (e2 instanceof Matrix)
+				matrix2 = (Matrix) e2;
+			else
+				matrix2 = e2.geefMatrix();
+			
+			if (matrix1 == null || matrix2 == null) // er is iets mis, ongeldige matrix-expressie
+				zijnGelijk = false;
+			else
+				zijnGelijk = zijnGelijkMatrices(matrix1, matrix2);			
+		}
+		else
+			zijnGelijk = zijnGelijk(e1, e2, false);
+
+		return zijnGelijk;
 	}
 
 	public static boolean zijnGelijk(Expressie e1, Expressie e2, boolean vorm)
@@ -924,6 +1013,9 @@ public class Algebra
 		Vector v2 = geefTermen(e2, new Vector());
 		if (v1.size() == 1 && v2.size() == 1)
 		{
+			if (((Expressie) v1.elementAt(0)).equals(e1) && ((Expressie) v2.elementAt(0)).equals(e2)) // als ze hetzelfde blijven: breek oneindige loop
+				return false;
+			
 			e1 = (Expressie) v1.elementAt(0);
 			e2 = (Expressie) v2.elementAt(0);
 			v1 = geefFactorenBeperkt(e1, new Vector());
@@ -1511,7 +1603,15 @@ public class Algebra
 	public static Vector geefVarN(Expressie e)
 	{
 		Vector v;
-		if (e instanceof BasisExpressie)
+		if (e instanceof VectorExpr)
+		{
+			return ((VectorExpr) e).geefVarNamen();
+		}
+		else if (e instanceof Matrix)
+		{
+			return ((Matrix) e).geefVarNamen();
+		}
+		else if (e instanceof BasisExpressie)
 		{
 			Vector v0 = new Vector();
 			if (e.geefVarNaam() != null)
@@ -2212,6 +2312,10 @@ public class Algebra
 		if (e instanceof E)
 			return e;
 		if (e instanceof PI)
+			return e;
+		if (e instanceof VectorExpr) // TODO herleid kinderen
+			return e;
+		if (e instanceof Matrix) // TODO herleid kinderen
 			return e;
 		Vector v = Algebra.geefTermen(e, new Vector());
 		v = sorteerTermen(v);
@@ -4030,4 +4134,721 @@ public class Algebra
 		}
 		return exp;
 	}
+	
+	/**
+	 * Retourneert true als de expressie een vector is,
+	 * d.w.z. VectorExpr of een andere expressie waarvan de uitkomst een vector is,
+	 * bijv. een optelling van twee vectoren.
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static boolean isVector(Expressie e)
+	{
+		boolean isVector = false;
+		
+		if (e instanceof VectorExpr)
+			isVector = true;
+		else if (e instanceof Optelling && isVector(e.kind1) && isVector(e.kind2)) // optelling van 2 vectoren is een vector
+			isVector = true;
+		else if (e instanceof Aftrekking && isVector(e.kind1) && isVector(e.kind2)) // aftrekking van 2 vectoren is een vector
+			isVector = true;
+		else if (e instanceof Vermenigvuldiging && 
+			((isVector(e.kind1) && isMatrix(e.kind2)) || (isMatrix(e.kind1) && isVector(e.kind2)))) // vermenigvuldiging van matrix en vector is een vector
+			isVector = true;
+		else if (e instanceof Vermenigvuldiging && (isVector(e.kind1) ^ isVector(e.kind2))) // vermenigvuldiging van vector en niet-vector (scalar) is een vector
+			isVector = true;
+		
+		return isVector;
+	}
+	
+	/**
+	 * Retourneert true als de expressie een matrix is,
+	 * d.w.z. Matrix of een andere expressie waarvan de uitkomst een matrix is,
+	 * bijv. een optelling van twee matrices.
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static boolean isMatrix(Expressie e)
+	{
+		boolean isMatrix = false;
+		
+		if (e instanceof Matrix)
+			isMatrix = true;
+		else if (e instanceof Optelling && isMatrix(e.kind1) && isMatrix(e.kind2)) // optelling van 2 matrices is een matrix
+			isMatrix = true;
+		else if (e instanceof Aftrekking && isMatrix(e.kind1) && isMatrix(e.kind2)) // aftrekking van 2 matrices is een matrix
+			isMatrix = true;
+		else if (e instanceof Vermenigvuldiging && isMatrix(e.kind1) && isMatrix(e.kind2)) // vermenigvuldiging van 2 matrices is een matrix
+			isMatrix = true;
+		else if (e instanceof Vermenigvuldiging && (isMatrix(e.kind1) ^ isMatrix(e.kind2))) // vermenigvuldiging van matrix en niet-matrix (scalar) is een matrix
+			isMatrix = true;
+		
+		return isMatrix;
+	}
+	
+	/**
+	 * Check de gelijkwaardigheid van de twee gegeven vectoren door paarsgewijs de kinderen te
+	 * checken op gelijkwaardigheid.
+	 * 
+	 * @param e1
+	 * @param e2
+	 * @param varNamen
+	 * @param tryValues
+	 * @return
+	 */
+	private static boolean checkGelijkwaardigVectoren(VectorExpr e1, VectorExpr e2, String[] varNamen, double[] tryValues)
+	{
+		boolean isGelijkwaardig = true;
+	
+		ArrayList<Expressie> kinderen1 = e1.geefKinderen();
+		ArrayList<Expressie> kinderen2 = e2.geefKinderen();
+		
+		if (kinderen1.size() != kinderen2.size())
+			isGelijkwaardig = false;
+		else
+		{
+			for (int i = 0; i < kinderen1.size(); i++)
+			{
+				if (!checkGelijkwaardig(kinderen1.get(i), kinderen2.get(i), varNamen, tryValues))
+				{
+					isGelijkwaardig = false;
+					break;
+				}
+			}
+		}
+		
+		return isGelijkwaardig;
+	}
+
+	/**
+	 * Check de gelijkwaardigheid van de twee gegeven matrices door paarsgewijs de kinderen te
+	 * checken op gelijkwaardigheid.
+	 * 
+	 * @param e1
+	 * @param e2
+	 * @param varNamen
+	 * @param tryValues
+	 * @return
+	 */
+	private static boolean checkGelijkwaardigMatrices(Matrix e1, Matrix e2, String[] varNamen, double[] tryValues)
+	{
+		boolean isGelijkwaardig = true;
+	
+		ArrayList<ArrayList<Expressie>> kinderen1 = e1.geefKinderen();
+		ArrayList<ArrayList<Expressie>> kinderen2 = e2.geefKinderen();
+		
+		int[] dimensie1 = e1.geefDimensie();
+		int[] dimensie2 = e2.geefDimensie();
+		
+		if (!isGelijkeDimensies(dimensie1, dimensie2)) // aantal rijen en kolommen moet gelijk zijn
+			isGelijkwaardig = false;
+		else
+		{
+			for (int i = 0; i < dimensie1[0]; i++) // rijen
+			{
+				if (!isGelijkwaardig)
+					break;
+				for (int j = 0; j < dimensie1[1]; j++) // kolommen
+				{
+					if (!checkGelijkwaardig(kinderen1.get(i).get(j), kinderen2.get(i).get(j), varNamen, tryValues))
+					{
+						isGelijkwaardig = false;
+						break;
+					}
+				}
+			}
+		}
+		
+		return isGelijkwaardig;
+	}
+
+	/**
+	 * Retourneert true als beide dimensies gelijk zijn.
+	 * 
+	 * @param dimensie1
+	 * @param dimensie2
+	 * @return
+	 */
+	private static boolean isGelijkeDimensies(int[] dimensie1, int[] dimensie2)
+	{
+		boolean isGelijk = false;
+		
+		if ((dimensie1[0] == dimensie2[0]) // aantal rijen
+			&& (dimensie1[1] == dimensie2[1])) // aantal kolommen
+			isGelijk = true;
+		
+		return isGelijk;
+	}
+
+	/**
+	 * Geef de dimensie van de gegeven expressie. Als de gegeven
+	 * expressie geen vector-resultaat heeft dan wordt [-1, -1] geretourneerd.
+	 * 
+	 * @param expressie
+	 * @return
+	 */
+	public static int[] geefVectorDimensie(Expressie expressie)
+	{
+		int[] dimensie = {-1, -1};
+		
+		if (isVector(expressie))
+		{
+			dimensie = expressie.geefVector().geefDimensie();
+		}
+		
+		return dimensie;
+	}
+
+	/**
+	 * Wordt gebruikt in isGelijkwaardig() om een optelling te kunnen maken 
+	 * om varNamen te kunnen opvragen van twee expressie die met elkaar vergeleken 
+	 * gaan worden.
+	 * 
+	 * @param e1
+	 * @param e2
+	 * @return
+	 */
+	public static boolean isGeldigeOptelling(Expressie e1, Expressie e2)
+	{
+		boolean b = true;
+	
+		if ((e1 instanceof VectorExpr || e2 instanceof VectorExpr) // een van beide vector
+			&& !isVectorOptelling(e1, e2)) // en geen vectoroptelling
+			b = false; // dan geen geldige optelling
+		else if ((e1 instanceof Matrix || e2 instanceof Matrix) // een van beide matrix
+			&& !isMatrixOptelling(e1, e2))
+			b = false;
+		
+		return b;
+	}
+	
+	public static boolean isVectorOptelling(Expressie e1, Expressie e2)
+	{
+		boolean b = false;
+		
+		if (isVector(e1) && isVector(e2))
+			b = true;
+		
+		return b;
+	}
+	
+	public static boolean isMatrixOptelling(Expressie e1, Expressie e2)
+	{
+		boolean b = false;
+		
+		if (isMatrix(e1) && isMatrix(e2))
+			b = true;
+		
+		return b;
+	}
+	
+	public static boolean isMatrixVergelijking(Vergelijking v)
+	{
+		boolean b = false;
+		
+		if (isMatrix(v.kind1) && isMatrix(v.kind2))
+			b = true;
+		
+		return b;
+	}
+	
+	/**
+	 * Retourneer true als de gegeven vectorvergelijking een correcte representatie is
+	 * van de lijn gegeven door oplossing.
+	 * Vooralsnog tweedimensionaal met
+	 * vectorvoorstelling vector(x, y) = vector(i1, i2) + labda * vector (j1, j2)
+	 * en oplossing y = ax + b 
+	 *  
+	 * @param vergelijking De vectorvergelijking
+	 * @param oplossing
+	 * @return
+	 */
+	private static boolean isJuisteOplossing(VergelijkingMeerv vergelijking, VergelijkingMeerv oplossing)
+	{
+		boolean isJuist = false;
+		
+		ArrayList<Expressie> kinderen1 = ((VectorExpr) vergelijking.geefVergelijking(0).geefExpRechts().kind1).geefKinderen();
+		// steunvector
+		double[] waarden1 = new double[] {kinderen1.get(0).geefWaarde(), kinderen1.get(1).geefWaarde()};
+		ArrayList<Expressie> kinderen2 = ((VectorExpr) vergelijking.geefVergelijking(0).geefExpRechts().kind2.kind2).geefKinderen();
+		// richtingsvector
+		double[] waarden2 = new double[] {kinderen2.get(0).geefWaarde(), kinderen2.get(1).geefWaarde()};
+		
+		
+		if (isOplossing(oplossing.geefVergelijking(0), waarden1) // steunvector op lijn
+			&& isJuisteRichtingscoefficient(waarden2, oplossing.geefVergelijking(0))) // richtingsvector de juist richtingcoefficient
+			isJuist = true;
+		
+		return isJuist;
+	}
+
+	/**
+	 * Retourneert true als de gegeven waarden (x, y) op de lijn liggen gegeven voor de vergelijking.
+	 * Vergelijking heeft de vorm y = ax + b.
+	 * 
+	 * @param vergelijking
+	 * @param waarden
+	 * @return
+	 */
+	private static boolean isOplossing(Vergelijking vergelijking, double[] waarden)
+	{
+		boolean isOplossing = false;
+		
+		String varLinks = vergelijking.geefExpLinks().geefVarNaam();
+		Expressie expLinks = vergelijking.geefExpLinks().substitueer(waarden[1], varLinks);
+		String varRechts = vergelijking.geefExpRechts().geefVarNaam();
+		Expressie expRechts = vergelijking.geefExpRechts().substitueer(waarden[0], varRechts);
+		
+		if (expLinks.geefWaarde() == expRechts.geefWaarde())
+			isOplossing = true;
+		
+		return isOplossing;
+	}
+
+	/**
+	 * Retourneert true als de richtingsvector overeenkomst met
+	 * de richtingscoefficient van de gegeven vergelijking.
+	 * 
+	 * @param waarden Waarden van tweedimensionale vector
+	 * @param vergelijking Vergelijking in vorm y = ax + b 
+	 * @return
+	 */
+	private static boolean isJuisteRichtingscoefficient(double[] waarden, Vergelijking vergelijking)
+	{
+		boolean isJuist = false;
+		
+		String varRechts = vergelijking.geefExpRechts().geefVarNaam();
+		Expressie diff = vergelijking.geefExpRechts().geefDiff(new BasisExpressie(varRechts));
+		Expressie rico = diff.substitueer(0, varRechts);
+		
+		if (waarden[0] != 0
+			&& waarden[1] / waarden[0] == rico.geefWaarde())
+			isJuist = true;
+		
+		return isJuist;
+	}
+
+	/**
+	 * Retourneert 
+	 * @param expressie
+	 * @return
+	 */
+	public static boolean isScalarMaalVector(Expressie expressie)
+	{
+		boolean isScalarMaalVector = false;
+		
+		if (expressie instanceof Vermenigvuldiging
+			&& (expressie.kind1.toString().equals("G") || expressie.kind1.toString().equals("Q")) // factor
+			&& isVector(expressie.kind2)) // maal vector
+		{
+			isScalarMaalVector = true;
+		}
+		
+		return isScalarMaalVector;
+	}
+
+	/**
+	 * Retourneert true als vector1 een scalar maal vector2 is.
+	 * Vooralsnog alleen tweedimensionaal.
+	 * 
+	 * @param vector1
+	 * @param expressie Vermenigvuldiging van scalar met vector2
+	 * @return
+	 */
+	public static boolean isJuisteScalarMaalVector(Expressie vector1, Expressie expressie)
+	{
+		boolean isJuist = false;
+		
+		if (vector1 instanceof VectorExpr && expressie.kind2 instanceof VectorExpr)
+		{
+			ArrayList<Expressie> kinderen1 = ((VectorExpr) vector1).geefKinderen();
+			ArrayList<Expressie> kinderen2 = ((VectorExpr) expressie.kind2).geefKinderen();
+			// richtingscoefficient vector 1
+			double rico1 = 0;
+			// richtingscoefficient vector 2
+			double rico2 = 0;
+			
+			if (kinderen1.get(0).geefWaarde() != 0 && kinderen2.get(0).geefWaarde() != 0)
+			{
+				rico1 = kinderen1.get(1).geefWaarde() / kinderen1.get(0).geefWaarde();
+				rico2 = kinderen2.get(1).geefWaarde() / kinderen2.get(0).geefWaarde();
+			}
+			else if (kinderen1.get(1).geefWaarde() != 0 && kinderen2.get(1).geefWaarde() != 0)
+			{
+				rico1 = kinderen1.get(0).geefWaarde() / kinderen1.get(1).geefWaarde();
+				rico2 = kinderen2.get(0).geefWaarde() / kinderen2.get(1).geefWaarde();
+			}
+			
+			if (rico1 == rico2)
+				isJuist = true;
+		}
+		
+		return isJuist;
+	}
+
+	/**
+	 * Retourneert true als de gegeven vergelijking een vectorvoorstelling is die voldoet
+	 * aan de oplossingsvergelijking (bijv. y = ax + b of z = 2x - 3y + 1) en
+	 * aan de gegeven juiste vorm.
+	 * Anders false.
+	 * 
+	 * @param vergelijking
+	 * @param oplossing
+	 * @param juisteVormen 
+	 * @return
+	 * @throws RestartException 
+	 */
+	public static boolean isJuisteVectorvoorstelling(VergelijkingMeerv vergelijking, VergelijkingMeerv oplossing, VergelijkingMeerv juisteVormen) throws RestartException
+	{
+		boolean isJuist = false;
+		
+		if (isJuistFormaatVectorVoorstelling(vergelijking)
+			&& isJuisteOplossingInJuisteVorm(vergelijking, oplossing, juisteVormen))
+			isJuist = true;
+		
+		return isJuist;
+	}
+	
+	/**
+	 * Retourneer true als de gegeven vectorvergelijking een correcte representatie is
+	 * van de lijn gegeven door oplossing.
+	 * Vectorvoorstelling bijv. vector(x, y) = vector(i1, i2) + labda * vector (j1, j2)
+	 * en oplossing y = ax + b 
+	 *  
+	 * @param vergelijking De vectorvergelijking
+	 * @param oplossing Bijv. y = ax + b of z = 2x - 3y + 1
+	 * @return
+	 * @throws RestartException 
+	 */
+	private static boolean isJuisteOplossingInJuisteVorm(VergelijkingMeerv vergelijking, VergelijkingMeerv oplossing, VergelijkingMeerv juisteVormen) throws RestartException
+	{
+		boolean isJuist = false;
+		
+		// variabelenvector
+		ArrayList<Expressie> variabelen = ((VectorExpr) vergelijking.geefVergelijking(0).geefExpLinks()).geefKinderen();
+		ArrayList<Vergelijking> vgln = new ArrayList<Vergelijking>();
+
+		ArrayList<VectorExpr> vectoren = geefVectoren((Optelling) vergelijking.geefVergelijking(0).geefExpRechts());
+		ArrayList<VectorExpr> vectorenJuisteVorm = geefVectoren((Optelling) juisteVormen.geefVergelijking(0).geefExpRechts());
+		
+		if (vectoren.size() != vectorenJuisteVorm.size()) // het aantal vectoren in de vectorvergelijking moet hetzelfde zijn als het aantal zoals aangegeven in de 'juiste vorm'
+			return false;
+		
+		// parameters labda, mu e.d., mogelijk null
+		// Deze hoeven niet hetzelfde te zijn als in de 'juiste vorm', als ze maar verschillend zijn
+		// en anders dan de variabelen.
+		ArrayList<Expressie> parameters = geefParameters((Optelling) vergelijking.geefVergelijking(0).geefExpRechts());
+		
+
+		for (int i = 0; i < variabelen.size(); i++) // rijindex in vector
+		{
+			Expressie expressie = null;
+			
+			for (int j = 0; j < vectoren.size(); j++) // aantal vectoren in vectorvergelijking
+			{
+				if (j == 0)
+				{
+					if (parameters.get(0) != null)
+						expressie = new Vermenigvuldiging(parameters.get(0), vectoren.get(0));
+					else
+						expressie = vectoren.get(0).geefKinderen().get(i);
+				}
+				else
+				{
+					if (parameters.get(j) != null)
+						expressie = new Optelling(expressie, new Vermenigvuldiging(parameters.get(j), vectoren.get(j).geefKinderen().get(i)));
+					else
+						expressie = new Optelling(expressie, vectoren.get(j).geefKinderen().get(i));
+				}
+			}
+
+			Vergelijking vgl = new Vergelijking(variabelen.get(i), expressie);
+			
+			vgln.add(vgl);
+		}
+
+		Expressie[] subst = new Expressie[vgln.size()];
+		String[] vars = new String[vgln.size()];
+		
+		for (int i = 0; i < vgln.size(); i++)
+		{
+			subst[i] = vgln.get(i).geefExpRechts();
+			vars[i] = vgln.get(i).geefExpLinks().geefVarNaam();
+		}
+		
+		isJuist = oplossing.geefVergelijking(0).isOplossing(subst, vars);
+		
+		return isJuist;
+	}
+
+	/**
+	 * Geef een array van de parameters in de vectoroptelling.
+	 * Bijv. vectoroptelling: (1, 1, 0) + labda * (3, 2, 0) + mu * (1, 0, 2)
+	 * geeft parameters {null, labda, mu}.
+	 * 
+	 * @param vectorOptelling
+	 * @return
+	 */
+	private static ArrayList<Expressie> geefParameters(Optelling vectorOptelling)
+	{
+		ArrayList<Expressie> parameters = new ArrayList<Expressie>();
+		
+		geefParameters(parameters, vectorOptelling.kind1);
+		geefParameters(parameters, vectorOptelling.kind2);
+		
+		return parameters;
+	}
+
+	/**
+	 * Voeg de eerstvolgende parameter in de gegeven vectorOptelling toe aan parameters. 
+	 * Bijv. als vectoroptelling is labda * vector1 + mu * vector2,
+	 * dan wordt labda toegevoegd aan parameters.
+	 * 
+	 * @param parameters
+	 * @param vectorOptelling
+	 */
+	private static void geefParameters(ArrayList<Expressie> parameters, Expressie vectorOptelling)
+	{
+		if (vectorOptelling instanceof Optelling)
+		{
+			geefParameters(parameters, vectorOptelling.kind1);
+			geefParameters(parameters, vectorOptelling.kind2);
+		}
+		else if (vectorOptelling instanceof Vermenigvuldiging)
+		{
+			// dan moet een van beide kinderen een parameter zijn
+			if (!vectorOptelling.kind1.isWaarde())
+				parameters.add(vectorOptelling.kind1);
+			else if (!vectorOptelling.kind2.isWaarde())
+				parameters.add(vectorOptelling.kind2);
+		}
+		else if (vectorOptelling instanceof VectorExpr)
+			parameters.add(null); // geen parameter
+		
+	}
+
+	/**
+	 * Geef een array van de vectoren in de vectoroptelling.
+	 * Bijv. vectoroptelling: (1, 1, 0) + labda * (3, 2, 0) + mu * (1, 0, 2)
+	 * geeft vectoren {(1, 1, 0), (3, 2, 0), (1, 0, 3)}.
+	 * 
+	 * @param vectorOptelling
+	 * @return
+	 */
+	private static ArrayList<VectorExpr> geefVectoren(Optelling vectorOptelling)
+	{
+		ArrayList<VectorExpr> vectoren = new ArrayList<VectorExpr>();
+		
+		geefVectoren(vectoren, vectorOptelling.kind1);
+		geefVectoren(vectoren, vectorOptelling.kind2);
+		
+		return vectoren;
+	}
+
+	/**
+	 * Voeg de eerstvolgende vector in de gegeven vectorOptelling toe aan vectoren. 
+	 * Bijv. als vectoroptelling is labda * vector1 + mu * vector2,
+	 * dan wordt vector1 toegevoegd aan vectoren.
+	 * 
+	 * @param vectoren
+	 * @param vectorOptelling
+	 */
+	private static void geefVectoren(ArrayList<VectorExpr> vectoren, Expressie vectorOptelling)
+	{
+		if (vectorOptelling instanceof Optelling)
+		{
+			geefVectoren(vectoren, vectorOptelling.kind1);
+			geefVectoren(vectoren, vectorOptelling.kind2);
+		}
+		else if (vectorOptelling instanceof Vermenigvuldiging)
+		{
+			// dan moet een van beide kinderen een vector zijn
+			if (vectorOptelling.kind1 instanceof VectorExpr)
+				vectoren.add((VectorExpr) vectorOptelling.kind1);
+			else if (vectorOptelling.kind2 instanceof VectorExpr)
+				vectoren.add((VectorExpr) vectorOptelling.kind2);
+		}
+		else if (vectorOptelling instanceof VectorExpr)
+			vectoren.add((VectorExpr) vectorOptelling); // geen parameter
+	}
+
+	/**
+	 * Retourneert true als de gegeven vergelijking een vectorvoorstelling is met 
+	 * vergelijking1 vector met variabelen en
+	 * vergelijking2 een optelling van vector1 en scalar * vector2.
+	 * Anders false.
+	 * 
+	 * @param vergelijking
+	 * @return
+	 */
+	public static boolean isJuistFormaatVectorVoorstelling(VergelijkingMeerv vergelijking)
+	{
+		boolean isJuistFormaat = false;
+		if (vergelijking == null || vergelijking.geefVergelijking(0) == null)
+			isJuistFormaat = false;
+		else if (isVariabelenVector(vergelijking.geefVergelijking(0).kind1)
+			&& isSomVectoren(vergelijking.geefVergelijking(0).kind2))
+		{
+			isJuistFormaat = true;
+		}
+		
+//		System.out.println("Algebra.isJuistFormaatVectorVoorstelling(): " + isJuistFormaat);
+		
+		return isJuistFormaat;
+	}
+
+	/**
+	 * Retourneert true als de gegeven expressie een som is van vectoren.
+	 * 
+	 * @param expr
+	 * @return
+	 */
+	private static boolean isSomVectoren(Expressie expr)
+	{
+		boolean b = true;
+		
+		if (expr == null || !(expr instanceof Optelling) || !(expr.kind1 instanceof VectorExpr || isSomVectoren(expr.kind1))) // de eerste term in de optelling moet een vector zijn of een optelling (van vectoren) 
+			b = false;
+		else if (!(isVariabeleMaalVector(expr.kind2) || isSomVariabeleMaalVector(expr.kind2))) // de tweede term in de optelling moet een scalar * vector zijn of een som van scalar * vector.
+			b = false;
+		
+		return b;
+	}
+
+	/**
+	 * Retourneert true als de gegeven expr een som is van een variabele maal vector.
+	 * 
+	 * @param expr
+	 * @return
+	 */
+	private static boolean isSomVariabeleMaalVector(Expressie expr)
+	{
+		boolean b = true;
+		
+		if (expr == null || !(expr instanceof Optelling))
+			b = false;
+		else if (expr.kind1 == null || expr.kind1 == null)
+			b = false;
+		else if (!isVariabeleMaalVector(expr.kind1) || !isSomVariabeleMaalVector(expr.kind1))
+			b = false;
+		else if (!isVariabeleMaalVector(expr.kind2) || !isSomVariabeleMaalVector(expr.kind2))
+			b = false;
+		
+		return b;
+	}
+
+	/**
+	 * Retourneert true als de gegeven expressie een vermenigvuldiging is
+	 * van een variabele en een vector.
+	 * 
+	 * @param expressie
+	 * @return
+	 */
+	public static boolean isVariabeleMaalVector(Expressie expressie)
+	{
+		boolean isVariabeleMaalVector = false;
+		
+		if (expressie instanceof Vermenigvuldiging
+			&& !expressie.kind1.isWaarde() // variabele
+			&& isVector(expressie.kind2)) // maal vector
+		{
+			isVariabeleMaalVector = true;
+		}
+		
+		return isVariabeleMaalVector;
+	}
+
+	/**
+	 * Retourneert true als de expressie een vector is,
+	 * d.w.z. VectorExpr of een andere expressie waarvan de uitkomst een vector is,
+	 * bijv. een optelling van twee vectoren.
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static boolean isVariabelenVector(Expressie e)
+	{
+		boolean isVariabelenVector = false;
+		
+		if (isVector(e) && ((VectorExpr) e).isVariabelenVector())
+			isVariabelenVector = true;
+		
+		return isVariabelenVector;
+	}
+	
+	/**
+	 * Als elk van de kinderen van de matrices paarsgewijs gelijk zijn, dan true,
+	 * anders false.
+	 * 
+	 * @param matrix1
+	 * @param matrix2
+	 * @return
+	 */
+	private static boolean zijnGelijkMatrices(Matrix matrix1, Matrix matrix2)
+	{
+		boolean zijnGelijk = true;
+		
+		ArrayList<ArrayList<Expressie>> kinderen1 = matrix1.geefKinderen();
+		ArrayList<ArrayList<Expressie>> kinderen2 = matrix2.geefKinderen();
+		
+		int[] dimensie1 = matrix1.geefDimensie();
+		int[] dimensie2 = matrix2.geefDimensie();
+		
+		if (!isGelijkeDimensies(dimensie1, dimensie2)) // aantal rijen en kolommen moet gelijk zijn
+			zijnGelijk = false;
+		else
+		{
+			for (int i = 0; i < dimensie1[0]; i++) // rijen
+			{
+				if (!zijnGelijk)
+					break;
+				
+				for (int j = 0; j < dimensie1[1]; j++) // kolommen
+				{
+					if (!zijnGelijk(kinderen1.get(i).get(j), kinderen2.get(i).get(j)))
+					{
+						zijnGelijk = false;
+						break;
+					}
+				}
+			}
+		}
+
+		return zijnGelijk;
+	}
+
+	/**
+	 * Als elk van de kinderen van de vectoren paarsgewijs gelijk zijn, dan true,
+	 * anders false.
+	 * 
+	 * @param vector1
+	 * @param vector2
+	 * @return
+	 */
+	private static boolean zijnGelijkVectoren(VectorExpr vector1, VectorExpr vector2)
+	{
+		boolean zijnGelijk = true;
+		
+		ArrayList<Expressie> kinderen1 = vector1.geefKinderen();
+		ArrayList<Expressie> kinderen2 = vector2.geefKinderen();
+		
+		if (kinderen1.size() != kinderen2.size())
+			zijnGelijk = false;
+		else
+		{
+			for (int i = 0; i < kinderen1.size(); i++)
+			{
+				if (!zijnGelijk(kinderen1.get(i), kinderen2.get(i)))
+				{
+					zijnGelijk = false;
+					break;
+				}
+			}
+		}
+
+		return zijnGelijk;
+	}
+
 }

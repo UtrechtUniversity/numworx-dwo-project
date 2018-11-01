@@ -485,4 +485,26 @@ public class Expressie
 	public Expressie vervangDiffs(Expressie subst, String var) {
 		return null;
 	}
+	
+	public VectorExpr geefVector()
+	{
+		return null;
+	}
+	
+	public Matrix geefMatrix()
+	{
+		return null;
+	}
+	
+	/**
+	 * Voor vectoren en matrices, aantal rijen en kolommen.
+	 * 
+	 * @return
+	 */
+	public int[] geefDimensie()
+	{
+		int[] dimensie = {-1, -1}; 
+		return dimensie;
+	}
+	
 }

@@ -1292,7 +1292,12 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			if (gewensteTussenOplossing != null && !isGelijkwaardig)
 				isGelijkwaardig = antwoord.isOplossing(gewensteTussenOplossing.geefEindOplossingen(var), var, gewensteTussenOplossing.geefVergTekens());
 
-			isEindOplossing = isGelijkwaardigEind && antwoord.isEindOplossing(var);
+			if (antwoord.isVectorVergelijking())
+				isEindOplossing = isGelijkwaardigEind && antwoord.isVectorEindOplossing(var);
+			else if (antwoord.isMatrixVergelijking())
+				isEindOplossing = isGelijkwaardigEind && antwoord.isMatrixEindOplossing(var);
+			else
+				isEindOplossing = isGelijkwaardigEind && antwoord.isEindOplossing(var);
 
 			isEindOplossingSignificant = isGelijkwaardigEind && antwoord.isEindOplossingSignificant(gewensteEindOplossing.geefEindOplossingen(var), var, gewensteEindOplossing.geefVergTekens());
 
@@ -1317,8 +1322,21 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			moetNogOngelijkheid = isGelijkwaardig && !isGelijkwaardigEind && antwoord.isEindOplossing(var) && gewensteEindOplossing.isOngelijkheid();
 
 			isJuisteVorm = false;
-			for (int i = 0; i < juisteVormen.length; i++) {
-				isJuisteVorm = isJuisteVorm || Algebra.gelijkGevormd(antwoordVoorAntwSub, juisteVormen[i]);
+			for (int i = 0; i < juisteVormen.length; i++)
+			{
+				if (Algebra.isJuistFormaatVectorVoorstelling(juisteVormen[i])) // als de gewenste vorm een vectorvoorstelling is
+				{
+					isJuisteVorm = isJuisteVorm || Algebra.isJuisteVectorvoorstelling(antwoordIngevuld, gewensteEindOplossing, juisteVormen[i]);
+					if (isJuisteVorm) // de juiste vectorvoorstelling is het goede antwoord
+					{
+						isGelijkwaardig = true;
+						bevatFouteOplossing = false;
+						isEindOplossing = true;
+					}
+				}
+				else
+					isJuisteVorm = isJuisteVorm || Algebra.gelijkGevormd(antwoordVoorAntwSub, juisteVormen[i]);
+				
 				if (isJuisteVorm)
 					break;
 			}

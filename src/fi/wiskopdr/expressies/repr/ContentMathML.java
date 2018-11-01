@@ -1,6 +1,7 @@
 package fi.wiskopdr.expressies.repr;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
@@ -368,6 +369,20 @@ public class ContentMathML extends AbstractConverter {
 		sb.append(expr.visit(this));
 		sb.append("</math>");
 		return sb.toString();
+	}
+
+	@Override
+	public Object matrix(ArrayList<ArrayList<Object>> kinderen)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object vectorExpr(ArrayList<Object> kinderen)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

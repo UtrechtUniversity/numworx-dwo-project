@@ -35,10 +35,13 @@
 <!--  <inherits name="fi.balansfruitgwt.BalansFruitGWT-DWO" /> -->
 <!-- <inherits name="nl.numworx.geodefinergwt.GeoDefinerGWT-DWO"/> -->
 <!--   <inherits name="fi.algebraexprgwt.AlgebraExprGWT-DWO" /> -->
-<!--  <inherits name="fi.algebrapijlengwt.AlgebraPijlenGWT-DWO" />  -->
+<!--   <inherits name="fi.algebrapijlengwt.AlgebraPijlenGWT-DWO" /> -->
 <!--  <inherits name="fi.doorziengwt.DoorzienGWT-DWO" /> -->
 <!--   <inherits name="fi.geomalggwt.GeomAlgGWT-DWO" /> -->
-<!-- <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" /> -->
+<!--   <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" /> -->
+<!--  <inherits name='gwt.Geom' /> -->   
+<!-- <inherits name="fi.statistiekgwt.StatistiekGWT-DWO" /> --> 
+<!--  <inherits name="fi.heksgwt.HeksGWT-DWO" /> -->
 <!--  <inherits name="fi.kladjegwt.KladjeGWT-DWO" /> -->
 <!-- <inherits name="fi.draaibankgwt.DraaibankGWT-DWO" /> -->
 <!-- <inherits name="fi.statsimgwt.StatSimGWT"/> -->

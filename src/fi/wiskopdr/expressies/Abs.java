@@ -1,5 +1,7 @@
 package fi.wiskopdr.expressies;
 
+import java.util.Arrays;
+
 import fi.wiskopdr.expressies.repr.AbstractConverter;
 
 public class Abs extends Expressie  
@@ -20,7 +22,14 @@ public class Abs extends Expressie
 	}
 	
 	public double geefWaarde()
-	{	return Math.abs(kind1.geefWaarde());
+	{
+		double waarde;
+		if (Algebra.isVector(kind1))
+			waarde = geefLengte().geefWaarde();
+		else
+			waarde = Math.abs(kind1.geefWaarde());
+			
+		return waarde;
 	}
 	
 	public double geefWaarde(double subst)
@@ -72,4 +81,21 @@ public class Abs extends Expressie
 		return converter.abs( kind1.visit(converter));
 	}
     
+	/**
+	 * Geef de lengte (norm) van het vectorkind.
+	 * 
+	 * @return
+	 */
+	private Expressie geefLengte()
+	{
+		Expressie lengte = null;
+		
+		if (Algebra.isVector(kind1))
+		{
+			lengte = kind1.geefVector().geefLengte();
+		}
+		
+		return lengte;
+	}
+
 }

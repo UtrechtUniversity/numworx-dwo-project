@@ -733,6 +733,36 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}
 	
 	@Override
+	public void vectornotatie()
+	{
+		insert("$z@");
+	}
+
+	@Override
+	public void vector()
+	{
+		insert("$Y@");
+	}
+
+	@Override
+	public void vector(int aantalRijen)
+	{
+		insert("$Y@");
+	}
+
+	@Override
+	public void matrix()
+	{
+		insert("$M@");
+	}
+
+	@Override
+	public void matrix(int aantalRijen, int aantalKolommen)
+	{
+		insert("$M@");
+	}
+
+	@Override
 	public int getAsHoogte() {
 		return facade.wrapAsHoogte(defaultFont.getAscent());
 	}
@@ -893,5 +923,4 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			}
 		}
 	}
-	
 }

@@ -1008,9 +1008,24 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 						else if(substitutie!=null)pastExact = pastExact || AntwoordChecker.checkExact(antwoordNonSub,juisteAntwoorden[i]);
                         else pastExact = pastExact || AntwoordChecker.checkExact(antwoord,juisteAntwoorden[i]);
 					}
-					for(int i=0 ; juisteVormen!=null && i<juisteVormen.length ; i++)
-					{	pastHerleid = pastHerleid || AntwoordChecker.checkHerleiding(antwoord, juisteVormen[i], soortHerleiding);	
+				
+					for (int i = 0; juisteVormen != null && i < juisteVormen.length; i++)
+					{
+						if (Algebra.isScalarMaalVector(juisteVormen[i])) // als de gewenste vorm een veelvoud van een vector is (t.b.v. normaalvector)
+						{
+							pastHerleid = pastHerleid || Algebra.isJuisteScalarMaalVector(antwoord, juisteVormen[i]);
+							if (pastHerleid) // de gegeven vector is een goede normaalvector
+							{
+								isGelijkwaardig = true;
+								pastGelijkwaardig = true;
+								pastExact = true;
+								pastSignificant = true;
+							}
+						}
+						else 
+							pastHerleid = pastHerleid || AntwoordChecker.checkHerleiding(antwoord, juisteVormen[i], soortHerleiding);	
 					}
+				
 					if(!gelijkwaardigP)pastGelijkwaardig = true;
 					if(!herleidingP)pastHerleid = true;
 					if(!exactP)pastExact = true;
@@ -1073,9 +1088,22 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 				
 				if(isExact)break;
 			}
-			for(int i=0 ; soortHerleiding==0 && i<juisteVormen.length ; i++)
-			{	isHerleid = isHerleid || AntwoordChecker.checkHerleiding(antwoord,juisteVormen[i], soortHerleiding);
-				if(isHerleid)break;
+			
+			for (int i = 0; soortHerleiding == 0 && i < juisteVormen.length; i++)
+			{
+				if (Algebra.isScalarMaalVector(juisteVormen[i])) // als de gewenste vorm een veelvoud van een vector is (normaalvector)
+				{
+					isHerleid = isHerleid || Algebra.isJuisteScalarMaalVector(antwoord, juisteVormen[i]);
+					if (isHerleid) // de gegeven vector is een goede normaalvector
+					{
+						isGelijkwaardig = true;
+					}
+				}
+				else 
+					isHerleid = isHerleid || AntwoordChecker.checkHerleiding(antwoord,juisteVormen[i], soortHerleiding);
+				
+				if (isHerleid)
+					break;
 			}
 		}
 	}	

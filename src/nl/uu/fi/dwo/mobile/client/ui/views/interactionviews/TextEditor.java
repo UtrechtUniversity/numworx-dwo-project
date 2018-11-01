@@ -839,6 +839,31 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 
 	@Override
+	public void vectornotatie()
+	{
+	}
+
+	@Override
+	public void vector()
+	{
+	}
+
+	@Override
+	public void vector(int aantalRijen)
+	{
+	}
+
+	@Override
+	public void matrix()
+	{
+	}
+	
+	@Override
+	public void matrix(int aantalRijen, int aantalKolommen)
+	{
+	}
+	
+	@Override
 	public void getResponses(List<String> responses) {
 		responses.add(getAllText().toString());
 	}
@@ -1376,5 +1401,5 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	{
 		editable = b;
 	}
-	
+
 }
