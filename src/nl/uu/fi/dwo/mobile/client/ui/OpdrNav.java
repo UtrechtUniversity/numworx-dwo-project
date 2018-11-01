@@ -2808,4 +2808,13 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			memento.setStudentModelStructure(studentModel);
 		
 	}
+
+	@Override
+	public ObjectMap getContext() {
+		HashMap<String,Object> map = new HashMap<>();
+		map.put("roles", getRole().name());
+		map.put("lesson_mode", getLessonMode().name());
+		map.put("premium", DWOplayer.isPremium());
+		return JSONUtilities.wrapMap(map);
+	}
 }

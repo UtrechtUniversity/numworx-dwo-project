@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.JSONObjectMapImpl;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMapImpl;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
@@ -32,6 +33,7 @@ import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
@@ -399,6 +401,9 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		}
 		wnd.getConfiguration = function(viewer) {
 			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getConfiguration0()()
+		}
+		wnd.getContext = function(viewer) {
+			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getContext0()()
 		}
 		
 		return wnd.inner;
@@ -906,7 +911,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		if(map instanceof JSONObjectMapImpl) {
 			return ((JSONObjectMapImpl) map).unwrap().getJavaScriptObject();
 		} else if (map instanceof Map) {
-			return JSONUtilities.toJSONObject( (Map) map).isObject().getJavaScriptObject();
+			return JSONUtilities.toJSONObject(map).isObject().getJavaScriptObject();
 		}
 		else {
 			return null;
@@ -923,4 +928,20 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			}
 		}
 	}
+
+	@Override
+	public ObjectMap getContext() {
+		if(comRoot != this && comRoot != null) {
+			return comRoot.getContext();
+		}
+		JSONObject object = new JSONObject();
+		object.put("premium", JSONBoolean.getInstance(DWOplayer.isPremium())); //werkt altijd!
+		return JSONUtilities.wrapMap(object);
+	}
+
+	public JavaScriptObject getContext0() {
+		ObjectMap map = getContext(); // Never null!
+		return JSONUtilities.toJSONObject(map).isObject().getJavaScriptObject();		
+	}
+
 }

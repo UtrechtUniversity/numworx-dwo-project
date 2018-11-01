@@ -1,22 +1,26 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.json.client.JSONObject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.HandlerRegistrations;
 
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Role;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.utils.Connector;
 
@@ -207,6 +211,13 @@ public class OpdrNavContext implements OpdrNavIF {
 		if(comRoot!=null)
 			return comRoot.getConfiguration();
 		return null;
+	}
+
+	@Override
+	public ObjectMap getContext() {
+		if (comRoot != null)
+			return comRoot.getContext();
+		return JSONUtilities.wrapMap(Collections.singletonMap("premium", DWOplayer.isPremium()));
 	}
 
 }

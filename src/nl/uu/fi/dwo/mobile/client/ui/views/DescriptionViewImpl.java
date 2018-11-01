@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -282,6 +283,11 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 	public ObjectMap getConfiguration() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public ObjectMap getContext() {
+		return JSONUtilities.wrapMap(Collections.EMPTY_MAP);
 	}
 
 
