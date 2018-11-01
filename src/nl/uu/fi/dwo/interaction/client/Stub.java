@@ -430,7 +430,7 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	}
 
 	private static native JavaScriptObject getContext0() /*-{
-	  return getContext($wnd.outer);
+	  return $wnd.getContext($wnd.outer);
 	}-*/;
 	
 	private static JSONObject getContext1() {
