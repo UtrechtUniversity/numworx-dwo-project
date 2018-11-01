@@ -10,6 +10,11 @@
 		height: 16px !important;
 		padding: 8px !important;
 	}
+	.svgimage {
+		width: 32px !important;
+		height: 32px !important;
+		padding: 0px !important;
+	}
 	.imagem {
 		width: 24px !important;
 		height: 24px !important;
@@ -17,6 +22,15 @@
 		padding-right: 4px !important;
 		padding-top: 4px !important;
 		padding-bottom: 34px !important;
+	}
+
+	.svgimagem {
+		width: 32px !important;
+		height: 32px !important;
+		padding-left: 0px !important;
+		padding-right: 0px !important;
+		padding-top: 0px !important;
+		padding-bottom: 30px !important;
 	}
 	
 	.symbol {
@@ -29,6 +43,15 @@
 		padding-right:8px !important;
 		padding-top: 27px !important;
 		padding-bottom: 27px !important;
+	}
+
+	.svgapply {
+		width: 32px !important;
+		height: 32px !important;
+		padding-left: 0px !important;
+		padding-right:0px !important;
+		padding-top: 19px !important;
+		padding-bottom: 19px !important;
 	}
 
 	.panel { 
@@ -49,13 +72,13 @@
 			<my:FKey addStyleNames="key bg-dkgrey icon {style.symbol}" ui:field="t3_16">
 				abc
 			</my:FKey>
-			<my:IKey addStyleNames="key bg-grey icon {style.image}" ui:field="t4_16" resource="{resources.hand}" />
+			<my:DKey addStyleNames="key bg-grey icon {style.svgimage}" ui:field="t4_16" resource="{resources.hand_svg}" />
 		</g:FlowPanel>
 
 		<g:FlowPanel addStyleNames="dclm">
-			<my:IKey addStyleNames="key bg-ltgrey icon {style.image}" ui:field="t1_17" resource="{resources.backspace}" />
-			<my:IKey addStyleNames="key bg-ltgrey icon {style.apply}" ui:field="t2_17" resource="{resources.apply}"/>
-			<my:IKey addStyleNames="key bg-ltgrey icon {style.imagem}" ui:field="t4_17" resource="{resources.VVV}" />
+			<my:DKey addStyleNames="key bg-ltgrey icon {style.svgimage}" ui:field="t1_17" resource="{resources.backspace_svg}" />
+			<my:DKey addStyleNames="key bg-ltgrey icon {style.svgapply}" ui:field="t2_17" resource="{resources.apply_svg}"/>
+			<my:DKey addStyleNames="key bg-ltgrey icon {style.svgimagem}" ui:field="t4_17" resource="{resources.VVV_svg}" />
 		</g:FlowPanel>
 
 	</g:FlowPanel>

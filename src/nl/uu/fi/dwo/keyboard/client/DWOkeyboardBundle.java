@@ -2,9 +2,96 @@ package nl.uu.fi.dwo.keyboard.client;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.resources.client.ClientBundle.Source;
+import com.google.gwt.resources.client.DataResource;
+import com.google.gwt.resources.client.DataResource.MimeType;
 
 public interface DWOkeyboardBundle extends ClientBundle {
+  
+    // SVG resources
+  
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/wortel.svg")
+    @MimeType("image/svg+xml")
+    DataResource wortel_svg();
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/diff.svg")
+    @MimeType("image/svg+xml")
+    DataResource diff_svg();
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/macht.svg")
+    @MimeType("image/svg+xml")
+    DataResource macht_svg();
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/limiet0.svg")
+    @MimeType("image/svg+xml")
+    DataResource limiet0_svg();
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/limiet1.svg")
+    @MimeType("image/svg+xml")
+    DataResource limiet1_svg();
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/limiet2.svg")
+    @MimeType("image/svg+xml")
+    DataResource limiet2_svg();
+    
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/bin.svg")
+    @MimeType("image/svg+xml")
+    DataResource bin_svg();
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/breuk.svg")
+    @MimeType("image/svg+xml")
+    DataResource breuk_svg();
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/conjug.svg")
+    @MimeType("image/svg+xml")
+    DataResource conjug_svg();
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/haakjes.svg")
+    @MimeType("image/svg+xml")
+    DataResource haakjes_svg();
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/abs.svg")
+    @MimeType("image/svg+xml")
+    DataResource abs_svg();
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/integraal.svg")
+    @MimeType("image/svg+xml")
+    DataResource integraal_svg();
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/kwadraat.svg")
+    @MimeType("image/svg+xml")
+    DataResource kwadraat_svg();
+    
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/ndelog.svg")
+    @MimeType("image/svg+xml")
+    DataResource ndelog_svg();
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/ndewortel.svg")
+    @MimeType("image/svg+xml")
+    DataResource ndewortel_svg();
+    
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/partialdiff.svg")
+    @MimeType("image/svg+xml")
+    DataResource partialdiff_svg();
+    
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/primitive.svg")
+    @MimeType("image/svg+xml")
+    DataResource primitieve_svg();
+
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/prv.svg")
+    @MimeType("image/svg+xml")
+    DataResource prv_svg();
+
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/sigma.svg")
+    @MimeType("image/svg+xml")
+    DataResource sigma_svg();
+ 
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/subscript.svg")
+    @MimeType("image/svg+xml")
+    DataResource subscript_svg();
+
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/keyboard-in.svg")
+    @MimeType("image/svg+xml")
+    DataResource VVV_svg();
+    
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/backspace.svg")
+    @MimeType("image/svg+xml")
+    DataResource backspace_svg();
+    
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/check-vink.svg")
+    @MimeType("image/svg+xml")
+    DataResource apply_svg();
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/gesture.svg")
+    @MimeType("image/svg+xml")
+    DataResource hand_svg();
+  
 	@Source("nl/uu/fi/dwo/keyboard/client/resources/mw_breuk.gif")
 	ImageResource breuk();
 

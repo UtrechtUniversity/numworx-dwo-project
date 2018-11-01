@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -258,13 +259,15 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 			break;
 		default:	
 		case APPLY:
-			resource = DWOTabletKeyboardFactory.resources.apply();
+			DataResource resource_svg = DWOTabletKeyboardFactory.resources.apply_svg();
 			if (isEnter) switch123();
+			setEnterImage(resource_svg);
+			return;
 		}
 		setEnterImage(resource);
 	}
 	
-	private ImageResource enterImage = DWOTabletKeyboardFactory.resources.apply();
+	private Object enterImage;
 	
 	@Override
 	void setEnterImage(ImageResource resource) {
@@ -280,5 +283,20 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 			math.setEnterImage(resource);
 		}
 	}
+ 
+	@Override
+    void setEnterImage(DataResource resource) {
+        if(resource != enterImage) {
+            enterImage = resource;
+            current.setEnterImage(resource);
+            k123.setEnterImage(resource);
+            kabc.setEnterImage(resource);
+            kABC.setEnterImage(resource);
+            pen.setEnterImage(resource);
+            kGrUpper.setEnterImage(resource);
+            kGrLower.setEnterImage(resource);
+            math.setEnterImage(resource);
+        }
+    }
 	
 }

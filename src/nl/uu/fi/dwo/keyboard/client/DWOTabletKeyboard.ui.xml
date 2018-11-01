@@ -18,6 +18,11 @@
 		height: 16px !important;
 		padding: 8px !important;
 	}
+	.svgimage {
+		width: 32px !important;
+		height: 32px !important;
+		padding: 0px !important;
+	}
 	.letter {
 		font-family: serif;
 		font-style: italic;
@@ -129,35 +134,35 @@
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-7">
-			<my:IKey addStyleNames="key {style.image}" ui:field="t1_7" resource="{resources.wortel}" />
-			<my:IKey addStyleNames="key {style.image}" ui:field="t2_7" resource="{resources.ndewortel}"/>
-			<my:IKey addStyleNames="key {style.image}" ui:field="t3_7" resource="{resources.integraal}" />
-			<my:IKey addStyleNames="key {style.image}" ui:field="t4_7" resource="{resources.limiet0}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t1_7" resource="{resources.wortel_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t2_7" resource="{resources.ndewortel_svg}"/>
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_7" resource="{resources.integraal_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_7" resource="{resources.limiet0_svg}" />
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-8">
-			<my:IKey addStyleNames="key {style.image}" ui:field="t1_8" resource="{resources.macht}" />
-			<my:IKey addStyleNames="key {style.image}" ui:field="t2_8" resource="{resources.ndelog}"/>
-			<my:IKey addStyleNames="key {style.image}" ui:field="t3_8" resource="{resources.prv}" />
-			<my:IKey addStyleNames="key {style.image}" ui:field="t4_8" resource="{resources.limiet1}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t1_8" resource="{resources.macht_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t2_8" resource="{resources.ndelog_svg}"/>
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_8" resource="{resources.prv_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_8" resource="{resources.limiet1_svg}" />
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-9">
-			<my:IKey addStyleNames="key {style.image}" ui:field="t1_9" resource="{resources.kwadraat}" />
-			<my:IKey addStyleNames="key {style.image}" ui:field="t2_9" resource="{resources.abs}"/>
-			<my:IKey addStyleNames="key {style.image}" ui:field="t3_9" resource="{resources.primitieve}" />
-			<my:IKey addStyleNames="key {style.image}" ui:field="t4_9" resource="{resources.limiet2}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t1_9" resource="{resources.kwadraat_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t2_9" resource="{resources.abs_svg}"/>
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_9" resource="{resources.primitieve_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_9" resource="{resources.limiet2_svg}" />
 		</g:FlowPanel>
 		
 		<g:FlowPanel addStyleNames="dclm clm-10">
-			<my:IKey addStyleNames="key {style.image}" ui:field="t1_10" resource="{resources.breuk}" />
-			<my:IKey addStyleNames="key {style.image}" ui:field="t2_10" resource="{resources.subscript}"/>
-			<my:IKey addStyleNames="key {style.image}" ui:field="t3_10" resource="{resources.diff}" />
-			<my:IKey addStyleNames="key {style.image}" ui:field="t4_10" resource="{resources.sigma}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t1_10" resource="{resources.breuk_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t2_10" resource="{resources.subscript_svg}"/>
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_10" resource="{resources.diff_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_10" resource="{resources.sigma_svg}" />
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-10">
-			<my:IKey addStyleNames="key {style.image}" ui:field="t1_11" resource="{resources.haakjes}" />
-			<my:IKey addStyleNames="key {style.image}" ui:field="t2_11" resource="{resources.bin}"/>
-			<my:IKey addStyleNames="key {style.image}" ui:field="t3_11" resource="{resources.partialdiff}" />
-			<my:IKey addStyleNames="key {style.image}" ui:field="t4_11" resource="{resources.conjug}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t1_11" resource="{resources.haakjes_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t2_11" resource="{resources.bin_svg}"/>
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_11" resource="{resources.partialdiff_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_11" resource="{resources.conjug_svg}" />
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-12">
 			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t1_12">
