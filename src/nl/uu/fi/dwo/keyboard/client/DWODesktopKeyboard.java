@@ -193,7 +193,7 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 	DWOkeyboardBundle resources = DWOTabletKeyboardFactory.resources;
 	
 	@UiField
-	FKey t3_1,t3_2,t3_3,t3_4, t3_5,t3_6,t3_7,t3_8, t3_9,t3_10,t3_11,t3_12, t3_13,t3_14, t3_15;//,t3_15;
+	FKey t3_1,t3_2,t3_3,t3_4, t3_5,t3_6,t3_7,t3_8, t3_9,t3_10,t3_11,t3_12, t3_13,t3_14, t3_15, t3_16;//,t3_15;
 	@UiField
 	FKey t4_1,t4_2,t4_3,t4_4, t4_5,t4_6,t4_7,t4_8, t4_9,t4_10,t4_11,t4_12, t4_13,t4_14, t4_15;//,t4_15;
 
@@ -297,6 +297,15 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 		getEditor().matrix(aantalRijen, aantalKolommen);
 		matrixDimensionDialog.hide();
 		t4_15.removeStyleName("hover");	
+	}
+
+	@Override
+	public void setPremium(boolean premium) {
+		if(!premium) {
+			disableKey(t3_15);
+			disableKey(t3_16);
+			disableKey(t4_15);
+		}
 	}
 
 }

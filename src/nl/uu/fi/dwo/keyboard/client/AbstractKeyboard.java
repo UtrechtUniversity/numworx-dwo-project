@@ -109,6 +109,14 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 	public void setWriteMathSet(int nr) {
 	}
 
+	public void setPremium(boolean premium) {
+		
+	}
+	
+	public boolean isPremium() {
+		return false;
+	}
+	
 	final protected void setActiveEditor(FormuleEditorIF formuleEditor) {
 		FormuleEditorIF old = getEditor();
 		setEditor0(formuleEditor);

@@ -208,5 +208,11 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 			}
 		}
 	}
+
+	@Override
+	public void setPremium(boolean premium) {
+		super.setPremium(premium);
+		k123.setPremium(premium);
+	}
 	
 }
