@@ -81,7 +81,7 @@ public class SecuredUserResultsManager {
         cc.setNoCache(true);
         cc.setNoStore(true);
 // match profile		
-        if (pid != parent.getDwoProfileID().longValue()) {
+        if (parent == null || pid != parent.getDwoProfileID().longValue()) {
             return Response.ok(result, "application/json").cacheControl(cc).build();//List<DomStudentScoContext>
         }// match school
         if (parent.getSchoolID() != null) {

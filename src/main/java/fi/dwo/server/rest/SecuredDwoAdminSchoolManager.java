@@ -276,13 +276,14 @@ public class SecuredDwoAdminSchoolManager {
                 persistentSchoolGroup.setPasswd(domMapEntry.getValue());
                 i.remove();
                 j.remove();
+                SchoolGroupManager.edit(persistentSchoolGroup);
               }
 
             }
           }
           // TODO wat met de leftovers te doen? nu ignore!
         }
-        return true;
+        return Boolean.TRUE;
       } catch (Exception e) {
         LOG.log(Level.SEVERE,
             "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
