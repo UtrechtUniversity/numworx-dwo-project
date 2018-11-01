@@ -17,6 +17,6 @@ public interface WiskOpdrComponent {
     WiskOpdrComponent build();
     Builder moduleView(ModuleViewModule module);
     @BindsInstance Builder api(Scorm2004IF api);
-    @BindsInstance @Named("premium") Builder premium(boolean b);
+    @BindsInstance Builder premium(@Named("premium") boolean b);
   }
 }
