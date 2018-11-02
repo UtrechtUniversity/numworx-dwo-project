@@ -2,8 +2,17 @@ package nl.uu.fi.dwo.keyboard.client;
 
 public class DWODesktopKeyboardFactory implements KeyboardFactory {
 
-	@Override
+	private boolean premium;
+
+  @Override
 	public AbstractKeyboard getKeyboard() {
-		return new DWOTabbedDesktopKeyboard();
+      DWOTabbedDesktopKeyboard kb = new DWOTabbedDesktopKeyboard();
+      kb.setPremium(premium);
+      return kb;
 	}
+
+  @Override
+  public void setPremium(boolean premium) {
+    this.premium = premium;
+  }
 }

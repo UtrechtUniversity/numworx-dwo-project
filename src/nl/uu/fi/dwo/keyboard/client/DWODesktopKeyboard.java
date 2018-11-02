@@ -234,6 +234,7 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 	void onT3_15(ClickEvent e)
 	{
 		// toon dimensiekeuze
+	  if (isPremium())
 		vectorDimensionDialog.showRelativeTo(this.t3_15);
 	}
 	
@@ -241,12 +242,14 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 	void onT4_15(ClickEvent e)
 	{
 		// toon dimensiekeuze
+	  if (isPremium())
 		matrixDimensionDialog.showRelativeTo(this.t4_15);
 	}
 
 	@UiHandler("t3_16")
 	void onT3_16(ClickEvent e)
 	{
+	  if (isPremium())
 		getEditor().vectornotatie();
 	}
 
@@ -299,13 +302,21 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 		t4_15.removeStyleName("hover");	
 	}
 
+	private boolean premium = true;
+	
 	@Override
-	public void setPremium(boolean premium) {
+	void setPremium(boolean premium) {
+	    this.premium = premium;
 		if(!premium) {
 			disableKey(t3_15);
 			disableKey(t3_16);
 			disableKey(t4_15);
 		}
 	}
+
+  @Override
+  boolean isPremium() {
+    return premium;
+  }
 
 }

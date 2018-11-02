@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.keyboard.client;
 
 public interface KeyboardFactory {
 
-	AbstractKeyboard getKeyboard();
+  AbstractKeyboard getKeyboard();
+
+  void setPremium(boolean premium);
 
 }

@@ -35,8 +35,9 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 	}
 
 	
-	DWOTabbedTouchKeyboard() {
+	DWOTabbedTouchKeyboard(boolean premium) {
 		this(1);
+		setPremium(premium);
 	}
 	
 	DWOTabbedTouchKeyboard(int nr) {

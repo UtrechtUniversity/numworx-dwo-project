@@ -10,4 +10,8 @@ public class DesktopKeyboardFactory implements KeyboardFactory {
 		return new TabbedDesktopKeyboard();
 	}
 
+  @Override
+  public void setPremium(boolean premium) {
+  }
+
 }

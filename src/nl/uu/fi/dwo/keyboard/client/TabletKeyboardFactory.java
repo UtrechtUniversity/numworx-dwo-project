@@ -8,4 +8,8 @@ public class TabletKeyboardFactory implements KeyboardFactory {
 		return new TabbedTouchKeyboard();
 	}
 
+  @Override
+  public void setPremium(boolean premium) {
+  }
+
 }
