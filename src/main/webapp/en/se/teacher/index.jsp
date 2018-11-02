@@ -14,7 +14,7 @@
     <head>
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=1024">
-        <title>Numworx Higher Education</title>
+        <title>Numworx Secondary Education</title>
 		<style type="text/css">
             body, html
             {
