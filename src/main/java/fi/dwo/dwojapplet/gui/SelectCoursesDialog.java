@@ -563,16 +563,18 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
     static class TypeCellEditor extends DefaultCellEditor {
 
-        public TypeCellEditor(JComboBox box) {
+        TypeCellEditor(JComboBox<?> box) {
             super(box);
         }
 
-        private static JComboBox createComboBox() {
-            JComboBox box = new JComboBox(OBJECT_TYPE);
+        private static JComboBox<?> createComboBox() {
+            JComboBox<?> box = new JComboBox<Object>(OBJECT_TYPE);
+            box.setEnabled(DwoHelper.isPremium());
+            if(!box.isEnabled()) box.setToolTipText("Dit is een premium feature"); // FIXME vertalen!
             return box;
         }
 
-        public TypeCellEditor() {
+        TypeCellEditor() {
             this(createComboBox());
         }
     }

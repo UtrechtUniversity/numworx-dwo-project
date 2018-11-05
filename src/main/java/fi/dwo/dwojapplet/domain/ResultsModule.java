@@ -10,8 +10,6 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.ClassTeacherModules;
 import fi.dwo.dwojapplet.gui.ScoDialog;
 import fi.dwo.dwojapplet.gui.ScoPanel;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
-import fi.dwo.dwojapplet.persistence.MapperIF;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.UserResultListMapper;
 import nl.uu.fi.dwo.rest.dom.DomCoursesOfSchoolclassTree;

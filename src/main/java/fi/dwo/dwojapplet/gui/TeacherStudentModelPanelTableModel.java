@@ -16,7 +16,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
  */
 class TeacherStudentModelPanelTableModel extends AbstractTableModel {
 
-    private String[] columnNames = {TextMapper.getText(TextMapper.TBL_USERNAME),
+    private String[] columnNames = {TextMapper.getText("Studentmodels"),
         TextMapper.getText(TextMapper.TBL_SELECT)};
 
     static boolean DEBUG = false;
