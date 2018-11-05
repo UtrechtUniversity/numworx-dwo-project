@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.ScoActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.SearchActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.SelectModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.ViewCourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
@@ -21,6 +22,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SearchPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.ViewCoursePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.s;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
@@ -106,7 +108,10 @@ public class TabletActivityMapper implements ActivityMapper
 			SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
 			if(item == null)
 				return new LoginActivity(clientFactory);
-			final ViewModuleActivity viewModuleActivity = new ViewModuleActivity(clientFactory, item, where);
+			final ViewModuleActivity viewModuleActivity = 
+			    place instanceof ViewCoursePlace 
+			    ? new ViewCourseActivity(clientFactory, item, where)
+			    : new ViewModuleActivity(clientFactory, item, where);
 			Provider<Activity> provider = new Provider<Activity>() {
 				
 				@Override

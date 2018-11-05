@@ -52,7 +52,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	private ClientFactory clientFactory;
 	private ViewModuleView view;
 	private AnchorContext defaultContext;
-	private SelectModuleItem sco;
+	SelectModuleItem sco;
 	private Timer tm;
 	private boolean started;
 	private String location;

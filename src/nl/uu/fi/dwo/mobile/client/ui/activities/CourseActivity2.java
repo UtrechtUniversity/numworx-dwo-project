@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.ViewCoursePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
 import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
@@ -199,6 +200,8 @@ public class CourseActivity2 extends MGWTAbstractActivity implements Activity, G
 	@Override
 	public void goTo(Place place) {
 		GWT.log(place.getClass().getName() + "  " + place.toString());
+		if(place instanceof ViewModulePlace)
+		  place = new ViewCoursePlace((ViewModulePlace)place);
 		placeController.goTo(place);
 	}
 }
