@@ -109,7 +109,7 @@ public class VectorNotatieVak extends FormuleElementWithChildren
 		/* geen idee welke van de twee de meest gesupporte is */
 		// return "<menclose notation='top' >" + children.get(0).toMathML() +
 		// "</menclose>";
-		return "<mover>" + getChild(0).toMathML() + "<mo>\u00AF</mo></mover>"; // UNICODE
+		return "<mover>" + getChild(0).toMathML() + "<mo>\u2192</mo></mover>"; // UNICODE
 																			// MACRON
 	}
 }
