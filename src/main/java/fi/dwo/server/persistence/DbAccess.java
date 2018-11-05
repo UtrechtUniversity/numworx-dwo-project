@@ -850,8 +850,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * rows mapped on the columnname.
      * @throws java.sql.SQLException
      */
-    @Override
-    public Vector getTable(String tableName, String orderCol) throws SQLException {
+    private Vector getTable(String tableName, String orderCol) throws SQLException {
         String[] arguments = {tableName, orderCol};
         String query = MessageFormat
                 .format(QRY_DEFAULT_SELECT_TABLE_ORDER, arguments);
@@ -1575,8 +1574,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws DwoXmlRpcException
      * @throws SQLException
      */
-    @Override
-    public Hashtable addSchool(int schoolID, String schoolName, String schoolLogin, Hashtable passwdMap)
+    private Hashtable addSchool(int schoolID, String schoolName, String schoolLogin, Hashtable passwdMap)
             throws DwoXmlRpcException, SQLException {
         Hashtable result = null;
         if (schoolLoginExists(schoolLogin)) {
@@ -1675,8 +1673,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @return
      * @throws SQLException
      */
-    @Override
-    public Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, Hashtable passwdMap) throws SQLException {
+    private Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, Hashtable passwdMap) throws SQLException {
         Hashtable result;
         result = getRecord("tblSchool", "schoolID", schoolID);
         updateSchoolNameLogin(schoolID, schoolName, schoolLogin, result);
@@ -1999,8 +1996,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 
     }
 
-    @Override
-    public Vector getCoursesForClass(int classID) throws IOException,
+    private Vector getCoursesForClass(int classID) throws IOException,
             XmlRpcException, SQLException {
         close(); //for lazy connection        
         PreparedStatement ps;
@@ -2104,8 +2100,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      *
      * @see fi.dwo.client.persistence.DbAccessIF#getCourses(int)
      */
-    @Override
-    public Vector getCourses(int profileValue) throws IOException, XmlRpcException,
+    private Vector getCourses(int profileValue) throws IOException, XmlRpcException,
             SQLException {
         close(); //for lazy connection
         PreparedStatement ps;
@@ -2149,8 +2144,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws XmlRpcException
      * @throws SQLException
      */
-    @Override
-    public Vector getToSchoolsFrom(int schoolID)
+    private Vector getToSchoolsFrom(int schoolID)
             throws IOException, XmlRpcException, SQLException {
         close(); //for lazy connection
         PreparedStatement ps;
@@ -2175,8 +2169,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws XmlRpcException
      * @throws SQLException
      */
-    @Override
-    public String LMSGetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement)
+    private String LMSGetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement)
             throws IOException, XmlRpcException, SQLException {
         try {
             iDataModelElement = fixDataModel(iDataModelElement);
@@ -2442,8 +2435,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws IOException
      * @throws XmlRpcException
      */
-    @Override
-    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement,
+    private String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement,
             String iValue, String random) throws SQLException, IOException, XmlRpcException {
         LMSSetValue(scoID, userID, schoolGroupID, iDataModelElement, iValue);
         return random;
@@ -2583,8 +2575,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @param classID
      * @throws java.sql.SQLException
      */
-    @Override
-    public Vector getResultCount(int profileID, int classID) throws SQLException {
+    private Vector getResultCount(int profileID, int classID) throws SQLException {
         long start = System.currentTimeMillis();
         String query = QRY_RESULTS_COURSE_PROFILE;
 
@@ -2637,8 +2628,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      */
-    @Override
-    public Vector getUserResults(int courseID, int userID, int schoolGroupID)
+    private Vector getUserResults(int courseID, int userID, int schoolGroupID)
             throws IOException, XmlRpcException, SQLException {
         //MessageFormat.
         MessageFormat qry = new MessageFormat(QRY_RESULTS_SINGLE_STUDENT_COURSE);
@@ -2862,8 +2852,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * 
      * @see fi.dwo.client.persistence.DbAccessIF#log(java.lang.String)
      */
-    @Override
-    public boolean log(String s) {
+    private boolean log(String s) {
         log(Level.INFO, s, null);
         return false;
     }
@@ -2943,8 +2932,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws DwoXmlRpcException
      * @throws SQLException
      */
-    @Override
-    public int addCourse(int schoolID, String name, String description, int dwoProfile, int parentID, boolean isMap)
+    private int addCourse(int schoolID, String name, String description, int dwoProfile, int parentID, boolean isMap)
             throws DwoXmlRpcException, SQLException {
         Hashtable schoolData = getRecord("tblSchool", "schoolID", schoolID);
         log("DbAccess.addCourse" + schoolData);
@@ -3712,8 +3700,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      */
-    @Override
-    public boolean deleteSchool(int schoolID) throws IOException, XmlRpcException, SQLException {
+    private boolean deleteSchool(int schoolID) throws IOException, XmlRpcException, SQLException {
 
         LOG.log(Level.FINE, "Attempting to delete school with id {0} and associated data.", new Object[]{schoolID});
 
@@ -3928,8 +3915,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws XmlRpcException
      * @throws SQLException
      */
-    @Override
-    public boolean editSchool(int schoolID, boolean export) throws IOException,
+    private boolean editSchool(int schoolID, boolean export) throws IOException,
             XmlRpcException, SQLException {
 
         PreparedStatement ps = getStatement(QRY_UPDATE_SCHOOL2);
@@ -3948,8 +3934,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws IOException
      * @throws SQLException
      */
-    @Override
-    public boolean editSchoolRights(int schoolID, String rights) throws IOException, SQLException {
+    private boolean editSchoolRights(int schoolID, String rights) throws IOException, SQLException {
         PreparedStatement ps = getStatement(QRY_UPDATE_SCHOOL3);
         ps.setString(1, rights);
         ps.setInt(2, schoolID);
@@ -3968,8 +3953,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws XmlRpcException
      * @throws SQLException
      */
-    @Override
-    public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID)
+    private Vector getImportCourses(int schoolFrom, int schoolTo, int profileID)
             throws IOException, XmlRpcException, SQLException {
         String sql = QRY_SELECT_IMPORT_COURSES;
         PreparedStatement ps = getStatement(sql);
@@ -4066,8 +4050,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws XmlRpcException
      * @throws SQLException
      */
-    @Override
-    public boolean updateSchoolTo(int schoolID, Vector schoolTo)
+    private boolean updateSchoolTo(int schoolID, Vector schoolTo)
             throws IOException, XmlRpcException, SQLException {
         Connection c = getConnection();
         try {
@@ -4101,8 +4084,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @return
      * @throws SQLException
      */
-    @Override
-    public boolean deleteCourseDataFromClass(int courseID, int classID)
+    private boolean deleteCourseDataFromClass(int courseID, int classID)
             throws SQLException {
         Connection c = getConnection();
         try {
@@ -4218,8 +4200,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @return
      * @throws SQLException
      */
-    @Override
-    public boolean setCourseSequence(Vector vector, int schoolID, int classID,
+    private boolean setCourseSequence(Vector vector, int schoolID, int classID,
             int parent, int profileID) throws SQLException {
         Connection c = getConnection();
         boolean auto = c.getAutoCommit();
@@ -4370,8 +4351,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @return
      * @throws SQLException
      */
-    @Override
-    public boolean selectCoursesForClass(int id, Vector v) throws SQLException {
+    private boolean selectCoursesForClass(int id, Vector v) throws SQLException {
         // XXX 
         Connection c = getConnection();
         try {
@@ -4454,8 +4434,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * @throws XmlRpcException
      * @throws SQLException
      */
-    @Override
-    public boolean setExpireDate(int schoolID, Date date) throws IOException,
+    private boolean setExpireDate(int schoolID, Date date) throws IOException,
             XmlRpcException, SQLException {
         PreparedStatement ps = getStatement("UPDATE tblSchool SET expire = ? WHERE (schoolID = ?) LIMIT 1");
         if (date == null || date.getTime() < DATE_OFFSET) {

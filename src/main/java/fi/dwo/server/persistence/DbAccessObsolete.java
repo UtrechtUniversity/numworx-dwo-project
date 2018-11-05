@@ -11,7 +11,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 
 public interface DbAccessObsolete {
-  public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID) throws IOException, XmlRpcException, SQLException;
+/*  public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID) throws IOException, XmlRpcException, SQLException;
   public Vector getCoursesJS(int profileValue) throws IOException, XmlRpcException,
   SQLException;
   public String LMSGetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement) throws IOException, XmlRpcException,
@@ -25,16 +25,16 @@ public interface DbAccessObsolete {
   public Vector getResultCount(int profile, int classId)
       throws SQLException, IOException, XmlRpcException;
   public boolean log(String s) throws IOException, XmlRpcException;
- /**
+*/ /**
    * Returns all the available courses for the specified user.
    *
    * @param userID The user where for the courses must selected.
    * @return A Vector containing hash tables with the course data.
    * @throws java.sql.SQLException
    */
-  public Vector getCourses(int profileValue) throws IOException, XmlRpcException, SQLException;
+/*  public Vector getCourses(int profileValue) throws IOException, XmlRpcException, SQLException;
   public Vector getToSchoolsFrom(int schoolID) throws IOException, XmlRpcException, SQLException;
-
+*/
 /*  Hashtable login(String username, String password)
       throws SQLException, DwoXmlRpcException, IOException, XmlRpcException;
 
@@ -77,7 +77,7 @@ XmlRpcException, SQLException;
 public Vector getTable(String tableName, Hashtable wheredef) throws IOException,
 XmlRpcException, SQLException;
 *///-------------------------------------
-public boolean setCourseSequence(Vector vector, int schoolID, int classID,
+/*public boolean setCourseSequence(Vector vector, int schoolID, int classID,
                                  int parent, int profileID)
                                  throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
@@ -97,4 +97,4 @@ public boolean selectCoursesForClass(int id, Vector v) throws IOException, XmlRp
 public boolean updateSchoolTo(int schoolID, Vector schoolTo)
     throws IOException, XmlRpcException, SQLException;
 
-}
+*/}
