@@ -572,10 +572,10 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
 //        return getDelegate().isInTeacherRole(userID, schoolID);
 //    }
 
-//    @Override
-//    public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
-//        return getDelegate().getStudentsOfClass(schoolClassID);
-//    }
+    @Override
+    public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
+        return getDelegate().getStudentsOfClass(schoolClassID);
+    }
 
 //    @Override
 //    public Vector<Object> getTeachersOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
