@@ -62,4 +62,8 @@ public class HeaderViewNone extends HTML implements HeaderView {
 
   }
 
+@Override
+public void setPresenter(GotoController presenter) {
+}
+
 }

@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -15,6 +16,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewCoursePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
@@ -25,6 +27,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -53,12 +57,16 @@ public class CourseActivity2 extends MGWTAbstractActivity implements Activity, G
 	private SelectModuleItem item;
 	@Inject PlaceController placeController;
 	@Inject Provider<NoCourseView> noCourseView;
+	private Place where;
+	private HeaderView headerView;
 
-	public CourseActivity2(ClientFactory clientFactory, SelectModuleItem item) {
+	public CourseActivity2(ClientFactory clientFactory, SelectModuleItem item, Place where) {
 		this.clientFactory = clientFactory;
 		this.item = item;
+		this.where = where;
 		placeController = clientFactory.getPlaceController();
 		noCourseView = clientFactory.getNoCourseView();
+		headerView = clientFactory.getHeaderView();
 	}
 
 	@Override
@@ -68,10 +76,15 @@ public class CourseActivity2 extends MGWTAbstractActivity implements Activity, G
 		clientFactory.getNavigationView().hide();
 		view.setBeheer(false);
 		view.setPresenter(this);
+		DomUserFull currentUser = DwoGlobalVars.instance().getCurrentUser();
+		RoleType roleType = clientFactory.getRoleType();
+		headerView.setUserAndRole(currentUser, roleType);
+		headerView.setPresenter(this);
+		headerView.setHomePlace(where);
+		headerView.setUpPlace(where);
 		
 		final Place next = 
-				new LoginPlace(
-						placeController.getWhere());
+				new LoginPlace(where);
 				
 		
 		if(item.getName() == null) {
@@ -202,6 +215,9 @@ public class CourseActivity2 extends MGWTAbstractActivity implements Activity, G
 		GWT.log(place.getClass().getName() + "  " + place.toString());
 		if(place instanceof ViewModulePlace)
 		  place = new ViewCoursePlace((ViewModulePlace)place);
+	    if (place instanceof LoginPlace) {
+	        place = new LoginPlace(where); // logout/login
+	      }
 		placeController.goTo(place);
 	}
 }
