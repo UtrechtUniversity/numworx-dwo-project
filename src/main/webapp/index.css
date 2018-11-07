@@ -1,5 +1,17 @@
+@import url("//fonts.googleapis.com/css?family=Ubuntu:regular,medium,bold");
+
 body {
-	background-color: d2e5f5;
+	background-color: #d2e5f5;
+	font-family: "Ubuntu" !important;
+	font-size: 14px;
+	line-height: 18px;
+	color: #1B75BB;
+}
+
+a {
+	color: #1B75BB;
+	text-decoration: underline;
+	font-weight: bold;
 }
 
 #header {
