@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.stelselsvergelijkin
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
+
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
@@ -20,6 +22,8 @@ import fi.wiskopdr.expressies.Expressie;
 
 
 public class StelselRekenVak extends LayoutPanel  {
+	
+	private final static Logger logger = Logger.getLogger("StelseRekenVak");
 	
 	StelselEditor hoofdEditor;
 	String[] varNamen = {"n", "p"};
@@ -40,7 +44,7 @@ public class StelselRekenVak extends LayoutPanel  {
 	
 	StelselAntwoordVak antwoordVak;
 	
-	ScrollPanel scrollPane;
+	private ScrollPanel scrollPane;
 	LayoutPanel contentPanel;
 	FlowPanel headerPanel;
 	
@@ -121,6 +125,7 @@ public class StelselRekenVak extends LayoutPanel  {
 	
 	public void setHeight(int h)
 	{
+		int currentScrollHeight = scrollPane.getVerticalScrollPosition();
 		super.setHeight(h + "px");
 		scrollHoogte = h - headerHoogte - marge - 2;
 		contentHoogte = Math.max(scrollHoogte, hoofdEditor.geefHoogteEditorEnKinderen());
@@ -129,8 +134,7 @@ public class StelselRekenVak extends LayoutPanel  {
 			contentPanel.setPixelSize(scrollWidth - 20, contentHoogte);
 		else
 			contentPanel.setPixelSize(scrollWidth - 3, contentHoogte);
-		
-		scrollPane.scrollToBottom();
+		scrollPane.setVerticalScrollPosition(currentScrollHeight);
 	}
 	
 	public void zetVolledigeBreedte(int b)
@@ -167,8 +171,9 @@ public class StelselRekenVak extends LayoutPanel  {
 		int kolomBreedte = contentPanel.getOffsetWidth()/aantalKolommen;
 		hoofdEditor.setSizes(kolomBreedte);
 		int h = hoofdEditor.geefHoogteEditorEnKinderen(); //hierin wordt ook plaatsHoogte gedaan voor alle editors; daarom doen vóór zetten locaties.
+		int verticalFocusPosition = h;
 		if(hoofdEditor.heeftKinderen())
-			hoofdEditor.setLocations(-1, 0);
+			verticalFocusPosition = hoofdEditor.setLocations(-1, 0, 0);
 		if(h > scrollHoogte)
 		{	contentHoogte = h;
 			contentPanel.setPixelSize(scrollWidth - 20, contentHoogte);
@@ -176,11 +181,10 @@ public class StelselRekenVak extends LayoutPanel  {
 		else
 		{	contentHoogte = scrollHoogte;
 			contentPanel.setPixelSize(scrollWidth - 3, contentHoogte);
-		
 		}
 		contentPanel.setWidgetTopHeight(hoofdEditor, 0, Style.Unit.PX, hoofdEditor.geefHoogte(), Style.Unit.PX);
-		scrollPane.scrollToBottom(); //Dit is te algemeen; je wil dat de editor die focus heeft goed in beeld komt. Die kan helemaal onderaan zitten, 
-		//maar kan ook ergens anders zitten. 
+		
+		scrollNaarFocus(verticalFocusPosition - scrollHoogte);
 	}
 	
 	public StelselAntwoordVak geefAntwoordVak()
@@ -242,6 +246,11 @@ public class StelselRekenVak extends LayoutPanel  {
 	public void setParentRegel(TekstRegel regel)
 	{
 		hoofdEditor.setParentRegel(regel);
+	}
+	
+	public void scrollNaarFocus(int position)
+	{
+		scrollPane.setVerticalScrollPosition(position); 
 	}
 	
 }

@@ -818,9 +818,11 @@ public class StelselEditor extends FormuleEditorWithSteps
 		}
 	}
 	
-	public void setLocations(int x, int y)
+	public int setLocations(int x, int y, int focusHoogte)
 	{
 		y += hoogte;
+		if(heeftFocus)
+			focusHoogte = y;
 		int breedteVergelijkingen = x;// + geefLaatsteFormuleVak().getX();
 		FormuleEditor hulpEditor = new FormuleEditor();
 		for(int i = 0; i < kinderen.length; i++)
@@ -843,11 +845,16 @@ public class StelselEditor extends FormuleEditorWithSteps
 			hoofdPanel.contentPanel.setWidgetLeftWidth(pijlen[i].getCanvas(), Math.min(pijlen[i].xBegin, pijlen[i].xEind), Style.Unit.PX, Math.max(5, Math.abs(pijlen[i].xBegin - pijlen[i].xEind)), Style.Unit.PX);
 			hoofdPanel.contentPanel.setWidgetTopHeight(pijlen[i].getCanvas(), y - pijlen[i].hoogte, Style.Unit.PX, pijlen[i].hoogte, Style.Unit.PX);
 			if(kinderen[i].heeftKinderen())
-				kinderen[i].setLocations(x, y);
+				focusHoogte = kinderen[i].setLocations(x, y, focusHoogte);
+			else if(kinderen[i].heeftFocus)
+			{	focusHoogte = y + kinderen[i].bepaalHoogte();
+			}
 			x += kinderen[i].getWidth();
 			
 		}
+		return focusHoogte;
 	}
+
 	
 		public Boolean isCorrect()
 	{
