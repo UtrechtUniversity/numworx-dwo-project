@@ -143,12 +143,12 @@
 		</g:FlowPanel>
 		
 		<g:FlowPanel addStyleNames="dclm clm-14">
-			<my:IKey addStyleNames="key {style.image}" ui:field="t3_15" resource="{resources.vector}" />
-			<my:IKey addStyleNames="key {style.image}" ui:field="t4_15" resource="{resources.matrix}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_15" resource="{resources.vector_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_15" resource="{resources.matrix_svg}" />
 		</g:FlowPanel>
 		
 		<g:FlowPanel addStyleNames="dclm clm-15">
-			<my:IKey addStyleNames="key {style.image}" ui:field="t3_16" resource="{resources.vectornotatie}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_16" resource="{resources.vectornotatie_svg}" />
 		</g:FlowPanel>
 		
 		<g:FlowPanel addStyleNames="dclm clm-14">

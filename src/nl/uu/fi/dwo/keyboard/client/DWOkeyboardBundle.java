@@ -77,7 +77,7 @@ public interface DWOkeyboardBundle extends ClientBundle {
     @MimeType("image/svg+xml")
     DataResource subscript_svg();
 
-    @Source("nl/uu/fi/dwo/keyboard/client/resources/keyboard-in.svg")
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/keyboard.svg")
     @MimeType("image/svg+xml")
     DataResource VVV_svg();
     
@@ -92,6 +92,25 @@ public interface DWOkeyboardBundle extends ClientBundle {
     @MimeType("image/svg+xml")
     DataResource hand_svg();
   
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/enter.svg")
+    @MimeType("image/svg+xml")
+    DataResource enter_svg();
+    
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/matrix.svg")
+    @MimeType("image/svg+xml")
+    DataResource matrix_svg();
+    
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/vector.svg")
+    @MimeType("image/svg+xml")
+    DataResource vector_svg();
+    
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/vectornotatie.svg")
+    @MimeType("image/svg+xml")
+    DataResource vectornotatie_svg();
+    
+   
+    
+    
 	@Source("nl/uu/fi/dwo/keyboard/client/resources/mw_breuk.gif")
 	ImageResource breuk();
 

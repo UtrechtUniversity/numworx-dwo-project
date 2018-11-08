@@ -251,21 +251,21 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 
 	@Override
 	public void setEnterType(EnterType type) {
-		ImageResource resource;
-		boolean isEnter = enterImage == DWOTabletKeyboardFactory.resources.enter();
+		
+		boolean isEnter = enterImage == DWOTabletKeyboardFactory.resources.enter_svg();
 		switch(type) {
 		case ENTER:
-			resource = DWOTabletKeyboardFactory.resources.enter();
+			DataResource resource_svg = DWOTabletKeyboardFactory.resources.enter_svg();
 			if (!isEnter) switchABC();
-			break;
+			setEnterImage(resource_svg);
+			return;
 		default:	
 		case APPLY:
-			DataResource resource_svg = DWOTabletKeyboardFactory.resources.apply_svg();
+			resource_svg = DWOTabletKeyboardFactory.resources.apply_svg();
 			if (isEnter) switch123();
 			setEnterImage(resource_svg);
 			return;
 		}
-		setEnterImage(resource);
 	}
 	
 	private Object enterImage;
