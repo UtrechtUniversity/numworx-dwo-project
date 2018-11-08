@@ -66,7 +66,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
         l.setFont(GuiConstants.NORMAL_TEXT);
         CopyLabel copyAction = new CopyLabel(l.getText());
 
-        if (DwoHelper.isTest()) {    
+        if (DwoHelper.isTest()&& DwoHelper.isPremium()) {    
             copyAction.add(new ShareAction(courseID, deepest));
             copyAction.add(new ShareHTMLAction(courseID, deepest));
         }

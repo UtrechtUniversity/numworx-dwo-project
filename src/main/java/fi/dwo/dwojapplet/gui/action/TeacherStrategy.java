@@ -127,7 +127,7 @@ public class TeacherStrategy implements SelectStrategy {
             item.addActionListener(listener);
             m.add(item);
 
-            if (DwoHelper.isTest()) {
+            if (DwoHelper.isTest() && DwoHelper.isPremium()) {
               LessonGroup lg = (LessonGroup) object;                  
               int id = lg.getID();
               Action action = new ShareAction(id, lg.isDeepestLevel());
