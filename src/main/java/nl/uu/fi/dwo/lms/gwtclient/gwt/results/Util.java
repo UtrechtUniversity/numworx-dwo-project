@@ -91,10 +91,10 @@ class Util {
       String label = String.valueOf(i+1);
       DomResultStudentScoPage item = new DomResultStudentScoPage(label);
       item.setNodeId(i);
-      if (i < ls)
+      if (i < ls && scores[i] != null)
         item.setScore(scores[i].doubleValue());
       item.setMaxScore(maxScores[i].doubleValue());
-      if (i < correctie.length)
+      if (i < correctie.length && correctie[i] != null)
         item.setCorrectie(correctie[i].doubleValue());
       PersistenceId key = new PersistenceId("LOCAL;none;" + label);
       result.put(key, item);

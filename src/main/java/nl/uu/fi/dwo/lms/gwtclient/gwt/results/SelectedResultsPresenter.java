@@ -329,7 +329,10 @@ public class SelectedResultsPresenter {
 
                     return preparePages(schoolclass, scocontext, iterator);
                 }
-            }).recoverWith(p -> preparePages(schoolclass, scocontext, iterator));
+            }).recoverWith(p -> {
+              LOG.log(Level.WARNING, "failure for " + ssc.getLabel() , p.getFailure());
+              return preparePages(schoolclass, scocontext, iterator);
+            });
         }
         return Promises.resolved(null);
     }
