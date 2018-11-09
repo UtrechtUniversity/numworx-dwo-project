@@ -127,7 +127,9 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 //    dummyClientFactory.setEntryView(view);
 
     Scorm2004IF api = GWT.create(Scorm2004IF.class);
-    return api.Initialize().then( p -> {
+    return api.Initialize()
+        .recover(p-> "false")        
+        .then( p -> {
 		DaggerWiskOpdrComponent.builder()
 			.api(api)
 			.premium("premium".equals(api.GetValue("dme.abo_type")))
