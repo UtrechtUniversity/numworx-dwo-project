@@ -405,6 +405,7 @@
     <servlet-mapping>
     	<servlet-name>MathShell</servlet-name>
     	<url-pattern>/ideas/mathshell</url-pattern>
+    	<url-pattern>/ideas/mathshell/*</url-pattern>
     </servlet-mapping>
 <!--    
     <security-constraint>
