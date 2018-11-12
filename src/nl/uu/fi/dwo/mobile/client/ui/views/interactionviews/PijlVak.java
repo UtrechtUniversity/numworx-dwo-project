@@ -6,8 +6,11 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.PushButton;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.wiskopdr.FormuleParser;
@@ -58,6 +61,11 @@ public class PijlVak extends LayoutPanel
 	private FormuleFont fm;
 	private boolean hasPrefix = false;
 	private Context2d ctx;
+
+	/**
+	 * Het discriminantvak (abc-formule) is te sluiten met een sluitknop met kruis.
+	 */
+	private PushButton sluitKnop;
 	
 	private FormuleEditorWithSteps fe;
 	
@@ -91,6 +99,23 @@ public class PijlVak extends LayoutPanel
 		if (operator.equals("abc")) 
 		{
 			width = Math.max(MIN_WIDTH_ABC_SUB, (int) ctx.measureText(MARGE_VOOR + "Discriminant" + MARGE_NA).getWidth());
+			
+			sluitKnop = new PushButton("x");
+			sluitKnop.addClickHandler(new ClickHandler( ) {
+
+				@Override
+				public void onClick(ClickEvent event)
+				{
+					fe.backStep(false);
+					
+					// openstaande pijl afsluiten
+					fe.setOpenstaandePijl(false);
+				}
+				
+			});
+			this.add(sluitKnop);
+			this.setWidgetRightWidth(sluitKnop, 0, Style.Unit.PX, 18, Style.Unit.PX);
+			this.setWidgetTopHeight(sluitKnop, 0, Style.Unit.PX, 18, Style.Unit.PX);
 		}
 		else if (operator.equals("sub")) 
 		{
@@ -587,6 +612,7 @@ public class PijlVak extends LayoutPanel
 					pijlvak.add(goedKrulImage);
 					setWidgetRightWidth(goedKrulImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
 					setWidgetBottomHeight(goedKrulImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
+					pijlvak.remove(pijlvak.getSluitKnop());
 					fe.zetEditorTerug();
 				}
 				else
@@ -711,5 +737,10 @@ public class PijlVak extends LayoutPanel
 				this.setWidgetTopHeight(prefixVak.getAsPanel(), ashoogte + ((editor != null)?editor.getMainRegel().getAsHoogte():viewer.getMainRegel().getAsHoogte()) - prefixVak.getAsHoogte(), Style.Unit.PX, prefixVak.getHeight(), Style.Unit.PX);
 			}
 		}
+	}
+	
+	PushButton getSluitKnop()
+	{
+		return sluitKnop;
 	}
 }

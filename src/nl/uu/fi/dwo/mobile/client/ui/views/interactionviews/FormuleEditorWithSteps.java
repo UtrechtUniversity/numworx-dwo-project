@@ -1004,6 +1004,20 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			return;
 		}
 		
+		if (stepPanels.size() == pijlVakken.size()) // je haalt een laatste pijlvak weg waar je nog in aan het editen bent
+		{
+			haalPijlVakWeg();
+
+			setStapOk(true);
+
+			if (!hasStartString || (hasStartString && stapNr > 0))
+				vervangViewerDoorEditor(false);
+			else
+				downStep();
+
+			return;			
+		}
+		
 		if (stapNr > 0 || !hasStartString)
 		{
 			if (viewers.size() == stapNr + 1)
@@ -1076,7 +1090,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				}
 				else
 				{
-					editor = null; // fix selecteren bordjesmethode
+					editor = null;
 				}
 			}
 			else if (!hasStartString) //stapNr is nu 0, je zit dus in eerste regel
@@ -1161,6 +1175,13 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			}
 			
 			contentPanel.remove(pijlVak);
+			
+			if (pijlVak.geefOperator().equals("abc"))
+			{
+				// ik haal een stap weg, dus ook de laatste pijlvakinhouden en -operatoren bijwerken
+				setPijlVakInhouden(pijlVakInhoudenArray.size() - 1, "");
+				setPijlVakOperatoren(pijlVakOperatorenArray.size() - 1, "");
+			}
 			
 			if (pijlVak.geefOperator().equals("sub"))
 				substitutie = null;
