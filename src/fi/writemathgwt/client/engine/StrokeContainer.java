@@ -26,6 +26,7 @@ public class StrokeContainer {
 	private String formulaString = "";
 	public double defaultAverageHeight = 50;
 	public double averageHeight = defaultAverageHeight;
+	public double averageBaseLine = 0;
 	private DoubleRectangle parseArea;
 	private boolean parseable = true;
 	
@@ -189,6 +190,7 @@ public class StrokeContainer {
 		}
 		formulaString = FormulaProcessor.parseFormule(this, parseArea);
 		updateAverageHeight();
+		updateAverageBaseLine();
 		
 	}
 	
@@ -220,6 +222,7 @@ public class StrokeContainer {
 			wo = new WMObject(strokes.get(strokes.size()-1),"-");
 			wmObjects.add(wo);
 			updateAverageHeight();
+			updateAverageBaseLine();
 		}
 		else {
 			strokes.remove(strokes.size()-1);
@@ -261,6 +264,36 @@ public class StrokeContainer {
 			averageHeight = heightSum/cnt;
 		else 
 			averageHeight = defaultAverageHeight;
+	}
+	
+	private void updateAverageBaseLine() {
+		double baseLineSum = 0;
+		int cnt = 0;
+		for (int i = 0; i < wmObjects.size(); i++) {
+			if ("-".equals(wmObjects.get(i).getTeken())
+					|| "*".equals(wmObjects.get(i).getTeken())
+					|| ",".equals(wmObjects.get(i).getTeken())
+					|| "sqrt".equals(wmObjects.get(i).getTeken()) 
+					|| "=".equals(wmObjects.get(i).getTeken())
+					|| "\u2190".equals(wmObjects.get(i).getTeken())
+					|| "\u2192".equals(wmObjects.get(i).getTeken())
+					) {
+				baseLineSum += wmObjects.get(i).getBoxMid().y + averageHeight/2;
+				cnt++;
+			}
+			else {
+				baseLineSum += wmObjects.get(i).getXBox().y + wmObjects.get(i).getXBox().height;
+				//logger.info("Teken: "+wmObjects.get(i).getTeken());
+				//logger.info("isMacht: "+wmObjects.get(i).isMachtVan());
+				//logger.info("isAsc: "+wmObjects.get(i).hasAscent());
+				//logger.info("isDesc: "+wmObjects.get(i).hasDescent());
+				cnt++;
+			}
+		}
+		if(cnt>0)
+			averageBaseLine = baseLineSum/cnt;
+		else 
+			averageBaseLine = 0;
 	}
 	
 	private void updateParseArea(Stroke stroke) {
@@ -333,6 +366,7 @@ public class StrokeContainer {
 					WMObject wo = new WMObject(stroke1, stroke2, s);
 					wmObjects.add(wo);
 					updateAverageHeight();
+					updateAverageBaseLine();
 					return true;
 				}
 			}

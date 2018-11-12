@@ -328,7 +328,7 @@ public class FormulaProcessor {
 		}
 		for (int i = 0; i < writeObjectsToDo.size(); i++) {	
 			WMObject wmObject = writeObjectsToDo.get(i);
-			if (wo!=wmObject && wo.getTellerBox().contains(wmObject.getBox(),-5,-wo.getBox().height))	{	
+			if (wo!=wmObject && wo.getTellerBox().contains(wmObject.getXBox(),-5,-wo.getBox().height))	{	
 				hasTeller = true;
 				wmObject.setIsTellerVan(wo);
 				wmObject.setIsNoemerVan(null);
@@ -336,7 +336,7 @@ public class FormulaProcessor {
 		}
 		for (int i = 0; i < writeObjectsToDo.size(); i++) {	
 			WMObject wmObject = writeObjectsToDo.get(i);
-			if (wo!=wmObject && wo.getNoemerBox().contains(wmObject.getBox(),-5,-wo.getBox().height)) {	
+			if (wo!=wmObject && wo.getNoemerBox().contains(wmObject.getXBox(),-5,-wo.getBox().height)) {	
 				hasNoemer = true;
 				wmObject.setIsNoemerVan(wo);
 				wmObject.setIsTellerVan(null);

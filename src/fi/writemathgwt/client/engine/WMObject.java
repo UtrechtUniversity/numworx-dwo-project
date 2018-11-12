@@ -76,6 +76,8 @@ public class WMObject {
 	public WMObject(WMObject wo) {
 		strokes = wo.getStrokes();
 		this.teken = wo.getTekenRaw();
+		hasAscent = isAscFont(teken);
+		hasDescent = isDescFont(teken);
 		this.box = new DoubleRectangle(wo.getBox().x , wo.getBox().y , wo.getBox().width , wo.getBox().height);
 		this.copyFrom = wo;
 	}
@@ -279,8 +281,8 @@ public class WMObject {
 		double factor = 1;
 		if(hasDescent || hasAscent)
 			factor /= 1.5;
-		if(isMachtVan!=null)
-			factor /= 0.5;
+//		if(isMachtVan!=null)
+//			factor /= 0.5;
 //		if(isTellerVan!=null)
 //			factor /= 0.75;
 //		if(isNoemerVan!=null)
