@@ -42,6 +42,7 @@ public abstract class GuiConstants {
     public final static String EMPTY_COURSE_MAP = "resources/map.png";
 
     public final static String REMOVE_STUDENT_IMAGE = "resources/delete.gif";
+    public final static String REMOVE_STUDENTMODEL_IMAGE = "resources/delete.gif";
 
     public final static String REMOVE_CLASS_IMAGE = "resources/delete.gif";
     public final static String EDIT_CLASS_IMAGE = "resources/edit.gif";
@@ -58,6 +59,7 @@ public abstract class GuiConstants {
 
     public final static String REMOVE_COURSE_IMAGE = "resources/delete.gif";
     public final static String EDIT_COURSE_IMAGE = "resources/edit.gif";
+    public final static String EDIT_STUDENTMODEL_IMAGE = "resources/edit.gif";
     public final static String SCO_COURSE_IMAGE = "resources/zoomin.gif";
 
     public final static String REMOVE_SCO_IMAGE = "resources/delete.gif";

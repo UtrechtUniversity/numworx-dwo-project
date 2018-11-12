@@ -14,8 +14,6 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 class TeacherStudentModelPanelProperties {
 
     private static final Logger LOG = Logger.getLogger(TeacherStudentModelPanelProperties.class.getName());
-//    private DomSchoolClassFull schoolClass = new DomSchoolClassFull();
-    private List<DomSchoolClass> scList;
 
     TeacherStudentModelPanelProperties(){
         
@@ -28,7 +26,6 @@ class TeacherStudentModelPanelProperties {
         return SecureTeacherStudentModelManager.addModel(modelContext);
     }
 
-
     List<DomStudentModelContext> getModelList() throws Dwo2Exception {
         return SecureTeacherStudentModelManager.getList();
     }
@@ -37,6 +34,11 @@ class TeacherStudentModelPanelProperties {
         return current = SecureTeacherStudentModelManager.updateModel(modelContext);
     }
     
+    void removeModel(DomStudentModelContext modelContext) throws Dwo2Exception {
+      SecureTeacherStudentModelManager.removeModel(modelContext);
+      if(modelContext == getCurrent()) setCurrent(null);
+    }
+        
     private DomStudentModelContext current;
 
     DomStudentModelContext getCurrent() {
