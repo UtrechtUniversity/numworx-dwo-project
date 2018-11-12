@@ -1209,11 +1209,21 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
             antwoordAlles = new VergelijkingMeerv(vn);
         }
 		
+		
 		//laatste stap oplossen vergelijking soms van de vorm: x = expressie = eindexpressie
 		String[] antwoordVergStringParts = antwoordVergString.split("=");
-		if(antwoordVergStringParts.length==3)
-			antwoordVergString = antwoordVergStringParts[0]+"="+antwoordVergStringParts[2];
-				
+		if(antwoordVergStringParts.length==3) {
+			VergelijkingMeerv vergMeerv = FormuleParser.parseVergelijking(antwoordVergString, functieMVDefSet);
+			if(vergMeerv==null) {
+				String newString1 = antwoordVergStringParts[0]+"="+antwoordVergStringParts[2];
+				String newString2 = antwoordVergStringParts[0]+"="+antwoordVergStringParts[1]+"@";
+				VergelijkingMeerv newStringVerg1 = FormuleParser.parseVergelijking(newString1, functieMVDefSet);
+				VergelijkingMeerv newStringVerg2 = FormuleParser.parseVergelijking(newString2, functieMVDefSet);
+				if(newStringVerg1!=null && newStringVerg2!=null)
+					antwoordVergString = newString1;
+			}
+		}
+			
 		VergelijkingMeerv antwoordIngevuld = FormuleParser.parseVergelijking(antwoordVergString, functieMVDefSet);
 		antwoord = antwoordIngevuld;
 		if (antwoord == null) {
