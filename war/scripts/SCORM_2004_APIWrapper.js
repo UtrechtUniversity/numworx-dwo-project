@@ -1,6 +1,6 @@
 /****************************************************************************
 SCORM_2004_APIwrapper.js
-© 2000, 2011 Advanced Distributed Learning (ADL). Some Rights Reserved.
+ï¿½ 2000, 2011 Advanced Distributed Learning (ADL). Some Rights Reserved.
 *****************************************************************************
 
 Advanced Distributed Learning ("ADL") grants you ("Licensee") a  non-exclusive, 
@@ -430,7 +430,11 @@ function getAPIHandle()
 {
    if (apiHandle == null)
    {
-      apiHandle = getAPI();
+	   try {
+		   apiHandle = getAPI();
+	   } catch(err) {
+		   message("getAPIHandle: " + err)
+	   }
    }
 
    return apiHandle;
