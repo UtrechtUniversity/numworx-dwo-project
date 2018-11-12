@@ -533,7 +533,9 @@ public abstract class TextMapper {
 	public static final String GUICDLG_ONZICHTBAAR = "onzichtbaar";
 	public static final String GUICDLG_LLGGVNS = "Ll ggvns";
 	
-	
+	/* Student models, leer domeinen */
+	public static final String GUIMNU_STUDENTMODELS = "GUIMNU_STUDENTMODELS";
+	public static final String GUIC_STUDENTMODELS_ADD = "GUIC_STUDENTMODELS_ADD";
 	
 	private static ResourceBundle rb;
 
