@@ -164,6 +164,12 @@
 			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_11" resource="{resources.partialdiff_svg}" />
 			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_11" resource="{resources.conjug_svg}" />
 		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-11">
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t1_16" resource="{resources.vector_svg}" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t2_16" resource="{resources.matrix_svg}"/>
+			<my:FKey addStyleNames="key bg-ltgrey disabled" ui:field="t3_16" />
+			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t4_16" resource="{resources.vectornotatie_svg}" />
+		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-12">
 			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t1_12">
 				(

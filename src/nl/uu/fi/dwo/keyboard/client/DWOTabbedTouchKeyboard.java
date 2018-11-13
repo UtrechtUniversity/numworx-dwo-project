@@ -22,7 +22,8 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 	private DWOTabletKeyboardPen pen;
 	private AbstractKeyboard[] stock = new AbstractKeyboard[5];
 	
-	
+	private boolean premium;
+	boolean isPremium() { return premium; }
 	
 	private AbstractKeyboard createKeyboard(int i) {
 		switch(i) {
@@ -40,6 +41,17 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 		setPremium(premium);
 	}
 	
+	
+	
+	
+	@Override
+	void setPremium(boolean premium) {
+		this.premium = premium;
+		super.setPremium(premium);
+		current.setPremium(premium);
+	}
+
+
 	DWOTabbedTouchKeyboard(int nr) {
 		AbstractKeyboard tk = createKeyboard(nr);
 		stock [nr] = tk;
@@ -232,7 +244,10 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 			boolean iscurrent = current == k123;
 			boolean shown = k123.isVisible() && iscurrent;
 			
-			if(stock[nr] == null) stock[nr] = createKeyboard(nr);
+			if(stock[nr] == null) {
+				stock[nr] = createKeyboard(nr);
+				stock[nr].setPremium(isPremium());
+			}
 			this.nr = nr;
 			k123.removeFromParent();
 			k123 = stock[nr];

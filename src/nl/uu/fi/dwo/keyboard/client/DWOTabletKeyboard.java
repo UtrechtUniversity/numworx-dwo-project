@@ -9,6 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.client.constants.NumberConstants;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -52,7 +53,22 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 		LocaleInfo currentLocale = LocaleInfo.getCurrentLocale();
 		nc = currentLocale.getNumberConstants();
 		initWidget(uiBinder.createAndBindUi(this));
+		initVectorMatrixMenus();
 	}
+	
+	private void initVectorMatrixMenus()
+	{
+		initVectorMenu(i ->  {
+			processVectorDimension(i);
+			t1_16.removeStyleName("hover");	
+		} );
+		initMatrixMenu(event ->
+		  {
+			processMatrixDimension(Integer.parseInt(rijBox.getSelectedItemText()), Integer.parseInt(kolomBox.getSelectedItemText()));
+			t2_16.removeStyleName("hover");	
+		  });
+	}
+
 	
 	@Override
 	public void setEditor(FormuleEditorIF formuleEditor) {
@@ -69,13 +85,15 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 	
 	
 	@UiField
-	FKey t1_1,t1_2,t1_3,t1_4, t1_5,t1_6,t1_7,t1_8, t1_9,t1_10,t1_11,t1_12, t1_13,t1_14,t1_15;
+	FKey t1_1,t1_2,t1_3,t1_4, t1_5,t1_6,t1_7,t1_8, t1_9,t1_10,t1_11,t1_12, t1_13,t1_14,t1_15, t1_16;
 	@UiField
-	FKey t2_1,t2_2,t2_3,t2_4, t2_5,t2_6,t2_7,t2_8, t2_9,t2_10,t2_11,t2_12, t2_13,t2_14,t2_15;
+	FKey t2_1,t2_2,t2_3,t2_4, t2_5,t2_6,t2_7,t2_8, t2_9,t2_10,t2_11,t2_12, t2_13,t2_14,t2_15, t2_16;
 	@UiField
-	FKey t3_1,t3_2,t3_3,t3_4, t3_5,t3_6,t3_7,t3_8, t3_9,t3_10,t3_11,t3_12, t3_13,t3_14,t3_15;
+	FKey t3_1,t3_2,t3_3,t3_4, t3_5,t3_6,t3_7,t3_8, t3_9,t3_10,t3_11,t3_12, t3_13,t3_14,t3_15, t3_16;
 	@UiField
-	FKey t4_1,t4_2,t4_3,t4_4, t4_5,t4_6,t4_7,t4_8, t4_9,t4_10,t4_11,t4_12, t4_13,t4_14,t4_15;
+	FKey t4_1,t4_2,t4_3,t4_4, t4_5,t4_6,t4_7,t4_8, t4_9,t4_10,t4_11,t4_12, t4_13,t4_14,t4_15, t4_16;
+
+	private boolean premium;
 
 	@UiHandler("t1_1") void onT1_1(ClickEvent e) {getEditor().insert('7');}
 	@UiHandler("t1_2") void onT1_2(ClickEvent e) {getEditor().insert('8');}
@@ -140,6 +158,26 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 	@UiHandler("t4_13") void onT4_13(ClickEvent e) {getEditor().insert('→');}
 	@UiHandler("t4_14") void onT4_14(ClickEvent e) {getEditor().insert(" "+rb.ofLabel()+" ");}
 	@UiHandler("t4_15") void onT4_15(ClickEvent e) {getEditor().insert('∞');}
+	
+	
+	@UiHandler("t1_16") void onT1_16(ClickEvent e) {
+		if (isPremium())
+			vectorDimensionDialog.showRelativeTo(this.t1_16);
+	}
+	@UiHandler("t2_16")
+	void onT2_16(ClickEvent e)
+	{
+		// toon dimensiekeuze
+	  if (isPremium())
+		matrixDimensionDialog.showRelativeTo(this.t2_16);
+	}
+
+	@UiHandler("t4_16")
+	void onT3_16(ClickEvent e)
+	{
+	  if (isPremium())
+		getEditor().vectornotatie();
+	}
 
 	@Override
 	public void blur() {
@@ -169,4 +207,26 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 	void setEnterImage(ImageResource resource) {
 		pad.setEnterImage(resource);
 	}
+
+	@Override
+	void setEnterImage(DataResource resource) {
+		pad.setEnterImage(resource);
+	}
+
+	@Override
+	void setPremium(boolean premium) {
+		this.premium = premium;
+		if (!premium) {
+			disableKey(t1_16);
+			disableKey(t2_16);
+			disableKey(t4_16);
+		}
+	}
+
+	@Override
+	boolean isPremium() {
+		return this.premium;
+	}
+	
+	
 }

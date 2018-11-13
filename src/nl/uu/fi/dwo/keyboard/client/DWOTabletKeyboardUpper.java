@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -103,6 +104,9 @@ public class DWOTabletKeyboardUpper extends AbstractKeyboard {
 	}
 	
 	void setEnterImage(ImageResource resource) {
+		pad.setEnterImage(resource);
+	}
+	void setEnterImage(DataResource resource) {
 		pad.setEnterImage(resource);
 	}
 

@@ -4,11 +4,28 @@ import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.AbstractEditor;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
+import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 
+import java.util.function.Consumer;
+
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Style.TextAlign;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.PushButton;
 
 public abstract class AbstractKeyboard extends Composite implements FormuleKeyboardIF {
 
@@ -20,6 +37,16 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 	protected static final int DEFAULT = 0;
 	FormuleEditorIF formuleEditor = AbstractEditor.NULL;
 	AbstractKeyboard delegate;
+	/**
+	 * Dialoog om de dimensie van vector te kiezen.
+	 */
+	protected DialogBox vectorDimensionDialog;
+	/**
+	 * Dialoog om de dimensie van matrix te kiezen.
+	 */
+	protected DialogBox matrixDimensionDialog;
+	protected ListBox rijBox;
+	protected ListBox kolomBox;
 
 	AbstractKeyboard getDelegate() {
 		return delegate;
@@ -167,4 +194,110 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 
   void setEnterImage(DataResource resource) { 
   }
+
+protected void initMatrixMenu(ClickHandler clickHandler) {
+	FlexTable grid = new FlexTable();
+	grid.getFlexCellFormatter().setColSpan(1, 0, 3);
+	grid.getFlexCellFormatter().setAlignment(1, 0, HasHorizontalAlignment.ALIGN_CENTER, HasVerticalAlignment.ALIGN_MIDDLE);
+	matrixDimensionDialog = new DialogBox(true);
+	rijBox = new ListBox();
+	initListBox(rijBox);
+	rijBox.getElement().getStyle().setWidth(30, Unit.PX);
+	Label keerLabel = new Label("x");
+	kolomBox = new ListBox();
+	initListBox(kolomBox);
+	kolomBox.getElement().getStyle().setWidth(30, Unit.PX);
+	
+	PushButton klaarButton = new PushButton("OK", clickHandler);
+	klaarButton.getElement().getStyle().setWidth(30, Unit.PX);
+	klaarButton.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+	keerLabel.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+	
+	grid.setWidget(0, 0, rijBox);
+	grid.setWidget(0, 1, keerLabel);
+	grid.setWidget(0, 2, kolomBox);
+	grid.setWidget(1, 0, klaarButton);
+	matrixDimensionDialog.add(grid);
+}
+
+/**
+ * Matrix is max 6 x 6.
+ * 
+ * @param list
+ */
+void initListBox(ListBox list) {
+	for (int i = 1; i < 7; i++)
+	{
+		list.addItem("" + i);
+	}
+	
+	list.setSelectedIndex(1);
+	list.setVisibleItemCount(list.getItemCount());
+
+}
+
+protected void processVectorDimension(int aantalRijen) {
+	FocusOnTouch.focus();
+	getEditor().vector(aantalRijen);
+	vectorDimensionDialog.hide();
+}
+
+protected void initVectorMenu(Consumer<Integer> consume) {
+	// menu om de dimensie te kiezen
+	MenuBar vectorDimensionOptions = new MenuBar(true);
+	MenuItem dimensie2 = new MenuItem(new SafeHtmlBuilder().appendEscaped("2").toSafeHtml());
+	MenuItem dimensie3 = new MenuItem(new SafeHtmlBuilder().appendEscaped("3").toSafeHtml());
+	MenuItem dimensie4 = new MenuItem(new SafeHtmlBuilder().appendEscaped("4").toSafeHtml());
+	MenuItem dimensie5 = new MenuItem(new SafeHtmlBuilder().appendEscaped("5").toSafeHtml());
+	MenuItem dimensie6 = new MenuItem(new SafeHtmlBuilder().appendEscaped("6").toSafeHtml());
+	vectorDimensionOptions.addItem(dimensie2);
+	vectorDimensionOptions.addItem(dimensie3);
+	vectorDimensionOptions.addItem(dimensie4);
+	vectorDimensionOptions.addItem(dimensie5);
+	vectorDimensionOptions.addItem(dimensie6);
+	dimensie2.setScheduledCommand(new ScheduledCommand()
+	{
+		public void execute()
+		{
+			consume.accept(2);
+		}
+	});
+	dimensie3.setScheduledCommand(new ScheduledCommand()
+	{
+		public void execute()
+		{
+			consume.accept(3);
+		}
+	});
+	dimensie4.setScheduledCommand(new ScheduledCommand()
+	{
+		public void execute()
+		{
+			consume.accept(4);
+		}
+	});
+	dimensie5.setScheduledCommand(new ScheduledCommand()
+	{
+		public void execute()
+		{
+			consume.accept(5);
+		}
+	});
+	dimensie6.setScheduledCommand(new ScheduledCommand()
+	{
+		public void execute()
+		{
+			consume.accept(6);
+		}
+	});
+	
+	vectorDimensionDialog = new DialogBox(true);
+	vectorDimensionDialog.add(vectorDimensionOptions);
+}
+
+protected void processMatrixDimension(int aantalRijen, int aantalKolommen) {
+	FocusOnTouch.focus();
+	getEditor().matrix(aantalRijen, aantalKolommen);
+	matrixDimensionDialog.hide();
+}
 }
