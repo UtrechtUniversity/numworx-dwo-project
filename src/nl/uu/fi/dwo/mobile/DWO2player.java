@@ -192,6 +192,16 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 		private DWO2RPCHandler(String server, int profile) {
 			super(server, profile, false);
 		}
+// MISSING clear schoollogins etc.
+		@Override
+		public Promise<Void> logout() {
+			return super.logout().then ( p -> {
+				DwoGlobalVars.instance().setSchoolLogins(null);
+				DwoGlobalVars.instance().setActiveSchoolRoleAndClass(null);
+				return p;
+			});
+		}
+		
 	}
 
 
