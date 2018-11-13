@@ -22,11 +22,15 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.s;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
+import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -44,7 +48,7 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 
-public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, ViewModuleView.Presenter {
+public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, ViewModuleView.Presenter, GotoController {
 
 	@Inject SelectModuleItem item;
 	@Inject ViewModuleView view;
@@ -56,25 +60,26 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 	@Inject nl.uu.fi.dwo.mobile.client.ui.RPCHandler rpcHandler;
 	private boolean started;
     @Inject DomSchoolClass schoolClass;
-    DomSchool school;
+    @Inject DomSchool school;
+    @Inject RoleType  role;
     @Inject Provider<NoCourseView> noCourseView;
-
+    @Inject HeaderView headerView;
 	@Inject ScoActivity(s where) {
 		next = new LoginPlace(where);
 		location = where.getLocation();
 	}
 		
 	public ScoActivity(ClientFactory clientFactory, SelectModuleItem item, s where) {
+		this(where);
 		this.item = item;
 		placeController = clientFactory.getPlaceController();
 		view = clientFactory.getEntryView();
-		//view = new ViewModuleViewNumworx().initialize().setupAPI();
 		rpcHandler = clientFactory.getRPCHandler();
-		next = new LoginPlace(where);
-		location = where.getLocation();
 		schoolClass = clientFactory.getSchoolClass();
 		noCourseView = clientFactory.getNoCourseView();
 		school = clientFactory.getSchool();
+		headerView = clientFactory.getHeaderView();
+		role = clientFactory.getRoleType();
 	}
 
 	@Override
@@ -140,6 +145,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 		}
 		final Failure failure = new Failure() {
 			
+
 			@Override
 			public void fail(Promise<?> resolved) throws Exception {
 				Throwable t = resolved.getFailure();
@@ -155,6 +161,9 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 				if (t instanceof NoSuchElementException || t instanceof Dwo2Exception)
                 {
                     NoCourseView view = noCourseView.get();
+            		DomUserFull currentUser = DwoGlobalVars.instance().getCurrentUser();
+            		headerView.setUserAndRole(currentUser, role);
+            		headerView.setPresenter(ScoActivity.this);
                     panel.setWidget(view);
                     view.setHomePlace(next.getPlace());
                     view.render();
