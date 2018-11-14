@@ -140,7 +140,8 @@ public class LoginPresenter {
                         boolean switchR = true;
                         LOG.log(Level.INFO, "login succeeded for user:" + dwoGlobalVars.getCurrentUser().getUniqueDisplayName());
                         try {
-                            if (dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())) {
+                            RoleType loginRole = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());    
+                            if (RoleType.TEACHER == loginRole || RoleType.SCHOOLADMIN == loginRole) {
                                 switchR = false;
                             }
                         } catch (Exception e) {

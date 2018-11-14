@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
@@ -55,9 +56,9 @@ public class AccountPresenter {
         this.view = view;
     }
 
-    void goBackToResults() {
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
-    }
+//    void goBackToResults() {
+//        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
+//    }
 
     public interface Display extends BasicDisplay {
 
@@ -116,7 +117,7 @@ public class AccountPresenter {
                         eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
                     };
                     //flip back to schoolclasses screen 
-                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.WELCOME));
+                    eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_WELCOME));
                     return null;
                 }
 

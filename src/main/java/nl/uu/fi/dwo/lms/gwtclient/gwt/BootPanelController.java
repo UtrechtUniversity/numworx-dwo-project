@@ -20,6 +20,7 @@ import javax.inject.Singleton;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.GuestComponent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.PresenterBuilder;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.SchoolAdminComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.TeacherComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
@@ -40,16 +41,17 @@ import org.osgi.util.promise.Success;
  *
  * @author Gert van der Plas
  */
-@Singleton //not required.
+@Singleton //required.
 public class BootPanelController {
 
     final class LoginHandler implements LoginEventHandler {
     @Override
     public void onLoginEvent(LoginEvent loginEvent) {
-        if (loginEvent.getState() == FAIL || loginEvent.getState() == LOGOUT || dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name())) {
+        RoleType role = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
+        resetPresenters(role);
             switch (loginEvent.getState()) {
                 case SUCCESS:
-                case SUCCESS_WELCOME:
+                case SUCCESS_WELCOME:                 
                     setSession(true);
                     LOG.log(Level.INFO, "Login succeeded. Showing welcome view.");
                     SelectedView view = initialView;
@@ -99,13 +101,6 @@ public class BootPanelController {
                 default:
                     LOG.log(Level.SEVERE, "Login handling failed in app controller.");
             }
-        } else {
-            LOG.log(Level.INFO, "Login succeeded. Showing account view for teacher.");
-            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
-            //DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
-            //eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_SwitchTeacher()));
-            //viewFactory.getMainView().showPostLoginWidgets();
-        }
     }
   }
 
@@ -126,7 +121,34 @@ public class BootPanelController {
     @Inject
     SchoolAdminComponent.Builder schoolAdminBuilder;
     
+    private static native void jsResetMainApp() /*-{
+      $wnd.jsResetMainApp()
+    }-*/;
+
     
+    public void resetPresenters(RoleType role) {
+        eventBus.removeHandlers();
+        eventBus.addHandler(LoginEvent.TYPE, LOGIN_HANDLER);
+        PresenterBuilder build;
+        switch (role) {
+          case TEACHER:
+              build = teacherBuilder.build();
+              break;
+          case SCHOOLADMIN:
+              build = schoolAdminBuilder.build();
+              break;
+          default:
+              build = guestBuilder.build();
+        }
+        presenterFactory = build.presenterFactory();
+        presenterFactory.getPersonsPresenter().setStage(stage);
+        presenterFactory.getSelectedResultsPresenter().setStage(stage);
+        viewHandler = build.viewHandler();
+        eventBus.addHandler(SwitchViewEvent.TYPE, viewHandler);
+        DwoPresenterFactory.getDwoPresenterFactory().setFac(presenterFactory);
+        // set translators....
+        jsResetMainApp(); // now js code gets new presenters
+    }
     
     @Inject
     DwoGlobalVars dwoGlobalVars;
@@ -158,9 +180,6 @@ public class BootPanelController {
         profile = 77;
         stage = 1;
         
-        GuestComponent build = initialBuilder.build();
-        presenterFactory = build.presenterFactory();
-        viewHandler = build.viewHandler();
         
 
     }
@@ -243,7 +262,10 @@ public class BootPanelController {
     
     
     public void go(RootLayoutPanel rootPanel) {
-        //todo dwo/rest/public/status/getHeartBeat
+      GuestComponent build = guestBuilder.build();
+      presenterFactory = build.presenterFactory();
+      viewHandler = build.viewHandler();
+       //todo dwo/rest/public/status/getHeartBeat
         //force reload if not current
         //todo
         /**
