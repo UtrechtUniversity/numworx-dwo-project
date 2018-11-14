@@ -396,11 +396,20 @@ div.listItem-dwo-separator {
 	background-position: right bottom !important;
 	background-color: transparent;
 }
+
+.correctie.corrected {
+		background-image: url("images/resources/corrected.png") !important;
+}
+
 .correctie > div > .correctie-tail {
 	background-image: url("images/resources/correctie.png") !important;
 	background-repeat: no-repeat !important;
 	background-position: right bottom !important;
 	background-color: transparent;
+}
+
+.correctie.corrected > div > .correctie-tail {
+	background-image: url("images/resources/corrected.png") !important;
 }
 
 .modules-icon {
