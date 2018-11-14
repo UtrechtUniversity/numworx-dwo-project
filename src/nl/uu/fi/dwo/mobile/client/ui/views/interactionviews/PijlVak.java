@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
@@ -20,8 +21,10 @@ import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.text.Text;
 import fi.wiskopdr.text.TextConstants;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
@@ -178,18 +181,13 @@ public class PijlVak extends LayoutPanel
 	public PijlVakFormuleEditor addNewEditor(LayoutPanel p)
 	{
 		PijlVakFormuleEditor editor = new PijlVakFormuleEditor(this);
-		//FormuleEditorWithAnswer editorInstance() {
-		//	return new FormuleEditorWithAnswer(h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden);
-		//}
 		editor.setFormuleToolBijFocus(true);
-		//if (!hasPrefix)
-		//	editor.getAsPanel().getElement().getStyle().setMarginLeft(13, Unit.PX);
-		//editor.getAsPanel().getElement().getStyle().setMarginTop(5, Unit.PX);
 		editor.setFont(fm);
-		editorPanel = (TouchPanel) editor.getAsPanel();
-		//tp.getElement().getStyle().setProperty("display", "inline-block");
-		//editor.setCurrent(0, 0);
-		//editor.requestFocus();
+
+		editorPanel = new TouchPanel();
+		editorPanel.add(editor.getMainRegel().asWidget());
+		editor.register(editorPanel.addTouchHandler(new FormuleEditorTouchHandler(editor)));
+
 		if (hasPrefix)
 		{
 			p.add(prefixVak.getAsPanel());
@@ -257,6 +255,11 @@ public class PijlVak extends LayoutPanel
 				this.setWidgetLeftWidth(editorPanel, 10 + prefixVak.getWidth(), Style.Unit.PX, viewer.getWidth(), Style.Unit.PX);
 				//p.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
 				this.setWidgetTopHeight(editorPanel, ashoogte + viewer.getMainRegel().getAsHoogte() - prefixVak.getAsHoogte(), Style.Unit.PX, viewer.getHeight(), Style.Unit.PX);
+			}
+			
+			if (operator.equals("abc"))
+			{
+				this.remove(this.getSluitKnop());
 			}
 		}
 		
@@ -398,6 +401,7 @@ public class PijlVak extends LayoutPanel
 			//volgende regel eigenlijk alleen voor Noordhoff
 			ctx.setFillStyle("white");
 			ctx.fillRect(0, 0, getWidth(), getHeight());
+			ctx.setGlobalAlpha(1);
 			ctx.setStrokeStyle("black");
 			//volgende regel eigenlijk alleen voor Noordhoff
 			ctx.setStrokeStyle(CssColor.make(246,127,142).toString()); // rood randje
@@ -423,6 +427,7 @@ public class PijlVak extends LayoutPanel
 			//volgende regel eigenlijk alleen voor Noordhoff
 			ctx.setFillStyle("white");
 			ctx.fillRect(0, 0, getWidth(), getHeight());
+			ctx.setGlobalAlpha(1);
 			ctx.setStrokeStyle("black");
 			//volgende regel eigenlijk alleen voor Noordhoff
 			ctx.setStrokeStyle(CssColor.make(246,127,142).toString());
