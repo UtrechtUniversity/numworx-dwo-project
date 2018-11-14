@@ -999,14 +999,14 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		if ((linStrategieVersie || linOefenVersie) && (stepPanels.size() == pijlVakken.size())) // je haalt een laatste pijlvak weg waar je nog in aan het editen bent
 		{
-			haalPijlVakWeg();
+			haalPijlVakWeg(true);
 			setStapOk(true);
 			return;
 		}
 		
 		if (stepPanels.size() == pijlVakken.size()) // je haalt een laatste pijlvak weg waar je nog in aan het editen bent
 		{
-			haalPijlVakWeg();
+			haalPijlVakWeg(true);
 
 			setStapOk(true);
 
@@ -1045,7 +1045,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			else
 				latest_answer_viewer = null; 
 			
-			haalPijlVakWeg();
+			haalPijlVakWeg(true);
 			
 			if (linStrategieVersie || linOefenVersie || subVisible || abcVisible)
 			{
@@ -1139,7 +1139,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		}
 		else 
 		{
-			haalPijlVakWeg();
+			haalPijlVakWeg(true);
 			setStapOk(true);
 		}
 	}
@@ -1163,7 +1163,13 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		return old;
 	}
 	
-	public void haalPijlVakWeg()
+	/**
+	 * 
+	 * @param pijlAdministratieBijwerken Als true dan ook pijlvak-administratie bijwerken. 
+	 * 		Als false dan administratie intact laten. 
+	 * 
+	 */
+	public void haalPijlVakWeg(boolean pijlAdministratieBijwerken)
 	{
 		if (pijlVak != null && pijlVak.getParent() != null)
 		{	
@@ -1176,9 +1182,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			
 			contentPanel.remove(pijlVak);
 			
-			if (pijlVak.geefOperator().equals("abc"))
+			if (pijlVak.geefOperator().equals("abc") && pijlAdministratieBijwerken) // de pijladministratie moet alleen bijgewerkt worden als de gebruiker zelf een stap weghaalt
 			{
-				// ik haal een stap weg, dus ook de laatste pijlvakinhouden en -operatoren bijwerken
+				// er wordt een stap weggehaald, dus ook de laatste pijlvakinhouden en -operatoren bijwerken
 				setPijlVakInhouden(pijlVakInhoudenArray.size() - 1, "");
 				setPijlVakOperatoren(pijlVakOperatorenArray.size() - 1, "");
 			}
@@ -1645,7 +1651,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable || !isStapOk())
+				if(!editable ||(!isStapOk() && !linOefenVersie))
 					return;
 				maakStap("+");
 			}
@@ -1657,7 +1663,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable || !isStapOk())
+				if(!editable || (!isStapOk() && !linOefenVersie))
 					return;
 				maakStap("-");
 			}
@@ -1669,7 +1675,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable || !isStapOk())
+				if(!editable || (!isStapOk() && !linOefenVersie))
 					return;
 				maakStap("*");
 			}
@@ -1681,7 +1687,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable || !isStapOk())
+				if(!editable || (!isStapOk() && !linOefenVersie))
 					return;
 				maakStap(":");
 			}
@@ -1693,7 +1699,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	
-				if(!editable || !isStapOk())
+				if(!editable || (!isStapOk() && !linOefenVersie))
 					return;
 				maakStap("haakjes");
 				maakBewerkingStap();
@@ -1706,7 +1712,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(!editable || !isStapOk())
+				if(!editable || (!isStapOk() && !linOefenVersie))
 					return;
 				maakStap("herleid");
 				maakBewerkingStap();
@@ -2375,7 +2381,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 						pijlVak.getEditor().requestFocus();
 					scrollToBottom();
 				}
-					
+
 				if (bordjesMethode)
 				{	
 					if (viewers.size() > 1)
@@ -2985,7 +2991,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			{
 				stepPanelY -= stapH + viewers.get(i - 1).getHeightWithImage();
 				stepPanels.remove(i);
-				haalPijlVakWeg();
+				haalPijlVakWeg(false);
 			}
 			viewers.remove(i);
 		}
