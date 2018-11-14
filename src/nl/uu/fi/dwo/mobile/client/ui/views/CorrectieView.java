@@ -30,6 +30,11 @@ public class CorrectieView extends Composite implements HasHide {
   
   public static Provider<Map<String,Object>> addCorrection(Map<String,Object> map, InteractionView iv, final Widget widget, int scoreMax) {
     widget.addStyleName("correctie");
+    ObjectMap h = JSONUtilities.wrapMap(map);
+    h = h.getObjectMap(REVIEW_INTERACTIE_DATA);
+    if ( h != null && h.containsKey(REVIEW_SCORE_CORRECTIE)) {
+      widget.setStyleName("corrected", h.getInt(REVIEW_SCORE_CORRECTIE)>0);
+    }
     return new Provider<Map<String, Object>>() {
 
       Map<String, Object> result = new HashMap<>();
@@ -70,7 +75,7 @@ public class CorrectieView extends Composite implements HasHide {
   
   
   private static PopupPanel startCorrection(Map<String, Object> map, Widget w, int score, int scoreMax) {
-      CorrectieView view = new CorrectieView();
+      CorrectieView view = new CorrectieView(w);
       view.setObject(map);      
       Object correctie = map.getOrDefault(REVIEW_SCORE_CORRECTIE,"0");
       view.correctie.setText(correctie.toString());
@@ -111,8 +116,10 @@ public class CorrectieView extends Composite implements HasHide {
 
   @UiField HasText max, score;
   @UiField TextBox correctie;
+  private final Widget parent;
 
-  public CorrectieView() {
+  private CorrectieView(Widget w) {
+    parent = w;
     initWidget(uiBinder.createAndBindUi(this));
   }
 
@@ -121,6 +128,9 @@ public class CorrectieView extends Composite implements HasHide {
     String result = correctie.getText();
     int n = Integer.parseInt(result);
     object.put(REVIEW_SCORE_CORRECTIE, (n));
+    if(parent != null) {
+      parent.setStyleName("corrected", n>0);
+    }
     hide();
   }
 
