@@ -5,7 +5,7 @@ import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.ResettableEventBus;
 
 import fi.dwo.gwt.lib.rest.CallManagers.PublicProfileManager;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicStatusManager;
@@ -19,18 +19,20 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.GuestComponent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.SchoolAdminComponent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.TeacherComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.FAIL;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.LOGOUT;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomHeartBeat;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 import org.osgi.util.promise.Promise;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
-import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
+
 import org.osgi.util.promise.Success;
 
 /**
@@ -41,6 +43,72 @@ import org.osgi.util.promise.Success;
 @Singleton //not required.
 public class BootPanelController {
 
+    final class LoginHandler implements LoginEventHandler {
+    @Override
+    public void onLoginEvent(LoginEvent loginEvent) {
+        if (loginEvent.getState() == FAIL || loginEvent.getState() == LOGOUT || dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name())) {
+            switch (loginEvent.getState()) {
+                case SUCCESS:
+                case SUCCESS_WELCOME:
+                    setSession(true);
+                    LOG.log(Level.INFO, "Login succeeded. Showing welcome view.");
+                    SelectedView view = initialView;
+                    initialView = SelectedView.WELCOME;
+                    eventBus.fireEvent(new SwitchViewEvent(view));
+                    // viewFactory.getMainView().showPostLoginWidgets();
+                    break;
+                case SUCCESS_ROLE:
+                    LOG.log(Level.INFO, "Login succeeded. Showing account view for teacher.");
+                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
+                    break;
+                case SUCCESS_RESULTS:
+                    setSession(true);
+                    LOG.log(Level.INFO, "Login succeeded. Showing results view.");
+                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
+                    // viewFactory.getMainView().showPostLoginWidgets();
+                    break;
+                case SUCCESS_SCHOOLCLASSES:
+                    setSession(true);
+                    LOG.log(Level.INFO, "Login succeeded. Showing schoolclasses view.");
+                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+                    // viewFactory.getMainView().showPostLoginWidgets();
+                    break;
+                case FAIL:
+                    LOG.log(Level.INFO, "Login failed, showing dialog.");
+                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN));
+                    break;
+                case LOGOUT:
+                    dwoGlobalVars.clearCurrentUser();
+                    setSession(false);
+                    if(!test){
+                        if(org_id != null) // running under SAML protection
+                          logout();
+                        else
+                          Window.Location.reload();
+                    }else{
+                    //we should also clear user, view and presenter states, but that is never bug free.
+                    //however a reload works too.
+                    
+                    UrlBuilder url = Window.Location.createUrlBuilder();
+                    url.setPath("/dwo/tablet/DWOplayer.jsp"); // switch to  /leerling
+                    url.removeParameter("a");
+                    url.removeParameter("view");
+                    Window.Location.replace(url.buildString());
+                    }
+                    break;
+                default:
+                    LOG.log(Level.SEVERE, "Login handling failed in app controller.");
+            }
+        } else {
+            LOG.log(Level.INFO, "Login succeeded. Showing account view for teacher.");
+            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
+            //DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
+            //eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_SwitchTeacher()));
+            //viewFactory.getMainView().showPostLoginWidgets();
+        }
+    }
+  }
+
     private static final Logger LOG = Logger.getLogger(BootPanelController.class.getName());
     static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
     static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
@@ -48,15 +116,25 @@ public class BootPanelController {
 
     @Inject
     ViewFactory viewFactory;
+    
+    PresenterFactory presenterFactory;
+    SwitchViewEventHandler viewHandler;
+    
+    private final GuestComponent.Builder guestBuilder;
     @Inject
-    PresenterFactoryGwt presenterFactory;
+    TeacherComponent.Builder teacherBuilder;
+    @Inject
+    SchoolAdminComponent.Builder schoolAdminBuilder;
+    
+    
+    
     @Inject
     DwoGlobalVars dwoGlobalVars;
     private int profile;
     private int stage;
     private boolean hideGwtGui;
     private boolean test = false;
-    private String authToken, user_id, org_id;
+    String authToken, user_id, org_id;
     private boolean session = false;
 
     static {
@@ -65,18 +143,25 @@ public class BootPanelController {
         Dwo2LocaleMessageTranslator.setTranslator(new Dwo2LocaleMessageGWTTranslator());
     }
 
-    EventBus eventBus;
+    ResettableEventBus eventBus;
     HasWidgets rootPanel;
 
     private SelectedView initialView = SelectedView.WELCOME;
+    private final LoginHandler LOGIN_HANDLER = new LoginHandler();
 
     @Inject
-    BootPanelController(EventBus eventBus) {
+    BootPanelController(ResettableEventBus eventBus, GuestComponent.Builder initialBuilder) {
         this.eventBus = eventBus;
+        this.guestBuilder = initialBuilder;
         test = false;
         hideGwtGui = false;
         profile = 77;
         stage = 1;
+        
+        GuestComponent build = initialBuilder.build();
+        presenterFactory = build.presenterFactory();
+        viewHandler = build.viewHandler();
+        
 
     }
 
@@ -214,28 +299,9 @@ public class BootPanelController {
 //        LOG.log(Level.INFO, "HideGwt=" + hideGwtGui + ".");
 
         //intialize our global and environmental variables instance.
-//        try {
-        //dwoGlobalVars = new DwoGlobalVars(); // INJECTED
         Promise<DomDwoProfileFull> promise = new PublicProfileManager().get(profile)
         .filter(v -> v != null);
         dwoGlobalVars.setProfile(promise);
-//        } catch (Dwo2Exception e) {
-//            //ugly emergency code in case server fails.
-//            String msg = "Fatal server error! " + e.getDwo2Message();
-//            LOG.log(Level.INFO, e.getDwo2Message());
-//            DialogBox dialogBox = new DialogBox();
-//            Label label = new Label();
-//            label.setText(msg);
-//            dialogBox.add(label);
-//            dialogBox.add(new Button("OK"));
-//            dialogBox.setModal(true);
-//            dialogBox.setAutoHideEnabled(false);
-//            dialogBox.setGlassEnabled(true);
-//            dialogBox.setAnimationEnabled(true);
-//            dialogBox.center();
-//            dialogBox.show();
-//            return;
-//        }
 
         //show main panel
         this.rootPanel = rootPanel;
@@ -247,195 +313,11 @@ public class BootPanelController {
 //        viewFactory = new ViewFactoryJs(presenterFactory);
         presenterFactory.bindViewFactory(viewFactory);
 
-        //handle login events
-        eventBus.addHandler(LoginEvent.TYPE, new LoginEventHandler() {
-            @Override
-            public void onLoginEvent(LoginEvent loginEvent) {
-                if (loginEvent.getState() == FAIL || loginEvent.getState() == LOGOUT || dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name())) {
-                    switch (loginEvent.getState()) {
-                        case SUCCESS:
-                        case SUCCESS_WELCOME:
-                            setSession(true);
-                            LOG.log(Level.INFO, "Login succeeded. Showing welcome view.");
-                            SelectedView view = initialView;
-                            initialView = SelectedView.WELCOME;
-                            eventBus.fireEvent(new SwitchViewEvent(view));
-                            // viewFactory.getMainView().showPostLoginWidgets();
-                            break;
-                        case SUCCESS_ROLE:
-                            LOG.log(Level.INFO, "Login succeeded. Showing account view for teacher.");
-                            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
-                            break;
-                        case SUCCESS_RESULTS:
-                            setSession(true);
-                            LOG.log(Level.INFO, "Login succeeded. Showing results view.");
-                            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
-                            // viewFactory.getMainView().showPostLoginWidgets();
-                            break;
-                        case SUCCESS_SCHOOLCLASSES:
-                            setSession(true);
-                            LOG.log(Level.INFO, "Login succeeded. Showing schoolclasses view.");
-                            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
-                            // viewFactory.getMainView().showPostLoginWidgets();
-                            break;
-                        case FAIL:
-                            LOG.log(Level.INFO, "Login failed, showing dialog.");
-                            eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN));
-                            break;
-                        case LOGOUT:
-                            dwoGlobalVars.clearCurrentUser();
-                            setSession(false);
-                            if(!test){
-                                if(org_id != null) // running under SAML protection
-                                  logout();
-                                else
-                                  Window.Location.reload();
-                            }else{
-                            //we should also clear user, view and presenter states, but that is never bug free.
-                            //however a reload works too.
-                            
-                            UrlBuilder url = Window.Location.createUrlBuilder();
-                            url.setPath("/dwo/tablet/DWOplayer.jsp"); // switch to  /leerling
-                            url.removeParameter("a");
-                            url.removeParameter("view");
-                            Window.Location.replace(url.buildString());
-                            }
-                            break;
-                        default:
-                            LOG.log(Level.SEVERE, "Login handling failed in app controller.");
-                    }
-                } else {
-                    LOG.log(Level.INFO, "Login succeeded. Showing account view for teacher.");
-                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
-                    //DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
-                    //eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_SwitchTeacher()));
-                    //viewFactory.getMainView().showPostLoginWidgets();
-                }
-            }
-
-        });
+        
+        eventBus.addHandler(LoginEvent.TYPE, LOGIN_HANDLER);
 
         //handle switch deckpanel events.
-        eventBus.addHandler(SwitchViewEvent.TYPE, new SwitchViewEventHandler() {
-            @Override
-            public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
-                if (SwitchViewEvent.eventValue != SwitchViewEvent.eventValue.LOGIN
-                        && (dwoGlobalVars.getActiveSchoolRoleAndClass() == null
-                        || dwoGlobalVars.getActiveSchoolRoleAndClass().getRole() == null
-                        || !dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name()))) {
-                    LOG.log(Level.INFO, "Showing account view, because not a teacher.");
-
-                    presenterFactory.getAccountPresenter().init();
-                    viewFactory.getMainView().showAccountView();
-                } else {
-                    if (SwitchViewEvent.eventValue != SwitchViewEvent.eventValue.LOGIN) {
-                        viewFactory.getMainView().setSchoolName(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
-                        viewFactory.getMainView().setPresentationName(dwoGlobalVars.getCurrentUser().getDisplayName());
-                    }
-                    switch (switchViewEvent.getEventValue()) {
-                        case LOGIN:
-                            viewFactory.getMainView().showLoginView();
-                            presenterFactory.getLoginPresenter().init();
-                            if (authToken != null) {
-                                String token = authToken;
-                                authToken = null;
-                                presenterFactory.getLoginPresenter().tokenLogin(token, user_id, org_id);
-                            }
-                            break;
-                        case WELCOME:
-                            viewFactory.getMainView().showWelcomeView();
-                            presenterFactory.getWelcomePresenter().init();
-                            break;
-                        case ACCOUNT:
-                            viewFactory.getMainView().showAccountView();
-                            presenterFactory.getAccountPresenter().init();
-                            break;
-                        case PERSONS:
-                            viewFactory.getMainView().showPersonsView();
-                            presenterFactory.getPersonsPresenter().init();
-                            break;
-                        case ADDPERSON:
-                            viewFactory.getMainView().showAddPersonView();
-                            presenterFactory.getAddStudentPresenter().init();
-                            break;
-                        case EDITSTUDENT:
-                            viewFactory.getMainView().showEditPersonView();
-                            presenterFactory.getEditStudentPresenter().init(switchViewEvent.getUser());
-                            break;
-                        case EDITTEACHER:
-                            viewFactory.getMainView().showEditPersonView();
-                            presenterFactory.getEditTeacherPresenter().init(switchViewEvent.getUser());
-                            break;
-                        case IMPORTPERSONS:
-                            viewFactory.getMainView().showImportPersonsView();
-                            presenterFactory.getImportPersonsPresenter().init(switchViewEvent.getFile());
-                            break;
-                        case RESULTS:
-                            viewFactory.getMainView().showResultsView();
-                            presenterFactory.getResultsPresenter().init();
-                            break;
-                        case SELECTEDRESULTS:
-                            viewFactory.getMainView().showSelectedResultsView();
-                            presenterFactory.getSelectedResultsPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultState());
-                            break;
-                        case BACKTORESULTS:
-                            viewFactory.getMainView().showResultsView();
-                            presenterFactory.getResultsPresenter().init(switchViewEvent.getResultState());
-                            break;
-                        case SELECTEDRESULTSRETURN:
-                            viewFactory.getMainView().showSelectedResultsView();
-                            presenterFactory.getSelectedResultsPresenter().reinit(switchViewEvent.getResultTree(), switchViewEvent.getResultState());
-                            break;
-                        case RESULTSSTUDENT:
-                            //eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
-                            viewFactory.getMainView().showStudentScoResultView();
-                            presenterFactory.getStudentScoResultPresenter().init(switchViewEvent.getResultTree(), switchViewEvent.getResultStudentScoContext(), switchViewEvent.getResultState(), switchViewEvent.getUserState());
-                            break;
-                        case LOGRESULTS:
-                            viewFactory.getMainView().showLogResultsView();
-                            presenterFactory.getLogResultsPresenter().init(switchViewEvent.getResultTree(),switchViewEvent.getScoResult(),switchViewEvent.getSchoolClass(),switchViewEvent.getResultState());
-                            break;
-                        case SCHOOLCLASSES:
-                            viewFactory.getMainView().showSchoolclassesView();
-                            presenterFactory.getSchoolclassesPresenter().init();
-                            break;
-                        case EDITSCHOOLCLASS:
-                            viewFactory.getMainView().showEditSchoolclassView();
-                            presenterFactory.getEditSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
-                            break;
-                        case ADDSTUDENTTOSCHOOLCLASS:
-                            viewFactory.getMainView().showAddStudentToSchoolClassView();
-                            presenterFactory.getAddStudentToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
-                            break;
-                        case COPYORMOVESTUDENTTOSCHOOLCLASS:
-                            viewFactory.getMainView().showCopyOrMoveStudentToSchoolClassView();
-                            presenterFactory.getCopyOrMoveStudentToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
-                            break;
-                        case ADDTEACHERTOSCHOOLCLASS:
-                            viewFactory.getMainView().showAddTeacherToSchoolClassView();
-                            presenterFactory.getAddTeacherToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
-                            break;
-                        case EDITCOURSESOFSCHOOLCLASS:
-                            LOG.log(Level.INFO, "Init panel EDITCOURSESOFSCHOOLCLASS.");
-                            viewFactory.getMainView().showEditCoursesOfSchoolClassView();
-                            presenterFactory.getModulesOfSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
-                            break;
-                        case ORGANISATION:
-                            eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
-                            break;
-                        case MODULES:
-                            presenterFactory.getModulesPresenter().show();
-                            break;
-                        case MODULESVIEW:
-                            viewFactory.getMainView().showModulesView();
-                            break;
-                        default:
-                            eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
-                            LOG.log(Level.SEVERE, "Switch panel failed in app controller.");
-                    }
-                }
-            }
-        });
+        eventBus.addHandler(SwitchViewEvent.TYPE, viewHandler);
         LOG.log(Level.FINE, "Intiating Main view.");
         //MainPresenter.Display mainView = viewFactory.getMainView();
         rootPanel.setVisible(false);

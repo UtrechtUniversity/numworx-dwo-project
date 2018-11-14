@@ -11,7 +11,7 @@ import jsinterop.annotations.JsMethod;
 public class DwoPresenterFactory {
 
     private static DwoPresenterFactory factory;
-    private static PresenterFactoryGwt fac;
+    private static PresenterFactory fac;
 
     
      @JsMethod
@@ -19,7 +19,7 @@ public class DwoPresenterFactory {
         return factory;
     }
     
-    public DwoPresenterFactory(PresenterFactoryGwt impl) {
+    public DwoPresenterFactory(PresenterFactory impl) {
         fac = impl;
         factory = this;
     }
@@ -29,7 +29,7 @@ public class DwoPresenterFactory {
      * @return the fac
      */
     @JsMethod
-    public PresenterFactoryGwt getFac() {
+    public PresenterFactory getFac() {
         return fac;
     }
 
@@ -37,7 +37,7 @@ public class DwoPresenterFactory {
      * @param fac the fac to set
      */
     @JsMethod
-    public void setFac(PresenterFactoryGwt fac) {
+    public void setFac(PresenterFactory fac) {
         this.fac = fac;
     }
 }
