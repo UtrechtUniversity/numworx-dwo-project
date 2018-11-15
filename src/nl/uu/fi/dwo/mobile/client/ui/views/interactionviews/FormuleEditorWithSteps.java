@@ -1182,7 +1182,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			
 			contentPanel.remove(pijlVak);
 			
-			if (pijlVak.geefOperator().equals("abc") && pijlAdministratieBijwerken) // de pijladministratie moet alleen bijgewerkt worden als de gebruiker zelf een stap weghaalt
+			if (pijlAdministratieBijwerken) // de pijladministratie moet alleen bijgewerkt worden als de gebruiker zelf een stap weghaalt
 			{
 				// er wordt een stap weggehaald, dus ook de laatste pijlvakinhouden en -operatoren bijwerken
 				setPijlVakInhouden(pijlVakInhoudenArray.size() - 1, "");
