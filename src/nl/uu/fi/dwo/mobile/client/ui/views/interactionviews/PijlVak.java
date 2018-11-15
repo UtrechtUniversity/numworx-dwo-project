@@ -6,6 +6,9 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.TextAlign;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Image;
@@ -104,6 +107,9 @@ public class PijlVak extends LayoutPanel
 			width = Math.max(MIN_WIDTH_ABC_SUB, (int) ctx.measureText(MARGE_VOOR + "Discriminant" + MARGE_NA).getWidth());
 			
 			sluitKnop = new PushButton("x");
+			sluitKnop.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+			sluitKnop.getElement().getStyle().setVerticalAlign(VerticalAlign.MIDDLE);
+			sluitKnop.getElement().getStyle().setFontSize(11, Unit.PX);
 			sluitKnop.addClickHandler(new ClickHandler( ) {
 
 				@Override
