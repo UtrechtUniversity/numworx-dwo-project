@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.dagger;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import com.google.web.bindery.event.shared.EventBus;
@@ -13,8 +14,6 @@ import dagger.Reusable;
 import dagger.multibindings.IntoMap;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.PresenterFactory;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.PresenterFactoryGwt;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactoryJs;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsLogResultsView;
@@ -23,11 +22,16 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 @Module(subcomponents = { TeacherComponent.class, SchoolAdminComponent.class, GuestComponent.class })
 abstract class BootModule {
-	@Singleton @Provides static ResettableEventBus resettableEventBus() {
-		return new ResettableEventBus(new SimpleEventBus());
+
+    @Singleton @Provides static SimpleEventBus simpleEventBus() { // for Singleton eventHandlers
+      return new SimpleEventBus();
+    }
+  
+	@Singleton @Provides static ResettableEventBus resettableEventBus(SimpleEventBus bus) {
+		return new ResettableEventBus(bus);
 	}
 
-	@Binds abstract EventBus eventBus(ResettableEventBus bus);
+	@Binds abstract EventBus eventBus(ResettableEventBus bus); // for RoleScope eventHandlers
 	@Binds abstract ViewFactory viewFactory(ViewFactoryJs view);
 	
 	@Reusable @Provides static SecuredUserAccountManager accountManager() {

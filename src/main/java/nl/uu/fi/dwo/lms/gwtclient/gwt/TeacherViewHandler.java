@@ -32,7 +32,8 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
               || dwoGlobalVars.getActiveSchoolRoleAndClass().getRole() == null
               || !dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().matches(RoleType.TEACHER.name()))) {
           LOG.log(Level.INFO, "Showing account view, because not a teacher.");
-
+          viewFactory.getMainView().setSchoolName(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
+          viewFactory.getMainView().setPresentationName(dwoGlobalVars.getCurrentUser().getDisplayName());
           presenterFactory.getAccountPresenter().init();
           viewFactory.getMainView().showAccountView();
       } else {

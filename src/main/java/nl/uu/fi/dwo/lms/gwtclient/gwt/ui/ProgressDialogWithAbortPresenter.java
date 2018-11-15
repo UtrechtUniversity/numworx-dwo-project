@@ -6,13 +6,18 @@ import fi.dwo.gwt.lib.rest.ui.ProgressDialogEventHandler;
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPresenter;
 import fi.dwo.gwt.lib.rest.ui.ProgressDialogPromise;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import jsinterop.annotations.JsMethod;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 
 /**
  * Sub classing for project.
  *
  * @author plas0006
  */
+@RoleScope
 public class ProgressDialogWithAbortPresenter implements ProgressDialogWithAbortEventHandler {
 
     private static final Logger LOG = Logger.getLogger(ProgressDialogPresenter.class.getName());
@@ -32,7 +37,7 @@ public class ProgressDialogWithAbortPresenter implements ProgressDialogWithAbort
     }
 
     
-    public ProgressDialogWithAbortPresenter(EventBus anEventBus) {
+    @Inject public ProgressDialogWithAbortPresenter(EventBus anEventBus) {
         eventBus=anEventBus;
         eventBus.addHandler(ProgressDialogWithAbortEvent.TYPE, this);
     }

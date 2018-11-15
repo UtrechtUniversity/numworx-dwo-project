@@ -2,13 +2,18 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.ui;
 
 import com.google.web.bindery.event.shared.EventBus;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import jsinterop.annotations.JsMethod;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 
 /**
  * Subclassing for project.
  *
  * @author plas0006
  */
+@RoleScope
 public class AlertDialogWithOKPresenter  implements AlertDialogWithOKEventHandler {
 
     private static final Logger LOG = Logger.getLogger(AlertDialogWithOKPresenter.class.getName());
@@ -24,7 +29,7 @@ public class AlertDialogWithOKPresenter  implements AlertDialogWithOKEventHandle
         void hideDialog();
     }
 
-    public AlertDialogWithOKPresenter(EventBus anEventBus) {
+    @Inject public AlertDialogWithOKPresenter(EventBus anEventBus) {
         eventBus = anEventBus;
         eventBus.addHandler(AlertDialogWithOKEvent.TYPE, this);
 

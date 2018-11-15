@@ -1,11 +1,13 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
-import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.event.shared.EventBus;
-import fi.dwo.gwt.lib.rest.util.StringFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import jsinterop.annotations.JsMethod;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
@@ -22,9 +24,9 @@ import org.osgi.util.promise.Success;
  *
  * @author Gert van der Plas
  */
+@RoleScope
 public class MainPresenter {
 
-    private static final DwoLocalesForGWT rb = GWT.create(DwoLocalesForGWT.class);
     private static final Logger LOG = Logger.getLogger(MainPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
@@ -91,12 +93,9 @@ public class MainPresenter {
 
     private MainPresenter.Display display;
 
-    MainPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject MainPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-//                setDWO(this);
-//        eventBus.addHandler(SwitchViewEvent.TYPE, this);
-//        eventBus.addHandler(LoginEvent.TYPE, this);
     }
 
     public void init() {
@@ -106,6 +105,7 @@ public class MainPresenter {
     /**
      * @param display the display to set
      */
+    //@Inject
     public void setView(MainPresenter.Display display) {
         this.display = display;
     }

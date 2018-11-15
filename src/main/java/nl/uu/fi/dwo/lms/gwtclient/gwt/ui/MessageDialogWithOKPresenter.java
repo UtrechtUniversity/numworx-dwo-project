@@ -4,13 +4,18 @@ import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import jsinterop.annotations.JsMethod;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 
 /**
  * Subclassing for project.
  *
  * @author plas0006
  */
+@RoleScope
 public class MessageDialogWithOKPresenter  implements MessageDialogWithOKEventHandler {
 
     private static final Logger LOG = Logger.getLogger(MsgDialogPresenter.class.getName());
@@ -26,7 +31,7 @@ public class MessageDialogWithOKPresenter  implements MessageDialogWithOKEventHa
         void hideDialog();
     }
 
-    public MessageDialogWithOKPresenter(EventBus anEventBus) {
+    @Inject public MessageDialogWithOKPresenter(EventBus anEventBus) {
         eventBus = anEventBus;
         eventBus.addHandler(MessageDialogWithOKEvent.TYPE, this);
 

@@ -6,9 +6,13 @@ import java.util.Date;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars.DwoGlobalVarsState;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedDialogWithConfirmDeferred;
@@ -29,6 +33,7 @@ import org.osgi.util.promise.Success;
  *
  * @author G.A.J. van der Plas
  */
+@RoleScope
 public class LoginPresenter {
 
     private static final Logger LOG = Logger.getLogger(LoginPresenter.class.getName());
@@ -98,6 +103,7 @@ public class LoginPresenter {
         public void hideMsgBox();
     }
 
+    @Inject
     public LoginPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;

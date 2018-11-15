@@ -62,4 +62,5 @@ public interface PresenterFactory {
 //    public PromisedDialogWithOKPresenter getPromisedDialogWithOKPresenter();
     public ProgressDialogWithAbortPresenter getProgressDialogWithAbortPresenter();
     public void bindViewFactory(ViewFactory viewFactory);
+    public void setStage(int stage);
 }

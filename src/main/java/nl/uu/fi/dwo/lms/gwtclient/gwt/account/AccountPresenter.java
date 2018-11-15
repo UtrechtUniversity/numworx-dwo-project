@@ -11,9 +11,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
@@ -39,6 +43,7 @@ import org.osgi.util.promise.Success;
  *
  * @author Gert van der Plas
  */
+@RoleScope
 public class AccountPresenter {
 
     private static final Logger LOG = Logger.getLogger(AccountPresenter.class.getName());
@@ -73,6 +78,7 @@ public class AccountPresenter {
         void clearAddSchoolLogin();
     }
 
+    @Inject
     public AccountPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, SecuredUserAccountManager accountManager) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;

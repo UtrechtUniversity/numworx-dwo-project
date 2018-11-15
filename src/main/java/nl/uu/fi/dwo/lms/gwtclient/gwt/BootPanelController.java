@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
@@ -24,6 +25,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.PresenterBuilder;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.SchoolAdminComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.TeacherComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State;
+
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.FAIL;
 import static nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State.LOGOUT;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
@@ -47,11 +50,14 @@ public class BootPanelController {
     final class LoginHandler implements LoginEventHandler {
     @Override
     public void onLoginEvent(LoginEvent loginEvent) {
-        RoleType role = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
-        resetPresenters(role);
-            switch (loginEvent.getState()) {
-                case SUCCESS:
-                case SUCCESS_WELCOME:                 
+        final RoleType role = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
+        final State state = loginEvent.getState();
+        resetPresenters(role); // changes in eventbus are not immediate
+        Scheduler.get().scheduleDeferred(
+            () -> {
+                switch (state) {
+                  case SUCCESS:
+                  case SUCCESS_WELCOME:
                     setSession(true);
                     LOG.log(Level.INFO, "Login succeeded. Showing welcome view.");
                     SelectedView view = initialView;
@@ -59,48 +65,50 @@ public class BootPanelController {
                     eventBus.fireEvent(new SwitchViewEvent(view));
                     // viewFactory.getMainView().showPostLoginWidgets();
                     break;
-                case SUCCESS_ROLE:
+                  case SUCCESS_ROLE:
                     LOG.log(Level.INFO, "Login succeeded. Showing account view for teacher.");
                     eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ACCOUNT));
                     break;
-                case SUCCESS_RESULTS:
+                  case SUCCESS_RESULTS:
                     setSession(true);
                     LOG.log(Level.INFO, "Login succeeded. Showing results view.");
                     eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.RESULTS));
                     // viewFactory.getMainView().showPostLoginWidgets();
                     break;
-                case SUCCESS_SCHOOLCLASSES:
+                  case SUCCESS_SCHOOLCLASSES:
                     setSession(true);
                     LOG.log(Level.INFO, "Login succeeded. Showing schoolclasses view.");
-                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
+                    eventBus
+                        .fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SCHOOLCLASSES));
                     // viewFactory.getMainView().showPostLoginWidgets();
                     break;
-                case FAIL:
+                  case FAIL:
                     LOG.log(Level.INFO, "Login failed, showing dialog.");
                     eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN));
                     break;
-                case LOGOUT:
+                  case LOGOUT:
                     dwoGlobalVars.clearCurrentUser();
                     setSession(false);
-                    if(!test){
-                        if(org_id != null) // running under SAML protection
-                          logout();
-                        else
-                          Window.Location.reload();
-                    }else{
-                    //we should also clear user, view and presenter states, but that is never bug free.
-                    //however a reload works too.
-                    
-                    UrlBuilder url = Window.Location.createUrlBuilder();
-                    url.setPath("/dwo/tablet/DWOplayer.jsp"); // switch to  /leerling
-                    url.removeParameter("a");
-                    url.removeParameter("view");
-                    Window.Location.replace(url.buildString());
+                    if (!test) {
+                      if (org_id != null) // running under SAML protection
+                        logout();
+                      else
+                        Window.Location.reload();
+                    } else {
+                      //we should also clear user, view and presenter states, but that is never bug free.
+                      //however a reload works too.
+
+                      UrlBuilder url = Window.Location.createUrlBuilder();
+                      url.setPath("/dwo/tablet/DWOplayer.jsp"); // switch to  /leerling
+                      url.removeParameter("a");
+                      url.removeParameter("view");
+                      Window.Location.replace(url.buildString());
                     }
                     break;
-                default:
+                  default:
                     LOG.log(Level.SEVERE, "Login handling failed in app controller.");
-            }
+                }
+              });
     }
   }
 
@@ -126,7 +134,7 @@ public class BootPanelController {
     }-*/;
 
     
-    public void resetPresenters(RoleType role) {
+    private void resetPresenters(RoleType role) {
         eventBus.removeHandlers();
         eventBus.addHandler(LoginEvent.TYPE, LOGIN_HANDLER);
         PresenterBuilder build;
@@ -141,8 +149,7 @@ public class BootPanelController {
               build = guestBuilder.build();
         }
         presenterFactory = build.presenterFactory();
-        presenterFactory.getPersonsPresenter().setStage(stage);
-        presenterFactory.getSelectedResultsPresenter().setStage(stage);
+        presenterFactory.setStage(stage);
         viewHandler = build.viewHandler();
         eventBus.addHandler(SwitchViewEvent.TYPE, viewHandler);
         DwoPresenterFactory.getDwoPresenterFactory().setFac(presenterFactory);
@@ -272,8 +279,7 @@ public class BootPanelController {
          * Testing stuff, stage = 1,2...
          */
         parseUrlParam();
-        presenterFactory.getPersonsPresenter().setStage(stage);
-        presenterFactory.getSelectedResultsPresenter().setStage(stage);
+        presenterFactory.setStage(stage);
 
         //fetch current version
         String softwareVersion = BUILD.version;

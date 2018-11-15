@@ -105,7 +105,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
 
     }
 
-    @Override
+    @Override @Inject
     public void bindViewFactory(ViewFactory viewFactory) {
         loginPresenter.setView(viewFactory.getLoginView());
         welcomePresenter.setView(viewFactory.getWelcomeView());
@@ -342,6 +342,12 @@ public class PresenterFactoryGwt implements PresenterFactory {
     @JsMethod
     public LogResultsPresenter getLogResultsPresenter() {
       return logResultsPresenter;
+    }
+
+    @Override
+    public void setStage(int stage) {
+      getPersonsPresenter().setStage(stage);
+      getSelectedResultsPresenter().setStage(stage);
     }
 
 }
