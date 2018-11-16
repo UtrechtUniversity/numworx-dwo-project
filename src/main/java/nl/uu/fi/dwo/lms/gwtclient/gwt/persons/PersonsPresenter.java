@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
@@ -32,10 +35,10 @@ import org.vectomatic.file.File;
 public class PersonsPresenter {
 
     private static final Logger LOG = Logger.getLogger(PersonsPresenter.class.getName());
-    DwoGlobalVars dwoGlobalVars;
-    EventBus eventBus;
+    final DwoGlobalVars dwoGlobalVars;
+    final EventBus eventBus;
     Display view;
-    private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
+    final PersonsService manager;
     Map<String, DomUser> personen;
     int stage=0;
 
@@ -67,9 +70,14 @@ public class PersonsPresenter {
         void setLoadingTableMessage();
     }
 
-    public PersonsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    public PersonsPresenter(EventBus bus, DwoGlobalVars vars) {
+      this(bus, vars, new PersonsServiceTeacher());
+    }
+    
+    @Inject PersonsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, PersonsService manager) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+        this.manager = manager;
     }
 
 //    @JsMethod not required unless testing stuff.

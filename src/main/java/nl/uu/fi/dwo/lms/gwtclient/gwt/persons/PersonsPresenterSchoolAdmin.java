@@ -29,18 +29,10 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 public class PersonsPresenterSchoolAdmin extends PersonsPresenter {
   private static final Logger LOG = Logger.getLogger(PersonsPresenterSchoolAdmin.class.getName());
   private final LoggingFailure FAILURE;
-  private final SecuredSchoolAdminSchoolClassManager manager = new SecuredSchoolAdminSchoolClassManager();
 
-  @Inject PersonsPresenterSchoolAdmin(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
-    super(anEventBus, aDwoGlobalVars);
+  @Inject PersonsPresenterSchoolAdmin(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, PersonsServiceSchoolAdmin manager) {
+    super(anEventBus, aDwoGlobalVars, manager);
     FAILURE = new LoggingFailure(LOG, anEventBus);
-  }
-
-
-  @Override
-  public void init() {
-    // TODO Auto-generated method stub
-    super.init();
   }
 
   List<DomUser> studentToUser(List<DomStudent>list) {
@@ -55,7 +47,7 @@ public class PersonsPresenterSchoolAdmin extends PersonsPresenter {
   public void showStudentList() {
     view.setLoadingTableMessage();
     Promise<List<DomUser>> promise;
-    promise = manager.getStudentsInSchool().map(this::studentToUser);
+    promise = manager.getTeachersStudents().map(this::studentToUser);
     updateView(promise);
   }
 

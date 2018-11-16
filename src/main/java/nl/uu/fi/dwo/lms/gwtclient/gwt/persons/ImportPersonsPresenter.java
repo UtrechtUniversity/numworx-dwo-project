@@ -55,7 +55,7 @@ public class ImportPersonsPresenter {
     private final DwoGlobalVars dwoGlobalVars;
     private final EventBus eventBus;
     private Display view;
-    private final SecuredTeacherSchoolClassManager manager;
+    private final PersonsService manager;
     private List<DomSingleSchoolStudent> persons;
     private Map<String, TaggedDomSchoolClass> taggedSchoolClasses;
 
@@ -90,7 +90,7 @@ public class ImportPersonsPresenter {
         void setLoadingSchoolClassesTableMessage();
     }
 
-    @Inject ImportPersonsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, SecuredTeacherSchoolClassManager m) {
+    @Inject ImportPersonsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, PersonsService m) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         manager = m;
@@ -173,11 +173,23 @@ public class ImportPersonsPresenter {
         
     private List<DomSingleSchoolStudent> loadFile(String file) {
         //tokenize import file.
-        String[] lines = file.split("\n");
+        String[] lines;
+
+        lines = file.split("\\r?\\n");         
+        // check de situatie waarin csvText alleen \r als regelscheiding bevat
+        if ((lines.length == 1) && file.contains("\r") && !file.contains("\r\n"))
+        {
+            // csvText has only \r as separator
+            lines = file.split("\\r");
+        }
+
+        String separator = "\t";
+        if (! file.contains(separator)) separator = ";"; // no tab, then ;
+               
         LOG.log(Level.INFO, "Read " + lines.length + " lines.");
         List<DomSingleSchoolStudent> personList = new ArrayList<>(lines.length);
         for (int i = 0; i < lines.length; i++) {
-            String[] cols = lines[i].split("\t");
+            String[] cols = lines[i].split(separator);
             LOG.log(Level.INFO, "Read " + cols.length + " columns.");
             
             if(cols.length < 6) {

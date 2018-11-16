@@ -10,6 +10,9 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
@@ -53,7 +56,7 @@ public class EditStudentPresenter {
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
     private Display view;
-    private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
+    private PersonsService manager;
     private Map<String, TaggedDomSchoolClass> taggedSchoolClassMap;
     private DomUserFull fullUser;
     private DomUser user;
@@ -85,9 +88,10 @@ public class EditStudentPresenter {
         this.view = view;
     }
 
-    public EditStudentPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject EditStudentPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, PersonsService m) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+        manager = m;
     }
 
     public void init(DomUser aUser) {
@@ -234,7 +238,7 @@ public class EditStudentPresenter {
 
         p.then((resolved) -> {
             if (resolved.getValue() == false) {
-                return Promises.failed(new Dwo2Exception(Dwo2ExceptionCode.User_Cancelled_RemoveStudentFromSchoolClass, "Unsubscribe schoolclass cancelled."));
+                throw (new Dwo2Exception(Dwo2ExceptionCode.User_Cancelled_RemoveStudentFromSchoolClass, "Unsubscribe schoolclass cancelled."));
             } else {
                 DomSchoolClass sc = taggedSchoolClassMap.get(schoolClassId).getSchoolClass();
                 DomRemoveStudentFromSchoolClass data = new DomRemoveStudentFromSchoolClass();

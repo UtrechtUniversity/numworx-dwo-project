@@ -49,6 +49,7 @@ public class SchoolAdminPresenterFactory implements PresenterFactory {
   @Inject ModulesPresenter modulesPresenter;
   @Inject PersonsPresenterSchoolAdmin personsPresenter;
   @Inject AddPersonPresenterSchoolAdmin addPersonPresenter;
+  @Inject EditStudentPresenter editStudentPresenter;
   @Inject ImportPersonsPresenter importPersonsPresenter;
 
   @Inject SchoolAdminPresenterFactory() {
@@ -161,7 +162,7 @@ public class SchoolAdminPresenterFactory implements PresenterFactory {
 
   @Override @JsMethod
   public EditStudentPresenter getEditStudentPresenter() {
-    return null;
+    return editStudentPresenter;
   }
 
   @Override @JsMethod
