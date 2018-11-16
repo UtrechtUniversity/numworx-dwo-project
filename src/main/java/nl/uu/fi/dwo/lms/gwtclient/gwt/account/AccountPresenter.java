@@ -399,9 +399,9 @@ public class AccountPresenter {
                 });
                 srac.setSchoolsRolesAndClassesList(sracList);
                 view.updateSchoolLoginsView(srac);
-                if (!srac.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())) {
-                    eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_User_NoTeacher()));
-                }
+//                if (!srac.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())) {
+//                    eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_User_NoTeacher()));
+//                }
                 return null;
             }
         }, new Failure() {

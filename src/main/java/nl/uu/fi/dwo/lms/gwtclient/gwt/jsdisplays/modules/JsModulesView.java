@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.modules;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 
 /**
@@ -8,6 +10,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
  * 
  * @author G.A.J. van der Plas
  */
+@Singleton
 public class JsModulesView implements ModulesPresenter.Display{
 
     @Override

@@ -5,6 +5,7 @@ import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.google.web.bindery.event.shared.SimpleEventBus;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.OsDetection;
 
@@ -17,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
@@ -39,6 +41,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  *
  * @author G.A.J. van der Plas
  */
+@Singleton
 public class ModulesPresenter implements SwitchViewEventHandler {
 
     private final static boolean IFRAME = true;
@@ -80,7 +83,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     /**
      * @param view the view to set
      */
-    public void setView(Display view) {
+    @Inject void setView(Display view) {
         this.view = view;
     }
 
@@ -92,7 +95,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         public void sendMessage(String message);
     }
 
-    @Inject ModulesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject ModulesPresenter(SimpleEventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         FAILURE = new LoggingFailure(LOG, anEventBus);
         injectEventListener(this);
@@ -165,20 +168,6 @@ public class ModulesPresenter implements SwitchViewEventHandler {
      return Promises.resolved(string);
     }
     
-//    /*
-//     * send failure event.
-//     */
-//    public void fail(Promise<?> resolved) {
-//      Throwable fail = resolved.getFailure();
-//      if (fail instanceof Dwo2Exception) {
-//          LOG.log(Level.SEVERE, fail.getMessage());
-//          eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail)); // FIXME which event type?
-//      } else {
-//          LOG.log(Level.SEVERE, fail.getMessage());
-//          eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-//      }
-//  }
-
     private native void injectEventListener(ModulesPresenter p) /*-{
       function postMessageListener(e) {
           var curUrl = $wnd.location.protocol + "//" + $wnd.location.hostname;

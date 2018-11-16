@@ -2,38 +2,51 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import javax.inject.Inject;
 
+import com.google.web.bindery.event.shared.EventBus;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
-public class GuestViewHandler implements SwitchViewEventHandler {
+public class SchoolAdminViewHandler implements SwitchViewEventHandler {
 
   @Inject DwoGlobalVars dwoGlobalVars;
   @Inject ViewFactory viewFactory;
   @Inject PresenterFactory presenterFactory;
   @Inject BootPanelController controller;
 
-  
-  @Inject GuestViewHandler() {
-    // TODO Auto-generated constructor stub
-  }
+  @Inject SchoolAdminViewHandler() {}
 
   @Override
   public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
       SelectedView value = switchViewEvent.getEventValue();
-      
+      if (!withUser()) value = SelectedView.LOGIN;
+      else {
+        // if not a schooladmin, value = SelectedView.ACCOUNT;
+      }
       switch (value) {
-        case WELCOME:
-            // show alert
+        case ORGANISATION:
         default:
+        case WELCOME:
+          viewFactory.getMainView().showWelcomeView();
+          presenterFactory.getWelcomePresenter().init();
+          break;
+        case MODULES:
+          presenterFactory.getModulesPresenter().show();
+          break;
+        case MODULESVIEW:
+          viewFactory.getMainView().showModulesView();
+          break;
         case ACCOUNT:
-          if (withUser()) {
-            viewFactory.getMainView().setSchoolName(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
-            viewFactory.getMainView().setPresentationName(dwoGlobalVars.getCurrentUser().getDisplayName());
-            viewFactory.getMainView().showAccountView();
-            presenterFactory.getAccountPresenter().init();
-            break;
-          }
+          viewFactory.getMainView().showAccountView();
+          presenterFactory.getAccountPresenter().init();
+          break;
+        case RESULTS:
+          presenterFactory.getEventBus().fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+          break;
+
         case LOGIN:
           viewFactory.getMainView().showLoginView();
           presenterFactory.getLoginPresenter().init();

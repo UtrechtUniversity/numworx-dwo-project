@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 
 import javax.inject.Inject;
@@ -73,12 +74,12 @@ public class PresenterFactoryGwt implements PresenterFactory {
 //    private final PromisedDialogWithOKPresenter promisedDialogWithOKPresenter;
     private final ProgressDialogWithAbortPresenter progressDialogWithAbortPresenter;
 
-    @Inject public PresenterFactoryGwt(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, SecuredUserAccountManager accountManager) {
+    @Inject public PresenterFactoryGwt(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, SecuredUserAccountManager accountManager, GwtClientMessages rb) {
         dwoGlobalVars = aDwoGlobalVars;
         eventBus = anEventBus;
         mainPresenter = new MainPresenter(eventBus, dwoGlobalVars);
         loginPresenter = new LoginPresenter(eventBus, dwoGlobalVars);
-        welcomePresenter = new WelcomePresenter(eventBus, dwoGlobalVars);
+        welcomePresenter = new WelcomePresenter(eventBus, dwoGlobalVars, rb);
         accountPresenter = new AccountPresenter(eventBus, dwoGlobalVars, accountManager);
         schoolclassesPresenter = new SchoolclassesPresenter(eventBus, dwoGlobalVars);
         editSchoolclassPresenter = new EditSchoolclassPresenter(eventBus, dwoGlobalVars);
@@ -116,7 +117,6 @@ public class PresenterFactoryGwt implements PresenterFactory {
         copyOrMoveStudentToSchoolclassPresenter.setView(viewFactory.getCopyOrMoveStudentToSchoolclassView());
         addTeacherToSchoolclassPresenter.setView(viewFactory.getAddTeacherToSchoolclassView());
         modulesOfSchoolclassPresenter.setView(viewFactory.getModulesOfSchoolclassView());
-        modulesPresenter.setView(viewFactory.getModulesView());
         resultsPresenter.setView(viewFactory.getResultsView());
         selectedResultsPresenter.setView(viewFactory.getSelectedResultsView());
         studentScoResultPresenter.setView(viewFactory.getStudentScoResultView());

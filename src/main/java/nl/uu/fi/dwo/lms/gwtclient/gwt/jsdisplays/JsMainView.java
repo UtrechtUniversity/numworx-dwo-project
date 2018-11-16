@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 /**
  *
@@ -14,8 +15,8 @@ public class JsMainView implements MainPresenter.Display{
     }
 
     @Override
-    public void setUserRole(String userRole) {
-        JsMainDisplay.setUserRole(userRole);
+    public void setUserRole(RoleType userRole) {
+        JsMainDisplay.setUserRole(userRole.name());
     }
 
     @Override

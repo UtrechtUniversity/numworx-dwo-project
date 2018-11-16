@@ -60,6 +60,8 @@ public class BootPanelController {
                   case SUCCESS_WELCOME:
                     setSession(true);
                     LOG.log(Level.INFO, "Login succeeded. Showing welcome view.");
+                    viewFactory.getMainView().setSchoolName(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
+                    viewFactory.getMainView().setPresentationName(dwoGlobalVars.getCurrentUser().getDisplayName());
                     SelectedView view = initialView;
                     initialView = SelectedView.WELCOME;
                     eventBus.fireEvent(new SwitchViewEvent(view));
@@ -141,12 +143,15 @@ public class BootPanelController {
         switch (role) {
           case TEACHER:
               build = teacherBuilder.build();
-              break;
+              viewFactory.getMainView().setUserRole(role);
+             break;
           case SCHOOLADMIN:
-              build = schoolAdminBuilder.build();
-              break;
+             build = schoolAdminBuilder.build();
+             viewFactory.getMainView().setUserRole(role);
+            break;
           default:
-              build = guestBuilder.build();
+            viewFactory.getMainView().setUserRole(RoleType.ANONYMOUS);
+            build = guestBuilder.build();
         }
         presenterFactory = build.presenterFactory();
         presenterFactory.setStage(stage);

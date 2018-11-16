@@ -16,7 +16,9 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactoryJs;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.modules.JsModulesView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsLogResultsView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.LogResultsPresenter;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
@@ -52,5 +54,6 @@ abstract class BootModule {
 	
 // Binds Views to Presenters
 	@Binds abstract LogResultsPresenter.Display logResultsView(JsLogResultsView view);
+	@Binds abstract ModulesPresenter.Display modulesView(JsModulesView view);
 	
 }
