@@ -6,6 +6,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import com.google.web.bindery.event.shared.EventBus;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditTeacherPresenter;
@@ -51,7 +52,7 @@ public interface PresenterFactory {
     public StudentScoResultPresenter getStudentScoResultPresenter();
     public LogResultsPresenter getLogResultsPresenter();
     public PersonsPresenter getPersonsPresenter();
-    public AddStudentPresenter getAddStudentPresenter();
+    public AddPersonPresenter getAddStudentPresenter();
     public ImportPersonsPresenter getImportPersonsPresenter();
     public EditStudentPresenter getEditStudentPresenter();
     public EditTeacherPresenter getEditTeacherPresenter();

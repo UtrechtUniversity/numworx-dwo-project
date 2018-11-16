@@ -32,12 +32,12 @@ import org.vectomatic.file.File;
 public class PersonsPresenter {
 
     private static final Logger LOG = Logger.getLogger(PersonsPresenter.class.getName());
-    private DwoGlobalVars dwoGlobalVars;
-    private EventBus eventBus;
-    private Display view;
+    DwoGlobalVars dwoGlobalVars;
+    EventBus eventBus;
+    Display view;
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
-    private Map<String, DomUser> personen;
-    private int stage=0;
+    Map<String, DomUser> personen;
+    int stage=0;
 
     /**
      * @return the view
@@ -172,7 +172,7 @@ public class PersonsPresenter {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.ADDPERSON));
     }
 
-   @JsMethod
+    @JsMethod
     public boolean hasImportPersons(){
         return (stage >=2);
     }

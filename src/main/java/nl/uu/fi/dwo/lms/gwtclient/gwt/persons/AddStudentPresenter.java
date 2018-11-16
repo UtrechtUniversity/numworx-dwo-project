@@ -47,7 +47,7 @@ public class AddStudentPresenter extends AddPersonPresenter {
     public void init() {
         view.clear();
         view.setHelp(dwoGlobalVars.buildHelpUrl("#addStudent"));
-        view.init(RoleType.TEACHER.name()); //role of client user.
+        view.init(RoleType.TEACHER); //role of client user.
         view.setEmptyTableMessage();
         updateSchoolClasses();
     }
@@ -140,7 +140,7 @@ public class AddStudentPresenter extends AddPersonPresenter {
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                 eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_User_StudentAdded()));
                 view.clear();
-                view.init(RoleType.STUDENT.name());
+                view.init(RoleType.STUDENT);
                 return null;
             }
 

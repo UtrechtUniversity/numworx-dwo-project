@@ -5,14 +5,15 @@ import java.util.Map;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 /**
  *
  * @author Gert van der Plas
  */
-public class AddPersonPresenter {
+public abstract class AddPersonPresenter {
     
-    protected static final Logger LOG = Logger.getLogger(AddStudentPresenter.class.getName());
+    protected static final Logger LOG = Logger.getLogger(AddPersonPresenter.class.getName());
     protected DwoGlobalVars dwoGlobalVars;
     protected EventBus eventBus;
     protected Display view;
@@ -22,7 +23,7 @@ public class AddPersonPresenter {
 
     public interface Display extends BasicDisplay {
 
-        void init(String role); //Supports "TEACHER", "SCHOOLADMIN"
+        void init(RoleType role); //Supports "TEACHER", "SCHOOLADMIN"
 
         void showSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses);
 
@@ -31,7 +32,7 @@ public class AddPersonPresenter {
         void setLoadingTableMessage();
     }
     
-    public AddPersonPresenter() {
+    AddPersonPresenter() {
     }
 
     /**
@@ -47,5 +48,7 @@ public class AddPersonPresenter {
     public void setView(Display view) {
         this.view = view;
     }
+
+    public abstract void init();
     
 }

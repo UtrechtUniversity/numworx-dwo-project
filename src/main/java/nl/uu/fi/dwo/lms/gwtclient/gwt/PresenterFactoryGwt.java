@@ -15,6 +15,7 @@ import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import javax.inject.Singleton;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditTeacherPresenter;
@@ -307,7 +308,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
      */
     @JsMethod
     @Override
-    public AddStudentPresenter getAddStudentPresenter() {
+    public AddPersonPresenter getAddStudentPresenter() {
         return addStudentPresenter;
     }
 

@@ -27,8 +27,8 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
         // if not a schooladmin, value = SelectedView.ACCOUNT;
       }
       switch (value) {
-        case ORGANISATION:
         default:
+          presenterFactory.getEventBus().fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
         case WELCOME:
           viewFactory.getMainView().showWelcomeView();
           presenterFactory.getWelcomePresenter().init();
@@ -46,7 +46,26 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
         case RESULTS:
           presenterFactory.getEventBus().fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
           break;
-
+        case PERSONS:
+          viewFactory.getMainView().showPersonsView();
+          presenterFactory.getPersonsPresenter().init();
+          break;
+        case ADDPERSON:
+            viewFactory.getMainView().showAddPersonView();
+            presenterFactory.getAddStudentPresenter().init();
+            break;
+        case EDITSTUDENT:
+            viewFactory.getMainView().showEditPersonView();
+            presenterFactory.getEditStudentPresenter().init(switchViewEvent.getUser());
+            break;
+        case EDITTEACHER:
+            viewFactory.getMainView().showEditPersonView();
+            presenterFactory.getEditTeacherPresenter().init(switchViewEvent.getUser());
+            break;
+        case IMPORTPERSONS:
+            viewFactory.getMainView().showImportPersonsView();
+            presenterFactory.getImportPersonsPresenter().init(switchViewEvent.getFile());
+            break;
         case LOGIN:
           viewFactory.getMainView().showLoginView();
           presenterFactory.getLoginPresenter().init();

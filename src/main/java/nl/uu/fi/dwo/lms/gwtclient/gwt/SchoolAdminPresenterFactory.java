@@ -9,11 +9,13 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddStudentPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenterSchoolAdmin;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditTeacherPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.ImportPersonsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsPresenterSchoolAdmin;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.LogResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectStudentResultsPresenter;
@@ -45,6 +47,9 @@ public class SchoolAdminPresenterFactory implements PresenterFactory {
   @Inject MessageDialogWithOKPresenter messageDialogWithOKPresenter;
   @Inject ProgressDialogWithAbortPresenter progressDialogWithAbortPresenter;
   @Inject ModulesPresenter modulesPresenter;
+  @Inject PersonsPresenterSchoolAdmin personsPresenter;
+  @Inject AddPersonPresenterSchoolAdmin addPersonPresenter;
+  @Inject ImportPersonsPresenter importPersonsPresenter;
 
   @Inject SchoolAdminPresenterFactory() {
   }
@@ -141,12 +146,12 @@ public class SchoolAdminPresenterFactory implements PresenterFactory {
 
   @Override @JsMethod
   public PersonsPresenter getPersonsPresenter() {
-    return null;
+    return personsPresenter;
   }
 
   @Override @JsMethod
-  public AddStudentPresenter getAddStudentPresenter() {
-    return null;
+  public AddPersonPresenter getAddStudentPresenter() {
+    return addPersonPresenter;
   }
 
   @Override @JsMethod

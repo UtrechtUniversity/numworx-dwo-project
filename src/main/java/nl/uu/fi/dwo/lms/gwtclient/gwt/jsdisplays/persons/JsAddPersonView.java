@@ -6,6 +6,7 @@ import java.util.Map;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClassCodec;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 /**
  * Mapper to allow java interface implementation.
@@ -25,8 +26,8 @@ public class JsAddPersonView implements AddPersonPresenter.Display{
     }
 
     @Override
-    public void init(String role) {
-        JsAddPersonDisplay.init(role);
+    public void init(RoleType role) {
+        JsAddPersonDisplay.init(role.name());
     }
 
     @Override
