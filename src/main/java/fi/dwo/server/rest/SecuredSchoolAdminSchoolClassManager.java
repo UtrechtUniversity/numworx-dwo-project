@@ -20,6 +20,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import nl.uu.fi.dwo.rest.entities.RestMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
@@ -748,4 +749,62 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         }
         return true;
     }
+
+    /**
+     * Move a student to a different school class.
+     *
+     * @param sc
+     * @param restSubmitStudentToSchoolClass
+     * @return true, throws an exception otherwise.
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/moveStudent")
+    public Boolean MoveStudentToSchoolClass(@Context SecurityContext sc, RestMoveStudentToSchoolClass restMoveStudentToSchoolClass) {
+        if (restMoveStudentToSchoolClass == null) {
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
+        DomStudent domStudent = restMoveStudentToSchoolClass.getDomMoveStudentToSchoolClass().getStudent();
+        DomSchoolClass domToSchoolClass = restMoveStudentToSchoolClass.getDomMoveStudentToSchoolClass().getSchoolClassTo();
+        DomSchoolClass domFromSchoolClass = restMoveStudentToSchoolClass.getDomMoveStudentToSchoolClass().getSchoolClassFrom();
+        PersistentHasRole phr = null;
+        PersistentSchool school = null;
+        PersistentSchoolClass fromClass = null;
+        PersistentSchoolClass toClass = null;
+        PersistentUser student = null;
+        PersistentHasRole shr = null;
+        try {
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
+            student = UserManager.findEntity(MySQLPersistenceId.getNativeId(domStudent));
+            if (student == null) {
+                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find student to add.");
+            }
+            shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
+            fromClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getNativeId(domFromSchoolClass));
+            toClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getNativeId(domToSchoolClass));
+        } catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, "", ex);
+            throw new Dwo2RestException(ex);
+        }
+
+        if (fromClass == null || toClass == null) {
+            LOG.log(Level.WARNING, "Username {0}: Submitted classes do not exist.", new Object[]{sc.getUserPrincipal().getName()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "One or both submitted schoolclasses do not exist.");
+        }
+
+        if ( fromClass.getSchoolID().equals(school.getSchoolID()) && toClass.getSchoolID().equals(school.getSchoolID())) {
+            if (SchoolClassUtilManager.registerStudentForSchoolClass(shr, toClass)) {
+                return SchoolClassUtilManager.removeStudentFromSchoolClass(shr, fromClass);
+            } else {
+                Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.Rest_CanNotAddStudentToClass, "Can not add student to class as requested.");
+                LOG.log(Level.SEVERE, "", e);
+                throw e;
+            }
+        } else {
+            return false;
+        }
+    }
+
+
 }

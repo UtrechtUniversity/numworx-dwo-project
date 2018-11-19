@@ -109,7 +109,7 @@ public class SecuredSchoolAdminSchoolManager {
     @GET
     @Produces({"application/json"})
     @Path("/getStudentsInSchoolList")
-    public static List<DomStudent> getStudentsInSchool(@Context SecurityContext sc) {
+    public List<DomStudent> getStudentsInSchool(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         List<DomStudent> domStudents = null;
@@ -151,7 +151,7 @@ public class SecuredSchoolAdminSchoolManager {
     @GET
     @Produces({"application/json"})
     @Path("/getSchoolAdminList")
-    public static List<DomSchoolAdmin> getSchoolAdminsInSchool(@Context SecurityContext sc) {
+    public List<DomSchoolAdmin> getSchoolAdminsInSchool(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         List<DomSchoolAdmin> domSchoolAdminList = null;
