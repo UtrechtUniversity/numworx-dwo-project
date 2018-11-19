@@ -1013,9 +1013,6 @@ public class Algebra
 		Vector v2 = geefTermen(e2, new Vector());
 		if (v1.size() == 1 && v2.size() == 1)
 		{
-			if (((Expressie) v1.elementAt(0)).equals(e1) && ((Expressie) v2.elementAt(0)).equals(e2)) // als ze hetzelfde blijven: breek oneindige loop
-				return false;
-			
 			e1 = (Expressie) v1.elementAt(0);
 			e2 = (Expressie) v2.elementAt(0);
 			v1 = geefFactorenBeperkt(e1, new Vector());
