@@ -471,8 +471,8 @@
                     <webapps>
                         <webapp>
                             <groupId>nl.uu.fi.dwo</groupId>
-                            <artifactId>DWOServer</artifactId> 
-                            <version>2.2.10</version> 
+                            <artifactId>DWOServer</artifactId>
+                            <version>${DWOServerVersion}</version>
                             <type>war</type>    
                             <asWebapp>true</asWebapp> 
                             <contextPath>/dwo</contextPath>

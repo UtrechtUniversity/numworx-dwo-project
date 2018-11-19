@@ -8,9 +8,13 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
@@ -38,12 +42,13 @@ import org.osgi.util.promise.Success;
 public class EditTeacherPresenter {
 
     private static final Logger LOG = Logger.getLogger(EditTeacherPresenter.class.getName());
-    private DwoGlobalVars dwoGlobalVars;
-    private EventBus eventBus;
+    private final DwoGlobalVars dwoGlobalVars;
+    private final EventBus eventBus;
     private Display view;
-    private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
+    private final PersonsService manager;
     private Map<String, TaggedDomSchoolClass> taggedSchoolClassMap;
     private DomUser user;
+    private final LoggingFailure FAILURE;
 
     public interface Display extends BasicDisplay {
 
@@ -70,9 +75,14 @@ public class EditTeacherPresenter {
         this.view = view;
     }
 
-    public EditTeacherPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject EditTeacherPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, PersonsService m) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+        manager = m;
+        FAILURE = new LoggingFailure(LOG, anEventBus);
+    }
+    public EditTeacherPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+      this(anEventBus, aDwoGlobalVars, new PersonsServiceTeacher());
     }
 
     public void init(DomUser aUser) {
@@ -87,14 +97,11 @@ public class EditTeacherPresenter {
     }
 
     public void initView(DomUser aUser) {
-        Promise p = Promises.resolved(null);
 
         //fetch schoolclasses
-        p = p.then((resolved) -> {
-            return manager.getTeachersSchoolClasses();
-
-        }).then((resolved) -> {
-            List<DomSchoolClass> classList = (List<DomSchoolClass>) resolved.getValue();
+        manager.getTeachersSchoolClasses()
+        .then((resolved) -> {
+            List<DomSchoolClass> classList = resolved.getValue();
             taggedSchoolClassMap = new HashMap<String, TaggedDomSchoolClass>(classList.size());
             classList.forEach((v) -> taggedSchoolClassMap.put(v.getId().getIdString(), new TaggedDomSchoolClass(v)));
             DomTeacher teacher = new DomTeacher(aUser);
@@ -105,12 +112,12 @@ public class EditTeacherPresenter {
             rest.setRestContext(ctx);
             return manager.getSharedTeacherClasses(rest);
         }).then((resolved) -> {
-            List<DomSchoolClassId> studentClassList = (List<DomSchoolClassId>) resolved.getValue();
+            List<DomSchoolClassId> studentClassList = resolved.getValue();
             studentClassList.forEach((v) -> {
                 taggedSchoolClassMap.get(v.getId().getIdString()).setTag(true);
             });
             view.setSchoolClasses(taggedSchoolClassMap);
-            return Promises.resolved(null);
+            return null;
         }).then(null, (failure) -> {
             eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
         });

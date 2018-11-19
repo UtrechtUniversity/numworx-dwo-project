@@ -1,25 +1,26 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import com.google.web.bindery.event.shared.EventBus;
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
-import fi.dwo.gwt.lib.rest.ui.DialogEvent;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsServiceTeacher;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
 
@@ -31,12 +32,13 @@ import org.osgi.util.promise.Success;
 public class AddTeacherToSchoolclassPresenter {
 
     private static final Logger LOG = Logger.getLogger(AddTeacherToSchoolclassPresenter.class.getName());
-    private DwoGlobalVars dwoGlobalVars;
-    private EventBus eventBus;
-    private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
+    private final DwoGlobalVars dwoGlobalVars;
+    private final EventBus eventBus;
+    private final PersonsService manager;
+    private final LoggingFailure FAILURE;
     private Display view;
     private DomSchoolClass schoolClass;
-    private Map<String, DomTeacher> teachers = new HashMap();
+    private Map<String, DomTeacher> teachers = new HashMap<>();
 
     public interface Display extends BasicDisplay {
         void setSchoolClass(DomSchoolClass schoolClass);
@@ -47,9 +49,14 @@ public class AddTeacherToSchoolclassPresenter {
         void setLoadingTableMessage();
     }
 
-    public AddTeacherToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject AddTeacherToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, PersonsService m) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+        manager = m;
+        FAILURE = new LoggingFailure(LOG, anEventBus);
+    }
+    public AddTeacherToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+      this(anEventBus, aDwoGlobalVars, new PersonsServiceTeacher());
     }
 
     public void init(DomSchoolClass aSchoolClass) {
@@ -87,22 +94,7 @@ public class AddTeacherToSchoolclassPresenter {
                 view.showTeachers(teachers);
                 return null;
             }
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        }
-        );
+        }, FAILURE);
     }
 
     /**
@@ -130,19 +122,6 @@ public class AddTeacherToSchoolclassPresenter {
                 return null;
             }
         },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        });
+                FAILURE);
     }
 }

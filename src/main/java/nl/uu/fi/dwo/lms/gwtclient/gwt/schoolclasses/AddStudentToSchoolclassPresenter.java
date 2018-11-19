@@ -9,9 +9,15 @@ import java.util.Map;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsServiceTeacher;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
@@ -31,12 +37,13 @@ import org.osgi.util.promise.Success;
 public class AddStudentToSchoolclassPresenter {
 
     private static final Logger LOG = Logger.getLogger(AddStudentToSchoolclassPresenter.class.getName());
-    private DwoGlobalVars dwoGlobalVars;
-    private EventBus eventBus;
-    private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
+    private final DwoGlobalVars dwoGlobalVars;
+    private final EventBus eventBus;
+    private final PersonsService manager;
+    private final LoggingFailure FAILURE;
     private Display view;
     private DomSchoolClass schoolClass;
-    private Map<String, DomStudent> students = new HashMap();
+    private Map<String, DomStudent> students = new HashMap<>();
     private List<DomStudent> studentsInClass;
 
     public interface Display extends BasicDisplay {
@@ -50,9 +57,15 @@ public class AddStudentToSchoolclassPresenter {
         void setSchoolClass(DomSchoolClass schoolClass);
     }
 
-    public AddStudentToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject AddStudentToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, PersonsService m) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;        
+        manager = m;
+        FAILURE = new LoggingFailure(LOG, anEventBus);
+        
+    }
+    public AddStudentToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+      this(anEventBus, aDwoGlobalVars, new PersonsServiceTeacher());
     }
 
     public void init(DomSchoolClass aSchoolClass) {
@@ -90,21 +103,7 @@ public class AddStudentToSchoolclassPresenter {
                 return null;
             }
 
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        });
+        },FAILURE);
     }
 
     /**
@@ -163,20 +162,6 @@ public class AddStudentToSchoolclassPresenter {
                 updateViewData();
                 return null;
             }
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        });
+        },FAILURE);
     }
 }

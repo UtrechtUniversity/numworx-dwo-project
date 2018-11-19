@@ -47,10 +47,17 @@ public class SchoolAdminPresenterFactory implements PresenterFactory {
   @Inject MessageDialogWithOKPresenter messageDialogWithOKPresenter;
   @Inject ProgressDialogWithAbortPresenter progressDialogWithAbortPresenter;
   @Inject ModulesPresenter modulesPresenter;
+
   @Inject PersonsPresenterSchoolAdmin personsPresenter;
   @Inject AddPersonPresenterSchoolAdmin addPersonPresenter;
   @Inject EditStudentPresenter editStudentPresenter;
   @Inject ImportPersonsPresenter importPersonsPresenter;
+  @Inject SchoolclassesPresenter schoolclassesPresenter;
+  @Inject EditSchoolclassPresenter editSchoolclassPresenter;
+  @Inject AddTeacherToSchoolclassPresenter addTeacherToSchoolclassPresenter;
+  @Inject AddStudentToSchoolclassPresenter addStudentToSchoolclassPresenter;
+  @Inject CopyOrMoveStudentToSchoolclassPresenter copyOrMoveStudentToSchoolclassPresenter;
+  @Inject EditTeacherPresenter editTeacherPresenter;
 
   @Inject SchoolAdminPresenterFactory() {
   }
@@ -87,27 +94,27 @@ public class SchoolAdminPresenterFactory implements PresenterFactory {
 
   @Override @JsMethod
   public SchoolclassesPresenter getSchoolclassesPresenter() {
-    return null;
+    return schoolclassesPresenter;
   }
 
   @Override @JsMethod
   public EditSchoolclassPresenter getEditSchoolclassPresenter() {
-    return null;
+    return editSchoolclassPresenter;
   }
 
   @Override @JsMethod
   public AddStudentToSchoolclassPresenter getAddStudentToSchoolclassPresenter() {
-    return null;
+    return addStudentToSchoolclassPresenter;
   }
 
   @Override @JsMethod
   public CopyOrMoveStudentToSchoolclassPresenter getCopyOrMoveStudentToSchoolclassPresenter() {
-    return null;
+    return copyOrMoveStudentToSchoolclassPresenter;
   }
 
   @Override @JsMethod
   public AddTeacherToSchoolclassPresenter getAddTeacherToSchoolclassPresenter() {
-    return null;
+    return addTeacherToSchoolclassPresenter;
   }
 
   @Override @JsMethod
@@ -167,7 +174,7 @@ public class SchoolAdminPresenterFactory implements PresenterFactory {
 
   @Override @JsMethod
   public EditTeacherPresenter getEditTeacherPresenter() {
-    return null;
+    return editTeacherPresenter;
   }
 
   @Override @JsMethod
@@ -192,9 +199,21 @@ public class SchoolAdminPresenterFactory implements PresenterFactory {
 
   @Override @Inject
   public void bindViewFactory(ViewFactory viewFactory) {
-    mainPresenter.setView(viewFactory.getMainView());
-    loginPresenter.setView(viewFactory.getLoginView());
     accountPresenter.setView(viewFactory.getAccountView());
+    addPersonPresenter.setView(viewFactory.getAddPersonView());
+    addStudentToSchoolclassPresenter.setView(viewFactory.getAddStudentToSchoolclassView());
+    addTeacherToSchoolclassPresenter.setView(viewFactory.getAddTeacherToSchoolclassView());
+    copyOrMoveStudentToSchoolclassPresenter.setView(viewFactory.getCopyOrMoveStudentToSchoolclassView());
+    editSchoolclassPresenter.setView(viewFactory.getEditSchoolclassView());
+    editStudentPresenter.setView(viewFactory.getEditStudentView());
+    editTeacherPresenter.setView(viewFactory.getEditTeacherView());
+    importPersonsPresenter.setView(viewFactory.getImportPersonsView());
+    loginPresenter.setView(viewFactory.getLoginView());
+    mainPresenter.setView(viewFactory.getMainView());
+    personsPresenter.setView(viewFactory.getPersonsView());
+    schoolclassesPresenter.setView(viewFactory.getSchoolclassesView());
+    welcomePresenter.setView(viewFactory.getWelcomeView());
+        
     alertDialogWithConfirmCancelPresenter.setView(viewFactory.getAlertDialogWithConfirmCancelView());
     alertDialogWithOKPresenter.setView(viewFactory.getAlertDialogWithOKView());
     messageDialogWithOKPresenter.setView(viewFactory.getMessageDialogWithOKView());

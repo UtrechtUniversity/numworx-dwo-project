@@ -8,13 +8,34 @@ import org.osgi.util.promise.Promise;
 
 import dagger.Reusable;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredSchoolAdminSchoolClassManager;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredSchoolAdminSchoolManager;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
+import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.entities.RestStudent;
+import nl.uu.fi.dwo.rest.entities.RestTeacher;
 
 @Reusable
 public class PersonsServiceSchoolAdmin extends PersonsService {
+
+  @Override
+  public Promise<Boolean> submitSchoolClass(DomSchoolClassFull schoolClass) {
+    return manager.submitSchoolClass(schoolClass);
+  }
 
   @Override
   public Promise<List<DomSchoolClass>> getTeachersSchoolClasses() {
@@ -27,9 +48,14 @@ public class PersonsServiceSchoolAdmin extends PersonsService {
   }
 
   final SecuredSchoolAdminSchoolClassManager manager;
+  final SecuredSchoolAdminSchoolManager manager2;
+  final DomContext context;
   
-  @Inject PersonsServiceSchoolAdmin() {
-    manager = new SecuredSchoolAdminSchoolClassManager();  
+  @Inject PersonsServiceSchoolAdmin(DwoGlobalVars vars) {
+    manager = new SecuredSchoolAdminSchoolClassManager();
+    manager2 = new SecuredSchoolAdminSchoolManager();
+    context = new DomContext();
+    context.setDomHasRole(vars.getActiveSchoolRoleAndClass().getHasRole());
   }
 
   @Override
@@ -41,5 +67,90 @@ public class PersonsServiceSchoolAdmin extends PersonsService {
   public Promise<List<DomTeacher>> getTeachersInSchool() {
     return manager.getTeachersInSchool();
   }
+  
+  @Override
+  public Promise<DomSchoolClassFull> getFullSchoolClass(DomSchoolClass aSchoolClass) {
+    return manager.getFullSchoolClass(aSchoolClass);
+  }
+
+  @Override
+  public Promise<Boolean> updateSchoolClass(DomSchoolClassFull fullSchoolClass) {
+    return manager.updateSchoolClass(fullSchoolClass);
+  }
+
+  @Override
+  public Promise<Boolean> removeSchoolClass(DomSchoolClass schoolClass) {
+    return manager.removeSchoolClass(schoolClass);
+  }
+
+  @Override
+  public Promise<List<DomTeacher>> getTeachersInSchoolClass(DomSchoolClass schoolClass) {
+    return manager.getTeachersInSchoolClass(schoolClass);
+  }
+
+  @Override
+  public Promise<List<DomStudent>> getStudentsInSchoolClass(DomSchoolClass schoolClass) {
+    return manager.getStudentsInSchoolClass(schoolClass);
+  }
+  @Override
+  public Promise<Boolean> submitTeacherToSchoolClass(DomSubmitTeacherToSchoolClass submit) {
+    return manager.submitTeacherToSchoolClass(submit);
+  }
+
+  public Promise<List<DomSchoolClassId>> getSharedTeacherClasses(DomTeacher rest) {
+    return manager2.getTeachersSchoolClasses(context, rest);
+  }
+  
+  @Override
+  @Deprecated
+  public Promise<List<DomSchoolClassId>> getSharedTeacherClasses(RestTeacher rest) {
+    return getSharedTeacherClasses(rest.getDomTeacher());
+  }
+
+  @Override
+  public Promise<Boolean> removeTeacherFromSchoolClass(DomRemoveTeacherFromSchoolClass data) {
+    return manager.removeTeacherFromSchoolClass(data);
+  }
+
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  @Override @Deprecated
+  public Promise<List<DomSchoolClassId>> getTeachersClassesOfStudent(RestStudent rest) {
+    return manager2.getStudentsSchoolClasses(context, rest.getDomStudent()).map(v -> (List)v );
+  }
+
+  @Override @Deprecated
+  public Promise<DomSingleSchoolStudent> getSingleSchoolStudent(
+      RestGetSingleSchoolStudent restData) {
+    return getSingleSchoolStudent(restData.getDomGetSingleSchoolStudent());
+  }
+  
+  public Promise<DomSingleSchoolStudent> getSingleSchoolStudent(DomGetSingleSchoolStudent student) {
+    return manager2.getSingleSchoolStudent(context, student);
+  }
+  
+  @Override
+  public Promise<Boolean> removeStudentFromSchoolClass(DomRemoveStudentFromSchoolClass data) {
+    return manager.removeStudentFromSchoolClass(data);
+  }
+
+  @Override
+  public Promise<Boolean> submitStudentToSchoolClass(DomSubmitStudentToSchoolClass data) {
+    return manager.submitStudentToSchoolClass(data);
+  }
+
+  @Override @Deprecated
+  public Promise<Boolean> updateSingleSchoolStudent(RestSingleSchoolStudent rest) {
+    return updateSingleSchoolStudent(rest.getDomSingleSchoolStudent());
+  }
+
+  public Promise<Boolean> updateSingleSchoolStudent(DomSingleSchoolStudent student) {
+    return manager2.updateSingleSchoolStudent(context, student);
+  }
+
+  @Override
+  public Promise<Boolean> moveStudentToSchoolClass(DomMoveStudentToSchoolClass submit) {
+    return manager.moveStudentToSchoolClass(submit);
+  }
+
   
 }

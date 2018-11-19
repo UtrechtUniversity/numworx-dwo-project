@@ -10,10 +10,15 @@ import java.util.Map;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsServiceTeacher;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
@@ -29,6 +34,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -45,11 +51,12 @@ import org.osgi.util.promise.Success;
 public class EditSchoolclassPresenter {
 
     private static final Logger LOG = Logger.getLogger(EditSchoolclassPresenter.class.getName());
-    private DwoGlobalVars dwoGlobalVars;
-    private EventBus eventBus;
-    private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
+    private final DwoGlobalVars dwoGlobalVars;
+    private final EventBus eventBus;
+    private final PersonsService manager;
     private Display view;
     private DomSchoolClassFull schoolClass;
+    final RoleType role;
 
     public interface Display extends BasicDisplay {
 
@@ -76,9 +83,15 @@ public class EditSchoolclassPresenter {
         void showModules(List<DomCourse> modules);
     }
 
-    public EditSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject EditSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, PersonsService m) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+        manager = m;
+        role = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
+
+    }
+    public EditSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+      this(anEventBus, aDwoGlobalVars, new PersonsServiceTeacher());
     }
 
     public void init(DomSchoolClass aSchoolClass) {
@@ -311,6 +324,7 @@ public class EditSchoolclassPresenter {
 
     @JsMethod
     public void showModules() {
+      if (role != RoleType.TEACHER) return;
         Promise<DomCoursesOfSchoolClass4Teacher> promise;
         DomCoursesOfSchoolClass4Teacher result;
         view.setEmptyModulesTableMessage();
@@ -385,6 +399,7 @@ public class EditSchoolclassPresenter {
 
     @JsMethod
     public void editModules() {
+      if (role == RoleType.TEACHER)
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.EDITCOURSESOFSCHOOLCLASS, schoolClass));
     }
 }

@@ -8,10 +8,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsServiceTeacher;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
@@ -31,9 +37,10 @@ import org.osgi.util.promise.Success;
 public class SchoolclassesPresenter {
 
     private static final Logger LOG = Logger.getLogger(SchoolclassesPresenter.class.getName());
-    private DwoGlobalVars dwoGlobalVars;
-    private EventBus eventBus;
-    private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
+    private final DwoGlobalVars dwoGlobalVars;
+    private final EventBus eventBus;
+    private final PersonsService manager;
+    private final LoggingFailure FAILURE;
 
     private Map<String, DomSchoolClass> schoolClassMap;
     private Map<String, ClassItem> viewData;
@@ -87,11 +94,17 @@ public class SchoolclassesPresenter {
         }
     }
 
-    public SchoolclassesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject SchoolclassesPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, PersonsService m) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
+        manager = m;
+        FAILURE = new LoggingFailure(LOG, anEventBus);
     }
-
+    
+    public SchoolclassesPresenter(EventBus bus, DwoGlobalVars vars) {
+      this(bus, vars, new PersonsServiceTeacher());
+    }
+ 
     public void init() {
         view.clear();
         view.init();
@@ -131,21 +144,7 @@ public class SchoolclassesPresenter {
                 return null;
             }
 
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        })
+        }, FAILURE)
         .recover((p) -> { view.setEmptyTableMessage(); return null; });
 
         ;
@@ -175,21 +174,7 @@ public class SchoolclassesPresenter {
                     throw ex;
                 }
             }
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        });
+        }, FAILURE );
     }
 
     @JsMethod
