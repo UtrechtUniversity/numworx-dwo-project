@@ -638,7 +638,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 			processingDWOCheck = false;
 		}
 	
-		if (isCorrect() == null || !isCorrect()) // halfgoed of fout
+		if (fire && (isCorrect() == null || !isCorrect())) // halfgoed of fout, alleen als fire true (isChanged() kan onverwacht true zijn ivm ggbLog() en timing 
 			verhoogErrorCount();
 
 		if (feedback && nakijken && fire)
