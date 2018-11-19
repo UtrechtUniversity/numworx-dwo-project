@@ -291,13 +291,4 @@ public class SecuredSchoolAdminSchoolClassManager {
         service.getTeachersClassesOfStudent(restData, (callBack));
     }            
 
-    public Promise<List<DomSchoolClassId>> getSharedTeacherClasses(RestTeacher rest) {
-        PromiseCallback<List<DomSchoolClassId>> defer = new PromiseCallback<List<DomSchoolClassId>>();
-        this.getSharedTeacherClasses(rest, defer);
-        return defer.getPromise();
-    }
-        private void getSharedTeacherClasses(RestTeacher restData, MethodCallback<List<DomSchoolClassId>> callBack) {
-        service.getSharedTeacherClasses(restData, (callBack));
-    }            
-
 }

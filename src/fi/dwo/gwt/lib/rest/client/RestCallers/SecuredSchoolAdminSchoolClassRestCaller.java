@@ -1,7 +1,5 @@
 package fi.dwo.gwt.lib.rest.client.RestCallers;
 
-//import fi.dwo.gwt.lib.rest.CallManagers.Callback; NOTA BENE Wim: Gebruik MethodCallback niet Callback bij een RestService
-import fi.dwo.gwt.lib.rest.CallManagers.Callback;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -12,7 +10,6 @@ import org.fusesource.restygwt.client.RestService;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import java.util.List;
 import javax.ws.rs.GET;
-import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
@@ -23,13 +20,6 @@ import nl.uu.fi.dwo.rest.entities.RestMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
-import nl.uu.fi.dwo.rest.entities.RestSchoolClassAndProfile;
-import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
-import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfileNew;
-import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewAccessKey;
-import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewFrom;
-import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewTo;
-import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewType;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
@@ -119,7 +109,4 @@ public interface SecuredSchoolAdminSchoolClassRestCaller extends RestService {
     @Path("/secure/schooladmin/schoolclass/getTeachersClassesOfStudent")
     public void getTeachersClassesOfStudent(RestStudent submit, MethodCallback<List<DomSchoolClassId>> callback);
 
-    @PUT
-    @Path("/secure/schooladmin/schoolclass/getSharedTeacherClasses")
-    public void getSharedTeacherClasses(RestTeacher submit, MethodCallback<List<DomSchoolClassId>> callback);
 }
