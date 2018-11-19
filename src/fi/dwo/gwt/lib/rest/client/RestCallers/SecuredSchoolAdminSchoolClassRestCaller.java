@@ -97,16 +97,4 @@ public interface SecuredSchoolAdminSchoolClassRestCaller extends RestService {
     @Path("/secure/schooladmin/schoolclass/submitSingleSchoolStudent")
     public void submitSingleSchoolStudent(RestNewSingleSchoolStudent schoolClass, MethodCallback<Boolean> callBack);
 
-    @PUT
-    @Path("/secure/schooladmin/schoolclass/getSingleSchoolStudent")
-    public void getSingleSchoolStudent(RestGetSingleSchoolStudent singleSchoolStudent, MethodCallback<DomSingleSchoolStudent> callback);
-
-    @PUT
-    @Path("/secure/schooladmin/schoolclass/updateSingleSchoolStudent")
-    public void updateSingleSchoolStudent(RestSingleSchoolStudent submit, MethodCallback<Boolean> callback);
-
-    @PUT
-    @Path("/secure/schooladmin/schoolclass/getTeachersClassesOfStudent")
-    public void getTeachersClassesOfStudent(RestStudent submit, MethodCallback<List<DomSchoolClassId>> callback);
-
 }

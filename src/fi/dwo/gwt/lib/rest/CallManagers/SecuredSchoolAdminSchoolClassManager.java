@@ -259,36 +259,5 @@ public class SecuredSchoolAdminSchoolClassManager {
     private void submitSingleSchoolStudent(RestNewSingleSchoolStudent restData, MethodCallback<Boolean> callBack) {
         service.submitSingleSchoolStudent(restData, (callBack));
     }
-
-    public Promise<DomSingleSchoolStudent> getSingleSchoolStudent(RestGetSingleSchoolStudent restData) {
-        PromiseCallback<DomSingleSchoolStudent> defer = new PromiseCallback<DomSingleSchoolStudent>();
-        this.getSingleSchoolStudent(restData, defer);
-        return defer.getPromise();
-    }
-
-    public void getSingleSchoolStudent(RestGetSingleSchoolStudent singleSchoolStudent, MethodCallback<DomSingleSchoolStudent> callBack) {
-        service.getSingleSchoolStudent(singleSchoolStudent, callBack);
-    }
-
-    public Promise<Boolean> updateSingleSchoolStudent(RestSingleSchoolStudent restData) {        
-        PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
-        this.updateSingleSchoolStudent(restData, defer);
-        return defer.getPromise();
-    }
-
-    private void updateSingleSchoolStudent(RestSingleSchoolStudent restData, MethodCallback<Boolean> callBack) {
-        service.updateSingleSchoolStudent(restData, (callBack));
-    }
     
- 
-    public Promise<List<DomSchoolClassId>> getTeachersClassesOfStudent(RestStudent rest) {
-        PromiseCallback<List<DomSchoolClassId>> defer = new PromiseCallback<List<DomSchoolClassId>>();
-        this.getTeachersClassesOfStudent(rest, defer);
-        return defer.getPromise();
-    }
-    
-    private void getTeachersClassesOfStudent(RestStudent restData, MethodCallback<List<DomSchoolClassId>> callBack) {
-        service.getTeachersClassesOfStudent(restData, (callBack));
-    }            
-
 }
