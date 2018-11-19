@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsServiceTeacher;
@@ -57,6 +58,7 @@ public class EditSchoolclassPresenter {
     private Display view;
     private DomSchoolClassFull schoolClass;
     final RoleType role;
+    final Failure FAILURE;
 
     public interface Display extends BasicDisplay {
 
@@ -88,6 +90,7 @@ public class EditSchoolclassPresenter {
         dwoGlobalVars = aDwoGlobalVars;
         manager = m;
         role = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
+        FAILURE = new LoggingFailure(LOG, anEventBus);
 
     }
     public EditSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
@@ -118,21 +121,7 @@ public class EditSchoolclassPresenter {
                 return null;
             }
 
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        });
+        }, FAILURE);
     }
 
     /**
@@ -173,21 +162,7 @@ public class EditSchoolclassPresenter {
                     throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Rest request failed for unknown reasons.");
                 }
             }
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        });
+        }, FAILURE);
     }
 
     @JsMethod
@@ -205,20 +180,7 @@ public class EditSchoolclassPresenter {
                 }
                 return null;
             }
-        }, new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        }
+        }, FAILURE
         );
 
         eventBus.fireEvent(new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, p));
@@ -242,21 +204,7 @@ public class EditSchoolclassPresenter {
                 return null;
             }
 
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-                    //throw directly
-                }
-            }
-        });
+        }, FAILURE);
     }
 
     @JsMethod
@@ -327,7 +275,7 @@ public class EditSchoolclassPresenter {
       if (role != RoleType.TEACHER) return;
         Promise<DomCoursesOfSchoolClass4Teacher> promise;
         DomCoursesOfSchoolClass4Teacher result;
-        view.setEmptyModulesTableMessage();
+        view.setLoadingModulesTableMessage();
         promise = this.getModules(schoolClass);
         // onSuccess update view
         promise.then(new Success<DomCoursesOfSchoolClass4Teacher, Void>() {
