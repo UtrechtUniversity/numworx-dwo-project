@@ -160,12 +160,6 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>com.fredhat.gwt.xmlrpc</groupId>
-			<artifactId>XmlRpcGWT</artifactId>
-			<version>1.1.1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
@@ -205,17 +199,6 @@
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
 			<artifactId>formule</artifactId>
 			<version>0.1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.inject</groupId>
-			<artifactId>javax.inject</artifactId>
-			<version>1</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.inject</groupId>
-			<artifactId>javax.inject</artifactId>
-			<version>1</version>
-			<classifier>sources</classifier>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx.gwtpatch</groupId>
