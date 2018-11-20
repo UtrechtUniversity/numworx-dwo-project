@@ -260,7 +260,32 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	}
 
 	public void insert(String text) {
-		editor.insert(text);
+		if("$m@".equals(text)) editor.macht();
+		else if ("$w@".equals(text)) editor.wortel();
+		else if ("$b$n@@".equals(text)) editor.breuk();
+		else if ("$m2@".equals(text)) editor.kwadraat();
+		else if ("$W$n@@".equals(text)) editor.ndewortel();
+		else if ("$h@".equals(text)) editor.haakjes();
+		else if ("$i$n$k$l@@@@".equals(text)) editor.integraal();
+		else if ("$q$n$k$l@@@@".equals(text)) editor.prv();
+		else if ("$L$n@@".equals(text)) editor.ndelog();
+		else if ("$r@".equals(text)) editor.abs();
+		else if ("$s@".equals(text)) editor.subscript();
+		else if ("$y$n@@".equals(text)) editor.bin();
+		else if ("$d$n@@".equals(text)) editor.diff();
+		else if ("$D$n@@".equals(text)) editor.diff_partial();
+		else if ("$T$n$k$l@@@@".equals(text)) editor.limiet0();
+		else if ("$T$n$k$l@@@@".equals(text)) editor.limiet1();
+		else if ("$T$n$k$l@@@@".equals(text)) editor.limiet2();
+		else if ("$P$n@@".equals(text)) editor.primitieve();
+		else if ("$c@".equals(text)) editor.conjug();
+		else if ("$S$n$k$l@@@@".equals(text)) editor.sigma();
+		else if ("$Q@".equals(text)) editor.stelsel();
+		else if ("$z@".equals(text)) editor.vectornotatie();
+		else if ("$Y@".equals(text)) editor.vector();
+		else if ("$M@".equals(text)) editor.matrix();
+		else 
+			editor.insert(text);
 	}
 
 	public void tab() {
