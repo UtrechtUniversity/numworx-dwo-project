@@ -35,11 +35,13 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 public abstract class AddPersonPresenter {
     
     private static final Logger LOG = Logger.getLogger(AddPersonPresenter.class.getName());
+    static final TaggedDomSchoolClass NULL = new TaggedDomSchoolClass();
     protected DwoGlobalVars dwoGlobalVars;
     protected EventBus eventBus;
     protected Display view;
     protected PersonsService manager;
     protected LoggingFailure FAILURE;
+    protected RoleType role;
     protected Map<String, TaggedDomSchoolClass> taggedSchoolClasses;
 
     public interface Display extends BasicDisplay {
@@ -133,7 +135,7 @@ public abstract class AddPersonPresenter {
          // MD5 password
                 student.setPassword(MD5.md5(password));
                 student.setUserName(username);
-                DomSchoolClass schoolClass = taggedSchoolClasses.get(schoolClassId).getSchoolClass();
+                DomSchoolClass schoolClass = taggedSchoolClasses.getOrDefault(schoolClassId, NULL).getSchoolClass();
                 submitSingleSchoolStudent(schoolClass, student);
             }
 
@@ -149,7 +151,7 @@ public abstract class AddPersonPresenter {
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                 eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_User_StudentAdded()));
                 view.clear();
-                view.init(RoleType.STUDENT);
+                view.init(role);
                 return null;
             }
     

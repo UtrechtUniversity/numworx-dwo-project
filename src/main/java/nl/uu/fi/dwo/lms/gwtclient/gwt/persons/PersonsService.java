@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
@@ -99,6 +100,9 @@ public abstract class PersonsService {
   public Promise<Boolean> removeTeacherFromSchoolClass(DomRemoveTeacherFromSchoolClass data) {
     // TODO Auto-generated method stub
     return null;
+  }
+  public Promise<Boolean> submitTeacher(DomUserFull newUser) {
+    return Promises.failed(new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "no implementation of getModules"));
   }
 
 }

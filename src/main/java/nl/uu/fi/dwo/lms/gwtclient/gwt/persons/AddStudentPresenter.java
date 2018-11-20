@@ -30,6 +30,7 @@ public class AddStudentPresenter extends AddPersonPresenter {
         dwoGlobalVars = aDwoGlobalVars;
         FAILURE = new LoggingFailure(LOG, anEventBus);
         manager = new PersonsServiceTeacher();
+        role = RoleType.TEACHER;
     }
 
 }

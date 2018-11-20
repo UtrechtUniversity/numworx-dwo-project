@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
@@ -150,6 +151,11 @@ public class PersonsServiceSchoolAdmin extends PersonsService {
   @Override
   public Promise<Boolean> moveStudentToSchoolClass(DomMoveStudentToSchoolClass submit) {
     return manager.moveStudentToSchoolClass(submit);
+  }
+
+  @Override
+  public Promise<Boolean> submitTeacher(DomUserFull newUser) {
+    return manager2.submitTeacher(context, newUser);
   }
 
   
