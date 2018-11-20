@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import com.google.web.bindery.event.shared.EventBus;
 
+import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -28,6 +29,13 @@ public class AddPersonPresenterSchoolAdmin extends AddPersonPresenter {
     view.init(RoleType.SCHOOLADMIN); //role of client user.
     view.setEmptyTableMessage();
     updateSchoolClasses();
+  }
+
+  @JsMethod
+  public void submitTeacher(String schoolClassId, String username, String givenName, String insertion,
+      String familyName, String eMail, String password) {
+    
+    
   }
 
 }

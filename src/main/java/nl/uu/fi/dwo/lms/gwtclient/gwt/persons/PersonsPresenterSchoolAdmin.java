@@ -3,28 +3,20 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.persons;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
-import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Success;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.web.bindery.event.shared.EventBus;
 
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredSchoolAdminSchoolClassManager;
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class PersonsPresenterSchoolAdmin extends PersonsPresenter {
   private static final Logger LOG = Logger.getLogger(PersonsPresenterSchoolAdmin.class.getName());
