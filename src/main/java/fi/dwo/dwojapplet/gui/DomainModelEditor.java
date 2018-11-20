@@ -142,6 +142,7 @@ public class DomainModelEditor extends JPanel implements ActionListener
 	    for(int j = 0; j < maxCategories; j++)
 	    {	categoryTextFields[j] = new JTextField(columnLabel + " "  + (j+1));
 	    	categoryTextFields[j].setPreferredSize(TEXTFIELD_SIZE);
+	    	new ToolTipEditor(categoryTextFields[j]);
 	    }
 	    for(int i=0 ; i<maxObjectives ; i++)
 	    {	objectiveLabels[i] = new JLabel(rowLabel + " " +(i+1));
@@ -149,6 +150,7 @@ public class DomainModelEditor extends JPanel implements ActionListener
 	   		for(int j = 0; j<maxCategories; j++)
 	        {	objectiveTextFields[j][i] = new JTextField("");
 	        	objectiveTextFields[j][i].setPreferredSize(TEXTFIELD_SIZE);
+	        	new ToolTipEditor(objectiveTextFields[j][i]);
 	        }
 	    }
 	    modelTextField = new JTextField();

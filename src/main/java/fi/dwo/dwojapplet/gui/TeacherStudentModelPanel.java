@@ -250,7 +250,6 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         this.add(Box.createVerticalStrut(15));
         textArea = new DomainModelEditor();
         textArea.setEditable(false);
-        textArea.setBackground(Color.LIGHT_GRAY);
         scrollPane = new JScrollPane(textArea);
 //        this.add(scrollPane);
 
