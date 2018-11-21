@@ -273,14 +273,14 @@ public class TinCanAPI extends SCORM_guest implements Scorm2004IF, CBookEventLis
 	}
 	
 
-	@Override
-	public Promise<String> Initialize() {
-	  regis = DWOplayer.clientfactory.getEventBus().addHandler(CBookEvent.TYPE, this);
-	  return super.Initialize();
-	}
+//	@Override
+//	public Promise<String> Initialize() {
+//	  return super.Initialize();
+//	}
 
 	@Override
 	public void Initialize(AsyncCallback<Void> callback) {
+		regis = DWOplayer.clientfactory.getEventBus().addHandler(CBookEvent.TYPE, this);
 		this.callback = callback;
 		if(true)
 			Initialize0(this);
