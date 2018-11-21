@@ -28,6 +28,7 @@
             authoring environment
 		<a href="/en/teacher/">SE</a>,
 		<a href="/ho/en/teacher/">HE</a> (java applet)</li>
+	<li>De auteursomgeving als <a href='https://www.numworx.nl/help/downloads/'>applicatie</a> downloaden</li>
     </ul>
 </body>
 </html>
