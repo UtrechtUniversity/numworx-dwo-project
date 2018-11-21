@@ -26,7 +26,6 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
 			<artifactId>DWOServer</artifactId>
-			<version>${DWOServerVersion}</version>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>
@@ -425,7 +424,6 @@
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testebserver</aws.environmentName>
-		<DWOServerVersion>2.3.0</DWOServerVersion>
 	</properties>
 	<scm>
 		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</developerConnection>
