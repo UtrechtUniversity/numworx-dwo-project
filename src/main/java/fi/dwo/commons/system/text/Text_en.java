@@ -510,6 +510,9 @@ public class Text_en extends ListResourceBundle {
 			{"OBJ_leerdoel", "Objective"},
             {"OBJ_categorie", "Category"},
 
+            { TextMapper.GUIMNU_STUDENTMODELS, "Learning domains" },
+            { TextMapper.GUIC_STUDENTMODELS_ADD, "New model" },
+
 	};
 
 	public Text_en() {
