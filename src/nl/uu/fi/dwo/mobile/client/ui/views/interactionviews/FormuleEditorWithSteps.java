@@ -42,6 +42,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -108,6 +109,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	private FormuleViewer prefixViewer;
 	protected FormuleViewer latest_answer_viewer;
 	private ScrollPanel sp = null;
+	private ScrollPanel stelselScrollPanel = null;
 	protected AntwoordVakChecker avChecker = null;
 	
 	private LayoutPanel contentPanel = null;
@@ -734,7 +736,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{	
 			contentPanel.add(feedbackPanel);
 			contentPanel.setWidgetLeftRight(feedbackPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
-			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + fv.getHeightWithImage(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
+			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + fv.getHeightWithImage(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX);
 		}
 		nagekeken = true;
 		correct = Boolean.TRUE;
@@ -806,7 +808,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			feedbackPanel.removeFromParent();
 			contentPanel.add(feedbackPanel);
 			contentPanel.setWidgetLeftRight(feedbackPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
-			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY +  fv.getHeightWithImage(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
+			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY +  fv.getHeightWithImage(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX);
 		}
 
 		editor = addNewEditor(stepPanel);
@@ -883,6 +885,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				current.setWidgetTopHeight(prefixViewer.getAsPanel(), Math.max(editor.getMainRegel().getAsHoogte() - prefixViewer.getMainRegel().getAsHoogte(), 0), Style.Unit.PX, prefixViewer.getHeight(), Style.Unit.PX);
 				current.setWidgetLeftWidth(prefixViewer.getAsPanel(), 23, Style.Unit.PX, prefixViewer.getWidth(), Style.Unit.PX);
 			}
+			if(stelselScrollPanel != null)
+			{
+				resizeStelselContentPanel();
+			}
 			
 			if (feedbackPanel.isAttached())
 			{
@@ -890,8 +896,35 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			}
 		}
 		scrollToBottom();
+		scrollToHorizontalFocus();
 	}
 
+	public void resizeStelselContentPanel()
+	{
+		int width = stelselScrollPanel.getOffsetWidth() - 10;
+		for(int i = 0; i < stepPanels.size(); i++)
+		{
+			LayoutPanel current = stepPanels.get(i);
+			current.getElement().getStyle().setBackgroundColor(CssColor.make(255-20*(i+1), 255, 255).toString());
+			if(editor != null && editor.getAsPanel().getParent() == current)
+			{	width = Math.max(width, hasPrefix?(prefixViewer.getWidth() + 23 + editor.getMainRegel().getWidth()):(23 + editor.getMainRegel().getWidth()));
+			}
+			else
+			{
+				FormuleViewer fv = viewers.get(i);
+				width = Math.max(width, fv.getMainRegel().getWidth() + 23);
+			}
+		}
+		//contentPanel.setWidth((width + 10) + "px");
+		for(int i = 0; i < stepPanels.size(); i++)
+		{
+			LayoutPanel current = stepPanels.get(i);
+			current.setWidth(width + "px");
+			contentPanel.setWidgetLeftWidth(current, 5, Style.Unit.PX, width, Style.Unit.PX);
+		}
+		
+	}
+	
 	public void copyStep()
 	{
 		if (nagekeken)
@@ -1034,6 +1067,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			}
 			if (stapNr > 0)
 			{	
+				current.removeFromParent(); //nodig voor goede maatzetting in stelselvakken; als ergens anders problemen oplevert, dan met clausule if(stelselScrollPanel != null)
 				stepPanels.remove(stapNr);
 				current = stepPanels.get(stapNr - 1);
 				if (viewers.size() > 0)
@@ -3934,6 +3968,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		hoogte = h;
 		mainPanel.setPixelSize(-1, h - 2);
 		sp.setPixelSize(-1, h - 50);
+		if(stelselScrollPanel != null)
+			stelselScrollPanel.setPixelSize(-1, h-22);
 	}
 
 	/**
@@ -3970,6 +4006,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			sp.setPixelSize(breedte - 5, hoogte - 50 + 20); // waar komt die 50
 															// vandaan, er kan nog
 															// 20 pixels bij
+			if(stelselScrollPanel != null)
+			{ 	stelselScrollPanel.setPixelSize(breedte - 5,  hoogte);// - 50 + 20);
+				resizeStelselContentPanel();
+			}
 			headerPanel.setPixelSize(breedte - 2, 22); // anders vallen knoppen buiten beeld...
 		}
 	}
@@ -4022,6 +4062,24 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	        @Override
 	        public void execute() {
 	            sp.scrollToBottom();
+	        }
+		});
+	}
+	
+	public void scrollToHorizontalFocus()
+	{
+		Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+	        @Override
+	        public void execute() {
+	            if(stelselScrollPanel != null)
+	            {	
+	            	if(editor != null)
+	            	{
+	            		stelselScrollPanel.setHorizontalScrollPosition(23 + editor.getMainRegel().getWidth() - stelselScrollPanel.getOffsetWidth() + 5);
+	            	}
+	            	else
+	            		stelselScrollPanel.scrollToLeft();
+	            }
 	        }
 		});
 	}
@@ -4120,6 +4178,15 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			hoogte += editor.getHeight() + stapH;
 		if (hasFeedback) 
 			hoogte += feedbackPanelHeight;
+		if(stelselScrollPanel != null && contentPanel.getElement().getScrollWidth() > stelselScrollPanel.getOffsetWidth())
+		{
+			String antwoord = "";
+			if(editor != null)
+				antwoord = "editor: " + editor.toString();
+			else if(viewers.size() > 0)
+				antwoord = "viewer: " + viewers.get(viewers.size() - 1).toString();
+			hoogte += 20;
+		}
 		return hoogte;
 	}
 	
@@ -4141,10 +4208,20 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		else
 		{
 			mainPanel.remove(sp);
-			mainPanel.add(contentPanel);
-				
+			
+			stelselScrollPanel = new ScrollPanel();
+			stelselScrollPanel.setPixelSize(breedte-5, hoogte);//-50 + 20); // waar komt die 50 vandaan, er kan nog 20 pixels bij
+			stelselScrollPanel.getElement().getStyle().setOverflowX(Overflow.AUTO);
+			stelselScrollPanel.getElement().getStyle().setOverflowY(Overflow.HIDDEN);
+			stelselScrollPanel.setWidget(contentPanel);
+			mainPanel.add(stelselScrollPanel);
+			
 		}
-		
+	}
+	
+	public ScrollPanel getScrollPanel()
+	{
+		return stelselScrollPanel;
 	}
 	
 	public void zetMetRand(boolean b)

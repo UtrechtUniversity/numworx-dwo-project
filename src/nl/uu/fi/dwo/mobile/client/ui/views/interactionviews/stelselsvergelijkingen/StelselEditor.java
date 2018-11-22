@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import com.google.gwt.dom.client.Style;
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -25,7 +26,6 @@ import fi.wiskopdr.text.TextConstants;
 
 public class StelselEditor extends FormuleEditorWithSteps
 {
-	
 	StelselRekenVak hoofdPanel;
 	private StelselEditor[] kinderen;
 	private StelselEditor parent = null;
@@ -63,7 +63,6 @@ public class StelselEditor extends FormuleEditorWithSteps
 	private boolean heeftFocus = false;
 	public static TextConstants rb = Text.constants;
 	
-	
 	private StelselPijl[] pijlen = null;
 	
 	
@@ -97,7 +96,6 @@ public class StelselEditor extends FormuleEditorWithSteps
 	{
 		setHeader(false);
 		zetPijl(false);
-		
 		zetScrollOptie(false);
 		zetMetRand(false);
 		zetLinkerRand();
@@ -169,7 +167,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 		int k = vergelijkingen.geefAantal();
 		kinderen = new StelselEditor[k];
 		pijlen = new StelselPijl[k];
-		
+		int splitsBreedte = this.getScrollPanel().getOffsetWidth()/k;
 		for(int i = 0; i < k; i++)
 		{
 			AntwoordStelselVakChecker newAvChecker = new AntwoordStelselVakChecker((AntwoordStelselVakChecker) avChecker);
@@ -227,12 +225,12 @@ public class StelselEditor extends FormuleEditorWithSteps
 					
 			}
 			
-			
 			stelselEditor.zetOplossingen(oplossingenKind, eindOplossingen, eindOplossingenVoorSplits);//eindOplossingenStelsel, eindOplossingenExact);
 			
 			kinderen[i] = stelselEditor;
 			if(takCorrect)
 				kinderen[i].correct = true;
+			stelselEditor.setWidth(splitsBreedte);
 			hoofdPanel.contentPanel.add(kinderen[i]);
 			stelselEditor.editor.clearAll();
 			stelselEditor.editor.insert(vergelijking.toString());
@@ -476,7 +474,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 		super.setState(h);
 		//in setState wordt geen maakNakijkenAf meer gedaan. Daarom mis je het weghalen van het eennalaatste oranje vinkje.
 		//in nakijken editor is mogelijk eindOplossingenGevondenVoorSplits verkeerd aangepast, dus opnieuw zetten:
-		zetOplossingen(oplossingen, oplossingArrays[editorTeller], voorSplitsArrays[editorTeller]); //voor nakijken editor al zorgen dat eindOplossingGevonden up to date is
+		zetOplossingen(oplossingen, oplossingArrays[editorTeller], voorSplitsArrays[editorTeller]); 
 		if (editor == null && viewers.size() > 1)
 		{
 			FormuleViewer viewer = viewers.get(viewers.size() - 2);
@@ -654,7 +652,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 	
 	public int geefHoogteEditorEnKinderen()
 	{
-		hoogte = bepaalHoogte();
+		//hoogte = bepaalHoogte();
 		if(kinderen == null)
 			return hoogte;
 		else
@@ -798,7 +796,7 @@ public class StelselEditor extends FormuleEditorWithSteps
 				fout = true;
 			}
 			super.maakNakijkenAf(backStep, show, setState);
-			hoogte = bepaalHoogte();
+			//hoogte = bepaalHoogte();
 			hoofdPanel.plaatsEditors();
 			if(focusDoorgeven)
 				geefFocusDoor();
@@ -807,9 +805,11 @@ public class StelselEditor extends FormuleEditorWithSteps
 	
 	public void setSizes(int kolomBreedte)
 	{
-		int h = hoogte;
-		breedte = geefBreedte(kolomBreedte);
-		this.getAsPanel().setPixelSize(geefBreedte(kolomBreedte), h);
+		hoogte = bepaalHoogte();
+		if(!isHoofdEditor())
+			breedte = geefBreedte(kolomBreedte);
+		//this.getAsPanel().setPixelSize(breedte, hoogte + 20);
+		setWidth(breedte);
 		if(!getFeedback().equals(""))
 			setAndAddFeedback(getFeedback());
 		if(kinderen != null)
@@ -831,9 +831,9 @@ public class StelselEditor extends FormuleEditorWithSteps
 			if(kinderen[i].heeftKinderen())
 				hoofdPanel.contentPanel.setWidgetTopHeight(kinderen[i], y, Style.Unit.PX, kinderen[i].getHeight(), Style.Unit.PX);
 			else
-			{	//kinderen[i].setHeight(hoofdPanel.hoofdEditor.geefHoogteEditorEnKinderen() - y);
-				if(kinderen[i].getHeight() < hoofdPanel.contentPanel.getOffsetHeight() - y)
-					kinderen[i].setHeight(hoofdPanel.contentPanel.getOffsetHeight() - y);
+			{	if(kinderen[i].getHeight() < hoofdPanel.contentPanel.getElement().getScrollHeight() - y + 20)
+					kinderen[i].setHeight(hoofdPanel.contentPanel.getElement().getScrollHeight() - y + 20);
+				
 				hoofdPanel.contentPanel.setWidgetTopBottom(kinderen[i], y, Style.Unit.PX, 0, Style.Unit.PX);
 			}
 			

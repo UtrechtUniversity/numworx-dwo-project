@@ -168,9 +168,9 @@ public class StelselRekenVak extends LayoutPanel  {
 	public void plaatsEditors()
 	{
 		int aantalKolommen = hoofdEditor.geefEindAantalKinderen();
-		int kolomBreedte = contentPanel.getOffsetWidth()/aantalKolommen;
+		int kolomBreedte = hoofdEditor.getScrollPanel().getOffsetWidth()/aantalKolommen;
 		hoofdEditor.setSizes(kolomBreedte);
-		int h = hoofdEditor.geefHoogteEditorEnKinderen(); //hierin wordt ook plaatsHoogte gedaan voor alle editors; daarom doen vóór zetten locaties.
+		int h = hoofdEditor.geefHoogteEditorEnKinderen();
 		int verticalFocusPosition = h;
 		if(hoofdEditor.heeftKinderen())
 			verticalFocusPosition = hoofdEditor.setLocations(-1, 0, 0);

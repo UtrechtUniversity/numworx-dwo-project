@@ -51,7 +51,7 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 	
 	private Expressie[][] oplossingen; 
 	private boolean[][] eindOplossingGevonden;
-	private boolean[][] eindOplossingGevondenVoorSplits;
+	//private boolean[][] eindOplossingGevondenVoorSplits; Weggehaald 22-11-2018; leek niet nodig en leverde problemen bij backStep na weggaan en terugkomen op pagina. 
 	//private boolean[][] eindOplossingStelselGevonden;
 	//private boolean[][] eindOplossingExactGevonden;
 	
@@ -182,7 +182,7 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 			{
 				for(int j = 0; j < varNamen.length; j++)
 				{
-					eindOplossingGevondenVoorSplits[i][j] = eindOplossingGevonden[i][j];
+//					eindOplossingGevondenVoorSplits[i][j] = eindOplossingGevonden[i][j];
 				}
 			}
 			
@@ -238,7 +238,7 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 	{
 		this.oplossingen = oplossingen;
 		eindOplossingGevonden = eindOplossing;
-		eindOplossingGevondenVoorSplits = eindOplossingVoorSplits;
+//		eindOplossingGevondenVoorSplits = eindOplossingVoorSplits;
 		//eindOplossingStelselGevonden = eindOplossingStelsel;
 		//eindOplossingExactGevonden = eindOplossingExact;
 	}
