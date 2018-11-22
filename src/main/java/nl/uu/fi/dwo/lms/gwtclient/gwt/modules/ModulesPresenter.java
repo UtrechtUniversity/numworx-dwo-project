@@ -200,7 +200,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         if (ISMAINNAVVISIBLE.equals(message)) {
           view.sendMessage( view.isMainNavVisible() ? SHOWMAINNAV : HIDEMAINNAV);
         } else 
-        if (select(SelectedView.RESULTS, message) || select(SelectedView.PERSONS,message) || select(SelectedView.SCHOOLCLASSES,message)) {
+        if (select(SelectedView.RESULTS, message) || select(SelectedView.PERSONS,message) || select(SelectedView.SCHOOLCLASSES,message) || select(SelectedView.ORGANISATION, message)) {
           
         } else {
           
