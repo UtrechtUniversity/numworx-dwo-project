@@ -905,7 +905,6 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		for(int i = 0; i < stepPanels.size(); i++)
 		{
 			LayoutPanel current = stepPanels.get(i);
-			current.getElement().getStyle().setBackgroundColor(CssColor.make(255-20*(i+1), 255, 255).toString());
 			if(editor != null && editor.getAsPanel().getParent() == current)
 			{	width = Math.max(width, hasPrefix?(prefixViewer.getWidth() + 23 + editor.getMainRegel().getWidth()):(23 + editor.getMainRegel().getWidth()));
 			}
