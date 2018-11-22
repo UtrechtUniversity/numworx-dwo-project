@@ -665,8 +665,8 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		}
 		if(logOption) {
 			dwologger = new DWOLogger();
-			dwologger.setClassName("fi.wiskopdr.CheckUnitPanel");
 			dwologger.setLogID(logID);
+			dwologger.setClassName("fi.wiskopdr.CheckUnitPanel");
 			dwologger.setMaxScore(scoreMax);
 			dwologger.setLogObjectives(logObjectives);
 			dwologger.setTeltMee(teltMee);
