@@ -194,8 +194,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		{
 			String logID = launchdata.getString("logID");
 			DWOLogger dwologger = new DWOLogger();
-			dwologger.setClassName("fi.wiskopdr.tekstobjects.TekstEditor");
 			dwologger.setLogID(logID);
+			dwologger.setClassName("fi.wiskopdr.tekstobjects.TekstEditor");
 			logging = dwologger;
 		}
 		//shown = true;

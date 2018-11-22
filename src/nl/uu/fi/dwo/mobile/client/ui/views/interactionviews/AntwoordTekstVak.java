@@ -281,8 +281,8 @@ public class AntwoordTekstVak implements InteractionView, FacetAware, TekstEleme
 			if(logOption) {
 				DWOLogger dwologger = new DWOLogger();
 				dwologger.setMaxScore(scoreMax);
-				dwologger.setClassName("fi.wiskopdr.AntwoordTekstVak");
 				dwologger.setLogID(logID);
+				dwologger.setClassName("fi.wiskopdr.AntwoordTekstVak");
 				if(map.containsKey("logIDLabel"))
 					dwologger.setLogIDLabel(map.getString("logIDLabel"));
 				dwologger.setLogObjectives(logObjectives);

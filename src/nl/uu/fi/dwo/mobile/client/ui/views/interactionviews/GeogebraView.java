@@ -256,9 +256,9 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		if (ggbMap.getBoolean("logOption", false))
 		{
 			dwologger = new DWOLogger();
-			dwologger.setClassName("fi.wiskopdr.Geogebra4Panel");
 			dwologger.setMaxScore(scoreMax);
 			dwologger.setLogID(ggbMap.getString("logID"));
+			dwologger.setClassName("fi.wiskopdr.Geogebra4Panel");
 		}
 		return this;
 
