@@ -22,4 +22,9 @@ public class WiskOpdrDefaults extends DWOplayerDefaults {
 		super(launchData);
 	}
 
+	@Override
+	public String getStubView() {
+		return "";
+	}
+
 }
