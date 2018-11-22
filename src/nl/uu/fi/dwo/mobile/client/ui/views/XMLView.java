@@ -6,8 +6,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
@@ -18,6 +20,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.json.JSONObjectMapImpl;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -286,10 +289,11 @@ public abstract class XMLView {
 		
 	}
 
-	protected void loadXML(String xmlPath) {
+	protected Promise<Boolean> loadXML(String xmlPath) {
 		RequestBuilder.Method method = RequestBuilder.GET;
 		String url = xmlPath;
 		RequestBuilder rb = new RequestBuilder(method, url);
+		Deferred<Boolean> defer = new Deferred<>();
 		try
 		{
 			rb.sendRequest(null, new RequestCallback()
@@ -311,8 +315,10 @@ public abstract class XMLView {
 						StringCodeToHashMap sc = new StringCodeToHashMap();
 						launchData = sc.decodeStringToHashMap(dom);
 						setupView(launchData);
+						defer.resolve(Boolean.FALSE);
 					} else {
 						logger.severe("response empty");
+						defer.resolve(Boolean.TRUE);
 					}
 	
 				}
@@ -321,6 +327,7 @@ public abstract class XMLView {
 				public void onError(Request request, Throwable exception)
 				{
 					Window.alert("error");
+					defer.fail(exception);
 				}
 			});
 	
@@ -328,7 +335,9 @@ public abstract class XMLView {
 		catch (RequestException e)
 		{
 			RootPanel.get().add(new Label("cannot load xml: " + e.getMessage()));
+			defer.fail(e);
 		}
+		return defer.getPromise();
 	}
 	abstract AnchorView.AnchorContext getAnchorContext();
 	//public void setObjects(ArrayList<Object> opdrachtObjects, Panel destination) 
@@ -430,23 +439,24 @@ public abstract class XMLView {
 		return bolletjesZichtbaar;
 	}
 
-	void loadJSON(String file) {
+	Promise<Boolean> loadJSON(String file) {
 		int is = file.lastIndexOf('=');
 // no scoid=
 		if(is == -1) {
-			loadJSON_org(file);
-			return;
+			return loadJSON_org(file);
 		}
 // via rest interface.
 		file = file.substring(is+1);
-		Success<JSONValue, Void> success = new Success<JSONValue, Void>() {
+		Success<JSONValue, Boolean> success = new Success<JSONValue, Boolean>() {
 
 			@Override
-			public Promise<Void> call(Promise<JSONValue> resolved) throws Exception {
+			public Promise<Boolean> call(Promise<JSONValue> resolved) throws Exception {
 				JSONValue response = resolved.getValue();
-				launchData = JSONUtilities.wrapMap(response.isObject());
-				setupView(launchData);
-				return null;
+				JSONObjectMapImpl map;
+				launchData = map = JSONUtilities.wrapMap(response.isObject());
+				Promise<Boolean> p = Promises.resolved(needsPremium(map));
+				if (!p.getValue()) setupView(launchData);
+				return p;
 			}
 		};
 
@@ -460,17 +470,18 @@ public abstract class XMLView {
 				logger.log(Level.SEVERE, exception.toString(), exception);
 			}
 		};
-		DWOplayer.clientfactory.getRPCHandler().getJSONLaunchDataBytes(file).then(success, failure);
+		return DWOplayer.clientfactory.getRPCHandler().getJSONLaunchDataBytes(file).then(success, failure);
 	}
 	
-	void loadJSON_org(String file) {
-		 {
+	Promise<Boolean> loadJSON_org(String file) {
+		 
 			RequestBuilder.Method method = RequestBuilder.GET;
 			String url = file;
 			logger.info("request " + method + " " + url);
 			logger.fine("requesting url = " + Window.Location.getHref());
 			RequestBuilder rb = new RequestBuilder(method, url);
 			rb.setTimeoutMillis(1000000);
+			Deferred<Boolean> defer = new Deferred<>();
 			try
 			{
 				rb.sendRequest(null, new RequestCallback()
@@ -485,10 +496,11 @@ public abstract class XMLView {
 						logger.info("Data: " + responseText.substring(0, Math.min(30, responseText.length()) ));
 						if (responseText.length() > 4 && response.getStatusCode() == 200)
 						{
-							setupView(responseText);
+							defer.resolve(setupView(responseText));
 						} else {
 							Window.alert(Text.constants.noJSONreceived());
 							logger.severe("response empty");
+							defer.fail(new RuntimeException(Text.constants.noJSONreceived()));
 						}
 					}
 		
@@ -498,6 +510,7 @@ public abstract class XMLView {
 						Window.alert(Text.constants.noJSONreceived() + 
 								"\nerror " + exception);
 						logger.log(Level.SEVERE, exception.toString(), exception);
+						defer.fail(exception);
 					}
 				});
 		
@@ -505,11 +518,13 @@ public abstract class XMLView {
 			catch (RequestException e)
 			{
 				RootPanel.get().add(new Label("cannot load xml: " + e.getMessage()));
+				defer.fail(e);
 			}
-		}
+		return defer.getPromise();
+		
 	}
 
-	public void setupView(String launchDataString) {
+	public boolean setupView(String launchDataString) {
 		contentPanel.clear();
 		// voor huub: allow old XML data 
 		if(launchDataString.startsWith("<"))
@@ -524,9 +539,17 @@ public abstract class XMLView {
 			//launchData = JSONUtilities.fromJSONObject(dom.isObject());
 			launchData = JSONUtilities.wrapMap(dom.isObject());
 		}
+		if (needsPremium(JSONUtilities.wrapMap(launchData)))
+			return true;
 		setupView(launchData);
+		return false;
 	}
 	
+	protected static boolean needsPremium(ObjectMap data) {
+		boolean premiumfeatures = Boolean.TRUE.toString().equals(data.getString("premium"));
+		return premiumfeatures && ! DWOplayer.isPremium();
+	}
+
 	/**
 	 * Returns whether the activity is a tempo test.
 	 * 

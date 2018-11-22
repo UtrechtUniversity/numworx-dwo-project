@@ -59,6 +59,7 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 /**
  * @author peterboon
@@ -147,7 +148,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	@UiField FlowPanel deck;
 	@UiField TreeModuleViewNumworxCss style;
 	@UiField FlowPanel beheer;
-	@UiField HTML bibliotheek;
+	@UiField HTML bibliotheek, results, organization;
 	GotoController presenter;
 	private String SCHOOL_MODULES;
 	private TreeItem schoolMap;
@@ -157,6 +158,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	private DockLayoutPanel dock;
 	private double width;
 	private boolean none;
+	private RoleType role = RoleType.TEACHER;
 	/**
 	 * Because this class has a default constructor, it can
 	 * be used as a binder template. In other words, it can be used in other
@@ -274,6 +276,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		Object schoolName = "school";
 		if(DWOplayer.withUser() && DWOplayer.clientfactory.getSchool() != null)
 			schoolName = DWOplayer.clientfactory.getSchool().getSchoolName();
+		setRole();
 		SCHOOL_MODULES = Text.constants.schoolModules() + schoolName;
 		schoolMap = new TreeItem(toSafeHTML(SCHOOL_MODULES));
 		schoolMap.setUserObject(SelectModuleItem.ROOT);
@@ -355,6 +358,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	
 	@UiHandler("results")
 	void onResults(ClickEvent e) {
+		if (role != RoleType.TEACHER) return;
 	  LOG.info("goto results");
 	  if(Actions.isAvailable())
 		  Actions.RESULTS.execute();
@@ -386,6 +390,8 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
     
   }
 
+    
+    
     @UiHandler("persons")
     void onPersons(ClickEvent e) {
       LOG.info("goto persons");
@@ -403,9 +409,21 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
     	  gotoGwtClient("SCHOOLCLASSES");
    }
 
+    @UiHandler("organization")
+    void onOrganization(ClickEvent e) {
+    	if (role != RoleType.SCHOOLADMIN) return;
+    	LOG.info("goto organization");
+    	if (Actions.isAvailable())
+    		Actions.ORGANISATION.execute();
+    	else
+    		gotoGwtClient("ORGANISATION");
+    }
+
     private boolean icon;
     public void setBeheer(boolean visible) {
-      dock.setWidgetHidden(beheer, !(visible&&icon));
+      boolean hidden = !(visible&&icon);
+      dock.setWidgetHidden(beheer, hidden);
+      
     }
 	
 //    @UiHandler("bibliotheek") void onModules(ClickEvent e) {
@@ -420,6 +438,17 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
     	setBeheer(show);
     	//bibliotheek.setStyleName("modules-icon", show);
     }
-    
+
+	void setRole(RoleType role) {
+		this.role = role;
+		// if visible?
+		{  	organization.setVisible(role == RoleType.SCHOOLADMIN);
+			results.setVisible(role == RoleType.TEACHER);
+		}
+	}
+
+	void setRole() {
+		setRole(DWOplayer.clientfactory.getRoleType());
+	}
     
 }

@@ -52,10 +52,11 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements GotoCont
 	{
 		view = clientFactory.getTreeModuleView();
 		
-		boolean teacher = clientFactory.getRoleType() == RoleType.TEACHER;
-        view.setBeheer(teacher);
+		RoleType role = clientFactory.getRoleType();
+		boolean beheerder = role == RoleType.TEACHER || role == RoleType.SCHOOLADMIN;
+        view.setBeheer(beheerder);
  
-        if(teacher) {
+        if(beheerder) {
           eventBus.addHandler(MessageEvent.TYPE, this);
           onMessage(MessageEvent.getLastEvent());          
         }

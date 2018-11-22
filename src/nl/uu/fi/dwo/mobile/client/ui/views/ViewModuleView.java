@@ -29,7 +29,7 @@ public interface ViewModuleView extends IsWidget
 	void removeBtns();
 	void setScoType(ScoType type);
 	void setTitle(String title);
-	void setupModule(String name, String file);
+	Promise<Boolean> setupModule(String name, String file);
 
 	public HeaderButton getBackButton();
 

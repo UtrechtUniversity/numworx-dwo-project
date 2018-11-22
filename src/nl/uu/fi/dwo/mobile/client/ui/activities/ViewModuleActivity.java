@@ -148,9 +148,15 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 				if(location != null) {
 					view.getApi().SetValue(Memento.LOCATION, location);
 				}
-				started = ! Memento.COMPLETED.equals(view.getApi().GetValue(Memento.COMPLETION_STATUS));
-				view.setupModule(sco.getName(), sco.getFile());
-				//panel.setWidget(view);
+					started = !Memento.COMPLETED.equals(view.getApi().GetValue(Memento.COMPLETION_STATUS));
+					view.setupModule(sco.getName(), sco.getFile()).then(p -> {
+						if (p.getValue()) {
+							Window.alert("Error: need a Premium subscription");
+							started = false;
+							History.back();
+						}
+						return null;
+					}, p -> { started = false; History.back(); });
 			}
 		};
 		view.getApi().Initialize(callback);

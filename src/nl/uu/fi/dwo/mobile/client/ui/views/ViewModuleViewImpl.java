@@ -228,12 +228,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	}
 
 	@Override
-	public void setupModule(String name, String file)
+	public Promise<Boolean> setupModule(String name, String file)
 	{
 		contentPanel.clear();
 		readonly = false;
-		if(DWOplayer.JSON) loadJSON(file); else loadXML(file);
 		if(!DWOplayer.PARAMETERS.isNavTitle()) setTitle(name);
+		if(DWOplayer.JSON) return loadJSON(file); else return loadXML(file);
 	}
 
 	public void preSetupModule(final String link, final String url)

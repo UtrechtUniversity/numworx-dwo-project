@@ -131,11 +131,11 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		delegate.setTitle(title);
 	}
 
-	public void setupModule(String name, String file) {
+	public Promise<Boolean> setupModule(String name, String file) {
 		String login = DWOplayer.withUser()? DwoGlobalVars.instance().getCurrentUser().getDisplayName() : rb.guest();
 		loginLabel.setText(login);
 		setupMenu(items);
-		delegate.setupModule(name, file);
+		return delegate.setupModule(name, file);
 	}
 
 	public HeaderButton getBackButton() {
