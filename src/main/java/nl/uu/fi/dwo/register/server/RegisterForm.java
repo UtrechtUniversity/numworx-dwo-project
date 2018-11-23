@@ -5,24 +5,24 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Key;
 import java.util.Date;
-import java.util.Map;
 import java.util.Properties;
-import java.util.TreeMap;
-
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -36,6 +36,7 @@ public class RegisterForm extends HttpServlet {
   Session session;
   private Key key;
   private InternetAddress smtpEmail;
+  private RequestDispatcher dispatch;
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -48,7 +49,7 @@ public class RegisterForm extends HttpServlet {
     String form = req.getParameter("form");
     
     String jwt = Jwts.builder().setIssuer(server)
-      .claim("email", email)
+      .setSubject(email)
       .claim("givenName", givenName)
       .claim("insertion", insertion)
       .claim("familyName", familyName)
@@ -105,9 +106,13 @@ public class RegisterForm extends HttpServlet {
 // mail parameters
     //place this in servlet
     String smtpServer = getInitParameter("fi.dwo.server.rest.smtp.server");
+    if(smtpServer == null) smtpServer = "localhost";
     String smtpPort = getInitParameter("fi.dwo.server.rest.smtp.port");
+    if (smtpPort == null) smtpPort = "25";
     String smtpTLS = getInitParameter("fi.dwo.server.rest.smtp.tls");
+    if (smtpTLS == null) smtpTLS = "no";
     String smtpAuth = getInitParameter("fi.dwo.server.rest.smtp.auth");
+    if (smtpAuth == null) smtpAuth = "false";
     final String smtpUser = getInitParameter("fi.dwo.server.rest.smtp.user");
     final String smtpPassword = getInitParameter("fi.dwo.server.rest.smtp.password");
     try {
@@ -137,7 +142,46 @@ public class RegisterForm extends HttpServlet {
 // Key
     byte[] bytes = new byte[32];
     key = Keys.hmacShaKeyFor(bytes);
+// FORM:
+    dispatch = getServletContext().getRequestDispatcher("/RegisterFree.html");
+
+  }
+
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
     
+    String server = req.getRequestURL().toString();
+    String jwt = req.getParameter("j");
+  
+    Jws<Claims> claims = Jwts.parser()
+        .requireIssuer(server)
+        .setSigningKey(key).parseClaimsJws(jwt);
+    Claims body = claims.getBody();
+    String email = body.getSubject();
+    String givenName = body.get("givenName", String.class);
+    String insertion = body.get("insertion", String.class);
+    String familyName = body.get("familyName", String.class);
+    
+    String suggestion = givenName + insertion + familyName;
+    suggestion = suggestion.toLowerCase();
+    suggestion = suggestion.replaceAll("\\W", "");
+    
+    Cookie cookie;
+    cookie = new Cookie("email", email);
+    resp.addCookie(cookie);
+    cookie = new Cookie("insertion", insertion);
+    resp.addCookie(cookie);
+    cookie = new Cookie("givenName", givenName);
+    resp.addCookie(cookie);
+    cookie = new Cookie("familyName", familyName);
+    resp.addCookie(cookie);
+    cookie = new Cookie("suggestion", suggestion);
+    resp.addCookie(cookie);
+
+  
+    dispatch.forward(req, resp);
+
   }
   
 }
