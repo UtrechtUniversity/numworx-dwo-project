@@ -197,7 +197,7 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
             instance.setWait();
             CenterSubPanel cp = instance.getStudentModelPanel();
             center.loadCenter(cp);
-            center.setStrategy(this);
+          //  center.setStrategy(this); // Why gert?
             instance.setReady();
             return;
         }
