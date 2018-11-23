@@ -122,13 +122,14 @@ public class StudentModelLogger implements Logging {
 		}
 	}
 	
-	public static void accumulateAllScores(DomStudentModelStructureScore studentModel) {
-		ObjectMap map = JSONUtilities.wrapMap(Memento.instance().getLogState());
+	public static void accumulateAllScores(DomStudentModelStructureScore studentModel, Memento memento) {
+		ObjectMap map = JSONUtilities.wrapMap(memento.getLogState());
 		for(String name: map.keySet()) {
 			ObjectMap logItem = map.getObjectMap(name);
 			ObjectList objectives = logItem.getObjectList(DWOLogger.LOG_OBJECTIVES);
+			if(objectives == null || !logItem.containsKey(DWOLogger.LOG_ATTEMPTS_COUNT)) continue;
 			int attempts = logItem.getInt(DWOLogger.LOG_ATTEMPTS_COUNT);
-			if(attempts > 0 && objectives != null) {
+			if(attempts > 0) {
 				double score = logItem.getDouble(SUCCESS_SCORE);
 				int size = objectives.size();
 				for (int i = 0; i < size; i++ ) {
