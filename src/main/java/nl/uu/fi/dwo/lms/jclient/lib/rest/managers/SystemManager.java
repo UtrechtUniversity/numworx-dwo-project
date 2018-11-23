@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -14,7 +13,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import nl.uu.fi.dwo.rest.util.PathId;
 
 public class SystemManager {
 
