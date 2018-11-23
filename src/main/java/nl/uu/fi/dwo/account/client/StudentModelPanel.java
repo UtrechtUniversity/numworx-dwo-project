@@ -31,6 +31,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class StudentModelPanel extends Composite implements HasText, StudentModelView, ClickHandler, ChangeHandler {
 
@@ -100,9 +101,11 @@ public class StudentModelPanel extends Composite implements HasText, StudentMode
 
 	}
 
+	static private DwoLocalesForGWT rb = GWT.create(DwoLocalesForGWT.class);
+
 	public void updateModels(Collection<String> keySet) {
 		selectBox.clear();
-		selectBox.addItem("-- kies model --");
+		selectBox.addItem("-- " + rb.ACC_DLG_CHOOSEMODEL() + " --");
 		for(String s: keySet) {
 			selectBox.addItem(s);
 		}
