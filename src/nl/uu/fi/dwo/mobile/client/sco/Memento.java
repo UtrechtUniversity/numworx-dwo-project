@@ -674,7 +674,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			Promise<?> then = pmodel.then(p -> { 
 				DomStudentModelStructure model = p.getValue().getModelStructure();
 				DomStudentModelStructureScore data = model.generateStudentModelStructureScore();
-				StudentModelLogger.accumulateAllScores(data);
+				StudentModelLogger.accumulateAllScores(data, Memento.this);
 				setStudentModel(data);
 				StudentModelLogger.destroy();
 				return api.Terminate();
@@ -689,7 +689,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			return pmodel.then(p-> {
 				DomStudentModelStructure model = p.getValue().getModelStructure();
 				DomStudentModelStructureScore data = model.generateStudentModelStructureScore();
-				StudentModelLogger.accumulateAllScores(data);
+				StudentModelLogger.accumulateAllScores(data, Memento.this);
 				setStudentModel(data);
 				return api.Commit();
 			}).recoverWith(p -> api.Commit()).then(p -> pmodel);
