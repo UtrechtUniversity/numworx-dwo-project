@@ -9,5 +9,12 @@
   <welcome-file-list>
     <welcome-file>Register.html</welcome-file>
   </welcome-file-list>
-  
+	<context-param>
+		<param-name>fi.dwo.server.rest.smtp.email</param-name>
+		<param-value>wim@fi.uu.nl</param-value>
+	</context-param>  
+  <servlet>
+  	<servlet-name>RegisterForm</servlet-name>
+  	<servlet-class>nl.uu.fi.dwo.register.server.RegisterForm</servlet-class>
+  </servlet>
 </web-app>
