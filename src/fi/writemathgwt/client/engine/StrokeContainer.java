@@ -38,12 +38,19 @@ public class StrokeContainer {
 	}
 	
 	public boolean addStroke(Stroke stroke) {
+		return addStroke(stroke, true);
+	}
+	
+	public boolean addStroke(Stroke stroke, boolean parse) {
 		if(isOutOfLine(stroke))
 			return true;
 		strokes.add(stroke);
 		updateParseArea(stroke);
-		//if(stroke.isParseable() && checkStrokeParseable(stroke)) {
+		if(parse) {
 			parseStrokes();
+			return true;
+		}
+		else
 			return true;
 //		}
 //		else {
