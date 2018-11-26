@@ -511,7 +511,7 @@ public class Text_en extends ListResourceBundle {
             {"OBJ_categorie", "Category"},
 
             { TextMapper.GUIMNU_STUDENTMODELS, "Learning domains" },
-            { TextMapper.GUIC_STUDENTMODELS_ADD, "New model" },
+            { TextMapper.GUIC_STUDENTMODELS_ADD, "New learning domain" },
 
 	};
 
