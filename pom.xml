@@ -264,4 +264,5 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<tomcat7.version>7.0.76</tomcat7.version>
 	</properties>
+	<version>2.3.2-SNAPSHOT</version>
 </project>
