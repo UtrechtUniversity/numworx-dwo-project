@@ -489,7 +489,7 @@ public class Text_nl extends ListResourceBundle {
             {"OBJ_categorie", "Vul naam in van categorie"},
 
             { TextMapper.GUIMNU_STUDENTMODELS, "Leerdomeinen" },
-            { TextMapper.GUIC_STUDENTMODELS_ADD, "Nieuw model" },
+            { TextMapper.GUIC_STUDENTMODELS_ADD, "Nieuw leerdomein" },
             
 	
 	};
