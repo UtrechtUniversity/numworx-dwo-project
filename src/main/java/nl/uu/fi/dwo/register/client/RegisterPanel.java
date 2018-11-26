@@ -4,11 +4,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.ui.client.widget.Button;
@@ -43,6 +45,38 @@ public class RegisterPanel extends Composite {
 //		register.addTapHandler(this::onRegister);
 //		cancel.addTapHandler(this::onCancel);
 		setStyleName(css.isfree(), isfree);
+		
+		absorbCookies();
+		
+		
+	}
+
+	private void absorbCookies() {
+		String email = Cookies.getCookie("email");
+		if (email != null) setAndFix(this.email, email);
+		String givenName = Cookies.getCookie("givenName");
+		if (givenName != null) setAndFix(this.givenName, givenName);
+		String insertion = Cookies.getCookie("insertion");
+		if (insertion != null) setAndFix(this.insertion, insertion);
+		String familyName = Cookies.getCookie("familyName");
+		if (familyName != null) setAndFix(this.familyName, familyName);
+		
+		String suggestion = Cookies.getCookie("suggestion");
+		if (suggestion != null) {
+			username.setText(suggestion); // Free to choose
+		} else {
+			String username = Cookies.getCookie("username");
+			if (username != null) {
+				setAndFix(this.username, username);
+			}
+		}
+		
+	}
+
+	private void setAndFix(TextBox widget, String string) {
+		widget.setText(string);
+		widget.setEnabled(false);
+		widget.addStyleDependentName("disabled");
 	}
 
 	private RegisterController controller;
@@ -54,8 +88,11 @@ public class RegisterPanel extends Composite {
 	DwoLocalesForGWT rb;
 	
 	@UiField
-	HasText username, password, givenName, insertion, familyName, email, passwordAgain, schoolCode, schoolLogin;
-
+	TextBox username, givenName, insertion, familyName, email, schoolLogin;
+	@UiField
+	PasswordTextBox password, passwordAgain, schoolCode;
+	
+	
 	@UiField ListBox schoolGroup;
 	
 	@UiField RegisterCSS css;

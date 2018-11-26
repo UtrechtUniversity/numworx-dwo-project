@@ -11,7 +11,7 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 public class Register implements EntryPoint, Command {
 	
 	private RegisterPanel content;
-	private String newURL = "/leerling/";
+	private String newURL = "/";
 	
 	private static native boolean getFree() /*-{
 	  return $wnd.free
