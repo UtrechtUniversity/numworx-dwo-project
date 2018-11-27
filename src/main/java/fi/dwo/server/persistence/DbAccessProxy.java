@@ -18,7 +18,7 @@ import fi.dwo.commons.exceptions.LoginException;
 
 import java.util.logging.Level;
 
-public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAccessIF, DbAccessJS, DbAccessObsolete {
+public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAccessIF, /*DbAccessJS,*/ DbAccessObsolete {
 //TODO this class should use reflection to delegate stuff going to be purely serverside.
 //
 
@@ -655,9 +655,9 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
         return getScormAccess().Initialize(userID, schoolGroupID, scoID, keys);
     }
 
-    private DbAccessJS getDbAccessJS() {
-        return (DbAccessJS) getDelegate();
-    }
+//    private DbAccessJS getDbAccessJS() {
+//        return (DbAccessJS) getDelegate();
+//    }
 
 //    @Override
 //    public Vector getCoursesJS(int profileValue) throws IOException,

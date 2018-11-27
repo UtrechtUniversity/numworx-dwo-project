@@ -49,7 +49,7 @@ import java.util.logging.Logger;
  *
  *
  */
-public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, DbAccessJS, DbAccessObsolete {
+public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, /*DbAccessJS,*/ DbAccessObsolete {
 
     private static final Logger LOG = Logger.getLogger(DbAccess.class.getName());
 
@@ -77,12 +77,6 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      */
     private final static String QRY_DEFAULT_SELECT_ID = "SELECT * "
             + "FROM {0} " + "WHERE `{1}` = ?";
-
-    /**
-     * Fetch all database entities of given type.
-     */
-    private final static String QRY_DEFAULT_SELECT_TABLE = "SELECT * "
-            + "FROM {0} ";
 
     /**
      * Fetch all database entities of this type in given order.
@@ -230,10 +224,10 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     private final static String QRY_DELETE_CLASS_COURSE = "DELETE FROM tblClassCourse "
             + "WHERE (classID = ?) " + "AND (courseID = ?) ";
 
-    private final static String QRY_DELETE_COURSES_FROM_CLASS_IN_SCHOOL
-            = "DELETE FROM tblClassCourse WHERE classID in (SELECT classID from tblClass where schoolID = ?)";
+//    private final static String QRY_DELETE_COURSES_FROM_CLASS_IN_SCHOOL
+//            = "DELETE FROM tblClassCourse WHERE classID in (SELECT classID from tblClass where schoolID = ?)";
 
-    private final static String QRY_DELETE_SCO_BY_ID = "delete tblScoContext, tblScoData from tblScoContext join tblScoData using (scoID) where scoID = ?";
+//    private final static String QRY_DELETE_SCO_BY_ID = "delete tblScoContext, tblScoData from tblScoContext join tblScoData using (scoID) where scoID = ?";
 
     private final static String QRY_SELECT_COURSES_EDITABLE_ADMIN = "SELECT tblCourse.* "
             + "FROM tblCourse "
@@ -265,8 +259,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
     private final static String QRY_CHECK_USERNAME_EXISTS = "SELECT userID "
             + "FROM tblUser " + "WHERE (username = ?)";
 
-    private final static String QRY_CHECK_SCHOOLLOGIN_EXISTS = "SELECT schoolID "
-            + "FROM tblSchool " + "WHERE (schoollogin = ?)";
+//    private final static String QRY_CHECK_SCHOOLLOGIN_EXISTS = "SELECT schoolID "
+//            + "FROM tblSchool " + "WHERE (schoollogin = ?)";
 
     private final static String QRY_CHECK_SCHOOLGROUP_EXISTS = "SELECT * "
             + "FROM tblSchoolGroup "
@@ -425,37 +419,37 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 //    private final static String QRY_ADD_CLASS = "INSERT INTO tblClass(schoolID, class) "
 //            + "VALUES(?, ?) ";
 
-    private final static String QRY_ADD_SCHOOLID = "INSERT INTO tblSchool(schoolName, schoollogin, schoolID) "
-            + "VALUES(?, ?, ?) ";
+//    private final static String QRY_ADD_SCHOOLID = "INSERT INTO tblSchool(schoolName, schoollogin, schoolID) "
+//            + "VALUES(?, ?, ?) ";
 
 //    private final static String QRY_SELECT_SCHOOL_FROM_SCHOOLLOGIN = "SELECT schoolID "
 //            + "FROM tblSchool "
 //            + "WHERE schoollogin = ?";
 
-    private final static String QRY_DELETE_DEFAULT = "DELETE FROM `{0}` "
-            + "WHERE `{1}` = ?";
-
-    private final static String QRY_DELETE_STUDENT_FROM_CLASS_IN_SCHOOL
-            = "delete from tblStudentOf join tblClass using (classID) where schoolID = ?";
-
-    private final static String QRY_DELETE_TEACHER_FROM_CLASS_IN_SCHOOL
-            = "delete from tblTeacherOf join tblClass using (classID) where schoolID = ?";
-
-    private final static String QRY_DELETE_STUDENTSCO_FROM_SCHOOL
-            = "Select * FROM tblStudentSco where scoID in "
-            + "(select scoID from tblSco join tblCourse using (CourseID)  where schoolID = ? )";
-
-    private final static String QRY_DELETE_SCO_FROM_SCHOOL
-            = "delete tblScoContext, tblScoData from tblScoContext join tblScoData using (scoID) where courseID in (SELECT courseID FROM tblCourse WHERE schoolID = ?)";
+//    private final static String QRY_DELETE_DEFAULT = "DELETE FROM `{0}` "
+//            + "WHERE `{1}` = ?";
+//
+//    private final static String QRY_DELETE_STUDENT_FROM_CLASS_IN_SCHOOL
+//            = "delete from tblStudentOf join tblClass using (classID) where schoolID = ?";
+//
+//    private final static String QRY_DELETE_TEACHER_FROM_CLASS_IN_SCHOOL
+//            = "delete from tblTeacherOf join tblClass using (classID) where schoolID = ?";
+//
+//    private final static String QRY_DELETE_STUDENTSCO_FROM_SCHOOL
+//            = "Select * FROM tblStudentSco where scoID in "
+//            + "(select scoID from tblSco join tblCourse using (CourseID)  where schoolID = ? )";
+//
+//    private final static String QRY_DELETE_SCO_FROM_SCHOOL
+//            = "delete tblScoContext, tblScoData from tblScoContext join tblScoData using (scoID) where courseID in (SELECT courseID FROM tblCourse WHERE schoolID = ?)";
 
 //TODO V1_3 DONE Delete tblHasRole references removed in  QRY_DELETE_ROLES_FROM_SCHOOL
-    private final static String QRY_DELETE_USERS_FROM_SCHOOL
-            = "UPDATE tblUser SET schoolGroupID = NULL WHERE "
-            + "SchoolGroupID in (SELECT schoolGroupID FROM tblSchoolGroup where schoolID = ?)";
+//    private final static String QRY_DELETE_USERS_FROM_SCHOOL
+//            = "UPDATE tblUser SET schoolGroupID = NULL WHERE "
+//            + "SchoolGroupID in (SELECT schoolGroupID FROM tblSchoolGroup where schoolID = ?)";
 
-    private final static String QRY_DELETE_ROLES_FROM_SCHOOL
-            = "DELETE tblHasRole FROM tblHasRole join tblSchoolGroup on (schoolGroupID) WHERE "
-            + "schoolID = ?)";
+//    private final static String QRY_DELETE_ROLES_FROM_SCHOOL
+//            = "DELETE tblHasRole FROM tblHasRole join tblSchoolGroup on (schoolGroupID) WHERE "
+//            + "schoolID = ?)";
 
 //TODO V1_3 DONE Usage verified.
 //    private final static String QRY_DELETE_STUDENTSCO_BY_STUDENT = "DELETE tblStudentScoContext, tblStudentScoData "
@@ -536,14 +530,14 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
      * results of selected courses from a single user.
      */
     //TODO V1_4 fix for many school/role options 
-    private final static String QRY_RESULTS_SINGLE = "SELECT tblStudentScoContext.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
-            + "FROM tblUser  "
-            //            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID "
-            + "right join tblScoContext on tblStudentScoContext.scoID = tblScoContext.scoID "
-            + "left join tblCourse on tblScoContext.courseID = tblCourse.courseID "
-            + "where (tblCourse.courseID in ({0})) "
-            + "and   (tblStudentScoContext.userID = ?) "
-            + "group by tblCourse.courseID ";
+//    private final static String QRY_RESULTS_SINGLE = "SELECT tblStudentScoContext.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
+//            + "FROM tblUser  "
+//            //            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID "
+//            + "right join tblScoContext on tblStudentScoContext.scoID = tblScoContext.scoID "
+//            + "left join tblCourse on tblScoContext.courseID = tblCourse.courseID "
+//            + "where (tblCourse.courseID in ({0})) "
+//            + "and   (tblStudentScoContext.userID = ?) "
+//            + "group by tblCourse.courseID ";
 
     /**
      * results of selected courses from a single user.
@@ -670,24 +664,24 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             + "group by tblTeacherOf.classID, tblScoContext.scoID "
             + "ORDER BY tblTeacherOf.classID, tblScoContext.sequencenr";
 
-    private final static String QRY_UPDATE_CLASS_NAME = "UPDATE tblClass "
-            + "SET class = ? " + "WHERE (classID = ?) ";
-    private final static String QRY_UPDATE_CLASS_NAME2 = "UPDATE tblClass "
-            + "SET class = ?, iconizer = ? " + "WHERE (classID = ?) ";
-    private final static String QRY_UPDATE_CLASS_NAME3 = "UPDATE tblClass "
-            + "SET class = ?, registrationKey = ?, iconizer = ? " + "WHERE (classID = ?) ";
+//    private final static String QRY_UPDATE_CLASS_NAME = "UPDATE tblClass "
+//            + "SET class = ? " + "WHERE (classID = ?) ";
+//    private final static String QRY_UPDATE_CLASS_NAME2 = "UPDATE tblClass "
+//            + "SET class = ?, iconizer = ? " + "WHERE (classID = ?) ";
+//    private final static String QRY_UPDATE_CLASS_NAME3 = "UPDATE tblClass "
+//            + "SET class = ?, registrationKey = ?, iconizer = ? " + "WHERE (classID = ?) ";
 
     // TODO DONE V1_3
 //    private final static String QRY_UPDATE_CLASS_USER = "UPDATE tblClass "
 //            + "SET userID = ? WHERE (classID = ?)";
-    private final static String QRY_UPDATE_SCHOOL = "UPDATE tblSchool "
-            + "SET schoolName = ?, " + "schoollogin = ? " + "WHERE (schoolID = ?) ";
+//    private final static String QRY_UPDATE_SCHOOL = "UPDATE tblSchool "
+//            + "SET schoolName = ?, " + "schoollogin = ? " + "WHERE (schoolID = ?) ";
 
-    private final static String QRY_UPDATE_SCHOOL2 = "UPDATE tblSchool "
-            + "SET export = ? WHERE (schoolID = ?) ";
+//    private final static String QRY_UPDATE_SCHOOL2 = "UPDATE tblSchool "
+//            + "SET export = ? WHERE (schoolID = ?) ";
 
-    private final static String QRY_UPDATE_SCHOOL3 = "UPDATE tblSchool "
-            + "SET schoolRights = ? WHERE (schoolID = ?) ";
+//    private final static String QRY_UPDATE_SCHOOL3 = "UPDATE tblSchool "
+//            + "SET schoolRights = ? WHERE (schoolID = ?) ";
 
     private final static String QRY_UPDATE_SCHOOLGROUP_PASSW = "UPDATE tblSchoolGroup "
             + "SET passwd = ? " + "WHERE (schoolGroupID = ?) ";
@@ -698,20 +692,20 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 //            + "SET `jarname` = ?, lastDate = CURDATE() " + "WHERE `key` = ?";
 //    private final static String QRY_JAR_SELECT_KEY = "SELECT jarname FROM tblJars where `key` = ?";
 //    private final static String QRY_JAR_COUNT_JARS = "SELECT count(*) as number FROM tblApplet ";
-    private final static String QRY_ADD_COURSE = "INSERT INTO tblCourse(schoolID, name, description, image, dwoProfileID, parentID, withChildren) "
-            + "VALUES(?, ?, ?, ?, ?, ?, ?) ";
+//    private final static String QRY_ADD_COURSE = "INSERT INTO tblCourse(schoolID, name, description, image, dwoProfileID, parentID, withChildren) "
+//            + "VALUES(?, ?, ?, ?, ?, ?, ?) ";
 
-    private final static String QRY_ADD_COURSE_BASIC = "INSERT INTO tblCourse(name, description, image, dwoProfileID, parentID, withChildren) "
-            + "VALUES(?, ?, ?, ?, ?, ?) ";
+//    private final static String QRY_ADD_COURSE_BASIC = "INSERT INTO tblCourse(name, description, image, dwoProfileID, parentID, withChildren) "
+//            + "VALUES(?, ?, ?, ?, ?, ?) ";
 
-    private final static String QRY_UPDATE_COURSE = "UPDATE tblCourse "
-            + "SET name = ?, " + "description = ? " + "WHERE (courseID = ?) ";
-    private final static String QRY_UPDATE_COURSE2 = "UPDATE tblCourse "
-            + "SET name = ?, description = ?, export = ? WHERE (courseID = ?) ";
+//    private final static String QRY_UPDATE_COURSE = "UPDATE tblCourse "
+//            + "SET name = ?, " + "description = ? " + "WHERE (courseID = ?) ";
+//    private final static String QRY_UPDATE_COURSE2 = "UPDATE tblCourse "
+//            + "SET name = ?, description = ?, export = ? WHERE (courseID = ?) ";
     private final static String QRY_UPDATE_COURSE3 = "UPDATE tblCourse "
             + "SET name = ?, description = ?, export = ?, schoolID = ? WHERE (courseID = ?) ";
-    private final static String QRY_UPDATE_COURSE4 = "UPDATE tblCourse "
-            + "SET name = ?, description = ?, export = ?, schoolID = ?, parentID = ? WHERE (courseID = ?) ";
+//    private final static String QRY_UPDATE_COURSE4 = "UPDATE tblCourse "
+//            + "SET name = ?, description = ?, export = ?, schoolID = ?, parentID = ? WHERE (courseID = ?) ";
     private final static String QRY_ADD_SCO_CONTEXT = "INSERT INTO tblScoContext(courseID, appletID, sconame, sequencenr) "
             + "VALUES(?, ?, ?, ?) ";
     private final static String QRY_ADD_SCO_DATA = "INSERT INTO tblScoData(scoID, description, launchdata) "
@@ -732,11 +726,11 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
             + "tblScoContext.showscore = ? "
             + "WHERE (tblScoContext.scoID = ? and tblScoContext.scoID = tblScoData.scoID) ";
 
-    private final static String QRY_UPDATE_SCO_SEQUENCE = "UPDATE tblScoContext "
-            + "SET sequencenr = sequencenr - 1 " + "WHERE (sequencenr > ?) "
-            + "AND   (courseid = ?) ";
+//    private final static String QRY_UPDATE_SCO_SEQUENCE = "UPDATE tblScoContext "
+//            + "SET sequencenr = sequencenr - 1 " + "WHERE (sequencenr > ?) "
+//            + "AND   (courseid = ?) ";
 
-    private final static String QRY_SELECT_TO_SCHOOLS_FROM = "select * from tblfromto where schoolFrom = ? ";
+//    private final static String QRY_SELECT_TO_SCHOOLS_FROM = "select * from tblfromto where schoolFrom = ? ";
 
 // TODO false bij een export.    
     /**
@@ -844,20 +838,20 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 //        return executeQueryWithResult(query);
 //    }
 
-    /**
-     * @param tableName The tablename of the table to select data.
-     * @return java.util.Vector The vector contains Hashtables who contains the
-     * rows mapped on the columnname.
-     * @throws java.sql.SQLException
-     */
-    private Vector getTable(String tableName, String orderCol) throws SQLException {
-        String[] arguments = {tableName, orderCol};
-        String query = MessageFormat
-                .format(QRY_DEFAULT_SELECT_TABLE_ORDER, arguments);
-
-        //log("DbAccess.getTable " + query);
-        return executeQueryWithResult(query);
-    }
+//    /**
+//     * @param tableName The tablename of the table to select data.
+//     * @return java.util.Vector The vector contains Hashtables who contains the
+//     * rows mapped on the columnname.
+//     * @throws java.sql.SQLException
+//     */
+//    private Vector getTable(String tableName, String orderCol) throws SQLException {
+//        String[] arguments = {tableName, orderCol};
+//        String query = MessageFormat
+//                .format(QRY_DEFAULT_SELECT_TABLE_ORDER, arguments);
+//
+//        //log("DbAccess.getTable " + query);
+//        return executeQueryWithResult(query);
+//    }
 
     /**
      * @param tableName The tablename of the table to select data.
@@ -979,22 +973,22 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return null;
     }
 
-    /**
-     * Checks if a schoolLogin already exists in the database
-     *
-     * @param schoolLogin the schoolLogin to check.
-     * @return If there exists a school with the specified schoolLogin, true is
-     * returned. Otherwise, false is returned.
-     * @throws SQLException
-     */
-    private boolean schoolLoginExists(String schoolLogin) throws SQLException {
-        PreparedStatement ps = getStatement(QRY_CHECK_SCHOOLLOGIN_EXISTS);
-        ps.setString(1, schoolLogin);
-        ResultSet rs = ps.executeQuery();
-        boolean schoolLoginExists = !isEmpty(rs);
-        rs.close();
-        return schoolLoginExists;
-    }
+//    /**
+//     * Checks if a schoolLogin already exists in the database
+//     *
+//     * @param schoolLogin the schoolLogin to check.
+//     * @return If there exists a school with the specified schoolLogin, true is
+//     * returned. Otherwise, false is returned.
+//     * @throws SQLException
+//     */
+//    private boolean schoolLoginExists(String schoolLogin) throws SQLException {
+//        PreparedStatement ps = getStatement(QRY_CHECK_SCHOOLLOGIN_EXISTS);
+//        ps.setString(1, schoolLogin);
+//        ResultSet rs = ps.executeQuery();
+//        boolean schoolLoginExists = !isEmpty(rs);
+//        rs.close();
+//        return schoolLoginExists;
+//    }
 
     /**
      *
@@ -1491,35 +1485,35 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 //        return v;
 //    }
 
-    /**
-     * @param schoolName
-     * @param schoolLogin
-     * @param studentPassw
-     * @param teacherPassw
-     * @return java.util.Hashtable
-     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
-     * @throws java.sql.SQLException
-     * @deprecated Gebruik expliciet nummer.
-     */
+//    /**
+//     * @param schoolName
+//     * @param schoolLogin
+//     * @param studentPassw
+//     * @param teacherPassw
+//     * @return java.util.Hashtable
+//     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
+//     * @throws java.sql.SQLException
+//     * @deprecated Gebruik expliciet nummer.
+//     */
     //@Override
 //    private Hashtable addSchool(String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
 //            throws DwoXmlRpcException, SQLException {
 //        return addSchool(0, schoolName, schoolLogin, studentPassw, teacherPassw);
 //    }
 
-    /**
-     * Add an existing user to a school.
-     *
-     * @param schoolID
-     * @param schoolName
-     * @param schoolLogin
-     * @param studentPassw
-     * @param teacherPassw
-     * @return java.util.Hashtable
-     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
-     * @throws java.sql.SQLException
-     *
-     */
+//    /**
+//     * Add an existing user to a school.
+//     *
+//     * @param schoolID
+//     * @param schoolName
+//     * @param schoolLogin
+//     * @param studentPassw
+//     * @param teacherPassw
+//     * @return java.util.Hashtable
+//     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
+//     * @throws java.sql.SQLException
+//     *
+//     */
     //@Override
 //    private Hashtable addSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
 //            throws DwoXmlRpcException, SQLException {
@@ -1563,39 +1557,39 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 //        return result;
 //    }
 
-    /**
-     * Add an existing user to a school.
-     *
-     * @param schoolID
-     * @param schoolName
-     * @param schoolLogin
-     * @param passwdMap
-     * @return
-     * @throws DwoXmlRpcException
-     * @throws SQLException
-     */
-    private Hashtable addSchool(int schoolID, String schoolName, String schoolLogin, Hashtable passwdMap)
-            throws DwoXmlRpcException, SQLException {
-        Hashtable result = null;
-        if (schoolLoginExists(schoolLogin)) {
-            throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCHOOL_EXISTS);
-        } else {
-            PreparedStatement ps = getStatementWithGeneratedKeys(QRY_ADD_SCHOOLID);
-            ps.setString(1, schoolName);
-            ps.setString(2, schoolLogin);
-            ps.setInt(3, schoolID);
-            ps.execute();
-            if (schoolID == 0) {
-                ResultSet rs = ps.getGeneratedKeys();
-                rs.first();
-                schoolID = rs.getInt(1);
-                rs.close();
-            }
-        }
-        updateSchoolGroupPasswdMap(schoolID, passwdMap);
-        result = getRecord("tblSchool", "schoolID", schoolID);
-        return result;
-    }
+//    /**
+//     * Add an existing user to a school.
+//     *
+//     * @param schoolID
+//     * @param schoolName
+//     * @param schoolLogin
+//     * @param passwdMap
+//     * @return
+//     * @throws DwoXmlRpcException
+//     * @throws SQLException
+//     */
+//    private Hashtable addSchool(int schoolID, String schoolName, String schoolLogin, Hashtable passwdMap)
+//            throws DwoXmlRpcException, SQLException {
+//        Hashtable result = null;
+//        if (schoolLoginExists(schoolLogin)) {
+//            throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCHOOL_EXISTS);
+//        } else {
+//            PreparedStatement ps = getStatementWithGeneratedKeys(QRY_ADD_SCHOOLID);
+//            ps.setString(1, schoolName);
+//            ps.setString(2, schoolLogin);
+//            ps.setInt(3, schoolID);
+//            ps.execute();
+//            if (schoolID == 0) {
+//                ResultSet rs = ps.getGeneratedKeys();
+//                rs.first();
+//                schoolID = rs.getInt(1);
+//                rs.close();
+//            }
+//        }
+//        updateSchoolGroupPasswdMap(schoolID, passwdMap);
+//        result = getRecord("tblSchool", "schoolID", schoolID);
+//        return result;
+//    }
 
     /**
      * @param schoolName
@@ -1648,52 +1642,52 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         }
     }
 
-    private void updateSchoolNameLogin(int schoolID, String schoolName,
-            String schoolLogin, Hashtable result) throws SQLException {
-        String schoolNameOld = (String) result.get("schoolName");
-        String schoolLoginOld = (String) result.get("schoollogin");
-        PreparedStatement ps;
-        if (!schoolName.equals(schoolNameOld) || !schoolLoginOld.equals(schoolLogin)) {
-            ps = getStatement(QRY_UPDATE_SCHOOL);
-            ps.setString(1, schoolName);
-            ps.setString(2, schoolLogin);
-            ps.setInt(3, schoolID);
+//    private void updateSchoolNameLogin(int schoolID, String schoolName,
+//            String schoolLogin, Hashtable result) throws SQLException {
+//        String schoolNameOld = (String) result.get("schoolName");
+//        String schoolLoginOld = (String) result.get("schoollogin");
+//        PreparedStatement ps;
+//        if (!schoolName.equals(schoolNameOld) || !schoolLoginOld.equals(schoolLogin)) {
+//            ps = getStatement(QRY_UPDATE_SCHOOL);
+//            ps.setString(1, schoolName);
+//            ps.setString(2, schoolLogin);
+//            ps.setInt(3, schoolID);
+//
+//            ps.execute();
+//            ps.close();
+//        }
+//    }
 
-            ps.execute();
-            ps.close();
-        }
-    }
+//    /**
+//     *
+//     * @param schoolID
+//     * @param schoolName
+//     * @param schoolLogin
+//     * @param passwdMap
+//     * @return
+//     * @throws SQLException
+//     */
+//    private Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, Hashtable passwdMap) throws SQLException {
+//        Hashtable result;
+//        result = getRecord("tblSchool", "schoolID", schoolID);
+//        updateSchoolNameLogin(schoolID, schoolName, schoolLogin, result);
+//        updateSchoolGroupPasswdMap(schoolID, passwdMap);
+//        result = getRecord("tblSchool", "schoolID", schoolID);
+//        return result;
+//    }
 
-    /**
-     *
-     * @param schoolID
-     * @param schoolName
-     * @param schoolLogin
-     * @param passwdMap
-     * @return
-     * @throws SQLException
-     */
-    private Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, Hashtable passwdMap) throws SQLException {
-        Hashtable result;
-        result = getRecord("tblSchool", "schoolID", schoolID);
-        updateSchoolNameLogin(schoolID, schoolName, schoolLogin, result);
-        updateSchoolGroupPasswdMap(schoolID, passwdMap);
-        result = getRecord("tblSchool", "schoolID", schoolID);
-        return result;
-    }
-
-    private void updateSchoolGroupPasswdMap(int schoolID, Hashtable passwdMap)
-            throws SQLException {
-        Set entries = passwdMap.entrySet();
-        Iterator iterator = entries.iterator();
-        while (iterator.hasNext()) {
-            Map.Entry entry = (Map.Entry) iterator.next();
-            //int groupID = ((Number) entry.getKey()).intValue();
-            int groupID = Integer.parseInt(entry.getKey().toString());
-            String passwd = entry.getValue().toString();
-            updateSchoolGroupPasswd(schoolID, groupID, passwd);
-        }
-    }
+//    private void updateSchoolGroupPasswdMap(int schoolID, Hashtable passwdMap)
+//            throws SQLException {
+//        Set entries = passwdMap.entrySet();
+//        Iterator iterator = entries.iterator();
+//        while (iterator.hasNext()) {
+//            Map.Entry entry = (Map.Entry) iterator.next();
+//            //int groupID = ((Number) entry.getKey()).intValue();
+//            int groupID = Integer.parseInt(entry.getKey().toString());
+//            String passwd = entry.getValue().toString();
+//            updateSchoolGroupPasswd(schoolID, groupID, passwd);
+//        }
+//    }
 
     /*
      public boolean register(String username, String password, String firstname,
@@ -2124,34 +2118,28 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.DbAccessIF#getTable(java.lang.String,
-     *      java.util.Hashtable)
-     */
     //@Override
     private Vector getTable(String tableName, Hashtable wheredef)
             throws IOException, XmlRpcException, SQLException {
         return getTable(tableName, wheredef, null);
     }
 
-    /**
-     *
-     * @param schoolID
-     * @return
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    private Vector getToSchoolsFrom(int schoolID)
-            throws IOException, XmlRpcException, SQLException {
-        close(); //for lazy connection
-        PreparedStatement ps;
-        ps = getStatement(QRY_SELECT_TO_SCHOOLS_FROM);
-        ps.setInt(1, schoolID);
-        return executeQueryWithResult(ps);
-    }
+//    /**
+//     *
+//     * @param schoolID
+//     * @return
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    private Vector getToSchoolsFrom(int schoolID)
+//            throws IOException, XmlRpcException, SQLException {
+//        close(); //for lazy connection
+//        PreparedStatement ps;
+//        ps = getStatement(QRY_SELECT_TO_SCHOOLS_FROM);
+//        ps.setInt(1, schoolID);
+//        return executeQueryWithResult(ps);
+//    }
 
     /*
      * (non-Javadoc)
@@ -2273,12 +2261,6 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 
 //    private Date currentTime = new Date();
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.DbAccessIF#LMSSetValue(java.lang.String,
-     *      java.lang.String)
-     */
     /**
      *
      * @param scoID
@@ -2422,24 +2404,24 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return "MD5(" + iValue.length() + "," + MD5.getHashString(iValue) + ")";
     }
 
-    /**
-     *
-     * @param scoID
-     * @param userID
-     * @param schoolGroupID
-     * @param iDataModelElement
-     * @param iValue
-     * @param random
-     * @return
-     * @throws SQLException
-     * @throws IOException
-     * @throws XmlRpcException
-     */
-    private String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement,
-            String iValue, String random) throws SQLException, IOException, XmlRpcException {
-        LMSSetValue(scoID, userID, schoolGroupID, iDataModelElement, iValue);
-        return random;
-    }
+//    /**
+//     *
+//     * @param scoID
+//     * @param userID
+//     * @param schoolGroupID
+//     * @param iDataModelElement
+//     * @param iValue
+//     * @param random
+//     * @return
+//     * @throws SQLException
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     */
+//    private String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement,
+//            String iValue, String random) throws SQLException, IOException, XmlRpcException {
+//        LMSSetValue(scoID, userID, schoolGroupID, iDataModelElement, iValue);
+//        return random;
+//    }
 
     /*
      * (non-Javadoc)
@@ -2618,30 +2600,30 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return v;
     }
 
-    /**
-     * The results of a single course by a single student.
-     *
-     * @param courseID
-     * @param userID
-     * @return
-     * @throws java.io.IOException
-     * @throws java.sql.SQLException
-     * @throws org.apache.xmlrpc.applet.XmlRpcException
-     */
-    private Vector getUserResults(int courseID, int userID, int schoolGroupID)
-            throws IOException, XmlRpcException, SQLException {
-        //MessageFormat.
-        MessageFormat qry = new MessageFormat(QRY_RESULTS_SINGLE_STUDENT_COURSE);
-        PreparedStatement ps = getStatement(qry.format(new Object[]{Integer.toString(userID), Integer.toString(schoolGroupID), Integer.toString(courseID)}));
-//        ps.setInt(1, userID);
-//        ps.setInt(2, schoolGroupID);
-//        ps.setInt(3, courseID);
-
-        Vector v = executeQueryWithResult(ps);
-        LOG.log(Level.FINE, "Got {0} results for <course, student> = <{1},{2}> combination.", new Object[]{v.size(), courseID, userID});
-
-        return v;
-    }
+//    /**
+//     * The results of a single course by a single student.
+//     *
+//     * @param courseID
+//     * @param userID
+//     * @return
+//     * @throws java.io.IOException
+//     * @throws java.sql.SQLException
+//     * @throws org.apache.xmlrpc.applet.XmlRpcException
+//     */
+//    private Vector getUserResults(int courseID, int userID, int schoolGroupID)
+//            throws IOException, XmlRpcException, SQLException {
+//        //MessageFormat.
+//        MessageFormat qry = new MessageFormat(QRY_RESULTS_SINGLE_STUDENT_COURSE);
+//        PreparedStatement ps = getStatement(qry.format(new Object[]{Integer.toString(userID), Integer.toString(schoolGroupID), Integer.toString(courseID)}));
+////        ps.setInt(1, userID);
+////        ps.setInt(2, schoolGroupID);
+////        ps.setInt(3, courseID);
+//
+//        Vector v = executeQueryWithResult(ps);
+//        LOG.log(Level.FINE, "Got {0} results for <course, student> = <{1},{2}> combination.", new Object[]{v.size(), courseID, userID});
+//
+//        return v;
+//    }
 
     /*
      * Get the student results for a <course, teacher> combination.
@@ -2671,31 +2653,25 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.DbAccessIF#renameClass(int,
-     *      java.lang.String)
-     */
-    /**
-     *
-     * @param classID
-     * @param newName
-     * @return
-     * @throws DwoXmlRpcException
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    //@Override
-    private boolean renameClass(int classID, String newName)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        PreparedStatement ps = getStatement(QRY_UPDATE_CLASS_NAME);
-        ps.setString(1, newName);
-        ps.setInt(2, classID);
-        return renameCommon(ps);
-    }
+//    /**
+//     *
+//     * @param classID
+//     * @param newName
+//     * @return
+//     * @throws DwoXmlRpcException
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    //@Override
+//    private boolean renameClass(int classID, String newName)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        PreparedStatement ps = getStatement(QRY_UPDATE_CLASS_NAME);
+//        ps.setString(1, newName);
+//        ps.setInt(2, classID);
+//        return renameCommon(ps);
+//    }
 
     /**
      * Updates a class entry and the sets the iconizer and bool
@@ -2730,24 +2706,24 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 //        return renameCommon(ps);
 //    }
 
-    private boolean renameCommon(PreparedStatement ps)
-            throws DwoXmlRpcException, SQLException {
-        try {
-            LOG.log(Level.FINE, "Trying query: {0}.", new Object[]{ps.toString()});
-            ps.execute();
-
-        } catch (SQLException e) {
-            if (e.getErrorCode() == 1062) {
-                /* The class already exists */
-                LOG.log(Level.FINE, "Class {0} already exists. Throwing error.");
-                throw new DwoXmlRpcException(
-                        DwoXmlRpcException.EXC_CLASS_EXISTS);
-            } else {
-                throw e;
-            }
-        }
-        return true;
-    }
+//    private boolean renameCommon(PreparedStatement ps)
+//            throws DwoXmlRpcException, SQLException {
+//        try {
+//            LOG.log(Level.FINE, "Trying query: {0}.", new Object[]{ps.toString()});
+//            ps.execute();
+//
+//        } catch (SQLException e) {
+//            if (e.getErrorCode() == 1062) {
+//                /* The class already exists */
+//                LOG.log(Level.FINE, "Class {0} already exists. Throwing error.");
+//                throw new DwoXmlRpcException(
+//                        DwoXmlRpcException.EXC_CLASS_EXISTS);
+//            } else {
+//                throw e;
+//            }
+//        }
+//        return true;
+//    }
 
 //    /**
 //     * Maak userID de Teacher van classID.
@@ -2847,12 +2823,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
 //        return ((Number) result.get("number")).intValue();
 //    }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.DbAccessIF#log(java.lang.String)
-     */
-    private boolean log(String s) {
+   private boolean log(String s) {
         log(Level.INFO, s, null);
         return false;
     }
@@ -2885,11 +2856,6 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return executeQueryWithResult(ps);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.DbAccessIF#getEditableCoursesAdmin()
-     */
     //@Override
     private Vector getEditableCoursesAdmin() throws IOException,
             XmlRpcException, SQLException {
@@ -2899,155 +2865,143 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return executeQueryWithResult(ps);
     }
 
-    /**
-     *
-     * @param schoolID
-     * @param name
-     * @param description
-     * @param dwoProfile
-     * @return
-     * @throws DwoXmlRpcException
-     * @throws SQLException
-     */
+//    /**
+//     *
+//     * @param schoolID
+//     * @param name
+//     * @param description
+//     * @param dwoProfile
+//     * @return
+//     * @throws DwoXmlRpcException
+//     * @throws SQLException
+//     */
     //@Override
 //    private int addCourse(int schoolID, String name, String description, int dwoProfile) throws DwoXmlRpcException, SQLException {
 //        return addCourse(schoolID, name, description, dwoProfile, 0, false);
 //    }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.DbAccessIF#addCourse(java.lang.String,
-     *      java.lang.String)
-     */
-    /**
-     *
-     * @param schoolID
-     * @param name
-     * @param description
-     * @param dwoProfile
-     * @param parentID
-     * @param isMap
-     * @return
-     * @throws DwoXmlRpcException
-     * @throws SQLException
-     */
-    private int addCourse(int schoolID, String name, String description, int dwoProfile, int parentID, boolean isMap)
-            throws DwoXmlRpcException, SQLException {
-        Hashtable schoolData = getRecord("tblSchool", "schoolID", schoolID);
-        log("DbAccess.addCourse" + schoolData);
-        String image = "";
-        if (schoolData.containsKey("image")
-                && (!schoolData.get("image").equals(""))) {
-            image = (String) schoolData.get("image");
-        }
+//    /**
+//     *
+//     * @param schoolID
+//     * @param name
+//     * @param description
+//     * @param dwoProfile
+//     * @param parentID
+//     * @param isMap
+//     * @return
+//     * @throws DwoXmlRpcException
+//     * @throws SQLException
+//     */
+//    private int addCourse(int schoolID, String name, String description, int dwoProfile, int parentID, boolean isMap)
+//            throws DwoXmlRpcException, SQLException {
+//        Hashtable schoolData = getRecord("tblSchool", "schoolID", schoolID);
+//        log("DbAccess.addCourse" + schoolData);
+//        String image = "";
+//        if (schoolData.containsKey("image")
+//                && (!schoolData.get("image").equals(""))) {
+//            image = (String) schoolData.get("image");
+//        }
+//
+//        PreparedStatement ps;
+//
+//        if (schoolID == 0) {
+//            ps = getStatementWithGeneratedKeys(QRY_ADD_COURSE_BASIC);
+//            ps.setString(1, name);
+//            ps.setString(2, description);
+//            ps.setString(3, image);
+//            ps.setInt(4, dwoProfile);
+//            ps.setInt(5, parentID);
+//            ps.setBoolean(6, isMap);
+//        } else {
+//            ps = getStatementWithGeneratedKeys(QRY_ADD_COURSE);
+//            ps.setInt(1, schoolID);
+//            ps.setString(2, name);
+//            ps.setString(3, description);
+//            ps.setString(4, image);
+//            ps.setInt(5, dwoProfile);
+//            ps.setInt(6, parentID);
+//            ps.setBoolean(7, isMap);
+//        }
+//
+//        try {
+//            ps.execute();
+//        } catch (SQLException e) {
+//            if (e.getErrorCode() == 1062) {
+//                /* The course already exists */
+//                DwoXmlRpcException dwoXmlRpcException = new DwoXmlRpcException(
+//                        DwoXmlRpcException.EXC_COURSE_EXISTS);
+//                dwoXmlRpcException.initCause(e);
+//                throw dwoXmlRpcException;
+//            } else {
+//                throw e;
+//            }
+//        }
+//
+//        ResultSet rs = ps.getGeneratedKeys();
+//
+//        int result = -1;
+//        if (!isEmpty(rs)) {
+//            result = rs.getInt(1);
+//        }
+//        rs.close();
+//        return result;
+//    }
 
-        PreparedStatement ps;
+//    /**
+//     *
+//     * @param courseID
+//     * @param name
+//     * @param description
+//     * @return
+//     * @throws DwoXmlRpcException
+//     * @throws SQLException
+//     */
+//    //@Override
+//    private boolean changeCourse(int courseID, String name, String description)
+//            throws DwoXmlRpcException, SQLException {
+//        PreparedStatement ps;
+//        ps = getStatement(QRY_UPDATE_COURSE);
+//        ps.setString(1, name);
+//        ps.setString(2, description);
+//        ps.setInt(3, courseID);
+//
+//        try {
+//            ps.execute();
+//        } catch (SQLException e) {
+//            if (e.getErrorCode() == 1062) {
+//                /* The course already exists */
+//                throw new DwoXmlRpcException(
+//                        DwoXmlRpcException.EXC_COURSE_EXISTS);
+//            } else {
+//                throw e;
+//            }
+//        }
+//        return true;
+//    }
 
-        if (schoolID == 0) {
-            ps = getStatementWithGeneratedKeys(QRY_ADD_COURSE_BASIC);
-            ps.setString(1, name);
-            ps.setString(2, description);
-            ps.setString(3, image);
-            ps.setInt(4, dwoProfile);
-            ps.setInt(5, parentID);
-            ps.setBoolean(6, isMap);
-        } else {
-            ps = getStatementWithGeneratedKeys(QRY_ADD_COURSE);
-            ps.setInt(1, schoolID);
-            ps.setString(2, name);
-            ps.setString(3, description);
-            ps.setString(4, image);
-            ps.setInt(5, dwoProfile);
-            ps.setInt(6, parentID);
-            ps.setBoolean(7, isMap);
-        }
-
-        try {
-            ps.execute();
-        } catch (SQLException e) {
-            if (e.getErrorCode() == 1062) {
-                /* The course already exists */
-                DwoXmlRpcException dwoXmlRpcException = new DwoXmlRpcException(
-                        DwoXmlRpcException.EXC_COURSE_EXISTS);
-                dwoXmlRpcException.initCause(e);
-                throw dwoXmlRpcException;
-            } else {
-                throw e;
-            }
-        }
-
-        ResultSet rs = ps.getGeneratedKeys();
-
-        int result = -1;
-        if (!isEmpty(rs)) {
-            result = rs.getInt(1);
-        }
-        rs.close();
-        return result;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.DbAccessIF#changeCourse(int,
-     *      java.lang.String, java.lang.String)
-     */
-    /**
-     *
-     * @param courseID
-     * @param name
-     * @param description
-     * @return
-     * @throws DwoXmlRpcException
-     * @throws SQLException
-     */
-    //@Override
-    private boolean changeCourse(int courseID, String name, String description)
-            throws DwoXmlRpcException, SQLException {
-        PreparedStatement ps;
-        ps = getStatement(QRY_UPDATE_COURSE);
-        ps.setString(1, name);
-        ps.setString(2, description);
-        ps.setInt(3, courseID);
-
-        try {
-            ps.execute();
-        } catch (SQLException e) {
-            if (e.getErrorCode() == 1062) {
-                /* The course already exists */
-                throw new DwoXmlRpcException(
-                        DwoXmlRpcException.EXC_COURSE_EXISTS);
-            } else {
-                throw e;
-            }
-        }
-        return true;
-    }
-
-    //@Override
-    private boolean changeCourse(int courseID, String name, String description, boolean export)
-            throws DwoXmlRpcException, SQLException {
-        PreparedStatement ps;
-        ps = getStatement(QRY_UPDATE_COURSE2);
-        ps.setString(1, name);
-        ps.setString(2, description);
-        ps.setBoolean(3, export);
-        ps.setInt(4, courseID);
-
-        try {
-            ps.execute();
-        } catch (SQLException e) {
-            if (e.getErrorCode() == 1062) {
-                /* The course already exists */
-                throw new DwoXmlRpcException(
-                        DwoXmlRpcException.EXC_COURSE_EXISTS);
-            } else {
-                throw e;
-            }
-        }
-        return true;
-    }
+//    //@Override
+//    private boolean changeCourse(int courseID, String name, String description, boolean export)
+//            throws DwoXmlRpcException, SQLException {
+//        PreparedStatement ps;
+//        ps = getStatement(QRY_UPDATE_COURSE2);
+//        ps.setString(1, name);
+//        ps.setString(2, description);
+//        ps.setBoolean(3, export);
+//        ps.setInt(4, courseID);
+//
+//        try {
+//            ps.execute();
+//        } catch (SQLException e) {
+//            if (e.getErrorCode() == 1062) {
+//                /* The course already exists */
+//                throw new DwoXmlRpcException(
+//                        DwoXmlRpcException.EXC_COURSE_EXISTS);
+//            } else {
+//                throw e;
+//            }
+//        }
+//        return true;
+//    }
 
     /**
      *
@@ -3102,274 +3056,263 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return true;
     }
 
-    /**
-     *
-     * @param courseID
-     * @param name
-     * @param description
-     * @param export
-     * @param schoolID
-     * @param parentID
-     * @return
-     * @throws DwoXmlRpcException
-     * @throws SQLException
-     */
-    //@Override
-    private boolean changeCourse(int courseID, String name, String description,
-            boolean export, int schoolID, int parentID)
-            throws DwoXmlRpcException, SQLException {
-// TODO als course schoolID verandert EN withChildren = true, dan ook kinderen updaten van school!!!!!!
-        PreparedStatement ps;
-        ps = getStatement(QRY_UPDATE_COURSE4);
-        ps.setString(1, name);
-        ps.setString(2, description);
-        ps.setBoolean(3, export);
-        if (schoolID == 0) {
-            ps.setNull(4, Types.INTEGER);
-        } else {
-            ps.setInt(4, schoolID);
-        }
-        ps.setInt(5, parentID);
-        ps.setInt(6, courseID);
-        try {
-            ps.execute();
-        } catch (SQLException e) {
-            if (e.getErrorCode() == 1062) {
-                /* The course already exists */
-                throw new DwoXmlRpcException(
-                        DwoXmlRpcException.EXC_COURSE_EXISTS);
-            } else {
-                throw e;
-            }
-        }
-        return true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.DbAccessIF#deleteCourse(int)
-     */
-    /**
-     *
-     * @param courseID
-     * @return
-     * @throws DwoXmlRpcException
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    //@Override
-    private boolean deleteCourse(int courseID) throws DwoXmlRpcException,
-            IOException, XmlRpcException, SQLException {
-        Hashtable wheredef = new Hashtable();
-        wheredef.put("parentID", courseID);
-        Vector children = getTable("tblCourse", wheredef);
-        /* delete the children, recurse */
-        Iterator iter = children.iterator();
-        while (iter.hasNext()) {
-            Hashtable course = (Hashtable) iter.next();
-            int id = ((Number) course.get("courseID")).intValue();
-            deleteCourse(id);
-        }
-
-        wheredef.clear();
-        wheredef.put("courseID", new Integer(courseID));
-        Vector scos = getTable("tblScoContext", wheredef);
-        String[] arguments = new String[2];
-
-        /* Delete results of sco's of the course */
-        String statement;
-        //String statement = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
-        PreparedStatement ps;
-        int scoID;
-        while (scos.size() > 0) {
-            //ps = getStatement(statement);
-            ps = getStatement(QRY_DELETE_STUDENTSCO_BY_SCO);
-            scoID = ((Integer) ((Hashtable) scos.remove(0)).get("scoID"))
-                    .intValue();
-            ps.setInt(1, scoID);
-            ps.execute();
-            ps.close();
-            log("deleteCourse(scoID=" + scoID + ")");
-        }
-
-        /* Delete Sco's of the course */
-        ps = getStatement("delete tblScoContext, tblScoData  from tblScoContext join tblScoData using (scoID) where courseid = ?");
-        //ps = getStatement(statement);
-        ps.setInt(1, courseID);
-        ps.execute();
-        ps.close();
-
-        /* Delete the course */
-        arguments[0] = "tblCourse";
-        arguments[1] = "courseID";
-        statement = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
-        ps = getStatement(statement);
-        ps.setInt(1, courseID);
-        ps.execute();
-        ps.close();
-
-        return true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.DbAccessIF#addSco(int, java.lang.String,
-     *      java.lang.String, int)
-     */
-    /**
-     *
-     * @param courseID
-     * @param name
-     * @param description
-     * @param appletConfigID
-     * @param sequencenr
-     * @return
-     * @throws DwoXmlRpcException
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    //@Override
-    private int addSco(int courseID, String name, String description,
-            int appletConfigID, int sequencenr) throws DwoXmlRpcException,
-            IOException, XmlRpcException, SQLException {
-        Hashtable data;
-        if (appletConfigID < 0) {
-// TODO tblSco done
-            data = getRecord("tblScoView", "scoID", -appletConfigID); // Wim: 24 dec Data, geen context
-        } else {
-            data = getRecord("tblAppletConfig", "appletConfigID",
-                    appletConfigID);
-        }
-        //log("DbAccess.addSco " + data);
-        int appletID = -1;
-        String launchdata = "";
-//        boolean showScore = false;
-       if (data.containsKey("appletID")) {
-            appletID = ((Integer) data.get("appletID")).intValue();
-        }
-        if (data.containsKey("launchdata")) {
-            launchdata = (String) data.get("launchdata");
-        }
-//        if (data.containsKey("showscore")) {
-//        	showScore =  Boolean.TRUE.equals(data.get("showscore"));
+//    /**
+//     *
+//     * @param courseID
+//     * @param name
+//     * @param description
+//     * @param export
+//     * @param schoolID
+//     * @param parentID
+//     * @return
+//     * @throws DwoXmlRpcException
+//     * @throws SQLException
+//     */
+//    //@Override
+//    private boolean changeCourse(int courseID, String name, String description,
+//            boolean export, int schoolID, int parentID)
+//            throws DwoXmlRpcException, SQLException {
+//// TODO als course schoolID verandert EN withChildren = true, dan ook kinderen updaten van school!!!!!!
+//        PreparedStatement ps;
+//        ps = getStatement(QRY_UPDATE_COURSE4);
+//        ps.setString(1, name);
+//        ps.setString(2, description);
+//        ps.setBoolean(3, export);
+//        if (schoolID == 0) {
+//            ps.setNull(4, Types.INTEGER);
+//        } else {
+//            ps.setInt(4, schoolID);
 //        }
-        int scoID = addSco(courseID, name, description, appletID, launchdata,
-                sequencenr);
-//		if (showScore) {
-//            changeSco(scoID, name, description, false);
+//        ps.setInt(5, parentID);
+//        ps.setInt(6, courseID);
+//        try {
+//            ps.execute();
+//        } catch (SQLException e) {
+//            if (e.getErrorCode() == 1062) {
+//                /* The course already exists */
+//                throw new DwoXmlRpcException(
+//                        DwoXmlRpcException.EXC_COURSE_EXISTS);
+//            } else {
+//                throw e;
+//            }
 //        }
-        try {
-            Object launchdatabytes = data.get("launchdatabytes");
-            if (launchdatabytes instanceof byte[]) {
-                changeLaunchDataBytes(scoID, (byte[]) launchdatabytes);
-            }
-        } catch (Exception e) {
-            log(Level.SEVERE, "changeLaunchDataBytes", e);
-        }
+//        return true;
+//    }
 
-        return scoID;
-    }
+//    /**
+//     *
+//     * @param courseID
+//     * @return
+//     * @throws DwoXmlRpcException
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    //@Override
+//    private boolean deleteCourse(int courseID) throws DwoXmlRpcException,
+//            IOException, XmlRpcException, SQLException {
+//        Hashtable wheredef = new Hashtable();
+//        wheredef.put("parentID", courseID);
+//        Vector children = getTable("tblCourse", wheredef);
+//        /* delete the children, recurse */
+//        Iterator iter = children.iterator();
+//        while (iter.hasNext()) {
+//            Hashtable course = (Hashtable) iter.next();
+//            int id = ((Number) course.get("courseID")).intValue();
+//            deleteCourse(id);
+//        }
+//
+//        wheredef.clear();
+//        wheredef.put("courseID", new Integer(courseID));
+//        Vector scos = getTable("tblScoContext", wheredef);
+//        String[] arguments = new String[2];
+//
+//        /* Delete results of sco's of the course */
+//        String statement;
+//        //String statement = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
+//        PreparedStatement ps;
+//        int scoID;
+//        while (scos.size() > 0) {
+//            //ps = getStatement(statement);
+//            ps = getStatement(QRY_DELETE_STUDENTSCO_BY_SCO);
+//            scoID = ((Integer) ((Hashtable) scos.remove(0)).get("scoID"))
+//                    .intValue();
+//            ps.setInt(1, scoID);
+//            ps.execute();
+//            ps.close();
+//            log("deleteCourse(scoID=" + scoID + ")");
+//        }
+//
+//        /* Delete Sco's of the course */
+//        ps = getStatement("delete tblScoContext, tblScoData  from tblScoContext join tblScoData using (scoID) where courseid = ?");
+//        //ps = getStatement(statement);
+//        ps.setInt(1, courseID);
+//        ps.execute();
+//        ps.close();
+//
+//        /* Delete the course */
+//        arguments[0] = "tblCourse";
+//        arguments[1] = "courseID";
+//        statement = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
+//        ps = getStatement(statement);
+//        ps.setInt(1, courseID);
+//        ps.execute();
+//        ps.close();
+//
+//        return true;
+//    }
 
-    /**
-     *
-     * @param courseID
-     * @param name
-     * @param description
-     * @param appletConfigID
-     * @param sequencenr
-     * @param showScore
-     * @return
-     * @throws DwoXmlRpcException
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    //@Override
-    private int addSco(int courseID, String name, String description,
-            int appletConfigID, int sequencenr, boolean showScore) throws DwoXmlRpcException,
-            IOException, XmlRpcException, SQLException {
-        int result = addSco(courseID, name, description, appletConfigID, sequencenr);
-        if (!showScore) {
-            changeSco(result, name, description, false);
-        }
-        return result;
-    }
+//    /**
+//     *
+//     * @param courseID
+//     * @param name
+//     * @param description
+//     * @param appletConfigID
+//     * @param sequencenr
+//     * @return
+//     * @throws DwoXmlRpcException
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    //@Override
+//    private int addSco(int courseID, String name, String description,
+//            int appletConfigID, int sequencenr) throws DwoXmlRpcException,
+//            IOException, XmlRpcException, SQLException {
+//        Hashtable data;
+//        if (appletConfigID < 0) {
+//// TODO tblSco done
+//            data = getRecord("tblScoView", "scoID", -appletConfigID); // Wim: 24 dec Data, geen context
+//        } else {
+//            data = getRecord("tblAppletConfig", "appletConfigID",
+//                    appletConfigID);
+//        }
+//        //log("DbAccess.addSco " + data);
+//        int appletID = -1;
+//        String launchdata = "";
+////        boolean showScore = false;
+//       if (data.containsKey("appletID")) {
+//            appletID = ((Integer) data.get("appletID")).intValue();
+//        }
+//        if (data.containsKey("launchdata")) {
+//            launchdata = (String) data.get("launchdata");
+//        }
+////        if (data.containsKey("showscore")) {
+////        	showScore =  Boolean.TRUE.equals(data.get("showscore"));
+////        }
+//        int scoID = addSco(courseID, name, description, appletID, launchdata,
+//                sequencenr);
+////		if (showScore) {
+////            changeSco(scoID, name, description, false);
+////        }
+//        try {
+//            Object launchdatabytes = data.get("launchdatabytes");
+//            if (launchdatabytes instanceof byte[]) {
+//                changeLaunchDataBytes(scoID, (byte[]) launchdatabytes);
+//            }
+//        } catch (Exception e) {
+//            log(Level.SEVERE, "changeLaunchDataBytes", e);
+//        }
+//
+//        return scoID;
+//    }
 
-    /**
-     * @param courseID
-     * @param name
-     * @param description
-     * @param appletID
-     * @param launchdata
-     * @param sequencenr
-     * @return
-     * @throws SQLException
-     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
-     */
-    //@Override
-    private int addSco(int courseID, String name, String description,
-            int appletID, String launchdata, int sequencenr)
-            throws SQLException, DwoXmlRpcException {
-        int result = -1;
-        if (appletID != -1) {
+//    /**
+//     *
+//     * @param courseID
+//     * @param name
+//     * @param description
+//     * @param appletConfigID
+//     * @param sequencenr
+//     * @param showScore
+//     * @return
+//     * @throws DwoXmlRpcException
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    //@Override
+//    private int addSco(int courseID, String name, String description,
+//            int appletConfigID, int sequencenr, boolean showScore) throws DwoXmlRpcException,
+//            IOException, XmlRpcException, SQLException {
+//        int result = addSco(courseID, name, description, appletConfigID, sequencenr);
+//        if (!showScore) {
+//            changeSco(result, name, description, false);
+//        }
+//        return result;
+//    }
 
-            Connection c = getConnection();
-            boolean commit = c.getAutoCommit();
-            c.setAutoCommit(false);
-
-            PreparedStatement ps = getStatementWithGeneratedKeys(QRY_ADD_SCO_CONTEXT);
-
-            ps.setInt(1, courseID);
-            ps.setInt(2, appletID);
-            ps.setString(3, name);
-            ps.setInt(4, sequencenr);
-            try {
-                ps.execute();
-            } catch (SQLException e) {
-            	c.rollback();
-            	c.setAutoCommit(commit);
-                if (e.getErrorCode() == 1062) {
-                    /* The sco already exists */
-                    throw new DwoXmlRpcException(
-                            DwoXmlRpcException.EXC_SCO_EXISTS);
-                } else {
-                    throw e;
-                }
-            }
-
-            ResultSet rs = ps.getGeneratedKeys();
-            int id = -1;
-            if (rs.next()) {
-                id = rs.getInt(1);
-                ps = getStatement(QRY_ADD_SCO_DATA);
-
-                ps.setInt(1, id);
-                ps.setString(2, description);
-                ps.setString(3, launchdata);
-                ps.execute();
-                int count = ps.getUpdateCount();
-                if (count != 1) {
-                    log("Error with inserting tblScoData" + count);
-                    id = -1;
-                    c.rollback();
-                }
-            } else {
-                log("Error with inserting tblScoContext");
-                c.rollback();
-            }
-            result = id;
-            c.commit();
-            c.setAutoCommit(commit);
-
-            return result;
-        } else { //no appletconfig found
-            throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCO_EXISTS);
-        }
-    }
+//    /**
+//     * @param courseID
+//     * @param name
+//     * @param description
+//     * @param appletID
+//     * @param launchdata
+//     * @param sequencenr
+//     * @return
+//     * @throws SQLException
+//     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
+//     */
+//    //@Override
+//    private int addSco(int courseID, String name, String description,
+//            int appletID, String launchdata, int sequencenr)
+//            throws SQLException, DwoXmlRpcException {
+//        int result = -1;
+//        if (appletID != -1) {
+//
+//            Connection c = getConnection();
+//            boolean commit = c.getAutoCommit();
+//            c.setAutoCommit(false);
+//
+//            PreparedStatement ps = getStatementWithGeneratedKeys(QRY_ADD_SCO_CONTEXT);
+//
+//            ps.setInt(1, courseID);
+//            ps.setInt(2, appletID);
+//            ps.setString(3, name);
+//            ps.setInt(4, sequencenr);
+//            try {
+//                ps.execute();
+//            } catch (SQLException e) {
+//            	c.rollback();
+//            	c.setAutoCommit(commit);
+//                if (e.getErrorCode() == 1062) {
+//                    /* The sco already exists */
+//                    throw new DwoXmlRpcException(
+//                            DwoXmlRpcException.EXC_SCO_EXISTS);
+//                } else {
+//                    throw e;
+//                }
+//            }
+//
+//            ResultSet rs = ps.getGeneratedKeys();
+//            int id = -1;
+//            if (rs.next()) {
+//                id = rs.getInt(1);
+//                ps = getStatement(QRY_ADD_SCO_DATA);
+//
+//                ps.setInt(1, id);
+//                ps.setString(2, description);
+//                ps.setString(3, launchdata);
+//                ps.execute();
+//                int count = ps.getUpdateCount();
+//                if (count != 1) {
+//                    log("Error with inserting tblScoData" + count);
+//                    id = -1;
+//                    c.rollback();
+//                }
+//            } else {
+//                log("Error with inserting tblScoContext");
+//                c.rollback();
+//            }
+//            result = id;
+//            c.commit();
+//            c.setAutoCommit(commit);
+//
+//            return result;
+//        } else { //no appletconfig found
+//            throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCO_EXISTS);
+//        }
+//    }
 
     /**
      * Shortcut. Geen update van launchdata.
@@ -3441,32 +3384,26 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.DbAccessIF#changeSco(int,
-     *      java.lang.String, java.lang.String)
-     */
-    /**
-     *
-     * @param scoID
-     * @param name
-     * @param description
-     * @param launchdata
-     * @param showScore
-     * @return
-     * @throws DwoXmlRpcException
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    //@Override
-    private boolean changeSco(int scoID, String name, String description, String launchdata, boolean showScore)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        changeSco(scoID, name, description, showScore);
-        return changeSco(scoID, name, description, launchdata);
-    }
+//    /**
+//     *
+//     * @param scoID
+//     * @param name
+//     * @param description
+//     * @param launchdata
+//     * @param showScore
+//     * @return
+//     * @throws DwoXmlRpcException
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    //@Override
+//    private boolean changeSco(int scoID, String name, String description, String launchdata, boolean showScore)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        changeSco(scoID, name, description, showScore);
+//        return changeSco(scoID, name, description, launchdata);
+//    }
 
     /*
      * (non-Javadoc)
@@ -3546,61 +3483,61 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         }
     }
 
-    /**
-     *
-     * @param scoID
-     * @param name
-     * @param description
-     * @param delete
-     * @param launchdata
-     * @param showScore
-     * @return
-     * @throws DwoXmlRpcException
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    //@Override
-    private boolean changeSco(int scoID, String name, String description, boolean delete, byte[] launchdata, boolean showScore)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        changeSco(scoID, name, description, showScore);
-        changeLaunchDataBytes(scoID, launchdata);
-        deleteSuspendData(scoID, delete);
-        return true;
-    }
+//    /**
+//     *
+//     * @param scoID
+//     * @param name
+//     * @param description
+//     * @param delete
+//     * @param launchdata
+//     * @param showScore
+//     * @return
+//     * @throws DwoXmlRpcException
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    //@Override
+//    private boolean changeSco(int scoID, String name, String description, boolean delete, byte[] launchdata, boolean showScore)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        changeSco(scoID, name, description, showScore);
+//        changeLaunchDataBytes(scoID, launchdata);
+//        deleteSuspendData(scoID, delete);
+//        return true;
+//    }
 
-    /**
-     * @param scoID
-     * @param launchdata
-     * @throws SQLException
-     * @throws DwoXmlRpcException
-     */
-    private void changeLaunchDataBytes(int scoID, byte[] launchdata)
-            throws SQLException, DwoXmlRpcException {
-        PreparedStatement ps;
-        // TODO tblSco done
-        String query = "UPDATE tblScoData "
-                + "SET "
-                + "launchdatabytes = ? "
-                + "WHERE (scoID = ?) ";
-        ps = getStatement(query);
-        ps.setBytes(1, launchdata);
-        ps.setInt(2, scoID);
-
-        try {
-            int count = ps.executeUpdate();
-        } catch (SQLException e) {
-            if (e.getErrorCode() == 1062) {
-                /* The course already exists */
-                throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCO_EXISTS);
-            } else {
-                throw e;
-            }
-        }
-
-        ps.close();
-    }
+//    /**
+//     * @param scoID
+//     * @param launchdata
+//     * @throws SQLException
+//     * @throws DwoXmlRpcException
+//     */
+//    private void changeLaunchDataBytes(int scoID, byte[] launchdata)
+//            throws SQLException, DwoXmlRpcException {
+//        PreparedStatement ps;
+//        // TODO tblSco done
+//        String query = "UPDATE tblScoData "
+//                + "SET "
+//                + "launchdatabytes = ? "
+//                + "WHERE (scoID = ?) ";
+//        ps = getStatement(query);
+//        ps.setBytes(1, launchdata);
+//        ps.setInt(2, scoID);
+//
+//        try {
+//            int count = ps.executeUpdate();
+//        } catch (SQLException e) {
+//            if (e.getErrorCode() == 1062) {
+//                /* The course already exists */
+//                throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCO_EXISTS);
+//            } else {
+//                throw e;
+//            }
+//        }
+//
+//        ps.close();
+//    }
 
     static private final String QRY_UPDATE_SCO_SEQUENCENR
             = "UPDATE tblScoContext SET sequencenr = ? WHERE (scoID = ?) ";
@@ -3637,1052 +3574,1042 @@ public class DbAccess extends DbConnect implements DbAccessIF, ScormAccessIF, Db
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.DbAccessIF#deleteSco(int)
-     */
-    /**
-     *
-     * @param scoID
-     * @return
-     * @throws DwoXmlRpcException
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-//    @Override
-    private boolean deleteSco(int scoID) throws DwoXmlRpcException, IOException,
-            XmlRpcException, SQLException {
-        Hashtable scodata = getRecord("tblScoView", "scoID", scoID);
-        int sequencenr = -1;
-        int courseid = -1;
-        PreparedStatement ps;
-        if (scodata.containsKey("sequencenr")) {
-            sequencenr = ((Integer) scodata.get("sequencenr")).intValue();
-        }
-        if (scodata.containsKey("courseID")) {
-            courseid = ((Integer) scodata.get("courseID")).intValue();
-        }
-
-        if (courseid != -1) {
-            ps = getStatement(QRY_UPDATE_SCO_SEQUENCE);
-            ps.setInt(1, sequencenr);
-            ps.setInt(2, courseid);
-            ps.execute();
-            ps.close();
-        }
-
-        String[] arguments = new String[2];
-        String statement;
-        ps = getStatement(QRY_DELETE_STUDENTSCO_BY_SCO);
-        ps.setInt(1, scoID);
-        ps.execute();
-        ps.close();
-        log("delete Sco(" + scoID + ")");
-
-        /* Delete Sco's */
-        ps = getStatement(QRY_DELETE_SCO_BY_ID);
-        ps.setInt(1, scoID);
-        ps.execute();
-        ps.close();
-
-        return true;
-    }
+//    /**
+//     *
+//     * @param scoID
+//     * @return
+//     * @throws DwoXmlRpcException
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+////    @Override
+//    private boolean deleteSco(int scoID) throws DwoXmlRpcException, IOException,
+//            XmlRpcException, SQLException {
+//        Hashtable scodata = getRecord("tblScoView", "scoID", scoID);
+//        int sequencenr = -1;
+//        int courseid = -1;
+//        PreparedStatement ps;
+//        if (scodata.containsKey("sequencenr")) {
+//            sequencenr = ((Integer) scodata.get("sequencenr")).intValue();
+//        }
+//        if (scodata.containsKey("courseID")) {
+//            courseid = ((Integer) scodata.get("courseID")).intValue();
+//        }
+//
+//        if (courseid != -1) {
+//            ps = getStatement(QRY_UPDATE_SCO_SEQUENCE);
+//            ps.setInt(1, sequencenr);
+//            ps.setInt(2, courseid);
+//            ps.execute();
+//            ps.close();
+//        }
+//
+//        String[] arguments = new String[2];
+//        String statement;
+//        ps = getStatement(QRY_DELETE_STUDENTSCO_BY_SCO);
+//        ps.setInt(1, scoID);
+//        ps.execute();
+//        ps.close();
+//        log("delete Sco(" + scoID + ")");
+//
+//        /* Delete Sco's */
+//        ps = getStatement(QRY_DELETE_SCO_BY_ID);
+//        ps.setInt(1, scoID);
+//        ps.execute();
+//        ps.close();
+//
+//        return true;
+//    }
 
 //TODO V1_3 DONE
-    /**
-     * Delete school from the database.
-     *
-     * @param schoolID School Identifier.
-     * @return
-     * @throws java.io.IOException
-     * @throws java.sql.SQLException
-     * @throws org.apache.xmlrpc.applet.XmlRpcException
-     */
-    private boolean deleteSchool(int schoolID) throws IOException, XmlRpcException, SQLException {
+//    /**
+//     * Delete school from the database.
+//     *
+//     * @param schoolID School Identifier.
+//     * @return
+//     * @throws java.io.IOException
+//     * @throws java.sql.SQLException
+//     * @throws org.apache.xmlrpc.applet.XmlRpcException
+//     */
+//    private boolean deleteSchool(int schoolID) throws IOException, XmlRpcException, SQLException {
+//
+//        LOG.log(Level.FINE, "Attempting to delete school with id {0} and associated data.", new Object[]{schoolID});
+//
+//// 1) delete students from class which is in the school.
+//        PreparedStatement ps;
+//        ps = getStatement(QRY_DELETE_STUDENT_FROM_CLASS_IN_SCHOOL);
+//        ps.setInt(1, schoolID);
+//        ps.executeUpdate();
+//        LOG.log(Level.FINE, "Deleted {0} students from class.", new Object[]{ps.getUpdateCount()});
+//
+//// 2) delete teachers from class which is in the school.
+//        ps = getStatement(QRY_DELETE_TEACHER_FROM_CLASS_IN_SCHOOL);
+//        ps.setInt(1, schoolID);
+//        ps.executeUpdate();
+//        LOG.log(Level.FINE, "Deleted {0} teachers from class.", new Object[]{ps.getUpdateCount()});
+//        ps.close();
+//
+//// 2) delete courses from tblClassCourse which are in the school.
+//        ps = getStatement(QRY_DELETE_COURSES_FROM_CLASS_IN_SCHOOL);
+//        ps.setInt(1, schoolID);
+//        ps.executeUpdate();
+//        LOG.log(Level.FINE, "Deleted {0} classcourses.", new Object[]{ps.getUpdateCount()});
+//        ps.close();
+//// 3) delete class from school which is in the school.
+//        String[] arguments2 = {"tblClass", "schoolID"};
+//        String query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments2);
+//        ps = getStatement(query);
+//        ps.setInt(1, schoolID);
+//        ps.executeUpdate();
+//        LOG.log(Level.FINE, "Deleted {0} classes.", new Object[]{ps.getUpdateCount()});
+//        ps.close();
+//// 4) delete suspend data that become inaccessable.
+//        //TODO Wim discuss
+//        ps = getStatement(QRY_DELETE_STUDENTSCO_FROM_SCHOOL);
+//        ps.setInt(1, schoolID);
+//        ps.executeUpdate();
+//        LOG.log(Level.FINE, "Deleted {0} StudentSco's.", new Object[]{ps.getUpdateCount()});
+//        ps.close();
+//// 5) delete sco's die bij courses van school horen.
+////         String QRY_DELETE_SCO_FROM_SCHOOL
+////                = "delete tblScoContext, tblScoData from tblScoContext join tblScoData using (scoID) where courseID in (SELECT courseID FROM tblCourse WHERE schoolID = ?)";
+//        ps = getStatement(QRY_DELETE_SCO_FROM_SCHOOL);
+//        ps.setInt(1, schoolID);
+//        ps.executeUpdate();
+//        LOG.log(Level.FINE, "Deleted {0} SCO's.", new Object[]{ps.getUpdateCount()});
+//        ps.close();
+//// 6) delete courses from school
+//        arguments2 = new String[]{"tblCourse", "schoolID"};
+//        query = MessageFormat.format(QRY_DELETE_DEFAULT, (Object) arguments2);
+//        ps = getStatement(query);
+//        ps.setInt(1, schoolID);
+//        ps.executeUpdate();
+//        LOG.log(Level.FINE, "Deleted {0} courses.", new Object[]{ps.getUpdateCount()});
+//        ps.close();
+//// 7) verwijder users uit school, teachers and students are already gone.
+////TODO DONE V1_3 fix query
+//        ps = getStatement(QRY_DELETE_USERS_FROM_SCHOOL);
+//        ps.setInt(1, schoolID);
+//        ps.executeUpdate();
+//        LOG.log(Level.FINE, "Deleted {0} users defaults.", new Object[]{ps.getUpdateCount()});
+//        //QRY_DELETE_ROLES_FROM_SCHOOL
+//        ps = getStatement(QRY_DELETE_ROLES_FROM_SCHOOL);
+//        ps.setInt(1, schoolID);
+//        ps.executeUpdate();
+//        LOG.log(Level.FINE, "Detached {0} users from a school.", new Object[]{ps.getUpdateCount()});
+//        ps.close();
+//// 8) verwijder schoolgroup
+//        arguments2 = new String[]{"tblSchoolGroup", "schoolID"};
+//        query = MessageFormat.format(QRY_DELETE_DEFAULT, (Object) arguments2);
+//        ps = getStatement(query);
+//        ps.setInt(1, schoolID);
+//        ps.executeUpdate();
+//        LOG.log(Level.FINE, "Deleted {0} tblSchoolGroup.", new Object[]{ps.getUpdateCount()});
+//        ps.close();
+//// 9) verwijder school
+//        arguments2 = new String[]{"tblSchool", "schoolID"};
+//        query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments2);
+//        ps = getStatement(query);
+//        ps.setInt(1, schoolID);
+//        ps.executeUpdate();
+//        LOG.log(Level.FINE, "Deleted {0} school(s).", new Object[]{ps.getUpdateCount()});
+//        ps.close();
+//
+//        return true;
+//    }
 
-        LOG.log(Level.FINE, "Attempting to delete school with id {0} and associated data.", new Object[]{schoolID});
+//    /**
+//     * Broken function in DWO 2.0 and datamodel after 1.2. Replaced by
+//     * {@Link #getUserResults(Vector, int, int) getUserResults}.
+//     *
+//     * @param courses
+//     * @param userID
+//     * @return
+//     * @throws SQLException
+//     */
+//    @Deprecated
+//    //@Override
+//    private Vector getUserResults(Vector courses, int userID) throws SQLException {
+//        int i;
+//        StringBuilder courseString = new StringBuilder();
+//        if (courses.size() > 0) {
+//            for (i = 0; i < courses.size(); i++) {
+//                if (i != 0) {
+//                    courseString.append(',');
+//                }
+//                // beware of source code injection here....
+//                // assert courses.get(i) instanceof Integer
+//                courseString.append(courses.get(i));
+//            }
+//            String[] arguments = {courseString.toString()};
+//            String query = MessageFormat.format(QRY_RESULTS_SINGLE, (Object[]) arguments);
+//            PreparedStatement ps = getStatement(query);
+//            ps.setInt(1, userID);
+//            LOG.log(Level.FINE, "Going to query: {0}.", new Object[]{ps.toString()});
+//            Vector v = executeQueryWithResult(ps);
+//            return v;
+//        } else {
+//            /* No Courses, no result */
+//            LOG.log(Level.FINE, "Submitted 0 courses, returning empty Vector.");
+//            return courses; // an empty vector
+//        }
+//    }
 
-// 1) delete students from class which is in the school.
-        PreparedStatement ps;
-        ps = getStatement(QRY_DELETE_STUDENT_FROM_CLASS_IN_SCHOOL);
-        ps.setInt(1, schoolID);
-        ps.executeUpdate();
-        LOG.log(Level.FINE, "Deleted {0} students from class.", new Object[]{ps.getUpdateCount()});
+//    /**
+//     * New function for DWO 2.0 data-model. Replaces
+//     * {@Link #getUserResults(Vector, int) getUserResults}.
+//     *
+//     * @param courses
+//     * @param userID
+//     * @return
+//     * @throws SQLException
+//     */
+//    //@Override
+//    private Vector getUserResults(Vector courses, int userID, int schoolGroupID) throws SQLException {
+//        int i;
+//        StringBuilder courseString = new StringBuilder();
+//        if (courses.size() > 0) {
+//            for (i = 0; i < courses.size(); i++) {
+//                if (i != 0) {
+//                    courseString.append(',');
+//                }
+//                // beware of source code injection here....
+//                // assert courses.get(i) instanceof Integer
+//                courseString.append(courses.get(i));
+//            }
+//            String[] arguments = {courseString.toString()};
+//            String query = MessageFormat.format(QRY_RESULTS_SINGLE2, (Object[]) arguments);
+//            PreparedStatement ps = getStatement(query);
+//            ps.setInt(1, userID);
+//            ps.setInt(2, schoolGroupID);
+//            LOG.log(Level.FINE, "Going to query: {0}.", new Object[]{ps.toString()});
+//            Vector v = executeQueryWithResult(ps);
+//            return v;
+//        } else {
+//            /* No Courses, no result */
+//            LOG.log(Level.FINE, "Submitted 0 courses, returning empty Vector.");
+//            return courses; // an empty vector
+//        }
+//    }
 
-// 2) delete teachers from class which is in the school.
-        ps = getStatement(QRY_DELETE_TEACHER_FROM_CLASS_IN_SCHOOL);
-        ps.setInt(1, schoolID);
-        ps.executeUpdate();
-        LOG.log(Level.FINE, "Deleted {0} teachers from class.", new Object[]{ps.getUpdateCount()});
-        ps.close();
-
-// 2) delete courses from tblClassCourse which are in the school.
-        ps = getStatement(QRY_DELETE_COURSES_FROM_CLASS_IN_SCHOOL);
-        ps.setInt(1, schoolID);
-        ps.executeUpdate();
-        LOG.log(Level.FINE, "Deleted {0} classcourses.", new Object[]{ps.getUpdateCount()});
-        ps.close();
-// 3) delete class from school which is in the school.
-        String[] arguments2 = {"tblClass", "schoolID"};
-        String query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments2);
-        ps = getStatement(query);
-        ps.setInt(1, schoolID);
-        ps.executeUpdate();
-        LOG.log(Level.FINE, "Deleted {0} classes.", new Object[]{ps.getUpdateCount()});
-        ps.close();
-// 4) delete suspend data that become inaccessable.
-        //TODO Wim discuss
-        ps = getStatement(QRY_DELETE_STUDENTSCO_FROM_SCHOOL);
-        ps.setInt(1, schoolID);
-        ps.executeUpdate();
-        LOG.log(Level.FINE, "Deleted {0} StudentSco's.", new Object[]{ps.getUpdateCount()});
-        ps.close();
-// 5) delete sco's die bij courses van school horen.
-//         String QRY_DELETE_SCO_FROM_SCHOOL
-//                = "delete tblScoContext, tblScoData from tblScoContext join tblScoData using (scoID) where courseID in (SELECT courseID FROM tblCourse WHERE schoolID = ?)";
-        ps = getStatement(QRY_DELETE_SCO_FROM_SCHOOL);
-        ps.setInt(1, schoolID);
-        ps.executeUpdate();
-        LOG.log(Level.FINE, "Deleted {0} SCO's.", new Object[]{ps.getUpdateCount()});
-        ps.close();
-// 6) delete courses from school
-        arguments2 = new String[]{"tblCourse", "schoolID"};
-        query = MessageFormat.format(QRY_DELETE_DEFAULT, (Object) arguments2);
-        ps = getStatement(query);
-        ps.setInt(1, schoolID);
-        ps.executeUpdate();
-        LOG.log(Level.FINE, "Deleted {0} courses.", new Object[]{ps.getUpdateCount()});
-        ps.close();
-// 7) verwijder users uit school, teachers and students are already gone.
-//TODO DONE V1_3 fix query
-        ps = getStatement(QRY_DELETE_USERS_FROM_SCHOOL);
-        ps.setInt(1, schoolID);
-        ps.executeUpdate();
-        LOG.log(Level.FINE, "Deleted {0} users defaults.", new Object[]{ps.getUpdateCount()});
-        //QRY_DELETE_ROLES_FROM_SCHOOL
-        ps = getStatement(QRY_DELETE_ROLES_FROM_SCHOOL);
-        ps.setInt(1, schoolID);
-        ps.executeUpdate();
-        LOG.log(Level.FINE, "Detached {0} users from a school.", new Object[]{ps.getUpdateCount()});
-        ps.close();
-// 8) verwijder schoolgroup
-        arguments2 = new String[]{"tblSchoolGroup", "schoolID"};
-        query = MessageFormat.format(QRY_DELETE_DEFAULT, (Object) arguments2);
-        ps = getStatement(query);
-        ps.setInt(1, schoolID);
-        ps.executeUpdate();
-        LOG.log(Level.FINE, "Deleted {0} tblSchoolGroup.", new Object[]{ps.getUpdateCount()});
-        ps.close();
-// 9) verwijder school
-        arguments2 = new String[]{"tblSchool", "schoolID"};
-        query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments2);
-        ps = getStatement(query);
-        ps.setInt(1, schoolID);
-        ps.executeUpdate();
-        LOG.log(Level.FINE, "Deleted {0} school(s).", new Object[]{ps.getUpdateCount()});
-        ps.close();
-
-        return true;
-    }
-
-    /**
-     * Broken function in DWO 2.0 and datamodel after 1.2. Replaced by
-     * {@Link #getUserResults(Vector, int, int) getUserResults}.
-     *
-     * @param courses
-     * @param userID
-     * @return
-     * @throws SQLException
-     */
-    @Deprecated
-    //@Override
-    private Vector getUserResults(Vector courses, int userID) throws SQLException {
-        int i;
-        StringBuilder courseString = new StringBuilder();
-        if (courses.size() > 0) {
-            for (i = 0; i < courses.size(); i++) {
-                if (i != 0) {
-                    courseString.append(',');
-                }
-                // beware of source code injection here....
-                // assert courses.get(i) instanceof Integer
-                courseString.append(courses.get(i));
-            }
-            String[] arguments = {courseString.toString()};
-            String query = MessageFormat.format(QRY_RESULTS_SINGLE, (Object[]) arguments);
-            PreparedStatement ps = getStatement(query);
-            ps.setInt(1, userID);
-            LOG.log(Level.FINE, "Going to query: {0}.", new Object[]{ps.toString()});
-            Vector v = executeQueryWithResult(ps);
-            return v;
-        } else {
-            /* No Courses, no result */
-            LOG.log(Level.FINE, "Submitted 0 courses, returning empty Vector.");
-            return courses; // an empty vector
-        }
-    }
-
-    /**
-     * New function for DWO 2.0 data-model. Replaces
-     * {@Link #getUserResults(Vector, int) getUserResults}.
-     *
-     * @param courses
-     * @param userID
-     * @return
-     * @throws SQLException
-     */
-    //@Override
-    private Vector getUserResults(Vector courses, int userID, int schoolGroupID) throws SQLException {
-        int i;
-        StringBuilder courseString = new StringBuilder();
-        if (courses.size() > 0) {
-            for (i = 0; i < courses.size(); i++) {
-                if (i != 0) {
-                    courseString.append(',');
-                }
-                // beware of source code injection here....
-                // assert courses.get(i) instanceof Integer
-                courseString.append(courses.get(i));
-            }
-            String[] arguments = {courseString.toString()};
-            String query = MessageFormat.format(QRY_RESULTS_SINGLE2, (Object[]) arguments);
-            PreparedStatement ps = getStatement(query);
-            ps.setInt(1, userID);
-            ps.setInt(2, schoolGroupID);
-            LOG.log(Level.FINE, "Going to query: {0}.", new Object[]{ps.toString()});
-            Vector v = executeQueryWithResult(ps);
-            return v;
-        } else {
-            /* No Courses, no result */
-            LOG.log(Level.FINE, "Submitted 0 courses, returning empty Vector.");
-            return courses; // an empty vector
-        }
-    }
-
-    /**
-     * Images die bij courses horen. Linked naar Courses.
-     *
-     * @param id
-     * @param image
-     * @return
-     * @throws SQLException
-     * @throws IOException
-     * @throws XmlRpcException
-     */
-//    @Override
-    private boolean setLogo(int id, byte[] image) throws SQLException,
-            IOException, XmlRpcException {
-
-        PreparedStatement ps;
-        ps = getStatement("UPDATE tblCourse SET imageData = ? where courseID = ?");
-        ps.setObject(1, image);
-        ps.setInt(2, id);
-        ps.executeUpdate();
-        ps.close();
-
-        ps = getStatement("UPDATE tblimage SET image = ? where courseID = ?");
-        ps.setObject(1, image);
-        ps.setInt(2, id);
-        boolean result = ps.executeUpdate() != 0;
-        ps.close();
-        if (!result) {
-            ps = getStatement("INSERT INTO tblimage(courseID, image) VALUES (?,?)");
-            ps.setInt(1, id);
-            ps.setObject(2, image);
-            ps.executeUpdate();
-            ps.close();
-        }
-        return result;
-    }
-
-    /**
-     *
-     * @return @throws DwoXmlRpcException
-     */
-    //@Override
-    private Hashtable getFidentitySchools() throws DwoXmlRpcException {
-        throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCHOOL_UNSUPPORTED);
-    }
-
-    /**
-     *
-     * @param schoolID
-     * @param export
-     * @return
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    private boolean editSchool(int schoolID, boolean export) throws IOException,
-            XmlRpcException, SQLException {
-
-        PreparedStatement ps = getStatement(QRY_UPDATE_SCHOOL2);
-        ps.setBoolean(1, export);
-        ps.setInt(2, schoolID);
-        ps.execute();
-        ps.close();
-        return export;
-    }
-
-    /**
-     *
-     * @param schoolID
-     * @param rights
-     * @return
-     * @throws IOException
-     * @throws SQLException
-     */
-    private boolean editSchoolRights(int schoolID, String rights) throws IOException, SQLException {
-        PreparedStatement ps = getStatement(QRY_UPDATE_SCHOOL3);
-        ps.setString(1, rights);
-        ps.setInt(2, schoolID);
-        int r = ps.executeUpdate();
-        ps.close();
-        return r != 0;
-    }
-
-    /**
-     *
-     * @param schoolFrom
-     * @param schoolTo
-     * @param profileID
-     * @return
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    private Vector getImportCourses(int schoolFrom, int schoolTo, int profileID)
-            throws IOException, XmlRpcException, SQLException {
-        String sql = QRY_SELECT_IMPORT_COURSES;
-        PreparedStatement ps = getStatement(sql);
-        ps.setInt(1, schoolFrom);
-        ps.setInt(2, schoolTo);
-        ps.setInt(3, profileID);
-        Vector v = executeQueryWithResult(ps);
-        LOG.log(Level.FINE, "Retrieved {0} courses to import.", new Object[]{v.size()});
-        return v;
-
-    }
-
-    //TODO V1_3 DONE fix method below. Clearly only a single role must be deleted.
-    /**
-     * Removes a user from the school. Removes occur for both student and
-     * teacher roles for the userID within the school with the given schoolID.
-     *
-     * @param userID
-     * @param schoolGroupID
-     *
-     * @return
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    //@Override
-    private boolean deleteUserWithRoleFromSchool(int userID, int schoolGroupID)
-            throws IOException, XmlRpcException, SQLException {
-
-        Connection c = getConnection();
-        try {
-            c.setAutoCommit(false);
-            LOG.log(Level.FINE, "Transaction started.");
-
-            //delete userID  from student links pointing to tblClass where schoolID matches. 
-            //String sql = "DELETE FROM tblStudentOf WHERE userID = ? AND classID IN (SELECT classID FROM tblClass WHERE tblSchoolGroup.schoolID = ?)";
-            String sql = "select * from tblStudentOf WHERE userID = ? AND tblStudentOf.classID "
-                    + "IN (SELECT tblClass.classID FROM tblClass join tblSchoolGroup using (schoolID) "
-                    + "join tblGroup using (groupID) join tblHasRole using (schoolGroupID) "
-                    + "WHERE schoolGroupID = ? and tblHasRole.userid = ? and groupname = 'STUDENT' )";
-            PreparedStatement ps = getStatement(sql);
-            ps.setInt(1, userID);
-            ps.setInt(2, schoolGroupID);
-            ps.setInt(3, userID);
-            int cnt = ps.executeUpdate();
-            LOG.log(Level.FINE, "Deleted the student from {0} classes.", new Object[]{cnt});
-
-            //delete user as teacherID  from teacher links pointing to tblClass where schoolID matches. 
-            //sql = "DELETE FROM tblTeacherOf WHERE tblTeacherOf join tblHasRole using (userID = ? AND classID IN (SELECT classID FROM tblClass WHERE schoolID = ?)";
-            sql = "select * from tblTeacherOf WHERE userID = ? AND tblTeacherOf.classID "
-                    + "IN (SELECT tblClass.classID FROM tblClass join tblSchoolGroup using (schoolID) "
-                    + "join tblGroup using (groupID) join tblHasRole using (schoolGroupID) "
-                    + "WHERE schoolGroupID = ? and tblHasRole.userid = ? and "
-                    + "(groupname = 'TEACHER' or groupname = 'SCHOOLADMIN')";
-            ps = getStatement(sql);
-            ps.setInt(1, userID);
-            ps.setInt(2, schoolGroupID);
-            ps.setInt(3, userID);
-            cnt = ps.executeUpdate();
-            LOG.log(Level.FINE, "Deleted the teacher from {0} classes.", new Object[]{cnt});
-
-            //then delete user from hasRole
-            sql = "DELETE FROM tblHasRole  WHERE "
-                    + " userID = ? AND schoolGroupID=?";
-            ps = getStatement(sql);
-            ps.setInt(1, userID);
-            ps.setInt(2, schoolGroupID);
-            cnt = ps.executeUpdate();
-            LOG.log(Level.FINE, "Deleted the role of  <user {0}, schoolGroup {1}>.", new Object[]{userID, schoolGroupID});
-
-            //then delete student from schoolgroup
-            sql = "UPDATE tblUser SET schoolGroupID = NULL WHERE "
-                    + " userID = ? AND schoolGroupID IN (SELECT schoolGroupID FROM tblSchoolGroup where schoolID = ?)";
-            ps = getStatement(sql);
-            ps.setInt(1, userID);
-            ps.setInt(2, schoolGroupID);
-            cnt = ps.executeUpdate();
-            LOG.log(Level.FINE, "Cleared the default role for user {0} with schoolID {0}.", new Object[]{userID, schoolGroupID});
-            c.commit();
-            LOG.log(Level.FINE, "Transaction commited.");
-
-            return cnt != 0;
-        } finally {
-            c.setAutoCommit(true);
-        }
-    }
-
-    /**
-     *
-     * @param schoolID
-     * @param schoolTo
-     * @return
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    private boolean updateSchoolTo(int schoolID, Vector schoolTo)
-            throws IOException, XmlRpcException, SQLException {
-        Connection c = getConnection();
-        try {
-            c.setAutoCommit(false);
-            String sql = "DELETE FROM tblfromto WHERE schoolFrom = ?";
-            PreparedStatement ps = getStatement(sql);
-            ps.setInt(1, schoolID);
-            ps.executeUpdate();
-            sql = "INSERT INTO tblfromto(schoolFrom, schoolTo) VALUES (?,?)";
-            ps = getStatement(sql);
-            Enumeration e = schoolTo.elements();
-            while (e.hasMoreElements()) {
-                Number to = (Number) e.nextElement();
-                ps.setInt(1, schoolID);
-                ps.setInt(2, to.intValue());
-                ps.executeUpdate();
-            }
-            c.commit();
-        } finally {
-            c.setAutoCommit(true);
-        }
-        return true;
-    }
-
-    /**
-     * Deletes Saved SCO data from a class
-     *
-     *
-     * @param courseID
-     * @param classID
-     * @return
-     * @throws SQLException
-     */
-    private boolean deleteCourseDataFromClass(int courseID, int classID)
-            throws SQLException {
-        Connection c = getConnection();
-        try {
-            String sql;
-            PreparedStatement ps;
-            ResultSet rs;
-            Vector scos, users;
-
-            sql = "select scoID from tblScoContext where courseID = ?";
-            ps = c.prepareStatement(sql);
-            ps.setInt(1, courseID);
-            rs = ps.executeQuery();
-            scos = new Vector();
-            while (rs.next()) {
-                int sco = rs.getInt(1);
-                scos.add(new Integer(sco));
-            }
-            rs.close();
-            ps.close();
-            sql = "select userID from tblStudentOf where classID = ?";
-            ps = c.prepareStatement(sql);
-            ps.setInt(1, classID);
-            rs = ps.executeQuery();
-            users = new Vector();
-            while (rs.next()) {
-                int user = rs.getInt(1);
-                users.add(user);
-            }
-            rs.close();
-            ps.close();
-            int n = 0;
-            sql = "delete tblStudentScoContext, tblStudentScoData from tblStudentScoContext join tblStudentScoData using (studentSco) where scoID=? and userID =?";
-            ps = c.prepareStatement(sql);
-            Enumeration sco, user;
-            sco = scos.elements();
-            while (sco.hasMoreElements()) {
-                Object s = sco.nextElement();
-                user = users.elements();
-                while (user.hasMoreElements()) {
-                    Object u = user.nextElement();
-                    ps.setObject(1, s);
-                    ps.setObject(2, u);
-                    n += ps.executeUpdate();
-                }
-            }
-            ps.close();
-            LOG.log(Level.FINE, "Deleted SCO data for course {0} and class {1}.", new Object[]{courseID, classID});
-// Old Wim code.
-//			c.setAutoCommit(false);
-//			c.commit();
-//			String sql = "DELETE FROM tblStudentSco where scoID in (select scoID from tblSco where courseID = ?) and userID in (select userID from tblUser where classID = ?)";
-//			PreparedStatement ps = c.prepareStatement(sql);
-//			ps.setInt(1, courseID);
-//			ps.setInt(2, classID);
-//			int n = ps.executeUpdate();
-//			log("course " + courseID + " class " + classID + " deleted: " + n);
-//			
-//			c.commit();
-//			ps.close();
-        } finally {
-            c.setAutoCommit(true);
-        }
-
-        return true;
-    }
-
-   // @Override
-    private String setRights(int uid, int schoolGroupID, int profileid, String rights)
-            throws SQLException, IOException, XmlRpcException {
-        //TODO V1_3 DONE adjust to rights in tblHasRole
-        String sql = "SELECT rights FROM tblHasRole where userID = ? and schoolGroupID = ?";
-        PreparedStatement ps = this.getStatement(sql);
-        ps.setInt(1, uid);
-        ps.setInt(2, schoolGroupID);
-        Vector v = executeQueryWithResult(ps, 0, 1);
-        String oldrights;
-        if (v.isEmpty()) {
-            oldrights = "";
-        } else {
-            oldrights = ((Hashtable) v.firstElement()).get("rights").toString();
-        }
-        // split string
-        String pstr = "[" + profileid + "]";
-        int start = oldrights.indexOf(pstr);
-        if (start < 0) {
-            oldrights = oldrights + pstr;
-            start = oldrights.length();
-        } else {
-            start += pstr.length();
-        }
-        int end = oldrights.indexOf("[", start);
-        if (end < 0) {
-            end = oldrights.length();
-        }
-        rights = oldrights.substring(0, start) + rights + oldrights.substring(end);
-        //TODO V1_3 DONE adjust to rights in tblHasRole
-        sql = "UPDATE tblHasRole SET rights = ? where userID = ? and schoolGroupID = ?";
-        ps = getStatement(sql);
-        ps.setString(1, rights);
-        ps.setInt(2, uid);
-        ps.setInt(3, schoolGroupID);
-        int r = ps.executeUpdate();
-        return rights;
-    }
-
-    /**
-     *
-     * @param vector
-     * @param schoolID
-     * @param classID
-     * @param parent
-     * @param profileID
-     * @return
-     * @throws SQLException
-     */
-    private boolean setCourseSequence(Vector vector, int schoolID, int classID,
-            int parent, int profileID) throws SQLException {
-        Connection c = getConnection();
-        boolean auto = c.getAutoCommit();
-        int len = vector.size();
-        try {
-            c.setAutoCommit(false);
-            PreparedStatement ps;
-//            //TODO set in tblCourse sequencenr = NULL
-//            ps = getStatement("DELETE FROM tblCourseSequence WHERE schoolID=? AND classID=? AND parent=? and profileID=?");
-//            ps.setInt(1, schoolID);
-//            ps.setInt(2, classID);
-//            ps.setInt(3, parent);
-//            ps.setInt(4, profileID);
+//    /**
+//     * Images die bij courses horen. Linked naar Courses.
+//     *
+//     * @param id
+//     * @param image
+//     * @return
+//     * @throws SQLException
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     */
+////    @Override
+//    private boolean setLogo(int id, byte[] image) throws SQLException,
+//            IOException, XmlRpcException {
+//
+//        PreparedStatement ps;
+//        ps = getStatement("UPDATE tblCourse SET imageData = ? where courseID = ?");
+//        ps.setObject(1, image);
+//        ps.setInt(2, id);
+//        ps.executeUpdate();
+//        ps.close();
+//
+//        ps = getStatement("UPDATE tblimage SET image = ? where courseID = ?");
+//        ps.setObject(1, image);
+//        ps.setInt(2, id);
+//        boolean result = ps.executeUpdate() != 0;
+//        ps.close();
+//        if (!result) {
+//            ps = getStatement("INSERT INTO tblimage(courseID, image) VALUES (?,?)");
+//            ps.setInt(1, id);
+//            ps.setObject(2, image);
 //            ps.executeUpdate();
 //            ps.close();
-//            //TODO set in tblCourse sequencenr = to value
-//            ps = getStatement("INSERT INTO tblCourseSequence(courseID, schoolID, classID, parent, profileID, sequencenr) VALUES(?,?,?,?,?,?)");
-//            for (int i = 0; i < len; i++) {
-//                ps.setObject(1, vector.get(i));
-//                ps.setInt(2, schoolID);
-//                ps.setInt(3, classID);
-//                ps.setInt(4, parent);
-//                ps.setInt(5, profileID);
-//                ps.setInt(6, i);
+//        }
+//        return result;
+//    }
+
+//    /**
+//     *
+//     * @return @throws DwoXmlRpcException
+//     */
+//    //@Override
+//    private Hashtable getFidentitySchools() throws DwoXmlRpcException {
+//        throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCHOOL_UNSUPPORTED);
+//    }
+
+//    /**
+//     *
+//     * @param schoolID
+//     * @param export
+//     * @return
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    private boolean editSchool(int schoolID, boolean export) throws IOException,
+//            XmlRpcException, SQLException {
+//
+//        PreparedStatement ps = getStatement(QRY_UPDATE_SCHOOL2);
+//        ps.setBoolean(1, export);
+//        ps.setInt(2, schoolID);
+//        ps.execute();
+//        ps.close();
+//        return export;
+//    }
+
+//    /**
+//     *
+//     * @param schoolID
+//     * @param rights
+//     * @return
+//     * @throws IOException
+//     * @throws SQLException
+//     */
+//    private boolean editSchoolRights(int schoolID, String rights) throws IOException, SQLException {
+//        PreparedStatement ps = getStatement(QRY_UPDATE_SCHOOL3);
+//        ps.setString(1, rights);
+//        ps.setInt(2, schoolID);
+//        int r = ps.executeUpdate();
+//        ps.close();
+//        return r != 0;
+//    }
+
+//    /**
+//     *
+//     * @param schoolFrom
+//     * @param schoolTo
+//     * @param profileID
+//     * @return
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    private Vector getImportCourses(int schoolFrom, int schoolTo, int profileID)
+//            throws IOException, XmlRpcException, SQLException {
+//        String sql = QRY_SELECT_IMPORT_COURSES;
+//        PreparedStatement ps = getStatement(sql);
+//        ps.setInt(1, schoolFrom);
+//        ps.setInt(2, schoolTo);
+//        ps.setInt(3, profileID);
+//        Vector v = executeQueryWithResult(ps);
+//        LOG.log(Level.FINE, "Retrieved {0} courses to import.", new Object[]{v.size()});
+//        return v;
+//
+//    }
+
+    //TODO V1_3 DONE fix method below. Clearly only a single role must be deleted.
+//    /**
+//     * Removes a user from the school. Removes occur for both student and
+//     * teacher roles for the userID within the school with the given schoolID.
+//     *
+//     * @param userID
+//     * @param schoolGroupID
+//     *
+//     * @return
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    //@Override
+//    private boolean deleteUserWithRoleFromSchool(int userID, int schoolGroupID)
+//            throws IOException, XmlRpcException, SQLException {
+//
+//        Connection c = getConnection();
+//        try {
+//            c.setAutoCommit(false);
+//            LOG.log(Level.FINE, "Transaction started.");
+//
+//            //delete userID  from student links pointing to tblClass where schoolID matches. 
+//            //String sql = "DELETE FROM tblStudentOf WHERE userID = ? AND classID IN (SELECT classID FROM tblClass WHERE tblSchoolGroup.schoolID = ?)";
+//            String sql = "select * from tblStudentOf WHERE userID = ? AND tblStudentOf.classID "
+//                    + "IN (SELECT tblClass.classID FROM tblClass join tblSchoolGroup using (schoolID) "
+//                    + "join tblGroup using (groupID) join tblHasRole using (schoolGroupID) "
+//                    + "WHERE schoolGroupID = ? and tblHasRole.userid = ? and groupname = 'STUDENT' )";
+//            PreparedStatement ps = getStatement(sql);
+//            ps.setInt(1, userID);
+//            ps.setInt(2, schoolGroupID);
+//            ps.setInt(3, userID);
+//            int cnt = ps.executeUpdate();
+//            LOG.log(Level.FINE, "Deleted the student from {0} classes.", new Object[]{cnt});
+//
+//            //delete user as teacherID  from teacher links pointing to tblClass where schoolID matches. 
+//            //sql = "DELETE FROM tblTeacherOf WHERE tblTeacherOf join tblHasRole using (userID = ? AND classID IN (SELECT classID FROM tblClass WHERE schoolID = ?)";
+//            sql = "select * from tblTeacherOf WHERE userID = ? AND tblTeacherOf.classID "
+//                    + "IN (SELECT tblClass.classID FROM tblClass join tblSchoolGroup using (schoolID) "
+//                    + "join tblGroup using (groupID) join tblHasRole using (schoolGroupID) "
+//                    + "WHERE schoolGroupID = ? and tblHasRole.userid = ? and "
+//                    + "(groupname = 'TEACHER' or groupname = 'SCHOOLADMIN')";
+//            ps = getStatement(sql);
+//            ps.setInt(1, userID);
+//            ps.setInt(2, schoolGroupID);
+//            ps.setInt(3, userID);
+//            cnt = ps.executeUpdate();
+//            LOG.log(Level.FINE, "Deleted the teacher from {0} classes.", new Object[]{cnt});
+//
+//            //then delete user from hasRole
+//            sql = "DELETE FROM tblHasRole  WHERE "
+//                    + " userID = ? AND schoolGroupID=?";
+//            ps = getStatement(sql);
+//            ps.setInt(1, userID);
+//            ps.setInt(2, schoolGroupID);
+//            cnt = ps.executeUpdate();
+//            LOG.log(Level.FINE, "Deleted the role of  <user {0}, schoolGroup {1}>.", new Object[]{userID, schoolGroupID});
+//
+//            //then delete student from schoolgroup
+//            sql = "UPDATE tblUser SET schoolGroupID = NULL WHERE "
+//                    + " userID = ? AND schoolGroupID IN (SELECT schoolGroupID FROM tblSchoolGroup where schoolID = ?)";
+//            ps = getStatement(sql);
+//            ps.setInt(1, userID);
+//            ps.setInt(2, schoolGroupID);
+//            cnt = ps.executeUpdate();
+//            LOG.log(Level.FINE, "Cleared the default role for user {0} with schoolID {0}.", new Object[]{userID, schoolGroupID});
+//            c.commit();
+//            LOG.log(Level.FINE, "Transaction commited.");
+//
+//            return cnt != 0;
+//        } finally {
+//            c.setAutoCommit(true);
+//        }
+//    }
+
+//    /**
+//     *
+//     * @param schoolID
+//     * @param schoolTo
+//     * @return
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    private boolean updateSchoolTo(int schoolID, Vector schoolTo)
+//            throws IOException, XmlRpcException, SQLException {
+//        Connection c = getConnection();
+//        try {
+//            c.setAutoCommit(false);
+//            String sql = "DELETE FROM tblfromto WHERE schoolFrom = ?";
+//            PreparedStatement ps = getStatement(sql);
+//            ps.setInt(1, schoolID);
+//            ps.executeUpdate();
+//            sql = "INSERT INTO tblfromto(schoolFrom, schoolTo) VALUES (?,?)";
+//            ps = getStatement(sql);
+//            Enumeration e = schoolTo.elements();
+//            while (e.hasMoreElements()) {
+//                Number to = (Number) e.nextElement();
+//                ps.setInt(1, schoolID);
+//                ps.setInt(2, to.intValue());
 //                ps.executeUpdate();
 //            }
-            ps = getStatement("UPDATE tblCourse set sequencenr=? WHERE courseID=?");//AND schoolID=? AND parentID =? AND dwoProfileID=?");
-            len = vector.size();
-            for (int i = 0; i < len; i++) {
-                ps.setInt(1, i);
-                Integer x = (Integer)vector.get(i);
-				ps.setInt(2, x.intValue());//courseid
-//                if(schoolID == 0)
-//                	ps.setNull(3,Types.INTEGER);
-//                else
-//                	ps.setInt(3, schoolID);
-//                ps.setInt(4, parent);
-//                ps.setInt(5, profileID);
-                int n = ps.executeUpdate();
-                log("n = " + n);
-                // assert n == 1
-            }
-            c.commit();
-        } finally {
-            c.rollback();
-            c.setAutoCommit(auto);
-        }
-        return true;
-    }
+//            c.commit();
+//        } finally {
+//            c.setAutoCommit(true);
+//        }
+//        return true;
+//    }
 
-    /*
-     * TODO eventueel een nieuwe naam meegeven, ivm clashes. 
-     * (non-Javadoc)
-     * @see fi.dwo.client.persistence.DbAccessIF#moveSco(int, int, int, String)
-     */
-    /**
-     *
-     * @param scoID
-     * @param courseID
-     * @param sequencenr
-     * @param name
-     * @return
-     * @throws DwoXmlRpcException
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    //@Override
-    private boolean moveSco(int scoID, int courseID, int sequencenr, String name)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        Connection c = getConnection();
-        boolean result = false;
-        boolean auto = c.getAutoCommit();
-        try {
-            c.setAutoCommit(false);
-            PreparedStatement ps;
-            /*
-             get old courseId/sequencenr
-             if courseid = oldcourseid 
-             seqnr updaten van alle sco's van deze course:
-             als newseqnr > oldseqnr dan seqnr aflagen tussen (old..new]
-             als newseqnr < oldseqnr dan seqnr ophogen tussen [new..old)
-             else
-             seqnr aflagen als seqnr > oldseqnr bij oldcourse
-             seqnr ophogen als seqnr >= newseqnr bij newcourse
-		
-             set (courseid, seqnr) in sco
-             */
-            ps = getStatement("SELECT courseID, sequencenr from tblScoContext where scoID = ?");
-            ps.setInt(1, scoID);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                int oldCourseID = rs.getInt(1);
-                int oldSequencenr = rs.getInt(2);
-                rs.close();
-                ps.close();
-                if (courseID == oldCourseID) {
-                    // gelijk.....
-                    if (sequencenr > oldSequencenr) {
-                        ps = getStatement("UPDATE tblScoContext SET sequencenr = sequencenr -1 WHERE courseID = ? AND sequencenr > ? AND sequencenr <= ?");
-                    } else {
-                        ps = getStatement("UPDATE tblScoContext SET sequencenr = sequencenr + 1 WHERE courseID = ? AND sequencenr < ? AND sequencenr >= ?");
-                    }
-                    ps.setInt(1, courseID);
-                    ps.setInt(2, oldSequencenr);
-                    ps.setInt(3, sequencenr);
-                    ps.executeUpdate();
-                    ps.close();
-                } else {
-                    // ongelijk
-                    ps = getStatement("UPDATE tblScoContext SET sequencenr = sequencenr - 1 WHERE courseID = ? AND sequencenr > ?");
-                    ps.setInt(1, oldCourseID);
-                    ps.setInt(2, oldSequencenr);
-                    ps.executeUpdate();
-                    ps.close();
-                    ps = getStatement("UPDATE tblScoContext SET sequencenr = sequencenr + 1 WHERE courseID = ? AND sequencenr >= ?");
-                    ps.setInt(1, courseID);
-                    ps.setInt(2, sequencenr);
-                    ps.executeUpdate();
-                    ps.close();
-                }
-                ps = getStatement("UPDATE tblScoContext SET courseID = ?, sequencenr = ?, sconame = ? where scoID = ?");
-                ps.setInt(1, courseID);
-                ps.setInt(2, sequencenr);
-                ps.setString(3, name);
-                ps.setInt(4, scoID);
-                ps.executeUpdate();
-                result = true;
-            } else {
-                rs.close();
-            }
-            ps.close();
-            c.commit();
-        } finally {
-            c.rollback();
-            c.setAutoCommit(auto);
-        }
-        return result;
-    }
+//    /**
+//     * Deletes Saved SCO data from a class
+//     *
+//     *
+//     * @param courseID
+//     * @param classID
+//     * @return
+//     * @throws SQLException
+//     */
+//    private boolean deleteCourseDataFromClass(int courseID, int classID)
+//            throws SQLException {
+//        Connection c = getConnection();
+//        try {
+//            String sql;
+//            PreparedStatement ps;
+//            ResultSet rs;
+//            Vector scos, users;
+//
+//            sql = "select scoID from tblScoContext where courseID = ?";
+//            ps = c.prepareStatement(sql);
+//            ps.setInt(1, courseID);
+//            rs = ps.executeQuery();
+//            scos = new Vector();
+//            while (rs.next()) {
+//                int sco = rs.getInt(1);
+//                scos.add(new Integer(sco));
+//            }
+//            rs.close();
+//            ps.close();
+//            sql = "select userID from tblStudentOf where classID = ?";
+//            ps = c.prepareStatement(sql);
+//            ps.setInt(1, classID);
+//            rs = ps.executeQuery();
+//            users = new Vector();
+//            while (rs.next()) {
+//                int user = rs.getInt(1);
+//                users.add(user);
+//            }
+//            rs.close();
+//            ps.close();
+//            int n = 0;
+//            sql = "delete tblStudentScoContext, tblStudentScoData from tblStudentScoContext join tblStudentScoData using (studentSco) where scoID=? and userID =?";
+//            ps = c.prepareStatement(sql);
+//            Enumeration sco, user;
+//            sco = scos.elements();
+//            while (sco.hasMoreElements()) {
+//                Object s = sco.nextElement();
+//                user = users.elements();
+//                while (user.hasMoreElements()) {
+//                    Object u = user.nextElement();
+//                    ps.setObject(1, s);
+//                    ps.setObject(2, u);
+//                    n += ps.executeUpdate();
+//                }
+//            }
+//            ps.close();
+//            LOG.log(Level.FINE, "Deleted SCO data for course {0} and class {1}.", new Object[]{courseID, classID});
+//// Old Wim code.
+////			c.setAutoCommit(false);
+////			c.commit();
+////			String sql = "DELETE FROM tblStudentSco where scoID in (select scoID from tblSco where courseID = ?) and userID in (select userID from tblUser where classID = ?)";
+////			PreparedStatement ps = c.prepareStatement(sql);
+////			ps.setInt(1, courseID);
+////			ps.setInt(2, classID);
+////			int n = ps.executeUpdate();
+////			log("course " + courseID + " class " + classID + " deleted: " + n);
+////			
+////			c.commit();
+////			ps.close();
+//        } finally {
+//            c.setAutoCommit(true);
+//        }
+//
+//        return true;
+//    }
+
+//   // @Override
+//    private String setRights(int uid, int schoolGroupID, int profileid, String rights)
+//            throws SQLException, IOException, XmlRpcException {
+//        //TODO V1_3 DONE adjust to rights in tblHasRole
+//        String sql = "SELECT rights FROM tblHasRole where userID = ? and schoolGroupID = ?";
+//        PreparedStatement ps = this.getStatement(sql);
+//        ps.setInt(1, uid);
+//        ps.setInt(2, schoolGroupID);
+//        Vector v = executeQueryWithResult(ps, 0, 1);
+//        String oldrights;
+//        if (v.isEmpty()) {
+//            oldrights = "";
+//        } else {
+//            oldrights = ((Hashtable) v.firstElement()).get("rights").toString();
+//        }
+//        // split string
+//        String pstr = "[" + profileid + "]";
+//        int start = oldrights.indexOf(pstr);
+//        if (start < 0) {
+//            oldrights = oldrights + pstr;
+//            start = oldrights.length();
+//        } else {
+//            start += pstr.length();
+//        }
+//        int end = oldrights.indexOf("[", start);
+//        if (end < 0) {
+//            end = oldrights.length();
+//        }
+//        rights = oldrights.substring(0, start) + rights + oldrights.substring(end);
+//        //TODO V1_3 DONE adjust to rights in tblHasRole
+//        sql = "UPDATE tblHasRole SET rights = ? where userID = ? and schoolGroupID = ?";
+//        ps = getStatement(sql);
+//        ps.setString(1, rights);
+//        ps.setInt(2, uid);
+//        ps.setInt(3, schoolGroupID);
+//        int r = ps.executeUpdate();
+//        return rights;
+//    }
+
+//    /**
+//     *
+//     * @param vector
+//     * @param schoolID
+//     * @param classID
+//     * @param parent
+//     * @param profileID
+//     * @return
+//     * @throws SQLException
+//     */
+//    private boolean setCourseSequence(Vector vector, int schoolID, int classID,
+//            int parent, int profileID) throws SQLException {
+//        Connection c = getConnection();
+//        boolean auto = c.getAutoCommit();
+//        int len = vector.size();
+//        try {
+//            c.setAutoCommit(false);
+//            PreparedStatement ps;
+////            //TODO set in tblCourse sequencenr = NULL
+////            ps = getStatement("DELETE FROM tblCourseSequence WHERE schoolID=? AND classID=? AND parent=? and profileID=?");
+////            ps.setInt(1, schoolID);
+////            ps.setInt(2, classID);
+////            ps.setInt(3, parent);
+////            ps.setInt(4, profileID);
+////            ps.executeUpdate();
+////            ps.close();
+////            //TODO set in tblCourse sequencenr = to value
+////            ps = getStatement("INSERT INTO tblCourseSequence(courseID, schoolID, classID, parent, profileID, sequencenr) VALUES(?,?,?,?,?,?)");
+////            for (int i = 0; i < len; i++) {
+////                ps.setObject(1, vector.get(i));
+////                ps.setInt(2, schoolID);
+////                ps.setInt(3, classID);
+////                ps.setInt(4, parent);
+////                ps.setInt(5, profileID);
+////                ps.setInt(6, i);
+////                ps.executeUpdate();
+////            }
+//            ps = getStatement("UPDATE tblCourse set sequencenr=? WHERE courseID=?");//AND schoolID=? AND parentID =? AND dwoProfileID=?");
+//            len = vector.size();
+//            for (int i = 0; i < len; i++) {
+//                ps.setInt(1, i);
+//                Integer x = (Integer)vector.get(i);
+//				ps.setInt(2, x.intValue());//courseid
+////                if(schoolID == 0)
+////                	ps.setNull(3,Types.INTEGER);
+////                else
+////                	ps.setInt(3, schoolID);
+////                ps.setInt(4, parent);
+////                ps.setInt(5, profileID);
+//                int n = ps.executeUpdate();
+//                log("n = " + n);
+//                // assert n == 1
+//            }
+//            c.commit();
+//        } finally {
+//            c.rollback();
+//            c.setAutoCommit(auto);
+//        }
+//        return true;
+//    }
+
+//    /**
+//     *
+//     * @param scoID
+//     * @param courseID
+//     * @param sequencenr
+//     * @param name
+//     * @return
+//     * @throws DwoXmlRpcException
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    //@Override
+//    private boolean moveSco(int scoID, int courseID, int sequencenr, String name)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        Connection c = getConnection();
+//        boolean result = false;
+//        boolean auto = c.getAutoCommit();
+//        try {
+//            c.setAutoCommit(false);
+//            PreparedStatement ps;
+//            /*
+//             get old courseId/sequencenr
+//             if courseid = oldcourseid 
+//             seqnr updaten van alle sco's van deze course:
+//             als newseqnr > oldseqnr dan seqnr aflagen tussen (old..new]
+//             als newseqnr < oldseqnr dan seqnr ophogen tussen [new..old)
+//             else
+//             seqnr aflagen als seqnr > oldseqnr bij oldcourse
+//             seqnr ophogen als seqnr >= newseqnr bij newcourse
+//		
+//             set (courseid, seqnr) in sco
+//             */
+//            ps = getStatement("SELECT courseID, sequencenr from tblScoContext where scoID = ?");
+//            ps.setInt(1, scoID);
+//            ResultSet rs = ps.executeQuery();
+//            if (rs.next()) {
+//                int oldCourseID = rs.getInt(1);
+//                int oldSequencenr = rs.getInt(2);
+//                rs.close();
+//                ps.close();
+//                if (courseID == oldCourseID) {
+//                    // gelijk.....
+//                    if (sequencenr > oldSequencenr) {
+//                        ps = getStatement("UPDATE tblScoContext SET sequencenr = sequencenr -1 WHERE courseID = ? AND sequencenr > ? AND sequencenr <= ?");
+//                    } else {
+//                        ps = getStatement("UPDATE tblScoContext SET sequencenr = sequencenr + 1 WHERE courseID = ? AND sequencenr < ? AND sequencenr >= ?");
+//                    }
+//                    ps.setInt(1, courseID);
+//                    ps.setInt(2, oldSequencenr);
+//                    ps.setInt(3, sequencenr);
+//                    ps.executeUpdate();
+//                    ps.close();
+//                } else {
+//                    // ongelijk
+//                    ps = getStatement("UPDATE tblScoContext SET sequencenr = sequencenr - 1 WHERE courseID = ? AND sequencenr > ?");
+//                    ps.setInt(1, oldCourseID);
+//                    ps.setInt(2, oldSequencenr);
+//                    ps.executeUpdate();
+//                    ps.close();
+//                    ps = getStatement("UPDATE tblScoContext SET sequencenr = sequencenr + 1 WHERE courseID = ? AND sequencenr >= ?");
+//                    ps.setInt(1, courseID);
+//                    ps.setInt(2, sequencenr);
+//                    ps.executeUpdate();
+//                    ps.close();
+//                }
+//                ps = getStatement("UPDATE tblScoContext SET courseID = ?, sequencenr = ?, sconame = ? where scoID = ?");
+//                ps.setInt(1, courseID);
+//                ps.setInt(2, sequencenr);
+//                ps.setString(3, name);
+//                ps.setInt(4, scoID);
+//                ps.executeUpdate();
+//                result = true;
+//            } else {
+//                rs.close();
+//            }
+//            ps.close();
+//            c.commit();
+//        } finally {
+//            c.rollback();
+//            c.setAutoCommit(auto);
+//        }
+//        return result;
+//    }
 
     static final Integer DEFAULT_TYPE = 0;
 
-    /**
-     *
-     * @param id
-     * @param v
-     * @return
-     * @throws SQLException
-     */
-    private boolean selectCoursesForClass(int id, Vector v) throws SQLException {
-        // XXX 
-        Connection c = getConnection();
-        try {
-            PreparedStatement ps;
-            c.setAutoCommit(false);
-            if (!v.isEmpty()) {
-                Hashtable map = (Hashtable) v.firstElement();
-                Object profileID = map.get("dwoProfileID");
-                if (profileID == null) {
-                    map = getRecord("tblCourse", "courseID", ((Number) map.get("courseID")).intValue());
-                    profileID = map.get("dwoProfileID");
-                }
-                ps = c.prepareStatement("UPDATE tblClassCourse SET viewState = 0 WHERE classID = ? and courseID in (SELECT courseID from tblCourse where dwoProfileID = ?)");
-//                ps = c.prepareStatement("DELETE FROM tblClassCourse WHERE classID = ? and courseID in (SELECT courseID from tblCourse where dwoProfileID = ?)");
-                ps.setInt(1, id);
-                ps.setObject(2, profileID);
-                int r = ps.executeUpdate();
-                System.out.println(r + " invisible from classcourse " + id + " and " + profileID);
-                ps.close();
-                if (!map.containsKey("courseID")) {
-                    v.remove(0);
-                }
+//    /**
+//     *
+//     * @param id
+//     * @param v
+//     * @return
+//     * @throws SQLException
+//     */
+//    private boolean selectCoursesForClass(int id, Vector v) throws SQLException {
+//        // XXX 
+//        Connection c = getConnection();
+//        try {
+//            PreparedStatement ps;
+//            c.setAutoCommit(false);
+//            if (!v.isEmpty()) {
+//                Hashtable map = (Hashtable) v.firstElement();
+//                Object profileID = map.get("dwoProfileID");
+//                if (profileID == null) {
+//                    map = getRecord("tblCourse", "courseID", ((Number) map.get("courseID")).intValue());
+//                    profileID = map.get("dwoProfileID");
+//                }
+//                ps = c.prepareStatement("UPDATE tblClassCourse SET viewState = 0 WHERE classID = ? and courseID in (SELECT courseID from tblCourse where dwoProfileID = ?)");
+////                ps = c.prepareStatement("DELETE FROM tblClassCourse WHERE classID = ? and courseID in (SELECT courseID from tblCourse where dwoProfileID = ?)");
+//                ps.setInt(1, id);
+//                ps.setObject(2, profileID);
+//                int r = ps.executeUpdate();
+//                System.out.println(r + " invisible from classcourse " + id + " and " + profileID);
+//                ps.close();
+//                if (!map.containsKey("courseID")) {
+//                    v.remove(0);
+//                }
+//
+//            } else {
+//                ps = c.prepareStatement("UPDATE tblClassCourse SET viewState = 0 WHERE classID = ?");
+////                ps = c.prepareStatement("DELETE FROM tblClassCourse WHERE classID = ?");
+//                ps.setInt(1, id);
+//                System.out.println(ps.executeUpdate() + " invisible from classcourse " + id);
+//                ps.close();
+//            }
+//            ps = getStatement(QRY_INSERT_CLASS_COURSE2);
+//            ps.setInt(1, id);
+//            for (Iterator iterator = v.iterator(); iterator.hasNext();) {
+//                Hashtable map = (Hashtable) iterator.next();
+//                Object courseID = map.get("courseID");
+//                ps.setObject(2, courseID);
+//                Object type = map.get("type");
+//                if (type == null) {
+//                    type = DEFAULT_TYPE;
+//                }
+//                ps.setObject(3, type);
+//                Date van = (Date) map.get("notBefore");
+//                if (van == null || van.getTime() <= DATE_OFFSET) {
+//                    ps.setNull(4, Types.TIMESTAMP);
+//                } else {
+//                    ps.setTimestamp(4, new java.sql.Timestamp(van.getTime()));
+//                }
+//                Date tot = (Date) map.get("notAfter");
+//                if (tot == null || tot.getTime() <= DATE_OFFSET) {
+//                    ps.setNull(5, Types.TIMESTAMP);
+//                } else {
+//                    ps.setTimestamp(5, new java.sql.Timestamp(tot.getTime()));
+//                }
+//                String accessKey = (String) map.get("accessKey");
+//                if(accessKey == null) {
+//                	ps.setNull(6, Types.VARCHAR);
+//                } else {
+//                	ps.setString(6, accessKey);
+//                }
+//                
+//                ps.executeUpdate();
+//            }
+//            ps.close();
+//            c.commit();
+//        } catch (SQLException s) {
+//            c.rollback();
+//            throw s;
+//        } finally {
+//            c.setAutoCommit(true);
+//        }
+//        return true;
+//    }
 
-            } else {
-                ps = c.prepareStatement("UPDATE tblClassCourse SET viewState = 0 WHERE classID = ?");
-//                ps = c.prepareStatement("DELETE FROM tblClassCourse WHERE classID = ?");
-                ps.setInt(1, id);
-                System.out.println(ps.executeUpdate() + " invisible from classcourse " + id);
-                ps.close();
-            }
-            ps = getStatement(QRY_INSERT_CLASS_COURSE2);
-            ps.setInt(1, id);
-            for (Iterator iterator = v.iterator(); iterator.hasNext();) {
-                Hashtable map = (Hashtable) iterator.next();
-                Object courseID = map.get("courseID");
-                ps.setObject(2, courseID);
-                Object type = map.get("type");
-                if (type == null) {
-                    type = DEFAULT_TYPE;
-                }
-                ps.setObject(3, type);
-                Date van = (Date) map.get("notBefore");
-                if (van == null || van.getTime() <= DATE_OFFSET) {
-                    ps.setNull(4, Types.TIMESTAMP);
-                } else {
-                    ps.setTimestamp(4, new java.sql.Timestamp(van.getTime()));
-                }
-                Date tot = (Date) map.get("notAfter");
-                if (tot == null || tot.getTime() <= DATE_OFFSET) {
-                    ps.setNull(5, Types.TIMESTAMP);
-                } else {
-                    ps.setTimestamp(5, new java.sql.Timestamp(tot.getTime()));
-                }
-                String accessKey = (String) map.get("accessKey");
-                if(accessKey == null) {
-                	ps.setNull(6, Types.VARCHAR);
-                } else {
-                	ps.setString(6, accessKey);
-                }
-                
-                ps.executeUpdate();
-            }
-            ps.close();
-            c.commit();
-        } catch (SQLException s) {
-            c.rollback();
-            throw s;
-        } finally {
-            c.setAutoCommit(true);
-        }
-        return true;
-    }
+//    /**
+//     *
+//     * @param schoolID
+//     * @param date
+//     * @return
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    private boolean setExpireDate(int schoolID, Date date) throws IOException,
+//            XmlRpcException, SQLException {
+//        PreparedStatement ps = getStatement("UPDATE tblSchool SET expire = ? WHERE (schoolID = ?) LIMIT 1");
+//        if (date == null || date.getTime() < DATE_OFFSET) {
+//            ps.setNull(1, Types.DATE);
+//        } else {
+//            ps.setDate(1, new java.sql.Date(date.getTime()));
+//        }
+//        ps.setInt(2, schoolID);
+//        int x = ps.executeUpdate();
+//        return x > 0;
+//    }
 
-    /**
-     *
-     * @param schoolID
-     * @param date
-     * @return
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    private boolean setExpireDate(int schoolID, Date date) throws IOException,
-            XmlRpcException, SQLException {
-        PreparedStatement ps = getStatement("UPDATE tblSchool SET expire = ? WHERE (schoolID = ?) LIMIT 1");
-        if (date == null || date.getTime() < DATE_OFFSET) {
-            ps.setNull(1, Types.DATE);
-        } else {
-            ps.setDate(1, new java.sql.Date(date.getTime()));
-        }
-        ps.setInt(2, schoolID);
-        int x = ps.executeUpdate();
-        return x > 0;
-    }
+//    /**
+//     *
+//     * @param userid
+//     * @param orgid
+//     * @return
+//     * @throws DwoXmlRpcException
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    
+//    private Hashtable login_saml(String userid, String orgid) throws DwoXmlRpcException,
+//            IOException, XmlRpcException, SQLException {
+//        close(); //for lazy connection
+//        //TODO DONE V1_3
+//        String QRY_LOGIN_SAML = "SELECT * FROM tblSamlUser "
+//                + "LEFT JOIN tblUser ON tblSamlUser.userID = tblUser.userID "
+//                + "LEFT JOIN tblStudentOf ON tblUser.classID = tblStudentOf.classID "
+//                + "WHERE (samluserid = ?) AND   (samlorgid = ?)";
+//        PreparedStatement ps = getStatement(QRY_LOGIN_SAML);
+//        ps.setString(1, userid);
+//        ps.setString(2, orgid);
+//        return login_tail(ps);
+//    }
 
-    /**
-     *
-     * @param userid
-     * @param orgid
-     * @return
-     * @throws DwoXmlRpcException
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    
-    private Hashtable login_saml(String userid, String orgid) throws DwoXmlRpcException,
-            IOException, XmlRpcException, SQLException {
-        close(); //for lazy connection
-        //TODO DONE V1_3
-        String QRY_LOGIN_SAML = "SELECT * FROM tblSamlUser "
-                + "LEFT JOIN tblUser ON tblSamlUser.userID = tblUser.userID "
-                + "LEFT JOIN tblStudentOf ON tblUser.classID = tblStudentOf.classID "
-                + "WHERE (samluserid = ?) AND   (samlorgid = ?)";
-        PreparedStatement ps = getStatement(QRY_LOGIN_SAML);
-        ps.setString(1, userid);
-        ps.setString(2, orgid);
-        return login_tail(ps);
-    }
+//    /**
+//     *
+//     * @param userid
+//     * @param orgid
+//     * @param id
+//     * @return
+//     * @throws SQLException
+//     */
+//    private boolean link_saml(String userid, String orgid, int id)
+//            throws SQLException {
+//        String INSERT_SAML_USER = "INSERT INTO tblSamlUser(samluserid, samlorgid, userID) VALUE(?,?,?)";
+//        PreparedStatement ps = getStatement(INSERT_SAML_USER);
+//        try {
+//            ps.setString(1, userid);
+//            ps.setString(2, orgid);
+//            ps.setInt(3, id);
+//            ps.execute();
+//        } finally {
+//            ps.close();
+//        }
+//        return true;
+//    }
 
-    /**
-     *
-     * @param userid
-     * @param orgid
-     * @param id
-     * @return
-     * @throws SQLException
-     */
-    private boolean link_saml(String userid, String orgid, int id)
-            throws SQLException {
-        String INSERT_SAML_USER = "INSERT INTO tblSamlUser(samluserid, samlorgid, userID) VALUE(?,?,?)";
-        PreparedStatement ps = getStatement(INSERT_SAML_USER);
-        try {
-            ps.setString(1, userid);
-            ps.setString(2, orgid);
-            ps.setInt(3, id);
-            ps.execute();
-        } finally {
-            ps.close();
-        }
-        return true;
-    }
+//    /**
+//     * Adds a teacher to an existing class, only if he is not a member yet.
+//     *
+//     * @param classID
+//     * @param teacherID
+//     * @return true if (teacher,class) exists in table on exit.
+//     * @throws IOException
+//     * @throws SQLException
+//     * @throws XmlRpcException
+//     * @throws DwoXmlRpcException
+//     */
+//    //@Override
+//    private boolean addTeacherToClass(int classID, int teacherID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        // Fetch any teachers that are a member of the class.
+//        PreparedStatement ps = getStatement(QRY_SELECT_CLASS_TEACHER);
+//        ps.setInt(1, classID);
+//        ps.setInt(2, teacherID);
+//        ResultSet rs = ps.executeQuery();
+//
+//        if (!isEmpty(rs)) {
+//            //teacher already exists hence return
+//            LOG.log(Level.FINE, "Teacher {0} already a member of class {1}. No insert done.", new Object[]{teacherID, classID});
+//            rs.close();
+//        } else {
+//            rs.close();
+//            // try inserting the teacher, though due to concurrency it might 
+//            // have been inserted already, via other page or applet
+//            ps = getStatement(QRY_ADD_TEACHER);
+//            ps.setInt(1, classID);
+//            ps.setInt(2, teacherID);
+//            try {
+//                LOG.log(Level.FINE, "Select did not find a teacher, attempting to insert teacher {0} to class {1}.", new Object[]{teacherID, classID});
+//                ps.execute();
+//                ps.close();
+//            } catch (SQLException e) {
+//                if (e.getErrorCode() == 1062) {
+//                    // MySQL duplicate entry error code detected.
+//                    LOG.log(Level.FINE, "Teacher {0} has been inserted concurrently into table. Proceeding without exception.", new Object[]{teacherID, classID});
+//                } else {
+//                    LOG.log(Level.FINE, "Unexpected error inserting teacher {0} into class {1}. Throwing exception.", new Object[]{teacherID, classID});
+//                    throw e;
+//                }
+//            }
+//        }
+//        return true;
+//    }
 
-    /**
-     * Adds a teacher to an existing class, only if he is not a member yet.
-     *
-     * @param classID
-     * @param teacherID
-     * @return true if (teacher,class) exists in table on exit.
-     * @throws IOException
-     * @throws SQLException
-     * @throws XmlRpcException
-     * @throws DwoXmlRpcException
-     */
-    //@Override
-    private boolean addTeacherToClass(int classID, int teacherID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        // Fetch any teachers that are a member of the class.
-        PreparedStatement ps = getStatement(QRY_SELECT_CLASS_TEACHER);
-        ps.setInt(1, classID);
-        ps.setInt(2, teacherID);
-        ResultSet rs = ps.executeQuery();
+//    /**
+//     * Removes a teacher of a class if a member
+//     *
+//     * @param classID
+//     * @param teacherID
+//     * @return true if teacher is no longer in table
+//     * @throws IOException
+//     * @throws SQLException
+//     * @throws XmlRpcException
+//     * @throws DwoXmlRpcException
+//     */
+//    //@Override
+//    private boolean removeTeacherFromClass(int classID, int teacherID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        // Delete the <teacher,class> entry
+//        PreparedStatement ps = getStatement(QRY_DELETE_CLASS_TEACHER);
+//        ps.setInt(1, classID);
+//        ps.setInt(2, teacherID);
+//        ps.executeQuery();
+//        ps.close();
+//        return true;
+//    }
 
-        if (!isEmpty(rs)) {
-            //teacher already exists hence return
-            LOG.log(Level.FINE, "Teacher {0} already a member of class {1}. No insert done.", new Object[]{teacherID, classID});
-            rs.close();
-        } else {
-            rs.close();
-            // try inserting the teacher, though due to concurrency it might 
-            // have been inserted already, via other page or applet
-            ps = getStatement(QRY_ADD_TEACHER);
-            ps.setInt(1, classID);
-            ps.setInt(2, teacherID);
-            try {
-                LOG.log(Level.FINE, "Select did not find a teacher, attempting to insert teacher {0} to class {1}.", new Object[]{teacherID, classID});
-                ps.execute();
-                ps.close();
-            } catch (SQLException e) {
-                if (e.getErrorCode() == 1062) {
-                    // MySQL duplicate entry error code detected.
-                    LOG.log(Level.FINE, "Teacher {0} has been inserted concurrently into table. Proceeding without exception.", new Object[]{teacherID, classID});
-                } else {
-                    LOG.log(Level.FINE, "Unexpected error inserting teacher {0} into class {1}. Throwing exception.", new Object[]{teacherID, classID});
-                    throw e;
-                }
-            }
-        }
-        return true;
-    }
+//    /**
+//     * Adds a student to a class if not exists
+//     *
+//     * @param classID
+//     * @param studentID
+//     * @return true if (student,class) exists in table on exit.
+//     * @throws IOException
+//     * @throws SQLException
+//     * @throws XmlRpcException
+//     * @throws DwoXmlRpcException
+//     */
+//    //@Override
+//    private boolean addStudentToClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        // Fetch any student that are a member of the class.
+//        PreparedStatement ps = getStatement(QRY_SELECT_CLASS_STUDENT);
+//        ps.setInt(1, classID);
+//        ps.setInt(2, studentID);
+//        ResultSet rs = ps.executeQuery();
+//
+//        if (!isEmpty(rs)) {
+//            //student already exists hence return
+//            LOG.log(Level.FINE, "Student {0} already a member of class {1}. No insert done.", new Object[]{studentID, classID});
+//            rs.close();
+//            // return
+//        } else {
+//            // try inserting the student, though due to concurrency it might 
+//            // have been inserted already, via other page or applet
+//            ps = getStatement(QRY_ADD_STUDENT);
+//            ps.setInt(1, classID);
+//            ps.setInt(2, studentID);
+//            try {
+//                LOG.log(Level.FINE, "Select did not find a student, attempting to insert student {0} to class {1}.", new Object[]{studentID, classID});
+//                ps.execute();
+//            } catch (SQLException e) {
+//                if (e.getErrorCode() == 1062) {
+//                    // MySQL duplicate entry error code detected.
+//                    LOG.log(Level.FINE, "Student {0} has been inserted concurrently into table. Proceeding without exception.", new Object[]{studentID, classID});
+//                    //return
+//                } else {
+//                    LOG.log(Level.FINE, "Unexpected error inserting student {0} into class {1}. Throwing exception.", new Object[]{studentID, classID});
+//                    throw e;
+//                }
+//            }
+//        }
+//        return true;
+//    }
 
-    /**
-     * Removes a teacher of a class if a member
-     *
-     * @param classID
-     * @param teacherID
-     * @return true if teacher is no longer in table
-     * @throws IOException
-     * @throws SQLException
-     * @throws XmlRpcException
-     * @throws DwoXmlRpcException
-     */
-    //@Override
-    private boolean removeTeacherFromClass(int classID, int teacherID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        // Delete the <teacher,class> entry
-        PreparedStatement ps = getStatement(QRY_DELETE_CLASS_TEACHER);
-        ps.setInt(1, classID);
-        ps.setInt(2, teacherID);
-        ps.executeQuery();
-        ps.close();
-        return true;
-    }
+//    /**
+//     * Removes a student from a class if a member
+//     *
+//     * @param classID
+//     * @param studentID
+//     * @return true if student is no longer in table
+//     * @throws IOException
+//     * @throws SQLException
+//     * @throws XmlRpcException
+//     * @throws DwoXmlRpcException
+//     */
+//    //@Override
+//    private boolean removeStudentFromClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//        // Delete the <teacher,class> entry
+//        PreparedStatement ps = getStatement(QRY_DELETE_CLASS_STUDENT);
+//        ps.setInt(1, classID);
+//        ps.setInt(2, studentID);
+//        ps.executeQuery();
+//
+//        ps = getStatement(QRY_CLEAR_USER_ROLE_DEFAULT_CLASS);
+//        ps.setInt(1, studentID);
+//        ps.setInt(2, classID);
+//        ps.executeQuery();
+//
+//        ps.close();
+//        return true;
+//        // no error if deleting non-existing teacher
+//    }
 
-    /**
-     * Adds a student to a class if not exists
-     *
-     * @param classID
-     * @param studentID
-     * @return true if (student,class) exists in table on exit.
-     * @throws IOException
-     * @throws SQLException
-     * @throws XmlRpcException
-     * @throws DwoXmlRpcException
-     */
-    //@Override
-    private boolean addStudentToClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        // Fetch any student that are a member of the class.
-        PreparedStatement ps = getStatement(QRY_SELECT_CLASS_STUDENT);
-        ps.setInt(1, classID);
-        ps.setInt(2, studentID);
-        ResultSet rs = ps.executeQuery();
+//    /**
+//     * Returns the classes to which the student is subscribed.
+//     *
+//     * @param userID
+//     * @param schoolID
+//     * @return
+//     * @throws java.io.IOException
+//     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
+//     * @throws java.sql.SQLException
+//     * @throws org.apache.xmlrpc.applet.XmlRpcException
+//     */
+//    //@Override
+//    private Vector<Object> getClassesOfStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//
+//        PreparedStatement ps = getStatement(QRY_SELECT_CLASSES_OF_STUDENT);
+//        ps.setInt(1, userID);
+//        ps.setInt(2, schoolID);
+//        Vector v = executeQueryWithResult(ps);
+//        LOG.log(Level.FINE, "Retrieved student-role classes of user {0} in school {1}.", new Object[]{userID, schoolID});
+//        return v;
+//    }
 
-        if (!isEmpty(rs)) {
-            //student already exists hence return
-            LOG.log(Level.FINE, "Student {0} already a member of class {1}. No insert done.", new Object[]{studentID, classID});
-            rs.close();
-            // return
-        } else {
-            // try inserting the student, though due to concurrency it might 
-            // have been inserted already, via other page or applet
-            ps = getStatement(QRY_ADD_STUDENT);
-            ps.setInt(1, classID);
-            ps.setInt(2, studentID);
-            try {
-                LOG.log(Level.FINE, "Select did not find a student, attempting to insert student {0} to class {1}.", new Object[]{studentID, classID});
-                ps.execute();
-            } catch (SQLException e) {
-                if (e.getErrorCode() == 1062) {
-                    // MySQL duplicate entry error code detected.
-                    LOG.log(Level.FINE, "Student {0} has been inserted concurrently into table. Proceeding without exception.", new Object[]{studentID, classID});
-                    //return
-                } else {
-                    LOG.log(Level.FINE, "Unexpected error inserting student {0} into class {1}. Throwing exception.", new Object[]{studentID, classID});
-                    throw e;
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Removes a student from a class if a member
-     *
-     * @param classID
-     * @param studentID
-     * @return true if student is no longer in table
-     * @throws IOException
-     * @throws SQLException
-     * @throws XmlRpcException
-     * @throws DwoXmlRpcException
-     */
-    //@Override
-    private boolean removeStudentFromClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        // Delete the <teacher,class> entry
-        PreparedStatement ps = getStatement(QRY_DELETE_CLASS_STUDENT);
-        ps.setInt(1, classID);
-        ps.setInt(2, studentID);
-        ps.executeQuery();
-
-        ps = getStatement(QRY_CLEAR_USER_ROLE_DEFAULT_CLASS);
-        ps.setInt(1, studentID);
-        ps.setInt(2, classID);
-        ps.executeQuery();
-
-        ps.close();
-        return true;
-        // no error if deleting non-existing teacher
-    }
-
-    /**
-     * Returns the classes to which the student is subscribed.
-     *
-     * @param userID
-     * @param schoolID
-     * @return
-     * @throws java.io.IOException
-     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
-     * @throws java.sql.SQLException
-     * @throws org.apache.xmlrpc.applet.XmlRpcException
-     */
-    //@Override
-    private Vector<Object> getClassesOfStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-
-        PreparedStatement ps = getStatement(QRY_SELECT_CLASSES_OF_STUDENT);
-        ps.setInt(1, userID);
-        ps.setInt(2, schoolID);
-        Vector v = executeQueryWithResult(ps);
-        LOG.log(Level.FINE, "Retrieved student-role classes of user {0} in school {1}.", new Object[]{userID, schoolID});
-        return v;
-    }
-
-    /**
-     * Returns the classes to which the student is subscribed.
-     *
-     * @param userID
-     * @param schoolID
-     * @return
-     * @throws java.io.IOException
-     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
-     * @throws java.sql.SQLException
-     * @throws org.apache.xmlrpc.applet.XmlRpcException
-     */
-    //@Override
-    private Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-
-        PreparedStatement ps = getStatement(QRY_SELECT_CLASSES_OF_TEACHER);
-        ps.setInt(1, userID);
-        ps.setInt(2, schoolID);
-        Vector v = executeQueryWithResult(ps);
-        LOG.log(Level.FINE, "Retrieved teaching-role classes of user {0} in school {1}.", new Object[]{userID, schoolID});
-        return v;
-    }
+//    /**
+//     * Returns the classes to which the student is subscribed.
+//     *
+//     * @param userID
+//     * @param schoolID
+//     * @return
+//     * @throws java.io.IOException
+//     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
+//     * @throws java.sql.SQLException
+//     * @throws org.apache.xmlrpc.applet.XmlRpcException
+//     */
+//    //@Override
+//    private Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+//
+//        PreparedStatement ps = getStatement(QRY_SELECT_CLASSES_OF_TEACHER);
+//        ps.setInt(1, userID);
+//        ps.setInt(2, schoolID);
+//        Vector v = executeQueryWithResult(ps);
+//        LOG.log(Level.FINE, "Retrieved teaching-role classes of user {0} in school {1}.", new Object[]{userID, schoolID});
+//        return v;
+//    }
 
     //@Override
     private boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
