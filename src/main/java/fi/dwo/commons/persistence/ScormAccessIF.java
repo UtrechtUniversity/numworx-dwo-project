@@ -8,6 +8,7 @@ import java.util.Vector;
  *
  * @xmlrpc.generate
  */
+@Deprecated
 public interface ScormAccessIF {
 
     public boolean Commit(int userID, int schoolGroupID, int scoID, Hashtable map) throws Exception;
