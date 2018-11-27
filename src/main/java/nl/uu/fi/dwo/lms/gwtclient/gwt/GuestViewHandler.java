@@ -3,8 +3,10 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 import javax.inject.Inject;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class GuestViewHandler implements SwitchViewEventHandler {
 
@@ -24,7 +26,8 @@ public class GuestViewHandler implements SwitchViewEventHandler {
       
       switch (value) {
         case WELCOME:
-            // show alert
+          // show alert
+          presenterFactory.getEventBus().fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_User_NoTeacher()));
         default:
         case ACCOUNT:
           if (withUser()) {

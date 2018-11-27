@@ -13,8 +13,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
-import javax.inject.Singleton;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.organisation.OrganisationPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
@@ -349,6 +349,12 @@ public class PresenterFactoryGwt implements PresenterFactory {
     public void setStage(int stage) {
       getPersonsPresenter().setStage(stage);
       getSelectedResultsPresenter().setStage(stage);
+    }
+
+    @Override
+    public OrganisationPresenter getOrganisationPresenter() {
+      // TODO Auto-generated method stub
+      return null;
     }
 
 }

@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.organisation.OrganisationPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenterSchoolAdmin;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
@@ -58,6 +59,7 @@ public class SchoolAdminPresenterFactory implements PresenterFactory {
   @Inject AddStudentToSchoolclassPresenter addStudentToSchoolclassPresenter;
   @Inject CopyOrMoveStudentToSchoolclassPresenter copyOrMoveStudentToSchoolclassPresenter;
   @Inject EditTeacherPresenter editTeacherPresenter;
+  @Inject OrganisationPresenter organisationPresenter;
 
   @Inject SchoolAdminPresenterFactory() {
   }
@@ -222,6 +224,11 @@ public class SchoolAdminPresenterFactory implements PresenterFactory {
 
   @Override
   public void setStage(int stage) {
+  }
+
+  @Override @JsMethod
+  public OrganisationPresenter getOrganisationPresenter() {
+    return organisationPresenter;
   }
 
 }

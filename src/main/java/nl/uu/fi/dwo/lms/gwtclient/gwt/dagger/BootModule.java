@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.dagger;
 
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import com.google.web.bindery.event.shared.EventBus;
@@ -17,8 +16,10 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactoryJs;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.modules.JsModulesView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.organisation.JsOrganisationView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsLogResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.organisation.OrganisationPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.LogResultsPresenter;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
@@ -44,16 +45,16 @@ abstract class BootModule {
 	  return new SecuredTeacherSchoolClassManager();
 	}
 	
-	@IntoMap
-	@RoleKey(RoleType.ANONYMOUS)
-	@Provides
-	static PresenterBuilder guest( GuestComponent.Builder builder ) {
-	  return builder.build();
-	}
+//	@IntoMap
+//	@RoleKey(RoleType.ANONYMOUS)
+//	@Provides
+//	static PresenterBuilder guest( GuestComponent.Builder builder ) {
+//	  return builder.build();
+//	}
 	
 	
 // Binds Views to Presenters
 	@Binds abstract LogResultsPresenter.Display logResultsView(JsLogResultsView view);
 	@Binds abstract ModulesPresenter.Display modulesView(JsModulesView view);
-	
+	@Binds abstract OrganisationPresenter.Display organisationView(JsOrganisationView view);
 }
