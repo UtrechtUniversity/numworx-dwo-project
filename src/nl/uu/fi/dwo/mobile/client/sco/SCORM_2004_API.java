@@ -2,18 +2,46 @@ package nl.uu.fi.dwo.mobile.client.sco;
 
 import nl.uu.fi.dwo.interaction.client.Role;
 
+import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
+import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.core.client.ScriptInjector.FromUrl;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SCORM_2004_API implements Scorm2004IF {
 
-	private native static void script(String item) /*-{
-		$wnd.script(item)	
+	private static Promise<?> loaded;
+	
+	private static native String getBase() /*-{
+		return $wnd.cdplogica;
 	}-*/;
 	
+	private static Promise<?> script(String source) {
+		source = getBase()+source;
+		Deferred<Void> defer = new Deferred<>();
+		FromUrl fromUrl = ScriptInjector.fromUrl(source);
+		fromUrl.setCallback(new Callback<Void, Exception>() {
+			
+			@Override
+			public void onSuccess(Void result) {
+				defer.resolve(result);
+			}
+			
+			@Override
+			public void onFailure(Exception reason) {
+				defer.fail(reason);
+			}
+		});
+		fromUrl.setWindow(ScriptInjector.TOP_WINDOW);
+		fromUrl.inject();
+		return defer.getPromise();
+	}
+	
 	static {
+		loaded = 
 		script("scripts/SCORM_2004_APIWrapper.js"); 
 	}
 	
@@ -94,7 +122,7 @@ public class SCORM_2004_API implements Scorm2004IF {
 	@Override
 	  public Promise<String> Initialize() {   
 	    try {
-	      return Promises.resolved(Initialize0());
+	      return loaded.map(p -> Initialize0());
 	    } catch (Exception e) {
 	      return Promises.failed(e);
 	    }
