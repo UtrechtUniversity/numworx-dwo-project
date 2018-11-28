@@ -12,7 +12,7 @@ import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
  *
  * @author G.A.J. van der Plas
  */
-class InputCellRendererEmail extends DefaultTableCellRenderer {
+class InputCellRendererNotEmpty extends DefaultTableCellRenderer {
     
     private static final long serialVersionUID = 1L;
 
@@ -21,12 +21,12 @@ class InputCellRendererEmail extends DefaultTableCellRenderer {
         JComponent component = (JComponent) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         int rows = table.getRowCount();
         if (row == rows-1 ||
-            value != null && ValidUserFieldsChecker.isValidEmail(value.toString())) {
+            value != null && ValidUserFieldsChecker.isNonEmptyNorNull(value.toString())) {
             component.setBackground(Color.WHITE);
             component.setToolTipText(null);
         } else {
             component.setBackground(new Color(255, 128, 128));
-            component.setToolTipText("Invalid email");
+            component.setToolTipText("enter data");
         }
         return component;
     }

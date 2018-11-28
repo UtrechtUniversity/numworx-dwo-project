@@ -10,6 +10,7 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.datatransfer.Clipboard;
@@ -29,6 +30,7 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
@@ -85,30 +87,8 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
     };
 
     private UserType userType = UserType.TEACHER;
-
-
-
-    class PasswordCellRenderer extends DefaultTableCellRenderer {
-
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean hasFocus, int row, int column) {
-            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
-                    row, column);
-
-            if (value != null && ValidUserFieldsChecker.isValidPassword(value.toString())) {
-                component.setBackground(Color.WHITE);
-            } else {
-                component.setBackground(new Color(255, 128, 128));
-            }
-
-            return component;
-        }
-    }
-
-    public class ImageRenderer extends JLabel implements TableCellRenderer {
+    
+    public class ImageRenderer extends JLabel implements TableCellRenderer, Icon {
 
         private ImageIcon icon = new ImageIcon();
 
@@ -116,28 +96,35 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         public Component getTableCellRendererComponent(JTable table,
                 Object value, boolean selected, boolean hasFocus, int row, int col) {
             Image image = (Image) value;
-            icon.setImage(image);
-            setIcon(icon);
+            if (image != null) {
+              icon.setImage(image);
+              setIcon(icon);
+            } else {
+              setIcon(this);
+            }
             setHorizontalAlignment(SwingConstants.CENTER);
             setOpaque(true);
             Object[] arguments = new Object[]{table.getValueAt(row, 0)};
-//            switch (col) {
-//                case 1:
-//                    String s = TextMapper.getText(TextMapper.GUIC_TLTP_USERS_CLASS);
-//                    setToolTipText(MessageFormat.format(s, arguments));
-//                    break;
-//                case 2:
-//                    setToolTipText(TextMapper.getText(TextMapper.GUIC_TLTP_EDIT_CLASS));
-//                    break;
-//                default:
-//                    setToolTipText("Message " + col); // TODO ....
-//            }
             if (selected) {
                 setBackground(table.getSelectionBackground());
             } else {
                 setBackground(table.getBackground());
             }
             return this;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+        }
+
+        @Override
+        public int getIconWidth() {
+          return 16;
+        }
+
+        @Override
+        public int getIconHeight() {
+          return 16;
         }
     }
 
@@ -169,11 +156,6 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
 //            final GuiCreator instance = GuiCreator.instance();
             if (value == delImage) {
                 tableModel.deleteSelectedRow(tableModel.getSelectedRow());
-                //set input verification
-                jtable.getColumnModel().getColumn(3).setCellRenderer(new InputCellRendererUsername());
-                jtable.getColumnModel().getColumn(4).setCellRenderer(new PasswordCellRenderer());
-                jtable.getColumnModel().getColumn(5).setCellRenderer(new InputCellRendererEmail());
-
             }
         }
     }
@@ -261,6 +243,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                     NewSingleSchoolStudentsTeacherPanelTableModel model = (NewSingleSchoolStudentsTeacherPanelTableModel) t.getModel();
                     model.getData().add(new DomSingleSchoolStudent());
                     model.setSelectedColumn(column + 1);
+                    model.emptyRow ++;
                     model.setSelectedRow(model.getData().size() - 1);
                     model.fireTableDataChanged();
                 }
@@ -289,20 +272,10 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
 
                 do {
                     if (row == -1) {
-//                        if ((e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) > 0) {
-//                            //shift pressed
-//                            row = t.getRowCount() - 1;
-//                        } else {
                         row = 0;//handle no selection                            
-//                        }
                     }
                     if (column == -1) {
-//                        if ((e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) > 0) {
-//                            //shift pressed
-//                            column = t.getColumnCount() - 2;
-//                        } else {
                         column = 0;
-//                        }//ditto
                     }
 
                     column++;
@@ -326,8 +299,10 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         TableUtil.setJTableSizes(jtable);
 
         //set input verification
+        jtable.getColumnModel().getColumn(0).setCellRenderer(new InputCellRendererNotEmpty());
+        jtable.getColumnModel().getColumn(2).setCellRenderer(new InputCellRendererNotEmpty());
         jtable.getColumnModel().getColumn(3).setCellRenderer(new InputCellRendererUsername());
-        jtable.getColumnModel().getColumn(4).setCellRenderer(new PasswordCellRenderer());
+        jtable.getColumnModel().getColumn(4).setCellRenderer(new InputCellRendererPassword());
         jtable.getColumnModel().getColumn(5).setCellRenderer(new InputCellRendererEmail());
 
 //        TableUtil.setBorder(jtable);
@@ -392,25 +367,6 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         addButton.setSize(addButton.getPreferredSize());
         addButton.addActionListener(this);
         addButton.setEnabled(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid());
-//        addButton.setEnabled(licenseIsValid(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool()));
-//        if(userType != userType.TEACHER && DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getExpire()){
-//           // 
-//        }
-//        Vector<DomSchoolClass> classList = new Vector<DomSchoolClass>(prop.getTeachersSchoolClasses());
-//        schoolClassComboBox = new JComboBox(classList);
-//       fix code first Collections.sort(userVector, new Comparator<DomSchoolClass>() {
-//            public int compare(DomSchoolClass a, DomSchoolClass b) {
-//                return a.getSchoolClassName().compareTo(b.getSchoolClassName());
-//            }
-//        });
-
-//        if (classList.size() > 0) {
-//            schoolClassComboBox.setSelectedIndex(0);
-//        }
-//        DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer();
-//        schoolClassComboBox.setRenderer(renderer);
-//        schoolClassComboBox.setMaximumRowCount(10);
-//        schoolClassComboBox.addActionListener(this);
         importButton = new JButton(TextMapper.getText("Import from clipboard"));
         importButton.setSize(importButton.getPreferredSize());
         importButton.addActionListener(this);
@@ -475,9 +431,6 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addButton) {
-//            if (schoolClassComboBox.getSelectedItem() == null) {
-//                return;
-//            }
             try {
                 List<DomSingleSchoolStudent> submitList = tableModel.getData();
                 List<DomSingleSchoolStudent> resultList = new ArrayList<DomSingleSchoolStudent>();
@@ -533,11 +486,6 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_NO_USERS_SELECTED));
                 }
                 tableModel.init(prop, columnNames, resultList, delImage);
-                //set input verification
-                jtable.getColumnModel().getColumn(3).setCellRenderer(new InputCellRendererUsername());
-                jtable.getColumnModel().getColumn(4).setCellRenderer(new PasswordCellRenderer());
-                jtable.getColumnModel().getColumn(5).setCellRenderer(new InputCellRendererEmail());
-
                 tableModel.fireTableDataChanged();
                 if (failFlag == true) {
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(),
@@ -608,24 +556,29 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 String tempString;
                 tempString = (String) clipboardContent.getTransferData(DataFlavor.stringFlavor);
                 String[] rowStrings = tempString.split("\n"); // was: StringUtils.split(tempString, "\n");
-                String[][] celStrings = new String[rowStrings.length][];
-                List<DomSingleSchoolStudent> newUserList = new ArrayList<DomSingleSchoolStudent>();
+                String[] celStrings;
+                List<DomSingleSchoolStudent> newUserList = new ArrayList<DomSingleSchoolStudent>(rowStrings.length);
                 for (int i = 0; i < rowStrings.length; i++) {
-                    newUserList.add(new DomSingleSchoolStudent());
+                    DomSingleSchoolStudent student = new DomSingleSchoolStudent();
+                    newUserList.add(student);
                     //userList.get(userList.size()).clearSettings();
-                    celStrings[i] = rowStrings[i].split("\t", columnNames.length);
-                    newUserList.get(newUserList.size() - 1).setGivenName(celStrings[i][0]);
-                    newUserList.get(newUserList.size() - 1).setInsertion(celStrings[i][1]);
-                    newUserList.get(newUserList.size() - 1).setFamilyName(celStrings[i][2]);
-                    newUserList.get(newUserList.size() - 1).setUserName(celStrings[i][3]);
-                    newUserList.get(newUserList.size() - 1).setPassword(celStrings[i][4]);
-                    newUserList.get(newUserList.size() - 1).setEmail(celStrings[i][5]);
-//                    System.out.println(celStrings[i]);
+                    celStrings = rowStrings[i].split("\t", columnNames.length);
+                    if(celStrings.length < columnNames.length) { // avoid index out of bounds
+                      String tmp[] = new String[columnNames.length];
+                      System.arraycopy(celStrings, 0, tmp, 0, celStrings.length);
+                      celStrings = tmp;
+                    }
+                    student.setGivenName(celStrings[0]);
+                    student.setInsertion(celStrings[1]);
+                    student.setFamilyName(celStrings[2]);
+                    student.setUserName(celStrings[3]);
+                    student.setPassword(celStrings[4]);
+                    student.setEmail(celStrings[5]);
                 }
                 tableModel.addRows(newUserList);
                 return true;
             } catch (Exception e) {
-                LOG.log(Level.SEVERE, "", e);
+                LOG.log(Level.SEVERE, "clipboard paste", e);
                 return false;
             }
         } else {

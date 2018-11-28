@@ -29,7 +29,7 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
     private int selectedRow, selectedColumn;
 
     //define an empty field to add things.
-    private int emptyRow = 0;
+    int emptyRow = 0;
 
     private List<DomUserFull> data = new ArrayList<DomUserFull>();
     private Image delImage;
@@ -90,7 +90,7 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
             case 5:
                 return data.get(row).getEmail();
             case 6:
-                return delImage;
+                return row == emptyRow ? null : delImage;
             default:
                 return data.get(row);
         }
@@ -128,7 +128,7 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
      */
     @Override
     public boolean isCellEditable(int row, int col) {
-        return true;
+        return col != 6 || row != emptyRow;
     }
 
     /*
@@ -203,21 +203,20 @@ class NewTeacherSchoolAdminPanelTableModel extends AbstractTableModel {
         if (row != data.size() - 1) {
             emptyRow--;
             data.remove(row);
-//            this.fireTableDataChanged();
-            this.fireTableStructureChanged();
+            this.fireTableRowsDeleted(row, row);
         }
     }
 
     public void addRows(List<DomUserFull> teachers) {
         DomUserFull temp = data.get(data.size() - 1);
         data.remove(data.size() - 1);
+        int firstRow = data.size();
         for (DomUserFull s : teachers) {
             data.add(s);
         }
+        int lastRow = data.size()-1;
         data.add(temp);
         emptyRow = data.size() - 1;
-        this.fireTableDataChanged();
-//        this.fireTableStructureChanged();
-
+        fireTableRowsInserted(firstRow, lastRow);
     }
 }
