@@ -7,10 +7,12 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
+import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
@@ -53,4 +55,15 @@ public class SystemManager {
     return result;
   }
 
+  public DomSamlUser requestSamlToken(DomSamlUser user) throws Dwo2Exception {
+    RestSamlUser rest = new RestSamlUser();
+    rest.setDomSamlUser(user);
+    rest.setRestContext(getContext());
+    DomSamlUser result =
+        manager.put("rest/system/user/requestSamlToken", DomSamlUser.class, rest);
+    LOG.log(Level.FINE, "Retrieved token for id {1} for system with username {0}.",
+      new Object[] {manager.getAuthenticator().getUsername(), rest.getDomSamlUser().getSamlUserId()});
+    return result;
+  }
+  
 }
