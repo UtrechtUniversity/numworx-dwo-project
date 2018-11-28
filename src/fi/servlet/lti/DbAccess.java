@@ -2,6 +2,9 @@ package fi.servlet.lti;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,43 +14,88 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.persistence.DbAccessIF;
-import fi.dwo.dwojapplet.domain.School;
-import fi.dwo.dwojapplet.domain.SchoolClass;
-import fi.dwo.dwojapplet.domain.SchoolGroup;
-import fi.dwo.dwojapplet.persistence.DbAccessBridge;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import fi.servlet.dwomaccess.DbAccessFactory;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class DbAccess {
 	
+    private final static Logger LOG = Logger.getLogger(DbAccess.class.getName());
+  
+    RestAuthenticator authenticator;
+    StoredRestManager restManager;
+    SystemManager systemManager;
+  
 	/**
 	 * @param dbaccess
 	 */
-	public DbAccess(DbAccessIF dbaccess) {
-		this.dbaccess = dbaccess;
-		DbAccessBridge.setInstance(dbaccess);
+	public DbAccess() {
+	  authenticator = new RestAuthenticator();
+	  restManager = new StoredRestManager(authenticator);
 	}
 	
 	public DbAccess(ServletContext context) {
-		this(DbAccessFactory.getDbAccess(context));
+		this();
 		String dbrest_url = context.getInitParameter("dbrest.url");
+		
 		if(dbrest_url != null)
 			try {
+			    authenticator.setServerUrlPath(new URL(dbrest_url));
 				rest = new RestHandler(dbrest_url);
+				
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOG.log(Level.SEVERE, "dbrest.url", e);
 			}
 	}
 	
-	DbAccessIF dbaccess;
 	RestHandler rest = new RestHandler();
 	
     private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
     private static final String DWO_SAML_ORGANIZATION = "dwoSAMLOrganization";    
 	private static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
 	private static final String DWO_SAML_AUTH_TOKEN = "dwoSAMLAuthToken";
+	
+	public boolean setEntreeCookie(HttpServletRequest request, HttpServletResponse response ) {
+	   Object user_id = request.getAttribute("uid");
+	   Object org_id  = request.getAttribute("nlEduPersonHomeOrganizationId");	   
+	   DomSamlUser u = new DomSamlUser();
+	   u.setSamlOrgId(s(org_id));
+	   u.setSamlUserId(s(user_id));
+	   String path = "/";
+	   try {
+	       u = systemManager.requestSamlToken(u);
+	       Cookie user = new Cookie(DWO_SAML_USER_ID, u.getSamlUserId());
+	       user.setPath(path);
+	       Cookie orgid = new Cookie(DWO_SAML_ORGANIZATION_ID, u.getSamlOrgId());
+	       orgid.setPath(path);
+	       Cookie authToken = new Cookie(DWO_SAML_AUTH_TOKEN, u.getAuthToken());
+	       authToken.setPath(path);
+	       response.addCookie(user);
+	       response.addCookie(orgid);
+	       response.addCookie(authToken);
+	       return false;	  	       
+	   } catch(Dwo2Exception e) {
+	       try {
+	         response.sendRedirect("/dwo/register/Register.jsp?next=" + 
+	              URLEncoder.encode(request.getRequestURL().toString(), "UTF-8")
+	         );
+	       } catch (IOException e1) {
+	       }
+	       return true;
+	   }
+	}
+	
+	
+	
 	
 	public boolean setUUSAMLCookie(HttpServletRequest request, HttpServletResponse response, String schoolid, String organization) {
 	  Object lti_id = request.getAttribute("uid");
@@ -99,9 +147,6 @@ public class DbAccess {
       } catch (IOException e) {
           logger.log(Level.SEVERE, "registerSAML", e);
       }
-
-  
-  
 	  return false;
 	}
 	
@@ -193,16 +238,16 @@ public class DbAccess {
 	 * @return
 	 * @throws PersistenceException
 	 */
-	protected SchoolClass getSchoolClass(final PersistenceFacade facade,
+	protected DomSchoolClass getSchoolClass(
 			String oauth_consumer_key, String context_label)
-			throws PersistenceException {
+			throws Dwo2Exception {
 		if(context_label != null) {
-	 		School s = getSchool(facade, oauth_consumer_key);
-	 		SchoolClass[] array = facade.get(SchoolClass.class, s);
-			SchoolClass c;
-			for (int i = 0; i < array.length; i++) {
-				c = array[i];
-				if(c.getName().equals(context_label))
+	 		DomSchool s = getSchool(oauth_consumer_key);
+	 		List<DomSchoolClass> array = systemManager.getSchoolClasses(s);
+			DomSchoolClass c;
+			for (int i = 0; i < array.size(); i++) {
+				c = array.get(i);
+				if(c.getSchoolClassName().equals(context_label))
 					return c;
 			}
 		}
@@ -210,16 +255,15 @@ public class DbAccess {
 	}
 	
 	public String getSecret(String key) {
-		return getSecret(key, SchoolGroup.STUDENT);
+		return getSecret(key, RoleType.STUDENT);
 	}
 
-	public String getSecret(String key, int gid) {
-		PersistenceFacade instance = PersistenceFacade.instance();
+	public String getSecret(String key, RoleType gid) {
 		try {
-			School result = getSchool(instance, key);
-			return result.getPasswd(gid);
+			DomSchoolFull result = getSchool(key);
+			return result.getPasswords().stream().filter(entry -> entry.getKey() == gid).findFirst().get().getValue();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "get secret " + key + "," + gid, e);
 		}
 		return null;
 	}
@@ -230,20 +274,31 @@ public class DbAccess {
 	 * @return
 	 * @throws PersistenceException
 	 */
-	protected School getSchool(PersistenceFacade instance, String key)
-			throws PersistenceException {
-		int id = Integer.parseInt(key);
-		School result = instance.get(id, School.class);
+	protected DomSchoolFull getSchool(String key)
+			throws Dwo2Exception {
+		Long id = Long.valueOf(key);
+		PersistenceId pid = PersistentSchool.buildPersistenceId(id);
+        DomSchoolId submit = new DomSchoolId(pid);
+		DomSchoolFull result = systemManager.getSchool(submit);
 		return result;
 	}
 	
+	public String getOrganization(String key) {
+	  try {
+	      DomSchoolFull result = getSchool(key);
+	      return result.getSchoolName();
+	  } catch (Exception e) {
+	      logger.log(Level.SEVERE, "organization of " + key, e);
+	      return key;
+	  }
+	}
+	
 	public String getRealm(String key) {
-		PersistenceFacade instance = PersistenceFacade.instance();
 		try {
-			School result = getSchool(instance, key);
+			DomSchoolFull result = getSchool(key);
 			return result.getSchoolLogin();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "getRealm for " + key, e);
 		}
 		return key;
 	}
@@ -266,8 +321,4 @@ public class DbAccess {
 		return "";
 	}
 	
-	
-	public String getOrganization(String key) {
-	    return getRealm(key);
-	}
 }
