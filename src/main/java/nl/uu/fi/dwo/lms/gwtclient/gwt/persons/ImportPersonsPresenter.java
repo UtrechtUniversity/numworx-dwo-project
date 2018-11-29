@@ -31,7 +31,11 @@ import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
@@ -204,12 +208,12 @@ public class ImportPersonsPresenter {
             //convert to SingleSchoolStudent which is subclassed of DomUserFull and 
             //works for teachers too.
             DomSingleSchoolStudent s = new DomSingleSchoolStudent();
-            s.setUserName(cols[0]);
-            s.setGivenName(cols[1]);
-            s.setInsertion(cols[2]);
-            s.setFamilyName(cols[3]);
-            s.setEmail(cols[4]);
-            s.setPassword(cols[5]);
+            s.setGivenName(cols[0]);
+            s.setInsertion(cols[1]);
+            s.setFamilyName(cols[2]);
+            s.setUserName(cols[3]);
+            s.setPassword(cols[4]);
+            s.setEmail(cols[5]);
             s.setSingleSchool(true);
             personList.add(s);
         }
@@ -236,7 +240,7 @@ public class ImportPersonsPresenter {
         personList.add(student);
       }
       DomSchoolClass schoolClass = tagged.getSchoolClass();
-
+      final List<DomSingleSchoolStudent> newPersons = new ArrayList<>(size);
       
       List<Promise<Boolean>> promises = new ArrayList<>(size);
       for(DomSingleSchoolStudent student: personList) {
@@ -245,12 +249,27 @@ public class ImportPersonsPresenter {
         newStudent.setDomSingleSchoolStudent(student);
         newStudent.setDomSchoolClass(schoolClass);
         promise = manager.submitSingleSchoolStudent(newStudent);
+        promise = promise.then(p -> {
+          return p;
+        }, p-> { 
+          Throwable t = p.getFailure();
+          if (t instanceof Dwo2Exception) {
+            Dwo2ExceptionCode code = ((Dwo2Exception) t).getDwo2Code();
+            if (code == Dwo2ExceptionCode.Rest_Registration_UserName_exists) {
+              student.setId(new PersistenceId("LOCAL;" + PersistenceClassType.PersistentUser + ";0000000000"));
+            }
+          }
+          newPersons.add(student);
+        });
         promises.add(promise);
       }
       Promises.all(promises).then(p-> {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.PERSONS));
         return null;
-      }, FAILURE);
+      }, FAILURE).then( null, p-> {
+        persons = newPersons;
+        view.setPersonImportList(persons);
+      });
       
       
     }
