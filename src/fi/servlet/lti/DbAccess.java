@@ -41,6 +41,7 @@ public class DbAccess {
 	public DbAccess() {
 	  authenticator = new RestAuthenticator();
 	  restManager = new StoredRestManager(authenticator);
+	  systemManager = new SystemManager(restManager);
 	}
 	
 	public DbAccess(ServletContext context) {
