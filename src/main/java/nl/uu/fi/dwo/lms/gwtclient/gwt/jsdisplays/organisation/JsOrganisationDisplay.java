@@ -22,11 +22,11 @@ public class JsOrganisationDisplay {
   public static native void init();
   /**
    * Fills the list view with the list of persons. It requires a JSONObject
-   * with each field the item key, and a converted DomUser as value.
+   * with each field the item key, and a converted TaggedDomUser as value.
    *
    * @param data a map with a string as key.
    */
-  public static native void showPersons(JavaScriptObject data);
+  public static native void showPersons(JavaScriptObject data, String role);
 
   /**
    * setEmptyTableMessage show an indicator that the table is empty.
@@ -34,7 +34,7 @@ public class JsOrganisationDisplay {
   public static native void setEmptyTableMessage();
 
   /**
-   * setEmptyTableMessage show an indicator that we are fetching data.
+   * setLoadingTableMessage show an indicator that we are fetching data.
    */
   public static native void setLoadingTableMessage();
 

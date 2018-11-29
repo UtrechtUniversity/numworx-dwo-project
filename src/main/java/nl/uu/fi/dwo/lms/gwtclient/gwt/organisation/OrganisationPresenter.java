@@ -15,16 +15,17 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomUserFull;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 public class OrganisationPresenter {
 
   public interface Display extends BasicDisplay {
     
-  void showPersonen(Map<String, TaggedDomUserFull> personen);
-
   void setEmptyTableMessage();
 
   void setLoadingTableMessage();
+
+  void showPersonen(Map<String, TaggedDomUserFull> personen, RoleType role);
 }
 
   private static final Logger LOG = Logger.getLogger(OrganisationPresenter.class.getName());
@@ -49,12 +50,6 @@ public class OrganisationPresenter {
     view.setEmptyTableMessage();
   }
   
-  @JsMethod public void showTeacherList() {
-  }
-
-  @JsMethod public void showSchoolAdminList() {
-    
-  }
   
   @JsMethod void setChooseClass(boolean choice) {
     
@@ -64,10 +59,13 @@ public class OrganisationPresenter {
     
   }
   
-  @JsMethod void deleteEmployees(JavaScriptObject obj) {
+  @JsMethod void deletePersons(JavaScriptObject obj, String role) {
     
   }
   
+  @JsMethod void selectRole(String role) {
+    view.setEmptyTableMessage();
+  }
   
   @Inject void setView (Display view) {
     this.view = view;

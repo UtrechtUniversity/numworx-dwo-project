@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.organisation.*;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 @Singleton
 public class JsOrganisationView implements OrganisationPresenter.Display {
@@ -32,7 +33,7 @@ public class JsOrganisationView implements OrganisationPresenter.Display {
   }
 
   @Override
-  public void showPersonen(Map<String, TaggedDomUserFull> personen) {
+  public void showPersonen(Map<String, TaggedDomUserFull> personen, RoleType role) {
     // TODO Auto-generated method stub
     
   }
