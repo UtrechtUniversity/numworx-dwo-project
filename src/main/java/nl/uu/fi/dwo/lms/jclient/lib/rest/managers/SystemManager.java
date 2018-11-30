@@ -41,6 +41,21 @@ public class SystemManager {
         new Object[] {manager.getAuthenticator().getUsername(), rest.getDomSchool().getId()});
     return result;
   }
+  
+  public DomSchoolFull getSchool(String school) throws Dwo2Exception {
+    RestSchool rest = new RestSchool();
+    rest.setRestContext(getContext());
+    rest.setDomSchool(new DomSchool());
+    rest.getDomSchool().setSchoolName(school);
+    DomSchoolFull result =
+        manager.put("rest/system/school/getByName", DomSchoolFull.class, rest);
+    LOG.log(Level.FINE, "Retrieved full school with id {1} for system with username {0}.",
+        new Object[] {manager.getAuthenticator().getUsername(), rest.getDomSchool().getId()});
+    return result;
+    
+  }
+  
+  
 
   public List<DomSchoolClass> getSchoolClasses(DomSchoolId submit) throws Dwo2Exception {
     RestSchool rest = new RestSchool();
