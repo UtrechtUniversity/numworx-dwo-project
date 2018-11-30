@@ -71,6 +71,9 @@ public class RegisterPanel extends Composite {
 			}
 		}
 		
+		String schoolLogin = Cookies.getCookie("schoolLogin");
+		if (schoolLogin != null) this.schoolLogin.setText(schoolLogin);
+		
 	}
 
 	private void setAndFix(TextBox widget, String string) {
