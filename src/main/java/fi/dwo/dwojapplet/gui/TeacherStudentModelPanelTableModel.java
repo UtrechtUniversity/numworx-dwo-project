@@ -16,8 +16,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
  */
 class TeacherStudentModelPanelTableModel extends AbstractTableModel {
 
-    private String[] columnNames = {TextMapper.getText("Studentmodels"),
-        TextMapper.getText(TextMapper.TBL_SELECT)};
+    private String[] columnNames = {TextMapper.getText(TextMapper.GUIMNU_STUDENTMODELS),
+        TextMapper.getText(TextMapper.TBL_SELECT),
+        TextMapper.getText(TextMapper.TBL_DELETE)};
 
     static boolean DEBUG = false;
 
@@ -25,7 +26,7 @@ class TeacherStudentModelPanelTableModel extends AbstractTableModel {
 
     private Object[][] data;
 
-    public void init(List<DomStudentModelContext> modelList, Image searchImage) throws Dwo2Exception {
+    public void init(List<DomStudentModelContext> modelList, Image searchImage, Image removeImage) throws Dwo2Exception {
 
         
         int rows = 0;
@@ -33,11 +34,9 @@ class TeacherStudentModelPanelTableModel extends AbstractTableModel {
             modelList = new ArrayList<DomStudentModelContext>();
         }
 
-        for (DomStudentModelContext m : modelList) {
-            rows++; // one for each item in List
-        }
+        rows = modelList.size();
 
-        data = new Object[rows][3];
+        data = new Object[rows][5];
         int j = 0;
         for (DomStudentModelContext m : modelList) {
             String language = m.getModelStructure().getInfo().getTitle().get(DwoHelper.getLocale().getLocale());
@@ -46,7 +45,8 @@ class TeacherStudentModelPanelTableModel extends AbstractTableModel {
             }
             data[j][0] = m.getModelStructure().getInfo().getTitle().get(DwoHelper.getLocale().getLocale());
             data[j][1] = searchImage;
-            data[j][2] = m;
+            data[j][2] = removeImage;
+            data[j][3] = m;
             j++;
         }
         fireTableDataChanged();

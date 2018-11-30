@@ -2,6 +2,8 @@ package fi.dwo.dwojapplet.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -17,12 +19,15 @@ class InputCellRendererPassword extends DefaultTableCellRenderer {
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        JLabel component = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        if (value != null && ValidUserFieldsChecker.isValidPassword(value.toString())) {
+        JComponent component = (JComponent) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        int rows = table.getRowCount();
+        if (row == rows-1 ||
+            value != null && ValidUserFieldsChecker.isValidPassword(value.toString())) {
             component.setBackground(Color.WHITE);
-            component.setToolTipText("test");
+            component.setToolTipText(null);
         } else {
             component.setBackground(new Color(255, 128, 128));
+            component.setToolTipText("Not a valid password");
         }
         return component;
     }

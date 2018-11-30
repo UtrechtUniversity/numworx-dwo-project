@@ -8,11 +8,12 @@
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
-        <version>2.2.11-SNAPSHOT</version>
+        <version>2.3.2-SNAPSHOT</version>
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>
     <!-- Adjust artifact, name and description for new projects -->
     <artifactId>DWOJClient</artifactId>
+  <version>2.3.2-SNAPSHOT</version>
     <name>${project.build.finalName}</name>
     <url>http://www.dwo.nl</url>
     <packaging>jar</packaging>
@@ -60,7 +61,6 @@
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-commons-lib</artifactId>
-            <version>2.2.11-SNAPSHOT</version>
             <exclusions>
             	<exclusion>
             		<artifactId>servlet-api</artifactId>
@@ -71,7 +71,6 @@
         <dependency>
             <groupId>nl.uu.fi.dwo.rest</groupId>
             <artifactId>DWO-jclient-lib</artifactId>
-            <version>2.2.11-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -499,7 +498,7 @@
                     <plugin>
                         <groupId>com.github.wvengen</groupId>
                         <artifactId>proguard-maven-plugin</artifactId>
-                        <version>2.0.8</version>
+                        <version>2.0.14</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -509,7 +508,7 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <proguardVersion>5.2</proguardVersion>
+                            <proguardVersion>6.0</proguardVersion>
                             <options>
                                 <option>-verbose</option>
                                 <option>-dontwarn</option> 
@@ -518,9 +517,10 @@
                             <obfuscate>true</obfuscate>                    
                             <inputDirectory>${project.build.directory}</inputDirectory>
                             <injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
+                            <outFilter>!org/xml/sax/**.class</outFilter>
                             <!-- uncomment to change the output file 
+                             <outjar>${project.build.finalName}.jar</outjar>
                             <outputDirectory>${project.build.directory}</outputDirectory>
-                            <outjar>${project.build.finalName}.jar</outjar>
                             -->
                             <proguardInclude>config.pro</proguardInclude>
                             <libs>

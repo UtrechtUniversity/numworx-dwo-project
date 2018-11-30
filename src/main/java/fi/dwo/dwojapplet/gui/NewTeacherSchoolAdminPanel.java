@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.datatransfer.Clipboard;
@@ -31,6 +32,7 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
@@ -85,7 +87,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
 //    };
 //
 //    private UserType userType = UserType.SCHOOLADMIN;
-    public class ImageRenderer extends JLabel implements TableCellRenderer {
+    public class ImageRenderer extends JLabel implements TableCellRenderer, Icon  {
 
         private ImageIcon icon = new ImageIcon();
 
@@ -93,8 +95,12 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
         public Component getTableCellRendererComponent(JTable table,
                 Object value, boolean selected, boolean hasFocus, int row, int col) {
             Image image = (Image) value;
-            icon.setImage(image);
-            setIcon(icon);
+            if (image != null) { 
+              icon.setImage(image);
+              setIcon(icon);
+            } else {
+              setIcon(this);
+            }
             setHorizontalAlignment(SwingConstants.CENTER);
             setOpaque(true);
             Object[] arguments = new Object[]{table.getValueAt(row, 0)};
@@ -116,6 +122,20 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
             }
             return this;
         }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+        }
+
+        @Override
+        public int getIconWidth() {
+          return 16;
+        }
+
+        @Override
+        public int getIconHeight() {
+          return 16;
+        }
     }
 
     public class ImageButtonEditor extends AbstractCellEditor implements
@@ -131,7 +151,6 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
             JButton button = new JButton(new ImageIcon((Image) value));
             button.addActionListener(this);
             this.row = row;
-            //model = (ClassTeacherPanelTableModel) table.getModel();
             return button;
         }
 
@@ -143,14 +162,8 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
         @Override
         public void actionPerformed(ActionEvent event) {
             this.fireEditingStopped();
-//            final GuiCreator instance = GuiCreator.instance();
             if (value == delImage) {
                 tableModel.deleteSelectedRow(row);
-                //set input verification
-                jtable.getColumnModel().getColumn(3).setCellRenderer(new InputCellRendererUsername());
-                jtable.getColumnModel().getColumn(4).setCellRenderer(new InputCellRendererPassword());
-                jtable.getColumnModel().getColumn(5).setCellRenderer(new InputCellRendererEmail());
-
             }
         }
     }
@@ -241,6 +254,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                     teacher.clearSettings();
                     teacher.setSingleSchool(null); // XXX initialisatie Teacher
                     model.getData().add(teacher);
+                    model.emptyRow ++;
                     model.setSelectedColumn(column + 1);
                     model.setSelectedRow(model.getData().size() - 1);
                     model.fireTableDataChanged();
@@ -307,6 +321,8 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
         TableUtil.setJTableSizes(jtable);
 
         //set input verification
+        jtable.getColumnModel().getColumn(0).setCellRenderer(new InputCellRendererNotEmpty());
+        jtable.getColumnModel().getColumn(2).setCellRenderer(new InputCellRendererNotEmpty());
         jtable.getColumnModel().getColumn(3).setCellRenderer(new InputCellRendererUsername());
         jtable.getColumnModel().getColumn(4).setCellRenderer(new InputCellRendererPassword());
         jtable.getColumnModel().getColumn(5).setCellRenderer(new InputCellRendererEmail());
@@ -490,11 +506,6 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                     GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.DLG_NO_USERS_SELECTED));
                 }
                 tableModel.init(prop, columnNames, resultList, delImage);
-                jtable.setModel(tableModel);
-                //set input verification
-                jtable.getColumnModel().getColumn(3).setCellRenderer(new InputCellRendererUsername());
-                jtable.getColumnModel().getColumn(4).setCellRenderer(new InputCellRendererPassword());
-                jtable.getColumnModel().getColumn(5).setCellRenderer(new InputCellRendererEmail());
 
                 tableModel.fireTableDataChanged();
                 if (failFlag == true) {
@@ -561,21 +572,26 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
             try {
                 String tempString;
                 tempString = (String) clipboardContent.getTransferData(DataFlavor.stringFlavor);
-                String[] rowStrings = tempString.split("\n"); // was: StringUtils.split(tempString, "\n");
-                String[][] celStrings = new String[rowStrings.length][];
-                List<DomUserFull> newUserList = new ArrayList<DomUserFull>();
+                String[] rowStrings = tempString.split("\n");
+                String[] celStrings;;
+                List<DomUserFull> newUserList = new ArrayList<DomUserFull>(rowStrings.length);
                 for (int i = 0; i < rowStrings.length; i++) {
-                    newUserList.add(new DomUserFull());
-                    //userList.get(userList.size()).clearSettings();
-                    celStrings[i] = rowStrings[i].split("\t", columnNames.length);
-                    newUserList.get(newUserList.size() - 1).setGivenName(celStrings[i][0]);
-                    newUserList.get(newUserList.size() - 1).setInsertion(celStrings[i][1]);
-                    newUserList.get(newUserList.size() - 1).setFamilyName(celStrings[i][2]);
-                    newUserList.get(newUserList.size() - 1).setUserName(celStrings[i][3]);
-                    newUserList.get(newUserList.size() - 1).setPassword(celStrings[i][4]);
-                    newUserList.get(newUserList.size() - 1).setEmail(celStrings[i][5]);
+                    DomUserFull teacher = new DomUserFull();
+                    newUserList.add(teacher);
+                    celStrings = rowStrings[i].split("\t", columnNames.length);
+                    if(celStrings.length < columnNames.length) {
+                      String[] tmp = new String[columnNames.length];
+                      System.arraycopy(celStrings, 0, tmp, 0, celStrings.length);
+                      celStrings = tmp;
+                    }
+                    teacher.setGivenName(celStrings[0]);
+                    teacher.setInsertion(celStrings[1]);
+                    teacher.setFamilyName(celStrings[2]);
+                    teacher.setUserName(celStrings[3]);
+                    teacher.setPassword(celStrings[4]);
+                    teacher.setEmail(celStrings[5]);
                     // a teacher-account!
-                    newUserList.get(newUserList.size() - 1).setSingleSchool(false);
+                    teacher.setSingleSchool(false);
 //                    System.out.println(celStrings[i]);
                 }
                 tableModel.addRows(newUserList);

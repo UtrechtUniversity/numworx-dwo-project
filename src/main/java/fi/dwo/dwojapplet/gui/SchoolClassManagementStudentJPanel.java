@@ -255,7 +255,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                 } else if (value == removeImage) {
                     int row = tableModel.getSelectedRow();
                     DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, 3);
-                    String msg = MessageFormat.format(TextMapper.getText(TextMapper.DLG_Q_REMOVE_SCHOOLCLASS_BY_NAME), schoolClass.getSchoolClassName());
+                    String msg = MessageFormat.format(TextMapper.getText(TextMapper.DLG_Q_REMOVE_SCHOOLCLASS_MEMBERSHIP), schoolClass.getSchoolClassName());
                     if (GuiCreator.instance().ShowConfirmDialog(null, msg) == JOptionPane.OK_OPTION) {
                         prop.removeSchoolClass(schoolClass);
                         tableModel.init(prop, loginImage, removeImage, emptyImage);

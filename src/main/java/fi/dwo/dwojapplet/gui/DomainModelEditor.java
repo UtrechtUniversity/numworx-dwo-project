@@ -2,6 +2,7 @@ package fi.dwo.dwojapplet.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
@@ -21,7 +23,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 
-public class DomainModelEditor extends JPanel implements ActionListener
+public class DomainModelEditor extends JPanel implements ActionListener, Scrollable
 {
 	private static final Dimension TEXTFIELD_SIZE = new Dimension(180,20);
     private JTextField[][] objectiveTextFields;
@@ -39,11 +41,11 @@ public class DomainModelEditor extends JPanel implements ActionListener
 	PlusMinKnop aantalRijenKnop;
 	PlusMinKnop aantalKolommenKnop;
 	//private String[][] objectives;
-	private JButton okButton; 
-	private JButton cancelButton;
+//	private JButton okButton; 
+//	private JButton cancelButton;
 	
 	JPanel objectivesPanel = this;
-	JPanel bottomPanel = new JPanel();
+//	JPanel bottomPanel = new JPanel();
 	
 	private String rowLabel;
 	private String columnLabel;
@@ -142,6 +144,8 @@ public class DomainModelEditor extends JPanel implements ActionListener
 	    for(int j = 0; j < maxCategories; j++)
 	    {	categoryTextFields[j] = new JTextField(columnLabel + " "  + (j+1));
 	    	categoryTextFields[j].setPreferredSize(TEXTFIELD_SIZE);
+	    	categoryTextFields[j].setOpaque(true);
+	    	new ToolTipEditor(categoryTextFields[j]);
 	    }
 	    for(int i=0 ; i<maxObjectives ; i++)
 	    {	objectiveLabels[i] = new JLabel(rowLabel + " " +(i+1));
@@ -149,10 +153,13 @@ public class DomainModelEditor extends JPanel implements ActionListener
 	   		for(int j = 0; j<maxCategories; j++)
 	        {	objectiveTextFields[j][i] = new JTextField("");
 	        	objectiveTextFields[j][i].setPreferredSize(TEXTFIELD_SIZE);
+	        	objectiveTextFields[j][i].setOpaque(true);
+	        	new ToolTipEditor(objectiveTextFields[j][i]);
 	        }
 	    }
 	    modelTextField = new JTextField();
 	    modelTextField.setPreferredSize(TEXTFIELD_SIZE);
+	    modelTextField.setOpaque(true);
 	    modelTextField.setMaximumSize(new Dimension(360,20));
 	    new ToolTipEditor(modelTextField);
 	    localeBox = new JComboBox<>(new String[] { "nl", "en", "fr", "de" });
@@ -161,12 +168,14 @@ public class DomainModelEditor extends JPanel implements ActionListener
 	    localeBox.setMaximumSize(TEXTFIELD_SIZE);
 	    localeBox.setEditable(true);
 	    localeBox.addActionListener(this);
+	    localeBox.setOpaque(true);
+	    setOpaque(true);
     }
     
     public void makeGUI(int aantalRijen, int aantalKolommen){
     	objectivesPanel = this;
     	objectivesPanel.removeAll();
-		bottomPanel = new JPanel();
+//		bottomPanel = new JPanel();
         
 		Box boxh1 = Box.createHorizontalBox();
 		Box boxv = Box.createVerticalBox();
@@ -183,7 +192,10 @@ public class DomainModelEditor extends JPanel implements ActionListener
         boxh.add(leegLabel);
         
         for(int j = 0; j < aantalKolommen; j++)
-        	boxh.add(categoryTextFields[j]);
+        {
+          boxh.add(categoryTextFields[j]);
+          categoryTextFields[j].repaint();
+        }
         
         boxv.add(boxh);
         
@@ -191,7 +203,10 @@ public class DomainModelEditor extends JPanel implements ActionListener
         {	boxh = Box.createHorizontalBox();
         	boxh.add(objectiveLabels[i]);
         	for(int j = 0; j < aantalKolommen; j++)
-        		boxh.add(objectiveTextFields[j][i]);
+        	{
+        	  boxh.add(objectiveTextFields[j][i]);
+        	  objectiveTextFields[j][i].repaint();
+        	}
         	boxv.add(boxh);
         }
         
@@ -214,13 +229,15 @@ public class DomainModelEditor extends JPanel implements ActionListener
         
         objectivesPanel.add(boxv);
         
-        okButton = new JButton("Ok");
-        okButton.addActionListener(this);
-        bottomPanel.add(okButton);
-        
-        cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(this);
-        bottomPanel.add(cancelButton);
+//        okButton = new JButton("Ok");
+//        okButton.addActionListener(this);
+//        bottomPanel.add(okButton);
+//        
+//        cancelButton = new JButton("Cancel");
+//        cancelButton.addActionListener(this);
+//        bottomPanel.add(cancelButton);
+        invalidate();
+        setSize(getPreferredSize());
     }
     
     
@@ -245,6 +262,7 @@ public class DomainModelEditor extends JPanel implements ActionListener
 				for(int j = 0; j < aantalKolommen; j++)
 					objectiveTextFields[j][aantalRijen].setText("");
 				invalidate();
+                repaint();
 				getParent().validate();
                 getParent().repaint();
 			}
@@ -252,7 +270,8 @@ public class DomainModelEditor extends JPanel implements ActionListener
 			{	makeGUI(aantalRijen + 1, aantalKolommen);
 				aantalRijen++;
 				invalidate();
-                getParent().validate();
+	            repaint();
+               getParent().validate();
 				getParent().repaint();
 			}
 		}
@@ -263,6 +282,8 @@ public class DomainModelEditor extends JPanel implements ActionListener
 				for(int i = 0; i < aantalRijen; i++)
 					objectiveTextFields[aantalKolommen][i].setText("");
 				invalidate();
+				repaint();
+				
                 getParent().getParent().validate();
                 getParent().getParent().repaint();
 			}
@@ -270,16 +291,17 @@ public class DomainModelEditor extends JPanel implements ActionListener
 			{	makeGUI(aantalRijen, aantalKolommen + 1);
 				aantalKolommen++;
 				invalidate();
+				repaint();
                 getParent().getParent().validate();
                 getParent().getParent().repaint();
 			}
 		}
-		else if(e.getSource().equals(okButton)) {   
-			//makeObjects();
-			
-		}
-		else if(e.getSource().equals(cancelButton)) {   
-        }
+//		else if(e.getSource().equals(okButton)) {   
+//			//makeObjects();
+//			
+//		}
+//		else if(e.getSource().equals(cancelButton)) {   
+//        }
 		else if(e.getSource() == localeBox) {
 		   switchModel(localeBox.getSelectedItem().toString());
 		}
@@ -380,14 +402,20 @@ public class DomainModelEditor extends JPanel implements ActionListener
   private String locale = DwoHelper.getLocale().getLocale();
   
   private final static Genson GENSON = new GensonBuilder().withConverters(new GensonMapConverter()).useIndentation(true).create();
+  private static final int NEW_CATEGORIES = 3;
+  private static final int NEW_OBJECTIVES = 5;
 
   public void setModel(DomStudentModelStructure modelStructure) {
     if ( modelStructure == null) {
       modelStructure = new DomStudentModelStructure();
       modelStructure.setInfo(new DomStudentModelContextInfo(new TreeMap<>(), new TreeMap<>()));
       modelStructure.setCategories(new LinkedList<>());
-      modelStructure.getCategories().add(newDomStudentModelCategory()); // start with a single category
-      modelStructure.getCategories().get(0).getObjectives().add(newDomStudentModelObj()); // and a single objective
+      for(int i = 0; i < NEW_CATEGORIES; i++ ) {
+        modelStructure.getCategories().add(newDomStudentModelCategory()); // start with a single category
+        for (int j = 0; j < NEW_OBJECTIVES; j++ ) {
+          modelStructure.getCategories().get(i).getObjectives().add(newDomStudentModelObj()); // and a single objective
+        }
+      }
     }
     model = modelStructure;
     text = GENSON.serialize(modelStructure);
@@ -442,6 +470,34 @@ public class DomainModelEditor extends JPanel implements ActionListener
     invalidate();
     getParent().validate();
     repaint();
+  }
+
+  @Override
+  public Dimension getPreferredScrollableViewportSize() {
+    return new Dimension( 180*5, 20 * 9);
+  }
+
+  @Override
+  public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+    if(orientation == SwingConstants.VERTICAL) return 20;
+    return 180;
+  }
+
+  @Override
+  public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+    if (orientation == SwingConstants.VERTICAL)
+      return visibleRect.height;
+    return visibleRect.width;
+  }
+
+  @Override
+  public boolean getScrollableTracksViewportWidth() {
+    return false;
+  }
+
+  @Override
+  public boolean getScrollableTracksViewportHeight() {
+    return false;
   }
 
 

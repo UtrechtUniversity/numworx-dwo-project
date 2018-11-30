@@ -59,7 +59,7 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
         /* Add StudentModel Button */
 //        studentModelButton = new MenuPanelButton(Dwo2LocaleMessageTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2LocaleMessageCode.GUI_Button_StudentModels));
         if(DwoHelper.isTest() && DwoHelper.isPremium()){
-          studentModelButton = new MenuPanelButton(TextMapper.getText("Studentmodels"));
+          studentModelButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_STUDENTMODELS));
         studentModelButton.addActionListener(this);
         this.add(studentModelButton);
         }
@@ -197,7 +197,7 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
             instance.setWait();
             CenterSubPanel cp = instance.getStudentModelPanel();
             center.loadCenter(cp);
-            center.setStrategy(this);
+          //  center.setStrategy(this); // Why gert?
             instance.setReady();
             return;
         }

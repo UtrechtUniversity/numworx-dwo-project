@@ -2,6 +2,8 @@ package fi.dwo.dwojapplet.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+
+import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
@@ -16,11 +18,15 @@ class InputCellRendererUsername extends DefaultTableCellRenderer {
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        if (value != null && ValidUserFieldsChecker.isValidUserName(value.toString())) {
+        JComponent component = (JComponent) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        int rows = table.getRowCount();
+        if (row == rows-1 ||
+            value != null && ValidUserFieldsChecker.isValidUserName(value.toString())) {
             component.setBackground(Color.WHITE);
+            component.setToolTipText(null);
         } else {
             component.setBackground(new Color(255, 128, 128));
+            component.setToolTipText("Error in username");
         }
         return component;
     }
