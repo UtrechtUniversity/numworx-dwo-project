@@ -131,6 +131,24 @@ public class StrokeMatcher {
 			teken = "1";
 		if("l".equals(teken) && stroke.getParsePointsbox().height<1.2*strokeContainer.averageHeight && 3*stroke.getParsePointsbox().width<stroke.getParsePointsbox().height)
 			teken = "1";
+		if("c".equals(teken) && stroke.getParsePointsbox().height>1.2*strokeContainer.averageHeight)
+			teken = "C";
+		if("o".equals(teken) && stroke.getParsePointsbox().height>1.2*strokeContainer.averageHeight)
+			teken = "O";
+		if("s".equals(teken) && stroke.getParsePointsbox().height>1.2*strokeContainer.averageHeight)
+			teken = "S";
+		if("u".equals(teken) && stroke.getParsePointsbox().height>1.2*strokeContainer.averageHeight)
+			teken = "U";
+		if("v".equals(teken) && stroke.getParsePointsbox().height>1.2*strokeContainer.averageHeight)
+			teken = "V";
+		if("w".equals(teken) && stroke.getParsePointsbox().height>1.2*strokeContainer.averageHeight)
+			teken = "W";
+//		if("x".equals(teken) && stroke.getParsePointsbox().height>1.3*strokeContainer.averageHeight)
+//			teken = "X";
+//		if("y".equals(teken) && stroke.getParsePointsbox().height>1.3*strokeContainer.averageHeight)
+//			teken = "Y";
+		if("z".equals(teken) && stroke.getParsePointsbox().height>1.2*strokeContainer.averageHeight)
+			teken = "Z";
 		return teken;
 	}
 	

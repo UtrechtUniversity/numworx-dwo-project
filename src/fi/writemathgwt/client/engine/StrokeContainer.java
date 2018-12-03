@@ -288,7 +288,7 @@ public class StrokeContainer {
 				baseLineSum += wmObjects.get(i).getBoxMid().y + averageHeight/2;
 				cnt++;
 			}
-			else {
+			else if(wmObjects.get(i).isMachtVan() == null){
 				baseLineSum += wmObjects.get(i).getXBox().y + wmObjects.get(i).getXBox().height;
 				//logger.info("Teken: "+wmObjects.get(i).getTeken());
 				//logger.info("isMacht: "+wmObjects.get(i).isMachtVan());

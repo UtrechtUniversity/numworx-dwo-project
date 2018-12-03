@@ -18,8 +18,8 @@ public class WMObject {
 	private DoubleRectangle noemerBox = null;
 	private DoubleRectangle wortelBox = null;
 	
-	private String[] ascFonts = {"b","d","f","h","k","l","t","6","8"};
-	private String[] descFonts = {"g","j","p","q","y","7","9"};
+	private String[] ascFonts = {"b","d","f","h","k","l","t","6","8","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","δ"};
+	private String[] descFonts = {"g","j","p","q","y","7","9","β","μ" };
 	
 	private boolean hasAscent;
 	private boolean hasDescent;
