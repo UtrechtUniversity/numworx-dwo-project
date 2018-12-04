@@ -69,10 +69,6 @@ public class PersonsPresenter {
 
         void setLoadingTableMessage();
     }
-
-    public PersonsPresenter(EventBus bus, DwoGlobalVars vars) {
-      this(bus, vars, new PersonsServiceTeacher());
-    }
     
     @Inject PersonsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, PersonsService manager) {
         eventBus = anEventBus;

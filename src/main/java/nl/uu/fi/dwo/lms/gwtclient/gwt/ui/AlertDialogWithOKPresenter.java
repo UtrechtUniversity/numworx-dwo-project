@@ -29,7 +29,7 @@ public class AlertDialogWithOKPresenter  implements AlertDialogWithOKEventHandle
         void hideDialog();
     }
 
-    @Inject public AlertDialogWithOKPresenter(EventBus anEventBus) {
+    @Inject AlertDialogWithOKPresenter(EventBus anEventBus) {
         eventBus = anEventBus;
         eventBus.addHandler(AlertDialogWithOKEvent.TYPE, this);
 

@@ -37,7 +37,7 @@ public class ProgressDialogWithAbortPresenter implements ProgressDialogWithAbort
     }
 
     
-    @Inject public ProgressDialogWithAbortPresenter(EventBus anEventBus) {
+    @Inject ProgressDialogWithAbortPresenter(EventBus anEventBus) {
         eventBus=anEventBus;
         eventBus.addHandler(ProgressDialogWithAbortEvent.TYPE, this);
     }

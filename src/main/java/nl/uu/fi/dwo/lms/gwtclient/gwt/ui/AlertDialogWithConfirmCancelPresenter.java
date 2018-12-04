@@ -31,7 +31,7 @@ public class AlertDialogWithConfirmCancelPresenter implements AlertDialogWithCon
         void hideDialog();
     }
 
-    @Inject public AlertDialogWithConfirmCancelPresenter(EventBus anEventBus) {
+    @Inject AlertDialogWithConfirmCancelPresenter(EventBus anEventBus) {
         eventBus = anEventBus;
         eventBus.addHandler(AlertDialogWithConfirmCancelEvent.TYPE, this);
     }

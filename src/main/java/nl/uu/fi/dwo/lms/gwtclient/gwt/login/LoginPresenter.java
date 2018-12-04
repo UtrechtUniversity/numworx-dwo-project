@@ -103,8 +103,7 @@ public class LoginPresenter {
         public void hideMsgBox();
     }
 
-    @Inject
-    public LoginPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject LoginPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         // broken calling view.clear();

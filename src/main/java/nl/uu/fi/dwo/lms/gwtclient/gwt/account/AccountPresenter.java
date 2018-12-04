@@ -79,7 +79,7 @@ public class AccountPresenter {
     }
 
     @Inject
-    public AccountPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, SecuredUserAccountManager accountManager) {
+    AccountPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, SecuredUserAccountManager accountManager) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         accountService = new AccountService(dwoGlobalVars, accountManager);

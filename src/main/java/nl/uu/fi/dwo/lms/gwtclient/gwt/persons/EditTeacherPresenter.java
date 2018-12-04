@@ -81,9 +81,6 @@ public class EditTeacherPresenter {
         manager = m;
         FAILURE = new LoggingFailure(LOG, anEventBus);
     }
-    public EditTeacherPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
-      this(anEventBus, aDwoGlobalVars, new PersonsServiceTeacher());
-    }
 
     public void init(DomUser aUser) {
         view.clear();

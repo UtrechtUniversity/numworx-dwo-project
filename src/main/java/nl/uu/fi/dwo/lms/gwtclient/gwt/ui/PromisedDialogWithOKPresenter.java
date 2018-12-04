@@ -31,7 +31,7 @@ public class PromisedDialogWithOKPresenter implements PromisedDialogWithConfirmE
         void hideDialog();
     }
 
-    @Inject public PromisedDialogWithOKPresenter(EventBus anEventBus) {
+    @Inject PromisedDialogWithOKPresenter(EventBus anEventBus) {
         eventBus = anEventBus;
         eventBus.addHandler(PromisedMessageDialogWithConfirmEvent.TYPE, this);
     }

@@ -31,7 +31,7 @@ public class MessageDialogWithOKPresenter  implements MessageDialogWithOKEventHa
         void hideDialog();
     }
 
-    @Inject public MessageDialogWithOKPresenter(EventBus anEventBus) {
+    @Inject MessageDialogWithOKPresenter(EventBus anEventBus) {
         eventBus = anEventBus;
         eventBus.addHandler(MessageDialogWithOKEvent.TYPE, this);
 

@@ -46,10 +46,10 @@ public class PresenterFactoryGwt implements PresenterFactory {
 
     private final DwoGlobalVars dwoGlobalVars;
     private final EventBus eventBus;
-    private final MainPresenter mainPresenter;
-    private final LoginPresenter loginPresenter;
-    private final WelcomePresenter welcomePresenter;
-    private final AccountPresenter accountPresenter;
+    @Inject MainPresenter mainPresenter;
+    @Inject LoginPresenter loginPresenter;
+    @Inject WelcomePresenter welcomePresenter;
+    @Inject AccountPresenter accountPresenter;
     private final SchoolclassesPresenter schoolclassesPresenter;
     private final EditSchoolclassPresenter editSchoolclassPresenter;
     private final AddStudentToSchoolclassPresenter addStudentToSchoolclassPresenter;
@@ -63,25 +63,25 @@ public class PresenterFactoryGwt implements PresenterFactory {
     @Inject StudentScoResultPresenter studentScoResultPresenter;
     @Inject LogResultsPresenter logResultsPresenter;
 
-    private final PersonsPresenter personsPresenter;
+    @Inject PersonsPresenter personsPresenter;
     private final AddPersonPresenter addStudentPresenter;
     @Inject ImportPersonsPresenter importPersonsPresenter;
     @Inject EditStudentPresenter editStudentPresenter;
-    private final EditTeacherPresenter editTeacherPresenter;
+    @Inject EditTeacherPresenter editTeacherPresenter;
 
-    private final MessageDialogWithOKPresenter messageDialogWithOKPresenter;
-    private final AlertDialogWithOKPresenter alertDialogWithOKPresenter;
-    private final AlertDialogWithConfirmCancelPresenter alertDialogWithConfirmCancelPresenter;
+    @Inject MessageDialogWithOKPresenter messageDialogWithOKPresenter;
+    @Inject AlertDialogWithOKPresenter alertDialogWithOKPresenter;
+    @Inject AlertDialogWithConfirmCancelPresenter alertDialogWithConfirmCancelPresenter;
 //    private final PromisedDialogWithOKPresenter promisedDialogWithOKPresenter;
-    private final ProgressDialogWithAbortPresenter progressDialogWithAbortPresenter;
+    @Inject ProgressDialogWithAbortPresenter progressDialogWithAbortPresenter;
 
-    @Inject public PresenterFactoryGwt(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, SecuredUserAccountManager accountManager, GwtClientMessages rb) {
+    @Inject public PresenterFactoryGwt(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         dwoGlobalVars = aDwoGlobalVars;
         eventBus = anEventBus;
-        mainPresenter = new MainPresenter(eventBus, dwoGlobalVars);
-        loginPresenter = new LoginPresenter(eventBus, dwoGlobalVars);
-        welcomePresenter = new WelcomePresenter(eventBus, dwoGlobalVars, rb);
-        accountPresenter = new AccountPresenter(eventBus, dwoGlobalVars, accountManager);
+        //mainPresenter = new MainPresenter(eventBus, dwoGlobalVars);
+        //loginPresenter = new LoginPresenter(eventBus, dwoGlobalVars);
+        //welcomePresenter = new WelcomePresenter(eventBus, dwoGlobalVars, rb);
+        //accountPresenter = new AccountPresenter(eventBus, dwoGlobalVars, accountManager);
         schoolclassesPresenter = new SchoolclassesPresenter(eventBus, dwoGlobalVars);
         editSchoolclassPresenter = new EditSchoolclassPresenter(eventBus, dwoGlobalVars);
         addStudentToSchoolclassPresenter = new AddStudentToSchoolclassPresenter(eventBus, dwoGlobalVars);
@@ -93,17 +93,17 @@ public class PresenterFactoryGwt implements PresenterFactory {
         //selectedResultsPresenter = new SelectedResultsPresenter(eventBus, dwoGlobalVars);
         //studentScoResultPresenter = new StudentScoResultPresenter(eventBus, dwoGlobalVars);
         //selectStudentResultsPresenter = new SelectStudentResultsPresenter(eventBus, dwoGlobalVars);
-        personsPresenter = new PersonsPresenter(anEventBus, aDwoGlobalVars);
+        //personsPresenter = new PersonsPresenter(anEventBus, aDwoGlobalVars);
         addStudentPresenter = new AddStudentPresenter(anEventBus, aDwoGlobalVars);
         //importPersonsPresenter = new ImportPersonsPresenter(anEventBus, aDwoGlobalVars);
         //editStudentPresenter = new EditStudentPresenter(anEventBus, aDwoGlobalVars);
-        editTeacherPresenter = new EditTeacherPresenter(anEventBus, aDwoGlobalVars);
+        //editTeacherPresenter = new EditTeacherPresenter(anEventBus, aDwoGlobalVars);
 
-        messageDialogWithOKPresenter = new MessageDialogWithOKPresenter(eventBus);
-        alertDialogWithOKPresenter = new AlertDialogWithOKPresenter(eventBus);
-        alertDialogWithConfirmCancelPresenter = new AlertDialogWithConfirmCancelPresenter(eventBus);
+        //messageDialogWithOKPresenter = new MessageDialogWithOKPresenter(eventBus);
+        //alertDialogWithOKPresenter = new AlertDialogWithOKPresenter(eventBus);
+        //alertDialogWithConfirmCancelPresenter = new AlertDialogWithConfirmCancelPresenter(eventBus);
 //        promisedDialogWithOKPresenter = new PromisedDialogWithOKPresenter(eventBus);
-        progressDialogWithAbortPresenter = new ProgressDialogWithAbortPresenter(eventBus);
+        //progressDialogWithAbortPresenter = new ProgressDialogWithAbortPresenter(eventBus);
 
     }
 

@@ -60,7 +60,7 @@ public class WelcomePresenter {
         public void setWelcomeText(String html);
     }
 
-    @Inject public WelcomePresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, GwtClientMessages rb) {
+    @Inject WelcomePresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, GwtClientMessages rb) {
         this.rb = rb;
     }
 
