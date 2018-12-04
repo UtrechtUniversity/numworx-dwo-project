@@ -41,7 +41,7 @@ public class SystemManager {
   @PUT
   @Produces({"application/json"})
   @Path("/school/get")
-  DomSchoolFull getSchool(RestSchool rest) throws Dwo2Exception {
+  public DomSchoolFull getSchool(RestSchool rest) throws Dwo2Exception {
       Long id = MySQLPersistenceId.getNativeId(rest.getDomSchool());
       PersistentSchool school = SchoolManager.findEntity(id);
       return school.buildDomSchoolFull();
@@ -50,7 +50,7 @@ public class SystemManager {
   @PUT
   @Produces({"application/json"})
   @Path("/schoolclasses/getList")
-  List<DomSchoolClass> getListSchoolClass(RestSchool rest) throws Dwo2Exception {
+  public List<DomSchoolClass> getListSchoolClass(RestSchool rest) throws Dwo2Exception {
     Long id = MySQLPersistenceId.getNativeId(rest.getDomSchool());
     PersistentSchool school = SchoolManager.findEntity(id);
     List<PersistentSchoolClass> list = SchoolClassManager.findEntities(school);
@@ -60,7 +60,7 @@ public class SystemManager {
   @PUT
   @Produces({"application/json"})
   @Path("/user/requestSamlToken")
-  DomSamlUser requestSamlToken(RestSamlUser rest) {
+  public DomSamlUser requestSamlToken(RestSamlUser rest) {
     DomSamlUser u = rest.getDomSamlUser();
     PersistentSamlUser samlUser = SamlUserManager.findEntity(u.getSamlUserId(), u.getSamlOrgId());
     if(samlUser == null) {
