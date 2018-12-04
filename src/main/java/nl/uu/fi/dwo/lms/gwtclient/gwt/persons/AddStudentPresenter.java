@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.persons;
 
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+
 import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
@@ -13,6 +15,7 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
  *
  * @author G.A.J. van der Plas
  */
+
 public class AddStudentPresenter extends AddPersonPresenter {
   private static final Logger LOG = Logger.getLogger(AddStudentPresenter.class.getName());
 
@@ -25,11 +28,11 @@ public class AddStudentPresenter extends AddPersonPresenter {
         updateSchoolClasses();
     }
 
-    public AddStudentPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject public AddStudentPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         FAILURE = new LoggingFailure(LOG, anEventBus);
-        manager = new PersonsServiceTeacher();
+        manager = new PersonsServiceTeacher(aDwoGlobalVars);
         role = RoleType.TEACHER;
     }
 

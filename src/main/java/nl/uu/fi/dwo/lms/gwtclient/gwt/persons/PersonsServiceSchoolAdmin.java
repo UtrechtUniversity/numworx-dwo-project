@@ -10,6 +10,7 @@ import dagger.Reusable;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredSchoolAdminSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredSchoolAdminSchoolManager;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomMoveStudentToSchoolClass;
@@ -30,7 +31,7 @@ import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
 
-@Reusable
+@RoleScope
 public class PersonsServiceSchoolAdmin extends PersonsService {
 
   @Override

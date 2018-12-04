@@ -94,7 +94,7 @@ public class EditSchoolclassPresenter {
 
     }
     public EditSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
-      this(anEventBus, aDwoGlobalVars, new PersonsServiceTeacher());
+      this(anEventBus, aDwoGlobalVars, new PersonsServiceTeacher(aDwoGlobalVars));
     }
 
     public void init(DomSchoolClass aSchoolClass) {

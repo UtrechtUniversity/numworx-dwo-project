@@ -31,11 +31,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
@@ -231,14 +233,53 @@ public class ImportPersonsPresenter {
       }
       JSONArray array = new JSONArray(json);
       int size = array.size();
-      List<DomSingleSchoolStudent> personList = new ArrayList<>(size);  
+      List<DomSingleSchoolStudent> personList = new ArrayList<>(size);
       for(int i = 0; i < size; i++ )   
       {
         JSONValue value = array.get(i);
         DomSingleSchoolStudent student = DomSingleSchoolStudentCodec.CODEC.decode(value);
         student.setSingleSchool(true);
+        String givenName = student.getGivenName();
+        String username = student.getUserName();
+        String eMail = student.getEmail();
+        String familyName = student.getFamilyName();
+        String password = student.getPassword();
+        String insertion = student.getInsertion();
+        // Verify formfields
+        if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(password, familyName , givenName, eMail , username)) {
+          LOG.log(Level.INFO, "valid required fields.");
+          if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(insertion)) {
+              insertion = insertion.trim();
+          } else {
+              insertion = null;
+          }
+          student.setInsertion(insertion);
+      } else {
+          eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Required_Fields)));
+          return;
+      }
+  
+       if (!SimpleValidUserFieldsChecker.isValidUserName(username)) {
+         eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_UserName_Invalid)));
+         return;
+       }
+       if (!SimpleValidUserFieldsChecker.isValidEmail(eMail)) {
+            eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid)));
+            return;
+        } else {
+          eMail = eMail.trim();
+          student.setEmail(eMail);
+        }
+        if (!SimpleValidUserFieldsChecker.isValidPassword(password)) {
+          //invalid password format
+          eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven)));
+          return;
+      }      
+       
         personList.add(student);
       }
+      
+      
       DomSchoolClass schoolClass = tagged.getSchoolClass();
       final List<DomSingleSchoolStudent> newPersons = new ArrayList<>(size);
       

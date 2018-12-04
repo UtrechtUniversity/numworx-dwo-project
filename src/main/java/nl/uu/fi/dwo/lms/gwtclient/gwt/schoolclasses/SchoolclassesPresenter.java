@@ -102,7 +102,7 @@ public class SchoolclassesPresenter {
     }
     
     public SchoolclassesPresenter(EventBus bus, DwoGlobalVars vars) {
-      this(bus, vars, new PersonsServiceTeacher());
+      this(bus, vars, new PersonsServiceTeacher(vars));
     }
  
     public void init() {

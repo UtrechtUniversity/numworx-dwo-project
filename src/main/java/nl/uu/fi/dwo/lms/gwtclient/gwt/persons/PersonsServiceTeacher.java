@@ -6,8 +6,9 @@ import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
 
-import dagger.Reusable;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomMoveStudentToSchoolClass;
@@ -28,37 +29,40 @@ import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
 
-@Reusable
+@RoleScope
 public class PersonsServiceTeacher extends PersonsService {
 
   private final SecuredTeacherSchoolClassManager manager;
+  private final DomContext context;
   @Inject
-  public PersonsServiceTeacher() {
+  public PersonsServiceTeacher(DwoGlobalVars vars) {
     this(new SecuredTeacherSchoolClassManager());
+    context.setDomHasRole(vars.getActiveSchoolRoleAndClass().getHasRole());
   }
 
-  public PersonsServiceTeacher(SecuredTeacherSchoolClassManager securedTeacherSchoolClassManager) {
+  private PersonsServiceTeacher(SecuredTeacherSchoolClassManager securedTeacherSchoolClassManager) {
     manager = securedTeacherSchoolClassManager;
+    context = new DomContext();
   }
 
   @Override
   public Promise<List<DomStudent>> getTeachersStudents() {
-    return manager.getTeachersStudents();
+    return manager.getTeachersStudents(context);
   }
 
   @Override
   public Promise<List<DomTeacher>> getTeachersInSchool() {
-    return manager.getTeachersInSchool();
+    return manager.getTeachersInSchool(context);
   }
 
   @Override
   public Promise<List<DomSchoolClass>> getTeachersSchoolClasses() {
-    return manager.getTeachersSchoolClasses();
+    return manager.getTeachersSchoolClasses(context);
   }
 
   @Override
   public Promise<Boolean> submitSingleSchoolStudent(DomNewSingleSchoolStudent newStudent) {
-    return manager.submitSingleSchoolStudent(newStudent);
+    return manager.submitSingleSchoolStudent(context, newStudent);
   }
 
   @Override
@@ -73,12 +77,12 @@ public class PersonsServiceTeacher extends PersonsService {
 
   @Override
   public Promise<Boolean> removeStudentFromSchoolClass(DomRemoveStudentFromSchoolClass data) {
-    return manager.removeStudentFromSchoolClass(data);
+    return manager.removeStudentFromSchoolClass(context, data);
   }
 
   @Override
   public Promise<Boolean> submitStudentToSchoolClass(DomSubmitStudentToSchoolClass data) {
-    return manager.submitStudentToSchoolClass(data);
+    return manager.submitStudentToSchoolClass(context, data);
   }
 
   @Override
@@ -88,32 +92,32 @@ public class PersonsServiceTeacher extends PersonsService {
 
   @Override
   public Promise<Boolean> submitSchoolClass(DomSchoolClassFull schoolClass) {
-    return manager.submitSchoolClass(schoolClass);
+    return manager.submitSchoolClass(context, schoolClass);
   }
 
   @Override
   public Promise<DomSchoolClassFull> getFullSchoolClass(DomSchoolClass aSchoolClass) {
-    return manager.getFullSchoolClass(aSchoolClass);
+    return manager.getFullSchoolClass(context, aSchoolClass);
   }
 
   @Override
   public Promise<Boolean> updateSchoolClass(DomSchoolClassFull fullSchoolClass) {
-    return manager.updateSchoolClass(fullSchoolClass);
+    return manager.updateSchoolClass(context, fullSchoolClass);
   }
 
   @Override
   public Promise<Boolean> removeSchoolClass(DomSchoolClass schoolClass) {
-    return manager.removeSchoolClass(schoolClass);
+    return manager.removeSchoolClass(context, schoolClass);
   }
 
   @Override
   public Promise<List<DomTeacher>> getTeachersInSchoolClass(DomSchoolClass schoolClass) {
-    return manager.getTeachersInSchoolClass(schoolClass);
+    return manager.getTeachersInSchoolClass(context, schoolClass);
   }
 
   @Override
   public Promise<List<DomStudent>> getStudentsInSchoolClass(DomSchoolClass schoolClass) {
-    return manager.getStudentsInSchoolClass(schoolClass);
+    return manager.getStudentsInSchoolClass(context, schoolClass);
   }
 
   @Override
@@ -124,7 +128,7 @@ public class PersonsServiceTeacher extends PersonsService {
 
   @Override
   public Promise<Boolean> submitTeacherToSchoolClass(DomSubmitTeacherToSchoolClass submit) {
-    return manager.submitTeacherToSchoolClass(submit);
+    return manager.submitTeacherToSchoolClass(context, submit);
   }
 
   @Override
@@ -139,7 +143,7 @@ public class PersonsServiceTeacher extends PersonsService {
 
   @Override
   public Promise<Boolean> removeTeacherFromSchoolClass(DomRemoveTeacherFromSchoolClass data) {
-    return manager.removeTeacherFromSchoolClass(data);
+    return manager.removeTeacherFromSchoolClass(context, data);
   }
 
 }
