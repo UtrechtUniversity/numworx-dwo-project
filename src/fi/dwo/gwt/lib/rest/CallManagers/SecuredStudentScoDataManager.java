@@ -18,7 +18,6 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 import org.fusesource.restygwt.client.MethodCallback;
-import org.osgi.util.function.Function;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;

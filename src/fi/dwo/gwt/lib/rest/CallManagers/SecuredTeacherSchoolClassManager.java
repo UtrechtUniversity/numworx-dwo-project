@@ -41,6 +41,7 @@ import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.osgi.util.promise.Promise;
@@ -58,170 +59,170 @@ public class SecuredTeacherSchoolClassManager {
         service = (SecuredTeacherSchoolClassRestCaller) GWT.create(SecuredTeacherSchoolClassRestCaller.class);
     }
 
-    public Promise<List<DomSchoolClass>> getTeachersSchoolClasses() {
+    public Promise<List<DomSchoolClass>> getTeachersSchoolClasses(DomContext context) {
         PromiseCallback<List<DomSchoolClass>> defer = new PromiseCallback<List<DomSchoolClass>>();
-        this.getTeachersSchoolClasses(defer);
+        this.getTeachersSchoolClasses(PathId.getId(context),defer);
         return defer.getPromise();
     }
 
-    public void getTeachersSchoolClasses(AsyncCallback<List<DomSchoolClass>> callBack) {
-        service.getTeachersSchoolClasses(new Callback<List<DomSchoolClass>>(callBack));
+    private void getTeachersSchoolClasses(String id, MethodCallback<List<DomSchoolClass>> callBack) {
+        service.getTeachersSchoolClasses(id, (callBack));
         LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
-    public Promise<List<DomTeacher>> getTeachersInSchool() {
+    public Promise<List<DomTeacher>> getTeachersInSchool(DomContext context) {
         PromiseCallback<List<DomTeacher>> defer = new PromiseCallback<List<DomTeacher>>();
-        this.getTeachersInSchool(defer);
+        this.getTeachersInSchool(PathId.getId(context),defer);
         return defer.getPromise();
     }
 
-    public void getTeachersInSchool(AsyncCallback<List<DomTeacher>> callBack) {
-        service.getTeachersInSchool(new Callback<List<DomTeacher>>(callBack));
+    private void getTeachersInSchool(String id, MethodCallback<List<DomTeacher>> callBack) {
+        service.getTeachersInSchool(id, (callBack));
         LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
-    public Promise<List<DomStudent>> getStudentsInSchool() {
+    public Promise<List<DomStudent>> getStudentsInSchool(DomContext context) {
         PromiseCallback<List<DomStudent>> defer = new PromiseCallback<List<DomStudent>>();
-        this.getStudentsInSchool(defer);
+        this.getStudentsInSchool(PathId.getId(context),defer);
         return defer.getPromise();
     }
 
-    public void getStudentsInSchool(AsyncCallback<List<DomStudent>> callBack) {
-        service.getStudentsInSchool(new Callback<List<DomStudent>>(callBack));
+    private void getStudentsInSchool(String id, MethodCallback<List<DomStudent>> callBack) {
+        service.getStudentsInSchool(id, (callBack));
         LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
-    public Promise<List<DomTeacher>> getTeachersInSchoolClass(DomSchoolClass schoolClass) {
+    public Promise<List<DomTeacher>> getTeachersInSchoolClass(DomContext context, DomSchoolClass schoolClass) {
         PromiseCallback<List<DomTeacher>> defer = new PromiseCallback<List<DomTeacher>>();
         RestSchoolClass restSchoolClass = new RestSchoolClass();
-        restSchoolClass.setRestContext(new DomContext());
+        restSchoolClass.setRestContext(context);
         restSchoolClass.setDomSchoolClass(schoolClass);
         this.getTeachersInSchoolClass(restSchoolClass, defer);
         return defer.getPromise();
     }
 
-    public void getTeachersInSchoolClass(RestSchoolClass restData, AsyncCallback<List<DomTeacher>> callBack) {
-        service.getTeachersInSchoolClass(restData, new Callback<List<DomTeacher>>(callBack));
+    private void getTeachersInSchoolClass(RestSchoolClass restData, AsyncCallback<List<DomTeacher>> callBack) {
+        service.getTeachersInSchoolClass(PathId.getId(restData.getRestContext()),restData, new Callback<List<DomTeacher>>(callBack));
         LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
-    public Promise<List<DomStudent>> getStudentsInSchoolClass(DomSchoolClass schoolClass) {
+    public Promise<List<DomStudent>> getStudentsInSchoolClass(DomContext context, DomSchoolClass schoolClass) {
         PromiseCallback<List<DomStudent>> defer = new PromiseCallback<List<DomStudent>>();
         RestSchoolClass restSchoolClass = new RestSchoolClass();
-        restSchoolClass.setRestContext(new DomContext());
+        restSchoolClass.setRestContext(context);
         restSchoolClass.setDomSchoolClass(schoolClass);
         this.getStudentsInSchoolClass(restSchoolClass, defer);
         return defer.getPromise();
     }
 
-    public void getStudentsInSchoolClass(RestSchoolClass restData, AsyncCallback<List<DomStudent>> callBack) {
-        service.getStudentsInSchoolClass(restData, new Callback<List<DomStudent>>(callBack));
+    private void getStudentsInSchoolClass(RestSchoolClass restData, MethodCallback<List<DomStudent>> callBack) {
+        service.getStudentsInSchoolClass(PathId.getId(restData.getRestContext()),restData, (callBack));
     }
 
-    public Promise<Boolean> submitSchoolClass(DomSchoolClassFull schoolClass) {
+    public Promise<Boolean> submitSchoolClass(DomContext context, DomSchoolClassFull schoolClass) {
         RestSchoolClassFull restSchoolClass = new RestSchoolClassFull();
-        restSchoolClass.setRestContext(new DomContext());
+        restSchoolClass.setRestContext(context);
         restSchoolClass.setDomSchoolClassFull(schoolClass);
         PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
         this.submitSchoolClass(restSchoolClass, defer);
         return defer.getPromise();
     }
 
-    private void submitSchoolClass(RestSchoolClassFull schoolClass, AsyncCallback<Boolean> callBack) {
-        service.submitSchoolClass(schoolClass, new Callback<Boolean>(callBack));
+    private void submitSchoolClass(RestSchoolClassFull schoolClass, MethodCallback<Boolean> callBack) {
+        service.submitSchoolClass(PathId.getId(schoolClass.getRestContext()),schoolClass, (callBack));
     }
 
-    public Promise<Boolean> removeSchoolClass(DomSchoolClass schoolClass) {
+    public Promise<Boolean> removeSchoolClass(DomContext context, DomSchoolClass schoolClass) {
         RestSchoolClass restSchoolClass = new RestSchoolClass();
-        restSchoolClass.setRestContext(new DomContext());
+        restSchoolClass.setRestContext(context);
         restSchoolClass.setDomSchoolClass(schoolClass);
         PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
         this.removeSchoolClass(restSchoolClass, defer);
         return defer.getPromise();
     }
 
-    private void removeSchoolClass(RestSchoolClass restData, AsyncCallback<Boolean> callBack) {
-        service.removeSchoolClass(restData, new Callback<Boolean>(callBack));
+    private void removeSchoolClass(RestSchoolClass restData, MethodCallback<Boolean> callBack) {
+        service.removeSchoolClass(PathId.getId(restData.getRestContext()),restData, (callBack));
     }
 
-    public Promise<List<DomSchoolClass>> getSchoolsClasses() {
+    public Promise<List<DomSchoolClass>> getSchoolsClasses(DomContext context) {
         PromiseCallback<List<DomSchoolClass>> defer = new PromiseCallback<List<DomSchoolClass>>();
-        this.getSchoolsClasses(defer);
+        this.getSchoolsClasses(PathId.getId(context),defer);
         return defer.getPromise();
     }
 
-    public void getSchoolsClasses(AsyncCallback<List<DomSchoolClass>> callBack) {
-        service.getSchoolsClasses(new Callback<List<DomSchoolClass>>(callBack));
+    private void getSchoolsClasses(String id, MethodCallback<List<DomSchoolClass>> callBack) {
+        service.getSchoolsClasses(id, (callBack));
     }
 
-    public Promise<Boolean> submitTeacherToSchoolClass(DomSubmitTeacherToSchoolClass teacherToClass) {
+    public Promise<Boolean> submitTeacherToSchoolClass(DomContext context, DomSubmitTeacherToSchoolClass teacherToClass) {
         RestSubmitTeacherToSchoolClass restData = new RestSubmitTeacherToSchoolClass();
-        restData.setRestContext(new DomContext());
+        restData.setRestContext(context);
         restData.setDomSubmitTeacherToSchoolClass(teacherToClass);
         PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
         this.submitTeacherToSchoolClass(restData, defer);
         return defer.getPromise();
     }
 
-    private void submitTeacherToSchoolClass(RestSubmitTeacherToSchoolClass restData, AsyncCallback<Boolean> callBack) {
-        service.submitTeacherToSchoolClass(restData, new Callback<Boolean>(callBack));
+    private void submitTeacherToSchoolClass(RestSubmitTeacherToSchoolClass restData, MethodCallback<Boolean> callBack) {
+        service.submitTeacherToSchoolClass(PathId.getId(restData.getRestContext()),restData, (callBack));
     }
 
-    public Promise<Boolean> removeTeacherFromSchoolClass(DomRemoveTeacherFromSchoolClass data) {
+    public Promise<Boolean> removeTeacherFromSchoolClass(DomContext context, DomRemoveTeacherFromSchoolClass data) {
         RestRemoveTeacherFromSchoolClass restData = new RestRemoveTeacherFromSchoolClass();
-        restData.setRestContext(new DomContext());
+        restData.setRestContext(context);
         restData.setDomRemoveTeacherFromSchoolClass(data);
         PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
         this.removeTeacherFromSchoolClass(restData, defer);
         return defer.getPromise();
     }
 
-    private void removeTeacherFromSchoolClass(RestRemoveTeacherFromSchoolClass restData, AsyncCallback<Boolean> callBack) {
-        service.removeTeacherFromSchoolClass(restData, new Callback<Boolean>(callBack));
+    private void removeTeacherFromSchoolClass(RestRemoveTeacherFromSchoolClass restData, MethodCallback<Boolean> callBack) {
+        service.removeTeacherFromSchoolClass(PathId.getId(restData.getRestContext()),restData, (callBack));
     }
 
-    public Promise<Boolean> moveStudentToSchoolClass(DomMoveStudentToSchoolClass studentToClass) {
+    public Promise<Boolean> moveStudentToSchoolClass(DomContext context, DomMoveStudentToSchoolClass studentToClass) {
         RestMoveStudentToSchoolClass restData = new RestMoveStudentToSchoolClass();
-        restData.setRestContext(new DomContext());
+        restData.setRestContext(context);
         restData.setDomMoveStudentToSchoolClass(studentToClass);
         PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
         this.moveStudentToSchoolClass(restData, defer);
         return defer.getPromise();
     }
 
-    private void moveStudentToSchoolClass(RestMoveStudentToSchoolClass restData, AsyncCallback<Boolean> callBack) {
-        service.moveStudentToSchoolClass(restData, new Callback<Boolean>(callBack));
+    private void moveStudentToSchoolClass(RestMoveStudentToSchoolClass restData, MethodCallback<Boolean> callBack) {
+        service.moveStudentToSchoolClass(PathId.getId(restData.getRestContext()),restData, (callBack));
     }    
     
-    public Promise<Boolean> submitStudentToSchoolClass(DomSubmitStudentToSchoolClass studentToClass) {
+    public Promise<Boolean> submitStudentToSchoolClass(DomContext context, DomSubmitStudentToSchoolClass studentToClass) {
         RestSubmitStudentToSchoolClass restData = new RestSubmitStudentToSchoolClass();
-        restData.setRestContext(new DomContext());
+        restData.setRestContext(context);
         restData.setDomSubmitStudentToSchoolClass(studentToClass);
         PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
         this.submitStudentToSchoolClass(restData, defer);
         return defer.getPromise();
     }
 
-    private void submitStudentToSchoolClass(RestSubmitStudentToSchoolClass restData, AsyncCallback<Boolean> callBack) {
-        service.submitStudentToSchoolClass(restData, new Callback<Boolean>(callBack));
+    private void submitStudentToSchoolClass(RestSubmitStudentToSchoolClass restData, MethodCallback<Boolean> callBack) {
+        service.submitStudentToSchoolClass(PathId.getId(restData.getRestContext()),restData, (callBack));
     }
 
-    public Promise<Boolean> removeStudentFromSchoolClass(DomRemoveStudentFromSchoolClass data) {
+    public Promise<Boolean> removeStudentFromSchoolClass(DomContext context, DomRemoveStudentFromSchoolClass data) {
         RestRemoveStudentFromSchoolClass restData = new RestRemoveStudentFromSchoolClass();
-        restData.setRestContext(new DomContext());
+        restData.setRestContext(context);
         restData.setDomRemoveStudentFromSchoolClass(data);
         PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
         this.removeStudentFromSchoolClass(restData, defer);
         return defer.getPromise();
     }
 
-    private void removeStudentFromSchoolClass(RestRemoveStudentFromSchoolClass restData, AsyncCallback<Boolean> callBack) {
-        service.removeStudentFromSchoolClass(restData, new Callback<Boolean>(callBack));
+    private void removeStudentFromSchoolClass(RestRemoveStudentFromSchoolClass restData, MethodCallback<Boolean> callBack) {
+        service.removeStudentFromSchoolClass(PathId.getId(restData.getRestContext()),restData, (callBack));
     }
 
-    public Promise<Boolean> updateSchoolClass(DomSchoolClassFull schoolClassFull) {
+    public Promise<Boolean> updateSchoolClass(DomContext context, DomSchoolClassFull schoolClassFull) {
         RestSchoolClassFull restData = new RestSchoolClassFull();
-        restData.setRestContext(new DomContext());
+        restData.setRestContext(context);
         restData.setDomSchoolClassFull(schoolClassFull);
         PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
         this.updateSchoolClass(restData, defer);
@@ -229,12 +230,12 @@ public class SecuredTeacherSchoolClassManager {
     }
 
     private void updateSchoolClass(RestSchoolClassFull restData, MethodCallback<Boolean> callBack) {
-        service.updateSchoolClass(restData, (callBack));
+        service.updateSchoolClass(PathId.getId(restData.getRestContext()),restData, (callBack));
     }
 
-    public Promise<DomSchoolClassFull> getFullSchoolClass(DomSchoolClass schoolClass) {
+    public Promise<DomSchoolClassFull> getFullSchoolClass(DomContext context, DomSchoolClass schoolClass) {
         RestSchoolClass restData = new RestSchoolClass();
-        restData.setRestContext(new DomContext());
+        restData.setRestContext(context);
         restData.setDomSchoolClass(schoolClass);
         PromiseCallback<DomSchoolClassFull> defer = new PromiseCallback<DomSchoolClassFull>();
         this.getFullSchoolClass(restData, defer);
@@ -242,22 +243,22 @@ public class SecuredTeacherSchoolClassManager {
     }
 
     private void getFullSchoolClass(RestSchoolClass restData, MethodCallback<DomSchoolClassFull> callBack) {
-        service.getFullSchoolClass(restData, (callBack));
+        service.getFullSchoolClass(PathId.getId(restData.getRestContext()),restData, (callBack));
     }
 
-    public Promise<List<DomStudent>> getSingleSchoolStudentsInSchool() {
+    public Promise<List<DomStudent>> getSingleSchoolStudentsInSchool(DomContext context) {
         PromiseCallback<List<DomStudent>> defer = new PromiseCallback<List<DomStudent>>();
-        this.getSingleSchoolStudentsInSchool(defer);
+        this.getSingleSchoolStudentsInSchool(PathId.getId(context),defer);
         return defer.getPromise();
     }
 
-    public void getSingleSchoolStudentsInSchool(AsyncCallback<List<DomStudent>> callBack) {
-        service.getSingleSchoolStudentsInSchool(new Callback<List<DomStudent>>(callBack));
+    public void getSingleSchoolStudentsInSchool(String id, MethodCallback<List<DomStudent>> callBack) {
+        service.getSingleSchoolStudentsInSchool(id, (callBack));
     }
 
-    public Promise<Boolean> submitSingleSchoolStudent(DomNewSingleSchoolStudent newStudent) {
+    public Promise<Boolean> submitSingleSchoolStudent(DomContext context, DomNewSingleSchoolStudent newStudent) {
         RestNewSingleSchoolStudent restData = new RestNewSingleSchoolStudent();
-        restData.setRestContext(new DomContext());
+        restData.setRestContext(context);
         restData.setDomNewSingleSchoolStudent(newStudent);
         PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
         this.submitSingleSchoolStudent(restData, defer);
@@ -265,7 +266,7 @@ public class SecuredTeacherSchoolClassManager {
     }
 
     private void submitSingleSchoolStudent(RestNewSingleSchoolStudent restData, MethodCallback<Boolean> callBack) {
-        service.submitSingleSchoolStudent(restData, (callBack));
+        service.submitSingleSchoolStudent(PathId.getId(restData.getRestContext()),restData, (callBack));
     }
 
     public Promise<DomSingleSchoolStudent> getSingleSchoolStudent(RestGetSingleSchoolStudent restData) {
@@ -274,8 +275,8 @@ public class SecuredTeacherSchoolClassManager {
         return defer.getPromise();
     }
 
-    public void getSingleSchoolStudent(RestGetSingleSchoolStudent singleSchoolStudent, AsyncCallback<DomSingleSchoolStudent> callBack) {
-        service.getSingleSchoolStudent(singleSchoolStudent, new Callback<DomSingleSchoolStudent>(callBack));
+    private void getSingleSchoolStudent(RestGetSingleSchoolStudent restData, AsyncCallback<DomSingleSchoolStudent> callBack) {
+        service.getSingleSchoolStudent(PathId.getId(restData.getRestContext()),restData, new Callback<DomSingleSchoolStudent>(callBack));
     }
 
     public Promise<Boolean> updateSingleSchoolStudent(RestSingleSchoolStudent restData) {        
@@ -285,7 +286,7 @@ public class SecuredTeacherSchoolClassManager {
     }
 
     private void updateSingleSchoolStudent(RestSingleSchoolStudent restData, MethodCallback<Boolean> callBack) {
-        service.updateSingleSchoolStudent(restData, (callBack));
+        service.updateSingleSchoolStudent(PathId.getId(restData.getRestContext()),restData, (callBack));
     }
 
     public Promise<DomCoursesOfSchoolClass4Teacher> getModules(DomContext context, DomSchoolClassAndProfile submit) {
@@ -298,7 +299,7 @@ public class SecuredTeacherSchoolClassManager {
     }
 
     private void getModules(RestSchoolClassAndProfile restData, MethodCallback<DomCoursesOfSchoolClass4Teacher> callBack) {
-        service.getModules(restData, (callBack));
+        service.getModules(PathId.getId(restData.getRestContext()),restData, (callBack));
     }
 
     public Promise<Boolean> addCourseToClass(RestSchoolClassCourseAndProfileNew rest) {
@@ -308,7 +309,7 @@ public class SecuredTeacherSchoolClassManager {
     }
     
     private void addCourseToClass(RestSchoolClassCourseAndProfileNew restData, MethodCallback<Boolean> callBack) {
-        service.addCourseToClass(restData, (callBack));
+        service.addCourseToClass(PathId.getId(restData.getRestContext()),restData, (callBack));
     }            
     
     
@@ -319,7 +320,7 @@ public class SecuredTeacherSchoolClassManager {
     }
     
     private void attachCourseToClass(RestSchoolClassCourseAndProfile restData, MethodCallback<Boolean> callBack) {
-        service.attachCourseToClass(restData, (callBack));
+        service.attachCourseToClass(PathId.getId(restData.getRestContext()),restData, (callBack));
     }            
 
     public Promise<Boolean> detachCourseFromClass(RestSchoolClassCourseAndProfile rest) {
@@ -329,7 +330,7 @@ public class SecuredTeacherSchoolClassManager {
     }
     
     private void detachCourseFromClass(RestSchoolClassCourseAndProfile restData, MethodCallback<Boolean> callBack) {
-        service.detachCourseFromClass(restData, (callBack));
+        service.detachCourseFromClass(PathId.getId(restData.getRestContext()),restData, (callBack));
     }            
 
     public Promise<Boolean> setFromDateClassCourse(RestSchoolClassCourseProfilewFrom rest) {
@@ -339,7 +340,7 @@ public class SecuredTeacherSchoolClassManager {
     }
     
     private void setFromDateClassCourse(RestSchoolClassCourseProfilewFrom restData, MethodCallback<Boolean> callBack) {
-        service.setFromDateClassCourse(restData, (callBack));
+        service.setFromDateClassCourse(PathId.getId(restData.getRestContext()),restData, (callBack));
     }            
 
     public Promise<Boolean> setToDateClassCourse(RestSchoolClassCourseProfilewTo rest) {
@@ -349,7 +350,7 @@ public class SecuredTeacherSchoolClassManager {
     }
     
     private void setToDateClassCourse(RestSchoolClassCourseProfilewTo restData, MethodCallback<Boolean> callBack) {
-        service.setToDateClassCourse(restData, (callBack));
+        service.setToDateClassCourse(PathId.getId(restData.getRestContext()),restData, (callBack));
     }            
 
     public Promise<Boolean> setClassCourseType(RestSchoolClassCourseProfilewType rest) {
@@ -359,33 +360,33 @@ public class SecuredTeacherSchoolClassManager {
     }
     
     private void setClassCourseType(RestSchoolClassCourseProfilewType restData, MethodCallback<Boolean> callBack) {
-    	service.setClassCourseType(restData, (callBack));
+    	service.setClassCourseType(PathId.getId(restData.getRestContext()),restData, (callBack));
     }
 
-	public Promise<Boolean> setAccessKeyClassCourse(RestSchoolClassCourseProfilewAccessKey rest) {
+	public Promise<Boolean> setAccessKeyClassCourse(RestSchoolClassCourseProfilewAccessKey restData) {
         PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
-        service.setAccessKeyClassCourse(rest, (defer));
+        service.setAccessKeyClassCourse(PathId.getId(restData.getRestContext()),restData, (defer));
         return defer.getPromise();
 	}            
 
-    public Promise<List<DomStudent>> getTeachersStudents() {
+    public Promise<List<DomStudent>> getTeachersStudents(DomContext context) {
         PromiseCallback<List<DomStudent>> defer = new PromiseCallback<List<DomStudent>>();
-        this.getTeachersStudents(defer);
+        this.getTeachersStudents(PathId.getId(context),defer);
         return defer.getPromise();
     }
     
-    private void getTeachersStudents(AsyncCallback<List<DomStudent>> callBack) {
-        service.getTeachersStudents(new Callback<List<DomStudent>>(callBack));
+    private void getTeachersStudents(String id, MethodCallback<List<DomStudent>> callBack) {
+        service.getTeachersStudents(id, (callBack));
     }
 
-    public Promise<List<DomSchoolClassId>> getTeachersClassesOfStudent(RestStudent rest) {
+    public Promise<List<DomSchoolClassId>> getTeachersClassesOfStudent(RestStudent restData) {
         PromiseCallback<List<DomSchoolClassId>> defer = new PromiseCallback<List<DomSchoolClassId>>();
-        this.getTeachersClassesOfStudent(rest, defer);
+        this.getTeachersClassesOfStudent(restData, defer);
         return defer.getPromise();
     }
     
     private void getTeachersClassesOfStudent(RestStudent restData, MethodCallback<List<DomSchoolClassId>> callBack) {
-        service.getTeachersClassesOfStudent(restData, (callBack));
+        service.getTeachersClassesOfStudent(PathId.getId(restData.getRestContext()),restData, (callBack));
     }            
 
     public Promise<List<DomSchoolClassId>> getSharedTeacherClasses(RestTeacher rest) {
@@ -394,7 +395,7 @@ public class SecuredTeacherSchoolClassManager {
         return defer.getPromise();
     }
         private void getSharedTeacherClasses(RestTeacher restData, MethodCallback<List<DomSchoolClassId>> callBack) {
-        service.getSharedTeacherClasses(restData, (callBack));
+        service.getSharedTeacherClasses(PathId.getId(restData.getRestContext()),restData, (callBack));
     }            
 
 }
