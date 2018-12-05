@@ -1371,7 +1371,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
     JSONValue v = statei.get(currentActiviteit);
     JSONArray statej = v == null ? null : v.isArray();
     if(statej == null) {
-      statej = new JSONArray();  statei.set(currentOpdracht, statej);
+      statej = new JSONArray();  statei.set(currentActiviteit, statej);
     }
     statej.set(currentOpdracht, reviewPage);
 
