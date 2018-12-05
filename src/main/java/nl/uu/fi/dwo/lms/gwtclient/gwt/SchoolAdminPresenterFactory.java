@@ -166,7 +166,7 @@ public class SchoolAdminPresenterFactory implements PresenterFactory {
 
   @Override @JsMethod
   public ImportPersonsPresenter getImportPersonsPresenter() {
-    return null;
+    return importPersonsPresenter;
   }
 
   @Override @JsMethod

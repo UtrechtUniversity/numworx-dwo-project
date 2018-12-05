@@ -1,6 +1,11 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,9 +38,16 @@ public class LoggingFailure implements Failure {
 	      if(collection.size() == 1) {
 	        fail = collection.iterator().next().getFailure();
 	      } else {
-	        String message = "Multiple failures";
-	        for(Promise<?> item: collection) {
-	          message += "\n" + item.getFailure().getMessage();
+	        collection = new ArrayList<>(collection);
+	        Set<String> set = new TreeSet<>();
+	        Iterator<Promise<?>> it = collection.iterator();
+	        while (it.hasNext()) {
+	          Promise<?> p =  it.next();
+	          set.add(p.getFailure().getLocalizedMessage() );
+            }
+	        String message = "";
+	        for(String item: set) {
+	          message += "\n" + item;
 	        }
 	        LOG.log(Level.SEVERE, message, fromPromises);
 	        eventBus.fireEvent(new AlertDialogWithOKEvent(message));

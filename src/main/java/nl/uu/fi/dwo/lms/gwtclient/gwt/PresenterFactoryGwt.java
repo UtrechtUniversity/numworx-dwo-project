@@ -64,7 +64,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
     @Inject LogResultsPresenter logResultsPresenter;
 
     @Inject PersonsPresenter personsPresenter;
-    private final AddPersonPresenter addStudentPresenter;
+    @Inject AddStudentPresenter addStudentPresenter;
     @Inject ImportPersonsPresenter importPersonsPresenter;
     @Inject EditStudentPresenter editStudentPresenter;
     @Inject EditTeacherPresenter editTeacherPresenter;
@@ -94,7 +94,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
         //studentScoResultPresenter = new StudentScoResultPresenter(eventBus, dwoGlobalVars);
         //selectStudentResultsPresenter = new SelectStudentResultsPresenter(eventBus, dwoGlobalVars);
         //personsPresenter = new PersonsPresenter(anEventBus, aDwoGlobalVars);
-        addStudentPresenter = new AddStudentPresenter(anEventBus, aDwoGlobalVars);
+        //addStudentPresenter = new AddStudentPresenter(anEventBus, aDwoGlobalVars);
         //importPersonsPresenter = new ImportPersonsPresenter(anEventBus, aDwoGlobalVars);
         //editStudentPresenter = new EditStudentPresenter(anEventBus, aDwoGlobalVars);
         //editTeacherPresenter = new EditTeacherPresenter(anEventBus, aDwoGlobalVars);

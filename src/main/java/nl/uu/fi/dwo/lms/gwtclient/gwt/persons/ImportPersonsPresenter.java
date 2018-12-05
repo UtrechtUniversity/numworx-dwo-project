@@ -30,6 +30,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -228,57 +229,12 @@ public class ImportPersonsPresenter {
     void submitImportStudents(JavaScriptObject json, String schoolClassID) {
       TaggedDomSchoolClass tagged = taggedSchoolClasses.get(schoolClassID);
       if(tagged == null) {
-          eventBus.fireEvent(new AlertDialogWithOKEvent("no class"));
+        eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Required_Fields)));
           return;
       }
-      JSONArray array = new JSONArray(json);
-      int size = array.size();
-      List<DomSingleSchoolStudent> personList = new ArrayList<>(size);
-      for(int i = 0; i < size; i++ )   
-      {
-        JSONValue value = array.get(i);
-        DomSingleSchoolStudent student = DomSingleSchoolStudentCodec.CODEC.decode(value);
-        student.setSingleSchool(true);
-        String givenName = student.getGivenName();
-        String username = student.getUserName();
-        String eMail = student.getEmail();
-        String familyName = student.getFamilyName();
-        String password = student.getPassword();
-        String insertion = student.getInsertion();
-        // Verify formfields
-        if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(password, familyName , givenName, eMail , username)) {
-          LOG.log(Level.INFO, "valid required fields.");
-          if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(insertion)) {
-              insertion = insertion.trim();
-          } else {
-              insertion = null;
-          }
-          student.setInsertion(insertion);
-      } else {
-          eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Required_Fields)));
-          return;
-      }
-  
-       if (!SimpleValidUserFieldsChecker.isValidUserName(username)) {
-         eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_UserName_Invalid)));
-         return;
-       }
-       if (!SimpleValidUserFieldsChecker.isValidEmail(eMail)) {
-            eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid)));
-            return;
-        } else {
-          eMail = eMail.trim();
-          student.setEmail(eMail);
-        }
-        if (!SimpleValidUserFieldsChecker.isValidPassword(password)) {
-          //invalid password format
-          eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven)));
-          return;
-      }      
-       
-        personList.add(student);
-      }
-      
+      List<DomSingleSchoolStudent> personList = new ArrayList<>();
+      int size = getAndCheck(json, personList);
+      if(size <= 0) return;
       
       DomSchoolClass schoolClass = tagged.getSchoolClass();
       final List<DomSingleSchoolStudent> newPersons = new ArrayList<>(size);
@@ -314,4 +270,108 @@ public class ImportPersonsPresenter {
       
       
     }
+
+    private int getAndCheck(JavaScriptObject json, List<DomSingleSchoolStudent> personList) {
+      JSONArray array = new JSONArray(json);
+      int size = array.size();
+      for(int i = 0; i < size; i++ )   
+      {
+        JSONValue value = array.get(i);
+        DomSingleSchoolStudent student = DomSingleSchoolStudentCodec.CODEC.decode(value);
+        student.setSingleSchool(true);
+        String givenName = student.getGivenName();
+        String username = student.getUserName();
+        String eMail = student.getEmail();
+        String familyName = student.getFamilyName();
+        String password = student.getPassword();
+        String insertion = student.getInsertion();
+        // Verify formfields
+        if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(password, familyName , givenName, eMail , username)) {
+          LOG.log(Level.INFO, "valid required fields.");
+          if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(insertion)) {
+              insertion = insertion.trim();
+          } else {
+              insertion = null;
+          }
+          student.setInsertion(insertion);
+        } else {
+          eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Required_Fields)));
+          return -1;
+        }
+  
+       if (!SimpleValidUserFieldsChecker.isValidUserName(username)) {
+         eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_UserName_Invalid)));
+         return -1;
+       }
+       if (!SimpleValidUserFieldsChecker.isValidEmail(eMail)) {
+            eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid)));
+            return -1;
+        } else {
+          eMail = eMail.trim();
+          student.setEmail(eMail);
+        }
+        if (!SimpleValidUserFieldsChecker.isValidPassword(password)) {
+          //invalid password format
+          eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven)));
+          return -1 ;
+      }      
+       
+        personList.add(student);
+      }
+      return size;
+    }
+    
+    
+    @JsMethod
+    void submitImportTeachers(JavaScriptObject json, String schoolClassID) {
+      TaggedDomSchoolClass tagged = taggedSchoolClasses.get(schoolClassID);
+      
+      List<DomSingleSchoolStudent> personList = new ArrayList<>();
+      int size = getAndCheck(json, personList);
+      if(size <= 0) return;
+      
+      DomSchoolClass schoolClass = tagged != null ? tagged.getSchoolClass(): null;
+      final List<DomSingleSchoolStudent> newPersons = new ArrayList<>(size);
+      
+      List<Promise<Boolean>> promises = new ArrayList<>(size);
+      for(DomSingleSchoolStudent student: personList) {
+        Promise<Boolean> promise;
+        promise = manager.submitTeacher(student);
+        promise = promise.then(p -> {
+          if ( schoolClass != null) {
+            DomSubmitTeacherToSchoolClass submit = new DomSubmitTeacherToSchoolClass();
+            submit.setSchoolClass(schoolClass);
+            return 
+                manager.getTeachersInSchool().map(list -> list.stream()
+                  .filter( u -> student.getUserName().equals(u.getUserName()))
+                  .findFirst().get())
+               .then( p2-> {
+                  submit.setTeacher(p2.getValue());
+                  return manager.submitTeacherToSchoolClass(submit);
+                });
+          }
+          return p;
+        }, p-> { 
+          Throwable t = p.getFailure();
+          if (t instanceof Dwo2Exception) {
+            Dwo2ExceptionCode code = ((Dwo2Exception) t).getDwo2Code();
+            if (code == Dwo2ExceptionCode.Rest_Registration_UserName_exists) {
+              student.setId(new PersistenceId("LOCAL;" + PersistenceClassType.PersistentUser + ";0000000000"));
+            }
+          }
+          newPersons.add(student);
+        });
+        promises.add(promise);
+      }
+      Promises.all(promises).then(p-> {
+        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.PERSONS));
+        return null;
+      }, FAILURE).then( null, p-> {
+        persons = newPersons;
+        view.setPersonImportList(persons);
+      });
+    }
+
+    
+    
 }

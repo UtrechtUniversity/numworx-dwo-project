@@ -84,7 +84,7 @@ public class PersonsPresenterSchoolAdmin extends PersonsPresenter {
 
   @Override  @JsMethod
   public boolean hasImportPersons() {
-    return false;
+    return true;
   }
 
   @Override @JsMethod
