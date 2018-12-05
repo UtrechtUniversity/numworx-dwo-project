@@ -613,7 +613,7 @@ public class CascadingPersistenceBuilder {
                 if (ccList.size() == 0) {
                     String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: ClassCourse {1} not found.", new Object[]{instance.context.user.getUsername(), c.getCourseID()});
                     LOG.log(Level.WARNING, msg);
-                    if (c.getSchoolID() != null) {
+                    if (false && c.getSchoolID() != null) { // never fatal
                       throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
                     } else
                       instance.context.classCourse = null; // public course, not fatal!

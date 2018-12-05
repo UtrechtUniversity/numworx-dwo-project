@@ -198,9 +198,10 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
             if (ccList.size() == 0) {
                 String msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: ClassCourse {1} not found.", new Object[]{instance.getContext().getUserCtx().getUser().getUsername(), c.getCourseID()});
                 LOG.log(Level.WARNING, msg);
-                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
-            }
-            instance.getContext().getTeacherCtx().setClassCourse(ccList.get(0));
+                //throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
+                instance.getContext().getTeacherCtx().setClassCourse(null);
+            } else 
+              instance.getContext().getTeacherCtx().setClassCourse(ccList.get(0));
             instance.getContext().getTeacherCtx().setCourse(c);
         }
         instance.getContext().getTeacherCtx().setScoContext(sco);
