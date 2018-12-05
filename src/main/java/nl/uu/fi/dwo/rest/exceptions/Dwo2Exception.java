@@ -70,4 +70,9 @@ public class Dwo2Exception extends Exception implements Dwo2ExceptionInterface {
         return Dwo2ExceptionTranslator.getLocalizedCodeExplanation(locale, this.code);
     }
 
+	@Override
+	public String getLocalizedMessage() {
+		return getLocalizedCodeExplanation(null);
+	}
+
 }
