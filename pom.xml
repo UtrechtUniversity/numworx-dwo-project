@@ -1,6 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nl.uu.fi.dwo.register</groupId>
 	<artifactId>Register</artifactId>
@@ -253,10 +251,10 @@
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
 		<relativePath>../DWO</relativePath>
-		<version>2.3.2-SNAPSHOT</version>
+		<version>2.3.2</version>
 	</parent>
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/Register/trunk</developerConnection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO/tags/Register-2.3.2</developerConnection>
 	</scm>
 	<properties>
 		<gwtVersion>2.8.2</gwtVersion>
