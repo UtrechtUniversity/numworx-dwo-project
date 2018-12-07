@@ -87,9 +87,9 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
         manager = m;
         FAILURE = new LoggingFailure(LOG, anEventBus);
     }
-    public CopyOrMoveStudentToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
-      this(anEventBus, aDwoGlobalVars, new PersonsServiceTeacher(aDwoGlobalVars));
-    }
+//    public CopyOrMoveStudentToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+//      this(anEventBus, aDwoGlobalVars, new PersonsServiceTeacher(aDwoGlobalVars));
+//    }
     public void init(DomSchoolClass aSchoolClass) {
         view.clear();
         view.init();

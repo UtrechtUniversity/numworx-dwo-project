@@ -16,6 +16,7 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
   @Inject ViewFactory viewFactory;
   @Inject PresenterFactory presenterFactory;
   @Inject BootPanelController controller;
+  @Inject EventBus eventBus;
 
   @Inject SchoolAdminViewHandler() {}
 
@@ -28,7 +29,7 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
       }
       switch (value) {
         default:
-          presenterFactory.getEventBus().fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+          eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
         case WELCOME:
           viewFactory.getMainView().showWelcomeView();
           presenterFactory.getWelcomePresenter().init();
@@ -44,7 +45,7 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
           presenterFactory.getAccountPresenter().init();
           break;
         case RESULTS:
-          presenterFactory.getEventBus().fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
+          eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
           break;
         case PERSONS:
           viewFactory.getMainView().showPersonsView();

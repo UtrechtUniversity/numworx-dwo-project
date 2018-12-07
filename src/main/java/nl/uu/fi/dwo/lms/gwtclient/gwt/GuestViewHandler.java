@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import javax.inject.Inject;
 
+import com.google.web.bindery.event.shared.EventBus;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
@@ -14,7 +16,7 @@ public class GuestViewHandler implements SwitchViewEventHandler {
   @Inject ViewFactory viewFactory;
   @Inject PresenterFactory presenterFactory;
   @Inject BootPanelController controller;
-
+  @Inject EventBus eventBus;
   
   @Inject GuestViewHandler() {
     // TODO Auto-generated constructor stub
@@ -27,7 +29,7 @@ public class GuestViewHandler implements SwitchViewEventHandler {
       switch (value) {
         case WELCOME:
           // show alert
-          presenterFactory.getEventBus().fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_User_NoTeacher()));
+          eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_User_NoTeacher()));
         default:
         case ACCOUNT:
           if (withUser()) {

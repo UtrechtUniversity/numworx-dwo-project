@@ -2,7 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import javax.inject.Inject;
 
-import com.google.web.bindery.event.shared.EventBus;
+//import com.google.web.bindery.event.shared.EventBus;
 
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
@@ -35,8 +35,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 @RoleScope
 public class GuestPresenterFactory implements PresenterFactory {
 
-  @Inject DwoGlobalVars dwoGlobalVars;
-  @Inject EventBus eventBus;
+//  @Inject DwoGlobalVars dwoGlobalVars;
+//  @Inject EventBus eventBus;
   @Inject MainPresenter mainPresenter;
   @Inject LoginPresenter loginPresenter;
   @Inject AccountPresenter accountPresenter;
@@ -48,15 +48,15 @@ public class GuestPresenterFactory implements PresenterFactory {
   @Inject GuestPresenterFactory() {
   }
 
-  @Override
-  public DwoGlobalVars getDwoGlobalVars() {
-    return dwoGlobalVars;
-  }
-
-  @Override
-  public EventBus getEventBus() {
-    return eventBus;
-  }
+//  @Override
+//  public DwoGlobalVars getDwoGlobalVars() {
+//    return dwoGlobalVars;
+//  }
+//
+//  @Override
+//  public EventBus getEventBus() {
+//    return eventBus;
+//  }
 
   @Override @JsMethod
   public MainPresenter getMainPresenter() {

@@ -64,9 +64,9 @@ public class AddStudentToSchoolclassPresenter {
         FAILURE = new LoggingFailure(LOG, anEventBus);
         
     }
-    public AddStudentToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
-      this(anEventBus, aDwoGlobalVars, new PersonsServiceTeacher(aDwoGlobalVars));
-    }
+//    public AddStudentToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+//      this(anEventBus, aDwoGlobalVars, new PersonsServiceTeacher(aDwoGlobalVars));
+//    }
 
     public void init(DomSchoolClass aSchoolClass) {
         view.clear();

@@ -93,9 +93,9 @@ public class EditSchoolclassPresenter {
         FAILURE = new LoggingFailure(LOG, anEventBus);
 
     }
-    public EditSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
-      this(anEventBus, aDwoGlobalVars, new PersonsServiceTeacher(aDwoGlobalVars));
-    }
+//    public EditSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+//      this(anEventBus, aDwoGlobalVars, new PersonsServiceTeacher(aDwoGlobalVars));
+//    }
 
     public void init(DomSchoolClass aSchoolClass) {
         view.clear();

@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
@@ -126,10 +128,10 @@ public class ModulesOfSchoolclassPresenter {
 //        item.parent = tree.getCourseTree().getObject().getCourse().getId().getIdString();
 //        item.children = null;
 //    }
-    public ModulesOfSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject ModulesOfSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, ModulesOfSchoolclassService aService) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-        service = new ModulesOfSchoolclassService(dwoGlobalVars);
+        service = aService;
     }
 
     /**

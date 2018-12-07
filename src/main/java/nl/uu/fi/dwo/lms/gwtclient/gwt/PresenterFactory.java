@@ -34,8 +34,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
  * @author G.A.J. van der Plas
  */
 public interface PresenterFactory {
-    public DwoGlobalVars getDwoGlobalVars();
-    public EventBus getEventBus();
+//    public DwoGlobalVars getDwoGlobalVars();
+//    public EventBus getEventBus();
     public MainPresenter getMainPresenter();
     public LoginPresenter getLoginPresenter();
     public WelcomePresenter getWelcomePresenter();

@@ -5,6 +5,8 @@ import java.util.Date;
 
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
@@ -43,7 +45,7 @@ public class ModulesOfSchoolclassService {
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
     private final DwoGlobalVars dwoGlobalVars;
 
-    public ModulesOfSchoolclassService(DwoGlobalVars aDwoGlobalVars) {
+    @Inject ModulesOfSchoolclassService(DwoGlobalVars aDwoGlobalVars) {
         dwoGlobalVars = aDwoGlobalVars;
     }
 

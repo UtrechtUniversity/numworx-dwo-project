@@ -44,18 +44,18 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 @RoleScope // one per Role change
 public class PresenterFactoryGwt implements PresenterFactory {
 
-    private final DwoGlobalVars dwoGlobalVars;
-    private final EventBus eventBus;
+//    private final DwoGlobalVars dwoGlobalVars;
+//    private final EventBus eventBus;
     @Inject MainPresenter mainPresenter;
     @Inject LoginPresenter loginPresenter;
     @Inject WelcomePresenter welcomePresenter;
     @Inject AccountPresenter accountPresenter;
-    private final SchoolclassesPresenter schoolclassesPresenter;
-    private final EditSchoolclassPresenter editSchoolclassPresenter;
-    private final AddStudentToSchoolclassPresenter addStudentToSchoolclassPresenter;
-    private final CopyOrMoveStudentToSchoolclassPresenter copyOrMoveStudentToSchoolclassPresenter;
-    private final AddTeacherToSchoolclassPresenter addTeacherToSchoolclassPresenter;
-    private final ModulesOfSchoolclassPresenter modulesOfSchoolclassPresenter;
+    @Inject SchoolclassesPresenter schoolclassesPresenter;
+    @Inject EditSchoolclassPresenter editSchoolclassPresenter;
+    @Inject AddStudentToSchoolclassPresenter addStudentToSchoolclassPresenter;
+    @Inject CopyOrMoveStudentToSchoolclassPresenter copyOrMoveStudentToSchoolclassPresenter;
+    @Inject AddTeacherToSchoolclassPresenter addTeacherToSchoolclassPresenter;
+    @Inject ModulesOfSchoolclassPresenter modulesOfSchoolclassPresenter;
     @Inject ModulesPresenter modulesPresenter;
     @Inject ResultsPresenter resultsPresenter;
     @Inject SelectedResultsPresenter selectedResultsPresenter;
@@ -75,19 +75,19 @@ public class PresenterFactoryGwt implements PresenterFactory {
 //    private final PromisedDialogWithOKPresenter promisedDialogWithOKPresenter;
     @Inject ProgressDialogWithAbortPresenter progressDialogWithAbortPresenter;
 
-    @Inject public PresenterFactoryGwt(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
-        dwoGlobalVars = aDwoGlobalVars;
-        eventBus = anEventBus;
+    @Inject public PresenterFactoryGwt(/*EventBus anEventBus, DwoGlobalVars aDwoGlobalVars*/) {
+//        dwoGlobalVars = aDwoGlobalVars;
+//        eventBus = anEventBus;
         //mainPresenter = new MainPresenter(eventBus, dwoGlobalVars);
         //loginPresenter = new LoginPresenter(eventBus, dwoGlobalVars);
         //welcomePresenter = new WelcomePresenter(eventBus, dwoGlobalVars, rb);
         //accountPresenter = new AccountPresenter(eventBus, dwoGlobalVars, accountManager);
-        schoolclassesPresenter = new SchoolclassesPresenter(eventBus, dwoGlobalVars);
-        editSchoolclassPresenter = new EditSchoolclassPresenter(eventBus, dwoGlobalVars);
-        addStudentToSchoolclassPresenter = new AddStudentToSchoolclassPresenter(eventBus, dwoGlobalVars);
-        copyOrMoveStudentToSchoolclassPresenter = new CopyOrMoveStudentToSchoolclassPresenter(eventBus, dwoGlobalVars);
-        addTeacherToSchoolclassPresenter = new AddTeacherToSchoolclassPresenter(eventBus, dwoGlobalVars);
-        modulesOfSchoolclassPresenter = new ModulesOfSchoolclassPresenter(eventBus, dwoGlobalVars);
+        //schoolclassesPresenter = new SchoolclassesPresenter(eventBus, dwoGlobalVars);
+        //editSchoolclassPresenter = new EditSchoolclassPresenter(eventBus, dwoGlobalVars);
+        //addStudentToSchoolclassPresenter = new AddStudentToSchoolclassPresenter(eventBus, dwoGlobalVars);
+        //copyOrMoveStudentToSchoolclassPresenter = new CopyOrMoveStudentToSchoolclassPresenter(eventBus, dwoGlobalVars);
+        //addTeacherToSchoolclassPresenter = new AddTeacherToSchoolclassPresenter(eventBus, dwoGlobalVars);
+        //modulesOfSchoolclassPresenter = new ModulesOfSchoolclassPresenter(eventBus, dwoGlobalVars);
         //modulesPresenter = new ModulesPresenter(eventBus, dwoGlobalVars);
         //resultsPresenter = new ResultsPresenter(eventBus, dwoGlobalVars);
         //selectedResultsPresenter = new SelectedResultsPresenter(eventBus, dwoGlobalVars);
@@ -137,18 +137,18 @@ public class PresenterFactoryGwt implements PresenterFactory {
         mainPresenter.setView(viewFactory.getMainView());
     }
 
-    @Override
-    public EventBus getEventBus() {
-        return eventBus;
-    }
-
-    /**
-     * @return the dwoGlobalVars
-     */
-    @Override
-    public DwoGlobalVars getDwoGlobalVars() {
-        return dwoGlobalVars;
-    }
+//    @Override
+//    public EventBus getEventBus() {
+//        return eventBus;
+//    }
+//
+//    /**
+//     * @return the dwoGlobalVars
+//     */
+//    @Override
+//    public DwoGlobalVars getDwoGlobalVars() {
+//        return dwoGlobalVars;
+//    }
 
     /**
      * @return the mainPresenter

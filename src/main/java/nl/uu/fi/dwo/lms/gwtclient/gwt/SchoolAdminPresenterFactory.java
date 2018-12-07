@@ -37,8 +37,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 @RoleScope
 public class SchoolAdminPresenterFactory implements PresenterFactory {
 
-  @Inject DwoGlobalVars dwoGlobalVars;
-  @Inject EventBus eventBus;
+//  @Inject DwoGlobalVars dwoGlobalVars;
+//  @Inject EventBus eventBus;
   @Inject MainPresenter mainPresenter;
   @Inject LoginPresenter loginPresenter;
   @Inject AccountPresenter accountPresenter;
@@ -64,15 +64,15 @@ public class SchoolAdminPresenterFactory implements PresenterFactory {
   @Inject SchoolAdminPresenterFactory() {
   }
 
-  @Override
-  public DwoGlobalVars getDwoGlobalVars() {
-    return dwoGlobalVars;
-  }
-
-  @Override
-  public EventBus getEventBus() {
-    return eventBus;
-  }
+//  @Override
+//  public DwoGlobalVars getDwoGlobalVars() {
+//    return dwoGlobalVars;
+//  }
+//
+//  @Override
+//  public EventBus getEventBus() {
+//    return eventBus;
+//  }
 
   @Override @JsMethod
   public MainPresenter getMainPresenter() {

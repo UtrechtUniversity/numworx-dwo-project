@@ -101,9 +101,9 @@ public class SchoolclassesPresenter {
         FAILURE = new LoggingFailure(LOG, anEventBus);
     }
     
-    public SchoolclassesPresenter(EventBus bus, DwoGlobalVars vars) {
-      this(bus, vars, new PersonsServiceTeacher(vars));
-    }
+//    public SchoolclassesPresenter(EventBus bus, DwoGlobalVars vars) {
+//      this(bus, vars, new PersonsServiceTeacher(vars));
+//    }
  
     public void init() {
         view.clear();
