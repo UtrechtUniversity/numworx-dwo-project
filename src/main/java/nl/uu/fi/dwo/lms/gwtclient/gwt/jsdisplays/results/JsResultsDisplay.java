@@ -28,4 +28,6 @@ public class JsResultsDisplay{
     public static native void setEmptyTableMessage();
     /** setEmptyTableMessage show an indicator that we are fetching data. */
     public static native void setLoadingTableMessage();
+    
+    public static native void setChooseModulesTable();
 }

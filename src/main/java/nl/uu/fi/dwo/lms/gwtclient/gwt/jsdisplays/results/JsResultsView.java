@@ -207,4 +207,8 @@ public class JsResultsView implements ResultsPresenter.Display {
         JsResultsDisplay.init();
     }
 
+    @Override
+    public void setChooseModulesTable() {
+      JsResultsDisplay.setChooseModulesTable();
+    }
 }
