@@ -89,10 +89,8 @@ public abstract class PersonsService {
   
   public abstract Promise<Boolean> submitTeacherToSchoolClass(DomSubmitTeacherToSchoolClass submit);
  
-  public Promise<Boolean> moveStudentToSchoolClass(DomMoveStudentToSchoolClass submit) {
-    // TODO Auto-generated method stub
-    return null;
-  }
+  public abstract Promise<Boolean> moveStudentToSchoolClass(DomMoveStudentToSchoolClass submit);
+
   public Promise<List<DomSchoolClassId>> getSharedTeacherClasses(RestTeacher rest) {
     // TODO Auto-generated method stub
     return null;
