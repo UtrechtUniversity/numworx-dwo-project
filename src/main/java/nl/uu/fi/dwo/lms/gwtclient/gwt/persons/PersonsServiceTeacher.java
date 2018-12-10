@@ -133,7 +133,7 @@ public class PersonsServiceTeacher extends PersonsService {
 
   @Override
   public Promise<Boolean> moveStudentToSchoolClass(DomMoveStudentToSchoolClass submit) {
-    return super.moveStudentToSchoolClass(submit);
+    return manager.moveStudentToSchoolClass(context, submit);
   }
 
   @Override
