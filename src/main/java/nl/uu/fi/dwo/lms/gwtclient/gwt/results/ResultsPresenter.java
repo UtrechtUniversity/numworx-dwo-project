@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.Collections;
@@ -162,9 +163,38 @@ public class ResultsPresenter {
     }
 
     @JsMethod
-    public void showSelectedResults(JavaScriptObject resultState) {
+    public void showSelectedResults(JavaScriptObject resultState, String classid, JsArrayString courses) {
+        if (stage > 1) {
+          Promise<DomMappedResultsPerTeacher> r = resultService.getResultsPerTeacher().then( p -> {
+            DomResultsPerTeacher results = p.getValue();
+            inject(mappedResults.getValue(), results);
+            return mappedResults;
+          }, FAILURE).fallbackTo(mappedResults);
+          r.then( 
+            p -> {
+              DomResultTree resultTree = new DomResultTree(r.getValue());
+              view.setResultTreeWithContext(resultTree, resultState);
+              eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTS, resultTree, resultState));
+              return null;
+              }
+          );
+          return;
+        }
+      
         eventBus.fireEvent(
                 new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTS, resultTree, resultState));
+    }
+
+    private void inject(DomMappedResultsPerTeacher value, DomResultsPerTeacher results) {
+     results.getClassCourses().forEach(entry -> value.getClassCourses().putIfAbsent(entry.getKey(), entry.getValue()));
+     results.getCourses().forEach(entry -> value.getCourses().putIfAbsent(entry.getKey(), entry.getValue()));
+     value.setFetchTimeStamp(results.getFetchTimeStamp());
+     results.getSchoolClasses().forEach(entry -> value.getSchoolClasses().putIfAbsent(entry.getKey(), entry.getValue()));
+     results.getScoContexts().forEach(entry -> value.getScoContexts().putIfAbsent(entry.getKey(), entry.getValue()));
+     results.getStudents().forEach(entry -> value.getStudents().putIfAbsent(entry.getKey(), entry.getValue()));
+     results.getStudentScoContexts().forEach(entry -> value.getStudentScoContexts().putIfAbsent(entry.getKey(), entry.getValue()));
+     results.getStudentsOfClasses().forEach(entry -> value.getStudentsOfClasses().putIfAbsent(entry.getKey(), entry.getValue()));
+     value.setTeacher(results.getTeacher());
     }
 
     @JsMethod
