@@ -6,6 +6,8 @@
 <html>
   <head>
 <%!
+static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
+static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
 private void cookie(String name, Object value, HttpServletResponse response) {
   if (value != null) {
     Cookie cookie = new Cookie(name, value.toString());
@@ -18,13 +20,37 @@ Object name_given = request.getAttribute("givenName");
 Object name_family = request.getAttribute("sn");
 Object name_prefix = request.getAttribute("insertion");
 Object email = request.getAttribute("mail");
-Object org_id  = request.getAttribute("nlEduPersonHomeOrganizationId");	   
+Object org_id  = request.getAttribute("nlEduPersonHomeOrganizationId");
+// quickfix voor idptestbed
+if (org_id == null) {
+	  String schoolid = System.getProperty("ENV_ORGID", "385");
+	  org_id = "saml:" + schoolid;
+}
+
+Object user_id = request.getAttribute("uid");
+Object student_id = request.getAttribute("studentNumber");
+if (student_id == null) {
+	student_id = user_id;
+}
+
+
+String roles = String.valueOf(request.getAttribute("unscoped-affiliation"));
+String role = "STUDENT";
+if(roles != null && roles.toLowerCase().contains("employee"))
+    role = "TEACHER";
+
 
 cookie("givenName", name_given, response);
 cookie("familyName", name_family, response);
 cookie("insertion", name_prefix, response);
 cookie("email", email, response);
 cookie("schoolLogin", org_id, response);
+cookie("suggestion", student_id, response); // XXX moet de nlEduPersonRealId zijn, zonder @suffix.
+cookie("schoolGroup", role, response);
+
+cookie(DWO_SAML_ORGANIZATION_ID, org_id, response);
+cookie(DWO_SAML_USER_ID, user_id, response);
+
 
 %>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
