@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SCO_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_P_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
@@ -75,6 +76,7 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
+import nl.uu.fi.dwo.rest.entities.RestResultsPerTeacher;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -90,6 +92,23 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredTeacherResultsManager.class.getName());
 
+    @PUT
+    @Path("/selectedTeachersResults")
+    public DomResultsPerTeacher selectedTeachersResults(@Context SecurityContext sc, RestResultsPerTeacher rest) throws Dwo2Exception {
+      TeacherState_HR_P_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      .setHasRole(rest.getRestContext().getDomHasRole())
+      .buildSchoolAdminTeacher().setTeacher().addProfile(rest.getDomDwoProfile());
+      DomResultsPerTeacher dom = rest.getDomResultsPerTeacher();
+      List<DomSchoolClass> classList = state.getSchoolClasses();
+      if ( dom.getSchoolClasses() == null) {
+        dom.setSchoolClasses(classList.stream().map(item -> new DomMapEntry<>(item.getId(), item)).collect(Collectors.toList()));
+      } else {
+        
+      }
+      return dom;
+    }
+    
+    
     /**
      * Returns the all the schoolclass/student results of a teacher within a
      * school. This includes the invisible data with ViewState none.
