@@ -303,7 +303,7 @@ public class ImportPersonsPresenter {
          eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_UserName_Invalid)));
          return -1;
        }
-       if (!SimpleValidUserFieldsChecker.isValidEmail(eMail)) {
+       if (!verifyEmail(eMail)) {
             eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid)));
             return -1;
         } else {
@@ -319,6 +319,11 @@ public class ImportPersonsPresenter {
         personList.add(student);
       }
       return size;
+    }
+
+    @JsMethod
+    boolean verifyEmail(String eMail) {
+      return SimpleValidUserFieldsChecker.isValidEmail(eMail);
     }
     
     
