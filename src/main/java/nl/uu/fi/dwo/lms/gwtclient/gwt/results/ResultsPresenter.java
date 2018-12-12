@@ -4,6 +4,8 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.web.bindery.event.shared.EventBus;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -24,6 +26,7 @@ import nl.uu.fi.dwo.rest.dom.DomMappedResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
@@ -165,7 +168,15 @@ public class ResultsPresenter {
     @JsMethod
     public void showSelectedResults(JavaScriptObject resultState, String classid, JsArrayString courses) {
         if (stage > 1) {
-          Promise<DomMappedResultsPerTeacher> r = resultService.getResultsPerTeacher().then( p -> {
+          DomMappedResultsPerTeacher map = mappedResults.getValue();
+          DomSchoolClass schoolclass = findSchoolClass(map, new PersistenceId(classid));
+          Collection<DomCourse> courseList = new ArrayList<>(courses.length());
+          for(int i = 0; i > courses.length(); i++) {
+            courseList.add(
+              map.getCourses().get(new PersistenceId(courses.get(i)))
+              );
+          }
+          Promise<DomMappedResultsPerTeacher> r = resultService.selectedResultsPerTeacher(schoolclass, courseList).then( p -> {
             DomResultsPerTeacher results = p.getValue();
             inject(mappedResults.getValue(), results);
             return mappedResults;

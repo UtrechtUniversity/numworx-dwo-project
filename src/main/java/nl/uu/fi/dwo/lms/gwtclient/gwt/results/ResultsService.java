@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -21,7 +22,10 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEventHandler;
 import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
@@ -83,7 +87,7 @@ public class ResultsService implements SwitchViewEventHandler {
         dwoGlobalVars = aDwoGlobalVars;
     }
 
-    public Promise<DomResultsPerTeacher> getResultsPerTeacher() {
+    Promise<DomResultsPerTeacher> getResultsPerTeacher() {
         DomContext context = getContext();
         return dwoGlobalVars.getProfile().then(new Success<DomDwoProfile, DomResultsPerTeacher>() {
 
@@ -95,6 +99,17 @@ public class ResultsService implements SwitchViewEventHandler {
         });
     }
 
+    Promise<DomResultsPerTeacher> selectedResultsPerTeacher(DomSchoolClass schoolClass, Collection<DomCourse> courseList) {
+      DomContext context = getContext();
+      DomResultsPerTeacher dom = new DomResultsPerTeacher();
+      dom.setSchoolClasses(Collections.singletonList(new DomMapEntry<PersistenceId, DomSchoolClass>(schoolClass.getId(), schoolClass)));
+      dom.setCourses(courseList.stream()
+        .map( item -> new DomMapEntry<>(item.getId(), item))
+        .collect(Collectors.toList()));
+      return dwoGlobalVars.getProfile().flatMap((profile) -> manager.selectedTeacherResults(context, profile, dom));
+    }
+    
+    
     private DomContext getContext() {
         DomContext context = new DomContext();
         context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
@@ -190,4 +205,6 @@ public class ResultsService implements SwitchViewEventHandler {
             clearCache();
         }
     }
+    
+    
 }
