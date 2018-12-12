@@ -412,4 +412,16 @@ public class SecuredUserAccountManager {
         return callback.getPromise();
     }
     
+    public Promise<Boolean> linkSaml(DomContext context, DomSamlUser samluser) {
+    	PromiseCallback<Boolean> callback = new PromiseCallback<>();
+    	RestSamlUser rest = new RestSamlUser();
+    	rest.setDomSamlUser(samluser);
+    	rest.setRestContext(context);
+		service.linkSaml(rest, callback);
+    	return callback.getPromise();
+    }
+    
+    public Promise<Boolean> linkSaml(DomSamlUser samluser) {
+    	return linkSaml(new DomContext(), samluser);
+    }
 }

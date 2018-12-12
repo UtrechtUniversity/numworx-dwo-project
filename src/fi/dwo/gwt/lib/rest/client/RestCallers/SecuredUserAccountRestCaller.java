@@ -72,4 +72,8 @@ public interface SecuredUserAccountRestCaller extends RestService {
     @GET
     @Path("/secure/user/account/getBearerToken")
     public void getBearerToken(MethodCallback<String> callback);
+    
+    @PUT
+    @Path("/secure/user/account/linkSaml")
+    public void linkSaml(RestSamlUser rest, MethodCallback<Boolean> callback);
 }
