@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
+import nl.uu.fi.dwo.rest.entities.RestResultsPerTeacher;
 import nl.uu.fi.dwo.rest.util.PathId;
 
 import org.fusesource.restygwt.client.Defaults;
@@ -56,6 +57,13 @@ public class SecuredTeacherResultsManager {
         service.getTeachersResults(PathId.getId(domContext), restPut, new Callback<DomResultsPerTeacher>(callBack));
     }
 
+    public Promise<DomResultsPerTeacher> selectedTeacherResults(DomContext context, DomDwoProfile profile, DomResultsPerTeacher dom) {
+        RestResultsPerTeacher rest = new RestResultsPerTeacher(context, profile, dom);
+        PromiseCallback<DomResultsPerTeacher> callback = new PromiseCallback<>();
+        service.selectedTeacherResult(PathId.getId(context), rest, callback);
+        return callback.getPromise();
+    }
+    
     public Promise<Boolean> clearStudentResults(RestClearStudentDataForScoAndClass rest) {
         PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
         this.clearStudentResults(rest, defer);

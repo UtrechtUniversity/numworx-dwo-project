@@ -7,6 +7,8 @@ import javax.ws.rs.Produces;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
+import nl.uu.fi.dwo.rest.entities.RestResultsPerTeacher;
+
 import org.fusesource.restygwt.client.RestService;
 import org.fusesource.restygwt.client.MethodCallback;
 
@@ -21,6 +23,10 @@ public interface SecuredTeacherResultsRestCaller extends RestService {
     @PUT
     @Path("/sec:{id}/teacher/results/getTeachersResults")
     public void getTeachersResults(@PathParam("id") String id, RestDwoProfile aProfile,MethodCallback<DomResultsPerTeacher> callback);
+    
+    @PUT
+    @Path("/sec:{id}/teacher/results/selectedTeacherResults")
+    public void selectedTeacherResult(@PathParam("id") String id, RestResultsPerTeacher rest, MethodCallback<DomResultsPerTeacher> callback);
     
     @PUT
     @Produces({"application/json"})
