@@ -2,6 +2,7 @@
 package fi.dwo.commons.persistence;
 
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -21,6 +22,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -484,4 +486,9 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
   // "Given PersistenceId is not of HasRolePK type.");
   // }
   // }
+
+  public static PersistentStudentOfClassPK getNativeId(DomStudentOfClass id) {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }
