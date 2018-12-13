@@ -461,12 +461,12 @@ public class Vergelijking
 			&& kind2.geefVarNaam().equals(var) 
 			&& !Algebra.bevatVarNaam(kind1, var) 
 			|| kind1.isVar() 
-			&& kind1.geefVarNaam().equals("D") 
-			&& !(kind2.isVar() && kind2.geefVarNaam().equals("D")) 
+			&& kind1.geefVarNaam().equals("D?(D)") 
+			&& !(kind2.isVar() && kind2.geefVarNaam().equals("D?(D)")) 
 			&& !Algebra.bevatVarNaam(kind2, var) 
 			|| kind1.isVar() 
-			&& kind1.geefVarNaam().equals("Q") 
-			&& !(kind2.isVar() && kind2.geefVarNaam().equals("Q")) 
+			&& kind1.geefVarNaam().equals("Q?(Q)") 
+			&& !(kind2.isVar() && kind2.geefVarNaam().equals("Q?(Q)")) 
 			&& !Algebra.bevatVarNaam(kind2, var);
 		
 		return isEindoplossing;
@@ -481,11 +481,11 @@ public class Vergelijking
 			&& kind2.geefVarNaam().equals(var)
 			&& !Algebra.bevatVarNaam(kind1, var)
 			&& Algebra.zijnGelijk(subst, kind1) || kind1.isVar()
-			&& kind1.geefVarNaam().equals("D")
-			&& !(kind2.isVar() && kind2.geefVarNaam().equals("D"))
+			&& kind1.geefVarNaam().equals("D?(D)")
+			&& !(kind2.isVar() && kind2.geefVarNaam().equals("D?(D)"))
 			&& !Algebra.bevatVarNaam(kind2, var) || kind1.isVar()
-			&& kind1.geefVarNaam().equals("Q")
-			&& !(kind2.isVar() && kind2.geefVarNaam().equals("Q"))
+			&& kind1.geefVarNaam().equals("Q?(Q)")
+			&& !(kind2.isVar() && kind2.geefVarNaam().equals("Q?(Q)"))
 			&& !Algebra.bevatVarNaam(kind2, var);
 
 		return isEindOplossingExact;
@@ -502,11 +502,11 @@ public class Vergelijking
 				&& kind2.geefVarNaam().equals(var)
 				&& !Algebra.bevatVarNaam(kind1, var)
 				&& Algebra.zijnGelijk(subst[i], kind1) || kind1.isVar()
-				&& kind1.geefVarNaam().equals("D")
-				&& !(kind2.isVar() && kind2.geefVarNaam().equals("D"))
+				&& kind1.geefVarNaam().equals("D?(D)")
+				&& !(kind2.isVar() && kind2.geefVarNaam().equals("D?(D)"))
 				&& !Algebra.bevatVarNaam(kind2, var) || kind1.isVar()
-				&& kind1.geefVarNaam().equals("Q")
-				&& !(kind2.isVar() && kind2.geefVarNaam().equals("Q"))
+				&& kind1.geefVarNaam().equals("Q?(Q)")
+				&& !(kind2.isVar() && kind2.geefVarNaam().equals("Q?(Q)"))
 				&& !Algebra.bevatVarNaam(kind2, var);
 
 			if (b)
@@ -585,9 +585,9 @@ public class Vergelijking
 				return kind2;
 			else if (kind2.isVar() && kind2.geefVarNaam().equals(var))
 				return kind1;
-			else if (kind1.isVar() && kind1.geefVarNaam().equals("D"))
+			else if (kind1.isVar() && kind1.geefVarNaam().equals("D?(D)"))
 				return new Optelling(kind2, new BasisExpressie(0.1234567));
-			else if (kind1.isVar() && kind1.geefVarNaam().equals("Q"))
+			else if (kind1.isVar() && kind1.geefVarNaam().equals("Q?(Q)"))
 				return new Optelling(kind2, new BasisExpressie(0.2345678));
 			else
 				return null;
