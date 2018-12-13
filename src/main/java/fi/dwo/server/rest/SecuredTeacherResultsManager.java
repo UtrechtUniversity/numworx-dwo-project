@@ -26,10 +26,12 @@ import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SCO_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_P_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
@@ -67,6 +69,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
@@ -95,16 +98,83 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     @PUT
     @Path("/selectedTeachersResults")
     public DomResultsPerTeacher selectedTeachersResults(@Context SecurityContext sc, RestResultsPerTeacher rest) throws Dwo2Exception {
-      TeacherState_HR_P_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
-      .setHasRole(rest.getRestContext().getDomHasRole())
+      UserState_HR_R_S_SG_U s1 = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      .setHasRole(rest.getRestContext().getDomHasRole());
+      PersistentHasRole phr = s1.getHasRole();
+      TeacherState_HR_P_R_S_SG_U state = s1
       .buildSchoolAdminTeacher().setTeacher().addProfile(rest.getDomDwoProfile());
+  
       DomResultsPerTeacher dom = rest.getDomResultsPerTeacher();
-      List<DomSchoolClass> classList = state.getSchoolClasses();
+      List<PersistentSchoolClass> scl;
       if ( dom.getSchoolClasses() == null) {
-        dom.setSchoolClasses(classList.stream().map(item -> new DomMapEntry<>(item.getId(), item)).collect(Collectors.toList()));
+        scl = SchoolClassUtilManager.getSchoolClassesOfTeacher(phr);
+        dom.setSchoolClasses(scl.stream().map(item -> new DomMapEntry<>(item.buildPersistenceId(), item.buildDomSchoolClass())).collect(Collectors.toList()));
       } else {
+        scl = new ArrayList<>();
+        dom.getSchoolClasses().forEach(entry -> {
+          DomSchoolClassId id = new DomSchoolClassId(entry.getKey());
+          try {
+            PersistentSchoolClass psc = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(id));
+            scl.add(psc);
+            entry.setValue(psc.buildDomSchoolClass());
+          } catch (Dwo2Exception e) {
+            entry.setValue(null);
+            LOG.log(Level.WARNING, "retrieve sc " + entry.getKey(), e);
+          }
+        });
+      }
+      List<PersistentStudentOfClass> studentOfClassList;
+      Map<Long,PersistentUser> studentMap = new HashMap<>();
+      if ( dom.getStudentsOfClasses() == null) {
+        studentOfClassList = 
+        scl.stream().flatMap(item -> {
+          List<PersistentStudentInClass> cicList = StudentInClassManager.findEntities(item);
+          cicList.forEach(cic -> studentMap.put(cic.getUser().getId(), cic.getUser()));
+          return cicList.stream().map(PersistentStudentInClass::getStudentOfClass);
+        }).collect(Collectors.toList());
+        dom.setStudentsOfClasses(studentOfClassList.stream().map(item -> new DomMapEntry<>(item.buildPersistenceId(), item.buildDomStudentOfClass())).collect(Collectors.toList()));
+      } else {
+        studentOfClassList = new ArrayList<>();
+        dom.getStudentsOfClasses().forEach(entry -> {
+          DomStudentOfClass id = new DomStudentOfClass(); id.setId(entry.getKey());
+          PersistentStudentOfClass psoc = StudentOfClassManager.findEntity(MySQLPersistenceId.getNativeId(id));
+          Long userID = psoc.getPersistentStudentOfClassPK().getUserID();
+          studentMap.put(userID, UserManager.findEntity(userID));
+          studentOfClassList.add(psoc);
+          entry.setValue(psoc.buildDomStudentOfClass());
+        });
+      }
+      if ( dom.getStudents() == null) {
+        dom.setStudents(studentMap.values()
+            .stream().map(item -> new DomMapEntry<PersistenceId,DomStudent>(item.buildPersistenceId(),item.buildDomStudent()))
+            .collect(Collectors.toList()));
+      } else {
+        Map<Long,PersistentUser> allStudents = new HashMap<>(studentMap);
+        studentMap.clear();;
+        dom.getStudents().forEach(entry -> {
+          DomStudent id = new DomStudent(); id.setId(entry.getKey());
+          try {
+            Long pid = MySQLPersistenceId.getNativeId(id);
+            PersistentUser u = allStudents.get(pid);
+            if (u != null) {
+              studentMap.put(pid, u);
+              entry.setValue(u.buildDomStudent());
+            } else {
+              entry.setValue(null);
+            }
+          } catch (Dwo2Exception e) {
+            entry.setValue(null);
+          }
+        });
+      }
+      
+      if (dom.getCourses() == null) {
         
       }
+      
+      
+      
+      
       return dom;
     }
     
