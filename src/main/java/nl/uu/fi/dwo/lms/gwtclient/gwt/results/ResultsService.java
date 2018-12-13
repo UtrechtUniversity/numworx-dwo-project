@@ -106,7 +106,7 @@ public class ResultsService implements SwitchViewEventHandler {
       dom.setCourses(courseList.stream()
         .map( item -> new DomMapEntry<>(item.getId(), item))
         .collect(Collectors.toList()));
-      return dwoGlobalVars.getProfile().flatMap((profile) -> manager.selectedTeacherResults(context, profile, dom));
+      return dwoGlobalVars.getProfile().flatMap((profile) -> manager.selectedTeachersResults(context, profile, dom));
     }
     
     

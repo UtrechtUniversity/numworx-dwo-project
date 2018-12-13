@@ -171,7 +171,7 @@ public class ResultsPresenter {
           DomMappedResultsPerTeacher map = mappedResults.getValue();
           DomSchoolClass schoolclass = findSchoolClass(map, new PersistenceId(classid));
           Collection<DomCourse> courseList = new ArrayList<>(courses.length());
-          for(int i = 0; i > courses.length(); i++) {
+          for(int i = 0; i < courses.length(); i++) {
             courseList.add(
               map.getCourses().get(new PersistenceId(courses.get(i)))
               );
