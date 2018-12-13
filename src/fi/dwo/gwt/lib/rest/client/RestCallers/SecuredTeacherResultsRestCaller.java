@@ -25,8 +25,8 @@ public interface SecuredTeacherResultsRestCaller extends RestService {
     public void getTeachersResults(@PathParam("id") String id, RestDwoProfile aProfile,MethodCallback<DomResultsPerTeacher> callback);
     
     @PUT
-    @Path("/sec:{id}/teacher/results/selectedTeacherResults")
-    public void selectedTeacherResult(@PathParam("id") String id, RestResultsPerTeacher rest, MethodCallback<DomResultsPerTeacher> callback);
+    @Path("/sec:{id}/teacher/results/selectedTeachersResults")
+    public void selectedTeachersResult(@PathParam("id") String id, RestResultsPerTeacher rest, MethodCallback<DomResultsPerTeacher> callback);
     
     @PUT
     @Produces({"application/json"})

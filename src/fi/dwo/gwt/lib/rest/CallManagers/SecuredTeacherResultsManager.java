@@ -57,10 +57,10 @@ public class SecuredTeacherResultsManager {
         service.getTeachersResults(PathId.getId(domContext), restPut, new Callback<DomResultsPerTeacher>(callBack));
     }
 
-    public Promise<DomResultsPerTeacher> selectedTeacherResults(DomContext context, DomDwoProfile profile, DomResultsPerTeacher dom) {
+    public Promise<DomResultsPerTeacher> selectedTeachersResults(DomContext context, DomDwoProfile profile, DomResultsPerTeacher dom) {
         RestResultsPerTeacher rest = new RestResultsPerTeacher(context, profile, dom);
         PromiseCallback<DomResultsPerTeacher> callback = new PromiseCallback<>();
-        service.selectedTeacherResult(PathId.getId(context), rest, callback);
+        service.selectedTeachersResult(PathId.getId(context), rest, callback);
         return callback.getPromise();
     }
     
