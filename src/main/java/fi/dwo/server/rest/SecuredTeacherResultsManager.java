@@ -41,6 +41,7 @@ import fi.dwo.server.PersistentDataManagers.util.CourseInClassManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -52,6 +53,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.security.PermitAll;
 import javax.persistence.PersistenceException;
@@ -104,7 +106,9 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
       TeacherState_HR_P_R_S_SG_U state = s1
       .buildSchoolAdminTeacher().setTeacher().addProfile(rest.getDomDwoProfile());
   
+      PersistentDwoProfile profile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomDwoProfile()));
       DomResultsPerTeacher dom = rest.getDomResultsPerTeacher();
+      dom.setTeacher(s1.getUser().buildDomTeacher());
       List<PersistentSchoolClass> scl;
       if ( dom.getSchoolClasses() == null) {
         scl = SchoolClassUtilManager.getSchoolClassesOfTeacher(phr);
@@ -168,13 +172,70 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
         });
       }
       
+      Map<Long, PersistentCourse> courseMap;
+      courseMap = new HashMap<>();
+      dom.setClassCourses(new ArrayList<>());
+      scl.forEach(schoolClass -> {
+        try {
+          List<PersistentCourseInClass> list = CourseInClassManager.findLeaveEntities(schoolClass, profile);
+          list.forEach(item -> {
+            courseMap.put(item.getCourse().getCourseID(), item.getCourse());
+            dom.getClassCourses().add(new DomMapEntry<PersistenceId, DomClassCourse4Teacher>(item.getClassCourse().buildPersistenceId(), item.getClassCourse().buildDomClassCourse4Teacher()));
+          });
+        } catch (Dwo2Exception e) {
+          LOG.log(Level.WARNING, "find classcourse", e);
+        }
+      });
+      
       if (dom.getCourses() == null) {
-        
+        dom.setCourses(courseMap.values().stream().map(item-> new DomMapEntry<>(item.buildPersistenceId(), item.buildDomCourse())).collect(Collectors.toList()));
+      } else {
+          Map<Long, PersistentCourse> copy = new HashMap<>(courseMap);
+          courseMap.clear();
+          dom.getCourses().forEach(entry -> {
+              DomCourse id = new DomCourse(); id.setId(entry.getKey());
+              try {
+                Long pid = MySQLPersistenceId.getNativeId(id);
+                PersistentCourse c = copy.get(pid);
+                if (c != null) {
+                  entry.setValue(c.buildDomCourse());
+                  courseMap.put(pid, c);
+                } else {
+                  entry.setValue(null);
+                }
+              } catch (Dwo2Exception e) {
+                entry.setValue(null);
+              }
+           });       
       }
-      
-      
-      
-      
+      Collection<PersistentScoContext> scos = new ArrayList<>();
+      dom.setScoContexts(
+          courseMap.values().stream().flatMap((PersistentCourse c) -> ScoContextManager.findEntities(c).stream()
+            .map(sco -> {
+              scos.add(sco);
+              return new DomMapEntry<>(sco.buildPersistenceId(), sco.buildDomScoContext());
+              }
+            ))
+            .collect(Collectors.toList())
+      );
+      PersistentSchool school = s1.getSchool();
+      PersistentSchoolGroup sg = SchoolGroupManager.findEntity(school, RoleType.STUDENT); 
+      dom.setStudentScoContexts(
+        studentMap.values().stream()
+        .flatMap( (PersistentUser user) ->
+          {
+              PersistentHasRolePK key = new PersistentHasRolePK(user.getId(), sg.getSchoolGroupID());
+              return scos.stream().flatMap(scoContext -> {
+                Stream<PersistentStudentScoContext> stream = null;
+                List<PersistentStudentScoContext> list = StudentScoContextManager.findEntities(scoContext, key);
+                if(list != null) stream = list.stream();
+                return stream;
+              });
+          })
+          .map(item -> new DomMapEntry<PersistenceId, DomStudentScoContext>(item.buildPersistenceId(), item.buildDomStudentScoContext()))
+          .collect(Collectors.toList())
+     );
+      dom.setFetchTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
       return dom;
     }
     
