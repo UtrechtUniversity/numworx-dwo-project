@@ -206,7 +206,19 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
               } catch (Dwo2Exception e) {
                 entry.setValue(null);
               }
-           });       
+           });
+          List<DomMapEntry<PersistenceId, DomClassCourse4Teacher>> reduced = dom.getClassCourses()
+              .stream()
+              .filter(entry -> {
+                DomCourse id = new DomCourse(); id.setId(entry.getValue().getCourseId());
+                try {
+                  return courseMap.containsKey(MySQLPersistenceId.getNativeId(id));
+                } catch (Dwo2Exception e) {
+                  return false;
+                }
+              })
+              .collect(Collectors.toList());
+          dom.setClassCourses(reduced);
       }
       Collection<PersistentScoContext> scos = new ArrayList<>();
       dom.setScoContexts(

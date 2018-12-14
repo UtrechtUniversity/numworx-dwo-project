@@ -183,28 +183,28 @@ DROP TABLE IF EXISTS `tblcourse`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tblcourse` (
-  `courseID` int(11) NOT NULL AUTO_INCREMENT,
-  `schoolID` int(11) DEFAULT NULL,
-  `name` varchar(40) NOT NULL DEFAULT '',
-  `description` mediumtext NOT NULL,
-  `image` varchar(128) DEFAULT NULL,
-  `dwoProfileID` int(11) NOT NULL DEFAULT '0',
-  `imageData` longblob,
-  `export` tinyint(1) DEFAULT '0',
-  `withChildren` tinyint(1) DEFAULT '0',
-  `parentID` int(11) NOT NULL DEFAULT '0',
-  `notVisible` tinyint(11) NOT NULL DEFAULT '0',
-  `sequencenr` int(11) DEFAULT NULL,
-  `optlock` int(11) DEFAULT '0',
-  `treeIndex` varchar(250) DEFAULT NULL,
-  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
-  `del` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`courseID`),
-  UNIQUE KEY `AK_IDENTIFIER_1` (`name`,`schoolID`,`dwoProfileID`,`parentID`),
-  KEY `SCHOOL_COURSE_FK` (`schoolID`),
-  KEY `AK_DWOPROFILE` (`dwoProfileID`),
-  KEY `AK_PARENTID` (`parentID`),
-  CONSTRAINT `tblcourse_ibfk_1` FOREIGN KEY (`schoolID`) REFERENCES `tblschool` (`schoolID`)
+`courseID` int(11) NOT NULL AUTO_INCREMENT,
+`schoolID` int(11) DEFAULT NULL,
+`name` varchar(40) NOT NULL DEFAULT '',
+`description` mediumtext NOT NULL,
+`image` varchar(128) DEFAULT NULL,
+`dwoProfileID` int(11) NOT NULL DEFAULT '0',
+`imageData` longblob,
+`export` tinyint(1) DEFAULT '0',
+`withChildren` tinyint(1) DEFAULT '0',
+`parentID` int(11) NOT NULL DEFAULT '0',
+`notVisible` tinyint(11) NOT NULL DEFAULT '0',
+`sequencenr` int(11) DEFAULT '0',
+`optlock` int(11) DEFAULT '0',
+`treeIndex` varchar(250) DEFAULT NULL,
+`lastChangeTimeStamp` bigint(20) DEFAULT '0',
+`del` tinyint(4) NOT NULL DEFAULT '0',
+`trashID` bigint(20) NOT NULL DEFAULT '0',
+PRIMARY KEY (`courseID`),
+UNIQUE KEY `AK_IDENTIFIER_1` (`name`,`schoolID`,`dwoProfileID`,`parentID`,`trashID`),
+KEY `SCHOOL_COURSE_FK` (`schoolID`),
+KEY `AK_DWOPROFILE` (`dwoProfileID`),
+KEY `AK_PARENTID` (`parentID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -214,7 +214,7 @@ CREATE TABLE `tblcourse` (
 
 LOCK TABLES `tblcourse` WRITE;
 /*!40000 ALTER TABLE `tblcourse` DISABLE KEYS */;
-INSERT INTO `tblcourse` VALUES (13333,3,'school course01','Course01 Description',NULL,1,NULL,1,1,0,0,0,0,NULL,0,0),(1,NULL,'course01','Course01 Description',NULL,1,NULL,1,1,0,0,0,0,NULL,0,0),(2,NULL,'course02','Course02 Description',NULL,1,NULL,0,1,0,0,1,0,NULL,0,0),(3,NULL,'course03','H4sIAAAAAAAAAFVUyc7zthX1nzRoJiBIU6DbBPm7MhBZky0tikazKFuTNWsTaB6twRosad3H6QMU6Ot02b5D9WVEDkiC5CUJHpx7zz//d/hoeB6+KoM5+G4ai/o7MRjyMQjr5Kt/f/HXb6T//OvDwwf84dO6DWI+iMb2CQ6fjPkzGfK2jpfu798f3vDl6+N9/MvePxsPn7dd/AyifPwB/gEe3/1XxAZA/QIB0QdrZnXaFFx4KJTY729GpmZVF6tYwQIB2NfQtzhjMWKxU7YiRGbZvBn4KMWKSNtmTNNEeqQ8CcoQbDJrKYrt+4vIgc25yysmtwWdU3KeJiJTfWlV8YKB5CNirlDW4byjRkOyDS/F5o9zVVMzlZ1jkhraSlBvHDc7voTXg6a8+FOr84Uf17cRIM+Opvstt2tz6GpQ90qLcxPjAE1qk4tNpvN9dV6RV7i6M+QkX2UepMIhAaW9SePoNqTnrcNV7MXQDM4ADtL1AG1P5p022V5Fqk6+Lkj4vNLF3DKEHCyVlOoNi+A2hA1L3E1QKhbpDXVI5aSsL0YBTtJODNJi5WbBAzTYSZRvqqWsykqoYoGRbh6icHY8MVmC+fxTUZzt3qMlFuncdemywmgmHuxi0tuqtm5xurbasqqXBtnENbcodL5WK3S/ChGu+9L+GVu+PrK+9Be+eFRtI4QCn0IWBWtamnF+4Qp52NK7un8bD38KgmYMaioai7kYk7014+EdvKdF8OvWnhaHz9QmTp5xktRfv63eA5kSuPcypb0fD//4Xcrw81a3AjyBnFaZabnxwjwy+nYniHIwi1JiuU6CbUy5HPt2TEwxesmmgMku2+CFUU9FVNVHy0lY6VULltMt9wZXjcqmU09lGZayIoyWbjW9US1Fet0mwTr1E5WP66DJpiBLxsMHTf0rNfXn9E6aNx5v1P7waOP90LvTePii7ZoimV5ymyV1UVbj4aM0qIc9+ucsqdquS+o4+e2F38KfF80wJnVdNNm+/eHp91UDm7IDmRZNH8PYNZQHGnSCxGWZKGzUAlpwNfixr0BuszxqIBvkP5uR2HBsNNWC9jyB4UtPoAeToIoYolaA6dfzAkxpM+EKv4KtYWM0fUM8+0oalFg5uhxQQ0N4cvCTuVy9l6lihOOOeIuI2gZpffxAnNJTszLELrv+N5eXH7Kr0lzaoe7UH0VbKKAbZN/w8KmEpKChtFiDvfRL4nG1WY/c6AzAwYPAfFqbYfWJEuQkzhe4gqMz+4g2mtW41u5h6zZ5Z0pJQ1i2zm5YzwJzbXDsqDbaGUpQKTQuqWJY02i7TeIlXDGbJJ72F/QCNb5zdXgnaF07yoDlRYRgKNVGWmBkbpvQN4IsPQyxES394sJiR3J4Fcpr1J6ZsVeq4EZzZyyrRI2s4ZPSTH5UgsQN7oWbkNJrWUHiiU62LJSM9XidD7bcTFfZ3AKnUs/SKZMJkl7up+vZZmwwyQTBDpTFG0MqgyiacFmiklLba7JybvNTpS8ymB0d7C5Rl8l+lQiCh+ArSVBa6h1xcau4lNFLNwdsvU04k921MRu2s8HW1bhbVMcgbqA/81Tgd1vxV6RrmNN2g41CXRg3u225kdocPeFgQXNwnA0GwqWB5tmxH7Y2pRY/gQe7DRwPS1i2EqhxMB1JkieE0GxUqgBu6tOuAruhRyoAffnMe/mC1CJy4h1nfFjC4ktaQuhp7OF2I/XYcRMddpXWVN2tppWTtTJWbQoqvk2rZKn4rZzACUpfTv8A55G9eKpdw8A/G5fp9uJex63wPBa1Z7VZ5eMiLzxoBbJyEYJ041nXZGcMp/uJ+6lc/xhmUVu3z332Lf8jlv8D6RqvY+AGAAA=',NULL,1,NULL,0,0,1,0,1,0,NULL,0,0),(4,NULL,'course04','Course04 Description',NULL,1,NULL,0,0,1,0,2,0,NULL,0,0),(5,NULL,'course05','Course05 Description',NULL,1,NULL,0,0,2,0,3,0,NULL,0,0),(6,NULL,'course06','Course06 Description',NULL,1,NULL,0,0,2,0,NULL,0,NULL,0,0),(7,NULL,'course11','Course11 Description',NULL,1,NULL,0,1,0,0,2,0,NULL,0,0),(8,NULL,'course12','Course12 Description',NULL,1,NULL,0,1,0,0,3,0,NULL,0,0),(9,NULL,'course13','Course13 Description',NULL,1,NULL,0,0,7,0,NULL,0,NULL,0,0),(10,NULL,'course14','Course14 Description',NULL,1,NULL,0,0,7,0,NULL,0,NULL,0,0),(11,NULL,'course15','Course15 Description',NULL,1,NULL,0,0,8,0,NULL,0,NULL,0,0),(12,NULL,'course16','Course16 Description',NULL,1,NULL,0,0,8,0,NULL,0,NULL,0,0);
+INSERT INTO `tblcourse` VALUES (13333,3,'school course01','Course01 Description',NULL,1,NULL,1,1,0,0,0,0,NULL,0,0,0),(1,NULL,'course01','Course01 Description',NULL,1,NULL,1,1,0,0,0,0,NULL,0,0,0),(2,NULL,'course02','Course02 Description',NULL,1,NULL,0,1,0,0,1,0,NULL,0,0,0),(3,NULL,'course03','H4sIAAAAAAAAAFVUyc7zthX1nzRoJiBIU6DbBPm7MhBZky0tikazKFuTNWsTaB6twRosad3H6QMU6Ot02b5D9WVEDkiC5CUJHpx7zz//d/hoeB6+KoM5+G4ai/o7MRjyMQjr5Kt/f/HXb6T//OvDwwf84dO6DWI+iMb2CQ6fjPkzGfK2jpfu798f3vDl6+N9/MvePxsPn7dd/AyifPwB/gEe3/1XxAZA/QIB0QdrZnXaFFx4KJTY729GpmZVF6tYwQIB2NfQtzhjMWKxU7YiRGbZvBn4KMWKSNtmTNNEeqQ8CcoQbDJrKYrt+4vIgc25yysmtwWdU3KeJiJTfWlV8YKB5CNirlDW4byjRkOyDS/F5o9zVVMzlZ1jkhraSlBvHDc7voTXg6a8+FOr84Uf17cRIM+Opvstt2tz6GpQ90qLcxPjAE1qk4tNpvN9dV6RV7i6M+QkX2UepMIhAaW9SePoNqTnrcNV7MXQDM4ADtL1AG1P5p022V5Fqk6+Lkj4vNLF3DKEHCyVlOoNi+A2hA1L3E1QKhbpDXVI5aSsL0YBTtJODNJi5WbBAzTYSZRvqqWsykqoYoGRbh6icHY8MVmC+fxTUZzt3qMlFuncdemywmgmHuxi0tuqtm5xurbasqqXBtnENbcodL5WK3S/ChGu+9L+GVu+PrK+9Be+eFRtI4QCn0IWBWtamnF+4Qp52NK7un8bD38KgmYMaioai7kYk7014+EdvKdF8OvWnhaHz9QmTp5xktRfv63eA5kSuPcypb0fD//4Xcrw81a3AjyBnFaZabnxwjwy+nYniHIwi1JiuU6CbUy5HPt2TEwxesmmgMku2+CFUU9FVNVHy0lY6VULltMt9wZXjcqmU09lGZayIoyWbjW9US1Fet0mwTr1E5WP66DJpiBLxsMHTf0rNfXn9E6aNx5v1P7waOP90LvTePii7ZoimV5ymyV1UVbj4aM0qIc9+ucsqdquS+o4+e2F38KfF80wJnVdNNm+/eHp91UDm7IDmRZNH8PYNZQHGnSCxGWZKGzUAlpwNfixr0BuszxqIBvkP5uR2HBsNNWC9jyB4UtPoAeToIoYolaA6dfzAkxpM+EKv4KtYWM0fUM8+0oalFg5uhxQQ0N4cvCTuVy9l6lihOOOeIuI2gZpffxAnNJTszLELrv+N5eXH7Kr0lzaoe7UH0VbKKAbZN/w8KmEpKChtFiDvfRL4nG1WY/c6AzAwYPAfFqbYfWJEuQkzhe4gqMz+4g2mtW41u5h6zZ5Z0pJQ1i2zm5YzwJzbXDsqDbaGUpQKTQuqWJY02i7TeIlXDGbJJ72F/QCNb5zdXgnaF07yoDlRYRgKNVGWmBkbpvQN4IsPQyxES394sJiR3J4Fcpr1J6ZsVeq4EZzZyyrRI2s4ZPSTH5UgsQN7oWbkNJrWUHiiU62LJSM9XidD7bcTFfZ3AKnUs/SKZMJkl7up+vZZmwwyQTBDpTFG0MqgyiacFmiklLba7JybvNTpS8ymB0d7C5Rl8l+lQiCh+ArSVBa6h1xcau4lNFLNwdsvU04k921MRu2s8HW1bhbVMcgbqA/81Tgd1vxV6RrmNN2g41CXRg3u225kdocPeFgQXNwnA0GwqWB5tmxH7Y2pRY/gQe7DRwPS1i2EqhxMB1JkieE0GxUqgBu6tOuAruhRyoAffnMe/mC1CJy4h1nfFjC4ktaQuhp7OF2I/XYcRMddpXWVN2tppWTtTJWbQoqvk2rZKn4rZzACUpfTv8A55G9eKpdw8A/G5fp9uJex63wPBa1Z7VZ5eMiLzxoBbJyEYJ041nXZGcMp/uJ+6lc/xhmUVu3z332Lf8jlv8D6RqvY+AGAAA=',NULL,1,NULL,0,0,1,0,1,0,NULL,0,0,0),(4,NULL,'course04','Course04 Description',NULL,1,NULL,0,0,1,0,2,0,NULL,0,0,0),(5,NULL,'course05','Course05 Description',NULL,1,NULL,0,0,2,0,3,0,NULL,0,0,0),(6,NULL,'course06','Course06 Description',NULL,1,NULL,0,0,2,0,NULL,0,NULL,0,0,0),(7,NULL,'course11','Course11 Description',NULL,1,NULL,0,1,0,0,2,0,NULL,0,0,0),(8,NULL,'course12','Course12 Description',NULL,1,NULL,0,1,0,0,3,0,NULL,0,0,0),(9,NULL,'course13','Course13 Description',NULL,1,NULL,0,0,7,0,NULL,0,NULL,0,0,0),(10,NULL,'course14','Course14 Description',NULL,1,NULL,0,0,7,0,NULL,0,NULL,0,0,0),(11,NULL,'course15','Course15 Description',NULL,1,NULL,0,0,8,0,NULL,0,NULL,0,0,0),(12,NULL,'course16','Course16 Description',NULL,1,NULL,0,0,8,0,NULL,0,NULL,0,0,0);
 /*!40000 ALTER TABLE `tblcourse` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -564,23 +564,25 @@ DROP TABLE IF EXISTS `tblscocontext`;
 CREATE TABLE `tblscocontext` (
   `scoID` int(11) NOT NULL AUTO_INCREMENT,
   `courseID` int(11) NOT NULL DEFAULT '0',
+  `dwoProfileID` int(11) DEFAULT NULL,
   `appletID` int(11) NOT NULL DEFAULT '0',
   `sconame` varchar(40) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `showscore` tinyint(1) DEFAULT '0',
   `sequencenr` int(11) NOT NULL DEFAULT '0',
+  `changeTimeStamp` bigint(20) DEFAULT '0',
+  `classID` int(11) DEFAULT NULL,
+  `userID` int(11) DEFAULT NULL,
   `optlock` int(11) DEFAULT '0',
   `lastChangeTimeStamp` bigint(20) DEFAULT '0',
   `del` tinyint(4) NOT NULL DEFAULT '0',
-  `publishState` tinyint(4) NOT NULL DEFAULT '0',
-  `classID` int(11) DEFAULT NULL,
+  `trashID` bigint(20) NOT NULL DEFAULT '0',
+  `publishState` tinyint(4) NOT NULL DEFAULT '2',
   `urnID` int(11) DEFAULT NULL,
-  `scoType` tinyint(4) DEFAULT '0',
-  `userID` int(11) DEFAULT NULL,
+  `scoType` tinyint(4) NOT NULL DEFAULT '0',
   `schoolID` int(11) DEFAULT NULL,
-  `dwoProfileID` int(11) DEFAULT NULL,
   `modelID` int(11) DEFAULT NULL,
   PRIMARY KEY (`scoID`),
-  UNIQUE KEY `AK_IDENTIFIER_1` (`sconame`,`courseID`),
+  UNIQUE KEY `AK_IDENTIFIER_1` (`sconame`,`courseID`,`trashID`),
   KEY `SCO_APPLET_FK` (`appletID`),
   KEY `SCO_COURSE_FK` (`courseID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=392 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -592,7 +594,10 @@ CREATE TABLE `tblscocontext` (
 
 LOCK TABLES `tblscocontext` WRITE;
 /*!40000 ALTER TABLE `tblscocontext` DISABLE KEYS */;
-INSERT INTO `tblscocontext` VALUES (1,5,17,'Optellen en aftrekken',0,1,0,0,0,0,NULL,NULL,1,NULL,NULL,NULL,NULL),(2,6,17,'Drie getallen optellen en aftrekken',0,2,0,0,0,0,NULL,NULL,1,NULL,NULL,NULL,NULL),(3,14,17,'Drie getallen optellen en aftrekken',0,2,0,0,0,0,NULL,NULL,1,NULL,3,NULL,1);
+INSERT INTO `tblscocontext` VALUES 
+(1, 5,1,17,'Optellen en aftrekken'               ,0,1,0,0,0,0,NULL,NULL,0,1,NULL,NULL,NULL,NULL),
+(2, 6,1,17,'Drie getallen optellen en aftrekken' ,0,2,0,0,0,0,NULL,NULL,0,1,NULL,NULL,NULL,NULL),
+(3,14,1,17,'Drie getallen optellen en aftrekken' ,0,2,0,0,0,0,NULL,NULL,0,1,NULL,3,   NULL,1);
 /*!40000 ALTER TABLE `tblscocontext` ENABLE KEYS */;
 UNLOCK TABLES;
 
