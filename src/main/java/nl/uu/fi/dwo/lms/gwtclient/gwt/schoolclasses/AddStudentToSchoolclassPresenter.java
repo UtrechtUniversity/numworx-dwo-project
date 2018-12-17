@@ -25,6 +25,10 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessage;
+import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
+
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -64,9 +68,6 @@ public class AddStudentToSchoolclassPresenter {
         FAILURE = new LoggingFailure(LOG, anEventBus);
         
     }
-//    public AddStudentToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
-//      this(anEventBus, aDwoGlobalVars, new PersonsServiceTeacher(aDwoGlobalVars));
-//    }
 
     public void init(DomSchoolClass aSchoolClass) {
         view.clear();
@@ -112,38 +113,6 @@ public class AddStudentToSchoolclassPresenter {
     public void setView(Display view) {
         this.view = view;
     }
-//
-//    @JsMethod
-//    public void FindStudentsOfTeacher(String username, String Firstname, String insertion, String familyName, String email) {
-//        Promise<List<DomStudent>> promise;
-//        promise = manager.getTeachersStudents();
-//        //TODO add get TeachersStudents() in gwt-lib;
-//        // onSuccess update view
-//        promise.then(new Success<List<DomStudent>, Void>() {
-//            @Override
-//            public Promise<Void> call(Promise<List<DomStudent>> resolved) throws Exception {
-//                Map<String, DomStudent> studentMap = new HashMap<>();
-//                resolved.getValue().forEach((k -> studentMap.put(k.getId().getIdString(), k)));
-//                view.showStudents(studentMap);
-//                return null;
-//            }
-//        },
-//                new Failure() {
-//            @Override
-//            public void fail(Promise<?> resolved) throws Exception {
-//                Throwable fail = resolved.getFailure();
-//                if (fail instanceof Dwo2Exception) {
-//                    LOG.log(Level.SEVERE, fail.getMessage());
-//                    eventBus.fireEvent(new MessageDialogWithOKEvent((Dwo2Exception) fail));
-//                } else {
-//                    LOG.log(Level.SEVERE, fail.getMessage());
-//                    eventBus.fireEvent(new MessageDialogWithOKEvent(fail.getMessage()));
-//                    //throw directly
-//                }
-//            }
-//        }
-//        );
-//    }
 
     @JsMethod
     public void AddStudentToSchoolClass(String studentId) {
@@ -158,7 +127,7 @@ public class AddStudentToSchoolclassPresenter {
         promise.then(new Success<Boolean, Void>() {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
-                eventBus.fireEvent(new MessageDialogWithOKEvent("Success"));
+                eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_Class_StudentsAdded()));
                 updateViewData();
                 return null;
             }

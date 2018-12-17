@@ -261,6 +261,7 @@ public class ImportPersonsPresenter {
         promises.add(promise);
       }
       Promises.all(promises).then(p-> {
+        eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.NUN_DLG_Persons_PersonsImported()));
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.PERSONS));
         return null;
       }, FAILURE).then( null, p-> {
