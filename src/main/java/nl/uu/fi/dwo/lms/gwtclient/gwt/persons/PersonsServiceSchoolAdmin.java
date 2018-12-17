@@ -17,9 +17,11 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
@@ -159,5 +161,12 @@ public class PersonsServiceSchoolAdmin extends PersonsService {
     return manager2.submitTeacher(context, newUser);
   }
 
+  public Promise<List<DomSchoolAdmin>> getSchoolAdminsInSchool() {
+     return manager2.getSchoolAdminsInSchool(context);
+  }
+
+  public Promise<Boolean> updateSchool(DomSchoolFull school) {
+    return manager2.updateSchool(context, school);
+  } 
   
 }
