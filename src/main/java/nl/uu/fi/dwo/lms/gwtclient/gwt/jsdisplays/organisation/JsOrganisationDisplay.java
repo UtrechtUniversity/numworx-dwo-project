@@ -38,4 +38,19 @@ public class JsOrganisationDisplay {
    */
   public static native void setLoadingTableMessage();
 
+  /**
+   * init "editModules"
+   */
+  public static native void initEditModules(boolean on);
+
+  /**
+   * init "chooseClass"
+   */
+  public static native void initChooseClass(boolean on);
+  
+  /**
+   * show schoolClassess
+   */
+  public static native void showSchoolClasses(JavaScriptObject json);
+  
 }

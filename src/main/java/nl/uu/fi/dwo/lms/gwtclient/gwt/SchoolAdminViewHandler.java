@@ -87,8 +87,10 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
             viewFactory.getMainView().showAddTeacherToSchoolClassView();
             presenterFactory.getAddTeacherToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
             break;
-
-        
+        case ORGANISATION:
+            viewFactory.getMainView().showOrganisationView();
+            presenterFactory.getOrganisationPresenter().init();
+            break;
         case LOGIN:
           viewFactory.getMainView().showLoginView();
           presenterFactory.getLoginPresenter().init();
