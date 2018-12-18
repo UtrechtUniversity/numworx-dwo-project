@@ -2,7 +2,9 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.organisation;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -92,7 +94,10 @@ public class OrganisationPresenter {
     Promise<List<DomSchoolClass>> pp = service.getTeachersSchoolClasses().then(
       p -> {
         List<DomSchoolClass> list = p.getValue();
-        HashMap<String,TaggedDomSchoolClass> map = new HashMap<>();
+        LinkedHashMap<String,TaggedDomSchoolClass> map = new LinkedHashMap<>();
+        Collections.sort(list, (a,b) -> {
+          return String.CASE_INSENSITIVE_ORDER.compare(a.getSchoolClassName(), b.getSchoolClassName());
+        });
         list.forEach(item -> map.put(item.getId().toString(), new TaggedDomSchoolClass(item)));
         view.showSchoolClasses(map);
         schoolClasses = map;

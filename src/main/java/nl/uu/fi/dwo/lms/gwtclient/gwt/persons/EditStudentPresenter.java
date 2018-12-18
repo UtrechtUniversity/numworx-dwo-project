@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.persons;
 
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,7 @@ import javax.inject.Inject;
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
@@ -53,13 +53,14 @@ import org.osgi.util.promise.Success;
 public class EditStudentPresenter {
 
     private static final Logger LOG = Logger.getLogger(EditStudentPresenter.class.getName());
-    private DwoGlobalVars dwoGlobalVars;
+    DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
     private Display view;
-    private PersonsService manager;
-    private Map<String, TaggedDomSchoolClass> taggedSchoolClassMap;
+    PersonsService manager;
+    Map<String, TaggedDomSchoolClass> taggedSchoolClassMap;
     private DomUserFull fullUser;
-    private DomUser user;
+    DomUser user;
+    Failure FAILURE;
 
     public interface Display extends BasicDisplay {
 
@@ -92,6 +93,7 @@ public class EditStudentPresenter {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         manager = m;
+        FAILURE = new LoggingFailure(LOG, anEventBus);
     }
 
     public void init(DomUser aUser) {
@@ -137,7 +139,7 @@ public class EditStudentPresenter {
 //        });
 //    }
     public void initView(DomUser aUser) {
-        Promise p = Promises.resolved(true);
+        Promise<Boolean> p = Promises.resolved(true);
 
         //fetch schoolclasses
         p = p.then((resolved) -> {
@@ -161,11 +163,7 @@ public class EditStudentPresenter {
                     taggedSchoolClassMap.get(v.getId().getIdString()).setTag(true);
                 });
                 view.setSchoolClasses(taggedSchoolClassMap);
-                Predicate<TaggedDomSchoolClass> p1 = e -> e.isTag() == true;
-                if (taggedSchoolClassMap.values().stream().filter(p1).count() < 1) {
-                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.PERSONS));
-                    return Promises.resolved(false);
-                }
+                return verifyStudentInTeachersClass();
             }
             return Promises.resolved(true);
         });
@@ -173,23 +171,14 @@ public class EditStudentPresenter {
         if (aUser.getSingleSchool()) {
             p = p.then((resolved) -> {
                 if (resolved.getValue() != null && resolved.getValue().equals(true)) {
-                    DomContext ctx = new DomContext();
                     DomGetSingleSchoolStudent student = new DomGetSingleSchoolStudent(new DomStudent(aUser));
-                    ctx.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
                     for (TaggedDomSchoolClass sc : taggedSchoolClassMap.values()) {
                         if (sc.isTag()) {
                             student.setDomSchoolClass(sc.getSchoolClass());
                             break;
                         }
                     }
-                    if (student.getDomSchoolClass() != null) {
-                        RestGetSingleSchoolStudent restData = new RestGetSingleSchoolStudent();
-                        restData.setRestContext(ctx);
-                        restData.setDomGetSingleSchoolStudent(student);
-                        return manager.getSingleSchoolStudent(restData);
-                    } else {
-                        return Promises.resolved(null);
-                    }
+                    return getSingleSchoolStudent(student);
                 }
                 return Promises.resolved(null);
             }).then((resolved) -> {
@@ -204,37 +193,35 @@ public class EditStudentPresenter {
             view.setUser(aUser);
         }
 
-        p.then(null, (resolved) -> {
-            Throwable fail = resolved.getFailure();
-            if (fail instanceof Dwo2Exception) {
-                LOG.log(Level.SEVERE, ((Dwo2Exception) fail).getDwo2Message());
-                eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
-            } else if (fail != null) {
-                LOG.log(Level.SEVERE, fail.getMessage());
-                eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
-            } //throw directly
-        });
+        p.then(null, FAILURE);
     }
+
+Promise<DomSingleSchoolStudent> getSingleSchoolStudent(DomGetSingleSchoolStudent student) {
+  if (student.getDomSchoolClass() != null) {
+      RestGetSingleSchoolStudent restData = new RestGetSingleSchoolStudent();
+      DomContext ctx = new DomContext();
+      ctx.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
+      restData.setRestContext(ctx);
+      restData.setDomGetSingleSchoolStudent(student);
+      return manager.getSingleSchoolStudent(restData);
+  } else {
+      return Promises.resolved(null);
+  }
+}
+
+Promise<Boolean> verifyStudentInTeachersClass() {
+  Predicate<TaggedDomSchoolClass> p1 = TaggedDomSchoolClass::isTag;
+  if (taggedSchoolClassMap.values().stream().filter(p1).count() < 1) {
+      eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.PERSONS));
+      return Promises.resolved(false);
+  } else 
+      return Promises.resolved(true);
+}
 
     @JsMethod
     public void removeStudentFromSchoolClass(String schoolClassId) {
         Promise<Boolean> p = Promises.resolved(true); //empty promise
-        Predicate<TaggedDomSchoolClass> p1 = e -> e.isTag() == true;
-        //taggedSchoolClassMap.values().stream().anyMatch(p1);
-        if (taggedSchoolClassMap.values().stream().filter(p1).count() <= 1) {
-            p = p.then(new Success<Boolean, Boolean>() {
-                @Override
-                //Are you sure?
-                public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
-                    //String msg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_EDITSTUDENT_Q_RemoveClassFromStudent(), sracData.get(hasRoleId).getSchool().getSchoolName());
-                    String msg = DwoLocalesForGWT.instance.NUM_DLG_EDITSTUDENT_Q_RemoveClassFromStudent();
-                    AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(msg);
-                    AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
-                    eventBus.fireEvent(event);
-                    return dialogPromise.getPromise();
-                }
-            });
-        }
+        p = isInTeachersClass(p);
 
         p.then((resolved) -> {
             if (resolved.getValue() == false) {
@@ -267,6 +254,26 @@ public class EditStudentPresenter {
         });
     }
 
+    Promise<Boolean> isInTeachersClass(Promise<Boolean> p) {
+      Predicate<TaggedDomSchoolClass> p1 = TaggedDomSchoolClass::isTag;
+      //taggedSchoolClassMap.values().stream().anyMatch(p1);
+      if (taggedSchoolClassMap.values().stream().filter(p1).count() <= 1) {
+          p = p.then(new Success<Boolean, Boolean>() {
+              @Override
+              //Are you sure?
+              public Promise<Boolean> call(Promise<Boolean> resolved) throws Exception {//do dialog check
+                  //String msg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_EDITSTUDENT_Q_RemoveClassFromStudent(), sracData.get(hasRoleId).getSchool().getSchoolName());
+                  String msg = DwoLocalesForGWT.instance.NUM_DLG_EDITSTUDENT_Q_RemoveClassFromStudent();
+                  AlertDialogWithConfirmCancelDeferred dialogPromise = new AlertDialogWithConfirmCancelDeferred(msg);
+                  AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, dialogPromise);
+                  eventBus.fireEvent(event);
+                  return dialogPromise.getPromise();
+              }
+          });
+      }
+      return p;
+    }
+
     @JsMethod
     public void submitStudentToSchoolClass(String schoolClassId) {
         TaggedDomSchoolClass from = null;
@@ -284,10 +291,8 @@ public class EditStudentPresenter {
         Promise<Boolean> p = manager.submitStudentToSchoolClass(data);
         p.then((resolved) -> {
             this.initView(user);
-            return Promises.resolved(true);
-        }).then(null, (failure) -> {
-            eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
-        });
+            return null;
+        }).then(null, FAILURE);
 
     }
 

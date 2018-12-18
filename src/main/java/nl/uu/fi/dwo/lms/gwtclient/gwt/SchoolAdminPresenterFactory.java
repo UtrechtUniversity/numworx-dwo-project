@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.organisation.OrganisationPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.AddPersonPresenterSchoolAdmin;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenterSchoolAdmin;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditTeacherPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.ImportPersonsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsPresenter;
@@ -51,7 +52,7 @@ public class SchoolAdminPresenterFactory implements PresenterFactory {
 
   @Inject PersonsPresenterSchoolAdmin personsPresenter;
   @Inject AddPersonPresenterSchoolAdmin addPersonPresenter;
-  @Inject EditStudentPresenter editStudentPresenter;
+  @Inject EditStudentPresenterSchoolAdmin editStudentPresenter;
   @Inject ImportPersonsPresenter importPersonsPresenter;
   @Inject SchoolclassesPresenter schoolclassesPresenter;
   @Inject EditSchoolclassPresenter editSchoolclassPresenter;
