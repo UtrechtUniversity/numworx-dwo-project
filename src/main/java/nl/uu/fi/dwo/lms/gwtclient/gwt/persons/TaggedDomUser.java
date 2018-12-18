@@ -9,20 +9,20 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
  *
  * @author Gert van der Plas
  */
-public class TaggedDomUser {
+public class TaggedDomUser<T extends DomUser> {
     
     private boolean tag;
-    private DomUser user;
+    private T user;
     private List<String> memberOf;
 
     public TaggedDomUser() {
     }
 
-    public TaggedDomUser(DomUser aUser) {
+    public TaggedDomUser(T aUser) {
         user = aUser;
     }
 
-    public TaggedDomUser(DomUser aUser, List<String> memberOf) {
+    public TaggedDomUser(T aUser, List<String> memberOf) {
       user = aUser;
       this.memberOf = memberOf;
   }
@@ -44,14 +44,14 @@ public class TaggedDomUser {
     /**
      * @return the user
      */
-    public DomUser getUser() {
+    public T getUser() {
         return user;
     }
 
     /**
      * @param user the user to set
      */
-    public void setUser(DomUserFull user) {
+    public void setUser(T user) {
         this.user = user;
     }
 

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -16,19 +15,21 @@ import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.web.bindery.event.shared.EventBus;
 
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredSchoolAdminSchoolClassManager;
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredSchoolAdminSchoolManager;
+import fi.dwo.gwt.lib.rest.util.StringFormatter;
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsServiceSchoolAdmin;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomUser;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortDeferred;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -36,6 +37,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class OrganisationPresenter {
 
@@ -45,7 +47,7 @@ public class OrganisationPresenter {
 
   void setLoadingTableMessage();
 
-  void showPersonen(Map<String, TaggedDomUser> personen, RoleType role);
+  void showPersonen(Map<String, ?> personen, RoleType role);
 
   void initEditModules(boolean flag);
 
@@ -63,9 +65,9 @@ public class OrganisationPresenter {
   private final PersonsServiceSchoolAdmin service;
 
   private Map<String,TaggedDomSchoolClass> schoolClasses;
-  private Map<String,TaggedDomUser> students;
-  private Map<String,TaggedDomUser> teachers;
-  private Map<String,TaggedDomUser> schooladmins;
+  private Map<String,TaggedDomUser<DomStudent>> students;
+  private Map<String,TaggedDomUser<DomTeacher>> teachers;
+  private Map<String,TaggedDomUser<DomSchoolAdmin>> schooladmins;
 
   private Map<String, Promise<List<DomStudent>>> studentMap;
   private Map<String, Promise<List<DomTeacher>>> teacherMap;
@@ -103,7 +105,7 @@ public class OrganisationPresenter {
           List<DomStudent> s = p2.getValue();
           students = s.stream().collect(Collectors.toMap(student -> student.getId().toString(), 
                                         student -> {
-                                          return new TaggedDomUser(student, new ArrayList<String>());
+                                          return new TaggedDomUser<DomStudent>(student, new ArrayList<String>());
                                           
                                      }));
           for(Entry<String, Promise<List<DomStudent>>> entry : studentMap.entrySet()) {
@@ -117,16 +119,17 @@ public class OrganisationPresenter {
       
   }
   
-  private void getTeachers() {
+  private Promise<Void> getTeachers() {
     view.setLoadingTableMessage();
     Promise<List<DomTeacher>> p2 = service.getTeachersInSchool();
     Promise<?> p1 = getTeachers(schoolClasses.values());
-    Promises.all(p1,p2).then(
+    
+    return Promises.all(p1,p2).then(
       x -> {
         List<DomTeacher> s = p2.getValue();
         teachers = s.stream().collect(Collectors.toMap(student -> student.getId().toString(), 
                                       student -> {
-                                        return new TaggedDomUser(student, new ArrayList<String>());
+                                        return new TaggedDomUser<DomTeacher>(student, new ArrayList<String>());
                                         
                                    }));
         for(Entry<String, Promise<List<DomTeacher>>> entry : teacherMap.entrySet()) {
@@ -139,16 +142,16 @@ public class OrganisationPresenter {
    
   }
   
-  private void getStudents() {
+  private Promise<Void> getStudents() {
     view.setLoadingTableMessage();
     Promise<?> p1 = getStudents(schoolClasses.values().stream().map(TaggedDomSchoolClass::getSchoolClass).collect(Collectors.toList()));
     Promise<List<DomStudent>> p2 = service.getTeachersStudents();
-    Promises.all(p1,p2).then(
+    return Promises.all(p1,p2).then(
       x -> {
         List<DomStudent> s = p2.getValue();
         students = s.stream().collect(Collectors.toMap(student -> student.getId().toString(), 
                                       student -> {
-                                        return new TaggedDomUser(student, new ArrayList<String>());
+                                        return new TaggedDomUser<DomStudent>(student, new ArrayList<String>());
                                         
                                    }));
         for(Entry<String, Promise<List<DomStudent>>> entry : studentMap.entrySet()) {
@@ -162,14 +165,14 @@ public class OrganisationPresenter {
   }
   
   
-  private void getSchoolAdmins() {
+  private Promise<Void> getSchoolAdmins() {
     view.setLoadingTableMessage();
     Promise<List<DomSchoolAdmin>> p2 = service.getSchoolAdminsInSchool();
-    p2.then( p -> {
+    return p2.then( p -> {
       List<DomSchoolAdmin> s = p.getValue();
       schooladmins = s.stream()
           .filter(admin -> !dwoGlobalVars.getCurrentUser().getId().equals(admin.getId()))
-          .collect(Collectors.toMap( admin -> admin.getId().toString(), admin -> new TaggedDomUser(admin)));
+          .collect(Collectors.toMap( admin -> admin.getId().toString(), admin -> new TaggedDomUser<DomSchoolAdmin>(admin)));
       view.showPersonen(schooladmins, RoleType.SCHOOLADMIN);
       return null;
     }).then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
@@ -222,19 +225,79 @@ public class OrganisationPresenter {
     service.updateSchool(school).then(p-> { s.setSchoolRights(r); return null;}, FAILURE);
   }
   
-  @JsMethod void deletePersons(JavaScriptObject obj, String role) {
+  @JsMethod void deletePersons(JsArrayString obj, String str) {
+    RoleType role = RoleType.valueOf(str);
+    int size = obj.length();
+    AlertDialogWithConfirmCancelDeferred defer;
+    ProgressDialogWithAbortDeferred progress =
+    new ProgressDialogWithAbortDeferred(DwoLocalesForGWT.instance.NUM_DLG_Class_CopyingStudentsTitle());
+    String aMsg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_Class_ConfirmRemoveSchoolClass(), size); //    
+    defer = new AlertDialogWithConfirmCancelDeferred(aMsg);
+   
     
+    eventBus.fireEvent(new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, defer));
+    defer.getPromise()
+    .then(p -> {
+      if (p.getValue()) {
+        ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Init, 0, DwoLocalesForGWT.instance.NUM_DLG_Class_StartingCopyStudents(), progress);
+        eventBus.fireEvent(e);
+        return deleteUser(obj, 0, role, progress.getPromise());
+      }
+      return p;
+    }) 
+    .then(p -> {
+        switch(role) {
+          case STUDENT: return getStudents();
+          case TEACHER: return getTeachers();
+          default:
+          case SCHOOLADMIN: return getSchoolAdmins();
+        }
+      })
+      .then(null, FAILURE);
   }
   
+  private Promise<Boolean> deleteUser(JsArrayString obj, int i, RoleType role, Promise<Boolean> cancel) {
+    if(i >= obj.length() || cancel.isDone()) {
+      ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Complete, 100, DwoLocalesForGWT.instance.NUM_DLG_Class_CopyingStudentsCompleted(), null);
+      eventBus.fireEvent(e);
+      return null;
+    }
+    double r = (100.0 * (i+1) / obj.length());
+    ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Update, (int) r, DwoLocalesForGWT.instance.NUM_DLG_Class_CopyingStudents(), null);
+    eventBus.fireEvent(e);
+    String id = obj.get(i);
+    Promise<Boolean> next = null;
+    TaggedDomUser<DomStudent> s;
+    switch(role) {
+      case STUDENT: s = students.get(id);
+          if (s.getUser().getSingleSchool().booleanValue())
+            next = service.removeSingleSchoolStudentFromSchool(s.getUser());
+          else
+            next = service.removeStudentFromSchool(s.getUser());
+      break;
+      case TEACHER: TaggedDomUser<DomTeacher> t = teachers.get(id);
+          next = service.removeTeacherFromSchool(t.getUser());
+      break;
+      case SCHOOLADMIN: TaggedDomUser<DomSchoolAdmin> a = schooladmins.get(id);
+          next = service.removeSchoolAdminFromSchool(a.getUser());
+      break;
+      default: next = Promises.failed(new IllegalArgumentException());
+    }
+    return next.then(p -> deleteUser(obj, i+1, role, cancel));
+  }
+
   @JsMethod void selectRole(String str) {
     RoleType role = RoleType.valueOf(str);
+    Promise<Void> p;
     switch(role) {
-      case STUDENT: getStudents(); break;
-      case TEACHER: getTeachers(); break;
-      case SCHOOLADMIN: getSchoolAdmins(); break;
+      case STUDENT: p = getStudents(); break;
+      case TEACHER: p = getTeachers(); break;
+      case SCHOOLADMIN: p = getSchoolAdmins(); break;
       default:
+        p = Promises.failed(new IllegalArgumentException());
         view.setEmptyTableMessage();
     }
+    p.then(null, FAILURE);
   }
   
   @Inject void setView (Display view) {

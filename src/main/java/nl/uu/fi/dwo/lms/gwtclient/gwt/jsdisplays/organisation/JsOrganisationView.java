@@ -38,10 +38,11 @@ public class JsOrganisationView implements OrganisationPresenter.Display {
     
   }
 
+  @SuppressWarnings("rawtypes")
   @Override
-  public void showPersonen(Map<String, TaggedDomUser> personen, RoleType role) {
+  public void showPersonen(Map<String, ?> personen, RoleType role) {
     JSONObject json = new JSONObject();
-    personen.forEach( (k,v) -> {json.put(k, TaggedDomUserCodec.CODEC.encode(v));});
+    personen.forEach( (k,v) -> {json.put(k, TaggedDomUserCodec.CODEC.encode((TaggedDomUser) v));});
     JsOrganisationDisplay.showPersons(json.getJavaScriptObject(), role.name());    
   }
 
