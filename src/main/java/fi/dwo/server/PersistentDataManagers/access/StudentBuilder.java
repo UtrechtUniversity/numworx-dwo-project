@@ -79,7 +79,7 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
             throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
         }
         //School matches with user state
-        if (pScoContext.getSchoolID() == null && instance.getContext().getUserCtx().school.getSchoolID().longValue() != pScoContext.getSchoolID().longValue()) {
+        if (pScoContext.getSchoolID() != null && instance.getContext().getUserCtx().school.getSchoolID().longValue() != pScoContext.getSchoolID().longValue()) {
             msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Can't update, schoolID not given or wrong.", new Object[]{instance.getContext().getUserCtx().getUser().getUsername()});
             LOG.log(Level.WARNING, msg);
             throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
@@ -90,12 +90,12 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
             LOG.log(Level.WARNING, msg);
             throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
         }
-        //SchoolId of school matches user state
-        if (pScoContext.getSchoolID() == null && instance.getContext().getUserCtx().school.getSchoolID().longValue() != pScoContext.getSchoolID().longValue()) {
-            msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Can't update, schoolID not given or wrong.", new Object[]{instance.getContext().getUserCtx().getUser().getUsername()});
-            LOG.log(Level.WARNING, msg);
-            throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
-        }
+//        //SchoolId of school matches user state
+//        if (pScoContext.getSchoolID() == null && instance.getContext().getUserCtx().school.getSchoolID().longValue() != pScoContext.getSchoolID().longValue()) {
+//            msg = MessageFormat.format("Username {0}: ILLEGAL USER-OPERATION: Can't update, schoolID not given or wrong.", new Object[]{instance.getContext().getUserCtx().getUser().getUsername()});
+//            LOG.log(Level.WARNING, msg);
+//            throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
+//        }
         //find StudentModelData
         Long id = MySQLPersistenceId.getNativeId(data);
         if (id != null) {
