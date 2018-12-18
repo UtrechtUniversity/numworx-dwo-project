@@ -4,8 +4,9 @@ import org.fusesource.restygwt.client.JsonEncoderDecoder;
 
 import com.google.gwt.core.shared.GWT;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 
-@SuppressWarnings("rawtypes")
-public interface TaggedDomUserCodec extends JsonEncoderDecoder<TaggedDomUser> {
+
+public interface TaggedDomUserCodec extends JsonEncoderDecoder<TaggedDomUser<DomUser>> {
 	TaggedDomUserCodec CODEC = GWT.create(TaggedDomUserCodec.class);
 }

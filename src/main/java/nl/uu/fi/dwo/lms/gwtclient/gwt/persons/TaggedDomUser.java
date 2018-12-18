@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.persons;
 
+import java.util.Collections;
 import java.util.List;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
@@ -20,6 +21,7 @@ public class TaggedDomUser<T extends DomUser> {
 
     public TaggedDomUser(T aUser) {
         user = aUser;
+        memberOf = Collections.emptyList();
     }
 
     public TaggedDomUser(T aUser, List<String> memberOf) {
