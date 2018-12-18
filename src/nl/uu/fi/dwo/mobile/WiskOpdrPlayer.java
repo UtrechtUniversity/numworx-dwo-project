@@ -225,6 +225,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 		final String launchData = api.GetValue(LAUNCH_DATA);
 		if(launchData == null || launchData.isEmpty() )
 		{
+			logger.severe("launchdata empty + " + launchData);
 			if(k > 0) {
 				String target = DWOplayer.PREFIX + value;
 				DWOplayer.insertCSS(value);
