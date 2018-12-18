@@ -212,7 +212,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 
 	protected void setupLaunchData(String value) {
 		Scorm2004IF api = view.getApi();
-		api.Initialize();
+		
 		int k = value.indexOf(':');
 		if(k > 0) {
 			value = value.substring(k+1);
