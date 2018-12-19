@@ -16,7 +16,7 @@ public class SCORM_2004_API implements Scorm2004IF {
 	private static Promise<?> loaded;
 	
 	private static native String getBase() /*-{
-		return $wnd.cdplogica;
+		return $wnd.deploy;
 	}-*/;
 	
 	private static Promise<?> script(String source) {

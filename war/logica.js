@@ -3,7 +3,9 @@
  */
 
 var cdplogica = "http://cdplogica.toegang.nu/noordhoff/vo/fi/dwo/2014_v1_0/"
-cdplogica = ""	
+	cdplogica = ""
+var	deploy = cdplogica
+	
 function script(name) {
 	var elem = document.createElement('script');
 	elem.src = cdplogica + name;
