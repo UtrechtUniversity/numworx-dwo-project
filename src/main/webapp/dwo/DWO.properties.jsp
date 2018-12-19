@@ -2,6 +2,7 @@
     pageEncoding="ISO-8859-1"%>
 <%
 	String cdn = System.getProperty("CDNURL", "http://cdn.dwo.nl");
+	String dwo_env = System.getProperty("DWO_ENV", "app");
 %>
 #Property file. It should be located in the working directory of the DWO application.
 #resourceURLPath should point to a webserver supplying the applet jar files loaded by WiskOpdr.
@@ -10,3 +11,4 @@ serverUrlPath=/dwo/
 resourceUrlPath=<%=cdn %>/resources
 jarUrlPath=<%=cdn %>/jars/
 httpAuthentication=BASIC
+dwo_env=<%=dwo_env%>
