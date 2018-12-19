@@ -190,8 +190,9 @@ public class DwoGlobalVars {
         LOG.log(Level.INFO, "restserver=" + server + ".");
         LOG.log(Level.INFO, "Done initProperties():");
         String locale = LocaleInfo.getCurrentLocale().getLocaleName();
-         String url = "helppage/helpindex_"+locale+".html";
-         helpUrlPrefix = url;
+        if ("default".equals(locale)) locale = "en"; // fallback to "en"
+        String url = "helppage/helpindex_"+locale+".html";
+        helpUrlPrefix = url;
     }
 
     /**
