@@ -23,7 +23,6 @@ import fi.wiskopdr.text.Text;
 import fi.wiskopdr.text.TextConstants;
 
 
-
 public class StelselEditor extends FormuleEditorWithSteps
 {
 	StelselRekenVak hoofdPanel;

@@ -59,7 +59,7 @@ public class StelselRekenVak extends LayoutPanel  {
 		contentHoogte = scrollHoogte;
 		this.setPixelSize(antwoordVak.breedte, hoogte);
 		contentPanel = new LayoutPanel();
-		contentPanel.getElement().getStyle().setBackgroundColor("white");
+		contentPanel.getElement().getStyle().setBackgroundColor("white"); 
 		contentPanel.setPixelSize(scrollWidth - 3, contentHoogte); // wordt aangepast zodra hoogte hoofdEditor wordt aangepast.
 		scrollPane = new ScrollPanel();
 		scrollPane.setPixelSize(scrollWidth, scrollHoogte);
@@ -139,6 +139,7 @@ public class StelselRekenVak extends LayoutPanel  {
 	
 	public void zetVolledigeBreedte(int b)
 	{
+		logger.info("zetVolledigeBreedte: " + b);
 		super.setWidth(b + "px");
 		scrollWidth = b - 2;
 		scrollPane.setPixelSize(scrollWidth, scrollHoogte);
@@ -146,6 +147,7 @@ public class StelselRekenVak extends LayoutPanel  {
 			contentPanel.setPixelSize(scrollWidth - 20, contentHoogte);
 		else
 			contentPanel.setPixelSize(scrollWidth - 3, contentHoogte);
+		hoofdEditor.zetVolledigeBreedte(scrollWidth - 20);
 	}
 	
 	public HashMap<String, Object> getState()

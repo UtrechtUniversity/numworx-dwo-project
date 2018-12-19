@@ -293,13 +293,31 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 		try{
 			//splitsen in verschillende oplossingen. Eerst $f en @ weghalen.
 			antwoordString = antwoordString.substring(2, antwoordString.length() - 1);
-			antwoordString = antwoordString.replace("),(", "):(");
+			int haakjesCount = 0;
+			for(int i = 0; i < antwoordString.length(); i++)
+			{
+				if(antwoordString.charAt(i) == '(')
+					haakjesCount++;
+				if(antwoordString.charAt(i) == ')')
+					haakjesCount--;
+				if(antwoordString.charAt(i) == ',' && haakjesCount == 0)
+					antwoordString = antwoordString.substring(0, i) + ":" + antwoordString.substring(i + 1, antwoordString.length());
+			}
+			//antwoordString = antwoordString.replace("),(", "):(");
 			String[] oplossingenStrings = antwoordString.split(":");
 			oplossingen = new Expressie[oplossingenStrings.length][varNamen.length];
 			for(int i = 0; i < oplossingenStrings.length; i++)
 			{
-				if(oplossingenStrings[i].length() < 2) return null;
+				if(oplossingenStrings[i].length() < 2) 
+				{
+					syntaxFout = true;
+					return null;
+				}
 				//haakjes verwijderen:
+				if(oplossingenStrings[i].charAt(0) != '(' || oplossingenStrings[i].charAt(oplossingenStrings[i].length() - 1) != ')')
+				{	syntaxFout = true;
+					return null; 
+				}
 				String opl = oplossingenStrings[i].substring(1, oplossingenStrings[i].length() - 1);
 				String[] varWaardes;
 				if(opl.contains(";"))
@@ -308,6 +326,10 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 					varWaardes = opl.split(",");
 				for(int j = 0; j < varNamen.length; j++)
 				{	oplossingen[i][j] = FormuleParser.geefExpressie("$f" + varWaardes[j] + "@");
+					if(oplossingen[i][j] == null)
+					{	syntaxFout = true;
+						return null;
+					}
 				}
 			}
 			return oplossingen;
