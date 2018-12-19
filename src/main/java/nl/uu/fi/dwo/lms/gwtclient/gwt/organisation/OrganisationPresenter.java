@@ -235,8 +235,10 @@ public class OrganisationPresenter {
     int size = obj.length();
     AlertDialogWithConfirmCancelDeferred defer;
     ProgressDialogWithAbortDeferred progress =
-    new ProgressDialogWithAbortDeferred(DwoLocalesForGWT.instance.NUM_DLG_Class_CopyingStudentsTitle());
-    String aMsg = StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_Class_ConfirmRemoveSchoolClass(), size); //    
+    new ProgressDialogWithAbortDeferred(DwoLocalesForGWT.instance.NUM_DLG_ORGANISATION_CONFIRM_TITLE());
+    String aMsg = 
+        size == 1 ? DwoLocalesForGWT.instance.NUM_DLG_ORGANISATION_CONFIRM_REMOVE1() :
+        StringFormatter.format(DwoLocalesForGWT.instance.NUM_DLG_ORGANISATION_CONFIRM_REMOVE(), size); //    
     defer = new AlertDialogWithConfirmCancelDeferred(aMsg);
    
     
@@ -263,12 +265,12 @@ public class OrganisationPresenter {
   
   private Promise<Boolean> deleteUser(JsArrayString obj, int i, RoleType role, Promise<Boolean> cancel) {
     if(i >= obj.length() || cancel.isDone()) {
-      ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Complete, 100, DwoLocalesForGWT.instance.NUM_DLG_Class_CopyingStudentsCompleted(), null);
+      ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Complete, 100, DwoLocalesForGWT.instance.NUM_DLG_ORGANISATION_REMOVING_COMPLETE(), null);
       eventBus.fireEvent(e);
       return null;
     }
     double r = (100.0 * (i+1) / obj.length());
-    ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Update, (int) r, DwoLocalesForGWT.instance.NUM_DLG_Class_CopyingStudents(), null);
+    ProgressDialogWithAbortEvent e = new ProgressDialogWithAbortEvent(ProgressDialogWithAbortEvent.EventType.Update, (int) r, DwoLocalesForGWT.instance.NUM_DLG_ORGANISATION_REMOVING(), null);
     eventBus.fireEvent(e);
     String id = obj.get(i);
     Promise<Boolean> next = null;
