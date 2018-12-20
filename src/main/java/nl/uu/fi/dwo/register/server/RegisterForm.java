@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Key;
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Properties;
+import java.util.ResourceBundle;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -33,12 +36,12 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 @SuppressWarnings("serial")
 public class RegisterForm extends HttpServlet {
 	
-	static final
   SystemManager manager;
   Session session;
   private Key key;
   private InternetAddress smtpEmail;
   private RequestDispatcher dispatch;
+private ResourceBundle mailrb;
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -68,12 +71,10 @@ public class RegisterForm extends HttpServlet {
     url.append("?j=").append(jwt);
     MimeMessage message = new MimeMessage(session);
 //FIXME i18n         
-    content += "\nGo to\n";
-    content += url.toString();
-    content += "\nto complete your registration";
-    message.setContent(content, "text/plain");
+    content += MessageFormat.format(mailrb.getString("mail.body"), url);
+    message.setContent(content, mailrb.getString("mail.mime"));
     message.setFrom(smtpEmail);
-    message.setSubject("Registration completion");
+    message.setSubject(mailrb.getString("mail.subject"));
     message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
 
     transport.connect();
@@ -86,7 +87,7 @@ public class RegisterForm extends HttpServlet {
       return;
     }
     if("html".equals(form)) {
-      resp.setContentType("text/plain");
+      resp.setContentType(mailrb.getString("mail.mime"));
       resp.getWriter().print(content);
       return;
     }
@@ -138,7 +139,8 @@ public class RegisterForm extends HttpServlet {
     key = Keys.hmacShaKeyFor(bytes);
 // FORM:
     dispatch = getServletContext().getRequestDispatcher("/RegisterFree.html");
-
+// I18N
+    mailrb = ResourceBundle.getBundle("nl.uu.fi.dwo.register.server.mail");
   }
 
   @Override
