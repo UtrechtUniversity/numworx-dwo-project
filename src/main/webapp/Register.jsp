@@ -2,6 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ page import="javax.servlet.http.Cookie" %>
 <%@ page import="javax.servlet.http.HttpServletResponse" %>
+<%@ page import="nl.uu.fi.dwo.lms.jclient.lib.rest.managers.*" %>
+<%@ page import="nl.uu.fi.dwo.register.server.Manager" %>
+<%@ page import="nl.uu.fi.dwo.rest.dom.entities.*" %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -16,6 +19,8 @@ private void cookie(String name, Object value, HttpServletResponse response) {
 }
 %>  
 <%
+
+Manager manager = new Manager(getServletContext());
 Object name_given = request.getAttribute("givenName");
 Object name_family = request.getAttribute("sn");
 Object name_prefix = request.getAttribute("insertion");
@@ -38,7 +43,7 @@ String roles = String.valueOf(request.getAttribute("unscoped-affiliation"));
 String role = "STUDENT";
 if(roles != null && roles.toLowerCase().contains("employee"))
     role = "TEACHER";
-
+String schoolCode = manager.getSchoolCode(org_id.toString(), role);
 
 cookie("givenName", name_given, response);
 cookie("familyName", name_family, response);
@@ -47,6 +52,7 @@ cookie("email", email, response);
 cookie("schoolLogin", org_id, response);
 cookie("suggestion", student_id, response); // XXX moet de nlEduPersonRealId zijn, zonder @suffix.
 cookie("schoolGroup", role, response);
+cookie("schoolCode", schoolCode, response);
 
 cookie(DWO_SAML_ORGANIZATION_ID, org_id, response);
 cookie(DWO_SAML_USER_ID, user_id, response);

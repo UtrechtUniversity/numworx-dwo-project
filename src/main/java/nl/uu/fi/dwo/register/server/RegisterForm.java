@@ -32,6 +32,8 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 
 @SuppressWarnings("serial")
 public class RegisterForm extends HttpServlet {
+	
+	static final
   SystemManager manager;
   Session session;
   private Key key;
@@ -93,17 +95,9 @@ public class RegisterForm extends HttpServlet {
 
   @Override
   public void init() throws ServletException {
-    String dbrest_url = getInitParameter("dbrest.url");
-    if (dbrest_url == null) dbrest_url = "http://localhost/dwo/rest/";
-    try {
-        RestAuthenticator authenticator = new RestAuthenticator();
-        authenticator.setServerUrlPath(new URL(dbrest_url));
-        StoredRestManager rest = new StoredRestManager(authenticator);
-        manager = new SystemManager(rest);       
-    } catch(MalformedURLException ex) {
-      throw new ServletException("init", ex);
-    }
-// mail parameters
+
+	manager = new Manager().getInstance(getServletContext());
+	// mail parameters
     //place this in servlet
     String smtpServer = getInitParameter("fi.dwo.server.rest.smtp.server");
     if(smtpServer == null) smtpServer = "localhost";
@@ -166,6 +160,11 @@ public class RegisterForm extends HttpServlet {
     String suggestion = givenName + insertion + familyName;
     suggestion = suggestion.toLowerCase();
     suggestion = suggestion.replaceAll("\\W", "");
+    try {
+		suggestion = manager.getSuggestion(suggestion);
+	} catch (Exception e) {
+		
+	}
     
     Cookie cookie;
     cookie = new Cookie("email", email);

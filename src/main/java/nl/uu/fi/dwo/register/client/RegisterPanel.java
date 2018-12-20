@@ -77,7 +77,8 @@ public class RegisterPanel extends Composite {
 		String schoolGroup = Cookies.getCookie("schoolGroup");
 		if ("TEACHER".equals(schoolGroup))
 			this.schoolGroup.setSelectedIndex(1);
-		
+		String schoolCode = Cookies.getCookie("schoolCode");
+		if (schoolCode != null) this.schoolCode.setText(schoolCode);
 		
 	}
 
