@@ -48,15 +48,18 @@ public class SystemManager {
   @Path("/school/get")
   public DomSchoolFull getSchool(RestSchool rest) throws Dwo2Exception {
       DomSchool s = rest.getDomSchool();
-      if ( s.getId() != null) {
-        Long id = MySQLPersistenceId.getNativeId(s);
-        PersistentSchool school = SchoolManager.findEntity(id);
-        return school.buildDomSchoolFull();
-      } 
-      String name  = s.getSchoolName();
-      PersistentSchool school = SchoolManager.findBySchoolLogin(name);
+      Long id = MySQLPersistenceId.getNativeId(s);
+      PersistentSchool school = SchoolManager.findEntity(id);
       return school.buildDomSchoolFull();
-      
+  }
+  
+  @PUT
+  @Produces({"application/json"})
+  @Path("/school/getByName")
+  public DomSchoolFull getSchoolByName(RestSchool rest) throws Dwo2Exception {
+      String name  = rest.getDomSchool().getSchoolName();
+      PersistentSchool school = SchoolManager.findBySchoolLogin(name);
+      return school.buildDomSchoolFull();  
   }
 
   @PUT
@@ -90,7 +93,6 @@ public class SystemManager {
         LOG.log(Level.SEVERE, null, e);
         throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error. Can't update samluser with id:" + samlUser.getId() + ".");
     }
-
     u.setAuthToken(samlUser.getAuthToken());
     return u;
   }

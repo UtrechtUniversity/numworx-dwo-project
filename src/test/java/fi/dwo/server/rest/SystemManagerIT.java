@@ -60,7 +60,7 @@ public class SystemManagerIT {
     RestSchool rest = new RestSchool();
     rest.setDomSchool(new DomSchool());
     rest.getDomSchool().setSchoolName("dwo");
-    DomSchoolFull school = manager.getSchool(rest);
+    DomSchoolFull school = manager.getSchoolByName(rest);
     assertEquals("school 0", (Long)0L, MySQLPersistenceId.getNativeId(school));
   }
 
