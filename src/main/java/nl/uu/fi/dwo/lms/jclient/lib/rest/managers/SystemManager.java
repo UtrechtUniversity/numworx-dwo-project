@@ -81,4 +81,8 @@ public class SystemManager {
     return result;
   }
   
+  public String getSuggestion ( String input ) throws Dwo2Exception {
+	  String result = manager.put("rest/system/user/suggestion", String.class, input);
+	  return result;
+  }
 }
