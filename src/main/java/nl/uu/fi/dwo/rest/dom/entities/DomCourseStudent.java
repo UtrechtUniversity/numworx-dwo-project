@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
-import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -10,7 +9,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DomCourseStudent extends DomCourse{
-    private static Logger LOG = Logger.getLogger(DomCourse.class.getName());
     private String image;
     private byte[] imageData;
     private String description;

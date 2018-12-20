@@ -4,7 +4,6 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
-import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -13,8 +12,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DomSchoolClass extends DomSchoolClassId implements Cloneable {
-    private static final Logger LOG = Logger.getLogger(DomSchoolClass.class.getName());
-
     private String schoolClassName;
     private Boolean hasRegKey;
     private Boolean iconizer = Boolean.FALSE;

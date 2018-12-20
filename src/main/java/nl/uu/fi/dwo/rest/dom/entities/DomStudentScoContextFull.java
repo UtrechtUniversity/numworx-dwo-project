@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.util.Date;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * 

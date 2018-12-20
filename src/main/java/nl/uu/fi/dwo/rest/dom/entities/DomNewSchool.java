@@ -16,12 +16,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DomNewSchool {
 
     private DomSchoolFull domSchoolFull;
-    private Map<RoleType, String> roleTypePasswords = new HashMap<RoleType, String>() {
-        {
-            put(RoleType.STUDENT,"student");
-            put(RoleType.TEACHER,"teacher");
-            put(RoleType.SCHOOLADMIN,"schooladmin");
-        }
+    private Map<RoleType, String> roleTypePasswords = new HashMap<RoleType, String>();
+    {
+      roleTypePasswords.put(RoleType.STUDENT,"student");
+      roleTypePasswords.put(RoleType.TEACHER,"teacher");
+      roleTypePasswords.put(RoleType.SCHOOLADMIN,"schooladmin");
     };
 
     /**

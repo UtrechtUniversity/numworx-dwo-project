@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.util.List;
-import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -14,8 +13,6 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  */
 @XmlRootElement
 public class DomCoursesOfSchoolClass4Teacher{
-    private static Logger LOG = Logger.getLogger(DomCoursesOfSchoolClass4Teacher.class.getName());
-
     private List<DomMapEntry<PersistenceId, DomCourse>> courses;
 
     private Long fetchTimeStamp;   

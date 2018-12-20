@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
-import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -10,8 +9,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DomCourseOfClass {
-    //not extended from DomCourse because of some issues wil occur with initalization.
-    private static Logger LOG = Logger.getLogger(DomCourseOfClass.class.getName());
     private DomClassCourse4Teacher classCourse;
     private DomCourse course;
 

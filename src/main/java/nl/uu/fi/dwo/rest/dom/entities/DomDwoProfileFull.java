@@ -2,8 +2,6 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
-
 /**
  * The DWO profile information.
  * @author velth101

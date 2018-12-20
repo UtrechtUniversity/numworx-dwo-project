@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.beans.Transient;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -13,8 +12,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class DomStudentModelStructureScore extends DomStudentModelScore<DomStudentModelCategoryScore>{
 
-    private static final Logger LOG = Logger.getLogger(DomStudentModelStructureScore.class.getName());
-    
     /**
      * @return the categories
      */

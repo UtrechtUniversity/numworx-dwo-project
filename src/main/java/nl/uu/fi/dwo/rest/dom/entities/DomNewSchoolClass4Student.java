@@ -5,8 +5,6 @@
  */
 package nl.uu.fi.dwo.rest.dom.entities;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -16,8 +14,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DomNewSchoolClass4Student extends DomSchoolClass {
-
-    private static final Logger LOG = Logger.getLogger(DomNewSchoolClass4Student.class.getName());
 
     private String registrationKey = null;
 

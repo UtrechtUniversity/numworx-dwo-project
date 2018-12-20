@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class DomContext {
     private DomHasRole domHasRole; //security
-
+    private String realm; // user namespace
     /**
      * @return the domHasRole
      */
@@ -24,5 +24,19 @@ public class DomContext {
      */
     public void setDomHasRole(DomHasRole domHasRole) {
         this.domHasRole = domHasRole;
+    }
+
+    /**
+     * @return the realm
+     */
+    public String getRealm() {
+      return realm;
+    }
+
+    /**
+     * @param realm the realm to set
+     */
+    public void setRealm(String realm) {
+      this.realm = realm;
     }    
 }

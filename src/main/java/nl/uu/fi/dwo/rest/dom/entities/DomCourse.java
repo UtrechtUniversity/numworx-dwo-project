@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
-import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -11,8 +10,6 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  */
 @XmlRootElement
 public class DomCourse {
-    private static Logger LOG = Logger.getLogger(DomCourse.class.getName());
-
     private PersistenceId id;
     private PersistenceId schoolId;
     private String name;

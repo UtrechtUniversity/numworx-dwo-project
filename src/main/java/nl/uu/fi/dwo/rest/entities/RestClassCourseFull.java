@@ -4,7 +4,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 
 /**
  * RestCourse contains a minimal DwoCourse info.

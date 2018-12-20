@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -13,8 +12,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DomStudentModelScore<T extends DomStudentModelScore> {
-
-    private static final Logger LOG = Logger.getLogger(DomStudentModelScore.class.getName());
 
     private List<T> children = new ArrayList<T>();
     

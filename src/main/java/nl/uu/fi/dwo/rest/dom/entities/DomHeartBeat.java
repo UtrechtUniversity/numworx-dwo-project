@@ -14,7 +14,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class DomHeartBeat {
 
-    private static final long serialVersionUID = 1L;
     private Long serverTimeStamp;
     private String serverVersion;
     private String javaClientVersion;

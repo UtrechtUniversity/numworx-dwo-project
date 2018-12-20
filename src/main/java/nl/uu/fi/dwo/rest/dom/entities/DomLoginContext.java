@@ -20,7 +20,7 @@ public class DomLoginContext {
     private PersistenceId schoolGroupId;
     private Long registerTimeStamp;
     private Long lastLoginTimeStamp;
-    private String secretKey;
+    private String secretKey, realm;
 
     /**
      * @return the lastLoginTimeStamp
@@ -107,13 +107,27 @@ public class DomLoginContext {
     }
 
 
-    @Transient
-    public String generateTOTP(){
-        return "";
+//    @Transient
+//    public String generateTOTP(){
+//        return "";
+//    }
+//    
+//    @Transient
+//    public boolean verifyTOTP(){
+//        return false;
+//    }
+
+    /**
+     * @return the realm
+     */
+    public String getRealm() {
+      return realm;
     }
-    
-    @Transient
-    public boolean verifyTOTP(){
-        return false;
+
+    /**
+     * @param realm the realm to set
+     */
+    public void setRealm(String realm) {
+      this.realm = realm;
     }    
 }

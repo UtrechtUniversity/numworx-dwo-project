@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
-import java.util.logging.Logger;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 
@@ -11,7 +10,6 @@ import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
  */
 @XmlRootElement
 public class DomClassCourse4Teacher extends DomClassCourse{
-    private static final Logger LOG = Logger.getLogger(DomClassCourse4Teacher.class.getName());
     private ViewState viewState;
 	private String accessKey;
 

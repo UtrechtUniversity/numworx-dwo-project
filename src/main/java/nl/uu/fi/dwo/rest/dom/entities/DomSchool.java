@@ -7,7 +7,6 @@ import java.beans.Transient;
 import java.util.Date;
 
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
