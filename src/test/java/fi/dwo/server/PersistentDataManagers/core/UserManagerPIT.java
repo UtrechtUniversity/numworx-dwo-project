@@ -12,6 +12,8 @@ import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -275,5 +277,12 @@ public class UserManagerPIT {
 //        catch (Exception e) {
 //            fail("Exception during find.");
 //        }
+    }
+    
+    @Test public void testLIKE() {
+      String input = "user";
+      List<PersistentUser> list = UserManager.findUsersLike(input);
+      System.out.println(list.stream().map(PersistentUser::getUsername).collect(Collectors.toList()));
+      assertEquals("users alike", 7, list.size());
     }
 }

@@ -3,7 +3,9 @@
  */
 package fi.dwo.server.rest;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,10 +19,13 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
+import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
@@ -42,9 +47,16 @@ public class SystemManager {
   @Produces({"application/json"})
   @Path("/school/get")
   public DomSchoolFull getSchool(RestSchool rest) throws Dwo2Exception {
-      Long id = MySQLPersistenceId.getNativeId(rest.getDomSchool());
-      PersistentSchool school = SchoolManager.findEntity(id);
+      DomSchool s = rest.getDomSchool();
+      if ( s.getId() != null) {
+        Long id = MySQLPersistenceId.getNativeId(s);
+        PersistentSchool school = SchoolManager.findEntity(id);
+        return school.buildDomSchoolFull();
+      } 
+      String name  = s.getSchoolName();
+      PersistentSchool school = SchoolManager.findBySchoolLogin(name);
       return school.buildDomSchoolFull();
+      
   }
 
   @PUT
@@ -53,6 +65,7 @@ public class SystemManager {
   public List<DomSchoolClass> getListSchoolClass(RestSchool rest) throws Dwo2Exception {
     Long id = MySQLPersistenceId.getNativeId(rest.getDomSchool());
     PersistentSchool school = SchoolManager.findEntity(id);
+    if(school == null) return Collections.emptyList();
     List<PersistentSchoolClass> list = SchoolClassManager.findEntities(school);
     return list.stream().map(PersistentSchoolClass::buildDomSchoolClass).collect(Collectors.toList());
   }
@@ -82,5 +95,20 @@ public class SystemManager {
     return u;
   }
   
+  @PUT
+  @Produces({"text/plain"})
+  @Path("/user/suggestion")
+  public String suggestion(String input) {
+    int cntr = 0;
+    List<PersistentUser> list = UserManager.findUsersLike(input);
+    if (list.isEmpty())
+      return input;
+    String base = input;
+    Set<String> names = list.stream().map(PersistentUser::getUsername).collect(Collectors.toSet());
+    while ( names.contains(input) && cntr < 100) {
+      input = base + (++cntr);      
+    }
+    return input;
+  }
   
 }

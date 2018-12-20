@@ -19,6 +19,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
@@ -279,6 +280,18 @@ public class UserManager {
             em.close();
         }
         return user;
+    }
+
+    public static List<PersistentUser> findUsersLike(String input) {
+      EntityManager em = getEntityManager();
+      try {
+        String string = "SELECT p FROM PersistentUser p WHERE p.username LIKE :pattern";
+        TypedQuery<PersistentUser> query = em.createQuery(string, PersistentUser.class);
+        query.setParameter("pattern", input + "%");
+        return query.getResultList();
+      } finally {
+        em.close();
+      }
     }
 
 }
