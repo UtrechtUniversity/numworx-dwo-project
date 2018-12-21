@@ -154,7 +154,7 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      * @param callback
      */
 
-	public void getUserFromAuthTokenHelper(String authToken,
+	private void getUserFromAuthTokenHelper(String authToken,
 			AsyncCallback<DomUserFullwLoginContext> callback) {
 		accountManager.getUserFromAuthToken(authToken, callback);
 	}

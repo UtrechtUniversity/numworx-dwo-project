@@ -49,23 +49,6 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @Deprecated
 public abstract class RPCHandlerV1 {
 
-	private static final class ListFunction<D> implements Function<List<Map<String,Object>>, List<D>> {
-		private Function<Map<String, Object>, D> function;
-
-		public ListFunction(Function<Map<String, Object>, D> function) {
-			this.function = function;
-		}
-
-		@Override
-		public List<D> apply(List<Map<String,Object>> t) {
-			List<D> courseList = new ArrayList<D>();
-			for( Map<String,Object> item: t) {
-				courseList.add(function.apply(item));
-			}
-			return courseList;
-		}
-	}
-
 	private int profile;
 	
     /**

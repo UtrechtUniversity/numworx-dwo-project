@@ -3,7 +3,6 @@ package nl.uu.fi.dwo.account.client;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -33,8 +32,6 @@ import org.osgi.util.promise.Success;
 
 import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.CallManagers.CourseManager;
 import fi.dwo.gwt.lib.rest.CallManagers.CoursesOfSchoolClassManager;
@@ -55,6 +52,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.StudentScoDataManager;
 import fi.dwo.gwt.lib.rest.CallManagers.UserResultsManager;
 import fi.dwo.gwt.lib.rest.util.Base64;
 
+@SuppressWarnings("deprecation")
 public class RPCHandlerV3 extends RPCHandlerV2 {
 
 	ScoContextManager scoManager;	
@@ -294,13 +292,6 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		
 	}
 
-//	@Override
-//	@Deprecated
-//	public void getUserResults(Object courseID, Object userID,
-//			AsyncCallback<List<Map<String, Object>>> getUserResultsCallback) {
-//		getUserResultsCallback.onFailure(new Error());
-//	}
-
 	public Promise<Map<String, String>> getValues(Object scoID,
 			Collection<String> keys) {
 		DomScoContext sco = toScoContext(scoID);
@@ -346,7 +337,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	}
 	
 	private static final Logger LOG = Logger.getLogger("RPCHandlerV3");
-	@SuppressWarnings("deprecation")
+
 	public Promise<Void> startExam(String key, String value) {
 		GwtRestVars vars = GwtRestVars.getInstance();
 		Map<String,String> headers = vars.getCustomHeaders();
@@ -394,20 +385,5 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			return Promises.failed(new IllegalArgumentException());
 		return studentModelManager.getStudentModelDataScore(getContext(), id);
 	}
-
-//  @Override
-//  protected void getUserResultsHelper(Object courseID, Object userID, Object schoolGroupID,
-//      AsyncCallback<List<Map<String, Object>>> getUserResultsCallback) {
-//    // TODO Auto-generated method stub
-//    
-//  }
-//
-//  @Override
-//  public void getCourses(AsyncCallback<List<Map<String, Object>>> getCoursesCallback) {
-//    // TODO Auto-generated method stub
-//    
-//  }
-
-
 
 }

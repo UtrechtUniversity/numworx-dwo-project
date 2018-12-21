@@ -142,6 +142,7 @@ public class Account implements EntryPoint, ClickHandler {
 		                    user =  result.getDomUserFull();
 		                    loginStatusPanel.setStatus(user.getUserName(), true);
 		                    userBar.setSingleSchool(user.getSingleSchool());
+		                    DwoGlobalVars.instance().setCurrentLoginContext(result.getDomLoginContext());
 		                    DwoGlobalVars.instance().setCurrentUser(user);
 		                    SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
 		                    return loginManager.getSchoolLogins();

@@ -205,88 +205,89 @@ public class DwoGlobalVars {
     private void initVars() throws Dwo2Exception {
     }
 
-    /**
-     * Performs a login for the given credentials and initializes DwoGlobalVars
-     * to a DwoGlobalVarsState.LoggedIn state if the credentials are correct. Otherwise the
-     * DwoGlobalVarsState returned in the Promise is DwoGlobalVarsState.NotLoggedIn.
-     * 
-     * @param usercode
-     * @param password
-     * @return
-     * @throws Dwo2Exception 
-     */
-    public Promise<DwoGlobalVarsState> initUser(String usercode, String password) throws Dwo2Exception {
-        if (state != DwoGlobalVarsState.NotLoggedIn) {
-            //if not in proper state throw an exception.
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Trying to initialize a user while in the wrong state");
-            //better yet logout.
-        };
-        //correct state.
-        state = DwoGlobalVarsState.LoggingIn;
-        LOG.log(Level.INFO, "state=LoggingIn. Calling accountManager.login.");
-        Promise<DomUserFullwLoginContext> userwLoginContext = accountManager.login(usercode, password);
-//        userwLoginContext.then(initUser(userwLoginContext.getValue().getDomUserFull()));
-        userwLoginContext.then(new Success<DomUserFullwLoginContext, DwoGlobalVarsState>() {
-            @Override
-            public Promise<DwoGlobalVarsState> call(Promise<DomUserFullwLoginContext> resolved) throws Exception {
-                LOG.log(Level.INFO, "Login completed setting current user.");
-                
-                initUser(resolved.getValue().getDomUserFull());
-                state = DwoGlobalVarsState.LoggedIn;
-        LOG.log(Level.INFO, "state=LoggedIn. Calling statePromise.getPromise.");
-                return statePromise.getPromise();
-            }
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                clearCurrentUser();
-                state = DwoGlobalVarsState.NotLoggedIn;
-            }
-        }
-        );
-        return statePromise.getPromise();
-    }
+//    /**
+//     * Performs a login for the given credentials and initializes DwoGlobalVars
+//     * to a DwoGlobalVarsState.LoggedIn state if the credentials are correct. Otherwise the
+//     * DwoGlobalVarsState returned in the Promise is DwoGlobalVarsState.NotLoggedIn.
+//     * 
+//     * @param usercode
+//     * @param password
+//     * @return
+//     * @throws Dwo2Exception 
+//     */
+//    public Promise<DwoGlobalVarsState> initUser(String usercode, String password) throws Dwo2Exception {
+//        if (state != DwoGlobalVarsState.NotLoggedIn) {
+//            //if not in proper state throw an exception.
+//            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Trying to initialize a user while in the wrong state");
+//            //better yet logout.
+//        };
+//        //correct state.
+//        state = DwoGlobalVarsState.LoggingIn;
+//        LOG.log(Level.INFO, "state=LoggingIn. Calling accountManager.login.");
+//        Promise<DomUserFullwLoginContext> userwLoginContext = accountManager.login(usercode, password);
+////        userwLoginContext.then(initUser(userwLoginContext.getValue().getDomUserFull()));
+//        userwLoginContext.then(new Success<DomUserFullwLoginContext, DwoGlobalVarsState>() {
+//            @Override
+//            public Promise<DwoGlobalVarsState> call(Promise<DomUserFullwLoginContext> resolved) throws Exception {
+//                LOG.log(Level.INFO, "Login completed setting current user.");
+//                
+//                initUser(resolved.getValue().getDomUserFull());
+//                state = DwoGlobalVarsState.LoggedIn;
+//        LOG.log(Level.INFO, "state=LoggedIn. Calling statePromise.getPromise.");
+//                return statePromise.getPromise();
+//            }
+//        },
+//                new Failure() {
+//            @Override
+//            public void fail(Promise<?> resolved) throws Exception {
+//                clearCurrentUser();
+//                state = DwoGlobalVarsState.NotLoggedIn;
+//            }
+//        }
+//        );
+//        return statePromise.getPromise();
+//    }
 
-    private Promise<DwoGlobalVarsState> initUser(DomUserFull user) throws Dwo2Exception {
-        if (state != DwoGlobalVarsState.Initializing) {
-            //throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Trying to initialize a user while in the wrong state");
-            //better yet logout.
-        };
-        setCurrentUser(user);
-        SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
-        Promise<DomSchoolsRolesAndClassesV2> logins = loginManager.getSchoolLogins();
-        logins.then(new Success<DomSchoolsRolesAndClassesV2, DwoGlobalVarsState>() {
-            @Override
-            public Promise<DwoGlobalVarsState> call(Promise<DomSchoolsRolesAndClassesV2> resolved) throws Exception {
-                schoolLogins = (resolved.getValue());
-                setActiveSchoolRoleAndClass(schoolLogins.getActiveSchoolRoleAndClass());
-                state = DwoGlobalVarsState.LoggedIn;
-                if (statePromise.getValue().equals(state)) {
-                    statePromise.resolve(state);
-                } else {
-                    statePromise.fail(new Dwo2Exception());
-                }
-                return statePromise.getPromise();
-            }
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                clearCurrentUser();
-                state = DwoGlobalVarsState.NotLoggedIn;
-                statePromise.fail(new Dwo2Exception());
-            }
-        }
-        );
-        return statePromise.getPromise();
-    }
+//    @Deprecated
+//    private Promise<DwoGlobalVarsState> initUser(DomUserFull user) throws Dwo2Exception {
+//        if (state != DwoGlobalVarsState.Initializing) {
+//            //throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Trying to initialize a user while in the wrong state");
+//            //better yet logout.
+//        };
+//        setCurrentUser(user);
+//        SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
+//        Promise<DomSchoolsRolesAndClassesV2> logins = loginManager.getSchoolLogins();
+//        logins.then(new Success<DomSchoolsRolesAndClassesV2, DwoGlobalVarsState>() {
+//            @Override
+//            public Promise<DwoGlobalVarsState> call(Promise<DomSchoolsRolesAndClassesV2> resolved) throws Exception {
+//                schoolLogins = (resolved.getValue());
+//                setActiveSchoolRoleAndClass(schoolLogins.getActiveSchoolRoleAndClass());
+//                state = DwoGlobalVarsState.LoggedIn;
+//                if (statePromise.getValue().equals(state)) {
+//                    statePromise.resolve(state);
+//                } else {
+//                    statePromise.fail(new Dwo2Exception());
+//                }
+//                return statePromise.getPromise();
+//            }
+//        },
+//                new Failure() {
+//            @Override
+//            public void fail(Promise<?> resolved) throws Exception {
+//                clearCurrentUser();
+//                state = DwoGlobalVarsState.NotLoggedIn;
+//                statePromise.fail(new Dwo2Exception());
+//            }
+//        }
+//        );
+//        return statePromise.getPromise();
+//    }
 
-    public void initUser() throws Dwo2Exception {
-        SecuredUserAccountManager userManager = new SecuredUserAccountManager();
-        Promise<DomUserFull> user = userManager.getAccountData();
-        initUser(user.getValue());
-    }
+//    private void initUser() throws Dwo2Exception {
+//        SecuredUserAccountManager userManager = new SecuredUserAccountManager();
+//        Promise<DomUserFull> user = userManager.getAccountData();
+//        initUser(user.getValue());
+//    }
 
     /**
      * @return the server
@@ -315,8 +316,15 @@ public class DwoGlobalVars {
     public void setCurrentUser(DomUserFull aCurUser) {
         currentUser = aCurUser;
         //notify the gwt-rest interface configuration
-        GwtRestVars.getInstance().setCurrentUser(aCurUser);
+        GwtRestVars.getInstance().setCurrentUser(aCurUser, getRealm());
 
+    }
+
+    private String getRealm() {
+      if (currentLoginContext == null)
+        return null;
+      else
+        return currentLoginContext.getRealm();
     }
 
     /**
@@ -324,7 +332,7 @@ public class DwoGlobalVars {
     public void clearCurrentUser() {
         currentUser = null;
         //notify the gwt-rest interface configuration
-        GwtRestVars.getInstance().setCurrentUser(null);
+        GwtRestVars.getInstance().setCurrentUser(null,null);
         state = DwoGlobalVarsState.NotLoggedIn;
 
     }
