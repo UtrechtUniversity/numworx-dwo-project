@@ -51,6 +51,8 @@ import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
+import fi.dwo.server.rest.util.Realm;
+
 import java.text.MessageFormat;
 
 import java.util.ArrayList;
@@ -211,9 +213,10 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         try {
             hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.TEACHER);
             domTeachers = new ArrayList<DomTeacher>(hrList.size());
+            String realm = Realm.of(sc.getUserPrincipal());
             for (PersistentHasRole hr : hrList) {
                 PersistentUser user = (PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID());
-                domTeachers.add(user.buildDomTeacher());
+                domTeachers.add(user.buildDomTeacher(realm));
             }
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
@@ -271,9 +274,10 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         try {
             List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.STUDENT);
             domStudents = new ArrayList<>(userList.size());
+            String realm = Realm.of(sc.getUserPrincipal());
             for (PersistentUser u : userList) {
                 if (u.isSingleSchoolAccount()) {
-                    domStudents.add(u.buildDomStudent());
+                    domStudents.add(u.buildDomStudent(realm));
                 }
             }
         } catch (Dwo2Exception ex) {
@@ -374,6 +378,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             List<DomTeacher> domTeachers;
             try {
                 domTeachers = new ArrayList<DomTeacher>(teachersOfClass.size());
+                String realm = Realm.of(restSchoolClass.getRestContext());
                 for (PersistentTeacherOfClass t : teachersOfClass) {
                     PersistentUser u = UserManager.findEntity(t.getPersistentTeacherOfClassPK().getUserID());
                     domTeachers.add(u.buildDomTeacher());
@@ -423,9 +428,11 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             List<DomStudent> domStudents;
             try {
                 domStudents = new ArrayList<DomStudent>(studentsOfClass.size());
+                String realm = Realm.of(restSchoolClass.getRestContext());
                 for (PersistentStudentOfClass s : studentsOfClass) {
                     PersistentUser u = UserManager.findEntity(s.getPersistentStudentOfClassPK().getUserID());
-                    domStudents.add(u.buildDomStudent());
+                    if(u != null)
+                      domStudents.add(u.buildDomStudent(realm));
                 }
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
@@ -933,7 +940,8 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                 && teacherInSchoolClass.getPersistentTeacherOfClassPK().getClassID()!=null
                 && studentInSchoolClass.getPersistentStudentOfClassPK().getClassID()!=null
                 && teacherInSchoolClass.getPersistentTeacherOfClassPK().getClassID().longValue()==studentInSchoolClass.getPersistentStudentOfClassPK().getClassID().longValue()) {
-            return student.buildDomSingleSchoolStudent();
+            String realm = Realm.of(submit.getRestContext());
+            return student.buildDomSingleSchoolStudent(realm);
         } else {
             LOG.log(Level.SEVERE, "User {0} tried to access full userdata of user {1}.", new Object[]{phr.getPersistentHasRolePK().toString(), shr.getUser().getId()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -985,7 +993,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to change a non-single school user with username {1} by teacher {0}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
             }
-            user.setUsername(nssStudent.getDomSingleSchoolStudent().getUserName());
+            //user.setUsername(nssStudent.getDomSingleSchoolStudent().getUserName());
             user.setEmail(nssStudent.getDomSingleSchoolStudent().getEmail());
             user.setGivenName(nssStudent.getDomSingleSchoolStudent().getGivenName());
             user.setInsertion(nssStudent.getDomSingleSchoolStudent().getInsertion());
@@ -999,9 +1007,9 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user " + sc.getUserPrincipal().getName() + ".");
             }
         } else {
-            return false;
+            return Boolean.FALSE;
         }
-        return true;
+        return Boolean.TRUE;
     }
 
     /**
@@ -1022,7 +1030,8 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         if (!ValidUserFieldsChecker.isValidEmail(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getEmail())) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, "The email address does not  conform with RFC 5322.");
         }
-        if (!ValidUserFieldsChecker.isValidUserName(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getUserName())) {
+        String userName = nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getUserName();
+        if (!ValidUserFieldsChecker.isValidUserName(userName)) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
         }
 
@@ -1052,7 +1061,9 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
             user.setLastname(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getFamilyName());
             user.setPassword(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getPassword());
             user.setRegisterDate(now);
-            user.setUsername(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getUserName());
+            String realm = Realm.of(nssStudent.getRestContext());
+            if (realm != null) userName += realm;
+            user.setUsername(userName);
             user.setSchoolGroupId(sg.getSchoolGroupID());
             user.setSingleSchoolAccount(true);
             try {

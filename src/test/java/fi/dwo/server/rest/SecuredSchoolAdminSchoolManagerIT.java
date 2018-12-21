@@ -224,7 +224,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
 
         System.out.println("submitNewUser without a schoolclass");
         try {
-            Boolean result = instance.SubmitSingleSchoolStudent(sc, rssStudent);
+            Boolean result = instance.submitSingleSchoolStudent(sc, rssStudent);
             assertEquals(true, result);
         } catch (Dwo2RestException ex) {
             fail("Student submit failed.");
@@ -252,7 +252,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         nssStudent.setDomSchoolClass(schoolClass);
 
         try {
-            Boolean result = instance.SubmitSingleSchoolStudent(sc, rssStudent);
+            Boolean result = instance.submitSingleSchoolStudent(sc, rssStudent);
             assertEquals(true, result);
         } catch (Dwo2RestException ex) {
             fail("Student submit failed.");

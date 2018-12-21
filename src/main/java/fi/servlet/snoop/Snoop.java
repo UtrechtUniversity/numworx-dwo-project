@@ -99,7 +99,10 @@ public class Snoop extends HttpServlet {
 		  "uid",
 		  "insertion",
 		  "unscoped-affiliation",
-		  "studentNumber"
+		  "studentNumber",
+		  "nlEduPersonHomeOrganizationId",
+		  "nlEduPersonHomeOrganization"
+		  
 		    );
 		for(String key: ajp) {
           Object value = request.getAttribute(key);

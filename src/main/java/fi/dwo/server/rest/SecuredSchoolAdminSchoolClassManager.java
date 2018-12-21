@@ -36,6 +36,7 @@ import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
+import fi.dwo.server.rest.util.Realm;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -128,8 +129,9 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         try {
             List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.TEACHER);
             domTeachers = new ArrayList<>(userList.size());
+            String realm = Realm.of(sc.getUserPrincipal());
             for (PersistentUser u : userList) {
-                domTeachers.add(u.buildDomTeacher());
+                domTeachers.add(u.buildDomTeacher(realm));
             }
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
@@ -163,8 +165,9 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         try {
             List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.STUDENT);
             domStudents = new ArrayList<DomStudent>(userList.size());
+            String realm = Realm.of(sc.getUserPrincipal());
             for (PersistentUser u : userList) {
-                domStudents.add(u.buildDomStudent());
+                domStudents.add(u.buildDomStudent(realm));
             }
 //            hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.STUDENT);
 //            domStudents = new ArrayList<DomStudent>(hrList.size());
@@ -224,9 +227,10 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
             List<DomTeacher> domTeachers;
             try {
                 domTeachers = new ArrayList<DomTeacher>(teachersOfClass.size());
+                String realm = Realm.of(restSchoolClass.getRestContext());
                 for (PersistentTeacherOfClass t : teachersOfClass) {
                     PersistentUser u = UserManager.findEntity(t.getPersistentTeacherOfClassPK().getUserID());
-                    domTeachers.add(u.buildDomTeacher());
+                    domTeachers.add(u.buildDomTeacher(realm));
                 }
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
@@ -282,10 +286,11 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
             List<DomStudent> domStudents;
             try {
                 domStudents = new ArrayList<DomStudent>(studentsList.size());
+                String realm = Realm.of(restSchoolClass.getRestContext());
                 for (PersistentStudentOfClass t : studentsList) {
                     PersistentUser u = UserManager.findEntity(t.getPersistentStudentOfClassPK().getUserID());
                     if (u != null) { // if not found,  no constraint of foreign key.
-                        domStudents.add(u.buildDomStudent());
+                        domStudents.add(u.buildDomStudent(realm));
                     }
                 }
             } catch (Exception e) {
@@ -413,7 +418,8 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         if (!ValidUserFieldsChecker.isValidEmail(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getEmail())) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, "The email address does not  conform with RFC 5322.");
         }
-        if (!ValidUserFieldsChecker.isValidUserName(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getUserName())) {
+        String userName = nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getUserName();
+        if (!ValidUserFieldsChecker.isValidUserName(userName)) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
         }
 
@@ -439,7 +445,9 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
             user.setLastname(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getFamilyName());
             user.setPassword(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getPassword());
             user.setRegisterDate(now);
-            user.setUsername(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getUserName());
+            String realm = Realm.of(nssStudent.getRestContext());
+            if (realm != null) userName += realm;
+            user.setUsername(userName);
             user.setSchoolGroupId(sg.getSchoolGroupID());
             user.setSingleSchoolAccount(true);
             try {

@@ -12,6 +12,7 @@ import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserPersistentContext;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -292,5 +293,17 @@ class UserBuilder implements UserDomainAuthorizer.UserState_U, UserDomainAuthori
     @Override
     public void setContext(UserDomainAuthorizer.Context context) {
         instance.setContext(context);
-    }    
+    }
+
+    @Override
+    public String getRealm() {
+      return instance.getContext().getUserCtx().getRealm();
+    }
+
+    @Override
+    public UserState_U setRealm(String realm) {
+      instance.getContext().getUserCtx().setRealm(realm);
+      return this;
+    }
+
 }

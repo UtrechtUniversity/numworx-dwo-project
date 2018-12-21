@@ -105,6 +105,7 @@ public class UserDomainAuthorizer {
         public RoleType roleType;
         public PersistentSchool school;
         public PersistentSchoolGroup schoolGroup;
+        public String realm;
 
         protected UserPersistentContext() {
             super();
@@ -116,6 +117,7 @@ public class UserDomainAuthorizer {
             this.school = ctx.school;
             this.schoolGroup = ctx.schoolGroup;
             this.user = ctx.user;
+            this.realm = ctx.realm;
         }
 
         /**
@@ -187,6 +189,14 @@ public class UserDomainAuthorizer {
         protected void setSchoolGroup(PersistentSchoolGroup schoolGroup) {
             this.schoolGroup = schoolGroup;
         }
+
+        protected void setRealm(String of) {
+          this.realm = of;          
+        }
+        
+        public String getRealm() {
+          return realm;
+        }
     }
 
 //
@@ -205,6 +215,8 @@ public class UserDomainAuthorizer {
         UserState_HR_R_S_SG_U setHasRoleIfType(DomHasRole hr, RoleType r) throws Dwo2Exception;
 
         public DomUserFull UpdateAccount(DomUserFull user) throws Dwo2Exception;
+
+        UserState_U setRealm(String realm);
     }
 
     public interface UserState_HR_R_S_SG_U extends PublicContext{
@@ -226,6 +238,8 @@ public class UserDomainAuthorizer {
         StudentState_HR_R_S_SG_U buildStudent() throws Dwo2Exception;
 
         DwoAdminState_HR_R_S_SG_U buildDwoAdmin() throws Dwo2Exception;
+
+        String getRealm();
     }
     
    public interface PublicContext {
@@ -249,5 +263,6 @@ public class UserDomainAuthorizer {
     protected void setContext(UserDomainAuthorizer.Context context) {
         this.context = context;
     }
+
 
 }

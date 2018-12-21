@@ -38,6 +38,8 @@ import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
+import fi.dwo.server.rest.util.Realm;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,6 +53,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
+
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
@@ -87,11 +90,12 @@ public class SecuredSchoolAdminSchoolManager {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
+        String realm = Realm.of(sc.getUserPrincipal());
         try {
             List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.TEACHER);
             domTeachers = new ArrayList<>(userList.size());
             for (PersistentUser u : userList) {
-                domTeachers.add(u.buildDomTeacher());
+                domTeachers.add(u.buildDomTeacher(realm));
             }
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
@@ -113,7 +117,7 @@ public class SecuredSchoolAdminSchoolManager {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         List<DomStudent> domStudents = null;
-
+        String realm = Realm.of(sc.getUserPrincipal());
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
@@ -126,7 +130,7 @@ public class SecuredSchoolAdminSchoolManager {
             List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.STUDENT);
             domStudents = new ArrayList<DomStudent>(userList.size());
             for (PersistentUser u : userList) {
-                domStudents.add(u.buildDomStudent());
+                domStudents.add(u.buildDomStudent(realm));
             }
 //            hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.STUDENT);
 //            domStudents = new ArrayList<DomStudent>(hrList.size());
@@ -165,10 +169,11 @@ public class SecuredSchoolAdminSchoolManager {
         }
 //        List<PersistentHasRole> hrList;
         try {
-            List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.SCHOOLADMIN);
+          String realm = Realm.of(sc.getUserPrincipal());
+           List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.SCHOOLADMIN);
             domSchoolAdminList = new ArrayList<>(userList.size());
             for (PersistentUser u : userList) {
-                domSchoolAdminList.add(u.buildDomSchoolAdmin());
+                domSchoolAdminList.add(u.buildDomSchoolAdmin(realm));
             }
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
@@ -242,7 +247,7 @@ public class SecuredSchoolAdminSchoolManager {
     @PUT
     @Produces({"application/json"})
     @Path("/submitSingleSchoolStudent")
-    public Boolean SubmitSingleSchoolStudent(@Context SecurityContext sc, RestNewSingleSchoolStudent nssStudent) {
+    public Boolean submitSingleSchoolStudent(@Context SecurityContext sc, RestNewSingleSchoolStudent nssStudent) {
         if (nssStudent == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
@@ -268,7 +273,11 @@ public class SecuredSchoolAdminSchoolManager {
             user.setLastname(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getFamilyName());
             user.setPassword(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getPassword());
             user.setRegisterDate(now);
-            user.setUsername(nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getUserName());
+            String userName = nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getUserName();
+            String realm = Realm.of(nssStudent.getRestContext());
+            if (realm != null) 
+              userName = userName + realm;
+            user.setUsername(userName);
             user.setSchoolGroupId(sg.getSchoolGroupID());
             user.setSingleSchoolAccount(true);
             try {
@@ -335,9 +344,12 @@ public class SecuredSchoolAdminSchoolManager {
         user.setLastname(teacher.getDomUserFull().getFamilyName());
         user.setPassword(teacher.getDomUserFull().getPassword());
         user.setRegisterDate(now);
-        user.setUsername(teacher.getDomUserFull().getUserName());
+        String userName = teacher.getDomUserFull().getUserName();
+        String realm = Realm.of(teacher.getRestContext());
+        if (realm != null) userName = userName + realm;
         //          user.setSchoolGroupId(sg.getSchoolGroupID());
-        user.setSingleSchoolAccount(false);
+        user.setUsername(userName);
+      user.setSingleSchoolAccount(false);
         try {
             SchoolUtilManager.addAccountAsTeacherInSchool(user, school);
         } catch (Dwo2Exception ex) {
@@ -348,7 +360,7 @@ public class SecuredSchoolAdminSchoolManager {
 //        } else {
 //            return false;
 //        }
-        return true;
+        return Boolean.TRUE;
     }
 
     /**
@@ -389,7 +401,7 @@ public class SecuredSchoolAdminSchoolManager {
                 LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to change a non-single school user with username {1} by schooladmin {0}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
             }
-            user.setUsername(nssStudent.getDomSingleSchoolStudent().getUserName());
+            //user.setUsername(nssStudent.getDomSingleSchoolStudent().getUserName());
             user.setEmail(nssStudent.getDomSingleSchoolStudent().getEmail());
             user.setGivenName(nssStudent.getDomSingleSchoolStudent().getGivenName());
             user.setInsertion(nssStudent.getDomSingleSchoolStudent().getInsertion());
@@ -622,7 +634,7 @@ public class SecuredSchoolAdminSchoolManager {
         }
 
         if (student.isSingleSchoolAccount()) {
-            return student.buildDomSingleSchoolStudent();
+            return student.buildDomSingleSchoolStudent(Realm.of(sc.getUserPrincipal()));
         } else {
             LOG.log(Level.SEVERE, "User {0} tried to access full userdata of user {1}.", new Object[]{submit.getDomGetSingleSchoolStudent().getDomStudent().getId(), shr.getUser()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -643,7 +655,7 @@ public class SecuredSchoolAdminSchoolManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            PersistentUser teacher = UserManager.findByUserName(restTeacher.getDomTeacher().getUserName());
+            PersistentUser teacher = UserManager.findEntity(MySQLPersistenceId.getNativeId(restTeacher.getDomTeacher()));
             thr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(teacher, school, RoleType.TEACHER);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
@@ -684,7 +696,7 @@ public class SecuredSchoolAdminSchoolManager {
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            PersistentUser student = UserManager.findByUserName(restStudent.getDomStudent().getUserName());
+            PersistentUser student = UserManager.findEntity(MySQLPersistenceId.getNativeId(restStudent.getDomStudent()));
             thr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);

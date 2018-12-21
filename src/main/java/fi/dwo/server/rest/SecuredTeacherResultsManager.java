@@ -40,6 +40,8 @@ import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.CourseInClassManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
+import fi.dwo.server.rest.util.Realm;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -101,6 +103,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
     @Path("/selectedTeachersResults")
     public DomResultsPerTeacher selectedTeachersResults(@Context SecurityContext sc, RestResultsPerTeacher rest) throws Dwo2Exception {
       UserState_HR_R_S_SG_U s1 = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      .setRealm(rest.getRestContext().getRealm())
       .setHasRole(rest.getRestContext().getDomHasRole());
       PersistentHasRole phr = s1.getHasRole();
       TeacherState_HR_P_R_S_SG_U state = s1
@@ -108,7 +111,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
   
       PersistentDwoProfile profile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(rest.getDomDwoProfile()));
       DomResultsPerTeacher dom = rest.getDomResultsPerTeacher();
-      dom.setTeacher(s1.getUser().buildDomTeacher());
+      dom.setTeacher(s1.getUser().buildDomTeacher(s1.getRealm()));
       List<PersistentSchoolClass> scl;
       if ( dom.getSchoolClasses() == null) {
         scl = SchoolClassUtilManager.getSchoolClassesOfTeacher(phr);
@@ -150,7 +153,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
       }
       if ( dom.getStudents() == null) {
         dom.setStudents(studentMap.values()
-            .stream().map(item -> new DomMapEntry<PersistenceId,DomStudent>(item.buildPersistenceId(),item.buildDomStudent()))
+            .stream().map(item -> new DomMapEntry<PersistenceId,DomStudent>(item.buildPersistenceId(),item.buildDomStudent(s1.getRealm())))
             .collect(Collectors.toList()));
       } else {
         Map<Long,PersistentUser> allStudents = new HashMap<>(studentMap);
@@ -162,7 +165,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             PersistentUser u = allStudents.get(pid);
             if (u != null) {
               studentMap.put(pid, u);
-              entry.setValue(u.buildDomStudent());
+              entry.setValue(u.buildDomStudent(s1.getRealm()));
             } else {
               entry.setValue(null);
             }
@@ -268,7 +271,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
         DomDwoProfile domProfile = aProfile.getDomDwoProfile();
         DomContext context = aProfile.getRestContext();
         DomHasRole domHasRole = context.getDomHasRole();
-
+        String realm = Realm.of(context);
         //check given role in RestContext
         if (domHasRole == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "User " + sc.getUserPrincipal().getName() + "didn't submit a hasRole in his RestContext.");
@@ -317,7 +320,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             // classcourses, courses, scocontext's and studentscocontext's.
 
             //Fetch teacher
-            DomTeacher teacher = UserManager.findEntity(phr.getPersistentHasRolePK().getUserID()).buildDomTeacher();
+            DomTeacher teacher = UserManager.findEntity(phr.getPersistentHasRolePK().getUserID()).buildDomTeacher(realm);
             results.setTeacher(teacher);
 
             //Collect schoolClasses of the teacher
@@ -364,7 +367,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             //convert studentMap and set in result
             HashMap<PersistenceId, DomStudent> domStudents = new HashMap<>(studentMap.size());
             studentMap.entrySet().stream().forEach((keyValuePair) -> {
-                DomStudent s = keyValuePair.getValue().buildDomStudent();
+                DomStudent s = keyValuePair.getValue().buildDomStudent(realm);
                 domStudents.put(s.getId(), s);
             });
             List<DomMapEntry<PersistenceId, DomStudent>> entryList = new ArrayList<>(domStudents.size());

@@ -182,7 +182,8 @@ public class SecuredUserAccountManager {
         try {
 //                return u.buildDomUserFullwLoginContext(LoginContextUtilManager.reqLoginContextSession(u));
             //loginDataUtilManager should use the returndata to log any statistical stuff needed for OLAP Warehousing.
-            return u.buildDomUserFullwLoginContext(LoginContextUtilManager.forceNewLoginContextSession(u));
+            DomUserFullwLoginContext result = u.buildDomUserFullwLoginContext(LoginContextUtilManager.forceNewLoginContextSession(u));
+            return result;
         } catch (Dwo2Exception ex) {
             Logger.getLogger(PublicUserManager.class.getName()).log(Level.SEVERE, "Invalid software state, this should not have happened.", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Invalid software state. This should not have happened.");
@@ -404,9 +405,9 @@ public class SecuredUserAccountManager {
         if (!ValidUserFieldsChecker.isValidEmail(user.getDomUserFull().getEmail())) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, "The email address does not  conform with RFC 5322.");
         }
-        if (!ValidUserFieldsChecker.isValidUserName(user.getDomUserFull().getUserName())) {
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
-        }
+//        if (!ValidUserFieldsChecker.isValidUserName(user.getDomUserFull().getUserName())) {
+//            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
+//        }
         if (!ValidUserFieldsChecker.isValidPassword(user.getDomUserFull().getPassword())) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Password_Invalid, "The password is not correctly formatted.");
         }

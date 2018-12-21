@@ -438,8 +438,9 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
     @Override
     public List<DomStudent> getTeachersStudents() throws Dwo2Exception {
         List<PersistentUser> students = instance.teacherActions.getTeachersStudents(instance.getContext());
+        String realm = instance.getContext().getUserCtx().getRealm();
         List<DomStudent> result = new ArrayList<>(students.size());
-        students.forEach((k -> result.add(k.buildDomStudent())));
+        students.forEach((k -> result.add(k.buildDomStudent(realm))));
         return result;
     }
 
