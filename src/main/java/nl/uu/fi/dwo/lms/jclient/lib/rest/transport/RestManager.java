@@ -22,7 +22,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
-import static nl.uu.fi.dwo.rest.RestListClassTypes.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -38,7 +37,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,7 +65,7 @@ class RestManager extends RestyDateTimeFormat {
     super();
     this.authenticator = authenticator;
     if (authenticator.isAuthenticated())
-      setBasicAuthString(authenticator.getUsername(), authenticator.getPassword());
+      setBasicAuthString(authenticator.getUsername(), authenticator.getPassword(), authenticator.getRealm());
   }
 
   public RestAuthenticator getAuthenticator() {
@@ -92,7 +90,7 @@ class RestManager extends RestyDateTimeFormat {
   /**
    * @param data
    */
-  public synchronized void setBasicAuthString(String data) {
+  synchronized void setBasicAuthString(String data) {
     // note that reference changes in Java are atomic.
     basicAuthString = data;
   }
@@ -101,12 +99,12 @@ class RestManager extends RestyDateTimeFormat {
    * @param username
    * @param password
    */
-  public synchronized void setBasicAuthString(String username, String password) {
+  public synchronized void setBasicAuthString(String username, String password, String realm) {
     getAuthenticator().setPassword(password);
     getAuthenticator().setUsername(username);
-    String authString = username + ":" + password;
-    // note that reference changes in Java are atomic.
-    basicAuthString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
+    getAuthenticator().setRealm(realm);
+// note that reference changes in Java are atomic.
+    basicAuthString = getAuthenticator().getBasicAuthentication();
   }
 
   /**

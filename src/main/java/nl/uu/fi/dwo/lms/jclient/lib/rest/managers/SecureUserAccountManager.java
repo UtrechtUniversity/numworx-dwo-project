@@ -50,7 +50,7 @@ public class SecureUserAccountManager {
     return user;
   }
 
-  public static DomLoginContext getLoginContext(String username, String password)
+  public static DomLoginContext getLoginContext(String username, String password, String realm)
       throws Dwo2Exception {
     DomLoginContext loginContext;
     Authenticator.setDefault(null);
@@ -58,8 +58,9 @@ public class SecureUserAccountManager {
     try {
       URL url = new URL(StoredRestManager.getInstance().getServerUrlPath().toString()
           + "rest/secure/user/account/getLoginContext"); // TODO make basicLogin
-      String authString = username + ":" + password;
-      authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
+      
+      String authString = new RestAuthenticator(username, password, realm).getBasicAuthentication();
+      
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("GET");
       conn.setRequestProperty("Accept", "application/json");
@@ -137,9 +138,7 @@ public class SecureUserAccountManager {
     // ensures basic auth data and cookies are wiped from Java Browser-like framework
     Authenticator.setDefault(null);
     CookieManager.setDefault(null);
-    restManager.setBasicAuthString(null);
-    restManager.getAuthenticator().setUsername(null);
-    restManager.getAuthenticator().setPassword(null);
+    restManager.setBasicAuthString(null, null, null);
     return result;
   }
 
@@ -160,9 +159,7 @@ public class SecureUserAccountManager {
     // ensures basic auth data and cookies are wiped from Java Browser-like framework
     Authenticator.setDefault(null);
     CookieManager.setDefault(null);
-    restManager.setBasicAuthString(null);
-    restManager.getAuthenticator().setUsername(null);
-    restManager.getAuthenticator().setPassword(null);
+    restManager.setBasicAuthString(null,null,null);
     return result;
   }
 
@@ -178,17 +175,11 @@ public class SecureUserAccountManager {
    */
   public static DomUserFull updateAccountData(DomUserFull user) throws Dwo2Exception {
     RestUserFull restUser = new RestUserFull();
-    restUser.setRestContext(new DomContext());
-    restUser.setDomUserFull(user);
-
     StoredRestManager restManager = StoredRestManager.getInstance();
+    restUser.setRestContext(restManager.getAuthenticator().getContext());
+    restUser.setDomUserFull(user);
     user = restManager.put("rest/secure/user/account/update", DomUserFull.class, restUser);
-    // Client client = ClientBuilder.newClient().register(feature);
-    // WebTarget target = client.target(RestAuthenticator.getServerUrlPath().toString());
-    // StoredRestManager.setWebTargetAndCredentials(target);
-    restManager.setBasicAuthString(null);
-    restManager.getAuthenticator().setPassword(null);
-    restManager.getAuthenticator().setUsername(null);
+    restManager.setBasicAuthString(null,null,null);
     LOG.log(Level.FINE, "Updated user profile of username {0}.",
         new Object[] {restUser.getDomUserFull().getUserName()});
     return user;
@@ -221,5 +212,11 @@ public class SecureUserAccountManager {
     b = StoredRestManager.getInstance().put("rest/secure/user/account/linkSaml", Boolean.class,
         rest);
     return b;
+  }
+
+  public static DomLoginContext getLoginContext() throws Dwo2Exception {
+    DomLoginContext context;
+    context = StoredRestManager.getInstance().get("rest/secure/user/account/getLoginContext", DomLoginContext.class);
+    return context;
   }
 }

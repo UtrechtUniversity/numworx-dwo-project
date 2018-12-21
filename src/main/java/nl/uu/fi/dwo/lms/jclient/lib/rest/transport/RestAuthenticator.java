@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.lms.jclient.lib.rest.transport;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.URL;
+import java.util.Base64;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 
 /**
@@ -15,9 +17,18 @@ public class RestAuthenticator extends Authenticator {
   private DomContext context;
   private String username;
   private String password;
+  private String realm;
 
   private static volatile RestAuthenticator instance;
 
+  public RestAuthenticator(String username, String password, String realm) {
+    setUsername(username);
+    setPassword(password);
+    setRealm(realm);
+  }
+
+  public RestAuthenticator() {}
+  
   @Deprecated // Static class use is evil!
   public static RestAuthenticator getInstance() {
     return instance;
@@ -38,7 +49,21 @@ public class RestAuthenticator extends Authenticator {
   //
   // }
   protected PasswordAuthentication GetPasswordAuthentication() {
-    return new PasswordAuthentication(getUsername(), getPassword().toCharArray());
+    return new PasswordAuthentication(getUsername() + getRealm(), getPassword().toCharArray());
+  }
+  
+  public String getBasicAuthentication() {
+    if ( isAuthenticated()) {
+      String u = username;
+      if(u.endsWith("@"))
+        u = u.substring(0, u.length()-1);
+      else if (!u.contains("@"))
+        u = u + realm;
+      String authString = u + ":" + password;
+      // note that reference changes in Java are atomic.
+      return  "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
+    }
+    return null;
   }
 
   /**
@@ -51,7 +76,7 @@ public class RestAuthenticator extends Authenticator {
   /**
    * @param username the username to set
    */
-  public void setUsername(String username) {
+  void setUsername(String username) {
     this.username = username;
   }
 
@@ -69,7 +94,7 @@ public class RestAuthenticator extends Authenticator {
   /**
    * @param password the password to set
    */
-  public void setPassword(String password) {
+  void setPassword(String password) {
     this.password = password;
   }
 
@@ -99,6 +124,21 @@ public class RestAuthenticator extends Authenticator {
    */
   public void setContext(DomContext context) {
     this.context = context;
+  }
+
+  /**
+   * @return the realm
+   */
+  public String getRealm() {
+    return realm;
+  }
+
+  /**
+   * @param realm the realm to set
+   */
+  void setRealm(String realm) {
+    if (realm == null) realm = "";
+    this.realm = realm;
   }
 
 }

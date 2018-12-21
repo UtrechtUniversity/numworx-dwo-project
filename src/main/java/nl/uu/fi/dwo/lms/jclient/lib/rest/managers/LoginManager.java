@@ -5,6 +5,7 @@ import com.owlike.genson.Genson;
 
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 
@@ -32,16 +33,19 @@ public class LoginManager {
 
   private static final Logger LOG = Logger.getLogger(LoginManager.class.getName());
 
+  public static DomUserFullwLoginContext basicLogin(String username, String password) throws Dwo2Exception {
+    return basicLogin(username, password, null);
+  }
   /**
    * Does basic login for authentication. To be replaced by digest.
    *
    * @param username
    * @param password
+   * @param realm 
    * @return
    * @throws Dwo2Exception
-   * @deprecated
    */
-  public static DomUserFullwLoginContext basicLogin(String username, String password)
+  public static DomUserFullwLoginContext basicLogin(String username, String password, String realm)
       throws Dwo2Exception {
     // login to rest service, note there is usually not yet be a fully configured StoredRestManager.
     DomUserFullwLoginContext user;
@@ -55,9 +59,7 @@ public class LoginManager {
       StoredRestManager restManager = StoredRestManager.getInstance();
       URL url = new URL(restManager.getServerUrlPath(), "rest/secure/user/account/login"); // TODO
                                                                                            // make
-                                                                                           // basicLogin
-      String authString = username + ":" + password;
-      authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
+      String authString = new RestAuthenticator(username, password, realm).getBasicAuthentication();
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("GET");
       conn.setRequestProperty("Accept", "application/json");
@@ -90,10 +92,7 @@ public class LoginManager {
       // GenericType<List<DomUserFull>>(){});
       user = genson.deserialize(json.toString(), DomUserFullwLoginContext.class);
       // initialize authenticated services
-      restManager.setBasicAuthString(authString);
-      // turn isAuthenticated into true
-      restManager.getAuthenticator().setUsername(username);
-      restManager.getAuthenticator().setPassword(password);
+      restManager.setBasicAuthString(user.getDomUserFull().getUserName(), user.getDomUserFull().getPassword(), user.getDomLoginContext().getRealm());
       // Set current user for domain
       return user;
     } catch (MalformedURLException e) {
@@ -111,4 +110,6 @@ public class LoginManager {
     }
   }
 
+  
+  
 }

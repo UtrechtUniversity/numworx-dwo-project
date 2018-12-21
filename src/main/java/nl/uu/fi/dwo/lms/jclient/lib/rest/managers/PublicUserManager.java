@@ -129,11 +129,8 @@ public class PublicUserManager {
       user = genson.deserialize(json.toString(), DomUserFullwLoginContext.class);
       String userName = user.getDomUserFull().getUserName();
       String password = user.getDomUserFull().getPassword();
-      String authString = userName + ":" + password;
-      authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
-      restManager.setBasicAuthString(authString);
-      restManager.getAuthenticator().setUsername(userName);
-      restManager.getAuthenticator().setPassword(password);
+      String realm = user.getDomLoginContext().getRealm();
+      restManager.setBasicAuthString(userName, password, realm);
       return user;
     } catch (MalformedURLException e) {
       throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Malformed URL");
