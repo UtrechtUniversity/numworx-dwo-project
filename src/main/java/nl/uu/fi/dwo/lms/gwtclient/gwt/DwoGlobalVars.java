@@ -224,7 +224,7 @@ public class DwoGlobalVars {
       };
       //correct state.
       state = DwoGlobalVarsState.LoggingIn;
-      RestAuthenticator.instance.setCredentials(null, null);
+      RestAuthenticator.instance.setCredentials(null, null, null);
     }
 
     /**
@@ -235,8 +235,8 @@ public class DwoGlobalVars {
      */
     private Promise<DomSchoolsRolesAndClassesV2> login_step1(Promise<DomUserFullwLoginContext> resolved) throws Exception {
       LOG.log(Level.INFO, "Login completed setting current user.");
-      GwtRestVars.getInstance().setCurrentUser(resolved.getValue().getDomUserFull());
-      setCurrentUser(resolved.getValue().getDomUserFull());
+      GwtRestVars.getInstance().setCurrentUser(resolved.getValue().getDomUserFull(),resolved.getValue().getDomLoginContext().getRealm());
+      setCurrentUser(resolved.getValue().getDomUserFull(), resolved.getValue().getDomLoginContext().getRealm());
       currentLoginContext = resolved.getValue().getDomLoginContext();
       LOG.log(Level.INFO, "Getting current and available school logins.");
       SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
@@ -365,11 +365,11 @@ public class DwoGlobalVars {
     /**
      * @param aCurUser the currentUser to set
      */
-    public void setCurrentUser(DomUserFull aCurUser) {
+    public void setCurrentUser(DomUserFull aCurUser, String realm) {
         currentUser = aCurUser;
         this.currentUser = aCurUser;
         //notify the gwt-rest interface configuration
-        GwtRestVars.getInstance().setCurrentUser(aCurUser);
+        GwtRestVars.getInstance().setCurrentUser(aCurUser, realm);
 
     }
 
@@ -378,7 +378,7 @@ public class DwoGlobalVars {
     public void clearCurrentUser() {
         currentUser = null;
         //notify the gwt-rest interface configuration
-        GwtRestVars.getInstance().setCurrentUser(null);
+        GwtRestVars.getInstance().setCurrentUser(null,null);
 
         state = DwoGlobalVarsState.NotLoggedIn;
 
@@ -454,5 +454,13 @@ public class DwoGlobalVars {
 
     public boolean isPremium() {
       return getActiveSchoolRoleAndClass().getSchool().getAboType() == AboType.premium;
+    }
+
+    public String getRealm() {
+      return currentLoginContext.getRealm();
+    }
+
+    public void setCurrentUser(DomUserFull user) {
+      setCurrentUser(user, getRealm());
     }
 }

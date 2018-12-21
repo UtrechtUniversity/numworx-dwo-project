@@ -351,7 +351,7 @@ public class AccountPresenter {
                 //calculate tree and call plotting
                 LOG.log(Level.INFO, "DomUser returned.");
                 DomUserFull u = resolved.getValue();
-                dwoGlobalVars.setCurrentUser(u);
+                dwoGlobalVars.setCurrentUser(u, dwoGlobalVars.getRealm());
                 view.clear();
                 view.updateUserView(u);
                 eventBus.fireEvent(new MessageDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_User_ConfirmChangeCommited()));
