@@ -305,28 +305,38 @@ public class PersistentUser implements Serializable {
         fillDomUserFull(user);
         result.setDomUserFull(user);
         result.setDomLoginContext(loginContext.buildDomLoginContext());
+        splitRealm(result);
         return result;
     }
     
-    public DomStudent buildDomStudent() {
+    private void splitRealm(DomUserFullwLoginContext result) {
+      String username  = result.getDomUserFull().getUserName();
+      int split = username.indexOf('@');
+      if (split > 0) {
+        result.getDomLoginContext().setRealm(username.substring(split));
+        result.getDomUserFull().setUserName(username.substring(0, split));
+      }     
+    }
+
+    private DomStudent buildDomStudent() {
         DomStudent user = new DomStudent();
         fillDomUser(user);
         return user;
     }
 
-    public DomTeacher buildDomTeacher() {
+    private DomTeacher buildDomTeacher() {
         DomTeacher user = new DomTeacher();
         fillDomUser(user);
         return user;
     }
 
-    public DomSchoolAdmin buildDomSchoolAdmin() {
+    private DomSchoolAdmin buildDomSchoolAdmin() {
         DomSchoolAdmin user = new DomSchoolAdmin();
         fillDomUser(user);
         return user;
     }
 
-    public DomSingleSchoolStudent buildDomSingleSchoolStudent() {
+    private DomSingleSchoolStudent buildDomSingleSchoolStudent() {
         DomSingleSchoolStudent user = new DomSingleSchoolStudent();
         fillDomUser(user);
         user.setPassword(password);
@@ -380,5 +390,36 @@ public class PersistentUser implements Serializable {
         id.setIdString(String.format("MYSQL;%s;%020d",
                 PersistenceClassType.PersistentUser.name(), aUserId));
         return id;
+    }
+
+    public DomStudent buildDomStudent(String realm) {
+      DomStudent s = buildDomStudent();
+      return withoutRealm(realm, s);
+    }
+
+    private <T extends DomUser> T withoutRealm(String realm, T s) {
+      if (realm == null) return s;
+      String name = s.getUserName();
+      int split = name.indexOf('@');
+      if (split > 0)
+      {
+        if (name.endsWith(realm))
+          s.setUserName(name.substring(0,split));
+      } else
+        s.setUserName(name + '@');
+      
+      return s;
+    }
+
+    public DomTeacher buildDomTeacher(String realm) {
+      return withoutRealm(realm, buildDomTeacher());
+    }
+
+    public DomSchoolAdmin buildDomSchoolAdmin(String realm) {
+      return withoutRealm(realm, buildDomSchoolAdmin());
+    }
+
+    public DomSingleSchoolStudent buildDomSingleSchoolStudent(String realm) {
+      return withoutRealm(realm, buildDomSingleSchoolStudent());
     }        
 }
