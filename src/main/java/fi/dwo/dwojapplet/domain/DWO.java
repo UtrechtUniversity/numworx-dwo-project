@@ -971,7 +971,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
             Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, "", ex);
         }
         try {
-            DwoHelper.setCurrentUser(null);
+            DwoHelper.setCurrentUser(null,null);
         } catch (Dwo2Exception ex) {
             Logger.getLogger(DWO.class.getName()).log(Level.SEVERE, "", ex);
         }
@@ -2499,7 +2499,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
        DomUserFullwLoginContext user = PublicUserManager.samlLogin(samlUserID, samlOrgID, authToken);
        String name = user.getDomUserFull().getUserName();
        String pw = user.getDomUserFull().getPassword();
-       GuiCreator.instance().loginWithMd5(name, pw);
+       String realm = user.getDomLoginContext().getRealm();
+  // FIXME NIET GOED, moet REALM meenemen
+       GuiCreator.instance().loginWithMd5(name, pw, realm);
     }
     
     
@@ -2526,8 +2528,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         if (samlUserID != null && samlOrgID != null) {
             try {
                 DomUserFullwLoginContext user = PublicUserManager.samlLogin(samlUserID, samlOrgID, authToken);
-                DwoHelper.setCurrentLoginContext(user.getDomLoginContext()); // currentlogincontext is used in setCurrentUser
-                DwoHelper.setCurrentUser(user.getDomUserFull());
+                DwoHelper.setCurrentUser(user.getDomUserFull(), user.getDomLoginContext());
                 return DwoHelper.getCurrentFacadeUser();
             } catch (Dwo2Exception e) {
                 //TODO LOG.log(...)

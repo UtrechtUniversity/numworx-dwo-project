@@ -143,8 +143,7 @@ public class GuiCreator {
         try {
             DwoHelper.setContact(false);
             DomUserFullwLoginContext user = LoginManager.basicLogin(username, MD5.getHashString(String.valueOf(password)));
-            DwoHelper.setCurrentLoginContext(user.getDomLoginContext());
-            DwoHelper.setCurrentUser(user.getDomUserFull());
+            DwoHelper.setCurrentUser(user.getDomUserFull(),user.getDomLoginContext());
 //            Code underdevelopment to do digest.
 //            PublicUserManager.digestLogin(username, password);
 
@@ -177,17 +176,17 @@ public class GuiCreator {
      *
      * @param username The username of the user.
      * @param password The password of the user.
+     * @param realm 
      * @throws fi.dwo.commons.exceptions.LoginException
      * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      *
      */
-    public void loginWithMd5(String username, String password) throws LoginException, Dwo2Exception {
+    public void loginWithMd5(String username, String password, String realm) throws LoginException, Dwo2Exception {
         dwo.setWait();
         try {
             DwoHelper.setContact(false);
-            DomUserFullwLoginContext user = LoginManager.basicLogin(username, password);
-            DwoHelper.setCurrentLoginContext(user.getDomLoginContext());
-            DwoHelper.setCurrentUser(user.getDomUserFull());
+            DomUserFullwLoginContext user = LoginManager.basicLogin(username, password, realm);
+            DwoHelper.setCurrentUser(user.getDomUserFull(),user.getDomLoginContext());
 //          Code under development for digest.
 //            PublicUserManager.digestLogin(username, password);
 

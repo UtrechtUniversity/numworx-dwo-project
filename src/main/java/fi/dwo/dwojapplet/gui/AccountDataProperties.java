@@ -1,6 +1,7 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -48,16 +49,15 @@ public class AccountDataProperties {
      */
     public void Update() throws Dwo2Exception{
             user = SecureUserAccountManager.updateAccountData(user);
+            DomLoginContext context = DwoHelper.getCurrentLoginContext();
+
             // update local Global storage.
-            String authString = user.getUserName() + ":" + user.getPassword();
-            authString = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
+            
  // XXX no information hiding here!
-            StoredRestManager.getInstance().setBasicAuthString(authString);
-            StoredRestManager.getInstance().getAuthenticator().setPassword(user.getPassword());
-            StoredRestManager.getInstance().getAuthenticator().setUsername(user.getUserName());
+            StoredRestManager.getInstance().setBasicAuthString(user.getUserName(),user.getPassword(),context.getRealm());
  
             DwoHelper.updateCurrentUser(user);
-            DwoHelper.setCurrentUser(user);
+            DwoHelper.setCurrentUser(user, context);
             //TODO above method currently updates the login date, this should not occur for this function.
             
     }

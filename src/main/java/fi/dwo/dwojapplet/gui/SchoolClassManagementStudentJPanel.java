@@ -195,11 +195,12 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
          */
         private void switchToActiveSchoolClass(DomSchoolClass sc) {
             DomUserFull user = DwoHelper.getCurrentUser();
+            DomLoginContext context = DwoHelper.getCurrentLoginContext();
             try {
                 prop.setActiveSchoolClass(sc);
 //                //switch role now
                 LOG.log(Level.INFO, "switching schoolclass now");
-                GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
+                GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword(), context.getRealm());
             } catch (LoginException ex) {
                 LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
@@ -234,7 +235,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
             try {
                 if (value == loginImage) {
                     DomLoginContext loginContext = SecureUserAccountManager.getLoginContext(DwoHelper.getCurrentUser().getUserName(),
-                            DwoHelper.getCurrentUser().getPassword());
+                            DwoHelper.getCurrentUser().getPassword(), DwoHelper.getCurrentLoginContext().getRealm());
                     if (loginContext != null && loginContext.getLastLoginTimeStamp() != null && !loginContext.getLastLoginTimeStamp().equals(DwoHelper.getCurrentLoginContext().getLastLoginTimeStamp())) {
                         if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
                                 Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession)
@@ -250,8 +251,9 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                     DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, 3);
                     prop.setActiveSchoolClass(schoolClass);
                     DomUserFull user = DwoHelper.getCurrentUser();
+                    DomLoginContext context = DwoHelper.getCurrentLoginContext();
                     //switch role now
-                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
+                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword(), context.getRealm());
                 } else if (value == removeImage) {
                     int row = tableModel.getSelectedRow();
                     DomSchoolClass schoolClass = (DomSchoolClass) tableModel.getValueAt(row, 3);

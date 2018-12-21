@@ -43,6 +43,7 @@ import javax.swing.JOptionPane;
 
 import netscape.javascript.JSObject;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 
 /**
  * Static Helper class for the DWO. The DwoHelper has two startup phases. During
@@ -164,15 +165,20 @@ public final class DwoHelper {
      *
      *
      * @param aCurrentUser
+     * @param aLoginContext 
      * @throws Dwo2Exception
      */
-    public static void userInit(DomUserFull aCurrentUser) throws Dwo2Exception {
+    public static void userInit(DomUserFull aCurrentUser, DomLoginContext aLoginContext) throws Dwo2Exception {
         currentUser = aCurrentUser;
+        currentLoginContext = aLoginContext;
         //Fetch all the login roles from the server for the current roles
         try {
             if (aCurrentUser != null) {
-                RestAuthenticator.getInstance().setUsername(aCurrentUser.getUserName());
-                RestAuthenticator.getInstance().setPassword(aCurrentUser.getPassword());
+              String username = aCurrentUser.getUserName();
+              String password = aCurrentUser.getPassword();
+              String realm = aLoginContext.getRealm();
+              StoredRestManager.getInstance().setBasicAuthString(username, password, realm);
+
                 DomSchoolsRolesAndClassesV2 srcs = SecureUserAccountLoginsManager.getSchoolLogins();//update DwoHelper
                 DwoHelper.setSchoolLogins(srcs);
 //                nullSchool = SecureUserAccountManager.getNullSchool();
@@ -184,13 +190,12 @@ public final class DwoHelper {
 				{
 				  context.setDomHasRole(activeSchoolRoleAndClass.getHasRole());
 				} 
-
-				RestAuthenticator.getInstance().setContext(context);
+				context.setRealm(realm);
+				StoredRestManager.getInstance().getAuthenticator().setContext(context);
             } else {
                 schoolLogins = null;
-                RestAuthenticator.getInstance().setUsername(null);
-                RestAuthenticator.getInstance().setPassword(null);
-                RestAuthenticator.getInstance().setContext(null);
+                StoredRestManager.getInstance().setBasicAuthString(null,null,null);
+                StoredRestManager.getInstance().getAuthenticator().setContext(null);
             }
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
@@ -606,13 +611,11 @@ public final class DwoHelper {
     /**
      * @param aCurrentUser the current User to set
      */
-    public static void setCurrentUser(DomUserFull aCurrentUser) throws Dwo2Exception {
-        userInit(aCurrentUser);
+    public static void setCurrentUser(DomUserFull aCurrentUser, DomLoginContext aCurrentLoginContext) throws Dwo2Exception {
+        userInit(aCurrentUser,aCurrentLoginContext);
         if (aCurrentUser != null) {
-            RestAuthenticator.getInstance().setUsername(aCurrentUser.getUserName());
-            RestAuthenticator.getInstance().setPassword(aCurrentUser.getPassword());
             GuiCreator.instance().clearCurrentUserData( MySQLPersistenceId.getNativeId(aCurrentUser).intValue());
-			currentFacadeUser = buildFacadeUser(aCurrentUser, getSchoolLogins(), currentLoginContext);
+			currentFacadeUser = buildFacadeUser(aCurrentUser, getSchoolLogins(), aCurrentLoginContext);
         } else {
             if (currentFacadeUser != null) {
                 GuiCreator.instance().clearCurrentUserData(currentFacadeUser.getID());
@@ -752,7 +755,7 @@ public final class DwoHelper {
         return appUrlPath;
     }
 
-    public static void setCurrentLoginContext(DomLoginContext domLoginContext) {
+    static void setCurrentLoginContext(DomLoginContext domLoginContext) {
         currentLoginContext = domLoginContext;
     }
 
