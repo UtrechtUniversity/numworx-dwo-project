@@ -95,13 +95,13 @@ public class SecuredUserAccountManager {
         domLoginCheck.setPassword(DomLoginCheck.crypt(password));
         RestLoginCheck restLoginCheck = new RestLoginCheck();
         restLoginCheck.setDomLoginCheck(domLoginCheck);
-        GwtRestVars.instance().setCurrentUser(null);
+        GwtRestVars.instance().setCurrentUser(null,null);
         service.loginCheck(restLoginCheck, new MethodCallback<Boolean>() {
 
             @Override
             public void onSuccess(Method method, Boolean response) {
                 if (Boolean.TRUE.equals(response)) {
-                    GwtRestVars.instance().setCredentials(username, password);
+                    GwtRestVars.instance().setCredentials(username, password,null);
                 }
                 callback.onSuccess(response);
             }
@@ -294,7 +294,7 @@ public class SecuredUserAccountManager {
         domSamlUser.setSamlUserId(userid);
         domSamlUser.setSamlOrgId(org);
         domSamlUser.setAuthToken(token);
-        GwtRestVars.instance().setCurrentUser(null);
+        GwtRestVars.instance().setCurrentUser(null,null);
         RestSamlUser samlRestUser = new RestSamlUser();
         samlRestUser.setDomSamlUser(domSamlUser);
         MethodCallback<DomUserFullwLoginContext> restcallback = new MethodCallback<DomUserFullwLoginContext>() {
@@ -306,7 +306,7 @@ public class SecuredUserAccountManager {
 
             @Override
             public void onSuccess(Method method, DomUserFullwLoginContext response) {
-                GwtRestVars.instance().setCurrentUser(response.getDomUserFull());
+                GwtRestVars.instance().setCurrentUser(response.getDomUserFull(),response.getDomLoginContext().getRealm());
                 userCallback.onSuccess(response);
             }
         };
@@ -332,7 +332,7 @@ public class SecuredUserAccountManager {
 
             @Override
             public void onSuccess(Method method, DomUserFullwLoginContext response) {
-                GwtRestVars.instance().setCurrentUser(response.getDomUserFull());
+                GwtRestVars.instance().setCurrentUser(response.getDomUserFull(), response.getDomLoginContext().getRealm());
                 userCallback.onSuccess(response);
             }
         };

@@ -26,7 +26,7 @@ public class PublicUserManager {
         RestNewUser user = new RestNewUser();
         user.setDomNewUser(domNewUser);
         user.setRestContext(new DomContext());
-        instance.setCurrentUser(null);
+        instance.setCurrentUser(null,null);
         caller.submitNewUser(user, new Callback<Boolean>(asyncCallback));
 
     }

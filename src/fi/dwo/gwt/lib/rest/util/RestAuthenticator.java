@@ -14,6 +14,7 @@ import com.google.gwt.http.client.RequestBuilder;
 public class RestAuthenticator implements DispatcherFilter {
 	private String username;
 	private String password;
+	private String realm = "";
 	@Override
 	public boolean filter(Method method, RequestBuilder builder) {
 		boolean haspassword = username != null && password != null;
@@ -21,14 +22,28 @@ public class RestAuthenticator implements DispatcherFilter {
 //		if(haspassword)builder.setUser(username);
 		if(haspassword)
 		{
-			builder.setHeader("Authorization", "Basic " + Base64.btoa(username + ":" + password));
+			builder.setHeader("Authorization", "Basic " + Base64.btoa(username + realm + ":" + password));
 		}
 //		builder.setIncludeCredentials(haspassword);
 		return true;
 	}
-    public void setCredentials(String aUsername, String aPassword){
+    /**
+   * @return the realm
+   */
+  public String getRealm() {
+    return realm;
+  }
+  /**
+   * @param realm the realm to set
+   */
+  public void setRealm(String realm) {
+    if(realm == null) realm = "";
+    this.realm = realm;
+  }
+    public void setCredentials(String aUsername, String aPassword, String realm){
         username = aUsername;
         password = aPassword;
+        setRealm(realm);
     }
     
     private RestAuthenticator() {

@@ -143,19 +143,24 @@ public class GwtRestVars {
         return currentUser;
     }
 
+    @Deprecated
+    public void setCurrentUser(DomUserFull u) {
+      setCurrentUser(u, null);
+    }
+    
     /**
      * @param aCurUser
      */
-    public void setCurrentUser(DomUserFull aCurUser) {
+    public void setCurrentUser(DomUserFull aCurUser, String realm) {
         currentUser = aCurUser;
         if(currentUser != null)
-        	setCredentials(currentUser.getUserName(), currentUser.getPassword());        
+        	setCredentials(currentUser.getUserName(), currentUser.getPassword(), realm);        
         else
-        	setCredentials(null, null);
+        	setCredentials(null, null,null);
     }
 
-    public void setCredentials(String username, String password) {
-    	getAuthenticator().setCredentials(username, password);
+    public void setCredentials(String username, String password, String realm) {
+    	getAuthenticator().setCredentials(username, password, realm);
     }
     
     /**
