@@ -493,7 +493,7 @@ public class SecuredDwoAdminSchoolManager {
             for (PersistentHasRole hr : hrList) {
                 PersistentUser user = (PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID());
                 DomTeacherAndHasRole domTAHR = new DomTeacherAndHasRole();
-                domTAHR.setTeacher(user.buildDomTeacher());
+                domTAHR.setTeacher(user.buildDomTeacher(null));
                 domTAHR.setHasRole(hr.buildDomHasRole());
                 resultList.add(domTAHR);
             }

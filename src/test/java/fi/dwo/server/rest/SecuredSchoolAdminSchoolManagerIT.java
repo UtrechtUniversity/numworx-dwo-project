@@ -145,7 +145,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         PersistentUser user = (PersistentUser) UserManager.findByUserName("user02");
         RestStudent restStudent = new RestStudent();
         restStudent.setRestContext(new DomContext());
-        restStudent.setDomStudent(user.buildDomStudent());
+        restStudent.setDomStudent(user.buildDomStudent(null));
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         try {
             Boolean result = instance.removeSingleSchoolStudentFromSchool(sc, restStudent);
@@ -174,7 +174,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
 
         restStudent = new RestStudent();
         restStudent.setRestContext(new DomContext());
-        restStudent.setDomStudent(user.buildDomStudent());
+        restStudent.setDomStudent(user.buildDomStudent(null));
         Boolean result = instance.removeSingleSchoolStudentFromSchool(sc, restStudent);
         assertEquals("Student was not removed.", true, result);
         PersistentUser userResult = (PersistentUser) UserManager.findByUserName("user04");
@@ -364,7 +364,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         PersistentUser user = (PersistentUser) UserManager.findByUserName("user04");
         RestTeacher restTeacher = new RestTeacher();
-        DomTeacher domTeacher = user.buildDomTeacher();
+        DomTeacher domTeacher = user.buildDomTeacher(null);
         restTeacher.setDomTeacher(domTeacher);
         try {
             Boolean expResult = null;
@@ -392,7 +392,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
             fail("Teacher did not have a hasRole in the test database. He should.");
         }
 
-        restTeacher.setDomTeacher(user.buildDomTeacher());
+        restTeacher.setDomTeacher(user.buildDomTeacher(null));
         Boolean result = instance.removeTeacherFromSchool(sc, restTeacher);
         assertEquals("Teacher was not removed.", true, result);
         PersistentUser userResult = (PersistentUser) UserManager.findByUserName("user03");
@@ -427,7 +427,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         PersistentUser user = (PersistentUser) UserManager.findByUserName("user04");
         RestStudent restStudent = new RestStudent();
         restStudent.setRestContext(new DomContext());
-        restStudent.setDomStudent(user.buildDomStudent());
+        restStudent.setDomStudent(user.buildDomStudent(null));
         try {
             Boolean result = instance.removeStudentFromSchool(sc, restStudent);
             assertEquals("SingleSchoolStudent was removed but should fail.", false, result);
@@ -455,7 +455,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
 
         restStudent = new RestStudent();
         restStudent.setRestContext(new DomContext());
-        restStudent.setDomStudent(user.buildDomStudent());
+        restStudent.setDomStudent(user.buildDomStudent(null));
         Boolean result = instance.removeStudentFromSchool(sc, restStudent);
         assertEquals("Student was not removed.", true, result);
         PersistentUser userResult = (PersistentUser) UserManager.findByUserName("user02");
@@ -493,7 +493,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
         SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
         PersistentUser user = (PersistentUser) UserManager.findByUserName("user04");
         RestSchoolAdmin restSchoolAdmin = new RestSchoolAdmin();
-        restSchoolAdmin.setDomSchoolAdmin(user.buildDomSchoolAdmin());
+        restSchoolAdmin.setDomSchoolAdmin(user.buildDomSchoolAdmin(null));
         try {
             Boolean result = instance.removeSchoolAdminFromSchool(sc, restSchoolAdmin);
             assertEquals(true, result);
@@ -519,7 +519,7 @@ public class SecuredSchoolAdminSchoolManagerIT {
             fail("SchoolAdmin did not have a hasRole in the test database. He should.");
         }
 
-        restSchoolAdmin.setDomSchoolAdmin(user.buildDomSchoolAdmin());
+        restSchoolAdmin.setDomSchoolAdmin(user.buildDomSchoolAdmin(null));
         Boolean result = instance.removeSchoolAdminFromSchool(sc, restSchoolAdmin);
         assertEquals("SchoolAdmin was not removed.", true, result);
         PersistentUser userResult = (PersistentUser) UserManager.findByUserName("user06");
