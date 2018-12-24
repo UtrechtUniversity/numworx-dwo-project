@@ -36,7 +36,7 @@ public class RegisterController {
 	}
 
 	public void register(DomNewUser domNewUser) {
-		GwtRestVars.instance().setCurrentUser(null);
+		GwtRestVars.instance().setCurrentUser(null,null);
 		Promise<Boolean> p = pum.RegisterNewUser(domNewUser);
 
 		Failure failure = (promise) -> 
@@ -65,12 +65,12 @@ public class RegisterController {
 		if (samlUser != null) {
 			SecuredUserAccountManager manager = new SecuredUserAccountManager();
 			Success<Boolean, Boolean> link = (promise) -> {
-				GwtRestVars.instance().setCredentials(domNewUser.getUsername(), domNewUser.getPassword());			
+				GwtRestVars.instance().setCredentials(domNewUser.getUsername(), domNewUser.getPassword(), null);			
 				return manager.linkSaml(samlUser);
 				
 			};
 			Function<Promise<?>, Promise<? extends Boolean>> recovery = (promise) -> {
-				GwtRestVars.instance().setCredentials(domNewUser.getUsername(), domNewUser.getPassword());			
+				GwtRestVars.instance().setCredentials(domNewUser.getUsername(), domNewUser.getPassword(), null);			
 				return manager.getAccountData().map(v -> Boolean.TRUE);
 			};
 			p = p.recoverWith(recovery).then(link);
