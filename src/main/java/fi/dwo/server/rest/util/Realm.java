@@ -14,6 +14,7 @@ public class Realm {
   }
 
   public static String of(DomContext context) {
+    if (context == null) return null;
     String realm = context.getRealm();
     if (realm == null|| realm.isEmpty()) return null;
     return realm;

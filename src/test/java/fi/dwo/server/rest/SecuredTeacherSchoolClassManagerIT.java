@@ -540,6 +540,7 @@ public class SecuredTeacherSchoolClassManagerIT {
 
         //try if a non-single school student can be updated
         dssStudent.setUserName("user03");
+        dssStudent.setId(PersistentUser.buildPersistenceId(10L));  // update by PersistenceID, not by name!
         dssStudent.setGivenName("User");
         dssStudent.setFamilyName("Lastname 02");
         dssStudent.setPassword("bla");
