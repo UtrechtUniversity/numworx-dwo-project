@@ -201,6 +201,65 @@ public class StrokeContainer {
 		
 	}
 	
+	public boolean isNearStroke(int x, int y, int distance) {
+		DoubleRectangle r = new DoubleRectangle(x-distance/2,y-distance/2,distance,distance);
+		for (int i = 0; i < strokes.size(); i++) {
+			Stroke stroke = strokes.get(i);
+			for(int j=0 ; j<stroke.getParsePoints().size() ; j++) {
+				if(r.contains(stroke.getParsePoints().get(j))) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public void removeStrokes(int x, int y) {
+		DoubleRectangle r = new DoubleRectangle(x-10,y-10,20,20);
+	
+		for (int i = 0; i < wmObjects.size(); i++) {
+			ArrayList<Stroke> wmStrokes = wmObjects.get(i).getStrokes();
+			for (int j = 0; j < wmStrokes.size(); j++) {
+				Stroke stroke = wmStrokes.get(j);
+				for(int k=0 ; k<stroke.getParsePoints().size() ; k++) {
+					if(r.contains(stroke.getParsePoints().get(k))) {
+						wmObjects.remove(wmObjects.get(i));
+						strokes.remove(stroke);
+						break;
+					}
+				}
+			}
+		}
+		for (int i = 0; i < strokes.size(); i++) {
+			Stroke stroke = strokes.get(i);
+			for(int j=0 ; j<stroke.getParsePoints().size() ; j++) {
+				if(r.contains(stroke.getParsePoints().get(j))) {
+					strokes.remove(stroke);
+					break;
+				}
+			}
+		}
+		makeParseArea();
+	}
+	
+	public void removeWmObjects(int x, int y) {
+		for (int i = 0; i < wmObjects.size(); i++) {
+			if(wmObjects.get(i).getBox().contains(new DoubleRectangle(x,y,0,0),-4,-4)) {
+				wmObjects.remove(wmObjects.get(i));
+				break;
+			}
+		}
+		makeParseArea();
+	}
+	
+	public void removeWmObjects() {
+		wmObjects.clear();
+	}
+	
+	public void removeStrokes() {
+		strokes.clear();
+	}
+	
 	private  ArrayList<WMObject> removeAllInBox(ArrayList<WMObject> wo, DoubleRectangle box) {
 		ArrayList<WMObject> woNew = new ArrayList<WMObject>();
 		for (int i = 0; i < wo.size(); i++) {

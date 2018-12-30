@@ -97,8 +97,9 @@ public class Stroke {
 			parsePoints = standardizeToLength((int)(length/2),doublePoints);
 			parsePointsBox = makeParsingBox(parsePoints);
 			parseable = false;
-			return;
+		//	return;
 		//}
+			timeStamp = System.currentTimeMillis();
 	}
 	
 	public Stroke(ArrayList<DoublePoint> points, boolean fromParsePoints) {
@@ -110,6 +111,7 @@ public class Stroke {
 		angles = new double[parsePoints.size()-1];
 		makeAngles();
 		makeDAngles();
+		timeStamp = System.currentTimeMillis();
 	}
 	
 	public void setOneStrokeTeken(String s) {
