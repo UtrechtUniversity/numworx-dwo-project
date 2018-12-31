@@ -266,7 +266,11 @@ public class Matrix extends Expressie
 		if (matrix.geefKinderen().size() != matrix.geefKinderen().get(0).size())
 			throw new IllegalStateException("invalid dimensions");
 
-		if (matrix.geefKinderen().size() == 2)
+		if (matrix.geefDimensie()[0] == 1)
+		{
+			det = matrix.geefKinderen().get(0).get(0);
+		}
+		else if (matrix.geefDimensie()[0] == 2)
 		{
 			det = new Aftrekking(
 				new Vermenigvuldiging(matrix.geefKinderen().get(0).get(0), matrix.geefKinderen().get(1).get(1)), 
