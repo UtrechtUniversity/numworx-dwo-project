@@ -78,7 +78,7 @@ public class Matrix extends Expressie
 	}
 	
 	/**
-	 * Geef de waarde van de grootte (lengte, norm, in het Engels ‘magnitude’).
+	 * Geef de determinant van de vierkant matrix.
 	 * 
 	 * @return
 	 */
@@ -86,24 +86,205 @@ public class Matrix extends Expressie
 	{
 		Expressie expr = null;
 		Expressie vermenigvuldiging = null;
-				
-		for (int i = 0; i < kinderen.size(); i++) // rijen
+
+		if (geefDimensie()[0] == geefDimensie()[1]) // matrix moet vierkant zijn
 		{
-			// TODO loop over goede indices
-			vermenigvuldiging = new Vermenigvuldiging(kinderen.get(0).get(0), kinderen.get(1).get(1));
-			// tel alle kwadraten op
-			if (i == 0)
-				expr = vermenigvuldiging;
+			Matrix temporary;
+			ArrayList<ArrayList<Expressie>> tempKinderen;
+			expr = new BasisExpressie(0);
+
+			if (geefDimensie()[0] == 1)
+			{
+				expr = kinderen.get(0).get(0);
+			}
+			else if (geefDimensie()[0] == 2)
+			{
+				expr = new Aftrekking(new Vermenigvuldiging(kinderen.get(0).get(0), kinderen.get(1).get(1)), 
+					new Vermenigvuldiging(kinderen.get(0).get(1), kinderen.get(1).get(0)));
+			}
 			else
-				expr = new Optelling(expr, vermenigvuldiging);
+			{
+				for (int i = 0; i < kinderen.get(0).size(); i++)
+				{
+					tempKinderen = initializeMatrixKinderen(kinderen.size() - 1, kinderen.get(0).size() - 1);
+	
+					for (int j = 1; j < kinderen.size(); j++)
+					{
+						for (int k = 0; k < kinderen.get(0).size(); k++)
+						{
+							if (k < i)
+							{
+								tempKinderen.get(j - 1).set(k, kinderen.get(j).get(k));
+							}
+							else if (k > i)
+							{
+								tempKinderen.get(j - 1).set(k - 1, kinderen.get(j).get(k));
+							}
+						}
+					}
+	
+					temporary = new Matrix(tempKinderen);
+					
+					expr = new Optelling(expr, new Vermenigvuldiging(
+						new Vermenigvuldiging(kinderen.get(0).get(i), new BasisExpressie(Math.pow(-1, (double) i))), temporary.geefDeterminant()));
+				}
+			}
 		}
-		
-		// neem de wortel
-		expr = new Wortel(expr);
 		
 		return expr;
 	}
+	
+	/**
+	 * 
+	 * @param aantalRijen
+	 * @param aantalKolommen
+	 * @return
+	 */
+	private ArrayList<ArrayList<Expressie>> initializeMatrixKinderen(int aantalRijen, int aantalKolommen)
+	{
+		ArrayList<ArrayList<Expressie>> list = new ArrayList<ArrayList<Expressie>>();
+		
+		for (int i = 0; i < aantalRijen; i++) // loop over de rijen
+		{
+			ArrayList<Expressie> rij = new ArrayList<Expressie>();
+			for (int j = 0; j < aantalKolommen; j++) // loop over kolommen
+			{
+				Expressie expr = new Expressie();
+				rij.add(expr);
+			}
+			
+			list.add(rij);
+		}
+		
+		return list;
+	}
 
+	/**
+	 * Geef de getransponeerde matrix.
+	 * 
+	 * @return
+	 */
+	public Matrix geefGetransponeerde()
+	{
+		Matrix getransponeerde = null;
+		
+		ArrayList<ArrayList<Expressie>> newKinderen = new ArrayList<ArrayList<Expressie>>();
+
+		for (int j = 0; j < geefDimensie()[1]; j++) // loop over kolommen
+		{
+			ArrayList<Expressie> rij = new ArrayList<Expressie>();
+			for (int i = 0; i < kinderen.size(); i++) // loop over de rijen
+			{
+				// kolommen worden rijen
+				Expressie kind = kinderen.get(i).get(j);
+				rij.add(kind);
+			}
+			newKinderen.add(rij);
+		}
+
+		getransponeerde = new Matrix(newKinderen);
+		
+		return getransponeerde;
+	}
+	
+	/**
+	 * Geef de inverse matrix.
+	 * 
+	 * @return
+	 */
+	public Matrix geefInverse()
+	{
+		Matrix inverse = null;
+		ArrayList<ArrayList<Expressie>> inverseKinderen = new ArrayList<ArrayList<Expressie>>();
+		
+		if (geefDimensie()[0] == geefDimensie()[1]) // matrix moet vierkant zijn
+		{
+			for (int i = 0; i < kinderen.size(); i++) // loop over de rijen
+			{
+				ArrayList<Expressie> rij = new ArrayList<Expressie>();
+				for (int j = 0; j < geefDimensie()[1]; j++) // loop over kolommen
+				{
+					Expressie expr = new Vermenigvuldiging(new BasisExpressie(Math.pow(-1, i + j)), geefDeterminant(geefMinor(i, j)));
+					rij.add(expr);
+				}
+				
+				inverseKinderen.add(rij);
+			}
+			
+			// adjugate and determinant
+			Expressie det = new Deling(new BasisExpressie(1.0), geefDeterminant());
+			for (int i = 0; i < inverseKinderen.size(); i++)
+			{
+				for (int j = 0; j <= i; j++)
+				{
+					Expressie temp = inverseKinderen.get(i).get(j);
+					inverseKinderen.get(i).set(j, new Vermenigvuldiging(inverseKinderen.get(j).get(i), det));
+					inverseKinderen.get(j).set(i, new Vermenigvuldiging(temp, det));
+				}
+			}
+			
+			inverse = new Matrix(inverseKinderen);
+		}
+		
+		return inverse;
+	}
+	
+	private Matrix geefMinor(int row, int column)
+	{
+		Matrix minor = null;
+		ArrayList<ArrayList<Expressie>> minorKinderen = initializeMatrixKinderen(kinderen.size() - 1, kinderen.size() - 1);
+
+		for (int i = 0; i < kinderen.size(); i++)
+		{
+			for (int j = 0; i != row && j < kinderen.get(i).size(); j++)
+			{
+				if (j != column)
+				{
+					int rowIndex = i < row ? i : i - 1;
+					int columnIndex = j < column ? j : j - 1;
+						
+					minorKinderen.get(rowIndex).set(columnIndex, kinderen.get(i).get(j));
+				}
+			}
+		}
+		
+		minor = new Matrix(minorKinderen);
+		
+		return minor;
+	}
+
+	/**
+	 * Geef de determinant van de gegeven matrix.
+	 * 
+	 * @param matrix
+	 * @return
+	 */
+	private Expressie geefDeterminant(Matrix matrix)
+	{
+		Expressie det = new BasisExpressie(0);
+		
+		if (matrix.geefKinderen().size() != matrix.geefKinderen().get(0).size())
+			throw new IllegalStateException("invalid dimensions");
+
+		if (matrix.geefKinderen().size() == 2)
+		{
+			det = new Aftrekking(
+				new Vermenigvuldiging(matrix.geefKinderen().get(0).get(0), matrix.geefKinderen().get(1).get(1)), 
+				new Vermenigvuldiging(matrix.geefKinderen().get(0).get(1), matrix.geefKinderen().get(1).get(0)));
+		}
+		else
+		{
+			for (int i = 0; i < matrix.geefKinderen().size(); i++)
+			{
+				Expressie exp = new Vermenigvuldiging(new BasisExpressie(Math.pow(-1, i)), matrix.geefKinderen().get(0).get(i));
+				exp = new Vermenigvuldiging(exp, geefDeterminant(matrix.geefMinor(0, i)));
+				det = new Optelling(det, exp);
+			}
+		}
+		
+		return det;
+	}
+	
 	public Matrix substitueer(double subst, String var)
 	{
 		ArrayList<ArrayList<Expressie>> newList = new ArrayList<ArrayList<Expressie>>();
