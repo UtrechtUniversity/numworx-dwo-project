@@ -237,8 +237,12 @@ public class PersistentSchool implements Serializable {
         return studentsCanManageTheirSchoolClasses();
     }
     
+    /**
+     * c or _ (default)
+     * @return
+     */
     public boolean studentsCanManageTheirSchoolClasses(){
-        return schoolRights.contains("c");
+        return schoolRights.contains("c") || schoolRights.equals("_");
     }
     
     public DomSchool buildDomSchool() {
