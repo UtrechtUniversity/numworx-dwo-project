@@ -151,7 +151,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.keyboard</groupId>
 			<artifactId>KeyboardGWT</artifactId>
-			<version>2.3.1</version>
+			<version>2.3.3</version>
 			<exclusions>
 				<exclusion>
 					<groupId>fi.wiskopdrgwt</groupId>
@@ -238,7 +238,7 @@
 		<runTarget>${project.artifactId}.html</runTarget>
 		<warClassifier />
 		<gwt.copyWebapp>true</gwt.copyWebapp>
-		<accountVersion>2.3.2</accountVersion>
+		<accountVersion>2.3.3</accountVersion>
 		<gwtVersion>2.8.2</gwtVersion>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <maven.javadoc.skip>true</maven.javadoc.skip>
