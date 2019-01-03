@@ -72,7 +72,7 @@ public class Dwo2Exception extends Exception implements Dwo2ExceptionInterface {
 
 	@Override
 	public String getLocalizedMessage() {
-		return getLocalizedCodeExplanation(null);
+		return getLocalizedCodeExplanation(DwoLocale.DEFAULT);
 	}
 
 }
