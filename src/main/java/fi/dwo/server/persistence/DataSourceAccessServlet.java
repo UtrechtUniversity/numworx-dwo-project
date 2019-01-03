@@ -61,7 +61,7 @@ public class DataSourceAccessServlet extends Servlet {
     }
 
     static private int count = 0;
-    class MonitorDataSourceAccess extends DataSourceAccess implements fi.beans.jdbc.DbConnectIF, DbAccessIF, ScormAccessIF, DbAccessLogin {
+    class MonitorDataSourceAccess extends DataSourceAccess implements fi.beans.jdbc.DbConnectIF, DbAccessIF, /*ScormAccessIF, */DbAccessLogin {
 
         protected PersistentUser getUser() {
             return user.get();

@@ -18,7 +18,7 @@ import fi.dwo.commons.exceptions.LoginException;
 
 import java.util.logging.Level;
 
-public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAccessIF, /*DbAccessJS,*/ DbAccessObsolete {
+public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, /*ScormAccessIF, *//*DbAccessJS,*/ DbAccessObsolete {
 //TODO this class should use reflection to delegate stuff going to be purely serverside.
 //
 
@@ -632,28 +632,28 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, ScormAcc
         return getDelegate().getHasRoleUser(uid, sgid);
     }
 
-    @Override
-    public boolean Commit(int userID, int schoolGroupID, int scoID,
-            Hashtable map) throws Exception {
-        return getScormAccess().Commit(userID, schoolGroupID, scoID, map);
-    }
-// TODO Need a super interface: DBConnectIF, DBAccessIF, ScormAccessIF
-
-    private ScormAccessIF getScormAccess() {
-        return (ScormAccessIF) getDelegate();
-    }
-
-    @Override
-    public Hashtable Initialize(int userID, int schoolGroupID, int scoID)
-            throws Exception {
-        return getScormAccess().Initialize(userID, schoolGroupID, scoID);
-    }
-
-    @Override
-    public Hashtable Initialize(int userID, int schoolGroupID, int scoID,
-            Vector keys) throws Exception {
-        return getScormAccess().Initialize(userID, schoolGroupID, scoID, keys);
-    }
+//    @Override
+//    public boolean Commit(int userID, int schoolGroupID, int scoID,
+//            Hashtable map) throws Exception {
+//        return getScormAccess().Commit(userID, schoolGroupID, scoID, map);
+//    }
+//// TODO Need a super interface: DBConnectIF, DBAccessIF, ScormAccessIF
+//
+//    private ScormAccessIF getScormAccess() {
+//        return (ScormAccessIF) getDelegate();
+//    }
+//
+//    @Override
+//    public Hashtable Initialize(int userID, int schoolGroupID, int scoID)
+//            throws Exception {
+//        return getScormAccess().Initialize(userID, schoolGroupID, scoID);
+//    }
+//
+//    @Override
+//    public Hashtable Initialize(int userID, int schoolGroupID, int scoID,
+//            Vector keys) throws Exception {
+//        return getScormAccess().Initialize(userID, schoolGroupID, scoID, keys);
+//    }
 
 //    private DbAccessJS getDbAccessJS() {
 //        return (DbAccessJS) getDelegate();
