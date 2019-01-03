@@ -416,10 +416,10 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<DWOplayerVersion>2.3.3-SNAPSHOT</DWOplayerVersion>
+		<DWOplayerVersion>2.3.3</DWOplayerVersion>
 		<DWOmAccessVersion>2.3.2</DWOmAccessVersion>
-		<RegisterVersion>2.3.3-SNAPSHOT</RegisterVersion>
-		<DWOGwtClientVersion>2.3.3-SNAPSHOT</DWOGwtClientVersion>
+		<RegisterVersion>2.3.3</RegisterVersion>
+		<DWOGwtClientVersion>2.3.3</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testebserver</aws.environmentName>
