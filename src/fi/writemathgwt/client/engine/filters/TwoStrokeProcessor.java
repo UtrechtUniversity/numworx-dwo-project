@@ -156,9 +156,9 @@ public class TwoStrokeProcessor {
 				return "D";
 				
 		// P 
-				if (checkStrokes(stroke1,"PH1",stroke2,"PH2"))
-					if(hasCloseDistance(stroke1, stroke2, 20,0,2,0,6) && hasCloseDistance(stroke1, stroke2, 30,15,25,34,39))
-						return "P";
+		if (checkStrokes(stroke1,"PH1",stroke2,"PH2"))
+			if(hasCloseDistance(stroke1, stroke2, 20,0,2,0,6) && hasCloseDistance(stroke1, stroke2, 30,15,25,34,39))
+				return "P";
 						
 		// j 
 		if (checkStrokes(stroke1,"jH1",stroke2,"jH2"))
@@ -182,8 +182,24 @@ public class TwoStrokeProcessor {
 		
 		// K
 		if (checkStrokes(stroke1,"KH1",stroke2,"KH2"))
-			if(hasCloseDistance(stroke1, stroke2, 20,14,28,14,26) &&hasYDistance(stroke1, stroke2, 0, 15,  0, 2, 0, 2))
+			if(hasCloseDistance(stroke1, stroke2, 20,14,28,14,26) && hasYDistance(stroke1, stroke2, 0, 15,  0, 2, 0, 2))
 				return "K";
+		
+		// R
+		if (checkStrokes(stroke1,"RH1",stroke2,"RH2"))
+			if(hasCloseDistance(stroke1, stroke2, 20,0,2,0,6) && hasCloseDistance(stroke1, stroke2, 30,15,25,20,30) && hasYDistance(stroke1, stroke2, 0, 25,  38, 39, 38, 39))
+				return "R";
+		
+		// T
+		if (checkStrokes(stroke1,"TH1",stroke2,"TH2"))
+			if(hasCloseDistance(stroke1, stroke2, 20,0,2,14,26))
+				return "T";
+		
+		// Q
+		if ("0".equals(teken1) && TwoStrokeDirFilter.checkDir(stroke2,"QH2") )
+			if(hasCloseDistance(stroke1, stroke2, 20,14,28,10,30))
+				if(stroke2.getParsePointsbox().width<averageHeight/2 && stroke2.getParsePointsbox().height<averageHeight/2)
+					return "Q";
 		
 		// theta
 		if ("0".equals(teken1) && "-".equals(teken2))

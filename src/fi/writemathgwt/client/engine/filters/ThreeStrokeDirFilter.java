@@ -54,6 +54,9 @@ public class ThreeStrokeDirFilter {
 		if("HT1".equals(teken)) {int[][] data = {{260, 30, 1, 39, 20}};return data;}
 		if("HT2".equals(teken)) {int[][] data = {{260, 30, 1, 39, 20}};return data;}
 		if("HT3".equals(teken)) {int[][] data = {{0, 30, 1, 39, 24}};return data;}
+		if("RT1".equals(teken)) {int[][] data = {{260, 30, 1, 39, 24}};return data;}
+		if("RT2".equals(teken)) {int[][] data = {{0, 30, 1, 14, 4},{300, 30, 6, 18, 2},{270, 40, 10, 30, 6},{240, 30, 22, 34, 2},{200, 30, 26, 39, 4}};return data;}
+		if("RT3".equals(teken)) {int[][] data = {{315, 40, 1, 39, 24}};return data;}
 				
 		return new int[0][0];
 	}

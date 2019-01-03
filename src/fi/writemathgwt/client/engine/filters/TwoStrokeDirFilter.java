@@ -99,6 +99,11 @@ public class TwoStrokeDirFilter {
 		if("kH2".equals(teken)) {int[][] data = {{220, 35, 1, 20, 12},{320, 35, 20, 39, 12}};return data;}
 		if("KH1".equals(teken)) {int[][] data = {{260, 40, 1, 39, 16}};return data;}
 		if("KH2".equals(teken)) {int[][] data = {{220, 35, 1, 20, 12},{320, 35, 20, 39, 12}};return data;}
+		if("TH1".equals(teken)) {int[][] data = {{260, 40, 1, 39, 16}};return data;}
+		if("TH2".equals(teken)) {int[][] data = {{0, 30, 1, 39, 24}};return data;}
+		if("QH2".equals(teken)) {int[][] data = {{315, 40, 1, 39, 24}};return data;}
+		if("RH1".equals(teken)) {int[][] data = {{260, 30, 1, 39, 24}};return data;}
+		if("RH2".equals(teken)) {int[][] data =  {{0, 30, 1, 8, 2},{300, 30, 4, 12, 2},{270, 40, 7, 20, 4},{240, 30, 14, 22, 2},{200, 30, 16, 26, 3},{315, 30, 26, 39, 8}};return data;}
 		
 		
 		return new int[0][0];

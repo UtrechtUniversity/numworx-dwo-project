@@ -42,6 +42,11 @@ public class ThreeStrokeProcessor {
 					&& TwoStrokeProcessor.hasCloseDistance(stroke2,stroke3,30,0,2,26,36))
 				return "\u03C0";
 		
+		//R
+		if (checkStrokes(stroke1,"RT1",stroke2,"RT2",stroke3,"RT3"))
+			if(TwoStrokeProcessor.hasCloseDistance(stroke1, stroke2, 20,0,2,0,6) && TwoStrokeProcessor.hasCloseDistance(stroke1, stroke2, 30,15,25,34,39) 
+					&& TwoStrokeProcessor.hasCloseDistance(stroke1,stroke3,20,15,25,0,2))
+				return "R";
 		
 		return null;
 	}
