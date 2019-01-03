@@ -4,7 +4,6 @@ import fi.dwo.commons.exceptions.DwoXmlRpcException;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -12,11 +11,6 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.jdbc.DbConnectIF;
 import fi.dwo.commons.persistence.DbAccessIF;
-import fi.dwo.commons.persistence.DbAccessLogin;
-import fi.dwo.commons.persistence.ScormAccessIF;
-import fi.dwo.commons.exceptions.LoginException;
-
-import java.util.logging.Level;
 
 public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, /*ScormAccessIF, *//*DbAccessJS,*/ DbAccessObsolete {
 //TODO this class should use reflection to delegate stuff going to be purely serverside.
@@ -132,7 +126,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, /*ScormA
 //            SQLException {
 //        return getDelegate().renameClass(classID, newName, iconizer);
 //    }
-//TODO V1_2 obsolete
+// V1_2 obsolete
 //    @Override
 //    public boolean reassignClass(int classID, int newTeacher)
 //            throws IOException, SQLException, XmlRpcException,
@@ -216,7 +210,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, /*ScormA
 //                .addToSchool(userID, schoolLogin, groupID, groupPassword);
 //    }
 
-    //TODO V1_2 obsolete
+    // V1_2 obsolete
 //    @Override
 //    public boolean changeAccount(int userID, String password,
 //            String newPassword, String firstname, String middlename,
@@ -264,7 +258,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, /*ScormA
             XmlRpcException, SQLException {
         return getDelegate().getResults(courseID, userID);
     }
-//TODO V1_2 obsolete
+// V1_2 obsolete
 //    @Override
 //    public boolean disconnectFromClass(int uid) throws IOException,
 //            XmlRpcException, SQLException {
@@ -637,7 +631,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, /*ScormA
 //            Hashtable map) throws Exception {
 //        return getScormAccess().Commit(userID, schoolGroupID, scoID, map);
 //    }
-//// TODO Need a super interface: DBConnectIF, DBAccessIF, ScormAccessIF
+////  Need a super interface: DBConnectIF, DBAccessIF, ScormAccessIF
 //
 //    private ScormAccessIF getScormAccess() {
 //        return (ScormAccessIF) getDelegate();

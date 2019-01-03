@@ -29,7 +29,6 @@ import fi.beans.jdbc.DbConnectIF;
 import fi.beans.xmlrpc.Servlet;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.DbAccessLogin;
-import fi.dwo.commons.persistence.ScormAccessIF;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import java.sql.PreparedStatement;

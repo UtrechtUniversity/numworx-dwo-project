@@ -32,7 +32,6 @@ import fi.beans.jdbc.DbConnect;
 import fi.beans.scorm2xml.Scorm2Xml;
 //import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.commons.persistence.DbAccessIF;
-import fi.dwo.commons.persistence.ScormAccessIF;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.MD5;
 
