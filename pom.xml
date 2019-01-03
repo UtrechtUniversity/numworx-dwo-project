@@ -251,10 +251,10 @@
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
 		<relativePath>../DWO</relativePath>
-		<version>2.3.3-SNAPSHOT</version>
+		<version>2.3.3</version>
 	</parent>
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/Register/trunk</developerConnection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO/tags/Register-2.3.3</developerConnection>
 	</scm>
 	<properties>
 		<gwtVersion>2.8.2</gwtVersion>
