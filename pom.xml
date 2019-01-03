@@ -8,6 +8,7 @@
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<artifactId>EBServer</artifactId>
+  <version>2.3.4-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>${project.build.finalName}</name>
 	<dependencies>
@@ -425,8 +426,8 @@
 		<aws.environmentName>testebserver</aws.environmentName>
 	</properties>
 	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/tags/EBServer-2.3.3</developerConnection>
-		<connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/tags/EBServer-2.3.3</connection>
+		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</developerConnection>
+		<connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/EBServer/trunk</connection>
 	</scm>
 	<profiles>
 		<profile>
