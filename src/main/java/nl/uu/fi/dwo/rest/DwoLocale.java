@@ -7,10 +7,11 @@ package nl.uu.fi.dwo.rest;
  */
 public class DwoLocale {
     private String locale;//IETF BCP 47 language tag required.
-    private static final String defaultLocale="nl";
  
+   public static final DwoLocale DEFAULT = new DwoLocale("nl");
+    
    public DwoLocale(){
-        locale = defaultLocale;
+        locale = getDefaultLocale();
     }
      
     public DwoLocale(String lcl){
@@ -31,6 +32,6 @@ public class DwoLocale {
     }
 
     public String getDefaultLocale() {
-        return defaultLocale;
+        return DEFAULT.getLocale();
     }
 }
