@@ -51,7 +51,7 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
         /* Variables used to create items */
         FontMetrics fm;
         /* Add accountdata-panel */
-        accountDataPanel = new AccountDataFullUserJPanel();
+        accountDataPanel = new AccountDataFullUserJPanel(DwoHelper.getCurrentUser());
         accountDataPanel.setUser(DwoHelper.getCurrentUser());
         accountDataPanel.setBackground(GuiConstants.SUB_BACKGROUND);
         //      p.setBounds(getSize().width / 2 - 155, 20, 310, 130);

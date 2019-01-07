@@ -196,9 +196,11 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                     DomGetSingleSchoolStudent getStudent = new DomGetSingleSchoolStudent();
                     getStudent.setDomSchoolClass(schoolClass);
                     getStudent.setDomStudent(student);
+// Full username in get/update
                     DomSingleSchoolStudent user = prop.getSingleSchoolStudent(getStudent);
+                    String realm = DwoHelper.getCurrentLoginContext().getRealm();
                     DomLoginContext loginContext = SecureUserAccountManager.getLoginContext(user.getUserName(),
-                            user.getPassword());
+                            user.getPassword(), realm);
                     if (loginContext != null && loginContext.getLastLoginTimeStamp() != null) {
                         if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
                                 Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession)
@@ -207,7 +209,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                         };
                     }
                     SecureUserAccountManager.logoutUser(DwoHelper.getCurrentLoginContext());
-                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
+                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword(), realm);
 
 // HTML5
                     String student_player = GuiConstants.STUDENT_PLAYER;

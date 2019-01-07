@@ -190,10 +190,11 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
          */
         private void switchToActiveSchoolLogin() {
             DomUserFull user = DwoHelper.getCurrentUser();
+            DomLoginContext context = DwoHelper.getCurrentLoginContext();
             try {
 //                //switch role now
                 LOG.log(Level.INFO, "switching role now");
-                GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
+                GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword(), context.getRealm());
             } catch (LoginException ex) {
                 LOG.log(Level.SEVERE, "", ex);
                 GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().mainPanel, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD));
@@ -230,8 +231,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
 //            //get Table setting
 //                int col = tableModel.getSelectedColumn();
                     //Fetch LoginContext to see if there is already a session.
-                    DomLoginContext loginContext = SecureUserAccountManager.getLoginContext(DwoHelper.getCurrentUser().getUserName(),
-                            DwoHelper.getCurrentUser().getPassword());
+                    DomLoginContext loginContext = SecureUserAccountManager.getLoginContext();
                     if (loginContext != null && !loginContext.getLastLoginTimeStamp().equals(DwoHelper.getCurrentLoginContext().getLastLoginTimeStamp())) {
                         if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(),
                                 Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), Dwo2ExceptionCode.User_ConfirmNewLoginSession)

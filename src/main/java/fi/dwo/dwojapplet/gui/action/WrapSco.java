@@ -231,7 +231,7 @@ class WrapSco extends Sco {
     public String LMSInitialize(String iParam) {
         System.out.println("Initialize");
         super.LMSInitialize(iParam);
-        return "true";
+        return ok("true");
     }
 
     /**

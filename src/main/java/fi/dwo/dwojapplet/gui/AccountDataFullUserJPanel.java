@@ -63,10 +63,10 @@ public class AccountDataFullUserJPanel extends JPanel implements
      * current user can be changed.
      *
      */
-    public AccountDataFullUserJPanel() {
+    AccountDataFullUserJPanel(DomUserFull u) {
         try {
             prop.init();
-            user = prop.getUser();
+            user = u;//prop.getUser();
         } catch (Dwo2Exception ex) {
             GuiCreator.instance().ShowErrorDialog(this, ex);
             LOG.log(Level.SEVERE, "", ex);

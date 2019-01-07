@@ -290,10 +290,10 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
         	} else if ("dme.abo_type".equals(iDataModelElement))
         	{
         	  try {
-              return DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getAboType().name();
+              return ok(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getAboType().name());
             } catch (Exception e) {
               LOG.log(Level.WARNING, "get dme.abo_type", e);
-              return AboType.standard.name();
+              return ok(AboType.standard.name());
             }
         	}
         	return ko("");

@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -205,7 +206,8 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                     getStudent.setDomSchoolClass(schoolClass);
                     getStudent.setDomStudent(student);
                     DomSingleSchoolStudent user = prop.getSingleSchoolStudent(getStudent);
-                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword());
+                    DomLoginContext context = DwoHelper.getCurrentLoginContext();
+                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword(), context.getRealm());
                 } catch (LoginException ex) {
                     Dwo2Exception err = new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, ex.getMessage());
                     LOG.log(Level.SEVERE, "", ex);
