@@ -60,8 +60,8 @@ public class ResultsService implements SwitchViewEventHandler {
 
     private static final Logger LOG = Logger.getLogger(ResultsService.class.getName());
 
-    private final static String COMPLETED = "completed";
-    private final static String INCOMPLETE = "incomplete";
+    final static String COMPLETED = "completed";
+    final static String INCOMPLETE = "incomplete";
 
     static final String COMPLETION_STATUS = "cmi.completion_status";
 

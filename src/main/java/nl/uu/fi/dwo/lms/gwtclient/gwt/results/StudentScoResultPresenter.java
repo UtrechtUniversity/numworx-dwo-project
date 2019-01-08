@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONValue;
@@ -25,6 +26,10 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent.EventType;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
@@ -54,6 +59,7 @@ public class StudentScoResultPresenter {
   private Map<String,String> userState;
   @SuppressWarnings("rawtypes")
   private DomResultSchoolClass parent;
+  @Inject GwtClientMessages rb;
 
   public interface Display  extends BasicDisplay{
 
@@ -67,6 +73,7 @@ public class StudentScoResultPresenter {
 
     void setLoadingTableMessage();
     void hide();
+    void resetSeal(boolean bool);
 
   }
 
@@ -260,14 +267,30 @@ public class StudentScoResultPresenter {
 
   @JsMethod
   public void sealSingleActivity(boolean value) {
-    DomStudentScoContext dssc = ssc.getStudentSco();    
-    resultService.seal(dssc, value)
+    DomStudentScoContext dssc = ssc.getStudentSco();
+    Promise<DomStudentScoContext> seal;
+    if (value == false && dwoGlobalVars.isPremium()) {
+      String aMsg = rb.unsealText();
+      AlertDialogWithConfirmCancelDeferred aPromise = new AlertDialogWithConfirmCancelDeferred(aMsg);
+      AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(EventType.ConfirmDialog, aPromise);
+      
+      eventBus.fireEvent(event);
+      seal = aPromise.getPromise().then(p -> p.getValue() ? resultService.seal(dssc, value) : resetSeal(dssc));
+      
+    } else
+      seal = resultService.seal(dssc, value);
+    seal
     .map(this::updateResultTree)
     .then( p-> {
       setValue(ResultsService.COMPLETION_STATUS, p.getValue().getCompletionStatus());
       updateFrame(p.getValue()); 
       return null;
       }, FAILURE);
+  }
+
+  private Promise<DomStudentScoContext> resetSeal(DomStudentScoContext dssc) {
+    view.resetSeal(ResultsService.COMPLETED.equals(dssc.getCompletionStatus()));
+    return Promises.resolved(dssc);
   }
 
   @JsMethod

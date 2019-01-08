@@ -27,4 +27,6 @@ public class JsStudentScoResultDisplay{
     /** load frame with player */
     public static native void openUrl(String url);
     public static native void hide();
+    
+    public static native void resetSeal(boolean bool);
 }

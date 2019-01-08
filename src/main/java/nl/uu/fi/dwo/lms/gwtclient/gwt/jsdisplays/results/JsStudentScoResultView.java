@@ -74,4 +74,8 @@ public class JsStudentScoResultView implements StudentScoResultPresenter.Display
       JsStudentScoResultDisplay.hide();
     }
 
+    @Override
+    public void resetSeal(boolean bool) {
+      JsStudentScoResultDisplay.resetSeal(bool);
+    }
 }
