@@ -90,6 +90,16 @@
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.10.5</version>
 		</dependency>
+         <dependency>
+            <groupId>nl.uu.fi.dwo</groupId>
+            <artifactId>DWO-commons-lib</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>org.mitre.dsmiley.httpproxy</groupId>
+			<artifactId>smiley-http-proxy-servlet</artifactId>
+			<version>1.7</version>
+			<scope>runtime</scope>
+		</dependency>
 		</dependencies>
 	<build>
 		<outputDirectory>target/${project.build.finalName}/WEB-INF/classes</outputDirectory>
@@ -99,6 +109,7 @@
 				<version>2.2</version>
 				<configuration>
 					<warSourceDirectory>src/main/webapp</warSourceDirectory>
+					<attachClasses>true</attachClasses>
 				</configuration>
 			</plugin>
 			<plugin>

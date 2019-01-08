@@ -29,7 +29,7 @@ Object org_id  = request.getAttribute("nlEduPersonHomeOrganizationId");
 // quickfix voor idptestbed
 if (org_id == null) {
 	  String schoolid = System.getProperty("ENV_ORGID", "385");
-	  org_id = "saml:" + schoolid;
+	  org_id = schoolid;
 }
 
 Object user_id = request.getAttribute("uid");
@@ -49,7 +49,7 @@ cookie("givenName", name_given, response);
 cookie("familyName", name_family, response);
 cookie("insertion", name_prefix, response);
 cookie("email", email, response);
-cookie("schoolLogin", org_id, response);
+cookie("schoolLogin", schoolCode == null ? null : org_id, response);
 cookie("suggestion", student_id, response); // XXX moet de nlEduPersonRealId zijn, zonder @suffix.
 cookie("schoolGroup", role, response);
 cookie("schoolCode", schoolCode, response);

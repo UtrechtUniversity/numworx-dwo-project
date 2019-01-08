@@ -3,7 +3,6 @@ package nl.uu.fi.dwo.register.server;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,7 +37,7 @@ public class Manager {
 	public SystemManager getInstance(ServletContext context) throws ServletException {
 		String dbrest_url = context.getInitParameter("dbrest.url");
 		if (dbrest_url == null)
-			dbrest_url = "http://localhost/dwo/rest/";
+			dbrest_url = "http://localhost/dwo/";
 		try {
 			RestAuthenticator authenticator = new RestAuthenticator();
 			authenticator.setServerUrlPath(new URL(dbrest_url));
