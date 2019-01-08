@@ -85,8 +85,9 @@ public class DbAccess {
 	       response.addCookie(authToken);
 	       return false;	  	       
 	   } catch(Dwo2Exception e) {
+	       LOG.log(Level.WARNING, "request SAML token: " + u.getSamlUserId() + " " + u.getSamlOrgId(), e);
 	       try {
-	         response.sendRedirect("/dwo/register/Register.jsp?next=" + 
+	         response.sendRedirect("/dwo/register/Register.jsp?cancel=/&next=" + 
 	              URLEncoder.encode(request.getRequestURL().toString(), "UTF-8")
 	         );
 	       } catch (IOException e1) {
