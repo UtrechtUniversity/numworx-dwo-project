@@ -7,7 +7,7 @@
   </context-param>
   <context-param>
   	<param-name>dbrest.url</param-name>
-	<param-value>http://127.0.0.1/dwo/rest/</param-value>  
+	<param-value>http://127.0.0.1/dwo/</param-value>  
   </context-param>
   <context-param>
   	<param-name>SERVLET</param-name>
