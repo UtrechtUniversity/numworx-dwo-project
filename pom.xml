@@ -267,6 +267,7 @@
 	</parent>
 	<scm>
 		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/Register/trunk</developerConnection>
+		<connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/Register/trunk</connection>
 	</scm>
 	<properties>
 		<gwtVersion>2.8.2</gwtVersion>
