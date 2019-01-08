@@ -3,6 +3,7 @@ package fi.wiskopdr.expressies;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import fi.wiskopdr.expressies.Matrix.BerekendeExpressie;
 import fi.wiskopdr.expressies.repr.AbstractConverter;
 
 /**
@@ -328,5 +329,79 @@ public class VectorExpr extends Expressie
 		
 		lengte = new Wortel(som);
 		return lengte;
+	}
+
+	/**
+	 * Bereken de kinderen van de vector (als in rekenmachine).
+	 * @param aantalDecRm 
+	 * @return
+	 */
+	public BerekendeVectorExpr berekenVector(int aantalDecRm)
+	{
+		BerekendeVectorExpr berekendeVector = new BerekendeVectorExpr(null, false); // initialiseer
+		VectorExpr vector;
+		ArrayList<Expressie> list = new ArrayList<Expressie>();
+		
+		for (int i = 0; i < kinderen.size(); i++)
+		{
+			BerekendeExpressie berekendeExpressie = Matrix.berekenExpressie(kinderen.get(i), aantalDecRm);
+			list.add(berekendeExpressie.getExpressie());
+ 
+			if (berekendeExpressie.isAfgerond())
+				berekendeVector.setIsAfgerond(true);
+		}
+		
+		vector = new VectorExpr(list);
+		berekendeVector.setVector(vector);
+		
+		return berekendeVector;
+	}
+	
+	/**
+	 * Klasse voor een al dan niet afgeronde berekende vector (als in rekenmachine).
+	 * 
+	 * @author borku102
+	 *
+	 */
+	public class BerekendeVectorExpr
+	{
+		VectorExpr vector;
+		boolean isAfgerond;
+		
+		BerekendeVectorExpr(VectorExpr vector, boolean isAfgerond)
+		{
+			this.vector = vector;
+			this.isAfgerond = isAfgerond;
+		}
+		
+		public VectorExpr getVector()
+		{
+			return vector;
+		}
+		
+		public boolean isAfgerond()
+		{
+			return isAfgerond;
+		}
+		
+		private void setVector(VectorExpr v)
+		{
+			this.vector = v;
+		}
+		
+		private void setIsAfgerond(boolean b)
+		{
+			this.isAfgerond = b;
+		}
+
+		/* 
+		 * Geef de matrix-string.
+		 * 
+		 */
+		@Override
+		public String toString()
+		{
+			return vector.toString();
+		}
 	}
 }

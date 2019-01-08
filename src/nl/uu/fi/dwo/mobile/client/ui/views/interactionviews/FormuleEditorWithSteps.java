@@ -42,7 +42,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -62,6 +61,8 @@ import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.DecRound;
 import fi.wiskopdr.expressies.Expressie;
+import fi.wiskopdr.expressies.Matrix.BerekendeMatrix;
+import fi.wiskopdr.expressies.VectorExpr.BerekendeVectorExpr;
 import fi.wiskopdr.expressies.Vergelijking;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.expressies.repr.ContentMathML;
@@ -1929,6 +1930,9 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	static final double E_MIN = 1.0E-3;
 	static final double MARGE = 0.00000000000000001;
 	
+	/**
+	 * Bereken stap rekent de stap 'als rekenmachine' uit.
+	 */
 	void berekenStap()
 	{
 		// checks vooraf....
@@ -1949,40 +1953,102 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				formule0 = formule0.substring(0, formule0.length()-1);
 			String formule1;
 			Expressie antwoord = FormuleParser.geefExpressie("$f" + formule0 + "@");
-			if (antwoord != null && ! (antwoord instanceof BasisExpressie))
+			if (antwoord != null && !(antwoord instanceof BasisExpressie))
 			{
-				double waarde = antwoord.geefWaarde();
-				double afgerond = new DecRound(new BasisExpressie(waarde), new BasisExpressie(aantalDecRm)).geefWaarde();
-				boolean isAfgerond = !Algebra.isGelijkDouble(waarde, afgerond, MARGE);
-				
-				if (!Double.isNaN(waarde))
+				if (Algebra.isVector(antwoord))
 				{
-					double abs = Math.abs(afgerond);
-					if ( abs < E_MIN || abs >= E_MAX) 
-					{
-						formule1 = Expressie.dfe.format(afgerond);						
-						formule1  = formule1.replace("E", "*10$m") + "@";
-					} 
-					else 
-					{
-						formule1 = Expressie.df.format(afgerond);
-					}
-					if (isAfgerond)
+					BerekendeVectorExpr berekendeVector = antwoord.geefVector().berekenVector(aantalDecRm);
+					formule1 = berekendeVector.toString();
+					
+					if (berekendeVector.isAfgerond())
 					{
 						if (!hasPrefix)
 							formule0 += '\u2248'; // Dit zorgt voor problemen als hasPrefix
 					}
+					
 					if (!editor.toString().isEmpty())
 						voegRegelToe("$f" + formule0 +"@", check && !isToets(), false);
 					editor.insert(formule1);
 					
 					if (!formule1.isEmpty())
+						setStapOk(true);					
+				}
+				else if (Algebra.isMatrix(antwoord))
+				{
+					BerekendeMatrix berekendeMatrix = antwoord.geefMatrix().berekenMatrix(aantalDecRm);
+					formule1 = berekendeMatrix.toString();
+					
+					if (berekendeMatrix.isAfgerond())
+					{
+						if (!hasPrefix)
+							formule0 += '\u2248'; // Dit zorgt voor problemen als hasPrefix
+					}
+					
+					if (!editor.toString().isEmpty())
+						voegRegelToe("$f" + formule0 +"@", check && !isToets(), false);
+					else if (berekendeMatrix.isAfgerond() && !hasPrefix) // formule0 heeft 'ongeveer gelijk'-teken gekregen op eind
+						updateVorigeStap(formule0);
+					
+					editor.insert(formule1);
+					
+					if (!formule1.isEmpty())
 						setStapOk(true);
+				}
+				else
+				{
+					double waarde = antwoord.geefWaarde();
+					double afgerond = new DecRound(new BasisExpressie(waarde), new BasisExpressie(aantalDecRm)).geefWaarde();
+					boolean isAfgerond = !Algebra.isGelijkDouble(waarde, afgerond, MARGE);
+					
+					if (!Double.isNaN(waarde))
+					{
+						double abs = Math.abs(afgerond);
+						if ( abs < E_MIN || abs >= E_MAX) 
+						{
+							formule1 = Expressie.dfe.format(afgerond);						
+							formule1  = formule1.replace("E", "*10$m") + "@";
+						} 
+						else 
+						{
+							formule1 = Expressie.df.format(afgerond);
+						}
+						if (isAfgerond)
+						{
+							if (!hasPrefix)
+								formule0 += '\u2248'; // Dit zorgt voor problemen als hasPrefix
+						}
+						
+						if (!editor.toString().isEmpty())
+							voegRegelToe("$f" + formule0 +"@", check && !isToets(), false);
+						else if (isAfgerond && !hasPrefix) // formule0 heeft 'ongeveer gelijk'-teken gekregen op eind
+							updateVorigeStap(formule0);
+
+						editor.insert(formule1);
+						
+						if (!formule1.isEmpty())
+							setStapOk(true);
+					}
 				}
 			}
 		}
 	}
 
+	/**
+	 * Zet de gegeven formule in de laatste viewer. 
+	 * Gebruikt om 'ongeveer gelijk'-teken in de formule te zetten.
+	 * 
+	 * @param formule
+	 */
+	private void updateVorigeStap(String formule)
+	{
+		if (viewers != null && viewers.size() > 0)
+		{
+			backStep(false);
+			editor.clearAll();
+			editor.insert(formule);
+			downStep();
+		}
+	}
 
 	class BordjesTouchHandler extends FormuleEditorTouchHandler
 	{
