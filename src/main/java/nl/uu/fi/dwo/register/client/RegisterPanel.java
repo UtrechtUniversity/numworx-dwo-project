@@ -55,7 +55,7 @@ public class RegisterPanel extends ResizeComposite {
 	}
 
 	private void absorbCookies() {
-		String email = Cookies.getCookie("email");
+		String email = getCookie("email");
 		if (email != null) setAndFix(this.email, email);
 		String givenName = Cookies.getCookie("givenName");
 		if (givenName != null) setAndFix(this.givenName, givenName);
@@ -83,6 +83,18 @@ public class RegisterPanel extends ResizeComposite {
 		String schoolCode = Cookies.getCookie("schoolCode");
 		if (schoolCode != null) this.schoolCode.setText(schoolCode);
 		
+	}
+
+	private String getCookie(String string) {
+		String result = Cookies.getCookie(string);
+		if(result.startsWith("\"")) {
+			result = result.substring(1, result.length()-1); // cookie decoder!
+			for(int i = 0; i < result.length(); i++) {
+				if (result.charAt(i)=='\\')
+					result = result.substring(0, i) + result.substring(i+1);
+			}
+		}
+		return result.trim();
 	}
 
 	private void setAndFix(TextBox widget, String string) {

@@ -8,6 +8,8 @@ import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -36,6 +38,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 @SuppressWarnings("serial")
 public class RegisterForm extends HttpServlet {
 	
+  private final Logger LOG = Logger.getLogger(getClass().getName());
   SystemManager manager;
   Session session;
   private Key key;
@@ -83,6 +86,7 @@ private ResourceBundle mailrb;
     transport.close();
 
     } catch (MessagingException e) {
+      LOG.log(Level.SEVERE, "mail error", e);
       resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       return;
     }
@@ -112,7 +116,7 @@ private ResourceBundle mailrb;
     final String smtpPassword = initParameter("fi.dwo.server.rest.smtp.password");
     try {
       smtpEmail = 
-          new InternetAddress(getInitParameter("fi.dwo.server.rest.smtp.email"));
+          new InternetAddress(initParameter("fi.dwo.server.rest.smtp.email"));
     } catch (AddressException e) {
       throw new ServletException("init", e);
     }//from address.
@@ -122,7 +126,7 @@ private ResourceBundle mailrb;
     props.put("mail.smtp.host", smtpServer);
     props.put("mail.smtp.port", smtpPort);
     props.put("mail.smtp.auth", smtpAuth);
-
+    LOG.info("mail parameters " + props);
     if (smtpAuth.equals("true")) {
         session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
@@ -139,7 +143,7 @@ private ResourceBundle mailrb;
     key = Keys.hmacShaKeyFor(bytes);
 // FORM:
     String registerFree = getInitParameter("register.free");
-    log("register.free = " + registerFree);
+    LOG.info("register.free = " + registerFree);
     if (registerFree == null) registerFree="/RegisterFree.html";
     dispatch = getServletContext().getRequestDispatcher(registerFree);
 // I18N
