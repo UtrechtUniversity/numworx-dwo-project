@@ -57,6 +57,7 @@ cookie("schoolCode", schoolCode, response);
 cookie(DWO_SAML_ORGANIZATION_ID, org_id, response);
 cookie(DWO_SAML_USER_ID, user_id, response);
 
+String dwo_env = System.getProperty("DWO_ENV", "app");
 
 %>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -64,6 +65,7 @@ cookie(DWO_SAML_USER_ID, user_id, response);
     <meta name="gwt:property" content="locale=nl">
     <script>
     	free = false;
+    	dwo_env = "<%=dwo_env%>"
     </script>
     <title>Registratie nieuwe gebruiker</title>
     <script type="text/javascript" language="javascript" src="registergwt/registergwt.nocache.js"></script>
