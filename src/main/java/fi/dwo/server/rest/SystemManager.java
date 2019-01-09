@@ -16,6 +16,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
@@ -114,9 +117,13 @@ public class SystemManager {
   }
   
   @PUT
-  @Produces({"text/plain"})
+  @Produces({"text/plain", "application/json"})
   @Path("/user/suggestion")
-  public String suggestion(String input) {
+  public String suggestion(String input) throws ParseException {
+    if(input.startsWith("\"")) {
+      JSONParser p = new JSONParser();
+      input = p.parse(input).toString();
+    }
     int cntr = 0;
     List<PersistentUser> list = UserManager.findUsersLike(input);
     if (list.isEmpty())
