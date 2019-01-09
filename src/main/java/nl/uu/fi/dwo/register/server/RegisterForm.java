@@ -138,7 +138,8 @@ private ResourceBundle mailrb;
     byte[] bytes = new byte[32];
     key = Keys.hmacShaKeyFor(bytes);
 // FORM:
-    String registerFree = initParameter("register.free");
+    String registerFree = getInitParameter("register.free");
+    log("register.free = " + registerFree);
     if (registerFree == null) registerFree="/RegisterFree.html";
     dispatch = getServletContext().getRequestDispatcher(registerFree);
 // I18N
