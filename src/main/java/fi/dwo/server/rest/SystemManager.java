@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.rest;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -19,15 +20,19 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -50,7 +55,7 @@ public class SystemManager {
       DomSchool s = rest.getDomSchool();
       Long id = MySQLPersistenceId.getNativeId(s);
       PersistentSchool school = SchoolManager.findEntity(id);
-      return school.buildDomSchoolFull();
+      return buildDomSchoolFull(school);
   }
   
   @PUT
@@ -59,7 +64,18 @@ public class SystemManager {
   public DomSchoolFull getSchoolByName(RestSchool rest) throws Dwo2Exception {
       String name  = rest.getDomSchool().getSchoolName();
       PersistentSchool school = SchoolManager.findBySchoolLogin(name);
-      return school.buildDomSchoolFull();  
+      return buildDomSchoolFull(school);  
+  }
+
+  private DomSchoolFull buildDomSchoolFull(PersistentSchool school) {
+    DomSchoolFull dom = school.buildDomSchoolFull();
+    List<PersistentSchoolGroup> list = SchoolGroupManager.findEntities(school);
+    List<DomMapEntry<RoleType, String>> passwords = 
+        list.stream()
+          .map(item -> new DomMapEntry<RoleType, String>(RoleType.values()[item.getGroupID()], item.getPasswd()))
+          .collect(Collectors.toList());
+    dom.setPasswords(passwords);
+    return dom;
   }
 
   @PUT
