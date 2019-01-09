@@ -32,11 +32,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.googlecode.mgwt</groupId>
-			<artifactId>MGWT</artifactId>
-			<version>1.1.2</version>
-		</dependency>
-		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
 			<artifactId>DWO-gwt-lib</artifactId>
 			<scope>provided</scope>

@@ -6,7 +6,6 @@
 	<inherits name='nl.uu.fi.dwo.mobile.promise.Promise' />
 	<inherits name="nl.uu.fi.dwo.rest.DWO-rest-lib"/>
 	<inherits name="fi.dwo.gwt.lib.rest.DWO-gwt-lib"/>
-	<inherits name="com.googlecode.mgwt.MGWTMin"/>
 	
 	<source path="client" />
 	<entry-point class="nl.uu.fi.dwo.register.client.Register"></entry-point>

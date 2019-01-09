@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class Manager {
@@ -56,9 +57,11 @@ public class Manager {
 		} catch (Dwo2Exception e) {
 			LOG.log(Level.SEVERE, "get school for " + schoolid, e);
 		}
-		if (school != null) {
+		if (school != null && AboType.premium == school.getAboType()) {
+			
 			List<DomMapEntry<RoleType, String>> passwords = school.getPasswords();
-			for (DomMapEntry<RoleType, String> item : passwords) {
+			if (passwords != null) 
+				for (DomMapEntry<RoleType, String> item : passwords) {
 				if (role.equals(item.getKey().name()))
 					return item.getValue();
 			}

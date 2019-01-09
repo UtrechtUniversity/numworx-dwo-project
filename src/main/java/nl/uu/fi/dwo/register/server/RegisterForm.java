@@ -100,16 +100,16 @@ private ResourceBundle mailrb;
 	manager = new Manager().getInstance(getServletContext());
 	// mail parameters
     //place this in servlet
-    String smtpServer = getInitParameter("fi.dwo.server.rest.smtp.server");
+    String smtpServer = initParameter("fi.dwo.server.rest.smtp.server");
     if(smtpServer == null) smtpServer = "localhost";
-    String smtpPort = getInitParameter("fi.dwo.server.rest.smtp.port");
+    String smtpPort = initParameter("fi.dwo.server.rest.smtp.port");
     if (smtpPort == null) smtpPort = "25";
-    String smtpTLS = getInitParameter("fi.dwo.server.rest.smtp.tls");
+    String smtpTLS = initParameter("fi.dwo.server.rest.smtp.tls");
     if (smtpTLS == null) smtpTLS = "no";
-    String smtpAuth = getInitParameter("fi.dwo.server.rest.smtp.auth");
+    String smtpAuth = initParameter("fi.dwo.server.rest.smtp.auth");
     if (smtpAuth == null) smtpAuth = "false";
-    final String smtpUser = getInitParameter("fi.dwo.server.rest.smtp.user");
-    final String smtpPassword = getInitParameter("fi.dwo.server.rest.smtp.password");
+    final String smtpUser = initParameter("fi.dwo.server.rest.smtp.user");
+    final String smtpPassword = initParameter("fi.dwo.server.rest.smtp.password");
     try {
       smtpEmail = 
           new InternetAddress(getInitParameter("fi.dwo.server.rest.smtp.email"));
@@ -143,7 +143,15 @@ private ResourceBundle mailrb;
     mailrb = ResourceBundle.getBundle("nl.uu.fi.dwo.register.server.mail");
   }
 
-  @Override
+  private String initParameter(String name) {
+	String result = getInitParameter(name);
+	if (result == null) {
+		result = getServletContext().getInitParameter(name); // fallback to context parameter.
+	}
+	return null;
+}
+
+@Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
     

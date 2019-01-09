@@ -11,7 +11,7 @@
   </welcome-file-list>
   <context-param>
   	<param-name>dbrest.url</param-name>
-	<param-value>http://127.0.0.1:8888/dwo/</param-value>  
+	<param-value>https://entree.dwo.nl/dwo/</param-value>  
   </context-param>
   <servlet>
   	<servlet-name>RegisterForm</servlet-name>

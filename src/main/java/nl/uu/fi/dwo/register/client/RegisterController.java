@@ -19,11 +19,36 @@ import org.osgi.util.promise.*;
 
 public class RegisterController {
 
-	private Command next;
+	private Command next, cancel;
 	
 	private PublicUserManager pum = new PublicUserManager();
 
 	private DomSamlUser samlUser;
+
+	private final Success<Boolean,Void> succes = (promise) ->
+		{   Boolean result = promise.getValue();
+			DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
+
+			if (result) {
+				Window.alert(rb.GUI_UserRegistrationSucceeded());
+				if(next != null)
+					next.execute();
+			} else {
+				Window.alert(rb.GUI_UserRegistrationFailed());	
+			}
+			return null;
+		};
+
+	private final Failure failure = (promise) -> 
+		 {  Throwable caught = promise.getFailure();
+			String message;
+			if(caught instanceof Dwo2Exception)
+			{	 
+				 message = caught.getLocalizedMessage();
+			} else
+				message = caught.toString();
+			Window.alert(message);
+		};
 	
 	
 	public Command getNext() {
@@ -36,34 +61,11 @@ public class RegisterController {
 	}
 
 	public void register(DomNewUser domNewUser) {
+		SecuredUserAccountManager manager = new SecuredUserAccountManager();
 		GwtRestVars.instance().setCurrentUser(null,null);
 		Promise<Boolean> p = pum.RegisterNewUser(domNewUser);
 
-		Failure failure = (promise) -> 
-			 {  Throwable caught = promise.getFailure();
-				String message;
-				if(caught instanceof Dwo2Exception)
-				{	 
-					 message = caught.getLocalizedMessage();
-				} else
-					message = caught.toString();
-				Window.alert(message);
-			};
-		Success<Boolean,Void> succes = (promise) ->
-			{   Boolean result = promise.getValue();
-				DwoLocalesForGWT rb = DwoLocalesForGWT.instance;
-
-				if (result) {
-					Window.alert(rb.GUI_UserRegistrationSucceeded());
-					if(next != null)
-						next.execute();
-				} else {
-					Window.alert(rb.GUI_UserRegistrationFailed());	
-				}
-				return null;
-			};
 		if (samlUser != null) {
-			SecuredUserAccountManager manager = new SecuredUserAccountManager();
 			Success<Boolean, Boolean> link = (promise) -> {
 				GwtRestVars.instance().setCredentials(domNewUser.getUsername(), domNewUser.getPassword(), null);			
 				return manager.linkSaml(samlUser);
@@ -79,8 +81,24 @@ public class RegisterController {
 	}
 
 
+	void link(DomNewUser u) {
+		SecuredUserAccountManager manager = new SecuredUserAccountManager();
+		GwtRestVars.instance().setCredentials(u.getUsername(), u.getPassword(), null);
+		manager.linkSaml(samlUser).then(succes,failure);
+	}
+	
+	
 	void setSamlUser(DomSamlUser samlUser) {
 		this.samlUser = samlUser;
 	}
 
+
+	public void setCancel(Command object) {
+		this.cancel = object;
+	}
+
+	public Command getCancel() {
+		if (cancel == null) return next;
+		return cancel;
+	}
 }

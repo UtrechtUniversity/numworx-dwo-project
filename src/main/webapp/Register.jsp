@@ -28,7 +28,7 @@ Object email = request.getAttribute("mail");
 Object org_id  = request.getAttribute("nlEduPersonHomeOrganizationId");
 // quickfix voor idptestbed
 if (org_id == null) {
-	  String schoolid = System.getProperty("ENV_ORGID", "385");
+	  String schoolid = System.getProperty("ENV_ORGID", "project");
 	  org_id = schoolid;
 }
 
@@ -57,7 +57,7 @@ cookie("schoolCode", schoolCode, response);
 cookie(DWO_SAML_ORGANIZATION_ID, org_id, response);
 cookie(DWO_SAML_USER_ID, user_id, response);
 
-String dwo_env = System.getProperty("DWO_ENV", "app");
+String dwo_env = System.getProperty("DWO_ENV", "saml");
 
 %>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">

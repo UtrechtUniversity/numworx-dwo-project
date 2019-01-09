@@ -1,19 +1,22 @@
 package nl.uu.fi.dwo.register.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.ui.client.widget.Button;
 
 import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
@@ -22,7 +25,7 @@ import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
-public class RegisterPanel extends Composite {
+public class RegisterPanel extends ResizeComposite {
 
 	private static RegisterPanelUiBinder uiBinder = GWT
 			.create(RegisterPanelUiBinder.class);
@@ -33,7 +36,7 @@ public class RegisterPanel extends Composite {
 
 	final private boolean isfree;
 	
-	public RegisterPanel(boolean isfree) {
+	public RegisterPanel(boolean isfree, boolean saml) {
 	    this.isfree = isfree;
 		initWidget(uiBinder.createAndBindUi(this));
 		//schoolGroup.addItem(rb.NULLSCHOOL(), RoleType.STUDENT.name());
@@ -45,7 +48,7 @@ public class RegisterPanel extends Composite {
 //		register.addTapHandler(this::onRegister);
 //		cancel.addTapHandler(this::onCancel);
 		setStyleName(css.isfree(), isfree);
-		
+		account.setVisible(saml);
 		absorbCookies();
 		
 		
@@ -103,16 +106,43 @@ public class RegisterPanel extends Composite {
 	
 	
 	@UiField ListBox schoolGroup;
+	@UiField CheckBox account;
 	
 	@UiField RegisterCSS css;
 	
+	@UiHandler("account")
+	void onValueChange(ValueChangeEvent<Boolean> event) {
+		setStyleName(css.saml(), event.getValue());
+	}
+	
 	@UiHandler("cancel")
-	void onCancel(TapEvent e) {
-		getController().getNext().execute();
+	void onCancel(ClickEvent e) {
+		getController().getCancel().execute();
 	}
 
 	@UiHandler("register")
-	void onRegister(TapEvent e) {
+	void registerOrLink(ClickEvent e) {
+		if (account.isChecked())
+			onLink(e);
+		else
+			onRegister(e);
+	}
+	
+	
+	
+	void onLink(ClickEvent e) {
+		DomNewUser domUser = new DomNewUser();
+		domUser.setUsername(username.getText());
+		domUser.setPassword(password.getText());
+		if ( ! SimpleValidUserFieldsChecker.isNonEmptyNorNull(domUser.getUsername(), domUser.getPassword())) {
+			Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_Required_Fields());
+			return;
+		}
+		domUser.setPassword(MD5.md5(password.getText()));
+		controller.link(domUser);
+	}
+
+	void onRegister(ClickEvent e) {
 		DomNewUser domUser = new DomNewUser();
 		
 		domUser.setEmail(email.getText());
