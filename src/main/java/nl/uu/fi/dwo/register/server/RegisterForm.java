@@ -138,7 +138,9 @@ private ResourceBundle mailrb;
     byte[] bytes = new byte[32];
     key = Keys.hmacShaKeyFor(bytes);
 // FORM:
-    dispatch = getServletContext().getRequestDispatcher("/RegisterFree.html");
+    String registerFree = initParameter("register.free");
+    if (registerFree == null) registerFree="/RegisterFree.html";
+    dispatch = getServletContext().getRequestDispatcher(registerFree);
 // I18N
     mailrb = ResourceBundle.getBundle("nl.uu.fi.dwo.register.server.mail");
   }
