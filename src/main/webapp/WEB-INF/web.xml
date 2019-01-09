@@ -306,6 +306,14 @@
     	<servlet-name>DWOproperties</servlet-name>
     	<jsp-file>/dwo/DWO.properties.jsp</jsp-file>
     </servlet>
+  <servlet>
+  	<servlet-name>RegisterForm</servlet-name>
+  	<servlet-class>nl.uu.fi.dwo.register.server.RegisterForm</servlet-class>
+  	<init-param>
+  		<param-name>fi.dwo.server.rest.smtp.email</param-name>
+ 		<param-value>info@numworx.nl</param-value>
+  	</init-param>
+  </servlet>
     <!--
     servlet mappings 
     -->
@@ -407,6 +415,10 @@
     	<url-pattern>/ideas/mathshell</url-pattern>
     	<url-pattern>/ideas/mathshell/*</url-pattern>
     </servlet-mapping>
+	<servlet-mapping>
+	 	<servlet-name>RegisterForm</servlet-name>
+	  	<url-pattern>/dwo/register/registerform</url-pattern>
+	</servlet-mapping>
 <!--    
     <security-constraint>
         <web-resource-collection>
