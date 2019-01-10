@@ -1,3 +1,4 @@
+<%@ page import="java.net.URLEncoder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="javax.servlet.http.Cookie" %>
@@ -13,9 +14,16 @@ static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
 static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
 private void cookie(String name, Object value, HttpServletResponse response) {
   if (value != null) {
-    Cookie cookie = new Cookie(name, value.toString());
+	Cookie cookie = new Cookie(name, value.toString());
     response.addCookie(cookie);
   }
+}
+
+private Object u(Object value) {
+	  try {
+		  	value = URLEncoder.encode(value.toString(), "UTF-8");
+		  } catch(Exception e) {}
+	  return value;
 }
 %>  
 <%
@@ -45,14 +53,14 @@ if(roles != null && roles.toLowerCase().contains("employee"))
     role = "TEACHER";
 String schoolCode = manager.getSchoolCode(org_id.toString(), role);
 
-cookie("givenName", name_given, response);
-cookie("familyName", name_family, response);
-cookie("insertion", name_prefix, response);
-cookie("email", email, response);
-cookie("schoolLogin", schoolCode == null ? null : org_id, response);
-cookie("suggestion", student_id, response); // XXX moet de nlEduPersonRealId zijn, zonder @suffix.
+cookie("givenName", u(name_given), response);
+cookie("familyName",u(name_family), response);
+cookie("insertion", u(name_prefix), response);
+cookie("email", u(email), response);
+cookie("schoolLogin", schoolCode == null ? null : u(org_id), response);
+cookie("suggestion", u(student_id), response); // XXX moet de nlEduPersonRealId zijn, zonder @suffix.
 cookie("schoolGroup", role, response);
-cookie("schoolCode", schoolCode, response);
+cookie("schoolCode", u(schoolCode), response);
 
 cookie(DWO_SAML_ORGANIZATION_ID, org_id, response);
 cookie(DWO_SAML_USER_ID, user_id, response);
