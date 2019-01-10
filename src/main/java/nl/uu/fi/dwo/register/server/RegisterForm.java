@@ -205,7 +205,7 @@ private ResourceBundle mailrb;
 public static String u(String value) {
 	if (value != null) {
 		try {
-			value = URLEncoder.encode(value, "UTF-8").replaceAll("+", "%20");
+			value = URLEncoder.encode(value, "UTF-8").replaceAll("\\+", "%20");
 		} catch (UnsupportedEncodingException ignore) {
 		}
 	}
