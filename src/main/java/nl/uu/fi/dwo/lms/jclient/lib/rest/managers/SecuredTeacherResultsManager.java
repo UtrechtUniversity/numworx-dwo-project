@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherScormValues;
 import nl.uu.fi.dwo.rest.entities.RestClearStudentDataForScoAndClass;
 import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
+import nl.uu.fi.dwo.rest.entities.RestResultsPerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestTeacherScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
@@ -43,6 +44,20 @@ public class SecuredTeacherResultsManager {
     return src;
   }
 
+  public static DomResultsPerTeacher selectedTeacherResults(DomDwoProfile profile, DomResultsPerTeacher dom) throws Dwo2Exception {
+	  RestResultsPerTeacher rest = new RestResultsPerTeacher();
+	  rest.setDomDwoProfile(profile);
+	  rest.setRestContext(getContext());
+	  rest.setDomResultsPerTeacher(dom);
+	  DomResultsPerTeacher result;
+	  result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/results/selectedTeachersResults",
+			  DomResultsPerTeacher.class, rest);
+	  LOG.log(Level.FINE, "Retrieved selected teacher results for the teacher with username {0}.",
+	            new Object[] {RestAuthenticator.getInstance().getUsername()});
+	 
+	  return result;
+  }
+  
   static DomContext getContext() {
     return RestAuthenticator.getInstance().getContext();
   }
