@@ -14,6 +14,8 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class SystemManagerIT {
@@ -52,8 +54,11 @@ public class SystemManagerIT {
 	}
 
 	@Test
-	public void testGetSchoolString() {
-		fail("Not yet implemented");
+	public void testGetSchoolString() throws Dwo2Exception {
+		String p = "project";
+		DomSchoolFull s = manager.getSchool(p);
+		assertNotNull(s.getPasswords());
+		assertEquals("premium", AboType.premium, s.getAboType());
 	}
 
 	@Test
@@ -73,8 +78,11 @@ public class SystemManagerIT {
 	}
 
 	@Test
-	public void testGetSuggestion() {
-		fail("Not yet implemented");
+	public void testGetSuggestion() throws Dwo2Exception {
+		String u = "project_wim";
+		String result = manager.getSuggestion(u);
+		System.out.println(result);
+		assertNotEquals("exists!",u,result);
 	}
 
 }
