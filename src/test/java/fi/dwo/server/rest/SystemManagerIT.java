@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.json.simple.parser.ParseException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -82,7 +83,7 @@ public class SystemManagerIT {
   }
 
   @Test
-  public void testSuggestion() {
+  public void testSuggestion() throws ParseException {
     String input = "user02";
     String suggestion = manager.suggestion(input);
     assertEquals("suggest", input + 1, suggestion);
