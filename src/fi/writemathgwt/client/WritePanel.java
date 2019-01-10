@@ -286,7 +286,7 @@ public class WritePanel extends LayoutPanel { //HorizontalPanel
 		formuleRoot.setPositions();
 		// convert the formulatree to WriteObjects
 		formuleRoot.convertToWriteObjects();
-		
+		strokeContainer.makeParseArea();
 		paint();
 		String formule = parseFormule();
 		eigenaar.writePanelChanged();

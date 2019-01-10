@@ -380,7 +380,7 @@ public class StrokeContainer {
 		}
 	}
 	
-	private void makeParseArea() {
+	public void makeParseArea() {
 		if(strokes.size()==0)
 			parseArea = null;
 		double xMin = 10000;
