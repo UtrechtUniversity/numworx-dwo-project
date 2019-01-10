@@ -155,7 +155,7 @@ private ResourceBundle mailrb;
 	if (result == null) {
 		result = getServletContext().getInitParameter(name); // fallback to context parameter.
 	}
-	return null;
+	return result;
 }
 
 @Override
