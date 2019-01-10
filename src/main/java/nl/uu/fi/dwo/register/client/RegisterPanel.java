@@ -103,7 +103,6 @@ public class RegisterPanel extends ResizeComposite {
 					result = result.substring(0, i) + result.substring(i+1);
 			}
 		}
-		result = URL.decodeQueryString(result); 
 		try {
 			result = new String(result.getBytes("ISO-8859-1"), "UTF-8");
 		} catch (Exception e) {
