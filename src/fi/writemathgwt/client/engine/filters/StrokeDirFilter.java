@@ -77,6 +77,8 @@ public class StrokeDirFilter {
 		if("w".equals(teken)) {int[][] data = {};return data;}
 		if("x".equals(teken)) {int[][] data = {};return data;}
 		if("y".equals(teken)) {int[][] data = {{70,30,8,20,4},{180,90,25,39,10},{255,30,24,34,11}};return data;}
+		if("y_1".equals(teken)) {int[][] data = {{260,30,1,6,4},{260,30,15,30,8}};return data;}
+
 		if("z".equals(teken)) {int[][] data = {};return data;}
 		if("of".equals(teken)) {int[][] data = {};return data;}
 		if("sqrt".equals(teken)) {int[][] data = {};return data;}

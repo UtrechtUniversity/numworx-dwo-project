@@ -74,6 +74,7 @@ public class StrokeLocFilter {
 		if("w".equals(teken)) {int[][] data = {{0,30,0,40,0,0,1},{80,100,0,40,39,39,1},{35,100,75,100,20,39,1}};return data;}
 		if("x".equals(teken)) {int[][] data = {{0,60,0,60,0,0,1}};return data;}
 		if("y".equals(teken)) {int[][] data = {{0,50,0,20,0,0,1},{0,100,25,100,2,10,1}};return data;}
+		if("y_1".equals(teken)) {int[][] data = {{0,100,0,60,0,15,15}};return data;}
 		if("z".equals(teken)) {int[][] data = {{0,100,75,100,30,39,10}};return data;}
 		
 		if("B".equals(teken)) {int[][] data = {{0,100,0,25,15,25,4},{0,30,0,100,1,20,10}};return data;}

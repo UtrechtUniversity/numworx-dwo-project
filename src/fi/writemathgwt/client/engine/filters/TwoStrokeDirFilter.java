@@ -49,6 +49,8 @@ public class TwoStrokeDirFilter {
 		//DH2 checkers.add(wo.hasDecreasingAngle(10,2,19));
 		if("PH1".equals(teken)) {int[][] data = {{260, 30, 1, 39, 24}};return data;}
 		if("PH2".equals(teken)) {int[][] data = {{0, 30, 1, 14, 4},{300, 30, 6, 18, 2},{270, 40, 10, 30, 6},{240, 30, 22, 34, 2},{200, 30, 26, 39, 4}};return data;}
+		if("bH1".equals(teken)) {int[][] data = {{260, 30, 1, 39, 24}};return data;}
+		if("bH2".equals(teken)) {int[][] data = {{0, 30, 1, 14, 4},{300, 30, 6, 18, 2},{270, 40, 10, 30, 6},{240, 30, 22, 34, 2},{200, 30, 26, 39, 4}};return data;}
 		if("yH1".equals(teken)) {int[][] data = {{280, 30, 1, 30, 16},{300, 40, 20, 36, 8}};return data;}
 		if("yH2".equals(teken)) {int[][] data = {{240, 30, 1, 30, 16},{230, 40, 20, 39, 8}};return data;}
 		if("x1H1".equals(teken)) {int[][] data = {{330, 50, 1, 18, 8},{270, 90, 10, 30, 12},{210, 50, 22, 39, 8}};return data;}

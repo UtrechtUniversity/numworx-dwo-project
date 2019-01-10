@@ -30,6 +30,8 @@ public class StrokeContainer {
 	private DoubleRectangle parseArea;
 	private boolean parseable = true;
 	
+	private WMObjectLine mainLine = new WMObjectLine();
+	
 	
 	public StrokeContainer() {
 		strokes = new ArrayList<Stroke>();
@@ -48,6 +50,8 @@ public class StrokeContainer {
 		updateParseArea(stroke);
 		if(parse) {
 			parseStrokes();
+			
+			mainLine = new WMObjectLine(wmObjects);
 			return true;
 		}
 		else
@@ -152,20 +156,23 @@ public class StrokeContainer {
 					wmObjects.remove(wmObjects.size()-1); 
 				}
 				wmObjects.add(wo);
-				//updateAverageHeight();
 			}
 		}
-		if(strokes.size()>2 && wmObjects.size()>1 && wmObjects.get(wmObjects.size()-1).isOneStroke() && wmObjects.get(wmObjects.size()-2).isOneStroke()) {
+		if(strokes.size()>2) {// && wmObjects.size()>1 && wmObjects.get(wmObjects.size()-1).isOneStroke() && wmObjects.get(wmObjects.size()-2).isOneStroke()) {
 			Stroke stroke1 = strokes.get(strokes.size()-3);
 			Stroke stroke2 = strokes.get(strokes.size()-2);
 			Stroke stroke3 = strokes.get(strokes.size()-1);
 			s = ThreeStrokeProcessor.findThreeStrokeTeken(stroke1, stroke2, stroke3);
 			if(s!=null) {
 				WMObject wo = new WMObject(stroke1, stroke2, stroke3, s);
-				wmObjects.remove(wmObjects.size()-1);
-				wmObjects.remove(wmObjects.size()-1);
+				int teller = 2;
+				while(teller>0) {
+					teller -= wmObjects.get(wmObjects.size()-1).getStrokes().size();
+					wmObjects.remove(wmObjects.size()-1); 
+				}
+				//wmObjects.remove(wmObjects.size()-1);
+				//wmObjects.remove(wmObjects.size()-1);
 				wmObjects.add(wo);
-				//updateAverageHeight();
 			}
 		}
 		if(s==null && strokes.size()>1 &&wmObjects.size()>0 && wmObjects.get(wmObjects.size()-1).isOneStroke()) {
@@ -176,7 +183,6 @@ public class StrokeContainer {
 				WMObject wo = new WMObject(stroke1, stroke2, s);
 				wmObjects.remove(wmObjects.size()-1);
 				wmObjects.add(wo);
-				//updateAverageHeight();
 			}
 		}
 		if(s==null && strokes.size()>0) {
@@ -478,6 +484,10 @@ public class StrokeContainer {
 		if(parseArea!=null)
 			return parseArea.getDiagonal();
 		return 0;
+	}
+	
+	public WMObjectLine getMainLine() {
+		return mainLine;
 	}
 	
 	public boolean isOutOfLine(Stroke stroke) {

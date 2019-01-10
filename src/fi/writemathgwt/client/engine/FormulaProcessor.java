@@ -28,6 +28,86 @@ public class FormulaProcessor {
 		return formuleString;
 	}
 
+	public static String parseFormuleNew(StrokeContainer strokeContainer, DoubleRectangle parseArea) {	
+		ArrayList<WMObject> wmObjects = strokeContainer.getWMObjects();
+		ArrayList<WMObject> wmObjectsToDo = new ArrayList<WMObject>();
+		for (int i = 0; i < wmObjects.size(); i++) {	
+			WMObject wo = new WMObject(wmObjects.get(i));
+			wo.setIsMachtVan(null);
+			wo.setIsTellerVan(null);
+			wo.setIsNoemerVan(null);
+			wo.setIsOnderWortel(null);
+			wmObjectsToDo.add(wo);
+		}
+		
+		labelBreuken(wmObjectsToDo);
+		labelWortels(wmObjectsToDo);
+		WMObjectLine wol = new WMObjectLine(wmObjectsToDo);
+		return wol.getFormula();
+		
+		
+//		// make a compact deep copy
+//		for (int i = 0; i < wmObjects.size(); i++) {	
+//			WMObject wo = new WMObject(wmObjects.get(i));
+//			wo.setIsMachtVan(null);
+//			wo.setIsTellerVan(null);
+//			wo.setIsNoemerVan(null);
+//			wo.setIsOnderWortel(null);
+//			wmObjectsToDo.add(wo);
+//		}
+//		// bubble sort op links-positie
+//		boolean swapped = true;
+//		while (swapped)	{	
+//			swapped = false;
+//			for (int i = 1; i < wmObjectsToDo.size(); i++) {	
+//				WMObject wo1 = wmObjectsToDo.get(i-1);
+//				WMObject wo2 = wmObjectsToDo.get(i);
+//				if (wo1.getBoxMid().x > wo2.getBoxMid().x) {	
+//					wmObjectsToDo.set(i-1, wo2);
+//					wmObjectsToDo.set(i, wo1);
+//					swapped = true;
+//				}
+//			}
+//		}
+//		// haal de breukstrepen er even uit
+//		ArrayList<WMObject> breukStrepen = new ArrayList<WMObject>();
+//		for (int i = 0; i < wmObjectsToDo.size(); i++) {	
+//			WMObject wo = wmObjectsToDo.get(i);
+//			if (wo.getTeken().equals("-"))
+//				breukStrepen.add(wo);
+//		}
+//		
+//		// bubble sort op lengte breukstreep
+//		// langste vooraan
+//		swapped = true;
+//		while (swapped)	{	
+//			swapped = false;
+//			for (int i = 1; i < breukStrepen.size(); i++) {	
+//				WMObject wo1 = breukStrepen.get(i-1);
+//				WMObject wo2 = breukStrepen.get(i);
+//				if (wo1.getBox().width < wo2.getBox().width) {	
+//					breukStrepen.set(i-1, wo2);
+//					breukStrepen.set(i, wo1);
+//					swapped = true;
+//				}
+//			}
+//		}
+//
+//		// label de objecten die breukstreep zijn, dit initialiseeert ook de teller- en noemer boxes,
+//		// en labelt alle objecten die in een teller(box) of in een noemer(box) voorkomen, maar zodanig
+//		// dat een object alleen teller of (exclusief) noemer kan zijn en dat van de meest geneste
+//		//(kortste) breukstreep
+//		for (int i = 0; i < breukStrepen.size(); i++) {	
+//			WMObject wo = breukStrepen.get(i);
+//			isBreuk(wo, wmObjectsToDo);
+//		}
+		
+		
+		
+		
+	}
+	
+	
 	public static String parseFormule(StrokeContainer strokeContainer, DoubleRectangle parseArea) {		
 		ArrayList<WMObject> wmObjects = strokeContainer.getWMObjects();
 		ArrayList<WMObject> wmObjectsToDo = new ArrayList<WMObject>();
@@ -260,6 +340,111 @@ public class FormulaProcessor {
 				return parseBox(new DoubleRectangle(cPanelAreaMin, cPanelAreaMin, cPanelAreaDelta, cPanelAreaDelta), strokeContainer, wmObjectsToDo, null, null);
 				//return parseBox(parseArea, wmObjectsToDo, null, null);
 				//		return parseBox(new DoubleRectangle(0, 0, width, height), writeObjectsToDo, null, null);
+	}
+	
+	private static void labelBreuken(ArrayList<WMObject> wmObjects) {
+		ArrayList<WMObject> writeObjects = new ArrayList<WMObject>();
+		writeObjects.addAll(wmObjects);
+		if(writeObjects.size()==0)
+			return;
+		WMObject langsteStreep = null;
+		for (int i = 0; i < writeObjects.size(); i++) {
+			WMObject wo = writeObjects.get(i);
+			if(("-".equals(wo.getTeken()) && (langsteStreep == null || wo.getBox().width > langsteStreep.getBox().width)))
+				langsteStreep = wo;
+		}
+		if(langsteStreep==null)
+			return;
+			
+		ArrayList<WMObject> writeObjectsToDoTeller = new ArrayList<WMObject>();
+		ArrayList<WMObject> writeObjectsToDoNoemer = new ArrayList<WMObject>();
+		for (int i = 0; i < writeObjects.size(); i++) {
+			WMObject wo = writeObjects.get(i);
+			if(inTellerBox(wo, langsteStreep)) {
+				writeObjectsToDoNoemer.add(writeObjects.get(i));
+				writeObjects.get(i).setIsNoemerVan(langsteStreep);
+				writeObjects.get(i).setIsTellerVan(null);
+				langsteStreep.setBreuk(true);
+			}
+			else if(inNoemerBox(wo, langsteStreep)) {
+				writeObjectsToDoTeller.add(writeObjects.get(i));
+				writeObjects.get(i).setIsTellerVan(langsteStreep);
+				writeObjects.get(i).setIsNoemerVan(null);
+				langsteStreep.setBreuk(true);
+			}
+		}
+		writeObjects.remove(langsteStreep);
+		writeObjects.removeAll(writeObjectsToDoTeller);
+		writeObjects.removeAll(writeObjectsToDoNoemer);
+		labelBreuken(writeObjects);
+		labelBreuken(writeObjectsToDoTeller);
+		labelBreuken(writeObjectsToDoNoemer);
+	}
+	
+	private static void labelWortels(ArrayList<WMObject> wmObjects) {
+		ArrayList<WMObject> writeObjects = new ArrayList<WMObject>();
+		writeObjects.addAll(wmObjects);
+		if(writeObjects.size()==0)
+			return;
+		WMObject langsteWortel = null;
+		for (int i = 0; i < writeObjects.size(); i++) {
+			WMObject wo = writeObjects.get(i);
+			if(("sqrt".equals(wo.getTeken()) && (langsteWortel == null || wo.getBox().width > langsteWortel.getBox().width)))
+				langsteWortel = wo;
+		}
+		if(langsteWortel==null)
+			return;
+		
+		ArrayList<WMObject> writeObjectsOnderWortel = new ArrayList<WMObject>();
+		langsteWortel.setWortel(true);
+		for (int i = 0; i < writeObjects.size(); i++) {
+			WMObject wo = writeObjects.get(i);
+			if(inWortelBox(wo,langsteWortel)) {
+				writeObjectsOnderWortel.add(wo);
+				if( wo.isTellerVan()!=null && !inWortelBox(wo.isTellerVan(), langsteWortel)) {
+					langsteWortel.setIsTellerVan(wo.isTellerVan());
+					wo.setIsTellerVan(null);
+					wo.setIsOnderWortel(langsteWortel);
+				}
+				else if( wo.isNoemerVan()!=null && !inWortelBox(wo.isNoemerVan(), langsteWortel)) {
+					langsteWortel.setIsNoemerVan(wo.isNoemerVan());
+					wo.setIsNoemerVan(null);
+					wo.setIsOnderWortel(langsteWortel);
+				}
+				else if(wo.isTellerVan()==null && wo.isNoemerVan()==null) {
+					wo.setIsOnderWortel(langsteWortel);
+				}
+			}
+		}
+		writeObjects.remove(langsteWortel);
+		writeObjects.removeAll(writeObjectsOnderWortel);
+		labelWortels(writeObjects);
+		labelWortels(writeObjectsOnderWortel);
+	}
+	
+	private static boolean inWortelBox(WMObject wo, WMObject wortel) {
+		DoubleRectangle wortelBox = wortel.getBox();
+		return (wo.getBox().x > wortelBox.x+5 
+				&& wo.getXBox().x+wo.getXBox().width<wortelBox.x+wortelBox.width+10 
+				&& wo.getXBox().y > wortelBox.y-5
+				&& wo.getXBox().y+wo.getXBox().height < wortelBox.y+wortelBox.height+10
+				);
+	}
+	
+	private static boolean inTellerBox(WMObject wo, WMObject breuk) {
+		DoubleRectangle breukStreepBox = breuk.getBox();
+		return (wo.getXBox().x > breukStreepBox.x-5 
+				&& wo.getXBox().x+wo.getXBox().width<breukStreepBox.x+breukStreepBox.width+5 
+				&& wo.getXBox().y > breukStreepBox.y
+				&& wo!=breuk);
+	}
+	
+	private static boolean inNoemerBox(WMObject wo, WMObject breuk) {
+		DoubleRectangle breukStreepBox = breuk.getBox();
+		return (wo.getXBox().x > breukStreepBox.x-5 
+				&& wo.getXBox().x+wo.getXBox().width<breukStreepBox.x+breukStreepBox.width+5 
+				&& wo.getXBox().y+wo.getXBox().height < breukStreepBox.y+breukStreepBox.height
+				&& wo!=breuk);
 	}
 	
 	private static void isBreuk(WMObject wo, ArrayList<WMObject> writeObjectsToDo) {

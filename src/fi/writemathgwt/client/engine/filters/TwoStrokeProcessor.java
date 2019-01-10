@@ -159,7 +159,12 @@ public class TwoStrokeProcessor {
 		if (checkStrokes(stroke1,"PH1",stroke2,"PH2"))
 			if(hasCloseDistance(stroke1, stroke2, 20,0,2,0,6) && hasCloseDistance(stroke1, stroke2, 30,15,25,34,39))
 				return "P";
-						
+		
+		// b 
+			if (checkStrokes(stroke1,"bH1",stroke2,"bH2"))
+				if(hasCloseDistance(stroke1, stroke2, 20,15,25,0,6) && hasCloseDistance(stroke1, stroke2, 30,34,39,31,39))
+					return "b";
+				
 		// j 
 		if (checkStrokes(stroke1,"jH1",stroke2,"jH2"))
 			if(hasYDistance(stroke1, stroke2, -30,25,0,2,0,2) && hasCloseXDistance(stroke1, stroke2, 20,0,2,0,2))
