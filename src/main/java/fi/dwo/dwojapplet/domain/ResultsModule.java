@@ -112,10 +112,16 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
           for(int j = 0; j < hSize; j++) {
             ResultScore scoresj = new ResultScore();
             scores[j] = scoresj;
-            DomResultScore mark = matrix.getMark(i, j);
+            DomResultScore<?> mark = matrix.getMark(i, j);
             if (mark != null) 
             {
-              scoresj.setScore(mark.getScore().floatValue());
+              long total_time = 0L; // mark.getTotalTime().longValue();
+              float value = mark.getScore().floatValue();
+              if (value == 0.0f && false) { // FIXME criterium
+                value = -1f;
+              }
+              scoresj.setScore(value);
+              scoresj.setTotal_time(total_time);
             }
             scoresj.setUserResultList(list);
             LessonGroup lessonGroup = getCourse(matrix.gethIndex(j));
