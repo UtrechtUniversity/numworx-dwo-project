@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.register.client;
 
+import java.io.UnsupportedEncodingException;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -96,7 +98,11 @@ public class RegisterPanel extends ResizeComposite {
 					result = result.substring(0, i) + result.substring(i+1);
 			}
 		}
-		result = URL.decodeQueryString(result);
+		result = URL.decodeQueryString(result); 
+		try {
+			result = new String(result.getBytes(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+		}
 		return result.trim();
 	}
 
