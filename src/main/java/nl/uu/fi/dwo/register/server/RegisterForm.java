@@ -1,8 +1,10 @@
 package nl.uu.fi.dwo.register.server;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.security.Key;
 import java.text.MessageFormat;
 import java.util.Date;
@@ -184,20 +186,30 @@ private ResourceBundle mailrb;
 	}
     
     Cookie cookie;
-    cookie = new Cookie("email", email);
+    cookie = new Cookie("email", u(email));
     resp.addCookie(cookie);
-    cookie = new Cookie("insertion", insertion);
+    cookie = new Cookie("insertion", u(insertion));
     resp.addCookie(cookie);
-    cookie = new Cookie("givenName", givenName);
+    cookie = new Cookie("givenName", u(givenName));
     resp.addCookie(cookie);
-    cookie = new Cookie("familyName", familyName);
+    cookie = new Cookie("familyName", u(familyName));
     resp.addCookie(cookie);
-    cookie = new Cookie("suggestion", suggestion);
+    cookie = new Cookie("suggestion", u(suggestion));
     resp.addCookie(cookie);
 
   
     dispatch.forward(req, resp);
 
   }
+
+public static String u(String value) {
+	if (value != null) {
+		try {
+			value = URLEncoder.encode(value, "UTF-8");
+		} catch (UnsupportedEncodingException ignore) {
+		}
+	}
+	return value;
+}
   
 }

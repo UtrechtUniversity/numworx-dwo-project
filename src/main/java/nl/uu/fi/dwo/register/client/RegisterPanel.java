@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.register.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -57,30 +58,30 @@ public class RegisterPanel extends ResizeComposite {
 	private void absorbCookies() {
 		String email = getCookie("email");
 		if (email != null) setAndFix(this.email, email);
-		String givenName = Cookies.getCookie("givenName");
+		String givenName = getCookie("givenName");
 		if (givenName != null) setAndFix(this.givenName, givenName);
-		String insertion = Cookies.getCookie("insertion");
+		String insertion = getCookie("insertion");
 		if (insertion != null) setAndFix(this.insertion, insertion);
-		String familyName = Cookies.getCookie("familyName");
+		String familyName = getCookie("familyName");
 		if (familyName != null) setAndFix(this.familyName, familyName);
 		
-		String suggestion = Cookies.getCookie("suggestion");
+		String suggestion = getCookie("suggestion");
 		if (suggestion != null) {
 			username.setText(suggestion); // Free to choose
 		} else {
-			String username = Cookies.getCookie("username");
+			String username = getCookie("username");
 			if (username != null) {
 				setAndFix(this.username, username);
 			}
 		}
 		
-		String schoolLogin = Cookies.getCookie("schoolLogin");
+		String schoolLogin = getCookie("schoolLogin");
 		if (schoolLogin != null) this.schoolLogin.setText(schoolLogin);
 		
-		String schoolGroup = Cookies.getCookie("schoolGroup");
+		String schoolGroup = getCookie("schoolGroup");
 		if ("TEACHER".equals(schoolGroup))
 			this.schoolGroup.setSelectedIndex(1);
-		String schoolCode = Cookies.getCookie("schoolCode");
+		String schoolCode = getCookie("schoolCode");
 		if (schoolCode != null) this.schoolCode.setText(schoolCode);
 		
 	}
@@ -94,6 +95,7 @@ public class RegisterPanel extends ResizeComposite {
 					result = result.substring(0, i) + result.substring(i+1);
 			}
 		}
+		result = URL.decodeQueryString(result);
 		return result.trim();
 	}
 
