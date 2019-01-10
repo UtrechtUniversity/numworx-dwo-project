@@ -213,11 +213,20 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	private OpdrNavIF comRoot = null;
 	private int breedte = 600;
 	private int hoogte = 250;
+	/**
+	 * Breedte onthouden voor invisible callout-tekstvak
+	 */
+	private int breedte_oud = 600;
+	/**
+	 * Hoogte onthouden voor invisible callout-tekstvak
+	 */
+	private int hoogte_oud = 250;
 	//ObjectMap launchState;
 	private ObjectMap instellingen;
 	private LayoutPanel mainPanel2 = null;
 	private Grid mainPanel = null;
 	private LayoutPanel callOutPanel = null;
+	private Canvas callOutCanvas = null;
 	//private LayoutPanel randPanel = null;
 	//private LayoutPanel[][] tekstVakken = null;
 	private TekstVak[][] tekstVakken = null;
@@ -658,7 +667,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			layerNr = 0;
 		visible = launchState.getBoolean("visible", true);
 		if(!visible)
-		{	hoogte = 0;
+		{	
+			hoogte_oud = hoogte;
+			breedte_oud = breedte;
+			hoogte = 0;
 			breedte = 0;
 		}
 		zichtbaarNaNakijken = launchState.getBoolean("zichtbaarNaNakijken", false);
@@ -835,7 +847,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			// hier moet als eerste een canvas met punttekening op mainPanel2 worden gezet
 			callOutPanel = new LayoutPanel();
 			callOutPanel.setStylePrimaryName("tekstvakpanel");
-			Canvas callOutCanvas = Canvas.createIfSupported();
+			callOutCanvas = Canvas.createIfSupported();
 			setUpCallOutCanvas(callOutCanvas);
 			callOutPanel.add(callOutCanvas);
 			callOutPanel.setPixelSize(breedte, hoogte);
@@ -963,14 +975,64 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	}
 
 	/**
+	 * Draw the call out canvas with the callout drawing.
+	 * 
+	 * @param callOutCanvas
+	 */
+	private void drawCallOutCanvas(Canvas callOutCanvas)
+	{
+		Context2d ctx = callOutCanvas.getContext2d();
+		
+		callOutCanvas.setPixelSize(breedte, hoogte);
+		callOutCanvas.setCoordinateSpaceWidth(breedte);
+		callOutCanvas.setCoordinateSpaceHeight(hoogte);
+	
+		ctx.clearRect(0, 0, breedte, hoogte);
+		
+		// draw the call out shape
+		ctx.beginPath();
+		ctx.setFillStyle(randColor);
+		ctx.setStrokeStyle(randColor);
+		
+		
+		int xm = callOutMargeX0 + breedtes.get(0).intValue() / 2;
+		int ym = callOutMargeY0 + hoogtes.get(0).intValue() / 2;
+
+		double x = xm - callOutPointX;
+		double y = ym - callOutPointY;
+		if (x == 0)
+			x += 0.000001;
+
+		double rx = 1.0 / Math.sqrt(1.0 + y * y / (x * x));
+		double ry = 1.0 * y / x / Math.sqrt(1.0 + y * y / (x * x));
+
+		ctx.moveTo(callOutPointX, callOutPointY);
+		ctx.lineTo((int) (xm + 5 * ry), (int) (ym - 5 * rx));
+		ctx.lineTo((int) (xm - 5 * ry), (int) (ym + 5 * rx));
+		ctx.lineTo(callOutPointX, callOutPointY);
+		ctx.stroke();
+		ctx.fill();
+	}
+
+	/**
 	 * Resize hoogtes en breedtes voor callout, d.w.z. trek de marges er vanaf.
 	 */
 	private void resizeForCallOut()
 	{
-		if (hoogtes.size() == 1)
-			hoogtes.set(0, (double) hoogte - callOutMargeY0 - callOutMargeY1 - 2 * randDikte);
+		if (hoogtes.size() == 1) // hoogte en breedte kan hier 0 zijn als de callout invisible is
+		{
+			if (hoogte <= 0)
+				hoogtes.set(0, (double) hoogte_oud - callOutMargeY0 - callOutMargeY1 - 2 * randDikte);
+			else
+				hoogtes.set(0, (double) hoogte - callOutMargeY0 - callOutMargeY1 - 2 * randDikte);
+		}
 		if (breedtes.size() == 1)
-			breedtes.set(0, (double) breedte - callOutMargeX0 - callOutMargeX1 - 2 * randDikte);
+		{
+			if (breedte <= 0)
+				breedtes.set(0, (double) breedte_oud - callOutMargeX0 - callOutMargeX1 - 2 * randDikte);
+			else
+				breedtes.set(0, (double) breedte - callOutMargeX0 - callOutMargeX1 - 2 * randDikte);
+		}
 	}
 	
 //	public void setTableBounds()
@@ -4413,6 +4475,11 @@ private Object CamelCase(String name) {
 			{
 				hoogte = hoogte + callOutMargeY0 + callOutMargeY1;
 				breedte = breedte + callOutMargeX0 + callOutMargeX1;
+				
+				if (b && (callOutPanel.getOffsetWidth() == 0 || callOutPanel.getOffsetHeight() == 0))
+					callOutPanel.setPixelSize(breedte + 2 * randDikte, hoogte + 2 * randDikte); // als callOutPanel eerst onzichtbaar was, moet de size gezet worden 
+				
+				drawCallOutCanvas(callOutCanvas);
 			}
 			setCurrentSize( breedte, hoogte);
 		}
