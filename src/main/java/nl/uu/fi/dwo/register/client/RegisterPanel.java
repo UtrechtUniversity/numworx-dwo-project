@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.register.client;
 
 import java.io.UnsupportedEncodingException;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -30,6 +31,8 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class RegisterPanel extends ResizeComposite {
 
+	static Logger LOG = Logger.getLogger("RegisterPanel");
+	
 	private static RegisterPanelUiBinder uiBinder = GWT
 			.create(RegisterPanelUiBinder.class);
 	private static RegisterBundle bundle = GWT.create(RegisterBundle.class);
@@ -90,6 +93,7 @@ public class RegisterPanel extends ResizeComposite {
 
 	private String getCookie(String string) {
 		String result = Cookies.getCookie(string);
+		LOG.info("VOOR " + string + "="  + result);
 		if (result == null) return null;
 		if(result.startsWith("\"")) {
 			result = result.substring(1, result.length()-1); // cookie decoder!
@@ -103,6 +107,7 @@ public class RegisterPanel extends ResizeComposite {
 			result = new String(result.getBytes(), "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 		}
+		LOG.info("NA + " + string + "=" + result +" !");
 		return result.trim();
 	}
 
