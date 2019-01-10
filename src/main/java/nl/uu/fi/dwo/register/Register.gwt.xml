@@ -19,5 +19,9 @@
 	<extend-property name="locale" values="en"/>
     <extend-property name="locale" values="fr"/>
     <extend-property name="locale" values="de"/>
+
+<!-- Logging TRUE/FALSE FINEST/.../SEVERE -->   
+    <set-property name="gwt.logging.logLevel" value="FINEST"/>
+    <set-property name="gwt.logging.enabled" value="TRUE"/>
 	
 </module>
