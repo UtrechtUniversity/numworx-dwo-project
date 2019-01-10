@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.rest.dom;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -22,7 +24,10 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  */
 public class ResultTreeCalculator {
 
-    public static void UpdateResultTree(DomResultTree tree) {
+    private static final Comparator<DomResultScoContext> ACTIVITIES_SORT =
+    		(a,b) -> Integer.compare(a.getScoContext().getSequencenr().intValue(), b.getScoContext().getSequencenr().intValue());
+
+	public static void UpdateResultTree(DomResultTree tree) {
         DomResultScore node = tree.getResultTree();
         updateNode(node);
     }
@@ -160,6 +165,7 @@ public class ResultTreeCalculator {
         }
 
         DomResultScoContext[] activities = activityMap.values().toArray(new DomResultScoContext[0]);
+        Arrays.sort(activities, ACTIVITIES_SORT);
         DomResultPlotMatrix result = new DomResultPlotMatrix(classes, activities);
         for (int i = 0; i < classes.length; i++) {
             //collect course leaves in class
@@ -227,6 +233,7 @@ public class ResultTreeCalculator {
 
         if (aResultCourse != null && aResultCourse.getChildren() != null && aResultCourse.getChildren().size() > 0) {
             activities = (DomResultScoContext[]) aResultCourse.getChildren().values().toArray(new DomResultScoContext[0]);
+            Arrays.sort(activities, ACTIVITIES_SORT);
             //create plot matrix
             result = new DomResultPlotMatrix(students, activities);
 
@@ -245,6 +252,7 @@ public class ResultTreeCalculator {
                         scoResult.setScore(calc.getScore());
                         scoResult.setScoCount(calc.getScoCount());
                         scoResult.setStudentScoCount(calc.getStudentScoCount());
+                        
                     }
                     result.setMarks(i, j, scoResult);
                 }
