@@ -109,7 +109,7 @@ public class ResultsPresenter {
         schoolClass = null;
         resultService.clearCache();
         Promise<DomResultsPerTeacher> promResults;
-        if (stage < 2) {
+        if (stage < 1) {
           promResults = resultService.getResultsPerTeacher();
         } else {
           promResults = personService.getTeachersSchoolClasses().map(list -> {
@@ -167,7 +167,7 @@ public class ResultsPresenter {
 
     @JsMethod
     public void showSelectedResults(JavaScriptObject resultState, String classid, JsArrayString courses) {
-        if (stage > 1) {
+        if (stage > 0) {
           DomMappedResultsPerTeacher map = mappedResults.getValue();
           DomSchoolClass schoolclass = findSchoolClass(map, new PersistenceId(classid));
           Collection<DomCourse> courseList = new ArrayList<>(courses.length());
@@ -218,7 +218,7 @@ public class ResultsPresenter {
 
     @JsMethod
     public void setChooseModulesTable(String schoolclassid) {
-      if (stage < 2)
+      if (stage < 1)
         view.setChooseModulesTable();
       else { 
         PersistenceId id = new PersistenceId(schoolclassid);
