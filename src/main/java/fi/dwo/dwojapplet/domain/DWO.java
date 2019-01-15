@@ -22,6 +22,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -32,6 +34,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -96,6 +99,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
@@ -1270,8 +1274,20 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         if (resultsModule == null) {
  //           resultsModule = new ResultsModule(new Course[0], (Teacher) DwoHelper.getCurrentFacadeUser(), this);
          try {
-          DomResultsPerTeacher results = SecuredTeacherResultsManager.getTeachersResults(getDwoProfile());
-            DomSchoolClassId sc = new DomSchoolClassId(PersistentSchoolClass.buildPersistenceId(Long.valueOf(schoolClass.getID())));
+//          DomResultsPerTeacher results = SecuredTeacherResultsManager.getTeachersResults(getDwoProfile());
+            DomSchoolClass sc = new DomSchoolClass();
+            sc.setId(PersistentSchoolClass.buildPersistenceId(Long.valueOf(schoolClass.getID())));
+            DomResultsPerTeacher results, source;
+            source = new DomResultsPerTeacher();
+            source.setSchoolClasses(Collections.singletonList(new DomMapEntry<PersistenceId, DomSchoolClass>(sc.getId(), null)));
+            Course[] selection = getSelectedCourses(schoolClass);
+            source.setCourses(
+            Arrays.asList(selection).stream().map((Course c) -> {
+              
+              PersistenceId id = (PersistentCourse.buildPersistenceId(Long.valueOf(c.getID())));
+              return new DomMapEntry<PersistenceId, DomCourse>(id, null);
+            }).collect(Collectors.toList()));
+            results = SecuredTeacherResultsManager.selectedTeacherResults(getDwoProfile(), source);
             return new ResultsModule(results, this, sc);
         } catch (Dwo2Exception e) {
           // TODO Auto-generated catch block
@@ -1298,7 +1314,24 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      */
     public ResultsModule getResultsModule(Course[] courses, boolean showSco) {
         if (resultsModule == null) {
-            resultsModule = new ResultsModule(new Course[0], (Teacher) DwoHelper.getCurrentFacadeUser(), this);
+          try {
+            DomResultsPerTeacher source = new DomResultsPerTeacher();
+            source.setCourses(
+              Arrays.asList(courses).stream().map((Course c) -> {               
+                PersistenceId id = (PersistentCourse.buildPersistenceId(Long.valueOf(c.getID())));
+                return new DomMapEntry<PersistenceId, DomCourse>(id, null);
+              }).collect(Collectors.toList()));
+              DomResultsPerTeacher results = SecuredTeacherResultsManager.selectedTeacherResults(getDwoProfile(), source);
+              resultsModule = new ResultsModule(results, this);
+          } catch (Dwo2Exception e) {
+            LOG.log(Level.SEVERE, "get results module", e);
+            return null;
+          }
+
+          
+          
+          
+///            resultsModule = new ResultsModule(new Course[0], (Teacher) DwoHelper.getCurrentFacadeUser(), this);
         }
 
         resultsModule.reset();
