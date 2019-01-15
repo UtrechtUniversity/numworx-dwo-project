@@ -725,25 +725,51 @@ public class Algebra
 		else if (isMatrix(e1) && isMatrix(e2))
 		{
 			Matrix matrix1, matrix2;
-			if (e1 instanceof Matrix)
-				matrix1 = (Matrix) e1;
-			else
-				matrix1 = e1.geefMatrix();
-				
-			if (e2 instanceof Matrix)
-				matrix2 = (Matrix) e2;
-			else
-				matrix2 = e2.geefMatrix();
 			
-			if (matrix1 == null || matrix2 == null) // er is iets mis, ongeldige matrix-expressie
+			if ((isGetransponeerdeMatrix(e1) && !isGetransponeerdeMatrix(e2))
+				|| (isGetransponeerdeMatrix(e2) && !isGetransponeerdeMatrix(e1)))
+			{
 				zijnGelijk = false;
+			}
 			else
-				zijnGelijk = zijnGelijkMatrices(matrix1, matrix2);			
+			{
+				if (e1 instanceof Matrix)
+					matrix1 = (Matrix) e1;
+				else
+					matrix1 = e1.geefMatrix();
+					
+				if (e2 instanceof Matrix)
+					matrix2 = (Matrix) e2;
+				else
+					matrix2 = e2.geefMatrix();
+				
+				if (matrix1 == null || matrix2 == null) // er is iets mis, ongeldige matrix-expressie
+					zijnGelijk = false;
+				else
+					zijnGelijk = zijnGelijkMatrices(matrix1, matrix2);
+			}
 		}
 		else
 			zijnGelijk = zijnGelijk(e1, e2, false);
 
 		return zijnGelijk;
+	}
+
+	/**
+	 * Als de gegeven expressie een getransponeerde matrix is, d.w.z.
+	 * macht(matrix, T), dan wordt true geretourneerd anders false.
+	 * 
+	 * @param e
+	 * @return
+	 */
+	private static boolean isGetransponeerdeMatrix(Expressie e)
+	{
+		boolean isGetransponeerd = false;
+		
+		if (isMatrix(e) && e instanceof Macht && "T".equals(e.kind2.toString()))
+			isGetransponeerd = true;
+			
+		return isGetransponeerd;
 	}
 
 	public static boolean zijnGelijk(Expressie e1, Expressie e2, boolean vorm)
