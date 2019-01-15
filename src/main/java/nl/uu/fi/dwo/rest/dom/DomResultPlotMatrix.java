@@ -64,50 +64,5 @@ public class DomResultPlotMatrix {
     public DomResultScore gethIndex(int i) {
         return hIndex[i];
     }
-//
-//    @Override
-//    public String toString() {
-//        return toString(1);
-//    }
-//
-//    public String toString(int divider) {
-//        StringBuilder buf = new StringBuilder();
-//        Formatter formatter = new Formatter(buf);// Local not in GWT, Locale.getDefault());
-//        //build top row containing horizontal labels
-//        formatter.format("\n%50s", "vlabels\\hlabels"); //empty field
-//        for (int i = 0; i < hIndex.length; i++) {
-//            if (hIndex[i] != null && hIndex[i].getLabel() != null) {
-//                formatter.format("%50s", hIndex[i].getLabel());
-//            } else {
-//                formatter.format("%50s", hIndex[i].getLabel());
-//            }
-//        }
-//        buf.append('\n');
-//        //build body plus leading vertical labels
-//        for (int j = 0; j < vIndex.length; j++) {
-//            if (vIndex[j] != null && vIndex[j].getLabel() != null) {
-//                formatter.format("%50s", vIndex[j].getLabel());
-//            } else {
-//                formatter.format("%50s", "null");
-//            }
-//
-//            for (int i = 0; i < hIndex.length; i++) {
-//                //row, column 
-//                if (marks[j][i] != null && marks[j][i].getScore() != null) {
-//                formatter.format("%50f", marks[j][i].getScore());
-////                    if (marks[j][i].getScoCount() > 0.0) {
-////                        formatter.format("%50f", marks[j][i].getScore() / divider );
-////                    } else if (marks[j][i].getStudentScoCount() > 0.0) {
-////                        formatter.format("%50f", marks[j][i].getScore() / divider);
-////                    } else {
-////                        formatter.format("%50s", "null");
-////                    }
-//                } else {
-//                    formatter.format("%50s", "null");
-//                }
-//            }
-//            buf.append('\n');
-//        }
-//        return buf.toString();
-//    }
+
 }
