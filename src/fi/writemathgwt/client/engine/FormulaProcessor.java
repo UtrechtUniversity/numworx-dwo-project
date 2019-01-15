@@ -33,17 +33,21 @@ public class FormulaProcessor {
 		ArrayList<WMObject> wmObjectsToDo = new ArrayList<WMObject>();
 		for (int i = 0; i < wmObjects.size(); i++) {	
 			WMObject wo = new WMObject(wmObjects.get(i));
-			wo.setIsMachtVan(null);
+			//wo.setIsMachtVan(null);
 			wo.setIsTellerVan(null);
 			wo.setIsNoemerVan(null);
 			wo.setIsOnderWortel(null);
+			wo.setIsExponentVan(null);
 			wmObjectsToDo.add(wo);
 		}
 		
 		labelBreuken(wmObjectsToDo);
 		labelWortels(wmObjectsToDo);
 		WMObjectLine wol = new WMObjectLine(wmObjectsToDo);
-		return wol.getFormula();
+		labelMachten(wol.getWMObjects());
+		WMObjectLine woll = new WMObjectLine(wmObjectsToDo);
+		//woll.fillLine(wol.getWMObjects());
+		return woll.getFormula();
 		
 		
 //		// make a compact deep copy
@@ -372,6 +376,7 @@ public class FormulaProcessor {
 				writeObjects.get(i).setIsNoemerVan(null);
 				langsteStreep.setBreuk(true);
 			}
+				
 		}
 		writeObjects.remove(langsteStreep);
 		writeObjects.removeAll(writeObjectsToDoTeller);
@@ -422,6 +427,103 @@ public class FormulaProcessor {
 		labelWortels(writeObjectsOnderWortel);
 	}
 	
+//	private static void labelMachten(WMObjectLine wmObjectLine) {
+//		if(wmObjectLine==null)
+//			return;
+//		ArrayList<WMObject> writeObjects = new ArrayList<WMObject>();
+//		for(int i=0 ; i<wmObjectLine.getWMObjects().size() ; i++)
+//			writeObjects.add(wmObjectLine.getWMObjects().get(i));
+//		
+//		//ArrayList<WMObject> writeObjectsInExponent = new ArrayList<WMObject>();
+//		
+//		for (int i = 0; i < writeObjects.size(); i++) {
+//			WMObject wo = writeObjects.get(i);
+//			if(wo.isBreuk()) { 
+//				labelMachten(wo.getWMObjectChildLine1());
+//				labelMachten(wo.getWMObjectChildLine2());
+//				//writeObjects.remove(wo);
+//				//i--;
+//			}
+//			if(wo.isWortel()) { 
+//				labelMachten(wo.getWMObjectChildLine1());
+//				//writeObjects.remove(wo);
+//				//i--;
+//			}
+//			
+//		}
+//		for (int i = 1; i < writeObjects.size(); i++) {
+//			WMObject woLast = writeObjects.get(i-1);
+//			WMObject woNext = writeObjects.get(i);
+//			
+//			if(inMachtBox(woLast,woNext,i==1)) {
+//				//writeObjectsInExponent.add(wo);
+//				woNext.setIsExponentVan(woLast);
+//				woNext.setIsTellerVan(null);
+//				woNext.setIsNoemerVan(null);
+//				woNext.setIsOnderWortel(null);
+//				woLast.setIsGrondtal(true);
+//			}
+//			else if(inBaseLine(woLast,woNext)) {
+//				if(woLast.isExponentVan()!=null) {
+//					woNext.setIsExponentVan(woLast.isExponentVan());
+//					woNext.setIsTellerVan(null);
+//					woNext.setIsNoemerVan(null);
+//					woNext.setIsOnderWortel(null);
+//					woLast.isExponentVan().setIsGrondtal(true);
+//				}
+//			}
+//		}
+//		
+//	}
+	
+	private static void labelMachten(ArrayList<WMObject> wmObjects) {
+		ArrayList<WMObject> writeObjects = new ArrayList<WMObject>();
+		writeObjects.addAll(wmObjects);
+		
+		if(writeObjects.size()==0)
+			return;
+		WMObject eersteMacht = null;
+		int expNr = 0;
+		for (int i = 0; i < writeObjects.size()-1; i++) {
+			WMObject wo = writeObjects.get(i);
+			WMObject woNext = writeObjects.get(i+1);
+			if(inMachtBox(wo,woNext,false)) {
+				eersteMacht = wo;
+				expNr = i+1;
+				break;
+			}
+		}
+		if(eersteMacht==null)
+			return;
+		ArrayList<WMObject> writeObjectsInExponent = new ArrayList<WMObject>();
+		for (int i = 0; i < writeObjects.size(); i++) {
+			WMObject wo = writeObjects.get(i);
+			if(wo.isBreuk()) { 
+				if(wo.getWMObjectChildLine1()!=null)labelMachten(wo.getWMObjectChildLine1().getWMObjects());
+				if(wo.getWMObjectChildLine2()!=null)labelMachten(wo.getWMObjectChildLine2().getWMObjects());
+			}
+			else if(wo.isWortel()) { 
+				if(wo.getWMObjectChildLine1()!=null)labelMachten(wo.getWMObjectChildLine1().getWMObjects());
+			}
+			if(inMachtBox(eersteMacht,wo,false)) {
+				writeObjectsInExponent.add(wo);
+				wo.setIsExponentVan(eersteMacht);
+				wo.setIsTellerVan(null);
+				wo.setIsNoemerVan(null);
+				wo.setIsOnderWortel(null);
+				eersteMacht.setIsGrondtal(true);
+			}
+			else if(i>expNr) {
+				break;
+			}
+				
+		}
+		writeObjects.remove(eersteMacht);
+		writeObjects.removeAll(writeObjectsInExponent);
+		labelMachten(writeObjects);
+		labelMachten(writeObjectsInExponent);
+	}
+	
 	private static boolean inWortelBox(WMObject wo, WMObject wortel) {
 		DoubleRectangle wortelBox = wortel.getBox();
 		return (wo.getBox().x > wortelBox.x+5 
@@ -445,6 +547,29 @@ public class FormulaProcessor {
 				&& wo.getXBox().x+wo.getXBox().width<breukStreepBox.x+breukStreepBox.width+5 
 				&& wo.getXBox().y+wo.getXBox().height < breukStreepBox.y+breukStreepBox.height
 				&& wo!=breuk);
+	}
+	
+	private static boolean inMachtBox(WMObject grondtal, WMObject exponent, boolean first) {
+		DoubleRectangle grondtalBox = grondtal.getXBox();
+		DoubleRectangle exponentBox = exponent.getXBox();
+		if(first && 
+				(".".equals(grondtal.getTeken()) || 
+				 ",".equals(grondtal.getTeken()) ||
+				 "=".equals(grondtal.getTeken()) || 
+				 "+".equals(grondtal.getTeken()) || 
+				 "-".equals(grondtal.getTeken()) || 
+				 "(".equals(grondtal.getTeken()) || 
+				 "/".equals(grondtal.getTeken())))
+			return false;
+		return (exponentBox.x > grondtalBox.x+grondtalBox.width/2
+				&& exponentBox.y+exponentBox.height < grondtalBox.y+grondtalBox.height/2);
+				
+	}
+	
+	private static boolean inBaseLine(WMObject wo1, WMObject wo2) {
+		DoubleRectangle wo1Box = wo1.getXBox();
+		DoubleRectangle wo2Box = wo2.getXBox();
+		return Math.abs(wo1Box.y+wo1Box.height/2 -(wo2Box.y+wo2Box.height/2)) < Math.max(wo1Box.height/2,wo2Box.height/2) ;
 	}
 	
 	private static void isBreuk(WMObject wo, ArrayList<WMObject> writeObjectsToDo) {

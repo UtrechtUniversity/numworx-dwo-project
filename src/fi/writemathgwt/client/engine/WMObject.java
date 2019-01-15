@@ -13,9 +13,11 @@ public class WMObject {
 	private WMObject isMachtVan = null;
 	private WMObject isOnderWortel = null;	
 	private WMObject wasOnderWortel = null;
+	private WMObject isExponentVan = null;
 	private boolean isVerwerkt = false;
 	private boolean isBreuk = false;
 	private boolean isWortel = false;
+	private boolean isGrondtal = false;
 	private DoubleRectangle tellerBox = null;
 	private DoubleRectangle noemerBox = null;
 	private DoubleRectangle wortelBox = null;
@@ -23,6 +25,7 @@ public class WMObject {
 	private WMObjectLine wmObjectParentLine;
 	private WMObjectLine wmObjectChildLine1;
 	private WMObjectLine wmObjectChildLine2;
+	private WMObjectLine wmObjectChildLineExponent;
 	
 	private String[] ascFonts = {"b","d","f","h","k","l","t","6","8","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","δ"};
 	private String[] descFonts = {"g","j","p","q","y","7","9","β","μ" };
@@ -334,6 +337,37 @@ public class WMObject {
 		return wmObjectChildLine2;
 	}
 	
+	public void setWMObjectChildLineExponent (WMObjectLine wol) {
+		wmObjectChildLineExponent = wol;
+	}
+	
+	public WMObjectLine getWMObjectChildLineExponent() {
+		return wmObjectChildLineExponent;
+	}
+	
+	public void setIsExponentVan(WMObject wo) {
+		isExponentVan = wo;
+		
+		if(copyFrom!=null) {
+			if(wo==null)
+				copyFrom.setIsExponentVan(null);
+			else
+				copyFrom.setIsExponentVan(wo.getCopyFrom());
+		}
+	}
+	
+	public WMObject isExponentVan() {
+		return isExponentVan;
+	}
+	
+	public void setIsGrondtal(boolean b) {
+		isGrondtal = b;
+	}
+	
+	public boolean isGrondtal() {
+		return isGrondtal;
+	}
+	
 	public double getXHeight() {
 		double factor = 1;
 		if(hasDescent || hasAscent)
@@ -395,8 +429,14 @@ public class WMObject {
 	
 	public String getFormulaString() {
 		String formulaString = "";
-		
-		if(isWortel) {
+		if(isGrondtal) {
+			formulaString = formulaString + getTeken() + "$m";
+			if(wmObjectChildLineExponent!=null)
+				for(int i=0 ; i<wmObjectChildLineExponent.getWMObjects().size() ; i++)
+					formulaString = formulaString + wmObjectChildLineExponent.getWMObjects().get(i).getFormulaString();
+			formulaString = formulaString + "@";
+		}
+		else if(isWortel) {
 			formulaString = formulaString + "$w";
 			if(wmObjectChildLine1!=null)
 				for(int i=0 ; i<wmObjectChildLine1.getWMObjects().size() ; i++)
@@ -414,9 +454,11 @@ public class WMObject {
 					formulaString = formulaString + wmObjectChildLine2.getWMObjects().get(i).getFormulaString();
 			formulaString = formulaString + "@@";
 		}
+		
 		else {
 			formulaString = getTeken();
 		}
+		
 		return formulaString;
 	}
 	
