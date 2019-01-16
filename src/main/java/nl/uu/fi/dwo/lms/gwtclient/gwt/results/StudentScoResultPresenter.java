@@ -233,8 +233,11 @@ public class StudentScoResultPresenter {
 
   private String Finish(String dummy) {
     LOG.info("Finish " + dummy);
+    if (!ResultsService.COMPLETED.equals(ssc.getStudentSco().getCompletionStatus())) {
+      this.userState.remove(ResultsService.REVIEW_DATA);
+    }
     Map<String,String> userState = new HashMap<> (this.userState);
-    userState.keySet().retainAll(Arrays.asList(/*"cmi.score.raw",*/"cmi.comments_from_lms.0.comment"));
+    userState.keySet().retainAll(Arrays.asList(/*"cmi.score.raw",*/ResultsService.REVIEW_DATA));
     LOG.info( "update Score/Review " + userState);
     if (dwoGlobalVars.isPremium())
       resultService.setValues(ssc.getStudentSco(), userState).map(this::updateResultTree).then(null,FAILURE);
@@ -275,17 +278,28 @@ public class StudentScoResultPresenter {
       AlertDialogWithConfirmCancelEvent event = new AlertDialogWithConfirmCancelEvent(EventType.ConfirmDialog, aPromise);
       
       eventBus.fireEvent(event);
-      seal = aPromise.getPromise().then(p -> p.getValue() ? resultService.seal(dssc, value) : resetSeal(dssc));
+      seal = aPromise.getPromise().then(p -> p.getValue() ? seal(value, dssc) : resetSeal(dssc));
       
     } else
-      seal = resultService.seal(dssc, value);
+      seal = seal(value, dssc);
     seal
     .map(this::updateResultTree)
     .then( p-> {
+      dssc.setCompletionStatus(p.getValue().getCompletionStatus());
       setValue(ResultsService.COMPLETION_STATUS, p.getValue().getCompletionStatus());
       updateFrame(p.getValue()); 
       return null;
       }, FAILURE);
+  }
+
+  private Promise<DomStudentScoContext> seal(boolean value, DomStudentScoContext dssc) {
+    if (!value) { 
+      setValue(ResultsService.REVIEW_DATA, "");
+      return 
+        resultService.setValues(ssc.getStudentSco(), Collections.singletonMap(ResultsService.REVIEW_DATA, ""))
+        .then(p -> resultService.seal(dssc, false));
+    }
+    return resultService.seal(dssc, value);
   }
 
   private Promise<DomStudentScoContext> resetSeal(DomStudentScoContext dssc) {

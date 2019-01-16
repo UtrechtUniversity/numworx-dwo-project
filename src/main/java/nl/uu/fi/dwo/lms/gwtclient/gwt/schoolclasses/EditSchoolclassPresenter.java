@@ -100,7 +100,6 @@ public class EditSchoolclassPresenter {
     public void init(DomSchoolClass aSchoolClass) {
         view.clear();
         view.init();
-        view.setHelp(dwoGlobalVars.buildHelpUrl("#editSchoolclass"));
         updateViewData(aSchoolClass);
     }
 
@@ -129,7 +128,8 @@ public class EditSchoolclassPresenter {
      */
     public void setView(Display view) {
         this.view = view;
-    }
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#editSchoolclass"));
+   }
 
     /**
      * Updates SchoolClass data.

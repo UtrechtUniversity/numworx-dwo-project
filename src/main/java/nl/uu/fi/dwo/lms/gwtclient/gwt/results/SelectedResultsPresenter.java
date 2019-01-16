@@ -103,7 +103,6 @@ public class SelectedResultsPresenter {
         resultTree = aResultTree;
         resultState = aResultState;
         view.init(aResultState);
-        view.setHelp(dwoGlobalVars.buildHelpUrl("#selectedResults"));
     }
 
     public void updateTree() {
@@ -129,7 +128,8 @@ public class SelectedResultsPresenter {
 
     public void setView(Display aView) {
         view = aView;
-    }
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#selectedResults"));
+   }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @JsMethod

@@ -103,7 +103,6 @@ public class ResultsPresenter {
         view.clear();
         view.init();
         LOG.log(Level.INFO, "DwoGlobalVarsState = " + dwoGlobalVars.getState().name());
-        view.setHelp(dwoGlobalVars.buildHelpUrl("#results"));        
         view.setLoadingTableMessage();
         course = null;
         schoolClass = null;
@@ -157,12 +156,12 @@ public class ResultsPresenter {
 
     
     public void init(JavaScriptObject context){
-        view.setHelp(dwoGlobalVars.buildHelpUrl("#results"));        
         view.setResultTreeWithContext(resultTree, context);
     }
     
     public void setView(Display aView) {
         view = aView;
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#results"));        
     }
 
     @JsMethod

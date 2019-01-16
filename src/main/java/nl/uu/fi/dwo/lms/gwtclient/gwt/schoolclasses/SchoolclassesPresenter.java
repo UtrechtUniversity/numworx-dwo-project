@@ -108,7 +108,6 @@ public class SchoolclassesPresenter {
     public void init() {
         view.clear();
         view.init();
-        view.setHelp(dwoGlobalVars.buildHelpUrl("#schoolclasses"));
         updateViewData();
     }
 
@@ -121,6 +120,7 @@ public class SchoolclassesPresenter {
      */
     public void setView(Display view) {
         this.view = view;
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#schoolclasses"));
     }
 
     private void updateViewData() {

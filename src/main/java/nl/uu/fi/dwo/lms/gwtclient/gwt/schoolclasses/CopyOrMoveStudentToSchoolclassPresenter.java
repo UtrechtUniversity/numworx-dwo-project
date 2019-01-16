@@ -79,6 +79,7 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
      */
     public void setView(CopyOrMoveStudentToSchoolclassPresenter.Display view) {
         this.view = view;
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#CopyOrMoveStudentToClass"));
     }
 
     @Inject CopyOrMoveStudentToSchoolclassPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, PersonsService m) {
@@ -93,7 +94,6 @@ public class CopyOrMoveStudentToSchoolclassPresenter {
     public void init(DomSchoolClass aSchoolClass) {
         view.clear();
         view.init();
-        view.setHelp(dwoGlobalVars.buildHelpUrl("#CopyOrMoveStudentToClass"));
         view.setEmptyTableMessageClasses();
         view.setEmptyTableMessageA();
         //view.setEmptyTableMessageB();

@@ -139,13 +139,13 @@ public class ModulesOfSchoolclassPresenter {
      */
     public void setView(Display view) {
         this.view = view;
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#schoolClassModuleManagement"));
     }
 
     public void init(DomSchoolClass aSchoolClass) {
         schoolClass = aSchoolClass;
         view.clear();
         view.init();
-        view.setHelp(dwoGlobalVars.buildHelpUrl("#schoolClassModuleManagement"));
         view.setEmptyTableMessageModules();
         view.setEmptyTableMessageSelected();
         updateViewData();

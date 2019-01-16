@@ -84,7 +84,6 @@ public class OrganisationPresenter {
   public void init() {
     view.init();
     view.clear();
-    view.setHelp(dwoGlobalVars.buildHelpUrl("#organisation"));
     view.setLoadingTableMessage();;
     
     DomSchool school = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool();
@@ -309,5 +308,6 @@ public class OrganisationPresenter {
   
   @Inject void setView (Display view) {
     this.view = view;
+    view.setHelp(dwoGlobalVars.buildHelpUrl("#organisation"));
   }
 }

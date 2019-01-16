@@ -72,7 +72,6 @@ public class AddStudentToSchoolclassPresenter {
     public void init(DomSchoolClass aSchoolClass) {
         view.clear();
         view.init();
-        view.setHelp(dwoGlobalVars.buildHelpUrl("#addStudentToClass"));
         view.setEmptyTableMessage();
         schoolClass = aSchoolClass;
         view.setSchoolClass(schoolClass);
@@ -112,6 +111,7 @@ public class AddStudentToSchoolclassPresenter {
      */
     public void setView(Display view) {
         this.view = view;
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#addStudentToClass"));
     }
 
     @JsMethod
