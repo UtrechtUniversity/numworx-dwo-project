@@ -387,14 +387,12 @@ public class FormulaProcessor {
 	}
 	
 	private static void labelWortels(ArrayList<WMObject> wmObjects) {
-		logger.info("LabelWortels 1");
 		ArrayList<WMObject> writeObjects = new ArrayList<WMObject>();
 		writeObjects.addAll(wmObjects);
 		if(writeObjects.size()==0)
 			return;
 		WMObject langsteWortel = null;
 		for (int i = 0; i < writeObjects.size(); i++) {
-			logger.info("LabelWortels 2");
 			WMObject wo = writeObjects.get(i);
 			if(("sqrt".equals(wo.getTeken()) && (langsteWortel == null || wo.getBox().width > langsteWortel.getBox().width)))
 				langsteWortel = wo;
@@ -403,52 +401,60 @@ public class FormulaProcessor {
 			return;
 		
 		ArrayList<WMObject> writeObjectsOnderWortel = new ArrayList<WMObject>();
+		ArrayList<WMObject> writeObjectsNdeVanWortel = new ArrayList<WMObject>();
 		langsteWortel.setWortel(true);
 		for (int i = 0; i < writeObjects.size(); i++) {
 			WMObject wo = writeObjects.get(i);
-			if(inWortelBox(wo,langsteWortel)) {
+			if(inWortelNdeBox(wo,langsteWortel)) {
+				logger.info("inWortelNdeBox");
+				writeObjectsNdeVanWortel.add(wo);
+				
+				if( wo.isTellerVan()!=null && !inWortelNdeBox(wo.isTellerVan(), langsteWortel)) {
+					langsteWortel.setIsTellerVan(wo.isTellerVan());
+					wo.setIsTellerVan(null);
+					wo.setIsNdeVanWortel(langsteWortel);
+				}
+				else if( wo.isNoemerVan()!=null && !inWortelNdeBox(wo.isNoemerVan(), langsteWortel)) {
+					langsteWortel.setIsNoemerVan(wo.isNoemerVan());
+					wo.setIsNoemerVan(null);
+					wo.setIsNdeVanWortel(langsteWortel);
+				}
+				else if(wo.isTellerVan()==null && wo.isNoemerVan()==null) 
+					wo.setIsNdeVanWortel(langsteWortel);
+			}
+			else 
+				if(inWortelBox(wo,langsteWortel)) {
 				writeObjectsOnderWortel.add(wo);
+				
 				if( wo.isTellerVan()!=null && !inWortelBox(wo.isTellerVan(), langsteWortel)) {
-					logger.info("LabelWortels teller");
 					langsteWortel.setIsTellerVan(wo.isTellerVan());
 					wo.setIsTellerVan(null);
 					wo.setIsOnderWortel(langsteWortel);
 				}
 				else if( wo.isNoemerVan()!=null && !inWortelBox(wo.isNoemerVan(), langsteWortel)) {
-					logger.info("LabelWortels noemer");
 					langsteWortel.setIsNoemerVan(wo.isNoemerVan());
 					wo.setIsNoemerVan(null);
 					wo.setIsOnderWortel(langsteWortel);
 				}
-				else if(wo.isTellerVan()==null && wo.isNoemerVan()==null) {
+				else if(wo.isTellerVan()==null && wo.isNoemerVan()==null) 
 					wo.setIsOnderWortel(langsteWortel);
-				}
 			}
 		}
 		writeObjects.remove(langsteWortel);
 		writeObjects.removeAll(writeObjectsOnderWortel);
+		writeObjects.removeAll(writeObjectsNdeVanWortel);
 		labelWortels(writeObjects);
 		labelWortels(writeObjectsOnderWortel);
+		labelWortels(writeObjectsNdeVanWortel);
 	}
 	
 
 	private static void labelMachten(ArrayList<WMObject> wmObjects) {
 		ArrayList<WMObject> writeObjects = new ArrayList<WMObject>();
 		writeObjects.addAll(wmObjects);
-		
 		if(writeObjects.size()==0)
 			return;
-		WMObject eersteMacht = null;
-		int expNr = 0;
-		for (int i = 0; i < writeObjects.size()-1; i++) {
-			WMObject wo = writeObjects.get(i);
-			WMObject woNext = writeObjects.get(i+1);
-			if(inMachtBox(wo,woNext,true)) {
-				eersteMacht = wo;
-				expNr = i+1;
-				break;
-			}
-		}
+		
 		for (int i = 0; i < writeObjects.size(); i++) {
 			WMObject wo = writeObjects.get(i);
 			if(wo.isBreuk()) { 
@@ -457,14 +463,35 @@ public class FormulaProcessor {
 			}
 			else if(wo.isWortel()) { 
 				if(wo.getWMObjectChildLine1()!=null)labelMachten(wo.getWMObjectChildLine1().getWMObjects());
+				if(wo.getWMObjectChildLine2()!=null)labelMachten(wo.getWMObjectChildLine2().getWMObjects());
 			}
 		}
+		
+		WMObject eersteMacht = null;
+		int expNr = 0;
+		for (int i = 0; i < writeObjects.size()-1; i++) {
+			WMObject wo = writeObjects.get(i);
+			WMObject woNext = writeObjects.get(i+1);
+			if(inMachtBox(wo,null,woNext,true)) {
+				eersteMacht = wo;
+				expNr = i+1;
+				break;
+			}
+			else {
+				writeObjects.remove(wo);
+				i--;
+			}
+		}
+		
 		if(eersteMacht==null)
 			return;
 		ArrayList<WMObject> writeObjectsInExponent = new ArrayList<WMObject>();
 		for (int i = 0; i < writeObjects.size(); i++) {
 			WMObject wo = writeObjects.get(i);
-			if(inMachtBox(eersteMacht,wo,i==expNr)) {
+			WMObject woLast = null;
+			if(i>expNr) 
+				woLast = writeObjects.get(i-1);
+			if(inMachtBox(eersteMacht, woLast, wo, i==expNr)) {
 				writeObjectsInExponent.add(wo);
 				wo.setIsExponentVan(eersteMacht);
 				wo.setIsTellerVan(null);
@@ -491,6 +518,15 @@ public class FormulaProcessor {
 				);
 	}
 	
+	private static boolean inWortelNdeBox(WMObject wo, WMObject wortel) {
+		DoubleRectangle wortelBox = wortel.getBox();
+		return (wo.getBox().x+wo.getBox().width < wortelBox.x+wortelBox.height/4
+				&& wo.getBox().x>wortelBox.x-wortelBox.width/2 
+				&& wo.getBox().y > wortelBox.y-5
+				&& wo.getXBox().y+wo.getXBox().height < wortelBox.y+2*wortelBox.height/3
+				);
+	}
+	
 	private static boolean inTellerBox(WMObject wo, WMObject breuk) {
 		DoubleRectangle breukStreepBox = breuk.getBox();
 		return (wo.getXBox().x > breukStreepBox.x-5 
@@ -507,7 +543,7 @@ public class FormulaProcessor {
 				&& wo!=breuk);
 	}
 	
-	private static boolean inMachtBox(WMObject grondtal, WMObject exponent, boolean first) {
+	private static boolean inMachtBox(WMObject grondtal, WMObject exponentLast, WMObject exponent, boolean first) {
 		DoubleRectangle grondtalBox = grondtal.getXBox();
 		DoubleRectangle exponentBox = exponent.getXBox();
 		if(".".equals(grondtal.getTeken()) 
@@ -518,8 +554,16 @@ public class FormulaProcessor {
 				|| "(".equals(grondtal.getTeken()) 
 				|| "/".equals(grondtal.getTeken()))
 			return false;
-		else if(first && ".".equals(exponent.getTeken()))
-				return false;
+		else if(first && ".".equals(exponent.getTeken())) {
+			return false;
+		}
+		else if(exponentLast!=null) {
+			DoubleRectangle exponentLastBox = exponentLast.getXBox();
+			return (exponentBox.x > exponentLastBox.x+exponentLastBox.width/2
+					&& exponentLastBox.x > grondtalBox.x+grondtalBox.width/2
+					&& (exponentBox.y+exponentBox.height/2) - (exponentLastBox.y+exponentLastBox.height/2) < exponentLastBox.height/2
+					|| exponentBox.y+exponentBox.height < grondtalBox.y+grondtalBox.height/4);
+		}
 		return (exponentBox.x > grondtalBox.x+grondtalBox.width/2
 				&& exponentBox.y+exponentBox.height < grondtalBox.y+grondtalBox.height/2);
 				
