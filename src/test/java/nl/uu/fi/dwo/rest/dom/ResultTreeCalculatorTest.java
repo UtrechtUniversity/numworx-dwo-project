@@ -108,6 +108,7 @@ public class ResultTreeCalculatorTest {
 		dssc01.setUserID(ds02.getId());
 		dssc01.setScoID(dsco01.getId());
 		dssc01.setScore(50);
+		dssc01.setTotalTime("forthnight");
 		
 		Map<PersistenceId, DomStudentScoContext> studentScoContexts = Collections.singletonMap(dssc01.getId(), dssc01);
 		mapped.setStudentScoContexts(studentScoContexts);
@@ -284,6 +285,7 @@ public class ResultTreeCalculatorTest {
 		MatrixPlotter m = new MatrixPlotter(result);
 		System.out.println(m);
 		assertEquals("score", 50.0, m.getMark(0, 0).getScore().doubleValue(), 0.00001);
+		assertEquals("totalTime", "forthnight", m.getMark(0, 0).getTotalTime());
 	}
     @Test
     public void testGetScoreOfActivitiesOfCourseByStudentsInClass2() {
@@ -292,6 +294,7 @@ public class ResultTreeCalculatorTest {
         MatrixPlotter m = new MatrixPlotter(result);
         System.out.println(m);
         assertEquals("score", 50.0, m.getMark(0, 0).getScore().doubleValue(), 0.00001);
+        assertEquals("totalTime", "forthnight", m.getMark(0, 0).getTotalTime());
     }
     @Test
     public void testGetScoreOfActivitiesOfCourseByStudentsInClass3() {
@@ -300,7 +303,8 @@ public class ResultTreeCalculatorTest {
         MatrixPlotter m = new MatrixPlotter(result);
         System.out.println(m);
         assertEquals("score", 50.0, m.getMark(0, 0).getScore().doubleValue(), 0.00001);
-    }
+        assertEquals("totalTime", "forthnight", m.getMark(0, 0).getTotalTime());
+   }
     @Test
     public void testGetScoreOfActivitiesOfCourseByStudentsInClass4() {
         addSco02();addStudent03();
@@ -308,6 +312,7 @@ public class ResultTreeCalculatorTest {
         MatrixPlotter m = new MatrixPlotter(result);
         System.out.println(m);
         assertEquals("score", 50.0, m.getMark(0, 0).getScore().doubleValue(), 0.00001);
+        assertEquals("totalTime", "forthnight", m.getMark(0, 0).getTotalTime());
     }
 
 //	@Test @Ignore

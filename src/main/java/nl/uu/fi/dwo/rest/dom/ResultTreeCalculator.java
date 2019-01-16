@@ -250,6 +250,7 @@ public class ResultTreeCalculator {
                         DomResultStudent calc = studentScoMap.get(students[i].getStudent().getId());
                         scoResult = new DomResultStudent(calc.getStudent());
                         scoResult.setScore(calc.getScore());
+                        scoResult.setTotalTime(calc.getTotalTime());
                         scoResult.setScoCount(calc.getScoCount());
                         scoResult.setStudentScoCount(calc.getStudentScoCount());
                         

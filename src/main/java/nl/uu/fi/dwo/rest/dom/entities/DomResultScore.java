@@ -18,7 +18,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
     private double score = 0; //unmade work is always score 0.
     private double scoCount = 0;   //count is 0 because scoCount may summarize empty subtree.
     private double studentScoCount = 0;   //count is 0 because studentScoCount may summarize empty subtree.
-    private String label;
+    private String label, totalTime;
     private DomResultScore parent = null;
     private Map<PersistenceId, T> children = new HashMap<PersistenceId, T>();
 
@@ -194,6 +194,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
         if (this instanceof DomResultStudentScoContext) {
             DomResultStudentScoContext ss = (DomResultStudentScoContext) this;
             this.setScore(ss.getStudentSco().getScore());
+            this.setTotalTime(ss.getStudentSco().getTotalTime());
             this.setScoCount(0);
             this.setStudentScoCount(1);
             return;
@@ -273,6 +274,7 @@ public abstract class DomResultScore<T extends DomResultScore> {
         if (this instanceof DomResultStudentScoContext) {
             DomResultStudentScoContext ss = (DomResultStudentScoContext) this;
             this.setScore(ss.getStudentSco().getScore());
+            this.setTotalTime(ss.getStudentSco().getTotalTime());
             this.setScoCount(0);
             this.setStudentScoCount(1);
             return;
@@ -404,11 +406,12 @@ public abstract class DomResultScore<T extends DomResultScore> {
         if (this instanceof DomResultStudentScoContext) {
             DomResultStudentScoContext ss = (DomResultStudentScoContext) this;
             ss.setScore(ss.getStudentSco().getScore());
+            ss.setTotalTime(ss.getStudentSco().getTotalTime());
 //            if (ss != null && ss.getStudentSco() != null) { //impossible else error
             DomResultStudent studentScore = studentScores.get(ss.getStudentSco().getUserID());
             studentScore.setScore(studentScore.getScore() + ss.getScore());
-//                studentScore.setScoCount(studentScore.getScoCount() + 1);
-            studentScore.setStudentScoCount(this.getStudentScoCount() + ss.getStudentScoCount());
+            studentScore.setTotalTime(ss.getTotalTime()); // FIXME add somehow
+            studentScore.setStudentScoCount(this.getStudentScoCount() + studentScore.getStudentScoCount());
             //               }
 
             return;
@@ -454,6 +457,20 @@ public abstract class DomResultScore<T extends DomResultScore> {
 
     public String getId() {
       return "";
+    }
+
+    /**
+     * @return the totalTime
+     */
+    public String getTotalTime() {
+      return totalTime;
+    }
+
+    /**
+     * @param totalTime the totalTime to set
+     */
+    public void setTotalTime(String totalTime) {
+      this.totalTime = totalTime;
     }
 
 }
