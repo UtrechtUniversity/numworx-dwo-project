@@ -56,8 +56,9 @@ public class MatrixPlotter extends DomResultPlotMatrix {
 
           for (int i = 0; i < gethSize(); i++) {
               //row, column 
-              if (getMark(i,j) != null && getMark(i,j).getScore() != null) {
-              formatter.format("%50f", getMark(i,j).getScore());
+              final DomResultScore mark = getMark(j,i);
+              if (mark != null && mark.getScore() != null) {
+              formatter.format("%50f", mark.getScore());
 //                  if (getMark(i,j).getScoCount() > 0.0) {
 //                      formatter.format("%50f", getMark(i,j).getScore() / divider );
 //                  } else if (getMark(i,j).getStudentScoCount() > 0.0) {
