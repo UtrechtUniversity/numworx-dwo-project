@@ -4,8 +4,13 @@ import java.util.ArrayList;
 
 public class WMObjectLine {
 
-	WMObject parent;
-	ArrayList<WMObject> wmObjects = new ArrayList<WMObject>();
+	private WMObject parent;
+	private ArrayList<WMObject> wmObjects = new ArrayList<WMObject>();
+	
+	private double averageHeight;
+	public static final double DEFAULTAVERAGEHEIGHT = 40;
+	
+	private double averageBaseLine;
 	
 	public WMObjectLine() {
 	}
@@ -32,7 +37,7 @@ public class WMObjectLine {
 		for(int i=0 ; i<wmObjectsToDo.size() ; i++) {
 			WMObject wo = wmObjectsToDo.get(i);
 			if(wo.isTellerVan()==null && wo.isNoemerVan()==null && wo.isMachtVan()==null && wo.isOnderWortel()==null && wo.isExponentVan()==null || wo.getWMObjectParentLine()==this) {
-				wmObjects.add(wo);
+				addWMObject(wo);
 				wmObjectsToDo.remove(wo);
 				i--;
 				wo.setWMObjectParentLine(this);
@@ -100,6 +105,12 @@ public class WMObjectLine {
 			}
 			
 		}
+	}
+	
+	public void addWMObject(WMObject wo) {
+		wmObjects.add(wo);
+		updateAverageHeight();
+		updateAverageBaseLine();
 	}
 	
 	
@@ -212,5 +223,65 @@ public class WMObjectLine {
 		for(int i=0 ; i<wmObjects.size(); i++) 
 			formula = formula + wmObjects.get(i).getFormulaString();
 		return formula;
+	}
+	
+	public double getAverageHeight() {
+		return averageHeight;
+	}
+	
+	public double getAverageBaseLine() {
+		return averageBaseLine;
+	}
+	
+	private void updateAverageHeight() {
+		double heightSum = 0;
+		int cnt = 0;
+		for (int i = 0; i < wmObjects.size(); i++) {
+			if ("-".equals(wmObjects.get(i).getTeken())
+					|| ".".equals(wmObjects.get(i).getTeken())
+					|| ",".equals(wmObjects.get(i).getTeken())
+					|| "sqrt".equals(wmObjects.get(i).getTeken()) 
+					|| "=".equals(wmObjects.get(i).getTeken())
+					|| "\u2190".equals(wmObjects.get(i).getTeken())
+					|| "\u2192".equals(wmObjects.get(i).getTeken())
+					)
+				;
+			else {
+				heightSum += wmObjects.get(i).getXHeight();
+				cnt++;
+			}
+		}
+		if(cnt>0)
+			averageHeight = heightSum/cnt;
+		else 
+			averageHeight = DEFAULTAVERAGEHEIGHT;
+	}
+	
+	private void updateAverageBaseLine() {
+		double baseLineSum = 0;
+		int cnt = 0;
+		for (int i = 0; i < wmObjects.size(); i++) {
+			if ("-".equals(wmObjects.get(i).getTeken())
+					|| ".".equals(wmObjects.get(i).getTeken())
+					|| ",".equals(wmObjects.get(i).getTeken())
+					|| "sqrt".equals(wmObjects.get(i).getTeken()) 
+					|| "=".equals(wmObjects.get(i).getTeken())
+					|| "\u2190".equals(wmObjects.get(i).getTeken())
+					|| "\u2192".equals(wmObjects.get(i).getTeken())
+					)
+				;
+			else {
+				baseLineSum += wmObjects.get(i).getXBox().y + wmObjects.get(i).getXBox().height;
+				cnt++;
+			}
+		}
+		if(cnt>0)
+			averageBaseLine = baseLineSum/cnt;
+		else {
+			for (int i = 0; i < wmObjects.size(); i++) {
+				averageBaseLine += wmObjects.get(i).getXBox().y + wmObjects.get(i).getXBox().height/2 + DEFAULTAVERAGEHEIGHT/2;
+			}
+		}
+		
 	}
 }

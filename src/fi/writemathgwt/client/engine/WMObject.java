@@ -1,8 +1,11 @@
 package fi.writemathgwt.client.engine;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class WMObject {
+	
+	private static Logger logger = Logger.getLogger("WMObject");
 
 	private ArrayList<Stroke> strokes = new ArrayList<Stroke>();
 	private DoubleRectangle box;
@@ -310,7 +313,7 @@ public class WMObject {
 	}
 	
 	public boolean isWortel() {
-		return wortelBox!=null;
+		return ( isWortel);//wortelBox!=null ||
 	}
 	
 	public void setWMObjectParentLine (WMObjectLine wol) {
@@ -368,6 +371,20 @@ public class WMObject {
 		return isGrondtal;
 	}
 	
+	public double getAverageLineHeight() {
+		if(wmObjectParentLine!=null)
+			return wmObjectParentLine.getAverageHeight();
+		else
+			return WMObjectLine.DEFAULTAVERAGEHEIGHT;
+	}
+	
+	public double getAverageBaseLine() {
+		if(wmObjectParentLine!=null)
+			return wmObjectParentLine.getAverageBaseLine();
+		else
+			return getXBox().y + getXBox().height;
+	}
+	
 	public double getXHeight() {
 		double factor = 1;
 		if(hasDescent || hasAscent)
@@ -383,9 +400,22 @@ public class WMObject {
 	
 	public DoubleRectangle getXBox() {
 		double x = box.x;
-		double y = hasAscent ? box.y+box.height/3 : box.y;
 		double width = box.width;
+		double y = hasAscent ? box.y+box.height/3 : box.y;
 		double height = hasAscent||hasDescent ? 2*box.height/3 : box.height;
+		if("-".equals(getTeken())
+				|| "sqrt".equals(getTeken()) 
+				|| "=".equals(getTeken())
+				|| "\u2190".equals(getTeken())
+				|| "\u2192".equals(getTeken())) {
+			y = box.y+box.height/2 - getAverageLineHeight()/2;
+			height = getAverageLineHeight();
+		}
+		else if(",".equals(getTeken())) {
+			y = box.y - getAverageLineHeight();
+			height = getAverageLineHeight();
+		}
+		
 		return new DoubleRectangle(x,y,width,height);
 	}
 	
@@ -430,7 +460,28 @@ public class WMObject {
 	public String getFormulaString() {
 		String formulaString = "";
 		if(isGrondtal) {
-			formulaString = formulaString + getTeken() + "$m";
+			if(isBreuk) {
+				formulaString = formulaString + "$b";
+				if(wmObjectChildLine1!=null)
+					for(int i=0 ; i<wmObjectChildLine1.getWMObjects().size() ; i++)
+						formulaString = formulaString + wmObjectChildLine1.getWMObjects().get(i).getFormulaString();
+				formulaString = formulaString + "$n";
+				if(wmObjectChildLine2!=null)
+					for(int i=0 ; i<wmObjectChildLine2.getWMObjects().size() ; i++)
+						formulaString = formulaString + wmObjectChildLine2.getWMObjects().get(i).getFormulaString();
+				formulaString = formulaString + "@@";
+			}
+			else if(isWortel) {
+				formulaString = formulaString + "$w";
+				if(wmObjectChildLine1!=null)
+					for(int i=0 ; i<wmObjectChildLine1.getWMObjects().size() ; i++)
+						formulaString = formulaString + wmObjectChildLine1.getWMObjects().get(i).getFormulaString();
+				formulaString = formulaString + "@";
+			}
+			else
+				formulaString = formulaString + getTeken();
+			
+			formulaString = formulaString + "$m";
 			if(wmObjectChildLineExponent!=null)
 				for(int i=0 ; i<wmObjectChildLineExponent.getWMObjects().size() ; i++)
 					formulaString = formulaString + wmObjectChildLineExponent.getWMObjects().get(i).getFormulaString();
@@ -457,6 +508,16 @@ public class WMObject {
 		
 		else {
 			formulaString = getTeken();
+			if(".".equals(getTeken())) {
+				logger.info("averageBaseLine: "+getAverageBaseLine());
+				logger.info("averageHeight: "+getAverageLineHeight());
+				logger.info("y: "+getBox().y);
+			}
+			if(".".equals(getTeken()) && getBox().y < getAverageBaseLine() - getAverageLineHeight()/3 && getBox().y > getAverageBaseLine() - 3*getAverageLineHeight()/4) {
+				formulaString = "*";
+				
+			}
+
 		}
 		
 		return formulaString;
