@@ -201,7 +201,7 @@ public class StrokeContainer {
 				}
 			}
 		}
-		formulaString = FormulaProcessor.parseFormule(this, parseArea);
+		formulaString = FormulaProcessor.parseFormuleNew(this, parseArea);
 		updateAverageHeight();
 		updateAverageBaseLine();
 		
