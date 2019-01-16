@@ -14,7 +14,8 @@ public class WMObject {
 	private WMObject isTellerVan = null;
 	private WMObject isNoemerVan = null;
 	private WMObject isMachtVan = null;
-	private WMObject isOnderWortel = null;	
+	private WMObject isOnderWortel = null;
+	private WMObject isNdeVanWortel = null;
 	private WMObject wasOnderWortel = null;
 	private WMObject isExponentVan = null;
 	private boolean isVerwerkt = false;
@@ -248,6 +249,20 @@ public class WMObject {
 		}
 	}
 	
+	public void setIsNdeVanWortel(WMObject wo) {
+//		if(wo==null && isOnderWortel!=null)
+//			setWasOnderWortel(isOnderWortel);
+		
+		isNdeVanWortel = wo;
+		
+		if(copyFrom!=null) {
+			if(wo==null)
+				copyFrom.setIsNdeVanWortel(null);
+			else
+				copyFrom.setIsNdeVanWortel(wo.getCopyFrom());
+		}
+	}
+	
 	public void setWasOnderWortel(WMObject wo) {
 		wasOnderWortel = wo;
 		
@@ -266,6 +281,11 @@ public class WMObject {
 	public WMObject wasOnderWortel() {
 		return wasOnderWortel;
 	}
+	
+	public WMObject isNdeVanWortel() {
+		return isNdeVanWortel;
+	}
+	
 	
 	public void setTellerBox(DoubleRectangle box) {
 		tellerBox = box;
@@ -471,12 +491,26 @@ public class WMObject {
 						formulaString = formulaString + wmObjectChildLine2.getWMObjects().get(i).getFormulaString();
 				formulaString = formulaString + "@@";
 			}
-			else if(isWortel) {
+			else if(isWortel && wmObjectChildLine2==null) {
 				formulaString = formulaString + "$w";
-				if(wmObjectChildLine1!=null)
+				if(wmObjectChildLine1!=null) {
 					for(int i=0 ; i<wmObjectChildLine1.getWMObjects().size() ; i++)
 						formulaString = formulaString + wmObjectChildLine1.getWMObjects().get(i).getFormulaString();
+				}
 				formulaString = formulaString + "@";
+			}
+			else if(isWortel && wmObjectChildLine2!=null) {	
+				formulaString = formulaString + "$W";
+				if(wmObjectChildLine1!=null) {
+					for(int i=0 ; i<wmObjectChildLine1.getWMObjects().size() ; i++)
+						formulaString = formulaString + wmObjectChildLine1.getWMObjects().get(i).getFormulaString();
+				}
+				formulaString = formulaString + "$n";
+				if(wmObjectChildLine2!=null) {
+					for(int i=0 ; i<wmObjectChildLine2.getWMObjects().size() ; i++)
+						formulaString = formulaString + wmObjectChildLine2.getWMObjects().get(i).getFormulaString();
+				}
+				formulaString = formulaString + "@@";
 			}
 			else
 				formulaString = formulaString + getTeken();
@@ -487,12 +521,27 @@ public class WMObject {
 					formulaString = formulaString + wmObjectChildLineExponent.getWMObjects().get(i).getFormulaString();
 			formulaString = formulaString + "@";
 		}
-		else if(isWortel) {
+		else if(isWortel && wmObjectChildLine2==null) {
 			formulaString = formulaString + "$w";
-			if(wmObjectChildLine1!=null)
+			if(wmObjectChildLine1!=null) {
 				for(int i=0 ; i<wmObjectChildLine1.getWMObjects().size() ; i++)
 					formulaString = formulaString + wmObjectChildLine1.getWMObjects().get(i).getFormulaString();
+			}
 			formulaString = formulaString + "@";
+		}
+		else if(isWortel && wmObjectChildLine2!=null) {	
+			logger.info("inWMObject nde wortel");
+			formulaString = formulaString + "$W";
+			if(wmObjectChildLine1!=null) {
+				for(int i=0 ; i<wmObjectChildLine1.getWMObjects().size() ; i++)
+					formulaString = formulaString + wmObjectChildLine1.getWMObjects().get(i).getFormulaString();
+			}
+			formulaString = formulaString + "$n";
+			if(wmObjectChildLine2!=null) {
+				for(int i=0 ; i<wmObjectChildLine2.getWMObjects().size() ; i++)
+					formulaString = formulaString + wmObjectChildLine2.getWMObjects().get(i).getFormulaString();
+			}
+			formulaString = formulaString + "@@";
 		}
 		else if(isBreuk) {
 			formulaString = formulaString + "$b";
