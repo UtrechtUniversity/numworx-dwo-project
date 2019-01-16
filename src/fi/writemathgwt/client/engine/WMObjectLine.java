@@ -36,7 +36,7 @@ public class WMObjectLine {
 		wmObjectsToDo.addAll(objects);
 		for(int i=0 ; i<wmObjectsToDo.size() ; i++) {
 			WMObject wo = wmObjectsToDo.get(i);
-			if(wo.isTellerVan()==null && wo.isNoemerVan()==null && wo.isMachtVan()==null && wo.isOnderWortel()==null && wo.isExponentVan()==null || wo.getWMObjectParentLine()==this) {
+			if(wo.isTellerVan()==null && wo.isNoemerVan()==null && wo.isMachtVan()==null && wo.isOnderWortel()==null && wo.isExponentVan()==null && wo.isNdeVanWortel()==null|| wo.getWMObjectParentLine()==this) {
 				addWMObject(wo);
 				wmObjectsToDo.remove(wo);
 				i--;
@@ -78,17 +78,16 @@ public class WMObjectLine {
 					wo.isOnderWortel().setWMObjectChildLine1(woLine);
 				}
 				wo.setWMObjectParentLine(woLine);
-//				if(wo.isExponentVan()!=null && wmObjects.contains(wo.isExponentVan())) {
-//					WMObjectLine woExpLine = wo.isExponentVan().getWMObjectChildLineExponent();
-//					if(woExpLine==null) {
-//						woExpLine = new WMObjectLine(wo.isExponentVan());
-//						wo.isExponentVan().setWMObjectChildLineExponent(woExpLine);
-//					}
-//					wo.setWMObjectParentLine(woLine);
-//				}
 			}
-			
-			//else 
+			else if(wo.isNdeVanWortel()!=null  && wmObjects.contains(wo.isNdeVanWortel())) {
+				WMObjectLine woLine = wo.isNdeVanWortel().getWMObjectChildLine2();
+				if(woLine==null) {
+					woLine = new WMObjectLine(wo.isNdeVanWortel());
+					wo.isNdeVanWortel().setWMObjectChildLine2(woLine);
+				}
+				wo.setWMObjectParentLine(woLine);
+			}
+				
 			
 			 
 		}
