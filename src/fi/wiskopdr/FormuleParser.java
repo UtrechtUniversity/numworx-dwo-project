@@ -140,7 +140,7 @@ public class FormuleParser
 						Expressie e3 = parse(schoon(formuleString("$f" + expressieStrings[2] + "@")));
 						if (e1 != null && e2 != null && e3 != null && e1.isWaarde() && e2.isWaarde() && e3.isWaarde())
 						{
-							vergelijkingen[j] = new Vergelijking(new BasisExpressie("Q"), new Vermenigvuldiging(e1, new Optelling(e2, e3)), "=");
+							vergelijkingen[j] = new Vergelijking(new BasisExpressie("Q?(Q)"), new Vermenigvuldiging(e1, new Optelling(e2, e3)), "=");
 							//System.out.println(vergelijkingen[j].toString());
 						}
 					}
