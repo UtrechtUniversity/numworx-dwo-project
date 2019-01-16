@@ -869,7 +869,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
         this.data = data;
         if (data.size() > 0) {
 
-            setTotalen();
+           // setTotalen();
 
             selectCoursesButton.setVisible(currentLessonGroup == null);
             LessonGroup lg;
@@ -1201,38 +1201,38 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
 //
 ////        this.setVisible(true);
 //   }
-    private void setTotalen() {
-        ResultScore[] results;
-        UserGroup ug;
-        LessonGroup lg;
-        int i, j;
-        for (i = 0; i < data.size(); i++) {
-            results = ((UserResultList) data.elementAt(i)).getResultScore();
-            //ug = results[0].getUserGroup();
-            for (j = 0; j < results.length; j++) {
-                // FIXME dit hoort hier niet thuis maar moet private zijn
-                lg = results[j].getLessonGroup();
-                ug = results[j].getUserGroup();
-                int corrTotaal = 1;
-                // average course/students
-                if (lg instanceof Course) {
-                    Course course = (Course) lg;
-                    if (course.getScoList() == null) {
-                        course.loadScos();
-                    }
-                    corrTotaal = course.getScoList().length;
-                }
-                if (ug instanceof SchoolClass) {
-                    SchoolClass schoolClass = (SchoolClass) ug;
-                    User[] u = schoolClass.getStudents();
-                    if (u != null) {
-                        corrTotaal *= u.length;
-                    }
-                }
-                results[j].setCorrTotaal(corrTotaal);
-            }
-        }
-    }
+//    private void setTotalen() {
+//        ResultScore[] results;
+//        UserGroup ug;
+//        LessonGroup lg;
+//        int i, j;
+//        for (i = 0; i < data.size(); i++) {
+//            results = ((UserResultList) data.elementAt(i)).getResultScore();
+//            //ug = results[0].getUserGroup();
+//            for (j = 0; j < results.length; j++) {
+//                // FIXME dit hoort hier niet thuis maar moet private zijn
+//                lg = results[j].getLessonGroup();
+//                ug = results[j].getUserGroup();
+//                int corrTotaal = 1;
+//                // average course/students
+//                if (lg instanceof Course) {
+//                    Course course = (Course) lg;
+//                    if (course.getScoList() == null) {
+//                        course.loadScos();
+//                    }
+//                    corrTotaal = course.getScoList().length;
+//                }
+//                if (ug instanceof SchoolClass) {
+//                    SchoolClass schoolClass = (SchoolClass) ug;
+//                    User[] u = schoolClass.getStudents();
+//                    if (u != null) {
+//                        corrTotaal *= u.length;
+//                    }
+//                }
+//                results[j].setCorrTotaal(corrTotaal);
+//            }
+//        }
+//    }
 
     /**
      * Returns the current object, as the object to add to a gui.

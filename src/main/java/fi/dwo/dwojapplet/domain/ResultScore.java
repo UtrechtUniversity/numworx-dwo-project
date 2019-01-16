@@ -16,7 +16,7 @@ public class ResultScore implements ResultScoreIF {
     private LessonGroup lessonGroup;
 
     private float score;
-    private int totaal, corrtotaal;
+    //private int totaal, corrtotaal;
     private long total_time;
 
     private UserGroup userGroup;
@@ -28,7 +28,7 @@ public class ResultScore implements ResultScoreIF {
      *
      */
     public ResultScore() {
-        totaal = corrtotaal = 1;
+//        totaal = corrtotaal = 1;
     }
 
     /**
@@ -57,10 +57,11 @@ public class ResultScore implements ResultScoreIF {
      * @return The score for the lessongroup and the usergroup.
      */
     public float getScore() {
-        if (corrtotaal == 0) {
-            return 0.0f;
-        }
-        return score * totaal / corrtotaal;
+//        if (corrtotaal == 0) {
+//            return 0.0f;
+//        }
+//        return score * totaal / corrtotaal;
+      return score;
     }
 
     /**
@@ -145,32 +146,32 @@ public class ResultScore implements ResultScoreIF {
 //        }
     }
 
-    /**
-     * @return Returns the totaal.
-     */
-    public int getTotaal() {
-        return totaal;
-    }
+//    /**
+//     * @return Returns the totaal.
+//     */
+//    public int getTotaal() {
+//        return totaal;
+//    }
 
-    /**
-     * Zet het totaal aantal scores waar deze score over gemiddeld is.
-     *
-     * @param totaal The totaal to set.
-     */
-    public void setTotaal(int totaal) {
-        this.totaal = totaal;
-        this.corrtotaal = totaal;
-    }
+//    /**
+//     * Zet het totaal aantal scores waar deze score over gemiddeld is.
+//     *
+//     * @param totaal The totaal to set.
+//     */
+//    public void setTotaal(int totaal) {
+//        this.totaal = totaal;
+//        this.corrtotaal = totaal;
+//    }
 
-    /**
-     * Zet het gecorrigeerde totaal. Dat is het totaal aantal elementen waar de
-     * score op betrekking heeft.
-     *
-     * @param correctie
-     */
-    public void setCorrTotaal(int correctie) {
-        this.corrtotaal = correctie;
-    }
+//    /**
+//     * Zet het gecorrigeerde totaal. Dat is het totaal aantal elementen waar de
+//     * score op betrekking heeft.
+//     *
+//     * @param correctie
+//     */
+//    public void setCorrTotaal(int correctie) {
+//        this.corrtotaal = correctie;
+//    }
 
     /**
      * @param total_time the total_time to set

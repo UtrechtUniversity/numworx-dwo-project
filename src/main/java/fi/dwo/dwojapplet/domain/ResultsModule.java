@@ -117,7 +117,8 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
             {
               long total_time = 0L; // mark.getTotalTime().longValue();
               float value = mark.getScore().floatValue();
-              if (value == 0.0f && false) { // FIXME criterium
+              total_time = PersistenceFacade.instance().toTimeInMillis(mark.getTotalTime());
+              if (value == 0.0f && total_time > 0) { // FIXME criterium
                 value = -1f;
               }
               scoresj.setScore(value);
@@ -457,45 +458,45 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      */
     @Override
     public Vector getResults() {
-        if(true) return userResultList;
-      
-      
-        if ((currentlyZoomedLesson == null) && (currentlyZoomedUser == null)) {
-            try {
-                userResultList = PersistenceFacade.instance().getResults(courses, teacher);
-            }
-            catch (PersistenceException e) {
-                JOptionPane.showMessageDialog(dwo, e.getMessage());
-            }
-        } else if ((currentlyZoomedUser == null)
-                && (currentlyZoomedLesson instanceof Course)) {
-            try {
-                userResultList = PersistenceFacade.instance().getResults((Course) currentlyZoomedLesson, teacher);
-            }
-            catch (PersistenceException e) {
-                JOptionPane.showMessageDialog(dwo, e.getMessage());
-            }
-        } else if ((currentlyZoomedLesson == null)
-                && (currentlyZoomedUser instanceof SchoolClass)) {
-            try {
-                userResultList = PersistenceFacade.instance().getResults(courses, (SchoolClass) currentlyZoomedUser, teacher);
-            }
-            catch (PersistenceException e) {
-                JOptionPane.showMessageDialog(dwo, e.getMessage());
-            }
-        } else {
-            try {
-                userResultList = PersistenceFacade.instance().getResults((Course) currentlyZoomedLesson, (SchoolClass) currentlyZoomedUser, teacher);
-            }
-            catch (PersistenceException e) {
-                JOptionPane.showMessageDialog(dwo, e.getMessage());
-            }
-        }
-
-        if (userResultList != null) {
-            Collections.sort(userResultList, this);
-        }
         return userResultList;
+      
+      
+//        if ((currentlyZoomedLesson == null) && (currentlyZoomedUser == null)) {
+//            try {
+//                userResultList = PersistenceFacade.instance().getResults(courses, teacher);
+//            }
+//            catch (PersistenceException e) {
+//                JOptionPane.showMessageDialog(dwo, e.getMessage());
+//            }
+//        } else if ((currentlyZoomedUser == null)
+//                && (currentlyZoomedLesson instanceof Course)) {
+//            try {
+//                userResultList = PersistenceFacade.instance().getResults((Course) currentlyZoomedLesson, teacher);
+//            }
+//            catch (PersistenceException e) {
+//                JOptionPane.showMessageDialog(dwo, e.getMessage());
+//            }
+//        } else if ((currentlyZoomedLesson == null)
+//                && (currentlyZoomedUser instanceof SchoolClass)) {
+//            try {
+//                userResultList = PersistenceFacade.instance().getResults(courses, (SchoolClass) currentlyZoomedUser, teacher);
+//            }
+//            catch (PersistenceException e) {
+//                JOptionPane.showMessageDialog(dwo, e.getMessage());
+//            }
+//        } else {
+//            try {
+//                userResultList = PersistenceFacade.instance().getResults((Course) currentlyZoomedLesson, (SchoolClass) currentlyZoomedUser, teacher);
+//            }
+//            catch (PersistenceException e) {
+//                JOptionPane.showMessageDialog(dwo, e.getMessage());
+//            }
+//        }
+//
+//        if (userResultList != null) {
+//            Collections.sort(userResultList, this);
+//        }
+//        return userResultList;
     }
 
     /**

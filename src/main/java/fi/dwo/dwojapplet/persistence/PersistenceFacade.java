@@ -2496,34 +2496,34 @@ public class PersistenceFacade {
      * specified teacher.
      * @throws PersistenceException
      */
-    public Vector getResults(Course[] courses, Teacher teacher)
-            throws PersistenceException {
-        Vector courseIDs = new Vector();
-
-        for (int i = 0; i < courses.length; i++) {
-            courseIDs.addElement(new Integer(courses[i].getID()));
-        }
-        try {
-            Vector v = DbAccessCreator.instance().getResults(courseIDs,
-                    teacher.getUserID());
-            MapperIF mapper = MapperCreator.instance(UserResultList.class);
-            Object[] oa = mapper.getObjectFromReturn(v);
-            if (oa.length > 0) {
-                return (Vector) (oa[0]);
-            } else {
-                return new Vector();
-            }
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-    }
+//    public Vector getResults(Course[] courses, Teacher teacher)
+//            throws PersistenceException {
+//        Vector courseIDs = new Vector();
+//
+//        for (int i = 0; i < courses.length; i++) {
+//            courseIDs.addElement(new Integer(courses[i].getID()));
+//        }
+//        try {
+//            Vector v = DbAccessCreator.instance().getResults(courseIDs,
+//                    teacher.getUserID());
+//            MapperIF mapper = MapperCreator.instance(UserResultList.class);
+//            Object[] oa = mapper.getObjectFromReturn(v);
+//            if (oa.length > 0) {
+//                return (Vector) (oa[0]);
+//            } else {
+//                return new Vector();
+//            }
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//    }
 
     /**
      * Returns the results for the specified courses and the students in the
@@ -2537,29 +2537,29 @@ public class PersistenceFacade {
      * specified courses.
      * @throws PersistenceException
      */
-    public Vector getResults(Course[] courses, SchoolClass schoolClass,
-            Teacher teacher) throws PersistenceException {
-        Vector courseIDs = new Vector();
-
-        for (int i = 0; i < courses.length; i++) {
-            courseIDs.addElement(new Integer(courses[i].getID()));
-        }
-        try {
-            Vector v = DbAccessCreator.instance().getResults(courseIDs,
-                    schoolClass.getID(), teacher.getUserID());
-            MapperIF mapper = MapperCreator.instance(UserResultList.class);
-            return (Vector) (mapper.getObjectFromReturn(v)[0]);
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-    }
+//    public Vector getResults(Course[] courses, SchoolClass schoolClass,
+//            Teacher teacher) throws PersistenceException {
+//        Vector courseIDs = new Vector();
+//
+//        for (int i = 0; i < courses.length; i++) {
+//            courseIDs.addElement(new Integer(courses[i].getID()));
+//        }
+//        try {
+//            Vector v = DbAccessCreator.instance().getResults(courseIDs,
+//                    schoolClass.getID(), teacher.getUserID());
+//            MapperIF mapper = MapperCreator.instance(UserResultList.class);
+//            return (Vector) (mapper.getObjectFromReturn(v)[0]);
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//    }
 
     /**
      * Returns the result for the SCO's in the specified course, for the
@@ -2573,25 +2573,25 @@ public class PersistenceFacade {
      * specified course.
      * @throws PersistenceException
      */
-    public Vector getResults(Course course, SchoolClass schoolClass,
-            Teacher teacher) throws PersistenceException {
-        try {
-            //TODO NOW add schoolgroupid to query
-            Vector v = DbAccessCreator.instance().getResults(course.getID(),
-                    schoolClass.getID(), teacher.getUserID());
-            MapperIF mapper = MapperCreator.instance(UserResultList.class);
-            return (Vector) (mapper.getObjectFromReturn(v)[0]);
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-    }
+//    public Vector getResults(Course course, SchoolClass schoolClass,
+//            Teacher teacher) throws PersistenceException {
+//        try {
+//            //TODO NOW add schoolgroupid to query
+//            Vector v = DbAccessCreator.instance().getResults(course.getID(),
+//                    schoolClass.getID(), teacher.getUserID());
+//            MapperIF mapper = MapperCreator.instance(UserResultList.class);
+//            return (Vector) (mapper.getObjectFromReturn(v)[0]);
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//    }
 
     /**
      * Returns the result for the SCO's in the specified course, for the
@@ -2656,11 +2656,11 @@ public class PersistenceFacade {
         }
     }
 
-    private long toTimeInMillis(String totalTime) {
+    public long toTimeInMillis(String totalTime) {
       try {
           return TOTAL_TIME_FORMAT.parse(totalTime).getTime();
-      } catch (ParseException e) {
-          LOG.log(Level.SEVERE,"toTimeInMillis " + totalTime,e);
+      } catch (Exception e) {
+          LOG.log(Level.WARNING,"toTimeInMillis " + totalTime,e);
       }
       return 0;
     }
@@ -2675,24 +2675,24 @@ public class PersistenceFacade {
      * @return The results for the SCO's of the classes from the teacher.
      * @throws PersistenceException
      */
-    public Vector getResults(Course course, Teacher teacher)
-            throws PersistenceException {
-        try {
-            Vector v = DbAccessCreator.instance().getResults(course.getID(),
-                    teacher.getUserID());
-            MapperIF mapper = MapperCreator.instance(UserResultList.class);
-            return (Vector) (mapper.getObjectFromReturn(v)[0]);
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-    }
+//    public Vector getResults(Course course, Teacher teacher)
+//            throws PersistenceException {
+//        try {
+//            Vector v = DbAccessCreator.instance().getResults(course.getID(),
+//                    teacher.getUserID());
+//            MapperIF mapper = MapperCreator.instance(UserResultList.class);
+//            return (Vector) (mapper.getObjectFromReturn(v)[0]);
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//    }
 
 //    public Vector getUserResults(Course[] courses) throws PersistenceException {
 //        User user = DwoHelper.getCurrentFacadeUser();

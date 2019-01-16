@@ -27,7 +27,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**
  * @author thijsk
- *
+ * @deprecated DO NOT USE
  */
 public class UserResultListMapper extends XmlRpcMapper {
     private static final Logger LOG = Logger.getLogger(UserResultListMapper.class.getName());
@@ -154,11 +154,11 @@ public class UserResultListMapper extends XmlRpcMapper {
             rs.setScore(Float.valueOf((String) score).floatValue());
         }
         Object totaal = data.get("totaal");
-        if (totaal instanceof String) {
-            rs.setTotaal(1);
-        } else if (totaal instanceof Number) {
-            rs.setTotaal(((Number) totaal).intValue());
-        }
+//        if (totaal instanceof String) {
+//            rs.setTotaal(1);
+//        } else if (totaal instanceof Number) {
+//            rs.setTotaal(((Number) totaal).intValue());
+//        }
         Object total_time = data.get("total_time");
         if (total_time instanceof String && !("".equals(total_time))) {
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);

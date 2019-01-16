@@ -1279,7 +1279,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
             sc.setId(PersistentSchoolClass.buildPersistenceId(Long.valueOf(schoolClass.getID())));
             DomResultsPerTeacher results, source;
             source = new DomResultsPerTeacher();
-            source.setSchoolClasses(Collections.singletonList(new DomMapEntry<PersistenceId, DomSchoolClass>(sc.getId(), null)));
+           // source.setSchoolClasses(Collections.singletonList(new DomMapEntry<PersistenceId, DomSchoolClass>(sc.getId(), null)));
             Course[] selection = getSelectedCourses(schoolClass);
             source.setCourses(
             Arrays.asList(selection).stream().map((Course c) -> {
