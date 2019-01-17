@@ -1,8 +1,5 @@
 package nl.uu.fi.dwo.rest.dom;
 
-//import java.util.Formatter;
-//import java.util.Locale;
-import java.util.Formatter;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 
 /**

@@ -223,8 +223,6 @@ public class DomResultTree {
         this.studentTree = studentTree;
     }
 
-    final String tabs = "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t";
-
     /**
      * Debug test code for logging a ResultTree.
      *
