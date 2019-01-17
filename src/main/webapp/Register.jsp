@@ -21,7 +21,7 @@ private void cookie(String name, Object value, HttpServletResponse response) {
 
 private Object u(Object value) {
 	  try {
-		  	value = URLEncoder.encode(value.toString(), "UTF-8");
+		  	value = URLEncoder.encode(value.toString(), "UTF-8").replaceAll("\\+", "%20");
 		  } catch(Exception e) {}
 	  return value;
 }
