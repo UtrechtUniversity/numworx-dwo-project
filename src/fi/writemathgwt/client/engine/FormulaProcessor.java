@@ -41,7 +41,8 @@ public class FormulaProcessor {
 		WMObjectLine wol = new WMObjectLine(wmObjectsToDo);
 		labelMachten(wol.getWMObjects());
 		WMObjectLine woll = new WMObjectLine(wmObjectsToDo);
-		return woll.getFormula();
+		
+		return addContext(woll.getFormula());
 	}
 	
 	
