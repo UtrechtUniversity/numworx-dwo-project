@@ -263,16 +263,16 @@ public class WMObject {
 		}
 	}
 	
-	public void setWasOnderWortel(WMObject wo) {
-		wasOnderWortel = wo;
-		
-		if(copyFrom!=null) {
-			if(wo==null)
-				copyFrom.setWasOnderWortel(null);
-			else
-				copyFrom.setWasOnderWortel(wo.getCopyFrom());
-		}
-	}
+//	public void setWasOnderWortel(WMObject wo) {
+//		wasOnderWortel = wo;
+//		
+//		if(copyFrom!=null) {
+//			if(wo==null)
+//				copyFrom.setWasOnderWortel(null);
+//			else
+//				copyFrom.setWasOnderWortel(wo.getCopyFrom());
+//		}
+//	}
 	
 	public WMObject isOnderWortel() {
 		return isOnderWortel;

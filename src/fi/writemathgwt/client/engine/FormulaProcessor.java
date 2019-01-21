@@ -220,7 +220,7 @@ public class FormulaProcessor {
 	private static boolean inWortelNdeBox(WMObject wo, WMObject wortel) {
 		DoubleRectangle wortelBox = wortel.getBox();
 		return (wo.getBox().x+wo.getBox().width < wortelBox.x+wortelBox.height/4
-				&& wo.getBox().x>wortelBox.x-wortelBox.width/2 
+				&& wo.getBox().x>wortelBox.x-wortelBox.height/4
 				&& wo.getBox().y > wortelBox.y-5
 				&& wo.getXBox().y+wo.getXBox().height < wortelBox.y+2*wortelBox.height/3
 				);

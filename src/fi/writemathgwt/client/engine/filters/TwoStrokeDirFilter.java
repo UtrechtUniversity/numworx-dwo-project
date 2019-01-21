@@ -85,11 +85,11 @@ public class TwoStrokeDirFilter {
 		if("=H1+".equals(teken)) {int[][] data = {{180, 30, 1, 39, 30}};return data;}
 		if("=H2".equals(teken)) {int[][] data = {{0, 30, 1, 39, 30}};return data;}
 		if("=H2+".equals(teken)) {int[][] data = {{180, 30, 1, 39, 30}};return data;}
-		if("fH1".equals(teken)) {int[][] data = {{180, 55, 1, 10, 4},{260, 35, 10, 39, 20}};return data;}
+		if("fH1".equals(teken)) {int[][] data = {{180, 55, 1, 10, 3},{260, 35, 10, 39, 20}};return data;}
 		if("fH2".equals(teken)) {int[][] data = {{0, 20, 1, 39, 28}};return data;}
 		if("fH2+".equals(teken)) {int[][] data = {{180, 20, 1, 39, 32}};return data;}
 		
-		if("tH1".equals(teken)) {int[][] data = {{260, 25, 1, 30, 20},{0, 90, 30, 39, 4}};return data;}
+		if("tH1".equals(teken)) {int[][] data = {{260, 25, 1, 30, 20},{0, 60, 30, 39, 3}};return data;}
 		if("tH2".equals(teken)) {int[][] data = {{0, 20, 1, 39, 28}};return data;}
 		if("tH2+".equals(teken)) {int[][] data = {{180, 20, 1, 39, 32}};return data;}
 		if("jH1".equals(teken)) {int[][] data = {{260, 40, 1, 30, 16},{180, 55, 30, 39, 4}};return data;}

@@ -191,6 +191,22 @@ public class Stroke {
 		return parsePointsBox;
 	}
 	
+	public double width() {
+		return parsePointsBox.width;
+	}
+	
+	public double height() {
+		return parsePointsBox.height;
+	}
+	
+	public double x() {
+		return parsePointsBox.x;
+	}
+	
+	public double y() {
+		return parsePointsBox.y;
+	}
+	
 	public String getParsePointsText() {
 		String text = "{";
 		for(int i = 0 ; i < parsePoints.size() ; i++) {
