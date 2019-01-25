@@ -112,7 +112,7 @@ public class StrokeMatcher {
 			teken = ".";
 		if("sqrt_1".equals(teken) && stroke.getParsePointsbox().height<15)
 			teken = "-";
-		teken = filterOpMaat(strokeContainer, stroke, teken);
+		//teken = filterOpMaat(strokeContainer, stroke, teken);
 		return teken;
 	}
 	

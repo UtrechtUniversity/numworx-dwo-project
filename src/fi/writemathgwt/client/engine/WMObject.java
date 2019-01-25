@@ -13,32 +13,28 @@ public class WMObject {
 	
 	private WMObject isTellerVan = null;
 	private WMObject isNoemerVan = null;
-	private WMObject isMachtVan = null;
 	private WMObject isOnderWortel = null;
 	private WMObject isNdeVanWortel = null;
-	private WMObject wasOnderWortel = null;
 	private WMObject isExponentVan = null;
+	private WMObject isSubscriptVan = null;
+	
 	private boolean isVerwerkt = false;
 	private boolean isBreuk = false;
 	private boolean isWortel = false;
 	private boolean isGrondtal = false;
-	private DoubleRectangle tellerBox = null;
-	private DoubleRectangle noemerBox = null;
-	private DoubleRectangle wortelBox = null;
+	private boolean isMetSubscript = false;
 	
 	private WMObjectLine wmObjectParentLine;
 	private WMObjectLine wmObjectChildLine1;
 	private WMObjectLine wmObjectChildLine2;
 	private WMObjectLine wmObjectChildLineExponent;
+	private WMObjectLine wmObjectChildLineSubscript;
 	
 	private String[] ascFonts = {"b","d","f","h","k","l","t","6","8","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","δ"};
 	private String[] descFonts = {"g","j","p","q","y","7","9","β","μ" };
 	
 	private boolean hasAscent;
 	private boolean hasDescent;
-	
-	private WMObject copyFrom;
-	
 	
 	public WMObject(Stroke stroke, String teken) {
 		strokes.add(stroke);
@@ -92,14 +88,8 @@ public class WMObject {
 		hasAscent = isAscFont(teken);
 		hasDescent = isDescFont(teken);
 		this.box = new DoubleRectangle(wo.getBox().x , wo.getBox().y , wo.getBox().width , wo.getBox().height);
-		this.copyFrom = wo;
 	}
 	
-	public WMObject getCopyFrom() {
-		return copyFrom;
-	}
-	
-
 	public boolean isOneStroke() {
 		return strokes.size()==1;
 	}
@@ -137,20 +127,8 @@ public class WMObject {
 	}
 	
 	public DoubleRectangle getBox() {
-//		if (teken!=null && (teken.equals("-") || teken.equals("back")))	{	
-//			int height = 2;
-//			if (box.height < height)
-//				return new DoubleRectangle(box.x - height, box.y - height / 2, box.width + 2 * height, height);
-//			else
-//				return new DoubleRectangle(box.x - box.height, box.y, box.width + 2 * box.height, box.height);
-//		}
 		return box;
 	}
-	
-	
-//	public DoublePoint getBoxMid() {
-//		return new DoublePoint(box.x+box.width/2 , box.y+box.height/2);
-//	}
 	
 	private void makeBox() {
 		double minx = 10000;
@@ -192,13 +170,6 @@ public class WMObject {
 	
 	public void setIsTellerVan(WMObject wo) {
 		isTellerVan = wo;
-		
-		if(copyFrom!=null) {
-			if(wo==null)
-				copyFrom.setIsTellerVan(null);
-			else
-				copyFrom.setIsTellerVan(wo.getCopyFrom());
-		}
 	}
 	
 	public WMObject isTellerVan() {
@@ -207,133 +178,74 @@ public class WMObject {
 	
 	public void setIsNoemerVan(WMObject wo) {
 		isNoemerVan = wo;
-		
-		if(copyFrom!=null) {
-			if(wo==null)
-				copyFrom.setIsNoemerVan(null);
-			else
-				copyFrom.setIsNoemerVan(wo.getCopyFrom());
-		}
 	}
 	
 	public WMObject isNoemerVan() {
 		return isNoemerVan;
 	}
 	
-	public void setIsMachtVan(WMObject wo) {
-		isMachtVan = wo;
-		
-		if(copyFrom!=null) {
-			if(wo==null)
-				copyFrom.setIsMachtVan(null);
-			else
-				copyFrom.setIsMachtVan(wo.getCopyFrom());
-		}
-	}
-	
-	public WMObject isMachtVan() {
-		return isMachtVan;
-	}
-	
 	public void setIsOnderWortel(WMObject wo) {
-//		if(wo==null && isOnderWortel!=null)
-//			setWasOnderWortel(isOnderWortel);
-		
 		isOnderWortel = wo;
-		
-		if(copyFrom!=null) {
-			if(wo==null)
-				copyFrom.setIsOnderWortel(null);
-			else
-				copyFrom.setIsOnderWortel(wo.getCopyFrom());
-		}
 	}
-	
-	public void setIsNdeVanWortel(WMObject wo) {
-//		if(wo==null && isOnderWortel!=null)
-//			setWasOnderWortel(isOnderWortel);
-		
-		isNdeVanWortel = wo;
-		
-		if(copyFrom!=null) {
-			if(wo==null)
-				copyFrom.setIsNdeVanWortel(null);
-			else
-				copyFrom.setIsNdeVanWortel(wo.getCopyFrom());
-		}
-	}
-	
-//	public void setWasOnderWortel(WMObject wo) {
-//		wasOnderWortel = wo;
-//		
-//		if(copyFrom!=null) {
-//			if(wo==null)
-//				copyFrom.setWasOnderWortel(null);
-//			else
-//				copyFrom.setWasOnderWortel(wo.getCopyFrom());
-//		}
-//	}
 	
 	public WMObject isOnderWortel() {
 		return isOnderWortel;
 	}
 	
-	public WMObject wasOnderWortel() {
-		return wasOnderWortel;
+	public void setIsNdeVanWortel(WMObject wo) {
+		isNdeVanWortel = wo;
 	}
 	
 	public WMObject isNdeVanWortel() {
 		return isNdeVanWortel;
 	}
 	
-	
-	public void setTellerBox(DoubleRectangle box) {
-		tellerBox = box;
+	public void setIsExponentVan(WMObject wo) {
+		isExponentVan = wo;
 	}
 	
-	public DoubleRectangle getTellerBox() {
-		return tellerBox;
+	public WMObject isExponentVan() {
+		return isExponentVan;
 	}
 	
-	public void setNoemerBox(DoubleRectangle box) {
-		noemerBox = box;
+	public void setIsSubscriptVan(WMObject wo) {
+		isSubscriptVan = wo;
 	}
 	
-	public DoubleRectangle getNoemerBox() {
-		return noemerBox;
-	}
-	
-	public void setWortelBox(DoubleRectangle box) {
-		wortelBox = box;
-		isWortel = wortelBox!=null;
-	}
-	
-	public DoubleRectangle getWortelBox() {
-		return wortelBox;
-	}
-	
-	public void setVerwerkt(boolean b) {
-		isVerwerkt = b;
-	}
-	
-	public boolean isVerwerkt() {
-		return isVerwerkt;
+	public WMObject isSubscriptVan() {
+		return isSubscriptVan;
 	}
 	
 	public void setBreuk(boolean b) {
 		isBreuk = b;
 	}
 	
-	public void setWortel(boolean b) {
-		isWortel = b;
-	}
-	
 	public boolean isBreuk() {
 		return isBreuk;
 	}
 	
+	public void setWortel(boolean b) {
+		isWortel = b;
+	}
+	
 	public boolean isWortel() {
 		return ( isWortel);//wortelBox!=null ||
+	}
+	
+	public void setIsGrondtal(boolean b) {
+		isGrondtal = b;
+	}
+	
+	public boolean isGrondtal() {
+		return isGrondtal;
+	}
+	
+	public void setIsMetSubscript(boolean b) {
+		isGrondtal = b;
+	}
+	
+	public boolean isMetSubscript() {
+		return isGrondtal;
 	}
 	
 	public void setWMObjectParentLine (WMObjectLine wol) {
@@ -368,28 +280,14 @@ public class WMObject {
 		return wmObjectChildLineExponent;
 	}
 	
-	public void setIsExponentVan(WMObject wo) {
-		isExponentVan = wo;
-		
-		if(copyFrom!=null) {
-			if(wo==null)
-				copyFrom.setIsExponentVan(null);
-			else
-				copyFrom.setIsExponentVan(wo.getCopyFrom());
-		}
+	public void setWMObjectChildLineSubscript (WMObjectLine wol) {
+		wmObjectChildLineSubscript = wol;
 	}
 	
-	public WMObject isExponentVan() {
-		return isExponentVan;
+	public WMObjectLine getWMObjectChildLineSubscript() {
+		return wmObjectChildLineSubscript;
 	}
 	
-	public void setIsGrondtal(boolean b) {
-		isGrondtal = b;
-	}
-	
-	public boolean isGrondtal() {
-		return isGrondtal;
-	}
 	
 	public double getAverageLineHeight() {
 		if(wmObjectParentLine!=null)
@@ -409,12 +307,6 @@ public class WMObject {
 		double factor = 1;
 		if(hasDescent || hasAscent)
 			factor /= 1.5;
-//		if(isMachtVan!=null)
-//			factor /= 0.5;
-//		if(isTellerVan!=null)
-//			factor /= 0.75;
-//		if(isNoemerVan!=null)
-//			factor /= 0.75;
 		return getBox().height*factor;
 	}
 	
@@ -448,27 +340,7 @@ public class WMObject {
 		else
 			return new DoublePoint(box.x + box.width / 2, box.y + box.height / 2);
 	}
-	
-//	public boolean hasAscent()
-//	{	
-//		if (getTeken().equals("f") || getTeken().equals("b") || getTeken().equals("d") || getTeken().equals("h") || getTeken().equals("k") ||
-//			getTeken().equals("l") || getTeken().equals("t") || getTeken().equals("6") || getTeken().equals("8"))
-//		{	return true;
-//		}
-//		else 
-//			return false;
-//	}
-//	
-//	public boolean hasDescent()
-//	{	
-//		if (getTeken().equals("f") || getTeken().equals("g") || getTeken().equals("j") || getTeken().equals("p") ||
-//			getTeken().equals("q") || getTeken().equals("y") || getTeken().equals("7") || getTeken().equals("9"))
-//		{	return true;
-//		}
-//		else
-//			return false;
-//	}
-	
+		
 	public void translate(double dx, double dy) {
 		box.translate(dx, dy);
 	}
@@ -477,9 +349,42 @@ public class WMObject {
 		box.scale(cx, cy, factor);
 	}
 	
+	public void setInContext() {
+		if(isGrondtal && wmObjectChildLineExponent!=null) {
+			setTekenInContext();
+			wmObjectChildLineExponent.setInContext();
+			if(isWortel) { 
+				if(wmObjectChildLine1!=null)
+					wmObjectChildLine1.setInContext();
+				if(wmObjectChildLine2!=null)
+					wmObjectChildLine2.setInContext();
+			}
+			else if(isBreuk) { 
+				if(wmObjectChildLine1!=null)
+					wmObjectChildLine1.setInContext();
+				if(wmObjectChildLine2!=null)
+					wmObjectChildLine2.setInContext();
+			}
+		}
+		else if(isWortel) { 
+			if(wmObjectChildLine1!=null)
+				wmObjectChildLine1.setInContext();
+			if(wmObjectChildLine2!=null)
+				wmObjectChildLine2.setInContext();
+		}
+		else if(isBreuk) { 
+			if(wmObjectChildLine1!=null)
+				wmObjectChildLine1.setInContext();
+			if(wmObjectChildLine2!=null)
+				wmObjectChildLine2.setInContext();
+		}
+		else
+			setTekenInContext();
+	}
+	
 	public String getFormulaString() {
 		String formulaString = "";
-		if(isGrondtal) {
+		if(isGrondtal && wmObjectChildLineExponent!=null) {
 			if(isBreuk) {
 				formulaString = formulaString + "$b";
 				if(wmObjectChildLine1!=null)
@@ -562,15 +467,55 @@ public class WMObject {
 				logger.info("averageHeight: "+getAverageLineHeight());
 				logger.info("y: "+getBox().y);
 			}
-			if(".".equals(getTeken()) && getBox().y < getAverageBaseLine() - getAverageLineHeight()/3 && getBox().y > getAverageBaseLine() - 3*getAverageLineHeight()/4) {
+			if(".".equals(getTeken()) && getBox().y < getAverageBaseLine() - getAverageLineHeight()/3 && getBox().y > getAverageBaseLine() - 4*getAverageLineHeight()/4) {
 				formulaString = "*";
-				
 			}
-
 		}
-		
 		return formulaString;
 	}
 	
-	
+	public String setTekenInContext() {
+		if(wmObjectParentLine==null)
+			return getTeken();
+		String teken = getTeken();
+		if("/".equals(getTeken()) && box.height<getAverageLineHeight())
+			teken = "1";
+		else if("\\".equals(getTeken()) && box.height<getAverageLineHeight())
+			teken = "1";
+		else if(")".equals(getTeken()) && box.height<getAverageLineHeight()/2) {
+			teken = ",";
+		}
+		else if("\u27e9".equals(getTeken()) && box.height<getAverageLineHeight()/2)
+			teken = ",";
+		else if(")".equals(getTeken()) && box.height<20 && box.height<getAverageLineHeight() && 3*box.width<box.height)
+			teken = "1";
+		else if("(".equals(getTeken()) && box.height<20 && box.height<getAverageLineHeight() && 3*box.width<box.height)
+			teken = "1";
+		else if("l".equals(getTeken()) && box.height<1.2*getAverageLineHeight() && 3*box.width<box.height)
+			teken = "1";
+		else if("c".equals(getTeken()) && box.height>1.2*getAverageLineHeight())
+			teken = "C";
+		else if("o".equals(getTeken()) && box.height>1.2*getAverageLineHeight())
+			teken = "O";
+		else if("s".equals(getTeken()) && box.height>1.2*getAverageLineHeight())
+			teken = "S";
+		else if("u".equals(getTeken()) && box.height>1.2*getAverageLineHeight())
+			teken = "U";
+		else if("v".equals(getTeken()) && box.height>1.2*getAverageLineHeight())
+			teken = "V";
+		else if("w".equals(getTeken()) && box.height>1.2*getAverageLineHeight())
+			teken = "W";
+		else if("x".equals(getTeken()) && box.height>1.3*getAverageLineHeight())
+			teken = "X";
+		else if("y".equals(getTeken()) && box.height>2.0*getAverageLineHeight())
+			teken = "Y";
+		else if("z".equals(getTeken()) && box.height>1.2*getAverageLineHeight())
+			teken = "Z";
+		
+		this.teken = teken;
+		hasAscent = isAscFont(teken);
+		hasDescent = isDescFont(teken);
+		makeBox();
+		return teken;
+	}
 }

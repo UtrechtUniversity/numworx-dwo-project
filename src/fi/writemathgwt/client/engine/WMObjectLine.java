@@ -30,13 +30,12 @@ public class WMObjectLine {
 		fillLine(objects);
 	}
 	
-			
 	public void fillLine(ArrayList<WMObject> objects) {
 		ArrayList<WMObject> wmObjectsToDo = new ArrayList<WMObject>();
 		wmObjectsToDo.addAll(objects);
 		for(int i=0 ; i<wmObjectsToDo.size() ; i++) {
 			WMObject wo = wmObjectsToDo.get(i);
-			if(wo.isTellerVan()==null && wo.isNoemerVan()==null && wo.isMachtVan()==null && wo.isOnderWortel()==null && wo.isExponentVan()==null && wo.isNdeVanWortel()==null|| wo.getWMObjectParentLine()==this) {
+			if(wo.isTellerVan()==null && wo.isNoemerVan()==null  && wo.isOnderWortel()==null && wo.isExponentVan()==null && wo.isNdeVanWortel()==null|| wo.getWMObjectParentLine()==this) {
 				addWMObject(wo);
 				wmObjectsToDo.remove(wo);
 				i--;
@@ -87,9 +86,6 @@ public class WMObjectLine {
 				}
 				wo.setWMObjectParentLine(woLine);
 			}
-				
-			
-			 
 		}
 		for(int i=0 ; i<wmObjects.size() ; i++) {
 			WMObject wo = wmObjects.get(i);
@@ -116,18 +112,7 @@ public class WMObjectLine {
 	public void removeAll() {
 		wmObjects.clear();
 	}
-	
-	
-//	public void addChildWMObject(WMObject wo) {
-//		if(wmObjects.contains(wo))
-//			return;
-//		else { 
-//			wo.setWMObjectParentLine(this);
-//			wmObjects.add(wo);
-//			sortWMObjects();
-//		}
-//	}
-	
+		
 	public void sortWMObjects() {
 		boolean swapped = true;
 		while (swapped)	{	
@@ -144,6 +129,25 @@ public class WMObjectLine {
 		}
 	}
 	
+	public DoubleRectangle getGrondtalBox(WMObject wo) {
+		DoubleRectangle woBox = null;
+		if(wo.getWMObjectChildLine1()==null) {
+			woBox = new DoubleRectangle(wo.getBox());
+		}
+		else if(wo.getWMObjectChildLine2()==null) { 
+			DoubleRectangle box0 = new DoubleRectangle(wo.getBox());
+			DoubleRectangle box1 = wo.getWMObjectChildLine1().getBox();
+			woBox = new DoubleRectangle(box0, box1);
+		}
+		else {
+			DoubleRectangle box0 = new DoubleRectangle(wo.getBox().x, wo.getBox().y, wo.getBox().width, wo.getBox().height);
+			DoubleRectangle box1 = wo.getWMObjectChildLine1().getBox();
+			DoubleRectangle box2 = wo.getWMObjectChildLine2().getBox();
+			woBox = new DoubleRectangle(box0, box1, box2);
+		}
+		return woBox;
+	}
+	
 	public DoubleRectangle getBox() {
 		double xLeft = 10000;
 		double yTop = 10000;
@@ -153,41 +157,28 @@ public class WMObjectLine {
 			DoubleRectangle woBox = null;
 			WMObject wo = wmObjects.get(i);
 			if(wo.getWMObjectChildLineExponent()!=null) {
-				DoubleRectangle box0 = new DoubleRectangle(wo.getBox().x, wo.getBox().y, wo.getBox().width, wo.getBox().height);
+				DoubleRectangle box0 = getGrondtalBox(wo);
 				DoubleRectangle box1 = wo.getWMObjectChildLineExponent().getBox();
-				double xxLeft = Math.min(box0.x, box1.x);
-				double yyTop = Math.min(box0.y, box1.y);
-				double xxRight = Math.max(box0.x+box0.width, box1.x+box1.width);
-				double yyBottom = Math.max(box0.y+box0.height,box1.y+box1.height);
-				woBox = new DoubleRectangle(xxLeft,yyTop,xxRight-xxLeft,yyBottom-yyTop);
+				woBox = new DoubleRectangle(box0, box1);
 			}
 			else if(wo.getWMObjectChildLine1()==null) {
-				woBox = new DoubleRectangle(wo.getBox().x, wo.getBox().y, wo.getBox().width, wo.getBox().height);
+				woBox = new DoubleRectangle(wo.getBox());
 			}
 			else if(wo.getWMObjectChildLine2()==null) { 
-				DoubleRectangle box0 = new DoubleRectangle(wo.getBox().x, wo.getBox().y, wo.getBox().width, wo.getBox().height);
+				DoubleRectangle box0 = new DoubleRectangle(wo.getBox());
 				DoubleRectangle box1 = wo.getWMObjectChildLine1().getBox();
-				double xxLeft = Math.min(box0.x, box1.x);
-				double yyTop = Math.min(box0.y, box1.y);
-				double xxRight = Math.max(box0.x+box0.width, box1.x+box1.width);
-				double yyBottom = Math.max(box0.y+box0.height,box1.y+box1.height);
-				woBox = new DoubleRectangle(xxLeft,yyTop,xxRight-xxLeft,yyBottom-yyTop);
+				woBox = new DoubleRectangle(box0, box1);
 			}
 			else {
 				DoubleRectangle box0 = new DoubleRectangle(wo.getBox().x, wo.getBox().y, wo.getBox().width, wo.getBox().height);
 				DoubleRectangle box1 = wo.getWMObjectChildLine1().getBox();
 				DoubleRectangle box2 = wo.getWMObjectChildLine2().getBox();
-				double xxLeft = Math.min(box0.x, Math.min(box1.x, box2.x));
-				double yyTop = Math.min(box0.y, Math.min(box1.y, box2.y));
-				double xxRight = Math.max(box0.x+box0.width, Math.max(box1.x+box1.width, box2.x+box2.width));
-				double yyBottom = Math.max(box0.y+box0.height, Math.max(box1.y+box1.height, box2.y+box2.height));
-				woBox = new DoubleRectangle(xxLeft,yyTop,xxRight-xxLeft,yyBottom-yyTop);
+				woBox = new DoubleRectangle(box0, box1, box2);
 			}
 			xLeft = Math.min(xLeft, woBox.x);
 			yTop = Math.min(yTop, woBox.y);
 			xRight = Math.max(xRight, woBox.x+woBox.width);
 			yBottom = Math.max(yBottom, woBox.y+woBox.height);
-			
 		}
 		return new DoubleRectangle(xLeft,yTop,xRight-xLeft,yBottom-yTop);
 	}
@@ -213,14 +204,39 @@ public class WMObjectLine {
 		return boxes;
 	}
 	
+	public ArrayList<WMObjectLine> getLines() {
+		ArrayList<WMObjectLine> lines = new ArrayList<WMObjectLine>();
+		for (int i=0 ; i<wmObjects.size() ; i++) {
+			ArrayList<DoubleRectangle> r = null;
+			if(wmObjects.get(i).getWMObjectChildLine1()!=null) {
+				lines.addAll(wmObjects.get(i).getWMObjectChildLine1().getLines());
+			}
+			if(wmObjects.get(i).getWMObjectChildLine2()!=null) {
+				lines.addAll(wmObjects.get(i).getWMObjectChildLine2().getLines());
+			}
+			if(wmObjects.get(i).getWMObjectChildLineExponent()!=null) {
+				lines.addAll(wmObjects.get(i).getWMObjectChildLineExponent().getLines());
+			}
+		}
+		lines.add(this);
+		return lines;
+	}
+	
 	public ArrayList<WMObject> getWMObjects() {
 		return wmObjects;
 	}
 	
+	public void setInContext() {
+		for(int i=0 ; i<wmObjects.size(); i++) {
+			wmObjects.get(i).setInContext();
+		}
+	}
+	
 	public String getFormula() {
 		String formula = "";
-		for(int i=0 ; i<wmObjects.size(); i++) 
+		for(int i=0 ; i<wmObjects.size(); i++) {
 			formula = formula + wmObjects.get(i).getFormulaString();
+		}
 		return formula;
 	}
 	
