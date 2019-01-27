@@ -12,9 +12,18 @@ public class FormulaProcessor {
 	public static String addContext(String formuleString) {
 		//logger.info("formuleString = "+formuleString);
 		formuleString = formuleString.replaceAll("c0s", "cos");
+		formuleString = formuleString.replaceAll("c0S", "cos");
+		formuleString = formuleString.replaceAll("C0s", "cos");
+		formuleString = formuleString.replaceAll("C0S", "cos");
 		formuleString = formuleString.replaceAll("l0g", "log");
+		formuleString = formuleString.replaceAll("l09", "log");
+		formuleString = formuleString.replaceAll("/0g", "log");
+		formuleString = formuleString.replaceAll("/09", "log");
 		formuleString = formuleString.replace("("+"0s", "cos");
+		formuleString = formuleString.replace("("+"0S", "cos");
+		formuleString = formuleString.replace("Sin", "sin");
 		formuleString = formuleString.replace("s1n", "sin");
+		formuleString = formuleString.replace("S1n", "sin");
 		formuleString = formuleString.replace("$"+"m1"+"@", "'");
 		formuleString = formuleString.replace("$"+"ml"+"@", "'");
 		formuleString = formuleString.replaceAll("->", "\u2192");
@@ -172,25 +181,31 @@ public class FormulaProcessor {
 		}
 		
 		WMObject eersteMacht = null;
+		WMObject eersteMetSubscript = null;
 		int expNr = 0;
 		for (int i = 0; i < writeObjects.size()-1; i++) {
 			WMObject wo = writeObjects.get(i);
 			WMObject woNext = writeObjects.get(i+1);
 			if(inMachtBox(wo,null,woNext,true)) {
 				eersteMacht = wo;
-				expNr = i+1;
-				break;
 			}
-			else {
+			if(inSubscriptBox(wo,null,woNext,true)) {
+				eersteMetSubscript = wo;
+			}
+			if(eersteMacht==null && eersteMetSubscript==null){
 				writeObjects.remove(wo);
 				i--;
 			}
+			else {
+				expNr = i+1;
+				break;
+			}
 		}
 		
-		if(eersteMacht==null)
+		if(eersteMacht==null && eersteMetSubscript==null)
 			return;
 		ArrayList<WMObject> writeObjectsInExponent = new ArrayList<WMObject>();
-		for (int i = 0; i < writeObjects.size(); i++) {
+		for (int i = 0; i < writeObjects.size() && eersteMacht!=null; i++) {
 			WMObject wo = writeObjects.get(i);
 			WMObject woLast = null;
 			if(i>expNr) 
@@ -207,8 +222,27 @@ public class FormulaProcessor {
 				break;
 			}
 		}
+		ArrayList<WMObject> writeObjectsInSubscript = new ArrayList<WMObject>();
+		for (int i = 0; i < writeObjects.size() && eersteMetSubscript!=null; i++) {
+			WMObject wo = writeObjects.get(i);
+			WMObject woLast = null;
+			if(i>expNr) 
+				woLast = writeObjects.get(i-1);
+			if(inSubscriptBox(eersteMetSubscript, woLast, wo, i==expNr)) {
+				writeObjectsInSubscript.add(wo);
+				wo.setIsSubscriptVan(eersteMetSubscript);
+				wo.setIsTellerVan(null);
+				wo.setIsNoemerVan(null);
+				wo.setIsOnderWortel(null);
+				eersteMetSubscript.setIsMetSubscript(true);
+			}
+			else if(i>expNr) {
+				break;
+			}
+		}
 		writeObjects.remove(eersteMacht);
 		writeObjects.removeAll(writeObjectsInExponent);
+		writeObjects.removeAll(writeObjectsInSubscript);
 		labelMachten(writeObjects);
 		labelMachten(writeObjectsInExponent);
 	}
@@ -264,6 +298,23 @@ public class FormulaProcessor {
 				&& exponentBox.y+exponentBox.height < grondtalBox.y+grondtalBox.height/2);
 	}
 	
+	private static boolean inSubscriptBox(WMObject metSubscript, WMObject subscriptLast, WMObject subscript, boolean first) {
+		DoubleRectangle metSubscriptBox = metSubscript.getXBox();
+		DoubleRectangle subscriptBox = subscript.getXBox();
+		if(isIllegaalMetSubscript(metSubscript)
+				|| first && isIllegaalFirstSubscript(subscript))
+			return false;
+		else if(subscriptLast!=null) {
+			DoubleRectangle subscriptLastBox = subscriptLast.getXBox();
+			return (subscriptBox.x > subscriptLastBox.x+subscriptLastBox.width/2
+					&& subscriptLastBox.x > metSubscriptBox.x+metSubscriptBox.width/2
+					&& (subscriptBox.y+subscriptBox.height/2) - (subscriptLastBox.y+subscriptLastBox.height/2) > -subscriptLastBox.height/2
+					|| subscriptBox.y > metSubscriptBox.y+3*metSubscriptBox.height/4);
+		}
+		return (subscriptBox.x > metSubscriptBox.x+metSubscriptBox.width/2
+				&& subscriptBox.y > metSubscriptBox.y+metSubscriptBox.height/2);
+	}
+	
 	private static boolean isIllegaalGrondtal(WMObject grondtal) {
 		if(".".equals(grondtal.getTeken()) 
 				|| ",".equals(grondtal.getTeken()) 
@@ -290,5 +341,31 @@ public class FormulaProcessor {
 		return false;
 	}
 	
+	private static boolean isIllegaalMetSubscript(WMObject grondtal) {
+		if(".".equals(grondtal.getTeken()) 
+				|| ",".equals(grondtal.getTeken()) 
+				|| "=".equals(grondtal.getTeken())  
+				|| "+".equals(grondtal.getTeken())
+				|| "-".equals(grondtal.getTeken()) && !grondtal.isBreuk() 
+				|| "(".equals(grondtal.getTeken()) 
+				|| "/".equals(grondtal.getTeken())
+				|| Character.isDigit(grondtal.getTeken().charAt(0)))
+			return true;
+		return false;
+	}
+	
+	private static boolean isIllegaalFirstSubscript(WMObject exponent) {
+		if(".".equals(exponent.getTeken()) 
+				|| ",".equals(exponent.getTeken()) 
+				|| "=".equals(exponent.getTeken())  
+				|| "+".equals(exponent.getTeken())
+				|| ")".equals(exponent.getTeken())
+				|| "*".equals(exponent.getTeken())
+				|| ">".equals(exponent.getTeken())
+				|| "<".equals(exponent.getTeken())
+				|| "/".equals(exponent.getTeken()))
+			return true;
+		return false;
+	}
 	
 }

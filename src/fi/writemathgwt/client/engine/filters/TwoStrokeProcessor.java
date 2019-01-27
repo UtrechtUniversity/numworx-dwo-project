@@ -219,13 +219,14 @@ public class TwoStrokeProcessor {
 				
 		// j 
 		if (checkStrokes(stroke1,"jH1",stroke2,"jH2"))
-			if(hasYDistance(stroke1, stroke2, -30,25,0,2,0,2) && hasCloseXDistance(stroke1, stroke2, 20,0,2,0,2))
+			if(hasYDistance(stroke1, stroke2, -30,50,0,2,0,2) && hasCloseXDistance(stroke1, stroke2, 30,0,2,0,2)
+				&& stroke2.width()<4 && stroke2.height()<4)
 				addAndSort("j", foundTekens, scores, stroke1,"jH1",stroke2,"jH2");
 			
 		// i
 		if (checkStrokes(stroke1,"iH1",stroke2,"iH2"))
-			if(hasYDistance(stroke1, stroke2, -40,25,0,2,0,2) && hasCloseXDistance(stroke1, stroke2, 30,0,2,0,2)
-				&& stroke2.getParsePointsbox().width<4 && stroke2.getParsePointsbox().height<4)
+			if(hasYDistance(stroke1, stroke2, -40,50,0,2,0,2) && hasCloseXDistance(stroke1, stroke2, 30,0,2,0,2)
+				&& stroke2.width()<4 && stroke2.height()<4)
 				addAndSort("i", foundTekens, scores, stroke1,"iH1",stroke2,"iH2");
 			
 		if (checkStrokes(stroke1,"iH1+",stroke2,"iH2"))
@@ -250,7 +251,8 @@ public class TwoStrokeProcessor {
 		// T
 		if (checkStrokes(stroke1,"TH1",stroke2,"TH2"))
 			if(hasCloseDistance(stroke1, stroke2, 20,0,2,14,26))
-				addAndSort("T", foundTekens, scores, stroke1,"TH1",stroke2,"TH2");
+				if(stroke2.width() > stroke1.height()/2)
+					addAndSort("T", foundTekens, scores, stroke1,"TH1",stroke2,"TH2");
 			
 		// Q
 		if ("0".equals(teken1) && TwoStrokeDirFilter.checkDir(stroke2,"QH2") )

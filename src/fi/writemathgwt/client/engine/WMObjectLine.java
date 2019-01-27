@@ -24,6 +24,7 @@ public class WMObjectLine {
 			WMObject wo = objects.get(i);
 			wo.setWMObjectChildLine1(null);
 			wo.setWMObjectChildLineExponent(null);
+			wo.setWMObjectChildLineSubscript(null);
 			wo.setWMObjectChildLine2(null);
 			wo.setWMObjectParentLine(null);
 		}
@@ -35,7 +36,13 @@ public class WMObjectLine {
 		wmObjectsToDo.addAll(objects);
 		for(int i=0 ; i<wmObjectsToDo.size() ; i++) {
 			WMObject wo = wmObjectsToDo.get(i);
-			if(wo.isTellerVan()==null && wo.isNoemerVan()==null  && wo.isOnderWortel()==null && wo.isExponentVan()==null && wo.isNdeVanWortel()==null|| wo.getWMObjectParentLine()==this) {
+			if(wo.isTellerVan()==null 
+					&& wo.isNoemerVan()==null  
+					&& wo.isOnderWortel()==null 
+					&& wo.isNdeVanWortel()==null
+					&& wo.isExponentVan()==null 
+					&& wo.isSubscriptVan()==null 
+					|| wo.getWMObjectParentLine()==this) {
 				addWMObject(wo);
 				wmObjectsToDo.remove(wo);
 				i--;
@@ -50,6 +57,14 @@ public class WMObjectLine {
 				if(woLine==null) {
 					woLine = new WMObjectLine(wo.isExponentVan());
 					wo.isExponentVan().setWMObjectChildLineExponent(woLine);
+				}
+				wo.setWMObjectParentLine(woLine);
+			}
+			else if(wo.isSubscriptVan()!=null && wmObjects.contains(wo.isSubscriptVan())) {
+				WMObjectLine woLine = wo.isSubscriptVan().getWMObjectChildLineSubscript();
+				if(woLine==null) {
+					woLine = new WMObjectLine(wo.isSubscriptVan());
+					wo.isSubscriptVan().setWMObjectChildLineSubscript(woLine);
 				}
 				wo.setWMObjectParentLine(woLine);
 			}
@@ -91,6 +106,9 @@ public class WMObjectLine {
 			WMObject wo = wmObjects.get(i);
 			if(wo.getWMObjectChildLineExponent()!=null) {
 				wo.getWMObjectChildLineExponent().fillLine(wmObjectsToDo);
+			}
+			if(wo.getWMObjectChildLineSubscript()!=null) {
+				wo.getWMObjectChildLineSubscript().fillLine(wmObjectsToDo);
 			}
 			if(wo.getWMObjectChildLine1()!=null) {
 				wo.getWMObjectChildLine1().fillLine(wmObjectsToDo);
@@ -161,6 +179,11 @@ public class WMObjectLine {
 				DoubleRectangle box1 = wo.getWMObjectChildLineExponent().getBox();
 				woBox = new DoubleRectangle(box0, box1);
 			}
+			else if(wo.getWMObjectChildLineSubscript()!=null) {
+				DoubleRectangle box0 = getGrondtalBox(wo);
+				DoubleRectangle box1 = wo.getWMObjectChildLineSubscript().getBox();
+				woBox = new DoubleRectangle(box0, box1);
+			}
 			else if(wo.getWMObjectChildLine1()==null) {
 				woBox = new DoubleRectangle(wo.getBox());
 			}
@@ -199,6 +222,10 @@ public class WMObjectLine {
 				r = wmObjects.get(i).getWMObjectChildLineExponent().getBoxes();
 				boxes.addAll(r);
 			}
+			if(wmObjects.get(i).getWMObjectChildLineSubscript()!=null) {
+				r = wmObjects.get(i).getWMObjectChildLineSubscript().getBoxes();
+				boxes.addAll(r);
+			}
 		}
 		boxes.add(this.getBox());
 		return boxes;
@@ -216,6 +243,9 @@ public class WMObjectLine {
 			}
 			if(wmObjects.get(i).getWMObjectChildLineExponent()!=null) {
 				lines.addAll(wmObjects.get(i).getWMObjectChildLineExponent().getLines());
+			}
+			if(wmObjects.get(i).getWMObjectChildLineSubscript()!=null) {
+				lines.addAll(wmObjects.get(i).getWMObjectChildLineSubscript().getLines());
 			}
 		}
 		lines.add(this);

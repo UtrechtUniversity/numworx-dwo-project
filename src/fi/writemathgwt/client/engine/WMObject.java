@@ -241,11 +241,11 @@ public class WMObject {
 	}
 	
 	public void setIsMetSubscript(boolean b) {
-		isGrondtal = b;
+		isMetSubscript = b;
 	}
 	
 	public boolean isMetSubscript() {
-		return isGrondtal;
+		return isMetSubscript;
 	}
 	
 	public void setWMObjectParentLine (WMObjectLine wol) {
@@ -384,6 +384,14 @@ public class WMObject {
 	
 	public String getFormulaString() {
 		String formulaString = "";
+		String subscriptString = "";
+		if(isMetSubscript && wmObjectChildLineSubscript!=null) {
+			subscriptString = "$s";
+			if(wmObjectChildLineSubscript!=null)
+				for(int i=0 ; i<wmObjectChildLineSubscript.getWMObjects().size() ; i++)
+					subscriptString = subscriptString + wmObjectChildLineSubscript.getWMObjects().get(i).getFormulaString();
+			subscriptString = subscriptString + "@";
+		}
 		if(isGrondtal && wmObjectChildLineExponent!=null) {
 			if(isBreuk) {
 				formulaString = formulaString + "$b";
@@ -420,7 +428,7 @@ public class WMObject {
 			else
 				formulaString = formulaString + getTeken();
 			
-			formulaString = formulaString + "$m";
+			formulaString = formulaString + subscriptString + "$m";
 			if(wmObjectChildLineExponent!=null)
 				for(int i=0 ; i<wmObjectChildLineExponent.getWMObjects().size() ; i++)
 					formulaString = formulaString + wmObjectChildLineExponent.getWMObjects().get(i).getFormulaString();
@@ -461,7 +469,7 @@ public class WMObject {
 		}
 		
 		else {
-			formulaString = getTeken();
+			formulaString = getTeken() + subscriptString;
 			if(".".equals(getTeken())) {
 				logger.info("averageBaseLine: "+getAverageBaseLine());
 				logger.info("averageHeight: "+getAverageLineHeight());
@@ -493,6 +501,8 @@ public class WMObject {
 			teken = "1";
 		else if("l".equals(getTeken()) && box.height<1.2*getAverageLineHeight() && 3*box.width<box.height)
 			teken = "1";
+		else if("1".equals(getTeken()) && box.height>1.3*getAverageLineHeight() )
+			teken = "l";
 		else if("c".equals(getTeken()) && box.height>1.2*getAverageLineHeight())
 			teken = "C";
 		else if("o".equals(getTeken()) && box.height>1.2*getAverageLineHeight())
@@ -511,6 +521,8 @@ public class WMObject {
 			teken = "Y";
 		else if("z".equals(getTeken()) && box.height>1.2*getAverageLineHeight())
 			teken = "Z";
+		else if("+".equals(getTeken()) && box.height>1.2*getAverageLineHeight() && 2*box.width<box.height)
+			teken = "t";
 		
 		this.teken = teken;
 		hasAscent = isAscFont(teken);
