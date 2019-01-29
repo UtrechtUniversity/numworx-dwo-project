@@ -515,12 +515,12 @@ public class WMObject {
 			teken = "V";
 		else if("w".equals(getTeken()) && box.height>1.2*getAverageLineHeight())
 			teken = "W";
-		else if("x".equals(getTeken()) && box.height>1.3*getAverageLineHeight())
-			teken = "X";
-		else if("y".equals(getTeken()) && box.height>2.0*getAverageLineHeight())
-			teken = "Y";
-		else if("z".equals(getTeken()) && box.height>1.2*getAverageLineHeight())
-			teken = "Z";
+//		else if("x".equals(getTeken()) && box.height>1.3*getAverageLineHeight())
+//			teken = "X";
+//		else if("y".equals(getTeken()) && box.height>2.0*getAverageLineHeight())
+//			teken = "Y";
+//		else if("z".equals(getTeken()) && box.height>1.2*getAverageLineHeight())
+//			teken = "Z";
 		else if("+".equals(getTeken()) && box.height>1.2*getAverageLineHeight() && 2*box.width<box.height)
 			teken = "t";
 		
