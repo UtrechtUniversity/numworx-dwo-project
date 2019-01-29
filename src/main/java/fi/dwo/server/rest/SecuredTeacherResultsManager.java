@@ -650,8 +650,13 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
      }
      
       DomResultsPerTeacher result = new DomResultsPerTeacher();
-      DomClassCourse4Teacher classCourse = call.getClassCourse().buildDomClassCourse4Teacher();
-      result.setClassCourses(Collections.singletonList(new DomMapEntry<PersistenceId, DomClassCourse4Teacher>(classCourse.getId(), classCourse)));
+      final PersistentClassCourse cc = call.getClassCourse();
+      if (cc != null) {
+        DomClassCourse4Teacher classCourse = cc.buildDomClassCourse4Teacher();
+        result.setClassCourses(Collections.singletonList(new DomMapEntry<PersistenceId, DomClassCourse4Teacher>(classCourse.getId(), classCourse)));
+      } else {
+        result.setClassCourses(Collections.emptyList());
+      }
       DomCourse course = call.getCourse().buildDomCourse();
       result.setCourses(Collections.singletonList(new DomMapEntry<PersistenceId, DomCourse>(course.getId(), course)));
       

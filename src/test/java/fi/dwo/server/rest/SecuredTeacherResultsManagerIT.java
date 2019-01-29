@@ -44,6 +44,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -272,4 +273,41 @@ public class SecuredTeacherResultsManagerIT {
       
       assertEquals("schoolclasscourse not wiped", Boolean.TRUE, result);
     }
+    
+    @Test
+    public void testCreateStudentResults() throws Exception {
+            
+      SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+      SecuredTeacherResultsManager instance = new SecuredTeacherResultsManager();
+      
+      RestClearStudentDataForScoAndClass rest = new RestClearStudentDataForScoAndClass();
+      DomContext restContext = new DomContext();
+      DomHasRole domHasRole;
+      PersistentUser pUser = UserManager.findByUserName("user07");
+      PersistentSchool pSchool = SchoolManager.findBySchoolLogin("school01");//id =3
+      PersistentHasRole pHasRole = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, pSchool, RoleType.TEACHER);
+      domHasRole = pHasRole.buildDomHasRole();
+      restContext.setDomHasRole(domHasRole);      
+      rest.setRestContext(restContext);
+      
+      DomClearStudentDataForScoAndClass dom = new DomClearStudentDataForScoAndClass();
+      DomDwoProfile domProfile = DwoProfileManager.findEntity(1L).buildDomDwoProfile();
+      dom.setDomProfile(domProfile);
+      DomSchoolClass domSchoolClass = SchoolClassManager.findEntity(2L).buildDomSchoolClass();
+      dom.setDomSchoolClass(domSchoolClass);
+      DomScoContext domScoContext = ScoContextManager.findEntity(2L).buildDomScoContext();
+      dom.setDomScoContext(domScoContext);
+      
+      dom.setDomStudentList(Collections.emptyList());
+      rest.setClearStudentDataForScoAndClass(dom);
+      DomResultsPerTeacher result = instance.createStudentResults(sc, rest);
+      
+      assertNotNull("schoolclasscourse not wiped",result);
+  // test without classcourse    
+      ClassCourseManager.destroy(6L);
+      result = instance.createStudentResults(sc, rest);
+      assertNotNull("schoolclasscourse wiped",result.getClassCourses());
+   
+    }
+
 }
