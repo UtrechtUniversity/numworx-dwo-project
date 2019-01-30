@@ -528,23 +528,27 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
         		{	answer = answer + e.toString();
         		}
 	        }
-		}
+		} // checkformule
         else
         {
-        	for(int i=0 ; i<aantalSleepObjects ; i++)
-	        {	ipListSleep[i].wisGoedFoutSleep();
+        	for (int i = 0; i < aantalSleepObjects; i++)
+	        {
+        		ipListSleep[i].wisGoedFoutSleep();
 	        }
         	boolean stapJuist = true;
-	        for(int i=0 ; i<aantalDoelObjects && i < aantalSleepObjects; i++)
-	        {   int dx = (int) Math.abs(posities[i].getX() - doelPosities[i].getX());
+	        for (int i = 0; i < aantalDoelObjects && i < aantalSleepObjects; i++)
+	        {  
+	        	int dx = (int) Math.abs(posities[i].getX() - doelPosities[i].getX());
 	        	int dy = (int) Math.abs(posities[i].getY() - doelPosities[i].getY());
 	        	
-	        	if(dx > acceptedMarge || dy > acceptedMarge) 
-	        	{	stapJuist = false;
+	        	if (!isBinnenMarge(ipListSleep[i], ipListDoel[i]))
+	        	{
+	        		stapJuist = false;
 	        		juist = juist && stapJuist;
 	        		if(!view) break;
 	        	}
-	        	else answer = answer + i + "-" + i + ",";
+	        	else 
+	        		answer = answer + i + "-" + i + ",";
 	        	
 	        	
 	        	if(view && show){
@@ -619,6 +623,38 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 		}
     }
     
+    /**
+     * True als het gegeven sleepObject binnen de marge van het gegeven sleepDoel valt,
+     * anders false.
+     * 
+     * @param sleepObject
+     * @param sleepDoel
+     * @return
+     */
+    private boolean isBinnenMarge(TekstVakPanel sleepObject, TekstVakPanel sleepDoel)
+	{
+		boolean isBinnenMarge = false;
+		int sleepObjectX = (int) sleepObject.geefLocatie().getX();
+		int sleepObjectY = (int) sleepObject.geefLocatie().getY();
+		int sleepObjectBreedte = sleepObject.getWidth();
+		int sleepObjectHoogte = sleepObject.getHeight();
+
+		int sleepDoelX = (int) sleepDoel.geefLocatie().getX();
+		int sleepDoelY = (int) sleepDoel.geefLocatie().getY();
+		int sleepDoelBreedte = sleepDoel.getWidth();
+		int sleepDoelHoogte = sleepDoel.getHeight();
+		
+		if (sleepObjectX > sleepDoelX - acceptedMarge // check x-coordinaat
+			&& sleepObjectX < (sleepDoelX + sleepDoelBreedte - sleepObjectBreedte + acceptedMarge)
+			&& sleepObjectY > sleepDoelY - acceptedMarge // check y-coordinaat
+			&& sleepObjectY < sleepDoelY + sleepDoelHoogte - sleepObjectHoogte + acceptedMarge)
+		{
+			isBinnenMarge = true;
+		}
+		
+		return isBinnenMarge;
+	}
+
 	private void fireEvent(CBookEvent event) 
 	{
 		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
@@ -840,6 +876,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
         for(int i=0 ; i<aantalSleepObjects ; i++)
         {   if(ipListSleep[i] != null)
         	{	ipListSleep[i].zetSleepDoelPosities(doelPosities);
+        		ipListSleep[i].zetSleepDoelen(ipListDoel); // gebruiken voor snap to target als sleepdoel groter dan sleepobject
 	            ipListSleep[i].zetSleepdoelMarge(acceptedMarge);
 	            ipListSleep[i].zetSleepSnap(snapToTarget);
 	            ipListSleep[i].setRelocate(relocate);
