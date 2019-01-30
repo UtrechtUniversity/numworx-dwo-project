@@ -284,6 +284,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	
 	private Point[] doelPosities;
 	private TekstVakPanel[] sleepObjecten;
+	private TekstVakPanel[] sleepDoelen;
 
 	private boolean relocate = false;
 	private int startSleepX;
@@ -2918,6 +2919,16 @@ private Object CamelCase(String name) {
 		this.doelPosities = doelPosities;
 	}
 
+	public TekstVakPanel[] geefSleepDoelen()
+	{
+		return sleepDoelen;
+	}
+
+	public void zetSleepDoelen(TekstVakPanel[] sleepDoelen)
+	{
+		this.sleepDoelen = sleepDoelen;
+	}
+
 	public void zetSleepObjecten(TekstVakPanel[] sleepObjecten)
 	{
 		this.sleepObjecten = sleepObjecten;
@@ -3905,32 +3916,52 @@ private Object CamelCase(String name) {
 	}
 	
 	public void mouseUpTouchEndAction(int eventX, int eventY)
-	{	if(sleepbaar && !draaibaar)
-		{	//hier zorgen dat de pagina wordt versleept?
+	{
+		if (sleepbaar && !draaibaar)
+		{
+			//hier zorgen dat de pagina wordt versleept?
 			locationX = eventX - startX;
 			locationY = eventY - startY;
-			if(parent != null && zwevend)
-			{	locationX = Math.max(locationX, 0);
+			if (parent != null && zwevend)
+			{
+				locationX = Math.max(locationX, 0);
 				locationX = Math.min(locationX, parent.getOffsetWidth() - breedte);
 				locationY = Math.max(locationY, 0);
 				locationY = Math.min(locationY, parent.getOffsetHeight() - hoogte);
 	
-				if(sleepSnap) 
+				if (sleepSnap) 
 				{
-					if(doelPosities != null) 
-					{	boolean snapped = false;
-						for(int i=0 ; i<doelPosities.length ; i++)
-						{	int dx = (int) Math.abs(locationX - doelPosities[i].getX());
+					if (doelPosities != null) 
+					{
+						boolean snapped = false;
+						for (int i = 0; i < doelPosities.length ; i++)
+						{
+							int dx = (int) Math.abs(locationX - doelPosities[i].getX());
 							int dy = (int) Math.abs(locationY - doelPosities[i].getY());
-							if(sleepSnap && dx < sleepdoelMarge && dy < sleepdoelMarge) 
-							{	locationX = (int) doelPosities[i].getX();
-								locationY = (int) doelPosities[i].getY();
+							
+							boolean in = isBinnen(sleepDoelen[i]);
+
+							if (sleepSnap)
+							{
+								if (!in && isBinnenMarge(sleepDoelen[i])) // check of erbuiten valt maar binnen de marge
+								{
+									Point p = findLocationWithin(sleepDoelen[i]);
+									locationX = (int) p.getX();
+									locationY = (int) p.getY();
+									
+									snapped = true;
+									break;
+								}
+							}
+							else if (in)
+							{
 								snapped = true;
 								break;
 							}
 						}
-						if(!snapped && relocate)
-						{	locationX = startSleepX;
+						if (!snapped && relocate)
+						{
+							locationX = startSleepX;
 							locationY = startSleepY;
 						}
 					}
@@ -3940,17 +3971,125 @@ private Object CamelCase(String name) {
 				parent.setWidgetLeftWidth(this.asWidget(), locationX, Style.Unit.PX, breedte, Style.Unit.PX);
 				parent.setWidgetTopHeight(this.asWidget(), locationY, Style.Unit.PX, hoogte, Style.Unit.PX);
 			}
-		} else {
+		}
+		else
+		{
 // Werk dit? FIXME naar de link api.		
-		if(isLink && linkUrls != null) {
-			String link = linkUrls.getString(0);
-			if(anchorContext == null || !link.startsWith("goto:"))
-				Window.open(link, "_blank", "");
-			else
-				anchorContext.gotoUrl(link);
-		}}
+			if (isLink && linkUrls != null)
+			{
+				String link = linkUrls.getString(0);
+				if (anchorContext == null || !link.startsWith("goto:"))
+					Window.open(link, "_blank", "");
+				else
+					anchorContext.gotoUrl(link);
+			}
+		}
 	}
 	
+	/**
+	 * Bepaal de locatie zodat this (sleepobject) binnen het gegeven sleepdoel valt.
+	 *  
+	 * @param sleepDoel
+	 * @return
+	 */
+	private Point findLocationWithin(TekstVakPanel sleepDoel)
+	{
+		Point p = null;
+		int pointX = -1;
+		int pointY = -1;
+		
+		int sleepObjectX = getLocationX();
+		int sleepObjectY = getLocationY();
+		int sleepObjectBreedte = getWidth();
+		int sleepObjectHoogte = getHeight();
+
+		int sleepDoelX = sleepDoel.getLocationX();
+		int sleepDoelY = sleepDoel.getLocationY();
+		int sleepDoelBreedte = sleepDoel.getWidth();
+		int sleepDoelHoogte = sleepDoel.getHeight();
+
+		// check x coordinate
+		if (sleepObjectX < sleepDoelX)
+			pointX = Math.min(sleepObjectX + sleepdoelMarge, sleepDoelX); // nooit groter dan sleepDoelX
+		else if (sleepObjectX + sleepObjectBreedte > sleepDoelX + sleepDoelBreedte)
+			pointX = Math.max(sleepObjectX - sleepdoelMarge, sleepDoelX); // nooit kleiner dan sleepDoelX
+		else
+			pointX = sleepObjectX;
+		
+		// check y coordinate
+		if (sleepObjectY < sleepDoelY)
+			pointY = Math.min(sleepObjectY + sleepdoelMarge, sleepDoelY); // nooit groter dan sleepObjectY
+		else if (sleepObjectY + sleepObjectHoogte > sleepDoelY + sleepDoelHoogte)
+			pointY = Math.max(sleepObjectY - sleepdoelMarge, sleepDoelY); // nooit kleiner dan sleepDoelY
+		else
+			pointY = sleepObjectY;
+		
+		p = new Point(pointX, pointY);
+		
+		return p;
+	}
+
+	/**
+	 * True als this (sleepobject) binnen de marge van het gegeven sleepdoel valt.
+	 * 
+	 * @param sleepDoel
+	 * @return
+	 */
+	private boolean isBinnenMarge(TekstVakPanel sleepDoel)
+	{
+		boolean isBinnenMarge = false;
+		int sleepObjectX = getLocationX();
+		int sleepObjectY = getLocationY();
+		int sleepObjectBreedte = getWidth();
+		int sleepObjectHoogte = getHeight();
+
+		TekstVakPanel sleepDoelVak = (TekstVakPanel) sleepDoel;
+		int sleepDoelX = sleepDoelVak.getLocationX();
+		int sleepDoelY = sleepDoelVak.getLocationY();
+		int sleepDoelBreedte = sleepDoelVak.getWidth();
+		int sleepDoelHoogte = sleepDoelVak.getHeight();
+		
+		if (sleepObjectX > sleepDoelX - sleepdoelMarge // check x-coordinaat
+			&& sleepObjectX < (sleepDoelX + sleepDoelBreedte - sleepObjectBreedte + sleepdoelMarge)
+			&& sleepObjectY > sleepDoelY - sleepdoelMarge // check y-coordinaat
+			&& sleepObjectY < sleepDoelY + sleepDoelHoogte - sleepObjectHoogte + sleepdoelMarge)
+		{
+			isBinnenMarge = true;
+		}
+		
+		return isBinnenMarge;
+	}
+
+	/**
+	 * True als this (sleepobject) binnen het gegeven sleepdoel valt.
+	 * 
+	 * @param sleepDoel
+	 * @return
+	 */
+	private boolean isBinnen(TekstVakPanel sleepDoel)
+	{
+		boolean isBinnen = false;
+		int sleepObjectX = getLocationX();
+		int sleepObjectY = getLocationY();
+		int sleepObjectBreedte = getWidth();
+		int sleepObjectHoogte = getHeight();
+
+		int sleepDoelX = sleepDoel.getLocationX();
+		int sleepDoelY = sleepDoel.getLocationY();
+		int sleepDoelBreedte = sleepDoel.getWidth();
+		int sleepDoelHoogte = sleepDoel.getHeight();
+		
+		if (sleepObjectX > sleepDoelX // check x-coordinaat
+			&& sleepObjectX < (sleepDoelX + sleepDoelBreedte - sleepObjectBreedte)
+			&& sleepObjectY > sleepDoelY // check y-coordinaat
+			&& sleepObjectY < sleepDoelY + sleepDoelHoogte - sleepObjectHoogte)
+		{
+			isBinnen = true;
+		}
+
+		return isBinnen;
+	}
+
 	public TekstVakPanel findMouseDownObject()
 	{
 		for(int i = 0; i < interactionViewObjects.size(); i++)
