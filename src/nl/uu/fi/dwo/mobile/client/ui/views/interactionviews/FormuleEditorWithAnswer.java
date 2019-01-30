@@ -44,6 +44,7 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Cursor;
@@ -552,11 +553,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				@Override
 				public void onTap(TapEvent event) {
 					if(feedbackLabel.isVisible())
-					{	int yPos = asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10;
-						if(yPos + feedbackTekst.hoogte + 10 > Window.getClientHeight())
+					{
+						int yPos = asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10;
+						if (yPos + feedbackTekst.hoogte + 10 > Window.getClientHeight())
 							yPos = Window.getClientHeight() - feedbackTekst.hoogte - 10;
 						
-						feedbackPanel.setPopupPosition(asWidget().getAbsoluteLeft() + 10, yPos);
+						int xPos = asWidget().getAbsoluteLeft() + 10;
+						feedbackPanel.setPopupPosition(xPos, yPos);
 						feedbackPanel.show();
 					}
 				}
@@ -820,6 +823,26 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			checkPanel.getElement().getStyle().setCursor(Cursor.POINTER);
 		else
 			checkPanel.getElement().getStyle().setCursor(Cursor.DEFAULT);
+		
+		if (feedbackLabel.isVisible())
+		{
+			// met scheduler omdat anders de xPos niet goed is
+			Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand()
+			{
+		        @Override
+		        public void execute()
+		        {
+					int yPos = asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10;
+					if (yPos + feedbackTekst.hoogte + 10 > Window.getClientHeight())
+						yPos = Window.getClientHeight() - feedbackTekst.hoogte - 10;
+					
+					int xPos = asWidget().getAbsoluteLeft() + 10;
+
+					feedbackPanel.setPopupPosition(xPos, yPos);
+					feedbackPanel.show();
+				}
+			});
+		}
 	}
 	
 //	public void setimg(String answer)
@@ -1364,7 +1387,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		//if(this.fe != null && !(mode == 2 || mode == 3))
 		//	fe.maakNakijkenAf(backStep);
-		if (!feedback.equals("") && fews == null)
+		if (!feedback.equals("") && fews == null && show)
 		{
 			zetFeedback();
 		}
