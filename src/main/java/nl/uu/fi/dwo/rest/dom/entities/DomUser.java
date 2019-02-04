@@ -143,13 +143,13 @@ public class DomUser {
      */
     public String getUniqueDisplayName() {
         StringBuilder result = new StringBuilder();
-        result.append(this.userName);
-        result.append(" - ");
-        result.append(this.givenName);
-        result.append(" ");
-        result.append((this.insertion == null) ? "" : this.insertion);
-        result.append(" ");
-        result.append(this.familyName);
+        result.append(this.userName)
+        	.append(" - ")
+        	.append(this.givenName)
+        	.append(" ")
+        	.append((this.insertion == null) ? "" : this.insertion)
+        	.append(" ")
+        	.append(this.familyName);
 
         return result.toString();
     }
@@ -163,11 +163,11 @@ public class DomUser {
      */
     public String getDisplayName() {
         StringBuilder result = new StringBuilder();
-        result.append(this.givenName);
-        result.append(" ");
-        result.append((this.insertion == null) ? "" : this.insertion);
-        result.append(" ");
-        result.append(this.familyName);
+        result.append(this.givenName)
+        	.append(" ")
+        	.append((this.insertion == null) ? "" : this.insertion)
+        	.append(" ")
+        	.append(this.familyName);
 
         return result.toString();
     }
@@ -179,9 +179,9 @@ public class DomUser {
     }
 
     protected void fill(DomUser user) {
-        user.id = this.getId().duplicate();
+        user.id = this.id == null ? null : this.id.duplicate();
         user.userName = this.userName;
-        user.singleSchool = (boolean) this.getSingleSchool();
+        user.singleSchool = this.singleSchool;
         user.givenName = this.givenName;
         user.insertion = this.insertion;
         user.familyName = this.familyName;
