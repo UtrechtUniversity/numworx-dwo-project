@@ -111,6 +111,7 @@
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
 		border-radius: 3px;
+		border-style: none;
 	}
 	.password {
 		width: 252px;
@@ -125,6 +126,7 @@
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
 		border-radius: 3px;
+		border-style: none;
 	}
 	
 	.button {
@@ -142,6 +144,7 @@
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
 		border-radius: 3px;
+		border-style: none;
 	}
 	
 	.guestButton {
@@ -159,6 +162,7 @@
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
 		border-radius: 3px;
+		border-style: none;
 	}
 	.links {
 		top: 576px;
