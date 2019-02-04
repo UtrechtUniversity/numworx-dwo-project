@@ -5,6 +5,8 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONValue;
 import com.google.web.bindery.event.shared.EventBus;
+
+import fi.dwo.gwt.lib.rest.CallManagers.MD5;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.util.DomSingleSchoolStudentCodec;
 
@@ -31,6 +33,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -229,7 +232,7 @@ public class ImportPersonsPresenter {
     void submitImportStudents(JavaScriptObject json, String schoolClassID) {
       TaggedDomSchoolClass tagged = taggedSchoolClasses.get(schoolClassID);
       if(tagged == null) {
-        eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Registration_Required_Fields)));
+        eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.Rest_Active_SchoolClass_Not_Set)));
           return;
       }
       List<DomSingleSchoolStudent> personList = new ArrayList<>();
@@ -243,7 +246,8 @@ public class ImportPersonsPresenter {
       for(DomSingleSchoolStudent student: personList) {
         Promise<Boolean> promise;
         DomNewSingleSchoolStudent newStudent = new DomNewSingleSchoolStudent();
-        newStudent.setDomSingleSchoolStudent(student);
+        newStudent.setDomSingleSchoolStudent(student.duplicate());
+        newStudent.getDomSingleSchoolStudent().setPassword(MD5.md5(student.getPassword()));
         newStudent.setDomSchoolClass(schoolClass);
         promise = manager.submitSingleSchoolStudent(newStudent);
         promise = promise.then(p -> {
@@ -342,7 +346,9 @@ public class ImportPersonsPresenter {
       List<Promise<Boolean>> promises = new ArrayList<>(size);
       for(DomSingleSchoolStudent student: personList) {
         Promise<Boolean> promise;
-        promise = manager.submitTeacher(student);
+        DomUserFull teacher = student.duplicate();
+        teacher.setPassword(MD5.md5(student.getPassword()));
+        promise = manager.submitTeacher(teacher);
         promise = promise.then(p -> {
           if ( schoolClass != null) {
             DomSubmitTeacherToSchoolClass submit = new DomSubmitTeacherToSchoolClass();
