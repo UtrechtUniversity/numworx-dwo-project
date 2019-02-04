@@ -225,6 +225,8 @@ public class SchoolAdminPresenterFactory implements PresenterFactory {
 
   @Override
   public void setStage(int stage) {
+    getLoginPresenter().setStage(stage);
+
   }
 
   @Override @JsMethod

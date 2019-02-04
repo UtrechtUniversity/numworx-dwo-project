@@ -42,6 +42,7 @@ public class LoginPresenter {
     private Display view;
     private String defaultUsername = "";
     private String defaultPassword = "";
+    private int stage;
 
     private DwoLocalesForGWT resourceBindings = DwoLocalesForGWT.instance;
 
@@ -138,7 +139,7 @@ public class LoginPresenter {
             loginUser.then(new Success<DwoGlobalVars.DwoGlobalVarsState, Boolean>() {
                 @Override
                 public Promise<Boolean> call(Promise<DwoGlobalVars.DwoGlobalVarsState> resolved) throws Exception {
-                    if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn && !dwoGlobalVars.getCurrentUser().getSingleSchool()) {
+                    if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn && (stage >= 2 ||!dwoGlobalVars.getCurrentUser().getSingleSchool())) {
                         if (!dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
                             eventBus.fireEvent(new MessageDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
                         };
@@ -146,7 +147,7 @@ public class LoginPresenter {
                         LOG.log(Level.INFO, "login succeeded for user:" + dwoGlobalVars.getCurrentUser().getUniqueDisplayName());
                         try {
                             RoleType loginRole = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());    
-                            if (RoleType.TEACHER == loginRole || RoleType.SCHOOLADMIN == loginRole) {
+                            if (RoleType.TEACHER == loginRole || RoleType.SCHOOLADMIN == loginRole || RoleType.STUDENT == loginRole) {
                                 switchR = false;
                             }
                         } catch (Exception e) {
@@ -288,5 +289,12 @@ public class LoginPresenter {
             Date now = new Date();
             return now.before(s.getExpire());
         }
+    }
+
+    /**
+     * @param stage the stage to set
+     */
+    public void setStage(int stage) {
+      this.stage = stage;
     }
 }

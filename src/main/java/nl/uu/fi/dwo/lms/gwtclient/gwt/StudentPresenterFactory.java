@@ -2,8 +2,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import javax.inject.Inject;
 
-//import com.google.web.bindery.event.shared.EventBus;
-
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
@@ -32,38 +30,28 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 
-@RoleScope
-public class GuestPresenterFactory implements PresenterFactory {
-
-//  @Inject DwoGlobalVars dwoGlobalVars;
-//  @Inject EventBus eventBus;
+@RoleScope // one per Role change
+public class StudentPresenterFactory implements PresenterFactory {
   @Inject MainPresenter mainPresenter;
   @Inject LoginPresenter loginPresenter;
   @Inject AccountPresenter accountPresenter;
+  @Inject ModulesPresenter modulesPresenter;
+
   @Inject AlertDialogWithConfirmCancelPresenter alertDialogWithConfirmCancelPresenter;
   @Inject AlertDialogWithOKPresenter alertDialogWithOKPresenter;
   @Inject MessageDialogWithOKPresenter messageDialogWithOKPresenter;
   @Inject ProgressDialogWithAbortPresenter progressDialogWithAbortPresenter;
 
-  @Inject GuestPresenterFactory() {
+  @Inject StudentPresenterFactory() {
+    // TODO Auto-generated constructor stub
   }
-
-//  @Override
-//  public DwoGlobalVars getDwoGlobalVars() {
-//    return dwoGlobalVars;
-//  }
-//
-//  @Override
-//  public EventBus getEventBus() {
-//    return eventBus;
-//  }
 
   @Override @JsMethod
   public MainPresenter getMainPresenter() {
     return mainPresenter;
   }
 
-  @Override @JsMethod
+  @Override  @JsMethod
   public LoginPresenter getLoginPresenter() {
     return loginPresenter;
   }
@@ -80,37 +68,41 @@ public class GuestPresenterFactory implements PresenterFactory {
 
   @Override @JsMethod
   public SchoolclassesPresenter getSchoolclassesPresenter() {
+    // TODO Auto-generated method stub
     return null;
   }
 
-  @Override @JsMethod
+  @Override
   public EditSchoolclassPresenter getEditSchoolclassPresenter() {
+    // TODO Auto-generated method stub
     return null;
   }
 
   @Override @JsMethod
   public AddStudentToSchoolclassPresenter getAddStudentToSchoolclassPresenter() {
+    // TODO Auto-generated method stub
     return null;
   }
 
-  @Override @JsMethod
+  @Override
   public CopyOrMoveStudentToSchoolclassPresenter getCopyOrMoveStudentToSchoolclassPresenter() {
+    // TODO Auto-generated method stub
     return null;
   }
 
-  @Override @JsMethod
+  @Override
   public AddTeacherToSchoolclassPresenter getAddTeacherToSchoolclassPresenter() {
     return null;
   }
 
-  @Override @JsMethod
+  @Override
   public ModulesOfSchoolclassPresenter getModulesOfSchoolclassPresenter() {
     return null;
   }
 
   @Override @JsMethod
   public ModulesPresenter getModulesPresenter() {
-    return null;
+    return modulesPresenter;
   }
 
   @Override @JsMethod
@@ -128,38 +120,43 @@ public class GuestPresenterFactory implements PresenterFactory {
     return null;
   }
 
-  @Override @JsMethod
+  @Override
   public StudentScoResultPresenter getStudentScoResultPresenter() {
     return null;
   }
 
-  @Override @JsMethod
+  @Override
   public LogResultsPresenter getLogResultsPresenter() {
     return null;
   }
 
-  @Override @JsMethod
+  @Override
   public PersonsPresenter getPersonsPresenter() {
     return null;
   }
 
-  @Override @JsMethod
+  @Override
   public AddPersonPresenter getAddStudentPresenter() {
     return null;
   }
 
-  @Override @JsMethod
+  @Override
   public ImportPersonsPresenter getImportPersonsPresenter() {
     return null;
   }
 
-  @Override @JsMethod
+  @Override
   public EditStudentPresenter getEditStudentPresenter() {
     return null;
   }
 
-  @Override @JsMethod
+  @Override
   public EditTeacherPresenter getEditTeacherPresenter() {
+    return null;
+  }
+
+  @Override
+  public OrganisationPresenter getOrganisationPresenter() {
     return null;
   }
 
@@ -197,11 +194,6 @@ public class GuestPresenterFactory implements PresenterFactory {
   @Override
   public void setStage(int stage) {
     getLoginPresenter().setStage(stage);
-  }
-
-  @Override
-  public OrganisationPresenter getOrganisationPresenter() {
-    return null;
   }
 
 }

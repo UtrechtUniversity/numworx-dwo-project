@@ -15,8 +15,11 @@ public class JsMainView implements MainPresenter.Display{
     }
 
     @Override
-    public void setUserRole(RoleType userRole) {
-        JsMainDisplay.setUserRole(userRole.name());
+    public void setUserRole(RoleType userRole, boolean single) {
+        if (single && userRole == RoleType.STUDENT)
+          JsMainDisplay.setUserRole("SINGLESTUDENT");
+        else
+          JsMainDisplay.setUserRole(userRole.name());
     }
 
     @Override

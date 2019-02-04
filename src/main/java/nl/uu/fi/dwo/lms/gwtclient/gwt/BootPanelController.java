@@ -23,6 +23,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.GuestComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.PresenterBuilder;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.SchoolAdminComponent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.StudentComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.TeacherComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State;
@@ -52,7 +53,8 @@ public class BootPanelController {
     public void onLoginEvent(LoginEvent loginEvent) {
         final RoleType role = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
         final State state = loginEvent.getState();
-        resetPresenters(role); // changes in eventbus are not immediate
+        final boolean single = dwoGlobalVars.getCurrentUser().getSingleSchool();
+        resetPresenters(role,single); // changes in eventbus are not immediate
         Scheduler.get().scheduleDeferred(
             () -> {
                 switch (state) {
@@ -131,28 +133,34 @@ public class BootPanelController {
     @Inject
     SchoolAdminComponent.Builder schoolAdminBuilder;
     
+    @Inject StudentComponent.Builder studentBuilder;
+    
     private static native void jsResetMainApp() /*-{
       $wnd.jsResetMainApp()
     }-*/;
 
     
-    private void resetPresenters(RoleType role) {
+    private void resetPresenters(RoleType role, boolean single) {
         eventBus.removeHandlers();
         eventBus.addHandler(LoginEvent.TYPE, LOGIN_HANDLER);
         PresenterBuilder build;
         switch (role) {
           case TEACHER:
               build = teacherBuilder.build();
-              viewFactory.getMainView().setUserRole(role);
+              viewFactory.getMainView().setUserRole(role, false);
              break;
           case SCHOOLADMIN:
-            if (stage > 0) {
-             build = schoolAdminBuilder.build();
-             viewFactory.getMainView().setUserRole(role);
+              build = schoolAdminBuilder.build();
+             viewFactory.getMainView().setUserRole(role, false);
             break;
+          case STUDENT:
+            if (stage > 1) {
+              build = studentBuilder.build();
+              viewFactory.getMainView().setUserRole(role, single);
+              break;
             }
           default:
-            viewFactory.getMainView().setUserRole(RoleType.ANONYMOUS);
+            viewFactory.getMainView().setUserRole(RoleType.ANONYMOUS, false);
             build = guestBuilder.build();
         }
         presenterFactory = build.presenterFactory();

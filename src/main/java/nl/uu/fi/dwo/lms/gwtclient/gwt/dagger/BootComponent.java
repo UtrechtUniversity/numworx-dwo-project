@@ -19,6 +19,7 @@ public interface BootComponent {
 		TeacherComponent.Builder teacherBuilder();
 		SchoolAdminComponent.Builder schoolAdminBuilder();
 		GuestComponent.Builder guestBuilder();
+		StudentComponent.Builder studentBuilder();
 		
 //		Map<RoleType, PresenterBuilder> presenters();
 }

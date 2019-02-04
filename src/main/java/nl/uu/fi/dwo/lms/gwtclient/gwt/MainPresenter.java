@@ -38,8 +38,6 @@ public class MainPresenter {
 
         public void setSchoolName(String schoolName);
 
-        public void setUserRole(RoleType userRole);
-
         public void setPresentationName(String presentationName);
 
         public void showWelcomeView();
@@ -90,6 +88,8 @@ public class MainPresenter {
         public void showOrganisationView();
         
         public void showLogResultsView();
+
+        void setUserRole(RoleType userRole, boolean single);
     }
 
     private MainPresenter.Display display;

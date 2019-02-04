@@ -23,7 +23,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.organisation.OrganisationPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.LogResultsPresenter;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
-@Module(subcomponents = { TeacherComponent.class, SchoolAdminComponent.class, GuestComponent.class })
+@Module(subcomponents = { TeacherComponent.class, SchoolAdminComponent.class, GuestComponent.class, StudentComponent.class })
 abstract class BootModule {
 
     @Singleton @Provides static SimpleEventBus simpleEventBus() { // for Singleton eventHandlers
