@@ -195,11 +195,16 @@ public class ImportPersonsPresenter {
 
         String separator = "\t";
         if (! file.contains(separator)) separator = ";"; // no tab, then ;
-               
+        if (! file.contains(separator)) separator = ",";
         LOG.log(Level.INFO, "Read " + lines.length + " lines.");
         List<DomSingleSchoolStudent> personList = new ArrayList<>(lines.length);
         for (int i = 0; i < lines.length; i++) {
-            String[] cols = lines[i].split(separator);
+            String[] cols;
+            boolean quote = lines[i].contains("\"");
+            if (quote) 
+              cols = quoted(lines[i], separator.charAt(0));
+            else 
+              cols = lines[i].split(separator);
             LOG.log(Level.INFO, "Read " + cols.length + " columns.");
             
             if(cols.length < 6) {
@@ -228,6 +233,44 @@ public class ImportPersonsPresenter {
     }
 
     
+    private String[] quoted(String string, char separator) {
+      ArrayList<String> list = new ArrayList<String>(6);
+      int state = 0;
+      StringBuilder builder = new StringBuilder();
+      for (char ch: string.toCharArray()) {
+        switch(state) {
+          case 2:
+            if (ch == '"') {
+              builder.append(ch); state = 1;
+              break;
+            }
+            state = 0;
+          case 0:
+            if (ch == separator) {
+              list.add(builder.toString()); builder.setLength(0);
+            } else if (ch == '"') {
+              state = 1;
+            } else {
+              builder.append(ch);
+            }
+            break;
+          case 1: 
+              if (ch == '"') {
+                state = 2;
+              } else {
+                builder.append(ch);
+              }
+              break;
+        }
+        
+        
+      }
+      if ( builder.length() > 0) {
+        list.add(builder.toString());
+      }
+      return list.toArray(new String[list.size()]);
+    }
+
     @JsMethod
     void submitImportStudents(JavaScriptObject json, String schoolClassID) {
       TaggedDomSchoolClass tagged = taggedSchoolClasses.get(schoolClassID);
