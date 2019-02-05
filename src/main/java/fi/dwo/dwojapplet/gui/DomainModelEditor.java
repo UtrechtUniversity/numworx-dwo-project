@@ -69,7 +69,7 @@ public class DomainModelEditor extends JPanel implements ActionListener, Scrolla
     private void popup() {
       String t = JOptionPane.showInputDialog(field, field.getText(), field.getToolTipText());
       if(t != null) 
-        field.setToolTipText(t);
+        field.setToolTipText(wrap(t));
     }
 
     @Override
@@ -325,22 +325,41 @@ public class DomainModelEditor extends JPanel implements ActionListener, Scrolla
            title = info.getTitle().get(string);
            if (title != null) objectiveTextFields[i][j].setText(title);
            if (info.getDescription().containsKey(string))
-             objectiveTextFields[i][j].setToolTipText(info.getDescription().get(string));
+             objectiveTextFields[i][j].setToolTipText(wrap(info.getDescription().get(string)));
          }
          DomStudentModelContextInfo info = cat.getInfo();
          title = info.getTitle().get(string);
          if (title != null) categoryTextFields[i].setText(title);
          if (info.getDescription().containsKey(string))
-           categoryTextFields[i].setToolTipText(info.getDescription().get(string));
+           categoryTextFields[i].setToolTipText(wrap(info.getDescription().get(string)));
        }
 
 	   DomStudentModelContextInfo info = model.getInfo();
        title = info.getTitle().get(string);
        if (title != null) modelTextField.setText(title);
        if (info.getDescription().containsKey(string))
-         modelTextField.setToolTipText(info.getDescription().get(string));     
+         modelTextField.setToolTipText(wrap(info.getDescription().get(string)));     
        locale = string;
        repaint();
+  }
+
+  private String wrap(String string) {
+    if (true) return string;
+ // werkt niet! is alleen write-only, niet read-write   
+    if (string != null && string.length() > 30) {
+       string = string.replace("&", "&amp;").replace("<", "&lt;").replace(">","&gt");
+      int space = string.indexOf(" ");
+      int start = 0;
+      while(space >=0) {
+        if (space - start > 30) {
+          string = string.substring(0, space) + "<br>" + string.substring(space + 1);
+          start = space + 3;
+        }
+        space = string.indexOf(" ", space+1);
+      }
+      string = "<html>" + string + "</html>";
+    }
+    return string;
   }
 
   private DomStudentModelObj newDomStudentModelObj() {
@@ -427,7 +446,7 @@ public class DomainModelEditor extends JPanel implements ActionListener, Scrolla
     title = model.getInfo().getTitle().getOrDefault(locale, "");
     descr = model.getInfo().getDescription().get(locale);
     modelTextField.setText(title);
-    modelTextField.setToolTipText(descr);
+    modelTextField.setToolTipText(wrap(descr));
     
     List<DomStudentModelCategory> list = model.getCategories();
     aantalKolommen = list.size();
@@ -442,7 +461,7 @@ public class DomainModelEditor extends JPanel implements ActionListener, Scrolla
       title = cat.getInfo().getTitle().getOrDefault(locale, columnLabel + " "  + (i+1));
       categoryTextFields[i].setText(title);
       descr = cat.getInfo().getDescription().get(locale);
-      categoryTextFields[i].setToolTipText(descr);
+      categoryTextFields[i].setToolTipText(wrap(descr));
       int rijen = cat.getObjectives().size();
       JTextField[] objectiveTextField = objectiveTextFields[i];
       List<DomStudentModelObj> objectives = cat.getObjectives();
@@ -451,7 +470,7 @@ public class DomainModelEditor extends JPanel implements ActionListener, Scrolla
         String label = obj.getInfo().getTitle().getOrDefault(locale, "");
         objectiveTextField[j].setText(label);
         descr = obj.getInfo().getDescription().get(locale);
-        objectiveTextField[j].setToolTipText(descr);
+        objectiveTextField[j].setToolTipText(wrap(descr));
       }
       for (int j = rijen; j < objectiveTextField.length; j++) {
         objectiveTextField[j].setText("");
