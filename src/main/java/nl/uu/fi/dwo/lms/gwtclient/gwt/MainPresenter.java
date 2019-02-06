@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 
 import jsinterop.annotations.JsMethod;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
@@ -111,6 +112,11 @@ public class MainPresenter {
         this.display = display;
     }
 
+    @JsMethod
+    public void onArrowUp() {
+      selectView(SelectedView.ARROWUP);
+    }
+    
     @JsMethod
     public void selectView(String selectedView) {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.valueOf(selectedView)));

@@ -99,6 +99,7 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
               controller.authToken = null;
               presenterFactory.getLoginPresenter().tokenLogin(token, controller.user_id, controller.org_id);
           }
+        case ARROWUP:
           break;
       }
   }

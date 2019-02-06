@@ -218,6 +218,11 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     @Override
     public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
       SelectedView select = switchViewEvent.getEventValue();
+      if (select == SelectedView.ARROWUP) {
+        LOG.info("sending arrowUp message");
+        view.sendMessage(SelectedView.ARROWUP.name());
+        return;
+      } 
       if(select == SelectedView.WELCOME) {
         LOG.fine( "old role "  + roleId);
         PersistenceId newRole = dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole().getId();

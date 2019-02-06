@@ -69,7 +69,8 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         MODULES,
         MODULESVIEW,
         ORGANISATION,
-        BACKTORESULTS
+        BACKTORESULTS,
+        ARROWUP
         // ACTIVERESULTS,
         // SCORESULTS,
         // COURSESOFSCHOOLCLASS,
