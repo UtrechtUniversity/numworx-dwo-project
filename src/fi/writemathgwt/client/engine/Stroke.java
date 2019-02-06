@@ -170,6 +170,21 @@ public class Stroke {
 		return parsePoints;
 	}
 	
+	public String getTestCode() {
+		String text = "{";
+		for(int i = 0 ; i < parsePoints.size() ; i++) {
+			if(i>0)
+				text = text+",";
+			text = text + (int)Math.rint(100*(parsePoints.get(i).getX()-parsePointsBox.x));
+			text = text+",";
+			text = text + (int)Math.rint(100*(parsePoints.get(i).getY()-parsePointsBox.y));
+		}
+		text = text+"}";
+		
+		String samplesText = "int[] sample_="+text+";samples.add(sample_);";
+		return samplesText;
+	}
+	
 	public long getTimeStamp() {
 		return timeStamp;
 	}
