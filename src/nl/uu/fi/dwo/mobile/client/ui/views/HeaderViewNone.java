@@ -1,18 +1,30 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
+import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
+import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
-public class HeaderViewNone extends HTML implements HeaderView {
+@Singleton
+public class HeaderViewNone extends HTML implements HeaderView, MessageEventHandler {
+
+  @Inject
+  public HeaderViewNone(EventBus eventBus) {
+    eventBus.addHandler(MessageEvent.TYPE, this);
+  }
 
   @Override
   public void setUserAndRole(DomUserFull currentUser, RoleType roleType) {
@@ -26,6 +38,7 @@ public class HeaderViewNone extends HTML implements HeaderView {
 
   @Override
   public void setUpPlace(Place upPlace) {
+    this.upPlace = upPlace;
   }
 
   @Override
@@ -35,6 +48,8 @@ public class HeaderViewNone extends HTML implements HeaderView {
 
   private Widget root;
   private NavigationView navigation;
+  private GotoController presenter;
+  private Place upPlace = homePlace;
   
   @Override
   public void hide() {
@@ -64,6 +79,15 @@ public class HeaderViewNone extends HTML implements HeaderView {
 
 @Override
 public void setPresenter(GotoController presenter) {
+  this.presenter = presenter;
+}
+
+@Override
+public void onMessage(MessageEvent event) {
+  if (Actions.ARROWUP.name().equals(event.getMessage())) {
+    presenter.goTo(upPlace);
+  }
+  
 }
 
 }

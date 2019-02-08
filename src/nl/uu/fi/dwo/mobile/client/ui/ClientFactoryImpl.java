@@ -71,7 +71,8 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	{
 	  if (Actions.isAvailable() )
 	  {
-	    HeaderViewNone headerViewNone = new HeaderViewNone();
+	    HeaderViewNone headerViewNone = new HeaderViewNone(getEventBus());
+	    headerViewNone.setPresenter(this);
 	    headerView = () -> headerViewNone;
 	  } else {
         HeaderViewNumworx impl = new HeaderViewNumworx(getEventBus());

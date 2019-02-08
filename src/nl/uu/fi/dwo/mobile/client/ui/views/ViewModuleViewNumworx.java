@@ -77,7 +77,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		if(DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB) {
 			removeBtns();
 		}
-		up2Btn.setVisible(Actions.isAvailable());
+		up2Btn.setVisible(false && Actions.isAvailable());
 		root.forceLayout();
 	}
 
@@ -242,9 +242,10 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		}
 
 		if(!trail.isEmpty())
-			upId = trail.get(0).getID();
+			upId = new TreeModulePlace(trail.get(0).getID());
 		else
-			upId = null;
+			upId = new TreeModulePlace();
+		DWOplayer.clientfactory.getHeaderView().setUpPlace(upId);
 	}
 	
 	private void clearKruimels() {
@@ -262,14 +263,12 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 		goTo(new TreeModulePlace());
 	}
 	
-	private Object upId;
+	private TreeModulePlace upId = new TreeModulePlace();
 	private Presenter presenter;
 	@UiHandler({"upBtn","up2Btn"})
 	void onUpBtn(ClickEvent ev) {
 	    ev.stopPropagation();
-		Object parent = upId;
-		if(parent == null) parent = "0";
-		goTo(new TreeModulePlace(parent));
+		goTo(upId);
 	}
 
 	@Override
