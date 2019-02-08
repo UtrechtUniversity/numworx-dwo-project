@@ -107,6 +107,7 @@ public class Stroke {
 		for(int i = 0 ; i < points.size() ; i++) {
 			parsePoints.add(new DoublePoint(points.get(i).getX(), points.get(i).getY()));
 		}
+		length = 2.5*getLength(parsePoints);
 		parsePointsBox = makeParsingBox(parsePoints);
 		angles = new double[parsePoints.size()-1];
 		makeAngles();
