@@ -91,6 +91,8 @@ public class MainPresenter {
         public void showLogResultsView();
 
         void setUserRole(RoleType userRole, boolean single);
+
+        public void showStudentSchoolclassView();
     }
 
     private MainPresenter.Display display;

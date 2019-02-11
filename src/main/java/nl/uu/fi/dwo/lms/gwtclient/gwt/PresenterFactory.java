@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentSchoolclassPresenter;
+
 import com.google.web.bindery.event.shared.EventBus;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
@@ -42,6 +44,7 @@ public interface PresenterFactory {
     public AccountPresenter getAccountPresenter();
     public SchoolclassesPresenter getSchoolclassesPresenter();
     public EditSchoolclassPresenter getEditSchoolclassPresenter();
+    public StudentSchoolclassPresenter getStudentSchoolclassPresenter();
     public AddStudentToSchoolclassPresenter getAddStudentToSchoolclassPresenter();
     public CopyOrMoveStudentToSchoolclassPresenter getCopyOrMoveStudentToSchoolclassPresenter();
     public AddTeacherToSchoolclassPresenter getAddTeacherToSchoolclassPresenter();

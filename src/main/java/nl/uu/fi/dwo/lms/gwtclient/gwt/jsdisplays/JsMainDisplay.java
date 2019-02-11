@@ -91,4 +91,6 @@ public class JsMainDisplay {
     public static native void  showOrganisationView();
     /** Show the log results panel */
     public static native void showLogResultsView();
+    /** show student's schoolclass view */
+    public static native void showStudentSchoolclassView();
 }

@@ -5,6 +5,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentSchoolclassPresenter;
 
 import javax.inject.Inject;
 
@@ -355,6 +356,12 @@ public class PresenterFactoryGwt implements PresenterFactory {
 
     @Override
     public OrganisationPresenter getOrganisationPresenter() {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public StudentSchoolclassPresenter getStudentSchoolclassPresenter() {
       // TODO Auto-generated method stub
       return null;
     }

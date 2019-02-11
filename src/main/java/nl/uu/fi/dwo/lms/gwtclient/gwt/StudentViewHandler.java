@@ -43,12 +43,8 @@ public class StudentViewHandler implements SwitchViewEventHandler {
         presenterFactory.getAccountPresenter().init();
         break;
       case SCHOOLCLASSES:
-          mainView.showSchoolclassesView();
-          presenterFactory.getSchoolclassesPresenter().init();
-          break;
-      case ADDSTUDENTTOSCHOOLCLASS:
-          mainView.showAddStudentToSchoolClassView();
-          presenterFactory.getAddStudentToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
+          mainView.showStudentSchoolclassView();
+          presenterFactory.getStudentSchoolclassPresenter().init();
           break;
       case LOGIN:
         mainView.showLoginView();
