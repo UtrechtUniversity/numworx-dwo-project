@@ -20,6 +20,10 @@
   		<param-name>fi.dwo.server.rest.smtp.email</param-name>
  		<param-value>wim@fi.uu.nl</param-value>
   	</init-param>
+  	<init-param>
+  		<param-name>register.free</param-name>
+  		<param-value>/RegisterFree.html</param-value>
+  	</init-param>
   </servlet>
   <servlet>
     <servlet-name>appdwo</servlet-name>

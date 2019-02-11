@@ -76,7 +76,7 @@ private ResourceBundle mailrb;
     url.append("?j=").append(jwt);
     MimeMessage message = new MimeMessage(session);
 //FIXME i18n         
-    content += MessageFormat.format(mailrb.getString("mail.body"), url);
+    content += MessageFormat.format(mailrb.getString("mail.body"), url, givenName, insertion, familyName);
     message.setContent(content, mailrb.getString("mail.mime"));
     message.setFrom(smtpEmail);
     message.setSubject(mailrb.getString("mail.subject"));
@@ -195,6 +195,11 @@ private ResourceBundle mailrb;
     cookie = new Cookie("familyName", u(familyName));
     resp.addCookie(cookie);
     cookie = new Cookie("suggestion", u(suggestion));
+    resp.addCookie(cookie);
+    
+    cookie = new Cookie("next", u(mailrb.getString("next")));
+    resp.addCookie(cookie);
+    cookie = new Cookie("cancel", u(mailrb.getString("cancel")));
     resp.addCookie(cookie);
 
   

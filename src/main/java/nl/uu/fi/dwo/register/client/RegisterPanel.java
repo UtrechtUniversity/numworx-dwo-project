@@ -92,7 +92,7 @@ public class RegisterPanel extends ResizeComposite {
 		
 	}
 
-	private String getCookie(String string) {
+	static String getCookie(String string) {
 		String result = Cookies.getCookie(string);
 		LOG.info("VOOR " + string + "="  + result);
 		if (result == null) return null;
