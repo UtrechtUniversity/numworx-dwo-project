@@ -39,7 +39,7 @@ public class Register implements EntryPoint, Command {
         }
         String cancel = Window.Location.getParameter("cancel");
         if (cancel == null) {
-        	next = getCookie("cancel");
+        	cancel = getCookie("cancel");
         	Cookies.removeCookie("cancel");
         }
         if(next != null)
