@@ -3943,7 +3943,12 @@ private Object CamelCase(String name) {
 
 							if (sleepSnap)
 							{
-								if (!in && isBinnenMarge(sleepDoelen[i])) // check of erbuiten valt maar binnen de marge
+								if (in)
+								{
+									snapped = true;
+									break;
+								}
+								else if (!in && isBinnenMarge(sleepDoelen[i])) // check of erbuiten valt maar binnen de marge
 								{
 									Point p = findLocationWithin(sleepDoelen[i]);
 									locationX = (int) p.getX();
@@ -3952,11 +3957,6 @@ private Object CamelCase(String name) {
 									snapped = true;
 									break;
 								}
-							}
-							else if (in)
-							{
-								snapped = true;
-								break;
 							}
 						}
 						if (!snapped && relocate)
