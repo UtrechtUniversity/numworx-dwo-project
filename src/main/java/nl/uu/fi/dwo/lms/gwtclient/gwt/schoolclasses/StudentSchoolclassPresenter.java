@@ -10,10 +10,13 @@ import javax.inject.Inject;
 import org.osgi.util.promise.Failure;
 
 import com.google.gwt.uibinder.elementparsers.IsEmptyParser;
+import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 
+import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -35,6 +38,8 @@ public class StudentSchoolclassPresenter {
 
     private DomSchoolClass active;
     private List<DomSchoolClass> list;
+
+    private Map<String, TaggedDomSchoolClass> schoolClasses = new HashMap<>();
     
 
     public interface Display extends BasicDisplay {
@@ -58,10 +63,11 @@ void setSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses);
       active = dwoGlobalVars.getCurrentSchoolClass();
       manager.getStudentsSchoolClasses().then(p -> { 
         list = p.getValue();
+        schoolClasses.clear();        
         if (list.isEmpty()) 
           view.setEmptyTableMessage();
         else {
-          Map<String, TaggedDomSchoolClass> schoolClasses = new HashMap<>();
+          
           list.forEach(item -> {
             String key = item.getId().getIdString();
             TaggedDomSchoolClass value = new TaggedDomSchoolClass(item);
@@ -82,4 +88,22 @@ void setSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses);
         view.setHelp(dwoGlobalVars.buildHelpUrl("#studentSchoolclass"));
    }
 
+    @JsMethod public void switchSchoolclass(String id) {
+      final TaggedDomSchoolClass tag = schoolClasses.get(id);
+      if (tag != null) {
+        manager.setCurrentSchoolClass(tag.getSchoolClass()).then(
+          p -> { 
+            if (p.getValue().booleanValue()) {
+              dwoGlobalVars.getActiveSchoolRoleAndClass().setSchoolClass(tag.getSchoolClass());
+              Event<?> event = new LoginEvent(LoginEvent.State.SUCCESS_WELCOME);
+              eventBus.fireEvent(event);
+            }
+             return null;
+          }, FAILURE);
+      }
+    }
+    
+    @JsMethod public void removeASchoolclass(String id) {
+      
+    }
 }

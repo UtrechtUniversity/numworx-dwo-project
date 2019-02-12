@@ -33,6 +33,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEventHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -58,7 +59,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     private String url="/dwo/tablet/DWOplayer.jsp";
     @Inject AccountService account;
     private Promise<String> init;
-    private PersistenceId roleId;
+    private PersistenceId roleId, schoolClassId;
     @Inject Lazy<BootPanelController> controller; // lazy anders cycle
 
     private HandlerRegistration register;
@@ -128,6 +129,8 @@ public class ModulesPresenter implements SwitchViewEventHandler {
       view.clear();
       view.init();
       roleId = dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole().getId();
+      DomSchoolClass klas = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchoolClass();
+      schoolClassId = klas == null ? null : klas.getId();
       LOG.fine("role = " + roleId);
       init = account.getBearerToken().then(this::gotToken,FAILURE);
     }
@@ -226,10 +229,13 @@ public class ModulesPresenter implements SwitchViewEventHandler {
       if(select == SelectedView.WELCOME) {
         LOG.fine( "old role "  + roleId);
         PersistenceId newRole = dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole().getId();
-        LOG.fine(" new role " + newRole);
-        if (!newRole.equals(roleId))
+        DomSchoolClass klas = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchoolClass();
+        PersistenceId newSchoolClass = klas == null ? null : klas.getId();
+        LOG.fine(" new role " + newRole + " new klas = " + newSchoolClass);
+        if (!equals(roleId, newRole) || !equals(schoolClassId, newSchoolClass) )
         { LOG.info("hasRole changed"); 
           roleId = null;
+          schoolClassId = null;
           init = null;
           view.clear();
           if(register != null) {
@@ -246,5 +252,10 @@ public class ModulesPresenter implements SwitchViewEventHandler {
       LOG.info("switch " + select);
       view.setMainNavVisible(true);
       view.sendMessage(SHOWMAINNAV);
+    }
+
+    private static boolean equals(PersistenceId id1, PersistenceId id2) {
+      if (id1 == null) return id2 == null;
+      return id1.equals(id2);
     }
 }
