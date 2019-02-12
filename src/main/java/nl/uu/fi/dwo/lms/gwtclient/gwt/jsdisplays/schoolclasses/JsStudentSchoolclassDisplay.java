@@ -50,5 +50,6 @@ public class JsStudentSchoolclassDisplay{
     public static native void setEmptyTableMessage();
 
     public static native void setSchoolClasses(JavaScriptObject data);
+    public static native void showSchoolClasses(JavaScriptObject data);
 
 }

@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 import com.google.gwt.json.client.JSONObject;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.account.JsAccountDisplay;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.organisation.JsOrganisationDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.persons.JsEditPersonDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClassCodec;
@@ -56,6 +57,13 @@ public class JsStudentSchoolClassView implements StudentSchoolclassPresenter.Dis
         JSONObject json = new JSONObject();
         schoolClasses.forEach((k,v) -> {json.put(k, TaggedDomSchoolClassCodec.CODEC.encode(v).isObject());});        
         JsStudentSchoolclassDisplay.setSchoolClasses(json.getJavaScriptObject());
+    }
+
+    @Override
+    public void showSchoolClasses(Map<String, TaggedDomSchoolClass> schoolClasses) {
+      JSONObject json = new JSONObject();
+      schoolClasses.forEach((k,v) -> {json.put(k, TaggedDomSchoolClassCodec.CODEC.encode(v));});        
+      JsStudentSchoolclassDisplay.showSchoolClasses(json.getJavaScriptObject());
     }
 
 }
