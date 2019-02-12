@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
+import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -47,7 +48,7 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
  * 
  */
 public class ViewModuleActivity extends AbstractActivity implements AnchorContext, ViewModuleView.Presenter, 
-  CBookEventListener, MessageEventHandler
+  CBookEventListener, MessageEventHandler, GotoController
 {
 	private ClientFactory clientFactory;
 	private ViewModuleView view;
@@ -121,6 +122,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			view.setTitle(sco.getName());
 			view.setScoType(sco.getScoType());
 			view.setPresenter(this);
+			clientFactory.getHeaderView().setPresenter(this);
 			defaultContext = view.getAnchorContext();
 			view.setAnchorContext(this);
 			view.setUnitId(id);
@@ -165,6 +167,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 
 	@Override
 	public void onStop() {
+		clientFactory.getHeaderView().setPresenter((GotoController) clientFactory); // FIXME ONS KENT ONS
 		if (tm != null) {
 			tm.cancel();
 			tm = null;
