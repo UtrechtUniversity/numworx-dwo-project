@@ -145,7 +145,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
             applet.init();
             appletStart();
             validate();
-        } catch (RuntimeException e) {
+        } catch (Throwable e) {
             // TODO Applet is niet gestart!
             // Dialog: interne fout, sco niet goed geïnitialiseerd.
             LOG.log(Level.SEVERE,null,e);

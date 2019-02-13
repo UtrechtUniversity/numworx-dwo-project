@@ -43,7 +43,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
-final class ClassTeacherModules {
+final public class ClassTeacherModules {
 
   Map<String,MyCourse> cache = new TreeMap<>();
   
