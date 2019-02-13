@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.TreeMap;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
-
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 
@@ -25,14 +23,65 @@ import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 
 public class DomainModelEditor extends JPanel implements ActionListener, Scrollable
 {
-	private static final Dimension TEXTFIELD_SIZE = new Dimension(180,20);
-    private JTextField[][] objectiveTextFields;
+    static class Model {
+      JTextField field;
+      ToolTipEditor editor;
+      String tip; // plain.
+      
+      Model(String value, String tip) {
+        field = new JTextField(value);
+        field.setPreferredSize(TEXTFIELD_SIZE);
+        field.setOpaque(true);
+        this.tip = tip;
+        editor = new ToolTipEditor(this);
+      }
+      public Model(String string) {
+        this(string, null);
+      }
+      void setText(String text) {
+        field.setText(text);
+      }
+      void setToolTip(String tip) {
+        field.setToolTipText(wrap(tip));
+        this.tip = tip;
+      }
+      
+      String getText() {
+        return field.getText();
+      }
+      String getToolTip() {
+        return tip;
+      }
+
+      private static String wrap(String string) {      
+        // is alleen write-only, niet read-write   
+           if (string != null && string.length() > 30) {
+              string = string.replace("&", "&amp;").replace("<", "&lt;").replace(">","&gt");
+             int space = string.indexOf(" ");
+             int start = 0;
+             while(space >=0) {
+               if (space - start > 30) {
+                 string = string.substring(0, space) + "<br>" + string.substring(space + 1);
+                 start = space + 3;
+               }
+               space = string.indexOf(" ", space+1);
+             }
+             string = "<html>" + string + "</html>";
+           }
+           return string;
+         }
+    
+    }
+  
+  
+  
+  
+    private static final Dimension TEXTFIELD_SIZE = new Dimension(180,20);
+    private Model[][] objectiveTextFields;
 	private JLabel[] objectiveLabels;
-	private JTextField[] categoryTextFields;
-	private JTextField modelTextField;
+	private Model[] categoryTextFields;
+	private Model modelTextField;
 	private JComboBox<String> localeBox;
-	
-	//private String[] categorieString;
 	
 	private int maxObjectives  = 20;
 	private int maxCategories = 10; // Sietske heeft er 7 in haar nieuwe domainmodel
@@ -40,48 +89,53 @@ public class DomainModelEditor extends JPanel implements ActionListener, Scrolla
 	int aantalKolommen = 1;
 	PlusMinKnop aantalRijenKnop;
 	PlusMinKnop aantalKolommenKnop;
-	//private String[][] objectives;
-//	private JButton okButton; 
-//	private JButton cancelButton;
 	
 	JPanel objectivesPanel = this;
-//	JPanel bottomPanel = new JPanel();
 	
 	private String rowLabel;
 	private String columnLabel;
 
-	private class ToolTipEditor extends MouseAdapter {
+  private static class ToolTipEditor extends MouseAdapter {
 
-	    private JTextField field;
-	  
-    private ToolTipEditor(JTextField field) {
-        this.field = field;
-        field.addMouseListener(this);
-      }
+    private Model model;
+    private JTextArea area;
+    private JScrollPane pane;
+
+    private ToolTipEditor(Model model) {
+      this.model = model;
+      model.field.addMouseListener(this);
+      area = new JTextArea(4, 30);
+      area.setWrapStyleWord(true);
+      area.setLineWrap(true);
+      pane = new JScrollPane(area, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+          JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+      pane.setMaximumSize(new Dimension(320, 200)); // Single size!
+      pane.setMinimumSize(pane.getMaximumSize());
+      pane.setPreferredSize(pane.getMaximumSize());
+    }
 
     @Override
     public void mousePressed(MouseEvent e) {
-      if(e.isPopupTrigger()) {
+      if (e.isPopupTrigger()) {
         popup();
       }
     }
 
     private void popup() {
-      String t = JOptionPane.showInputDialog(field, field.getText(), field.getToolTipText());
-      if(t != null) 
-        field.setToolTipText(t);
+      area.setText(model.getToolTip());
+      int r = JOptionPane.showConfirmDialog(model.field, pane, model.getText(),
+          JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+      if (r == JOptionPane.OK_OPTION) {
+        model.setToolTip(area.getText());
+      }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-      if (e.isPopupTrigger())
-        popup();
+      if (e.isPopupTrigger()) popup();
     }
-	  
-	}
-	
-	
-	
+
+  }
 	
 	DomainModelEditor() {
 	  this(TextMapper.getText("OBJ_leerdoel"), TextMapper.getText("OBJ_categorie"));
@@ -96,72 +150,24 @@ public class DomainModelEditor extends JPanel implements ActionListener, Scrolla
 		this.rowLabel = rowLabel;
 		this.columnLabel = columnLabel;
 	}
-			
-//	private void makeObjects(){   
-//    	objectives = null;
-//    	String[] newObjects = null;
-//    	for(int j=0 ; j<maxCategories ; j++)
-//    	{	String checkObject = objectiveTextFields[j][0].getText();
-//   			if(checkObject==null || "".equals(checkObject.trim()))
-//   			{	objectives = new String[j][];
-//   				break;
-//   			}
-//   			if(objectives == null)
-//   				objectives = new String[maxCategories][];
-//    	}
-//    	for(int j=0 ; j<objectives.length ; j++)
-//    	{	newObjects = new String[maxObjectives];
-//	        for(int i=0 ; i<maxObjectives ; i++){   
-//	        	String checkObject = objectiveTextFields[j][i].getText();
-//	       		if(checkObject!=null && !"".equals(checkObject.trim())){	
-//	       			newObjects[i] = checkObject;
-//	            }
-//	            else{   
-//	            	objectives[j] = new String[i];
-//	            	break;
-//	            }
-//	        }
-//	        if(objectives[j]==null){
-//	        	objectives[j] = new String[maxObjectives];
-//	        }
-//	        for(int i=0 ; i<objectives[j].length ; i++){
-//	        	objectives[j][i] = newObjects[i];
-//	        }
-//    	}
-//    	categorieString = null;
-//    	categorieString = new String[objectives.length];
-//    	for(int i = 0; i < objectives.length; i++)
-//    	{	categorieString[i] = categoryTextFields[i].getText();
-//    		if(categorieString[i].equals(columnLabel + " "  + (i+1)))
-//    			categorieString[i] = "";
-//    	}	
-//    }
-            
+
     public void makeTextFields()
-    {	objectiveTextFields = new JTextField[maxCategories][maxObjectives];
+    {	objectiveTextFields = new Model[maxCategories][maxObjectives];
 	    objectiveLabels = new JLabel[maxObjectives];
-	    categoryTextFields = new JTextField[maxCategories];
+	    categoryTextFields = new Model[maxCategories];
 	    for(int j = 0; j < maxCategories; j++)
-	    {	categoryTextFields[j] = new JTextField(columnLabel + " "  + (j+1));
-	    	categoryTextFields[j].setPreferredSize(TEXTFIELD_SIZE);
-	    	categoryTextFields[j].setOpaque(true);
-	    	new ToolTipEditor(categoryTextFields[j]);
+	    {	categoryTextFields[j] = new Model(columnLabel + " "  + (j+1));
 	    }
 	    for(int i=0 ; i<maxObjectives ; i++)
 	    {	objectiveLabels[i] = new JLabel(rowLabel + " " +(i+1));
 	   		objectiveLabels[i].setPreferredSize(new Dimension(100,20));
 	   		for(int j = 0; j<maxCategories; j++)
-	        {	objectiveTextFields[j][i] = new JTextField("");
-	        	objectiveTextFields[j][i].setPreferredSize(TEXTFIELD_SIZE);
-	        	objectiveTextFields[j][i].setOpaque(true);
-	        	new ToolTipEditor(objectiveTextFields[j][i]);
+	        {	objectiveTextFields[j][i] = new Model("");
 	        }
 	    }
-	    modelTextField = new JTextField();
-	    modelTextField.setPreferredSize(TEXTFIELD_SIZE);
-	    modelTextField.setOpaque(true);
-	    modelTextField.setMaximumSize(new Dimension(360,20));
-	    new ToolTipEditor(modelTextField);
+	    modelTextField = new Model("");
+	    
+	    modelTextField.field.setMaximumSize(new Dimension(360,20));
 	    localeBox = new JComboBox<>(new String[] { "nl", "en", "fr", "de" });
 	    localeBox.setSelectedItem(locale);
 	    localeBox.setPreferredSize(TEXTFIELD_SIZE);
@@ -180,7 +186,7 @@ public class DomainModelEditor extends JPanel implements ActionListener, Scrolla
 		Box boxh1 = Box.createHorizontalBox();
 		Box boxv = Box.createVerticalBox();
  
-        boxh1.add(modelTextField);
+        boxh1.add(modelTextField.field);
         boxh1.add(Box.createHorizontalStrut(10));
         boxh1.add(localeBox);
         boxh1.add(Box.createHorizontalGlue());      
@@ -193,8 +199,8 @@ public class DomainModelEditor extends JPanel implements ActionListener, Scrolla
         
         for(int j = 0; j < aantalKolommen; j++)
         {
-          boxh.add(categoryTextFields[j]);
-          categoryTextFields[j].repaint();
+          boxh.add(categoryTextFields[j].field);
+          categoryTextFields[j].field.repaint();
         }
         
         boxv.add(boxh);
@@ -204,8 +210,8 @@ public class DomainModelEditor extends JPanel implements ActionListener, Scrolla
         	boxh.add(objectiveLabels[i]);
         	for(int j = 0; j < aantalKolommen; j++)
         	{
-        	  boxh.add(objectiveTextFields[j][i]);
-        	  objectiveTextFields[j][i].repaint();
+        	  boxh.add(objectiveTextFields[j][i].field);
+        	  objectiveTextFields[j][i].field.repaint();
         	}
         	boxv.add(boxh);
         }
@@ -244,10 +250,10 @@ public class DomainModelEditor extends JPanel implements ActionListener, Scrolla
         public void zetTextFieldsZichtbaar(boolean b){
     	
     	for(int i = 1; i < maxCategories; i++)
-    	{	categoryTextFields[i].setVisible(b);
+    	{	categoryTextFields[i].field.setVisible(b);
     		for(int j = 0; j < maxObjectives; j++)
     		{	objectiveTextFields[i][j].setText("");
-    			objectiveTextFields[i][j].setVisible(b);
+    			objectiveTextFields[i][j].field.setVisible(b);
     		}
     	}
     }
@@ -309,39 +315,40 @@ public class DomainModelEditor extends JPanel implements ActionListener, Scrolla
 	
 	private void switchModel(String string) {
 	  String title;
-	   setInfo(model.getInfo(), modelTextField.getText(), modelTextField.getToolTipText());
+	   setInfo(model.getInfo(), modelTextField.getText(), modelTextField.getToolTip());
        List<DomStudentModelCategory> categories = model.getCategories();
 	   for( int i = 0; i < aantalKolommen; i++ ) {
          if (i >= categories.size()) categories.add(newDomStudentModelCategory());
          DomStudentModelCategory cat = categories.get(i);
          String text = categoryTextFields[i].getText(); // XXX empty tekst
-         setInfo(cat.getInfo(), text, categoryTextFields[i].getToolTipText());
+         setInfo(cat.getInfo(), text, categoryTextFields[i].getToolTip());
          List<DomStudentModelObj> objectives = cat.getObjectives();
          for (int j = 0; j < aantalRijen; j++) {
            if (j >= objectives.size()) objectives.add(newDomStudentModelObj());
            DomStudentModelObj obj = objectives.get(j);
            DomStudentModelContextInfo info = obj.getInfo();
-           setInfo(info, objectiveTextFields[i][j].getText(), objectiveTextFields[i][j].getToolTipText());
+           setInfo(info, objectiveTextFields[i][j].getText(), objectiveTextFields[i][j].getToolTip());
            title = info.getTitle().get(string);
            if (title != null) objectiveTextFields[i][j].setText(title);
            if (info.getDescription().containsKey(string))
-             objectiveTextFields[i][j].setToolTipText(info.getDescription().get(string));
+             objectiveTextFields[i][j].setToolTip((info.getDescription().get(string)));
          }
          DomStudentModelContextInfo info = cat.getInfo();
          title = info.getTitle().get(string);
          if (title != null) categoryTextFields[i].setText(title);
          if (info.getDescription().containsKey(string))
-           categoryTextFields[i].setToolTipText(info.getDescription().get(string));
+           categoryTextFields[i].setToolTip((info.getDescription().get(string)));
        }
 
 	   DomStudentModelContextInfo info = model.getInfo();
        title = info.getTitle().get(string);
        if (title != null) modelTextField.setText(title);
        if (info.getDescription().containsKey(string))
-         modelTextField.setToolTipText(info.getDescription().get(string));     
+         modelTextField.setToolTip((info.getDescription().get(string)));     
        locale = string;
        repaint();
   }
+
 
   private DomStudentModelObj newDomStudentModelObj() {
     DomStudentModelObj obj = new DomStudentModelObj();
@@ -387,11 +394,11 @@ public class DomainModelEditor extends JPanel implements ActionListener, Scrolla
 
   public void setEditable(boolean b) {
     setEnabled(b);
-    modelTextField.setEditable(b);
-    for(JTextField item: categoryTextFields) item.setEditable(b);
-    for(JTextField[] items: objectiveTextFields) {
-      for (JTextField item: items)
-        item.setEditable(b);
+    modelTextField.field.setEditable(b);
+    for(Model item: categoryTextFields) item.field.setEditable(b);
+    for(Model[] items: objectiveTextFields) {
+      for (Model item: items)
+        item.field.setEditable(b);
     }
   }
 
@@ -427,7 +434,7 @@ public class DomainModelEditor extends JPanel implements ActionListener, Scrolla
     title = model.getInfo().getTitle().getOrDefault(locale, "");
     descr = model.getInfo().getDescription().get(locale);
     modelTextField.setText(title);
-    modelTextField.setToolTipText(descr);
+    modelTextField.setToolTip((descr));
     
     List<DomStudentModelCategory> list = model.getCategories();
     aantalKolommen = list.size();
@@ -442,29 +449,29 @@ public class DomainModelEditor extends JPanel implements ActionListener, Scrolla
       title = cat.getInfo().getTitle().getOrDefault(locale, columnLabel + " "  + (i+1));
       categoryTextFields[i].setText(title);
       descr = cat.getInfo().getDescription().get(locale);
-      categoryTextFields[i].setToolTipText(descr);
+      categoryTextFields[i].setToolTip((descr));
       int rijen = cat.getObjectives().size();
-      JTextField[] objectiveTextField = objectiveTextFields[i];
+      Model[] objectiveTextField = objectiveTextFields[i];
       List<DomStudentModelObj> objectives = cat.getObjectives();
       for (int j = 0; j < rijen; j++) {
         DomStudentModelObj obj = objectives.get(j);
         String label = obj.getInfo().getTitle().getOrDefault(locale, "");
         objectiveTextField[j].setText(label);
         descr = obj.getInfo().getDescription().get(locale);
-        objectiveTextField[j].setToolTipText(descr);
+        objectiveTextField[j].setToolTip((descr));
       }
       for (int j = rijen; j < objectiveTextField.length; j++) {
         objectiveTextField[j].setText("");
-        objectiveTextField[j].setToolTipText(null);
+        objectiveTextField[j].setToolTip(null);
       }
     }
     for (int i = aantalKolommen; i < categoryTextFields.length; i++) {
       categoryTextFields[i].setText("");
-      categoryTextFields[i].setToolTipText(null);
-      JTextField[] objectiveTextField = objectiveTextFields[i];
+      categoryTextFields[i].setToolTip(null);
+      Model[] objectiveTextField = objectiveTextFields[i];
       for (int j = 0; j < objectiveTextField.length; j++) {
         objectiveTextField[j].setText("");
-        objectiveTextField[j].setToolTipText(null);
+        objectiveTextField[j].setToolTip(null);
       }
     }
     invalidate();

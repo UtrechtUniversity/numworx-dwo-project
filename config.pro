@@ -27,6 +27,10 @@
     <methods>;
 }
 
+-keep class org.osgi.** {
+    <methods>;
+}
+
 -keep class fi.dwo.commons.system.text.* {
     <fields>;
     <methods>;
