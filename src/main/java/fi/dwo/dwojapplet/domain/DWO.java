@@ -1288,7 +1288,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
               return new DomMapEntry<PersistenceId, DomCourse>(id, null);
             }).collect(Collectors.toList()));
             results = SecuredTeacherResultsManager.selectedTeacherResults(getDwoProfile(), source);
-            return new ResultsModule(results, this, sc);
+            return new ResultsModule(results, this, sc, selection);
         } catch (Dwo2Exception e) {
           // TODO Auto-generated catch block
           e.printStackTrace();

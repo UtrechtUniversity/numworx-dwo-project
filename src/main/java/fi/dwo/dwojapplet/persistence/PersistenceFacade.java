@@ -2657,6 +2657,7 @@ public class PersistenceFacade {
     }
 
     public long toTimeInMillis(String totalTime) {
+      if (totalTime != null) 
       try {
           return TOTAL_TIME_FORMAT.parse(totalTime).getTime();
       } catch (Exception e) {

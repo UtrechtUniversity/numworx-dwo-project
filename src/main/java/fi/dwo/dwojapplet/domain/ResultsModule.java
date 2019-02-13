@@ -12,12 +12,14 @@ import fi.dwo.dwojapplet.gui.ScoDialog;
 import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.UserResultListMapper;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherResultsManager;
 import nl.uu.fi.dwo.rest.dom.DomCoursesOfSchoolclassTree;
 import nl.uu.fi.dwo.rest.dom.DomMappedResultsPerTeacher;
 import nl.uu.fi.dwo.rest.dom.DomResultPlotMatrix;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.ResultTreeCalculator;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
@@ -33,8 +35,11 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 
@@ -84,10 +89,11 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
       this.coursetree = new DomCoursesOfSchoolclassTree(school, domresults);
       reset();
     }
-    public ResultsModule(DomResultsPerTeacher domresults, DWO dwo, DomSchoolClassId domclass) throws Dwo2Exception, PersistenceException
+    public ResultsModule(DomResultsPerTeacher domresults, DWO dwo, DomSchoolClassId domclass, Course[] selection) throws Dwo2Exception, PersistenceException
     {
       this(domresults, dwo);
       int id = MySQLPersistenceId.getNativeId(domclass).intValue();
+      this.courses = selection;
       currentlyZoomedUser = PersistenceFacade.instance().get(id, SchoolClass.class);      
       calculateCoursesByStudents(domclass);
     }
@@ -651,6 +657,34 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
         this.courses = courses;
         if (getResults) {
             if (currentlyZoomedLesson == null) {
+                // redo things.
+                DomResultsPerTeacher result, source = new DomResultsPerTeacher();
+                List<DomMapEntry<PersistenceId, DomCourse>> aCourses = new ArrayList<>(courses.length);
+                for (Course c : courses) {
+                  if (c.isWithChildren()) continue;
+                  PersistenceId id = (PersistentCourse.buildPersistenceId(Long.valueOf(c.getID())));
+                  aCourses.add(new DomMapEntry<PersistenceId, DomCourse>(id, null));
+                }
+                source.setCourses(aCourses);
+                try {
+                  result = SecuredTeacherResultsManager.selectedTeacherResults(DWO.getDwoProfile(), source);
+                  this.domresults = result;
+                  Iterator<DomMapEntry<PersistenceId, DomCourse>> i = result.getCourses().iterator();
+                  while (i.hasNext()) {
+                    DomMapEntry<nl.uu.fi.dwo.rest.persistence.PersistenceId, nl.uu.fi.dwo.rest.dom.entities.DomCourse> domMapEntry =
+                        (DomMapEntry<nl.uu.fi.dwo.rest.persistence.PersistenceId, nl.uu.fi.dwo.rest.dom.entities.DomCourse>) i
+                            .next();
+                    if (domMapEntry.getValue() == null) i.remove(); // remove null entries, should be done at server side!
+                  }
+                  this.mappedresults = new DomMappedResultsPerTeacher(domresults);
+                  this.resulttree = new DomResultTree(mappedresults);
+                  DomSchool school = DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool();
+                  this.coursetree = new DomCoursesOfSchoolclassTree(school, domresults);
+                  zoomOut(currentlyZoomedLesson);
+               } catch (Dwo2Exception e) {
+                  // TODO Auto-generated catch block
+                  e.printStackTrace();
+                }
                 return getResults();
             } else {
                 return userResultList;
