@@ -659,10 +659,11 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
                 } catch (RuntimeException e1) {
                     LOG.log(Level.SEVERE, null, e1);
                 }
-            }
+            } finally { 
             applet = null;
             LMSFinish("");
 //            dwo.endSco(this);
+            }
         }
     }
 

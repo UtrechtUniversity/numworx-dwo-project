@@ -120,7 +120,7 @@ public class Teacher extends User {
 
 	@Override
 	public void setSchoolRoleAndClass(DomSchoolsRolesAndClassesV2 dom) {
-		super.setSchoolRoleAndClass(dom);
+		superSetSchoolRoleAndClass(dom);
         Object[] o = null;
 		try {
 			o = PersistenceFacade.instance().get(SchoolClass.class,this);
@@ -134,5 +134,9 @@ public class Teacher extends User {
             setClasses(null);
         }
 	}
+
+  void superSetSchoolRoleAndClass(DomSchoolsRolesAndClassesV2 dom) {
+    super.setSchoolRoleAndClass(dom);
+  }
 
 }

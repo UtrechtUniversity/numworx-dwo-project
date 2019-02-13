@@ -1,5 +1,7 @@
 package fi.dwo.dwojapplet.domain;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
+
 public class SchoolAdmin extends Teacher {
 
     public SchoolAdmin() {
@@ -21,6 +23,12 @@ public class SchoolAdmin extends Teacher {
                 return super.hasRight(right);
 
         }
+    }
+
+    @Override
+    public void setSchoolRoleAndClass(DomSchoolsRolesAndClassesV2 dom) {
+      superSetSchoolRoleAndClass(dom);
+      setClasses(null);
     }
 
 }
