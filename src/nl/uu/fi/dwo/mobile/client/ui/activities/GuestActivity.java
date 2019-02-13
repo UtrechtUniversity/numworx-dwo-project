@@ -47,7 +47,7 @@ public class GuestActivity extends MGWTAbstractActivity implements Activity {
 					DwoGlobalVars instance = DwoGlobalVars.instance();
 					instance.setCurrentLoginContext(null);
 					instance.setCurrentUser(null);
-					instance.setCurrentSchoolClass(null);
+					instance.setActiveSchoolRoleAndClass(null);
 					clientFactory.getHeaderView().setUserAndRole(null, RoleType.STUDENT);
 					DWOplayer.gotoCourses();
 					return null;
