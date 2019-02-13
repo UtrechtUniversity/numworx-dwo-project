@@ -58,6 +58,13 @@ public class BootPanelController {
         Scheduler.get().scheduleDeferred(
             () -> {
                 switch (state) {
+                  case SUCCESS_GUEST:
+                    setSession(false);
+                    viewFactory.getMainView().setSchoolName("");
+                    viewFactory.getMainView().setPresentationName("");
+                    eventBus.fireEvent(new SwitchViewEvent(SelectedView.MODULES));
+                    break;
+                  
                   case SUCCESS:
                   case SUCCESS_WELCOME:
                     setSession(true);

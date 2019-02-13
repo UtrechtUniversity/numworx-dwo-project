@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import com.google.web.bindery.event.shared.EventBus;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter.Display;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
@@ -26,6 +27,7 @@ public class GuestViewHandler implements SwitchViewEventHandler {
   public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
       SelectedView value = switchViewEvent.getEventValue();
       
+      Display mainView = viewFactory.getMainView();
       switch (value) {
         case WELCOME:
           // show alert
@@ -33,20 +35,26 @@ public class GuestViewHandler implements SwitchViewEventHandler {
         default:
         case ACCOUNT:
           if (withUser()) {
-            viewFactory.getMainView().setSchoolName(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
-            viewFactory.getMainView().setPresentationName(dwoGlobalVars.getCurrentUser().getDisplayName());
-            viewFactory.getMainView().showAccountView();
+            mainView.setSchoolName(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
+            mainView.setPresentationName(dwoGlobalVars.getCurrentUser().getDisplayName());
+            mainView.showAccountView();
             presenterFactory.getAccountPresenter().init();
             break;
           }
         case LOGIN:
-          viewFactory.getMainView().showLoginView();
+          mainView.showLoginView();
           presenterFactory.getLoginPresenter().init();
           if (controller.authToken != null) {
               String token = controller.authToken;
               controller.authToken = null;
               presenterFactory.getLoginPresenter().tokenLogin(token, controller.user_id, controller.org_id);
           }
+          break;
+        case MODULES:
+          presenterFactory.getModulesPresenter().show();
+          break;
+        case MODULESVIEW:
+          mainView.showModulesView();
           break;
       }
   }

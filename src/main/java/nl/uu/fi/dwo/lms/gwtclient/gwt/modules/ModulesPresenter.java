@@ -132,8 +132,41 @@ public class ModulesPresenter implements SwitchViewEventHandler {
       DomSchoolClass klas = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchoolClass();
       schoolClassId = klas == null ? null : klas.getId();
       LOG.fine("role = " + roleId);
-      init = account.getBearerToken().then(this::gotToken,FAILURE);
-    }
+      if (roleId != null)
+        init = account.getBearerToken().then(this::gotToken,FAILURE);
+      else
+      {
+        UrlBuilder u = new UrlBuilder();
+        u.setPath(url);
+        u.setProtocol(Location.getProtocol());
+        u.setHost(Location.getHost());
+        u.setHash("#guest:");
+        if (IFRAME)
+          u.setParameter("header", "none");
+        String base = Location.getParameter("base");
+        if(base != null) {
+          u.setParameter("base",base);
+        }
+        String profile = Location.getParameter("profile");
+        if(profile == null || profile.isEmpty()) profile = "77";
+        u.setParameter("profile",profile);
+        String locale = LocaleInfo.getCurrentLocale().getLocaleName();
+        if ("default".equals(locale) ) locale =  "nl";
+        u.setParameter("locale",locale);
+        String string = u.buildString();
+        LOG.info("open URL " + string);
+        if(IFRAME)
+        {
+          view.openUrl(string);
+        }
+        else {
+          controller.get().setSession(false); // LEAVING.....
+          Location.replace(string);
+        }
+        init =  Promises.resolved(string);
+       }
+      }
+    
 
     /*
      * bearer token has arrived:

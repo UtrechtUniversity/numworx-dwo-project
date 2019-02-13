@@ -45,6 +45,7 @@ public class GuestPresenterFactory implements PresenterFactory {
   @Inject AlertDialogWithOKPresenter alertDialogWithOKPresenter;
   @Inject MessageDialogWithOKPresenter messageDialogWithOKPresenter;
   @Inject ProgressDialogWithAbortPresenter progressDialogWithAbortPresenter;
+  @Inject ModulesPresenter modulesPresenter;
 
   @Inject GuestPresenterFactory() {
   }
@@ -111,7 +112,7 @@ public class GuestPresenterFactory implements PresenterFactory {
 
   @Override @JsMethod
   public ModulesPresenter getModulesPresenter() {
-    return null;
+    return modulesPresenter;
   }
 
   @Override @JsMethod

@@ -14,6 +14,7 @@ public class LoginEvent extends GwtEvent<LoginEventHandler> {
         SUCCESS_ROLE, // role panel
         SUCCESS_WELCOME, // welcome panel
         SUCCESS_RESULTS, // result panel
+        SUCCESS_GUEST,   // guest login
         SUCCESS_SCHOOLCLASSES, //schoolclass panel
         LOGOUT 
     }

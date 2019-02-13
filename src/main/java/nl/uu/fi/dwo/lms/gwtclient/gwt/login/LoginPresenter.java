@@ -13,16 +13,25 @@ import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars.DwoGlobalVarsState;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedDialogWithConfirmDeferred;
 import nl.uu.fi.dwo.rest.DwoLocale;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.Dwo2ExceptionsForGWT;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -37,6 +46,7 @@ import org.osgi.util.promise.Success;
 public class LoginPresenter {
 
     private static final Logger LOG = Logger.getLogger(LoginPresenter.class.getName());
+    private final String locale;
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
     private Display view;
@@ -58,6 +68,10 @@ public class LoginPresenter {
      */
     public void setView(Display view) {
         this.view = view;
+        
+        view.showMessage("<iframe src='//cdn.dwo.nl/resources/alert_"
+            + locale
+            + ".html'></iframe>");
     }
 
 //    /**
@@ -104,7 +118,8 @@ public class LoginPresenter {
         public void hideMsgBox();
     }
 
-    @Inject LoginPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject LoginPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, GwtClientMessages rb)  {
+        locale = rb.locale();
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         // broken calling view.clear();
@@ -125,7 +140,7 @@ public class LoginPresenter {
     /**
      * User login call. A login function is called.
      *
-     * @param user usernme
+     * @param user username
      * @param password cleartext password.
      * @param switchRole In case a roleSwitch is desired, generally the value is
      * false.
@@ -296,5 +311,26 @@ public class LoginPresenter {
      */
     public void setStage(int stage) {
       this.stage = stage;
+    }
+    
+    @JsMethod public void loginGuest() {
+      if (stage > 1) {
+        dwoGlobalVars.clearCurrentUser();
+        DomLoginContext context = new DomLoginContext();
+        dwoGlobalVars.setCurrentLoginContext(context);
+        DomUserFull user = new DomUserFull();
+        user.setSingleSchool(false);
+        dwoGlobalVars.setCurrentUser(user);
+        DomSchoolRoleAndClassV2 activeSchoolRoleAndClass = new DomSchoolRoleAndClassV2();
+        DomRole role = new DomRole();
+        role.setRoleName(RoleType.ANONYMOUS.name());
+        role.setId(null);
+        activeSchoolRoleAndClass.setRole(role);
+        DomHasRole hasRole = new DomHasRole();
+        activeSchoolRoleAndClass.setHasRole(hasRole);
+        dwoGlobalVars.setActiveSchoolRoleAndClass(activeSchoolRoleAndClass );
+ 
+        eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_GUEST));
+      }
     }
 }
