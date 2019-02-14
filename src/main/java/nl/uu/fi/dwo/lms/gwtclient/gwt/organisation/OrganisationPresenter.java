@@ -200,33 +200,40 @@ public class OrganisationPresenter {
   }
   
   
-  @JsMethod void setChooseClass(boolean choice) {
-    DomSchoolFull school = new DomSchoolFull();
+  @JsMethod void setChooseClass(boolean choice) { // Verkeerd om!
     DomSchool s = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool();
-    school.setId(s.getId());
     String rights = s.getSchoolRights();
     rights = rights.replace("c", "");
     if (choice) {
       rights = rights + "c";
     }
-    school.setSchoolRights(rights);
-    String r = rights;
-    service.updateSchool(school).then(p->{s.setSchoolRights(r);return null;}, FAILURE);
+    setSchoolRights(s, rights);
     
   }
-  
-  @JsMethod void setEditModules(boolean choice) {
+
+  void setSchoolRights(DomSchool s, String rights) {
     DomSchoolFull school = new DomSchoolFull();
-    DomSchool s = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool();
     school.setId(s.getId());
+    school.setSchoolRights(rights);
+    String r = rights;
+    service.updateSchool(school).then(p->{
+      s.setSchoolRights(r);
+      dwoGlobalVars.getSchoolLogins().getSchoolsRolesAndClassesList().forEach(item -> 
+      {  DomSchool ss = item.getSchool();
+         if (ss.getId() .equals( s.getId()))
+          ss.setSchoolRights(r);
+      });
+      return null;}, FAILURE);
+  }
+  
+  @JsMethod void setEditModules(boolean choice) { // Verkeerd om
+    DomSchool s = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool();
     String rights = s.getSchoolRights();
     rights = rights.replace("m", "");
     if (choice) {
       rights = rights + "m";
     }
-    final String r = rights;
-    school.setSchoolRights(rights);   
-    service.updateSchool(school).then(p-> { s.setSchoolRights(r); return null;}, FAILURE);
+    setSchoolRights(s, rights);
   }
   
   @JsMethod void deletePersons(JsArrayString obj, String str) {

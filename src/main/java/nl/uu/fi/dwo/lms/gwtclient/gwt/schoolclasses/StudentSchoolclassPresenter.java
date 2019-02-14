@@ -161,6 +161,8 @@ private static final Logger LOG = Logger.getLogger(StudentSchoolclassPresenter.c
               return Boolean.TRUE;});
         });
         pr.then(null, FAILURE);
+      } else {
+        init();
       }
     }
     
