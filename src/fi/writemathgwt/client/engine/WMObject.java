@@ -501,8 +501,8 @@ public class WMObject {
 			teken = "1";
 		else if("l".equals(getTeken()) && box.height<1.2*getAverageLineHeight() && 3*box.width<box.height)
 			teken = "1";
-		else if("1".equals(getTeken()) && box.height>1.3*getAverageLineHeight() )
-			teken = "l";
+//		else if("1".equals(getTeken()) && box.height>1.3*getAverageLineHeight() )
+//			teken = "l";
 		else if("c".equals(getTeken()) && box.height>1.2*getAverageLineHeight())
 			teken = "C";
 		else if("o".equals(getTeken()) && box.height>1.2*getAverageLineHeight())
