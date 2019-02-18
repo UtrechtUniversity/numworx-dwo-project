@@ -6,6 +6,7 @@
 	<ui:style field='style' type='nl.uu.fi.dwo.keyboard.client.KeyboardCSS'>
 	@external key;
 	@external icon;
+	@external C11T18;
 	.small {
 		width: 582px;
 		padding-top: 1px !important;
@@ -15,6 +16,11 @@
 	}
 	.small .key.icon:first-child {
 		margin-left: 4px;
+	}
+
+	.C11T18:before {
+		left: -3px  !important;
+		font-size: 24px !important;
 	}
 	
 	</ui:style>
@@ -50,7 +56,8 @@
 			<span class='basis basis-C10'><span class='path1'></span><span class='path2'></span><span class='path3'></span></span>
 		</my:FKey>
 		<my:FKey addStyleNames="key icon" ui:field="c11" >
-			<span class='basis basis-C11'></span>
+<!-- 			<span class='basis basis-C11'></span> -->
+			<span class='basis basis-T1-8 C11T18'></span>
 		</my:FKey>
 		<my:FKey addStyleNames="key icon" ui:field="c12" >
 			<span class='basis basis-C12'><span class='path1'></span><span class='path2'></span><span class='path3'></span><span class='path4'></span></span>

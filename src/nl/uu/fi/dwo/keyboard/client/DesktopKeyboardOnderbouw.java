@@ -24,7 +24,7 @@ public class DesktopKeyboardOnderbouw extends DesktopKeyboard {
 		c28.setHTML("<span class='onderbouw' style='font-size:18px'>∪</span>");
 		c29.setHTML("<span class='onderbouw' style='font-size:18px'>÷</span>"); c29.addStyleName("bg-blue");
 		c30.setHTML("<span class='onderbouw' style='font-size:18px'>×</span>"); c30.addStyleName("bg-blue");
-		c31.setHTML("<span class='onderbouw' style='font-size:18px'>-</span>"); c31.addStyleName("bg-blue");
+		c31.setHTML("<span class='onderbouw' style='font-size:18px'>\u2212</span>"); c31.addStyleName("bg-blue");
 		c32.setHTML("<span class='onderbouw' style='font-size:18px'>+</span>"); c32.addStyleName("bg-blue");
 		c33.setHTML("<span class='onderbouw' style='font-size:18px'>=</span>"); c33.addStyleName("bg-blue");
 		//disableKey(c30);
