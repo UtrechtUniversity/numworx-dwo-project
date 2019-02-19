@@ -54,6 +54,7 @@ private ResourceBundle mailrb;
     String email = req.getParameter("email");
     String givenName = req.getParameter("givenName");
     String insertion = req.getParameter("insertion");
+    if(insertion == null) insertion = "";
     String familyName = req.getParameter("familyName");
     String server = req.getRequestURL().toString();
     String form = req.getParameter("form");
@@ -81,7 +82,7 @@ private ResourceBundle mailrb;
     message.setFrom(smtpEmail);
     message.setSubject(mailrb.getString("mail.subject"));
     message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
-
+    message.saveChanges();
     transport.connect();
     transport.sendMessage(message,
             message.getRecipients(Message.RecipientType.TO));
