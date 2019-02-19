@@ -467,13 +467,13 @@ public interface DbAccessIF  {
 //    public boolean deleteClass(int classID, boolean mustEmpty)
 //            throws IOException, XmlRpcException, SQLException;
 
-    public Vector getResults(Vector courses, int userID) throws IOException, XmlRpcException, SQLException;
-
-    public Vector getResults(Vector courses, int classID, int userID) throws IOException, XmlRpcException, SQLException;
-
-    public Vector getResults(int courseID, int classID, int userID) throws IOException, XmlRpcException, SQLException;
-
-    public Vector getResults(int courseID, int userID) throws IOException, XmlRpcException, SQLException;
+//    public Vector getResults(Vector courses, int userID) throws IOException, XmlRpcException, SQLException;
+//
+//    public Vector getResults(Vector courses, int classID, int userID) throws IOException, XmlRpcException, SQLException;
+//
+//    public Vector getResults(int courseID, int classID, int userID) throws IOException, XmlRpcException, SQLException;
+//
+//    public Vector getResults(int courseID, int userID) throws IOException, XmlRpcException, SQLException;
 
 //    public boolean disconnectFromClass(int userID, int classID) throws IOException,
 //            XmlRpcException, SQLException;
