@@ -238,25 +238,25 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, /*ScormA
     @Override
     public Vector getResults(Vector courses, int userID) throws IOException,
             XmlRpcException, SQLException {
-        return getDelegate().getResults(courses, userID);
+        return getDelegateObsolete().getResults(courses, userID);
     }
 
     @Override
     public Vector getResults(Vector courses, int classID, int userID)
             throws IOException, XmlRpcException, SQLException {
-        return getDelegate().getResults(courses, classID, userID);
+        return getDelegateObsolete().getResults(courses, classID, userID);
     }
 
     @Override
     public Vector getResults(int courseID, int classID, int userID)
             throws IOException, XmlRpcException, SQLException {
-        return getDelegate().getResults(courseID, classID, userID);
+        return getDelegateObsolete().getResults(courseID, classID, userID);
     }
 
     @Override
     public Vector getResults(int courseID, int userID) throws IOException,
             XmlRpcException, SQLException {
-        return getDelegate().getResults(courseID, userID);
+        return getDelegateObsolete().getResults(courseID, userID);
     }
 // V1_2 obsolete
 //    @Override
