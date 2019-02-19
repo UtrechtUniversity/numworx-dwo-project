@@ -148,7 +148,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	@UiField FlowPanel deck;
 	@UiField TreeModuleViewNumworxCss style;
 	@UiField FlowPanel beheer;
-	@UiField HTML bibliotheek, results, organization;
+	@UiField HTML bibliotheek, results, organization, persons;
 	GotoController presenter;
 	private String SCHOOL_MODULES;
 	private TreeItem schoolMap;
@@ -443,7 +443,8 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		this.role = role;
 		// if visible?
 		{  	organization.setVisible(role == RoleType.SCHOOLADMIN);
-			results.setVisible(role == RoleType.TEACHER);
+			results.setVisible(role == RoleType.TEACHER); // or student if premium.
+			persons.setVisible(role != RoleType.STUDENT);
 		}
 	}
 
