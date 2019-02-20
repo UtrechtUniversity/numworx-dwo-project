@@ -85,6 +85,11 @@ public class TwoStrokeProcessor {
 		if (checkStrokes(stroke1,"x2H2",stroke2,"x2H1"))
 			if(hasCloseDistance(stroke1, stroke2, 10,16,24,16,24))
 				addAndSort("x", foundTekens, scores, stroke1,"x2H2",stroke2,"x2H1");
+		
+		// x = \ + /(2e stroke start onder
+				if (checkStrokes(stroke1,"x2H1",stroke2,"x2H2+"))
+					if(hasCloseDistance(stroke1, stroke2, 10,16,24,16,24))
+						addAndSort("x", foundTekens, scores, stroke1,"x2H1",stroke2,"x2H2+");
 			
 		// x = \ + /
 		if (checkStrokes(stroke1,"labdaH1",stroke2,"labdaH2"))
