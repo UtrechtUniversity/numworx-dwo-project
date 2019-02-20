@@ -3,6 +3,7 @@ package fi.wiskopdr.expressies;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.client.NumberFormat;
 
 import fi.wiskopdr.RestartException;
@@ -4016,7 +4017,11 @@ public class Algebra
 
 	public static Expressie evalueerGetalsExpressie(Expressie exp)
 	{
-		return evalueerGetalsExpressie(exp, true);
+		String locale = LocaleInfo.getCurrentLocale().getLocaleName();
+		if("nl".equals(locale))
+			return evalueerGetalsExpressie(exp, true);
+		else
+			return evalueerGetalsExpressie(exp, false);
 
 	}
 
