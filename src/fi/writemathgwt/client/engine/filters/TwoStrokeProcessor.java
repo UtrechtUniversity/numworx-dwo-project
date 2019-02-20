@@ -129,12 +129,12 @@ public class TwoStrokeProcessor {
 		//+
 		if (checkStrokes(stroke1,"+H1",stroke2,"+H2"))
 			if(hasCloseDistance(stroke1, stroke2, 10,12,28,12,28))
-				if(stroke2.getParsePointsbox().width<1.5*stroke1.getParsePointsbox().height)
+				if(stroke2.getParsePointsbox().width<1.8*stroke1.getParsePointsbox().height)
 					addAndSort("+", foundTekens, scores, stroke1,"+H1",stroke2,"+H2");
 				
 		if (checkStrokes(stroke1,"+H1",stroke2,"+H2+"))
 			if(hasCloseDistance(stroke1, stroke2, 10,12,28,12,28))
-				if(stroke2.getParsePointsbox().width<1.5*stroke1.getParsePointsbox().height)
+				if(stroke2.getParsePointsbox().width<1.8*stroke1.getParsePointsbox().height)
 					addAndSort("+", foundTekens, scores, stroke1,"+H1",stroke2,"+H2+");
 				
 		if (checkStrokes(stroke1,"+H2",stroke2,"+H1"))
