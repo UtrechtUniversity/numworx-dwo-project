@@ -154,7 +154,7 @@ public class LoginPresenter {
             loginUser.then(new Success<DwoGlobalVars.DwoGlobalVarsState, Boolean>() {
                 @Override
                 public Promise<Boolean> call(Promise<DwoGlobalVars.DwoGlobalVarsState> resolved) throws Exception {
-                    if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn && (stage >= 2 ||!dwoGlobalVars.getCurrentUser().getSingleSchool())) {
+                    if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn && (/*stage >= 1 ||*/!dwoGlobalVars.getCurrentUser().getSingleSchool())) {
                         if (!dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
                             eventBus.fireEvent(new MessageDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
                         };
@@ -314,7 +314,8 @@ public class LoginPresenter {
     }
     
     @JsMethod public void loginGuest() {
-      if (stage > 1) {
+      //if (stage > 0)
+      {
         dwoGlobalVars.clearCurrentUser();
         DomLoginContext context = new DomLoginContext();
         dwoGlobalVars.setCurrentLoginContext(context);

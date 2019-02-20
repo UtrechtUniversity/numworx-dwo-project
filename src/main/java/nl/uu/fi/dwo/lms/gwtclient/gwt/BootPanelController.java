@@ -161,7 +161,8 @@ public class BootPanelController {
              viewFactory.getMainView().setUserRole(role, false);
             break;
           case STUDENT:
-            if (stage > 1) {
+            //if (stage > 0)
+            {
               build = studentBuilder.build();
               viewFactory.getMainView().setUserRole(role, single);
               break;
