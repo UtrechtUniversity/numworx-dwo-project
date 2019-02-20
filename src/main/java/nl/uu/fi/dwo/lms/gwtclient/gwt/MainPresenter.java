@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import com.google.web.bindery.event.shared.EventBus;
+
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -93,6 +95,8 @@ public class MainPresenter {
         void setUserRole(RoleType userRole, boolean single);
 
         public void showStudentSchoolclassView();
+
+        String getSearchInput();
     }
 
     private MainPresenter.Display display;
@@ -128,6 +132,14 @@ public class MainPresenter {
         eventBus.fireEvent(new SwitchViewEvent(selectedView));
     }
 
+    public String getSearchInput() {
+      return display.getSearchInput();
+    }
+    
+    @JsMethod public void search(String input) {
+      eventBus.fireEvent(new SwitchViewEvent(SelectedView.SEARCH, Collections.singletonMap("input", input)));
+    }
+    
     @JsMethod
     public void logout() {
         LOG.log(Level.INFO, "Logging out");

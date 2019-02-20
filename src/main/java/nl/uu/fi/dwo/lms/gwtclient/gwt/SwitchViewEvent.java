@@ -70,7 +70,8 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
         MODULESVIEW,
         ORGANISATION,
         BACKTORESULTS,
-        ARROWUP
+        ARROWUP,
+        SEARCH
         // ACTIVERESULTS,
         // SCORESULTS,
         // COURSESOFSCHOOLCLASS,
@@ -142,6 +143,10 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
 		resultStudentScoContext = value;
 		userState = map;
 	}
+    public SwitchViewEvent(SelectedView search, Map<String,String> map) {
+      this(search);
+      userState = map;
+    }
 
 	public SwitchViewEvent(SelectedView logresults, DomResultTree resultTree,
         JavaScriptObject context, DomResultScoContext sco,
@@ -215,6 +220,10 @@ public class SwitchViewEvent extends GwtEvent<SwitchViewEventHandler> {
     }
 
     public Map<String,String> getUserState() {
+      return userState;
+    }
+ 
+    public Map<String,String> getSearch() {
       return userState;
     }
     

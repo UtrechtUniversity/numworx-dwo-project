@@ -151,4 +151,8 @@ public class JsMainView implements MainPresenter.Display{
       JsMainDisplay.showStudentSchoolclassView();
     }
 
+    @Override
+    public String getSearchInput() {
+      return JsMainDisplay.getSearchInput();
+    }
 }

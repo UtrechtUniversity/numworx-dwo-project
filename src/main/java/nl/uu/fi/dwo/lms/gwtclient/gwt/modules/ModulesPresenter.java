@@ -1,7 +1,10 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.modules;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -14,12 +17,16 @@ import fi.dwo.gwt.lib.rest.util.Base64;
 import jsinterop.annotations.JsMethod;
 
 import java.sql.SQLClientInfoException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.fusesource.restygwt.client.JsonEncoderDecoder;
+import org.omg.IOP.Codec;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -254,11 +261,18 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     @Override
     public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
       SelectedView select = switchViewEvent.getEventValue();
-      if (select == SelectedView.ARROWUP) {
-        LOG.info("sending arrowUp message");
-        view.sendMessage(SelectedView.ARROWUP.name());
-        return;
-      } 
+      switch(select) {
+        case ARROWUP:
+          LOG.info("sending arrowUp message");
+          view.sendMessage(select.name());
+          return;
+        case SEARCH:
+          final Map<String, String> search = (switchViewEvent.getSearch());
+          LOG.info("sending search message " + search);
+          String message = select.name() + ":" + toString(search);
+          view.sendMessage(message);
+          return;
+      }
       if(select == SelectedView.WELCOME) {
         LOG.fine( "old role "  + roleId);
         PersistenceId newRole = dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole().getId();
@@ -285,6 +299,12 @@ public class ModulesPresenter implements SwitchViewEventHandler {
       LOG.info("switch " + select);
       view.setMainNavVisible(true);
       view.sendMessage(SHOWMAINNAV);
+    }
+
+    private String toString(Map<String, String> search) {
+      JSONObject obj = new JSONObject();
+      search.forEach((k,v) -> obj.put(k, new JSONString(v)));
+      return obj.toString();      
     }
 
     private static boolean equals(PersistenceId id1, PersistenceId id2) {

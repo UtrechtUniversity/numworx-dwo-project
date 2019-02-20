@@ -134,7 +134,7 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
                   break;
               case MODULES:
                   presenterFactory.getModulesPresenter().show();
-              case ARROWUP:
+              case ARROWUP: case SEARCH:
                   break;
               case MODULESVIEW:
                   viewFactory.getMainView().showModulesView();
