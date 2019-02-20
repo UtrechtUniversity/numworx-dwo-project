@@ -34,6 +34,7 @@ private static HashMap<String,int[][]> cachedLocDAngleData = new HashMap<String,
 			return cachedLocDAngleData.get(teken);
 		
 		if("4".equals(teken)) {int[][] data = {{180,90,20,37}};return data;}
+		if("5_1".equals(teken)) {int[][] data = {{90,30,4,15},{90,30,10,25}};return data;}
 
 		if("b".equals(teken)) {int[][] data = {{180,30,10,22}};return data;}
 		if("b_1".equals(teken)) {int[][] data = {{-180,140,30,39}};return data;}
