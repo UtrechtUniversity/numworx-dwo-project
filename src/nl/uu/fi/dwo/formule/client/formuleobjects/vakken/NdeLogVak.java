@@ -5,11 +5,13 @@ import org.vectomatic.dom.svg.OMSVGGElement;
 import org.vectomatic.dom.svg.OMSVGTransform;
 
 import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.core.shared.GWT;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.i18n.NdeLog;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 
@@ -21,6 +23,7 @@ public class NdeLogVak extends FormuleElementWithChildren
 	{
 		super(editor, 2);
 
+		variant = GWT.create(NdeLog.class);
 		//this.paint();
 		//this.setChanged(true);
 		this.setAsHoogte(3 * fm.getAscent() / 4);
@@ -29,10 +32,10 @@ public class NdeLogVak extends FormuleElementWithChildren
 		//ctx.setTextBaseline(TextBaseline.BOTTOM);
 		//ctx.setFont(fm.getFontStyle());
 		//System.out.println("this.getFontChanges.toString()" + this.font.toString());
-		int fStr = //(int) Math.round(ctx.measureText("log").getWidth());
-				(int) holder.measureWidth(this, fm, "log");
+		fStr = (int) holder.measureWidth(this, fm, "log");
 		setSize(4 * fm.getAscent() / 3, 5 * fm.getAscent() / 4 + fm.getDescent());
 		setAsHoogte(getChild(0).getAsHoogte() + getChild(1).height/2);
+
 		//if(WiskOpdr.language.toString().equals("en"))ashoogte = kind1.ashoogte;
 		//ashoogte = kind1.ashoogte+ k2h/2;
         
@@ -57,11 +60,13 @@ public class NdeLogVak extends FormuleElementWithChildren
 		changes.setSmallText(FormuleFontChanges.TRUE);
 
 		getChild(1).setFontChanges(changes);
+		
+		variant.position(this);
 	}
 	
 	public int getAsHoogte()
 	{
-		return getChild(0).getAsHoogte() + getChild(1).height/2;
+		return variant.getAsHoogte(this);
 	}
 
 	/* (non-Javadoc)
@@ -88,7 +93,7 @@ public class NdeLogVak extends FormuleElementWithChildren
 		fmLog.setItalic(false);
 		
 		ctx.setFont(fmLog);
-		ctx.fillText("log", 5 + getChild(1).width, getAsHoogte());// + fm.getAscent()/2 + fm.getAscent()/12);
+		ctx.fillText("log", variant.getLogX(this), getAsHoogte());// + fm.getAscent()/2 + fm.getAscent()/12);
 		ctx.setFont(fm);
 		int hoogte = getChild(0).height;
 		int breedte = width;
@@ -101,8 +106,8 @@ public class NdeLogVak extends FormuleElementWithChildren
 		int d = fm.getAscent()/8;
 		
 		int locx =	fm.getAscent()/3+getChild(1).width + fStr;
-		int locy = getChild(1).height/2;
-		//FIXME if(WiskOpdr.language.toString().equals("en"))locy = 0;
+		int locy = variant.getLogY(this);
+		//if(WiskOpdr.language.toString().equals("en"))locy = 0;
 		
 		ctx.beginPath();
 		ctx.moveTo(locx+c+b, locy+d);
@@ -128,15 +133,9 @@ public class NdeLogVak extends FormuleElementWithChildren
 	 */
 	@Override
 	public void zetMaat() {
-		//ctx.setFont(fm.getFontStyle());
 		
-		fStr = (int) //Math.round(ctx.measureText("log").getWidth());
-				holder.measureWidth(this, fm, "log");
-		setSize(2*fm.getAscent()/3+getChild(1).width + fStr + getChild(0).width + fm.getAscent()/2, getChild(1).height/2 + getChild(0).height);
-		setAsHoogte(getChild(0).getAsHoogte() + getChild(1).getHeight()/2);
-
-		getChild(0).setPosition(getChild(1).width + fStr + 3*fm.getAscent()/4, getChild(1).height/2);
-        getChild(1).setPosition(fm.getAscent()/3, getAsHoogte()-(this.getChild(1).height/2 + fm.getAscent()));
+		fStr = (int) holder.measureWidth(this, fm, "log");
+		variant.position(this);
 		super.zetMaat();
 	}
 
@@ -186,16 +185,12 @@ public class NdeLogVak extends FormuleElementWithChildren
 		return "$L" + getChild(0).toString() + "$n" + getChild(1).toString() + "@@";
 	}
 
-	static final boolean isEN = false;
 	private int fStr;
+	private final NdeLog variant;
+
 	public String toMathML() 
 	{
-// if language is 'en' grondtal als subscript
-		if(isEN)
-		{
-			return "<mrow><msub><mi>log</mi>" + getChild(1).toMathML() + "</msub><mfenced>" + getChild(0).toMathML() + "</mfenced></mrow>";
-		}
-		return "<mrow><mmultiscripts><mi>log</mi><mprescripts /><none />" + getChild(1).toMathML() + "</mmultiscripts><mfenced>" + getChild(0).toMathML() + "</mfenced></mrow>";
+		return variant.toMathML(this);
 	}
 
 	@Override
@@ -218,6 +213,14 @@ public class NdeLogVak extends FormuleElementWithChildren
 		getChild(0).draw(g);
 		getChild(1).draw(g);
 		drawCursor(svg);
+	}
+
+	public int getfStr() {
+		return fStr;
+	}
+
+	public void setfStr(int fStr) {
+		this.fStr = fStr;
 	}
 
 }
