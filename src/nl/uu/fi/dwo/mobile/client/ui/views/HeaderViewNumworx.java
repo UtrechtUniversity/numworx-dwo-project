@@ -153,8 +153,13 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 
 	@UiHandler("searchBtn")
 	void onSearch(ClickEvent ev) {
-		long id = System.currentTimeMillis();
-		String search = searchInput.getText().trim();
+      String search = searchInput.getText().trim();
+		SearchPlace place = computeSearch(search, rb);
+    presenter.goTo(place);
+	}
+
+  static SearchPlace computeSearch(String search, Text rb) {
+    long id = System.currentTimeMillis();
 		SelectModuleItem item = SelectModuleItemHolder.getSearch(search);
 		if(item == null)
 		{
@@ -182,13 +187,11 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 					);
 			SelectModuleItemHolder.insert(item);
 		}
-		presenter.goTo(new SearchPlace(item.getID()));
-	}
+		SearchPlace place = new SearchPlace(item.getID());
+    return place;
+  }
 
-	private Promise<List<SelectModuleItem>> searchMock(String search) {
-		if(search.contains("error")) {
-			return Promises.failed(new IllegalArgumentException(search));
-		}
+	private static Promise<List<SelectModuleItem>> searchMock(String search) {
 		search = search.toLowerCase();
 		List<SelectModuleItem> list = new ArrayList<>();
 		List<SelectModuleItem> items = SelectModuleItemHolder.getItems();
@@ -196,7 +199,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 		return Promises.resolved(list);
 	}
 	
-	private void search(String search, List<SelectModuleItem> items, List<SelectModuleItem> list) {
+	private static void search(String search, List<SelectModuleItem> items, List<SelectModuleItem> list) {
 		for(SelectModuleItem item: items) {
 			String name = item.getName();
 			String description = item.getDescription();
