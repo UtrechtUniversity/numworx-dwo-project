@@ -44,6 +44,7 @@
     <scm>
         <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOGwtClient/trunk</developerConnection>
         <connection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOGwtClient/trunk</connection>
+        <url>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOGwtClient/trunk</url>
     </scm>
     <!-- Running with Maven -->
     <!-- mvn clean package -->
@@ -618,6 +619,8 @@
                 <version>2.5.3</version>
                 <configuration>
                     <goals>deploy</goals>
+					<preparationGoals>clean verify install</preparationGoals>
+					<tagBase>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOGwtClient/tags/</tagBase>
                 </configuration>    
             </plugin>
             <plugin>
