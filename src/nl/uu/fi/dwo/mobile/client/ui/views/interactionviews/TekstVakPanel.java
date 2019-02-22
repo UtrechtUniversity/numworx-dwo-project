@@ -2383,6 +2383,43 @@ private Promise<RuleIF> getOneFirst(List<Tupel> answers) {
 	return defer.getPromise().recover(new RuleRecovery());
 }
 
+/**
+ * Bepaal een hint na answers.
+ * Aanroep:
+ * getOneFirst(getAnswers()).then(new Success<RuleIF, Void>() {...doeietsmetRuleIF(resolved.getValue())...} );
+ * @param answers
+ * @return de hint als promise
+ */
+private Promise<RuleIF> getOneHint(List<Tupel> answers) {
+    Deferred<RuleIF> defer = new Deferred<RuleIF>();
+    IdeasIF ideas = GWT.create(IdeasIF.class);
+    ideas.setStrategie("hypothesis");
+    String expr = "[]"; // last time
+    
+    final TekstVakPanel statPanel = isInIdeasStatistiek();
+    //final List<Tupel> newAnswers = statPanel.getAnswers();
+    List<Tupel> old = new ArrayList<Tupel>();
+    if(statPanel.initialStatistiekState != null) old.addAll(statPanel.initialStatistiekState);
+    if(answers != null) old.addAll(answers);
+    
+    if(!old.isEmpty()) {
+        StringBuilder input = new StringBuilder();
+        input.append('[');
+        for (Tupel tupel : old) {
+            if(tupel.value == null || tupel.value.isEmpty()) continue;
+            input.append("$C"); // component
+            input.append(deGreek(tupel.value)).append("$n").append(CamelCase(tupel.name)).append("$k");
+            if("initial".equals(tupel.type)) input.append('0'); else input.append('1');
+            input.append("@@@,");
+        }
+        if(input.length()>2) input.setLength(input.length()-1);
+        input.append(']');
+        expr = input.toString();
+    }
+    String prefix = getPrefix(answers);
+    ideas.getOneHint(wrap(expr, prefix), new DeferRuleCallback(defer));
+    return defer.getPromise().recover(new RuleRecovery());
+}
 
 
 private Promise<RuleIF> diagnose(List<Tupel> oldAnswers, List<Tupel> newAnswers) {
