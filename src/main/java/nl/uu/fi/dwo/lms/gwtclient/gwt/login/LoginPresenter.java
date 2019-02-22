@@ -154,7 +154,7 @@ public class LoginPresenter {
             loginUser.then(new Success<DwoGlobalVars.DwoGlobalVarsState, Boolean>() {
                 @Override
                 public Promise<Boolean> call(Promise<DwoGlobalVars.DwoGlobalVarsState> resolved) throws Exception {
-                    if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn && (/*stage >= 1 ||*/!dwoGlobalVars.getCurrentUser().getSingleSchool())) {
+                    if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
                         if (!dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
                             eventBus.fireEvent(new MessageDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
                         };
@@ -176,11 +176,6 @@ public class LoginPresenter {
                         LOG.log(Level.INFO, "login succeeded. Firing Login success event.");
                         //true means we are done
                         return Promises.resolved(false);
-                    } else if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn && dwoGlobalVars.getCurrentUser().getSingleSchool()) {
-                        LOG.log(Level.INFO, "login failed, you are a single schoolstudent: " + resolved.getValue().name());
-                        dwoGlobalVars.clearCurrentUser();
-                        view.showWarning(DwoLocalesForGWT.instance.NUM_DLG_User_NoAccessForYourAccount());
-                        return Promises.resolved(true);
                     } else {
                         LOG.log(Level.INFO, "login failed, wrong login state: " + resolved.getValue().name());
                         dwoGlobalVars.clearCurrentUser();
