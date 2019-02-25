@@ -117,6 +117,7 @@
 				<executions>
 					<execution>
 						<goals>
+							<goal>i18n</goal>
 							<goal>compile</goal>
 							<goal>test</goal>
 						</goals>
