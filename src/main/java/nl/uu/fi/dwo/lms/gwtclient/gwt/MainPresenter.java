@@ -1,5 +1,8 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.Collections;
@@ -97,6 +100,8 @@ public class MainPresenter {
         public void showStudentSchoolclassView();
 
         String getSearchInput();
+
+		void setTrails(JSONArray row);
     }
 
     private MainPresenter.Display display;
@@ -178,5 +183,10 @@ public class MainPresenter {
                 }
             }
         });
+    }
+    
+    public void setTrails(String subcommand) {
+    	JSONValue value = JSONParser.parseStrict(subcommand);
+    	display.setTrails(value.isArray());
     }
 }

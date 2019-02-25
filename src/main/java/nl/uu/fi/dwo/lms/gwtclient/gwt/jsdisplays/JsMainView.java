@@ -1,5 +1,8 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays;
 
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONNull;
+
 import nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
@@ -154,5 +157,13 @@ public class JsMainView implements MainPresenter.Display{
     @Override
     public String getSearchInput() {
       return JsMainDisplay.getSearchInput();
+    }
+    
+    @Override
+    public void setTrails(JSONArray row) {
+    	if (row == null) {
+    		JsMainDisplay.setTrails(null);
+    	} else 
+    		JsMainDisplay.setTrails(row.getJavaScriptObject());
     }
 }

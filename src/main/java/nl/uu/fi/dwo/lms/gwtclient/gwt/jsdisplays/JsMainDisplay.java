@@ -1,5 +1,8 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
+
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
@@ -94,5 +97,7 @@ public class JsMainDisplay {
     /** show student's schoolclass view */
     public static native void showStudentSchoolclassView();
     
-    public static native String getSearchInput();
+    static native String getSearchInput();
+    
+    static native void setTrails(JavaScriptObject javaScriptObject);
 }
