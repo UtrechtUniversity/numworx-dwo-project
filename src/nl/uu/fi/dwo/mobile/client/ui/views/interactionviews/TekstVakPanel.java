@@ -3851,7 +3851,7 @@ private Object CamelCase(String name) {
 				//TODO: ask for hint based on newAnswers: String hint = ideas.getOneFirst(newAnswers);
 				Promise<String> promise;
 				
-				promise = statPanel.getOneFirst(newAnswers).map(new Function<RuleIF, String>() {
+				promise = statPanel.getOneHint(newAnswers).map(new Function<RuleIF, String>() {
 					private final MapperConstants constants = new MapperConstants();
 					@Override
 					public String apply(RuleIF t) {
@@ -3859,8 +3859,15 @@ private Object CamelCase(String name) {
 						String id = t.getId(); // ideas identifier
 						String hint;						 
 
+						if(id.equals("error"))
+						{
+							String expr = t.getExpr();
+							if(expr.equals("no hint available"))
+								id = "no hint available";
+						}
 						hint = constants.getHint(id);//getFromMap(constants, "hint", id); // ID to hint tekst
 // toevoegen: reason/expr/..?
+						
 						return hint;
 					}});
 				
