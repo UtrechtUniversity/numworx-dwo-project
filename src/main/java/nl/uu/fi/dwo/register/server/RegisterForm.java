@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -40,13 +41,16 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 @SuppressWarnings("serial")
 public class RegisterForm extends HttpServlet {
 	
+  private static final String DEMO = "DEMO";
+  private static final String BRIN = "brin";
+  private static final String ORGANIZATION = "organization";
   private final Logger LOG = Logger.getLogger(getClass().getName());
   SystemManager manager;
   Session session;
   private Key key;
   private InternetAddress smtpEmail;
   private RequestDispatcher dispatch;
-private ResourceBundle mailrb;
+  private ResourceBundle mailrb;
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -59,11 +63,24 @@ private ResourceBundle mailrb;
     String server = req.getRequestURL().toString();
     String form = req.getParameter("form");
     
-    String jwt = Jwts.builder().setIssuer(server)
+    JwtBuilder claim = Jwts.builder().setIssuer(server)
       .setSubject(email)
       .claim("givenName", givenName)
       .claim("insertion", insertion)
-      .claim("familyName", familyName)
+      .claim("familyName", familyName);
+// case DEMO
+    if (DEMO.equals(form)) {
+      // organization/brin
+      String organization = req.getParameter(ORGANIZATION);
+      String brin = req.getParameter(BRIN);
+      claim = claim.claim(ORGANIZATION, organization);
+      if (brin != null && !brin.isEmpty()) {
+        claim = claim.claim(BRIN,brin);
+        claim = claim.setId(DEMO);
+      }
+      
+    }
+    String jwt = claim
       .setNotBefore(new Date())
       .signWith(key, SignatureAlgorithm.HS256)
       .compact();
@@ -76,8 +93,12 @@ private ResourceBundle mailrb;
     StringBuffer url = req.getRequestURL();
     url.append("?j=").append(jwt);
     MimeMessage message = new MimeMessage(session);
-//FIXME i18n         
-    content += MessageFormat.format(mailrb.getString("mail.body"), url, givenName, insertion, familyName);
+//FIXME i18n
+    String abo = "Numworx Free";
+    
+    
+    
+    content += MessageFormat.format(mailrb.getString("mail.body"), url, givenName, insertion, familyName, abo);
     message.setContent(content, mailrb.getString("mail.mime"));
     message.setFrom(smtpEmail);
     message.setSubject(mailrb.getString("mail.subject"));
