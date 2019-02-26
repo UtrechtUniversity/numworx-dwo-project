@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNull;
 
@@ -160,10 +161,7 @@ public class JsMainView implements MainPresenter.Display{
     }
     
     @Override
-    public void setTrails(JSONArray row) {
-    	if (row == null) {
-    		JsMainDisplay.setTrails(null);
-    	} else 
-    		JsMainDisplay.setTrails(row.getJavaScriptObject());
+    public void setTrails(JavaScriptObject jso) {
+    	JsMainDisplay.setTrails(jso);
     }
 }

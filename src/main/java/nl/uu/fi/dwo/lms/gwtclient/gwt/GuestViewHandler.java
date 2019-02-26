@@ -55,7 +55,11 @@ public class GuestViewHandler implements SwitchViewEventHandler {
           break;
         case MODULESVIEW:
           mainView.showModulesView();
-        case SEARCH: case ARROWUP:
+          break;
+        case TRAIL:
+          mainView.setTrails(switchViewEvent.getResultState());
+          break;
+        case SEARCH: case ARROWUP: case GOTO:
           break;
       }
   }

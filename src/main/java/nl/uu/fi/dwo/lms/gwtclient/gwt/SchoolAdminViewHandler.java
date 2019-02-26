@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import com.google.web.bindery.event.shared.EventBus;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter.Display;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
@@ -27,72 +28,73 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
       else {
         // if not a schooladmin, value = SelectedView.ACCOUNT;
       }
+      Display mainView = viewFactory.getMainView();
       switch (value) {
         default:
           eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
         case WELCOME:
-          viewFactory.getMainView().showWelcomeView();
+          mainView.showWelcomeView();
           presenterFactory.getWelcomePresenter().init();
           break;
         case MODULES:
           presenterFactory.getModulesPresenter().show();
           break;
         case MODULESVIEW:
-          viewFactory.getMainView().showModulesView();
+          mainView.showModulesView();
           break;
         case ACCOUNT:
-          viewFactory.getMainView().showAccountView();
+          mainView.showAccountView();
           presenterFactory.getAccountPresenter().init();
           break;
         case RESULTS:
           eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
           break;
         case PERSONS:
-          viewFactory.getMainView().showPersonsView();
+          mainView.showPersonsView();
           presenterFactory.getPersonsPresenter().init();
           break;
         case ADDPERSON:
-            viewFactory.getMainView().showAddPersonView();
+            mainView.showAddPersonView();
             presenterFactory.getAddStudentPresenter().init();
             break;
         case EDITSTUDENT:
-            viewFactory.getMainView().showEditPersonView();
+            mainView.showEditPersonView();
             presenterFactory.getEditStudentPresenter().init(switchViewEvent.getUser());
             break;
         case EDITTEACHER:
-            viewFactory.getMainView().showEditPersonView();
+            mainView.showEditPersonView();
             presenterFactory.getEditTeacherPresenter().init(switchViewEvent.getUser());
             break;
         case IMPORTPERSONS:
-            viewFactory.getMainView().showImportPersonsView();
+            mainView.showImportPersonsView();
             presenterFactory.getImportPersonsPresenter().init(switchViewEvent.getFile());
             break;
         case SCHOOLCLASSES:
-            viewFactory.getMainView().showSchoolclassesView();
+            mainView.showSchoolclassesView();
             presenterFactory.getSchoolclassesPresenter().init();
             break;
         case EDITSCHOOLCLASS:
-            viewFactory.getMainView().showEditSchoolclassView();
+            mainView.showEditSchoolclassView();
             presenterFactory.getEditSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
             break;
         case ADDSTUDENTTOSCHOOLCLASS:
-            viewFactory.getMainView().showAddStudentToSchoolClassView();
+            mainView.showAddStudentToSchoolClassView();
             presenterFactory.getAddStudentToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
             break;
         case COPYORMOVESTUDENTTOSCHOOLCLASS:
-            viewFactory.getMainView().showCopyOrMoveStudentToSchoolClassView();
+            mainView.showCopyOrMoveStudentToSchoolClassView();
             presenterFactory.getCopyOrMoveStudentToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
             break;
         case ADDTEACHERTOSCHOOLCLASS:
-            viewFactory.getMainView().showAddTeacherToSchoolClassView();
+            mainView.showAddTeacherToSchoolClassView();
             presenterFactory.getAddTeacherToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
             break;
         case ORGANISATION:
-            viewFactory.getMainView().showOrganisationView();
+            mainView.showOrganisationView();
             presenterFactory.getOrganisationPresenter().init();
             break;
         case LOGIN:
-          viewFactory.getMainView().showLoginView();
+          mainView.showLoginView();
           presenterFactory.getLoginPresenter().init();
           if (controller.authToken != null) {
               String token = controller.authToken;
@@ -101,8 +103,12 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
           }
         case ARROWUP:
         case SEARCH:
+        case GOTO:
           break;
-      }
+        case TRAIL:
+          mainView.setTrails(switchViewEvent.getResultState());
+          break;
+     }
   }
 
   private boolean withUser() {

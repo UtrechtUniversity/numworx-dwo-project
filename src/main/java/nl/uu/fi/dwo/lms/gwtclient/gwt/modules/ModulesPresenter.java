@@ -1,9 +1,11 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.modules;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
@@ -59,6 +61,7 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     private static final String SHOWMAINNAV = "showMainNav";
     private static final String HIDEMAINNAV = "hideMainNav";
     private static final String ISMAINNAVVISIBLE = "isMainNavVisible";
+    private static final String TRAIL = "TRAIL";
 
     private final Failure FAILURE;
     private final EventBus eventBus;
@@ -245,8 +248,15 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         } else 
         if (select(SelectedView.RESULTS, message) || select(SelectedView.PERSONS,message) || select(SelectedView.SCHOOLCLASSES,message) || select(SelectedView.ORGANISATION, message)) {
           
-        } else {
-          
+        } else if (TRAIL.equals(message)) {
+          SwitchViewEvent event = new SwitchViewEvent(SelectedView.TRAIL);
+          eventBus.fireEvent(event);
+        } 
+        else if (message.startsWith(TRAIL +":")) {
+          message = message.substring(TRAIL.length()+1);
+          JavaScriptObject o = JSONParser.parseLenient(message).isArray().getJavaScriptObject();
+          SwitchViewEvent event = new SwitchViewEvent(SelectedView.TRAIL, o);
+          eventBus.fireEvent(event);
         }
     }
 
@@ -262,6 +272,12 @@ public class ModulesPresenter implements SwitchViewEventHandler {
     public void onSwitchViewEvent(SwitchViewEvent switchViewEvent) {
       SelectedView select = switchViewEvent.getEventValue();
       switch(select) {
+        case GOTO:
+          String cmd = switchViewEvent.getSearch().get("message");
+          LOG.info("goto "+cmd);
+          view.sendMessage(cmd);
+        case TRAIL: 
+          return;
         case ARROWUP:
           LOG.info("sending arrowUp message");
           view.sendMessage(select.name());
@@ -288,6 +304,8 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           if(register != null) {
             register.removeHandler();register = null;
           }
+        } else {
+          view.sendMessage("GOTO:");
         }
       }
       

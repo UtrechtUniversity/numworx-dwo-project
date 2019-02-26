@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
@@ -101,7 +102,7 @@ public class MainPresenter {
 
         String getSearchInput();
 
-		void setTrails(JSONArray row);
+		void setTrails(JavaScriptObject object);
     }
 
     private MainPresenter.Display display;
@@ -130,7 +131,13 @@ public class MainPresenter {
     
     @JsMethod
     public void selectView(String selectedView) {
-        eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.valueOf(selectedView)));
+      SwitchViewEvent event;
+      if (selectedView.startsWith("GOTO:")) {
+          event = new SwitchViewEvent(SelectedView.GOTO, Collections.singletonMap("message", selectedView));  
+      } else {
+       event = new SwitchViewEvent(SwitchViewEvent.SelectedView.valueOf(selectedView));
+      }
+      eventBus.fireEvent(event);
     }
 
     public void selectView(SwitchViewEvent.SelectedView selectedView) {
@@ -185,8 +192,7 @@ public class MainPresenter {
         });
     }
     
-    public void setTrails(String subcommand) {
-    	JSONValue value = JSONParser.parseStrict(subcommand);
-    	display.setTrails(value.isArray());
+    public void setTrails(JavaScriptObject object) {
+    	display.setTrails(object);
     }
 }

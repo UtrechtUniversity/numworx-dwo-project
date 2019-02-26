@@ -56,8 +56,12 @@ public class StudentViewHandler implements SwitchViewEventHandler {
         }
       case ARROWUP:
       case SEARCH:
+      case GOTO:
         break;
-    }  }
+      case TRAIL:
+        mainView.setTrails(switchViewEvent.getResultState());
+        break;
+   }  }
 
   private boolean withUser() {
     DomSchoolRoleAndClassV2 active = dwoGlobalVars.getActiveSchoolRoleAndClass();
