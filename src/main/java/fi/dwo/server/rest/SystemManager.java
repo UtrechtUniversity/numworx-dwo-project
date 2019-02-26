@@ -3,15 +3,19 @@
  */
 package fi.dwo.server.rest;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javax.persistence.PersistenceException;
+import javax.persistence.RollbackException;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -38,6 +42,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
+import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
@@ -134,6 +139,52 @@ public class SystemManager {
       input = base + (++cntr);      
     }
     return input;
+  }
+  @PUT
+  @Path("/school/submit")
+  public Boolean submitSchool(RestSchoolFull rest) {
+	  DomSchoolFull school = rest.getDomSchoolFull();
+      // allowed user role
+      PersistentSchool s = new PersistentSchool();
+      s.setExpire(school.getExpire());
+      s.setExport(school.getExport());
+      s.setImage(school.getImage());
+      s.setSchoolLogin(school.getSchoolLogin());
+      s.setSchoolName(school.getSchoolName());
+      s.setSchoolRights(school.getSchoolRights());
+      s.setAboType(school.getAboType());
+      try {
+          SchoolManager.create(s);
+          s = SchoolManager.findBySchoolLogin(school.getSchoolLogin());
+          LOG.log(Level.INFO, "created school with schoollogin {1} and id {2}.", new Object[]{null, s.getSchoolLogin(), s.getSchoolID()});
+          //add user roles
+      } catch (RollbackException e) {
+          LOG.log(Level.INFO, "A Rollback exception occured while creating school with schoollogin "+ s.getSchoolLogin());
+          s = SchoolManager.findBySchoolLogin(school.getSchoolLogin());
+          //if (s == null)
+          	throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, e.getMessage());
+      } catch (PersistenceException e) {
+          //non-fatal for semi-idempotent operation
+          LOG.log(Level.INFO, "A Persistence exception occured while creating school with schoollogin {0}.", s.getSchoolLogin());
+          throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while creating school " + school.getSchoolLogin() + ".");
+      }
+      for (DomMapEntry<RoleType, String> entry : school.getPasswords()) {
+          PersistentSchoolGroup newSg = new PersistentSchoolGroup();
+          newSg.setSchoolID(s.getSchoolID().intValue());
+          newSg.setGroupID(entry.getKey().ordinal());
+          newSg.setPasswd(entry.getValue());
+          try {
+              SchoolGroupManager.create(newSg);
+          } catch (PersistenceException e) {
+              //non-fatal for idempotent operation
+              String msg = MessageFormat.format("A Persistence exception occured while creating schoolgroup for school "
+                      + "with logincode {0} and RoleType {1} (with groupid {2}).",
+                      new Object[]{s.getSchoolLogin(), entry.getKey().name(), newSg.getGroupID()});
+              LOG.log(Level.INFO, msg);
+              throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
+          }
+      }
+      return Boolean.TRUE;
   }
   
 }

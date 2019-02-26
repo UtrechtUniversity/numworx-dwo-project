@@ -2,6 +2,8 @@ package fi.dwo.server.rest;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -18,11 +20,17 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
+import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class SystemManagerIT {
@@ -93,5 +101,29 @@ public class SystemManagerIT {
     assertEquals("notfound", input, suggestion);
   
   }
+	@Test public void testSubmitSchool() throws Dwo2Exception {
+		DomSchoolFull school = new DomSchoolFull();
+		school.setAboType(AboType.demo);
+		school.setExpire(new Date());
+		List<DomMapEntry<RoleType, String>> passwords = new ArrayList<>();
+		passwords.add(new DomMapEntry<>(RoleType.STUDENT, "student"));
+		passwords.add(new DomMapEntry<>(RoleType.TEACHER, "teacher"));
+		passwords.add(new DomMapEntry<>(RoleType.SCHOOLADMIN, "admin"));
+		school.setSchoolRights("_");
+		school.setPasswords(passwords);
+		school.setSchoolLogin("test");
+		school.setSchoolName("TestSchool");
+		RestSchoolFull rest = new RestSchoolFull();
+		rest.setDomSchoolFull(school);
+		Boolean result = manager.submitSchool(rest);
+		assertTrue(result.booleanValue());
+		
+		try { 
+			result = manager.submitSchool(rest);
+			fail("duplicate school");
+		} catch (Dwo2RestException e) {
+			assertEquals(Dwo2ExceptionCode.User_IllegalAction, e.getDwo2Code());
+		}
+	}
 
 }

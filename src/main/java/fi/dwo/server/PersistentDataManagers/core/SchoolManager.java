@@ -44,6 +44,9 @@ public class SchoolManager {
             em.getTransaction().begin();
             em.persist(school);
             em.getTransaction().commit();
+        } catch (PersistenceException e) {
+            LOG.log(Level.SEVERE, "Can't create the PersistentSchool.", e);
+        	throw e;
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentSchool.", e);
             throw new PersistenceException(e);
