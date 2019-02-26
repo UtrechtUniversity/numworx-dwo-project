@@ -76,6 +76,7 @@ public class SystemManager {
   }
 
   private DomSchoolFull buildDomSchoolFull(PersistentSchool school) {
+	if (school == null) return null;
     DomSchoolFull dom = school.buildDomSchoolFull();
     List<PersistentSchoolGroup> list = SchoolGroupManager.findEntities(school);
     List<DomMapEntry<RoleType, String>> passwords = 
