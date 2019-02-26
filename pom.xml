@@ -88,7 +88,13 @@
          <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-commons-lib</artifactId>
-        </dependency>
+            <exclusions>
+            	<exclusion>
+            		<groupId>javax.servlet</groupId>
+            		<artifactId>servlet-api</artifactId>
+            	</exclusion>
+            </exclusions>
+         </dependency>
 		<dependency>
 			<groupId>org.mitre.dsmiley.httpproxy</groupId>
 			<artifactId>smiley-http-proxy-servlet</artifactId>
@@ -142,6 +148,7 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                     <configuration>
+                    	<port>8888</port>
                         <server>TomcatServer</server>
                         <path>/dwo/register</path>
                         <systemProperties>
@@ -262,7 +269,7 @@
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
 		<relativePath>../DWO</relativePath>
-		<version>2.3.4</version>
+		<version>2.3.6-SNAPSHOT</version>
 	</parent>
 	<scm>
 		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/Register/trunk</developerConnection>

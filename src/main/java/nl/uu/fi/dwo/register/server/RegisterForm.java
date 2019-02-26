@@ -5,9 +5,16 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -15,6 +22,7 @@ import java.util.logging.Logger;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -28,6 +36,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtBuilder;
@@ -37,6 +46,12 @@ import io.jsonwebtoken.security.Keys;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 @SuppressWarnings("serial")
 public class RegisterForm extends HttpServlet {
@@ -44,6 +59,7 @@ public class RegisterForm extends HttpServlet {
   private static final String DEMO = "DEMO";
   private static final String BRIN = "brin";
   private static final String ORGANIZATION = "organization";
+  private static final Charset UTF_8 = StandardCharsets.UTF_8;
   private final Logger LOG = Logger.getLogger(getClass().getName());
   SystemManager manager;
   Session session;
@@ -73,29 +89,55 @@ public class RegisterForm extends HttpServlet {
       // organization/brin
       String organization = req.getParameter(ORGANIZATION);
       String brin = req.getParameter(BRIN);
-      claim = claim.claim(ORGANIZATION, organization);
-      if (brin != null && !brin.isEmpty()) {
-        claim = claim.claim(BRIN,brin);
-        claim = claim.setId(DEMO);
+      brin = generateBrin(brin, organization);
+      organization += " " + DEMO;
+      try { 
+    	  DomSchoolFull school = manager.getSchool(brin);
+    	  if (school != null && ! organization.equals(school.getSchoolName())) {
+    		  mailError(email, req.getParameter(ORGANIZATION));
+    		  return;
+    	  }
+    	  if (school == null) throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ObjectAlreadyExists, brin);
+      } catch(Dwo2Exception e) {
+    	  DomSchoolFull school = new DomSchoolFull();
+    	  school.setAboType(AboType.demo);
+    	  school.setExpire(new Date());
+    	  school.setExport(Boolean.FALSE);
+    	  school.setSchoolLogin(brin);
+    	  school.setSchoolName(organization);
+    	  List<DomMapEntry<RoleType, String>> passwords = new ArrayList<DomMapEntry<RoleType,String>>();
+    	  String password;
+    	  password = "L" + encode(brin);
+    	  passwords.add(new DomMapEntry<RoleType, String>(RoleType.STUDENT, password));
+    	  password = "D" + encode(password);
+    	  passwords.add(new DomMapEntry<RoleType, String>(RoleType.TEACHER, password));
+    	  password = "C" + encode(password);
+    	  passwords.add(new DomMapEntry<RoleType, String>(RoleType.SCHOOLADMIN, password));    	  
+    	  school.setPasswords(passwords);
+    	  try {
+			manager.submitSchool(school);
+		} catch (Dwo2Exception e1) {
+  		  mailError(email, req.getParameter(ORGANIZATION));
+  		  return;
+		}
       }
-      
+      claim = claim.claim(BRIN,brin).setId(DEMO).claim("role", RoleType.TEACHER.name());     
     }
     String jwt = claim
       .setNotBefore(new Date())
       .signWith(key, SignatureAlgorithm.HS256)
       .compact();
-
-    Transport transport;
+    
     String content = "";
     try {
-      transport = session.getTransport();
-
     StringBuffer url = req.getRequestURL();
     url.append("?j=").append(jwt);
     MimeMessage message = new MimeMessage(session);
 //FIXME i18n
     String abo = "Numworx Free";
-    
+    if (DEMO.equals(form)) {
+    	abo = "Numworx demo-omgeving";
+    }
     
     
     content += MessageFormat.format(mailrb.getString("mail.body"), url, givenName, insertion, familyName, abo);
@@ -103,11 +145,7 @@ public class RegisterForm extends HttpServlet {
     message.setFrom(smtpEmail);
     message.setSubject(mailrb.getString("mail.subject"));
     message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
-    message.saveChanges();
-    transport.connect();
-    transport.sendMessage(message,
-            message.getRecipients(Message.RecipientType.TO));
-    transport.close();
+    Transport.send(message);
 
     } catch (MessagingException e) {
       LOG.log(Level.SEVERE, "mail error", e);
@@ -122,7 +160,41 @@ public class RegisterForm extends HttpServlet {
     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
   }
 
-  @Override
+  private void mailError(String email, String org) {
+	MimeMessage message = new MimeMessage(session);
+	try {
+		message.setSubject(org);
+		message.setFrom(smtpEmail);
+		message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+		message.setContent("Er is een probleem met de aanmaak van de demo-omgeving\nProbeer het opnieuw", "text/plain");
+		Transport.send(message);
+	} catch (Exception e) {
+		LOG.log(Level.SEVERE, "mail error " + org, e);
+	}
+	
+}
+
+private String generateBrin(String brin, String organization) {
+	if (brin == null || brin.isEmpty()) {
+		String encode = encode(organization);
+		String code = "SH" + encode;
+		return code;
+	}
+	return brin;
+}
+
+private String encode(String string) {
+	try {
+		MessageDigest digest = MessageDigest.getInstance("SHA-1");
+		byte[] bytes = digest.digest(string.getBytes(UTF_8));
+		String encode = Base64.getUrlEncoder().encodeToString(bytes);
+		return encode;
+	} catch (NoSuchAlgorithmException e) {
+		return string;
+	}
+}
+
+@Override
   public void init() throws ServletException {
 
 	manager = new Manager().getInstance(getServletContext());
@@ -223,6 +295,32 @@ public class RegisterForm extends HttpServlet {
     resp.addCookie(cookie);
     cookie = new Cookie("cancel", u(mailrb.getString("cancel")));
     resp.addCookie(cookie);
+    
+    
+    String role = body.get("role", String.class);
+    String brin = body.get("brin", String.class);
+    String id = body.getId();
+    if (id != null) {
+    	cookie = new Cookie("schoolGroup", u(role));
+    	resp.addCookie(cookie);
+    	cookie = new Cookie("schoolLogin", u(brin));
+    	resp.addCookie(cookie);
+    	cookie = new Cookie("form", id);
+    	resp.addCookie(cookie);
+    	DomSchoolFull school = null;
+		try {
+			school = manager.getSchool(brin);
+		} catch (Dwo2Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	RoleType key = RoleType.valueOf(role);
+    	String password = 
+    	school.getPasswords().stream().filter(item -> item.getKey() == key).findAny().get().getValue();
+    	cookie = new Cookie("schoolCode", u(password));
+    	resp.addCookie(cookie);
+    }
+    
 
   
     dispatch.forward(req, resp);

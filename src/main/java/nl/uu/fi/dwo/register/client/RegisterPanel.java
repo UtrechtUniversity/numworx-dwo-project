@@ -42,16 +42,18 @@ public class RegisterPanel extends ResizeComposite {
 	}
 
 	final private boolean isfree;
+	final private boolean demo;
 	
 	public RegisterPanel(boolean isfree, boolean saml) {
 	    this.isfree = isfree;
+	    demo = "DEMO".equals(getCookie("form"));
 		initWidget(uiBinder.createAndBindUi(this));
 		//schoolGroup.addItem(rb.NULLSCHOOL(), RoleType.STUDENT.name());
 		schoolGroup.addItem(rb.STUDENT(), RoleType.STUDENT.name());
 		schoolGroup.addItem(rb.TEACHER(), RoleType.TEACHER.name());
 		schoolGroup.addItem(rb.SCHOOLADMIN(), RoleType.SCHOOLADMIN.name());
 		controller = new RegisterController();
-		nav_title.setText(isfree ? bundle.REGISTER_FREE() : bundle.REGISTER());
+		nav_title.setText(isfree  && !demo ? bundle.REGISTER_FREE() : bundle.REGISTER());
 //		register.addTapHandler(this::onRegister);
 //		cancel.addTapHandler(this::onCancel);
 		setStyleName(css.isfree(), isfree);
@@ -86,9 +88,13 @@ public class RegisterPanel extends ResizeComposite {
 		
 		String schoolGroup = getCookie("schoolGroup");
 		if ("TEACHER".equals(schoolGroup))
+		{
 			this.schoolGroup.setSelectedIndex(1);
+			LOG.info("school group = " + this.schoolGroup.getSelectedItemText() + " " + this.schoolGroup.getSelectedValue());
+		}
 		String schoolCode = getCookie("schoolCode");
 		if (schoolCode != null) this.schoolCode.setText(schoolCode);
+		
 		
 	}
 
@@ -177,8 +183,9 @@ public class RegisterPanel extends ResizeComposite {
 		domUser.setGivenName(givenName.getText());
 		domUser.setInsertion(insertion.getText());
 		domUser.setUsername(username.getText());
-		if(!schoolGroup.getSelectedValue().isEmpty() && !isfree)
-		domUser.setRole(RoleType.valueOf(schoolGroup.getSelectedValue()));
+		if(!schoolGroup.getSelectedValue().isEmpty() && !isfree || demo)
+			domUser.setRole(RoleType.valueOf(schoolGroup.getSelectedValue()));
+		
 		
 		String p1 = password.getText();
 		String p2 = passwordAgain.getText();
@@ -212,7 +219,7 @@ public class RegisterPanel extends ResizeComposite {
 		
 		String sLogin = schoolLogin.getText();
 		String sCode = schoolCode.getText();
-		if(isfree) {
+		if(isfree && !demo) {
 			sLogin = sCode = null;
 			domUser.setRole(RoleType.STUDENT);
 		} else {
