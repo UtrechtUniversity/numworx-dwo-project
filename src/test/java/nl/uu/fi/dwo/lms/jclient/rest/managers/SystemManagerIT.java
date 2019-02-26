@@ -3,6 +3,9 @@ package nl.uu.fi.dwo.lms.jclient.rest.managers;
 import static org.junit.Assert.*;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -13,15 +16,45 @@ import org.junit.Test;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.DwoLocale;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.util.DWO2ExceptionTranslatorInterface;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class SystemManagerIT {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+	      Dwo2ExceptionTranslator.setTranslator(new DWO2ExceptionTranslatorInterface() {
+
+			@Override
+			public String encodeJSON(Dwo2ExceptionCode code, String message) {
+				// TODO Auto-generated method stub
+				return message;
+			}
+
+			@Override
+			public String decodeMessageInJSON(String json) {
+				// TODO Auto-generated method stub
+				return json;
+			}
+
+			@Override
+			public Dwo2ExceptionCode decodeCodeInJSON(String json) {
+				// TODO Auto-generated method stub
+				return Dwo2ExceptionCode.Client_InternalError;
+			}
+
+			@Override
+			public String getLocalizedCodeExplanation(DwoLocale locale, Dwo2ExceptionCode code) {
+				return code.toString();
+			}});
 	}
 
 	@AfterClass
@@ -85,4 +118,23 @@ public class SystemManagerIT {
 		assertNotEquals("exists!",u,result);
 	}
 
+	@Test public void testSubmitSchool() throws Dwo2Exception {
+		DomSchoolFull school = new DomSchoolFull();
+		school.setAboType(AboType.demo);
+		school.setExpire(new Date());
+		List<DomMapEntry<RoleType, String>> passwords = new ArrayList<>();
+		passwords.add(new DomMapEntry<>(RoleType.STUDENT, "student"));
+		passwords.add(new DomMapEntry<>(RoleType.TEACHER, "teacher"));
+		passwords.add(new DomMapEntry<>(RoleType.SCHOOLADMIN, "admin"));
+		school.setSchoolRights("_");
+		school.setPasswords(passwords);
+		school.setSchoolLogin("test");
+		school.setSchoolName("TestSchool");
+		
+		Boolean result = manager.submitSchool(school);
+		assertTrue(result.booleanValue());
+		System.err.println("please remove test school");
+	}
+	
+	
 }

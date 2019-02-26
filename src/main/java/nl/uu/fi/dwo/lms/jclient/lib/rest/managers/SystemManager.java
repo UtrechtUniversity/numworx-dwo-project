@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
+import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class SystemManager {
@@ -85,4 +86,16 @@ public class SystemManager {
 	  String result = manager.put("rest/system/user/suggestion", String.class, input);
 	  return result;
   }
+  
+  public Boolean submitSchool (DomSchoolFull school) throws Dwo2Exception {
+	  RestSchoolFull rest = new RestSchoolFull();
+	  rest.setDomSchoolFull(school);
+	  rest.setRestContext(getContext());
+	  Boolean result = 
+			  manager.put("rest/system/school/submit", Boolean.class, rest);
+	    LOG.log(Level.FINE, "Submit school for id {1} for system with username {0}.",
+	    	      new Object[] {manager.getAuthenticator().getUsername(), school.getSchoolLogin()});
+	  return result;
+  }
+  
 }

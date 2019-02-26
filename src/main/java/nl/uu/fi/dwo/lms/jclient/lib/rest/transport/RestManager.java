@@ -328,11 +328,14 @@ class RestManager extends RestyDateTimeFormat {
       LOG.log(Level.FINEST, "Sending: {0}", new Object[] {jsonOut.toString()});
       outStream.write(jsonOut.getBytes("UTF-8"));
       outStream.close();
-      if (conn.getResponseCode() != 200) {
+      int responseCode = conn.getResponseCode();
+      if (responseCode == 204) 
+    	  return null; // No content
+	  if (responseCode != 200) {
         LOG.log(Level.WARNING, "Code: {0}. Reason{1}",
-            new Object[] {conn.getResponseCode(), conn.getResponseMessage()});
+            new Object[] {responseCode, conn.getResponseMessage()});
         Dwo2Exception e;
-        if (conn.getResponseCode() == 400) {// Dwo2Exception
+        if (responseCode == 400) {// Dwo2Exception
           // String json = conn.getResponseMessage();
           BufferedReader br = new BufferedReader(
               new InputStreamReader((conn.getErrorStream()), StandardCharsets.UTF_8));
