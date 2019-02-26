@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.osgi.util.function.Function;
@@ -21,6 +22,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -89,7 +91,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	 * Note that depending on the widget that is used, it may be necessary to
 	 * implement HasHTML instead of HasText.
 	 */
-	public HeaderViewNumworx(EventBus bus) {
+	@Inject HeaderViewNumworx(EventBus bus) {
 		this.bus = bus;
         final int correctie = 10; // width popup 
 		user = new MenuItem("<i class='fa fa-caret-down fa-2x'></i>", true, items) {
@@ -115,7 +117,9 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 		loginLabel.setText(text);
 	}
 
-	GotoController presenter;
+	@Inject PlaceController controller;
+	
+	GotoController presenter = controller::goTo;
 	@UiHandler("homeBtn")
 	void onHomeBtn(ClickEvent ev) {
 		presenter.goTo(homePlace);
@@ -295,6 +299,10 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 		this.navigation = navigation;
 		RootLayoutPanel.get().setWidgetTopBottom(this, 0, Unit.PX, 50, Unit.PX);
 	}
+
+  @Override
+  public void setTrail(List<SelectModuleItem> trail) {
+  }
 
 
 }

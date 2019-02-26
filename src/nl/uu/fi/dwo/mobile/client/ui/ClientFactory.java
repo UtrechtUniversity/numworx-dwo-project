@@ -1,7 +1,5 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
-import java.util.Map;
-
 import javax.inject.Provider;
 
 import org.osgi.util.promise.Promise;
@@ -21,8 +19,7 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceController;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -85,6 +82,8 @@ public interface ClientFactory
     Provider<NoCourseView> getNoCourseView();
 
 	boolean isPremium();
+
+  PlaceHistoryHandler getPlaceHistoryHandler();
 
 // High level functions
 /*	Full varianten?

@@ -15,11 +15,8 @@ import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.mobile.client.DWOplayerClientBundle;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
-import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
-import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.AppPlaceHistoryMapper;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
-import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
@@ -27,19 +24,15 @@ import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
-import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
-
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LinkElement;
-import com.google.gwt.dom.client.Text;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.ResizeLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -88,8 +81,6 @@ public class DWOplayer implements EntryPoint
 
 	public static final String PREFIX = PARAMETERS.getLaunchData();
 	
-	Place defaultPlace = new LoginPlace(); // new SelectModulePlace("select");
-
 	public static int count;
 	
 	static void goTree() {
@@ -102,112 +93,8 @@ public class DWOplayer implements EntryPoint
 			clientfactory.getPlaceController().goTo(new FlatModulePlace());		
 	}
 	
-//	static final AsyncCallback<List<Map<String,Object>>> GETCOURSES_CALLBACK_CLASS_FLAT = new AsyncCallback<List<Map<String,Object>>>(){
-//
-//		@Override
-//		public void onFailure(Throwable caught) {
-//			Window.alert(caught.toString());
-//			goFlat();
-//			
-//		}
-//
-//		@Override
-//		public void onSuccess(List<Map<String, Object>> result) {
-//			insertFlat(result);
-//			goFlat();
-//		}
-//		
-//	};
-
-//	static final AsyncCallback<List<Map<String,Object>>> GETCOURSES_CALLBACK = 
-//			new AsyncCallback<List<Map<String,Object>>>() {
-//		@Override
-//		public void onFailure(Throwable caught) {
-//			Window.alert(caught.toString());
-//			goTree();
-//		}	
-//		@Override
-//		public void onSuccess(List<Map<String,Object>> result) {	
-//			insertFlat(result);
-//			goTree();
-//		}		
-//	};	
-	//private Place defaultPlace = new SelectModulePlace("Home");
 	private static HashMap<String, String> resources = new HashMap<String, String>();
 
-//	private static final AsyncCallback<List<Map<String,Object>>>
-//	GETCOURSES_CALLBACK_CLASS_TREE = new AsyncCallback<List<Map<String,Object>>>(){
-//
-//		@Override
-//		public void onFailure(Throwable caught) {
-//			Logger.getLogger("DWOplayer").log(Level.SEVERE, caught.toString(), caught);
-//			Window.alert(caught.toString());
-//			goTree();
-//		}
-//
-//		@Override
-//		public void onSuccess(List<Map<String, Object>> result) {
-//			sort(result);
-//			insertTree(result);
-//			goTree();
-//		}
-//		
-//		private int getParentID(Map<String,Object> course) {
-//			try {
-//				return ((Number) course.get("parentID")).intValue();
-//			} catch (Exception e) {
-//				return 0;
-//			}
-//		}
-//		
-//		private int getID(Map<String, Object> course) {
-//			try {
-//				return ((Number) course.get("courseID")).intValue();
-//			} catch (Exception e) {
-//				return 0;
-//			}
-//		}
-//		private void sort(List<Map<String,Object>> courses) {
-//			boolean again;
-//			if(courses == null || courses.isEmpty())
-//				return;
-//			do {
-//				again = false;
-//				more:
-//				for(int i = 0; i < courses.size(); i++ ) {
-//					Map<String,Object> course = courses.get(i);
-//					if( getParentID(course) == 0) {
-//						int j;
-//						for(j = i-1; j >= 0; j--) {
-//							if(getParentID(courses.get(j))==0) {
-//								if(j == i-1)
-//									break;
-//								courses.add(j+1, courses.remove(i));
-//								continue more;
-//							}
-//						}
-//						if(j == -1) {
-//							courses.add(0, courses.remove(i));
-//							continue more;
-//						}
-//					} else {
-//						int pid = getParentID(course); int j;
-//						for(j = i-1; j>=0; j--) {
-//							if(getParentID(courses.get(j))==pid || getID(courses.get(j)) == pid) {
-//								if(j == i-1) break;
-//								courses.add(j+1, courses.remove(i));
-//								continue more;
-//							}
-//						}
-//						if(j == -1) {
-//							again = true;
-//						}
-//					}
-//				}
-//			} while(again);
-//		}
-//		
-//	};
 
 	
 	//public static Locale language = new Locale ("nl", "");
@@ -267,12 +154,10 @@ public class DWOplayer implements EntryPoint
 		settings.setPreventScrolling(true);
 		MGWT.applySettings(settings);
 
-		inject();
 		//GWT Settings//
 		clientfactory = createClientFactory();
-		AppPlaceHistoryMapper historyMapper = GWT.create(AppPlaceHistoryMapper.class);
-		final PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
-		historyHandler.register(clientfactory.getPlaceController(), clientfactory.getEventBus(), defaultPlace);
+		final PlaceHistoryHandler historyHandler = clientfactory.getPlaceHistoryHandler();
+
 		createTabletDisplay(clientfactory);
 		historyHandler.handleCurrentHistory();
 	}
@@ -317,10 +202,6 @@ public class DWOplayer implements EntryPoint
 		};
 		t.schedule(1);
 
-	}
-
-	protected void inject() {
-	  //nl.uu.fi.dwo.mobile.client.dagger.DaggerPlayerComponent.create().inject(this);
 	}
 	
 	private void setupResources()

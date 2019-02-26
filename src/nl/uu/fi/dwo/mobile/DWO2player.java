@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -32,8 +34,8 @@ import nl.uu.fi.dwo.account.client.AccountBundle;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.account.client.UserBar;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
-import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO4;
-import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
+import nl.uu.fi.dwo.mobile.client.dagger.DWO2PlayerComponent;
+import nl.uu.fi.dwo.mobile.client.dagger.DaggerDWO2PlayerComponent;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
@@ -41,21 +43,15 @@ import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
-import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.Login2ViewImpl;
-import nl.uu.fi.dwo.mobile.client.ui.views.Login3ViewImpl;
-import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
-import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -73,121 +69,6 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 //		
 //	}
 	
-	private static final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
-		//			private IsWidget  menuWidget;
-		private TrafficAgent agent = new TrafficAgent();
-
-		@Override
-		public void addBarrier(Promise<?> p) {
-			agent.addBarrier(p);
-		}
-
-		@Override
-		public Promise<Void> barrier() {
-			return agent.barrier();
-		}
-
-		@Override
-		public LoginView getLoginView()
-		{
-			if (loginView == null) loginView = new Login3ViewImpl();
-			return loginView;
-		}
-
-		private Promise<Void> superLogout() {
-			return super.logout();
-		}
-
-		@Override
-		public Promise<Void> logout() {
-			return barrier().
-					then(new Success<Void,Void>(){
-
-						@Override
-						public Promise<Void> call(Promise<Void> resolved) throws Exception {
-//								menuWidget = null;
-							if(withUser()) {
-								return getRPCHandler().logout();
-							}
-							return resolved;
-						}}).
-					then(new Success<Void,Void>() {
-
-						@Override
-						public Promise<Void> call(Promise<Void> resolved) throws Exception {
-							return superLogout();
-						}}).
-					then(new Success<Void,Void>() {
-
-						@Override
-						public Promise<Void> call(Promise<Void> resolved) throws Exception {
-							treeModuleView = null;
-							return null;
-						}});
-		}
-
-		public SCORM_guest setupAPI() {
-			SCORM_guest api;
-			if(!withUser()) {
-				api = new SCORM_guest();
-			} else {					
-				api = new SCORM_DWO4();
-			}
-			return api;
-		}
-
-		@Override
-		public boolean withUser() {
-			return DwoGlobalVars.instance().getCurrentUser() != null;
-		}
-
-		@Override
-		public DomSchool getSchool() {
-			try {
-				return DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getSchool();
-			} catch (Exception e) {
-				return null;
-			}
-		}
-
-		@Override
-		public DomSchoolClass getSchoolClass() {
-			return DwoGlobalVars.instance().getCurrentSchoolClass();
-		}
-
-		@Override
-		public boolean isIconizer() {
-			try {
-				return getSchoolClass().getIconizer().booleanValue();
-			} catch (Exception e) {
-				return true;
-			}
-		}
-
-		@Override
-		public RoleType getRoleType() {
-			try {
-				String roleName = DwoGlobalVars.instance().getActiveSchoolRoleAndClass().getRole().getRoleName();
-				return RoleType.valueOf(roleName);
-			} catch (Exception e) {
-				return RoleType.ANONYMOUS;
-			}
-		}
-
-		@Override
-		public Object getUserID() {
-			PersistenceId id = DwoGlobalVars.instance().getCurrentUser().getId();
-			return PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentUser);
-		}
-
-		@Override
-		public boolean isPremium() {
-			return withUser() && getSchool().getAboType() == AboType.premium;
-		}
-		
-	}
-
-
 	private final static class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandlerV3 implements RPCHandler {
 		private DWO2RPCHandler(String server, int profile) {
 			super(server, profile, false);
@@ -210,10 +91,19 @@ public class DWO2player extends DWOplayer implements EntryPoint {
         Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
 	}
 	
-		
-	protected ClientFactory createClientFactory() {
-		ClientFactoryImpl factory = new DWO2ClientFactoryImpl();
-		String host = PARAMETERS.getHost();
+	@Inject DWO2ClientFactoryImpl factory;
+	
+	
+	/* (non-Javadoc)
+   * @see nl.uu.fi.dwo.mobile.DWOplayer#inject()
+   */
+
+
+  protected ClientFactory createClientFactory() {
+        DWO2PlayerComponent create = DaggerDWO2PlayerComponent.create();
+        create.inject(this);
+
+        String host = PARAMETERS.getHost();
 		String http = Window.Location.getProtocol();
 		factory.setRPCHandler(new DWO2RPCHandler(http + "//" + host + "/dwo/xmlrpc", PROFILE_ID));
  

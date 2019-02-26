@@ -31,6 +31,8 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.place.shared.PlaceHistoryHandler;
+import com.google.gwt.place.shared.PlaceHistoryMapper;
 //import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
@@ -43,18 +45,19 @@ import com.google.web.bindery.event.shared.SimpleEventBus;
  */
 public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 {
-	private final EventBus eventBus = new SimpleEventBus();
+	private final EventBus eventBus;
+    final Provider<PlaceHistoryMapper> mapper;  
 
-	final Provider<ViewModuleView> NORMAL = new Provider<ViewModuleView>() {
-
-		@Override
-		public ViewModuleView get() {
-			ViewModuleViewImpl impl = new ViewModuleViewImpl(true, setupAPI());
-			impl.initialize();
-			impl.zetMaat();
-			return impl;
-		}};
-	
+//	final Provider<ViewModuleView> NORMAL = new Provider<ViewModuleView>() {
+//
+//		@Override
+//		public ViewModuleView get() {
+//			ViewModuleViewImpl impl = new ViewModuleViewImpl(true, setupAPI());
+//			impl.initialize();
+//			impl.zetMaat();
+//			return impl;
+//		}};
+//	
 	final Provider<ViewModuleView> NUMWORX_VIEW = new Provider<ViewModuleView>() {
 
 		@Override
@@ -66,16 +69,17 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	};
 			
 	// singleton pattern.
-	final Provider<HeaderView> headerView;
-		
+	Provider<HeaderView> headerView;
+
+	protected void setup(Provider<HeaderViewNone> none, Provider<HeaderViewNumworx> numworx)
 	{
 	  if (Actions.isAvailable() )
 	  {
-	    HeaderViewNone headerViewNone = new HeaderViewNone(getEventBus());
+	    HeaderViewNone headerViewNone = none.get();
 	    headerViewNone.setPresenter(this);
 	    headerView = () -> headerViewNone;
 	  } else {
-        HeaderViewNumworx impl = new HeaderViewNumworx(getEventBus());
+        HeaderViewNumworx impl = numworx.get();
         impl.setPresenter(ClientFactoryImpl.this);
 	    headerView = () -> impl;
 	  }
@@ -98,15 +102,20 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	}
 	
 	
-	private final PlaceController placeController = new PlaceController(eventBus);
+	private final PlaceController placeController;
 	private Provider<ViewModuleView> entryView = NUMWORX_VIEW;
 	private SelectModuleView selectModuleView;
 	protected LoginView loginView;
 	protected TreeModuleView treeModuleView;
 	private RPCHandler handler;
 	
-	public ClientFactoryImpl()
+	public ClientFactoryImpl(EventBus bus, PlaceController controller, 
+	                 Provider<PlaceHistoryMapper> mapper
+	       )
 	{
+	  this.eventBus = bus;
+	  this.placeController = controller;
+	  this.mapper = mapper;
 	}
 
 	@Override
@@ -258,6 +267,7 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
       }
   };
  }
+
 	
 	
 }

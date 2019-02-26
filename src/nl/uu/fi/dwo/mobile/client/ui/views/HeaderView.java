@@ -1,9 +1,12 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import java.util.List;
+
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
@@ -21,5 +24,7 @@ public interface HeaderView extends IsWidget {
 	void setDisplay(Widget display, NavigationView navigationView);
 	
 	void setPresenter(GotoController presenter);
+
+  void setTrail(List<SelectModuleItem> trail);
 
 }

@@ -23,6 +23,7 @@ import org.osgi.util.promise.Promises;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
@@ -193,4 +194,10 @@ public class DummyClientFactory implements ClientFactory {
 	public boolean isPremium() {
 		return premium; // FIXME komt van buitenaf.
 	}
+
+  @Override
+  public PlaceHistoryHandler getPlaceHistoryHandler() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

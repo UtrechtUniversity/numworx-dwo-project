@@ -119,6 +119,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 				parent = parent.getParent();
 			}
 			view.setTrail(trail);
+			clientFactory.getHeaderView().setTrail(trail);
 			view.setTitle(sco.getName());
 			view.setScoType(sco.getScoType());
 			view.setPresenter(this);
@@ -167,6 +168,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 
 	@Override
 	public void onStop() {
+	    clientFactory.getHeaderView().setTrail(null);
 		clientFactory.getHeaderView().setPresenter((GotoController) clientFactory); // FIXME ONS KENT ONS
 		if (tm != null) {
 			tm.cancel();

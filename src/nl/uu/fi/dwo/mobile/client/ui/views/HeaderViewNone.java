@@ -1,24 +1,33 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import java.util.List;
+import java.util.ListIterator;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
-import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -27,8 +36,13 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 public class HeaderViewNone extends HTML implements HeaderView, MessageEventHandler {
 
   private static final String SEARCH = "SEARCH:";
+  private static final String GOTO = "GOTO:";
+   
+  
   @Inject
-  public HeaderViewNone(EventBus eventBus) {
+  public HeaderViewNone(EventBus eventBus, PlaceHistoryMapper mapper, PlaceController controller) {
+    this.mapper = mapper;
+    this.controller = controller;
     eventBus.addHandler(MessageEvent.TYPE, this);
   }
 
@@ -54,7 +68,8 @@ public class HeaderViewNone extends HTML implements HeaderView, MessageEventHand
 
   private Widget root;
   private NavigationView navigation;
-  private GotoController presenter;
+  private PlaceController controller;
+  private GotoController presenter = controller::goTo;
   private Place upPlace = homePlace;
   
   @Override
@@ -88,6 +103,8 @@ public void setPresenter(GotoController presenter) {
   this.presenter = presenter;
 }
 
+private PlaceHistoryMapper mapper;
+
 @Override
 public void onMessage(MessageEvent event) {
   String message = event.getMessage();
@@ -98,8 +115,46 @@ public void onMessage(MessageEvent event) {
     JSONValue dom = JSONParser.parseStrict(message);
     message = dom.isObject().get("input").isString().stringValue();
     presenter.goTo(HeaderViewNumworx.computeSearch(message, Text.constants));
+  } else if (message.startsWith(GOTO)) {
+    message = message.substring(GOTO.length());
+    Place place = mapper.getPlace(message);
+    if (place != null) presenter.goTo(place);
+    else presenter.goTo(getHomePlace());
+    
   }
   
 }
+
+public void setTrail(List<SelectModuleItem> trail) {
+  if (!Actions.isAvailable()) return;
+  if (trail == null) {
+    Actions.TRAIL.execute();
+    return;
+  }
+  if(DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB)
+      trail.clear();
+  JSONArray array = new JSONArray();
+  ListIterator<SelectModuleItem> iter = trail.listIterator(Math.min(trail.size(),3));
+  while (iter.hasPrevious()) {
+      SelectModuleItem selectModuleItem = (SelectModuleItem) iter.previous();
+      String title = selectModuleItem.getName();
+      String id = selectModuleItem.getID().toString();
+      final TreeModulePlace place = new TreeModulePlace(id);
+      String command = "GOTO:" + mapper.getToken(place);
+      JSONObject obj = new JSONObject();
+      obj.put("title", new JSONString(title));
+      obj.put("command", new JSONString(command));
+      array.set(array.size(), obj);
+  }
+  Actions.TRAIL.execute(array.toString());
+  
+  TreeModulePlace upId;
+  if(!trail.isEmpty())
+      upId = new TreeModulePlace(trail.get(0).getID());
+  else
+      upId = new TreeModulePlace();
+  setUpPlace(upId);
+}
+
 
 }

@@ -14,6 +14,7 @@ import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import dagger.Module;
 import dagger.Provides;
+import dagger.Reusable;
 import nl.uu.fi.dwo.mobile.client.ui.AppPlaceHistoryMapper;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
 
@@ -42,7 +43,7 @@ public abstract class PlayerModule {
     return handler;
   }
 
-  @Provides
+  @Provides @Reusable
   static PlaceHistoryMapper getHistoryMapper() {
     return GWT.create(AppPlaceHistoryMapper.class);
   }

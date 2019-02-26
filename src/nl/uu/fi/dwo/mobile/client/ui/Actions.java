@@ -3,7 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import com.google.gwt.user.client.Window.Location;
 
 public enum Actions {
-  showMainNav, hideMainNav, isMainNavVisible, RESULTS, PERSONS, SCHOOLCLASSES, ORGANISATION, ARROWUP;
+  showMainNav, hideMainNav, isMainNavVisible, RESULTS, PERSONS, SCHOOLCLASSES, ORGANISATION, ARROWUP, TRAIL;
   private String command;
 
   Actions() {
@@ -25,6 +25,21 @@ public enum Actions {
     return command;
   }
 
+  /**
+   * For TRAIL, add arguments.
+   * jsonarray of jsonobject("title", "message")
+   * @param extra argument
+   */
+  public void execute(String extra) {
+    java.util.logging.Logger.getLogger(Actions.class.getName()).fine("execute " + command);
+    String command;
+    if (extra == null || extra.isEmpty())
+      command = name();
+    else 
+      command = name() + ":" + extra;
+    sendParent(command);
+  }
+  
   /**
    * true if embedded in gwtclient.
    * header is gehalveerd.
