@@ -12,6 +12,9 @@ public class WMObjectLine {
 	
 	private double averageBaseLine;
 	
+	private boolean averageHeightSet;
+	private boolean averageBaseLineSet;
+	
 	public WMObjectLine() {
 	}
 	
@@ -126,7 +129,57 @@ public class WMObjectLine {
 		updateAverageBaseLine();
 	}
 	
+	private void scaleAndPlace() {
+//		boolean swapped = true;
+//		while (swapped)	{	
+//			swapped = false;
+//			for (int i = 1; i < wmObjects.size(); i++) {	
+//				WMObject wo1 = wmObjects.get(i-1);
+//				WMObject wo2 = wmObjects.get(i);
+//				if (wo1.getTimeStamp() > wo2.getTimeStamp()) {	
+//					wmObjects.set(i-1, wo2);
+//					wmObjects.set(i, wo1);
+//					swapped = true;
+//				}
+//			}
+//		}
+		boolean scaled = false;
+		for(int i=wmObjects.size()-1 ; i>0; i--) {
+			if(i<wmObjects.size()-1 && !scaled) {
+				scaleAndPlace(wmObjects.get(i-1));
+				scaled = true;
+			}
+		}
+	}
 	
+	private void scaleAndPlace(WMObject wo) {
+		if(wo.getBox().getDiagonal()<10)
+			return;
+		if(wo.isBreuk())
+			return;
+		if(wo.isWortel())
+			return;
+		if(averageHeightSet) {
+			double woHeight = wo.getXBox().height;
+			double woX = wo.getXBox().x;
+			double factor = averageHeight/woHeight;
+			wo.scale(woX, 0, factor);
+			ArrayList<Stroke> strokes = wo.getStrokes();
+			for(int i=0 ; i<strokes.size() ; i++) {
+				strokes.get(i).scale(woX, 0, factor);
+			}
+		}
+		if(averageBaseLineSet) {
+			double woBase = wo.getXBox().y + wo.getXBox().height;
+			double ty = averageBaseLine - woBase;
+			wo.translate(0, ty);
+			ArrayList<Stroke> strokes = wo.getStrokes();
+			for(int i=0 ; i<strokes.size() ; i++) {
+				strokes.get(i).translate(0, ty);
+			}
+		}		
+	}
+		
 	public void removeAll() {
 		wmObjects.clear();
 	}
@@ -267,6 +320,7 @@ public class WMObjectLine {
 		for(int i=0 ; i<wmObjects.size(); i++) {
 			formula = formula + wmObjects.get(i).getFormulaString();
 		}
+		//scaleAndPlace();
 		return formula;
 	}
 	
@@ -281,6 +335,7 @@ public class WMObjectLine {
 	private void updateAverageHeight() {
 		double heightSum = 0;
 		int cnt = 0;
+		averageHeightSet = false;
 		for (int i = 0; i < wmObjects.size(); i++) {
 			if ("-".equals(wmObjects.get(i).getTeken())
 					|| ".".equals(wmObjects.get(i).getTeken())
@@ -294,6 +349,7 @@ public class WMObjectLine {
 			else {
 				heightSum += wmObjects.get(i).getXHeight();
 				cnt++;
+				averageHeightSet = true;
 			}
 		}
 		if(cnt>0)
@@ -305,6 +361,7 @@ public class WMObjectLine {
 	private void updateAverageBaseLine() {
 		double baseLineSum = 0;
 		int cnt = 0;
+		averageBaseLineSet = false;
 		for (int i = 0; i < wmObjects.size(); i++) {
 			if ("-".equals(wmObjects.get(i).getTeken())
 					|| ".".equals(wmObjects.get(i).getTeken())
@@ -318,6 +375,7 @@ public class WMObjectLine {
 			else {
 				baseLineSum += wmObjects.get(i).getXBox().y + wmObjects.get(i).getXBox().height;
 				cnt++;
+				averageBaseLineSet = true;
 			}
 		}
 		if(cnt>0)

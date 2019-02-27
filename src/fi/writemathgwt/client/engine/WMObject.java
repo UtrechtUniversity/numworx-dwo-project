@@ -36,6 +36,8 @@ public class WMObject {
 	private boolean hasAscent;
 	private boolean hasDescent;
 	
+	private long timeStamp;
+	
 	public WMObject(Stroke stroke, String teken) {
 		strokes.add(stroke);
 		this.teken = teken;
@@ -51,6 +53,7 @@ public class WMObject {
 		hasAscent = isAscFont(teken);
 		hasDescent = isDescFont(teken);
 		makeBox();
+		timeStamp = System.currentTimeMillis();
 	}
 	
 	public WMObject(Stroke stroke1, Stroke stroke2, Stroke stroke3, String teken) {
@@ -61,6 +64,7 @@ public class WMObject {
 		hasAscent = isAscFont(teken);
 		hasDescent = isDescFont(teken);
 		makeBox();
+		timeStamp = System.currentTimeMillis();
 	}
 	
 	public WMObject(Stroke stroke1, Stroke stroke2, Stroke stroke3, Stroke stroke4, String teken) {
@@ -72,6 +76,7 @@ public class WMObject {
 		hasAscent = isAscFont(teken);
 		hasDescent = isDescFont(teken);
 		makeBox();
+		timeStamp = System.currentTimeMillis();
 	}
 	
 	public WMObject(ArrayList<Stroke> strokes, String teken) {
@@ -80,6 +85,7 @@ public class WMObject {
 		hasAscent = isAscFont(teken);
 		hasDescent = isDescFont(teken);
 		makeBox();
+		timeStamp = System.currentTimeMillis();
 	}
 	
 	public WMObject(WMObject wo) {
@@ -88,6 +94,11 @@ public class WMObject {
 		hasAscent = isAscFont(teken);
 		hasDescent = isDescFont(teken);
 		this.box = new DoubleRectangle(wo.getBox().x , wo.getBox().y , wo.getBox().width , wo.getBox().height);
+		timeStamp = wo.getTimeStamp();
+	}
+	
+	public long getTimeStamp() {
+		return timeStamp;
 	}
 	
 	public boolean isOneStroke() {
