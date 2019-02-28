@@ -48,6 +48,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -102,7 +103,7 @@ public class RegisterForm extends HttpServlet {
     	  DomSchoolFull school = new DomSchoolFull();
     	  school.setAboType(AboType.demo);
     	  Date d = new Date();
-    	  d.setMonth(d.getMonth()+3); // 3 maanden?
+    	  d.setDate(d.getDate() + 42);
     	  school.setExpire(d);
     	  school.setExport(Boolean.FALSE);
     	  school.setSchoolLogin(brin);
@@ -311,10 +312,17 @@ private String encode(String string) {
     	resp.addCookie(cookie);
     	DomSchoolFull school = null;
 		try {
-			school = manager.getSchool(brin);
+			school = manager.getSchool(brin); // Bij DEMO aantal docenten moet 0 zijn.
+			List<DomTeacher> teachers = manager.getTeachersInSchool(school);
+			if (DEMO.equals(id) && teachers.size() > 0) {
+				LOG.warning("has teacher " + teachers.get(0).getUniqueDisplayName());
+				resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+				return;
+			}
 		} catch (Dwo2Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.log(Level.WARNING, "getSchool", e);
+			resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+			return;
 		}
     	RoleType key = RoleType.valueOf(role);
     	String password = 
