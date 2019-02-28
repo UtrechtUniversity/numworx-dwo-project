@@ -35,6 +35,7 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
@@ -197,7 +198,8 @@ public class SystemManager {
   public List<DomTeacher> getTeachersInSchoolList(RestSchool rest) throws Dwo2Exception {
 	  Long id = MySQLPersistenceId.getNativeId(rest.getDomSchool());
 	  PersistentSchool school = SchoolManager.findEntity(id);
-	  final String realm = rest.getRestContext().getRealm();
+	  DomContext context = rest.getRestContext();
+	  final String realm = context != null ? context.getRealm(): null;
       List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.TEACHER);
       return userList.stream().map(t -> t.buildDomTeacher(realm)).collect(Collectors.toList());
   }
