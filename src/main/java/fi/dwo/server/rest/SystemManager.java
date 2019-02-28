@@ -194,7 +194,7 @@ public class SystemManager {
   
   @PUT
   @Path("school/getTeachersInSchoolList")
-  List<DomTeacher> getTeachersInSchoolList(RestSchool rest) throws Dwo2Exception {
+  public List<DomTeacher> getTeachersInSchoolList(RestSchool rest) throws Dwo2Exception {
 	  Long id = MySQLPersistenceId.getNativeId(rest.getDomSchool());
 	  PersistentSchool school = SchoolManager.findEntity(id);
 	  final String realm = rest.getRestContext().getRealm();
