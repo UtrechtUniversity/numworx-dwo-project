@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
@@ -97,5 +98,14 @@ public class SystemManager {
 	    	      new Object[] {manager.getAuthenticator().getUsername(), school.getSchoolLogin()});
 	  return result;
   }
+
+public List<DomTeacher> getTeachersInSchool(DomSchool school) throws Dwo2Exception {
+	RestSchool rest = new RestSchool();
+	rest.setDomSchool(school);
+	rest.setRestContext(getContext());
+	List<DomTeacher> result = 
+			manager.getPutList("rest/system/school/getTeachersInSchoolList", RestListClassTypes.DomTeacher, rest);
+	return result;
+}
   
 }
