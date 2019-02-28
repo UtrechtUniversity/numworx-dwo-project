@@ -101,10 +101,13 @@ public class RegisterForm extends HttpServlet {
       } catch(Dwo2Exception e) {
     	  DomSchoolFull school = new DomSchoolFull();
     	  school.setAboType(AboType.demo);
-    	  school.setExpire(new Date());
+    	  Date d = new Date();
+    	  d.setMonth(d.getMonth()+3); // 3 maanden?
+    	  school.setExpire(d);
     	  school.setExport(Boolean.FALSE);
     	  school.setSchoolLogin(brin);
     	  school.setSchoolName(organization);
+    	  school.setSchoolRights("_");
     	  List<DomMapEntry<RoleType, String>> passwords = new ArrayList<DomMapEntry<RoleType,String>>();
     	  String password;
     	  password = "L" + encode(brin);
