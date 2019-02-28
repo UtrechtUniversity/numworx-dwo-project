@@ -97,7 +97,7 @@ public class SamlUserManager {
                 persistentUser.getUserID();
             } catch (EntityNotFoundException e) {
                 LOG.log(Level.FINE, "The PersistentSamlUser with " + id + " no longer exists.", e);
-                throw new PersistenceException(e);
+                throw e;
             }
             em.remove(persistentUser);
             em.getTransaction().commit();
