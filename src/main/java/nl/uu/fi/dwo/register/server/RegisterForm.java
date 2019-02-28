@@ -88,7 +88,7 @@ public class RegisterForm extends HttpServlet {
     if (DEMO.equals(form)) {
       // organization/brin
       String organization = req.getParameter(ORGANIZATION);
-      String brin = req.getParameter(BRIN);
+      String brin = req.getParameter("Brinnummer"); // name from teamleader
       brin = generateBrin(brin, organization);
       organization += " " + DEMO;
       try { 
@@ -187,7 +187,7 @@ private String encode(String string) {
 	try {
 		MessageDigest digest = MessageDigest.getInstance("SHA-1");
 		byte[] bytes = digest.digest(string.getBytes(UTF_8));
-		String encode = Base64.getUrlEncoder().encodeToString(bytes);
+		String encode = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
 		return encode;
 	} catch (NoSuchAlgorithmException e) {
 		return string;
@@ -295,8 +295,7 @@ private String encode(String string) {
     resp.addCookie(cookie);
     cookie = new Cookie("cancel", u(mailrb.getString("cancel")));
     resp.addCookie(cookie);
-    
-    
+   
     String role = body.get("role", String.class);
     String brin = body.get("brin", String.class);
     String id = body.getId();
@@ -320,11 +319,7 @@ private String encode(String string) {
     	cookie = new Cookie("schoolCode", u(password));
     	resp.addCookie(cookie);
     }
-    
-
-  
     dispatch.forward(req, resp);
-
   }
 
 public static String u(String value) {
