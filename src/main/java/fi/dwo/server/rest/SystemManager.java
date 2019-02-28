@@ -152,7 +152,9 @@ public class SystemManager {
       s.setImage(school.getImage());
       s.setSchoolLogin(school.getSchoolLogin());
       s.setSchoolName(school.getSchoolName());
-      s.setSchoolRights(school.getSchoolRights());
+      String schoolRights = school.getSchoolRights();
+      if (schoolRights == null) schoolRights = "_"; // geen null
+      s.setSchoolRights(schoolRights);
       s.setAboType(school.getAboType());
       try {
           SchoolManager.create(s);
