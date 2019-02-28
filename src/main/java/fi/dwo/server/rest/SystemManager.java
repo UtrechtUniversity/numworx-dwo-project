@@ -34,11 +34,13 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
@@ -188,6 +190,16 @@ public class SystemManager {
           }
       }
       return Boolean.TRUE;
+  }
+  
+  @PUT
+  @Path("school/getTeachersInSchoolList")
+  List<DomTeacher> getTeachersInSchoolList(RestSchool rest) throws Dwo2Exception {
+	  Long id = MySQLPersistenceId.getNativeId(rest.getDomSchool());
+	  PersistentSchool school = SchoolManager.findEntity(id);
+	  final String realm = rest.getRestContext().getRealm();
+      List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.TEACHER);
+      return userList.stream().map(t -> t.buildDomTeacher(realm)).collect(Collectors.toList());
   }
   
 }
