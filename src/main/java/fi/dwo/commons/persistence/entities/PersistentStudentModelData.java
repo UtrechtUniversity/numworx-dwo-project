@@ -49,6 +49,7 @@ import org.eclipse.persistence.annotations.Converter;
     @NamedQuery(name = "PersistentStudentModelData.findByModelDataId", query = "SELECT p FROM PersistentStudentModelData p WHERE p.modelDataId = :modelDataId"),
     @NamedQuery(name = "PersistentStudentModelData.findByUniqueKeys", query = "SELECT p FROM PersistentStudentModelData p WHERE p.scoID = :scoID and p.modelID = :modelID and p.persistentHasRolePK = :persistentHasRolePK"),
     @NamedQuery(name = "PersistentStudentModelData.findByScoId", query = "SELECT p FROM PersistentStudentModelData p WHERE p.scoID = :scoID"),
+    @NamedQuery(name = "PersistentStudentModelData.findByHasRolePK", query = "SELECT p FROM PersistentStudentModelData p WHERE p.persistentHasRolePK = :persistentHasRolePK"),
     @NamedQuery(name = "PersistentStudentModelData.findStudentScoresOfModel", query = "SELECT p FROM PersistentStudentModelData p WHERE p.modelID = :modelID and p.persistentHasRolePK = :persistentHasRolePK")})
 public class PersistentStudentModelData implements Serializable {
 
