@@ -424,4 +424,11 @@ public class SecuredUserAccountManager {
     public Promise<Boolean> linkSaml(DomSamlUser samluser) {
     	return linkSaml(new DomContext(), samluser);
     }
+    
+    
+    public Promise<Boolean> removeCurrentUser() {
+      PromiseCallback<Boolean> callback = new PromiseCallback<>();
+      service.removeCurrentUser(callback);
+      return callback.getPromise();
+    }
 }
