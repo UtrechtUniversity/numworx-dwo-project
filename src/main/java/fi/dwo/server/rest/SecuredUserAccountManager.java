@@ -8,6 +8,8 @@ import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
@@ -18,6 +20,7 @@ import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserStat
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.entities.RestLoginContext;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
@@ -26,11 +29,14 @@ import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
 import fi.dwo.server.rest.jaxrsfilters.DwoUserPrincipal;
 
@@ -429,43 +435,35 @@ public class SecuredUserAccountManager {
      *
      * @param sc
      * @return
+     * @throws Dwo2Exception 
      */
     @GET
     @Produces({"application/json"})
     @Path("/remove")
-    public Boolean removeCurrentUser(@Context SecurityContext sc) {
+    public Boolean removeCurrentUser(@Context SecurityContext sc) throws Dwo2Exception {
         PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
         if (u == null) {
-            return true;
+            return Boolean.TRUE;
         }
-        if(u.isSingleSchoolAccount()){
-                    throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
-        }
-        List<PersistentHasRole> hrList = HasRoleManager.findEntities(u);
-        for (PersistentHasRole hr : hrList) {
-            List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
-            for (PersistentStudentScoContext ssc : sscList) {
-              try {
-                StudentScoDataManager.destroy(ssc.getStudentSco()); //  non-fatal. studentscodata
-              } catch (EntityNotFoundException e1) {}
-              try {
-                StudentScoContextManager.destroy(ssc.getStudentSco());
-              } catch (EntityNotFoundException e) {}
-            }
-            //Remove StudentOf and TeacherOf
-            List<PersistentStudentOfClass> soList = StudentOfClassManager.findEntities(hr.getPersistentHasRolePK());
-            for (PersistentStudentOfClass so : soList) {
-                StudentOfClassManager.destroy(so.getPersistentStudentOfClassPK());
-            }
-            List<PersistentTeacherOfClass> toList = TeacherOfClassManager.findEntities(hr.getPersistentHasRolePK());
-            for (PersistentTeacherOfClass to : toList) {
-                TeacherOfClassManager.destroy(to.getPersistentTeacherOfClassPK());
-            }
-            //Ready to remove hasRoles
-            HasRoleManager.destroy(hr.getPersistentHasRolePK());
-        }
-        //Ready to remove User
-        UserManager.destroy(u.getId());
+        UserState_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName());
+        PersistentUser user = state.getUser();
+        if (user.isSingleSchoolAccount())
+        {
+          LOG.warning("cannot remove singleschoolStudent " + user.getUsername());
+          return Boolean.FALSE;
+        }    
+        List<PersistentHasRole> roles = HasRoleManager.findEntities(user);
+        roles.forEach(t -> {
+          try {
+            HasRoleUtilManager.removeHasRoleAndItsData(t);
+          } catch (Dwo2Exception e) {
+            throw new Dwo2RestException(e);
+          }
+        });
+
+        SamlUserManager.findEntities(user).forEach(t -> SamlUserManager.destroy(t.getId()));
+        LoginContextManager.findEntities(user.getId()).forEach( t-> LoginContextManager.destroy(t.getId()));
+        UserManager.destroy(user.getId());
         return Boolean.TRUE;
     }
 

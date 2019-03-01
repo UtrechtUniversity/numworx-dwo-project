@@ -152,9 +152,10 @@ public class SecuredUserAccountManagerIT {
     /**
      * Test of removeCurrentUser method, of class SecuredUserAccountManager.
      * Tests if user in tblUser was removed.
+     * @throws Dwo2Exception 
      */
     @Test
-    public void testRemoveCurrentUser() {
+    public void testRemoveCurrentUser() throws Dwo2Exception {
         System.out.println("removeCurrentUser");
         SecurityContext sc = new TestSecurityContext("user01", RoleType.STUDENT);
         SecuredUserAccountManager instance = new SecuredUserAccountManager();

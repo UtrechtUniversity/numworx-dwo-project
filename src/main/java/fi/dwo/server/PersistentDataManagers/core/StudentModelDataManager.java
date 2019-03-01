@@ -5,6 +5,8 @@ import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.server.persistence.DwoEmfFactory;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
@@ -235,4 +238,18 @@ public class StudentModelDataManager {
             em.close();
         }
 	}
+
+  public static List<PersistentStudentModelData> findEntities(PersistentHasRole hr) {
+    EntityManager em = getEntityManager();
+    try {
+      em.getTransaction().begin();
+      TypedQuery<PersistentStudentModelData> q = em.createNamedQuery("PersistentStudentModelData.findByHasRolePK",PersistentStudentModelData.class);
+      q.setParameter("persistentHasRolePK", hr.getPersistentHasRolePK());
+      List<PersistentStudentModelData> list = q.getResultList();
+      em.getTransaction().commit();
+      return list;
+    } finally {
+      em.close();
+    }
+  }
 }
