@@ -66,4 +66,7 @@ public class AccountService {
     public Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins(){
         return schoolLoginManager.getSchoolLogins();
     }
+    public Promise<Boolean> removeCurrentUser() {
+      return accountManager.removeCurrentUser();
+    }
  }

@@ -16,14 +16,19 @@ import javax.inject.Inject;
 
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortDeferred;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedDialogWithConfirmDeferred;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.PromisedMessageDialogWithConfirmEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
@@ -53,6 +58,7 @@ public class AccountPresenter {
     private Map<String, DomSchoolRoleAndClassV2> sracData;
 
     private Display view;
+private LoggingFailure FAILURE;
 
     /**
      * @param view the view to set
@@ -83,6 +89,7 @@ public class AccountPresenter {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         accountService = new AccountService(dwoGlobalVars, accountManager);
+        FAILURE = new LoggingFailure(LOG, eventBus);
     }
 
     public void init() {
@@ -421,4 +428,32 @@ public class AccountPresenter {
         });
     }
 
+    @JsMethod
+    void removeCurrentUser(String password) {
+      password = MD5.md5(password);
+      if ( password .equals(dwoGlobalVars.getCurrentUser().getPassword())) {
+        AlertDialogWithConfirmCancelDeferred defer;
+        defer = new AlertDialogWithConfirmCancelDeferred(DwoLocalesForGWT.instance.NUM_DLG_User_ConfirmLogout());
+        eventBus.fireEvent(new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, defer));
+        
+        Promise<Boolean> promise = defer.getPromise();
+        promise = promise.then( (p) -> 
+          {
+            if (p.getValue().booleanValue()) {
+              return accountService.removeCurrentUser();
+          }
+          return p;
+        });
+        promise = promise.then( p -> {
+            if (p.getValue().booleanValue()) {
+              eventBus.fireEvent(new LoginEvent(State.LOGOUT));
+            } 
+            return p;
+          }, FAILURE);
+      } else {
+        eventBus.fireEvent(new AlertDialogWithOKEvent(Dwo2ExceptionTranslator.getLocalizedCodeExplanation(dwoGlobalVars.getDwoLocale(), Dwo2ExceptionCode.GUI_AnIncorrectPasswordWasGiven)));
+      }
+    }
+    
+    
 }
