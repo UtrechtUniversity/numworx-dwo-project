@@ -9,6 +9,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class SchoolAdminViewHandler implements SwitchViewEventHandler {
@@ -54,6 +56,10 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
           presenterFactory.getPersonsPresenter().init();
           break;
         case ADDPERSON:
+          if (!dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
+            eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
+            break;
+          };
             mainView.showAddPersonView();
             presenterFactory.getAddStudentPresenter().init();
             break;
@@ -66,6 +72,10 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
             presenterFactory.getEditTeacherPresenter().init(switchViewEvent.getUser());
             break;
         case IMPORTPERSONS:
+          if (!dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
+            eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
+            break;
+          };
             mainView.showImportPersonsView();
             presenterFactory.getImportPersonsPresenter().init(switchViewEvent.getFile());
             break;

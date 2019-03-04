@@ -22,6 +22,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -178,7 +180,8 @@ public class PersonsPresenter {
 
     @JsMethod
     public boolean hasImportPersons(){
-        return true;
+        //return true;
+      return dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().licenseIsValid();
     }
     
     @JsMethod
