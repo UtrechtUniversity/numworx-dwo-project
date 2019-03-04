@@ -200,7 +200,7 @@ public class PersistentSchool implements Serializable {
         if (getExpire() == null) {
             return true;
         } else {
-            Calendar c = DwoDateUtilities.getCurrentDwoDateAsCalendarDate();
+            Date c = DwoDateUtilities.getCurrentDwoDate();
             if (c.after(getExpire())) //compare on UTC calendar.
             {
                 return false;
