@@ -63,7 +63,7 @@ public class SchoolManager {
      * @param school
      * @throws Exception
      */
-    public static void edit(PersistentSchool school) throws PersistenceException, Exception {
+    public static void edit(PersistentSchool school) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();

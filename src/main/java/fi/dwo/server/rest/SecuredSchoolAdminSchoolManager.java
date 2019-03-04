@@ -334,7 +334,9 @@ public class SecuredSchoolAdminSchoolManager {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
-
+        if ( !school.licenseIsValid()) {
+          throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "licence expired");
+        }
 //        if (sg != null) {
         Date now = DwoDateUtilities.getCurrentDwoDate();
         PersistentUser user = new PersistentUser();

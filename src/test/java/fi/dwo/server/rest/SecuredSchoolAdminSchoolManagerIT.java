@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
@@ -29,6 +30,7 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolAdmin;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
+import nl.uu.fi.dwo.rest.entities.RestUserFull;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -40,6 +42,8 @@ import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
+
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -285,6 +289,116 @@ public class SecuredSchoolAdminSchoolManagerIT {
             Logger.getLogger(PublicUserManagerIT.class.getName()).log(Level.SEVERE, "", ex);
             fail("Could not find created student of class.");
         }
+    }
+ 
+    @Test public void testSubmitTeacher() throws Dwo2Exception { 
+      SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
+      SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
+      
+      RestUserFull teacher = new RestUserFull();
+      DomSingleSchoolStudent dssStudent = new DomSingleSchoolStudent();
+      dssStudent.setUserName("testuser01");
+      dssStudent.setGivenName("a");
+      dssStudent.setInsertion("b");
+      dssStudent.setFamilyName("c");
+      dssStudent.setEmail("a@b.cd");
+      dssStudent.setPassword("pwd");
+      teacher.setDomUserFull(dssStudent);
+      teacher.setRestContext(new DomContext());
+      
+      Boolean result = instance.submitTeacher(sc, teacher);
+      assertTrue(result);
+
+      PersistentUser user = UserManager.findByUserName(dssStudent.getUserName());
+      assertEquals(dssStudent.getGivenName(), user.getGivenName());
+      assertEquals(dssStudent.getInsertion(), user.getInsertion());
+      assertEquals(dssStudent.getFamilyName(), user.getLastname());
+      assertEquals(dssStudent.getEmail(), user.getEmail());
+      assertEquals(dssStudent.getPassword(), user.getPassword());
+      assertFalse(user.isSingleSchoolAccount());
+      PersistentHasRole hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, SchoolManager.findBySchoolLogin("school01"), RoleType.TEACHER);
+      assertNotNull(hr);
+      
+    }
+ 
+    @Test public void testSubmitTeacher_expire() { 
+      PersistentSchool school = SchoolManager.findBySchoolLogin("school01");    
+      school.setExpire(new Date(0));
+      SchoolManager.edit(school);
+      SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
+      SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
+      
+      RestUserFull teacher = new RestUserFull();
+      DomSingleSchoolStudent dssStudent = new DomSingleSchoolStudent();
+      dssStudent.setUserName("testuser01");
+      dssStudent.setGivenName("a");
+      dssStudent.setInsertion("b");
+      dssStudent.setFamilyName("c");
+      dssStudent.setEmail("a@b.cd");
+      dssStudent.setPassword("pwd");
+      teacher.setDomUserFull(dssStudent);
+      teacher.setRestContext(new DomContext());
+    try {  
+      Boolean result = instance.submitTeacher(sc, teacher);
+      assertFalse(result);
+    } catch (Dwo2RestException ex) {
+      assertEquals(Dwo2ExceptionCode.Rest_Registration_School_license_expired, ex.getDwo2Code());
+  }
+
+      PersistentUser user = UserManager.findByUserName(dssStudent.getUserName());
+      assertNull(user);
+    }
+    
+    
+    
+    @Test
+    public void testSubmitSingleSchoolStudent_expire() {
+        System.out.println("SubmitSingleSchoolStudent");
+        PersistentSchool school = SchoolManager.findBySchoolLogin("school01");    
+        school.setExpire(new Date(0));
+        SchoolManager.edit(school);
+       SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
+        RestNewSingleSchoolStudent rssStudent = new RestNewSingleSchoolStudent();
+        DomNewSingleSchoolStudent nssStudent = new DomNewSingleSchoolStudent();
+        DomSingleSchoolStudent dssStudent = new DomSingleSchoolStudent();
+        rssStudent.setRestContext(new DomContext());
+        rssStudent.setDomNewSingleSchoolStudent(nssStudent);
+        SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
+        dssStudent.setUserName("testuser01");
+        dssStudent.setGivenName("a");
+        dssStudent.setInsertion("b");
+        dssStudent.setFamilyName("c");
+        dssStudent.setEmail("a@b.cd");
+        dssStudent.setPassword("pwd");
+        nssStudent.setDomSingleSchoolStudent(dssStudent);
+        nssStudent.setDomSchoolClass(null);
+
+        System.out.println("submitNewUser without a schoolclass");
+        try {
+            Boolean result = instance.submitSingleSchoolStudent(sc, rssStudent);
+            assertFalse(result);
+        } catch (Dwo2RestException ex) {
+            assertEquals(Dwo2ExceptionCode.Rest_Registration_School_license_expired, ex.getDwo2Code());
+        }
+
+        PersistentUser user = UserManager.findByUserName(dssStudent.getUserName());
+        assertNull(user);
+
+        System.out.println("submitNewUser with a schoolclass");
+        dssStudent.setUserName("testuser02");
+        DomSchoolClass schoolClass = SchoolClassManager.findEntity(1L).buildDomSchoolClass();//SchoolClass01        
+        nssStudent.setDomSchoolClass(schoolClass);
+
+        try {
+            Boolean result = instance.submitSingleSchoolStudent(sc, rssStudent);
+            assertFalse(result);
+        } catch (Dwo2RestException ex) {
+          assertEquals(Dwo2ExceptionCode.Rest_Registration_School_license_expired, ex.getDwo2Code());
+      }
+
+        user = UserManager.findByUserName(dssStudent.getUserName());
+        assertNull(user);
+        
     }
 
     /**

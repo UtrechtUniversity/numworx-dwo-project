@@ -172,7 +172,7 @@ public class PublicUserManager {
         }
 
         if (!school.licenseIsValid()) {
-            LOG.log(Level.INFO, "Registration failde for school {0}, school id {1}, the license expired on {1}.", new Object[]{school.getSchoolName(), school.getSchoolID(), school.getExpire()});
+            LOG.log(Level.INFO, "Registration failde for school {0}, school id {1}, the license expired on {2}.", new Object[]{school.getSchoolName(), school.getSchoolID(), school.getExpire()});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "The license expired on " + school.getExpire());
         }
 

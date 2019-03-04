@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
@@ -49,9 +50,13 @@ import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.testutil.TestSecurityContext;
+
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.persistence.PersistenceException;
 import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
@@ -601,6 +606,42 @@ public class SecuredTeacherSchoolClassManagerIT {
             fail("Could not find created user's hasRole");
         }
     }
+    @Test
+    public void testSubmitSingleSchoolStudent_expire() throws Exception {
+        System.out.println("SubmitSingleSchoolStudent expire");
+        SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+        PersistentSchool school = SchoolManager.findBySchoolLogin("school01");    
+        school.setExpire(new Date(0));
+        SchoolManager.edit(school);
+
+        RestNewSingleSchoolStudent rss = new RestNewSingleSchoolStudent();
+        DomNewSingleSchoolStudent nss = new DomNewSingleSchoolStudent();
+        DomSingleSchoolStudent dss = new DomSingleSchoolStudent();
+        rss.setDomNewSingleSchoolStudent(nss);
+        nss.setDomSingleSchoolStudent(dss);
+        dss.setUserName("singleschooluser");
+        dss.setGivenName("a");
+        dss.setInsertion("b");
+        dss.setFamilyName("c");
+        dss.setEmail("a@b.cd");
+        dss.setPassword("pwd");
+        dss.setSingleSchool(true);
+
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(2L);
+        nss.setDomSchoolClass(schoolClass.buildDomSchoolClass());
+
+        try {
+          SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
+          Boolean result = instance.SubmitSingleSchoolStudent(sc, rss);
+          assertFalse("Operation failed to be true.", result);
+        } catch (Dwo2RestException e) {
+          assertEquals(Dwo2ExceptionCode.Rest_Registration_School_license_expired, e.getDwo2Code());
+        }
+
+        //fetch user
+        PersistentUser user = UserManager.findByUserName(dss.getUserName());
+        assertNull("should not exist", user);
+     }
 
     @Test
     public void testAttachCourseToClass() {
