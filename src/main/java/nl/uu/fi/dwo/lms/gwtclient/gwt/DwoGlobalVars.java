@@ -463,4 +463,8 @@ public class DwoGlobalVars {
     public void setCurrentUser(DomUserFull user) {
       setCurrentUser(user, getRealm());
     }
+    
+    public Promise<Dwo2Exception> logout() {
+      return accountManager.logout(getCurrentLoginContext());
+    }
 }

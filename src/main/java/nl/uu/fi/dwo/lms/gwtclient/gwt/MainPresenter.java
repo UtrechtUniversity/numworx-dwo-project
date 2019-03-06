@@ -165,7 +165,17 @@ public class MainPresenter {
                 eventBus.fireEvent(event);
                 return dialogPromise.getPromise();
             }
-        }).then(new Success<Boolean, Void>() {
+        })
+        .then(resolved -> { 
+            if (resolved.getValue()) {
+              return dwoGlobalVars.logout()
+                  .map(r -> Boolean.TRUE)
+                  .fallbackTo(Promises.resolved(Boolean.TRUE));
+            }
+            return resolved;
+        })
+        
+        .then(new Success<Boolean, Void>() {
             @Override
             //Are you sure?
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
