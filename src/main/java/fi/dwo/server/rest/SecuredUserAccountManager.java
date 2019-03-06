@@ -324,14 +324,18 @@ public class SecuredUserAccountManager {
 //            LOG.log(Level.SEVERE, null, e);
 //            //return false;
 //        }
-        //erasing PersistentLoginContext only if proper setRegisterTimeStamp
+        //erasing PersistentLoginContext only if proper setRegisterTimeStamp and lastlogin timestamp
         if (loginContext != null) {
             try {
                 List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
                 if (loginContextList.size() == 1) {
-                    if (loginContext.getDomLoginContext().getRegisterTimeStamp().equals((loginContextList.get(0).getRegisterTimeStamp()))) {
-                        loginContextList.get(0).setLastLogin(null);
-                        LoginContextManager.edit(loginContextList.get(0));
+                    if (loginContext.getDomLoginContext().getRegisterTimeStamp().equals((loginContextList.get(0).getRegisterTimeStamp()))
+                        && loginContext.getDomLoginContext().getLastLoginTimeStamp().equals(loginContextList.get(0).getLastLogin())
+                        ) {
+//                        loginContextList.get(0).setLastLogin(null); not for housekeeping users. // changed 6 maart 2019, actie voor maart 2021
+                        loginContextList.get(0).setSecretKey(null);
+                        loginContextList.get(0).setLastLogin(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+                       LoginContextManager.edit(loginContextList.get(0));
                     }
                 } else {
                     //logout while no login tried before.
