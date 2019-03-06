@@ -35,6 +35,7 @@ import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.FromToManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -392,7 +393,12 @@ public class SecuredDwoAdminSchoolManager {
                                 //remove saml user
                                 SamlUserManager.destroy(su.getId());
                             }
-                            //remove user
+                            try {
+                            	LoginContextManager.findEntities(u.getId()).forEach(item -> LoginContextManager.destroy(item.getId()));
+                            } catch (PersistenceException e) {
+                            	
+                            }
+                           //remove user
                             UserManager.destroy(u.getId());
                         }
                     }

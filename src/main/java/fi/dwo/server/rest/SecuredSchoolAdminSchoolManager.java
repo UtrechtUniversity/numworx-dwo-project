@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -30,6 +31,8 @@ import nl.uu.fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
+import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -228,6 +231,17 @@ public class SecuredSchoolAdminSchoolManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
+        try {
+			SamlUserManager.findEntities(student).forEach(t -> SamlUserManager.destroy(t.getId()));
+		} catch (PersistenceException e1) {
+		}
+
+        try {
+        	LoginContextManager.findEntities(student.getId()).forEach(item -> LoginContextManager.destroy(item.getId()));
+        } catch (PersistenceException e) {
+        	
+        }
+        
         try {
             UserManager.destroy(student.getId());
         } catch (PersistenceException e) {
