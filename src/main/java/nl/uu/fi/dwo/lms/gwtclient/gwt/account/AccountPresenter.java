@@ -433,7 +433,7 @@ private LoggingFailure FAILURE;
       password = MD5.md5(password);
       if ( password .equals(dwoGlobalVars.getCurrentUser().getPassword())) {
         AlertDialogWithConfirmCancelDeferred defer;
-        defer = new AlertDialogWithConfirmCancelDeferred(DwoLocalesForGWT.instance.NUM_DLG_User_ConfirmLogout());
+        defer = new AlertDialogWithConfirmCancelDeferred(DwoLocalesForGWT.instance.NUM_DLG_ORGANISATION_CONFIRM_REMOVE1());
         eventBus.fireEvent(new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, defer));
         
         Promise<Boolean> promise = defer.getPromise();
