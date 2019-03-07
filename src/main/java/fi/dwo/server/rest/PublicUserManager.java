@@ -794,6 +794,7 @@ public class PublicUserManager {
             String smtpServer = servletContext.getInitParameter("fi.dwo.server.rest.smtp.server");
             String smtpPort = servletContext.getInitParameter("fi.dwo.server.rest.smtp.port");
             String smtpTLS = servletContext.getInitParameter("fi.dwo.server.rest.smtp.tls");
+            String smtpSSL = servletContext.getInitParameter("fi.dwo.server.rest.smtp.ssl");
             String smtpAuth = servletContext.getInitParameter("fi.dwo.server.rest.smtp.auth");
             String smtpUser = servletContext.getInitParameter("fi.dwo.server.rest.smtp.user");
             String smtpPassword = servletContext.getInitParameter("fi.dwo.server.rest.smtp.password");
@@ -804,7 +805,7 @@ public class PublicUserManager {
             props.put("mail.smtp.host", smtpServer);
             props.put("mail.smtp.port", smtpPort);
             props.put("mail.smtp.auth", smtpAuth);
-
+            if (smtpSSL != null) props.put("mail.smtp.ssl.enable", smtpSSL);
             Session session;
             if (smtpAuth.equals("true")) {
                 session = Session.getInstance(props,

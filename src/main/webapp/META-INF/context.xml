@@ -116,6 +116,7 @@ SMTP_SERVER=localhost
 SMTP_PORT=25
 SMTP_AUTH=false
 SMTP_TLS=no
+SMTP_SSL=no
 SMTP_USER=me
 SMTP_PASSWORD=mySmtpSecret
 SMTP_EMAIL=wisweb@fi.uu.nl -->
@@ -123,6 +124,7 @@ SMTP_EMAIL=wisweb@fi.uu.nl -->
   <Parameter name="fi.dwo.server.rest.smtp.port" override="true" value="${SMTP_PORT}"/>
   <Parameter name="fi.dwo.server.rest.smtp.auth" override="true" value="${SMTP_AUTH}"/>
   <Parameter name="fi.dwo.server.rest.smtp.tls" override="true" value="${SMTP_TLS}"/>
+  <Parameter name="fi.dwo.server.rest.smtp.ssl" override="true" value="${SMTP_SSL}"/>
   <Parameter name="fi.dwo.server.rest.smtp.user" override="true" value="${SMTP_USER}"/>
   <Parameter name="fi.dwo.server.rest.smtp.password" override="true" value="${SMTP_PASSWORD}"/>
   <Parameter name="fi.dwo.server.rest.smtp.email" override="true" value="${SMTP_EMAIL}"/>
