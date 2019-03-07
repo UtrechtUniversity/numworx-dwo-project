@@ -210,6 +210,8 @@ private String encode(String string) {
     if (smtpPort == null) smtpPort = "25";
     String smtpTLS = initParameter("fi.dwo.server.rest.smtp.tls");
     if (smtpTLS == null) smtpTLS = "no";
+    String smtpSSL = initParameter("fi.dwo.server.rest.smtp.ssl");
+    if (smtpSSL == null) smtpSSL = "false";
     String smtpAuth = initParameter("fi.dwo.server.rest.smtp.auth");
     if (smtpAuth == null) smtpAuth = "false";
     final String smtpUser = initParameter("fi.dwo.server.rest.smtp.user");
@@ -223,6 +225,7 @@ private String encode(String string) {
     Properties props = new Properties();
     props.put("mail.transport.protocol", "smtp");
     props.put("mail.smtp.starttls.enable", smtpTLS);
+    props.put("mail.smtp.ssl.enable", smtpSSL);
     props.put("mail.smtp.host", smtpServer);
     props.put("mail.smtp.port", smtpPort);
     props.put("mail.smtp.auth", smtpAuth);
