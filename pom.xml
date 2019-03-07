@@ -9,7 +9,6 @@
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>
     <artifactId>DWO-commons-lib</artifactId>
-  <version>2.3.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.build.finalName}</name>
     <description>This is a java library of common classes between the DwoJAppplet and the DwoServer applications.</description>
