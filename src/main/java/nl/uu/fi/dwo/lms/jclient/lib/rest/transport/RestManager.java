@@ -332,7 +332,7 @@ class RestManager extends RestyDateTimeFormat {
       if (responseCode == 204) 
     	  return null; // No content
 	  if (responseCode != 200) {
-        LOG.log(Level.WARNING, "Code: {0}. Reason{1}",
+        LOG.log(Level.WARNING, "Code: {0}. Reason {1}",
             new Object[] {responseCode, conn.getResponseMessage()});
         Dwo2Exception e;
         if (responseCode == 400) {// Dwo2Exception
