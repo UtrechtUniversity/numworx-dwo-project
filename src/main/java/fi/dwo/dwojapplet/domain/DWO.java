@@ -2078,6 +2078,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 			int pid = MySQLPersistenceId.getNativeId(edit).intValue();
 			Course c = (Course) PersistenceFacade.instance().get(pid, Course.class);
 			return c;
+    	} catch (Dwo2Exception e) {
+          LOG.log(Level.SEVERE, "add course", e);
+          GuiCreator.instance().ShowErrorDialog(this, e);
+          return null;
     	} catch(Exception e) {
     		LOG.log(Level.SEVERE, "add course", e);
             JOptionPane.showMessageDialog(this, e.getMessage());

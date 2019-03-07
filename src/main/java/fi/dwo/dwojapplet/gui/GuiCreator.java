@@ -96,8 +96,8 @@ public class GuiCreator {
         JOptionPane.showMessageDialog(parentComponent, message, TextMapper.getText(TextMapper.DLG_MESSAGE), JOptionPane.WARNING_MESSAGE);
     }
 
-        /**
-     * Show DwoWarning message
+    /**
+     * Show Dwo2Exception message
      *
      * @param parentComponent
      * @param ex
