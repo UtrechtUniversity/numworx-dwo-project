@@ -58,7 +58,7 @@ cookie("familyName",u(name_family), response);
 cookie("insertion", u(name_prefix), response);
 cookie("email", u(email), response);
 cookie("schoolLogin", schoolCode == null ? null : u(org_id), response);
-cookie("suggestion", u(student_id), response); // XXX moet de nlEduPersonRealId zijn, zonder @suffix.
+//cookie("suggestion", u(student_id), response); // XXX moet de nlEduPersonRealId zijn, zonder @suffix.
 cookie("schoolGroup", role, response);
 cookie("schoolCode", u(schoolCode), response);
 
