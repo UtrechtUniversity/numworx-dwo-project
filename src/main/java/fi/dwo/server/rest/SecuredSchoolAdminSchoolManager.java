@@ -231,19 +231,9 @@ public class SecuredSchoolAdminSchoolManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        try {
-			SamlUserManager.findEntities(student).forEach(t -> SamlUserManager.destroy(t.getId()));
-		} catch (PersistenceException e1) {
-		}
-
-        try {
-        	LoginContextManager.findEntities(student.getId()).forEach(item -> LoginContextManager.destroy(item.getId()));
-        } catch (PersistenceException e) {
-        	
-        }
         
         try {
-            UserManager.destroy(student.getId());
+            UserUtilManager.deleteUser(student);
         } catch (PersistenceException e) {
             return false;
         }

@@ -38,6 +38,7 @@ import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
 import fi.dwo.server.rest.jaxrsfilters.DwoUserPrincipal;
 
 import java.security.Principal;
@@ -455,19 +456,8 @@ public class SecuredUserAccountManager {
         {
           LOG.warning("cannot remove singleschoolStudent " + user.getUsername());
           return Boolean.FALSE;
-        }    
-        List<PersistentHasRole> roles = HasRoleManager.findEntities(user);
-        roles.forEach(t -> {
-          try {
-            HasRoleUtilManager.removeHasRoleAndItsData(t);
-          } catch (Dwo2Exception e) {
-            throw new Dwo2RestException(e);
-          }
-        });
-
-        SamlUserManager.findEntities(user).forEach(t -> SamlUserManager.destroy(t.getId()));
-        LoginContextManager.findEntities(user.getId()).forEach( t-> LoginContextManager.destroy(t.getId()));
-        UserManager.destroy(user.getId());
+        }
+        UserUtilManager.deleteUser(user);
         return Boolean.TRUE;
     }
 

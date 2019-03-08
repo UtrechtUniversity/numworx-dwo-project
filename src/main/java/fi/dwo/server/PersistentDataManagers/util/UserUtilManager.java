@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.PersistentDataManagers.util;
 
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -13,6 +14,9 @@ import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
+import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
@@ -105,5 +109,20 @@ public class UserUtilManager {
             em.close();
         }
     }       
-                
+       
+    public static void deleteUser(PersistentUser user) {
+      List<PersistentHasRole> roles = HasRoleManager.findEntities(user);
+      roles.forEach(t -> {
+        try {
+          HasRoleUtilManager.removeHasRoleAndItsData(t);
+        } catch (Dwo2Exception e) {
+          throw new Dwo2RestException(e);
+        }
+      });
+
+      SamlUserManager.findEntities(user).forEach(t -> SamlUserManager.destroy(t.getId()));
+      LoginContextManager.findEntities(user.getId()).forEach( t-> LoginContextManager.destroy(t.getId()));
+      UserManager.destroy(user.getId());
+
+    }
 }
