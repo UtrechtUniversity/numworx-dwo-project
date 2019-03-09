@@ -350,33 +350,34 @@ public abstract class XMLView {
 		if(opdracht.containsKey("scheidingX"))
 		{
 			breedte = ((Number) opdracht.get("scheidingX")).intValue();
+			//breedte = Window.getClientWidth();
 		}
 
-		if(!MGWT.getOsDetection().isDesktop() 
-				&& false // FIXME staat uit omdat Graphtool clientX en clientY niet goed doet.
-		) {
-			final int width=breedte;
-
-		// FIXED is dit op tijd? ALLEEN OP TABLET!!!!
-			ResizeHandler resize = new ResizeHandler() {
-
-				@Override
-				public void onResize(ResizeEvent event) {
-					double factor = Window.getClientWidth();
-					logger.info("zoom " + factor + " / " + width);
-					factor = factor / width;
-					Style style = destination.getElement().getStyle();
-					if(factor > 0.6 && factor < 1.4)
-					{
-						style.setProperty("zoom", String.valueOf(factor));
-					} else {
-						style.clearProperty("zoom");			
-					}
-				}
-			};
-			resize.onResize(null);
-			Window.addResizeHandler(resize);
-		}
+//		if(!MGWT.getOsDetection().isDesktop() 
+//				&& false // FIXME staat uit omdat Graphtool clientX en clientY niet goed doet.
+//		) {
+//			final int width=breedte;
+//
+//		// FIXED is dit op tijd? ALLEEN OP TABLET!!!!
+//			ResizeHandler resize = new ResizeHandler() {
+//
+//				@Override
+//				public void onResize(ResizeEvent event) {
+//					double factor = Window.getClientWidth();
+//					logger.info("zoom " + factor + " / " + width);
+//					factor = factor / width;
+//					Style style = destination.getElement().getStyle();
+//					if(factor > 0.6 && factor < 1.4)
+//					{
+//						style.setProperty("zoom", String.valueOf(factor));
+//					} else {
+//						style.clearProperty("zoom");			
+//					}
+//				}
+//			};
+//			resize.onResize(null);
+//			Window.addResizeHandler(resize);
+//		}
 // FIXME ....	
 		hoofdPanel = new TekstVakPanel(breedte, hoogte, randomVarNamen, randomVarWaarden, getAnchorContext());
 		hoofdPanel.setCommunicationRoot(comRoot);
@@ -384,6 +385,19 @@ public abstract class XMLView {
 		hoofdPanel.zetInstellingen(instellingen);
 		hoofdPanel.setKeyboard(kb);
 		hoofdPanel.zetOpdracht(opdracht);
+		
+		
+		
+		ResizeHandler resize = new ResizeHandler() {
+
+			@Override
+			public void onResize(ResizeEvent event) {
+				final int w  = Window.getClientWidth()-20;
+				hoofdPanel.zetVolledigeBreedte(w);
+			}
+		};
+		resize.onResize(null);
+		Window.addResizeHandler(resize);
 		
 		destination.add(hoofdPanel);
 		opdrachtObjects.add(hoofdPanel);
@@ -396,7 +410,10 @@ public abstract class XMLView {
 		if(instellingen.containsKey("margeLinks"))
 		style.setMarginLeft(instellingen.getInt("margeLinks"), Style.Unit.PX);
 		if(instellingen.containsKey("margeRechts"))
-		style.setMarginRight(instellingen.getInt("margeRechts"), Style.Unit.PX);	
+		style.setMarginRight(instellingen.getInt("margeRechts"), Style.Unit.PX);
+		
+		breedte = Window.getClientWidth()-20;
+		hoofdPanel.zetVolledigeBreedte(breedte);
 	}
 
 	public Panel getPanelElement(final FormuleHolder editor) {
