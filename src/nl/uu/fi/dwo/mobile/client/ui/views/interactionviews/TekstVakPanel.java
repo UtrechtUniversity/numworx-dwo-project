@@ -213,6 +213,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	private OpdrNavIF comRoot = null;
 	private int breedte = 600;
 	private int hoogte = 250;
+	private boolean volledigeBreedte=false;
 	/**
 	 * Breedte onthouden voor invisible callout-tekstvak
 	 */
@@ -352,6 +353,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	private String feedbackStatistiek = "";
 	private TekstVak feedbackPanel = null;
 	int feedbackPanelHeight = 0;
+	private boolean volledigeBreedte2K;
 	
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
@@ -372,6 +374,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	{
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
+		this.volledigeBreedte = true;
 		
 		//niet nodig waarschijnlijk
 		facade = new PopupFacade((ObjectMap)null);
@@ -452,6 +455,10 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		
 		if (h != null && h.containsKey("hoogte"))
 			hoogte = h.getInt("hoogte");
+		
+		if (h != null && h.containsKey("volledigeBreedte"))
+			volledigeBreedte = h.getBoolean("volledigeBreedte");
+		
 		if (h != null && h.containsKey("interactiePanelLaunchState"))
 			launchState =  h.getObjectMap("interactiePanelLaunchState");
 
@@ -646,6 +653,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			pasAanB = launchState.getBoolean("pasAanB",pasAanB);
 		}
 		
+		volledigeBreedte2K = tableBorders && breedtes!=null && breedtes.size()==1 && hoogtes.size()==1;
+		
 		selectable = launchState.getBoolean("selectable",selectable); 
 		sleepbaar = launchState.getBoolean("sleepbaar", sleepbaar);
 		draaibaar = launchState.getBoolean("draaibaar", draaibaar);
@@ -760,7 +769,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			backButton = launchState.getBoolean("backButton");
 		if(launchState.containsKey("hintButton"))
 			hintButton = launchState.getBoolean("hintButton");
-
+		
 // FIXME overleg met Peter		
 //		if(ingeklapt) for(int i = 0; i < hoogtes.size(); i++) {
 //			ingeklapt = false;
@@ -5000,6 +5009,49 @@ private Object CamelCase(String name) {
 	}
 	
 	public void zetVolledigeBreedte(int breedte){
+//		if(volledigeBreedte && breedtes!=null) {
+//			int aantalKolommen = breedtes.size();
+//			int teVerdelenBreedte = this.breedte - (aantalKolommen-1)*cellSpaceColumn;
+//			double factor = 1.0*(breedte-(aantalKolommen-1)*cellSpaceColumn)/teVerdelenBreedte;
+//			double restbreedte = breedte-(aantalKolommen-1)*cellSpaceColumn;				
+//			double[] newBreedtes = new double[breedtes.size()];
+//			for(int i=0 ; i<aantalKolommen ; i++) {
+//				if(i==aantalKolommen-1) {
+//					for(int j=0 ; j<hoogtes.size() ; j++) 
+//						tekstVakken[j][i].setSize((int)restbreedte, tekstVakken[0][0].getHeight());
+//					newBreedtes[i] = restbreedte;		
+//				}
+//				else {
+//					for(int j=0 ; j<hoogtes.size() ; j++)
+//						tekstVakken[j][i].setSize((int)(breedtes.get(i)*factor), tekstVakken[0][0].getHeight());
+//					newBreedtes[i] = breedtes.get(i)*factor;
+//					restbreedte = restbreedte-breedtes.get(i)*factor;
+//				}
+//			}
+//			restbreedte = breedte;
+//			for(int i=0 ; i<aantalKolommen ; i++) {
+//				breedtes.set(i,newBreedtes[i]);
+//			}
+//				
+//			this.breedte = breedte;
+//				
+//			for(int i=0 ; i<aantalKolommen ; i++) {
+//				for(int j=0 ; j<hoogtes.size() ; j++) {
+//					tekstVakken[j][i].reLayout();
+//				}
+//			}
+//		}
+//		if(volledigeBreedte2K) {
+//			int w = breedte;
+//			if(breedte>800) 
+//				w = breedte/2;
+//			tekstVakken[0][0].setSize(w, tekstVakken[0][0].getHeight());
+//			
+//			this.breedte = w;
+//			breedtes.set(0,(double)w);
+//			
+//			tekstVakken[0][0].reLayout();
+//		}
 	}
 
 	@Override
