@@ -256,7 +256,6 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	CssColor selectieColor = CssColor.make(255, 128, 0);
 	CssColor grijs = CssColor.make(128, 128, 128);
 	int randDikte, randDikte0;
-	int responsiveBreedteGetal = 800;
 	private boolean popup;
 	//private boolean tableBorders;
 	private LayoutPanel[] horizontalBorders;
@@ -354,7 +353,8 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	private String feedbackStatistiek = "";
 	private TekstVak feedbackPanel = null;
 	int feedbackPanelHeight = 0;
-	private boolean volledigeBreedte2K;
+	private boolean responsive;
+	private int responsiveToggleWidth = 800;
 	
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
@@ -654,8 +654,6 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			pasAanB = launchState.getBoolean("pasAanB",pasAanB);
 		}
 		
-		volledigeBreedte2K = tableBorders && breedtes!=null && breedtes.size()==1 && hoogtes.size()==1;
-		
 		selectable = launchState.getBoolean("selectable",selectable); 
 		sleepbaar = launchState.getBoolean("sleepbaar", sleepbaar);
 		draaibaar = launchState.getBoolean("draaibaar", draaibaar);
@@ -676,6 +674,12 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			layerNr = launchState.getInt("layerNr");
 		} else
 			layerNr = 0;
+		
+		if (launchState.containsKey("responsive"))
+			responsive = launchState.getBoolean("responsive");
+		if (launchState.containsKey("responsiveToggleWidth"))
+			responsiveToggleWidth = launchState.getInt("responsiveToggleWidth");
+		
 		visible = launchState.getBoolean("visible", true);
 		if(!visible)
 		{	
@@ -786,7 +790,6 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			resizeForCallOut();
 		}
 		
-		responsiveBreedteGetal = randDikte;
 		randDikte0 = randDikte = randZichtbaar ? randDikte : 0; 
 
 		mainPanel2 = new LayoutPanel(); 
@@ -5043,9 +5046,9 @@ private Object CamelCase(String name) {
 //				}
 //			}
 //		}
-//		if(volledigeBreedte2K) {
+//		if(responsive) {
 //			int w = breedte;
-//			if(breedte>responsiveBreedteGetal*100) 
+//			if(breedte>responsiveToggleWidth) 
 //				w = breedte/2;
 //			tekstVakken[0][0].setSize(w, tekstVakken[0][0].getHeight());
 //			
