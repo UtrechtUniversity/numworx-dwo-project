@@ -63,11 +63,11 @@ public class GarbageManagerIT {
       instance = null;
   }
 
-  GarbageManager manager;
+  SecuredDwoAdminGarbageManager manager;
   @Before
   public void setUp() throws Exception {
       instance.IntializeTestDatabase();
-      manager = new GarbageManager();
+      manager = new SecuredDwoAdminGarbageManager();
   }
 
   @After

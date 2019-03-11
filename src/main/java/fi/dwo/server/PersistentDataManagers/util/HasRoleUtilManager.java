@@ -212,7 +212,7 @@ public class HasRoleUtilManager {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "User could not be found.");
         }
         //Update the default hasRole to the null school if user is in the current role.
-        if (user.getSchoolGroupId().equals(hr.getPersistentHasRolePK().getSchoolGroupID())) //userid's already match...
+        if ( hr.getPersistentHasRolePK().getSchoolGroupID().equals(user.getSchoolGroupId())) //userid's already match...
         {
             RoleType type = RoleType.STUDENT;
             PersistentSchoolGroup sg = SchoolGroupManager.findBySchoolAndRole(SchoolManager.findBySchoolLogin("null"), type);

@@ -44,13 +44,16 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  * @author wim
  *
  */
-@Path("/garbage")
-public class GarbageManager {
+@Path("/secure/dwoadmin/garbage")
+public class SecuredDwoAdminGarbageManager {
 
   @GET
   @Produces({"application/json"})
   @Path("/user/get") 
-  List<DomUserFullwLoginContext> getUsers(@Context SecurityContext sc, @QueryParam("before") Long before, @QueryParam("limit") Integer limit) {
+  public List<DomUserFullwLoginContext> getUsers(@Context SecurityContext sc, @QueryParam("before") Long before, @QueryParam("limit") Integer limit) throws Dwo2Exception {
+    DwoAdminState_HR_R_S_SG_U admin = AnonDomainAuthorizer.build()
+        .submitUser(sc.getUserPrincipal().getName())
+        .setDefaultHasRole().buildDwoAdmin();
     Date when = new Date(System.currentTimeMillis() - 3L*365*24*3600*1000); // sensible defaults
     if (before != null) when.setTime(before.longValue());
     if (limit == null) limit = 100;
@@ -112,7 +115,7 @@ public class GarbageManager {
   @PUT
   @Produces({"application/json"})
   @Path("/user/remove") 
-  Boolean removeUser(@Context SecurityContext sc, RestUser rest) throws Dwo2Exception {
+  public Boolean removeUser(@Context SecurityContext sc, RestUser rest) throws Dwo2Exception {
   DwoAdminState_HR_R_S_SG_U admin = AnonDomainAuthorizer.build()
       .submitUser(sc.getUserPrincipal().getName())
       .setHasRole(rest.getRestContext().getDomHasRole()).buildDwoAdmin();
