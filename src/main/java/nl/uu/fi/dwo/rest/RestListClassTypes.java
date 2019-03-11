@@ -50,6 +50,7 @@ public enum RestListClassTypes {
         DomSchoolRoleAndClassV2,
         DomSchoolsRolesAndClasses,
         DomSchoolsRolesAndClassesV2,
+        DomUserFullwLoginContext,
         //Non-persistent classes
         PersistenceId
     }
