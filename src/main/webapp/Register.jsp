@@ -42,9 +42,9 @@ if (org_id == null) {
 
 Object user_id = request.getAttribute("uid");
 Object student_id = request.getAttribute("studentNumber");
-if (student_id == null) {
-	student_id = user_id;
-}
+// if (student_id == null) {
+// 	student_id = user_id;
+// }
 
 
 String roles = String.valueOf(request.getAttribute("unscoped-affiliation"));
@@ -58,7 +58,7 @@ cookie("familyName",u(name_family), response);
 cookie("insertion", u(name_prefix), response);
 cookie("email", u(email), response);
 cookie("schoolLogin", schoolCode == null ? null : u(org_id), response);
-//cookie("suggestion", u(student_id), response); // XXX moet de nlEduPersonRealId zijn, zonder @suffix.
+cookie("suggestion", u(student_id), response); // XXX moet de nlEduPersonRealId zijn, zonder @suffix.
 cookie("schoolGroup", role, response);
 cookie("schoolCode", u(schoolCode), response);
 
