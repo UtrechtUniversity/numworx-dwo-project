@@ -62,6 +62,8 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	
 	TextArea[][] objectivesTextAreas;
 	Label[] categoryLabels;
+	Label titleLabel;
+	double titleScore = 0;
 	
 	Canvas canvas;
 	Context2d ctx;
@@ -74,6 +76,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	
 	String[][] colorArray;
 	String[] categoryColorArray;
+	
 	//CssColor[][] colorArray;
 	//CssColor[] categoryColorArray;
 	
@@ -101,6 +104,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		this.stars = stars;
 		canvas = Canvas.createIfSupported();
 		ctx = canvas.getContext2d();
+		String titleForDiagram = "";
 		//setLayout(null);
 		
 //		theFont = new Font("Dialog", Font.PLAIN, 12);
@@ -126,7 +130,11 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		{
 			categoryScoreObjectives = h.getDoubleArray("categorieScoreObjectives");
 			categoryMaxObjectives = h.getDoubleArray("categorieMaxObjectives");
-		}
+			if(h.containsKey("title"))
+				titleForDiagram = h.getString("title");
+			if(h.containsKey("titleScore"))
+				titleScore = h.getDouble("titleScore");
+			}
 		
 //		objectives = (String[][]) map.get("objectives");
 //		totaalScoreObjectives = (double[][]) map.get("totaalScoreObjectives");
@@ -275,6 +283,11 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 			    dwologger.setLogID("StudentModel");
 			}
 			
+			titleLabel = new Label(titleForDiagram);
+			titleLabel.getElement().getStyle().setFontSize(12, Unit.PX);
+			titleLabel.getElement().getStyle().setFontWeight(FontWeight.BOLD);
+			if(!titleForDiagram.equals(""))
+				add(titleLabel);			
 			
 			categoryLabels = new Label[objectivesForDiagram.length];
 			margin = 10;
@@ -483,6 +496,8 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 		
 		lineHeight = 15 + margin; //TODO nog iets zinvollers van 15 maken; meten mbv canvas?
 		textColumnWidth = 0;
+		if(!titleLabel.getText().equals(""))
+			textColumnWidth = (int) ctx.measureText(titleLabel.getText()).getWidth() + margin + 25;
 		indent = 20;
 		for(int j = 0; j < objectivesForDiagram.length; j++)
 		{
@@ -575,7 +590,60 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 			ctx.lineTo(textColumnWidth + margin, columnHeight + lineHeight);
 			ctx.closePath();
 			ctx.stroke();
-			columnHeight += lineHeight;			
+			columnHeight += lineHeight;	
+			
+			if(!titleLabel.getText().equals(""))
+			{
+				ctx.beginPath();
+				ctx.moveTo(margin, columnHeight);
+				ctx.lineTo(tableWidth, columnHeight);
+				
+				ctx.closePath();
+				ctx.stroke();
+				columnHeight += interspace;
+				if(!stars)
+				{
+					int red = 255; 
+					int green = 255;
+					if(titleScore < 50)
+						green = (int) (green * titleScore / 50);
+					else 
+						red -= (int) (red * (titleScore - 50)/50);
+					String titleColor = CssColor.make(red, green, 0).toString();
+					
+					ctx.setFillStyle(titleColor);
+					ctx.fillRect(textColumnWidth + margin - indent, columnHeight, scoreWidth + 2 * indent, lineHeight);
+				}
+				ctx.beginPath();
+				ctx.moveTo(margin, columnHeight);
+				ctx.lineTo(tableWidth, columnHeight);
+				ctx.moveTo(textColumnWidth + margin - indent, columnHeight);
+				ctx.lineTo(textColumnWidth + margin - indent, columnHeight + lineHeight);
+				ctx.closePath();
+				ctx.stroke();
+				
+				//fill in category name and score
+				textDifference += 12 - lineHeight;
+				ctx.setFillStyle("black");
+				
+				this.setWidgetLeftWidth(titleLabel, categoryX, Unit.PX, textColumnWidth - indent, Unit.PX);
+				this.setWidgetTopHeight(titleLabel, columnHeight + textDifference, Unit.PX, lineHeight, Unit.PX);
+				
+				textDifference += lineHeight - 15;  //label-location and drawString need different y
+				if(stars)
+				{
+					drawStars(titleScore, categoryScoreX - indent, columnHeight);// + textDifference);
+					
+				}
+				else
+				{
+					ctx.fillText((int) titleScore +"%", categoryScoreX - indent, columnHeight + textDifference);
+				}
+				
+				textDifference += 3;
+				columnHeight += lineHeight;
+			}
+				
 			
 			for(int j = 0; j < objectivesForDiagram.length; j++)
 			{
