@@ -6,14 +6,15 @@
 	int profile = 77;
 	String query = request.getQueryString();
 	if(query == null)
-	 	query = "?base=/vo/&locale=nl&profile=" + profile;
+	 	query = "?base=/vo/&profile=" + profile;
 	else 
-	  	query = "?base=/vo/&locale=nl&profile=" + profile + "&" + query;
+	  	query = "?base=/vo/&profile=" + profile + "&" + query;
+	String hash = "";
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
 		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="viewport" content="width=1024">
+		<meta name="viewport" content="width=device-width">
         <title>Numworx Voortgezet Onderwijs</title>
 		<style type="text/css">
             body, html
@@ -29,10 +30,10 @@
 		<script type="text/javascript">
 	 		function load() {
 				var search = "<%=query%>"
-				var hash = location.hash || "";
+				var hash = location.hash || "<%=hash%>";
 				var id = search + hash;
 				var element = document.getElementsByTagName("iframe")[0];
-				element.setAttribute("src", "/gwtclient/index.html"+id);
+				element.setAttribute("src", "/dwo/tablet/DWOplayer.jsp"+id);
 		    }
 	 		function logout() {
 	 			window.location = "/dwo/saml/logout.jsp"
@@ -41,7 +42,7 @@
     </head>
     <body onload ="load()">
         <div id="content">
-            <iframe width="100%" height="100%" frameborder="0" src="" allowfullscreen ></iframe>
+            <iframe width="100%" height="100%" frameborder="0" src="" allowfullscreen></iframe>
         </div>
     </body>
 </html>

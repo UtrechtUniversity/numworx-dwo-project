@@ -33,7 +33,7 @@
 				var hash = location.hash || "<%=hash%>";
 				var id = search + hash;
 				var element = document.getElementsByTagName("iframe")[0];
-				element.setAttribute("src", "/dwo/tablet/DWOplayer.jsp"+id);
+				element.setAttribute("src", "/gwtclient/index.html"+id);
 		    }
 	 		function logout() {
 	 			window.location = "/dwo/saml/logout.jsp"
@@ -42,7 +42,7 @@
     </head>
     <body onload ="load()">
         <div id="content">
-            <iframe width="100%" height="100%" frameborder="0" src="" ></iframe>
+            <iframe width="100%" height="100%" frameborder="0" src="" allowfullscreen></iframe>
         </div>
     </body>
 </html>
