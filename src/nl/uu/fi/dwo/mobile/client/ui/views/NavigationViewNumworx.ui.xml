@@ -8,17 +8,28 @@
 	<ui:style field='extra' >
 		.icon { 
 			display: inline-block;
-			width: 32px;
-			height: 32px;
-			margin: 7px 16px;
+			width: 26px;
+			height: 26px;
+			margin: 8px 9px;
 			fill: #a8abb1;
 		}
-	
+		.selected {
+			fill: #1b75bb;
+			margin-left: 20px;
+		}		
 	
 	</ui:style>
 		    <g:DockLayoutPanel unit='PX' styleName='{style.navPanel}' >
 				<g:north size="40">
 					<g:FlowPanel ui:field='beheer'>
+						<g:HTML ui:field='modules' styleName='{extra.icon} {extra.selected}' title='Resultaten'>
+							<svg viewBox="0 0 64 64" class="icon">
+				<path class="st0" d="M56.9,0H7.1C3.2,0,0,3.2,0,7.1v49.8C0,60.8,3.2,64,7.1,64h49.8c3.9,0,7.1-3.2,7.1-7.1V7.1C64,3.2,60.8,0,56.9,0
+					z M19.6,53.8H9.8V44h9.8V53.8z M19.6,37H9.8v-9.8h9.8V37z M19.6,19.5H9.8V9.6h9.8V19.5z M36.7,53.8h-9.8V44h9.8V53.8z M36.7,37h-9.8
+					v-9.8h9.8V37z M36.7,19.5h-9.8V9.6h9.8V19.5z M53.9,53.8h-9.8V44h9.8V53.8z M53.9,37h-9.8v-9.8h9.8V37z M53.9,19.5h-9.8V9.6h9.8
+					V19.5z"/>
+				    		</svg>
+				    	</g:HTML>
 						<g:HTML ui:field='results' styleName='{extra.icon}' title='Resultaten'>
 							<svg viewBox="0 0 64 64" class="icon">
 			  		  			<path d="M56.9,0H7.1C3.2,0,0,3.2,0,7.1v49.8C0,60.8,3.2,64,7.1,64h49.8c3.9,0,7.1-3.2,7.1-7.1V7.1C64,3.2,60.8,0,56.9,0

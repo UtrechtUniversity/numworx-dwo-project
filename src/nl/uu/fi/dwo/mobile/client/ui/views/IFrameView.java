@@ -15,6 +15,7 @@ public class IFrameView extends Composite implements TekstElement, IsWidget {
 	
 	public IFrameView(String href, String widthStr, String heightStr) {
 		frame = new Frame(href);
+		frame.getElement().setAttribute("allowfullscreen", "true"); // op verzoek van youtube
 		frame.setStylePrimaryName(".gwt-StubView");
 		frame.addStyleDependentName("borderless");
 		height = Integer.parseInt(heightStr);
