@@ -101,7 +101,7 @@ public class LoginContextManager {
                 loginContext.getId();
             } catch (EntityNotFoundException e) {
                 LOG.log(Level.FINE, "The PersistentLoginContext with " + id + " no longer exists.", e);
-                throw new PersistenceException(e);
+                throw e;
             }
             em.remove(loginContext);
             em.getTransaction().commit();

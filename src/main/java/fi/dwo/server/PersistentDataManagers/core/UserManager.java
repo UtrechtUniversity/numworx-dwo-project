@@ -145,7 +145,7 @@ public class UserManager {
                 persistentUser.getId();
             } catch (EntityNotFoundException e) {
                 LOG.log(Level.FINE, "The PersistentUser with " + id + " no longer exists.", e);
-                throw new PersistenceException(e);
+                throw e;
             }
             em.remove(persistentUser);
             em.getTransaction().commit();

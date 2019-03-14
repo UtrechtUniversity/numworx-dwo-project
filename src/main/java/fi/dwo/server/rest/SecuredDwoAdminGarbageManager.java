@@ -37,6 +37,7 @@ import fi.dwo.server.persistence.DwoEmfFactory;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.entities.RestLoginContext;
 import nl.uu.fi.dwo.rest.entities.RestUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
@@ -47,6 +48,40 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 @Path("/secure/dwoadmin/garbage")
 public class SecuredDwoAdminGarbageManager {
 
+  @GET
+  @Produces({"application/json"})
+  @Path("/context/get")
+  public List<DomLoginContext> getContexts(@Context SecurityContext sc, @QueryParam("limit") Integer limit) throws Dwo2Exception
+  {
+    DwoAdminState_HR_R_S_SG_U admin = AnonDomainAuthorizer.build()
+        .submitUser(sc.getUserPrincipal().getName())
+        .setDefaultHasRole().buildDwoAdmin();
+    if (limit == null) limit = 100;
+    EntityManager em = DwoEmfFactory.getEntityManager();
+    try {
+      em.getTransaction().begin();
+      CriteriaBuilder builder = em.getCriteriaBuilder();
+// select * from tbluser where userid not in (select userid from tbllogincontext) and lastLogin is null and registerData < '2017-01-01' limit 100;
+      CriteriaQuery<PersistentLoginContext> q = builder.createQuery(PersistentLoginContext.class);
+      Root<PersistentLoginContext> u = q.from(PersistentLoginContext.class);
+      
+      Subquery<Long> sub = q.subquery(Long.class);
+      Root<PersistentUser> context = sub.from(PersistentUser.class);
+      sub = sub.select(context.get("userID"));
+      javax.persistence.criteria.Path<Long> userid = u.get("userID");
+      Predicate in = userid.in(sub);
+      Predicate and = in.not();
+      q = q.select(u).where(and);
+   
+      TypedQuery<PersistentLoginContext> query = em.createQuery(q);
+      query.setMaxResults(limit);
+      List<PersistentLoginContext> list = query.getResultList();
+      return list.stream().map(PersistentLoginContext::buildDomLoginContext).collect(Collectors.toList());
+
+    } finally {
+      em.close();
+    }
+  }
   @GET
   @Produces({"application/json"})
   @Path("/user/get") 
@@ -124,6 +159,23 @@ public class SecuredDwoAdminGarbageManager {
     if (user.isSingleSchoolAccount())
       return Boolean.FALSE;
     UserUtilManager.deleteUser(user);
+    return Boolean.TRUE;
+  }
+
+  @PUT
+  @Produces({"application/json"})
+  @Path("/context/remove") 
+  public Boolean removeContext(@Context SecurityContext sc, RestLoginContext rest) throws Dwo2Exception {
+  DwoAdminState_HR_R_S_SG_U admin = AnonDomainAuthorizer.build()
+      .submitUser(sc.getUserPrincipal().getName())
+      .setHasRole(rest.getRestContext().getDomHasRole()).buildDwoAdmin();
+    Long id = MySQLPersistenceId.getNativeId(rest.getDomLoginContext());
+    PersistentLoginContext context = LoginContextManager.findEntity(id);
+    PersistentUser u = UserManager.findEntity(context.getUserId());
+    if (u == null)
+      LoginContextManager.destroy(id);
+    else 
+      return Boolean.FALSE;
     return Boolean.TRUE;
   }
   
