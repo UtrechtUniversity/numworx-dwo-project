@@ -4,10 +4,14 @@ import java.util.List;
 
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.entities.RestLoginContext;
 import nl.uu.fi.dwo.rest.entities.RestUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 public class SecuredDwoAdminGarbageManager {
 
@@ -23,7 +27,7 @@ public class SecuredDwoAdminGarbageManager {
     if (amount != null) {
       query = "?limit=" + amount;
     }
-    String path = "rest/secure/dwoadmin/garbage/user/get" + query;
+    String path = "rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/garbage/user/get" + query;
     RestListClassTypes type = RestListClassTypes.DomUserFullwLoginContext;
     result = manager.getList(path, type);    
     return result;
@@ -32,9 +36,35 @@ public class SecuredDwoAdminGarbageManager {
   public Boolean removeUser(DomUser user) throws Dwo2Exception {
     RestUser rest = new RestUser();
     rest.setDomUser(user);
-    rest.setRestContext(manager.getAuthenticator().getContext());
+    rest.setRestContext(getContext());
     Boolean result;
-    result = manager.put("rest/secure/dwoadmin/garbage/user/remove", Boolean.class, rest);
+    result = manager.put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/garbage/user/remove", Boolean.class, rest);
     return result;
+  }
+
+  public List<DomLoginContext> getContexts(Integer amount) throws Dwo2Exception {
+    List<DomLoginContext> result = null;
+    String query = "";
+    if (amount != null) {
+      query = "?limit=" + amount;
+    }
+    String path = "rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/garbage/context/get" + query;
+    RestListClassTypes type = RestListClassTypes.DomLoginContext;
+    result = manager.getList(path, type);    
+    return result;
+  }
+  
+  public Boolean removeContext(DomLoginContext user) throws Dwo2Exception {
+    RestLoginContext rest = new RestLoginContext();
+    rest.setDomLoginContext(user);
+    rest.setRestContext(getContext());
+    Boolean result;
+    result = manager.put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/garbage/context/remove", Boolean.class, rest);
+    return result;
+  }
+
+  
+  private DomContext getContext() {
+    return manager.getAuthenticator().getContext();
   }
 }
