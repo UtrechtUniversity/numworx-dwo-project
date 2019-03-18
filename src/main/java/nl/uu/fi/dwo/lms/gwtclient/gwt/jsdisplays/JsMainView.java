@@ -5,6 +5,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNull;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
 /**
@@ -163,5 +164,10 @@ public class JsMainView implements MainPresenter.Display{
     @Override
     public void setTrails(JavaScriptObject jso) {
     	JsMainDisplay.setTrails(jso);
+    }
+    
+    @Override
+    public void selectView(SelectedView view) {
+      JsMainDisplay.selectView(String.valueOf(view));
     }
 }

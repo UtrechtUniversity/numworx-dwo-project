@@ -33,16 +33,19 @@ public class StudentViewHandler implements SwitchViewEventHandler {
         eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
       case WELCOME:
       case MODULES:
+        mainView.selectView(value);
         presenterFactory.getModulesPresenter().show();
         break;
       case MODULESVIEW:
         mainView.showModulesView();
         break;
       case ACCOUNT:
+        mainView.selectView(value);
         mainView.showAccountView();
         presenterFactory.getAccountPresenter().init();
         break;
       case SCHOOLCLASSES:
+          mainView.selectView(value);
           mainView.showStudentSchoolclassView();
           presenterFactory.getStudentSchoolclassPresenter().init();
           break;

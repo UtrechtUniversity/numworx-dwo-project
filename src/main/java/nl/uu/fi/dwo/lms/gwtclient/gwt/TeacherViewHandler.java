@@ -56,14 +56,17 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
                   }
                   break;
               case WELCOME:
+                  mainView.selectView(SelectedView.WELCOME);
                   mainView.showWelcomeView();
                   presenterFactory.getWelcomePresenter().init();
                   break;
               case ACCOUNT:
+                  mainView.selectView(SelectedView.ACCOUNT);
                   mainView.showAccountView();
                   presenterFactory.getAccountPresenter().init();
                   break;
               case PERSONS:
+                  mainView.selectView(SelectedView.PERSONS);
                   mainView.showPersonsView();
                   presenterFactory.getPersonsPresenter().init();
                   break;
@@ -93,6 +96,7 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
                   presenterFactory.getImportPersonsPresenter().init(switchViewEvent.getFile());
                   break;
               case RESULTS:
+                  mainView.selectView(SelectedView.RESULTS);
                   mainView.showResultsView();
                   presenterFactory.getResultsPresenter().init();
                   break;
@@ -118,6 +122,7 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
                   presenterFactory.getLogResultsPresenter().init(switchViewEvent.getResultTree(),switchViewEvent.getScoResult(),switchViewEvent.getSchoolClass(),switchViewEvent.getResultState());
                   break;
               case SCHOOLCLASSES:
+                  mainView.selectView(SelectedView.SCHOOLCLASSES);
                   mainView.showSchoolclassesView();
                   presenterFactory.getSchoolclassesPresenter().init();
                   break;
@@ -146,6 +151,7 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
                   eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
                   break;
               case MODULES:
+                  mainView.selectView(SelectedView.MODULES);
                   presenterFactory.getModulesPresenter().show();
               case ARROWUP: case SEARCH: case GOTO:
                   break;

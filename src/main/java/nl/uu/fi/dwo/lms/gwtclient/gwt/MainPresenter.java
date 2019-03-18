@@ -103,6 +103,8 @@ public class MainPresenter {
         String getSearchInput();
 
 		void setTrails(JavaScriptObject object);
+
+        void selectView(SelectedView view);
     }
 
     private MainPresenter.Display display;

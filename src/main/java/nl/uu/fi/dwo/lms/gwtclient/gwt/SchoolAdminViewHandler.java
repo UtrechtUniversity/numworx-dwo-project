@@ -34,24 +34,29 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
       switch (value) {
         default:
           eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
-        case WELCOME:
+        case WELCOME: 
+          mainView.selectView(value);
           mainView.showWelcomeView();
           presenterFactory.getWelcomePresenter().init();
           break;
         case MODULES:
-          presenterFactory.getModulesPresenter().show();
+          mainView.selectView(value);
+         presenterFactory.getModulesPresenter().show();
           break;
         case MODULESVIEW:
           mainView.showModulesView();
           break;
         case ACCOUNT:
+          mainView.selectView(value);
           mainView.showAccountView();
           presenterFactory.getAccountPresenter().init();
           break;
         case RESULTS:
+          mainView.selectView(value);
           eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
           break;
         case PERSONS:
+          mainView.selectView(value);
           mainView.showPersonsView();
           presenterFactory.getPersonsPresenter().init();
           break;
@@ -80,6 +85,7 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
             presenterFactory.getImportPersonsPresenter().init(switchViewEvent.getFile());
             break;
         case SCHOOLCLASSES:
+            mainView.selectView(value);
             mainView.showSchoolclassesView();
             presenterFactory.getSchoolclassesPresenter().init();
             break;
@@ -100,6 +106,7 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
             presenterFactory.getAddTeacherToSchoolclassPresenter().init(switchViewEvent.getSchoolClass());
             break;
         case ORGANISATION:
+            mainView.selectView(value);
             mainView.showOrganisationView();
             presenterFactory.getOrganisationPresenter().init();
             break;
