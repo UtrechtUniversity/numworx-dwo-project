@@ -32,6 +32,8 @@ public class ImageVak extends FormuleElement {
 
 	@Override
 	public void vulVak(String s) {
+	    if(s.endsWith("@"))
+	      s = s.substring(0, s.length()-1);
 		setImage(s);
 	}
 
@@ -133,5 +135,12 @@ public class ImageVak extends FormuleElement {
 			svg.appendChild(image);
 		}
 	}
+    @Override
+    public void paintObject()
+    {
+        validate();        
+        paintComponent(this.ctx); // TODO draw image on canvas.
+        drawCursor();
+    }
 
 }
