@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.ConjugVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.DiffPartialVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.DiffVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Haakjesvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.ImageVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.IntegraalVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.LimietVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
@@ -66,6 +67,7 @@ public class FormuleDecoder
 		case 'Y': return new VectorVak(holder);
 		case 'M': return new MatrixVak(holder);
 		case 'z': return new VectorNotatieVak(holder);
+		case 'I': return new ImageVak(holder);
 		default: return null;
 		}			
 		
