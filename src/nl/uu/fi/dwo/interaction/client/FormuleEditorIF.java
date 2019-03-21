@@ -80,8 +80,10 @@ public interface FormuleEditorIF {
 	
 	void sigma();
 	
-	void stelsel();
-	
+    void stelsel();
+    
+    void stelsel(int aantalRijen);
+    
 	void tab();
 	
 	void shiftTab();

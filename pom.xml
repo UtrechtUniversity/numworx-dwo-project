@@ -48,7 +48,7 @@
 	</parent>
 	<groupId>nl.uu.fi.dwo.mobile</groupId>
 	<description>interaction library</description>
-	<version>0.1.3-SNAPSHOT</version>
+	<version>0.1.4-SNAPSHOT</version>
 	<scm>
 		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/GWT/DWOinteraction/trunk</developerConnection>
 	</scm>

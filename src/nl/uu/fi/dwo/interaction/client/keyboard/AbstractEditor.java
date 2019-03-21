@@ -208,4 +208,9 @@ public class AbstractEditor implements FormuleEditorIF {
 	{
 	}
 
+    @Override
+    public void stelsel(int aantalRijen)
+    {
+    }
+
 }
