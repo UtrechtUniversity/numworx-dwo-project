@@ -528,4 +528,10 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 			}, element);
 		}
 	}
+
+	@Override
+	public void stelsel(int aantalRijen)
+	{
+	}
+	
 }

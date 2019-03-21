@@ -29,6 +29,11 @@ public class StelselVak extends FormuleElementWithChildren
 		super(editor, 1);		
 	}
 
+	public StelselVak(FormuleElement currentRegel, int aantalRijen)
+	{
+		super(currentRegel, aantalRijen);
+	}
+
 	@Override
 	public void paintComponent(Context2d ctx) {
 		super.paintComponent(ctx);

@@ -455,8 +455,15 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	}
 	
 	@Override
-	public void stelsel() {
+	public void stelsel()
+	{
 		addElement(new StelselVak(getCurrentRegel()));
+	}
+
+	@Override
+	public void stelsel(int aantalRijen)
+	{
+		addElement(new StelselVak(getCurrentRegel(), aantalRijen));
 	}
 
 	@Override
