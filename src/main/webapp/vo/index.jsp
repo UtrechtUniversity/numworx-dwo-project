@@ -9,7 +9,13 @@
 	 	query = "?base=/vo/&profile=" + profile;
 	else 
 	  	query = "?base=/vo/&profile=" + profile + "&" + query;
-	String hash = "";
+	String hash = request.getParameter("hash");
+	String player = "/gwtclient/index.html";
+
+	if ( hash != null) // Deeplink
+		player = "/dwo/tablet/DWOplayer.jsp";
+	else
+		hash = "";
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -33,7 +39,7 @@
 				var hash = location.hash || "<%=hash%>";
 				var id = search + hash;
 				var element = document.getElementsByTagName("iframe")[0];
-				element.setAttribute("src", "/gwtclient/index.html"+id);
+				element.setAttribute("src", "<%=player%>"+id);
 		    }
 	 		function logout() {
 	 			window.location = "/dwo/saml/logout.jsp"
