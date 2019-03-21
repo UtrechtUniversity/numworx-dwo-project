@@ -339,7 +339,7 @@ public abstract class XMLView {
 		}
 		return defer.getPromise();
 	}
-	abstract AnchorView.AnchorContext getAnchorContext();
+	abstract AnchorContext getAnchorContext();
 	//public void setObjects(ArrayList<Object> opdrachtObjects, Panel destination) 
 	public void setObjects(HashMap<String, Object> opdracht, final Panel destination, OpdrNavIF comRoot)
 	{	

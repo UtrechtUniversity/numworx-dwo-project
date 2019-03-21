@@ -51,7 +51,6 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
-import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
 public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorContext, Command, Comparator<SelectModuleItem> {

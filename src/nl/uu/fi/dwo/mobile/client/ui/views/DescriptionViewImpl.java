@@ -41,13 +41,13 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 	
 	private SimplePanel main;
 	private Label loading = new Label("Loading...");
-	private AnchorView.AnchorContext anchorContext;
+	private AnchorContext anchorContext;
 
-	public AnchorView.AnchorContext getAnchorContext() {
+	public AnchorContext getAnchorContext() {
 		return anchorContext;
 	}
 
-	public void setAnchorContext(AnchorView.AnchorContext anchorContext) {
+	public void setAnchorContext(AnchorContext anchorContext) {
 		this.anchorContext = anchorContext;
 	}
 
@@ -76,7 +76,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 		this();
 		setupModule(id);
 	}
-	public DescriptionViewImpl(Object id, AnchorView.AnchorContext context) {
+	public DescriptionViewImpl(Object id, AnchorContext context) {
 		this();
 		setAnchorContext(context);
 		setupModule(id);

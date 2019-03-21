@@ -41,8 +41,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.sco.ShareFacade;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
-import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
-import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.Connector;
@@ -322,7 +321,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	
 	private boolean isLink = false;
 	private ObjectList linkUrls;
-	private AnchorView.AnchorContext anchorContext;
+	private AnchorContext anchorContext;
 	
 	
 	private FlowPanel klikPanel;
@@ -430,7 +429,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		hoogtes = Arrays.asList((double) hoogte);
 	}
 
-	public TekstVakPanel(HashMap<String, Object> hh, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden, AnchorView.AnchorContext context)
+	public TekstVakPanel(HashMap<String, Object> hh, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden, AnchorContext context)
 	{
 		this(hh, randomVarNamen, randomVarWaarden);
 		this.anchorContext = context;

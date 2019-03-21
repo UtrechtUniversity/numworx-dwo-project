@@ -15,11 +15,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class AnchorView implements IsWidget, ClickHandler, TekstElementWithFont /*, TekstElement*/ {
 
-	public interface AnchorContext {
-
-		void gotoUrl(String href);
-	}
-	
 	static class AnchorAdapter implements AnchorContext {
 
 		@Override

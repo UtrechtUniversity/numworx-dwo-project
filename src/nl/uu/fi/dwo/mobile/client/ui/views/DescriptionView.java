@@ -8,7 +8,7 @@ public interface DescriptionView extends IsWidget {
 
 	void setupModule(Object id);
 	
-	AnchorView.AnchorContext getAnchorContext();
-	void setAnchorContext(AnchorView.AnchorContext context);
+	AnchorContext getAnchorContext();
+	void setAnchorContext(AnchorContext context);
 
 }
