@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.vectomatic.dom.svg.OMSVGElement;
 import org.vectomatic.dom.svg.OMSVGImageElement;
+import org.vectomatic.dom.svg.OMSVGRectElement;
+import org.vectomatic.dom.svg.utils.SVGConstants;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -12,6 +14,7 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 public class ImageVak extends FormuleElement {
 
 	private String image = "";
+    private OMSVGRectElement selectedRect;
 	private static Map<String,Object> images = Collections.emptyMap();
 	
 	public String getImage() {
@@ -128,6 +131,7 @@ public class ImageVak extends FormuleElement {
 
 	@Override
 	public void draw(OMSVGElement svg) {
+        createSelection(svg);
 		OMSVGImageElement image;
 		String data = u();
 		if (data != null) {
@@ -142,5 +146,34 @@ public class ImageVak extends FormuleElement {
         paintComponent(this.ctx); // TODO draw image on canvas.
         drawCursor();
     }
+ 
+    private void createSelection(OMSVGElement svg) {
+      selectedRect = new OMSVGRectElement(x,y,width,height,0, 0);
+      paintSelection();
+      svg.appendChild(selectedRect);
+  }
+  
+  public void paintSelection() {
+      if (isSelected()) {
+          selectedRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "#AAAAFF");
+      } else {
+          selectedRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, SVGConstants.CSS_NONE_VALUE);
+      }
+      selectedRect.getWidth().getBaseVal().setValue(width);
+      selectedRect.getX().getBaseVal().setValue(x);
+      
+      drawCursor((OMSVGElement)null);
+  }
+  protected void drawCursor(OMSVGElement svg) {
+    drawCursor(width, svg);
+}
+
+protected void drawCursor(int width, OMSVGElement notused) {
+    if (this.isCurrent() == false || this.isSelected() || this.holder.hasSelection())
+        return;
+    selectedRect.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "#00F");
+    selectedRect.getWidth().getBaseVal().setValue(2f);
+    selectedRect.getX().getBaseVal().setValue(x+width-2);
+}
 
 }
