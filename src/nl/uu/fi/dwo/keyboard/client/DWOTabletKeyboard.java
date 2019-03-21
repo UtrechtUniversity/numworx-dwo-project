@@ -53,10 +53,10 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 		LocaleInfo currentLocale = LocaleInfo.getCurrentLocale();
 		nc = currentLocale.getNumberConstants();
 		initWidget(uiBinder.createAndBindUi(this));
-		initVectorMatrixMenus();
+		initVectorMatrixStelselMenus();
 	}
 	
-	private void initVectorMatrixMenus()
+	private void initVectorMatrixStelselMenus()
 	{
 		initVectorMenu(i ->  {
 			processVectorDimension(i);
@@ -67,6 +67,7 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 			processMatrixDimension(Integer.parseInt(rijBox.getSelectedItemText()), Integer.parseInt(kolomBox.getSelectedItemText()));
 			t2_16.removeStyleName("hover");	
 		  });
+        initStelselMenu(i ->  {processStelselDimension(i); t4_16.removeStyleName("hover"); } );
 	}
 
 	
@@ -172,12 +173,19 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 		matrixDimensionDialog.showRelativeTo(this.t2_16);
 	}
 
-	@UiHandler("t4_16")
-	void onT3_16(ClickEvent e)
-	{
-	  if (isPremium())
-		getEditor().vectornotatie();
-	}
+    @UiHandler("t3_16")
+    void onT3_16(ClickEvent e)
+    {
+      if (isPremium())
+        getEditor().vectornotatie();
+    }
+
+    @UiHandler("t4_16")
+    void onT4_16(ClickEvent e)
+    {
+  	  if (isPremium())
+        stelselDimensionDialog.showRelativeTo(this.t4_16);
+    }
 
 	@Override
 	public void blur() {

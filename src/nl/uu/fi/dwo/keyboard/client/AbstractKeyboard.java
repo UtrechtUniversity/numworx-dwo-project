@@ -45,6 +45,10 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 	 * Dialoog om de dimensie van matrix te kiezen.
 	 */
 	protected DialogBox matrixDimensionDialog;
+    /**
+     * Dialoog om de dimensie van stelsel te kiezen.
+     */
+    protected DialogBox stelselDimensionDialog;
 	protected ListBox rijBox;
 	protected ListBox kolomBox;
 
@@ -236,63 +240,89 @@ void initListBox(ListBox list) {
 
 }
 
-protected void processVectorDimension(int aantalRijen) {
-	FocusOnTouch.focus();
-	getEditor().vector(aantalRijen);
-	vectorDimensionDialog.hide();
+protected void processVectorDimension(int aantalRijen)
+{
+    FocusOnTouch.focus();
+    getEditor().vector(aantalRijen);
+    vectorDimensionDialog.hide();
 }
 
-protected void initVectorMenu(Consumer<Integer> consume) {
-	// menu om de dimensie te kiezen
-	MenuBar vectorDimensionOptions = new MenuBar(true);
-	MenuItem dimensie2 = new MenuItem(new SafeHtmlBuilder().appendEscaped("2").toSafeHtml());
-	MenuItem dimensie3 = new MenuItem(new SafeHtmlBuilder().appendEscaped("3").toSafeHtml());
-	MenuItem dimensie4 = new MenuItem(new SafeHtmlBuilder().appendEscaped("4").toSafeHtml());
-	MenuItem dimensie5 = new MenuItem(new SafeHtmlBuilder().appendEscaped("5").toSafeHtml());
-	MenuItem dimensie6 = new MenuItem(new SafeHtmlBuilder().appendEscaped("6").toSafeHtml());
-	vectorDimensionOptions.addItem(dimensie2);
-	vectorDimensionOptions.addItem(dimensie3);
-	vectorDimensionOptions.addItem(dimensie4);
-	vectorDimensionOptions.addItem(dimensie5);
-	vectorDimensionOptions.addItem(dimensie6);
-	dimensie2.setScheduledCommand(new ScheduledCommand()
-	{
-		public void execute()
-		{
-			consume.accept(2);
-		}
-	});
-	dimensie3.setScheduledCommand(new ScheduledCommand()
-	{
-		public void execute()
-		{
-			consume.accept(3);
-		}
-	});
-	dimensie4.setScheduledCommand(new ScheduledCommand()
-	{
-		public void execute()
-		{
-			consume.accept(4);
-		}
-	});
-	dimensie5.setScheduledCommand(new ScheduledCommand()
-	{
-		public void execute()
-		{
-			consume.accept(5);
-		}
-	});
-	dimensie6.setScheduledCommand(new ScheduledCommand()
-	{
-		public void execute()
-		{
-			consume.accept(6);
-		}
-	});
-	
-	vectorDimensionDialog = new DialogBox(true);
-	vectorDimensionDialog.add(vectorDimensionOptions);
+protected void processStelselDimension(int aantalRijen)
+{
+    FocusOnTouch.focus();
+    getEditor().stelsel(aantalRijen);
+    stelselDimensionDialog.hide();
+}
+
+protected void initVectorMenu(Consumer<Integer> consume)
+{
+    // menu om de dimensie te kiezen
+    MenuBar vectorDimensionOptions = getDimensionOptions(consume);
+    
+    vectorDimensionDialog = new DialogBox(true);
+    vectorDimensionDialog.add(vectorDimensionOptions);
+}
+
+protected void initStelselMenu(Consumer<Integer> consume)
+{
+    // menu om de dimensie te kiezen
+    MenuBar stelselDimensionOptions = getDimensionOptions(consume);
+    
+    stelselDimensionDialog = new DialogBox(true);
+    stelselDimensionDialog.add(stelselDimensionOptions);
+}
+
+private MenuBar getDimensionOptions(Consumer<Integer> consume)
+{
+    MenuBar options = new MenuBar(true);
+    
+    MenuItem dimensie2 = new MenuItem(new SafeHtmlBuilder().appendEscaped("2").toSafeHtml());
+    MenuItem dimensie3 = new MenuItem(new SafeHtmlBuilder().appendEscaped("3").toSafeHtml());
+    MenuItem dimensie4 = new MenuItem(new SafeHtmlBuilder().appendEscaped("4").toSafeHtml());
+    MenuItem dimensie5 = new MenuItem(new SafeHtmlBuilder().appendEscaped("5").toSafeHtml());
+    MenuItem dimensie6 = new MenuItem(new SafeHtmlBuilder().appendEscaped("6").toSafeHtml());
+    options.addItem(dimensie2);
+    options.addItem(dimensie3);
+    options.addItem(dimensie4);
+    options.addItem(dimensie5);
+    options.addItem(dimensie6);
+    dimensie2.setScheduledCommand(new ScheduledCommand()
+    {
+        public void execute()
+        {
+            consume.accept(2);
+        }
+    });
+    dimensie3.setScheduledCommand(new ScheduledCommand()
+    {
+        public void execute()
+        {
+            consume.accept(3);
+        }
+    });
+    dimensie4.setScheduledCommand(new ScheduledCommand()
+    {
+        public void execute()
+        {
+            consume.accept(4);
+        }
+    });
+    dimensie5.setScheduledCommand(new ScheduledCommand()
+    {
+        public void execute()
+        {
+            consume.accept(5);
+        }
+    });
+    dimensie6.setScheduledCommand(new ScheduledCommand()
+    {
+        public void execute()
+        {
+            consume.accept(6);
+        }
+    });
+    
+    return options;
 }
 
 protected void processMatrixDimension(int aantalRijen, int aantalKolommen) {

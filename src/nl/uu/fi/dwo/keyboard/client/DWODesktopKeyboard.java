@@ -44,18 +44,19 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 	 */
 	public DWODesktopKeyboard() {
 		initWidget(uiBinder.createAndBindUi(this));
-		initVectorMatrixMenus();
+		initVectorMatrixStelselMenus();
 		setPixelSize(-1, HEIGHT);
 	}
 	
-	void initVectorMatrixMenus()
+	void initVectorMatrixStelselMenus()
 	{
-		initVectorMenu(i ->  {processVectorDimension(i);t3_15.removeStyleName("hover");	} );
+		initVectorMenu(i ->  {processVectorDimension(i); t3_15.removeStyleName("hover");	} );
 		initMatrixMenu(event ->
 		  {
 			processMatrixDimension(Integer.parseInt(rijBox.getSelectedItemText()), Integer.parseInt(kolomBox.getSelectedItemText()));
 			t4_15.removeStyleName("hover");	
 		  });
+        initStelselMenu(i ->  {processStelselDimension(i); t4_16.removeStyleName("hover"); } );
 	}
 
 	@Override
@@ -67,9 +68,9 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 	DWOkeyboardBundle resources = DWOTabletKeyboardFactory.resources;
 	
 	@UiField
-	FKey t3_1,t3_2,t3_3,t3_4, t3_5,t3_6,t3_7,t3_8, t3_9,t3_10,t3_11,t3_12, t3_13,t3_14, t3_15, t3_16;//,t3_15;
+	FKey t3_1,t3_2,t3_3,t3_4, t3_5,t3_6,t3_7,t3_8, t3_9,t3_10,t3_11,t3_12, t3_13,t3_14, t3_15, t3_16;
 	@UiField
-	FKey t4_1,t4_2,t4_3,t4_4, t4_5,t4_6,t4_7,t4_8, t4_9,t4_10,t4_11,t4_12, t4_13,t4_14, t4_15;//,t4_15;
+	FKey t4_1,t4_2,t4_3,t4_4, t4_5,t4_6,t4_7,t4_8, t4_9,t4_10,t4_11,t4_12, t4_13,t4_14, t4_15, t4_16;
 
 
 	@UiHandler("t3_1")
@@ -125,6 +126,13 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 	{
 	  if (isPremium())
 		getEditor().vectornotatie();
+	}
+
+	@UiHandler("t4_16")
+	void onT4_16(ClickEvent e)
+	{
+	  if (isPremium())
+	    stelselDimensionDialog.showRelativeTo(this.t4_16);
 	}
 
 	@UiHandler({"t4_5", "t4_8", "t4_9", "t4_10", "t4_11", "t4_12"} )

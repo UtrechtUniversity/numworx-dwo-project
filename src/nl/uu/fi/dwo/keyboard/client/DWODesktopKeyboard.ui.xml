@@ -149,6 +149,7 @@
 		
 		<g:FlowPanel addStyleNames="dclm clm-15">
 			<my:DKey addStyleNames="key {style.svgimage}" ui:field="t3_16" resource="{resources.vectornotatie_svg}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t4_16" resource="{resources.stelsel}" />
 		</g:FlowPanel>
 		
 		<g:FlowPanel addStyleNames="dclm clm-14">

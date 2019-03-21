@@ -181,5 +181,7 @@ public interface DWOkeyboardBundle extends ClientBundle, Localizable {
 	ImageResource matrix();
 	@Source("nl/uu/fi/dwo/keyboard/client/resources/vectornotatie.png")
 	ImageResource vectornotatie();
+	@Source("nl/uu/fi/dwo/keyboard/client/resources/stelsel.png")
+	ImageResource stelsel();
 	
 }
