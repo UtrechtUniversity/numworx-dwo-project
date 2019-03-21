@@ -732,11 +732,17 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		insert("$S$n$k$l@@@@");
 	}
 	
-	@Override
-	public void stelsel() {
-		insert("$Q@");
-	}
-	
+    @Override
+    public void stelsel() {
+        insert("$Q@");
+    }
+    
+    @Override
+    public void stelsel(int aantalRijen)
+    {
+        insert("$Q@");
+    }
+    
 	@Override
 	public void vectornotatie()
 	{

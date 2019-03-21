@@ -833,10 +833,15 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		insert(Σ);
 	}
 	
-	@Override
-	public void stelsel() {
-		
-	}
+    @Override
+    public void stelsel()
+    {
+    }
+
+    @Override
+    public void stelsel(int aantalRijen)
+    {
+    }
 
 	@Override
 	public void vectornotatie()

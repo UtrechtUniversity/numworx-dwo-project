@@ -358,9 +358,11 @@ public class FormuleParser
 				s = s.substring(0, n) + "_" + s.substring(n + 2, k) + "_" + s.substring(k + 2, l) + "_" + s.substring(l + 2, indexAtl) + ")" + s.substring(indexAt + 1);
 			else if (s.charAt(index$ + 1) == 'S')
 				s = s.substring(0, n) + "_" + s.substring(n + 2, k) + "_" + s.substring(k + 2, l) + "_" + s.substring(l + 2, indexAtl) + ")" + s.substring(indexAt + 1);
-			else if (s.charAt(index$ + 1) == 'Y')
+			else if (s.charAt(index$ + 1) == 'Y') // vector
 				s = s.substring(0, n) + "(" + s.substring(n + 2, indexAt) + ")" + s.substring(indexAt + 1);
-			else if (s.charAt(index$ + 1) == 'M')
+			else if (s.charAt(index$ + 1) == 'M') // matrix
+				s = s.substring(0, n) + "(" + s.substring(n + 2, indexAt) + ")" + s.substring(indexAt + 1);
+			else if (s.charAt(index$ + 1) == 'Q') // stelsel
 				s = s.substring(0, n) + "(" + s.substring(n + 2, indexAt) + ")" + s.substring(indexAt + 1);
 
 			n = s.indexOf("$n");
@@ -391,6 +393,12 @@ public class FormuleParser
 			s = s.substring(0, n) + "(bin(" + s.substring(n + 2);
 			n = s.indexOf("$y");
 
+		}
+		n = s.indexOf("$Q"); // stelsel
+		if (n>-1)
+		{
+			s = "";
+			return s; // stelsel wordt niet nagekeken
 		}
 		n = s.indexOf("$Y");
 		while (n>-1)
