@@ -4,6 +4,8 @@ import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -52,7 +54,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
     private JButton addModelButton;
     private JButton cancelButton;
-    private DomainModelEditor textArea;
+    private LeerdomeinEditPanel textArea;
 
     private JPanel jtbl;
     private TableRowSorter rowSorter;
@@ -248,7 +250,8 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         this.add(Box.createVerticalStrut(15));
         buildJTable();
         this.add(Box.createVerticalStrut(15));
-        textArea = new DomainModelEditor();
+        //textArea = new DomainModelEditor();
+        textArea = new LeerdomeinEditPanel();
         textArea.setEditable(false);
         scrollPane = new JScrollPane(textArea);
 //        this.add(scrollPane);
