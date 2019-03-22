@@ -2454,8 +2454,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, /*ScormAccessIF,*
      * @throws SQLException
      */
     @SuppressWarnings("rawtypes")
-    @Override
-    public Vector getResults(Vector courses, int userID) throws IOException,
+    //@Override
+    private Vector getResults(Vector courses, int userID) throws IOException,
             XmlRpcException, SQLException {
         int i;
         String courseString = "";
@@ -2550,8 +2550,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, /*ScormAccessIF,*
      * @throws SQLException
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    @Override
-    public Vector getResults(Vector courses, int classID, int teacherID)
+    //@Override
+    private Vector getResults(Vector courses, int classID, int teacherID)
             throws SQLException {
         if (courses.isEmpty()) {
             return new Vector();
@@ -2606,8 +2606,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, /*ScormAccessIF,*
      * @throws XmlRpcException
      * @throws SQLException
      */
-    @Override
-    public Vector getResults(int courseID, int classID, int userID)
+    //@Override
+    private Vector getResults(int courseID, int classID, int userID)
             throws IOException, XmlRpcException, SQLException {
         PreparedStatement ps = getStatement(QRY_RESULTS_STUDENT_COURSE);
         ps.setInt(1, classID);
@@ -2661,8 +2661,8 @@ public class DbAccess extends DbConnect implements DbAccessIF, /*ScormAccessIF,*
      * @throws SQLException
      */
     @SuppressWarnings("rawtypes")
-    @Override
-    public Vector getResults(int courseID, int userID) throws IOException,
+    //@Override
+    private Vector getResults(int courseID, int userID) throws IOException,
             XmlRpcException, SQLException {
         PreparedStatement ps = getStatement(QRY_RESULTS_COURSE);
         ps.setInt(1, courseID);

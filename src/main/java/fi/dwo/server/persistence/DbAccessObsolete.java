@@ -11,14 +11,14 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 
 public interface DbAccessObsolete {
-  public Vector getResults(Vector courses, int userID) throws IOException, XmlRpcException, SQLException;
+/*  public Vector getResults(Vector courses, int userID) throws IOException, XmlRpcException, SQLException;
 
   public Vector getResults(Vector courses, int classID, int userID) throws IOException, XmlRpcException, SQLException;
 
   public Vector getResults(int courseID, int classID, int userID) throws IOException, XmlRpcException, SQLException;
 
   public Vector getResults(int courseID, int userID) throws IOException, XmlRpcException, SQLException;
-
+*/
   
 /*  public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID) throws IOException, XmlRpcException, SQLException;
   public Vector getCoursesJS(int profileValue) throws IOException, XmlRpcException,

@@ -235,29 +235,29 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, /*ScormA
 
  
 
-    @Override
-    public Vector getResults(Vector courses, int userID) throws IOException,
-            XmlRpcException, SQLException {
-        return getDelegateObsolete().getResults(courses, userID);
-    }
+//    @Override
+//    public Vector getResults(Vector courses, int userID) throws IOException,
+//            XmlRpcException, SQLException {
+//        return getDelegateObsolete().getResults(courses, userID);
+//    }
+//
+//    @Override
+//    public Vector getResults(Vector courses, int classID, int userID)
+//            throws IOException, XmlRpcException, SQLException {
+//        return getDelegateObsolete().getResults(courses, classID, userID);
+//    }
+//
+//    @Override
+//    public Vector getResults(int courseID, int classID, int userID)
+//            throws IOException, XmlRpcException, SQLException {
+//        return getDelegateObsolete().getResults(courseID, classID, userID);
+//    }
 
-    @Override
-    public Vector getResults(Vector courses, int classID, int userID)
-            throws IOException, XmlRpcException, SQLException {
-        return getDelegateObsolete().getResults(courses, classID, userID);
-    }
-
-    @Override
-    public Vector getResults(int courseID, int classID, int userID)
-            throws IOException, XmlRpcException, SQLException {
-        return getDelegateObsolete().getResults(courseID, classID, userID);
-    }
-
-    @Override
-    public Vector getResults(int courseID, int userID) throws IOException,
-            XmlRpcException, SQLException {
-        return getDelegateObsolete().getResults(courseID, userID);
-    }
+//    @Override
+//    public Vector getResults(int courseID, int userID) throws IOException,
+//            XmlRpcException, SQLException {
+//        return getDelegateObsolete().getResults(courseID, userID);
+//    }
 // V1_2 obsolete
 //    @Override
 //    public boolean disconnectFromClass(int uid) throws IOException,
