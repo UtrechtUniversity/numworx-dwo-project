@@ -186,7 +186,7 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 				}
 			}
 			
-			for(int i = 0; i < oplossingen.length; i++)
+			for(int i = 0; i < Math.min(oplossingen.length, eindOplossingGevonden.length); i++) //TODO: Lengths should be equal, but if not, this prevents problems
 			{
 				for(int j = 0; j < varNamen.length; j++)
 				{	if(!eindOplossingGevonden[i][j])
