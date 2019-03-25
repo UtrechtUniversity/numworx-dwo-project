@@ -62,6 +62,8 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 	boolean bevatFouteOplossing = false;
 	//private boolean bevatVoldoetNiet;
 	
+	private Vergelijking[] antwoordSubstituties;
+	
 	public static TextConstants rb = Text.constants;
 	
 	
@@ -77,20 +79,38 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 		List<Map<String,Object>> answerModels = null;
 		boolean hasFeedback = false;
 		int scoreMax = 0;
+		List<String> antwoordSubStrings = null;
 				
 		if(asvCheckerModel.containsKey("answerModels")) answerModels = asvCheckerModel.getMapList("answerModels");
 		if(asvCheckerModel.containsKey("hasFeedback")) hasFeedback = asvCheckerModel.getBoolean("hasFeedback");
 		if(asvCheckerModel.containsKey("scoreMax")) scoreMax = asvCheckerModel.getInt("scoreMax");
+		if(asvCheckerModel.containsKey("antwoordSubStrings"))
+			antwoordSubStrings = asvCheckerModel.getStringList("antwoordSubStrings");
 			
-		
-	    this.answerModels = new ArrayList<Map<String, Object>> ();
+		this.answerModels = new ArrayList<Map<String, Object>> ();
 		for(int i = 0; i < answerModels.size(); i++)
 		{	this.answerModels.add(answerModels.get(i));
 		}
 		initialiseerAnswerModels();
         this.hasFeedback = hasFeedback;
-        
         this.scoreMax = scoreMax;
+        
+        if (antwoordSubStrings != null) {
+			boolean subCorrect = true;
+			antwoordSubstituties = new Vergelijking[antwoordSubStrings.size()];
+			for (int i = 0; i < antwoordSubStrings.size(); i++) {
+				try {
+					String ass = FormuleParser.randomizeString(antwoordSubStrings.get(i), randomVars, randomValues);
+					antwoordSubstituties[i] = (FormuleParser.parseVergelijking(ass)).geefVergelijking(0);
+					if (!antwoordSubstituties[i].geefExpLinks().isVar())
+						subCorrect = false;
+				} catch (Exception e) {
+					subCorrect = false;
+				}
+			}
+			if (!subCorrect)
+				antwoordSubstituties = null;
+		}
     }
 	
 	public AntwoordStelselVakChecker(AntwoordStelselVakChecker avChecker)
@@ -102,6 +122,7 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 		scoreMax = avChecker.scoreMax;
 		varNamen = avChecker.varNamen;
 		oplossingen = avChecker.oplossingen;
+		antwoordSubstituties = avChecker.antwoordSubstituties;
 	}
 	
 	//gebruiken voor antwoorden uit StelselOplossingenVak
@@ -172,6 +193,18 @@ public class AntwoordStelselVakChecker implements AntwoordVakChecker
 				if(e.isVar())
 					varNamen[i] = e.geefVarNaam();
 			}
+			
+			
+			if (antwoordSubstituties != null && antwoord != null) {
+				for (int i = 0; i < antwoordSubstituties.length; i++)
+				{
+					if(antwoord.isEindOplossing(varNamen))
+						antwoord = antwoord.substitueerEindOplossing(antwoordSubstituties[i].geefExpRechts(), antwoordSubstituties[i].geefExpLinks().geefVarNaam());
+					else	
+						antwoord = antwoord.substitueer(antwoordSubstituties[i].geefExpRechts(), antwoordSubstituties[i].geefExpLinks().geefVarNaam());
+				}
+			}
+			
 			
 			boolean isGelijkwaardigEind = antwoord.isStelselOplossing(oplossingen, varNamen);
 			gelijkwaardig = isGelijkwaardigEind;

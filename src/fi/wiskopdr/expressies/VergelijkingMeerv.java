@@ -544,6 +544,24 @@ public class VergelijkingMeerv
 		return true;
 	}*/
 
+	public boolean isEindOplossing(String[] vars)
+	{
+		for (int i = 0; i < vergelijkingen.length; i++)
+		{
+			boolean isEindOpl = false;
+			for(int j = 0; j < vars.length; j++)
+			{
+				if(vergelijkingen[i].isEindOplossing(vars[j]))
+				{	isEindOpl = true;
+					break;
+				}
+			}
+			if(!isEindOpl)
+				return false;
+		}
+		return true;
+	}
+	
 	public boolean isEindOplossing(String var)
 	{
 		for (int i = 0; i < vergelijkingen.length; i++)
