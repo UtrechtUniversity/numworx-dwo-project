@@ -1,5 +1,7 @@
 package fi.dwo.dwojapplet.gui.domainmodel;
 
+import java.util.TreeMap;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 
 class NodeLeaf implements Node {
@@ -22,6 +24,13 @@ class NodeLeaf implements Node {
     this.lang = l;
   }
 
+  public NodeLeaf(String string) {
+    this.lang = string;
+    info = new DomStudentModelContextInfo(new TreeMap<>(), new TreeMap<>());
+    setTitle("");
+    setDescription("");
+  }
+
   public String toString() {
     return title;
   }
@@ -34,7 +43,14 @@ class NodeLeaf implements Node {
 
   @Override
   public void setLanguage(String lang) {
-    this.lang = lang;
+    if (!lang.equals(this.lang)) {
+      String nt = info.getTitle().getOrDefault(lang, "");
+      if (!nt.isEmpty()) title = nt;
+      String od = getDescription();
+      this.lang = lang;
+      String nd = getDescription();
+      if (nd == null || nd.isEmpty()) setDescription(od);
+    }
   }
 
   @Override

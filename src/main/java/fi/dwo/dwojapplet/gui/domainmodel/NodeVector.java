@@ -1,7 +1,10 @@
 package fi.dwo.dwojapplet.gui.domainmodel;
 
 import java.util.List;
+import java.util.TreeMap;
 import java.util.Vector;
+
+import javax.swing.JComponent;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
@@ -38,6 +41,12 @@ public class NodeVector extends Vector<Object> implements Node {
     setSize(last+1);
   }
 
+  public NodeVector(String lang) {
+    info = new DomStudentModelContextInfo(new TreeMap<>(), new TreeMap<>());
+    this.lang = lang;
+    setDescription("");
+    setTitle("");
+  }
   public String toString() {
     return title;
   }
@@ -49,7 +58,14 @@ public class NodeVector extends Vector<Object> implements Node {
   }
   @Override
   public void setLanguage(String lang) {
-    
+    if (!lang.equals(this.lang)) {
+      String nt = info.getTitle().getOrDefault(lang, "");
+      if (!nt.isEmpty()) title = nt;
+      String od = getDescription();
+      this.lang = lang;
+      String nd = getDescription();
+      if (nd == null || nd.isEmpty()) setDescription(od);
+    }
   }
   @Override
   public String getLanguage() {

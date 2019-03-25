@@ -2,9 +2,14 @@ package fi.dwo.dwojapplet.gui.domainmodel;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -27,7 +32,9 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 
 public class LeerdomeinEditPanel extends JPanel {
@@ -71,6 +78,10 @@ public class LeerdomeinEditPanel extends JPanel {
         title.setText(subtitle.getText());
       }
       model.nodeChanged(node);
+      left();
+    }
+
+    void left() {
       putValue(NAME, BEWERKEN);
       subtitle.setEditable(false); text.setEditable(false);
       tree.setEnabled(true);language.setEnabled(true);title.setEnabled(true);
@@ -185,11 +196,15 @@ public class LeerdomeinEditPanel extends JPanel {
       if (path == null) return;
       
       Object node = path.getLastPathComponent();
+      if (root == node) return;
+      
       if (node instanceof MutableTreeNode) {
         MutableTreeNode mutable = (MutableTreeNode) node;
         if (mutable.isLeaf()) return;
-        int index = mutable.getChildCount();        
-        DefaultMutableTreeNode child = new DefaultMutableTreeNode("Leerdoel-" + (index+1), false);
+        int index = mutable.getChildCount();
+        Node leaf = new NodeLeaf(getLanguage());
+        leaf.setTitle("Leerdoel-" + (index+1));
+        DefaultMutableTreeNode child = new DefaultMutableTreeNode(leaf, false);
         mutable.insert(child, index);
         model.nodesWereInserted(mutable, new int[] {index});
         tree.setSelectionPath(new TreePath(child.getPath()));
@@ -217,15 +232,20 @@ public class LeerdomeinEditPanel extends JPanel {
       if (path == null) return;
       
       Object node = path.getLastPathComponent();
+      if ( node != root) return; // Only root can add subdomains
+      
       if (node instanceof MutableTreeNode) {
         MutableTreeNode mutable = (MutableTreeNode) node;
         if (mutable.isLeaf()) return;
-        int index = mutable.getChildCount();        
-        DefaultMutableTreeNode child = new DynamicUtilTreeNode("Untitled-" + (index+1), new Object[0]);
+        int index = mutable.getChildCount();
+        Node vector = new NodeVector(getLanguage());
+        vector.setTitle("Untitled-" + (index+1));
+        DefaultMutableTreeNode child = new DynamicUtilTreeNode(vector,vector);
         mutable.insert(child, index);
         model.nodesWereInserted(mutable, new int[] {index});
         tree.setSelectionPath(new TreePath(child.getPath()));
         OPSLAAN_ACTION.bewerken();
+        subtitle.requestFocusInWindow();
         subtitle.selectAll();
      }
     }
@@ -245,19 +265,33 @@ public class LeerdomeinEditPanel extends JPanel {
   public LeerdomeinEditPanel() {
     super(null);
     setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
-    title = new JTextField("Leerdomein",40);
+    setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    title = new JTextField("Leerdomein",30);
     title.addActionListener(ev -> {
       String text = title.getText();
-      root.setUserObject(text);
+      Node n = (Node) root.getUserObject();
+      n.setTitle(text);
       model.nodeChanged(root);
     });
     language = new JComboBox<>(LANGUAGES);
     language.setEditable(true);
+    language.addActionListener(ev -> {
+      @SuppressWarnings("unchecked")
+      Enumeration<DefaultMutableTreeNode> children = root.breadthFirstEnumeration();
+      while (children.hasMoreElements()) {
+        DefaultMutableTreeNode node = children.nextElement();
+        ((Node) node.getUserObject()).setLanguage(getLanguage());
+      }
+      title.setText(root.getUserObject().toString());
+      model.nodeStructureChanged(root);
+    });
     String locale = JComponent.getDefaultLocale().getLanguage();
-    language.setSelectedItem(locale); 
-    root = new DynamicUtilTreeNode("Leerdomein", new Vector<Object>() );
+    NodeVector v = new NodeVector(locale);
+    v.setTitle("Leerdomein");
+    root = new DynamicUtilTreeNode(v,v);
     model = new DefaultTreeModel(root);   
     tree = new JTree(model);
+    language.setSelectedItem(locale); 
  // Menu
     JMenuBar bar = new JMenuBar();
     JMenu Bestand = new JMenu("Bestand");
@@ -279,10 +313,11 @@ public class LeerdomeinEditPanel extends JPanel {
     max.width = Integer.MAX_VALUE;
     titlebox.setMaximumSize(max);
 // Right
-    subtitle = new JTextField(40);
+    subtitle = new JTextField(30);
     opslaan = new JButton(OPSLAAN_ACTION);
-    text = new JTextArea(10,60);
+    text = new JTextArea(10,30);
     text.setLineWrap(true);
+    text.setWrapStyleWord(true);
     
     Box leftBox = Box.createVerticalBox();
     
@@ -317,29 +352,56 @@ public class LeerdomeinEditPanel extends JPanel {
   public void setModel(DomStudentModelStructure model) {
     if (model == null) {
       model = new DomStudentModelStructure();
+      model.setInfo(new DomStudentModelContextInfo(new TreeMap<>(), new TreeMap<>()));
+      model.setCategories(new ArrayList<>());
     }
     String locale = getLocale().getLanguage();
     language.setSelectedItem(locale);
     NodeVector vector = new NodeVector(model.getCategories(), model.getInfo(), locale);
     this.model.setRoot(root = new DynamicUtilTreeNode(vector, vector));
     this.title.setText(vector.toString());
+    this.subtitle.setText("");
+    this.text.setText("");
     this.model.nodeStructureChanged(root);
     this.structure = model;
+    OPSLAAN_ACTION.left();
   }
 
-  private String getTitle(DomStudentModelContextInfo info, String locale) {
-    try {
-      return info.getTitle().getOrDefault(locale, "");
-    } catch(Exception e) {
-      return "";
-    }
+  private String getLanguage() {
+    return language.getSelectedItem().toString();
   }
 
   public void setEditable(boolean b) {
   }
 
+  @SuppressWarnings("unchecked")
   public DomStudentModelStructure getModel() {
-    return structure;
+    DomStudentModelStructure result = new DomStudentModelStructure();
+    Node u;
+    u = (Node) root.getUserObject();
+    result.setInfo(u.getInfo());
+    List<DomStudentModelCategory> categories = new ArrayList<>(root.getChildCount());
+    result.setCategories(categories);
+    Enumeration<DefaultMutableTreeNode> children = root.children();
+    while (children.hasMoreElements()) {
+      DefaultMutableTreeNode object = children.nextElement();
+      u = (Node) object.getUserObject();
+      DomStudentModelCategory cat = new DomStudentModelCategory();
+      cat.setInfo(u.getInfo());
+      List<DomStudentModelObj> objectives = new ArrayList<>(object.getChildCount());
+      cat.setObjectives(objectives );
+      Enumeration<DefaultMutableTreeNode> kids = object.children();
+      while (kids.hasMoreElements()) {
+        DefaultMutableTreeNode kid = kids.nextElement();
+        u = (Node) kid.getUserObject();
+        DomStudentModelObj objective = new DomStudentModelObj();
+        objective.setInfo(u.getInfo());
+        objectives.add(objective);
+      }
+      categories.add(cat);
+    }
+    result.setCategories(categories);
+    return result;
   }
   
   
