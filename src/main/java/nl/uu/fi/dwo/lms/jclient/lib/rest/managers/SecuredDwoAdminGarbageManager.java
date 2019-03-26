@@ -27,6 +27,10 @@ public class SecuredDwoAdminGarbageManager {
     if (amount != null) {
       query = "?limit=" + amount;
     }
+    if (since != null) {
+      if (query.isEmpty()) query = "?"; else query += "&";
+      query += "before=" + since;
+    }
     String path = "rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/garbage/user/get" + query;
     RestListClassTypes type = RestListClassTypes.DomUserFullwLoginContext;
     result = manager.getList(path, type);    
