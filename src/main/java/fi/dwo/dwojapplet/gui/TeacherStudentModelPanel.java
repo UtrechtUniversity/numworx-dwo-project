@@ -59,7 +59,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
     private JPanel jtbl;
     private TableRowSorter rowSorter;
 
-    private Image searchImage, removeImage;
+    private Image searchImage, removeImage, resultsImage;
     int row;
 
     private JScrollPane scrollPane;
@@ -126,7 +126,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                   model.setModelStructure(modelStructure);
                   try {
                     prop.updateModel(model);
-                    tableModel.init(prop.getModelList(), searchImage, removeImage);
+                    tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage);
                   } catch (Dwo2Exception e) {
                     LOG.log(Level.SEVERE, "update model " + title, e);
                     GuiCreator.instance().ShowErrorDialog(center, e);
@@ -140,13 +140,23 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
               if ( ok == JOptionPane.OK_OPTION) {
                 try {
                   prop.removeModel(model);
-                  tableModel.init(prop.getModelList(), searchImage, removeImage);
+                  tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage);
                 } catch (Dwo2Exception e) {
                   LOG.log(Level.SEVERE, "remove model " + title, e);
                   GuiCreator.instance().ShowErrorDialog(center, e);
 
                 }
               }
+              
+              
+              
+            }
+            
+            if (value == resultsImage) {
+              DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
+              String title = (String) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), 0);
+              JOptionPane.showMessageDialog(TeacherStudentModelPanel.this, "resultaten van de klassen", title, JOptionPane.PLAIN_MESSAGE);  
+              
             }
         }
     }
@@ -167,7 +177,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
         tableModel = new TeacherStudentModelPanelTableModel();
 
-        tableModel.init(prop.getModelList(), searchImage, removeImage);
+        tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage);
         jtable.setModel(tableModel);
         rowSorter = new TableRowSorter(tableModel);
         rowSorter.toggleSortOrder(0);//
@@ -223,8 +233,10 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         MediaTracker tr = new MediaTracker(this);
         searchImage = DwoHelper.getResourceImage(GuiConstants.EDIT_STUDENTMODEL_IMAGE);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_STUDENTMODEL_IMAGE);
+        resultsImage = DwoHelper.getResourceImage(GuiConstants.SEARCH_IMAGE);
         tr.addImage(searchImage, 0);
         tr.addImage(removeImage, 0);
+        tr.addImage(searchImage, 0);
         try {
             tr.waitForAll();
         } catch (Exception e) {
@@ -306,7 +318,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                     DomStudentModelContext model = new DomStudentModelContext();
                     model.setModelStructure(modelStructure);
                     prop.addModel(model);
-                    tableModel.init(prop.getModelList(), searchImage, removeImage);
+                    tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage);
                   } catch (Dwo2Exception ex) {
                       LOG.log(Level.SEVERE, "new model", ex);
                       GuiCreator.instance().ShowErrorDialog(center, ex);
