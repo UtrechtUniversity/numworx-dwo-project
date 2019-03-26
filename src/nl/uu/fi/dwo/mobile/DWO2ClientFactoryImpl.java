@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNone;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.Login3ViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
+import nl.uu.fi.dwo.mobile.client.ui.views.NavigationViewNumworx;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -38,10 +39,11 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 		@Inject DWO2ClientFactoryImpl(EventBus bus, PlaceController controller,
             Provider<PlaceHistoryMapper> mapper,
             Provider<HeaderViewNone> none,
-            Provider<HeaderViewNumworx> numworx
+            Provider<HeaderViewNumworx> numworx,
+            Provider<NavigationViewNumworx> navigation
 		    
 		    ) {
-              super(bus, controller, mapper);
+              super(bus, controller, mapper, navigation);
               setup(none,numworx);
         }
 

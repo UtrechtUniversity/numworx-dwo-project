@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Success;
@@ -27,6 +28,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -35,11 +37,9 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
-import com.google.gwt.user.client.ui.DeckLayoutPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Tree;
@@ -53,7 +53,6 @@ import fi.dwo.gwt.lib.rest.util.Base64;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
-import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
@@ -65,6 +64,7 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
  * @author peterboon
  *
  */
+@Singleton
 public class NavigationViewNumworx extends ResizeComposite implements NavigationView {
 
 	private static final Logger LOG = java.util.logging.Logger.getLogger("NavigationView");
@@ -171,7 +171,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	 * implement HasHTML instead of HasText.
 	 */
 
-	public NavigationViewNumworx() {
+	@Inject NavigationViewNumworx(final PlaceController controller) {
 		HorizontalCellListResources cellResources;
 		cellResources = GWT.create(HorizontalCellListResources.class);
 		cells = new CellList<SelectModuleItem>(new NavCell(), cellResources);
@@ -179,8 +179,19 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		cells.setKeyboardSelectionPolicy(com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.DISABLED);
 		cells.addStyleName(cellResources.cellListStyle().navCellList());
 		initWidget(dock = uiBinder.createAndBindUi(this));
-		// tree stuff		
-		standardMap = new TreeItem(toSafeHTML(Text.constants.standaardModules()));
+		// tree stuff
+		String standaard = SelectModuleItem.ROOT.getName();
+		
+		standardMap = new TreeItem(toSafeHTML(standaard));
+		
+		DWOplayer.dwoProfile.then(p -> 
+			{
+				standardMap.setHTML(toSafeHTML(p.getValue().getDwoProfileDescription()));
+				return p;
+			}
+		);
+		
+		
 		standardMap.setState(true);
 		standardMap.setUserObject(SelectModuleItem.ROOT);
 		none = Actions.isAvailable();
@@ -188,6 +199,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		  none = !"test".equals(DWOplayer.PARAMETERS.getDwoEnv());
 		}
 		if(!none) setBeheer(false);
+		presenter = controller::goTo;
 	}
 
 	public void showCells() {
@@ -354,7 +366,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	}
 
 	
-	@Inject SecuredUserAccountManager account = new SecuredUserAccountManager();
+	/*@Inject*/ SecuredUserAccountManager account = new SecuredUserAccountManager();
 	
 	@UiHandler("results")
 	void onResults(ClickEvent e) {

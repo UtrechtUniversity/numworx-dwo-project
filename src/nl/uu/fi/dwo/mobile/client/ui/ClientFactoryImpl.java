@@ -85,20 +85,12 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	  }
 	};
 	
-	final Provider<NavigationViewNumworx> navigationView = new Provider<NavigationViewNumworx>() {
-		NavigationViewNumworx impl = new NavigationViewNumworx();
-		{
-			impl.setPresenter(ClientFactoryImpl.this);
-			
-		}
-		@Override
-		public NavigationViewNumworx get() {
-			return impl;
-		}
-	};
+	final Provider<NavigationViewNumworx> navigationView;
 	
 	public NavigationView getNavigationView() {
-		return navigationView.get();
+		NavigationViewNumworx view = navigationView.get();
+		view.setPresenter(this);
+		return view;
 	}
 	
 	
@@ -110,12 +102,14 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	private RPCHandler handler;
 	
 	public ClientFactoryImpl(EventBus bus, PlaceController controller, 
-	                 Provider<PlaceHistoryMapper> mapper
+	                 Provider<PlaceHistoryMapper> mapper, 
+	                 Provider<NavigationViewNumworx> navigationView
 	       )
 	{
 	  this.eventBus = bus;
 	  this.placeController = controller;
 	  this.mapper = mapper;
+	  this.navigationView = navigationView;
 	}
 
 	@Override

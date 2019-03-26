@@ -11,7 +11,7 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
+import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
@@ -46,7 +46,7 @@ public class SelectModuleItem
 
 	public static final SelectModuleItem ROOT = new SelectModuleItem();
 	static {
-		ROOT.setName("Standaard DWO Modules");
+		ROOT.setName(Text.constants.standaardModules());
 		ROOT.setDescription("<html><body><b>DWO-modules</b><br>In de DWO is veel oefenmateriaal beschikbaar.  Naast dit oefenmateriaal zijn er ook diverse volledige lessen en lessenseries beschikbaar, die kunnen worden gebruikt als aanvulling op of zelfs vervanging van het reguliere boek. In de etalage kunt u een indruk krijgen van de mogelijkheden die de DWO biedt voor de wiskundeles.</body></html>");
 	}
 	

@@ -99,6 +99,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
    */
 
 
+	
   protected ClientFactory createClientFactory() {
         DWO2PlayerComponent create = DaggerDWO2PlayerComponent.create();
         create.inject(this);
@@ -119,6 +120,12 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 	}
 
 	
+	@Override
+public void setupDWOPlayer() {
+	
+	super.setupDWOPlayer();
+}
+
 	final static Function<List<DomCourseStudent>,List<SelectModuleItem>> TO_SELECTMODULEITEM = new Function<List<DomCourseStudent>,List<SelectModuleItem>>(){
 
 		@Override

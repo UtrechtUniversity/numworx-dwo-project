@@ -123,18 +123,18 @@ public class DWOplayer implements EntryPoint
 	}
 
 	protected void initProfile() {
-		Success<DomDwoProfileFull, Void> getProfileCallback = new Success<DomDwoProfileFull, Void>() {
+		Success<DomDwoProfileFull, DomDwoProfileFull> getProfileCallback = new Success<DomDwoProfileFull, DomDwoProfileFull>() {
 
 			@Override
-			public Promise<Void> call(Promise<DomDwoProfileFull> promise)
+			public Promise<DomDwoProfileFull> call(Promise<DomDwoProfileFull> promise)
 					throws Exception {
 				SelectModuleItem r = SelectModuleItem.ROOT;
 				DomDwoProfileFull p = promise.getValue();
 				r.setName(p.getDwoProfileDescription());
 				r.setDescription(p.getDwoProfileText());
-				return null;
+				return promise;
 			}};
-		dwoProfile.then(getProfileCallback);
+		dwoProfile = dwoProfile.then(getProfileCallback);
 		deferredProfile.resolveWith(clientfactory.getRPCHandler().getDwoProfile());
 		
 	}
@@ -265,7 +265,7 @@ public class DWOplayer implements EntryPoint
 	/**
 	 * @param result
 	 */
-	public static void insertFlat(List<Map<String, Object>> result) {
+	private static void insertFlat(List<Map<String, Object>> result) {
 		long now = System.currentTimeMillis() + timezone;
 		for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
 			Map<String, Object> map = iterator.next();
