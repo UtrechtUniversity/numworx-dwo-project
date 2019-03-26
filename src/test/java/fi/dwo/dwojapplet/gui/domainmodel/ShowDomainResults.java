@@ -38,7 +38,7 @@ public class ShowDomainResults extends JFrame {
     
     String username = args[0];
     String password = args[1];
-    DwoHelper.setServerUrlPath(new URL("https://teuniz.dwo.nl/dwo/"));
+    DwoHelper.setServerUrlPath(new URL("http://localhost:8080/dwo/"));
     DomUserFullwLoginContext user = LoginManager.basicLogin(username, MD5.getHashString(String.valueOf(password)));
     DwoHelper.setSchoolLogins(SecureUserAccountLoginsManager.getSchoolLogins());
     DomContext context = new DomContext();
