@@ -12,8 +12,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
+import nl.uu.fi.dwo.rest.entities.RestStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 
@@ -105,5 +107,22 @@ public class SecuredTeacherStudentModelManager {
         } catch (Dwo2Exception e) {
             throw new Dwo2RestException(e);
         }
+    }
+    
+    @PUT
+    @Produces({"application/json"})
+    @Path("getScores")
+    public DomStudentModelScorePerTeacher getScores(@Context SecurityContext sc, RestStudentModelScorePerTeacher rest) {
+    	try {
+            TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+                    .setHasRole(rest.getRestContext().getDomHasRole())
+                    .buildSchoolAdminTeacher()
+                    .setTeacher();
+            return build.getScores(rest.getDomStudentModelScorePerTeacher());
+    	} catch (Dwo2Exception e) {
+    		throw new Dwo2RestException(e);
+    	}
+    	
+    	
     }
 }

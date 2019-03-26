@@ -30,6 +30,16 @@
                 <role>Java Developer</role>
             </roles>
         </developer>
+        <developer>
+            <id>Wim van Velthoven</id>
+            <name>velth101</name>
+            <email>w.p.g.vanvelthoven@uu.nl</email>
+            <organization>Freudenthal Institute</organization>
+            <organizationUrl>http://www.uu.nl/onderzoek/freudenthal-instituut</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
     </developers>
     <properties>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
@@ -161,6 +171,10 @@
             <artifactId>cxf-rt-rs-security-cors</artifactId>
             <version>2.6.1</version>
         </dependency>-->
+    	<dependency>
+    		<groupId>nl.uu.fi.dwo.rest</groupId>
+    		<artifactId>DWO-rest-lib</artifactId>
+    	</dependency>
     </dependencies>
     
 <!--    <distributionManagement>

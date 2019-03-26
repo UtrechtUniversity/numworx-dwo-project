@@ -14,6 +14,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
+import fi.dwo.commons.persistence.entities.PersistentStudentInClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
@@ -33,22 +34,31 @@ import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.EntityNotFoundException;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
@@ -58,6 +68,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  *
@@ -557,4 +568,56 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
     public Boolean detachCourseFromClass() throws Dwo2Exception {
         return instance.teacherActions.detachCourseFromClass(instance.getContext());
     }
+
+	@Override
+	public DomStudentModelScorePerTeacher getScores(DomStudentModelScorePerTeacher dom) throws Dwo2Exception {
+		dom.setFetchTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+		String realm = instance.getContext().getUserCtx().getRealm();
+		dom.setTeacher(instance.getContext().getUserCtx().user.buildDomTeacher(realm));
+		if (dom.getSchoolClasses() == null) {
+			dom.setSchoolClasses(
+					getSchoolClasses().stream().map(s -> new DomMapEntry<>(s.getId(), s)).collect(Collectors.toList()));
+		}
+		if (dom.getStudents() == null) {
+			dom.setStudents(
+					getTeachersStudents().stream().map(s -> new DomMapEntry<>(s.getId(), s)).collect(Collectors.toList()));
+		}
+		
+		dom.setStudentScores(Collections.emptyList());
+		Stream<DomSchoolClass> l1 = dom.getSchoolClasses().stream()
+			.map(x -> x.getValue());
+		Stream<PersistentSchoolClass> l2 = l1
+			.map(id -> {
+				try {
+					return SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(id));
+				} catch (Dwo2Exception e) {
+					throw new Dwo2RestException(e);
+				}
+			});
+		Stream<PersistentStudentInClass> l3 = l2
+				.flatMap(c -> StudentInClassManager.findEntities(c).stream());
+		List<PersistentStudentInClass> students = l3.collect(Collectors.toList());
+		l3 = students.stream();
+		List<DomMapEntry<PersistenceId, DomStudentOfClass>> aStudentsOfClasses =
+				l3
+					.map(PersistentStudentInClass::getStudentOfClass)
+					.map(PersistentStudentOfClass::buildDomStudentOfClass)
+					.map(t -> new DomMapEntry<>(t.getId(), t))
+					.collect(Collectors.toList());
+		dom.setStudentsOfClasses(aStudentsOfClasses );
+		
+		// reduce students
+		l3 = students.stream();
+		Set<PersistenceId> set = l3.map(PersistentStudentInClass::getUser).map(PersistentUser::buildPersistenceId).collect(Collectors.toSet());
+		dom.setStudents(dom.getStudents()
+				.stream()
+				.filter( t -> set.contains(t.getKey()))
+				.collect(Collectors.toList()));
+		
+// iterate over students and contexts		
+		dom.setStudentScores(Collections.emptyList());
+		
+		
+		return dom;
+	}
 }
