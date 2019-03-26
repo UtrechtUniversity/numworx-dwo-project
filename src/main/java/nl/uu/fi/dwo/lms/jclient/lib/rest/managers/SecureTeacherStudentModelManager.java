@@ -10,8 +10,10 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestStudentModelContext;
+import nl.uu.fi.dwo.rest.entities.RestStudentModelScorePerTeacher;
 
 /**
  * Manages the school roles and classes registered in HasRole.
@@ -76,4 +78,14 @@ public class SecureTeacherStudentModelManager {
 	        new Object[] {RestAuthenticator.getInstance().getUsername()});
 	    return result;
 	  }
+  
+	public static DomStudentModelScorePerTeacher getScores(DomStudentModelScorePerTeacher dom) throws Dwo2Exception {
+		RestStudentModelScorePerTeacher rest = new RestStudentModelScorePerTeacher(getContext(), dom);
+		DomStudentModelScorePerTeacher result = StoredRestManager.getInstance().put(
+				"rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/getScores",
+				DomStudentModelScorePerTeacher.class, rest);
+		LOG.log(Level.FINE, "Got studentmodelscore of teacher with username {0} to his school.",
+				new Object[] { RestAuthenticator.getInstance().getUsername() });
+		return result;
+	}
 }

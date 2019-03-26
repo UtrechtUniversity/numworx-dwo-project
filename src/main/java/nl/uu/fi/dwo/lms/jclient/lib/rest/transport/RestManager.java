@@ -425,7 +425,7 @@ class RestManager extends RestyDateTimeFormat {
       outStream.write(jsonOut.getBytes());
       outStream.close();
       if (conn.getResponseCode() != 200) {
-        LOG.log(Level.WARNING, "Code: {0}. Reason{1}",
+        LOG.log(Level.WARNING, "Code: {0}. Reason {1}",
             new Object[] {conn.getResponseCode(), conn.getResponseMessage()});
         Dwo2Exception e;
         if (conn.getResponseCode() == 400) {// Dwo2Exception
