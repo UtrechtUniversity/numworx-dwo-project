@@ -4,6 +4,7 @@
 package fi.dwo.server.rest;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -120,6 +121,25 @@ public class SecuredDwoAdminGarbageManager {
       query.setParameter(p, when);
       query.setMaxResults(limit);
       List<PersistentUser> list = query.getResultList();
+      if (list.size() < limit) {
+        CriteriaQuery<PersistentUser> q1 = builder.createQuery(PersistentUser.class);
+        Root<PersistentLoginContext> c = q1.from(PersistentLoginContext.class);
+        Root<PersistentUser> user = q1.from(PersistentUser.class);
+        Expression<Long> lasttimestamp = c.get("lastLoginTimeStamp");
+        Expression<Long> uid = user.get("userID");
+        Expression<Long> cid = c.get("userID");
+        Predicate eq = builder.equal(uid, cid);
+        singleschool = user.get("singleSchoolAccount");
+        isFalse = builder.isFalse(singleschool);
+        ParameterExpression<Long> l = builder.parameter(Long.class);
+        Predicate ltt = builder.lessThan(lasttimestamp, l);
+        q1 = q1.select(user).where(ltt,eq, isFalse);
+        TypedQuery<PersistentUser> query1 = em.createQuery(q1);
+        query1.setParameter(l, Long.valueOf(when.getTime()));
+        query1.setMaxResults(limit-list.size());
+        list = new ArrayList<>(list);
+        list.addAll(query1.getResultList());
+      }
       em.getTransaction().commit();
       return list.stream().map(item -> {
         DomUserFull uf = item.buildDomUserFull();
