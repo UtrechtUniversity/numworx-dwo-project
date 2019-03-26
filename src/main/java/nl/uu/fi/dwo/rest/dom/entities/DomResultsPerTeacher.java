@@ -20,8 +20,6 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @XmlRootElement
 public class DomResultsPerTeacher {
 
-    private static final Logger LOG = Logger.getLogger(DomResultsPerTeacher.class.getName());
-
     private DomTeacher teacher;
     private Long fetchTimeStamp;
     private List<DomMapEntry<PersistenceId, DomStudent>> students;
