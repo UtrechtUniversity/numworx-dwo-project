@@ -6,9 +6,9 @@
 	int profile = 77;
 	String query = request.getQueryString();
 	if(query == null)
-	 	query = "?base=/vo/&profile=" + profile;
+	 	query = "?base=/vo/&responsive=true&profile=" + profile;
 	else 
-	  	query = "?base=/vo/&profile=" + profile + "&" + query;
+	  	query = "?base=/vo/&responsive=true&profile=" + profile + "&" + query;
 	String hash = "";
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
