@@ -24,6 +24,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -34,6 +35,8 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
@@ -41,11 +44,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
+import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
@@ -204,4 +209,15 @@ public class SystemManager {
       return userList.stream().map(t -> t.buildDomTeacher(realm)).collect(Collectors.toList());
   }
   
+  @PUT
+  @Path("schoolclass/submitStudent")
+  public Boolean submitStudentToSchoolClass(RestSubmitStudentToSchoolClass rest) throws Dwo2Exception {
+	  Long uid = MySQLPersistenceId.getNativeId(rest.getDomSubmitStudentToSchoolClass().getStudent());
+	  Long cid = MySQLPersistenceId.getNativeId(rest.getDomSubmitStudentToSchoolClass().getSchoolClassTo());
+	  PersistentSchoolClass schoolclass = SchoolClassManager.findEntity(cid);
+	  PersistentUser student = UserManager.findEntity(uid);
+	  PersistentSchool school = SchoolManager.findEntity(schoolclass.getSchoolID());
+      PersistentHasRole shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
+      return SchoolClassUtilManager.registerStudentForSchoolClass(shr, schoolclass);
+  }
 }

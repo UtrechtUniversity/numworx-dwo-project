@@ -18,16 +18,23 @@ import org.junit.Test;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
+import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
+import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
@@ -126,4 +133,17 @@ public class SystemManagerIT {
 		}
 	}
 
+	@Test public void testSubmitStudentToClass() throws Dwo2Exception {
+		PersistentUser u = UserManager.findByUserName("user03");
+		PersistentSchool s = SchoolManager.findBySchoolLogin("school02");
+		PersistentSchoolClass c = SchoolClassManager.findEntity("SchoolClass04", s);
+		
+		RestSubmitStudentToSchoolClass rest = new RestSubmitStudentToSchoolClass();
+		rest.setDomSubmitStudentToSchoolClass(new DomSubmitStudentToSchoolClass());
+		rest.getDomSubmitStudentToSchoolClass().setSchoolClassTo(c.buildDomSchoolClass());
+		rest.getDomSubmitStudentToSchoolClass().setStudent(u.buildDomStudent(null));
+		Boolean result = manager.submitStudentToSchoolClass(rest);
+		
+		assertTrue("submit student to schoolclass", result.booleanValue());
+	}
 }
