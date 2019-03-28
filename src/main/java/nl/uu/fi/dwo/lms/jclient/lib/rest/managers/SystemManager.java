@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -12,11 +13,14 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
+import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
+import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 public class SystemManager {
 
@@ -99,13 +103,24 @@ public class SystemManager {
 	  return result;
   }
 
-public List<DomTeacher> getTeachersInSchool(DomSchool school) throws Dwo2Exception {
-	RestSchool rest = new RestSchool();
-	rest.setDomSchool(school);
-	rest.setRestContext(getContext());
-	List<DomTeacher> result = 
-			manager.getPutList("rest/system/school/getTeachersInSchoolList", RestListClassTypes.DomTeacher, rest);
-	return result;
-}
-  
+	public List<DomTeacher> getTeachersInSchool(DomSchool school) throws Dwo2Exception {
+		RestSchool rest = new RestSchool();
+		rest.setDomSchool(school);
+		rest.setRestContext(getContext());
+		List<DomTeacher> result = 
+				manager.getPutList("rest/system/school/getTeachersInSchoolList", RestListClassTypes.DomTeacher, rest);
+		return result;
+	}
+
+	public Boolean submitStudentToSchoolClass(DomSubmitStudentToSchoolClass submit) throws Dwo2Exception {
+		RestSubmitStudentToSchoolClass rest = new RestSubmitStudentToSchoolClass();
+		rest.setRestContext(getContext());
+		rest.setDomSubmitStudentToSchoolClass(submit);
+		Boolean result = manager.put("rest/system/schoolclass/submitStudent", Boolean.class, rest);
+		LOG.log(Level.FINE, "Submitted student {1} to schoolclass {2} for schooladmin with username {0}.",
+				new Object[] { manager.getAuthenticator().getUsername(), submit.getStudent().getId(),
+						submit.getSchoolClassTo().getId() });
+		return result;
+	}
+
 }
