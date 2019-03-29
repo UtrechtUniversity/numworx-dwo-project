@@ -41,7 +41,7 @@ public class CorrectieFacade {
   }
     
   protected Widget prepareWidget(Widget view) {
-    if(Memento.instance().isEindtoetsVerzegeld() && DWOplayer.isPremium()) 
+    if(Memento.instance() != null && Memento.instance().isEindtoetsVerzegeld() && DWOplayer.isPremium()) 
       return new CorrectieLayer(view);
     return (view);
   }
