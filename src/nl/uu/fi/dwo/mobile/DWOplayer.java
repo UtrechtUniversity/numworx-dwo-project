@@ -33,6 +33,7 @@ import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -146,7 +147,10 @@ public class DWOplayer implements EntryPoint
 		ViewPort viewport = new MGWTSettings.ViewPort();
 		viewport.setTargetDensity(DENSITY.MEDIUM);
 		viewport.setUserScaleAble(false).setMinimumScale(1.0).setMaximumScale(1.0);
-		viewport.setWidth(1024);
+		if("true".equals(Window.Location.getParameter("responsive")))
+			viewport.setWidthToDeviceWidth();
+		else
+			viewport.setWidth(1024);
 		MGWTSettings settings = new MGWTSettings();
 		settings.setViewPort(viewport);
 		settings.setAddGlosToIcon(true);
