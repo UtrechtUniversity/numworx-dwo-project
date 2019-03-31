@@ -5013,49 +5013,52 @@ private Object CamelCase(String name) {
 	}
 	
 	public void zetVolledigeBreedte(int breedte){
-//		if(volledigeBreedte && breedtes!=null) {
-//			int aantalKolommen = breedtes.size();
-//			int teVerdelenBreedte = this.breedte - (aantalKolommen-1)*cellSpaceColumn;
-//			double factor = 1.0*(breedte-(aantalKolommen-1)*cellSpaceColumn)/teVerdelenBreedte;
-//			double restbreedte = breedte-(aantalKolommen-1)*cellSpaceColumn;				
-//			double[] newBreedtes = new double[breedtes.size()];
-//			for(int i=0 ; i<aantalKolommen ; i++) {
-//				if(i==aantalKolommen-1) {
-//					for(int j=0 ; j<hoogtes.size() ; j++) 
-//						tekstVakken[j][i].setSize((int)restbreedte, tekstVakken[0][0].getHeight());
-//					newBreedtes[i] = restbreedte;		
-//				}
-//				else {
-//					for(int j=0 ; j<hoogtes.size() ; j++)
-//						tekstVakken[j][i].setSize((int)(breedtes.get(i)*factor), tekstVakken[0][0].getHeight());
-//					newBreedtes[i] = breedtes.get(i)*factor;
-//					restbreedte = restbreedte-breedtes.get(i)*factor;
-//				}
-//			}
-//			restbreedte = breedte;
-//			for(int i=0 ; i<aantalKolommen ; i++) {
-//				breedtes.set(i,newBreedtes[i]);
-//			}
-//				
-//			this.breedte = breedte;
-//				
-//			for(int i=0 ; i<aantalKolommen ; i++) {
-//				for(int j=0 ; j<hoogtes.size() ; j++) {
-//					tekstVakken[j][i].reLayout();
-//				}
-//			}
-//		}
-//		if(responsive) {
-//			int w = breedte;
-//			if(breedte>responsiveToggleWidth) 
-//				w = breedte/2;
-//			tekstVakken[0][0].setSize(w, tekstVakken[0][0].getHeight());
-//			
-//			this.breedte = w;
-//			breedtes.set(0,(double)w);
-//			
-//			tekstVakken[0][0].reLayout();
-//		}
+		if(!"true".equals(Window.Location.getParameter("responsive"))) {
+			return;
+		}
+		if(volledigeBreedte && breedtes!=null) {
+			int aantalKolommen = breedtes.size();
+			int teVerdelenBreedte = this.breedte - (aantalKolommen-1)*cellSpaceColumn;
+			double factor = 1.0*(breedte-(aantalKolommen-1)*cellSpaceColumn)/teVerdelenBreedte;
+			double restbreedte = breedte-(aantalKolommen-1)*cellSpaceColumn;				
+			double[] newBreedtes = new double[breedtes.size()];
+			for(int i=0 ; i<aantalKolommen ; i++) {
+				if(i==aantalKolommen-1) {
+					for(int j=0 ; j<hoogtes.size() ; j++) 
+						tekstVakken[j][i].setSize((int)restbreedte, tekstVakken[0][0].getHeight());
+					newBreedtes[i] = restbreedte;		
+				}
+				else {
+					for(int j=0 ; j<hoogtes.size() ; j++)
+						tekstVakken[j][i].setSize((int)(breedtes.get(i)*factor), tekstVakken[0][0].getHeight());
+					newBreedtes[i] = breedtes.get(i)*factor;
+					restbreedte = restbreedte-breedtes.get(i)*factor;
+				}
+			}
+			restbreedte = breedte;
+			for(int i=0 ; i<aantalKolommen ; i++) {
+				breedtes.set(i,newBreedtes[i]);
+			}
+				
+			this.breedte = breedte;
+				
+			for(int i=0 ; i<aantalKolommen ; i++) {
+				for(int j=0 ; j<hoogtes.size() ; j++) {
+					tekstVakken[j][i].reLayout();
+				}
+			}
+		}
+		if(responsive) {
+			int w = breedte;
+			if(breedte>responsiveToggleWidth) 
+				w = breedte/2;
+			tekstVakken[0][0].setSize(w, tekstVakken[0][0].getHeight());
+			
+			this.breedte = w;
+			breedtes.set(0,(double)w);
+			
+			tekstVakken[0][0].reLayout();
+		}
 	}
 
 	@Override
