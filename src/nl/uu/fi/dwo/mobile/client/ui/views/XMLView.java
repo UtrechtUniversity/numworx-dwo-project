@@ -397,7 +397,7 @@ public abstract class XMLView {
 			}
 		};
 		resize.onResize(null);
-		Window.addResizeHandler(resize);
+		
 		
 		destination.add(hoofdPanel);
 		opdrachtObjects.add(hoofdPanel);
@@ -412,8 +412,11 @@ public abstract class XMLView {
 		if(instellingen.containsKey("margeRechts"))
 		style.setMarginRight(instellingen.getInt("margeRechts"), Style.Unit.PX);
 		
-		breedte = Window.getClientWidth()-20;
-		hoofdPanel.zetVolledigeBreedte(breedte);
+		if("true".equals(Window.Location.getParameter("responsive"))) {
+			Window.addResizeHandler(resize);
+			breedte = Window.getClientWidth()-20;
+			hoofdPanel.zetVolledigeBreedte(breedte);
+		}
 	}
 
 	public Panel getPanelElement(final FormuleHolder editor) {
