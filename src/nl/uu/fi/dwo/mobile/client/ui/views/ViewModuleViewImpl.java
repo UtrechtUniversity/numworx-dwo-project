@@ -1033,7 +1033,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			kijkNa();
 		}
 
-		if(on.isVerzegeld()||on.isReview()) 
+		if(on.isVerzegeld() && !on.isReview()) 
 		{
 			seal(); // push action.setNotEditable
 		}
