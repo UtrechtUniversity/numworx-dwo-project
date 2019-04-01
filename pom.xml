@@ -285,6 +285,18 @@
 		</build>
 		</profile>
 		<profile>
+			<id>WidgetPlayer</id>
+			<properties>
+				<warClassifier>widget</warClassifier>
+				<maven.war.webxml>war/WEB-INF/web-dwo2.xml</maven.war.webxml>
+				<finalName>WidgetPlayer</finalName>
+				<gwtModule>${project.groupId}.WidgetPlayer</gwtModule>
+				<wagonPhase>none</wagonPhase>
+				<gwt.copyWebapp>false</gwt.copyWebapp>
+				<s3>s3://ebs-dev-dwo-nl</s3>
+			</properties>
+		</profile>
+		<profile>
 			<id>NoordhoffPlayer</id>
 			<properties>
 				<gwtModule>${project.groupId}.NoordhoffPlayer</gwtModule>
