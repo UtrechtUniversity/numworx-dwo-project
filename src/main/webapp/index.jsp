@@ -14,9 +14,9 @@
     Ga naar/Go to:
     <ul>
 	<li><a href="/vo/">VO</a> voor leerling en voor docent/schooladmin</li>
-	<li><a href="/ho/">HO</a> voor student en voor <a href="/ho/docent/">docent</a></li>
-	<li><a href="/en/se/">SE (English)</a> for pupil and <a href="/en/se/teacher/">teacher</a> </li>
-	<li><a href="/en/he/">HE (English)</a> for student and <a href="/en/he/teacher/">teacher</a> </li>
+	<li><a href="/ho/">HO</a> voor student en voor  docent/schooladmin</li>
+	<li><a href="/en/se/">SE (English)</a> for pupil and teacher or school admin</li>
+	<li><a href="/en/he/">HE (English)</a> for student and teacher or school admin</li>
     </ul>
     <p>Apps:</p>
     <ul>
