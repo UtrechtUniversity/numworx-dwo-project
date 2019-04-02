@@ -64,13 +64,21 @@ public class SymboolPanel implements InteractionStub, FacetAware
 		if (h != null && h.containsKey("interactiePanelLaunchState"))
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 		
-		init(breedte, hoogte, launchState, randomVarWaarden);
+		init0(breedte, hoogte, launchState, randomVarWaarden);
 		
 		initialize();
 	}
 	
+	public SymboolPanel() {}
+
 	@Override
 	public void init(int width, int height, Map<String, Object> launchData,
+            Map<String, Number> values ) {
+	  init0(width, height, launchData, values);
+	  initialize();
+	}
+	
+	private void init0(int width, int height, Map<String, Object> launchData,
 			Map<String, Number> values) {
 		breedte = width;
 		hoogte = height;
