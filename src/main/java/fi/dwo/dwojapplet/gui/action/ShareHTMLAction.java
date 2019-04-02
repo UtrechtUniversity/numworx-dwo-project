@@ -7,8 +7,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Locale;
 
-import javax.swing.Action;
-
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
