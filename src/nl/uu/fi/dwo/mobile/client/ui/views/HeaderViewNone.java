@@ -120,7 +120,8 @@ public void onMessage(MessageEvent event) {
     Place place = mapper.getPlace(message);
     if (place != null) presenter.goTo(place);
     else presenter.goTo(getHomePlace());
-    
+  } else if (Actions.LOGOUT.name().equals(message)) {
+	  presenter.goTo(upPlace);
   }
   
 }
