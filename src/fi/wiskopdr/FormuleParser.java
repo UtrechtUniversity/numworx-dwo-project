@@ -649,7 +649,10 @@ public class FormuleParser
 			{
 				tel++;
 			}
-			if (index > -1 && tel > index + 2)
+			if(index >-1 && tel>index+2 && s.charAt(tel)=='^') 
+				s = s.substring(0,index) + "(-1)" + s.substring(index+2);
+			
+			else if (index > -1 && tel > index + 2)
 				s = s.substring(0, index) + "(" + s.substring(index + 1, tel) + ")" + s.substring(tel);
 
 			else if (index > -1 && index + 2 < s.length() && Letter.isLetter(s.charAt(index + 2)))
