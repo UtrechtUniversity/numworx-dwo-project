@@ -3,12 +3,15 @@
  */
 package fi.dwo.server.PersistentDataManagers.actions;
 
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
+import fi.dwo.server.PersistentDataManagers.util.StudentModelDataUtilManager;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +21,6 @@ import javax.persistence.PersistenceException;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -30,7 +32,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
  */
 public class MySQLStudentActions implements StudentActions {
 
-    private static final Logger LOG = Logger.getLogger(MySQLStudentActions.class.getName());
+    public static final Logger LOG = Logger.getLogger(MySQLStudentActions.class.getName());
 
     @Override
     public void setStudentModelData(StudentDomainAuthorizer.Context ctx, PersistentStudentModelData data) throws Dwo2Exception {
@@ -64,31 +66,11 @@ public class MySQLStudentActions implements StudentActions {
 
     @Override
     public DomStudentModelDataScore getStudentModelData(StudentDomainAuthorizer.Context ctx, PersistentStudentModelContext pStudentModel) throws Dwo2Exception {
-        DomStudentModelStructureScore score = pStudentModel.buildDomStudentModelContext().getModelStructure().generateStudentModelStructureScore();
         //get list of al StudentModelData
-        List<PersistentStudentModelData> list = StudentModelDataManager.findEntities(pStudentModel, ctx.getUserCtx().getHasRole());
-//        //aggregate data over list
-        try {
-            for (PersistentStudentModelData data : list) {
-                //update leaves
-                DomStudentModelStructureScore dataPoint = data.getModelData();
-                for (int c = 0; c < dataPoint.getCategories().size(); c++) {
-                    for (int o = 0; o < dataPoint.getCategories().get(c).getObjectives().size(); o++) {
-                        DomStudentModelObjectiveScore obj = dataPoint.getCategories().get(c).getObjectives().get(o);
-                        DomStudentModelObjectiveScore sum = score.getCategories().get(c).getObjectives().get(o);
-                        sum.setCount(sum.getCount() + obj.getCount());
-                        sum.setScore(sum.getScore() + obj.getScore());
-                    }
-                }
-            }
-        } catch (RuntimeException e) {
-            String msg = MessageFormat.format("Something went wrong aggregating scores over student model {0}", pStudentModel.getModelID());
-            LOG.log(Level.WARNING, msg, e);
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
-        }
-        //recalculate categories 
-        score.recalculateAncestors();
-        //prep return 
+        PersistentHasRole hasRole = ctx.getUserCtx().getHasRole();
+
+        
+        DomStudentModelStructureScore score = StudentModelDataUtilManager.calculateStudentModelScore(pStudentModel, hasRole);
         DomStudentModelDataScore result = new DomStudentModelDataScore();
         result.setDomStudentModelStructureScore(score);
         DomStudentModelContextId id = new DomStudentModelContextId();
@@ -96,7 +78,7 @@ public class MySQLStudentActions implements StudentActions {
         result.setModelId(id);
         return result;
     }
-    
+
     @Override
         public List<PersistentStudentModelContext> getStudentModels(StudentDomainAuthorizer.Context context) throws Dwo2Exception {           
             List<PersistentStudentModelContext> pModels =  StudentModelContextManager.findEntities(context.getUserCtx().getSchool());

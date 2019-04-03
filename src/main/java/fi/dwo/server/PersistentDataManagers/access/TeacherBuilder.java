@@ -16,6 +16,7 @@ import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.commons.persistence.entities.PersistentStudentInClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
@@ -25,9 +26,11 @@ import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
@@ -35,6 +38,7 @@ import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
+import fi.dwo.server.PersistentDataManagers.util.StudentModelDataUtilManager;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -49,6 +53,8 @@ import java.util.stream.Stream;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.eclipse.persistence.internal.jpa.weaving.RestAdapterClassWriter;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
@@ -57,7 +63,10 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataStudentScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -571,7 +580,9 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
 
 	@Override
 	public DomStudentModelScorePerTeacher getScores(DomStudentModelScorePerTeacher dom) throws Dwo2Exception {
-		dom.setFetchTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
+	  PersistentSchool school = getSchool();
+	  PersistentSchoolGroup studentgroup = SchoolGroupManager.findBySchoolAndRole(school, RoleType.STUDENT);
+	  dom.setFetchTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
 		String realm = instance.getContext().getUserCtx().getRealm();
 		dom.setTeacher(instance.getContext().getUserCtx().user.buildDomTeacher(realm));
 		if (dom.getSchoolClasses() == null) {
@@ -616,6 +627,54 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
 		
 // iterate over students and contexts		
 		dom.setStudentScores(Collections.emptyList());
+		Stream<DomStudentModelDataStudentScore> stream = 
+		dom.getStudents().stream()
+		  .map(DomMapEntry::getValue)
+		  .map(arg0 -> {
+        try {
+          return MySQLPersistenceId.getNativeId(arg0);
+        } catch (Dwo2Exception e) {
+          throw new Dwo2RestException(e);
+        }
+      })
+		  .map( t -> new PersistentHasRole(new PersistentHasRolePK(t, studentgroup.getSchoolGroupID())))
+		  .flatMap(
+		      hr -> 
+		          {
+		            Stream<Long> stream2 = dom.getStudentModelContexts().stream()
+		          
+		            .map(DomMapEntry::getValue)
+		            .map(t -> {
+                        try {
+                          return MySQLPersistenceId.getNativeId(t);
+                        } catch (Dwo2Exception e) {
+                          throw new Dwo2RestException(e);
+                        }
+                  });
+		            Stream<DomStudentModelDataStudentScore> stream3 = stream2
+		            .map( StudentModelContextManager::findEntity)
+		            .map(
+		              t -> {		                
+		                DomStudentModelStructureScore score;
+                    try {
+                      score = StudentModelDataUtilManager.calculateStudentModelScore(t, hr);
+                    } catch (Dwo2Exception e) {
+                      throw new Dwo2RestException(e);
+                    }
+		                DomStudentModelDataStudentScore result = new DomStudentModelDataStudentScore();
+		                result.setDomStudentModelStructureScore(score);
+		                result.setModelId(t.buildDomStudentModelContext());
+		                result.setStudentId(PersistentUser.buildPersistenceId(hr.getPersistentHasRolePK().getUserID()));
+                        return result;
+		              });
+		            return stream3;
+		          }
+		      )
+		;  
+		  
+		dom.setStudentScores(stream
+		  .collect(Collectors.toList()));
+		
 		
 		
 		return dom;
