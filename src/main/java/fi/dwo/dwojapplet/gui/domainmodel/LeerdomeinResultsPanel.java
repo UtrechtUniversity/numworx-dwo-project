@@ -32,6 +32,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListener, ActionListener {
@@ -156,6 +157,9 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
           for (int i = 0; i < tmodel.getRowCount(); i++ ) {
             String u = scores.getStudents().get(i).getValue().getDisplayName();
             tmodel.setValueAt(u, i, 0);
+            DomStudentModelStructureScore v = scores.getStudentScores().get(i).getDomStudentModelStructureScore();
+            String result = v.getCount() + " " + v.getScore();
+            tmodel.setValueAt(result, i, 1);
           }
           table.setModel(tmodel);
           
@@ -163,7 +167,7 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
           LOG.log(Level.SEVERE, "getScores", e1);
         }
       } else {
-        
+        table.setModel(new DefaultTableModel(0,2));
       }
     }
     

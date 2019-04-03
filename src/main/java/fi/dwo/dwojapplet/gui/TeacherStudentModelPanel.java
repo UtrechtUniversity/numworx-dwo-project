@@ -5,6 +5,7 @@ import com.owlike.genson.GensonBuilder;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel;
+import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinResultsPanel;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -13,6 +14,8 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
@@ -33,6 +36,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
+
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
@@ -155,8 +161,17 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
             if (value == resultsImage) {
               DomStudentModelContext model = (DomStudentModelContext) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), tableModel.getColumnCount());
               String title = (String) tableModel.getValueAt(rowSorter.convertRowIndexToModel(row), 0);
-              JOptionPane.showMessageDialog(TeacherStudentModelPanel.this, "resultaten van de klassen", title, JOptionPane.PLAIN_MESSAGE);  
-              
+              LeerdomeinResultsPanel panel = new LeerdomeinResultsPanel();
+              panel.setContext(model);
+              List<DomSchoolClass> list;
+              try {
+                list = SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
+              } catch (Dwo2Exception e) {
+                LOG.log(Level.SEVERE, "get classes for popup", e);
+                list = Collections.emptyList();
+              }
+              panel.setClasses(list);
+              JOptionPane.showMessageDialog(TeacherStudentModelPanel.this, panel, title, JOptionPane.PLAIN_MESSAGE);  
             }
         }
     }
