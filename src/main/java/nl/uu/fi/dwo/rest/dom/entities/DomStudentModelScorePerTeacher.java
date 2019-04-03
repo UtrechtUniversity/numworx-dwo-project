@@ -25,7 +25,7 @@ public class DomStudentModelScorePerTeacher {
 	private List<DomMapEntry<PersistenceId, DomStudent>> students;
 	private List<DomMapEntry<PersistenceId, DomStudentOfClass>> studentsOfClasses;
 	private List<DomMapEntry<PersistenceId, DomSchoolClass>> schoolClasses;
-	private List<DomMapEntry<PersistenceId, DomStudentModelDataStudentScore>> studentScores;
+	private List<DomStudentModelDataStudentScore> studentScores;
 	private List<DomMapEntry<PersistenceId, DomStudentModelContext>> studentModelContexts;
 
 	/**
@@ -116,12 +116,12 @@ public class DomStudentModelScorePerTeacher {
 		this.studentsOfClasses = aStudentsOfClasses;
 	}
 
-	public List<DomMapEntry<PersistenceId, DomStudentModelDataStudentScore>> getStudentScores() {
+	public List<DomStudentModelDataStudentScore> getStudentScores() {
 		return studentScores;
 	}
 
-	public void setStudentScores(List<DomMapEntry<PersistenceId, DomStudentModelDataStudentScore>> studentScores) {
-		this.studentScores = studentScores;
+	public void setStudentScores(List<DomStudentModelDataStudentScore> list) {
+		this.studentScores = list;
 	}
 
 	public List<DomMapEntry<PersistenceId, DomStudentModelContext>> getStudentModelContexts() {
