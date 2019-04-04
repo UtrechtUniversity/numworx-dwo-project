@@ -42,7 +42,7 @@ public class DomStudentModelStructureScore extends DomStudentModelScore<DomStude
                 score += obj.getScore();
             }
             cat.setCount(count); setCount(count + getCount());
-            cat.setScore(score); setScore(count + getScore());
+            cat.setScore(score); setScore(score + getScore());
         }
     }
     
