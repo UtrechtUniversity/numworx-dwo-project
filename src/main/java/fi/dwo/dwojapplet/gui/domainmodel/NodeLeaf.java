@@ -7,6 +7,17 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 class NodeLeaf implements Node {
 
   
+  private int path;
+  
+  
+  public int getPath() {
+    return path;
+  }
+
+  public void setPath(int path) {
+    this.path = path;
+  }
+
   private String title;
   private final DomStudentModelContextInfo info;
   /**

@@ -13,4 +13,7 @@ interface Node {
   
   public DomStudentModelContextInfo getInfo();
   
+  public int getPath();
+  public void setPath(int path);
+  
 }

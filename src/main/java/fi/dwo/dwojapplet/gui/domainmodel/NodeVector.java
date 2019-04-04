@@ -12,6 +12,18 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 
 public class NodeVector extends Vector<Object> implements Node {
 
+  private int path;
+  
+  
+  public int getPath() {
+    return path;
+  }
+
+  public void setPath(int path) {
+    this.path = path;
+  }
+
+  
   public String title, lang;
   public DomStudentModelContextInfo info;
   public NodeVector(List<DomStudentModelCategory> categories, DomStudentModelContextInfo info, String l) {
@@ -24,6 +36,7 @@ public class NodeVector extends Vector<Object> implements Node {
       String subtitle = cat.getInfo().getTitle().get(l);
       if (!subtitle.isEmpty()) last = size();
       NodeVector nv = new NodeVector(cat.getObjectives(), subtitle, l, cat.getInfo());
+      nv.setPath(elementCount);
       add(nv);
     }
     setSize(last+1);
@@ -36,7 +49,9 @@ public class NodeVector extends Vector<Object> implements Node {
     for (DomStudentModelObj obj: objectives) {
       String subtitle = obj.getInfo().getTitle().get(l);
       if (!subtitle.isEmpty()) last = size();
-      add(new NodeLeaf(subtitle, obj.getInfo(), l));
+      NodeLeaf nodeleaf = new NodeLeaf(subtitle, obj.getInfo(), l);
+      nodeleaf.setPath(elementCount);
+      add(nodeleaf);
     }
     setSize(last+1);
   }
