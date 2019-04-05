@@ -177,6 +177,7 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 			disableKey(t3_15);
 			disableKey(t3_16);
 			disableKey(t4_15);
+			disableKey(t4_16);
 		}
 	}
 
