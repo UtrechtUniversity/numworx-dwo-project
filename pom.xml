@@ -441,7 +441,7 @@
 			<properties>
 				<aws.serverId>dev</aws.serverId>
 				<aws.applicationName>teuniz</aws.applicationName>
-				<aws.environmentName>teuniz2</aws.environmentName>
+				<aws.environmentName>teunis3</aws.environmentName>
 			</properties>
 		</profile>
 	</profiles>
