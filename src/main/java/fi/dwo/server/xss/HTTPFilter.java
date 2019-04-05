@@ -134,7 +134,8 @@ public class HTTPFilter implements Filter {
 
   private boolean isException(String uri) {
     return uri.contains("rest") || uri.contains("xmlrpc") || uri.contains("crossdomain.xml")
-        || "/".equals(uri);
+    //   || "/".equals(uri)
+    ;
   }
 
   @Override
