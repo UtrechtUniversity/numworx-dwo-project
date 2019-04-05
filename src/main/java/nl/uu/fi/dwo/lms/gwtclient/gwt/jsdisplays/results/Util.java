@@ -28,7 +28,7 @@ class Util {
           String classType = node.getClass().getSimpleName();
           json.put("classType", buildTime(classType));
           json.put("label", new JSONString(node.getLabel()));
-          json.put("sumScore", new JSONNumber(node.getScore()));
+          json.put("sumScore", new JSONNumber(d(node.getScore())));
           json.put("scoCount", new JSONNumber(node.getScoCount()));
           json.put("studentScoCount", new JSONNumber(node.getStudentScoCount()));
           if (node instanceof DomResultStudentScoContext) {
@@ -60,8 +60,8 @@ class Util {
              }
          } else if (node instanceof DomResultStudentScoPage) {
              DomResultStudentScoPage page = (DomResultStudentScoPage) node;
-             json.put("maxScore", new JSONNumber(page.getMaxScore()));
-             json.put("bonus", new JSONNumber(page.getCorrectie()));
+             json.put("maxScore", new JSONNumber(d(page.getMaxScore())));
+             json.put("bonus", new JSONNumber(d(page.getCorrectie())));
              json.put("label", new JSONString(page.getLabel()));
              json.put("sequence", new JSONNumber(page.getNodeId()));
          }
@@ -79,6 +79,11 @@ class Util {
           }
           return json;
       }
+
+  private static double d(Double d) { // Voorkom npe op double
+    if (d != null) return d.doubleValue();
+    return 0.0;
+  }
 
   private static JSONString buildTime(String totalTime) {
     if("00:00:00".equals(totalTime))
@@ -108,7 +113,7 @@ class Util {
           String classType = node.getClass().getSimpleName();
           json.put("classType", buildTime(classType));
           json.put("label", new JSONString(node.getLabel()));
-          json.put("sumScore", new JSONNumber(node.getScore()));
+          json.put("sumScore", new JSONNumber(d(node.getScore())));
           json.put("scoCount", new JSONNumber(node.getScoCount()));
           json.put("studentScoCount", new JSONNumber(node.getStudentScoCount()));
           //Add children.
@@ -125,7 +130,7 @@ class Util {
                       classType = o.getClass().getSimpleName();
                       schoolClass.put("classType", buildTime(classType));
                       schoolClass.put("label", new JSONString(o.getLabel()));
-                      schoolClass.put("sumScore", new JSONNumber(node.getScore()));
+                      schoolClass.put("sumScore", new JSONNumber(d(node.getScore())));
                       schoolClass.put("scoCount", new JSONNumber(node.getScoCount()));
                       schoolClass.put("studentScoCount", new JSONNumber(node.getStudentScoCount()));
                       JSONObject students = new JSONObject();
