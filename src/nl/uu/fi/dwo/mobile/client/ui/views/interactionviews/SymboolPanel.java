@@ -28,7 +28,7 @@ public class SymboolPanel implements InteractionStub, FacetAware
 	private boolean volledigeBreedte = false;
 	int ashoogte = 12;
 	
-	private Canvas symboolCanvas;
+	private final Canvas symboolCanvas;
 	private Context2d ctx;
 	
 	private int dikte, richting, type;
@@ -54,7 +54,7 @@ public class SymboolPanel implements InteractionStub, FacetAware
 	
 	public SymboolPanel(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
-		
+		this();
 		if (h != null && h.containsKey("breedte"))
 			breedte = ((Number) h.get("breedte")).intValue();
 		if (h != null && h.containsKey("hoogte"))
@@ -64,12 +64,13 @@ public class SymboolPanel implements InteractionStub, FacetAware
 		if (h != null && h.containsKey("interactiePanelLaunchState"))
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 		
-		init0(breedte, hoogte, launchState, randomVarWaarden);
-		
+		init0(breedte, hoogte, launchState, randomVarWaarden);		
 		initialize();
 	}
 	
-	public SymboolPanel() {}
+	public SymboolPanel() {
+	     symboolCanvas = Canvas.createIfSupported();
+	}
 
 	@Override
 	public void init(int width, int height, Map<String, Object> launchData,
@@ -110,7 +111,6 @@ public class SymboolPanel implements InteractionStub, FacetAware
 	public void initialize()
 	{
 		
-		symboolCanvas = Canvas.createIfSupported();
 		ctx = symboolCanvas.getContext2d();
 		symboolCanvas.setPixelSize(breedte, hoogte);
 		symboolCanvas.setCoordinateSpaceHeight(hoogte);
