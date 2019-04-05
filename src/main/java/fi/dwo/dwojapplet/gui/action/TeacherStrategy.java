@@ -127,11 +127,14 @@ public class TeacherStrategy implements SelectStrategy {
             item.addActionListener(listener);
             m.add(item);
 
-            if (DwoHelper.isTest() && DwoHelper.isPremium()) {
+            if ( DwoHelper.isPremium()) {
               LessonGroup lg = (LessonGroup) object;                  
               int id = lg.getID();
-              Action action = new ShareAction(id, lg.isDeepestLevel());
-              item = new JMenuItem(action);m.add(item);
+              Action action;
+              if (DwoHelper.isTest()) {
+                action = new ShareAction(id, lg.isDeepestLevel());
+                item = new JMenuItem(action);m.add(item);
+              }
               action = new ShareHTMLAction(id, lg.isDeepestLevel());
               item = new JMenuItem(action);m.add(item);
             }
