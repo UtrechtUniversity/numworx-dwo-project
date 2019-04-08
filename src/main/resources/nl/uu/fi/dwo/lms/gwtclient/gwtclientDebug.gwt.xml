@@ -27,7 +27,7 @@
   <!-- add entry point for each app in an external jar -->
 
   <!-- locale settings (toevoegen in productie) -->
-<!--   <extend-property name="locale" values="en"/> -->
+  <extend-property name="locale" values="en"/>
   <extend-property name="locale" values="nl"/>
 <!--   <extend-property name="locale" values="fr"/> -->
 <!--   <set-property-fallback name="locale" value="en"/> -->

@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -49,13 +50,23 @@ class Util {
         if(value == null || value.isNull() != null) return EMPTY_NUMBERS;
         JSONObject onsState = value.isObject();
         value = onsState.get("orScores");
-        if(value == null || value.isNull() != null) return EMPTY_NUMBERS;
+        if(value == null || value.isNull() != null) value = new JSONArray();
         JSONArray array = value.isArray();
-        if(array.size() == 0) return EMPTY_NUMBERS;
+        if(array.size() == 0) array.set(0, new JSONArray());
         value = array.get(0);
-        if(value == null || value.isNull() != null) return EMPTY_NUMBERS;
+        if(value == null || value.isNull() != null) value = new JSONArray();
         JSONArray orScores = value.isArray();
         int max = Math.min(aantalOpdrachten, orScores.size());
+
+        value = onsState.get("bezocht");
+        JSONArray bezocht;
+        try {
+        	bezocht = value.isArray().get(0).isArray();
+        	max = Math.max(max, bezocht.size());
+        } catch(Exception oops) {
+        	bezocht = new JSONArray();
+        }
+        
         JSONNumber[] scores = new JSONNumber[max];
         for (int i = 0; i < max; i++) {
             try {
@@ -64,11 +75,13 @@ class Util {
                 scores[i] = number;
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "score " + i, e);
+                if (i < bezocht.size() && bezocht.get(i) == JSONBoolean.getInstance(true))
+                	scores[i] = new JSONNumber(0);
             }
         }
         return scores;
       } catch (Throwable e) {
-        LOG.log(Level.FINE, "getScores\n"+e);
+        LOG.log(Level.WARNING, "getScores\n"+e);
         return EMPTY_NUMBERS;
       }
   }
@@ -92,8 +105,10 @@ class Util {
       DomResultStudentScoPage item = new DomResultStudentScoPage(label);
       item.setNodeId(i);
       if (i < ls && scores[i] != null)
-        item.setScore(scores[i].doubleValue());
-      item.setMaxScore(maxScores[i].doubleValue());
+      {
+    	  item.setScore(scores[i].doubleValue());
+    	  item.setMaxScore(maxScores[i].doubleValue());
+      }
       if (i < correctie.length && correctie[i] != null)
         item.setCorrectie(correctie[i].doubleValue());
       PersistenceId key = new PersistenceId("LOCAL;none;" + label);

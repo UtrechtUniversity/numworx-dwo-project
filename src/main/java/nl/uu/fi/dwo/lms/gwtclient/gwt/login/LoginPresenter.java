@@ -1,5 +1,10 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.login;
 
+import com.google.gwt.http.client.URL;
+import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.safehtml.shared.UriUtils;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.Date;
@@ -328,5 +333,25 @@ public class LoginPresenter {
  
         eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_GUEST));
       }
+    }
+    
+    @JsMethod public void hyperlink(String tag) {
+    	LOG.info("goto #" + tag);
+        String locale = LocaleInfo.getCurrentLocale().getLocaleName();
+        String base = Location.createUrlBuilder().buildString();
+        base = URL.encodeQueryString(base);
+        if ("default".equals(locale) ) locale =  "nl";
+    	if ("FORGOT".equals(tag)) {
+    		Location.assign(
+    				"/dwo/rest/public/user/requestNewPassword?locale="+ locale + "&back=" + base
+    		);
+    		return;
+    	}
+    	if ("REGISTER".equals(tag)) {
+    		Location.assign(
+    				"/dwo/register/?locale=" + locale + "&next=" + base
+    				);
+    		return;
+    	}
     }
 }

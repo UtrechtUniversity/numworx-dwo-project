@@ -54,7 +54,8 @@ public class BootPanelController {
         final RoleType role = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());
         final State state = loginEvent.getState();
         final boolean single = dwoGlobalVars.getCurrentUser().getSingleSchool();
-        resetPresenters(role,single); // changes in eventbus are not immediate
+        if (state != State.LOGOUT)
+        	resetPresenters(role,single); // changes in eventbus are not immediate
         Scheduler.get().scheduleDeferred(
             () -> {
                 switch (state) {
@@ -185,7 +186,7 @@ public class BootPanelController {
     private int profile;
     private int stage;
     private boolean hideGwtGui;
-    private boolean test = false;
+    private final boolean test = false;
     String authToken, user_id, org_id;
     private boolean session = false;
 
@@ -205,7 +206,7 @@ public class BootPanelController {
     BootPanelController(ResettableEventBus eventBus, GuestComponent.Builder initialBuilder) {
         this.eventBus = eventBus;
         this.guestBuilder = initialBuilder;
-        test = false;
+        //test = false;
         hideGwtGui = false;
         profile = 77;
         stage = 1;
@@ -235,10 +236,10 @@ public class BootPanelController {
         } catch (Exception e) {
             profile = 77;
         }
-        value = Window.Location.getParameter("test");
-        if (value != null && value.matches("on")) {
-            test = true;
-        }
+//        value = Window.Location.getParameter("test");
+//        if (value != null && value.matches("on")) {
+//            test = true;
+//        }
         value = Window.Location.getParameter("stage");
         if (value != null) {
             stage = Integer.parseInt(value);
@@ -309,7 +310,7 @@ public class BootPanelController {
         String svnRevision = BUILD.buildNumber;
         String buildTimeStamp = BUILD.timeStamp;
         LOG.log(Level.INFO, "Software version " + softwareVersion + " subversion revision " + svnRevision + " build timestamp " + buildTimeStamp + ".");
-        LOG.log(Level.INFO, "forceNewAersion = " + test + ".");
+        //LOG.log(Level.INFO, "forceNewAersion = " + test + ".");
         setLogoVersionTip(softwareVersion);
         
         final int flag = 1;

@@ -10,6 +10,7 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.google.web.bindery.event.shared.HandlerRegistrations;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.OsDetection;
@@ -40,6 +41,9 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEventHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountService;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -52,7 +56,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * @author G.A.J. van der Plas
  */
 @Singleton
-public class ModulesPresenter implements SwitchViewEventHandler {
+public class ModulesPresenter implements SwitchViewEventHandler, LoginEventHandler {
 
     private final static boolean IFRAME = true;
     
@@ -120,7 +124,10 @@ public class ModulesPresenter implements SwitchViewEventHandler {
       } 
         init.then(p-> {
           if(register == null)
-            register = eventBus.addHandler(SwitchViewEvent.TYPE, this);
+          {
+        	  register = eventBus.addHandler(SwitchViewEvent.TYPE, this);
+        	  register = HandlerRegistrations.compose(register, eventBus.addHandler(LoginEvent.TYPE, this));
+          }
 
           LOG.info("switch to modules view " + p.getValue());
           eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.MODULESVIEW));
@@ -163,6 +170,10 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         String locale = LocaleInfo.getCurrentLocale().getLocaleName();
         if ("default".equals(locale) ) locale =  "nl";
         u.setParameter("locale",locale);
+        String responsive = Location.getParameter("responsive");
+        if (responsive != null) {
+        	u.setParameter("responsive", responsive);
+        }
         String string = u.buildString();
         LOG.info("open URL " + string);
         if(IFRAME)
@@ -329,4 +340,10 @@ public class ModulesPresenter implements SwitchViewEventHandler {
       if (id1 == null) return id2 == null;
       return id1.equals(id2);
     }
+
+	@Override
+	public void onLoginEvent(LoginEvent loginEvent) {
+		if (loginEvent.getState() == State.LOGOUT)
+			view.sendMessage("LOGOUT");
+	}
 }

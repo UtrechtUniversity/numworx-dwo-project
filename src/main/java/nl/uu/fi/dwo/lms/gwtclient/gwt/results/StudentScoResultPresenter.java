@@ -222,6 +222,9 @@ public class StudentScoResultPresenter {
   private String setValue(String key, String value) {
     String shortValue = value.length() > 10 ? value.substring(0, 10) + "..." : value;
     LOG.info("SetValue " + key + ", " + shortValue);
+
+    if ( ResultsService.SUSPEND_DATA.equals(key)) return "false"; // never writable
+    
     userState.put(key,value);
     return "true";
   }
