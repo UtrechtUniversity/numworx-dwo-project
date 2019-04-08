@@ -17,7 +17,11 @@
 		.selected {
 			fill: #1b75bb;
 			margin-left: 20px;
-		}		
+		}
+		.icon:hover {
+			fill: #1b75bb;
+
+		}
 	
 	</ui:style>
 		    <g:DockLayoutPanel unit='PX' styleName='{style.navPanel}' >
