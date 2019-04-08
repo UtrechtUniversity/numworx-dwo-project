@@ -897,6 +897,14 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			if (child instanceof FormulaVak) {
 				sb.append("<math xmlns=\"http://www.w3.org/1998/Math/MathML\">").append(((FormulaVak) child).editor.getMainRegel().toMathML()).append("</math>");
 			} else
+			if (child instanceof CalculatorVak) {
+				CalculatorVak vak = (CalculatorVak) child;
+				sb.append("<math xmlns=\"http://www.w3.org/1998/Math/MathML\" class=\"calculator\" >");
+				sb.append("<mrow>").append(vak.editor.getMainRegel().toMathML()).append("</mrow>");
+				sb.append("<mo>").append(vak.btn.getText()).append("</mo>");
+				sb.append("<mn>").append(vak.waarde).append("</mn>");
+				sb.append("</math>");				
+			} else
 			if(child instanceof HasText) {
 				sb.append(xmlEncode(((HasText) child).getText()));
 			}
@@ -1227,6 +1235,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	
 	private class CalculatorVak extends Composite implements HasText, ClickHandler, IsEditable
 	{
+		public Object waarde = "";
 		static final double E_MAX = 1.0E7;
 		static final double E_MIN = 1.0E-3;
 		static final double MARGE = 0.00000000000000001;
@@ -1301,7 +1310,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			String x = editor.toString();
 			Expressie antwoord = FormuleParser.geefExpressie("$f" + x + "@");
 			viewer.getAsPanel().removeFromParent();
-			x = "";
+			this.waarde = x = "";
 			if (antwoord != null) 
 			{
 				double waarde = antwoord.geefWaarde();
@@ -1311,6 +1320,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				if (Double.isNaN(waarde))
 				{	x = "?";
 					btn.setText(EXACT);
+					this.waarde = "NaN"; // Nan
 				}
 				else
 				{ 
@@ -1332,6 +1342,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 							x = Expressie.df.format(waarde);
 						}
 					}
+					this.waarde = x;
 				}
 				//x = String.valueOf(antwoord.geefWaarde());
 			}
