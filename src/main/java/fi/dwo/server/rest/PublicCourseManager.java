@@ -191,14 +191,14 @@ if(SECURITY)
         		}
     		
     		}
-    		byte[] imageData = course.getImageData();
+    		byte[] imageData = course.getImageData(); // NULL PointerException
     		BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageData));
     		ByteArrayOutputStream out = new ByteArrayOutputStream();
     		ImageIO.write(image, "png", out);
     		imageData = out.toByteArray();
     		return Response.ok(imageData, "image/png").build();    		
     	} catch(Exception e) {
-    		LOG.log(Level.SEVERE, "getImage error", e);
+    		LOG.log(Level.WARNING, "getImage error", e);
     	}
     	return Response.status(Status.NOT_FOUND).build();
     }    
