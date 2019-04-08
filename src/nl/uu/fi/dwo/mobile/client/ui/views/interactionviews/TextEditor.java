@@ -1328,21 +1328,23 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 					if (op3)
 					{
 						x = Expressie.df3.format(waarde);
+						this.waarde = x;
 					}
 					else 
 					{
 						double abs = Math.abs(waarde);
-						if (abs < E_MIN || abs >= E_MAX) 
+						if ( (abs > 0 && abs < E_MIN) || abs >= E_MAX) 
 						{
 							x = Expressie.dfe.format(waarde);						
+							this.waarde = x;
 							x = x.replace("E", "*10$m") + "@";
 						}
 						else
 						{
 							x = Expressie.df.format(waarde);
+							this.waarde = x;
 						}
 					}
-					this.waarde = x;
 				}
 				//x = String.valueOf(antwoord.geefWaarde());
 			}
