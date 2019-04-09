@@ -2,13 +2,29 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\system\\TextMapper.java
 package fi.dwo.commons.system;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import fi.dwo.commons.system.text.Text;
+import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages;
+
 public abstract class TextMapper {
 
-	public static final String DEFAULT_LANGUAGE = "nl";
+	static class Dwo2MessageProxy implements InvocationHandler {
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+      String name = method.getName();
+      return getDwo2Messages().getString(name);
+    }
+
+  }
+
+  public static final String DEFAULT_LANGUAGE = "nl";
 
 	private static final String TEXT_CLASS = "Text";
 
@@ -539,9 +555,11 @@ public abstract class TextMapper {
 	public static final String GUIMNU_STUDENTMODELS = "GUIMNU_STUDENTMODELS";
 	public static final String GUIC_STUDENTMODELS_ADD = "GUIC_STUDENTMODELS_ADD";
 	
-	private static ResourceBundle rb;
+	private static ResourceBundle rb, dwo2Messages;
 
 	private static String language;
+
+  private static Dwo2LocaleMessages proxy;
 
 	public static final String DWO_PROFILE_ADMIN = "DwoProfileAdmin";
 
@@ -581,6 +599,22 @@ public abstract class TextMapper {
 		}
 
 		return rb;
+	}
+	
+	public static ResourceBundle getDwo2Messages() {
+	  if (dwo2Messages == null) {        
+          Locale lang = Locale.forLanguageTag(getLanguage());
+          String className = "nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages";
+          dwo2Messages = ResourceBundle.getBundle(className, lang);
+	  }
+	  return dwo2Messages;
+	}
+	
+	public static Dwo2LocaleMessages dwo2Message() {
+	  if (proxy != null) return proxy;
+	  Class<?>[] interfaces = { Dwo2LocaleMessages.class };
+      InvocationHandler h = new Dwo2MessageProxy();
+      return proxy = (Dwo2LocaleMessages) Proxy.newProxyInstance(Text.class.getClassLoader(), interfaces, h);
 	}
 
 	/**
@@ -626,5 +660,6 @@ public abstract class TextMapper {
 	public static void setLanguage(String language) {
 		TextMapper.language = language;
 		rb = null; // Wim: rb is een cache van de oude language
+		dwo2Messages = null;
 	}
 }
