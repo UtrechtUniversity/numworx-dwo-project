@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -47,12 +48,14 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 @SuppressWarnings("serial")
 public class RegisterForm extends HttpServlet {
@@ -61,6 +64,7 @@ public class RegisterForm extends HttpServlet {
   private static final String BRIN = "brin";
   private static final String ORGANIZATION = "organization";
   private static final Charset UTF_8 = StandardCharsets.UTF_8;
+  private static final String WISWISE_FREE = "WisWise-FREE";
   private final Logger LOG = Logger.getLogger(getClass().getName());
   SystemManager manager;
   Session session;
@@ -126,6 +130,11 @@ public class RegisterForm extends HttpServlet {
 		}
       }
       claim = claim.claim(BRIN,brin).setId(DEMO).claim("role", RoleType.TEACHER.name());     
+    } else if (WISWISE_FREE.equals(form)) {
+    	claim = claim.setId(WISWISE_FREE)
+    			.claim("schoolClass", "Klas Free")
+    			.claim("role", RoleType.STUDENT.name())
+    			.claim(BRIN,"wiswise");
     }
     String jwt = claim
       .setNotBefore(new Date())
@@ -137,10 +146,13 @@ public class RegisterForm extends HttpServlet {
     StringBuffer url = req.getRequestURL();
     url.append("?j=").append(jwt);
     MimeMessage message = new MimeMessage(session);
-//FIXME i18n
+
+    //FIXME i18n
     String abo = "Numworx Free";
     if (DEMO.equals(form)) {
     	abo = "Numworx demo-omgeving";
+    } else if (WISWISE_FREE.equals(form)) {
+    	abo = "Wiswise Free";
     }
     
     
@@ -156,7 +168,7 @@ public class RegisterForm extends HttpServlet {
       resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       return;
     }
-    if("html".equals(form)) {
+    if("html".equals(form)||WISWISE_FREE.equals(form)) {
       resp.setContentType(mailrb.getString("mail.mime"));
       resp.getWriter().print(content);
       return;
@@ -308,6 +320,7 @@ private String encode(String string) {
     String id = body.getId();
     if (id != null) {
     	cookie = new Cookie("schoolGroup", u(role));
+    	cookie.setMaxAge(-1);
     	resp.addCookie(cookie);
     	cookie = new Cookie("schoolLogin", u(brin));
     	resp.addCookie(cookie);
@@ -322,6 +335,13 @@ private String encode(String string) {
 				resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
 				return;
 			}
+			if (WISWISE_FREE.equals(id)) {
+				String schoolClass = body.get("schoolClass", String.class);
+				List<DomSchoolClass> list = manager.getSchoolClasses(school);
+				Optional<PersistenceId> classId = 
+				list.stream().filter(dsc -> schoolClass.equals(dsc.getSchoolClassName())).map(DomSchoolClass::getId).findAny();
+				classId.ifPresent(pid -> { resp.addCookie(new Cookie("schoolClassId", u(schoolClass_jwt(pid, server, email))));});
+			}
 		} catch (Dwo2Exception e) {
 			LOG.log(Level.WARNING, "getSchool", e);
 			resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -335,6 +355,16 @@ private String encode(String string) {
     }
     dispatch.forward(req, resp);
   }
+
+
+private String schoolClass_jwt(PersistenceId pid, String server, String email) {
+	return Jwts.builder().setIssuer(server)
+		      .setSubject(email)
+		      .setId(pid.getIdString())
+		      .setIssuedAt(new Date())
+		      .signWith(key, SignatureAlgorithm.HS256)
+		      .compact();
+}
 
 public static String u(String value) {
 	if (value != null) {
