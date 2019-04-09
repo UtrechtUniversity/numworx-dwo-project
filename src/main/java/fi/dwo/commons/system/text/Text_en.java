@@ -352,8 +352,8 @@ public class Text_en extends ListResourceBundle {
 			{ TextMapper.LG_SCO_ORDER_ASC, "results (0-100)" },
 			{ TextMapper.LG_SCO_ORDER_DESC, "results (100-0)" },
 			{ TextMapper.LG_SCO_NAME, "Activity {0}" },
-			{ TextMapper.GUIC_ADD_COURSE, "Add new module" },
-			{ TextMapper.GUIC_ADD_MAP, "Add new folder" },
+			{ TextMapper.GUIC_ADD_COURSE, "Add new Module" },
+			{ TextMapper.GUIC_ADD_MAP, "Add new Folder" },
 			{ TextMapper.GUIC_COURSE_MANAGEMENT, "Module management" },
 			{ TextMapper.GUIC_TLTP_DELETE_COURSE, "Delete module {0}" },
 			{ TextMapper.GUIC_TLTP_DELETE_MAP, "Delete folder {0}" },
@@ -512,6 +512,11 @@ public class Text_en extends ListResourceBundle {
 
             { TextMapper.GUIMNU_STUDENTMODELS, "Learning domains" },
             { TextMapper.GUIC_STUDENTMODELS_ADD, "New learning domain" },
+  
+            { "Backup map", "Back up Folder"},
+            { "Backup module", "Back up Module" },
+            { "Import map", "Import Folder"},
+            { "Import", "Import Module" },
 
 	};
 
