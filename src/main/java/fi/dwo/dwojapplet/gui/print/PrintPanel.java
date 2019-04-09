@@ -45,20 +45,20 @@ public class PrintPanel extends Box {
 	}
 	
 	
-	public static void main(String[] args) {
-		PrintPanel panel = new PrintPanel();
-		Printable p = new PrintComponent(panel);
-		
-		panel.setComponent(p);
-		panel.setIterable(Arrays.asList( p,p,p ));
-		
-		JFrame f = new JFrame("test L&F");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER,20, 20));
-		f.getContentPane().add(panel);
-		f.pack();
-		f.show();
-	}
+//	public static void main(String[] args) {
+//		PrintPanel panel = new PrintPanel();
+//		Printable p = new PrintComponent(panel);
+//		
+//		panel.setComponent(p);
+//		panel.setIterable(Arrays.asList( p,p,p ));
+//		
+//		JFrame f = new JFrame("test L&F");
+//		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		f.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER,20, 20));
+//		f.getContentPane().add(panel);
+//		f.pack();
+//		f.show();
+//	}
 
 	public void setComponent(Printable component) {
 		printStudent.setPrintable(component);
