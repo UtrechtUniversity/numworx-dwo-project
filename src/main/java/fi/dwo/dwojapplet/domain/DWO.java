@@ -2885,6 +2885,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         TextMapper.setLanguage(lang);
         fi.dwo.dwojapplet.parameters.system.TextMapper.setLanguage(lang);
         firePropertyChange("language", old, lang);
+        ModuleTreePanel.initialize(dwoProfile);
       } catch(Exception oops) {
         LOG.log(Level.WARNING, "switch to " + p + " " + lang, oops);
       }

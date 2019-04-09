@@ -341,10 +341,10 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         closeButton.setSize(closeButton.getPreferredSize());
         closeButton.addActionListener(this);
 
-        globalSeal = new JButton("Alles verzegelen");
+        globalSeal = new JButton(TextMapper.dwo2Message().NUM_LBL_SELECTEDRESULTS_SEALSINGLEACTIVITY());
         globalSeal.setVisible(false);
         globalSeal.addActionListener(this);
-        studentSeal = new JCheckBox("Verzegeld voor deze leerling");
+        studentSeal = new JCheckBox(TextMapper.dwo2Message().NUM_LBL_STUDENTSCO_SEAL());
         studentSeal.setOpaque(false);
         studentSeal.setVisible(false);
         // this.pack();
