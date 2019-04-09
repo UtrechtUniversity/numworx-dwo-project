@@ -4,6 +4,7 @@ import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
 
 import fi.dwo.gwt.lib.rest.util.DomStudentCodec;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
@@ -60,7 +61,7 @@ class Util {
              }
          } else if (node instanceof DomResultStudentScoPage) {
              DomResultStudentScoPage page = (DomResultStudentScoPage) node;
-             json.put("maxScore", new JSONNumber(d(page.getMaxScore())));
+             json.put("maxScore", dnull(page.getMaxScore()));
              json.put("bonus", new JSONNumber(d(page.getCorrectie())));
              json.put("label", new JSONString(page.getLabel()));
              json.put("sequence", new JSONNumber(page.getNodeId()));
@@ -84,6 +85,11 @@ class Util {
     if (d != null) return d.doubleValue();
     return 0.0;
   }
+
+  private static JSONValue dnull(Double d) { // Voorkom npe op double
+	    if (d != null) return new JSONNumber(d.doubleValue());
+	    return JSONNull.getInstance();
+	  }
 
   private static JSONString buildTime(String totalTime) {
     if("00:00:00".equals(totalTime))
