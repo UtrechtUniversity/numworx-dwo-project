@@ -36,7 +36,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.welcome.WelcomePresenter;
 @RoleScope
 public class GuestPresenterFactory implements PresenterFactory {
 
-  @Inject MainPresenter mainPresenter;
+  @Inject GuestMainPresenter mainPresenter;
   @Inject LoginPresenter loginPresenter;
   @Inject AccountPresenter accountPresenter;
   @Inject AlertDialogWithConfirmCancelPresenter alertDialogWithConfirmCancelPresenter;

@@ -37,7 +37,7 @@ public class MainPresenter {
 
     private static final Logger LOG = Logger.getLogger(MainPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
-    private EventBus eventBus;
+    protected EventBus eventBus;
 
     public interface Display {
 
