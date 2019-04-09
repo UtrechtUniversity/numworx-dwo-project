@@ -418,16 +418,16 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 		bar.setVisible(GuiCreator.instance().getUser().hasRight(User.MODIFY_MODULES_RIGHT));
 		JMenu menu; JMenuItem item;
 		menu = new JMenu(TextMapper.getText("file"));
-		item = new JMenuItem("Nieuwe map");menu.add(item);item.setAction(new NewAction(true, true));
-		item = new JMenuItem("Nieuwe module/activiteit");menu.add(item);item.setAction(new NewAction(false, false));
+		item = new JMenuItem();menu.add(item);item.setAction(new NewAction(true, true));
+		item = new JMenuItem();menu.add(item);item.setAction(new NewAction(false, false));
 		if(DwoHelper.isSecure())
 		{  	
 			menu.addSeparator();
-			item = new JMenuItem("Import module");menu.add(item);item.setAction(new ImportModuleAction());
-			item = new JMenuItem("Backup module");menu.add(item);item.setAction(new BackupModuleAction());
+			item = new JMenuItem(/*"Import module"*/);menu.add(item);item.setAction(new ImportModuleAction());
+			item = new JMenuItem(/*"Backup module"*/);menu.add(item);item.setAction(new BackupModuleAction());
 
-			item = new JMenuItem("Import folder");menu.add(item);item.setAction(new ImportMapAction());
-			item = new JMenuItem("Backup folder");menu.add(item);item.setAction(new BackupMapAction());
+			item = new JMenuItem(/*"Import folder"*/);menu.add(item);item.setAction(new ImportMapAction());
+			item = new JMenuItem(/*"Backup folder"*/);menu.add(item);item.setAction(new BackupMapAction());
 			if( DwoHelper.isScormExportLoggedIn() || DwoHelper.isAppletExportLoggedIn())
 				menu.addSeparator();
 			if( DwoHelper.isScormExportLoggedIn() )
