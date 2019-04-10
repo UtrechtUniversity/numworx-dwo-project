@@ -81,7 +81,6 @@ import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.gui.WelcomePanel;
 import fi.dwo.dwojapplet.gui.action.Clipboard;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.StoreCreator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
@@ -2276,7 +2275,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
       c.setId(PersistentCourse.buildPersistenceId(Long.valueOf(course.getID())));
       boolean r = manager.remove(c, getDwoProfile()).booleanValue();
       if (r) {
-        MapperCreator.instance(Course.class).removeObject(course.getID());
+        PersistenceFacade.instance().removeObject(course.getID(), Course.class);
       }
 
       return r;
@@ -2297,7 +2296,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
       scoContext.setId(PersistentScoContext.buildPersistenceId(Long.valueOf(sco.getScoID())));
       boolean returnValue = manager.remove(scoContext, getDwoProfile());
       if (returnValue) {
-        MapperCreator.instance(Sco.class).removeObject(sco.getID());
+        PersistenceFacade.instance().removeObject(sco.getID(), Sco.class);
 
         /*
          * Delete the sco in the course, and reset all the sequencenrs

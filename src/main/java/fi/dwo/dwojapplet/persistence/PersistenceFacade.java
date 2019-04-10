@@ -289,16 +289,15 @@ public class PersistenceFacade {
     }
 
     /**
-     * This method saves an object in the database.<br>
-     * school/schoolclass
+     * This method saves an object in the CACHE.<br>
+     * school/schoolclass/user
      *
      * @param oid
      * @param obj
      * @throws fi.dwo.commons.exceptions.PersistenceException
      *
      */
-    public <T> void put(int oid, T obj, Class<T> clz)
-            throws PersistenceException {
+    public <T> void put(int oid, T obj, Class<T> clz) {
         MapperIF<T> mapper = MapperCreator.instance(clz);
         mapper.put(oid, obj);
 
@@ -3201,6 +3200,14 @@ public class PersistenceFacade {
         v.add(h);
       });
       return v;
+    }
+
+    
+    
+    public void removeObject(int id, Class<?> class1) {
+      MapperCreator.instance(class1).removeObject(id);
+
+      
     }
 
 }

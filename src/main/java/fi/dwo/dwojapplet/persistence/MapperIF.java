@@ -8,6 +8,8 @@ import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
+import fi.dwo.commons.exceptions.PersistenceException;
+
 /**
  * A mapper which can map database-hashtables on objects. e.g. the data out the
  * coursetable are read out of the database and put in a hashtable (on the
@@ -17,7 +19,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  * @author M.J.B. Kupers
  *
  */
-public interface MapperIF<T> {
+interface MapperIF<T> {
 
     /**
      * Returns a object of the class, with the specified objectID.<br>
@@ -32,7 +34,7 @@ public interface MapperIF<T> {
      *
      */
     public T get(int oid) throws IOException, XmlRpcException,
-            SQLException;
+            SQLException, PersistenceException;
 
     /** only supported for users
      * @param uid

@@ -10,7 +10,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
@@ -18,7 +17,6 @@ import fi.dwo.commons.system.TextMapper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -645,7 +643,7 @@ public final class DwoHelper {
 		u.setDomLoginContext(context);
 		u.setDomUserFull(user);
 		u.setSchoolRoleAndClass(dom);
-		MapperCreator.instance(User.class).put(u.getID(), u);
+		PersistenceFacade.instance().put(u.getID(), u, User.class);
 		return u;
 	}
 

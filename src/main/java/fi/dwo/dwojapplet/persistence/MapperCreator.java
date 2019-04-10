@@ -18,7 +18,7 @@ import fi.dwo.dwojapplet.domain.UserResultList;
  * @author M.J.B. Kupers
  *
  */
-public class MapperCreator {
+class MapperCreator {
 
     private final static String DOMAIN_PACKAGE = "fi.dwo.dwojapplet.domain";
 
@@ -116,7 +116,7 @@ public class MapperCreator {
      * @param c The class wherefrom the mapper must be returned.
      * @return The corresponding mapper.
      */
-    public static <T> MapperIF<T> instance(Class<T> c) {
+    static <T> MapperIF<T> instance(Class<T> c) {
         if (mapperList == null) {
             mapperList = new Hashtable();
             createClasses();
