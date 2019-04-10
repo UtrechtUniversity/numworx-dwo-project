@@ -52,10 +52,10 @@ public class ClassConfigurePanel extends JPanel implements ActionListener,
 		classTextField.addFocusListener(this);
 		classTextField.requestFocusInWindow();// request focus for typing
 
-		treeCB = new JCheckBox(TextMapper.getText(TextMapper.GUIC_MSG_CLASS_TREESTRUCTURE));
+		treeCB = new JCheckBox(TextMapper.dwo2Message().NUM_LBL_CLASSES_TREESTRUCT());
 		treeCB.addActionListener(this);
 
-		classKeyCB = new JCheckBox(TextMapper.getText(TextMapper.GUIC_MSG_CLASS_REGISTRATIONKEYQ));
+		classKeyCB = new JCheckBox(TextMapper.dwo2Message().NUM_LBL_CLASSES_ACCESSKEY());
 		classKeyCB.addActionListener(this);
 
 		registrationKeyLabel = new JLabel(

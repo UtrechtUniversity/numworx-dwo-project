@@ -195,6 +195,9 @@
 	<init>(java.lang.String[]);
 }
 
+-keep public interface * extends com.google.gwt.i18n.client.ConstantsWithLookup {
+	<methods>;
+}
 
 
 
