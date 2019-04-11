@@ -80,8 +80,9 @@ interface MapperIF<T> {
      * @throws IOException
      * @throws SQLException
      * @throws XmlRpcException
+     * @throws PersistenceException 
      */
-    public T getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException;
+    public T getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException;
 
     /**
      * Creates all the objects out of the Vector. If this is the CourseMapper,
@@ -92,8 +93,9 @@ interface MapperIF<T> {
      * @throws IOException
      * @throws SQLException
      * @throws XmlRpcException
+     * @throws PersistenceException 
      */
-    public T[] getObjectFromReturn(Vector data) throws IOException, SQLException, XmlRpcException;
+    public T[] getObjectFromReturn(Vector data) throws IOException, SQLException, XmlRpcException, PersistenceException;
 
     /**
      * Returns all the objects whith the object as restriction. If this is the
@@ -107,9 +109,10 @@ interface MapperIF<T> {
      * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
+     * @throws PersistenceException 
      */
     public T[] get(Object obj) throws IOException, SQLException,
-            XmlRpcException;
+            XmlRpcException, PersistenceException;
 
     /**
      * Removes the object with the specified ID from the cache.

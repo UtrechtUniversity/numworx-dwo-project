@@ -2,6 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\CourseMapper.java
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.dwojapplet.domain.ClassCourse;
@@ -150,10 +151,11 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>{
      * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
+     * @throws PersistenceException 
      */
     @Override
     public Course[] get(Object obj) throws IOException, SQLException,
-            XmlRpcException {
+            XmlRpcException, PersistenceException {
         Hashtable ht = new Hashtable();
         if (obj instanceof Course) {
             Course course = (Course) obj;
@@ -200,7 +202,7 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>{
      */
     @Override
     public Course get(int oid) throws IOException, XmlRpcException,
-            SQLException {
+            SQLException, PersistenceException {
         Integer Oid = new Integer(oid);
         Course result = objects.get(Oid);
         if (result != null) {
@@ -232,10 +234,11 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>{
      * @throws IOException
      * @throws XmlRpcException
      * @throws SQLException
+     * @throws PersistenceException 
      */
     @SuppressWarnings("rawtypes")
 	private Course[] cached(Hashtable ht) throws IOException, XmlRpcException,
-            SQLException {
+            SQLException, PersistenceException {
         Vector v;
         v = (Vector) cachemap.get(ht);
 // easy found in cache, return objects
@@ -458,7 +461,7 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>{
      */
     @Override
     public Course[] getObjectFromReturn(Vector data) throws IOException,
-            SQLException, XmlRpcException {
+            SQLException, XmlRpcException, PersistenceException {
       if(!data.isEmpty() && data.get(0) instanceof DomCourseStudent)
       {
         Course[] result = createArray(data.size());

@@ -2,6 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\SchoolMapper.java
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
@@ -61,6 +62,9 @@ class SchoolMapper extends XmlRpcMapper<School> {
 
                 LOG.log(Level.SEVERE,null,e);
                 return new SchoolClass[0]; // FIXME
+            } catch (PersistenceException e) {
+              LOG.log(Level.SEVERE,null,e);
+              return new SchoolClass[0]; // FIXME
             }
 
             return super.getClassList();
@@ -82,6 +86,8 @@ class SchoolMapper extends XmlRpcMapper<School> {
                 } catch (XmlRpcException e) {
     
                     LOG.log(Level.SEVERE,null,e);
+                } catch (PersistenceException e) {
+                  LOG.log(Level.SEVERE,null,e);
                 }
             }
             return super.getSchoolGroupList();
@@ -140,10 +146,11 @@ class SchoolMapper extends XmlRpcMapper<School> {
      * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
+     * @throws PersistenceException 
      *
      */
     @Override
-    public School getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException {
+    public School getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
         School s = null;
         if (data.get("schoolID") == null) { //We don't know enough to make a
             // schoolobject
@@ -228,7 +235,7 @@ class SchoolMapper extends XmlRpcMapper<School> {
      *      java.util.Hashtable)
      */
     @Override
-    protected School update(School obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
+    protected School update(School obj, Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
         School s = obj;
         s.setSchoolID(((Integer) data.get("schoolID")).intValue());
         s.setName((String) data.get("schoolName"));

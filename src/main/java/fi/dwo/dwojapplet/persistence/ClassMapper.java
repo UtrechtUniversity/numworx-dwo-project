@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
+import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
@@ -213,7 +214,7 @@ class ClassMapper extends XmlRpcMapper<SchoolClass> {
     }
 
     @Override
-    public SchoolClass get(int oid) throws IOException, XmlRpcException, SQLException {
+    public SchoolClass get(int oid) throws IOException, XmlRpcException, SQLException, PersistenceException {
         // TODO Auto-generated method stub
         SchoolClass schoolClass = super.get(oid);
         if (schoolClass != null) {

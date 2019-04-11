@@ -4,6 +4,7 @@
  */
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.LessonGroup;
 import fi.dwo.dwojapplet.domain.ResultScore;
@@ -66,10 +67,11 @@ public class UserResultListMapper extends XmlRpcMapper {
      * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
+     * @throws PersistenceException 
      *
      */
     @Override
-    public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException {
+    public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
         ResultScore rs = new ResultScore();
         return update(rs, data);
     }
@@ -115,7 +117,7 @@ public class UserResultListMapper extends XmlRpcMapper {
      *      java.util.Hashtable)
      */
     @Override
-    protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
+    protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
         ResultScore rs = (ResultScore) obj;
 
         UserGroup ug = null;
@@ -192,7 +194,7 @@ public class UserResultListMapper extends XmlRpcMapper {
 
     @Override
     public Object[] getObjectFromReturn(Vector data) throws IOException,
-            SQLException, XmlRpcException {
+            SQLException, XmlRpcException, PersistenceException {
         Vector result = new Vector();
 
         if (data.size() == 0) {

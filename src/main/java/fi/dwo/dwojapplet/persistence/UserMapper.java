@@ -3,6 +3,7 @@
 package fi.dwo.dwojapplet.persistence;
 
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
+import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.system.TextMapper;
@@ -63,10 +64,11 @@ class UserMapper extends XmlRpcMapper {
      * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
+     * @throws PersistenceException 
      *
      */
     @Override
-    public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException {
+    public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
         User u = null;
         if (data.get("userID") == null) { //We don't know enough to make a
             // userobject
@@ -122,10 +124,11 @@ class UserMapper extends XmlRpcMapper {
      * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
+     * @throws PersistenceException 
      */
     @Override
     public Object[] get(Object obj) throws IOException, SQLException,
-            XmlRpcException {
+            XmlRpcException, PersistenceException {
         Hashtable ht = new Hashtable();
         if (obj instanceof SchoolClass) {
             SchoolClass sc = (SchoolClass) obj;
@@ -209,7 +212,7 @@ class UserMapper extends XmlRpcMapper {
          */
         @Override
         protected Object update
-        (Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
+        (Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
             User u = (User) obj;
             u.setEmail((String) data.get("email"));
             u.setFirstname((String) data.get("firstname"));

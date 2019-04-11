@@ -3,6 +3,7 @@
 package fi.dwo.dwojapplet.persistence;
 
 import fi.beans.private_base64code.StringCodeObject;
+import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.School;
@@ -126,7 +127,7 @@ class ScoMapper extends XmlRpcMapper {
 
     
     @Override
-	public Object get(int oid) throws IOException, XmlRpcException, SQLException {
+	public Object get(int oid) throws IOException, XmlRpcException, SQLException, PersistenceException {
 		if (!objects.containsKey(Integer.valueOf(oid)))
 				cachemap.clear();
 		return super.get(oid);
@@ -138,10 +139,11 @@ class ScoMapper extends XmlRpcMapper {
      * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
+	 * @throws PersistenceException 
      *
      */
     @Override
-    public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException {
+    public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
         Sco s = null;
         if (data.get("scoID") == null) { //We don't know enough to make a
             // scoobject
@@ -181,10 +183,11 @@ class ScoMapper extends XmlRpcMapper {
      * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
+     * @throws PersistenceException 
      */
     @Override
     public Object[] get(Object obj) throws IOException, SQLException,
-            XmlRpcException {
+            XmlRpcException, PersistenceException {
         Hashtable ht = new Hashtable();
         if (obj instanceof Course) {
             Course c = (Course) obj;
@@ -276,7 +279,7 @@ class ScoMapper extends XmlRpcMapper {
      *      java.util.Hashtable)
      */
     @Override
-    protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
+    protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
         Sco s = (Sco) obj;
         s.setScoID(((Integer) data.get("scoID")).intValue());
         s.setName((String) data.get("sconame"));
@@ -340,7 +343,7 @@ class ScoMapper extends XmlRpcMapper {
     public static boolean hasShowScore = true;
 
     private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
-            SQLException {
+            SQLException, PersistenceException {
         Object[] result;
         result = (Object[]) cachemap.get(ht);
         if (result != null) {
@@ -355,7 +358,7 @@ class ScoMapper extends XmlRpcMapper {
 
     @Override
     public Object[] get(Hashtable wheredef) throws IOException,
-            XmlRpcException, SQLException {
+            XmlRpcException, SQLException, PersistenceException {
 
         DbAccessIF dbAccess = DbAccessCreator.instance();
         try {

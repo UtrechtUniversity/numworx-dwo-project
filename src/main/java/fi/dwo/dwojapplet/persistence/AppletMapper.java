@@ -5,6 +5,7 @@
 package fi.dwo.dwojapplet.persistence;
 
 import fi.beans.loader.Loader;
+import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
 
@@ -172,7 +173,7 @@ class AppletMapper extends XmlRpcMapper<Class<Applet>> {
      */
     @Override
     public Class<Applet> get(int oid) throws IOException, XmlRpcException,
-            SQLException {
+            SQLException, PersistenceException {
         Class<Applet> object = super.get(oid);
         if (object != null) {
             objects.put(oid, object);

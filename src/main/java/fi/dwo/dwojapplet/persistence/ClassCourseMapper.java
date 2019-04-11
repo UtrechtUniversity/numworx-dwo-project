@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.domain.ClassCourse;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import java.io.IOException;
@@ -42,7 +43,7 @@ class ClassCourseMapper extends XmlRpcMapper {
 
     @Override
     public Object[] get(Object obj) throws IOException, SQLException,
-            XmlRpcException {
+            XmlRpcException, PersistenceException {
         Hashtable ht = new Hashtable();
         if (obj instanceof SchoolClass) {
             ht.put("ClassID", new Integer(((SchoolClass) obj).getID()));

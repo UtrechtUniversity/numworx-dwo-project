@@ -2,6 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\GroupMapper.java
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
 import java.io.IOException;
@@ -68,11 +69,12 @@ class SchoolGroupMapper extends XmlRpcMapper {
      * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
+     * @throws PersistenceException 
      *
      */
     @Override
     public Object[] get(Object obj) throws IOException, SQLException,
-            XmlRpcException {
+            XmlRpcException, PersistenceException {
         Hashtable ht = new Hashtable();
         if (obj instanceof School) {
             School sc = (School) obj;

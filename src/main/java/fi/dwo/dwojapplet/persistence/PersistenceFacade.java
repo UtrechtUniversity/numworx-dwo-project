@@ -1471,6 +1471,7 @@ public class PersistenceFacade {
      * @param withChildren
      * @param parent
      * @return The new course. If an exception occurs, null is returned.
+     * @throws PersistenceException 
      * @throws CourseException
      */
 //    public Course addCourse(School school, String name, String description, int profileID, Course parent, boolean withChildren)
@@ -1584,7 +1585,7 @@ public class PersistenceFacade {
 //        }
 //    }
 
-    public Course[] getCourseFromMapper(Object o) throws IOException, SQLException, XmlRpcException {
+    public Course[] getCourseFromMapper(Object o) throws IOException, SQLException, XmlRpcException, PersistenceException {
         return MapperCreator.instance(Course.class).get(o);
     }
 

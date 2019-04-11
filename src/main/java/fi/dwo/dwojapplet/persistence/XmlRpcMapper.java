@@ -54,8 +54,9 @@ abstract class XmlRpcMapper<T> implements MapperIF<T> {
      * @throws IOException
      * @throws XmlRpcException
      * @throws SQLException
+     * @throws PersistenceException 
      */
-    public T[] get(Hashtable wheredef) throws IOException, XmlRpcException, SQLException {
+    public T[] get(Hashtable wheredef) throws IOException, XmlRpcException, SQLException, PersistenceException {
         DbAccessIF dbAccess = DbAccessCreator.instance();
         return getObjectFromReturn(dbAccess.getTable(getTableName(), wheredef, getOrderbyCol()));
     }
@@ -68,10 +69,11 @@ abstract class XmlRpcMapper<T> implements MapperIF<T> {
      * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws PersistenceException 
      */
     @Override
     public T get(int oid) throws IOException, XmlRpcException,
-            SQLException {
+            SQLException, PersistenceException {
         if (objects.containsKey(new Integer(oid))) {
             return objects.get(new Integer(oid));
         } else {
@@ -133,7 +135,7 @@ abstract class XmlRpcMapper<T> implements MapperIF<T> {
 
     @Override
     public T[] getObjectFromReturn(Vector data) throws IOException,
-            SQLException, XmlRpcException {
+            SQLException, XmlRpcException, PersistenceException {
         int i;
         T[] oa = createArray(data.size());
         for (i = 0; i < data.size(); i++) {
