@@ -109,6 +109,9 @@ public interface DWOkeyboardBundle extends ClientBundle, Localizable {
     @MimeType("image/svg+xml")
     DataResource vectornotatie_svg();
     
+    @Source("nl/uu/fi/dwo/keyboard/client/resources/stelsel.svg")
+    @MimeType("image/svg+xml")
+    DataResource stelsel_svg();
    
     
     
