@@ -1,5 +1,10 @@
 package nl.uu.fi.dwo.register.client;
 
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -7,8 +12,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.CallManagers.PublicUserManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
+import fi.dwo.gwt.lib.rest.util.Base64;
+import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
@@ -77,6 +85,9 @@ public class RegisterController {
 			};
 			p = p.recoverWith(recovery).then(link);
 		}
+
+		if (putRequest != null)
+		  p = p.map(x -> domNewUser).then(this::sendPutRequest);
 		p.then(succes,failure);
 	}
 
@@ -101,4 +112,50 @@ public class RegisterController {
 		if (cancel == null) return next;
 		return cancel;
 	}
+	
+	private String putRequest;
+
+  /**
+   * @param putRequest the putRequest to set
+   */
+  public void setPutRequest(String putRequest) {
+    this.putRequest = putRequest;
+  }
+
+    private static String serverURL = "registerform";
+	
+	Promise<Boolean> sendPutRequest(Promise<DomNewUser> user) {
+	  if (putRequest == null) return Promises.resolved(Boolean.TRUE);
+	  Deferred<Boolean> defer = new PromiseCallback<>();
+      RequestBuilder requestBuilder = new RequestBuilder(
+        RequestBuilder.PUT, serverURL);
+	  requestBuilder.setUser(user.getValue().getUsername());
+	  requestBuilder.setPassword(user.getValue().getPassword());
+	  requestBuilder.setIncludeCredentials(true);
+	  requestBuilder.setHeader("Authorization", "Basic " + Base64.btoa(requestBuilder.getUser() + ":" + requestBuilder.getPassword()));
+	  RequestCallback callback = new RequestCallback() {
+        
+        @Override
+        public void onResponseReceived(Request request, Response response) {
+          if (response.getStatusCode() == 204) 
+            defer.resolve(Boolean.TRUE);
+          else {
+            defer.fail(new RequestException(response.getStatusCode() + " " + response.getStatusText()));
+          }
+        }
+        
+        @Override
+        public void onError(Request request, Throwable exception) {
+          defer.fail(exception);
+        }
+      };
+    try {
+      requestBuilder.sendRequest(putRequest, callback);
+    } catch (RequestException e) {
+        defer.fail(e);
+    }
+	  
+	  return defer.getPromise();
+	}
+	
 }

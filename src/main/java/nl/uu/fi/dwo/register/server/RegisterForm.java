@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.register.server;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -32,14 +33,18 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.HttpHeaders;
 
+import org.json.simple.parser.JSONParser;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -50,7 +55,10 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -60,6 +68,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @SuppressWarnings("serial")
 public class RegisterForm extends HttpServlet {
 	
+  private static final String SUBMIT_STUDENT_TO_SCHOOL_CLASS = "submitStudentToSchoolClass";
   private static final String DEMO = "DEMO";
   private static final String BRIN = "brin";
   private static final String ORGANIZATION = "organization";
@@ -340,7 +349,7 @@ private String encode(String string) {
 				List<DomSchoolClass> list = manager.getSchoolClasses(school);
 				Optional<PersistenceId> classId = 
 				list.stream().filter(dsc -> schoolClass.equals(dsc.getSchoolClassName())).map(DomSchoolClass::getId).findAny();
-				classId.ifPresent(pid -> { resp.addCookie(new Cookie("schoolClassId", u(schoolClass_jwt(pid, server, email))));});
+				classId.ifPresent(pid -> { resp.addCookie(new Cookie("putRequest", u(schoolClass_jwt(pid, server, email))));});
 			}
 		} catch (Dwo2Exception e) {
 			LOG.log(Level.WARNING, "getSchool", e);
@@ -362,6 +371,7 @@ private String schoolClass_jwt(PersistenceId pid, String server, String email) {
 		      .setSubject(email)
 		      .setId(pid.getIdString())
 		      .setIssuedAt(new Date())
+		      .setAudience(SUBMIT_STUDENT_TO_SCHOOL_CLASS)
 		      .signWith(key, SignatureAlgorithm.HS256)
 		      .compact();
 }
@@ -375,5 +385,54 @@ public static String u(String value) {
 	}
 	return value;
 }
-  
+
+/* (non-Javadoc)
+ * @see javax.servlet.http.HttpServlet#doPut(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+ */
+  @Override
+  protected void doPut(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    String server = req.getRequestURL().toString();
+    String auth = req.getHeader(HttpHeaders.AUTHORIZATION);
+    if (auth == null) {
+      resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+      return;
+    }
+
+    ServletInputStream in = req.getInputStream();
+    InputStreamReader reader = new InputStreamReader(in, UTF_8);
+    StringBuilder sb = new StringBuilder();
+    int ch;
+    while ((ch = reader.read()) >= 0)
+      sb.append((char) ch); // readfully.
+    String jwt = sb.toString();
+    Jws<Claims> claims = Jwts.parser().requireIssuer(server).setSigningKey(key).parseClaimsJws(jwt);
+    Claims body = claims.getBody();
+    String audience = body.getAudience();
+    if (SUBMIT_STUDENT_TO_SCHOOL_CLASS.equals(audience)) {
+    Manager man = new Manager(getServletContext());
+    try {
+      DomUserFull user = man.getUser(auth);
+      if (! user.getEmail().equals(body.getSubject()))
+        throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, user.getUniqueDisplayName());
+
+      DomStudent student = new DomStudent(user);
+      DomSubmitStudentToSchoolClass submit = new DomSubmitStudentToSchoolClass();
+      submit.setStudent(student);
+      DomSchoolClass schoolClassTo = new DomSchoolClass();
+      schoolClassTo.setId(new PersistenceId(body.getId()));
+      submit.setSchoolClassTo(schoolClassTo);
+      manager.submitStudentToSchoolClass(submit);
+    } catch (Dwo2Exception e) {
+      resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+      return;
+    }
+    // all ok
+    resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+    } else {
+      resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+    }
+    
+  }
+
 }

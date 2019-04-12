@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -23,6 +24,7 @@ public class Manager {
 	static final Logger LOG = Logger.getLogger(Manager.class.getName());
 
 	private SystemManager manager;
+	private URL dwoRest;
 
 	public Manager(ServletContext context) {
 		try {
@@ -41,7 +43,7 @@ public class Manager {
 			dbrest_url = "http://localhost/dwo/";
 		try {
 			RestAuthenticator authenticator = new RestAuthenticator();
-			authenticator.setServerUrlPath(new URL(dbrest_url));
+			authenticator.setServerUrlPath(dwoRest = new URL(dbrest_url));
 			StoredRestManager rest = new StoredRestManager(authenticator);
 			return new SystemManager(rest);
 		} catch (MalformedURLException ex) {
@@ -67,5 +69,22 @@ public class Manager {
 			}
 		}
 		return null;
+	}
+	
+	public DomUserFull getUser(String auth) throws Dwo2Exception {
+	  DomUserFull result = null;
+      RestAuthenticator authenticator = new RestAuthenticator() {
+
+        @Override
+        public String getBasicAuthentication() {
+          return auth;
+        }
+        
+      };
+      authenticator.setServerUrlPath(dwoRest);
+      StoredRestManager rpc = new StoredRestManager(authenticator);
+      rpc.setBasicAuthString(auth, auth, auth); // very dummy
+      result = rpc.get("rest/secure/user/account/get", DomUserFull.class);
+      return result;
 	}
 }

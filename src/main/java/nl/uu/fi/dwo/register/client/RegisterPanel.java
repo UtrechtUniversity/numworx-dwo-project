@@ -40,10 +40,14 @@ public class RegisterPanel extends ResizeComposite {
 
 	final private boolean isfree;
 	final private boolean demo;
+	private static final String WISWISE_FREE = "WisWise-FREE";
+	final private boolean wiswise;
 	
 	public RegisterPanel(boolean isfree, boolean saml) {
 	    this.isfree = isfree;
 	    demo = "DEMO".equals(getCookie("form"));
+	    wiswise = WISWISE_FREE.equals(getCookie("form"));
+	    
 		initWidget(uiBinder.createAndBindUi(this));
 		//schoolGroup.addItem(rb.NULLSCHOOL(), RoleType.STUDENT.name());
 		schoolGroup.addItem(rb.STUDENT(), RoleType.STUDENT.name());
@@ -90,8 +94,16 @@ public class RegisterPanel extends ResizeComposite {
 			LOG.info("school group = " + this.schoolGroup.getSelectedItemText() + " " + this.schoolGroup.getSelectedValue());
 		}
 		String schoolCode = getCookie("schoolCode");
-		if (schoolCode != null) this.schoolCode.setText(schoolCode);
+		if (schoolCode != null) {
+		  this.schoolCode.setText(schoolCode);
+		  Cookies.removeCookie("schoolCode");
+		}
 		
+		String putRequest = getCookie("putRequest");
+		if (putRequest != null) {
+		  Cookies.removeCookie("putRequest");
+		  controller.setPutRequest(putRequest);
+		}
 		
 	}
 
@@ -217,7 +229,7 @@ public class RegisterPanel extends ResizeComposite {
 		String sLogin = schoolLogin.getText();
 		String sCode = schoolCode.getText();
 		if(isfree && !demo) {
-			sLogin = sCode = null;
+			if (!wiswise) sLogin = sCode = null;
 			domUser.setRole(RoleType.STUDENT);
 		} else {
 	        if ( ! SimpleValidUserFieldsChecker.isNonEmptyNorNull(sLogin,sCode))
