@@ -97,7 +97,7 @@ public class SystemManager {
 
   @PUT
   @Produces({"application/json"})
-  @Path("/schoolclasses/getList")
+  @Path("/schoolclass/getList")
   public List<DomSchoolClass> getListSchoolClass(RestSchool rest) throws Dwo2Exception {
     Long id = MySQLPersistenceId.getNativeId(rest.getDomSchool());
     PersistentSchool school = SchoolManager.findEntity(id);
