@@ -49,6 +49,7 @@ public class RegisterPanel extends ResizeComposite {
 	    wiswise = WISWISE_FREE.equals(getCookie("form"));
 	    
 		initWidget(uiBinder.createAndBindUi(this));
+		fixInputs();
 		//schoolGroup.addItem(rb.NULLSCHOOL(), RoleType.STUDENT.name());
 		schoolGroup.addItem(rb.STUDENT(), RoleType.STUDENT.name());
 		schoolGroup.addItem(rb.TEACHER(), RoleType.TEACHER.name());
@@ -62,6 +63,12 @@ public class RegisterPanel extends ResizeComposite {
 		absorbCookies();
 		
 		
+	}
+
+	private void fixInputs() {
+		password.getElement().setAttribute("autocomplete", "new-password");
+		passwordAgain.getElement().setAttribute("autocomplete", "new-password");
+		schoolCode.getElement().setAttribute("autocomplete", "new-password");		
 	}
 
 	private void absorbCookies() {
