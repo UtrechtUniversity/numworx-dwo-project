@@ -82,7 +82,7 @@ public class ModulesPresenter implements SwitchViewEventHandler, LoginEventHandl
 
     private static final boolean tablet;
     static {
-      OsDetection osDetection = MGWT.getOsDetection();
+//     OsDetection osDetection = MGWT.getOsDetection();
 // a tablet is a ipad, iphone, android, not a desktop
       tablet = true; // !osDetection.isDesktop();   // FIXME voor Teunis, als uitgeklapt goed werkt, weer aanzetten: tablet = ! osDetection.isDesktop(); 
       LOG.fine("OsDetection " + tablet);

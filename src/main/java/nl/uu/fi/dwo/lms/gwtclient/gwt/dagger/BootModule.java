@@ -10,7 +10,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import dagger.Reusable;
-import dagger.multibindings.IntoMap;
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentStudentModelManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory;
@@ -18,10 +18,11 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactoryJs;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.modules.JsModulesView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.organisation.JsOrganisationView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsLogResultsView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results.JsStudentResultsView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.organisation.OrganisationPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.LogResultsPresenter;
-import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsPresenter;
 
 @Module(subcomponents = { TeacherComponent.class, SchoolAdminComponent.class, GuestComponent.class, StudentComponent.class })
 abstract class BootModule {
@@ -44,6 +45,9 @@ abstract class BootModule {
 	@Reusable @Provides static SecuredTeacherSchoolClassManager schoolClassManager() {
 	  return new SecuredTeacherSchoolClassManager();
 	}
+	@Reusable @Provides static SecuredStudentStudentModelManager studentStudenModelManager() {
+		return new SecuredStudentStudentModelManager();
+	}
 	
 //	@IntoMap
 //	@RoleKey(RoleType.ANONYMOUS)
@@ -57,4 +61,5 @@ abstract class BootModule {
 	@Binds abstract LogResultsPresenter.Display logResultsView(JsLogResultsView view);
 	@Binds abstract ModulesPresenter.Display modulesView(JsModulesView view);
 	@Binds abstract OrganisationPresenter.Display organisationView(JsOrganisationView view);
+	@Binds abstract StudentResultsPresenter.Display studentResultsView(JsStudentResultsView view);
 }

@@ -14,7 +14,7 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 @RoleScope // one per Role change
 public class StudentViewHandler implements SwitchViewEventHandler {
   @Inject DwoGlobalVars dwoGlobalVars;
-  @Inject PresenterFactory presenterFactory;
+  @Inject StudentPresenterFactory presenterFactory;
   @Inject BootPanelController controller;
   @Inject EventBus eventBus;
 
@@ -29,6 +29,14 @@ public class StudentViewHandler implements SwitchViewEventHandler {
     SelectedView value = switchViewEvent.getEventValue();
     if (!withUser()) value = SelectedView.LOGIN;
     switch (value) {
+    case RESULTS:
+    case STUDENTRESULTS:
+    	if (dwoGlobalVars.isPremium()) {
+    		mainView.selectView(SelectedView.RESULTS);
+    		mainView.showStudentResults();
+    		presenterFactory.getResultsPresenter().init();
+    		break;
+    	}
       default:
         eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));
       case WELCOME:

@@ -1,0 +1,57 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+	.total {
+		display: inline-block;
+		background-color: red;
+		height: 1em;
+		width: 58%;
+	}
+	.outer { 
+		display: inline-block;
+		border: solid 1px black;
+		width: 100px;
+		height: 1em;
+		margin-left: 1em;
+	}
+	.correct {
+		height: 1em;
+		display: inline-block;
+		width: 50%;
+		background-color: green;
+	}
+	
+	.fullheight {
+		height: 100%;
+	}
+
+	</ui:style>
+	<g:SplitLayoutPanel styleName='{style.fullheight}'>
+		<g:west size="400">
+			<g:ScrollPanel>
+				<g:Tree ui:field='tree'>
+				</g:Tree>	
+			</g:ScrollPanel>		
+		</g:west>
+		<g:center>
+			<g:DockLayoutPanel unit='EM'  >
+				<g:north size="2"><g:InlineLabel ui:field='title'>TITEL</g:InlineLabel></g:north>
+				<g:north size='3'><g:FlowPanel><g:InlineLabel ui:field='perc'>58%</g:InlineLabel>
+						<g:SimplePanel styleName='{style.outer}' ui:field='outer'>
+							<g:SimplePanel styleName='{style.total}' ui:field='total'>
+								<g:SimplePanel styleName='{style.correct}' ui:field='correct' />
+							</g:SimplePanel>
+						</g:SimplePanel>
+				</g:FlowPanel></g:north>
+				<g:center><g:SimplePanel ui:field='description'>
+					<g:HTML>
+						<h1>hier komt de beschrijving</h1>
+						<p>bblablaba ;ba ;aba;n;a an;an;nna bla bla blabla ba=ka=== bla</p>
+					</g:HTML>
+				</g:SimplePanel>
+			</g:center>
+			</g:DockLayoutPanel>
+		</g:center>
+	</g:SplitLayoutPanel>
+</ui:UiBinder> 

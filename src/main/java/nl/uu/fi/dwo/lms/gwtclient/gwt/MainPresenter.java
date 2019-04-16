@@ -105,6 +105,8 @@ public class MainPresenter {
 		void setTrails(JavaScriptObject object);
 
         void selectView(SelectedView view);
+
+		public void showStudentResults();
     }
 
     private MainPresenter.Display display;

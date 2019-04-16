@@ -170,4 +170,9 @@ public class JsMainView implements MainPresenter.Display{
     public void selectView(SelectedView view) {
       JsMainDisplay.selectView(String.valueOf(view));
     }
+
+	@Override
+	public void showStudentResults() {
+		JsMainDisplay.showStudentResultsView();
+	}
 }

@@ -47,14 +47,12 @@ import org.osgi.util.promise.Success;
  *
  * @author Gert van der Plas
  */
-public class ResultsPresenter {
+public class ResultsPresenter extends AbstractResultsPresenter {
 
   
   
     private static final Logger LOG = Logger.getLogger(ResultsPresenter.class.getName());
 
-    private final EventBus eventBus;
-    private final DwoGlobalVars dwoGlobalVars;
     private final Failure FAILURE;
 
     private Display view;
@@ -91,9 +89,9 @@ public class ResultsPresenter {
 
     }
 
-    @Inject ResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
-        eventBus = anEventBus;
-        dwoGlobalVars = aDwoGlobalVars;
+    @Inject
+	protected ResultsPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    	super(anEventBus, aDwoGlobalVars);
         FAILURE = new LoggingFailure(LOG, anEventBus);
 
     }

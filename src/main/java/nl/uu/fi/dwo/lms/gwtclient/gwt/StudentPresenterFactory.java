@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditStudentPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.EditTeacherPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.ImportPersonsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.PersonsPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.AbstractResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.LogResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.ResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.results.SelectStudentResultsPresenter;
@@ -25,6 +26,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.EditSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.ModulesOfSchoolclassPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.SchoolclassesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses.StudentSchoolclassPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKPresenter;
@@ -38,6 +40,7 @@ public class StudentPresenterFactory implements PresenterFactory {
   @Inject AccountPresenter accountPresenter;
   @Inject ModulesPresenter modulesPresenter;
   @Inject StudentSchoolclassPresenter studentSchoolclassPresenter;
+  @Inject StudentResultsPresenter studentResultsPresenter;
 
   @Override  @JsMethod
   public StudentSchoolclassPresenter getStudentSchoolclassPresenter() {
@@ -113,8 +116,8 @@ public class StudentPresenterFactory implements PresenterFactory {
   }
 
   @Override @JsMethod
-  public ResultsPresenter getResultsPresenter() {
-    return null;
+  public StudentResultsPresenter getResultsPresenter() {
+    return studentResultsPresenter;
   }
 
   @Override @JsMethod
