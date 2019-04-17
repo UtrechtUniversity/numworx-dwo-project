@@ -425,7 +425,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<DWOplayerVersion>2.3.7</DWOplayerVersion>
 		<DWOmAccessVersion>2.3.4</DWOmAccessVersion>
-		<RegisterVersion>2.3.7</RegisterVersion>
+		<RegisterVersion>2.3.8-SNAPSHOT</RegisterVersion>
 		<DWOGwtClientVersion>2.3.8-SNAPSHOT</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
