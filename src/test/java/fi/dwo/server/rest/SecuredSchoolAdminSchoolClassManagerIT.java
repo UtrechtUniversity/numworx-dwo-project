@@ -30,6 +30,7 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
 import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
+import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
@@ -373,4 +374,25 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         assertEquals("The worm wil eat you.", schoolClass.getClass1());
         assertEquals("Shaihulud", schoolClass.getRegistrationKey());
     }
+    
+    @Test
+    public void testRemoveSchoolClass() throws Exception {
+        SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
+        SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
+        
+        RestSchoolClass rest = new RestSchoolClass();
+        DomContext context = new DomContext();
+		rest.setRestContext(context);
+		DomSchoolClass domSchoolClass = new DomSchoolClass();
+		PersistentSchoolClass c = SchoolClassManager.findEntity(2L);
+		domSchoolClass = c.buildDomSchoolClass();
+		rest.setDomSchoolClass(domSchoolClass);
+		assertTrue(instance.removeSchoolClass(sc, rest));
+		
+		List<?> list = ClassCourseManager.findEntities(c);
+		assertTrue("classcourses removed", list.isEmpty());
+
+
+    }
+
 }

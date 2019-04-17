@@ -533,6 +533,11 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                     //remove teachers
                     TeacherOfClassManager.destroy(t.getPersistentTeacherOfClassPK());
                 }
+                // Loop classcourses of class
+        		List<PersistentClassCourse> cclist = ClassCourseManager.findEntities(schoolClass);
+        		for (PersistentClassCourse cc : cclist) {
+        			ClassCourseManager.destroy(cc.getClassCourseID());
+        		}
                 SchoolClassManager.destroy(schoolClass.getClassID());
             } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, "", ex);

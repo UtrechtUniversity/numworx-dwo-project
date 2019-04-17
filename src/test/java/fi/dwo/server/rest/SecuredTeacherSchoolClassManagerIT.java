@@ -269,9 +269,10 @@ public class SecuredTeacherSchoolClassManagerIT {
      * SecuredTeacherSchoolClassManager. Tests whether a proper school class can
      * be removed by a teacher. Tests whether a school class can't be removed
      * from another school.
+     * @throws Dwo2Exception 
      */
     @Test
-    public void testRemoveSchoolClass() {
+    public void testRemoveSchoolClass() throws Dwo2Exception {
         System.out.println("removeSchoolClass");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         RestSchoolClass restSchoolClass = new RestSchoolClass();
@@ -282,18 +283,16 @@ public class SecuredTeacherSchoolClassManagerIT {
         domSchoolClass.setSchoolClassName("The worm wil eat you.");
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;
+        PersistentSchoolClass schoolClass;
+        schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(restSchoolClass.getDomSchoolClass()));
+        List<?> list = ClassCourseManager.findEntities(schoolClass);
+        assertFalse(list.isEmpty());
         Boolean result = instance.removeSchoolClass(sc, restSchoolClass);
+        list = ClassCourseManager.findEntities(schoolClass);
+        assertTrue("removed classcourses", list.isEmpty());
         assertEquals("remove returned false", expResult, result);
-        PersistentSchoolClass schoolClass = null;
-        try {
-            schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(restSchoolClass.getDomSchoolClass()));
-        } catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
-            fail(ex.getDwo2Message());
-        }
-        if (schoolClass != null) {
-            fail("SchoolClass still exists after removal.");
-        }
+        schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(restSchoolClass.getDomSchoolClass()));       
+        assertNull("SchoolClass still exists after removal.", schoolClass);        
         id = PersistentSchoolClass.buildPersistenceId(3L);
         domSchoolClass.setId(id);
         domSchoolClass.setSchoolClassName("The worm wil eat you.");

@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -29,6 +30,7 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
+import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
@@ -696,6 +698,13 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
                     //remove teachers
                     TeacherOfClassManager.destroy(t.getPersistentTeacherOfClassPK());
                 }
+                // Loop classcourses of class
+        		List<PersistentClassCourse> cclist = ClassCourseManager.findEntities(schoolClass);
+        		for (PersistentClassCourse cc : cclist) {
+        			ClassCourseManager.destroy(cc.getClassCourseID());
+        		}
+                
+                
                 SchoolClassManager.destroy(schoolClass.getClassID());
             } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, "", ex);
