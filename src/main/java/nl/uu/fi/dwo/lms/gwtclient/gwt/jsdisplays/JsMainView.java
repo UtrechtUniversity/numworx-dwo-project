@@ -175,4 +175,9 @@ public class JsMainView implements MainPresenter.Display{
 	public void showStudentResults() {
 		JsMainDisplay.showStudentResultsView();
 	}
+	
+	@Override
+	public void setPremium(boolean set) {
+		JsMainDisplay.setPremium(set);
+	}
 }

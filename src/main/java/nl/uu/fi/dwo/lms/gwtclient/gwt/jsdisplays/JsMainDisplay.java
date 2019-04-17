@@ -102,4 +102,5 @@ public class JsMainDisplay {
     static native void setTrails(JavaScriptObject javaScriptObject);
     
     static native void selectView(String view);
+    static native void setPremium(boolean set);
 }

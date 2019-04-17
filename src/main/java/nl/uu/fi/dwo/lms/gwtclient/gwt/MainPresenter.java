@@ -107,6 +107,8 @@ public class MainPresenter {
         void selectView(SelectedView view);
 
 		public void showStudentResults();
+
+		void setPremium(boolean set);
     }
 
     private MainPresenter.Display display;

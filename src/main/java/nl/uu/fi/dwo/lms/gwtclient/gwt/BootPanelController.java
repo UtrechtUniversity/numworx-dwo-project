@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter.Display;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.GuestComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.PresenterBuilder;
@@ -101,12 +102,14 @@ public class BootPanelController {
                   case LOGOUT:
                     dwoGlobalVars.clearCurrentUser();
                     setSession(false);
-                    if (!test) {
+                    if (!test) 
+                    {
                       if (org_id != null) // running under SAML protection
                         logout();
                       else
                         Window.Location.reload();
-                    } else {
+                    } 
+                    else {
                       //we should also clear user, view and presenter states, but that is never bug free.
                       //however a reload works too.
 
@@ -152,24 +155,26 @@ public class BootPanelController {
         eventBus.removeHandlers();
         eventBus.addHandler(LoginEvent.TYPE, LOGIN_HANDLER);
         PresenterBuilder build;
-        switch (role) {
+        Display mainView = viewFactory.getMainView();
+		switch (role) {
           case TEACHER:
               build = teacherBuilder.build();
-              viewFactory.getMainView().setUserRole(role, false);
+              mainView.setUserRole(role, false);
              break;
           case SCHOOLADMIN:
               build = schoolAdminBuilder.build();
-             viewFactory.getMainView().setUserRole(role, false);
+             mainView.setUserRole(role, false);
             break;
           case STUDENT:
             //if (stage > 0)
             {
               build = studentBuilder.build();
-              viewFactory.getMainView().setUserRole(role, single);
+              mainView.setUserRole(role, single);
+              if(stage > 1) mainView.setPremium(dwoGlobalVars.isPremium()); // results for student is premium
               break;
             }
           default:
-            viewFactory.getMainView().setUserRole(RoleType.ANONYMOUS, false);
+            mainView.setUserRole(RoleType.ANONYMOUS, false);
             build = guestBuilder.build();
         }
         presenterFactory = build.presenterFactory();
