@@ -2,6 +2,8 @@ package fi.dwo.server.rest;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import javax.ws.rs.core.SecurityContext;
 
 import org.junit.AfterClass;
@@ -16,6 +18,7 @@ import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -68,6 +71,9 @@ public class SecuredTeacherCourseManagerIT {
     PersistentSchool pSchool = SchoolManager.findBySchoolLogin("school01");//id =3
     PersistentHasRole pHasRole = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, pSchool, RoleType.TEACHER);
     PersistentCourse  course = CourseManager.findEntity(1L);
+    PersistentCourse  course1 = course;
+    List<?> list = ClassCourseManager.findEntities(course);
+    assertFalse(list.isEmpty());
     PersistentDwoProfile profile = DwoProfileManager.findEntity(course.getDwoProfileID());
     DomHasRole domHasRole = pHasRole.buildDomHasRole();
     DomCourse  domCourse = course.buildDomCourse();
@@ -83,7 +89,8 @@ public class SecuredTeacherCourseManagerIT {
     
     course = CourseManager.findEntity(1L);
     assertNull("removed", course);
- }
+    list = ClassCourseManager.findEntities(course1);
+    assertTrue(list.isEmpty()); }
 
   /**
    * Should fail! no updates in nullschool for normal teacher!
