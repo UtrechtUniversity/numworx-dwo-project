@@ -128,7 +128,7 @@ public class EditSchoolclassPresenter {
      */
     public void setView(Display view) {
         this.view = view;
-        view.setHelp(dwoGlobalVars.buildHelpUrl("#editSchoolclass"));
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#editSchoolclass"+role));
    }
 
     /**

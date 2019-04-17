@@ -120,7 +120,7 @@ public class SchoolclassesPresenter {
      */
     public void setView(Display view) {
         this.view = view;
-        view.setHelp(dwoGlobalVars.buildHelpUrl("#schoolclasses"));
+        view.setHelp(dwoGlobalVars.buildHelpUrl("#schoolclasses"+dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName()));
     }
 
     private void updateViewData() {
