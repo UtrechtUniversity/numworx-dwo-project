@@ -7,10 +7,13 @@ import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -30,6 +33,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 
@@ -40,7 +44,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	public interface Display extends BasicDisplay {
 		String getId();
 	}
-
+	
 	private final LoggingFailure FAILURE;
 	private Display view;
 	private RootPanel root;
@@ -104,7 +108,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			widget.get().description.setWidget(description);
 			service.getScore(model).then ( p -> {
 				DomStudentModelStructureScore score = p.getValue().getDomStudentModelStructureScore();
-				widget.get().perc.setText(Math.round(score.getScore()*100) + "/" + score.getCount() + "%");
+				setPerc(score);
 				return p;
 			}, FAILURE)
 			.then(p -> { 
@@ -128,8 +132,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			widget.get().description.setWidget(description);
 			service.getScore(model).then(p -> { 
 				DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(((Integer) userObject).intValue());
-				widget.get().perc.setText(Math.round(score.getScore()*100) + "/" + score.getCount() + "%");
-			
+				setPerc(score);
 				return p; }, FAILURE)
 			.then(p -> {
 				if (item.getChildCount() != o.getObjectives().size()) {
@@ -155,10 +158,17 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			widget.get().description.setWidget(createDescription(text));
 			service.getScore(model).then( p -> { 
 				DomStudentModelObjectiveScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat).getObjectives().get(obj);
-				widget.get().perc.setText(Math.round(score.getScore()*100) + "/" + score.getCount() + "%");			
+				setPerc(score);
 				return p; }, FAILURE);
 		}
 		
+	}
+
+	private void setPerc(DomStudentModelScore score) {
+		int perc;
+		if (score.getCount() == 0) perc = 50;
+		else perc = (int)Math.round(score.getScore()*100/score.getCount());
+		widget.get().setPerc(perc);
 	}
 
 	private Widget createDescription(String text) {
