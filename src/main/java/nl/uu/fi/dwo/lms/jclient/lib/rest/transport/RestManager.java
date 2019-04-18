@@ -7,6 +7,7 @@ import com.owlike.genson.GensonBuilder;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
@@ -277,6 +278,8 @@ class RestManager extends RestyDateTimeFormat {
         case DomSchoolsRolesAndClassesV2:
           return (List<T>) genson.deserialize(json.toString(),
               new GenericType<List<DomSchoolsRolesAndClassesV2>>() {});
+        case DomClassCourse:
+        	return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomClassCourse>>() {});
         case DomAppletConfig:
           return (List<T>) genson.deserialize(json.toString(),
               new GenericType<List<DomAppletConfig>>() {});

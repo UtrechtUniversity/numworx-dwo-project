@@ -4,10 +4,12 @@ import java.util.List;
 
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.entities.RestClassCourse;
 import nl.uu.fi.dwo.rest.entities.RestLoginContext;
 import nl.uu.fi.dwo.rest.entities.RestUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -67,6 +69,29 @@ public class SecuredDwoAdminGarbageManager {
     return result;
   }
 
+  public List<DomClassCourse> getClassCourses(Integer amount) throws Dwo2Exception {
+	    List<DomClassCourse> result = null;
+	    String query = "";
+	    if (amount != null) {
+	      query = "?limit=" + amount;
+	    }
+	    String path = "rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/garbage/classcourse/get" + query;
+	    RestListClassTypes type = RestListClassTypes.DomClassCourse;
+	    result = manager.getList(path, type);    
+	    return result;
+
+  }
+  
+  public Boolean removeClassCourse(DomClassCourse cc) throws Dwo2Exception {
+	    RestClassCourse rest = new RestClassCourse();
+	    rest.setDomClassCourse(cc);
+	    rest.setRestContext(getContext());
+	    Boolean result;
+	    result = manager.put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/garbage/classcourse/remove", Boolean.class, rest);
+	    return result;
+	  }
+
+  
   
   private DomContext getContext() {
     return manager.getAuthenticator().getContext();
