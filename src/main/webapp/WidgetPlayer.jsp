@@ -14,6 +14,6 @@
     <script>script("WidgetPlayer/WidgetPlayer.nocache.js")</script>
   </head>
 
-  <body style='margin:0px;'>
+  <body style='margin:0px;overflow:hidden;'>
   </body>
 </html>
