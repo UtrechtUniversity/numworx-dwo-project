@@ -195,10 +195,15 @@
 	<init>(java.lang.String[]);
 }
 
+# no effect????
 -keep public interface * extends com.google.gwt.i18n.client.ConstantsWithLookup {
 	<methods>;
 }
 
+#Extra: 
+-keep interface nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages {
+	<methods>;
+}
 
 
 # Also keep - Enumerations. Keep the special static methods that are required in
