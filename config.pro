@@ -201,7 +201,7 @@
 }
 
 #Extra: 
--keep interface nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages {
+-keep,allowshrinking interface nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages {
 	<methods>;
 }
 
