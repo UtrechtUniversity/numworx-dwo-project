@@ -114,12 +114,14 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	public static final String TVP_SELECT = "action.select";
 	public static final String TVP_DESELECT = "action.deselect";
 	public static final String TVP_CLICK = "action.click";
+	public static final String TVP_POPUP = "action.popup";
 	
 	private static final CBookEvent KLAPUIT_EVENT = new CBookEvent(TVP_KLAPUIT); 
 	private static final CBookEvent KLAPIN_EVENT = new CBookEvent(TVP_KLAPIN); 
 	private static final CBookEvent SELECT_EVENT = new CBookEvent(TVP_SELECT); 
 	private static final CBookEvent DESELECT_EVENT = new CBookEvent(TVP_DESELECT);
 	private static final CBookEvent CLICK_EVENT = new CBookEvent(TVP_CLICK);
+	private static final CBookEvent POPUP_EVENT = new CBookEvent(TVP_POPUP);
 	
 	public static Map<String,Map<String,Object>> styles;
 	
@@ -4478,6 +4480,10 @@ private Object CamelCase(String name) {
 			comRoot.setChanged(false);
 		}
 	}
+	
+	void setPopupOpened() {
+		fireEvent(POPUP_EVENT);
+	}
 
 	public HandlerRegistration addCBookEventListener(CBookEventListener listener) {
 		return DWOplayer.clientfactory.getEventBus().addHandlerToSource(CBookEvent.TYPE, this, listener);
@@ -5123,6 +5129,7 @@ private Object CamelCase(String name) {
 				kijkNaOnShow();
 		}
 		setPopupUsed();
+		setPopupOpened();
 	}
 
 	@Override
