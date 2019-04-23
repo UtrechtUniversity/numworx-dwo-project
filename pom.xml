@@ -228,6 +228,7 @@
 			<groupId>fi.graphtoolgwt</groupId>
 			<artifactId>GraphToolGWT</artifactId>
 			<version>2.3.3-SNAPSHOT</version>
+			<classifier>classes</classifier>
 		</dependency>
 	</dependencies>
 	<parent>
