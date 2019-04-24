@@ -370,7 +370,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 	
 	@UiHandler("results")
 	void onResults(ClickEvent e) {
-		if (role != RoleType.TEACHER) return;
+	  if (role != RoleType.TEACHER && !DWOplayer.isPremium() || role == RoleType.SCHOOLADMIN) return;
 	  LOG.info("goto results");
 	  if(Actions.isAvailable())
 		  Actions.RESULTS.execute();
@@ -455,7 +455,7 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		this.role = role;
 		// if visible?
 		{  	organization.setVisible(role == RoleType.SCHOOLADMIN);
-			results.setVisible(role == RoleType.TEACHER); // or student if premium.
+			results.setVisible(role == RoleType.TEACHER || (role == RoleType.STUDENT && DWOplayer.isPremium())); // or student if premium.
 			persons.setVisible(role != RoleType.STUDENT);
 		}
 	}
