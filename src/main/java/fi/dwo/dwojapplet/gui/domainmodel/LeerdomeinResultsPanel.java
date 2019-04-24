@@ -21,7 +21,6 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.JTree.DynamicUtilTreeNode;
-import javax.swing.border.Border;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -43,7 +42,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-import sun.swing.DefaultLookup;
 
 public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListener, ActionListener {
 
@@ -82,12 +80,26 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
 
   class ScoreIcon implements Icon {
 
-    float green = 0.24f;
-    float red =   0.64f;
+    float green = 0.64f;
+    float red =   0.24f;
+    float score = 0.5f;
     
     ScoreIcon( double score, long count, double part, int size) {
-      red = size == 0 ? 0 : (float) part / size;
-      green = count == 0 ? 0 : (float) (score/count) * red;
+      if (count == 0L || size == 0) {
+        this.score = 0.5f;
+        red = 0.49f;
+        green = 0.51f;
+      } else {
+        this.score = red = green  =  (float) (((float)score/count * part + (size-part)*0.5f)/(float)size);
+        if (green <= 0.49f) {
+          green = 0.5f;
+        } else if (green >= 0.51f){
+          red = 0.5f;
+        } else {
+          green += 0.01f; 
+          red -= 0.01f;        
+        }
+      }
     }
     
     
@@ -97,10 +109,13 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
       g.fillRect(x, y, getIconWidth(), getIconHeight());
       x+=2;
       y+=2;
+      int w = getIconWidth()-3;
       g.setColor(Color.red);
-      g.fillRect(x, y, Math.round(getIconWidth()*red)-2, getIconHeight()-2-3);
+      g.fillRect( x+ Math.round(red * w), y, Math.round((0.5f-red)*w), getIconHeight()-2-3);
+
       g.setColor(Color.green);
-      g.fillRect(x, y, Math.round(getIconWidth()*green)-2, getIconHeight()-2-3);          
+      g.fillRect(x + Math.round(w/2.0f), y, Math.round(w*(green-0.5f)), getIconHeight()-2-3);          
+
       g.setColor(Color.black); g.drawRect(x, y, getIconWidth()-2, getIconHeight()-2-4);
     }
 
@@ -112,6 +127,10 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
     @Override
     public int getIconHeight() {
       return getFontMetrics(getFont()).getHeight()+4+3;
+    }
+
+    public String getPercentage() {
+      return Math.round(score * 100)+"%";
     }
     
   }
@@ -142,6 +161,8 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
     title = new JLabel();
     title2 = new JLabel();
     tekst = new JTextArea(20,20);
+    tekst.setWrapStyleWord(true);
+    tekst.setLineWrap(true);
     score = new JLabel(new ScoreIcon(0,0,0,0));
     
     Box vbox = Box.createVerticalBox();
@@ -233,14 +254,16 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
       int count = 1;      
       if (v.getCount() != 0) nz += 1;      
       
-      Icon result = new ScoreIcon (v.getScore()  , v.getCount() , nz , count);
-      tmodel.setValueAt(result, i, 1);
+      ScoreIcon result = new ScoreIcon (v.getScore()  , v.getCount() , nz , count);
+      tmodel.setValueAt(result, i, 2);
+      tmodel.setValueAt(result.getPercentage(), i, 1);
       if (v.getCount() != 0) nzl ++;
       sumScore += v.getScore();
       sumCount += v.getCount();
     }
-    score.setIcon( new ScoreIcon (sumScore , sumCount , nzl , tmodel.getRowCount()  ));
-    //score.setText( sumScore + "/" + sumCount + " " + nzl + "/" + tmodel.getRowCount()  );
+    ScoreIcon icon = new ScoreIcon (sumScore , sumCount , nzl , tmodel.getRowCount()  );
+    score.setIcon( icon);
+    score.setText( icon.getPercentage());
     
     
   }
@@ -270,8 +293,9 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
       for( DomStudentModelObjectiveScore item: v.getObjectives()) {
         if (item.getCount() != 0) nz += 1;      
       }
-      Icon result = new ScoreIcon (v.getScore()  , v.getCount() , nz , count);
-      tmodel.setValueAt(result, i, 1);
+      ScoreIcon result = new ScoreIcon (v.getScore()  , v.getCount() , nz , count);
+      tmodel.setValueAt(result, i, 2);
+      tmodel.setValueAt(result.getPercentage(), i, 1);
       if (v.getCount() != 0) nzl ++;
       sumScore += v.getScore();
       sumCount += v.getCount();
@@ -293,21 +317,21 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
         scores.setStudentModelContexts(Collections.singletonList(new DomMapEntry<>(context.getId(), context)));
         try {
           scores = SecureTeacherStudentModelManager.getScores(scores);
-          TableModel tmodel = new DefaultTableModel(scores.getStudents().size(), 2);
+          TableModel tmodel = new DefaultTableModel(scores.getStudents().size(), 3);
           for (int i = 0; i < tmodel.getRowCount(); i++ ) {
             String u = scores.getStudents().get(i).getValue().getDisplayName();
             tmodel.setValueAt(u, i, 0);
           }
           calculateROOT(scores, tmodel);
           table.setModel(tmodel);
-          table.getColumnModel().getColumn(1).setCellRenderer(new IconRenderer());
+          table.getColumnModel().getColumn(2).setCellRenderer(new IconRenderer());
           table.setRowHeight(score.getPreferredSize().height+2);
           table.clearSelection();
         } catch (Dwo2Exception e1) {
           LOG.log(Level.SEVERE, "getScores", e1);
         }
       } else {
-        table.setModel(new DefaultTableModel(0,2));
+        table.setModel(new DefaultTableModel(0,3));
       }
     }
     
@@ -326,14 +350,16 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
       for( DomStudentModelCategoryScore item: v.getCategories()) {
         if (item.getCount() != 0) nz += 1;      
       }
-      Icon result = new ScoreIcon (v.getScore()  , v.getCount() , nz , count);
-      tmodel.setValueAt(result, i, 1);
+      ScoreIcon result = new ScoreIcon (v.getScore()  , v.getCount() , nz , count);
+      tmodel.setValueAt(result.getPercentage(), i, 1);
+      tmodel.setValueAt(result, i, 2);
       if (v.getCount() != 0) nzl ++;
       sumScore += v.getScore();
       sumCount += v.getCount();
     }
-   // score.setIcon( new ScoreIcon (sumScore , sumCount , nzl , tmodel.getRowCount()  ));
-    score.setText( sumScore + "/" + sumCount + " " + nzl + "/" + tmodel.getRowCount()  );
+    ScoreIcon icon = new ScoreIcon (sumScore , sumCount , nzl , tmodel.getRowCount()  );
+    score.setIcon( icon);
+    score.setText( icon.getPercentage()  );
   }
   
 }
