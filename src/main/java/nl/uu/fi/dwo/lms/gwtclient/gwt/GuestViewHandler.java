@@ -29,9 +29,9 @@ public class GuestViewHandler implements SwitchViewEventHandler {
       
       Display mainView = viewFactory.getMainView();
       switch (value) {
-        case WELCOME:
-          // show alert
-          eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_User_NoTeacher()));
+//        case WELCOME:
+//          // show alert
+//          eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.NUM_DLG_User_NoTeacher()));
         default:
         case ACCOUNT:
           if (withUser()) {
@@ -50,7 +50,7 @@ public class GuestViewHandler implements SwitchViewEventHandler {
               presenterFactory.getLoginPresenter().tokenLogin(token, controller.user_id, controller.org_id);
           }
           break;
-        case MODULES:
+        case MODULES: case WELCOME:
           presenterFactory.getModulesPresenter().show();
           break;
         case MODULESVIEW:
