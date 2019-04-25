@@ -697,7 +697,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		if (on.getAantalOpdrachten() == 1)
 			enabled = true;
 		else if ((on.getKeerNagekeken() > 0) && (eerderGeenCorr || zelftoetsGeenCorr))
-			enabled = false;
+			enabled = on.isReview();
 		else if (on.getKeerNagekeken() > 0) // in andere gevallen van een nagekeken zelftoets enabled = true
 			enabled = true;
 		else if (allesBezocht(on.getCurrentActiviteit()))
@@ -750,11 +750,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 //				zetAfdekPanelLeeg(true);
 				
 				if (zelftoetsNagekeken)
-					zetAfdekPanel(true);
+					zetAfdekPanel( !on.isReview());
 				else
 					zetAfdekPanel(false);
 			}
-			source.setKijkNaEnabled(!zelftoetsGeenCorr);
+			source.setKijkNaEnabled(!zelftoetsGeenCorr || on.isReview());
 			//scoresObjectivesKnop.setEnabled(true);//goed? nodig?
 			prev.setVisible(vorigeKnopZichtbaar || !bolletjesZichtbaar && zelftoetsNagekeken);
 			scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig());
@@ -1076,7 +1076,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			|| (getZelftoetsNagekeken() && zelftoetsGeenCorr)
 			|| isVerlopenTempotoets())
 		{
-			zetAfdekPanel(true);
+			zetAfdekPanel(!on.isReview());
 		}
 		else if (isTempotoets())
 		{
@@ -1088,7 +1088,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 					timerTempoToets.cancel();
 				}
 			}
-			zetAfdekPanelTempotoets(tempotoetsLocked, isAllCorrect());
+			zetAfdekPanelTempotoets(tempotoetsLocked && !on.isReview(), isAllCorrect() && !on.isReview());
 		}
 		else
 		{
