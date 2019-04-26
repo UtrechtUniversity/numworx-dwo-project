@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  *
@@ -75,7 +76,9 @@ public class MySQLStudentActions implements StudentActions {
         result.setDomStudentModelStructureScore(score);
         DomStudentModelContextId id = new DomStudentModelContextId();
         id.setId(pStudentModel.buildPersistenceId());
+        id.setOptLock(pStudentModel.getOptlock());
         result.setModelId(id);
+        result.setFetchTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
         return result;
     }
 
