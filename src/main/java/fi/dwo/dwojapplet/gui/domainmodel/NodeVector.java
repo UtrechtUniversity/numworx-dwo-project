@@ -49,9 +49,15 @@ public class NodeVector extends Vector<Object> implements Node {
     for (DomStudentModelObj obj: objectives) {
       String subtitle = obj.getInfo().getTitle().get(l);
       if (!subtitle.isEmpty()) last = size();
-      NodeLeaf nodeleaf = new NodeLeaf(subtitle, obj.getInfo(), l);
-      nodeleaf.setPath(elementCount);
-      add(nodeleaf);
+      if (obj.getObjectives()==null)
+      {  NodeLeaf nodeleaf = new NodeLeaf(subtitle, obj.getInfo(), l);
+         nodeleaf.setPath(elementCount);
+         add(nodeleaf);
+      } else {
+        NodeVector nv = new NodeVector(obj.getObjectives(), subtitle, l, obj.getInfo());
+        nv.setPath(elementCount);
+        add(nv);
+      }
     }
     setSize(last+1);
   }

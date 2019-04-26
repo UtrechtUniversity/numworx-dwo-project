@@ -31,6 +31,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 
+import fi.dwo.commons.system.TextMapper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -59,7 +60,7 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
     @Override
     public String toString() {
       if (delegate == null) {
-        return "Kies klas";
+        return TextMapper.getText(TextMapper.LBL_CLICK_TO_SELECT_A_SCHOOLCLASS);
       }
       return delegate.getSchoolClassName();
     }
@@ -130,7 +131,7 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
     }
 
     public String getPercentage() {
-      return Math.round(score * 100)+"%";
+      return Math.round(score * 200-100)+"%";
     }
     
   }
@@ -229,8 +230,8 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
         calculateROOT(scores, table.getModel());
       } else if (ipath.length == 2) {
         calculateCategories(scores, table.getModel(), ipath[1]);
-      } else if (ipath.length == 3) {
-        calculateObjectives(scores, table.getModel(), ipath[1], ipath[2]);
+      } else if (ipath.length >= 3) {
+        calculateObjectives(scores, table.getModel(), ipath);
       }
       
     }
@@ -238,18 +239,27 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
     
   }
 
-  private void calculateObjectives(DomStudentModelScorePerTeacher scores, TableModel tmodel, int cat,
-      int obj) {
+  private void calculateObjectives(DomStudentModelScorePerTeacher scores, TableModel tmodel, int[] path) {
     if (scores == null) return;
     double nzl = 0.0;
     double sumScore = 0.0;
     long sumCount = 0;
+    int cat = path[1];
+    int obj = path[2];
     List<DomStudentModelDataStudentScore> studentScores = scores.getStudentScores();
     for (int i = 0; i < tmodel.getRowCount(); i++ ) {
       DomStudentModelStructureScore c = studentScores.get(i).getDomStudentModelStructureScore();
       DomStudentModelCategoryScore o = c.getCategories().get(cat);
       DomStudentModelObjectiveScore v = o.getObjectives().get(obj);
-      
+      if (path.length >= 4) {
+        for (int index = 3; index < path.length; index++) {
+          obj = path[index];
+          if (v.getChildren() != null && v.getChildren().size() > obj)
+            v = v.getChildren().get(obj);
+          else
+            v = new DomStudentModelObjectiveScore();
+        }
+      }
       double nz = 0;
       int count = 1;      
       if (v.getCount() != 0) nz += 1;      

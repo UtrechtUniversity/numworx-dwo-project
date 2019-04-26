@@ -8,7 +8,7 @@
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
-        <version>2.3.7</version>
+        <version>2.3.8-SNAPSHOT</version>
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>
     <!-- Adjust artifact, name and description for new projects -->
@@ -183,12 +183,12 @@
     		<artifactId>async-lib</artifactId>
     		<version>0.0.3</version>
     	</dependency>
-    	<dependency>
-    		<groupId>netscape.javascript</groupId>
-    		<artifactId>mayscript</artifactId>
-    		<version>1.0.0</version>
-    		<scope>provided</scope>
-    	</dependency>
+<!--     	<dependency> -->
+<!--     		<groupId>netscape.javascript</groupId> -->
+<!--     		<artifactId>mayscript</artifactId> -->
+<!--     		<version>1.0.0</version> -->
+<!--     		<scope>provided</scope> -->
+<!--     	</dependency> -->
     </dependencies>      
 
     <build>

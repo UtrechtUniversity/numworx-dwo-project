@@ -30,6 +30,7 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import fi.dwo.commons.system.TextMapper;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
@@ -37,8 +38,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 
 public class LeerdomeinEditPanel extends JPanel {
 
-  private String BEWERKEN = "Bewerken";
-  private String OPSLAAN  = "Opslaan";
+  private String BEWERKEN = TextMapper.getText("edit");
+  private String OPSLAAN  = TextMapper.getText(TextMapper.GUIP_BTN_SAVE);
   private Opslaan OPSLAAN_ACTION = new Opslaan();
 
   class Opslaan extends AbstractAction implements TreeSelectionListener {
@@ -230,7 +231,7 @@ public class LeerdomeinEditPanel extends JPanel {
       if (path == null) return;
       
       Object node = path.getLastPathComponent();
-      if ( node != root) return; // Only root can add subdomains
+      //if ( node != root) return; // Only root can add subdomains
       
       if (node instanceof MutableTreeNode) {
         MutableTreeNode mutable = (MutableTreeNode) node;
@@ -395,11 +396,35 @@ public class LeerdomeinEditPanel extends JPanel {
         DomStudentModelObj objective = new DomStudentModelObj();
         objective.setInfo(u.getInfo());
         objectives.add(objective);
+        if (!kid.isLeaf()) {
+          setObjectiveChildren(objective, kid.getChildCount(), kid.children());
+        }
       }
       categories.add(cat);
     }
     result.setCategories(categories);
     return result;
+  }
+
+  private void setObjectiveChildren(DomStudentModelObj node, int childCount,
+      Enumeration<DefaultMutableTreeNode> children) {
+    // TODO Auto-generated method stub
+    System.out.println("add children");
+    List<DomStudentModelObj> objectives = new ArrayList<>(childCount);
+    node.setObjectives(objectives);
+    while (children.hasMoreElements()) {
+      DefaultMutableTreeNode kid =
+          (DefaultMutableTreeNode) children.nextElement();
+      Node u = (Node) kid.getUserObject();
+      DomStudentModelObj objective = new DomStudentModelObj();
+      objective.setInfo(u.getInfo());
+      objectives.add(objective);
+      if (!kid.isLeaf()) {
+        setObjectiveChildren(objective, kid.getChildCount(), kid.children());
+      }
+      
+    }
+    
   }
   
   

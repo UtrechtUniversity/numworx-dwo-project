@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.gui.domainmodel;
 
 import java.util.TreeMap;
+import java.util.UUID;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 
@@ -33,11 +34,15 @@ class NodeLeaf implements Node {
     this.title = title;
     this.info = info;
     this.lang = l;
+    if (info.getId() == null) {
+      info.setId(UUID.randomUUID().toString());
+    }
   }
 
   public NodeLeaf(String string) {
     this.lang = string;
     info = new DomStudentModelContextInfo(new TreeMap<>(), new TreeMap<>());
+    info.setId(UUID.randomUUID().toString());
     setTitle("");
     setDescription("");
   }
