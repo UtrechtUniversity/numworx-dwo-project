@@ -1584,7 +1584,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	}
 
 	@Override
-	public Panel getAsPanel()
+	public TouchPanel getAsPanel()
 	{
 		return sp;
 	}
