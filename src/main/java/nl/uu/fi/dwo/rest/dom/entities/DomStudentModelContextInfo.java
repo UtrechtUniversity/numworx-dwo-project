@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DomStudentModelContextInfo {
     private Map<String,String> title;
     private Map<String,String> description;
+    private String id;
 
     public DomStudentModelContextInfo(){        
        
@@ -48,6 +49,20 @@ public class DomStudentModelContextInfo {
      */
     public void setDescription(Map<String,String> description) {
         this.description = description;
+    }
+
+    /**
+     * @return the id
+     */
+    public String getId() {
+      return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(String id) {
+      this.id = id;
     }
     
 }

@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -9,5 +11,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class DomStudentModelObjectiveScore extends DomStudentModelScore<DomStudentModelObjectiveScore> {
+
+   @Override
+  public List<DomStudentModelObjectiveScore> getChildren() {
+    return super.getChildren();
+  }
+
+  @Override
+  public void setChildren(List<DomStudentModelObjectiveScore> children) {
+    super.setChildren(children);
+  }
     
 }

@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.beans.Transient;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -24,4 +25,5 @@ public class DomStudentModelCategoryScore extends DomStudentModelScore<DomStuden
     public void setObjectives(List<DomStudentModelObjectiveScore> objectives) {
         setChildren(objectives);
     }
+    
 }

@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DomStudentModelDataScore implements Cloneable {
     private DomStudentModelContextId modelId;
     private DomStudentModelStructureScore domStudentModelStructureScore;
+    private Long fetchTimeStamp;
 
     /**
      * @return the domStudentModelStructureScore
@@ -37,6 +38,20 @@ public class DomStudentModelDataScore implements Cloneable {
      */
     public void setModelId(DomStudentModelContextId modelId) {
         this.modelId = modelId;
+    }
+
+    /**
+     * @return the fetchTimeStamp
+     */
+    public Long getFetchTimeStamp() {
+      return fetchTimeStamp;
+    }
+
+    /**
+     * @param fetchTimeStamp the fetchTimeStamp to set
+     */
+    public void setFetchTimeStamp(Long fetchTimeStamp) {
+      this.fetchTimeStamp = fetchTimeStamp;
     }
     
 }
