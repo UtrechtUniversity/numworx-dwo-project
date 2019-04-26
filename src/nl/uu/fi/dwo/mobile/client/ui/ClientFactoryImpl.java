@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
+import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewBuilder;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewNumworx;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
@@ -58,20 +59,20 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 //			return impl;
 //		}};
 //	
-	final Provider<ViewModuleView> NUMWORX_VIEW = new Provider<ViewModuleView>() {
-
-		@Override
-		public ViewModuleView get() {
-			ViewModuleViewNumworx impl = new ViewModuleViewNumworx(setupAPI());
-			return impl.initialize();
-		}
-		
-	};
+//	final Provider<ViewModuleView> NUMWORX_VIEW = new Provider<ViewModuleView>() {
+//
+//		@Override
+//		public ViewModuleView get() {
+//			ViewModuleViewNumworx impl = new ViewModuleViewNumworx(setupAPI());
+//			return impl.initialize();
+//		}
+//		
+//	};
 			
 	// singleton pattern.
 	Provider<HeaderView> headerView;
 
-	protected void setup(Provider<HeaderViewNone> none, Provider<HeaderViewNumworx> numworx)
+	protected void setup(Provider<HeaderViewNone> none, Provider<HeaderView> numworx)
 	{
 	  if (Actions.isAvailable() )
 	  {
@@ -79,8 +80,8 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	    headerViewNone.setPresenter(this);
 	    headerView = () -> headerViewNone;
 	  } else {
-        HeaderViewNumworx impl = numworx.get();
-        impl.setPresenter(ClientFactoryImpl.this);
+        HeaderView impl = numworx.get();
+        impl.setPresenter(this);
 	    headerView = () -> impl;
 	  }
 	};
@@ -95,7 +96,7 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	
 	
 	private final PlaceController placeController;
-	private Provider<ViewModuleView> entryView = NUMWORX_VIEW;
+	private Provider<ViewModuleView> entryView;
 	private SelectModuleView selectModuleView;
 	protected LoginView loginView;
 	protected TreeModuleView treeModuleView;
@@ -103,13 +104,19 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 	
 	public ClientFactoryImpl(EventBus bus, PlaceController controller, 
 	                 Provider<PlaceHistoryMapper> mapper, 
-	                 Provider<NavigationViewNumworx> navigationView
+	                 Provider<NavigationViewNumworx> navigationView,
+	                 final Provider<ViewModuleViewBuilder> entryView	                 
 	       )
 	{
 	  this.eventBus = bus;
 	  this.placeController = controller;
 	  this.mapper = mapper;
 	  this.navigationView = navigationView;
+	  this.entryView = () -> {
+	    ViewModuleViewBuilder view = entryView.get();
+	    view.initialize(setupAPI());
+	    return view;
+	  };
 	}
 
 	@Override
@@ -159,7 +166,7 @@ public abstract class ClientFactoryImpl implements ClientFactory, GotoController
 		if (treeModuleView == null){
 			{
 				
-				entryView = NUMWORX_VIEW;				
+//				entryView = NUMWORX_VIEW;				
 				return this.treeModuleView = new TreeModuleViewNumworx(getHeaderView(), navigationView.get());
 			}
 			

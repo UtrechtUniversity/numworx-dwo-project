@@ -32,6 +32,7 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
+import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
@@ -41,7 +42,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 
-public class ViewModuleViewNumworx extends ResizeComposite implements ViewModuleView {
+public class ViewModuleViewNumworx extends ResizeComposite implements ViewModuleViewBuilder {
 
 	private static ViewModuleViewNumworxUiBinder uiBinder = GWT.create(ViewModuleViewNumworxUiBinder.class);
 
@@ -55,28 +56,35 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	private DockLayoutPanel root;
 	private MenuBar items = new MenuBar(true);
 	
+	
+	public ViewModuleViewNumworx() {}
+
+	public void initialize(Scorm2004IF api) {
+      delegate = new ViewModuleViewImpl(false, api);
+      pfx = DWOplayer.PARAMETERS.getResource("");
+      final int correctie = 10; // width popup 
+      user = new MenuItem("<i class='fa fa-caret-down fa-2x'></i>", true, items) {
+          @Override
+          public int getAbsoluteLeft() {
+              int w1 = items.getOffsetWidth();
+              int w2 = this.getOffsetWidth();
+              return super.getAbsoluteLeft() - w1 + w2 - correctie;
+          }
+      };
+      initWidget(root = uiBinder.createAndBindUi(this));
+      delegate.initialize();
+      delegate.setWindowTop(90); // 90 pixels header
+      delegate.zetMaat();
+      center.setWidget(delegate);
+      if(DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB) {
+          removeBtns();
+      }
+      up2Btn.setVisible(false && Actions.isAvailable());
+      root.forceLayout();	  
+	}
+	
 	public ViewModuleViewNumworx(Scorm2004IF api) {
-		delegate = new ViewModuleViewImpl(false, api);
-		pfx = DWOplayer.PARAMETERS.getResource("");
-        final int correctie = 10; // width popup 
-		user = new MenuItem("<i class='fa fa-caret-down fa-2x'></i>", true, items) {
-            @Override
-            public int getAbsoluteLeft() {
-                int w1 = items.getOffsetWidth();
-                int w2 = this.getOffsetWidth();
-                return super.getAbsoluteLeft() - w1 + w2 - correctie;
-            }
-		};
-		initWidget(root = uiBinder.createAndBindUi(this));
-		delegate.initialize();
-		delegate.setWindowTop(90); // 90 pixels header
-		delegate.zetMaat();
-		center.setWidget(delegate);
-		if(DWOplayer.PARAMETERS.getSecureMode() == SecureMode.SEB) {
-			removeBtns();
-		}
-		up2Btn.setVisible(false && Actions.isAvailable());
-		root.forceLayout();
+	  initialize(api);
 	}
 
 	public void removeBtns() {

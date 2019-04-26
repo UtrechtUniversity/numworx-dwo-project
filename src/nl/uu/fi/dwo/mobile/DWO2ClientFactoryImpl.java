@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
@@ -18,11 +19,13 @@ import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO4;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNone;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.Login3ViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationViewNumworx;
+import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewBuilder;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -39,11 +42,11 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 		@Inject DWO2ClientFactoryImpl(EventBus bus, PlaceController controller,
             Provider<PlaceHistoryMapper> mapper,
             Provider<HeaderViewNone> none,
-            Provider<HeaderViewNumworx> numworx,
-            Provider<NavigationViewNumworx> navigation
-		    
+            @Named("header") Provider<HeaderView> numworx,
+            Provider<NavigationViewNumworx> navigation,
+		    Provider<ViewModuleViewBuilder> entry
 		    ) {
-              super(bus, controller, mapper, navigation);
+              super(bus, controller, mapper, navigation, entry);
               setup(none,numworx);
         }
 

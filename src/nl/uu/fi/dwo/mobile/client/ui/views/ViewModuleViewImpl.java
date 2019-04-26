@@ -113,7 +113,7 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
  * @author Danny Hendrix, Evertson Croes, Sietske Tacoma, Wim van Velthoven
  * 
  */
-public class ViewModuleViewImpl extends XMLView implements ViewModuleView, EntryPoint, NextPrevHandler, ObjectivesHandler, MisconceptionsHandler, HasHeight
+public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder, EntryPoint, NextPrevHandler, ObjectivesHandler, MisconceptionsHandler, HasHeight
 {
 	public class ResizeFocusPanel extends FocusPanel implements RequiresResize, ProvidesResize {
 
@@ -208,7 +208,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private Widget next, prev, end;
 	private int[][][] beginStateMeasuredMisconceptions;
 
-	final private Scorm2004IF api;
+	private Scorm2004IF api;
 	private DWOLogger dwologger;
 
 	public ViewModuleViewImpl(boolean b, Scorm2004IF api) 
@@ -221,6 +221,15 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		this.api = api;
 	}
 
+	public ViewModuleViewImpl() {	  
+	}
+
+	public void initialize(Scorm2004IF api) {
+	  this.api = api;
+	  initialize();
+	  zetMaat();
+	}
+	
 	public HeaderButton getBackButton()
 	{
 		return hb;
