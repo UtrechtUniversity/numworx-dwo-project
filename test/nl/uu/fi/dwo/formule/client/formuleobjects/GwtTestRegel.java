@@ -144,4 +144,14 @@ public class GwtTestRegel extends GWTTestCase {
 		assertEquals("<msqrt><msup><mtext/><mtext>\u25AF</mtext></msup></msqrt>",mathml);
 	}
 
+	public void testMathMLlt() {
+      FormuleHolder holder = new MockHolder();
+      FormuleRegel regel = holder.getCurrentRegel();
+      FormuleTeken twee = new FormuleTeken(regel, "<");
+      regel.insert(twee);
+      String mathml = regel.toMathML();
+      assertEquals("<mtext>&lt;</mtext>",mathml);	  
+	}
+	
+	
 }

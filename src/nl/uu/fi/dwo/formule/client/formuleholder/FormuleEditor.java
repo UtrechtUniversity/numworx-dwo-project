@@ -30,7 +30,9 @@ import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 /**
@@ -39,7 +41,7 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
  * @author Danny Hendrix
  * 
  */
-public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
+public class FormuleEditor extends FormuleHolder implements FormuleEditorIF, IsWidget
 {
 	//selector
 	private FormuleRegel current = null;
@@ -175,13 +177,15 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		current = e;
 	}
 
-	public Panel getAsPanel()
+	public TouchPanel getAsPanel()
 	{
+	    if (widget != null) return widget;
 		//FocusPanel sp = new FocusPanel();
 		//nl.uu.fi.dwo.interaction.client.touch.TouchPanel sp = new nl.uu.fi.dwo.interaction.client.touch.TouchPanel();
 		TouchPanel sp = new TouchPanel();
 		sp.getElement().addClassName("insert_formule");
 		sp.add(this.getMainRegel().asWidget());
+		widget = sp;
 		return sp;
 	}
 
@@ -521,4 +525,12 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		removeTouchHandler();
 		registration = r;
 	}
+
+	public TouchPanel widget;
+  @Override
+  public Widget asWidget() {
+    if (widget == null)
+       getAsPanel();
+    return widget;
+  }
 }

@@ -1530,8 +1530,8 @@ public class FormuleRegel extends FormuleElement
 	private String fix1char(String mathML) {
 		if(mathML.length() == 1) {
 			switch(mathML.charAt(0)) {
-			case '>' : mathML = "&gt"; break;
-			case '<' : mathML = "&lt"; break;
+			case '>' : mathML = "&gt;"; break;
+			case '<' : mathML = "&lt;"; break;
 			case '&' : mathML = "&amp;"; break;
 			}
 			mathML = "<mtext>" + mathML + "</mtext>";
