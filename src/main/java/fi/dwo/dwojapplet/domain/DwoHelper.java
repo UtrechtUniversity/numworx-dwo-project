@@ -219,6 +219,7 @@ public final class DwoHelper {
      */
     public static void setAu(AppletUtil au) {
         DwoHelper.au = au;
+        setLocale(new DwoLocale(au.getLocale().getLanguage()));
     }
 
     public static void setUmpc(boolean b) {
