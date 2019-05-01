@@ -240,7 +240,6 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         try {
             TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                     .setDefaultHasRole()
-                    //.setDefaultHasRole()
                     .buildSchoolAdminTeacher()
                     .setTeacher();
             return build.getTeachersStudents();
@@ -445,45 +444,6 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         }
     }
 
-//    /**
-//     * Returns the school data to be displayed.
-//     *
-//     * @param sc
-//     * @return
-//     */
-//    @GET
-//    @Produces({"application/json"})
-//    @Path("/getList")
-//    public List<RestSchoolClass> getSchoolClasses(@Context SecurityContext sc) {
-//        PersistentHasRole phr = null;
-//        PersistentSchool school = null;
-//
-//        try {
-//            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
-//            school = HasRoleUtilManager.getSchoolforHasRole(phr);
-//        }
-//        catch (Dwo2Exception ex) {
-//            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-//            LOG.log(Level.SEVERE, "", ex);
-//            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
-//        }
-//
-//        List<PersistentSchoolClass> schoolClasses = null;
-//        List<RestSchoolClass> restSchoolClasses;
-//        try {
-//            schoolClasses = SchoolClassManager.findEntities(school);
-//            LOG.log(Level.FINER, "Fetched all {0} schoolClasses. ", new Object[]{schoolClasses.size()});
-//            restSchoolClasses = new ArrayList<RestSchoolClass>(schoolClasses.size());
-//            for (PersistentSchoolClass s : schoolClasses) {
-//                restSchoolClasses.addPrincipalUser(new RestSchoolClass(s));
-//            }
-//        }
-//        catch (Exception e) {
-//            LOG.log(Level.WARNING, "Unexpected exception", e);
-//            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schoolclasses.");
-//        }
-//        return restSchoolClasses;
-//    }
     /**
      * Removes all the school data of the current school and returns true.
      *
@@ -1191,44 +1151,12 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                 .stream()
                 .map((e) -> new DomMapEntry<PersistenceId, DomClassCourse4Teacher>(e))
                 .collect(Collectors.toList()));
-//        result.setCourses(courseMap.entrySet()
-//                .stream()
-//                .map((e) -> new DomMapEntry<PersistenceId, DomCourse>(e))
-//                .collect(Collectors.toList()));
         result.setFetchTimeStamp(Long.valueOf(System.currentTimeMillis()));
         return result;
 
     }
     
-    //DomClassCourse4Teacher
-//    /**
-//     * Attaches a leaf course that a class in a school can see.
-//     *
-//     * @param sc
-//     * @param rest
-//     * @return
-//     * @throws Dwo2Exception
-//     */
-//    @PUT
-//    @Produces({"application/json"})
-//    @Path("/attachCourseToClass")
-//    public Boolean attachCourseToClass(@Context SecurityContext sc, RestClassCourseWProfile rest) throws Dwo2Exception {
-//        //secure builder to detach course by setting it invisible.
-//        try {
-//            TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
-//                    .setHasRole(rest.getRestContext().getDomHasRole())
-//                    //.setDefaultHasRole()
-//                    .buildSchoolAdminTeacher()
-//                    .setTeacher()
-//                    .addProfile(rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile())
-//                    .addSchoolClass(rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass())
-//                    .addCourse(rest.getDomSchoolClassCourseAndProfile().getCourse());
-//            return build.attachCourseToClass(from,to, key, exam, viewState);
-//        } catch (Dwo2Exception e) {
-//            throw new Dwo2RestException(e);
-//        }
-//    }
-
+ 
     /**
      * Attaches a leaf course that a class in a school can see.
      *
@@ -1245,7 +1173,6 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         try {
             TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                     .setHasRole(rest.getRestContext().getDomHasRole())
-                    //.setDefaultHasRole()
                     .buildSchoolAdminTeacher()
                     .setTeacher()
                     .addProfile(rest.getDomSchoolClassCourseAndProfileNew().getDomDwoProfile())
@@ -1275,7 +1202,6 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         try {
             TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                     .setHasRole(rest.getRestContext().getDomHasRole())
-                    //.setDefaultHasRole()
                     .buildSchoolAdminTeacher()
                     .setTeacher()
                     .addProfile(rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile())
@@ -1287,71 +1213,6 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         }
     }
 
-//    /**
-//     * Attaches a leaf course that a class in a school can see.
-//     *
-//     * @param sc
-//     * @param rest
-//     * @return
-//     * @throws Dwo2Exception
-//     */
-//    @PUT
-//    @Produces({"application/json"})
-//    @Path("/attachCourseToClass")
-//    public Boolean attachCourseToClass(@Context SecurityContext sc, RestSchoolClassCourseAndProfile rest) throws Dwo2Exception {
-//        //secure builder to detach course by setting it invisible.
-//        try {
-//            TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
-//                    .setHasRole(rest.getRestContext().getDomHasRole())
-//                    //.setDefaultHasRole()
-//                    .buildSchoolAdminTeacher()
-//                    .setTeacher()
-//                    .addProfile(rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile())
-//                    .addSchoolClass(rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass())
-//                    .addCourse(rest.getDomSchoolClassCourseAndProfile().getCourse());
-//
-//            //Loop up the course tree and find the tree path
-//            Stack<PersistentCourse> treePath = new Stack<>();
-//            PersistentCourse curCourse = build.getCourse();
-//            treePath.add(curCourse);
-//            while (curCourse.getParentID() != 0) {
-//                curCourse = CourseManager.findEntity(curCourse.getParentID());
-//                //if no classCourse addPrincipalUser to stack
-//                if (ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse()).isEmpty()) {
-//                    treePath.push(curCourse);
-//                } else {
-//                    break; // Someone might erase an existing classcourse in the background, yet this failure will be visible after a tree refresh.
-//                }
-//            }// stop when added course with parentid = 0;
-//
-//            //Walk the treepath list from top to bottom and add classCourses idempotently (ignore if it already exists).   
-//            while (!treePath.empty()) {
-//                curCourse = treePath.pop();
-//                List<PersistentClassCourse> pcc = ClassCourseManager.findEntities(build.getSchoolClass(), build.getCourse());
-//                if (pcc.isEmpty()) { //create new 
-//                    PersistentClassCourse cc = new PersistentClassCourse();
-//                    cc.setClassID(build.getSchoolClass().getClassID());
-//                    cc.setCourseID(curCourse.getCourseID());
-//                    cc.setNotAfter(null);
-//                    cc.setNotBefore(null);
-//                    cc.setType(CourseType.normal.ordinal());
-//                    cc.setViewState(ViewState.studentsAndTeachers);
-//                    try {
-//                        cc = ClassCourseManager.create(cc);
-//                        LOG.log(Level.FINE, "User {3} adds a ClassCourse {0} for Course {1} and Class {2}", new Object[]{cc.getClassCourseID(), cc.getCourseID(), cc.getClassID(), sc.getUserPrincipal().getName()});
-//                    } catch (PersistenceException e) {
-//                        // ignore as it might already exist.
-//                    }
-//                } else {//switch to visible.
-//                    pcc.get(0).setViewState(ViewState.studentsAndTeachers);
-//                    ClassCourseManager.insertOrUpdateViewState(pcc.get(0));
-//                }
-//            }
-//        } catch (Dwo2Exception e) {
-//            throw new Dwo2RestException(e);
-//        }
-//        return true;
-//    }
     /**
      * Detaches a leaf course that a class in a school can see.
      *
@@ -1367,7 +1228,6 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         try {
             TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                     .setHasRole(rest.getRestContext().getDomHasRole())
-                    //.setDefaultHasRole()
                     .buildSchoolAdminTeacher()
                     .setTeacher()
                     .addProfile(rest.getDomSchoolClassCourseAndProfile().getDomDwoProfile())
@@ -1521,7 +1381,6 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     public List<DomSchoolClassId> getTeachersClassesOfStudent(@Context SecurityContext sc, RestStudent restStudent) throws Dwo2Exception {
         TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                 .setHasRole(restStudent.getRestContext().getDomHasRole())
-                //.setDefaultHasRole()
                 .buildSchoolAdminTeacher()
                 .setTeacher();
         return build.getTeachersClassesOfStudent(restStudent.getDomStudent());
@@ -1533,7 +1392,6 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     public List<DomSchoolClassId> getSharedTeacherClasses(@Context SecurityContext sc, RestTeacher restTeacher) throws Dwo2Exception {
         TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
                 .setHasRole(restTeacher.getRestContext().getDomHasRole())
-                //.setDefaultHasRole()
                 .buildSchoolAdminTeacher()
                 .setTeacher();
         return build.getSharedTeacherClasses(restTeacher.getDomTeacher());
