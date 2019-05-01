@@ -45,6 +45,10 @@ class NodeLeaf implements Node {
     info.setId(UUID.randomUUID().toString());
     setTitle("");
     setDescription("");
+// FIXME INITIAL VALUES INIT,LEARN,SLIP
+    info.setInit(0.5);
+    info.setSlip(0.05);
+    info.setLearn(0.20);
   }
 
   public String toString() {

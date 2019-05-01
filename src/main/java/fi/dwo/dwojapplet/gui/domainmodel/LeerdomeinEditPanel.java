@@ -2,6 +2,8 @@ package fi.dwo.dwojapplet.gui.domainmodel;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -13,6 +15,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -71,6 +75,13 @@ public class LeerdomeinEditPanel extends JPanel {
         Node n = (Node)u;
         n.setTitle(subtitle.getText());
         n.setDescription(text.getText());
+        if (n instanceof NodeLeaf) {
+          DomStudentModelContextInfo info = n.getInfo();
+          commitEdit(init);commitEdit(learn); commitEdit(slip);
+          info.setInit((Double) init.getValue());
+          info.setLearn((Double) learn.getValue());
+          info.setSlip((Double) slip.getValue());
+        }
       } else 
         node.setUserObject(subtitle.getText());
       if (node == root) {
@@ -80,9 +91,16 @@ public class LeerdomeinEditPanel extends JPanel {
       left();
     }
 
+    private void commitEdit(JFormattedTextField field) {
+      try {
+        field.commitEdit();
+      } catch (ParseException e) {}
+    }
+
     void left() {
       putValue(NAME, BEWERKEN);
       subtitle.setEditable(false); text.setEditable(false);
+      slip.setEditable(false); init.setEditable(false); learn.setEditable(false);
       tree.setEnabled(true);language.setEnabled(true);title.setEnabled(true);
     }
 
@@ -98,6 +116,7 @@ public class LeerdomeinEditPanel extends JPanel {
         text.setText("");
       }
       subtitle.setEditable(true);text.setEditable(true);
+      slip.setEditable(true); learn.setEditable(true); init.setEditable(true);
       tree.setEnabled(false);language.setEnabled(false);
       if (node == root) {
         title.setEnabled(false);
@@ -110,6 +129,7 @@ public class LeerdomeinEditPanel extends JPanel {
       if (path == null) {
         subtitle.setText("");
         text.setText("");
+        bkt.setVisible(false);
         return;
       }
       DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
@@ -119,6 +139,18 @@ public class LeerdomeinEditPanel extends JPanel {
         text.setText(((Node) u).getDescription());
       } else 
         text.setText("");
+      if (u instanceof NodeLeaf) {
+        DomStudentModelContextInfo info = ((NodeLeaf) u).getInfo();
+        Double d = info.getSlip(); if (d == null) d = 0.05; // DEFAULT SLIP
+        slip.setValue(d);
+        d = info.getInit(); if (d == null) d = 0.5; // DEFAULT INIT;
+        init.setValue(d);
+        d = info.getLearn(); if (d == null) d = 0.2; // DEFAULT LEARN;
+        learn.setValue(d);
+        bkt.setVisible(true);
+      } else {
+        bkt.setVisible(false);
+      }
     }
 
     @Override
@@ -254,12 +286,15 @@ public class LeerdomeinEditPanel extends JPanel {
   static final String[] LANGUAGES = { "nl", "de", "en", "fr" };
   
   JTextField title, subtitle;
+  JFormattedTextField slip, init, learn;
+  
   JComboBox<String>  language;
   JTree tree;
   DefaultTreeModel model;
   DynamicUtilTreeNode root;
   JButton opslaan;
   JTextArea text;
+  private Box bkt;
   
   public LeerdomeinEditPanel() {
     super(null);
@@ -341,6 +376,18 @@ public class LeerdomeinEditPanel extends JPanel {
     rightBox.add(hbox);
     rightBox.add(Box.createVerticalStrut(10+bar.getPreferredSize().height));
     rightBox.add(new JScrollPane(text));
+    
+    bkt = Box.createHorizontalBox();
+    bkt.add(new JLabel("init"));init = new JFormattedTextField(NumberFormat.getInstance()); bkt.add(init);
+    bkt.add(new JLabel("learn")); learn = new JFormattedTextField(NumberFormat.getInstance()); bkt.add(learn);
+    bkt.add(new JLabel("slip"));slip = new JFormattedTextField(NumberFormat.getInstance()); bkt.add(slip);
+    Dimension pref = bkt.getPreferredSize();
+    bkt.setMinimumSize(pref);
+    pref.width = Short.MAX_VALUE;
+    bkt.setMaximumSize(pref);
+    rightBox.add(Box.createVerticalStrut(10));
+    rightBox.add(bkt);
+    
     add(rightBox);
         
     tree.addTreeSelectionListener(OPSLAAN_ACTION);
@@ -363,6 +410,7 @@ public class LeerdomeinEditPanel extends JPanel {
     this.text.setText("");
     this.model.nodeStructureChanged(root);
     this.structure = model;
+    bkt.setVisible(false);
     OPSLAAN_ACTION.left();
   }
 
