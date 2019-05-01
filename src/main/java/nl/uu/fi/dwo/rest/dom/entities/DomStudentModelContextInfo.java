@@ -14,6 +14,7 @@ public class DomStudentModelContextInfo {
     private Map<String,String> title;
     private Map<String,String> description;
     private String id;
+    private Double slip, learn, init;
 
     public DomStudentModelContextInfo(){        
        
@@ -64,5 +65,47 @@ public class DomStudentModelContextInfo {
     public void setId(String id) {
       this.id = id;
     }
+
+	/**
+	 * @return the slip
+	 */
+	public Double getSlip() {
+		return slip;
+	}
+
+	/**
+	 * @param slip the slip to set
+	 */
+	public void setSlip(Double slip) {
+		this.slip = slip;
+	}
+
+	/**
+	 * @return the learn
+	 */
+	public Double getLearn() {
+		return learn;
+	}
+
+	/**
+	 * @param learn the learn to set
+	 */
+	public void setLearn(Double learn) {
+		this.learn = learn;
+	}
+
+	/**
+	 * @return the init
+	 */
+	public Double getInit() {
+		return init;
+	}
+
+	/**
+	 * @param init the init to set
+	 */
+	public void setInit(Double init) {
+		this.init = init;
+	}
     
 }
