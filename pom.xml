@@ -122,7 +122,7 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>DWO-apps</artifactId>
-			<version>2.3.8-SNAPSHOT</version>
+			<version>2.3.8</version>
 			<scope>runtime</scope>
 			<type>war</type>
 		</dependency>
@@ -423,10 +423,10 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<DWOplayerVersion>2.3.8-SNAPSHOT</DWOplayerVersion>
+		<DWOplayerVersion>2.3.8</DWOplayerVersion>
 		<DWOmAccessVersion>2.3.4</DWOmAccessVersion>
-		<RegisterVersion>2.3.8-SNAPSHOT</RegisterVersion>
-		<DWOGwtClientVersion>2.3.8-SNAPSHOT</DWOGwtClientVersion>
+		<RegisterVersion>2.3.8</RegisterVersion>
+		<DWOGwtClientVersion>2.3.8</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testebserver</aws.environmentName>
