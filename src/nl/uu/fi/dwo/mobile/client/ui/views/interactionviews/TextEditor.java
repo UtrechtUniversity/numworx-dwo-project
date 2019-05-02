@@ -110,7 +110,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	
 	private Widget cursorWidget;
 	private Widget widget;
-	private boolean shown;
+	private boolean shown, childfocus;
 	
 	private boolean boxMetRand;
 	private int boxsize;
@@ -218,6 +218,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	protected void requestFocus()
 	{
 		comRoot.getKeyboard().setEditor(this);
+		childfocus = false;
 		FocusOnTouch.focus();
 		shown = true; // mag dat hier al? nee dus. -- Syl: Waarom niet? Waar dan wel? deze wordt tevroeg aangeroepen, als de teksteditor nog niet in de div-tree zit
 		setCursorWidget(cursorWidget);
@@ -1119,7 +1120,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
 			keyboard.setEditor(TextEditor.this);
 			keyboard.setEnterType(EnterType.ENTER);
-			shown = true;
+			shown = true; childfocus = false;
 			setCursorWidget(cursorWidget);
 			hbox.removeStyleName(css.textEditor_empty());
 			keyboard.softFocus();
@@ -1132,7 +1133,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		{
 			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
 			keyboard.setEditor(TextEditor.this);
-			shown = true;
+			shown = true;childfocus = false;
 			setCursorWidget(cursorWidget);
 			keyboard.setEnterType(EnterType.ENTER);
 			keyboard.softFocus();
@@ -1169,6 +1170,25 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 					keyboard.setEnterType(EnterType.ENTER);
 					TextEditor.this.requestFocus();
 				}
+
+				/* (non-Javadoc)
+				 * @see nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor#requestFocus()
+				 */
+				@Override
+				public void requestFocus() {
+					super.requestFocus();
+					childfocus = true;
+				}
+
+				/* (non-Javadoc)
+				 * @see nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor#setCurrentElementRepaint()
+				 */
+				@Override
+				public void setCurrentElementRepaint() {
+					childfocus = false;
+					super.setCurrentElementRepaint();
+				}
+				
 			};
 			editor.setFormuleToolBijFocus(true);
 			setFont(defaultfont);
@@ -1375,8 +1395,18 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		{
 			if (!editable)
 				return;
+			GWT.log("childfocus " + childfocus);
+			if ( childfocus ) return;
 			if (comRoot.getKeyboard().getEditor() != TextEditor.this)
-				return;
+			{	FormuleKeyboardIF kb = comRoot.getKeyboard();
+				kb.setEditor(TextEditor.this);
+				kb.setEnterType(EnterType.APPLY);
+				shown = true;
+				setCursorWidget(cursorWidget);
+				hbox.removeStyleName(css.textEditor_empty());
+				event.stopPropagation();
+				event.preventDefault();
+			}
 			FormulaVak panel = new FormulaVak();
 			panel.start();
 			//sb.insert(cursor, '@');
