@@ -219,17 +219,11 @@
 			<version>${daggerVersion}</version>
 		</dependency>
 <!-- 		<dependency> -->
-<!-- 			<groupId>com.google.dagger</groupId> -->
-<!-- 			<artifactId>dagger-compiler</artifactId> -->
-<!-- 			<version>${daggerVersion}</version> -->
-<!-- 			<scope>provided</scope> -->
+<!-- 			<groupId>fi.graphtoolgwt</groupId> -->
+<!-- 			<artifactId>GraphToolGWT</artifactId> -->
+<!-- 			<version>2.3.3-SNAPSHOT</version> -->
+<!-- 			<classifier>classes</classifier> -->
 <!-- 		</dependency> -->
-		<dependency>
-			<groupId>fi.graphtoolgwt</groupId>
-			<artifactId>GraphToolGWT</artifactId>
-			<version>2.3.3-SNAPSHOT</version>
-			<classifier>classes</classifier>
-		</dependency>
 	</dependencies>
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
@@ -245,7 +239,7 @@
 		<runTarget>${project.artifactId}.html</runTarget>
 		<warClassifier />
 		<gwt.copyWebapp>true</gwt.copyWebapp>
-		<accountVersion>2.3.7-SNAPSHOT</accountVersion>
+		<accountVersion>2.3.7</accountVersion>
 		<gwtVersion>2.8.2</gwtVersion>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <maven.javadoc.skip>true</maven.javadoc.skip>
