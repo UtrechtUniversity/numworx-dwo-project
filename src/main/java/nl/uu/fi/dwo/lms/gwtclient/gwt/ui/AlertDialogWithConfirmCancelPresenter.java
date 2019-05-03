@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 /**
  * Subclassing for project.
@@ -27,7 +28,7 @@ public class AlertDialogWithConfirmCancelPresenter implements AlertDialogWithCon
 
         void clear();
         void init();
-        void showDialog(String text);
+        void showDialog(String text, String ok, String cancel);
         void hideDialog();
     }
 
@@ -41,7 +42,11 @@ public class AlertDialogWithConfirmCancelPresenter implements AlertDialogWithCon
         LOG.log(Level.INFO,"AlertDialogWithConfirmCancelEvent does: "+aDialogEvent.getEventValue()+ " with "+aDialogEvent.getPromise().getMsg());
         if (aDialogEvent.getEventValue()==AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog){
             deferred = aDialogEvent.getPromise();
-            view.showDialog(deferred.getMsg());
+            view.showDialog(deferred.getMsg(), DwoLocalesForGWT.instance.NUM_BTN_Ok(), DwoLocalesForGWT.instance.NUM_BTN_Cancel());
+        } else if (aDialogEvent.getEventValue() == AlertDialogWithConfirmCancelEvent.EventType.YesNoDialog) {
+          deferred = aDialogEvent.getPromise();
+            view.showDialog(deferred.getMsg(), DwoLocalesForGWT.instance.NUM_LBL_YES(), DwoLocalesForGWT.instance.NUM_LBL_NO());
+          
         }
     }
     

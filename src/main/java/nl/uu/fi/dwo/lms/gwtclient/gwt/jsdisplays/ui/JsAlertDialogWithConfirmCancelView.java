@@ -20,8 +20,8 @@ public class JsAlertDialogWithConfirmCancelView implements AlertDialogWithConfir
     }
 
     @Override
-    public void showDialog(String text) {
-        JsAlertDialogWithConfirmCancelDisplay.showDialog(text);
+    public void showDialog(String text, String ok, String cancel) {
+        JsAlertDialogWithConfirmCancelDisplay.showDialog(text, ok, cancel);
     }
 
     @Override

@@ -27,7 +27,8 @@ public class AlertDialogWithConfirmCancelEvent extends Event<AlertDialogWithConf
     }
     
     public enum EventType {
-        ConfirmDialog
+        ConfirmDialog,
+        YesNoDialog
     }
     
     @Override

@@ -18,14 +18,16 @@ import jsinterop.annotations.JsType;
  * @author G.A.J. van der Plas
  */
 @JsType(isNative = true, name = "jsAlertDialogWithConfirmCancelDisplay", namespace = JsPackage.GLOBAL)
-//@JsType(isNative = false, namespace = JsPackage.GLOBAL)
 public class JsAlertDialogWithConfirmCancelDisplay{
     /** clear the state of the dialog **/
     public static native void clear();
     /** Initialize the Dialog for use **/
     public static native void init();
-    /** Show the dialog **/
-    public static native void showDialog(String text);
+    /** Show the dialog 
+     * @param text the message
+     * @param cancel "cancel"
+     * @param ok  "ok" **/
+    public static native void showDialog(String text, String ok, String cancel);
     /** Hide the dialog **/
     public static native void hideDialog();
 }

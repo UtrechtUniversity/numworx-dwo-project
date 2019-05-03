@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
@@ -24,6 +25,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -144,7 +146,9 @@ public abstract class AddPersonPresenter {
         DomNewSingleSchoolStudent newStudent = new DomNewSingleSchoolStudent();
         newStudent.setDomSingleSchoolStudent(student);
         newStudent.setDomSchoolClass(schoolClass);
-        promise = manager.submitSingleSchoolStudent(newStudent);
+        if (schoolClass == null)
+          promise = Promises.failed(new Dwo2Exception(Dwo2ExceptionCode.Rest_Active_SchoolClass_Not_Set, "null"));
+        else promise = manager.submitSingleSchoolStudent(newStudent);
         // onSuccess update view
         promise.then(new Success<Boolean, Void>() {
             @Override
