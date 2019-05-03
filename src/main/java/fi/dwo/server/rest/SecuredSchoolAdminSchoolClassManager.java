@@ -454,7 +454,9 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
             user.setSingleSchoolAccount(true);
             try {
                 //add to schoolClass
-                PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(nssStudent.getDomNewSingleSchoolStudent().getDomSchoolClass()));
+                Long schoolclassID = MySQLPersistenceId.getNativeId(nssStudent.getDomNewSingleSchoolStudent().getDomSchoolClass());
+                if (schoolclassID == null) throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Active_SchoolClass_Not_Set, "null schoolclassID");
+                PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(schoolclassID);
                 SchoolUtilManager.addSingleSchoolStudentAccount(user, school, schoolClass);
                 PersistentStudentOfClass toSoc = new PersistentStudentOfClass();
                 toSoc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(user.getId(), schoolClass.getClassID(), user.getSchoolGroupId()));
