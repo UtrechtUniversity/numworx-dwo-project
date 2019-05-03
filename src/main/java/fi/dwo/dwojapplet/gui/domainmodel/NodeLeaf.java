@@ -51,6 +51,16 @@ class NodeLeaf implements Node {
     info.setLearn(0.20);
   }
 
+  public NodeLeaf(NodeLeaf u) {
+    lang = u.lang;
+    title = u.title;
+    info = new DomStudentModelContextInfo(new TreeMap<>(u.info.getTitle()), new TreeMap<>(u.info.getDescription()));
+    info.setId(UUID.randomUUID().toString());
+    info.setInit(u.info.getInit());
+    info.setSlip(u.info.getSlip());
+    info.setLearn(u.info.getLearn());
+  }
+
   public String toString() {
     return title;
   }

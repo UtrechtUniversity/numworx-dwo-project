@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui.domainmodel;
 
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.text.NumberFormat;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.TreeMap;
+
+import javax.management.DynamicMBean;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -167,7 +170,7 @@ public class LeerdomeinEditPanel extends JPanel {
   class Verwijderen extends AbstractAction {
 
     Verwijderen() {
-      this("verwijderen");
+      this(TextMapper.getText("delete"));
     }
 
     Verwijderen(String name) {
@@ -196,7 +199,7 @@ public class LeerdomeinEditPanel extends JPanel {
   class Wijzigen extends AbstractAction {
 
     public Wijzigen() {
-      this("wijzigen");
+      this(TextMapper.getText("rename"));
     }
 
     public Wijzigen(String name) {
@@ -211,6 +214,126 @@ public class LeerdomeinEditPanel extends JPanel {
 
   }
 
+  DefaultMutableTreeNode clipboard;
+  
+  class Knippen extends AbstractAction {
+    Knippen() {
+      super(TextMapper.getText("cut"));
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+      TreePath path = tree.getSelectionPath();
+      if (path == null) return;
+      
+      Object node = path.getLastPathComponent();
+      if (node == root) return;
+      if (node instanceof MutableTreeNode) {
+        DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
+        TreeNode parent = mutable.getParent();
+        mutable.removeFromParent();
+        clipboard = mutable;
+        model.nodeStructureChanged(parent);
+        OPSLAAN_ACTION.fillSelection();
+      
+      }
+    }
+    
+  }
+  class Kopieren extends AbstractAction {
+    Kopieren() {
+      super(TextMapper.getText("copy"));
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      TreePath path = tree.getSelectionPath();
+      if (path == null) return;
+      
+      Object node = path.getLastPathComponent();
+      if (node == root) return;
+      clipboard = copy(node);
+    }
+    
+  }
+  
+  class Plakken extends AbstractAction {
+    Plakken() {
+      super(TextMapper.getText("paste"));
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (clipboard == null) return;
+        TreePath path = tree.getSelectionPath();
+        if (path == null) return;
+        
+        Object node = path.getLastPathComponent();
+        if (node == root) {
+          if (clipboard.isLeaf()) return;
+          root.add(clipboard);
+          model.nodeStructureChanged(root);
+          tree.setSelectionPath(new TreePath(clipboard.getPath()));
+          clipboard = copy(clipboard);
+          tree.repaint();
+          return;
+        }
+        if (node instanceof MutableTreeNode) {
+          MutableTreeNode mutable = (MutableTreeNode) node;
+          if (mutable.isLeaf()) {
+            mutable = (MutableTreeNode) mutable.getParent();
+          }
+          ((DynamicUtilTreeNode) mutable).add(clipboard);
+          model.nodeStructureChanged(mutable);
+          tree.setSelectionPath(new TreePath(clipboard.getPath()));
+          tree.repaint();
+          clipboard = copy(clipboard);
+          return;
+        }
+    }
+    
+  }
+  
+  class Omhoog extends AbstractAction {
+    Omhoog() { super("Omhoog");
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      TreePath path = tree.getSelectionPath();
+      if (path == null) return;
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+      DynamicUtilTreeNode parent = (DynamicUtilTreeNode) node.getParent();
+      int i = parent.getIndex(node);
+      if (i > 0) {
+        parent.remove(i);
+        parent.insert(node, i-1);
+        model.nodeStructureChanged(parent);
+        tree.setSelectionPath(new TreePath(node.getPath()));
+        tree.repaint();
+      }
+      
+    }
+  
+  }
+  
+  class Omlaag extends AbstractAction {
+    Omlaag() {super("Omlaag"); }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      TreePath path = tree.getSelectionPath();
+      if (path == null) return;
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+      DynamicUtilTreeNode parent = (DynamicUtilTreeNode) node.getParent();
+      int i = parent.getIndex(node);
+      if (i < parent.getChildCount()-1) {
+        parent.remove(i);
+        parent.insert(node, i+1);
+        model.nodeStructureChanged(parent);
+        tree.setSelectionPath(new TreePath(node.getPath()));
+        tree.repaint();
+      }
+    }
+  }
   class LeerdoelAction extends AbstractAction {
 
     public LeerdoelAction() {
@@ -328,13 +451,18 @@ public class LeerdomeinEditPanel extends JPanel {
     language.setSelectedItem(locale); 
  // Menu
     JMenuBar bar = new JMenuBar();
-    JMenu Bestand = new JMenu("Bestand");
-    JMenu Bewerken = new JMenu("Bewerken");
+    JMenu Bestand = new JMenu(TextMapper.getText("file"));
+    JMenu Bewerken = new JMenu(TextMapper.getText("edit"));
     bar.add(Bestand);
       Bestand.add(new JMenuItem(new SubdomeinAction()));
       Bestand.add(new JMenuItem(new LeerdoelAction()));
     bar.add(Bewerken);
+      Bewerken.add(new JMenuItem(new Knippen()));
+      Bewerken.add(new JMenuItem(new Kopieren()));
+      Bewerken.add(new JMenuItem(new Plakken()));
       Bewerken.add(new JMenuItem(new Wijzigen()));
+      Bewerken.add(new JMenuItem(new Omhoog()));
+      Bewerken.add(new JMenuItem(new Omlaag()));
       Bewerken.add(new JMenuItem(new Verwijderen()));
     
     bar.add(Box.createHorizontalGlue());
@@ -392,6 +520,23 @@ public class LeerdomeinEditPanel extends JPanel {
         
     tree.addTreeSelectionListener(OPSLAAN_ACTION);
     
+  }
+
+  public DefaultMutableTreeNode copy(Object node) {
+    if (node instanceof DefaultMutableTreeNode) {
+      DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
+      if (mutable.isLeaf()) {
+        return new DefaultMutableTreeNode(new NodeLeaf((NodeLeaf)mutable.getUserObject()));
+      } else {
+        NodeVector v = new NodeVector( (NodeVector) mutable.getUserObject());
+        DynamicUtilTreeNode copy = new DynamicUtilTreeNode(v, v);
+        for(int i = 0; i < mutable.getChildCount(); i++) {
+          copy.add(copy(mutable.getChildAt(i)));
+        }
+        return copy;
+      }
+    }
+    return null;
   }
 
   DomStudentModelStructure structure;
@@ -473,7 +618,6 @@ public class LeerdomeinEditPanel extends JPanel {
       
     }
     
-  }
-  
+  }  
   
 }

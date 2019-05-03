@@ -23,6 +23,11 @@ public class NodeVector extends Vector<Object> implements Node {
     this.path = path;
   }
 
+  NodeVector(NodeVector u) {
+    title = u.title;
+    lang = u.lang;
+    info = new DomStudentModelContextInfo(new TreeMap<>(u.info.getTitle()), new TreeMap<>(u.info.getDescription()));
+  }
   
   public String title, lang;
   public DomStudentModelContextInfo info;
