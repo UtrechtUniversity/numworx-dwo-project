@@ -189,7 +189,7 @@ log("setScoID " + scoID);
 					}
 				}
 				log("Failed exception: " + caught);
-				if (!Window.confirm(caught.getMessage() + "\n" + Text.constants.opnieuwKnopLabel() +"?"))
+				if (!Window.confirm(caught.getLocalizedMessage() + "\n" + Text.constants.opnieuwKnopLabel() +"?"))
 				{
 					deferred.fail(caught);
 					return;

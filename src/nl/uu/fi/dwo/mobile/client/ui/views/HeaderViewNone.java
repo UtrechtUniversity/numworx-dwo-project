@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.List;
 import java.util.ListIterator;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -28,6 +29,7 @@ import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -35,14 +37,16 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 @Singleton
 public class HeaderViewNone extends HTML implements HeaderView, MessageEventHandler {
 
+  final Logger LOG = Logger.getLogger(getClass().getName());
   private static final String SEARCH = "SEARCH:";
   private static final String GOTO = "GOTO:";
-   
+  private TrafficAgent agent; 
   
   @Inject
-  public HeaderViewNone(EventBus eventBus, PlaceHistoryMapper mapper, PlaceController controller) {
+  public HeaderViewNone(EventBus eventBus, PlaceHistoryMapper mapper, PlaceController controller, TrafficAgent a) {
     this.mapper = mapper;
     this.controller = controller;
+    this.agent = a;
     eventBus.addHandler(MessageEvent.TYPE, this);
   }
 
@@ -121,7 +125,11 @@ public void onMessage(MessageEvent event) {
     if (place != null) presenter.goTo(place);
     else presenter.goTo(getHomePlace());
   } else if (Actions.LOGOUT.name().equals(message)) {
+      LOG.info("logout recieved");
 	  presenter.goTo(upPlace);
+	  LOG.info("wait");
+	  agent.barrier().onResolve(() -> { LOG.info("execute");Actions.LOGOUT.execute();});
+	  LOG.info("waiting");
   }
   
 }
