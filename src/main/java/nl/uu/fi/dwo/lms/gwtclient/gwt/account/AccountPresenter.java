@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
@@ -428,6 +429,8 @@ private LoggingFailure FAILURE;
         });
     }
 
+    @Inject ModulesPresenter modules;
+ 
     @JsMethod
     void removeCurrentUser(String password) {
       password = MD5.md5(password);
@@ -437,6 +440,7 @@ private LoggingFailure FAILURE;
         eventBus.fireEvent(new AlertDialogWithConfirmCancelEvent(AlertDialogWithConfirmCancelEvent.EventType.ConfirmDialog, defer));
         
         Promise<Boolean> promise = defer.getPromise();
+        promise = promise.then(modules::logout);
         promise = promise.then( (p) -> 
           {
             if (p.getValue().booleanValue()) {

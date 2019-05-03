@@ -30,6 +30,7 @@ import javax.inject.Singleton;
 
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
 import org.omg.IOP.Codec;
+import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -56,7 +57,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * @author G.A.J. van der Plas
  */
 @Singleton
-public class ModulesPresenter implements SwitchViewEventHandler, LoginEventHandler {
+public class ModulesPresenter implements SwitchViewEventHandler {
 
     private final static boolean IFRAME = true;
     
@@ -126,7 +127,6 @@ public class ModulesPresenter implements SwitchViewEventHandler, LoginEventHandl
           if(register == null)
           {
         	  register = eventBus.addHandler(SwitchViewEvent.TYPE, this);
-        	  register = HandlerRegistrations.compose(register, eventBus.addHandler(LoginEvent.TYPE, this));
           }
 
           LOG.info("switch to modules view " + p.getValue());
@@ -268,6 +268,8 @@ public class ModulesPresenter implements SwitchViewEventHandler, LoginEventHandl
           JavaScriptObject o = JSONParser.parseLenient(message).isArray().getJavaScriptObject();
           SwitchViewEvent event = new SwitchViewEvent(SelectedView.TRAIL, o);
           eventBus.fireEvent(event);
+        } else if ("LOGOUT".equals(message)) {
+          eventBus.fireEvent(new LoginEvent(State.LOGOUT));
         }
     }
 
@@ -341,9 +343,18 @@ public class ModulesPresenter implements SwitchViewEventHandler, LoginEventHandl
       return id1.equals(id2);
     }
 
-	@Override
-	public void onLoginEvent(LoginEvent loginEvent) {
-		if (loginEvent.getState() == State.LOGOUT)
-			view.sendMessage("LOGOUT");
-	}
+    Deferred<Boolean> logout;
+    public Promise<Boolean> logout(Promise<Boolean> p) {
+      if (p.getValue() && init != null) {
+        logout = new Deferred<>();
+        view.sendMessage("LOGOUT");
+        return logout.getPromise();
+      }
+      return p;
+    }
+//	@Override
+//	public void onLoginEvent(LoginEvent loginEvent) {
+//		if (loginEvent.getState() == State.LOGOUT)
+//			view.sendMessage("LOGOUT");
+//	}
 }

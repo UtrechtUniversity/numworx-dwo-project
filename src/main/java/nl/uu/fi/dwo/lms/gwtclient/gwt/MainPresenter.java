@@ -16,6 +16,7 @@ import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
@@ -113,6 +114,7 @@ public class MainPresenter {
 
     private MainPresenter.Display display;
 
+    @Inject ModulesPresenter modules;
     @Inject MainPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
@@ -172,6 +174,7 @@ public class MainPresenter {
                 return dialogPromise.getPromise();
             }
         })
+        .then(modules::logout)
         .then(resolved -> { 
             if (resolved.getValue()) {
               return dwoGlobalVars.logout()
