@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -40,18 +41,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.HttpHeaders;
 
-import org.json.simple.parser.JSONParser;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
@@ -81,6 +77,7 @@ public class RegisterForm extends HttpServlet {
   private InternetAddress smtpEmail;
   private RequestDispatcher dispatch;
   private ResourceBundle mailrb;
+  private String registerFree;
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -92,19 +89,25 @@ public class RegisterForm extends HttpServlet {
     String familyName = req.getParameter("familyName");
     String server = req.getRequestURL().toString();
     String form = req.getParameter("form");
-    
+    String locale = req.getParameter("locale");
+    ResourceBundle mailrb = this.mailrb;
     JwtBuilder claim = Jwts.builder().setIssuer(server)
       .setSubject(email)
       .claim("givenName", givenName)
       .claim("insertion", insertion)
       .claim("familyName", familyName);
+    if (locale != null) {
+      claim.claim("locale", locale);
+      mailrb = ResourceBundle.getBundle("nl.uu.fi.dwo.register.server.mail", Locale.forLanguageTag(locale));
+    }
+    String organization="";
 // case DEMO
     if (DEMO.equals(form)) {
       // organization/brin
-      String organization = req.getParameter(ORGANIZATION);
+      organization = req.getParameter(ORGANIZATION);
       String brin = req.getParameter("Brinnummer"); // name from teamleader
       brin = generateBrin(brin, organization);
-      organization += " " + DEMO;
+      organization += " (" + DEMO +")";
       try { 
     	  DomSchoolFull school = manager.getSchool(brin);
     	  if (school != null && ! organization.equals(school.getSchoolName())) {
@@ -154,6 +157,9 @@ public class RegisterForm extends HttpServlet {
     try {
     StringBuffer url = req.getRequestURL();
     url.append("?j=").append(jwt);
+    if (locale != null) {
+      url.append("&locale=").append(URLEncoder.encode(locale));
+    }
     MimeMessage message = new MimeMessage(session);
 
     //FIXME i18n
@@ -165,7 +171,13 @@ public class RegisterForm extends HttpServlet {
     }
     
     
-    content += MessageFormat.format(mailrb.getString("mail.body"), url, givenName, insertion, familyName, abo);
+    String format;
+    try {
+      format = mailrb.getString("mail.body."+form); // demo free
+    } catch (Exception e) {
+      format = mailrb.getString("mail.body.FREE");  // wiswise free
+    }
+    content += MessageFormat.format(format, url, givenName, insertion, familyName, abo, organization);
     message.setContent(content, mailrb.getString("mail.mime"));
     message.setFrom(smtpEmail);
     message.setSubject(mailrb.getString("mail.subject"));
@@ -265,10 +277,9 @@ private String encode(String string) {
 // Key
     byte[] bytes = new byte[32];
     key = Keys.hmacShaKeyFor(bytes);
-// FORM:
-    String registerFree = getInitParameter("register.free");
+    registerFree = getInitParameter("register.free");
     LOG.info("register.free = " + registerFree);
-    if (registerFree == null) registerFree="/RegisterFree.html";
+    if (registerFree == null) registerFree="/RegisterFree.jsp";
     dispatch = getServletContext().getRequestDispatcher(registerFree);
 // I18N
     mailrb = ResourceBundle.getBundle("nl.uu.fi.dwo.register.server.mail");
@@ -297,7 +308,15 @@ private String encode(String string) {
     String givenName = body.get("givenName", String.class);
     String insertion = body.get("insertion", String.class);
     String familyName = body.get("familyName", String.class);
-    
+    String locale = body.get("locale", String.class);
+    ResourceBundle mailrb = this.mailrb;
+    if (locale != null) {
+      mailrb = ResourceBundle.getBundle("nl.uu.fi.dwo.register.server.mail", Locale.forLanguageTag(locale));
+      if ( !locale.equals(req.getParameter("locale"))) return;
+      req.setAttribute("locale", locale);
+    } else {
+      req.setAttribute("locale", "nl");
+    }
     String suggestion = givenName + insertion + familyName;
     suggestion = suggestion.toLowerCase();
     suggestion = suggestion.replaceAll("\\W", "");
