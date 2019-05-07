@@ -55,6 +55,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -347,7 +348,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 
 	private void adviseMe() {
-		if (logging != null) {
+		if (logging != null && comRoot.getLessonMode() == LessonMode.normal) {
 			String id = logging.getLogID();
 			if(! id.startsWith("adviseMe:")) 
 				return;
