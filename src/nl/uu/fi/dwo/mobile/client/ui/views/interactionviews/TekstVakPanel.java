@@ -56,6 +56,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.dom.client.Touch;
@@ -922,16 +923,22 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			}
 		}
 		
+		
+		
 		mainPanel2.add(mainPanel);
 		mainPanel2.setWidgetLeftRight(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 		mainPanel2.setWidgetTopBottom(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 		
 		if(sleepbaar && sleepHandle)
 		{	crosshair = new Image(DWOplayer.DWO_BUNDLE.crosshair().getSafeUri());
+			crosshair.getElement().getStyle().setProperty("WebkitUserDrag", "none");
 			mainPanel2.add(crosshair);
 			mainPanel2.setWidgetLeftWidth(crosshair, 0, Style.Unit.PX, 20, Style.Unit.PX);
 			mainPanel2.setWidgetTopHeight(crosshair, 0, Style.Unit.PX, 20, Style.Unit.PX);
+			
+			
 		}
+		
 		if(hoek != 0)
 		{	//voor Chrome, Firefox
 			mainPanel2.getElement().getStyle().setProperty("transform", "rotate(" + hoek + "deg)");
@@ -1276,7 +1283,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		
 		
 	
-		if (selectable || (sleepbaar && !sleepHandle))
+		if (selectable || (sleepbaar && !sleepHandle)) //
 			zetKlikPanel();
 
 		if(inklapbaar)
@@ -3548,7 +3555,7 @@ private Object CamelCase(String name) {
 			mainPanel2.setWidgetLeftRight(mainPanel, randDikte - 5, Style.Unit.PX, randDikte - 5, Style.Unit.PX);
 			mainPanel2.setWidgetTopBottom(mainPanel, randDikte - 5, Style.Unit.PX, randDikte - 5, Style.Unit.PX);
 			if(sleepbaar && sleepHandle)
-			{	mainPanel2.setWidgetLeftWidth(crosshair, - 5, Style.Unit.PX, 20, Style.Unit.PX);
+			{	mainPanel2.setWidgetLeftWidth(crosshair, -5, Style.Unit.PX, 20, Style.Unit.PX);
 				mainPanel2.setWidgetTopHeight(crosshair, - 5, Style.Unit.PX, 20, Style.Unit.PX);
 			}
 		}
@@ -4372,15 +4379,18 @@ private Object CamelCase(String name) {
 		{
 			LOG.info("TekstVakPanel.TouchHandler.onTouchEnd()");
 			
+			Touch touch = e.getTouches().get(0);
+			
 			e.stopPropagation();
 			if(!editable) return;
 			if(sleepbaar || selectable)
 				e.preventDefault();
 			
-			if(sleepbaar && sleepHandle)
-			{	e.preventDefault();
-				return;
-			}
+//			if(sleepbaar && sleepHandle && (touch.getPageX() - getAsPanel().getAbsoluteLeft() > 20 || 
+//					touch.getPageY() - getAsPanel().getAbsoluteTop() > 20))
+//			{	e.preventDefault();
+//				return;
+//			}
 			int eventX = locationX + startX;
 			int eventY = locationY + startY;
 			mouseUpTouchEndAction(eventX, eventY);
