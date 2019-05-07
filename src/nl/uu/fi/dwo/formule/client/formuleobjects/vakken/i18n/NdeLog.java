@@ -24,9 +24,16 @@ public class NdeLog implements Localizable {
         */
 
 		child0.setPosition( p.getfStr() + child1.width + 3*fm.getAscent()/4, 0);
-        child1.setPosition( 5+p.getfStr(), p.getAsHoogte()+(child1.height/2-child1.getAsHoogte()));
-		
-        p.setSize(2*fm.getAscent()/3 + child1.width + p.getfStr() + child0.width + fm.getAscent()/2 , child1.y + child1.height);
+        child1.setPosition( 5+p.getfStr(), p.getAsHoogte()-(child1.height/2));
+//		if (child1.y<0) {
+//		  child0.y -= child1.y;
+//		  p.setAsHoogte(p.getAsHoogte()-child1.y);
+//          child1.y = 0;
+//		}
+        
+        
+        
+        p.setSize(2*fm.getAscent()/3 + child1.width + p.getfStr() + child0.width + fm.getAscent()/2 , Math.max(child1.y + child1.height, child0.y + child0.height));
 	}
 	// if language is 'default' grondtal als subscript
 	
@@ -39,7 +46,7 @@ public class NdeLog implements Localizable {
 	}
 
 	public int getLogY(NdeLogVak p) {
-		return 0;
+		return p.getChild(0).y;
 	}
 
 	public int getAsHoogte(NdeLogVak p) {
