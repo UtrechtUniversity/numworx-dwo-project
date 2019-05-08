@@ -37,7 +37,7 @@
     	<when-type-is class="nl.uu.fi.dwo.ideas.client.IdeasIF" />
     </replace-with>
  
-    <set-property name="gwt.logging.enabled" value="TRUE"/>
+    <set-property name="gwt.logging.enabled" value="FALSE"/>
 	<set-property name="gwt.logging.logLevel" value="FINEST"/>
 
 <!-- deze -->
