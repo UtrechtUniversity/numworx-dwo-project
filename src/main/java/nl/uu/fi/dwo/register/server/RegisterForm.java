@@ -90,6 +90,7 @@ public class RegisterForm extends HttpServlet {
     String server = req.getRequestURL().toString();
     String form = req.getParameter("form");
     String locale = req.getParameter("locale");
+    if (locale == null) locale = req.getParameter("language"); // XXX smtpservice nog language
     ResourceBundle mailrb = this.mailrb;
     JwtBuilder claim = Jwts.builder().setIssuer(server)
       .setSubject(email)
