@@ -50,7 +50,7 @@
 				C35.2,9.7,38.6,6.3,42.9,6.3z M57.3,48H42V35.5c0-3.8-2.1-6.6-5-8.8c0.9-0.1,3.4-0.1,4.2-0.1c5.9,0,16.1,3,16.1,8.9V48z"/>
 						    		</svg>
 						</g:HTML>
-						<g:HTML ui:field='classes' styleName='{extra.icon}' title='{dw2.MUM_MNU_CLASSES}'>
+						<g:HTML ui:field='classes' styleName='{extra.icon}' title='{dw2.NUM_MNU_CLASSES}'>
 								<svg viewBox="0 0 64 64" class="icon">
 					<path class="st0" d="M56.9,0H7.1C3.2,0,0,3.2,0,7.1v49.8C0,60.8,3.2,64,7.1,64h49.8c3.9,0,7.1-3.2,7.1-7.1V7.1C64,3.2,60.8,0,56.9,0
 					z M19.2,14.2c0-2.8,2.3-5.1,5.1-5.1h15.2c2.8,0,5.1,2.3,5.1,5.1v20.3H19.2V14.2z M6.5,34.5v-7.6h7.6v7.6H6.5z M52.1,54.7h-7.6v-7.6

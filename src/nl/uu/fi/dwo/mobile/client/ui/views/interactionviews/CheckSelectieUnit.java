@@ -599,15 +599,6 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		ObjectMap map = JSONUtilities.wrapMap(launchData);
 		if (map != null)
 		{
-			/*
-			if(launchData.get("juisteSelecties") instanceof ArrayList)
-			{
-				ArrayList<Boolean> juisteSelectiesList = (ArrayList<Boolean>) launchData.get("juisteSelecties");
-				juisteSelecties = new boolean[juisteSelectiesList.size()];
-				for(int i = 0; i < juisteSelectiesList.size(); i++)
-					juisteSelecties[i] = juisteSelectiesList.get(i);
-			}
-			*/
 			if(map.containsKey("juisteSelecties"))
 				juisteSelecties = map.getBooleanArray("juisteSelecties");
 			if(map.containsKey("scoreMax")) 
@@ -666,7 +657,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		if(logOption) {
 			dwologger = new DWOLogger();
 			dwologger.setLogID(logID);
-			dwologger.setClassName("fi.wiskopdr.CheckUnitPanel");
+			dwologger.setClassName("fi.wiskopdr.CheckUnitPanel/" + getAantalSelectieObjecten());
 			dwologger.setMaxScore(scoreMax);
 			dwologger.setLogObjectives(logObjectives);
 			dwologger.setTeltMee(teltMee);

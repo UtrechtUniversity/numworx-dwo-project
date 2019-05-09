@@ -340,4 +340,9 @@ public class LaTransport implements Logging {
 		// TODO Auto-generated method stub
 		
 	}
+
+
+  @Override
+  public void setSMObjectives(String[] objectives) {
+  }
 }

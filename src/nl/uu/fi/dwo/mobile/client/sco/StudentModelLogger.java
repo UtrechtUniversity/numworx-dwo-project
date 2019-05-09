@@ -1,7 +1,11 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
@@ -16,7 +20,12 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.LoggingProvider;
 import nl.uu.fi.dwo.mobile.utils.NoLogging;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 
 public class StudentModelLogger implements Logging {
@@ -45,6 +54,7 @@ public class StudentModelLogger implements Logging {
 	private static final String SUCCESS = "success";
 	private String logID;
 	private boolean[][] objectives;
+	private Collection<String> smobjectives;
 	private static Map<String,StudentModelLogger> all = new TreeMap<>();
 // strategy, compatible with studentmodel;
 	private int attempts;
@@ -107,46 +117,96 @@ public class StudentModelLogger implements Logging {
 		addToSet();
 	}
 
-	public void accumulateScore(DomStudentModelStructureScore studentModel) {
-		for ( int i = 0; i < objectives.length; i++) {
-			for ( int j = 0; j < objectives[i].length; j++) {
-				if (objectives[i][j]) {
-					DomStudentModelScore<?> s = studentModel.getCategories().get(i).getObjectives().get(j);
-// more strategie
-					if(attempts > 0) {
-						s.setCount(s.getCount()+1);
-						s.setScore(s.getScore()+score/attempts);
-					}
-				}
-			}
-		}
-	}
+//	public void accumulateScore(DomStudentModelStructureScore studentModel) {
+//		for ( int i = 0; i < objectives.length; i++) {
+//			for ( int j = 0; j < objectives[i].length; j++) {
+//				if (objectives[i][j]) {
+//					DomStudentModelScore<?> s = studentModel.getCategories().get(i).getObjectives().get(j);
+//// more strategie
+//					if(attempts > 0) {
+//						s.setCount(s.getCount()+1);
+//						s.setScore(s.getScore()+score/attempts);
+//					}
+//				}
+//			}
+//		}
+//	}
 	
 	public static void accumulateAllScores(DomStudentModelStructureScore studentModel, Memento memento) {
 		ObjectMap map = JSONUtilities.wrapMap(memento.getLogState());
 		for(String name: map.keySet()) {
 			ObjectMap logItem = map.getObjectMap(name);
-			ObjectList objectives = logItem.getObjectList(DWOLogger.LOG_OBJECTIVES);
-			if(objectives == null || !logItem.containsKey(DWOLogger.LOG_ATTEMPTS_COUNT)) continue;
-			int attempts = logItem.getInt(DWOLogger.LOG_ATTEMPTS_COUNT);
-			if(attempts > 0) {
-				double score = logItem.getDouble(SUCCESS_SCORE);
-				int size = objectives.size();
-				for (int i = 0; i < size; i++ ) {
-					boolean[] objective = objectives.getBooleanArray(i);
-					for( int j = 0; j < objective.length; j++) {
-						if(objective[j]) {
-							DomStudentModelScore<?> s = studentModel.getCategories().get(i).getObjectives().get(j);
-							s.setCount(s.getCount()+1);
-							s.setScore(s.getScore()+score/attempts);
-						}
-					}
-				}
+			if(!logItem.containsKey(DWOLogger.LOG_ATTEMPTS_COUNT)) continue;
+			String[] smObjectives = logItem.getStringArray(DWOLogger.SM_OBJECTIVES);
+			if (smObjectives != null ) {
+			    viaSMObjectives(studentModel, logItem, smObjectives, memento.pmodel.getValue().getModelStructure());
+			} else {
+              ObjectList objectives = logItem.getObjectList(DWOLogger.LOG_OBJECTIVES);			
+              if ( objectives != null ) viaObjectives(studentModel, logItem, objectives);
 			}
 		}
 	}
 
+  private static void viaSMObjectives(DomStudentModelStructureScore studentModel, ObjectMap logItem,
+    String[] sm, DomStudentModelStructure modelStructure) {
+    int attempts = logItem.getInt(DWOLogger.LOG_ATTEMPTS_COUNT);
+    if (attempts <= 0) return;
+    double score = logItem.getDouble(SUCCESS_SCORE);
+    Collection<String> ids = new TreeSet<>(Arrays.asList(sm));
+    List<DomStudentModelCategory> cat = modelStructure.getCategories(); List<DomStudentModelCategoryScore> catScore = studentModel.getCategories();
+    int size = cat.size();
+    for (int i = 0; i < size; i++ ) {
+      List<DomStudentModelObj> obj = cat.get(i).getObjectives(); List<DomStudentModelObjectiveScore> objScore = catScore.get(i).getObjectives();
+      viaSMObjectives(obj, objScore, ids, attempts, score);
+    }
+    
+    
+}
+
+  private static void viaSMObjectives(List<DomStudentModelObj> obj,
+      List<DomStudentModelObjectiveScore> objScore, Collection<String> ids, int attempts,
+      double score) {
+    int size = obj.size();
+    for (int i = 0; i < size; i++) {
+      DomStudentModelObj item = obj.get(i); DomStudentModelObjectiveScore s = objScore.get(i);
+      String id = item.getInfo().getId();
+      if (ids.contains(id)) {
+        s.setCount(s.getCount()+1);
+        s.setScore(s.getScore()+score/attempts);
+      }
+      List<DomStudentModelObj> o = item.getObjectives(); List<DomStudentModelObjectiveScore> os = s.getChildren();
+      if (o != null && os != null) {
+        viaSMObjectives(o, os, ids, attempts, score);
+      }
+    }
+    
+  }
+
+  private static void viaObjectives(DomStudentModelStructureScore studentModel, ObjectMap logItem,
+      ObjectList objectives) {
+    int attempts = logItem.getInt(DWOLogger.LOG_ATTEMPTS_COUNT);
+    if(attempts > 0) {
+    	double score = logItem.getDouble(SUCCESS_SCORE);
+    	int size = objectives.size();
+    	for (int i = 0; i < size; i++ ) {
+    		boolean[] objective = objectives.getBooleanArray(i);
+    		for( int j = 0; j < objective.length; j++) {
+    			if(objective[j]) {
+    				DomStudentModelScore<?> s = studentModel.getCategories().get(i).getObjectives().get(j);
+    				s.setCount(s.getCount()+1);
+    				s.setScore(s.getScore()+score/attempts);
+    			}
+    		}
+    	}
+    }
+  }
+
 	public static void destroy() {
 		all.clear();
 	}
+
+  @Override
+  public void setSMObjectives(String[] objectives) {
+    smobjectives = new TreeSet<>(Arrays.asList(objectives));
+  }
 }

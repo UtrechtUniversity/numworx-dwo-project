@@ -761,7 +761,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 			if(logOption) {
 				dwologger = new DWOLogger();
 				dwologger.setLogID(logID);
-				dwologger.setClassName("fi.wiskopdr.CheckSleepUnitPanel");
+				dwologger.setClassName("fi.wiskopdr.CheckSleepUnitPanel/" + getAantalSleepObjects() + "," + getAantalDoelObjects());
 				dwologger.setMaxScore(scoreMax);
 				dwologger.setLogObjectives(logObjectives);
 				dwologger.setTeltMee(teltMee);

@@ -20,6 +20,7 @@ public class DWOLogger implements Logging {
 	
 	
 	static final String LOG_OBJECTIVES = "logObjectives";
+	static final String  SM_OBJECTIVES =  "smObjectives";
 	private static final String LOGKEY_ANSWER = "logAnswer";
 	private static final String LOGKEY_MAXSCORE = "logMaxScore";
 	private static final String START = "0";
@@ -35,7 +36,6 @@ public class DWOLogger implements Logging {
 	private JSONArray  attempts;
 	private JSONNumber maxScore;
 	private JSONString logIDLabel;
-	private boolean[][] logObjectives;
 	private int errorCount, attemptsCount;
 	private JSONBoolean teltMee;
 
@@ -197,7 +197,6 @@ public class DWOLogger implements Logging {
 	
 	@Override
 	public void setLogObjectives(boolean[][] logObjectives) {
-		this.logObjectives = logObjectives;
 		if(logObjectives != null)
 			map.put(LOG_OBJECTIVES, JSONUtilities.toJSONArray(logObjectives));
 		if(delegate != null)
@@ -235,4 +234,13 @@ public class DWOLogger implements Logging {
 	public String getLogID() {
 		return logID;
 	}
+
+  @Override
+  public void setSMObjectives(String[] objectives) {
+    if(objectives != null)
+      map.put(SM_OBJECTIVES, JSONUtilities.toJSONArray(objectives));
+    if (delegate != null) {
+      setSMObjectives(objectives);
+    }
+  }
 }

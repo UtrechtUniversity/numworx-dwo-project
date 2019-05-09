@@ -15,5 +15,6 @@ public interface Logging {
 
 	String getLogID();
 
-	void setLogObjectives(boolean[][] objectives);
+	void setLogObjectives(boolean[][] objectives);	
+	void setSMObjectives(String[] objectives);
 }

@@ -31,4 +31,8 @@ public final class NoLogging implements Logging {
 	public void setLogObjectives(boolean[][] objectives) {
 	}
 
+  @Override
+  public void setSMObjectives(String[] objectives) {
+  }
+
 }
