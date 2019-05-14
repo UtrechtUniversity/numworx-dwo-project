@@ -30,6 +30,7 @@ import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
+import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -126,7 +127,7 @@ public void onMessage(MessageEvent event) {
     else presenter.goTo(getHomePlace());
   } else if (Actions.LOGOUT.name().equals(message)) {
       LOG.info("logout recieved");
-	  presenter.goTo(upPlace);
+	  presenter.goTo(getHomePlace());
 	  LOG.info("wait");
 	  agent.barrier().onResolve(() -> { LOG.info("execute");Actions.LOGOUT.execute();});
 	  LOG.info("waiting");
