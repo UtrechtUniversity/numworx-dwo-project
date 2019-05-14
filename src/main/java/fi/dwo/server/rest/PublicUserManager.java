@@ -819,7 +819,7 @@ public class PublicUserManager {
                 session = Session.getDefaultInstance(props);
             }
             // uncomment for debugging infos to stdout
-            // mailSession.setDebug(true);
+            session.setDebug(true);
             Transport transport = session.getTransport();
 
             StringBuffer url = request.getRequestURL();
