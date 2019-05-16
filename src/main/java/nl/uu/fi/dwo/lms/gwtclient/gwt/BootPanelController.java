@@ -327,9 +327,10 @@ public class BootPanelController {
             public Promise<Void> call(Promise<DomHeartBeat> resolved) throws Exception {
                 DomHeartBeat beat = resolved.getValue();
                 if (flag == 0) {
-                    LOG.log(Level.FINE, "unmatching version");
-                    Window.alert("outdated version, reloading");
-                    forceReload();
+                    LOG.log(Level.FINE, "unmatching version flag=0");
+                    if (Window.confirm("outdated version, reloading"))
+                    	forceReload();
+                    return null;
                 }
                 if (beat.getHtmlClientVersion() == null
                         || (BUILD.version != null && BUILD.version.equals(beat.getHtmlClientVersion()))) {
@@ -337,9 +338,9 @@ public class BootPanelController {
                     LOG.log(Level.FINE, "matching version");
                 } else {
                     //incompatible version
-                    LOG.log(Level.FINE, "unmatching version");
-                    Window.alert("outdated version, reloading");
-                    forceReload();
+                    LOG.log(Level.FINE, "unmatching version " + beat.getHtmlClientVersion() + " " + BUILD.version);
+                    if (Window.confirm("outdated version, reloading?"))
+                    	forceReload();
                     //return false;
                 }
                 return null;
