@@ -69,7 +69,9 @@ public class RegisterForm extends HttpServlet {
   private static final String BRIN = "brin";
   private static final String ORGANIZATION = "organization";
   private static final Charset UTF_8 = StandardCharsets.UTF_8;
-  private static final String WISWISE_FREE = "WisWise-FREE";
+  private static final String WISWISE_FREE = "WISWISE-FREE";
+  private static final String ADMINISTRATIE = "administratie@numworx.nl";
+  private static final String WIM = "w.vanvelthoven@numworx.nl";
   private final Logger LOG = Logger.getLogger(getClass().getName());
   SystemManager manager;
   Session session;
@@ -103,7 +105,7 @@ public class RegisterForm extends HttpServlet {
     }
     String organization="";
 // case DEMO
-    if (DEMO.equals(form)) {
+    if (DEMO.equalsIgnoreCase(form)) {
       // organization/brin
       organization = req.getParameter(ORGANIZATION);
       String brin = req.getParameter("Brinnummer"); // name from teamleader
@@ -143,7 +145,7 @@ public class RegisterForm extends HttpServlet {
 		}
       }
       claim = claim.claim(BRIN,brin).setId(DEMO).claim("role", RoleType.TEACHER.name());     
-    } else if (WISWISE_FREE.equals(form)) {
+    } else if (WISWISE_FREE.equalsIgnoreCase(form)) {
     	claim = claim.setId(WISWISE_FREE)
     			.claim("schoolClass", "Klas Free")
     			.claim("role", RoleType.STUDENT.name())
@@ -183,6 +185,8 @@ public class RegisterForm extends HttpServlet {
     message.setFrom(smtpEmail);
     message.setSubject(mailrb.getString("mail.subject"));
     message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+    message.addRecipient(Message.RecipientType.BCC, new InternetAddress(ADMINISTRATIE));
+    message.addRecipient(Message.RecipientType.BCC, new InternetAddress(WIM));
     Transport.send(message);
 
     } catch (MessagingException e) {
@@ -204,6 +208,8 @@ public class RegisterForm extends HttpServlet {
 		message.setSubject(org);
 		message.setFrom(smtpEmail);
 		message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+		message.addRecipient(Message.RecipientType.BCC, new InternetAddress(ADMINISTRATIE));
+		message.addRecipient(Message.RecipientType.BCC, new InternetAddress(WIM));
 		message.setContent("Er is een probleem met de aanmaak van de demo-omgeving\nProbeer het opnieuw", "text/plain");
 		Transport.send(message);
 	} catch (Exception e) {
