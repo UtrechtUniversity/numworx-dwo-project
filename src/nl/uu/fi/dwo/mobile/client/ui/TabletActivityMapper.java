@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.ExamModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.FlatModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.GuestActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.LogoutActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ReloginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ScoActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.SearchActivity;
@@ -18,6 +19,7 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.ViewCourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.LogoutPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SearchPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
@@ -49,6 +51,9 @@ public class TabletActivityMapper implements ActivityMapper
 	@Override
 	public Activity getActivity(Place place)
 	{
+		if (place instanceof LogoutPlace) {
+			return new LogoutActivity();
+		}
 		if (place instanceof nl.uu.fi.dwo.mobile.client.ui.places.guest)
 		{
 			return new GuestActivity(clientFactory);
