@@ -541,12 +541,15 @@ public class LeerdomeinEditPanel extends JPanel {
 
   DomStudentModelStructure structure;
   public void setModel(DomStudentModelStructure model) {
+    String locale = getLocale().getLanguage();
     if (model == null) {
       model = new DomStudentModelStructure();
       model.setInfo(new DomStudentModelContextInfo(new TreeMap<>(), new TreeMap<>()));
+      model.getInfo().getTitle().put(locale, "Model");
+      model.getInfo().getDescription().put(locale, "");
+      
       model.setCategories(new ArrayList<>());
     }
-    String locale = getLocale().getLanguage();
     language.setSelectedItem(locale);
     NodeVector vector = new NodeVector(model.getCategories(), model.getInfo(), locale);
     this.model.setRoot(root = new DynamicUtilTreeNode(vector, vector));
