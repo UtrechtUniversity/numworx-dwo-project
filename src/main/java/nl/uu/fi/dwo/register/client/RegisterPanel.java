@@ -40,13 +40,13 @@ public class RegisterPanel extends ResizeComposite {
 
 	final private boolean isfree;
 	final private boolean demo;
-	private static final String WISWISE_FREE = "WisWise-FREE";
+	private static final String WISWISE_FREE = "WISWISE-FREE";
 	final private boolean wiswise;
 	
 	public RegisterPanel(boolean isfree, boolean saml) {
 	    this.isfree = isfree;
-	    demo = "DEMO".equals(getCookie("form"));
-	    wiswise = WISWISE_FREE.equals(getCookie("form"));
+	    demo = "DEMO".equalsIgnoreCase(getCookie("form"));
+	    wiswise = WISWISE_FREE.equalsIgnoreCase(getCookie("form"));
 	    
 		initWidget(uiBinder.createAndBindUi(this));
 		fixInputs();
