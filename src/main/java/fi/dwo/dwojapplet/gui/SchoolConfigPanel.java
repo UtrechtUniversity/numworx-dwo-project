@@ -99,6 +99,7 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
             dom.setSchoolRights(sb.toString());
             dom.setId(PersistentSchool.buildPersistenceId((long) school.getSchoolID()));
             GuiCreator.instance().getSchoolManager().updateSchool(dom);
+            school.setRights(sb.toString());
         }
         catch (Exception e) {
             LOG.log(Level.SEVERE, null, e);
