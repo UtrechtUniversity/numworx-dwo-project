@@ -5,6 +5,8 @@ package fi.dwo.commons.persistence;
 
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
+
+import fi.dwo.commons.util.UEscape;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.util.GensonMapConverter;
 import org.eclipse.persistence.mappings.DatabaseMapping;
@@ -20,7 +22,9 @@ public class JpaEclipseConverterDomStudentModelStructure implements Converter {
     
     @Override
     public Object convertObjectValueToDataValue(Object objectValue, Session session) {        
-        return g.serialize(objectValue);
+        String object = g.serialize(objectValue);
+        object = UEscape.convertUEsc(object);
+        return object;
     }
 
     @Override
