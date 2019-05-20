@@ -22,7 +22,7 @@
 	<!-- <extend-property name="locale" values="en"/> -->
 
 	<!-- Specify the app entry point class. -->
-	<entry-point class='nl.uu.fi.dwo.account.client.Account' />
+	<entry-point class='nl.uu.fi.dwo.account.client.XapiTest' />
 	<!-- add entry point for each app in an external jar -->
 
 	<!-- local settings -->
