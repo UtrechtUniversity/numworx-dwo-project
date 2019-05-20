@@ -325,7 +325,7 @@
 						</manifest>
 						<manifestEntries>
 							<Implementation-Build>${buildNumber}</Implementation-Build>
-							<JavaClient-Version>${project.version}</JavaClient-Version>
+							<JavaClient-Version>${DWOJClientVersion}</JavaClient-Version>
 							<HtmlClient-Version>${DWOGwtClientVersion}</HtmlClient-Version>
 							<DWOplayer-Version>${DWOplayerVersion}</DWOplayer-Version>
 							<Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
