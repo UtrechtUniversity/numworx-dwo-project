@@ -134,6 +134,7 @@ public class GwtRestVars {
      */
     public void setServer(String server) {
         this.server = server;
+        Defaults.setServiceRoot(this.getServer());
     }
 
     /**
