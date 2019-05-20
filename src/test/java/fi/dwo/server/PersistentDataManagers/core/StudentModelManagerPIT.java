@@ -150,10 +150,10 @@ public class StudentModelManagerPIT {
         DomStudentModelStructure model = new DomStudentModelStructure();
         Map<String, String> titleMap = new HashMap<>();
         Map<String, String> descrMap = new HashMap<>();
-        titleMap.put("nl", "A model");
-        titleMap.put("en", "A model");
-        descrMap.put("nl", "A description");
-        descrMap.put("en", "A description");
+        titleMap.put("nl", "A mödel");
+        titleMap.put("en", "A mødel");
+        descrMap.put("nl", "A déscription");
+        descrMap.put("en", "A dèscription");
         model.setInfo(new DomStudentModelContextInfo(titleMap, descrMap));
         List<DomStudentModelCategory> catList = new ArrayList<>(3);
         model.setCategories(catList);
@@ -172,10 +172,10 @@ public class StudentModelManagerPIT {
                 {
                     Map<String, String> objTitle = new HashMap<>();
                     Map<String, String> objDescr = new HashMap<>();
-                    objTitle.put("nl", "A obj " + o);
-                    objTitle.put("en", "A obj " + o);
-                    objDescr.put("nl", "A description");
-                    objDescr.put("en", "A description");
+                    objTitle.put("nl", "A öbj " + o);
+                    objTitle.put("en", "A öbj " + o);
+                    objDescr.put("nl", "A dëscription");
+                    objDescr.put("en", "A dëscription");
                     objList.add(new DomStudentModelObj());
                     objList.get(o).setInfo(new DomStudentModelContextInfo(objTitle, objDescr));
                 }
@@ -213,6 +213,7 @@ public class StudentModelManagerPIT {
             System.out.println("reading modelA ");
             PersistentStudentModelContext modelD = StudentModelContextManager.findEntity(modelA.getModelID());
             assertEquals(modelA.getModelID(), modelD.getModelID());
+            assertEquals(modelA.getModelStructure().getInfo().getTitle(), modelD.getModelStructure().getInfo().getTitle());
 //            JSONAssert.assertEquals(modelA.getModelStructure().toJSONString(), modelD.getModelStructure().toJSONString(), JSONCompareMode.NON_EXTENSIBLE);
             //should succeed            
         } catch (Exception e) {

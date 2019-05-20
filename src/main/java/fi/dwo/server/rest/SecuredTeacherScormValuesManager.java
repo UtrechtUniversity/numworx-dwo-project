@@ -25,6 +25,7 @@ import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.util.UEscape;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
@@ -33,13 +34,10 @@ import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.persistence.CmiConvert;
-import fi.dwo.server.persistence.DbAccess;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
-import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherScormValues;
-import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.entities.RestTeacherScormValues;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -202,7 +200,7 @@ public class SecuredTeacherScormValuesManager {
 				pssc.setSessionTime(CMI.to1_2Timex(CMI.from2004Time(value)));
 				break;
 			case SUSPEND_DATA:
-				value = DbAccess.convertUEsc(value);
+				value = UEscape.convertUEsc(value);
 				if(pssd == null) {
 					pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
 					if(pssd == null) {

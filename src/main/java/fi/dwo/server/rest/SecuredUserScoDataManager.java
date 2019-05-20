@@ -43,6 +43,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.util.UEscape;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
@@ -443,7 +444,7 @@ public class SecuredUserScoDataManager {
 				break;
 			case SUSPEND_DATA:
 				try {
-					value = DbAccess.convertUEsc(value);
+					value = UEscape.convertUEsc(value);
 					if(pssd == null) {
 						pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
 						if(pssd == null) {
@@ -541,7 +542,7 @@ public class SecuredUserScoDataManager {
 		        JsonObject newObject = Json.createPatch(patch).apply(oldObject);
 				StringWriter newValue = new StringWriter();
 				Json.createWriter(newValue).write(newObject);
-				ssData.setSuspendData(DbAccess.convertUEsc(newValue.toString()));
+				ssData.setSuspendData(UEscape.convertUEsc(newValue.toString()));
 				break;
 			default:
 				throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "wrong key");
