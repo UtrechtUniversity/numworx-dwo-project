@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.fusesource.restygwt.client.Defaults;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.shared.GWT;
@@ -77,13 +78,13 @@ public class XapiTest implements EntryPoint, ClickHandler {
       Extensions extensions = new Extensions();
       extensions.objectives = Arrays.asList("obj1", "obj2");
       Statement statement = new Statement();
-      statement.actor = agent;
+      //statement.actor = agent;
       statement.verb = verb;
       statement.object = activity;
       statement.result = result;
       statement.timestamp = FORMAT_8601.format(new Date());
       Context context = new Context();
-      context.registration = "f44018b5-165f-4454-af29-f4231d269c8c"; // Some UUID
+      //context.registration = "f44018b5-165f-4454-af29-f4231d269c8c"; // Some UUID
       context.contextActivities = new ContextActivities();
       context.contextActivities.parent = new ArrayList<>();
       Activity element = new Activity();
@@ -109,10 +110,10 @@ public class XapiTest implements EntryPoint, ClickHandler {
       agent.name = "Wim van Velthoven";
       StatementsQuery q = new StatementsQuery();
       q.verbID = ATTEMPTED;
-      q.agent = agent;
+      //q.agent = agent;
       q.since = FORMAT_8601.format(new Date(System.currentTimeMillis()-1000000000L));
       q.ascending = true;
-      q.registration = "f44018b5-165f-4454-af29-f4231d269c8c";
+      //q.registration = "f44018b5-165f-4454-af29-f4231d269c8c";
       
       Promise<StatementsResult> result;
       
@@ -181,8 +182,8 @@ public class XapiTest implements EntryPoint, ClickHandler {
         
         
         .then (p -> {
-      
-    return rpc.getLRS();}
+          return rpc.getLRS();
+    }
     );
 
     xapi.onResolve(

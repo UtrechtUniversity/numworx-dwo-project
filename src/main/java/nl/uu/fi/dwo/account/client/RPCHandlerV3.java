@@ -221,7 +221,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			});
 	}
 
-	private DomContext getContext() {
+	DomContext getContext() {
 		return context;
 	}
 
