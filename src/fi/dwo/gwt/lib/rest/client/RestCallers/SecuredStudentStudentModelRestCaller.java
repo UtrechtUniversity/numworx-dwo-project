@@ -11,6 +11,7 @@ import org.fusesource.restygwt.client.RestService;
 
 import com.google.gwt.core.client.GWT;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.entities.RestContext;
@@ -27,4 +28,7 @@ public interface SecuredStudentStudentModelRestCaller extends RestService{
 		@Path("/sec:{id}/student/studentmodel/getScore")
 		void getStudentModelDataScore(@PathParam("id") String id, RestStudentModelContextId restModelId, MethodCallback<DomStudentModelDataScore> callback);
 
+		@PUT
+		@Path("/sec:{id}/student/studentmodel/getLRS")
+		void getLRS(@PathParam("id") String id, RestContext rest, MethodCallback<DomLRS> callback);
 }

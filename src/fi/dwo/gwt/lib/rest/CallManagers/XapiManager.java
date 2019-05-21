@@ -40,6 +40,7 @@ public class XapiManager {
   }
   
   public Promise<String> saveStatement(Statement statement) {
+    if(statement.actor == null) statement.actor = getAgent();
     PromiseCallback<List<String>> defer = new PromiseCallback<>();
     service.createStatement(statement, defer);
     return defer.getPromise().map(list -> list.get(0));
@@ -73,6 +74,8 @@ public class XapiManager {
   StatementsResultCodec codec = GWT.create(StatementsResultCodec.class);
   interface AgentCodec extends JsonEncoderDecoder<Agent> {};
   AgentCodec agentCodec = GWT.create(AgentCodec.class);
+
+  private Agent agent;
   
   private Promise<String> sendDocument(String resource, Map<String,String> query, Document document, String method) {
     PromiseCallback<String> callback = new PromiseCallback<>();
@@ -97,6 +100,7 @@ public class XapiManager {
   }
   
   public Promise<?> saveState(StateDocument state) {
+      if (state.agent == null) state.agent = getAgent();
       HashMap<String,String> queryParams = new HashMap<String,String>();
       queryParams.put("stateId", state.id);
       queryParams.put("activityId", state.activity.id);
@@ -106,6 +110,7 @@ public class XapiManager {
   }
 
   public Promise<?> updateState(StateDocument state) {
+    if (state.agent == null) state.agent = getAgent();
     HashMap<String,String> queryParams = new HashMap<String,String>();
     queryParams.put("stateId", state.id);
     queryParams.put("activityId", state.activity.id);
@@ -137,7 +142,7 @@ public class XapiManager {
       public void onSuccess(Method method, String response) {
         StateDocument state = new StateDocument();
         state.activity = activity;
-        state.agent = agent;
+        state.agent = agent == null ? getAgent() : agent;
         state.registration = registration;
         if (method.getResponse().getStatusCode() == 200) {
           state.content =  response;
@@ -169,6 +174,9 @@ public class XapiManager {
     if (q.since != null) r = r.addQueryParam("since", q.since);
     if (q.ascending != null) r = r.addQueryParam("ascending", q.ascending.toString());
     if (q.agent != null) r = r.addQueryParam("agent", encode(q.agent));
+    else {
+      r = r.addQueryParam("agent", encode(getAgent()));
+    }
     //etc
    
     Method method = r.get();
@@ -188,5 +196,16 @@ public class XapiManager {
     });
     
     return callback.getPromise();
+  }
+
+  public void setAuth(String auth) {
+    headers.put("Authorization", auth);
+  }
+  
+  public void setAgent(Agent agent) {
+    this.agent = agent;
+  }
+  public Agent getAgent() {
+    return agent;
   }
 }

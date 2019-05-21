@@ -9,6 +9,7 @@ import com.google.gwt.core.shared.GWT;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredStudentStudentModelRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
@@ -39,4 +40,11 @@ public class SecuredStudentStudentModelManager {
 		return callback.getPromise();
 	}
 	
+	public Promise<DomLRS> getLRS(DomContext context) {
+	  PromiseCallback<DomLRS> callback = new PromiseCallback<>();
+	  RestContext rest = new RestContext();
+	  rest.setRestContext(context);
+	  service.getLRS(PathId.getId(context), rest, callback);
+	  return callback.getPromise();
+	}
 }
