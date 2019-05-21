@@ -3,6 +3,7 @@ package fi.dwo.gwt.lib.rest.CallManagers;
 import java.util.List;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.google.gwt.core.shared.GWT;
 
@@ -47,4 +48,5 @@ public class SecuredStudentStudentModelManager {
 	  service.getLRS(PathId.getId(context), rest, callback);
 	  return callback.getPromise();
 	}
+	
 }

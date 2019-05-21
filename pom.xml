@@ -212,6 +212,13 @@
             <version>0.0.1</version>
             <classifier>sources</classifier>
         </dependency>        
+        <dependency>
+            <groupId>com.owlike</groupId>
+            <artifactId>genson</artifactId>
+            <version>1.4</version>
+            <classifier>sources</classifier>
+            <scope>provided</scope>
+        </dependency> 
     </dependencies>
     <version>2.3.9-SNAPSHOT</version>
 </project>
