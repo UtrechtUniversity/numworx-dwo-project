@@ -46,7 +46,7 @@ public class XapiTest implements EntryPoint, ClickHandler {
     Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionGWTTranslator());
 }
 
-  XapiManager xapi;
+  Promise<XapiManager> xapi;
   private Button safe;
   private Button query;
   private Button state;
@@ -72,7 +72,7 @@ public class XapiTest implements EntryPoint, ClickHandler {
       score.scaled = 1.0;
       result.score = score;
       result.success = Boolean.TRUE;
-      result.duration = "PT10s";
+      result.duration = "PT10S";
       result.response = "42";
       Extensions extensions = new Extensions();
       extensions.objectives = Arrays.asList("obj1", "obj2");
@@ -93,7 +93,7 @@ public class XapiTest implements EntryPoint, ClickHandler {
       element.definition.extensions = extensions;
       context.contextActivities.parent.add(element);
       statement.context = context;
-      xapi.saveStatement(statement).then(p -> {
+      xapi.getValue().saveStatement(statement).then(p -> {
         GWT.log("result id = " + p.getValue());
         return p;
       }, f -> { GWT.log("fail", f.getFailure());
@@ -116,7 +116,7 @@ public class XapiTest implements EntryPoint, ClickHandler {
       
       Promise<StatementsResult> result;
       
-      result = xapi.queryStatements(q);
+      result = xapi.getValue().queryStatements(q);
       result.then(p -> { 
         GWT.log("result " + p.getValue());
         return p; }, p -> { GWT.log("fail", p.getFailure());});
@@ -138,7 +138,7 @@ public class XapiTest implements EntryPoint, ClickHandler {
       state.contentType = "application/json";
       state.id = "StructureScore";
       state.registration = "f44018b5-165f-4454-af29-f4231d269c8c";
-      xapi.saveState(state).then(p -> {GWT.log("okay"); return null;}, p-> GWT.log("failed", p.getFailure()));
+      xapi.getValue().saveState(state).then(p -> {GWT.log("okay"); return null;}, p-> GWT.log("failed", p.getFailure()));
       return;
     }
     if (event.getSource() == load) {
@@ -157,7 +157,7 @@ public class XapiTest implements EntryPoint, ClickHandler {
       state.contentType = "application/json";
       state.id = "StructureScore";
       state.registration = "f44018b5-165f-4454-af29-f4231d269c8c";
-      xapi.getState(state.id, state.activity, state.agent, state.registration).then(p -> {GWT.log("okay " + p.getValue().content); return null;}, p-> GWT.log("failed", p.getFailure()));
+      xapi.getValue().getState(state.id, state.activity, state.agent, state.registration).then(p -> {GWT.log("okay " + p.getValue().content); return null;}, p-> GWT.log("failed", p.getFailure()));
     }
    
   }
@@ -165,12 +165,38 @@ public class XapiTest implements EntryPoint, ClickHandler {
   @Override
   public void onModuleLoad() {
 
-    xapi = new XapiManager();
+//    xapi = new XapiManager();
+    
+    
     Defaults.ignoreJsonNulls();
     Defaults.setAddXHttpMethodOverrideHeader(false);
     GwtRestVars instance = GwtRestVars.instance();
-    xapi.setCredentials("root", "test");
-    xapi.setServer("http://localhost:8080/xapi");
+    RPCHandlerV3 rpc = new RPCHandlerV3(null, 77, false);
+
+    xapi = rpc.login("meesterwim", "paulien")
+        .then(p -> {
+          instance.setCurrentUser(p.getValue().getDomUserFull(), p.getValue().getDomLoginContext().getRealm());   
+          return rpc.getSchoolLogins();
+        })
+        
+        
+        .then (p -> {
+      
+    return rpc.getLRS();}
+    );
+
+    xapi.onResolve(
+      () -> {
+        GWT.log("resolved " , xapi.getFailure());
+      }
+        );
+    
+//    xapi.setCredentials("root", "test");
+//    xapi.setServer("http://localhost:8080/xapi");
+ 
+//    xapi.setAuth("Basic MzdjZTEwMzE2NzQxN2NhODlmNDNkODA1ZDJhNGY3YjU1MzM3MzE3YjpjY2QzODMwYjc1NWJkY2E3ZDJlYzQ5NmQ0ZTkyZWQwYzJlNDljYjRh");
+//    xapi.setServer("/data/xAPI/");
+    
     Button hitme = new Button("SAFE");
     this.safe = hitme;
     hitme.addClickHandler(this);

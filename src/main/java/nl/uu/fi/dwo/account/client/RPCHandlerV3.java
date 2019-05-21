@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
+import org.fusesource.restygwt.client.Defaults;
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -50,6 +51,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserResultsManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserScoContextManager;
 import fi.dwo.gwt.lib.rest.CallManagers.StudentScoDataManager;
 import fi.dwo.gwt.lib.rest.CallManagers.UserResultsManager;
+import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import fi.dwo.gwt.lib.rest.util.Base64;
 
 @SuppressWarnings("deprecation")
@@ -386,4 +388,18 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		return studentModelManager.getStudentModelDataScore(getContext(), id);
 	}
 
+	public Promise<XapiManager> getLRS() {
+	  if (studentModelManager == null) {
+	    return Promises.failed(new IllegalArgumentException());
+	  }
+	  return studentModelManager.getLRS(getContext()).map(lrs -> {
+	    Defaults.ignoreJsonNulls();
+	    Defaults.setAddXHttpMethodOverrideHeader(false);
+	    XapiManager xapi = new XapiManager();
+	    xapi.setServer(lrs.getEndpoint());
+	    xapi.setAuth(lrs.getAuth());
+	    xapi.setAgent(lrs.getAgent());
+	    return xapi;
+	  });
+	}
 }
