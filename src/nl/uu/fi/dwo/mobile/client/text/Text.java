@@ -117,7 +117,7 @@ public interface Text extends Constants {
 	@DefaultStringValue("Niet ingelogd")
 	String guest();
 	
-	@DefaultStringValue("<p>Dit is een toets</p><p>Ga naar de <a href='exam/' target='_top' >beveiligde toets omgeving</a> als je deze toets wilt maken</p>")
+	@DefaultStringValue("<p>Dit is een toets</p><p>Ga naar de <a href='#Exam:' >beveiligde toets omgeving</a> als je deze toets wilt maken</p>")
 	String UNSAFE_MODULE_HTML();
 	
 	@DefaultStringValue("Leerdomeinen")
