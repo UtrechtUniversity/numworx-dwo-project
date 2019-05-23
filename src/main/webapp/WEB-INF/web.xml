@@ -321,6 +321,19 @@
   		<param-value>/dwo/register/RegisterFree.html</param-value>
   	</init-param>
   </servlet>
+  <servlet>
+    <servlet-name>xapi</servlet-name>
+    <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
+    <init-param>
+      <param-name>targetUri</param-name>
+      <param-value>https://repos.dwo.nl/data/xAPI</param-value>
+    </init-param>
+    <init-param>
+      <param-name>log</param-name>
+      <param-value>true</param-value>
+    </init-param>
+</servlet>
+
     <!--
     servlet mappings 
     -->
@@ -426,6 +439,10 @@
 	 	<servlet-name>RegisterForm</servlet-name>
 	  	<url-pattern>/dwo/register/registerform</url-pattern>
 	</servlet-mapping>
+    <servlet-mapping>
+   	  <servlet-name>xapi</servlet-name>
+   	  <url-pattern>/data/xAPI/*</url-pattern>
+   </servlet-mapping>
 <!--    
     <security-constraint>
         <web-resource-collection>
