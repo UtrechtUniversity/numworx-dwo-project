@@ -16,7 +16,7 @@
         <maven.test.skip>true</maven.test.skip>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <DwoGWTVersion>2.3.9-SNAPSHOT</DwoGWTVersion>
+        <DwoGWTVersion>2.3.9</DwoGWTVersion>
     </properties>
     <build>
         <outputDirectory>target/${project.build.finalName}/WEB-INF/classes</outputDirectory>
@@ -92,7 +92,7 @@
                         <webapp> 
                             <groupId>nl.uu.fi.dwo</groupId>
                             <artifactId>DWOServer</artifactId>
-                            <version>2.1.8-SNAPSHOT</version>
+                            <version>2.1.9</version>
                             <type>war</type>
                             <asWebapp>true</asWebapp> 
                         </webapp> 
