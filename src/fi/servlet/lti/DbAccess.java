@@ -1,6 +1,7 @@
 package fi.servlet.lti;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -122,7 +123,7 @@ public class DbAccess {
       Cookie orgid = new Cookie(DWO_SAML_ORGANIZATION_ID, orgidStr);
       orgid.setPath(path);
       orgidStr = "\"" + orgidStr + "\"";
-      Cookie org = new Cookie(DWO_SAML_ORGANIZATION, organization);
+      Cookie org = new Cookie(DWO_SAML_ORGANIZATION, u(organization));
       org.setPath(path);
       response.addCookie(user);
       response.addCookie(orgid);
@@ -152,9 +153,15 @@ public class DbAccess {
 	  return false;
 	}
 	
-	
-	
-	private String s(Object o) {
+	private String u(String string) {
+	  try {
+      return URLEncoder.encode(string, "UTF-8").replace("+", "%20");
+    } catch (UnsupportedEncodingException e) {
+    }
+    return string;
+  }
+
+  private String s(Object o) {
     if(o == null) return "";
     return String.valueOf(o);
   }
