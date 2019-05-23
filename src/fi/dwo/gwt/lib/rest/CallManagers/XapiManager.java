@@ -45,6 +45,15 @@ public class XapiManager {
     service.createStatement(statement, defer);
     return defer.getPromise().map(list -> list.get(0));
   }
+  
+  public Promise<List<String>> saveStatements(List<Statement> list) {
+    PromiseCallback<List<String>> defer = new PromiseCallback<>();
+    for(Statement i:list) {
+      if (i.actor == null) i.actor = getAgent();
+    }
+    service.createStatements(list, defer);
+    return defer.getPromise();
+  }
 
   /**
    * @return the server
