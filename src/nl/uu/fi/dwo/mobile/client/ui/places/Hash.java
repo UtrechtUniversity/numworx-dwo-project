@@ -6,12 +6,14 @@ import com.google.gwt.place.shared.PlaceTokenizer;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public interface Hash {
-	enum Type { c(new c.Tokenizer()), s(new s.Tokenizer());
+	enum Type { c(new c.Tokenizer()), s(new s.Tokenizer()), cs(new cs.Tokenizer());
 		
-		final private PlaceTokenizer<Place> t;
-		Type(PlaceTokenizer t) {this.t = t; }
+		final private PlaceTokenizer<?> t;
+		<T extends Place & Hash>
+		Type(PlaceTokenizer<T> t) {this.t = t; }
+
 		public PlaceTokenizer<Place> getT() {
-			return t;
+			return (PlaceTokenizer<Place>) t;
 		}
 		public Hash getHash(String substring) {
 			return (Hash) t.getPlace(substring);

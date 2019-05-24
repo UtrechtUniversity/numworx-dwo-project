@@ -1,8 +1,11 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -19,13 +22,19 @@ import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.s;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NoCourseView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
@@ -34,6 +43,7 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import com.google.gwt.activity.shared.AbstractActivity;
@@ -46,6 +56,7 @@ import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 
+import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 
 public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, ViewModuleView.Presenter, GotoController {
@@ -64,7 +75,10 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
     @Inject RoleType  role;
     @Inject Provider<NoCourseView> noCourseView;
     @Inject HeaderView headerView;
+    private final PersistenceId where;
+    private Promise<List<DomScoContext>> scoList;
 	@Inject ScoActivity(s where) {
+	    this.where = where.getID();
 		next = new LoginPlace(where);
 		location = where.getLocation();
 	}
@@ -82,6 +96,15 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 		role = clientFactory.getRoleType();
 	}
 
+	DomScoContext findSco(DomCoursesOfSchoolClass csc) {
+	  return  csc.getScoContexts().stream()
+	      .filter(entry -> where.equals(entry.getKey()))
+	      .findAny().get().getValue(); 
+	}
+	List<DomScoContext> listScos(DomCoursesOfSchoolClass csc) {
+	  return csc.getScoContexts().stream().map(DomMapEntry::getValue).collect(Collectors.toList());
+	}
+	
 	@Override
 	public void start(final AcceptsOneWidget panel, EventBus eventBus)
 	{
@@ -107,13 +130,21 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 		if(name == null) {
 			name = scoID;
 			Promise<DomScoContext> sco;
+			Promise<DomCoursesOfSchoolClass> course;
 			if (schoolClass != null /*&& item.isFromSchool()*/) { // XXX unsure if isSchool correct
 			  //sco = rpcHandler.getSco(item.getID());
-			  sco = rpcHandler.getScoContextClass(item.getID(), schoolClass)
+			  course = rpcHandler.getScoContextClass(item.getID(), schoolClass)
 			  .filter(p -> !p.getScoContexts().isEmpty())
 // should not happen. Server should prevent this.
-			  .filter(p-> p.getClassCourses().get(0).getValue().getCourseType() != CourseType.assesment)
-			  .map(p -> p.getScoContexts().get(0).getValue());
+			  .filter(p-> p.getClassCourses().get(0).getValue().getCourseType() != CourseType.assesment);
+              sco = course
+			  .map(this::findSco);
+              course.then(p-> { 
+                SelectModuleItem parent = new SelectModuleItem(p.getValue().getCourses().get(0).getValue(), p.getValue().getClassCourses().get(0).getValue());
+                SelectModuleItemHolder.insert(parent);
+                item.setParent(parent);
+                return p;} );
+              scoList = course.map(this::listScos);
 			} else {
 	            sco = rpcHandler.getSco(item.getID())
 	            // temporary		
@@ -122,9 +153,11 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 	            	if(schoolID == null) return true;
 	            	if (school == null) return false;
 	            	return school.getId().equals(schoolID);
-	            })
-	            ;
-	  
+	            });
+	            scoList = sco.flatMap(p -> rpcHandler.getCourse(p.getCourseId())).then( p -> { 
+	              SelectModuleItem parent = new SelectModuleItem(p.getValue(),(DomClassCourse)null);
+                  SelectModuleItemHolder.insert(parent);item.setParent(parent);
+	              return sco;}).flatMap(dom -> rpcHandler.getScos(dom.getCourseId()));;
 			}
 			namePromise = 
 			  sco.then(new Success<DomScoContext, String>() {
@@ -195,6 +228,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 						}
 						view.setupModule(name, item.getFile());
 						panel.setWidget(view);
+	                    view.setAnchorContext(ScoActivity.this);
 						return null;
 					}
 				}, failure);
@@ -226,13 +260,55 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 	public void gotoUrl(String href) {
 		if("goto:0".equals(href))
 			gotoNext();
-		else
+		else if (href.startsWith("goto:") && href.charAt(5) != '.') {
+		  gotoHref(href.substring(5));	  
+		} else 
 			defaultContext.gotoUrl(href);
 	}
 
+	protected void gotoHref(String href) {
+	    int dot = href.indexOf('.');
+	    String label = dot < 0 ? href:href.substring(0, dot);
+	    String location = dot <= 0 ? null:href.substring(dot+1);
+
+	    scoList.then(p -> {
+	      List<SelectModuleItem> items = new ArrayList<>();
+	      for (DomScoContext i:p.getValue()) {
+	        if (!i.getId().equals(where)) {
+	          SelectModuleItem sm = new SelectModuleItem(i);
+              SelectModuleItemHolder.insert(sm);
+              items.add(sm);	          
+	        } else {
+	          items.add(item);
+	        }
+	      }
+
+	      SelectModuleItemHolder.getItemByID(item.getParentID()).setChildren(items);
+
+	      Object id = null;
+	      try { 
+    	      int n = Integer.parseInt(label)-1;
+    	      DomScoContext sco = p.getValue().get(n);
+    	      id = PersistenceIdDecoderInterface.instance.idOf(sco.getId(), PersistenceClassType.PersistentScoContext);
+	      } catch (Exception e) {
+	        for(DomScoContext sco: p.getValue()) {
+	          if (sco.getScoName().startsWith(label)) {
+	             id = PersistenceIdDecoderInterface.instance.idOf(sco.getId(), PersistenceClassType.PersistentScoContext);
+	             break;
+	          }
+	        }
+	      }
+	      if (id == null) return p;
+	      ViewModulePlace place = (new ViewModulePlace(id, location));
+	      started = false;
+	      placeController.goTo(place);
+	      return p;
+	    });
+	}
+	
 	void gotoNext() {
-		started = false;
-		placeController.goTo(next);
+      started = false;
+      placeController.goTo(next);
 	}
 
 	@Override
