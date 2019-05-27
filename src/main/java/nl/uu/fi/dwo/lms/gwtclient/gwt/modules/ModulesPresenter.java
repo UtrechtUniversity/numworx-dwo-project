@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.modules;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.i18n.client.LocaleInfo;
@@ -10,26 +9,17 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.google.web.bindery.event.shared.HandlerRegistrations;
 import com.google.web.bindery.event.shared.SimpleEventBus;
-import com.googlecode.mgwt.ui.client.MGWT;
-import com.googlecode.mgwt.ui.client.OsDetection;
-
 import dagger.Lazy;
 import fi.dwo.gwt.lib.rest.util.Base64;
 import jsinterop.annotations.JsMethod;
 
-import java.sql.SQLClientInfoException;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.fusesource.restygwt.client.JsonEncoderDecoder;
-import org.omg.IOP.Codec;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
@@ -43,12 +33,9 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEventHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.account.AccountService;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent.State;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -270,6 +257,8 @@ public class ModulesPresenter implements SwitchViewEventHandler {
           eventBus.fireEvent(event);
         } else if ("LOGOUT".equals(message)) {
           eventBus.fireEvent(new LoginEvent(State.LOGOUT));
+        } else if ("EXAM".equals(message)) {
+          controller.get().setSession(false);
         }
     }
 
