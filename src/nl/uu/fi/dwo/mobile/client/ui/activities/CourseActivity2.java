@@ -133,7 +133,7 @@ public class CourseActivity2 extends MGWTAbstractActivity implements Activity, G
 					view.selectModule(item);
 					clientFactory.getNavigationView().hide();
 					if(item.getCourseType() == CourseType.assesment) {
-						final UnSafeModuleView w = new UnSafeModuleView(clientFactory.getHeaderView());
+						final UnSafeModuleView w = new UnSafeModuleView(clientFactory.getHeaderView(), clientFactory.getPlaceController());
 						w.selectItem(item);
 						clientFactory.getNavigationView().hide();
 						clientFactory.barrier().onResolve(		

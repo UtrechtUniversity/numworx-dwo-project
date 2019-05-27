@@ -27,7 +27,10 @@
 				<g:HorizontalPanel styleName='{style.itemPanel}'>
 					<g:FlowPanel styleName='{style.titlePanel}'> 
 							<g:HTML styleName='{style.title}' ui:field='title' ></g:HTML>
-							<g:HTML styleName='{style.description}' HTML="{rb.UNSAFE_MODULE_HTML}"></g:HTML>
+							<g:HTMLPanel styleName='{style.description}' >
+								<p><ui:text from="{rb.UNSAFE_MODULE_HTML1}"/></p>
+								<p><ui:text from="{rb.UNSAFE_MODULE_HTML2}"/><g:Anchor ui:field='anchor' styleName='{style.empty}'><ui:text from="{rb.UNSAFE_MODULE_HTML3}"/></g:Anchor><ui:text from="{rb.UNSAFE_MODULE_HTML4}"/></p>
+							</g:HTMLPanel>
 					</g:FlowPanel>
 					<g:FlowPanel styleName='{style.favicon}'>
 						<g:Image ui:field='favIcon'

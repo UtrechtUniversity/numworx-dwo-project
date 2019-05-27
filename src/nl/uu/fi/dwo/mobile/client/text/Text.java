@@ -119,6 +119,17 @@ public interface Text extends Constants {
 	
 	@DefaultStringValue("<p>Dit is een toets</p><p>Ga naar de <a href='#Exam:' >beveiligde toets omgeving</a> als je deze toets wilt maken</p>")
 	String UNSAFE_MODULE_HTML();
+
+	@DefaultStringValue("Dit is een toets")
+	String UNSAFE_MODULE_HTML1();
+	@DefaultStringValue("Ga naar de ")
+	String UNSAFE_MODULE_HTML2();
+	@DefaultStringValue("beveiligde toets omgeving")
+	String UNSAFE_MODULE_HTML3();
+	@DefaultStringValue(" als je deze toets wilt maken")
+	String UNSAFE_MODULE_HTML4();
+
+	
 	
 	@DefaultStringValue("Leerdomeinen")
 	String STUDENT_MODELS();
