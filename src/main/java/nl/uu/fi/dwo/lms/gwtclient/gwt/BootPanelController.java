@@ -107,7 +107,16 @@ public class BootPanelController {
                       if (org_id != null) // running under SAML protection
                         logout();
                       else
-                        Window.Location.reload();
+                      { boolean test = Window.Location.getParameterMap().containsKey("a");
+                        if (test) {
+                          UrlBuilder builder = Window.Location.createUrlBuilder();
+                          builder.removeParameter("a");
+                          Window.Location.assign(builder.buildString());
+                        }
+                        else {  
+                          Window.Location.reload();
+                        }
+                      }
                     } 
                     else {
                       //we should also clear user, view and presenter states, but that is never bug free.
