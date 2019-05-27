@@ -39,8 +39,16 @@ public class MainPresenter {
     private static final Logger LOG = Logger.getLogger(MainPresenter.class.getName());
     private DwoGlobalVars dwoGlobalVars;
     protected EventBus eventBus;
+    private int stage;
 
-    public interface Display {
+    /**
+	 * @param stage the stage to set
+	 */
+	public void setStage(int stage) {
+		this.stage = stage;
+	}
+
+	public interface Display {
 
         public boolean isMenuVisible();
 
@@ -91,7 +99,7 @@ public class MainPresenter {
 
         public void showImportPersonsView();
 
-        public void showModulesView();
+        public void showModulesView(boolean box);
 
         public void showOrganisationView();
         
@@ -110,6 +118,8 @@ public class MainPresenter {
 		public void showStudentResults();
 
 		void setPremium(boolean set);
+
+		void setSearchBox(boolean on);
     }
 
     private MainPresenter.Display display;
@@ -121,7 +131,7 @@ public class MainPresenter {
     }
 
     public void init() {
-
+    	display.setSearchBox(stage > 1);
     }
 
     /**
@@ -213,5 +223,12 @@ public class MainPresenter {
     
     public void setTrails(JavaScriptObject object) {
     	display.setTrails(object);
+    	if (object == null && stage == 1) {
+    		display.setSearchBox(false);
+    	}
     }
+
+	public void showModulesView() {
+		display.showModulesView(stage > 1);
+	}
 }

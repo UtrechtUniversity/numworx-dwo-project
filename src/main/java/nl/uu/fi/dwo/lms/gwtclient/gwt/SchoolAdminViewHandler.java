@@ -44,7 +44,7 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
          presenterFactory.getModulesPresenter().show();
           break;
         case MODULESVIEW:
-          mainView.showModulesView();
+        	presenterFactory.getMainPresenter().showModulesView();
           break;
         case ACCOUNT:
           mainView.selectView(value);
@@ -123,7 +123,7 @@ public class SchoolAdminViewHandler implements SwitchViewEventHandler {
         case GOTO:
           break;
         case TRAIL:
-          mainView.setTrails(switchViewEvent.getResultState());
+          presenterFactory.getMainPresenter().setTrails(switchViewEvent.getResultState());
           break;
      }
   }

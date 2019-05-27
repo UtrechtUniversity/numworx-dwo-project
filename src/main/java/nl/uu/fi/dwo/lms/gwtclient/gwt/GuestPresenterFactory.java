@@ -187,6 +187,7 @@ public class GuestPresenterFactory implements PresenterFactory {
   @Override
   public void setStage(int stage) {
     getLoginPresenter().setStage(stage);
+    getMainPresenter().setStage(stage);
   }
 
   @Override

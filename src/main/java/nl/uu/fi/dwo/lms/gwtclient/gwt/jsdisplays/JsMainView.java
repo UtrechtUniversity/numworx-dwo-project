@@ -121,8 +121,9 @@ public class JsMainView implements MainPresenter.Display{
     }
 
     @Override
-    public void showModulesView() {
+    public void showModulesView(boolean box) {
         JsMainDisplay.showModulesView();
+        JsMainDisplay.setSearchBox(box);
     }
 
     @Override
@@ -179,5 +180,10 @@ public class JsMainView implements MainPresenter.Display{
 	@Override
 	public void setPremium(boolean set) {
 		JsMainDisplay.setPremium(set);
+	}
+	
+	@Override
+	public void setSearchBox(boolean on) {
+		JsMainDisplay.setSearchBox(on);
 	}
 }
