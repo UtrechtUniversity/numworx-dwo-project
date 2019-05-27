@@ -100,6 +100,7 @@ public class JsMainDisplay {
     static native String getSearchInput();
     
     static native void setTrails(JavaScriptObject javaScriptObject);
+    static native void setSearchBox(boolean on);
     
     static native void selectView(String view);
     static native void setPremium(boolean set);

@@ -156,10 +156,10 @@ public class TeacherViewHandler implements SwitchViewEventHandler {
               case ARROWUP: case SEARCH: case GOTO:
                   break;
               case MODULESVIEW:
-                  mainView.showModulesView();
+            	  presenterFactory.getMainPresenter().showModulesView();
                   break;
               case TRAIL:
-                mainView.setTrails(switchViewEvent.getResultState());
+            	  presenterFactory.getMainPresenter().setTrails(switchViewEvent.getResultState());
                 break;
              default:
                   eventBus.fireEvent(new AlertDialogWithOKEvent(DwoLocalesForGWT.instance.GUI_Feature_Not_Supported_Yet()));

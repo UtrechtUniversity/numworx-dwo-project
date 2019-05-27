@@ -348,6 +348,7 @@ public class PresenterFactoryGwt implements PresenterFactory {
       getSelectedResultsPresenter().setStage(stage);
       getResultsPresenter().setStage(stage);
       getLoginPresenter().setStage(stage);
+      getMainPresenter().setStage(stage);
     }
 
     @Override
