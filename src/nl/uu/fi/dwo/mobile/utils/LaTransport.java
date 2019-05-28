@@ -327,22 +327,17 @@ public class LaTransport implements Logging {
 		this.comRoot = comRoot;
 	}
 
-
-	@Override
-	public String getLogID() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
 	@Override
 	public void setLogObjectives(boolean[][] objectives) {
-		// TODO Auto-generated method stub
-		
 	}
 
 
   @Override
   public void setSMObjectives(String[] objectives) {
+  }
+
+
+  @Override
+  public void setMaxScore(int max) {
   }
 }

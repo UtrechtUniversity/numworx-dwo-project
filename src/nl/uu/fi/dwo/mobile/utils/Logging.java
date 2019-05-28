@@ -13,8 +13,10 @@ public interface Logging {
 
 	void setClassName(String string);
 
-	String getLogID();
+	//String getLogID();
 
 	void setLogObjectives(boolean[][] objectives);	
 	void setSMObjectives(String[] objectives);
+
+    void setMaxScore(int max);
 }

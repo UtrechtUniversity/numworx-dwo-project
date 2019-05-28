@@ -6,6 +6,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
 import fi.dwo.gwt.lib.rest.DwoConstants;
+import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
 import nl.uu.fi.dwo.mobile.client.sco.StudentModelLogger;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.LoggingProvider;
@@ -84,7 +85,9 @@ public class DWO2playerDefaults extends DWOplayerDefaults implements DwoConstant
 		return secureMode;
 	}
 
-	public Provider<Logging> loggingProvider = new StudentModelLogger.Provider();
+	public Provider<Logging> loggingProvider = 
+	    new SMLogger.Provider(	    
+	      new StudentModelLogger.Provider());
 			//GWT.create(LoggingProvider.class);
 	
 	@Override

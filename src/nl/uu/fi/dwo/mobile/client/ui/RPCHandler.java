@@ -23,6 +23,8 @@ import org.osgi.util.promise.Promise;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.google.gwt.json.client.JSONValue;
 
+import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
+
 public interface RPCHandler {
 
 	Promise<Void> logout();
@@ -73,4 +75,6 @@ public interface RPCHandler {
 	Promise<List<DomStudentModelContext>> getStudentModels();
 	Promise<DomStudentModelDataScore> getStudentModelDataScore(DomStudentModelContextId id);
 
+// V5 stuff
+	Promise<XapiManager> getLRS();
 }

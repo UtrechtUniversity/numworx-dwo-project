@@ -23,16 +23,17 @@ public final class NoLogging implements Logging {
 	}
 
 	@Override
-	public String getLogID() {
-		return null;
-	}
-
-	@Override
 	public void setLogObjectives(boolean[][] objectives) {
 	}
 
   @Override
   public void setSMObjectives(String[] objectives) {
+  }
+
+  @Override
+  public void setMaxScore(int max) {
+    // TODO Auto-generated method stub
+    
   }
 
 }

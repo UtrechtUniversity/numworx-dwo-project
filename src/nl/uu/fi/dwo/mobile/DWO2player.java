@@ -19,12 +19,8 @@ import org.osgi.util.promise.Success;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.place.shared.Place;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.googlecode.mgwt.ui.client.MGWT;
-
+import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import fi.dwo.gwt.lib.rest.css.DwoStyle;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogView;
@@ -32,20 +28,16 @@ import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import nl.uu.fi.dwo.account.client.AccountBundle;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
-import nl.uu.fi.dwo.account.client.UserBar;
 import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.dagger.DWO2PlayerComponent;
 import nl.uu.fi.dwo.mobile.client.dagger.DaggerDWO2PlayerComponent;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
-import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
-import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
-import nl.uu.fi.dwo.mobile.client.ui.views.Login2ViewImpl;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
@@ -70,8 +62,8 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 //	}
 	
 	private final static class DWO2RPCHandler extends nl.uu.fi.dwo.account.client.RPCHandlerV3 implements RPCHandler {
-		private DWO2RPCHandler(String server, int profile) {
-			super(server, profile, false);
+		private DWO2RPCHandler(int profile) {
+			super(null, profile, false);
 		}
 // MISSING clear schoollogins etc.
 		@Override
@@ -79,10 +71,20 @@ public class DWO2player extends DWOplayer implements EntryPoint {
 			return super.logout().then ( p -> {
 				DwoGlobalVars.instance().setSchoolLogins(null);
 				DwoGlobalVars.instance().setActiveSchoolRoleAndClass(null);
+				xapi = null;
 				return p;
 			});
 		}
 		
+		private Promise<XapiManager> xapi; // caching xapi 1 per login
+		
+		@Override
+		public Promise<XapiManager> getLRS() {
+		  if (xapi == null) {
+		    xapi = super.getLRS();
+		  }
+		  return xapi;
+		}
 	}
 
 
@@ -103,10 +105,7 @@ public class DWO2player extends DWOplayer implements EntryPoint {
   protected ClientFactory createClientFactory() {
         DWO2PlayerComponent create = DaggerDWO2PlayerComponent.create();
         create.inject(this);
-
-        String host = PARAMETERS.getHost();
-		String http = Window.Location.getProtocol();
-		factory.setRPCHandler(new DWO2RPCHandler(http + "//" + host + "/dwo/xmlrpc", PROFILE_ID));
+		factory.setRPCHandler(new DWO2RPCHandler(PROFILE_ID));
  
 // 		
 		MsgDialogPresenter mdp = new MsgDialogPresenter(factory.getEventBus());

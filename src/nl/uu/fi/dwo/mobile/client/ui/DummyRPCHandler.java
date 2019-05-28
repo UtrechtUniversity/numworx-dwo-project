@@ -21,6 +21,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
+import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
@@ -209,5 +210,10 @@ public class DummyRPCHandler implements RPCHandler {
 	public Promise<DomCoursesOfSchoolClass> getScoContextClass(Object sco, DomSchoolClass schoolClass) {
 		return null;
 	}
+
+  @Override
+  public Promise<XapiManager> getLRS() {
+    return null;
+  }
 
 }

@@ -118,7 +118,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	int menuheight = 0;
 	int padding = 4; // TODO bepaal padding;
 	
-	Logging logging;
+	DWOLogger logging;
 	private String lastAttempt;
 	
 	TextEditor(int breedte, int hoogte, boolean boxMetRand)

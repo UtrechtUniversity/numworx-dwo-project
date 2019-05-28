@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
@@ -105,9 +104,6 @@ public class DWOLogger implements Logging {
 			map.put("logIDLabel", logIDLabel);
 	}
 	
-	
-	
-	
 	private JSONNumber getScore(Map<String, ?> parameters) {
 		Map map = (Map) parameters.get("score");
 		if(map == null) return null;
@@ -193,6 +189,8 @@ public class DWOLogger implements Logging {
 
 	public void setMaxScore(int max) {
 		maxScore = new JSONNumber(max);
+        if(delegate != null)
+          delegate.setMaxScore(max);
 	}
 	
 	@Override
@@ -230,7 +228,6 @@ public class DWOLogger implements Logging {
 		return delegate == null ? this : delegate;
 	}
 
-	@Override
 	public String getLogID() {
 		return logID;
 	}
@@ -240,7 +237,7 @@ public class DWOLogger implements Logging {
     if(objectives != null)
       map.put(SM_OBJECTIVES, JSONUtilities.toJSONArray(objectives));
     if (delegate != null) {
-      setSMObjectives(objectives);
+      delegate.setSMObjectives(objectives);
     }
   }
 }

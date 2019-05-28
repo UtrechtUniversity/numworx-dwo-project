@@ -21,7 +21,6 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNone;
-import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewNumworx;
 import nl.uu.fi.dwo.mobile.client.ui.views.Login3ViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationViewNumworx;

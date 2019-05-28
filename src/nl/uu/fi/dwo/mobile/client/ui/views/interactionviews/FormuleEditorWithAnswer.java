@@ -395,6 +395,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			
 			if(launchState != null) 
 			{
+			  String[] smObjectives = null;
               if(launchState.containsKey("scoreMax"))
               {
                   scoreMax = launchState.getInt("scoreMax");
@@ -414,6 +415,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
 					}
 				}
+				if (launchState.containsKey("smObjectives")) {
+				  smObjectives = launchState.getStringArray("smObjectives");
+				}
 				if(launchState.getBoolean("logOption", false)) {
 					if(fe != null) 
 					{
@@ -431,6 +435,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 						String Formule = isVergelijkingVak ? "Vergelijking" : "Formule";
 						logging.setClassName("fi.wiskOpdr.SimpelAntwoord"+Formule+"Vak");
 						dwoLogger.setLogObjectives(logObjectives);
+						dwoLogger.setSMObjectives(smObjectives);
 						dwoLogger.setTeltMee(teltMee);
 						
 						

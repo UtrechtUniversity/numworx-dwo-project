@@ -155,7 +155,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	//private JSONNumber aantalSessies;
 
 	private String scoreRaw;
-	final private Date startDate = new Date();
+	final Date startDate = new Date();
 	final private long startTime;
 	private Number score;
 	private JSONArray aantalNakijken;
@@ -792,7 +792,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		    );
 		}
 
-	private String format(long millis)
+	String format(long millis)
 	{
 		return "PT" + (millis / 1000.0F) + "S";
 	}

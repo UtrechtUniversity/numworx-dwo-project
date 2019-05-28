@@ -107,11 +107,6 @@ public class StudentModelLogger implements Logging {
 	}
 
 	@Override
-	public String getLogID() {
-		return logID;
-	}
-
-	@Override
 	public void setLogObjectives(boolean[][] objectives) {
 		this.objectives = objectives;
 		addToSet();
@@ -208,5 +203,11 @@ public class StudentModelLogger implements Logging {
   @Override
   public void setSMObjectives(String[] objectives) {
     smobjectives = new TreeSet<>(Arrays.asList(objectives));
+  }
+
+  @Override
+  public void setMaxScore(int max) {
+    // TODO Auto-generated method stub
+    
   }
 }
