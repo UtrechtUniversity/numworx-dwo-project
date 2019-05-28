@@ -357,7 +357,7 @@ public class TekstBuffer
 			return x(map, new GeogebraView(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 45: // GraphTool
 			return x(map, new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
-//			return x(map, new PopupFacade(currentVakGegevens, new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])));
+			//			return x(map, new PopupFacade(currentVakGegevens, new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])));
 
 		case 15: 
 			return new StubView("DoorzienGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
@@ -425,9 +425,8 @@ public class TekstBuffer
 		case 31:
 			return new StubView("StroomDiagrammenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 50:
-			return x(map, 
-					new StubView("SliderWidgetGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden)
-			);
+			//return x(map, new StubView("SliderWidgetGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return x(map, new PopupFacade(currentVakGegevens, new fi.sliderwidgetgwt.client.SliderWidgetGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])));
 		case 57:
 			//if(true) return new nl.numworx.geodefinergwt.client.GeoDefinerGWT(currentVakGegevens, randomVarWaarden, volleBreedtes[huidigeKolom]);
 			return x(map, 
@@ -497,8 +496,13 @@ public class TekstBuffer
 		}
 		else if (soortVak == 41)
 		{
-            //result =  x(map, new PopupFacade(currentVakGegevens, new fi.kladjegwt.client.KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)));
-			result = x(map, new StubView("KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+			result =  x(map, new PopupFacade(currentVakGegevens, new fi.kladjegwt.client.KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)));
+			//result = x(map, new StubView("KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+		}
+		else if (soortVak == 59)
+		{
+			result =  x(map, new PopupFacade(currentVakGegevens, new fi.ivmdrawgwt.client.IVMdrawGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)));
+			//result = x(map, new StubView("IVMdrawGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if (soortVak == 25)
 		{
