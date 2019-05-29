@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LogoutPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.SMPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SearchPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
@@ -24,7 +25,7 @@ import com.google.gwt.place.shared.WithTokenizers;
  * 
  */
 @WithTokenizers(
-{ Exam.Tokenizer.class, SelectModulePlace.Tokenizer.class, ViewModulePlace.Tokenizer.class, ViewCoursePlace.Tokenizer.class, LoginPlace.Tokenizer.class, ReloginPlace.Tokenizer.class, TreeModulePlace.Tokenizer.class, FlatModulePlace.Tokenizer.class, c.Tokenizer.class, s.Tokenizer.class, guest.Tokenizer.class, SearchPlace.Tokenizer.class, LogoutPlace.Tokenizer.class })
+{ Exam.Tokenizer.class, SelectModulePlace.Tokenizer.class, ViewModulePlace.Tokenizer.class, ViewCoursePlace.Tokenizer.class, LoginPlace.Tokenizer.class, ReloginPlace.Tokenizer.class, TreeModulePlace.Tokenizer.class, FlatModulePlace.Tokenizer.class, c.Tokenizer.class, s.Tokenizer.class, guest.Tokenizer.class, SearchPlace.Tokenizer.class, LogoutPlace.Tokenizer.class, SMPlace.Tokenizer.class })
 public interface AppPlaceHistoryMapper extends PlaceHistoryMapper
 {
 

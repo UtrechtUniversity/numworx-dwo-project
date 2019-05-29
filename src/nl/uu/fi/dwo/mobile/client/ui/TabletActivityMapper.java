@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.GuestActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LogoutActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ReloginActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.SMActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ScoActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.SearchActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.SelectModuleActivity;
@@ -23,6 +24,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LogoutPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ReloginPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.SMPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SearchPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
@@ -161,6 +163,9 @@ public class TabletActivityMapper implements ActivityMapper
 			return new SearchActivity(clientFactory, tmp.getId());
 		}
 		
+		if (place instanceof SMPlace) {
+			return new SMActivity( (SMPlace) place, clientFactory.getRPCHandler());
+		}
 		return null;
 	}
 

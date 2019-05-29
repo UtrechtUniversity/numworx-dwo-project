@@ -47,8 +47,8 @@ public class SMLogger implements Logging {
     javax.inject.Provider<Logging> delegate;
   }
 
-  private static final String ATTEMPTED = "http://www.dwo.nl/verbs/attempted";
-  private static final DateTimeFormat FORMAT_8601 = DateTimeFormat.getFormat(PredefinedFormat.ISO_8601);
+  public static final String ATTEMPTED = "http://www.dwo.nl/verbs/attempted";
+  public static final DateTimeFormat FORMAT_8601 = DateTimeFormat.getFormat(PredefinedFormat.ISO_8601);
 
   final Memento memento;
   final Promise<XapiManager> xapi;
