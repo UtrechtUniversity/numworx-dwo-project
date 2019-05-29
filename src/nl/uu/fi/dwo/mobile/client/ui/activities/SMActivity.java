@@ -57,13 +57,56 @@ public class SMActivity extends AbstractActivity {
 		Map<String, DomStudentModelContextInfo> infos = new HashMap<>();
 		
 		for (Statement statement: statements) {
-			Boolean succes = statement.result.success;
-			String className = statement.context.contextActivities.parent.get(0).definition.type;
-			// 
-			List<String> ids = statement.context.contextActivities.parent.get(0).definition.extensions.objectives;
+			Boolean success = statement.result.success;
 			
-		
-		
+			String className = statement.context.contextActivities.parent.get(0).definition.type;
+			double guess = 0.1;
+			if(className.contains("AntwoordKeuzeVak"))
+			{
+				String nrOfChoicesString = className.substring(className.indexOf('/'));
+				int nrOfChoices = 10;
+				try{
+					nrOfChoices = Integer.parseInt(nrOfChoicesString);
+				}
+				catch(Exception e){}
+				guess = 1/nrOfChoices;
+			}
+			
+			List<String> ids = statement.context.contextActivities.parent.get(0).definition.extensions.objectives;
+			if(success.equals(false))
+			{
+				//Calculate prodCorrect based on current scores
+				double prodCorrect = 1;
+				for(String id: ids)
+				{
+					double current = model.get(id).getScore();
+					DomStudentModelContextInfo info = infos.get(id);
+					prodCorrect = prodCorrect * ((1 - info.getSlip()) * current + guess * (1 - current));
+				}
+				
+				//Now that prodCorrect has been calculated, use it to calculate all new scores
+				for(String id: ids)
+				{	double current = model.get(id).getScore();
+					DomStudentModelContextInfo info = infos.get(id);
+					double newScore = (1 - (1 - info.getSlip()) * prodCorrect / ((1 - info.getSlip()) * current + guess * (1 - current))) *
+							current / (1 - prodCorrect);
+					newScore = newScore + (1 - newScore) * info.getLearn();
+					model.get(id).setScore(newScore);
+				}
+			}
+			else if(success.equals(true))
+			{
+				//Immediately calculate new scores for all ids
+				for(String id: ids)
+				{	double current = model.get(id).getScore();
+					DomStudentModelContextInfo info = infos.get(id);
+					double newScore = current * (1 - info.getSlip()) / (current * (1 - info.getSlip()) + (1 - current) * guess);
+					newScore = newScore + (1 - newScore) * info.getLearn();
+					model.get(id).setScore(newScore);
+				}
+			}
 		}
+		
+		//TODO: en dan gegevens uit het model weer terugzetten naar de tree? Of is dat niet nodig?
 	}
 }
