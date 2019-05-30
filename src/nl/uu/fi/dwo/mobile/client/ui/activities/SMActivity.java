@@ -12,18 +12,15 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HTML;
 
-import apple.laf.JRSUIConstants.State;
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureScoreCodec;
 import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.places.SMPlace;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
-import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
@@ -35,7 +32,6 @@ import nl.uu.fi.dwo.rest.dom.xapi.StateDocument;
 import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsQuery;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsResult;
-import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 
 public class SMActivity extends AbstractActivity {
 
