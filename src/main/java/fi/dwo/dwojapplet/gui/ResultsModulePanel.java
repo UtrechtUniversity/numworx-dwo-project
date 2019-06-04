@@ -109,7 +109,12 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
                 currentLessonGroup = domain.getZoomedLessonGroup();
                 if (currentUserGroup instanceof SchoolClass && currentLessonGroup instanceof Course) {
                     SchoolClass schoolClass = ((SchoolClass) currentUserGroup);
-                    Sco sco = ((Course) currentLessonGroup).getScoList()[col - 1];
+                    Sco[] scoList = ((Course) currentLessonGroup).getScoList();
+                    if (scoList == null) {
+                      ((Course) currentLessonGroup).loadScos();
+                      scoList = ((Course) currentLessonGroup).getScoList();
+                    }
+                    Sco sco = scoList[col - 1];
                     ResultLogger.showLogs(sco, schoolClass);
                 }
 
