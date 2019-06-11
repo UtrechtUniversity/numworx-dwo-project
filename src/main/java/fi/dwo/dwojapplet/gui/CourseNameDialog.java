@@ -7,6 +7,7 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.action.CopyLabel;
 import fi.dwo.dwojapplet.gui.action.ShareAction;
 import fi.dwo.dwojapplet.gui.action.ShareHTMLAction;
+import fi.dwo.dwojapplet.gui.domutils.DocumentSizeFilter;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -25,6 +26,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.Document;
 
 /**
  * This is a dialog for editing the course name and description.
@@ -92,6 +95,9 @@ public class CourseNameDialog extends JDialog implements ActionListener {
 
         /* Coursename field */
         name = new JTextField(courseName);
+        Document doc = name.getDocument();
+        if (doc instanceof AbstractDocument) 
+          ((AbstractDocument)doc).setDocumentFilter(new DocumentSizeFilter(40));
         name.setBounds(150, 28, 200, 20);
         name.setVisible(false);
         contentPane.add(name);
