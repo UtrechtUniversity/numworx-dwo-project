@@ -154,7 +154,8 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 
 		@Override
 		public boolean isPremium() {
-			return withUser() && getSchool().getAboType() == AboType.premium;
+			//return withUser() && getSchool().getAboType() == AboType.premium;
+			return !withUser() || getSchool().getAboType() == AboType.premium;
 		}
 
 		/* (non-Javadoc)
