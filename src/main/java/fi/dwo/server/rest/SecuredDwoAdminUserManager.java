@@ -49,9 +49,9 @@ public class SecuredDwoAdminUserManager {
     @GET
     @Produces({"application/json"})
     @Path("/getList")
-    public static List<DomUser> getUsersInSchool(@Context SecurityContext sc) {
+    public static List<DomUserFull> getUsersInSchool(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
-        List<DomUser> domUsers = null;
+        List<DomUserFull> domUsers = null;
 
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
@@ -61,7 +61,7 @@ public class SecuredDwoAdminUserManager {
         }
 //todo page the results
         List<PersistentUser> userList = UserManager.findEntities();
-        domUsers = new ArrayList<DomUser>(userList.size());
+        domUsers = new ArrayList<DomUserFull>(userList.size());
         for (PersistentUser u : userList) {
             domUsers.add(u.buildDomUserFull());
         }
