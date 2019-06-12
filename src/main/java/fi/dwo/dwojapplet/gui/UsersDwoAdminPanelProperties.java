@@ -6,7 +6,7 @@ package fi.dwo.dwojapplet.gui;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminUserManager;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import java.util.List;
-import java.util.logging.Logger;
+//import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 
@@ -16,13 +16,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
  */
 public class UsersDwoAdminPanelProperties {
 
-    private static final Logger LOG = Logger.getLogger(UsersDwoAdminPanelProperties.class.getName());
+    //private static final Logger LOG = Logger.getLogger(UsersDwoAdminPanelProperties.class.getName());
 
     public UsersDwoAdminPanelProperties() {
 
     }
 
-    public List<DomUser> getUserList() throws Dwo2Exception {
+    public List<DomUserFull> getUserList() throws Dwo2Exception {
         return SecureDwoAdminUserManager.getUserList();
     }
     public DomUserFull get(DomUser user) throws Dwo2Exception {

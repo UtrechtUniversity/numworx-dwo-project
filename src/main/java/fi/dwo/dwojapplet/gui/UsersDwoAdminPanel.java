@@ -278,7 +278,7 @@ public class UsersDwoAdminPanel extends JPanel implements CenterSubPanel, Action
         Box header = Box.createHorizontalBox();
 //        header.add(Box.createHorizontalStrut(25));
         zoekField = new JTextField();
-        zoekField.setToolTipText("Zoek school");
+        zoekField.setToolTipText("Zoek user");
         zoekField.addActionListener(this);
         zoekField.setColumns(8);
         zoekField.setMinimumSize(zoekField.getPreferredSize());
@@ -355,7 +355,7 @@ public class UsersDwoAdminPanel extends JPanel implements CenterSubPanel, Action
        Object source = e.getSource();
         if (zoekField == source || zoekBtn == source) {
             //zoek(zoekField.getText().trim().toLowerCase());
-            tableFilter = RowFilter.regexFilter(zoekField.getText().trim(), 0);
+            tableFilter = RowFilter.regexFilter(zoekField.getText().trim());
             rowSorter.setRowFilter(tableFilter);
             //table.setRowSorter(rowSorter);
 

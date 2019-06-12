@@ -4,6 +4,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import fi.dwo.commons.system.TextMapper;
 import java.awt.Image;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ class UsersDwoAdminPanelTableModel extends AbstractTableModel {
         TextMapper.getText(TextMapper.TBL_GIVENNAME),
         TextMapper.getText(TextMapper.TBL_INSERTION),
         TextMapper.getText(TextMapper.TBL_FAMILYNAME),
+        TextMapper.getText(TextMapper.TBL_EMAIL),
         TextMapper.getText(TextMapper.TBL_DB_KEY),
 //        TextMapper.getText(TextMapper.TBL_EDIT),
 //            TextMapper.getText(TextMapper.TBL_SELECT)
@@ -34,10 +36,10 @@ class UsersDwoAdminPanelTableModel extends AbstractTableModel {
 
     public void init(UsersDwoAdminPanelProperties props, Image removeImage, Image klassenImage, Image editImage, Image emptyImage) throws Dwo2Exception {
 
-        List<DomUser> userList = props.getUserList();
+        List<DomUserFull> userList = props.getUserList();
         int rows = 0;
         if (userList == null) {
-            userList = new ArrayList<DomUser>();
+            userList = new ArrayList<DomUserFull>();
         }
 
 //        for (T u : userList) {
@@ -47,15 +49,16 @@ class UsersDwoAdminPanelTableModel extends AbstractTableModel {
 
         data = new Object[rows][8];
         int j = 0;
-        for (DomUser u : userList) {
+        for (DomUserFull u : userList) {
             data[j][0] = u.getUserName();
             data[j][1] = u.getGivenName();
             data[j][2] = u.getInsertion();
             data[j][3] = u.getFamilyName();
-            data[j][4] = u.getId().getIdString();
+            data[j][4] = u.getEmail();
+            data[j][5] = u.getId().getIdString();
 //            data[j][4] = editImage;
 //            data[j][5] = emptyImage;
-            data[j][5] = u;
+            data[j][6] = u;
             j++;
         }
         fireTableDataChanged();
