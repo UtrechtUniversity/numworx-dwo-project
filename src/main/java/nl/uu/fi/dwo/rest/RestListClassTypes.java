@@ -46,6 +46,7 @@ public enum RestListClassTypes {
         DomTeacherAndHasRole,
         DomTeacherOfClass,
         DomUser,
+        DomUserFull,
         DomSchoolRoleAndClass,
         DomSchoolRoleAndClassV2,
         DomSchoolsRolesAndClasses,
