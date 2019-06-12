@@ -23,10 +23,10 @@ public class SecureDwoAdminUserManager {
 
   private static final Logger LOG = Logger.getLogger(SecureDwoAdminUserManager.class.getName());
 
-  public static List<DomUser> getUserList() throws Dwo2Exception {
-    List<DomUser> src;
+  public static List<DomUserFull> getUserList() throws Dwo2Exception {
+    List<DomUserFull> src;
     src = StoredRestManager.getInstance().getList("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/user/getList",
-        RestListClassTypes.DomUser);
+        RestListClassTypes.DomUserFull);
     LOG.log(Level.FINE, "Retrieved list of schoolsfor the dwoadmin with username {0}.",
         new Object[] {RestAuthenticator.getInstance().getUsername()});
     return src;
