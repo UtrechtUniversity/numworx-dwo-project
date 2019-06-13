@@ -39,6 +39,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.ideas.client.RuleIF;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -525,10 +526,10 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		return fout;
 	}
 
-	public void zetMode(int mode)
+	public void zetMode(int mode, LessonMode lessonMode)
 	{
 		this.mode = mode;
-		checkButton.setVisible(mode==0 || mode==1);
+		checkButton.setVisible(mode==0 || mode==1|| lessonMode == LessonMode.review);
 	}
 
 	public void zetNagekeken(boolean b)
@@ -567,7 +568,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
-		zetMode(comRoot.getMode());
+		zetMode(comRoot.getMode(), comRoot.getLessonMode());
 		if(dwologger != null) dwologger.setCommunicationRoot(comRoot);
 		comRoot.addCBookEventListener("action.setNotEditable", this);
 	}
@@ -667,7 +668,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	}
 
 	private void adviseMe() {
-		if (logOption) {
+		if (logOption && comRoot.getLessonMode() == LessonMode.normal) {
 			String id = logID;
 			if(! id.startsWith("adviseMe:")) 
 				return;

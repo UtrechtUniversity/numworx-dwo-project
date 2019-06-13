@@ -2619,7 +2619,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		
 		if (isToets())
 		{	
-			if (nagekeken && !isVeranderdNaNakijken)
+			if (nagekeken && !isVeranderdNaNakijken || lessonMode == LessonMode.review)
 			{	
 				kijkToetsNa(true, true);
 			}
