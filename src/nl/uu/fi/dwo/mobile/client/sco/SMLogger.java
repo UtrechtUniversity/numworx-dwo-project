@@ -4,14 +4,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import javax.inject.Provider;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -35,7 +38,9 @@ public class SMLogger implements Logging {
 
     public Logging get() {
       Memento instance = Memento.instance();
-      boolean experiment = instance != null && instance.pmodel != null;
+      boolean experiment = instance != null 
+    		  && instance.pmodel != null 
+    		  && instance.getLessonMode() == LessonMode.normal;
       experiment &= DWOplayer.withUser();
       if (experiment) {
         Promise<XapiManager> xapi = DWOplayer.clientfactory.getRPCHandler().getLRS();
@@ -51,7 +56,7 @@ public class SMLogger implements Logging {
   public static final DateTimeFormat FORMAT_8601 = DateTimeFormat.getFormat(PredefinedFormat.ISO_8601);
 
   final Memento memento;
-  final Promise<XapiManager> xapi;
+  Promise<XapiManager> xapi;
   Logging delegate; // Chain of command;
   Statement prototype;
   Activity widget;

@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.interaction.client.FacetHelper;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.StateLess;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
@@ -239,7 +240,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				}
 				
 				boolean show = 
-					mode == OpdrNavIF.OEFENEN 
+					isReview() 
+					|| mode == OpdrNavIF.OEFENEN 
 					|| mode == OpdrNavIF.OEFENEN_STRAFPUNTEN
 					|| (mode == OpdrNavIF.ZELFTOETS && isNagekeken() && !isVeranderdNaNakijken());
 
@@ -316,6 +318,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private boolean ingevuld = false;
 	private boolean nagekeken = false;
 	private boolean isVeranderdNaNakijken = false;
+	private boolean review;
 	
 	private boolean[][] logObjectives;
 	
@@ -959,7 +962,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private void processAntwoord0() throws RestartException
 	{
 		if (mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
-			kijkNa0(false, false, false);
+			kijkNa0(false, isReview(), false);
 		else
 			kijkNa0(false, true, false);
 		
@@ -1804,7 +1807,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//if(mode != 2 && mode != 3)
 			//	kijkNa();
 			setChanged(false);
-			if (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (isNagekeken() && !isVeranderdNaNakijken()))
+			if (isReview() || mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (isNagekeken() && !isVeranderdNaNakijken()))
 				kijkNa(true); // FIXME kijkna in setstate
 		}
 		setEditable(editable);
@@ -1896,6 +1899,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		return isVeranderdNaNakijken;
 	}
 	
+	public boolean isReview() {
+		return review;
+	}
+	
 	public void requestFocus()
 	{
 		super.requestFocus();
@@ -1907,7 +1914,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void setCommunicationRoot(OpdrNavIF comRoot)
 	{
 		this.comRoot = comRoot;
-		zetMode(comRoot.getMode());
+		zetMode(comRoot.getMode(), comRoot.getLessonMode());
 		
 		if (formuleEditorPopup != null)
 		{	
@@ -1936,8 +1943,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		return facade.isPopup();
 	}
 
-	public void zetMode(int mode) {
+	public void zetMode(int mode, LessonMode lessonMode) {
 		this.mode = mode;
+		this.review = lessonMode == LessonMode.review;
 	}
 	
 	public String getLogIDLabel()

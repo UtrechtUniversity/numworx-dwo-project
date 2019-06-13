@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.TouchButton;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -1183,6 +1184,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	private boolean rmknop;
 
   private CorrectieFacade correctie;
+  private LessonMode lessonMode = LessonMode.normal;
 
 	private void requestFocus() {
 		if(focusEnabled && editor != null)
@@ -1536,7 +1538,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			
 		}
 		FormuleEditorWithAnswer editor = editorInstance();
-		editor.zetMode(mode);
+		editor.zetMode(mode, lessonMode);
 		editor.setFormuleToolBijFocus(true);
 		editor.setFont(font);
 		editor.setDefaultFont(font);
@@ -2821,7 +2823,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		for (int i = start; i < viewers.size(); i++)
 		{
 			FormuleEditorWithAnswer editor = editorInstance();
-			editor.zetMode(mode); // mode eindtoets zorgt ervoor dat er geen vinkjes worden getoond
+			editor.zetMode(mode, lessonMode); // mode eindtoets zorgt ervoor dat er geen vinkjes worden getoond
 			String text;
 			if (hasPrefix)
 				text = removePrefix(viewers.get(i).toString());
@@ -3964,6 +3966,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 	{
 		this.comRoot = comRoot;
 		mode = comRoot.getMode();
+		lessonMode = comRoot.getLessonMode(); // Inline?
 		if (dwologger != null)
 			dwologger.setCommunicationRoot(comRoot);
 		if (editor != null)
