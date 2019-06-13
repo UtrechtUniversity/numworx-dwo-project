@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -374,6 +375,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 
 	private DWOLogger dwologger;
 	private int mode;
+	private boolean review;
 	private void setAttempt() {
 		if(dwologger != null) {
 			Map<String,Object> parameters = new HashMap<String,Object>();
@@ -500,7 +502,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		if (wrap.containsKey("errorCount"))
 			errorCount = wrap.getInt("errorCount");
 
-		boolean feedback = mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || nagekeken;
+		boolean feedback = mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || nagekeken|| review;
 		if (feedback)
 			setCheckImg(); // geen Kijkna nodig, want we hebben alle variabelen
 							// hersteld, behalve de groene elementen.
@@ -742,7 +744,8 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		dir = comRoot.getUUID();
 		if(dir != null) dir = dir.replace('-', '/')+'/'; else dir ="";
 		mode = comRoot.getMode();
-		if (nakijken & mode > 1 && checkBtn != null) {
+		review = comRoot.getLessonMode() == LessonMode.review;
+		if (nakijken & mode > 1 && checkBtn != null && !review) {
 			// haal checkbutton weg, insert een label
 			checkBtn.removeFromParent();
 			checkWidget = checkLbl;

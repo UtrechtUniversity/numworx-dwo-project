@@ -12,6 +12,7 @@ import java.util.Vector;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -378,9 +379,9 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	    return fout;
 	}
 	
-	public void zetMode(int mode)
+	public void zetMode(int mode, LessonMode lessonMode)
     {   this.mode = mode;
-    	checkButton.setVisible(mode==0 || mode==1);
+    	checkButton.setVisible(mode==0 || mode==1 || lessonMode == LessonMode.review);
     }
 	
 	public void zetNagekeken(boolean b)
@@ -675,7 +676,7 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
-		zetMode(comRoot.getMode());
+		zetMode(comRoot.getMode(), comRoot.getLessonMode());
 		if(dwologger!=null)
 			dwologger.setCommunicationRoot(comRoot);
 		comRoot.addCBookEventListener("action.setNotEditable", this);
