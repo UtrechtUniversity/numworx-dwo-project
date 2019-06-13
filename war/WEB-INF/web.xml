@@ -12,10 +12,26 @@
       <param-value>true</param-value>
     </init-param>
   </servlet>
+  <servlet>
+    <servlet-name>appideas</servlet-name>
+    <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
+    <init-param>
+      <param-name>targetUri</param-name>
+      <param-value>https://teuniz.dwo.nl/ideas</param-value>
+    </init-param>
+    <init-param>
+      <param-name>log</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </servlet>
   <servlet-mapping>
     <servlet-name>dwo</servlet-name>
     <url-pattern>/dwo/*</url-pattern>
   </servlet-mapping>
+   <servlet-mapping>
+   	  <servlet-name>appideas</servlet-name>
+   	  <url-pattern>/ideas/*</url-pattern>
+   </servlet-mapping>
   <welcome-file-list>
     <welcome-file>gwtclient.html</welcome-file>
   </welcome-file-list>

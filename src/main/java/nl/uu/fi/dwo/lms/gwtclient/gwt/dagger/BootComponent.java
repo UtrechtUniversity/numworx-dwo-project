@@ -8,9 +8,10 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Component;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.BootPanelController;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.StudentResultsModule;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
-@Component(modules= {BootModule.class} )
+@Component(modules= {BootModule.class, StudentResultsModule.class} )
 @Singleton
 public interface BootComponent {
 

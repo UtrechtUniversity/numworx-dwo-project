@@ -23,7 +23,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 @RoleScope
-public class StudentResultsService {
+public class StudentResultsService implements StudentResults {
 	
 	private SecuredStudentStudentModelManager manager;
 	private DomContext context;
@@ -41,7 +41,7 @@ public class StudentResultsService {
 	Promise<List<DomStudentModelContext>> models;
 	Map<PersistenceId, Promise<DomStudentModelDataScore>> map = new HashMap<>();
 
-	Promise<List<DomStudentModelContext>> getModels() {
+	public Promise<List<DomStudentModelContext>> getModels() {
 		if (models == null) {
 			models = manager.getStudentModels(context).map(this::trimObjectives);
 		} else if (models.isDone() && models.getFailure() != null ) {
@@ -50,7 +50,7 @@ public class StudentResultsService {
 		return models;
 	}
 	
-	Promise<DomStudentModelDataScore> getScore(DomStudentModelContextId id) {
+	public Promise<DomStudentModelDataScore> getScore(DomStudentModelContextId id) {
 		PersistenceId pid = id.getId();
 		Promise<DomStudentModelDataScore> result = map.get(pid);
 		if (result == null) {
@@ -91,7 +91,7 @@ public class StudentResultsService {
 				;
 	}
 	
-	void clear() {
+	public void clear() {
 		map.clear();
 	}
 }

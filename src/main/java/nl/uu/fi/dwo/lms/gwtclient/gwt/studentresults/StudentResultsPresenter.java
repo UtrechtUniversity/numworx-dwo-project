@@ -51,7 +51,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	private String lang;
 	
 	@Inject Lazy<StudentResultsWidget> widget;
-	@Inject StudentResultsService service;
+	@Inject StudentResults service;
 	private HandlerRegistration ref;
 	
 	@Inject StudentResultsPresenter(EventBus bus, DwoGlobalVars vars) {

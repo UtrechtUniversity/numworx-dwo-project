@@ -1,7 +1,9 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -18,7 +20,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
 
 @RoleScope
-public class AdviseMeService {
+public class AdviseMeService implements StudentResults {
 
 	private final IdeasIF ideas;
 	private Promise<Usermodel> usermodel;
@@ -29,7 +31,18 @@ public class AdviseMeService {
 		
 	private Promise<Usermodel> getUsermodel() {
 		PromiseCallback<Usermodel[]> callback = new PromiseCallback<>();
+		final Map context = new HashMap();
+		
 		AbstractRule input = new AbstractRule() {
+
+			/* (non-Javadoc)
+			 * @see nl.uu.fi.dwo.ideas.client.AbstractRule#getContext()
+			 */
+			@Override
+			public Map getContext() {
+				
+				return context;
+			}
 			
 		};
 		RuleIF[] inputs = new RuleIF[] { input };
@@ -54,5 +67,10 @@ public class AdviseMeService {
 		if (usermodel == null) usermodel = getUsermodel();
 		return usermodel.map(this::toScore);
 
+	}
+
+	@Override
+	public void clear() {
+		usermodel = null;	
 	}
 }
