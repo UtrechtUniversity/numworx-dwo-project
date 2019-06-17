@@ -171,6 +171,7 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseO
 		if(listener != null) {
 			listener.onClick(this.event);
 		}
+		event.preventDefault();
 	}
 
 	@Override
@@ -178,6 +179,7 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseO
 		if(listener != null) {
 			listener.onClick(this.event);
 		}
+		event.preventDefault();
 		
 	}
 
