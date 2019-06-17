@@ -44,6 +44,7 @@ import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.samengesteldestappen.SamengesteldeStappenPanel;
 import nl.uu.fi.dwo.mobile.utils.Connector;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade.PopupListener;
@@ -1685,6 +1686,13 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 				aantalVakken++;
 				((SymboolPanel) currentObject).zetVolledigeHoogte(tekstVakken[rij][kolom].hoogte);
 			}
+			else if (currentObject instanceof SamengesteldeStappenPanel)
+			{
+				SamengesteldeStappenPanel panel = (SamengesteldeStappenPanel) currentObject;
+				panel.zetInstellingen(instellingen);
+				panel.setKeyboard(kb);
+				//panel.setParent(tekstVakken[rij][kolom]);
+			}
 			else if (currentObject instanceof InteractionView)
 			{
 				aantalVakken++;
@@ -1697,7 +1705,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		return getXWidgetMap().get(currentObject);
 	}
 	
-	private void initialiseerStappen()
+	public void initialiseerStappen()
 	{
 		stappen = new ArrayList<Object>();
 		resize();
@@ -4546,36 +4554,8 @@ private Object CamelCase(String name) {
 				}
 				catch(Exception e){
 					ObjectMap contentMap = objectMap.getObjectMap("content");
-					if(stappen.size() > stapNr)
-						stappen.remove(stapNr);
-					if(stapNr >= tekstVakken.length)
-						return;
-					stappen.add(contentMap);
-					stapNr++;
+					maakStap(contentMap);
 					
-					TekstVakPanel tvp = new TekstVakPanel((HashMap<String, Object>) contentMap, null, null);
-					tvp.setParent(tekstVakken[stapNr - 1][breedtes.size() - 1]);
-					tvp.zetInstellingen(instellingen);
-					tvp.setKeyboard(kb);
-					final Object orgObject = tvp;
-					OpdrNavIF comRoot2 = comRoot;
-					Connector connector = find(tvp);
-					comRoot2 = new OpdrNavContext(comRoot,connector, this.bgColorZichtbaar ? bgColor : comRoot.getBackground());
-					((InteractionView) orgObject).setCommunicationRoot(comRoot2);
-					if(! (tvp instanceof StateLess))
-					{	interactionViewObjects.add(orgObject);
-					}
-										
-					HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) contentMap).get("interactiePanelLaunchState");
-					tvp.zetOpdracht(launchState);
-					tvp.setContainer(new TekstVakContext(stapNr - 1,breedtes.size() - 1));
-					xWidgetMap.putAll(tvp.xWidgetMap);
-					Connector.calculateSubscriptions(xWidgetMap.values());
-					ArrayList<Object> list = new ArrayList<Object>();
-					list.add(tvp);
-					tekstVakken[stapNr - 1][breedtes.size() - 1].zetOpdrachtObjects(list);
-					tekstVakken[stapNr - 1][breedtes.size() - 1].setObjects(list);
-					setVisibility(layerVisible);
 				}
 			}
 		}
@@ -4616,7 +4596,7 @@ private Object CamelCase(String name) {
 		}
 	}
 	
-	private boolean backAction()
+	public boolean backAction()
 	{
 		//back has to be performed on this TekstVakPanel
 		if(stappen != null && stappen.size() > 0)
@@ -4653,6 +4633,27 @@ private Object CamelCase(String name) {
 			return false;
 		}
 			
+	}
+	
+	public void maakStap(ObjectMap contentMap)
+	{
+		//Heeft omliggende (statistiek)TekstVakPanel nog een feedbackPanel? Dan weghalen.
+		TekstVakPanel statPanel = isInIdeasStatistiek();
+		if(statPanel != null && statPanel.feedbackPanel != null)
+		{	statPanel.feedbackPanel.removeFromParent();
+			statPanel.feedbackPanelHeight = 0;
+			statPanel.removeFeedbackImage();
+		}
+		
+		if(stappen.size() > stapNr)
+			stappen.remove(stapNr);
+		if(stapNr >= tekstVakken.length)
+			return;
+		stappen.add(contentMap);
+		stapNr++;
+		
+		if(contentMap != null) 
+			addTekstVakPanel((HashMap<String, Object>) contentMap, stapNr - 1, breedtes.size() -1);
 	}
 
 	// visible (default) or hidden.
@@ -4705,6 +4706,33 @@ private Object CamelCase(String name) {
 		    parent.reLayout();
 		}
 		resize();
+	}
+	
+	public void addTekstVakPanel(HashMap<String, Object> contentMap, int row, int column)
+	{
+		TekstVakPanel tvp = new TekstVakPanel(contentMap, null, null);
+		tvp.setParent(tekstVakken[row][column]);
+		tvp.zetInstellingen(instellingen);
+		tvp.setKeyboard(kb);
+		final Object orgObject = tvp;
+		OpdrNavIF comRoot2 = comRoot;
+		Connector connector = find(tvp);
+		comRoot2 = new OpdrNavContext(comRoot,connector, this.bgColorZichtbaar ? bgColor : comRoot.getBackground());
+		((InteractionView) orgObject).setCommunicationRoot(comRoot2);
+		if(! (tvp instanceof StateLess))
+		{	interactionViewObjects.add(orgObject);
+		}
+							
+		HashMap<String, Object> launchState = (HashMap<String, Object>) (contentMap.get("interactiePanelLaunchState"));
+		tvp.zetOpdracht(launchState);
+		tvp.setContainer(new TekstVakContext(row, column));
+		xWidgetMap.putAll(tvp.xWidgetMap);
+		Connector.calculateSubscriptions(xWidgetMap.values());
+		ArrayList<Object> list = new ArrayList<Object>();
+		list.add(tvp);
+		tekstVakken[row][column].zetOpdrachtObjects(list);
+		tekstVakken[row][column].setObjects(list);
+		setVisibility(layerVisible);
 	}
 	
 	
@@ -5229,4 +5257,8 @@ private Object CamelCase(String name) {
 		}
 	}
 
+	public TekstVak geefTekstVak(int row, int col)
+	{
+		return(tekstVakken[row][col]);
+	}
 }

@@ -130,6 +130,9 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	
 	@DefaultStringValue("Kies")
 	String keuzeVakKiesLabel();
+	
+	@DefaultStringValue("Actie")
+	String actionLabel();
 // Opnieuw dialog
 /*
  * 	{ "opnieuwPanelTekstMW", "Je verliest je huidige score als je opnieuw begint.\n\nWeet je zeker dat je opnieuw wilt beginnen?" },

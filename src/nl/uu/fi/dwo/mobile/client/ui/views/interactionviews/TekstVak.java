@@ -34,7 +34,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	private TekstVakPanel parent;
 	private int rij;
 	private int kolom;
-	private ArrayList<Object> opdrachtObjects;
+	private ArrayList<Object> opdrachtObjects = new ArrayList<Object>();
 	private ArrayList<TekstVakPanel> zwevendeTekstVakken = new ArrayList<TekstVakPanel>();
 	private int ashoogte;
 	private double tekstVakBreedte;
