@@ -9,44 +9,52 @@ import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
 
+import com.google.gwt.i18n.client.LocaleInfo;
+
+import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.ideas.client.AbstractRule;
 import nl.uu.fi.dwo.ideas.client.IdeasIF;
 import nl.uu.fi.dwo.ideas.client.RuleIF;
 import nl.uu.fi.dwo.ideas.client.Usermodel;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
+import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 @RoleScope
 public class AdviseMeService implements StudentResults {
 
-	private final IdeasIF ideas;
+	private static final String ADVISEME = "adviseme-usermodel";
+  private final IdeasIF ideas;
 	private Promise<Usermodel> usermodel;
+    final Map<String,String> context = new HashMap<>();
 	
-	@Inject AdviseMeService(IdeasIF i) {
+	@Inject AdviseMeService(IdeasIF i, DwoGlobalVars vars) {
 		this.ideas = i;
+		PersistenceId id = vars.getCurrentUser().getId();
+		Object userid = PersistenceIdDecoderInterface.instance.idOf(id, PersistenceClassType.PersistentUser);
+		context.put("userid", userid.toString());
+		String locale = LocaleInfo.getCurrentLocale().getLocaleName();
+		if("default".equals(locale)) locale = "nl";
+		context.put("language", locale);
 	}
 		
 	private Promise<Usermodel> getUsermodel() {
 		PromiseCallback<Usermodel[]> callback = new PromiseCallback<>();
-		final Map context = new HashMap();
 		
 		AbstractRule input = new AbstractRule() {
-
-			/* (non-Javadoc)
-			 * @see nl.uu.fi.dwo.ideas.client.AbstractRule#getContext()
-			 */
 			@Override
-			public Map getContext() {
-				
+			public Map getContext() {				
 				return context;
 			}
 			
 		};
 		RuleIF[] inputs = new RuleIF[] { input };
-		ideas.adviseMeUsermodel(inputs, "", callback);
+		ideas.adviseMeUsermodel(inputs, ADVISEME, callback);
 		return callback.getPromise().map(ar -> ar[0]);
 	}
 	
