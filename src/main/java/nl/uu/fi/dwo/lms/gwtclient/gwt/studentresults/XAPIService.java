@@ -1,0 +1,268 @@
+package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.fusesource.restygwt.client.Defaults;
+import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
+
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentStudentModelManager;
+import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
+import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureScoreCodec;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+import nl.uu.fi.dwo.rest.dom.xapi.Activity;
+import nl.uu.fi.dwo.rest.dom.xapi.StateDocument;
+import nl.uu.fi.dwo.rest.dom.xapi.Statement;
+import nl.uu.fi.dwo.rest.dom.xapi.StatementsQuery;
+import nl.uu.fi.dwo.rest.dom.xapi.StatementsResult;
+
+@RoleScope
+public class XAPIService extends StudentResultsService implements StudentResults {
+  public static final String ATTEMPTED = "http://www.dwo.nl/verbs/attempted";
+  public static final DateTimeFormat FORMAT_8601 = DateTimeFormat.getFormat(PredefinedFormat.ISO_8601);
+
+  private Promise<XapiManager> man;
+
+  @Inject XAPIService(SecuredStudentStudentModelManager manager, DwoGlobalVars vars) {
+    super(manager, vars);
+    if (!vars.isPremium()) {
+        man = Promises.failed(new IllegalArgumentException());
+    } else {
+      this.man = manager.getLRS(context).map(lrs -> {
+        Defaults.ignoreJsonNulls();
+        Defaults.setAddXHttpMethodOverrideHeader(false);
+        XapiManager x = new XapiManager();
+        x.setServer(lrs.getEndpoint());
+        x.setAuth(lrs.getAuth());
+        x.setAgent(lrs.getAgent());
+        return x;
+      });
+    }
+  }
+  
+  @Override
+  public void clear() {
+    super.clear();
+  }
+
+  @Override
+  public Promise<List<DomStudentModelContext>> getModels() {
+    return super.getModels();
+  }
+
+  @Override
+  public Promise<DomStudentModelDataScore> getScore(DomStudentModelContextId id) {
+    return man.then(p -> {
+      XapiManager xapi = p.getValue();
+      StatementsQuery query = new StatementsQuery();
+      query.agent = xapi.getAgent();
+      query.verbID = ATTEMPTED;
+      query.activityID = "pid:" + id.getId();
+      Activity a = new Activity(); a.id = query.activityID;
+      query.ascending = Boolean.TRUE;
+      // statements ophalen vanaf tijdstip n
+      return 
+          xapi.getState("StudentModelData", a, xapi.getAgent(), null)
+          .recover(oops -> new StateDocument())
+          .then( p0 -> {
+              StateDocument d = p0.getValue();
+              query.since = d.timestamp;
+          return xapi.queryStatements(query)
+              .map(statements -> toDataScore( statements, d, id, xapi));
+          });
+      });
+  }
+
+  private DomStudentModelDataScore toDataScore(StatementsResult result, StateDocument state,
+      DomStudentModelContextId id, XapiManager xapi) {
+    DomStudentModelContext context = (DomStudentModelContext) id; // if not, search from models...
+    DomStudentModelDataScore scores = null;
+    if (state.content != null) {
+      scores = new DomStudentModelDataScore();
+      DomStudentModelStructureScore s = DomStudentModelStructureScoreCodec.CODEC.decode(state.content);
+      scores.setDomStudentModelStructureScore(s);
+    }
+    if (scores == null) scores = eerstestap(context);
+    // Sorteren???
+    List<Statement> list = result.statements;
+    int last = list.size()-1;
+    String lastTimestamp = result.statements.get(last).timestamp;
+    Long stamp = FORMAT_8601.parse(lastTimestamp).getTime();
+    scores.setFetchTimeStamp(stamp);
+    stappen(scores, context, list);
+
+    String text = DomStudentModelStructureScoreCodec.CODEC.encode(scores.getDomStudentModelStructureScore()).toString();
+    state.content = text;
+    state.contentType = "application/json";
+    Activity a = new Activity(); a.id = "pid:" + context.getId();
+    state.activity = a;
+    state.id = "StudentModelData";
+    state.agent = xapi.getAgent();
+    state.registration = null;      
+    xapi.saveState(state); // store in background
+    
+    return scores;
+  }
+
+  private DomStudentModelDataScore eerstestap(DomStudentModelContext context) {
+    DomStudentModelDataScore result = new DomStudentModelDataScore();
+    DomStudentModelStructure structure = context.getModelStructure();
+    DomStudentModelStructureScore score = structure.generateStudentModelStructureScore();
+    result.setDomStudentModelStructureScore(score);
+    result.setModelId(context);
+    return result;
+}
+
+  
+  
+  
+  private void stappen( DomStudentModelDataScore scores, DomStudentModelContext context, List<Statement> statements) {
+    // converteer scores naar een map<String, Score>
+    
+    Map<String, DomStudentModelScore> model = new HashMap<>();
+    // converteer context naar een map<String, DomStudentModelContextInfo>
+    Map<String, DomStudentModelContextInfo> infos = new HashMap<>();
+
+    fill( scores.getDomStudentModelStructureScore(), context.getModelStructure(), model, infos);
+    
+    
+    for (Statement statement: statements) {
+        Boolean success = statement.result.success;
+        
+        String className = statement.context.contextActivities.parent.get(0).definition.type;
+        double guess = 0.1;
+        if(className.contains("AntwoordKeuzeVak"))
+        {
+            String nrOfChoicesString = className.substring(className.lastIndexOf('/')+1);
+            int nrOfChoices = 10;
+            try{
+                nrOfChoices = Integer.parseInt(nrOfChoicesString);
+            }
+            catch(Exception e){}
+            guess = 1/nrOfChoices;
+        }
+        
+        List<String> ids = statement.context.contextActivities.parent.get(0).definition.extensions.objectives;
+        if(Boolean.FALSE.equals(success))
+        {
+            //Calculate prodCorrect based on current scores
+            double prodCorrect = 1;
+            for(String id: ids)
+            {
+                double current = model.get(id).getScore();
+                DomStudentModelContextInfo info = infos.get(id);
+                prodCorrect = prodCorrect * ((1 - info.getSlip()) * current + guess * (1 - current));
+            }
+            
+            //Now that prodCorrect has been calculated, use it to calculate all new scores
+            for(String id: ids)
+            {   double current = model.get(id).getScore();
+                DomStudentModelContextInfo info = infos.get(id);
+                double newScore = (1 - (1 - info.getSlip()) * prodCorrect / ((1 - info.getSlip()) * current + guess * (1 - current))) *
+                        current / (1 - prodCorrect);
+                newScore = newScore + (1 - newScore) * info.getLearn();
+                model.get(id).setScore(newScore);
+            }
+        }
+        else if(Boolean.TRUE.equals(success))
+        {
+            //Immediately calculate new scores for all ids
+            for(String id: ids)
+            {   double current = model.get(id).getScore();
+                DomStudentModelContextInfo info = infos.get(id);
+                double newScore = current * (1 - info.getSlip()) / (current * (1 - info.getSlip()) + (1 - current) * guess);
+                newScore = newScore + (1 - newScore) * info.getLearn();
+                model.get(id).setScore(newScore);
+            }
+        }
+    }
+    
+    //TODO: en dan gegevens uit het model weer terugzetten naar de tree? Of is dat niet nodig?
+}
+
+private void fill(DomStudentModelStructureScore score,
+        DomStudentModelStructure structure, Map<String, DomStudentModelScore> model,
+        Map<String, DomStudentModelContextInfo> infos) {
+    DomStudentModelContextInfo info = structure.getInfo();
+    String id = info.getId();
+    infos.put(id, info);
+    model.put(id, score);
+    List<DomStudentModelCategory> cat = structure.getCategories();
+    List<DomStudentModelCategoryScore> catS = score.getCategories();
+    if (cat == null || catS == null) return;
+    int size = Math.min(cat.size(), catS.size());
+    for (int i = 0; i < size; i++) {
+        fill(catS.get(i), cat.get(i), model, infos);
+    }
+}
+
+@SuppressWarnings("rawtypes")
+private void fill(DomStudentModelCategoryScore score,
+        DomStudentModelCategory structure, Map<String, DomStudentModelScore> model,
+        Map<String, DomStudentModelContextInfo> infos) {
+    DomStudentModelContextInfo info = structure.getInfo();
+    String id = info.getId();
+    infos.put(id, info);
+    model.put(id, score);
+    List<DomStudentModelObj> obj = structure.getObjectives();
+    List<DomStudentModelObjectiveScore> objS = score.getObjectives();
+    if (obj == null || objS == null) return;
+    int size = Math.min(obj.size(), objS.size());
+    for (int i = 0; i < size; i++) {
+        fill(objS.get(i), obj.get(i), model, infos);
+    }
+}
+
+@SuppressWarnings("rawtypes")
+private void fill(DomStudentModelObjectiveScore score,
+        DomStudentModelObj structure, Map<String, DomStudentModelScore> model,
+        Map<String, DomStudentModelContextInfo> infos) {
+    DomStudentModelContextInfo info = structure.getInfo();
+    String id = info.getId();
+    if (id != null) {
+//set defaults
+    if (info.getInit() == null) info.setInit(0.5);
+    if (info.getLearn() == null) info.setLearn(0.2);
+    if (info.getSlip() == null) info.setSlip(0.05);
+    if (score.getCount() == 0) {
+        score.setScore(info.getInit());
+        score.setCount(1);
+    }
+        infos.put(id, info);
+        model.put(id, score);
+    }
+    List<DomStudentModelObj> obj = structure.getObjectives();
+    List<DomStudentModelObjectiveScore> objS = score.getChildren();
+    if (obj == null || objS == null) return;
+    int size = Math.min(obj.size(), objS.size());
+    for (int i = 0; i < size; i++) {
+        fill(objS.get(i), obj.get(i), model, infos);
+    }
+
+}
+  
+  
+  
+}

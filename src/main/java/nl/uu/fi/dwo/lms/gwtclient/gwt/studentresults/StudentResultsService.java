@@ -25,8 +25,8 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @RoleScope
 public class StudentResultsService implements StudentResults {
 	
-	private SecuredStudentStudentModelManager manager;
-	private DomContext context;
+	SecuredStudentStudentModelManager manager;
+	DomContext context;
 
 	@Inject StudentResultsService(SecuredStudentStudentModelManager manager, DwoGlobalVars vars) {
 		this.manager = manager;
