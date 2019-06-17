@@ -15,7 +15,7 @@ public abstract class StudentResultsModule {
 	}
 
 	@Provides @Singleton static IdeasIF ideas() {
-		return new IdeasClient("/gwtclient/ideas/IdeasServlet");
+		return new IdeasClient("/ideas/IdeasServlet");
 	}
 	
 	@Binds abstract StudentResults studentResults(AdviseMeService service);
