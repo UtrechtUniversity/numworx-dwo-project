@@ -22,7 +22,7 @@ var API_1484_11;
 
 </HEAD>
 <frameset rows="100%,*" border=0 framespacing=0 frameborder=no >
-<frame src="<%=contextPath %>/dwowebpage?profile=<%=profile%>&language=<%=language%>" id="topframe" name="topframe" scrolling="no">
+<frame src="<%=contextPath %>/dwo/dwowebpage?profile=<%=profile%>&language=<%=language%>" id="topframe" name="topframe" scrolling="no">
 <frame src="" name="bodyframe" id="bodyframe" scrolling="no">
 </frameset>
 </HTML>
