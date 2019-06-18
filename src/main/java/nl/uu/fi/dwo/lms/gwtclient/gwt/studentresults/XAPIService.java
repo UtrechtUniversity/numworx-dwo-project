@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,8 +18,6 @@ import fi.dwo.gwt.lib.rest.CallManagers.XapiManager;
 import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureScoreCodec;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
-import nl.uu.fi.dwo.rest.dom.entities.DomContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -74,6 +71,19 @@ public class XAPIService extends StudentResultsService implements StudentResults
 
   @Override
   public Promise<DomStudentModelDataScore> getScore(DomStudentModelContextId id) {
+	  Promise<DomStudentModelDataScore> result;
+	  result = map.get(id.getId());
+	  if (result == null || result.isDone() && result.getFailure() != null) {
+		  if (id.getId().getIdString().startsWith("ADVISEME"))
+			  result = adviseMe.get().getScore(id);
+		  else
+			  result = getScore_impl(id);
+		  map.put(id.getId(), result);
+	  }
+	  return result;
+  }
+  
+  public Promise<DomStudentModelDataScore> getScore_impl(DomStudentModelContextId id) {
     return man.then(p -> {
       XapiManager xapi = p.getValue();
       StatementsQuery query = new StatementsQuery();
@@ -108,9 +118,13 @@ public class XAPIService extends StudentResultsService implements StudentResults
     // Sorteren???
     List<Statement> list = result.statements;
     int last = list.size()-1;
-    String lastTimestamp = result.statements.get(last).timestamp;
-    Long stamp = FORMAT_8601.parse(lastTimestamp).getTime();
+    String lastTimestamp = state.timestamp;
+    if (last>=0)
+    		lastTimestamp = result.statements.get(last).timestamp;
+    Long stamp = lastTimestamp == null ? 0L : FORMAT_8601.parse(lastTimestamp).getTime();
     scores.setFetchTimeStamp(stamp);
+    if (last < 0) return scores;
+    
     stappen(scores, context, list);
 
     String text = DomStudentModelStructureScoreCodec.CODEC.encode(scores.getDomStudentModelStructureScore()).toString();
@@ -172,30 +186,39 @@ public class XAPIService extends StudentResultsService implements StudentResults
             double prodCorrect = 1;
             for(String id: ids)
             {
-                double current = model.get(id).getScore();
+                DomStudentModelScore modelScore = model.get(id);
+                if (modelScore == null) continue;
+				double current = modelScore.getScore();
                 DomStudentModelContextInfo info = infos.get(id);
+                if (info == null) continue;
                 prodCorrect = prodCorrect * ((1 - info.getSlip()) * current + guess * (1 - current));
             }
             
             //Now that prodCorrect has been calculated, use it to calculate all new scores
             for(String id: ids)
-            {   double current = model.get(id).getScore();
+            {   DomStudentModelScore modelScore = model.get(id);
+                if (modelScore == null) continue;
+				double current = modelScore.getScore();
                 DomStudentModelContextInfo info = infos.get(id);
+                if (info == null) continue;
                 double newScore = (1 - (1 - info.getSlip()) * prodCorrect / ((1 - info.getSlip()) * current + guess * (1 - current))) *
                         current / (1 - prodCorrect);
                 newScore = newScore + (1 - newScore) * info.getLearn();
-                model.get(id).setScore(newScore);
+                modelScore.setScore(newScore);
             }
         }
         else if(Boolean.TRUE.equals(success))
         {
             //Immediately calculate new scores for all ids
             for(String id: ids)
-            {   double current = model.get(id).getScore();
+            {   DomStudentModelScore modelScore = model.get(id);
+            	if (modelScore == null) continue;
+				double current = modelScore.getScore();
                 DomStudentModelContextInfo info = infos.get(id);
+                if (info == null) continue;
                 double newScore = current * (1 - info.getSlip()) / (current * (1 - info.getSlip()) + (1 - current) * guess);
                 newScore = newScore + (1 - newScore) * info.getLearn();
-                model.get(id).setScore(newScore);
+                modelScore.setScore(newScore);
             }
         }
     }

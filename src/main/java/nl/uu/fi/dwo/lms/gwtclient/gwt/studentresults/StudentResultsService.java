@@ -1,7 +1,9 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -11,6 +13,9 @@ import javax.inject.Inject;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
+import com.google.gwt.i18n.client.LocaleInfo;
+
+import dagger.Lazy;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentStudentModelManager;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
@@ -27,6 +32,7 @@ public class StudentResultsService implements StudentResults {
 	
 	SecuredStudentStudentModelManager manager;
 	DomContext context;
+	@Inject Lazy<AdviseMeService> adviseMe;
 
 	@Inject StudentResultsService(SecuredStudentStudentModelManager manager, DwoGlobalVars vars) {
 		this.manager = manager;
@@ -43,12 +49,33 @@ public class StudentResultsService implements StudentResults {
 
 	public Promise<List<DomStudentModelContext>> getModels() {
 		if (models == null) {
-			models = manager.getStudentModels(context).map(this::trimObjectives);
+			models = manager.getStudentModels(context).map(this::trimObjectives).then(this::insertAdviseMe);
 		} else if (models.isDone() && models.getFailure() != null ) {
-			models = manager.getStudentModels(context).map(this::trimObjectives);
+			models = manager.getStudentModels(context).map(this::trimObjectives).then(this::insertAdviseMe);
 		}		
 		return models;
 	}
+	
+	
+	private Promise<List<DomStudentModelContext>> insertAdviseMe(Promise<List<DomStudentModelContext>> p) {
+		List<DomStudentModelContext> list = p.getValue();
+		Iterator<DomStudentModelContext> iter = list.iterator();
+		String lang = LocaleInfo.getCurrentLocale().getLocaleName();
+		boolean advise = false;
+		while (iter.hasNext()) {
+			DomStudentModelContext context = iter.next();
+			String title = context.getModelStructure().getInfo().getTitle().get(lang);
+			if ("AdviseMe:".equals(title)) {
+				advise = true;
+				iter.remove();
+				break;
+			}
+		}
+		if (advise) 
+			return adviseMe.get().getModels().map( l -> { l = new ArrayList<>(l); l.addAll(list); return l; });
+		return p;
+	}
+	
 	
 	public Promise<DomStudentModelDataScore> getScore(DomStudentModelContextId id) {
 		PersistenceId pid = id.getId();
