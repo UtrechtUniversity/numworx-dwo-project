@@ -260,7 +260,7 @@ public class TekstBuffer
 		}
 // FIXME OOK ALS DESCRIPTIONVIEW IN GEBRUIK IS!		
 		AnchorContext anchorContext = getAnchorContext();
-		return new AnchorView(tekst, href, anchorContext);
+		return new AnchorView(tekst, href, "_blank", anchorContext);
 	}
 	
 	private String[] getBreaks(String normalTekst)

@@ -32,8 +32,21 @@ public class AnchorView implements IsWidget, ClickHandler, TekstElementWithFont 
 	 * @param tekst
 	 * @param href
 	 * @param context 
+	 * @deprecated Use {@link #AnchorView(String,String,String,AnchorContext)} instead
 	 */
 	public AnchorView(String tekst, String href, AnchorContext context) {
+		this(tekst, href, "_blank", context);
+	}
+
+
+	/**
+	 * Let op voor 'goto' URLS
+	 * @param tekst
+	 * @param href
+	 * @param target TODO
+	 * @param context 
+	 */
+	public AnchorView(String tekst, String href, String target, AnchorContext context) {
 		tekst = tekst.trim().replace(' ', '\u00A0');
 		if(href.startsWith("goto:"))
 		{
@@ -42,8 +55,11 @@ public class AnchorView implements IsWidget, ClickHandler, TekstElementWithFont 
 			this.context = context==null?NULL:context;
 			this.href = href;
 		} else
-		{	anchor = new Anchor(tekst, href);
-			anchor .setTarget("_blank");
+		{	
+			href = href.replace('!', '#'); // een echte ! is %21
+			anchor = new Anchor(tekst, href);
+			if (! href.startsWith("#") && !"player".equals(target))
+				anchor .setTarget(target);
 		}
 		ctx = Canvas.createIfSupported().getContext2d();
 		setContextFont();
