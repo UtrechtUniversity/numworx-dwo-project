@@ -18,5 +18,5 @@ public abstract class StudentResultsModule {
 		return new IdeasClient("/ideas/IdeasServlet");
 	}
 	
-	@Binds abstract StudentResults studentResults(AdviseMeService service);
+	@Binds abstract StudentResults studentResults(XAPIService service);
 }

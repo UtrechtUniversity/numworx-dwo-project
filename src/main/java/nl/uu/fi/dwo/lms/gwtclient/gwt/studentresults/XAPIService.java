@@ -138,6 +138,7 @@ public class XAPIService extends StudentResultsService implements StudentResults
   
   
   
+  @SuppressWarnings("rawtypes")
   private void stappen( DomStudentModelDataScore scores, DomStudentModelContext context, List<Statement> statements) {
     // converteer scores naar een map<String, Score>
     
