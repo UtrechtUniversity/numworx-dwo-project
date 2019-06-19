@@ -251,16 +251,24 @@ public class TekstBuffer
 		tekst = data.substring(0,u);
 		String href = data.substring(u+2, b);
 		boolean embedded = data.contains("$Etrue@");
+		String target = "_blank";
 		if(embedded) {
 			u = data.indexOf("$B"); b = data.indexOf('@',u);
 			String width = data.substring(u+2,b);
 			u = data.indexOf("$C"); b = data.indexOf('@',u);
 			String height = data.substring(u+2,b);
 			return new IFrameView(href, width, height);
+		} else {
+			u = data.indexOf("$E_"); // _top _blank _self _parent
+			b = data.indexOf('@',u);
+			if (u >= 0) {
+				target = data.substring(u+2, b);
+			}
 		}
 // FIXME OOK ALS DESCRIPTIONVIEW IN GEBRUIK IS!		
 		AnchorContext anchorContext = getAnchorContext();
-		return new AnchorView(tekst, href, "_blank", anchorContext);
+		
+		return new AnchorView(tekst, href, target, anchorContext);
 	}
 	
 	private String[] getBreaks(String normalTekst)

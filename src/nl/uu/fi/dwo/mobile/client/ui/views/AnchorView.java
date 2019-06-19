@@ -58,7 +58,7 @@ public class AnchorView implements IsWidget, ClickHandler, TekstElementWithFont 
 		{	
 			href = href.replace('!', '#'); // een echte ! is %21
 			anchor = new Anchor(tekst, href);
-			if (! href.startsWith("#") && !"player".equals(target))
+			if (! href.startsWith("#") && !"_self".equals(target))
 				anchor .setTarget(target);
 		}
 		ctx = Canvas.createIfSupported().getContext2d();
