@@ -1065,7 +1065,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 			}
 		}
 		else if(casCheck)
-		{	//checkCasStatement(expAntwoordString);
+		{	checkCasStatement(expAntwoordString);
 		}
 		else 
 		{	
