@@ -711,4 +711,28 @@ public class Vergelijking
 		return instance.vergelijking( kind1.visit(instance), vergelijkingsTeken , kind2.visit(instance));
 	}
 
+	/**
+	 * Bepaal de oplossing van een vergelijking.
+	 * @return waar of niet waar
+	 */
+	public boolean isOplossing() {
+		if ("=" .equals(vergelijkingsTeken)) {
+			return Algebra.isGelijkwaardig(kind1, kind2);
+		}
+		if (!geefVarN().isEmpty()) return false;
+		double w1 = kind1.geefWaarde();
+		double w2 = kind2.geefWaarde();
+		if ("<".equals(vergelijkingsTeken))
+			return w1 < w2;
+		if (">".equals(vergelijkingsTeken))
+			return w1 > w2;
+		if ("≤".equals(vergelijkingsTeken))
+			return w1 <= w2;
+		if ("≥".equals(vergelijkingsTeken))
+			return w1 >= w2;
+		if ("≈".equals(vergelijkingsTeken))
+			return Algebra.isGelijkDouble(w1, w2, 0.0000001);
+		return false;
+	}
+
 }

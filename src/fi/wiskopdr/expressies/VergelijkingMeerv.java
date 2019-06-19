@@ -176,6 +176,16 @@ public class VergelijkingMeerv
 		}
 		return isOplossing;
 	}
+	
+	public boolean isOplossing() {
+		if (!geefVarN().isEmpty()) return false; // Geen substitutie, dus x=x is false!
+		boolean isOplossing = false;
+		for(int j = 0; j < vergelijkingen.length && !isOplossing; j++) {
+			isOplossing = vergelijkingen[j].isOplossing();
+		}
+		return isOplossing;
+	}
+	
 
 	public boolean isOplossing(double subst, String vergTeken)
 	{
