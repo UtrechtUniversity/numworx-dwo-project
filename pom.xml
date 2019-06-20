@@ -509,6 +509,14 @@
                             <contextPath>/dwo/register</contextPath>
                             <asWebapp>true</asWebapp>
                         </webapp>
+                        <webapp>
+                          <groupId>fi.servlet</groupId>
+  						  <artifactId>ideas</artifactId>
+ 						  <version>0.0.9-SNAPSHOT</version>
+                          <type>war</type>
+                          <contextPath>/ideas</contextPath>
+                          <asWebapp>true</asWebapp>              
+                        </webapp>
                     </webapps>                         
                 </configuration> 
                 <dependencies>

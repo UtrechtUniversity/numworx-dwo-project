@@ -7,12 +7,10 @@ import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.HTML;
@@ -75,18 +73,27 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		root.clear();
 		service.clear();
 		view.setHelp(dwoGlobalVars.buildHelpUrl("#studentresults"));
-		service.getModels().then(this::getModels, FAILURE)
-		;
+		service.getModels().then(this::getModels, FAILURE);
 	}
 	
 	Promise<?> getModels(Promise<List<DomStudentModelContext>> p) {
 		StudentResultsWidget w = widget.get();
 		List<DomStudentModelContext> list = p.getValue();
 		Tree tree = w.tree;
+		tree.removeItems();
 		for (DomStudentModelContext item : list) {
 			DomStudentModelStructure structure = item.getModelStructure();
-			TreeItem ti = tree.addTextItem(structure.getInfo().getTitle().getOrDefault(lang, ""));
+			String title = structure.getInfo().getTitle().getOrDefault(lang, "");
+			int perc = 50;
+			SafeHtml html = Util.treeItem(title, perc);
+            TreeItem ti = tree.addItem(html);
 			ti.setUserObject(item);
+			service.getScore(item).then(s -> {
+              DomStudentModelStructureScore score = s.getValue().getDomStudentModelStructureScore();
+              int percentage = percentage(score);
+              ti.setHTML(Util.treeItem(title, percentage));
+			  return s;
+			});
 		}
 		ref = tree.addSelectionHandler(this);
 		
@@ -97,7 +104,6 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	@Override
 	public void onSelection(SelectionEvent<TreeItem> event) {
 		TreeItem item = event.getSelectedItem();
-		widget.get().title.setText(item.getText());
 		LOG.info("selected " + item);
 		Object userObject = item.getUserObject();
 		if (userObject instanceof DomStudentModelContext) {
@@ -106,6 +112,8 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			String text = structure.getInfo().getDescription().get(lang);
 			Widget description = createDescription(text);
 			widget.get().description.setWidget(description);
+			text = structure.getInfo().getTitle().get(lang);
+			widget.get().title.setText(text);
 			service.getScore(model).then ( p -> {
 				DomStudentModelStructureScore score = p.getValue().getDomStudentModelStructureScore();
 				setPerc(score);
@@ -116,12 +124,15 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 					item.removeItems();
 					int cat = 0;
 					for (DomStudentModelCategory o : structure.getCategories()) {
-						TreeItem tt = item.addTextItem(o.getInfo().getTitle().getOrDefault(lang, ""));
+		                DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat);
+						TreeItem tt = item.addItem(
+						  Util.treeItem(o.getInfo().getTitle().getOrDefault(lang, ""), percentage(score)));
 						tt.setUserObject(cat);
 						cat++;
 					}
 				}
-				return p; });
+				return p; })
+			.then(null, FAILURE);
 			
 		} else if (userObject instanceof Integer) {
 			DomStudentModelContext model = (DomStudentModelContext) item.getParentItem().getUserObject();
@@ -130,17 +141,23 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			String text = o.getInfo().getDescription().get(lang);
 			Widget description = createDescription(text);
 			widget.get().description.setWidget(description);
+            text = o.getInfo().getTitle().get(lang);
+            widget.get().title.setText(text);
 			service.getScore(model).then(p -> { 
 				DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(((Integer) userObject).intValue());
 				setPerc(score);
 				return p; }, FAILURE)
 			.then(p -> {
+                DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(((Integer) userObject).intValue());
 				if (item.getChildCount() != o.getObjectives().size()) {
 					item.removeItems();
 					int cat = ((Integer) userObject).intValue();
 					int obj = 0;
 					for( DomStudentModelObj oo : o.getObjectives()) {
-						TreeItem tt = item.addTextItem(oo.getInfo().getTitle().getOrDefault(lang, ""));
+					    int ppp;
+					    DomStudentModelObjectiveScore s = score.getObjectives().get(obj);
+					    ppp = percentage(s);
+						TreeItem tt = item.addItem(Util.treeItem(oo.getInfo().getTitle().getOrDefault(lang, ""), ppp));
 						tt.setUserObject(new int[] { cat, obj } );
 						obj++;
 					}
@@ -155,7 +172,9 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			DomStudentModelCategory o = structure.getCategories().get(cat);
 			DomStudentModelObj oo = o.getObjectives().get(obj);
 			String text = oo.getInfo().getDescription().get(lang);
-			widget.get().description.setWidget(createDescription(text));
+	        widget.get().description.setWidget(createDescription(text));
+	        text = oo.getInfo().getTitle().get(lang);
+            widget.get().title.setText(text);
 			service.getScore(model).then( p -> { 
 				DomStudentModelObjectiveScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat).getObjectives().get(obj);
 				setPerc(score);
@@ -165,11 +184,15 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	}
 
 	private void setPerc(DomStudentModelScore score) {
-		int perc;
-		if (score.getCount() == 0) perc = 50;
-		else perc = (int)Math.round(score.getScore()*100/score.getCount());
+		int perc = percentage(score);
 		widget.get().setPerc(perc);
 	}
+int percentage(DomStudentModelScore score) {
+  int perc;
+  		if (score.getCount() == 0) perc = 50;
+  		else perc = (int)Math.round(score.getScore()*100/score.getCount());
+  return perc;
+}
 
 	private Widget createDescription(String text) {
 		Widget description;

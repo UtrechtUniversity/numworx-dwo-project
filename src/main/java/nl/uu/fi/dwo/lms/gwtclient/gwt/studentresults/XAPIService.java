@@ -80,7 +80,7 @@ public class XAPIService extends StudentResultsService implements StudentResults
 			  result = getScore_impl(id);
 		  map.put(id.getId(), result);
 	  }
-	  return result;
+	  return result.recoverWith(oops -> super.getScore(id));
   }
   
   public Promise<DomStudentModelDataScore> getScore_impl(DomStudentModelContextId id) {
