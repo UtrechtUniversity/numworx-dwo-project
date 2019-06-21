@@ -1,14 +1,21 @@
 package fi.dwo.dwojapplet.gui.domainmodel;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.management.DynamicMBean;
 import javax.swing.AbstractAction;
@@ -16,6 +23,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
@@ -37,18 +45,25 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import fi.beans.dwomaccess.JSONEncoder;
+import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 
-public class LeerdomeinEditPanel extends JPanel {
+public class LeerdomeinEditPanel extends JPanel implements ActionListener {
 
+  private static final Logger LOG = Logger.getLogger(LeerdomeinEditPanel.class.getName());
   private String BEWERKEN = TextMapper.getText("edit");
   private String OPSLAAN  = TextMapper.getText(TextMapper.GUIP_BTN_SAVE);
   private Opslaan OPSLAAN_ACTION = new Opslaan();
-
+  private static final String WISKOPDR_SIG = "H4sIAAAAAA";
   class Opslaan extends AbstractAction implements TreeSelectionListener {
     
     Opslaan() {
@@ -77,7 +92,15 @@ public class LeerdomeinEditPanel extends JPanel {
       if (u instanceof Node) {
         Node n = (Node)u;
         n.setTitle(subtitle.getText());
-        n.setDescription(text.getText());
+        String description = text.getText();
+        if (editorCB.isSelected() && wiskOpdrEditPanel != null) {
+          description = wiskOpdrEditPanel.getText();
+          pane.setViewportView(WiskOpdr.getWiskOpdrPanel(description));
+          n.setDescriptionAsJSON(toJSON(description));
+        } else {
+          n.setDescriptionAsJSON(null);
+        }
+        n.setDescription(description);
         if (n instanceof NodeLeaf) {
           DomStudentModelContextInfo info = n.getInfo();
           commitEdit(init);commitEdit(learn); commitEdit(slip);
@@ -105,6 +128,7 @@ public class LeerdomeinEditPanel extends JPanel {
       subtitle.setEditable(false); text.setEditable(false);
       slip.setEditable(false); init.setEditable(false); learn.setEditable(false);
       tree.setEnabled(true);language.setEnabled(true);title.setEnabled(true);
+      editorCB.setEnabled(false);
     }
 
     void bewerken() {
@@ -113,35 +137,55 @@ public class LeerdomeinEditPanel extends JPanel {
       DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
       Object u = node.getUserObject();
       subtitle.setText(u.toString());
-      if (u instanceof Node) {
-        text.setText(((Node) u).getDescription());
-      } else {
-        text.setText("");
-      }
       subtitle.setEditable(true);text.setEditable(true);
       slip.setEditable(true); learn.setEditable(true); init.setEditable(true);
       tree.setEnabled(false);language.setEnabled(false);
+      editorCB.setEnabled(true);
+      setDescription(u);
       if (node == root) {
         title.setEnabled(false);
       }
       putValue(NAME, OPSLAAN);
     }
 
+    void setDescription(Object u) {
+      if (u instanceof Node) {
+        String description = ((Node) u).getDescription();
+        if (description.startsWith(WISKOPDR_SIG)) {
+          if (text.isEditable()) {
+            wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(description);
+            pane.setViewportView(wiskOpdrEditPanel);
+          } else {
+            WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(description);
+            pane.setViewportView(panel);
+          }
+          editorCB.setSelected(true);
+        } else {
+          text.setText(description);
+          wiskOpdrEditPanel = null;
+          pane.setViewportView(text);
+          editorCB.setSelected(false);
+        }
+      } else {
+        text.setText("");
+        wiskOpdrEditPanel = null;
+        pane.setViewportView(text);
+        editorCB.setSelected(false);
+      }
+    }
+
     void fillSelection() {
       TreePath path = tree.getSelectionPath();
       if (path == null) {
         subtitle.setText("");
-        text.setText("");
+        setDescription("");
         bkt.setVisible(false);
         return;
       }
       DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
       Object u = node.getUserObject();
-      subtitle.setText(u.toString());
-      if (u instanceof Node) {
-        text.setText(((Node) u).getDescription());
-      } else 
-        text.setText("");
+      subtitle.setText(u.toString()); 
+      setDescription(u);
       if (u instanceof NodeLeaf) {
         DomStudentModelContextInfo info = ((NodeLeaf) u).getInfo();
         Double d = info.getSlip(); if (d == null) d = 0.05; // DEFAULT SLIP
@@ -417,6 +461,8 @@ public class LeerdomeinEditPanel extends JPanel {
   DynamicUtilTreeNode root;
   JButton opslaan;
   JTextArea text;
+  private WiskOpdrEditPanel wiskOpdrEditPanel;
+  private JCheckBox editorCB;
   private Box bkt;
   
   public LeerdomeinEditPanel() {
@@ -480,9 +526,11 @@ public class LeerdomeinEditPanel extends JPanel {
     text = new JTextArea(10,30);
     text.setLineWrap(true);
     text.setWrapStyleWord(true);
+    editorCB = new JCheckBox("Editor");
+    editorCB.addActionListener(this);
+    wiskOpdrEditPanel = null;
     
-    Box leftBox = Box.createVerticalBox();
-    
+    Box leftBox = Box.createVerticalBox(); 
     leftBox.add(titlebox);
     leftBox.add(Box.createVerticalStrut(10));
     leftBox.add(bar);
@@ -496,6 +544,7 @@ public class LeerdomeinEditPanel extends JPanel {
     Box hbox = Box.createHorizontalBox();
     hbox.add(subtitle);
     hbox.add(Box.createHorizontalStrut(20));
+    hbox.add(editorCB);
     hbox.add(opslaan);
     max = hbox.getPreferredSize();
     max.width = Integer.MAX_VALUE;
@@ -503,7 +552,8 @@ public class LeerdomeinEditPanel extends JPanel {
     
     rightBox.add(hbox);
     rightBox.add(Box.createVerticalStrut(10+bar.getPreferredSize().height));
-    rightBox.add(new JScrollPane(text));
+    pane = new JScrollPane(text);
+    rightBox.add(pane);
     
     bkt = Box.createHorizontalBox();
     bkt.add(new JLabel("init"));init = new JFormattedTextField(NumberFormat.getInstance()); bkt.add(init);
@@ -540,6 +590,7 @@ public class LeerdomeinEditPanel extends JPanel {
   }
 
   DomStudentModelStructure structure;
+  private JScrollPane pane;
   public void setModel(DomStudentModelStructure model) {
     String locale = getLocale().getLanguage();
     if (model == null) {
@@ -555,7 +606,8 @@ public class LeerdomeinEditPanel extends JPanel {
     this.model.setRoot(root = new DynamicUtilTreeNode(vector, vector));
     this.title.setText(vector.toString());
     this.subtitle.setText("");
-    this.text.setText("");
+    text.setEditable(false);
+    OPSLAAN_ACTION.setDescription("");
     this.model.nodeStructureChanged(root);
     this.structure = model;
     bkt.setVisible(false);
@@ -566,6 +618,19 @@ public class LeerdomeinEditPanel extends JPanel {
     return language.getSelectedItem().toString();
   }
 
+  private String toJSON(String string) {
+    StringWriter writer = new StringWriter();
+    try {
+      Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(string, WiskOpdrCache.getInstance().getClassLoader());
+      JSONEncoder.encode(map, writer, null);
+    } catch (Exception e) {
+      LOG.log(Level.WARNING, "toJSON", e);
+    } 
+    return writer.toString();
+
+  }
+  
+  
   public void setEditable(boolean b) {
   }
 
@@ -621,6 +686,23 @@ public class LeerdomeinEditPanel extends JPanel {
       
     }
     
-  }  
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent ev) {
+    Object src = ev.getSource();
+    if(src == editorCB)
+    {   if(editorCB.isSelected())
+        {   if(wiskOpdrEditPanel==null)
+            {   wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel("");
+                wiskOpdrEditPanel.setPreferredSize(new Dimension(400,350));
+            }
+            pane.setViewportView(wiskOpdrEditPanel);
+        }
+        else if(wiskOpdrEditPanel!=null)
+        {   
+            pane.setViewportView(text);
+        }
+    }  }  
   
 }

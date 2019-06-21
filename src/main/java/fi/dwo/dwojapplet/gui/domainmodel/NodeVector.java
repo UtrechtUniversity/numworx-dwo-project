@@ -110,4 +110,17 @@ public class NodeVector extends Vector<Object> implements Node {
   public DomStudentModelContextInfo getInfo() {
     return info;
   }
+
+  @Override
+  public void setDescriptionAsJSON(String description) {
+    if (description == null) 
+      info.getDescription().remove(json());
+    else
+      info.getDescription().put(json(), description);
+  }
+
+  String json() {
+    return lang +"@JSON";
+  }
+  
 }
