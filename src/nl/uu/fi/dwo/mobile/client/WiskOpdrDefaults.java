@@ -1,6 +1,10 @@
 package nl.uu.fi.dwo.mobile.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
+
+import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
+import nl.uu.fi.dwo.mobile.client.ui.dwokb.NoStatusKeyboard;
 
 public class WiskOpdrDefaults extends DWOplayerDefaults {
 	@Override
@@ -26,5 +30,14 @@ public class WiskOpdrDefaults extends DWOplayerDefaults {
 	public String getStubView() {
 		return "";
 	}
+    /* (non-Javadoc)
+     * @see nl.uu.fi.dwo.mobile.client.DWOplayerDefaults#getStatusBar()
+     */
+    @Override
+    public StatusBarIF getStatusBar() {
+        if ("none".equals(Window.Location.getParameter("footer")))
+            return new NoStatusKeyboard();
+        return super.getStatusBar();
+    }
 
 }
