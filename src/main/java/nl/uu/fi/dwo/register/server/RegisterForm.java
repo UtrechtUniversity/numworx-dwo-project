@@ -289,7 +289,7 @@ private String encode(String string) {
     if (registerFree == null) registerFree="/RegisterFree.jsp";
     dispatch = getServletContext().getRequestDispatcher(registerFree);
 // I18N
-    mailrb = ResourceBundle.getBundle("nl.uu.fi.dwo.register.server.mail");
+    mailrb = ResourceBundle.getBundle("nl.uu.fi.dwo.register.server.mail", Locale.forLanguageTag("nl"));
   }
 
   private String initParameter(String name) {
