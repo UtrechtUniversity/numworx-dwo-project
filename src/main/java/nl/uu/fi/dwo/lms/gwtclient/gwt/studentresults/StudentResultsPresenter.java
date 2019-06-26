@@ -235,6 +235,7 @@ int percentage(DomStudentModelScore score) {
 		if (text == null) text = "";
 		builder.appendEscapedLines(text);
 		description = new HTML(builder.toSafeHtml());
+		description.setStylePrimaryName("score-html");
 		return description;
 	}
 
