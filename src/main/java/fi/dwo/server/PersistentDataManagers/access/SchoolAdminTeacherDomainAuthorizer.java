@@ -95,6 +95,7 @@ public class SchoolAdminTeacherDomainAuthorizer {
         //TeacherState_HR_R_S_SG_U setTeacher() throws Dwo2Exception;
         public PersistentStudentModelContext getStudentModel(DomScoContextId ctxId) throws Dwo2Exception;
         public TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U setTeacher() throws Dwo2Exception;
+		public int countStudents(DomScoContextId sco);
 
     }
 

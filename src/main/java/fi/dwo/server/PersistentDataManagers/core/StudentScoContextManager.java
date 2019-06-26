@@ -244,4 +244,8 @@ public class StudentScoContextManager {
             em.close();
         }
     }
+    
+    public static long getEntityCount(PersistentScoContext sco, PersistentHasRolePK role) {
+    	return 1;
+    }
 }

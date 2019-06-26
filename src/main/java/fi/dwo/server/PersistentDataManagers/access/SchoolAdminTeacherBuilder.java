@@ -79,4 +79,10 @@ class SchoolAdminTeacherBuilder implements SchoolAdminTeacherDomainAuthorizer.Sc
         }
     }
 
+	@Override
+	public int countStudents(DomScoContextId sco) {
+	// TODO count number of users with studentscocontext rows where context.sco=sco	
+		return 1;
+	}
+
 }

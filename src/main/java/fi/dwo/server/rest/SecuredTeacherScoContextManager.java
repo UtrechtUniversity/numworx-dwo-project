@@ -101,6 +101,18 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
       return MySQLScoContextActions.update(pc, sd, scoContext, scoData, true);
     }
       
+    @PUT
+    @Path("countStudents")
+    @Produces({"application/json"})
+    public int countStudents(@Context SecurityContext sc, RestScoContext rest) throws Dwo2Exception {
+        AnonState s0 = AnonDomainAuthorizer.build();
+        UserState_U s1 = s0.submitUser(sc.getUserPrincipal().getName());
+        UserState_HR_R_S_SG_U s2 = s1.setHasRole(rest.getRestContext().getDomHasRole());
+        SchoolAdminTeacherState_HR_R_S_SG_U state = s2.buildSchoolAdminTeacher();
+        DomScoContextId sco = rest.getDomScoContext();
+    	return state.countStudents(sco);
+    }
+    
     public DomScoContextFull updateOLD(@Context SecurityContext sc, RestScoContextFull rest) {
 		DomScoContextFull scoContext = rest.getDomScoContext();
 		DomScoData    	  scoData = rest.getDomScoData();

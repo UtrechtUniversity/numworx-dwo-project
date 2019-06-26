@@ -192,4 +192,27 @@ public class SecuredTeacherScoContextManagerIT {
 		}
 	}
 	
+	@Test public void testCountStudents() throws Exception {
+        SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+        PersistentUser user = UserManager.findByUserName("user07");
+        List<PersistentHasRole> list = HasRoleManager.findEntities(user);
+        DomHasRole dhr = list.get(0).buildDomHasRole();
+        
+        RestScoContext rest = new RestScoContext();
+		DomDwoProfile domDwoProfile = new DomDwoProfile();
+		PersistenceId id = PersistentDwoProfile.buildPersistenceId(Long.valueOf(1));
+		domDwoProfile.setId(id);
+		rest.setDomDwoProfile(domDwoProfile);
+		
+		DomScoContextFull domScoContext = new DomScoContextFull();
+		PersistenceId sco = PersistentScoContext.buildPersistenceId(Long.valueOf(1));
+		domScoContext.setId(sco);
+		
+		rest.setDomScoContext(domScoContext);
+		DomContext restContext = new DomContext();
+		restContext.setDomHasRole(dhr);
+		rest.setRestContext(restContext);
+		Integer result = manager.countStudents(sc, rest);
+		assertEquals(1, result.intValue());	
+	}
 }
