@@ -186,10 +186,13 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
             "timestamp: "+buildTimeStamp,
             "auteur: Peter Boon",
             "programmeur: M.J.B. Kupers,",
+            "Peter Boon",
+            "Sylvia van Borkulo",
             "Gert van der Plas",
+            "Sietsje Tacoma",
             "Wim van Velthoven",
             "Freudenthal Instituut",
-            "www.fisme.science.uu.nl",
+            "www.numworx.nl",
             ""
         });
         fiButton.setBounds(GuiConstants.DWO_WIDTH - 30, 0, 20, 30);
