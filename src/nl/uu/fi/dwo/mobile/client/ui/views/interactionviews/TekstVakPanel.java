@@ -4527,6 +4527,22 @@ private Object CamelCase(String name) {
 			setVisibility(false);
 		}
 		else if(TEXT_CONTENT.equals(command)) {
+			if(!ideasStatistiek) {
+				Map map = (Map)event.getParameters();
+				if(map!=null) {
+					String contentString = ((String)map.get("content"));
+					ArrayList<Object> objectArray = new ArrayList<Object>();
+					objectArray.add(contentString);
+					tekstVakken[0][0].clearRegels();
+					tekstVakken[0][0].zetOpdrachtObjects(objectArray);
+					tekstVakken[0][0].setObjects(objectArray);
+					LOG.info("was here");
+				}
+				return;
+			}
+			
+			
+			
 			if(stappen == null)
 				stappen = new ArrayList<Object>(); //ObjectMap[hoogtes.size()];
 			Map map = (Map)event.getParameters();
