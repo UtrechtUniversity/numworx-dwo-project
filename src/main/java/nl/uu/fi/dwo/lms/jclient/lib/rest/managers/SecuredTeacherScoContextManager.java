@@ -50,6 +50,16 @@ public class SecuredTeacherScoContextManager extends AbstractScoContextManager {
     return result;
   }
 
+  public Integer countStudents(DomScoContext edit, DomDwoProfile profile) throws Dwo2Exception {
+	  RestScoContext rest = new RestScoContext();
+	  rest.setDomScoContext(edit);
+	  rest.setDomDwoProfile(profile);
+	  rest.setRestContext(getContext());
+	  Integer result = StoredRestManager.getInstance()
+			  .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/scoContext/countStudents", Integer.class, rest);
+	  return result;
+  }
+  
   public DomScoContextFull add(DomScoContextFull edit, DomScoData data, DomDwoProfile dwoProfile)
       throws Dwo2Exception {
     RestScoContextFull rest = new RestScoContextFull();
