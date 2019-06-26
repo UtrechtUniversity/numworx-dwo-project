@@ -90,13 +90,13 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			DomStudentModelStructure structure = item.getModelStructure();
 			String title = structure.getInfo().getTitle().getOrDefault(lang, "");
 			int perc = 50;
-			SafeHtml html = Util.treeItem(title, perc);
+			SafeHtml html = Util.treeItem(title, perc,0);
             TreeItem ti = tree.addItem(html);
 			ti.setUserObject(item);
 			service.getScore(item).then(s -> {
               DomStudentModelStructureScore score = s.getValue().getDomStudentModelStructureScore();
               int percentage = percentage(score);
-              ti.setHTML(Util.treeItem(title, percentage));
+              ti.setHTML(Util.treeItem(title, percentage,1));
 			  return s;
 			});
 		}
@@ -132,7 +132,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 					for (DomStudentModelCategory o : structure.getCategories()) {
 		                DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat);
 						TreeItem tt = item.addItem(
-						  Util.treeItem(o.getInfo().getTitle().getOrDefault(lang, ""), percentage(score)));
+						  Util.treeItem(o.getInfo().getTitle().getOrDefault(lang, ""), percentage(score),2));
 						tt.setUserObject(cat);
 						cat++;
 					}
@@ -164,7 +164,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 					    int ppp;
 					    DomStudentModelObjectiveScore s = score.getObjectives().get(obj);
 					    ppp = percentage(s);
-						TreeItem tt = item.addItem(Util.treeItem(oo.getInfo().getTitle().getOrDefault(lang, ""), ppp));
+						TreeItem tt = item.addItem(Util.treeItem(oo.getInfo().getTitle().getOrDefault(lang, ""), ppp,3));
 						tt.setUserObject(new int[] { cat, obj } );
 						obj++;
 					}
