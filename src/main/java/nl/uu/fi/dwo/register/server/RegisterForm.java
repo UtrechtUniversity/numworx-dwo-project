@@ -84,6 +84,7 @@ public class RegisterForm extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
+    String id = req.getParameter("id"); // teamleader id of contact
     String email = req.getParameter("email");
     String givenName = req.getParameter("givenName");
     String insertion = req.getParameter("insertion");
@@ -104,7 +105,9 @@ public class RegisterForm extends HttpServlet {
       mailrb = ResourceBundle.getBundle("nl.uu.fi.dwo.register.server.mail", Locale.forLanguageTag(locale));
     } else 
       mailrb = this.mailrb;
-    
+    if (id != null) {
+      claim.claim("id", id);
+    }
     String organization="";
 // case DEMO
     if (DEMO.equalsIgnoreCase(form)) {
