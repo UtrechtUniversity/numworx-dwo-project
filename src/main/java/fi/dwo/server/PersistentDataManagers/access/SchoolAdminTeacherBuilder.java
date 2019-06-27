@@ -9,6 +9,9 @@ import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.persistence.PersistenceException;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -80,9 +83,10 @@ class SchoolAdminTeacherBuilder implements SchoolAdminTeacherDomainAuthorizer.Sc
     }
 
 	@Override
-	public int countStudents(DomScoContextId sco) {
-	// TODO count number of users with studentscocontext rows where context.sco=sco	
-		return 1;
+	public int countStudents(DomScoContextId sco) throws Dwo2Exception {
+      PersistentScoContext scoCtx = ScoContextManager.findEntity(MySQLPersistenceId.getNativeId(sco));
+      if (scoCtx == null) return 0;
+	  return instance.schoolAdminTeacherActions.countStudents(instance.getContext().getUserCtx().hasRole, scoCtx);
 	}
 
 }

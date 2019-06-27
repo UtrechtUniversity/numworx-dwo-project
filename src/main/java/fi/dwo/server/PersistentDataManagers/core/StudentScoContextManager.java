@@ -16,7 +16,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 /**
@@ -235,7 +240,7 @@ public class StudentScoContextManager {
     public static int getEntityCount() {
         EntityManager em = getEntityManager();
         try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            CriteriaQuery<Long> cq = em.getCriteriaBuilder().createQuery(Long.class);
             Root<PersistentStudentScoContext> rt = cq.from(PersistentStudentScoContext.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
@@ -246,6 +251,22 @@ public class StudentScoContextManager {
     }
     
     public static long getEntityCount(PersistentScoContext sco, PersistentHasRolePK role) {
-    	return 1;
+      EntityManager em = getEntityManager();
+      try {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = builder.createQuery(Long.class);
+        Root<PersistentStudentScoContext> rt = cq.from(PersistentStudentScoContext.class);
+        cq.select(em.getCriteriaBuilder().count(rt));
+        Predicate exprSco = builder.equal(rt.get("scoID"), sco.getScoID());
+        Path<Object> hasRolePath = rt.get("persistentHasRolePK");
+        Predicate exprUser = builder.notEqual(hasRolePath.get("userID"), role.getUserID());
+        Predicate exprSG   = builder.notEqual(hasRolePath.get("schoolGroupID"), role.getSchoolGroupID());
+        Predicate or = builder.or(exprUser, exprSG);
+        cq.where(exprSco,or);
+        TypedQuery<Long> q = em.createQuery(cq);
+        return q.getSingleResult().longValue();        
+      } finally {
+        em.close();
+      }
     }
 }

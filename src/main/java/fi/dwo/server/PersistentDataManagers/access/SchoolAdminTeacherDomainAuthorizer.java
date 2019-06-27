@@ -2,6 +2,7 @@ package fi.dwo.server.PersistentDataManagers.access;
 
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserPersistentContext;
+import fi.dwo.server.PersistentDataManagers.actions.MySQLSchoolAdminTeacherActions;
 import fi.dwo.server.PersistentDataManagers.actions.SchoolAdminTeacherActions;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
@@ -22,7 +23,7 @@ public class SchoolAdminTeacherDomainAuthorizer {
          private SchoolAdminTeacherDomainAuthorizer.Context context;
 
     protected SchoolAdminTeacherPersistentContext schoolAdminTeacherCtx;
-    protected SchoolAdminTeacherActions schoolAdminTeacherActions;
+    protected SchoolAdminTeacherActions schoolAdminTeacherActions = new MySQLSchoolAdminTeacherActions();
 
     public static class Context {
 
@@ -95,7 +96,7 @@ public class SchoolAdminTeacherDomainAuthorizer {
         //TeacherState_HR_R_S_SG_U setTeacher() throws Dwo2Exception;
         public PersistentStudentModelContext getStudentModel(DomScoContextId ctxId) throws Dwo2Exception;
         public TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U setTeacher() throws Dwo2Exception;
-		public int countStudents(DomScoContextId sco);
+		public int countStudents(DomScoContextId sco) throws Dwo2Exception;
 
     }
 
