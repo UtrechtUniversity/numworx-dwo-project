@@ -102,7 +102,9 @@ public class RegisterForm extends HttpServlet {
     if (locale != null) {
       claim.claim("locale", locale);
       mailrb = ResourceBundle.getBundle("nl.uu.fi.dwo.register.server.mail", Locale.forLanguageTag(locale));
-    }
+    } else 
+      mailrb = this.mailrb;
+    
     String organization="";
 // case DEMO
     if (DEMO.equalsIgnoreCase(form)) {
@@ -172,7 +174,7 @@ public class RegisterForm extends HttpServlet {
     } else if (WISWISE_FREE.equals(form)) {
     	abo = "Wiswise Free";
     }
-    
+    LOG.info("mailing " + abo + " in " + mailrb.getString("language"));
     
     String format;
     try {
@@ -290,6 +292,7 @@ private String encode(String string) {
     dispatch = getServletContext().getRequestDispatcher(registerFree);
 // I18N
     mailrb = ResourceBundle.getBundle("nl.uu.fi.dwo.register.server.mail", Locale.forLanguageTag("nl"));
+    LOG.info("default language " + mailrb.getString("language"));
   }
 
   private String initParameter(String name) {
