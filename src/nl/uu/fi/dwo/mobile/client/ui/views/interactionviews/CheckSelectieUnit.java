@@ -51,6 +51,7 @@ import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.utils.Review;
 
 public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMisconceptions, CBookEventListener
 {
@@ -406,7 +407,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	        //(((TekstInteractiePanelVak)((Component)ipList[0]).getParent()).getTekstVak()).layoutTekst();
         }
         
-        if(ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)))
+        if(ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)||Review.isReview(comRoot)))
         {
         	kijkNa();
         }

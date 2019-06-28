@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.utils.Review;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 
 import com.google.gwt.dom.client.Style;
@@ -359,7 +360,7 @@ public class CheckValueUnit implements InteractionStub, CBookEventListener {
 	    this.editable = editable;
 	    basisPanel.setStyleDependentName("readonly", !editable);
         
-        if(ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken))) 
+        if(ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)||Review.isReview(comRoot))) 
         	kijkNa();
         correctie = CorrectieFacade.get(h, this, getScoreMax());
 	}

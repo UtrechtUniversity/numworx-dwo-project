@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.ImageTextButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
+import nl.uu.fi.dwo.mobile.utils.Review;
 
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Unit;
@@ -744,7 +745,7 @@ public class GeogebraView implements InteractionView, LoadHandler, CBookEventLis
 		dir = comRoot.getUUID();
 		if(dir != null) dir = dir.replace('-', '/')+'/'; else dir ="";
 		mode = comRoot.getMode();
-		review = comRoot.getLessonMode() == LessonMode.review;
+		review = Review.isReview(comRoot);
 		if (nakijken & mode > 1 && checkBtn != null && !review) {
 			// haal checkbutton weg, insert een label
 			checkBtn.removeFromParent();

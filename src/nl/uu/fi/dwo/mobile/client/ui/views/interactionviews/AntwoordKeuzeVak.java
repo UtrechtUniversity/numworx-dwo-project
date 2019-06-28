@@ -37,6 +37,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -47,6 +48,7 @@ import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.Logging;
+import nl.uu.fi.dwo.mobile.utils.Review;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEventListener {
@@ -645,7 +647,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		isShowing = false;
 		changed = true;
 		
-		if (!checkExternal &&(mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN))
+		if (!checkExternal &&(mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || Review.isReview(comRoot)))
 		{
 			kijkNa();
 			attemptsCount++;
@@ -809,7 +811,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		log.put("step", "");
 		return log;
 	}
-
+	
+	
 	public void setState(HashMap<String, Object> h)
 	{
 		if( h == null) return; // setStateNull();
@@ -870,7 +873,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		//antwoordKV.setSelectedIndex(index);
 		//antwoordKV.setSelectedItem(antwoord);
 
-		if (ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)))
+		if (ingevuld && (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken) || Review.isReview(comRoot)))
 			kijkNa(true, true);
 		
 		basisPanel.setStyleDependentName("readonly", !editable);

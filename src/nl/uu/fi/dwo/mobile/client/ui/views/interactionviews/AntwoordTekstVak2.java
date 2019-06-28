@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
+import nl.uu.fi.dwo.mobile.utils.Review;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
@@ -714,7 +715,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		setChanged(false);
 
 		if (ingevuld 
-			&& (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)))
+			&& (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)||Review.isReview(comRoot)))
 			kijkNa(true, false);
 		this.editable = map.getBoolean("editable", true);
 		
@@ -1151,7 +1152,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 		setAttempt();
 		fireText();
 		
-		if (mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
+		if ((mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS) && !Review.isReview(comRoot))
 		{
 			return;
 		}
