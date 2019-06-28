@@ -19,7 +19,6 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.JSONObjectMapImpl;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
-import nl.uu.fi.dwo.interaction.client.json.ObjectMapImpl;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;

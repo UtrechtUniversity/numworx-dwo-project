@@ -15,6 +15,7 @@ import com.googlecode.mgwt.ui.client.OsDetection;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
+import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
 import nl.uu.fi.dwo.keyboard.client.DWODesktopKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.DWOTabletKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
@@ -25,9 +26,11 @@ import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
 public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipboardIF {
 
-	KeyboardFactory factory;
+	private int STATUS_BAR_HEIGHT = KeyBoardTabPanel.KEYB_STATIC_HEIGHT;
+    KeyboardFactory factory;
 	AbstractKeyboard kb;
 	FlowPanel staticPanel;
+	private HasHeight scrollPanel;
 	private static DWOplayerCss dwoplayercss = DWOplayer.DWO_BUNDLE.dwoplayercss();
 	
 	public DWOKeyboard() {
@@ -49,21 +52,12 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 
 // css style! FIXME naar dwoplayercss
 		Style style;
-//		style = getElement().getStyle();
-//		style.setPosition(Style.Position.ABSOLUTE);
-//		style.setBottom(0, Style.Unit.PX);
-//		style.setRight(0, Style.Unit.PX);
-//		style.setLeft(0, Style.Unit.PX);
-//		style.setBackgroundColor("rgb(229,231,233)");
 		addStyleName(dwoplayercss.DWOkeyboard());;
 		
 		style = staticPanel.getElement().getStyle();
 		style.setHeight(getStatusBarHeight(), Unit.PX);
 		style.setWidth(100, Unit.PCT);
 		style.setBackgroundColor("rgb(255,255,255)");
-		//style.setBackgroundImage("url("
-		//		+ DWOplayer.PARAMETERS.getResource("images/resources/footerbgimage.png")
-		//		+ ")");
 
 		style = kb.getElement().getStyle();
 		style.setProperty("margin", "0 auto");
@@ -87,17 +81,6 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	@Override
 	public void addKnop(Widget knop, boolean right) {
 		if(knop == null) return;
-		//knop.setStylePrimaryName("scoreBtn");
-		//Style style = knop.getElement().getStyle();
-		//if(right)
-			//style.setFloat(Style.Float.RIGHT);
-		//else
-			//style.setFloat(Style.Float.LEFT);
-		//style.setDisplay(Display.INLINE_BLOCK);
-		//style.setMarginTop(10, Style.Unit.PX);
-		//style.setWidth(80 ,Style.Unit.PX); // XXX past niet altijd
-		//style.setProperty("minWidth", 80, Unit.PX);
-		//style.setProperty("horizontalAlign", "center"); //TODO: helpt dit?
 		staticPanel.add(knop);
 	}
 
@@ -111,7 +94,8 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 
 	@Override
 	public void setScrollPanel(AbstractKeyboard.HasHeight w, int h) {
-		kb.setScrollPanel(w,h);
+	  scrollPanel = w;
+	  kb.setScrollPanel(w,h);
 	}
 
 	@Override
@@ -120,7 +104,7 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 
 	@Override
 	public int getStatusBarHeight() {
-		return KeyBoardTabPanel.KEYB_STATIC_HEIGHT;
+		return STATUS_BAR_HEIGHT;
 	}
 
 	@Override
@@ -154,7 +138,7 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 		kb.setWriteMathSet(nr);
 	}
 
-	Timer scoreTimer;
+	//private Timer scoreTimer;
 	@Override
 	public void showScore(ScoreNavIF scoreNav) {
 //		final Style style = staticPanel.getElement().getStyle();
@@ -178,5 +162,13 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 		label.setStyleName(dwoplayercss.navigatiebalkLabel(), true);
 		staticPanel.add(label);
 	}
+
+  @Override
+  public void hide() {
+    STATUS_BAR_HEIGHT=0;
+    staticPanel.removeFromParent();
+    kb.setScrollPanel(scrollPanel, 0);
+    
+  }
 
 }

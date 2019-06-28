@@ -7,7 +7,6 @@ import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 public interface StatusBarIF extends IsWidget {
@@ -27,4 +26,6 @@ public interface StatusBarIF extends IsWidget {
 	void showScore(ScoreNavIF scoreNav);
 
 	void addLabel(Label label);
+	
+	default void hide() {}
 }

@@ -15,5 +15,11 @@ public class NoStatusKeyboard extends DWOKeyboard {
 		staticPanel.setVisible(false);
 		staticPanel.removeFromParent();
 	}
+/**
+ * always hidden.
+ */
+  @Override
+  public void hide() {
+  }
 
 }

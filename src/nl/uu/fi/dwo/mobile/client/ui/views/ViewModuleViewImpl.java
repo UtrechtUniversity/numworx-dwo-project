@@ -343,6 +343,20 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			else {
 			  addTitle();
 			}
+			
+			// voor numworx
+			if (   !bolletjesZichtbaar 
+			    && !volgendeKnopZichtbaar
+			    && !vorigeKnopZichtbaar
+			    && mode != OpdrNav.ZELFTOETS
+			    && !wrap.getBoolean("itemOpnieuw", false)
+			    && ! (opnieuw||opnieuwMogelijk)
+			    && ! scoresZichtbaar	    
+			    ) {
+			  sb.hide();
+			}
+			
+			
 			FlowPanel onp = (FlowPanel) on.getAsPanel();
 			
 			onp.setStyleName(dwoplayercss.opdrachtbollen(), true);
