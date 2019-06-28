@@ -93,6 +93,14 @@ div.insert_formule {padding-right:5px; padding-left:5px;}
 	border-left: thin solid black;
 }
 
+span.textEditor_select {
+	background-color: lightblue;
+}
+
+.insert_formule.textEditor_select, .insert_calculator.textEditor_select, .textEditor_select .insert_formule {
+	background-color: lightblue !important;
+}
+
 .WaitScreen {
 	margin: 0px;
 	padding: 0px !important;

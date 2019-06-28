@@ -67,8 +67,6 @@ import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor.IsEditable;
-import nl.uu.fi.dwo.mobile.utils.Logging;
 
 public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware, CBookEventListener, TekstElementWithFont {
 	
@@ -105,7 +103,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private FormuleFont font = defaultfont.createCopy();
 	
 	private FlowPanel  flow;
-	private int cursor;
+	private int cursor, selectionEnd;
 	private Widget menubar, content;
 	FlowPanel hbox;
 	
@@ -436,15 +434,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 
 	private StringBuilder getAllText() {
-		StringBuilder sb = new StringBuilder();
-		int count = flow.getWidgetCount()-1;
-		for(int i=0; i < count; i++) {
-			Widget child = flow.getWidget(i);
-			if(child instanceof HasText) {
-				sb.append(((HasText) child).getText());
-			}
-		}
-		return sb;
+	    int size = flow.getWidgetCount()-1;
+	    return  getAllText(0, size);
 	}
 
 	@Override
@@ -528,6 +519,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	@Override
 	public void clearAll() {
 		cursor = 0;
+		selectionEnd = -1;
 		flow.clear();
 		flow.add(setCursorWidget(new InlineHTML(" \u00A0")));
 	}
@@ -602,7 +594,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	@Override // loose focus
 	public void setCurrentElementRepaint()
 	{
-		removeCursor();
+		deSelection();removeCursor();
 		setAttempt();
 		if (comRoot != null)
 			comRoot.getKeyboard().setEnterType(EnterType.APPLY);
@@ -619,6 +611,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	public void enter() {
 		if(!editable) return;
 //		sb.insert( cursor, '\n');
+		deleteSelection();
 		flow.insert(new Enter(), cursor); cursor++;
 		showCursor();
 		setAttempt();
@@ -628,56 +621,114 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		if(shown && logging != null) setAttempt(getAllText());
 	}
 
-	@Override
-	public void removeCurrentElement() {
-		if(cursor > 0 && editable)
-		{	flow.remove(--cursor);
-//			sb.replace(cursor, cursor+1, "");
-			showCursor();
-		}
-	}
+	private void removeCurrentElement1() {
+	    if(cursor > 0 && editable)
+	    {   flow.remove(--cursor);
+//	      sb.replace(cursor, cursor+1, "");
+	        showCursor();
+	    }
+	  }
+	  @Override
+	  public void removeCurrentElement() {
+	    if(hasSelection()) {
+	      deleteSelection();
+	    } else {
+	      removeCurrentElement1();
+	    }
+	  }
 
-	@Override
-	public void removeNextElement() {
-		int max = flow.getWidgetCount()-1;
-		if(cursor < max && editable){
-			flow.remove(cursor);
-			setCursorWidget(flow.getWidget(cursor));
-//			sb.replace(cursor, cursor+1, "");
-		}
-	}
+	  @Override
+	  public void removeNextElement() {
+	    if (hasSelection()) {
+	      deleteSelection();
+	    } else {
+	      removeNextElement1();
+	    }
+	  }
+	  
+	  private void removeNextElement1() {
+	    int max = flow.getWidgetCount()-1;
+	    if(cursor < max && editable){
+	        flow.remove(cursor);
+	        setCursorWidget(flow.getWidget(cursor));
+//	      sb.replace(cursor, cursor+1, "");
+	    }
+	  }
 
-	@Override
-	public void cursorToLeft() {
-		if(cursor > 0){
-			cursor --;
-			setCursorWidget(flow.getWidget(cursor));
-		}
-	}
+	  private boolean hasSelection() {
+	    return selectionEnd != -1;
+	  }
+	  
+	  private void deleteSelection() {
+	    if(hasSelection()) {
+	      while(cursor > selectionEnd) removeCurrentElement1();
+	      while(cursor < selectionEnd--) {
+	        removeNextElement1();
+	      }
+	      selectionEnd = -1;
+	    }
+	  }
 
-	@Override
-	public void cursorToRight() {
-		int max = flow.getWidgetCount()-1;
-		if(cursor < max){
-			cursor ++;
-			setCursorWidget(flow.getWidget(cursor));	}
-		}
+	  private void deSelection() {
+	    if(hasSelection()) {
+	      while(cursor > selectionEnd) 
+	        flow.getWidget(selectionEnd++).removeStyleName(css.textEditor_select());
+	      while(cursor < selectionEnd)
+	        flow.getWidget(--selectionEnd).removeStyleName(css.textEditor_select());
+	      selectionEnd = -1;
+	    }
+	  }
+
+	  private void cursorToLeft1() {
+	    if (cursor > 0) {
+	      cursor --;
+	      setCursorWidget(flow.getWidget(cursor));
+	    }
+	  }
+	  @Override
+	  public void cursorToLeft() {
+	    deSelection();
+	    cursorToLeft1();
+	  }
+	  @Override
+	  public void cursorToLeftShift() {
+	    if (cursor > 0) {
+	      if (!hasSelection()) selectionEnd = cursor;
+	      if (cursor > selectionEnd) 
+	        flow.getWidget(cursor-1).removeStyleName(css.textEditor_select());
+	      else
+	        flow.getWidget(cursor-1).addStyleName(css.textEditor_select());
+	    }
+	    cursorToLeft1();
+	    if (cursor == selectionEnd) selectionEnd = -1;
+	  }
+
+	  private void cursorToRight1() {
+	    int max = flow.getWidgetCount()-1;
+	    if (cursor < max) {
+	        cursor ++;
+	        setCursorWidget(flow.getWidget(cursor));
+	    }
+	  }
+	  @Override
+	  public void cursorToRight() {
+	    deSelection();
+	    cursorToRight1();
+	  }
 	
-	@Override
-	public void cursorToLeftShift() {
-		if(cursor > 0){
-			cursor --;
-			setCursorWidget(flow.getWidget(cursor));
-		}
-	}
-
-	@Override
-	public void cursorToRightShift() {
-		int max = flow.getWidgetCount()-1;
-		if(cursor < max){
-			cursor ++;
-			setCursorWidget(flow.getWidget(cursor));	}
-	}
+	  @Override
+	  public void cursorToRightShift() {
+	    int max = flow.getWidgetCount()-1;
+	    if (cursor < max) {    
+	      if (!hasSelection()) selectionEnd = cursor;
+	      if (cursor < selectionEnd)
+	        flow.getWidget(cursor).removeStyleName(css.textEditor_select());
+	      else
+	        flow.getWidget(cursor).addStyleName(css.textEditor_select());
+	      cursorToRight1();
+	      if (cursor == selectionEnd) selectionEnd = -1;
+	    }
+	  }
 	
 	
 	@Override
@@ -688,16 +739,15 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	public void cursorDown() {
 		
 	}
-
-	
-	
 	
 	@Override
 	public void insert(char charAt)
 	{
 		if (!editable)
 			return;
-		SafeHtml html;
+	    deleteSelection();
+
+	    SafeHtml html;
 		SafeHtmlBuilder builder = new SafeHtmlBuilder();
 		builder.append(charAt);
 		html = builder.toSafeHtml();
@@ -729,17 +779,41 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		return false;
 	}
 
-	@Override
-	public String getSelectionString() {
-		return "";
-	}
+	  private StringBuilder getAllText(int start, int end) {
+	    StringBuilder sb = new StringBuilder();
+	    for(int i = start; i < end; i++) {
+	      Widget child = flow.getWidget(i);
+	      if(child instanceof HasText) {
+	          sb.append(((HasText) child).getText());
+	      }
+	    }
+	    return sb;
+	  }
+	  @Override
+	  public String getSelectionString() {
+	    int start, end;
+	    if(hasSelection()) {
+	      if (selectionEnd < cursor) {
+	        start = selectionEnd;
+	        end = cursor;
+	      } else {
+	        start = cursor;
+	        end = selectionEnd;
+	      }
+	      return getAllText(start, end).toString();
+	    }
+	    return "";
+	  }
 	
 	@Override
 	public void kopieer(FormuleClipboardIF clip) {
+	    clip.setClipboard(getSelectionString());
 	}
 	
 	@Override
 	public void knip(FormuleClipboardIF clip) {
+	    kopieer(clip);
+	    deleteSelection();
 	}
 	
 	@Override
@@ -1030,6 +1104,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 //			keyboard.focus();
 //			deze.requestFocus();
 			setCursorWidget(widget);
+			deSelection();
 			removeCursor(); // cursor is in formule editor
 			event.stopPropagation();
 		}
@@ -1079,6 +1154,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				} while ( i < max && w < y);
 				
 				LOGGER.fine("widget " + i + " at "  + w + " mouse at " + y + " c=" + cursor + " m=" + max);
+				deSelection();
 				setCursorWidget(widget);
 				if (cursor != max || w >= y)
 					cursorToLeft(); // 1 terug
@@ -1122,6 +1198,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			keyboard.setEditor(TextEditor.this);
 			keyboard.setEnterType(EnterType.ENTER);
 			shown = true; childfocus = false;
+			deSelection();
 			setCursorWidget(cursorWidget);
 			hbox.removeStyleName(css.textEditor_empty());
 			keyboard.softFocus();
@@ -1290,6 +1367,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				public void onTouchEnd(TouchEndEvent event)
 				{
 					super.onTouchEnd(event);
+					deSelection();
 					setCursorWidget(CalculatorVak.this);
 				} 
 			};
@@ -1403,6 +1481,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				kb.setEditor(TextEditor.this);
 				kb.setEnterType(EnterType.APPLY);
 				shown = true;
+				deSelection();
 				setCursorWidget(cursorWidget);
 				hbox.removeStyleName(css.textEditor_empty());
 				event.stopPropagation();
@@ -1425,6 +1504,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		{
 			if (!editable)
 				return;
+			deleteSelection();
 			CalculatorVak panel = new CalculatorVak();
 			// sb.insert(cursor, '@');
 			flow.insert(panel, cursor++);

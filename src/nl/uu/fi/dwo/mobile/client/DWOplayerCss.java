@@ -12,6 +12,7 @@ public interface DWOplayerCss extends CssResource {
 	String textEditor_empty();
 	String textEditor_nowrap();
 	String textEditor_cursor();
+	String textEditor_select();
 	String balk();
 	String insert_formule();
 	String insert_formule_readonly();
