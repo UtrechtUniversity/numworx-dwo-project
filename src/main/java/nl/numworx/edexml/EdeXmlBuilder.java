@@ -1,8 +1,11 @@
 package nl.numworx.edexml;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -101,7 +104,53 @@ public class EdeXmlBuilder {
 		return parseUser(leerlingen, result, "leerling");
 	}
 
+	private Map<String,Collection<String>> membership(Element users) {
+		Map<String,Collection<String>> result = new HashMap<>();
+		NodeList nodes = users.getChildNodes();
+		int size = nodes.getLength();
+		for(int i = 0; i < size; i++ ) {
+			Node item = nodes.item(i);
+			if(item.getNodeType() == Node.ELEMENT_NODE) {
+				Element elem = (Element) item;
+				String key = elem.getAttribute("key");
+				NodeList children = elem.getElementsByTagName("groep");
+				Collection<String> set = new TreeSet<>();
+				int len = children.getLength();
+				for (int j = 0; j < len; j++) {
+					String groep = children.item(j).getAttributes().getNamedItem("key").getNodeValue();
+					set.add(groep);
+				}
+				children = elem.getElementsByTagName("samengestelde_groep");
+				len = children.getLength();
+				for (int j = 0; j < len; j++) {
+					String groep = children.item(j).getAttributes().getNamedItem("key").getNodeValue();
+					set.add(groep);
+				}
+				result.put(key, set);
+			}
+		}
+		
+		return result;
+	}
+	
 
+	public Map<String, Collection<String>> memberships() {
+		Map<String, Collection<String>> result = new TreeMap<>();
+		NodeList groepen = document.getDocumentElement().getChildNodes();
+		int size = groepen.getLength();
+		for(int i = 0; i < size; i++) {
+			Node item = groepen.item(i);
+			String nodeName = item.getNodeName();
+			if(item instanceof Element && (nodeName.equals("leerlingen")||nodeName.equals("leerkrachten"))) {
+				Map<String, Collection<String>> r = membership((Element)item);
+				result.putAll(r);
+			}
+		}
+		
+		return result;
+	}
+	
+	
 	private Map<String, DomUserFull> parseUser(Element leerlingen,
 			Map<String, DomUserFull> result, String type) {
 		NodeList nodes = leerlingen.getChildNodes();
