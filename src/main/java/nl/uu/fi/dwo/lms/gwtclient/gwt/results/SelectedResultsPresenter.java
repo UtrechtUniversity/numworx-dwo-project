@@ -187,6 +187,13 @@ public class SelectedResultsPresenter {
 
     private int stage;
 
+    
+    @JsMethod
+    public void abandonPages() {
+    	prepareStart = Long.MAX_VALUE;
+    }
+    
+    
     @JsMethod
     public void preparePages(String scoid, String classid) {
         prepareStart = System.currentTimeMillis();
@@ -195,12 +202,15 @@ public class SelectedResultsPresenter {
         PersistenceId sco = new PersistenceId(scoid);
         PersistenceId schoolclass = new PersistenceId(classid);
         preparePages(schoolclass, sco).then(p -> {
-            view.updateResultTree(resultTree);
+        	if (prepareStart < Long.MAX_VALUE)
+        		view.updateResultTree(resultTree);
             return null;
         }, p -> LOG.log(Level.SEVERE, "preparePages", p.getFailure()))
                 .then(p -> {
-                    prepareStart = Long.MAX_VALUE;
-                    view.showPages(resultTree);
+                    if (prepareStart < Long.MAX_VALUE) {
+                    	prepareStart = Long.MAX_VALUE;
+                        view.showPages(resultTree);
+                    }
                     return null;
                 }, FAILURE);
     }
@@ -282,6 +292,7 @@ public class SelectedResultsPresenter {
     }
 
     Promise<Void> preparePages(PersistenceId schoolclass, PersistenceId scoid) {
+    	if (prepareStart == Long.MAX_VALUE) return Promises.resolved(null);
         // find studentscocontexts:
         DomResultSchoolClass<DomResultCourseInClass> cc = resultTree.getResultTree().getChildren().get(schoolclass);
         Map<PersistenceId, DomResultCourseInClass> children = cc.getChildren();
@@ -300,6 +311,7 @@ public class SelectedResultsPresenter {
     private Promise<Void> preparePages(DomSchoolClass schoolclass,
             DomScoContext scocontext,
             Iterator<DomResultStudentScoContext> iterator) {
+    	if (prepareStart == Long.MAX_VALUE) return Promises.resolved(null);
         if (iterator.hasNext()) {
             DomResultStudentScoContext ssc = iterator.next();
 
