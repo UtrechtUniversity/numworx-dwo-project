@@ -4,6 +4,7 @@ import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.gui.domainmodel.ImportAction;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinResultsPanel;
 
@@ -53,12 +54,12 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
     private static final Logger LOG = Logger.getLogger(TeacherStudentModelPanel.class.getName());
 
-    private TeacherStudentModelPanelProperties prop = new TeacherStudentModelPanelProperties();
+    public TeacherStudentModelPanelProperties prop = new TeacherStudentModelPanelProperties();
     private TeacherStudentModelPanelTableModel tableModel;
 
     private CenterPanel center;
 
-    private JButton addModelButton;
+    private JButton addModelButton, importModelButton;
     private JButton cancelButton;
     private LeerdomeinEditPanel textArea;
 
@@ -261,6 +262,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         addModelButton = new JButton(TextMapper.getText(TextMapper.GUIC_STUDENTMODELS_ADD));
         addModelButton.setSize(addModelButton.getPreferredSize());
         addModelButton.addActionListener(this);
+        importModelButton = new JButton(new ImportAction(this));
 //        cancelButton = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
 //        cancelButton.setSize(addModelButton.getPreferredSize());
 //        cancelButton.addActionListener(this);
@@ -268,6 +270,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
         Box header = Box.createHorizontalBox();
         header.add(addModelButton);
+        header.add(importModelButton);
         header.add(Box.createHorizontalGlue());
 //        header.add(cancelButton);
         header.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -332,14 +335,18 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                     DomStudentModelStructure modelStructure = textArea.getModel();
                     DomStudentModelContext model = new DomStudentModelContext();
                     model.setModelStructure(modelStructure);
-                    prop.addModel(model);
-                    tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage);
+                    addModel(model);
                   } catch (Dwo2Exception ex) {
                       LOG.log(Level.SEVERE, "new model", ex);
                       GuiCreator.instance().ShowErrorDialog(center, ex);
                   } 
                 }
             }
+    }
+
+    public void addModel(DomStudentModelContext model) throws Dwo2Exception {
+      prop.addModel(model);
+      tableModel.init(prop.getModelList(), searchImage, removeImage, resultsImage);
     }
 
     /**

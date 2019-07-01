@@ -32,6 +32,8 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -148,6 +150,7 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
   private JTable table;
   private JLabel score;
   private DomStudentModelScorePerTeacher scores;
+  private JScrollPane scroll;
   
   
   public LeerdomeinResultsPanel() {
@@ -170,7 +173,7 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
     vbox.add(new JScrollPane(tree));
     vbox.add(title);
     vbox.add(score);
-    vbox.add(new JScrollPane(tekst));
+    vbox.add(scroll = new JScrollPane(tekst));
     
     add(vbox);
     vbox = Box.createVerticalBox();
@@ -223,7 +226,7 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
       Node n = (Node)node.getUserObject();
       title.setText(n.toString());
       title2.setText(n.toString());
-      tekst.setText(n.getDescription());
+      setDescription(n);
       
       int[] ipath = getPath(path);
       if (ipath == null || ipath.length == 1) {
@@ -237,6 +240,18 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
     }
 
     
+  }
+
+  private void setDescription(Node n) {
+    String description = n.getDescription();
+    if (description.startsWith(LeerdomeinEditPanel.WISKOPDR_SIG))
+    {
+      WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(description);
+      scroll.setViewportView(panel);
+    } else {
+      tekst.setText(description);
+      scroll.setViewportView(tekst);
+    }
   }
 
   private void calculateObjectives(DomStudentModelScorePerTeacher scores, TableModel tmodel, int[] path) {

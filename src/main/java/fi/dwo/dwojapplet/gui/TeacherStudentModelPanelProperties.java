@@ -11,7 +11,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  *
  * @author Gert van der Plas
  */
-class TeacherStudentModelPanelProperties {
+public class TeacherStudentModelPanelProperties {
 
     private static final Logger LOG = Logger.getLogger(TeacherStudentModelPanelProperties.class.getName());
 

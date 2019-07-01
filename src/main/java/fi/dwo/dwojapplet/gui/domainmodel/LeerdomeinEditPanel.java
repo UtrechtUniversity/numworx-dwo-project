@@ -63,7 +63,7 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
   private String BEWERKEN = TextMapper.getText("edit");
   private String OPSLAAN  = TextMapper.getText(TextMapper.GUIP_BTN_SAVE);
   private Opslaan OPSLAAN_ACTION = new Opslaan();
-  private static final String WISKOPDR_SIG = "H4sIAAAAAA";
+  static final String WISKOPDR_SIG = "H4sIAAAAAA";
   class Opslaan extends AbstractAction implements TreeSelectionListener {
     
     Opslaan() {
@@ -502,6 +502,8 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
     bar.add(Bestand);
       Bestand.add(new JMenuItem(new SubdomeinAction()));
       Bestand.add(new JMenuItem(new LeerdoelAction()));
+      Bestand.addSeparator();
+      Bestand.add(new JMenuItem(new ExportAction(this)));
     bar.add(Bewerken);
       Bewerken.add(new JMenuItem(new Knippen()));
       Bewerken.add(new JMenuItem(new Kopieren()));
