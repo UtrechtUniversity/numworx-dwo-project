@@ -32,6 +32,7 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
@@ -141,11 +142,25 @@ public class SecuredTeacherSchoolClassManagerIT {
      * SecuredTeacherSchoolClassManager.
      */
     @Test
-    public void testGetTeachersSchoolClasses() {
+    public void testGetTeachersSchoolClasses1() {
         System.out.println("getTeachersSchoolClasses");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         List<DomSchoolClass> result = instance.getTeachersSchoolClasses(sc);
+        assertEquals(1, result.size());
+    }
+    @Test
+
+    public void testGetTeachersSchoolClasses2() throws Dwo2Exception {
+        System.out.println("getTeachersSchoolClasses");
+        SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+        SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
+        RestContext rest = new RestContext();
+        rest.setRestContext(new DomContext());
+        DomHasRole domHasRole;
+        domHasRole = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER).buildDomHasRole();
+		rest.getRestContext().setDomHasRole(domHasRole);
+		List<DomSchoolClass> result = instance.getTeachersSchoolClasses(sc, rest);
         assertEquals(1, result.size());
     }
 

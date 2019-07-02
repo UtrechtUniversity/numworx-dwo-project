@@ -209,6 +209,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @GET
     @Produces({"application/json"})
     @Path("/getTeachersInSchoolList")
+    @Deprecated
     public List<DomTeacher> getTeachersInSchool(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
@@ -323,6 +324,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @GET
     @Produces({"application/json"})
     @Path("/getSingleSchoolStudentsInSchoolList")
+    @Deprecated
     public List<DomStudent> getSingleSchoolStudentsInSchool(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
