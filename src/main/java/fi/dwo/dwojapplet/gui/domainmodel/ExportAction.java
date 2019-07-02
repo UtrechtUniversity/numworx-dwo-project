@@ -30,6 +30,7 @@ public class ExportAction extends AbstractAction {
     chooser = new JFileChooser();
     genson = new GensonBuilder()
         .useIndentation(true)
+        .setSkipNull(true)
         .create();
   }
 
