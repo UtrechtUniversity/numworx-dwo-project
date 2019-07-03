@@ -1,7 +1,6 @@
 package fi.dwo.gwt.lib.rest.client.RestCallers;
 
 //import fi.dwo.gwt.lib.rest.CallManagers.Callback; NOTA BENE Wim: Gebruik MethodCallback niet Callback bij een RestService
-import fi.dwo.gwt.lib.rest.CallManagers.Callback;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -19,6 +18,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
@@ -42,16 +42,33 @@ public interface SecuredTeacherSchoolClassRestCaller extends RestService {
 
     @GET
     @Path("/sec:{id}/teacher/schoolclass/getList")
+    @Deprecated
     public void getTeachersSchoolClasses(@PathParam("id") String id, MethodCallback<List<DomSchoolClass>> callback);
 
     @GET
     @Path("/sec:{id}/teacher/schoolclass/getTeachersInSchoolList")
+    @Deprecated
     public void getTeachersInSchool(@PathParam("id") String id, MethodCallback<List<DomTeacher>> callback);
 
     @GET
     @Path("/sec:{id}/teacher/schoolclass/getStudentsInSchoolList")
+    @Deprecated
     public void getStudentsInSchool(@PathParam("id") String id, MethodCallback<List<DomStudent>> callback);
 
+    
+    @PUT
+    @Path("/sec:{id}/teacher/schoolclass/getList")
+    public void getTeachersSchoolClasses(@PathParam("id") String id, RestContext context, MethodCallback<List<DomSchoolClass>> callback);
+
+    @PUT
+    @Path("/sec:{id}/teacher/schoolclass/getTeachersInSchoolList")
+    public void getTeachersInSchool(@PathParam("id") String id, RestContext context, MethodCallback<List<DomTeacher>> callback);
+
+    @PUT
+    @Path("/sec:{id}/teacher/schoolclass/getStudentsInSchoolList")
+    public void getStudentsInSchool(@PathParam("id") String id, RestContext context, MethodCallback<List<DomStudent>> callback);
+
+    
     @PUT
     @Path("/sec:{id}/teacher/schoolclass/getTeacherList")
     public void getTeachersInSchoolClass(@PathParam("id") String id, RestSchoolClass restData, MethodCallback<List<DomTeacher>> callback);
@@ -70,7 +87,12 @@ public interface SecuredTeacherSchoolClassRestCaller extends RestService {
 
     @GET
     @Path("/sec:{id}/teacher/schoolclass/getSchoolsList")
+    @Deprecated
     public void getSchoolsClasses(@PathParam("id") String id, MethodCallback<List<DomSchoolClass>> callback);
+
+    @PUT
+    @Path("/sec:{id}/teacher/schoolclass/getSchoolsList")
+    public void getSchoolsClasses(@PathParam("id") String id, RestContext context, MethodCallback<List<DomSchoolClass>> callback);
 
     @PUT
     @Path("/sec:{id}/teacher/schoolclass/submitTeacher")
@@ -102,7 +124,12 @@ public interface SecuredTeacherSchoolClassRestCaller extends RestService {
 
     @GET
     @Path("/sec:{id}/teacher/schoolclass/getSingleSchoolStudentsInSchoolList")
+    @Deprecated
     public void getSingleSchoolStudentsInSchool(@PathParam("id") String id, MethodCallback<List<DomStudent>> callback);
+
+    @PUT
+    @Path("/sec:{id}/teacher/schoolclass/getSingleSchoolStudentsInSchoolList")
+    public void getSingleSchoolStudentsInSchool(@PathParam("id") String id, RestContext context, MethodCallback<List<DomStudent>> callback);
     
     @PUT
     @Path("/sec:{id}/teacher/schoolclass/submitSingleSchoolStudent")
@@ -151,7 +178,12 @@ public interface SecuredTeacherSchoolClassRestCaller extends RestService {
 
     @GET
     @Path("/sec:{id}/teacher/schoolclass/getTeachersStudents")
-        public void getTeachersStudents(@PathParam("id") String id, MethodCallback<List<DomStudent>> callback);
+    @Deprecated
+    public void getTeachersStudents(@PathParam("id") String id, MethodCallback<List<DomStudent>> callback);
+ 
+    @PUT
+    @Path("/sec:{id}/teacher/schoolclass/getTeachersStudents")
+    public void getTeachersStudents(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomStudent>> callback);
 
     @PUT
     @Path("/sec:{id}/teacher/schoolclass/getTeachersClassesOfStudent")
