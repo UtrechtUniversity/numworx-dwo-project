@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
 
 import nl.uu.fi.dwo.rest.dom.entities.*;
 
-public class EdeXmlBuilder {
+public class EdeXmlBuilder implements Builder {
 
 	private Document document;
 
