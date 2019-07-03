@@ -150,7 +150,6 @@ public class SecuredTeacherSchoolClassManagerIT {
         assertEquals(1, result.size());
     }
     @Test
-
     public void testGetTeachersSchoolClasses2() throws Dwo2Exception {
         System.out.println("getTeachersSchoolClasses");
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
@@ -194,6 +193,30 @@ public class SecuredTeacherSchoolClassManagerIT {
         domSchoolClass.setIconizer(false);
         domSchoolClass.setRegistrationKey("Shaihulud");
         domSchoolClass.setSchoolClassName("The worm wil eat you.");
+        SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
+        Boolean expResult = true;
+        Boolean result = instance.SubmitSchoolClass(sc, restSchoolClass);
+        assertEquals("Update action threw false", true, result);
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity("The worm wil eat you.", SchoolManager.findBySchoolLogin("school01"));
+        assertEquals(false, schoolClass.getIconizer());
+        assertEquals("The worm wil eat you.", schoolClass.getClass1());
+        assertEquals("Shaihulud", schoolClass.getRegistrationKey());
+    }
+    @Test
+    public void testSubmitSchoolClass2() throws Dwo2Exception {
+        System.out.println("SubmitSchoolClass");
+        SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+        RestSchoolClassFull restSchoolClass = new RestSchoolClassFull();
+        DomSchoolClassFull domSchoolClass = new DomSchoolClassFull();
+        restSchoolClass.setDomSchoolClassFull(domSchoolClass);
+//        restSchoolClass.setId(id);
+        domSchoolClass.setIconizer(false);
+        domSchoolClass.setRegistrationKey("Shaihulud");
+        domSchoolClass.setSchoolClassName("The worm wil eat you.");
+        restSchoolClass.setRestContext(new DomContext());
+        DomHasRole domHasRole;
+        domHasRole = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER).buildDomHasRole();
+        restSchoolClass.getRestContext().setDomHasRole(domHasRole);
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
         Boolean expResult = true;
         Boolean result = instance.SubmitSchoolClass(sc, restSchoolClass);

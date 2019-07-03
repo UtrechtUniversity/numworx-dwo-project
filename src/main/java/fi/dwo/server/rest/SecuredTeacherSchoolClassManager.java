@@ -721,7 +721,8 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
 		else 
 		{
 			phr = HasRoleManager.findEntity(MySQLPersistenceId.getNativeId(context.getDomHasRole()));
-			if (! phr.getUser().getUsername().equals(sc.getUserPrincipal().getName()))
+			if (! phr.getUser().getUsername().equals(sc.getUserPrincipal().getName())||
+					phr.getSchoolGroup().getGroupID() != RoleType.TEACHER.ordinal())
 				throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "No Permission");
 		}
 		return phr;
