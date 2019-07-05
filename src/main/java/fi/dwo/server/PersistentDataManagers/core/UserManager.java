@@ -53,7 +53,10 @@ public class UserManager {
         } catch (EntityExistsException ex) {
             LOG.log(Level.SEVERE, "Can't create the PersistentUser.", ex);
             throw ex;
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
+          LOG.log(Level.SEVERE, "Can't create the PersistentUser.", e);
+          throw (e);
+      } catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentUser.", e);
             throw new PersistenceException(e);
         } finally {

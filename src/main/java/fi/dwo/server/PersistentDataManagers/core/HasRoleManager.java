@@ -42,6 +42,10 @@ public class HasRoleManager {
             em.persist(hasRole);
             em.getTransaction().commit();
         }
+        catch (PersistenceException e) {
+          LOG.log(Level.SEVERE, "Can't create the PersistentHasRole.", e);
+          throw (e);
+        }
         catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentHasRole.", e);
             throw new PersistenceException(e);
