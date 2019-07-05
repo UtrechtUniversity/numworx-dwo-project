@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
@@ -87,5 +88,14 @@ public class SecureTeacherStudentModelManager {
 		LOG.log(Level.FINE, "Got studentmodelscore of teacher with username {0} to his school.",
 				new Object[] { RestAuthenticator.getInstance().getUsername() });
 		return result;
+	}
+	
+	public static DomLRS getLRS() throws Dwo2Exception {
+	  RestContext rest = new RestContext();
+	  rest.setRestContext(getContext());
+	  DomLRS lrs = StoredRestManager.getInstance().put(
+	    "rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/getLRS",
+	    DomLRS.class, rest);
+	  return lrs;
 	}
 }
