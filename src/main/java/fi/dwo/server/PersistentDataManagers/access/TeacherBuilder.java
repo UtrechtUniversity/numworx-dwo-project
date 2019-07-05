@@ -52,11 +52,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.persistence.EntityNotFoundException;
+import javax.ws.rs.core.UriInfo;
 
 import org.eclipse.persistence.internal.jpa.weaving.RestAdapterClassWriter;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
@@ -674,9 +676,11 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
 		  
 		dom.setStudentScores(stream
 		  .collect(Collectors.toList()));
-		
-		
-		
 		return dom;
 	}
+
+  @Override
+  public DomLRS getLRS(UriInfo info) {
+    return instance.teacherActions.getLRS(instance.getContext(), info);
+  }
 }

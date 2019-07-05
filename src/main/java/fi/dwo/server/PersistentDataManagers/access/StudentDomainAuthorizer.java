@@ -5,6 +5,10 @@ import fi.dwo.server.PersistentDataManagers.actions.MySQLStudentActions;
 import fi.dwo.server.PersistentDataManagers.actions.StudentActions;
 import java.util.List;
 import java.util.logging.Logger;
+
+import javax.ws.rs.core.UriInfo;
+
+import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -125,6 +129,8 @@ public class StudentDomainAuthorizer {
         public DomStudentModelData getStudentModelData(DomScoContextId domScoId) throws Dwo2Exception;
         public DomStudentModelDataScore getStudentModelDataScore(DomStudentModelContextId domModelId) throws Dwo2Exception;
         public List<DomStudentModelContext> getStudentModelContextList()  throws Dwo2Exception;
+
+        public DomLRS getLRS(UriInfo info);
 
     }
 

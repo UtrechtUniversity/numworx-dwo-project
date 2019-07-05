@@ -1,7 +1,10 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
+
 import java.util.List;
 import java.util.logging.Logger;
 import javax.annotation.security.PermitAll;
@@ -11,6 +14,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
+
+import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
@@ -125,4 +131,15 @@ public class SecuredTeacherStudentModelManager {
     	
     	
     }
+    
+    @PUT
+    @Produces("application/json")
+    @Path("/getLRS") 
+    public DomLRS getLRS(@Context SecurityContext sc, @Context UriInfo info, RestContext rest) throws Dwo2Exception {
+       TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+          .setHasRole(rest.getRestContext().getDomHasRole())
+          .buildSchoolAdminTeacher().setTeacher();
+      return state.getLRS(info);
+    }
+
 }

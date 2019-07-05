@@ -16,6 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.ws.rs.core.UriInfo;
+
+import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -170,5 +174,10 @@ class StudentBuilder implements StudentDomainAuthorizer.StudentState_HR_R_S_SG_U
             pModels.stream().forEach(m -> result.add(m.buildDomStudentModelContext()));
             return result;
 
+    }
+
+    @Override
+    public DomLRS getLRS(UriInfo info) {
+      return instance.getStudentActions().getLRS(instance.getContext(), info);
     }
 }

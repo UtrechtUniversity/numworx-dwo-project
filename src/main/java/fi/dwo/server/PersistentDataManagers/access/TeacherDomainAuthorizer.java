@@ -16,8 +16,12 @@ import fi.dwo.server.PersistentDataManagers.actions.TeacherActions;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
+
+import javax.ws.rs.core.UriInfo;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
@@ -326,6 +330,8 @@ public class TeacherDomainAuthorizer {
         Boolean removeStudentModel(DomStudentModelContext domStudentModelContext) throws Dwo2Exception;
 
 		DomStudentModelScorePerTeacher getScores(DomStudentModelScorePerTeacher domStudentModelScorePerTeacher) throws Dwo2Exception;
+
+        DomLRS getLRS(UriInfo info);
 
 //        TeacherState_HR_R_S_SC_SG_U addASchoolClass(DomSchoolClass schoolClassFrom)  throws Dwo2Exception;
     }

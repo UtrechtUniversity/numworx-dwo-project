@@ -9,8 +9,13 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
+
 import java.util.Date;
 import java.util.List;
+
+import javax.ws.rs.core.UriInfo;
+
+import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -31,5 +36,6 @@ public interface TeacherActions  {
     public Boolean addCourseToClass(TeacherDomainAuthorizer.Context context, CourseType courseType, Date from, Date to, String accessKey) throws Dwo2Exception;
     public Boolean attachCourseToClass(TeacherDomainAuthorizer.Context context) throws Dwo2Exception;
     public Boolean detachCourseFromClass(TeacherDomainAuthorizer.Context context) throws Dwo2Exception;
+    public DomLRS getLRS(TeacherDomainAuthorizer.Context context, UriInfo info);
 
 }
