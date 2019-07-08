@@ -30,10 +30,11 @@ public class StudentResultsWidget extends Composite {
 	@UiField SimplePanel description;
 	@UiField InlineHTML outer;
 
-	void setPerc(int perc) {
-		SafeHtml sh = Util.percentageBar(perc);
+	void setPerc(float perc) {
+		SafeHtml sh = Util.percentageBar(Math.round(perc));
 		outer.setHTML(sh);
-		this.perc.setText(perc+"%");
+		perc = perc * 2 - 100;
+		this.perc.setText(Math.round(perc)+"%");
 	}
 
 }

@@ -95,7 +95,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			ti.setUserObject(item);
 			service.getScore(item).then(s -> {
               DomStudentModelStructureScore score = s.getValue().getDomStudentModelStructureScore();
-              int percentage = percentage(score);
+              int percentage = Math.round(percentage(score));
               ti.setHTML(Util.treeItem(title, percentage,1));
 			  return s;
 			});
@@ -132,7 +132,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 					for (DomStudentModelCategory o : structure.getCategories()) {
 		                DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(cat);
 						TreeItem tt = item.addItem(
-						  Util.treeItem(o.getInfo().getTitle().getOrDefault(lang, ""), percentage(score),2));
+						  Util.treeItem(o.getInfo().getTitle().getOrDefault(lang, ""), (percentage(score)),2));
 						tt.setUserObject(cat);
 						cat++;
 					}
@@ -161,9 +161,9 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 					int cat = ((Integer) userObject).intValue();
 					int obj = 0;
 					for( DomStudentModelObj oo : o.getObjectives()) {
-					    int ppp;
+					    float ppp;
 					    DomStudentModelObjectiveScore s = score.getObjectives().get(obj);
-					    ppp = percentage(s);
+					    ppp = (percentage(s));
 						TreeItem tt = item.addItem(Util.treeItem(oo.getInfo().getTitle().getOrDefault(lang, ""), ppp,3));
 						tt.setUserObject(new int[] { cat, obj } );
 						obj++;
@@ -192,13 +192,13 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	}
 
 	private void setPerc(DomStudentModelScore score) {
-		int perc = percentage(score);
+		float perc = percentage(score);
 		widget.get().setPerc(perc);
 	}
-int percentage(DomStudentModelScore score) {
-  int perc;
+float percentage(DomStudentModelScore score) {
+  float perc;
   		if (score.getCount() == 0) perc = 50;
-  		else perc = (int)Math.round(score.getScore()*100/score.getCount());
+  		else perc = (float)(score.getScore()*100/score.getCount());
   return perc;
 }
   private static final String WISKOPDR_SIG = "H4sIAAAAAA";

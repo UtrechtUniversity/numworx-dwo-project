@@ -30,14 +30,15 @@ public class Util {
   
   
   static final int MAX_LEVEL = 3;
-  static SafeHtml treeItem (String title, int perc, int level) {
+  static SafeHtml treeItem (String title, float perc, int level) {
     float red = 0.5f, green = 0.5f;
     if (perc > 50) { red = 0; green = perc-50;
     } else if (perc < 50) {
         red = 50 - perc; green = 0;
     }
     level = Math.max(MAX_LEVEL-level, 0);
-    return scoreTemplate.treeItem(title, perc, red, green, level);
+    perc = perc * 2 - 100;
+    return scoreTemplate.treeItem(title, Math.round(perc), red, green, level);
   }
 
 }
