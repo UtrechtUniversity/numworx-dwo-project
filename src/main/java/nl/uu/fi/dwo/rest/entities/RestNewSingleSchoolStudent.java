@@ -7,7 +7,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 
 /**
- * Create a single SchoolStudent and put han in a SchoolClass
+ * Create a single SchoolStudent and put him/her in a SchoolClass
  * 
  * @author G.A.J. van der Plas
  */
