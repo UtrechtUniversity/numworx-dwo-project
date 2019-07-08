@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -35,6 +36,7 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
@@ -174,6 +176,8 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
     vbox.add(title);
     vbox.add(score);
     vbox.add(scroll = new JScrollPane(tekst));
+    scroll.setBackground(Color.WHITE);
+    scroll.getViewport().setBackground(Color.white);
     
     add(vbox);
     vbox = Box.createVerticalBox();
@@ -247,6 +251,7 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
     if (description.startsWith(LeerdomeinEditPanel.WISKOPDR_SIG))
     {
       WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(description);
+      panel.setBackground(Color.white);
       scroll.setViewportView(panel);
     } else {
       tekst.setText(description);
@@ -342,6 +347,19 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
         scores.setStudentModelContexts(Collections.singletonList(new DomMapEntry<>(context.getId(), context)));
         try {
           scores = SecureTeacherStudentModelManager.getScores(scores);
+
+          DomLRS lrs = SecureTeacherStudentModelManager.getLRS();
+          XapiResultsManager xapi = new XapiResultsManager(lrs);
+          try {
+            scores = xapi.fromXAPI(scores).getValue();
+          } catch (InvocationTargetException e1) {
+            LOG.log(Level.SEVERE, "fromXAPI", e1.getCause());
+          } catch (InterruptedException e1) {
+            LOG.log(Level.WARNING, "interrupted", e1);
+          }
+          
+          
+          
           TableModel tmodel = new DefaultTableModel(scores.getStudents().size(), 3);
           for (int i = 0; i < tmodel.getRowCount(); i++ ) {
             String u = scores.getStudents().get(i).getValue().getDisplayName();

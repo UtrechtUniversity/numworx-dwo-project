@@ -95,7 +95,9 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
         String description = text.getText();
         if (editorCB.isSelected() && wiskOpdrEditPanel != null) {
           description = wiskOpdrEditPanel.getText();
-          pane.setViewportView(WiskOpdr.getWiskOpdrPanel(description));
+          WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(description);
+          panel.setBackground(Color.white);
+          pane.setViewportView(panel);
           n.setDescriptionAsJSON(toJSON(description));
         } else {
           n.setDescriptionAsJSON(null);
@@ -151,12 +153,14 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
     void setDescription(Object u) {
       if (u instanceof Node) {
         String description = ((Node) u).getDescription();
-        if (description.startsWith(WISKOPDR_SIG)) {
+        if (description.startsWith(WISKOPDR_SIG)||description.isEmpty()) {
           if (text.isEditable()) {
             wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(description);
+            wiskOpdrEditPanel.setBackground(Color.WHITE);
             pane.setViewportView(wiskOpdrEditPanel);
           } else {
             WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(description);
+            panel.setBackground(Color.WHITE);
             pane.setViewportView(panel);
           }
           editorCB.setSelected(true);
@@ -555,6 +559,8 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
     rightBox.add(hbox);
     rightBox.add(Box.createVerticalStrut(10+bar.getPreferredSize().height));
     pane = new JScrollPane(text);
+    pane.setBackground(Color.white);
+    pane.getViewport().setBackground(Color.white);
     rightBox.add(pane);
     
     bkt = Box.createHorizontalBox();
@@ -698,6 +704,7 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
         {   if(wiskOpdrEditPanel==null)
             {   wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel("");
                 wiskOpdrEditPanel.setPreferredSize(new Dimension(400,350));
+                wiskOpdrEditPanel.setBackground(Color.white);
             }
             pane.setViewportView(wiskOpdrEditPanel);
         }
