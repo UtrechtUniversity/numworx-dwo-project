@@ -30,9 +30,9 @@ public class EdeXmlBuilder implements Builder {
 	
 	public void setSource(InputSource input) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		
+		dbf.setIgnoringComments(true);
+		dbf.setIgnoringElementContentWhitespace(true);
+		DocumentBuilder db = dbf.newDocumentBuilder();		
 		setDocument(db.parse(input));
 	}
 
@@ -179,11 +179,11 @@ public class EdeXmlBuilder implements Builder {
 		String tussenvoegsel = getElement(item, "tussenvoegsel");
 		String emailadres = getElement(item, "emailadres");
 		String gebruikersnaam = getElement(item, "gebruikersnaam");
-		u.setInsertion(tussenvoegsel);
-		u.setFamilyName(achternaam);
-		u.setGivenName(roepnaam);
-		u.setEmail(emailadres);
-		u.setUserName(gebruikersnaam);
+		u.setInsertion(tussenvoegsel.trim());
+		u.setFamilyName(achternaam.trim());
+		u.setGivenName(roepnaam.trim());
+		u.setEmail(emailadres.trim());
+		u.setUserName(gebruikersnaam.trim());
 		return u;
 	}
 

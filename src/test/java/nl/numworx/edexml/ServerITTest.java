@@ -74,8 +74,8 @@ public class ServerITTest extends TestCase {
       Map<String, Collection<String>> members = input.memberships();
       
       builder.addSchoolClasses(groepen);
-      builder.addStudents(leerlingen, members, groepen);
-
+     // builder.addStudents(leerlingen, members, groepen);
+      builder.addTeachers(leerkrachten, members, groepen);
 	
 	}
 	

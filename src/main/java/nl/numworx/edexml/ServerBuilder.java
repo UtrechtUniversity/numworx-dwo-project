@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolClassManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
@@ -25,6 +26,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
@@ -230,4 +232,43 @@ public class ServerBuilder implements Builder {
       }      
 	}
   }
+  
+  public void addTeachers(Map<String, DomUserFull> users, Map<String,Collection<String>>members, Map<String, DomSchoolClassFull> classes) {  
+    for (Map.Entry<String, DomUserFull> item: users.entrySet()) {    
+      String key = item.getKey();
+      DomUserFull value = item.getValue();
+      if (value.getUserName().isEmpty()) {
+        value.setUserName(key);
+      }
+      try {
+        SecureSchoolAdminSchoolManager.submitTeacher(value);
+      } catch (Dwo2Exception e) {
+        LOG.log(Level.WARNING, "submit Teacher", e);
+      }      
+    }
+    Collection<DomUserFull> allTeachers = parseLeerkrachten().values();
+    for(Map.Entry<String,DomUserFull> item: users.entrySet()) {
+      for (DomUserFull t: allTeachers) {
+        if (t.getUserName().equals(item.getValue().getUserName())) {
+          item.setValue(t);
+        }
+      }
+    } 
+    for(Map.Entry<String,DomUserFull> item: users.entrySet()) {
+      String key = item.getKey();
+      Collection<String> collection = members.get(key);
+      DomSubmitTeacherToSchoolClass submit;
+      submit = new DomSubmitTeacherToSchoolClass();
+      submit.setTeacher(new DomTeacher(item.getValue()));
+      for(String id: collection) {
+        submit.setSchoolClass(classes.get(id));
+        try {
+          SecureSchoolAdminSchoolClassManager.submitTeacherToSchoolClass(submit);
+        } catch (Dwo2Exception e) {
+          LOG.log(Level.WARNING, "Teacher to class",e);
+        }
+      }
+    }
+  }
+  
 }
