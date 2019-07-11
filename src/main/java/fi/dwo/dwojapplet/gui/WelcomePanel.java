@@ -189,7 +189,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
             "Peter Boon",
             "Sylvia van Borkulo",
             "Gert van der Plas",
-            "Sietsje Tacoma",
+            "Sietske Tacoma",
             "Wim van Velthoven",
             "Freudenthal Instituut",
             "www.numworx.nl",
