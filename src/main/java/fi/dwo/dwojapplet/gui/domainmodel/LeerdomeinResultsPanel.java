@@ -204,6 +204,9 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
     this.context = context;
     DomStudentModelStructure model = context.getModelStructure();
     String locale = getLocale().getLanguage();
+    
+    model = AdviseMeResultManager.restructure(model, locale, context);
+      
     NodeVector vector = new NodeVector(model.getCategories(), model.getInfo(), locale);
     this.model.setRoot(root = new DynamicUtilTreeNode(vector, vector));
 
@@ -348,6 +351,22 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
         try {
           scores = SecureTeacherStudentModelManager.getScores(scores);
 
+          if (context.getModelStructure().getInfo().getId() != null &&
+              context.getModelStructure().getInfo().getId().startsWith(AdviseMeResultManager.KEY))
+          {
+            try {
+              scores = new AdviseMeResultManager().fromAdviseMe(scores).getValue();
+            } catch (InvocationTargetException e1) {
+              LOG.log(Level.SEVERE, "fromAdviseMe", e1.getCause());
+            } catch (InterruptedException e1) {
+              LOG.log(Level.WARNING, "interrupted", e1);
+            }
+          } else {
+          
+          
+          
+          
+
           DomLRS lrs = SecureTeacherStudentModelManager.getLRS();
           XapiResultsManager xapi = new XapiResultsManager(lrs);
           try {
@@ -358,7 +377,7 @@ public class LeerdomeinResultsPanel extends JPanel implements TreeSelectionListe
             LOG.log(Level.WARNING, "interrupted", e1);
           }
           
-          
+          }
           
           TableModel tmodel = new DefaultTableModel(scores.getStudents().size(), 3);
           for (int i = 0; i < tmodel.getRowCount(); i++ ) {
