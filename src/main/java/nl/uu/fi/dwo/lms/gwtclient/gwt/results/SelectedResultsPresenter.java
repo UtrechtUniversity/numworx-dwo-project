@@ -25,6 +25,7 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.web.bindery.event.shared.EventBus;
+
 import fi.dwo.gwt.lib.rest.util.StringFormatter;
 
 import jsinterop.annotations.JsMethod;
@@ -36,6 +37,9 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortDeferred;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortEvent.EventType;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
@@ -157,6 +161,8 @@ public class SelectedResultsPresenter {
 
     }
 
+    private static final String WAIT = DwoLocalesForGWT.instance.NUM_DLG_SELECTEDRESULTS_PAGES();
+    
     @SuppressWarnings({"rawtypes", "unchecked"})
     @JsMethod
     public void sealSingleActivity(String scoId, String classid) {
@@ -184,9 +190,18 @@ public class SelectedResultsPresenter {
     }
 
     long prepareStart = Long.MAX_VALUE;
+    Promise<Boolean> progress;
+    float step,count;
 
     private int stage;
 
+    private boolean firestep() {
+      count += step;
+      eventBus.fireEvent(new ProgressDialogWithAbortEvent(EventType.Update, Math.round(count), WAIT, null));
+      return progress.isDone();
+    }
+    
+    
     
     @JsMethod
     public void abandonPages() {
@@ -198,6 +213,9 @@ public class SelectedResultsPresenter {
     public void preparePages(String scoid, String classid) {
         prepareStart = System.currentTimeMillis();
         view.setLoadingTableMessage();
+        ProgressDialogWithAbortDeferred defer = new ProgressDialogWithAbortDeferred(WAIT);
+        progress = defer.getPromise();
+        eventBus.fireEvent(new ProgressDialogWithAbortEvent(EventType.Init, 0, WAIT, defer));
         LOG.log(Level.FINE, "scoid = " + scoid + " classid = " + classid);
         PersistenceId sco = new PersistenceId(scoid);
         PersistenceId schoolclass = new PersistenceId(classid);
@@ -212,7 +230,8 @@ public class SelectedResultsPresenter {
                         view.showPages(resultTree);
                     }
                     return null;
-                }, FAILURE);
+                }, FAILURE)
+        .onResolve( () -> eventBus.fireEvent(new ProgressDialogWithAbortEvent(EventType.Complete, 100, WAIT, null)));
     }
 
     @JsMethod
@@ -300,7 +319,11 @@ public class SelectedResultsPresenter {
             Map<PersistenceId, DomResultScoContext> items = cic.getChildren();
             DomResultScoContext sco = items.get(scoid);
             if (sco != null) {
-                Iterator<DomResultStudentScoContext> iterator = sco.getChildren().values().iterator();
+                Collection<DomResultStudentScoContext> values = sco.getChildren().values();
+                int size = values.size(); if (size < 1) size = 1;
+                count = 0;
+                step = 100.0F/size;              
+                Iterator<DomResultStudentScoContext> iterator = values.iterator();
                 return preparePages(cc.getSchoolClass(), sco.getScoContext(), iterator);
 
             }
@@ -311,8 +334,8 @@ public class SelectedResultsPresenter {
     private Promise<Void> preparePages(DomSchoolClass schoolclass,
             DomScoContext scocontext,
             Iterator<DomResultStudentScoContext> iterator) {
-    	if (prepareStart == Long.MAX_VALUE) return Promises.resolved(null);
-        if (iterator.hasNext()) {
+    	if (prepareStart == Long.MAX_VALUE || firestep()) return Promises.resolved(null);
+    	if (iterator.hasNext()) {
             DomResultStudentScoContext ssc = iterator.next();
 
             if (!ssc.getChildren().isEmpty()) // skip if non-empty
