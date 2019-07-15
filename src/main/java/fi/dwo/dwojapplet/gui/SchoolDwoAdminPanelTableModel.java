@@ -15,11 +15,15 @@ import javax.swing.table.AbstractTableModel;
  */
 class SchoolDwoAdminPanelTableModel extends AbstractTableModel {
 
+    public static final int SCHOOLCOLUMN = 6;
+  
     private String[] columnNames = {TextMapper.getText(TextMapper.TBL_SCHOOL),
         TextMapper.getText(TextMapper.TBL_SCHOOLLOGIN),
         TextMapper.getText(TextMapper.TBL_EDIT),
         TextMapper.getText(TextMapper.TBL_SCHOOLRIGHTS),
-        TextMapper.getText(TextMapper.TBL_DELETE)};
+        TextMapper.getText(TextMapper.TBL_DELETE),
+        TextMapper.getText("Stats")
+    };
 
     static boolean DEBUG = false;
     private SchoolDwoAdminPanelProperties prop;
@@ -28,7 +32,7 @@ class SchoolDwoAdminPanelTableModel extends AbstractTableModel {
 
     private Object[][] data;
 
-    public void init(SchoolDwoAdminPanelProperties props, Image editImage, Image rightsImage, Image emptyImage, Image removeImage) throws Dwo2Exception {
+    public void init(SchoolDwoAdminPanelProperties props, Image editImage, Image rightsImage, Image emptyImage, Image removeImage, Image statsImage) throws Dwo2Exception {
 
         prop = props;
         List<DomSchool4DwoAdmin> sList = prop.getSchoolList();
@@ -41,7 +45,7 @@ class SchoolDwoAdminPanelTableModel extends AbstractTableModel {
             rows++; // one for each item in List
         }
 
-        data = new Object[rows][6];
+        data = new Object[rows][7];
         int j = 0;
         for (DomSchool4DwoAdmin s : sList) {
             data[j][0] = s.getSchoolName();
@@ -55,12 +59,18 @@ class SchoolDwoAdminPanelTableModel extends AbstractTableModel {
                 data[j][3] = rightsImage;
                 data[j][4] = removeImage;
             }
-            data[j][5] = s;
+          data[j][5] = statsImage;
+          data[j][SCHOOLCOLUMN] = s;
             j++;
         }
         fireTableDataChanged();
     }
 
+    public DomSchool4DwoAdmin getSchool(int row) {
+      return (DomSchool4DwoAdmin) data[row][SCHOOLCOLUMN];
+    }
+    
+    
     @Override
     public int getColumnCount() {
         return columnNames.length;

@@ -93,9 +93,9 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
             fireEditingStopped();
             School oldSchool = null;
             int lclRow=-1;
-            if (value == editImage || value == removeImage || value == rightsImage) {
+            if (value == editImage || value == removeImage || value == rightsImage|| value == imageStats) {
                 lclRow = rowSorter.convertRowIndexToModel(row);
-                DomSchool4DwoAdmin school = (DomSchool4DwoAdmin) tableModel.getValueAt(lclRow, 5);
+                DomSchool4DwoAdmin school =  tableModel.getSchool(lclRow);
                 long schoolid;
                 try {
                     schoolid = MySQLPersistenceId.getNativeId(school);
@@ -123,14 +123,14 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
             } else if (value == removeImage) {
                 /* Delete the school */
                     //int row = tableModel.getSelectedRow();
-                    DomSchool4DwoAdmin school = (DomSchool4DwoAdmin) tableModel.getValueAt(lclRow, 5);
+                    DomSchool4DwoAdmin school = tableModel.getSchool(lclRow);
                     String msg = MessageFormat.format(
                             Dwo2ExceptionTranslator.getLocalizedCodeExplanation(DwoHelper.getLocale(), 
                                     Dwo2ExceptionCode.User_ConfirmSchoolDelete),school.getSchoolName());
                 if (GuiCreator.instance().ShowConfirmDialog(GuiCreator.instance().getMainPanel(), msg) == JOptionPane.OK_OPTION) {
                     try {
                         prop.deleteSchool(school);
-                        tableModel.init(prop, editImage, rightsImage, emptyImage, removeImage);
+                        tableModel.init(prop, editImage, rightsImage, emptyImage, removeImage, imageStats);
                         GuiCreator.instance().ShowMessageDialog(center, TextMapper.getText(TextMapper.DLG_DONE_MSG));
                     }
                     catch (Dwo2Exception ex) {
@@ -141,13 +141,22 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
             } else if (value == rightsImage) {
                 JDialog rightsDialog;
                 try {
-                    rightsDialog = new RightsDialog((DomSchool4DwoAdmin) tableModel.getValueAt(lclRow, 5));
+                    rightsDialog = new RightsDialog(tableModel.getSchool(lclRow));
                     rightsDialog.show();
                 }
                 catch (Dwo2Exception ex) {
                         LOG.log(Level.SEVERE, "", ex);
                         GuiCreator.instance().ShowErrorDialog(center, ex);
                 }
+            } else if (value == imageStats) {
+              try {
+                DomSchool4DwoAdmin school = tableModel.getSchool(lclRow);
+                SchoolStatisticsPanel panel = new SchoolStatisticsPanel(school);
+                JOptionPane.showMessageDialog(center, panel, school.getSchoolName(), JOptionPane.INFORMATION_MESSAGE);
+                
+              } catch(Exception ex) {
+                LOG.log(Level.SEVERE, "Statistics", ex);           
+              }
             }
 
         }
@@ -192,96 +201,12 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
 
     }
 
-    class SchoolModel extends AbstractTableModel implements TableModel {
-
-        private School[] school;
-
-        public SchoolModel(School[] school) {
-            this.school = school;
-        }
-
-        @Override
-        public int getColumnCount() {
-            return 7 - 2;
-        }
-
-        @Override
-        public Class getColumnClass(int col) {
-            if (col >= 4 - 2) {
-                return Image.class;
-            }
-            return super.getColumnClass(col);
-        }
-
-        @Override
-        public boolean isCellEditable(int row, int col) {
-            if (col >= 4 - 2) {
-                return true;
-            }
-            return super.isCellEditable(row, col);
-        }
-
-        @Override
-        public int getRowCount() {
-            return school.length;
-        }
-
-        @Override
-        public Object getValueAt(int row, int col) {
-            School s = school[row];
-            switch (col) {
-                case 0:
-                    return s.getName();
-                case 1:
-                    return s.getSchoolLogin();
-//			case 2: try {
-//						return s.getSchoolGroupList()[0].getPasswd();
-//					} catch (RuntimeException e) {
-//					} 
-//					break;
-//			case 3: try {
-//						return s.getSchoolGroupList()[1].getPasswd();
-//					} catch (RuntimeException e) {
-//					}
-//					break;
-                case 2:
-                    return rightsImage;
-                case 3:
-                    return editImage;
-                case 4:
-                    return removeImage;
-            }
-
-            return "";
-        }
-
-        @Override
-        public String getColumnName(int col) {
-            switch (col) {
-                case 0:
-                    return "School";
-                case 1:
-                    return "Login";
-//			case 2: return "Leerling";
-//			case 3: return "Docent";
-            }
-            return "";
-        }
-
-        void deleteRow(int row) {
-            School[] newSchool = new School[school.length - 1];
-            System.arraycopy(school, 0, newSchool, 0, row);
-            System.arraycopy(school, row + 1, newSchool, row, newSchool.length - row);
-            school = newSchool;
-            fireTableRowsDeleted(row, row);
-        }
-    }
 
     private CenterPanel center;
 
     private JButton addSchoolButton, copyButton, clrBtn;
 
-    private Image removeImage, editImage, rightsImage, emptyImage, assignImage;
+    private Image removeImage, editImage, rightsImage, emptyImage, assignImage, imageStats;
 
     private JTextField zoekField;
 
@@ -307,6 +232,8 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
         emptyImage = DwoHelper.getResourceImage(GuiConstants.EMPTY_IMAGE);
         rightsImage = DwoHelper.getResourceImage(GuiConstants.GUI_RIGHTS_IMAGE);
         assignImage = DwoHelper.getResourceImage(GuiConstants.ASSIGN_CLASS_IMAGE);
+        imageStats = DwoHelper.getResourceImage(GuiConstants.RESULTS_STATS);
+
         Image clearImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
         Image searchImage = DwoHelper.getResourceImage(GuiConstants.SEARCH_IMAGE);
         tr.addImage(removeImage, 0);
@@ -316,6 +243,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
         tr.addImage(searchImage, 4);
         tr.addImage(clearImage, 5);
         tr.addImage(emptyImage, 6);
+        tr.addImage(imageStats, 7);
         try {
             tr.waitForAll();
         }
@@ -397,7 +325,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
         table.getTableHeader().setReorderingAllowed(false);
         zoekPos = -1;
         tableModel = new SchoolDwoAdminPanelTableModel();
-        tableModel.init(prop, editImage, rightsImage, emptyImage, removeImage);
+        tableModel.init(prop, editImage, rightsImage, emptyImage, removeImage, imageStats);
         table.setModel(tableModel);
         rowSorter = new TableRowSorter(tableModel);
         tableFilter = RowFilter.regexFilter(".*", 0);
@@ -475,7 +403,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
             try {
                 School s = AddSchoolDialog.addSchool(center);
                 if (s != null) {
-                    tableModel.init(prop, editImage, rightsImage, emptyImage, removeImage);
+                    tableModel.init(prop, editImage, rightsImage, emptyImage, removeImage, imageStats);
                 }
             }
             catch (Dwo2Exception ex) {
