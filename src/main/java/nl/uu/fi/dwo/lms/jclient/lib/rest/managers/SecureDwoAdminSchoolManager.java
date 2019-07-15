@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomStatistics;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
@@ -41,12 +42,27 @@ public class SecureDwoAdminSchoolManager implements SchoolManager {
     rest.setDomSchool4DwoAdmin(submit);
     DomSchoolFull result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/school/get",
         DomSchoolFull.class, rest);
-    LOG.log(Level.FINE, "Retrieved full school with login {1} for dwoadmin with userename {0}.",
+    LOG.log(Level.FINE, "Retrieved full school with login {1} for dwoadmin with username {0}.",
         new Object[] {RestAuthenticator.getInstance().getUsername(),
             rest.getDomSchool4DwoAdmin().getId()});
     return result;
   }
 
+  public static DomStatistics getStatistics(DomSchool4DwoAdmin submit) throws Dwo2Exception {
+	    RestSchool4DwoAdmin rest = new RestSchool4DwoAdmin();
+	    rest.setRestContext(getContext());
+	    rest.setDomSchool4DwoAdmin(submit);
+	    DomStatistics result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/school/statistics",
+	    		DomStatistics.class, rest);
+	    LOG.log(Level.FINE, "Retrieved statistics with login {1} for dwoadmin with username {0}.",
+	        new Object[] {RestAuthenticator.getInstance().getUsername(),
+	            rest.getDomSchool4DwoAdmin().getId()});
+	    return result;
+	  
+  }
+  
+  
+  
   static DomContext getContext() {
     return RestAuthenticator.getInstance().getContext();
   }
