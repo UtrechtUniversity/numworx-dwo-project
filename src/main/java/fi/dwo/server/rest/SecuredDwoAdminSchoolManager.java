@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomStatistics;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
@@ -13,13 +14,16 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentFromTo;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
@@ -33,6 +37,7 @@ import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
+import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.FromToManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
@@ -42,6 +47,7 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentModelContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
@@ -581,6 +587,82 @@ public class SecuredDwoAdminSchoolManager {
         }
       school.setId(ps.buildPersistenceId());
       return school;
+    }
+
+    @PUT
+    @Produces({"application/json"})
+    @Path("/statistics")
+    public DomStatistics getStatistics(@Context SecurityContext sc, RestSchool4DwoAdmin rest) throws Dwo2Exception {
+        DwoAdminState_HR_R_S_SG_U state = AnonDomainAuthorizer.build()
+                .submitUser(sc.getUserPrincipal().getName())
+                .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN)
+                .buildDwoAdmin();
+   	
+        DomStatistics result = new DomStatistics();
+        result.setSchool(rest.getDomSchool4DwoAdmin());
+        result.setFetchTimeStamp(System.currentTimeMillis());
+        
+        List<DomMapEntry<String, String>> stats = new ArrayList<>();
+        
+        Long id = MySQLPersistenceId.getNativeId(rest.getDomSchool4DwoAdmin());
+        PersistentSchool school = SchoolManager.findEntity(id);
+        stats.add(new DomMapEntry<>("id", school.buildPersistenceId().getIdString()));
+    	DomMapEntry<String, String> entry;
+    {    List<PersistentSchoolGroup> groups = SchoolGroupManager.findEntity(school);
+        long studentsco = 0;
+        for (PersistentSchoolGroup g: groups) {
+        	entry = new DomMapEntry<>(g.getRole().getGroupname() + " id", g.buildPersistenceId().getIdString());
+        	stats.add(entry);        	
+        	List<PersistentUser> users = UserManager.findEntities(g);
+			int size = users.size();
+        	entry = new DomMapEntry<>(g.getRole().getGroupname() + " size", Integer.toString(size));
+        	stats.add(entry);
+        	long count = users.stream().filter(PersistentUser::isSingleSchoolAccount).count();
+        	if (count > 0) {
+        		entry = new DomMapEntry<>("singleschool users", Long.toString(count));
+        		stats.add(entry);
+        	}
+        	
+        	studentsco += users.stream().flatMap(u -> {
+        		PersistentHasRolePK key = new PersistentHasRolePK(u.getId(), g.getSchoolGroupID());
+				return StudentScoContextManager.findEntities(key).stream();
+        	}).count();
+        }
+    	entry = new DomMapEntry<>("studentscos", Long.toString(studentsco));
+    	stats.add(entry);       
+}   
+        {
+        	List<PersistentSchoolClass> classes = SchoolClassManager.findEntities(school);
+        	entry = new DomMapEntry<>("classes", Integer.toString(classes.size()));
+        	stats.add(entry);       
+        }
+        {
+        	final long[] scocount = new long[1];
+        	List<PersistentDwoProfile> profiles = DwoProfileManager.findEntities();
+        	long count = profiles.stream()
+        			.flatMap(p ->  
+        			{
+        				List<PersistentCourse> course = CourseManager.findEntities(p.getDwoProfileID(), school.getSchoolID());
+        				scocount[0] += course.stream().flatMap(c -> ScoContextManager.findEntities(c).stream()).count();
+						return course.stream(); 
+        			}
+        					) 
+        			.count();
+        	entry = new DomMapEntry<>("courses", Long.toString(count));
+        	stats.add(entry);
+        	entry = new DomMapEntry<>("scos", Long.toString(scocount[0]));
+        	stats.add(entry);
+        }
+        {
+        	List<PersistentStudentModelContext> models = StudentModelContextManager.findEntities(school);
+        	entry = new DomMapEntry<>("models", Integer.toString(models.size()));
+        	stats.add(entry);
+        }
+        
+        
+        
+        result.setStatistics(stats);
+        return result;
     }
 
 }
