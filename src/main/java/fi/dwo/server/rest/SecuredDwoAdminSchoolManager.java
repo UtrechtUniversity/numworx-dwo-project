@@ -18,6 +18,7 @@ import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentFromTo;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -55,6 +56,8 @@ import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -613,18 +616,38 @@ public class SecuredDwoAdminSchoolManager {
         for (PersistentSchoolGroup g: groups) {
         	entry = new DomMapEntry<>(g.getRole().getGroupname() + " id", g.buildPersistenceId().getIdString());
         	stats.add(entry);        	
-        	List<PersistentUser> users = UserManager.findEntities(g);
+        	List<PersistentHasRole> users = HasRoleManager.findEntities(g);
 			int size = users.size();
         	entry = new DomMapEntry<>(g.getRole().getGroupname() + " size", Integer.toString(size));
         	stats.add(entry);
-        	long count = users.stream().filter(PersistentUser::isSingleSchoolAccount).count();
+            long count;
+            long stamp = (System.currentTimeMillis() - 30 * 24 * 3600 * 1000L);
+        	count = users.stream()
+        	    .filter( f -> f.getUser() != null)
+        	    .flatMap(u -> {
+        	      List<PersistentLoginContext> entities = LoginContextManager.findEntities(u.getUser().getId());
+        	      if (entities == null) entities = Collections.emptyList();
+        	      return entities.stream();
+        	    })
+        	        .filter(u -> {
+        	          return u.getLastLogin() != null && u.getLastLogin().longValue()>(stamp);
+        	        }).count();
+            entry = new DomMapEntry<>(g.getRole().getGroupname() + " active", Long.toString(count));
+            stats.add(entry);
+        	count = users.stream()
+        	    .filter(f -> f.getUser() != null) // NPE checks
+        	    .map(PersistentHasRole::getUser)
+        	    .filter(u -> u.isSingleSchoolAccount() != null) // NPE checks
+        	    .filter(PersistentUser::isSingleSchoolAccount).count();
         	if (count > 0) {
         		entry = new DomMapEntry<>("singleschool users", Long.toString(count));
         		stats.add(entry);
         	}
         	
+        	
+        	
         	studentsco += users.stream().flatMap(u -> {
-        		PersistentHasRolePK key = new PersistentHasRolePK(u.getId(), g.getSchoolGroupID());
+        		PersistentHasRolePK key = u.getPersistentHasRolePK();
 				return StudentScoContextManager.findEntities(key).stream();
         	}).count();
         }
