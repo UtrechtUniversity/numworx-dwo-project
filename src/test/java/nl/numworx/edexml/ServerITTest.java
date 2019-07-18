@@ -55,6 +55,7 @@ public class ServerITTest extends TestCase {
 	protected void setUp() throws Exception {
 		builder = new ServerBuilder();
 		builder.setSource("project_wim", "d7f69547d875d5984c7c0d185f62a81b", new URL("http://localhost:8080/dwo/"));
+		builder.setRealm("@edex");
 	}
 
 	protected void tearDown() throws Exception {

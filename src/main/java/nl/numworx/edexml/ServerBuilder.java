@@ -57,7 +57,10 @@ public class ServerBuilder implements Builder {
 		} else 
 			throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "Wrong role");
 	}
-	
+
+	public void setRealm(String realm) {
+		StoredRestManager.getInstance().getAuthenticator().getContext().setRealm(realm);
+	}
 	
 	@Override
 	public Map<String, DomUserFull> parseLeerlingen() {
