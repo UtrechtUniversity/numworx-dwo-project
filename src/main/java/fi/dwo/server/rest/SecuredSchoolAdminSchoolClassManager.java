@@ -1,5 +1,6 @@
 package fi.dwo.server.rest;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -21,6 +22,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
@@ -30,7 +32,10 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
+import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
@@ -107,6 +112,23 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         return restSchoolClasses;
     }
 
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getTeachersInSchoolList")
+    public List<DomTeacher> getTeachersInSchool(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
+       UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      .setRealm(rest.getRestContext().getRealm())
+      .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.SCHOOLADMIN);
+      PersistentSchool school = state.getSchool();
+      List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.TEACHER);
+      ArrayList<DomTeacher> domTeachers = new ArrayList<>(userList.size());
+      String realm = state.getRealm();
+      for (PersistentUser u : userList) {
+          domTeachers.add(u.buildDomTeacher(realm));
+      }
+      return domTeachers;
+    }
+    
     /**
      * Returns a list of the teachers in a school.
      *
@@ -142,6 +164,24 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         return domTeachers;
     }
 
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getStudentsInSchoolList")
+    public List<DomStudent> getStudentsInSchool(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
+      UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+     .setRealm(rest.getRestContext().getRealm())
+     .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.SCHOOLADMIN);
+     PersistentSchool school = state.getSchool();
+     List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.STUDENT);
+     ArrayList<DomStudent>domStudents = new ArrayList<DomStudent>(userList.size());
+     String realm = state.getRealm();
+     for (PersistentUser u : userList) {
+         domStudents.add(u.buildDomStudent(realm));
+     }
+     return domStudents;
+    }
+   
+    
     /**
      * Returns a list of the teachers in a school.
      *
@@ -163,7 +203,6 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
         }
-//        List<PersistentHasRole> hrList;
         try {
             List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.STUDENT);
             domStudents = new ArrayList<DomStudent>(userList.size());
@@ -171,12 +210,6 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
             for (PersistentUser u : userList) {
                 domStudents.add(u.buildDomStudent(realm));
             }
-//            hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.STUDENT);
-//            domStudents = new ArrayList<DomStudent>(hrList.size());
-//            for (PersistentHasRole hr : hrList) {
-//                PersistentUser user = (PersistentUser) UserManager.findEntity(hr.getPersistentHasRolePK().getUserID());
-//                domStudents.add(user.buildDomStudent());
-//            }
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, "", ex);
             throw new Dwo2RestException(ex);
@@ -203,7 +236,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         PersistentSchool school = null;
 
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
+          phr = getHasRole(sc, restSchoolClass.getRestContext());
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
@@ -263,7 +296,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         PersistentSchool school = null;
 
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
+            phr = getHasRole(sc, restSchoolClass.getRestContext());
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
@@ -329,7 +362,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         PersistentHasRole thr = null;
         PersistentSchoolClass schoolClass;
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
+          phr = getHasRole(sc, restData.getRestContext());
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             teacher = UserManager.findEntity((Long) MySQLPersistenceId.getNativeId(domTeacher));
             thr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(teacher, school, RoleType.TEACHER);
@@ -376,7 +409,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         PersistentHasRole thr = null;
         PersistentSchoolClass schoolClass=null;
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
+          phr = getHasRole(sc, restData.getRestContext());
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             teacher = UserManager.findEntity((Long) MySQLPersistenceId.getNativeId(domTeacher));
             thr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(teacher, school, RoleType.TEACHER);
@@ -429,7 +462,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         PersistentSchool school = null;
         PersistentSchoolGroup sg = null;
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
+          phr = getHasRole(sc, nssStudent.getRestContext());
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             sg = SchoolGroupManager.findBySchoolAndRole(school, RoleType.STUDENT);
         } catch (Dwo2Exception ex) {
@@ -474,6 +507,21 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         return true;
     }
 
+    @SuppressWarnings("deprecation")
+    private PersistentHasRole getHasRole(SecurityContext sc, DomContext context) throws Dwo2Exception {
+      PersistentHasRole phr;
+      if (context == null || context.getDomHasRole() == null)
+          phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
+      else 
+      {
+          phr = HasRoleManager.findEntity(MySQLPersistenceId.getNativeId(context.getDomHasRole()));
+          if (! phr.getUser().getUsername().equals(sc.getUserPrincipal().getName())||
+                  phr.getSchoolGroup().getGroupID() != RoleType.SCHOOLADMIN.ordinal())
+              throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "No Permission");
+      }
+      return phr;
+  }
+
     /**
      * Registers an existing user into a new <school,hasRole> tuple.
      *
@@ -497,7 +545,8 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         PersistentHasRole shr = null;
         PersistentSchoolClass schoolClass=null;
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
+            phr = getHasRole(sc, restData.getRestContext());
+
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             student = UserManager.findEntity((Long) MySQLPersistenceId.getNativeId(domStudent));
             shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
@@ -544,7 +593,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         PersistentHasRole shr = null;
         PersistentSchoolClass schoolClass=null;
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
+          phr = getHasRole(sc, restData.getRestContext());
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             student = UserManager.findEntity((Long) MySQLPersistenceId.getNativeId(domStudent));
             shr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(student, school, RoleType.STUDENT);
@@ -581,7 +630,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
             
 
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
+          phr = getHasRole(sc, restSchoolClass.getRestContext());
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             key = MySQLPersistenceId.getNativeId(restSchoolClass.getDomSchoolClass());
         } catch (Dwo2Exception ex) {
@@ -625,7 +674,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         PersistentSchool school = null;
         PersistentSchoolClass schoolClass = null;
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
+          phr = getHasRole(sc, restSchoolClass.getRestContext());
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getNativeId(restSchoolClass.getDomSchoolClassFull()));
         } catch (Dwo2Exception ex) {
@@ -671,7 +720,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         PersistentSchoolClass schoolClass = null;
 
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
+          phr = getHasRole(sc, restSchoolClass.getRestContext());
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
          schoolClass = SchoolClassManager.findEntity((Long) MySQLPersistenceId.getNativeId(restSchoolClass.getDomSchoolClass()));
         } catch (Dwo2Exception ex) {
@@ -739,7 +788,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         PersistentSchool school = null;
 
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
+          phr = getHasRole(sc, restSchoolClass.getRestContext());
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
 
         } catch (Dwo2Exception ex) {
@@ -793,7 +842,7 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         PersistentUser student = null;
         PersistentHasRole shr = null;
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN);
+          phr = getHasRole(sc, restMoveStudentToSchoolClass.getRestContext());
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             student = UserManager.findEntity(MySQLPersistenceId.getNativeId(domStudent));
             if (student == null) {

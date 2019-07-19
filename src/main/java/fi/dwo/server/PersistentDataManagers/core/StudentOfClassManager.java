@@ -53,6 +53,10 @@ public class StudentOfClassManager {
             em.getTransaction().begin();
             em.persist(studentOf);
             em.getTransaction().commit();
+        }
+        catch (PersistenceException e) {
+          LOG.log(Level.WARNING, "Can't create the PersistentStudentOfClass.", e);
+          throw (e);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentStudentOfClass.", e);
             throw new PersistenceException(e);

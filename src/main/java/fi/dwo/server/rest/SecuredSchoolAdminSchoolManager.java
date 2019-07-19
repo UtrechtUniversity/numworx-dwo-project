@@ -20,6 +20,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSchoolAdmin;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
@@ -72,6 +73,22 @@ public class SecuredSchoolAdminSchoolManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredSchoolAdminSchoolManager.class.getName());
 
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getTeachersInSchoolList")
+    public List<DomTeacher> getTeachersInSchool(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
+       UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      .setRealm(rest.getRestContext().getRealm())
+      .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.SCHOOLADMIN);
+      PersistentSchool school = state.getSchool();
+      List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.TEACHER);
+      ArrayList<DomTeacher> domTeachers = new ArrayList<>(userList.size());
+      String realm = state.getRealm();
+      for (PersistentUser u : userList) {
+          domTeachers.add(u.buildDomTeacher(realm));
+      }
+      return domTeachers;
+    }
     /**
      * Returns the school data to be displayed.
      *
@@ -107,6 +124,22 @@ public class SecuredSchoolAdminSchoolManager {
         return domTeachers;
     }
 
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getStudentsInSchoolList")
+    public List<DomStudent> getStudentsInSchool(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
+      UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+     .setRealm(rest.getRestContext().getRealm())
+     .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.SCHOOLADMIN);
+     PersistentSchool school = state.getSchool();
+     List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.STUDENT);
+     ArrayList<DomStudent>domStudents = new ArrayList<DomStudent>(userList.size());
+     String realm = state.getRealm();
+     for (PersistentUser u : userList) {
+         domStudents.add(u.buildDomStudent(realm));
+     }
+     return domStudents;
+    }
     /**
      * Returns the school data to be displayed.
      *
