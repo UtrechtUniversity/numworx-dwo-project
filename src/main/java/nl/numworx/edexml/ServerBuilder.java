@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolClassManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
@@ -137,7 +136,7 @@ public class ServerBuilder implements Builder {
 	@Override
 	public Map<String, DomUserFull> parseLeerkrachten() {
 		try {
-			List<DomTeacher> list = schoolClassManager.getTeachersInSchool();
+			List<DomTeacher> list = SecureSchoolAdminSchoolClassManager.getTeachersInSchool();
 			putUsers(list, teachers);
 		} catch (Dwo2Exception e) {
 			LOG.log(Level.WARNING, "parseLeerkrachten", e);
