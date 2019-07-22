@@ -1,10 +1,6 @@
 package nl.uu.fi.dwo.register.server;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Base64.Encoder;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Level;
