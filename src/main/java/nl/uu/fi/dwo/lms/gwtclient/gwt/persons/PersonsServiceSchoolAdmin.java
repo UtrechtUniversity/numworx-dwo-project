@@ -61,16 +61,17 @@ public class PersonsServiceSchoolAdmin extends PersonsService {
     manager2 = new SecuredSchoolAdminSchoolManager();
     context = new DomContext();
     context.setDomHasRole(vars.getActiveSchoolRoleAndClass().getHasRole());
+    context.setRealm(vars.getCurrentLoginContext().getRealm());
   }
 
   @Override
   public Promise<List<DomStudent>> getTeachersStudents() {
-    return manager.getStudentsInSchool();
+    return manager.getStudentsInSchool(context);
   }
 
   @Override
   public Promise<List<DomTeacher>> getTeachersInSchool() {
-    return manager.getTeachersInSchool();
+    return manager.getTeachersInSchool(context);
   }
   
   @Override

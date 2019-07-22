@@ -38,6 +38,7 @@ public class PersonsServiceTeacher extends PersonsService {
   public PersonsServiceTeacher(DwoGlobalVars vars) {
     this(new SecuredTeacherSchoolClassManager());
     context.setDomHasRole(vars.getActiveSchoolRoleAndClass().getHasRole());
+    context.setRealm(vars.getCurrentLoginContext().getRealm());
   }
 
   private PersonsServiceTeacher(SecuredTeacherSchoolClassManager securedTeacherSchoolClassManager) {
