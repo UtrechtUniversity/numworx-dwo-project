@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
@@ -13,6 +14,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
@@ -32,7 +34,15 @@ public interface SecuredSchoolAdminSchoolClassRestCaller extends RestService {
     @Path("/secure/schooladmin/schoolclass/getTeachersInSchoolList")
     public void getTeachersInSchool(MethodCallback<List<DomTeacher>> callback);
 
+    @PUT
+    @Path("/sec:{id}/schooladmin/schoolclass/getTeachersInSchoolList")
+    public void getTeachersInSchool(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomTeacher>> callback);
+
     @GET
+    @Path("/sec:{id}/schooladmin/schoolclass/getStudentsInSchoolList")
+    public void getStudentsInSchool(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomStudent>> callback);
+ 
+    @PUT
     @Path("/secure/schooladmin/schoolclass/getStudentsInSchoolList")
     public void getStudentsInSchool(MethodCallback<List<DomStudent>> callback);
 

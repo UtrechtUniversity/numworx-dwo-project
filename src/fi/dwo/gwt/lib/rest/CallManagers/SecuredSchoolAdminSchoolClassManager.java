@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
@@ -30,6 +31,7 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassFull;
 import nl.uu.fi.dwo.rest.entities.RestSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
+import nl.uu.fi.dwo.rest.util.PathId;
 
 /**
  *
@@ -55,10 +57,18 @@ public class SecuredSchoolAdminSchoolClassManager {
         LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
+    @Deprecated
     public Promise<List<DomTeacher>> getTeachersInSchool() {
         PromiseCallback<List<DomTeacher>> defer = new PromiseCallback<List<DomTeacher>>();
         this.getTeachersInSchool(defer);
         return defer.getPromise();
+    }
+    
+    public Promise<List<DomTeacher>> getTeachersInSchool(DomContext context) {
+    	PromiseCallback<List<DomTeacher>> defer = new PromiseCallback<>();
+    	RestContext rest = new RestContext(); rest.setRestContext(context);
+    	service.getTeachersInSchool(PathId.getId(context), rest, defer);
+    	return defer.getPromise();
     }
 
     private void getTeachersInSchool(MethodCallback<List<DomTeacher>> callBack) {
@@ -66,10 +76,19 @@ public class SecuredSchoolAdminSchoolClassManager {
         LOG.log(Level.FINE, "Rest Callback performed.");
     }
 
+    @Deprecated
     public Promise<List<DomStudent>> getStudentsInSchool() {
         PromiseCallback<List<DomStudent>> defer = new PromiseCallback<List<DomStudent>>();
         this.getStudentsInSchool(defer);
         return defer.getPromise();
+    }
+    
+    public Promise<List<DomStudent>> getStudentsInSchool(DomContext context) {
+    	PromiseCallback<List<DomStudent>> defer = new PromiseCallback<>();
+    	RestContext rest = new RestContext();
+    	rest.setRestContext(context);
+    	service.getStudentsInSchool(PathId.getId(context), rest, defer);
+    	return defer.getPromise();
     }
 
     private void getStudentsInSchool(MethodCallback<List<DomStudent>> callBack) {
