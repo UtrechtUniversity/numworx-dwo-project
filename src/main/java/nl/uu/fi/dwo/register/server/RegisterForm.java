@@ -65,6 +65,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class RegisterForm extends HttpServlet {
 	
   private static final String SUBMIT_STUDENT_TO_SCHOOL_CLASS = "submitStudentToSchoolClass";
+  private static final String REGISTER_TEAM_LEADER = "registerTeamLeader";
   private static final String DEMO = "DEMO";
   private static final String BRIN = "brin";
   private static final String ORGANIZATION = "organization";
@@ -322,6 +323,7 @@ private String encode(String string) {
     String insertion = body.get("insertion", String.class);
     String familyName = body.get("familyName", String.class);
     String locale = body.get("locale", String.class);
+    String tlid = body.get("id", String.class);
     ResourceBundle mailrb = this.mailrb;
     if (locale != null) {
       mailrb = ResourceBundle.getBundle("nl.uu.fi.dwo.register.server.mail", Locale.forLanguageTag(locale));
@@ -339,7 +341,7 @@ private String encode(String string) {
 		
 	}
     
-    Cookie cookie;
+    Cookie cookie, putRequest;
     cookie = new Cookie("email", u(email));
     resp.addCookie(cookie);
     cookie = new Cookie("insertion", u(insertion));
@@ -350,7 +352,12 @@ private String encode(String string) {
     resp.addCookie(cookie);
     cookie = new Cookie("suggestion", u(suggestion));
     resp.addCookie(cookie);
-    
+ 
+    if (tlid != null) {
+    	putRequest = new Cookie("putRequest", u(registerTL_jwt(server, email, tlid)));
+    } else {
+    	putRequest = null;
+    }
     cookie = new Cookie("next", u(mailrb.getString("next")));
     resp.addCookie(cookie);
     cookie = new Cookie("cancel", u(mailrb.getString("cancel")));
@@ -381,7 +388,10 @@ private String encode(String string) {
 				List<DomSchoolClass> list = manager.getSchoolClasses(school);
 				Optional<PersistenceId> classId = 
 				list.stream().filter(dsc -> schoolClass.equals(dsc.getSchoolClassName())).map(DomSchoolClass::getId).findAny();
-				classId.ifPresent(pid -> { resp.addCookie(new Cookie("putRequest", u(schoolClass_jwt(pid, server, email))));});
+				if (classId.isPresent())
+				{ PersistenceId pid = classId.get();
+				  putRequest = (new Cookie("putRequest", u(schoolClass_jwt(pid, server, email, tlid))));	
+				}
 			}
 		} catch (Dwo2Exception e) {
 			LOG.log(Level.WARNING, "getSchool", e);
@@ -393,20 +403,34 @@ private String encode(String string) {
     	school.getPasswords().stream().filter(item -> item.getKey() == key).findAny().get().getValue();
     	cookie = new Cookie("schoolCode", u(password));
     	resp.addCookie(cookie);
+    	if (putRequest != null) resp.addCookie(putRequest);
     }
     dispatch.forward(req, resp);
   }
 
 
-private String schoolClass_jwt(PersistenceId pid, String server, String email) {
+private String schoolClass_jwt(PersistenceId pid, String server, String email, String tlid) {
 	return Jwts.builder().setIssuer(server)
 		      .setSubject(email)
 		      .setId(pid.getIdString())
 		      .setIssuedAt(new Date())
 		      .setAudience(SUBMIT_STUDENT_TO_SCHOOL_CLASS)
+		      .claim("id", tlid)
 		      .signWith(key, SignatureAlgorithm.HS256)
 		      .compact();
 }
+
+private String registerTL_jwt(String server, String email, String tlid) {
+	return Jwts.builder().setIssuer(server)
+			.setSubject(email)
+			.setIssuedAt(new Date())
+			.setAudience(REGISTER_TEAM_LEADER)
+			.claim("id", tlid)
+			.signWith(key, SignatureAlgorithm.HS256)
+			.compact();
+}
+
+
 
 public static String u(String value) {
 	if (value != null) {
@@ -441,8 +465,8 @@ public static String u(String value) {
     Jws<Claims> claims = Jwts.parser().requireIssuer(server).setSigningKey(key).parseClaimsJws(jwt);
     Claims body = claims.getBody();
     String audience = body.getAudience();
-    if (SUBMIT_STUDENT_TO_SCHOOL_CLASS.equals(audience)) {
     Manager man = new Manager(getServletContext());
+    if (SUBMIT_STUDENT_TO_SCHOOL_CLASS.equals(audience)) {
     try {
       DomUserFull user = man.getUser(auth);
       if (! user.getEmail().equals(body.getSubject()))
@@ -455,16 +479,41 @@ public static String u(String value) {
       schoolClassTo.setId(new PersistenceId(body.getId()));
       submit.setSchoolClassTo(schoolClassTo);
       manager.submitStudentToSchoolClass(submit);
+      String tlid = body.get("id", String.class);
+      register(user.getUserName(), user.getEmail(), tlid);
     } catch (Dwo2Exception e) {
       resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
     // all ok
     resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-    } else {
+    } else
+    if (REGISTER_TEAM_LEADER.equals(audience))
+    {
+        try {
+			DomUserFull user = man.getUser(auth);
+			if (! user.getEmail().equals(body.getSubject()))
+			  throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, user.getUniqueDisplayName());
+			String tlid = body.get("id", String.class);
+			register(user.getUserName(), user.getEmail(), tlid);
+		} catch (Dwo2Exception e) {
+		      resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+			return;
+		}
+    } else 
+    {
       resp.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
     
   }
+
+private void register(String userName, String email, String tlid) {
+	Properties p  = new Properties();
+	if (userName != null) p.setProperty("username", userName);
+	if (email != null) p.setProperty("email", email);
+	if (tlid != null) p.setProperty("id", tlid);
+	TeamAccess.sendTeam(session, p, TeamAccess.UPDATE, smtpEmail);
+	
+}
 
 }

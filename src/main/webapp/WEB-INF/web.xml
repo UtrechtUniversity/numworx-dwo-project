@@ -37,7 +37,14 @@
       <param-value>true</param-value>
     </init-param>
 </servlet>
-
+<servlet>
+	<servlet-name>update</servlet-name>
+	<servlet-class>nl.uu.fi.dwo.register.server.TeamAccess</servlet-class>
+  	<init-param>
+  		<param-name>fi.dwo.server.rest.smtp.email</param-name>
+ 		<param-value>wim@fi.uu.nl</param-value>
+  	</init-param>
+</servlet>
   <servlet-mapping>
   	<servlet-name>RegisterForm</servlet-name>
   	<url-pattern>/registerform</url-pattern>
@@ -45,6 +52,10 @@
     <servlet-mapping>
    	  <servlet-name>appdwo</servlet-name>
    	  <url-pattern>/dwo/*</url-pattern>
+   </servlet-mapping>
+   <servlet-mapping>
+   	<servlet-name>update</servlet-name>
+   	<url-pattern>/update-contact</url-pattern>
    </servlet-mapping>
 	<listener>
         <listener-class>
