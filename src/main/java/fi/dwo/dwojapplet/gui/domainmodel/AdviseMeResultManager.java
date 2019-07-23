@@ -155,7 +155,8 @@ private DomStudentModelContextInfo toInfo(Competence item) {
     if (description == null) description = "";
     String example = item.getExample();
     if (example != null && !example.isEmpty()) {
-      description += "\n\n" + TextMapper.getText("EXAMPLE") + "\n\n" + example;
+      String EXAMPLE = TextMapper.dwo2Message().NUM_LBL_ADVISEME_EXAMPLE();
+      description += "\n\n" + EXAMPLE + "\n\n" + example;
     }
     info.getDescription().put(locale, description); // XXX wat komt hier?
     return info;
