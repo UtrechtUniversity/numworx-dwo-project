@@ -101,7 +101,13 @@ public class AdviseMeService implements StudentResults {
 		DomStudentModelContextInfo info = new DomStudentModelContextInfo(new HashMap<>(), new HashMap<>());
 		info.setId(item.getId());
 		info.getTitle().put(locale, item.getLabel());
-		info.getDescription().put(locale, ""); // XXX wat komt hier?
+	    String description = item.getDescription();
+	    if (description == null) description = "";
+	    String example = item.getExample();
+	    if (example != null && !example.isEmpty()) {
+	      description += "\n\n" + ("EXAMPLE") + "\n\n" + example;
+	    }
+	    info.getDescription().put(locale, description); // XXX wat komt hier?
 		return info;
 	}
 
