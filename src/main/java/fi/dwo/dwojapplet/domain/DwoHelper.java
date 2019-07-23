@@ -380,10 +380,7 @@ public final class DwoHelper {
         URL url = null;
         if (isApplication) {
             if (applicationBase == null) {
-                    try {
-                        applicationBase = new URL("https://app.dwo.nl/dwo/");
-                    } catch (MalformedURLException e) {
-                    }
+                    applicationBase = getServerUrlPath();
             }
             try {
                 url = new URL(applicationBase, resource);

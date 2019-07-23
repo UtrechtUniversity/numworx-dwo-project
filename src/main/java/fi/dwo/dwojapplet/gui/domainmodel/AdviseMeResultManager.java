@@ -21,6 +21,7 @@ import fi.beans.ideas.RuleIF;
 import fi.beans.ideas.Usermodel;
 import fi.beans.ideas.Usermodel.Competence;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
@@ -150,7 +151,13 @@ private DomStudentModelContextInfo toInfo(Competence item) {
     DomStudentModelContextInfo info = new DomStudentModelContextInfo(new HashMap<>(), new HashMap<>());
     info.setId(item.getId());
     info.getTitle().put(locale, item.getLabel());
-    info.getDescription().put(locale, ""); // XXX wat komt hier?
+    String description = item.getDescription();
+    if (description == null) description = "";
+    String example = item.getExample();
+    if (example != null && !example.isEmpty()) {
+      description += "\n\n" + TextMapper.getText("EXAMPLE") + "\n\n" + example;
+    }
+    info.getDescription().put(locale, description); // XXX wat komt hier?
     return info;
 }
 
