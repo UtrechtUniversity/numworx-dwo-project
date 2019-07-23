@@ -31,6 +31,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -97,6 +98,8 @@ public class AdviseMeService implements StudentResults {
 		
 	}
 
+	
+	
 	private DomStudentModelContextInfo toInfo(Competence item) {
 		DomStudentModelContextInfo info = new DomStudentModelContextInfo(new HashMap<>(), new HashMap<>());
 		info.setId(item.getId());
@@ -104,8 +107,10 @@ public class AdviseMeService implements StudentResults {
 	    String description = item.getDescription();
 	    if (description == null) description = "";
 	    String example = item.getExample();
+	    DwoLocalesForGWT instance = DwoLocalesForGWT.instance;
+	    String EXAMPLE = instance.NUM_LBL_ADVISEME_EXAMPLE();
 	    if (example != null && !example.isEmpty()) {
-	      description += "\n\n" + ("EXAMPLE") + "\n\n" + example;
+	      description += "\n\n" + EXAMPLE + "\n\n" + example;
 	    }
 	    info.getDescription().put(locale, description); // XXX wat komt hier?
 		return info;
