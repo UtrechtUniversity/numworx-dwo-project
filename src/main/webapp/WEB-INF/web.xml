@@ -321,6 +321,15 @@
   		<param-value>/dwo/register/RegisterFree.html</param-value>
   	</init-param>
   </servlet>
+	<servlet>
+	<servlet-name>update-contact</servlet-name>
+	<servlet-class>nl.uu.fi.dwo.register.server.TeamAccess</servlet-class>
+  	<init-param>
+  		<param-name>fi.dwo.server.rest.smtp.email</param-name>
+ 		<param-value>noreply@numworx.nl</param-value>
+  	</init-param>
+	</servlet>
+
   <servlet>
     <servlet-name>xapi</servlet-name>
     <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
@@ -438,6 +447,10 @@
 	<servlet-mapping>
 	 	<servlet-name>RegisterForm</servlet-name>
 	  	<url-pattern>/dwo/register/registerform</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>update-contact</servlet-name>
+		<url-pattern>/dwo/register/update-contact</url-pattern>
 	</servlet-mapping>
     <servlet-mapping>
    	  <servlet-name>xapi</servlet-name>
