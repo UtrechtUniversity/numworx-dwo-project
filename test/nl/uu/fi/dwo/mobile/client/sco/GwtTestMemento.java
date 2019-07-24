@@ -20,6 +20,7 @@ import com.google.gwt.junit.client.GWTTestCase;
 
 import nl.numworx.gwtpatch.client.GWTPatch;
 import nl.numworx.gwtpatch.client.JSONBuilder;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.promise.client.PromiseImpl;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
@@ -78,7 +79,7 @@ public class GwtTestMemento extends GWTTestCase {
       api.SetValue(Memento.REVIEW_DATA, review);
       api.SetValue(Memento.SUSPEND_DATA, suspend_data);
       api.SetValue(Memento.COMPLETION_STATUS, Memento.COMPLETED);
-      api.SetValue(Memento.CMI_MODE, CmiMode.review.name());
+      api.SetValue(Memento.LESSON_MODE, LessonMode.review.name());
       m = new Memento(api, view, defer) {
 
         @Override
@@ -103,7 +104,7 @@ public class GwtTestMemento extends GWTTestCase {
     api.SetValue(Memento.REVIEW_DATA, review);
     api.SetValue(Memento.SUSPEND_DATA, suspend_data);
     api.SetValue(Memento.COMPLETION_STATUS, Memento.COMPLETED);
-    api.SetValue(Memento.CMI_MODE, CmiMode.review.name());
+    api.SetValue(Memento.LESSON_MODE, LessonMode.review.name());
     m = new Memento(api, view, defer) {
 
       @Override

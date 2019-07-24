@@ -106,9 +106,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	
 	public static final String LESSON_MODE = "cmi.mode";
 	public static final String SHARE_MAP = "shareMap";
-    static final String CMI_MODE = "cmi.mode";
-	
-	final private Scorm2004IF api;
+    final private Scorm2004IF api;
 	final private ViewModuleView view; 
 	private JSONObject suspendData;
 	private JSONObject onsState, shareMap;
@@ -159,7 +157,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	final private long startTime;
 	private Number score;
 	private JSONArray aantalNakijken;
-	private CmiMode cmi_mode;
+	private LessonMode cmi_mode;
 
 	public Memento(Scorm2004IF api, ViewModuleView view, Promise<DomStudentModelContext> studentModel)
 	{
@@ -176,15 +174,15 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		value = getValue(COMPLETION_STATUS);
 		eindtoetsVerzegeld = COMPLETED.equals(value);
 		try {
-			value = getValue(CMI_MODE);
-			cmi_mode = CmiMode.valueOf(value);
+			value = getValue(LESSON_MODE);
+			cmi_mode = LessonMode.valueOf(value);
 		} catch(Exception not_used) {
-			cmi_mode = CmiMode.normal;
+			cmi_mode = LessonMode.normal;
 		}
 		
 		
 		String reviewData = null;
-		if (eindtoetsVerzegeld || cmi_mode == CmiMode.review)
+		if (eindtoetsVerzegeld || cmi_mode == LessonMode.review)
 			reviewData = getValue(REVIEW_DATA);
 		try
 		{
@@ -947,12 +945,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	}
 
 	public LessonMode getLessonMode() {
-		try {
-			String mode = getValue(LESSON_MODE);
-			return LessonMode.valueOf(mode);
-		} catch (Exception e) {
-			return LessonMode.normal;
-		}
+		return cmi_mode;
 	}
 	
 	public Role getRole() {
@@ -990,7 +983,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	}
 	
 	public boolean isReview() {
-		return cmi_mode == CmiMode.review;
+		return cmi_mode == LessonMode.review;
 	}
 	
 	void setShareMap(JSONObject obj) {
