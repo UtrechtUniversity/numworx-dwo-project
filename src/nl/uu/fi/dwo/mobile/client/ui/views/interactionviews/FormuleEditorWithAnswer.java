@@ -831,8 +831,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			checkPanel.getElement().getStyle().setCursor(Cursor.POINTER);
 		else
 			checkPanel.getElement().getStyle().setCursor(Cursor.DEFAULT);
-		
-		if (feedbackLabel.isVisible())
+
+		// popup met feedback alleen tonen als niet correct 
+		if (feedbackLabel.isVisible() && (isCorrect() == null || !isCorrect())) // correct is null is half/doorgaan, correct is true is goed, correct is false is fout
 		{
 			// met scheduler omdat anders de xPos niet goed is
 			Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand()
