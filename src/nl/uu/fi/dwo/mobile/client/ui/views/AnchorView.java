@@ -9,6 +9,8 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.http.client.UrlBuilder;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
@@ -60,6 +62,11 @@ public class AnchorView implements IsWidget, ClickHandler, TekstElementWithFont 
 			anchor = new Anchor(tekst, href);
 			if (! href.startsWith("#") && !"_self".equals(target))
 				anchor .setTarget(target);
+			if (href.startsWith("#")) {
+				UrlBuilder builder = Window.Location.createUrlBuilder();
+				builder.setHash(href);
+				anchor.setHref(builder.buildString());
+			}
 		}
 		ctx = Canvas.createIfSupported().getContext2d();
 		setContextFont();
