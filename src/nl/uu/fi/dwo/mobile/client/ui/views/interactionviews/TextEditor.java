@@ -1103,8 +1103,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			keyboard.setEnterType(EnterType.APPLY);
 //			keyboard.focus();
 //			deze.requestFocus();
-			setCursorWidget(widget);
 			deSelection();
+			setCursorWidget(widget);
 			removeCursor(); // cursor is in formule editor
 			event.stopPropagation();
 		}
@@ -1212,6 +1212,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			FormuleKeyboardIF keyboard = comRoot.getKeyboard();
 			keyboard.setEditor(TextEditor.this);
 			shown = true;childfocus = false;
+			deSelection();
 			setCursorWidget(cursorWidget);
 			keyboard.setEnterType(EnterType.ENTER);
 			keyboard.softFocus();
@@ -1280,6 +1281,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				@Override
 				public void onTouchEnd(TouchEndEvent event) {
 					super.onTouchEnd(event);
+					deSelection();
 					setCursorWidget(FormulaVak.this);
 				} 
 			};

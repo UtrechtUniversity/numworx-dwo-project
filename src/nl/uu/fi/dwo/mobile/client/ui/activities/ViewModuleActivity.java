@@ -196,6 +196,11 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	}
 
 	@Override
+	public void prepareLeave() {
+		started = false;
+	}
+	
+	@Override
 	public void gotoUrl(String href) {
 		if("goto:0".equals(href)) {
 			started = false;

@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
@@ -173,6 +174,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 			
 		} else {
 			namePromise = Promises.resolved(name);
+			scoList = rpcHandler.getScos(item.getParentID());
 		}
 		final Failure failure = new Failure() {
 			
@@ -232,6 +234,7 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 		
 	}
 
+
 	@Override
 	public void onStop() {
 		started = false;
@@ -252,7 +255,11 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 			return Text.constants.maybe_lost_data();
 		return super.mayStop();
 	}
-
+	@Override
+	public void prepareLeave() {
+		started = false;
+	}
+	
 	@Override
 	public void gotoUrl(String href) {
 		if("goto:0".equals(href))

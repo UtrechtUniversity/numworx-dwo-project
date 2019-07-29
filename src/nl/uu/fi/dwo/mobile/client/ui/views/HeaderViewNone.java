@@ -127,7 +127,7 @@ public void onMessage(MessageEvent event) {
     if (place != null) presenter.goTo(place);
     else presenter.goTo(getHomePlace());
   } else if (Actions.LOGOUT.name().equals(message)) {
-      LOG.info("logout recieved");
+      LOG.info("logout received");
 	  presenter.goTo(LogoutPlace.INSTANCE);
 	  LOG.info("wait");
 	  agent.barrier().onResolve(() -> { LOG.info("execute");Actions.LOGOUT.execute();});

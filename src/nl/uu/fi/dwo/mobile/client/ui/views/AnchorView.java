@@ -1,11 +1,13 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
+import nl.uu.fi.dwo.mobile.client.dagger.PlayerModule;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -40,6 +42,12 @@ public class AnchorView implements IsWidget, ClickHandler, TekstElementWithFont 
 		this(tekst, href, "_blank", context);
 	}
 
+	private void onLeave(ClickEvent ev) {
+		if (context != null)			
+			context.prepareLeave();
+		else
+			GWT.log("CONTEXT NULL");
+	}
 
 	/**
 	 * Let op voor 'goto' URLS
@@ -66,6 +74,8 @@ public class AnchorView implements IsWidget, ClickHandler, TekstElementWithFont 
 				UrlBuilder builder = Window.Location.createUrlBuilder();
 				builder.setHash(href);
 				anchor.setHref(builder.buildString());
+				this.context = context;
+				anchor.addClickHandler(this::onLeave);
 			}
 		}
 		ctx = Canvas.createIfSupported().getContext2d();
