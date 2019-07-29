@@ -103,7 +103,7 @@ public class AdviseMeResultManager {
       }
     }
     Usermodel[] usermodel = ideas.adviseMeUsermodel(inputs, ADVISEME);
-      if (usermodel.length > 0) {
+      if (usermodel != null && usermodel.length > 0) {
         DomStudentModelStructure structure = toStructure(usermodel[0]);
         adviseme.setModelStructure(structure);
         structure.getInfo().setId(KEY + structure.getInfo().getId());
