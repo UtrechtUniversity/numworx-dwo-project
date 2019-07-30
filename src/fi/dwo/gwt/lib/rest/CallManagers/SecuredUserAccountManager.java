@@ -391,7 +391,9 @@ public class SecuredUserAccountManager {
 
             @Override
             public void onSuccess(DomUserFullwLoginContext result) {
-                if (result.getDomUserFull() != null && name.equalsIgnoreCase(result.getDomUserFull().getUserName())) {
+            	String realm = result.getDomLoginContext().getRealm();
+            	if (realm == null) realm = "";
+                if (result.getDomUserFull() != null && name.equalsIgnoreCase(result.getDomUserFull().getUserName()+realm)) {
                     callback.onSuccess(result);
                 } else {
                     callback.onFailure(new RuntimeException("Please restart browser")); // FIXME showstopper?
