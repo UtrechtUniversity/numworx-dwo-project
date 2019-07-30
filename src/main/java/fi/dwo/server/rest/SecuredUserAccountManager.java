@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestLoginContext;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
@@ -113,6 +114,30 @@ public class SecuredUserAccountManager {
         return user.buildDomUserFull();
     }
 
+    @PUT
+    @Produces({"application/json"})
+    @Path("/get")
+    public DomUserFull getCurrentUser(@Context SecurityContext sc, RestContext ctx) {
+        PersistentUser user = null;
+
+        try {
+            Principal p = sc.getUserPrincipal();
+            if (p instanceof DwoUserPrincipal) 
+              user = ((DwoUserPrincipal) p).getUser();
+            else 
+              user = UserManager.findByUserName(p.getName());
+            LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "User " + sc.getUserPrincipal() + ": Unexpected exception", e);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user " + sc.getUserPrincipal() + " .");
+        }
+        String realm = ctx.getRestContext().getRealm();
+		return user.buildDomUserFull(realm);
+    	
+    }
+
+    
+    
     /**
      * Returns the current LoginContext. The information is retrieved from the
      * data store.
@@ -427,6 +452,7 @@ public class SecuredUserAccountManager {
 //clear results
         try {            
             UserDomainAuthorizer.UserState_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName());
+            build.setRealm(user.getRestContext().getRealm());
             return build.UpdateAccount(user.getDomUserFull());
             //TODO clear all excess classcourses.
         } catch (Dwo2Exception e) {

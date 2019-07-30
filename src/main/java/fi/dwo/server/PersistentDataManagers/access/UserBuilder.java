@@ -242,10 +242,14 @@ class UserBuilder implements UserDomainAuthorizer.UserState_U, UserDomainAuthori
 
     @Override
     public DomUserFull UpdateAccount(DomUserFull user) throws Dwo2Exception {
-        if (user.getUserName().matches(instance.getContext().getUserCtx().getUser().getUsername())) {
-            return instance.getUserActions().UpdateAccount(instance.getContext().getUserCtx().getUser(), user).buildDomUserFull();
+        String userName = user.getUserName();
+        String realm = instance.getContext().getUserCtx().getRealm();
+		if (realm != null)
+        	userName +=  realm;
+		if (userName.matches(instance.getContext().getUserCtx().getUser().getUsername())) {
+            return instance.getUserActions().UpdateAccount(instance.getContext().getUserCtx().getUser(), user).buildDomUserFull(realm);
         } else {
-            String msg = MessageFormat.format("Trying to change the usercode from {0} to {1}", new Object[]{instance.getContext().getUserCtx().getUser().getUsername(), user.getUserName()});
+            String msg = MessageFormat.format("Trying to change the usercode from {0} to {1}", new Object[]{instance.getContext().getUserCtx().getUser().getUsername(), userName});
             LOG.log(Level.WARNING, msg);
             throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, msg);
         }
