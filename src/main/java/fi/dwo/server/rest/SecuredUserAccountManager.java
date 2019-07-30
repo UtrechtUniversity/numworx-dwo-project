@@ -280,7 +280,7 @@ public class SecuredUserAccountManager {
         Response result;
 
         DomUserFullwLoginContext domUser = loginUser(sc);
-        String domUserName = domUser.getDomUserFull().getUserName();
+        String domUserName = domUser.getDomUserFull().getUserName() + domUser.getDomLoginContext().getRealm();
         if (domUserName.equalsIgnoreCase(user)) {
             result = Response.ok().
                     type(MediaType.APPLICATION_JSON_TYPE).
