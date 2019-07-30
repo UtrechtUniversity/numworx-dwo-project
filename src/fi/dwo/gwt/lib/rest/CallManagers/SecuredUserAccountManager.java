@@ -29,6 +29,8 @@ import nl.uu.fi.dwo.rest.util.PathId;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.uu.fi.dwo.rest.entities.RestAuthToken;
+import nl.uu.fi.dwo.rest.entities.RestContext;
+
 import org.osgi.util.promise.Promise;
 
 public class SecuredUserAccountManager {
@@ -229,6 +231,7 @@ public class SecuredUserAccountManager {
      * @param password
      * @return
      */
+    @Deprecated
     public Promise<DomUserFull> updateAccountData(DomUserFull updateUser) {
         PromiseCallback<DomUserFull> defer = new PromiseCallback<DomUserFull>();
         this.updateAccountData(updateUser, defer);
@@ -263,16 +266,25 @@ public class SecuredUserAccountManager {
      * @param password
      * @return
      */
+    @Deprecated
     public Promise<DomUserFull> getAccountData() {
         PromiseCallback<DomUserFull> defer = new PromiseCallback<DomUserFull>();
-        this.getAccountData(defer);
+        this.service.getAccountData((defer));
         return defer.getPromise();
     }
 
+    public Promise<DomUserFull> getAccountData(DomContext context) {
+    	PromiseCallback<DomUserFull> defer = new PromiseCallback<>();
+    	RestContext rest = new RestContext(); 
+    	rest.setRestContext(context);
+    	service.getAccount(PathId.getId(context), rest, defer);
+    	return defer.getPromise();
+    }
     /**
      *
      * @param callBack
      */
+    @Deprecated
     public void getAccountData(AsyncCallback<DomUserFull> callBack) {
         service.getAccountData(new Callback<DomUserFull>(callBack));
     }
