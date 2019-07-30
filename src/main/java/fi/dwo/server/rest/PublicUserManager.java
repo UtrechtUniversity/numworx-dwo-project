@@ -274,7 +274,12 @@ public class PublicUserManager {
     @Path("/submitSaml")
     public DomUserFullwLoginContext getSamlUser(RestSamlUser samlRestUser) {
         //should return a DomFullUser. 
-        PersistentSamlUser samlUser = SamlUserManager.findEntity(samlRestUser.getDomSamlUser().getSamlUserId(), samlRestUser.getDomSamlUser().getSamlOrgId());
+        String samlOrgId = samlRestUser.getDomSamlUser().getSamlOrgId();
+		PersistentSamlUser samlUser = SamlUserManager.findEntity(samlRestUser.getDomSamlUser().getSamlUserId(), samlOrgId);
+		if (samlUser == null && !samlOrgId.startsWith("\"")) {
+			samlOrgId = "\"" + samlOrgId + "\"";
+			samlUser = SamlUserManager.findEntity(samlRestUser.getDomSamlUser().getSamlUserId(), samlOrgId);
+		}
         if (samlUser != null
                 && samlUser.getAuthToken().equals(samlRestUser.getDomSamlUser().getAuthToken()) //&& samlUser.tokenIsValid(20000) //TODO TESTING, productie aan.
                 ) {//milisseconden
@@ -289,7 +294,7 @@ public class PublicUserManager {
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Invalid software state. This should not have happened.");
             }
         } else {
-            LOG.log(Level.SEVERE, "Incorrect saml-authentication event for samlOrg {0} samlUser {1} and authToken {2}: {3}", new Object[]{samlRestUser.getDomSamlUser().getSamlOrgId(), samlRestUser.getDomSamlUser().getSamlUserId(), samlRestUser.getDomSamlUser().getAuthToken(), samlUser});
+            LOG.log(Level.SEVERE, "Incorrect saml-authentication event for samlOrg {0} samlUser {1} and authToken {2}: {3}", new Object[]{samlOrgId, samlRestUser.getDomSamlUser().getSamlUserId(), samlRestUser.getDomSamlUser().getAuthToken(), samlUser});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "The authentication is invalid, this event is logged.");
         }
     }
