@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
@@ -30,17 +31,27 @@ public class AccountService {
     private SecuredUserSchoolLoginManagerV2 schoolLoginManager = new SecuredUserSchoolLoginManagerV2();
 
     private final DwoGlobalVars dwoGlobalVars;
+
     
     @Inject public AccountService(DwoGlobalVars aDwoGlobalVars, SecuredUserAccountManager accountManager) {
         this.accountManager = accountManager;
         dwoGlobalVars = aDwoGlobalVars; // for future use (hasRole fetch i.e.)
     }
-   public Promise<DomUserFull> getUserData() {
-        return accountManager.getAccountData();
+
+    public Promise<DomUserFull> getUserData() {
+       DomContext context = createContext();
+       return accountManager.getAccountData(context);
     }
+
+	private DomContext createContext() {
+		DomContext context = new DomContext();
+		context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
+	    context.setRealm(dwoGlobalVars.getCurrentLoginContext().getRealm());
+		return context;
+	}
    
    public Promise<DomUserFull> UpdateUserData(DomUserFull user){
-        return accountManager.updateAccountData(user);       
+        return accountManager.updateAccountData(createContext(), user);       
    }
 
     Promise<DomSchoolRoleAndClassV2> switchToSchoolLogin(DomSchoolRoleAndClassV2 srac) {
