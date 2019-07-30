@@ -421,5 +421,9 @@ public class PersistentUser implements Serializable {
 
     public DomSingleSchoolStudent buildDomSingleSchoolStudent(String realm) {
       return withoutRealm(realm, buildDomSingleSchoolStudent());
-    }        
+    }
+    
+    public DomUserFull buildDomUserFull(String realm) {
+      return withoutRealm(realm, buildDomUserFull());
+    }
 }
