@@ -18,6 +18,7 @@ import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -452,7 +453,8 @@ public class SecuredUserAccountManager {
 //clear results
         try {            
             UserDomainAuthorizer.UserState_U build = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName());
-            build.setRealm(user.getRestContext().getRealm());
+            DomContext context = user.getRestContext(); // in de test null
+            build.setRealm(context == null ? null : context.getRealm());
             return build.UpdateAccount(user.getDomUserFull());
             //TODO clear all excess classcourses.
         } catch (Dwo2Exception e) {
