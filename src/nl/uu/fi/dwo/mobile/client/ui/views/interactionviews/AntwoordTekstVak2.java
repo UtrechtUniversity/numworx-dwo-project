@@ -713,6 +713,9 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 			antwoordTF.setEditable(true);
 		setText(antwoord); // dit zet changed = true
 		setChanged(false);
+		// ook voor formulevak!
+		if (formuleMode)
+			formuleVak.setChanged(false);
 
 		if (ingevuld 
 			&& (mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN || (nagekeken && !isVeranderdNaNakijken)||Review.isReview(comRoot)))
