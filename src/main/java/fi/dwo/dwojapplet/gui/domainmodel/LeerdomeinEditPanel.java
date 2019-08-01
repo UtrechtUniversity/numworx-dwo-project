@@ -10,6 +10,7 @@ import java.io.StringWriter;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
@@ -31,6 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -262,6 +264,39 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
 
   }
 
+  class VoorkennisAction extends AbstractAction {
+
+    private VoorkennisAction() {
+      super(TextMapper.getText("voorkennis"));
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      TreePath path = tree.getSelectionPath();
+      if (path == null) return;
+      
+      Object node = path.getLastPathComponent();
+      if (node instanceof MutableTreeNode) {
+        DefaultMutableTreeNode mutable = (DefaultMutableTreeNode) node;
+        Object o = mutable.getUserObject();
+        if (o instanceof NodeLeaf) {
+          NodeLeaf leaf = (NodeLeaf) o;
+          List<String> ids = leaf.getInfo().getVoorkennis();
+          if (ids == null) ids = Collections.emptyList();
+          NodeVector v = (NodeVector) root.getUserObject();
+          StudentModelChoicePanel panel = new StudentModelChoicePanel(v);
+          panel.setObjectives(ids);
+          int r = JOptionPane.showConfirmDialog(LeerdomeinEditPanel.this, panel, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION);
+          if (r == JOptionPane.OK_OPTION) {
+            panel.makeChoices();
+            List<String> list = panel.getObjectives();
+            leaf.getInfo().setVoorkennis(list);
+          }
+        }}
+    }
+    
+  }
+  
   DefaultMutableTreeNode clipboard;
   
   class Knippen extends AbstractAction {
@@ -458,7 +493,7 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
   
   JTextField title, subtitle;
   JFormattedTextField slip, init, learn;
-  
+  JButton voorkennisBtn;
   JComboBox<String>  language;
   JTree tree;
   DefaultTreeModel model;
@@ -567,6 +602,7 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
     bkt.add(new JLabel("init"));init = new JFormattedTextField(NumberFormat.getInstance()); bkt.add(init);
     bkt.add(new JLabel("learn")); learn = new JFormattedTextField(NumberFormat.getInstance()); bkt.add(learn);
     bkt.add(new JLabel("slip"));slip = new JFormattedTextField(NumberFormat.getInstance()); bkt.add(slip);
+    //voorkennisBtn = new JButton(new VoorkennisAction()); bkt.add(voorkennisBtn);
     Dimension pref = bkt.getPreferredSize();
     bkt.setMinimumSize(pref);
     pref.width = Short.MAX_VALUE;

@@ -122,5 +122,14 @@ public class NodeVector extends Vector<Object> implements Node {
   String json() {
     return lang +"@JSON";
   }
+
+  @Override
+  public boolean isValue() {
+    for(int i = 0; i < size(); i++) {
+      Object e = elementAt(i);
+      if (e instanceof Node && ((Node) e).isValue()) return true;
+    }
+    return false;
+  }
   
 }

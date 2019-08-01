@@ -16,5 +16,7 @@ interface Node {
   
   public int getPath();
   public void setPath(int path);
+
+  public boolean isValue();
   
 }

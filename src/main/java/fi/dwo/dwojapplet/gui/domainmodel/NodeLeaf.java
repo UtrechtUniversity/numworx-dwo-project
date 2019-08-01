@@ -109,6 +109,17 @@ class NodeLeaf implements Node {
   String json() {
     return lang +"@JSON";
   }
+
+  
+  private boolean value;
+  public void setValue(boolean selected) {
+    this.value = selected;
+  }
+
+  @Override
+  public boolean isValue() {
+    return value;
+  }
   
   
 }
