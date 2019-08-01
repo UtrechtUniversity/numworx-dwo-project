@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.util.List;
 import java.util.Map;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -15,6 +16,7 @@ public class DomStudentModelContextInfo {
     private Map<String,String> description;
     private String id;
     private Double slip, learn, init;
+    private List<String> voorkennis;
 
     public DomStudentModelContextInfo(){        
        
@@ -107,5 +109,19 @@ public class DomStudentModelContextInfo {
 	public void setInit(Double init) {
 		this.init = init;
 	}
+
+  /**
+   * @return the voorkennis
+   */
+  public List<String> getVoorkennis() {
+    return voorkennis;
+  }
+
+  /**
+   * @param voorkennis the voorkennis to set
+   */
+  public void setVoorkennis(List<String> voorkennis) {
+    this.voorkennis = voorkennis;
+  }
     
 }
