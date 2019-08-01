@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
@@ -37,6 +38,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -437,6 +439,15 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		JSONObject value = new JSONObject(jso);
 		CBookEvent evt = new CBookEvent(JSONUtilities.wrapMap(value));
 		fireEvent(evt);
+		Timer t = new Timer()
+		{
+			@Override
+			public void run()
+			{
+			}
+		};
+		t.schedule(1);
+
 	}
 	
 	private static native void acceptCBookEvent(JavaScriptObject jso, String event) /*-{

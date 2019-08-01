@@ -952,7 +952,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	public void acceptCBookEvent(CBookEvent event) {
 		if("action.setNotEditable".equals(event.getCommand())) {
 			editable = false;
-			basisPanel.setStyleDependentName("readonle", !editable);
+			basisPanel.setStyleDependentName("readonly", !editable);
 		}
 		
 	}
