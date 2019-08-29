@@ -382,12 +382,17 @@ public final class DwoHelper {
             if (applicationBase == null) {
                     applicationBase = getServerUrlPath();
             }
+            URL base = applicationBase;
             try {
-                url = new URL(applicationBase, resource);
+              if (base == null)  {
+                try {
+                  base = new URL("https://app.dwo.nl/dwo/");
+                } catch (MalformedURLException e) {
+                }
+              }
+               url = new URL(base, resource);
             } catch (MalformedURLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+                LOG.log(Level.SEVERE, "url=" + base + "," + resource, e);            }
 
         } else {
             try {
