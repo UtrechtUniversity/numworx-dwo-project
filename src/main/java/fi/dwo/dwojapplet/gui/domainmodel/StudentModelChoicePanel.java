@@ -36,6 +36,9 @@ import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
+
 public class StudentModelChoicePanel extends JPanel implements TreeSelectionListener {
   private class LeafNodeEditor extends AbstractCellEditor implements TreeCellEditor {
 
@@ -88,6 +91,7 @@ public class StudentModelChoicePanel extends JPanel implements TreeSelectionList
                  if (stopCellEditing()) {
                      fireEditingStopped();
                      //model.nodeStructureChanged(root);
+                     repaint();
                  }
              }  
          };
@@ -167,6 +171,7 @@ public class StudentModelChoicePanel extends JPanel implements TreeSelectionList
   JLabel title;
   JTextArea description;
   final NodeVector studentModel;
+  static final String WISKOPDR_SIG = "H4sIAAAAAA";
 
   public StudentModelChoicePanel(NodeVector studentModel) {
     super(null);
@@ -196,20 +201,29 @@ public class StudentModelChoicePanel extends JPanel implements TreeSelectionList
     add(rightBox);
     
     title = new JLabel(v.toString());
-    description = new JTextArea(v.getDescription(), 10, 30);
+    String descr = v.getDescription();
+    description = new JTextArea(descr, 10, 30);
     description.setLineWrap(true);
     description.setWrapStyleWord(true);
     description.setEditable(false);
+    scroll = new JScrollPane(description);
+    if (descr.startsWith(WISKOPDR_SIG))
+    {
+      WiskOpdrPanel panel = getWiskOpdrPanel(descr);
+      scroll.setViewportView(panel);
+    }
+    
     
     rightBox.add(title);
     rightBox.add(Box.createVerticalStrut(10));
-    rightBox.add(new JScrollPane(description));
+    rightBox.add(scroll);
     
     tree.addTreeSelectionListener(this);
   }
 
   private boolean[][] choices;
   private List<String> ids;
+  private JScrollPane scroll;
   
   public List<String> getObjectives() {
     return ids;
@@ -232,17 +246,10 @@ public class StudentModelChoicePanel extends JPanel implements TreeSelectionList
   
   public void setObjectives(List<String> objectives) {
     ids = objectives;
-    setObjectives(studentModel, objectives);
+    makeGUI();
     
   }
   
-  public void setObjectives(Object n, List<String> objectives) {
-    if (n instanceof NodeLeaf) {
-      ((NodeLeaf) n).setValue(objectives.contains(((NodeLeaf) n).getInfo().getId()));
-    } else if (n instanceof NodeVector) {
-      ((NodeVector) n).forEach(i -> setObjectives(i, objectives));
-    }
-  }
   
   public void makeChoices() {
 // new style
@@ -275,15 +282,36 @@ public class StudentModelChoicePanel extends JPanel implements TreeSelectionList
       if (path == null) {
         title.setText("");
         description.setText("");
+        scroll.setViewportView(description);
         return;
       }
       DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
       Object u = node.getUserObject();
       title.setText(u.toString());
       if (u instanceof Node) {
-        description.setText(((Node) u).getDescription());
-      } else 
+        String descr = ((Node) u).getDescription();
+        if (descr == null) descr = "";
+        if (descr.startsWith(WISKOPDR_SIG)) {
+          WiskOpdrPanel panel = getWiskOpdrPanel(descr);
+          scroll.setViewportView(panel);
+        } else {
+          description.setText(descr);
+          scroll.setViewportView(description);
+        }
+      } else {
         description.setText("");
+        scroll.setViewportView(description);
+      }
     }   
+    repaint();
+  }
+
+  private WiskOpdrPanel getWiskOpdrPanel(String descr) {
+    try {
+      WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(descr);
+      panel.setBackground(Color.WHITE);
+      return panel;
+    } finally {
+    }
   }
 }

@@ -50,6 +50,7 @@ import javax.swing.tree.TreePath;
 import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
@@ -155,7 +156,7 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
     void setDescription(Object u) {
       if (u instanceof Node) {
         String description = ((Node) u).getDescription();
-        if (description.startsWith(WISKOPDR_SIG)||description.isEmpty()) {
+        if (description == null || description.startsWith(WISKOPDR_SIG)||description.isEmpty()) {
           if (text.isEditable()) {
             wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(description);
             wiskOpdrEditPanel.setBackground(Color.WHITE);
@@ -602,7 +603,10 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
     bkt.add(new JLabel("init"));init = new JFormattedTextField(NumberFormat.getInstance()); bkt.add(init);
     bkt.add(new JLabel("learn")); learn = new JFormattedTextField(NumberFormat.getInstance()); bkt.add(learn);
     bkt.add(new JLabel("slip"));slip = new JFormattedTextField(NumberFormat.getInstance()); bkt.add(slip);
-    //voorkennisBtn = new JButton(new VoorkennisAction()); bkt.add(voorkennisBtn);
+    if (DwoHelper.isTest())
+    {
+      voorkennisBtn = new JButton(new VoorkennisAction()); bkt.add(voorkennisBtn);
+    }
     Dimension pref = bkt.getPreferredSize();
     bkt.setMinimumSize(pref);
     pref.width = Short.MAX_VALUE;
