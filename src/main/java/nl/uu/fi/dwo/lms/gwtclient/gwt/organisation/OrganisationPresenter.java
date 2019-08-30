@@ -138,6 +138,7 @@ public class OrganisationPresenter {
                                    }));
         for(Entry<String, Promise<List<DomTeacher>>> entry : teacherMap.entrySet()) {
           String key = entry.getKey();
+          // FIXME NPE if garbage: non existent user in ClassOf table
           entry.getValue().getValue().forEach(item -> teachers.get(item.getId().getIdString()).getMemberOf().add(key));
         }
         view.showPersonen(teachers, RoleType.TEACHER);
