@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.form;
 import fi.dwo.commons.exceptions.CourseException;
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.dwojapplet.domain.Course;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
@@ -30,28 +31,12 @@ public class DWOFile {
         m = new ManifestFile();
     }
 
-    /**
-     * @param course
-     * @param scoid
-     * @param out
-     * @throws ParserConfigurationException
-     * @throws TransformerException
-     * @throws SQLException
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws fi.dwo.commons.exceptions.PersistenceException
-     * @see fi.dwo.server.form.ManifestFile#createIMSManifest(int, int,
-     * java.io.OutputStream)
-     */
-    public void createIMSManifest(int course, int scoid, OutputStream out)
-            throws ParserConfigurationException, TransformerException,
-            SQLException, IOException, XmlRpcException, PersistenceException {
-
-        out.write(prefix);
-        GZIPOutputStream gout;
-        out = gout = new GZIPOutputStream(out);
-        m.createIMSManifest(course, scoid, out);
-        gout.finish();
+    public void createIMSManifest(Course course, OutputStream out) throws ParserConfigurationException, TransformerException, SQLException, IOException, XmlRpcException, PersistenceException {
+      out.write(prefix);
+      GZIPOutputStream gout;
+      out = gout = new GZIPOutputStream(out);
+      m.createIMSManifest(course, out);
+      gout.finish();
     }
 
 	/**

@@ -80,7 +80,7 @@ public class BackupModuleAction extends GuiAction {
             File file = new File(lclDir, naam);
             FileOutputStream out = new FileOutputStream(file);
             DWOFile zipper = new DWOFile();
-            zipper.createIMSManifest(course.getID(), -1, out);
+            zipper.createIMSManifest(course, out);
         }
     }
 

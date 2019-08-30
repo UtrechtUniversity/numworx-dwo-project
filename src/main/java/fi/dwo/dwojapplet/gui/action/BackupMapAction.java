@@ -123,6 +123,6 @@ public class BackupMapAction extends GuiAction {
 
 	private void exportCourse(Course map, OutputStream out) throws ParserConfigurationException, TransformerException, SQLException, IOException, XmlRpcException, PersistenceException {
 		DWOFile builder = new DWOFile();
-		builder.createIMSManifest(map.getID(), -1, out);
+		builder.createIMSManifest(map, out);
 	}
 }

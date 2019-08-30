@@ -1,26 +1,36 @@
 package fi.dwo.dwojapplet.form;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Level;
 
+import javax.swing.SwingUtilities;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
+import org.osgi.util.promise.Promise;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -36,17 +46,24 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentApplet;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.GuiCreator;
+import fi.dwo.dwojapplet.gui.ReducedImageIcon;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import hplb.misc.ByteArray;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicScoContextManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * Save en restore van courses en single sco's.
@@ -69,6 +86,7 @@ class ManifestFile {
     private static String DESCRIPTION = "description";
     private static String LAUNCHDATA = "launchdata";
     private static String SEQUENCE_NR = "sequencenr";
+    private static String THUMBNAIL = "thumbnail";
 
 //    private DbAccessIF dbAccess;
     private Document document;
@@ -78,14 +96,19 @@ class ManifestFile {
 
     Hashtable configMap = new Hashtable();
 
-    public void createIMSManifest(int course, int scoid, OutputStream out) throws ParserConfigurationException, TransformerException, SQLException, IOException, XmlRpcException, PersistenceException {
-        Course record = PersistenceFacade.instance().get( course, Course.class);
-        Hashtable restriction;
-        restriction = new Hashtable();
-        restriction.put("courseID", record.getID());
-        if (scoid != -1) {
-            // insert scoid in restriction.
-        }
+//    public void createIMSManifest(int course, int scoid, OutputStream out) throws ParserConfigurationException, TransformerException, SQLException, IOException, XmlRpcException, PersistenceException {
+//        Course record = PersistenceFacade.instance().get( course, Course.class);
+//        createIMSManifest(record, out);
+//    }
+    public void createIMSManifest(Course record, OutputStream out) throws ParserConfigurationException, TransformerException {
+        
+        
+        //        Hashtable restriction;
+//        restriction = new Hashtable();
+//        restriction.put("courseID", record.getID());
+//        if (scoid != -1) {
+//            // insert scoid in restriction.
+//        }
         record.loadScos();
         List<Sco> scos = Arrays.asList(record.getScoList());
 
@@ -126,6 +149,34 @@ class ManifestFile {
         description.appendChild(document.createTextNode((String) record.getDescription()));
         organization.appendChild(description);
         appendNL(organization);
+// Metadata of course
+        metadata = document.createElementNS(IMSCP, "metadata");
+        schema = document.createElementNS(IMSCP, "schema");
+        schema.appendChild(document.createTextNode("DWO " + THUMBNAIL));
+        schemaVersion = document.createElementNS(IMSCP, "schemaversion");
+        schemaVersion.appendChild(document.createTextNode("1.0"));
+        metadata.appendChild(schema);
+        appendNL(metadata);
+        metadata.appendChild(schemaVersion);
+        appendNL(metadata);
+        Element thumbnail = document.createElementNS(DWO, THUMBNAIL);
+        metadata.appendChild(thumbnail);
+        appendNL(metadata);
+
+        byte[] data = record.getImageData();
+        if (data == null && record.getImageUrl() != null) {
+          try {
+            URL u = new URL(record.getImageUrl());
+            data = ByteArray.getContent(u);           
+          } catch(Exception e) {            
+          }
+        }
+        if (data != null) {
+        String base64 = Base64.getEncoder().encodeToString(data);
+        thumbnail.appendChild(document.createTextNode(base64));
+        }
+        organization.appendChild(metadata);
+        appendNL(organization);
 // items
         Iterator<Sco> iter;
         iter = scos.iterator();
@@ -152,7 +203,44 @@ class ManifestFile {
             launchdata.appendChild(document.createTextNode(sco.getLaunchdataString()));
             item.appendChild(launchdata);
             appendNL(item);
-
+// Metadata of sco
+            metadata = document.createElementNS(IMSCP, "metadata");
+            schema = document.createElementNS(IMSCP, "schema");
+            schema.appendChild(document.createTextNode("DWO " + THUMBNAIL));
+            schemaVersion = document.createElementNS(IMSCP, "schemaversion");
+            schemaVersion.appendChild(document.createTextNode("1.0"));
+            metadata.appendChild(schema);
+            appendNL(metadata);
+            metadata.appendChild(schemaVersion);
+            appendNL(metadata);
+            thumbnail = document.createElementNS(DWO, THUMBNAIL);
+            metadata.appendChild(thumbnail);
+            appendNL(metadata);
+            data = sco.getImageData();
+            if (data == null) {
+              PersistenceId id = PersistentScoContext.buildPersistenceId(Long.valueOf(sco.getScoID()));
+              DomScoContext domScoId = new DomScoContext();
+              domScoId.setId(id);
+              Promise<DomScoContext> p = PublicScoContextManager.getAsync(domScoId, fi.dwo.dwojapplet.domain.DWO.getDwoProfile(), null);
+              Promise<byte[]> map = p.map(s -> {        
+                try {
+                  return ByteArray.getContent(new URL(s.getImage()));
+                } catch (Exception e) {
+                  return null;
+                }
+              });
+              try {
+                data = map.getValue();
+                sco.setImageData(data);
+              } catch (Exception e) {
+              }
+            }
+            if (data != null) {
+              String base64 = Base64.getEncoder().encodeToString(data);
+              thumbnail.appendChild(document.createTextNode(base64));
+            }
+            item.appendChild(metadata);
+            appendNL(item); 
             organization.appendChild(item);
             appendNL(organization);
         }
@@ -177,6 +265,7 @@ class ManifestFile {
 
     static final String FILENAME = "imsmanifest.xml";
 
+    @SuppressWarnings("rawtypes")
     Hashtable inputIMSManifest(InputStream input) throws ParserConfigurationException, SAXException, IOException {
         Hashtable result = new Hashtable();
         Vector items = new Vector();
@@ -204,6 +293,11 @@ class ManifestFile {
                     Hashtable r = insertItem(element, itemNr);
                     items.addElement(r);
                     itemNr++;
+                } else if (element.getLocalName().equals("metadata")) {
+                  Node thumbnail = element.getElementsByTagNameNS(DWO, THUMBNAIL).item(0);
+                  byte[] data = Base64.getDecoder().decode(thumbnail.getTextContent());
+                  if (data.length > 0 ) 
+                    result.put(THUMBNAIL, data);
                 }
             }
         }
@@ -251,6 +345,12 @@ class ManifestFile {
 				{
 						result.put(LAUNCHDATA, getNodeValue(firstChild));
 				} 
+				else if (element.getLocalName().equals("metadata")) {
+                  Node thumbnail = element.getElementsByTagNameNS(DWO, THUMBNAIL).item(0);
+                  byte[] data = Base64.getDecoder().decode(thumbnail.getTextContent());
+                  if (data.length > 0 ) 
+                    result.put(THUMBNAIL, data);
+                }
 			}
 		}
 		return result;
@@ -262,20 +362,22 @@ class ManifestFile {
 		String description;
 		name = (String) course.get(COURSE_TITLE);
 		description = (String) course.get(DESCRIPTION);
-		int courseID = addCourseRest(schoolID, notnull(name), notnull(description), dwoProfile, parent, false, n);
+		byte[] thumbnail = (byte[]) course.get(THUMBNAIL);
+		int courseID = addCourseRest(schoolID, notnull(name), notnull(description), dwoProfile, parent, false, n, thumbnail);
 		DomDwoProfile p = new DomDwoProfile();
 		p.setId(PersistentDwoProfile.buildPersistenceId((long)dwoProfile));
 		appendCourse(courseID, 0, course,p);
 		return courseID;
 	}
 
-	int addCourseRest(long schoolID, String name, String description,long dwoProfile, long parent, boolean isMap, long offset) throws Dwo2Exception {
+	int addCourseRest(long schoolID, String name, String description,long dwoProfile, long parent, boolean isMap, long offset, byte[] image) throws Dwo2Exception {
     	PersistentCourse pc = new PersistentCourse();
 // if Course extends persistentCourse
     		pc.setName(name);
     		pc.setWithChildren(Boolean.valueOf(isMap));
     		pc.setDescription(description);    		
     		pc.setDwoProfileID(dwoProfile);
+    		pc.setImageData(image);
 // defaults:
     		
 // special cases...
@@ -306,13 +408,14 @@ class ManifestFile {
 			int sequencenr = ((Number)sco.get(SEQUENCE_NR)).intValue();
 			String description = (String) sco.get(DESCRIPTION);
 			String launchdata = (String) sco.get(LAUNCHDATA);
+			byte[] thumbnail = (byte[]) sco.get(THUMBNAIL);
 			//GuiCreator.instance().getDWO().addScoWithExceptions(course, appletConfig, name, description, showScore, imageData)
 			
 			
 			Sco addsco = new Sco();
     			DomScoContextFull scoContext = new DomScoContextFull();
     			DomScoData scoData = new DomScoData();
-    			scoContext.setImageData(null);
+    			scoContext.setImageData(thumbnail);
     			scoContext.setScoName(notnull(name));
     			scoContext.setDescription(notnull(description));
     			scoContext.setShowScore(Boolean.TRUE);
