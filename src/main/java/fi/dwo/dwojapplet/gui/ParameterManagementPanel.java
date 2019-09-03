@@ -287,7 +287,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         if (editMode) {
             if (POPUP) {
                 editModeDialog.setVisible(true);
-            } else if (CenterPanel.isIconizer()) {
+            } else if (false && CenterPanel.isIconizer()) { // ALWAYS pseudo-LoadTotal
                 center.loadCenter(this);
             } else {
                 center.loadTotal(this);

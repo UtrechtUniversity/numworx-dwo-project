@@ -155,8 +155,10 @@ public class CenterPanel extends JPanel implements CourseContainer {
             ip2 = tree.getIP();
             ip2.setIconBorder(ip.getIconBorder());
             Image imgs = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_BGIMAGE_SCO);
-            Insets inset2 = (Insets) GuiConstants.GUI_INSETS_SCO.clone();
-            scoBorder = new DWOBorder(imgs, GuiConstants.GUI_INSETS_SCO, GuiConstants.GUI_9PATCH_SCO);
+            Insets inset2 = (Insets) GuiConstants.GUI_INSETS_TREE.clone();
+            Insets insetsSco = GuiConstants.GUI_INSETS_SCO;
+//            insetsSco = new Insets(4,4,0,0);
+            scoBorder = new DWOBorder(imgs, insetsSco, GuiConstants.GUI_9PATCH_SCO);
             tree.add(new Mover(inset2.right), BorderLayout.EAST);
             inset2.right = 0;
             DWOBorder treeBorder = new DWOBorder(imgs, inset2, GuiConstants.GUI_9PATCH_SCO);

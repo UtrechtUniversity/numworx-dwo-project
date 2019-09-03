@@ -97,7 +97,7 @@ public abstract class GuiConstants {
     public static int[] GUI_9PATCH_SCO;
     public static Insets GUI_INSETS_ICON;
     public static Insets GUI_INSETS_MENU;
-    public static Insets GUI_INSETS_SCO;
+    public static Insets GUI_INSETS_SCO, GUI_INSETS_TREE;
 
     public static boolean GUI_SCOUPDATE_UNSAFE;
 
@@ -174,6 +174,8 @@ public abstract class GuiConstants {
         GUI_INSETS_ICON = getInsets(prop, "gui_insets_icon");
         GUI_INSETS_MENU = getInsets(prop, "gui_insets_menu");
         GUI_INSETS_SCO = getInsets(prop, "gui_insets_sco");
+        GUI_INSETS_TREE = getInsets(prop, "gui_insets_tree");
+        //GUI_INSETS_SCO = new Insets(0,0,0,0);
         DWO.SEQUENCE = getBoolean(prop, "sequence_module") || GUI_ICONIZED;
         GUI_SCOUPDATE_UNSAFE = getBoolean(prop, "scoupdate_unsafe");
         DEPLOY_VARIANT = getString(prop, "deployVariant");
