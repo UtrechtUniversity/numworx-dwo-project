@@ -93,7 +93,47 @@ public class LoginPresenter {
         this.resourceBindings = resourceBindings;
     }
 
-    public interface Display extends BasicDisplay {
+    private final class LoginSucces implements Success<DwoGlobalVars.DwoGlobalVarsState, Boolean> {
+		private final Boolean switchRole;
+
+		private LoginSucces(Boolean switchRole) {
+			this.switchRole = switchRole;
+		}
+
+		@Override
+		public Promise<Boolean> call(Promise<DwoGlobalVars.DwoGlobalVarsState> resolved) throws Exception {
+		    if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
+		        if (!dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
+		            eventBus.fireEvent(new MessageDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
+		        };
+		        boolean switchR = true;
+		        LOG.log(Level.INFO, "login succeeded for user:" + dwoGlobalVars.getCurrentUser().getUniqueDisplayName());
+		        try {
+		            RoleType loginRole = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());    
+		            if (RoleType.TEACHER == loginRole || RoleType.SCHOOLADMIN == loginRole || RoleType.STUDENT == loginRole) {
+		                switchR = false;
+		            }
+		        } catch (Exception e) {
+		            switchR = true;
+		        }
+		        if (switchR || switchRole) {
+		            eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_ROLE));
+		        } else {
+		            eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_WELCOME));
+		        }
+		        LOG.log(Level.INFO, "login succeeded. Firing Login success event.");
+		        //true means we are done
+		        return Promises.resolved(false);
+		    } else {
+		        LOG.log(Level.INFO, "login failed, wrong login state: " + resolved.getValue().name());
+		        dwoGlobalVars.clearCurrentUser();
+		        view.showWarning(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_AuthenticationError());
+		        return Promises.resolved(true);
+		    }
+		}
+	}
+
+	public interface Display extends BasicDisplay {
 
         /**
          * Sets the username in the ui box.
@@ -156,39 +196,7 @@ public class LoginPresenter {
         Promise<DwoGlobalVars.DwoGlobalVarsState> loginUser;
         try {
             loginUser = dwoGlobalVars.initUser(user, password);
-            loginUser.then(new Success<DwoGlobalVars.DwoGlobalVarsState, Boolean>() {
-                @Override
-                public Promise<Boolean> call(Promise<DwoGlobalVars.DwoGlobalVarsState> resolved) throws Exception {
-                    if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
-                        if (!dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
-                            eventBus.fireEvent(new MessageDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
-                        };
-                        boolean switchR = true;
-                        LOG.log(Level.INFO, "login succeeded for user:" + dwoGlobalVars.getCurrentUser().getUniqueDisplayName());
-                        try {
-                            RoleType loginRole = RoleType.valueOf(dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName());    
-                            if (RoleType.TEACHER == loginRole || RoleType.SCHOOLADMIN == loginRole || RoleType.STUDENT == loginRole) {
-                                switchR = false;
-                            }
-                        } catch (Exception e) {
-                            switchR = true;
-                        }
-                        if (switchR || switchRole) {
-                            eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_ROLE));
-                        } else {
-                            eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_WELCOME));
-                        }
-                        LOG.log(Level.INFO, "login succeeded. Firing Login success event.");
-                        //true means we are done
-                        return Promises.resolved(false);
-                    } else {
-                        LOG.log(Level.INFO, "login failed, wrong login state: " + resolved.getValue().name());
-                        dwoGlobalVars.clearCurrentUser();
-                        view.showWarning(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_User_AuthenticationError());
-                        return Promises.resolved(true);
-                    }
-                }
-            },
+            loginUser.then(new LoginSucces(switchRole),
                     new Failure() {
                 @Override
                 public void fail(Promise<?> resolved) throws Exception {
@@ -227,35 +235,7 @@ public class LoginPresenter {
             } else {
               statePromise = dwoGlobalVars.initUserWithToken(token);
             }
-            statePromise.then(resolved -> {
-                if (resolved.getValue() == DwoGlobalVars.DwoGlobalVarsState.LoggedIn) {
-                    if (!dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().licenseIsValid()) {
-                        eventBus.fireEvent(new MessageDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "License expired.")));
-                    };
-                    boolean switchR = true;
-                    LOG.log(Level.INFO, "login succeeded for user:" + dwoGlobalVars.getCurrentUser().getUniqueDisplayName());
-                    try {
-                        if (dwoGlobalVars.getActiveSchoolRoleAndClass().getRole().getRoleName().equals(RoleType.TEACHER.name())) {
-                            switchR = false;
-                        }
-                    } catch (Exception e) {
-                        switchR = true;
-                    }
-                    if (switchR) {
-                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_ROLE));
-                    } else {
-                        eventBus.fireEvent(new LoginEvent(LoginEvent.State.SUCCESS_WELCOME));
-                    }
-                    LOG.log(Level.INFO, "login succeeded. Firing Login success event.");
-                    //true means we are done
-                    return Promises.resolved(Boolean.FALSE);
-                } else {
-                    LOG.log(Level.INFO, "login failed, wrong login state: " + resolved.getValue().name());
-                    dwoGlobalVars.clearCurrentUser();
-                    view.showWarning("login failed");
-                    return Promises.resolved(Boolean.TRUE);
-                }
-            },
+            statePromise.then(new LoginSucces(false),
                     resolved -> {
                         Throwable fail = resolved.getFailure();
                         dwoGlobalVars.clearCurrentUser();
