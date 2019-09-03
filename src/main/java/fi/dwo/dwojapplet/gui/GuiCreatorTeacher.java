@@ -24,6 +24,7 @@ import fi.dwo.dwojapplet.domain.AppletConfig;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DWO;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.Teacher;
@@ -31,6 +32,7 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.CourseManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
+import fi.dwo.dwojapplet.gui.action.WrapSco;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
@@ -405,6 +407,22 @@ public class GuiCreatorTeacher extends GuiCreator {
     @Override
     public ScoPanel previewSco(Sco sco) {
         return dwo.previewSco(sco);
+    }
+
+    public CenterSubPanel getHTML5ScoPanel(Sco sco) {
+      if (DwoHelper.isTest() && sco.hasFeature(Sco.JSON_OUT) && DwoHelper.hasProfileRight(DwoHelper.PREVIEW)) {
+        dwo.setWait();
+        try {
+          final WrapSco wrap = new WrapSco(sco);
+          CenterSubPanel csp = getScoPanel(wrap);
+          dwo.setCurrentSco(wrap);
+          return csp;
+        } finally {
+          dwo.setReady();
+        }
+      } else {
+        return getScoPanel(sco);
+      }
     }
 
     public CenterSubPanel getScoPanel(Sco sco) {

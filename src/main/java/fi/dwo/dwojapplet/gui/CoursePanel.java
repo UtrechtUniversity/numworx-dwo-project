@@ -365,7 +365,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 
                 @Override
                 protected CenterSubPanel doInBackground() throws Exception {
-                    CenterSubPanel csp = GuiCreator.instance().getScoPanel(s);
+                    CenterSubPanel csp = GuiCreator.instance().getHTML5ScoPanel(s);
                     return csp;
                 }
 

@@ -184,6 +184,7 @@ public class TeacherStrategy implements SelectStrategy {
             if (action.isEnabled()) {
                 m.addSeparator();
                 m.add(new JMenuItem(action));
+                m.add(new JMenuItem(new OpenApplet(map)));
             }
         }
 
@@ -276,7 +277,7 @@ public class TeacherStrategy implements SelectStrategy {
         } else if (value instanceof Sco) {
             Sco s = (Sco) value;
             center.end();
-            CenterSubPanel csp = instance.getScoPanel(s);
+            CenterSubPanel csp = instance.getHTML5ScoPanel(s);
             if (csp != null) {
                 s.setLessonMode(getLessonMode());
                 center.loadTotal(csp);

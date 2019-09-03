@@ -27,13 +27,13 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class WrapSco extends Sco {
+public class WrapSco extends Sco {
     private static final Logger LOG = Logger.getLogger(WrapSco.class.getName());
 
     /**
      * @param delegate
      */
-    WrapSco(Sco delegate) {
+    public WrapSco(Sco delegate) {
         this.delegate = delegate;
         setEditor(delegate);
     }

@@ -29,6 +29,7 @@ import fi.dwo.dwojapplet.domain.SchoolPasswdMap;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.action.WrapSco;
 import fi.dwo.dwojapplet.gui.fullscreen.FramedScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
@@ -556,6 +557,12 @@ public class GuiCreator {
             dwo.setReady();
         }
     }
+    
+  public CenterSubPanel getHTML5ScoPanel(Sco sco) {
+      return getScoPanel(sco);
+  }
+
+    
 
     /**
      * Returns an instance of a GuiCreator Object. This object must be created
