@@ -559,6 +559,11 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 String[] celStrings;
                 List<DomSingleSchoolStudent> newUserList = new ArrayList<DomSingleSchoolStudent>(rowStrings.length);
                 for (int i = 0; i < rowStrings.length; i++) {
+                  // remove trailing \r
+                    if (rowStrings[i].endsWith("\r")) {
+                      String t = rowStrings[i];
+                      rowStrings[i] = t.substring(0, t.length()-1);
+                    }
                     DomSingleSchoolStudent student = new DomSingleSchoolStudent();
                     newUserList.add(student);
                     //userList.get(userList.size()).clearSettings();

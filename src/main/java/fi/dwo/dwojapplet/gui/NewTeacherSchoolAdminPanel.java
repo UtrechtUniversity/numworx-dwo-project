@@ -576,6 +576,10 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                 String[] celStrings;;
                 List<DomUserFull> newUserList = new ArrayList<DomUserFull>(rowStrings.length);
                 for (int i = 0; i < rowStrings.length; i++) {
+                    if (rowStrings[i].endsWith("\r")) {
+                      String t = rowStrings[i];
+                      rowStrings[i] = t.substring(0, t.length()-1);
+                    }
                     DomUserFull teacher = new DomUserFull();
                     newUserList.add(teacher);
                     celStrings = rowStrings[i].split("\t", columnNames.length);
