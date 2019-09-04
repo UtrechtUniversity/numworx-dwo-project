@@ -365,7 +365,11 @@ public class WrapSco extends Sco {
      */
     @Override
     public String SetValue(String iDataModelElement, String iValue) {
-        return super.SetValue(iDataModelElement, iValue);
+      if(LESSON_LOCATION.equals(iDataModelElement))
+      {
+          delegate.SetValue(iDataModelElement, iValue);
+      }
+      return super.SetValue(iDataModelElement, iValue);
     }
 
     /**
