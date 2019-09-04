@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.osgi.util.promise.Promise;
@@ -306,7 +308,11 @@ public class XapiResultsManager {
         }
         else if(Boolean.TRUE.equals(success))
         {
-            //Immediately calculate new scores for all ids
+          ids = metVoorkennis(ids, infos);
+          
+          
+          
+          //Immediately calculate new scores for all ids
             for(String id: ids)
             {   DomStudentModelScore modelScore = model.get(id);
                 if (modelScore == null) continue;
@@ -322,6 +328,31 @@ public class XapiResultsManager {
     
     //TODO: en dan gegevens uit het model weer terugzetten naar de tree? Of is dat niet nodig?
 }
+
+List<String> metVoorkennis(List<String> ids,
+      Map<String, DomStudentModelContextInfo> infos) {
+    Set<String> all = new TreeSet<String>(ids);
+    Set<String> extra = new TreeSet<>();
+    Set<String> work = new TreeSet<>(all);
+    while( ! work.isEmpty()) {
+      // extra is empty, work is nonempty, work all in "all"
+      for (String id: work) {
+        DomStudentModelContextInfo info = infos.get(id);
+        if (info == null) continue;
+        List<String> voorkennis = info.getVoorkennis();
+        if (voorkennis == null) continue;
+        extra.addAll(voorkennis);
+      }
+      extra.removeAll(all);
+      work.clear();
+      work.addAll(extra);
+      all.addAll(extra);
+      extra.clear();
+    }
+    return new ArrayList<String>(all);
+  }
+
+
 
 private void fill(DomStudentModelStructureScore score,
         DomStudentModelStructure structure, Map<String, DomStudentModelScore> model,
