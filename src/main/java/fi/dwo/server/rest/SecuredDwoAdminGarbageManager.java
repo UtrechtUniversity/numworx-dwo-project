@@ -42,6 +42,7 @@ import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
@@ -267,5 +268,16 @@ public class SecuredDwoAdminGarbageManager {
 	return false;
   }
 
+  // TODO select * from tblhasrole where userid not in (select userid from tbluser) (14 stuks in productie, 5 in dev)
+  @GET
+  @Produces({"application/json"})
+  @Path("/hasrole/get")
+  public List<DomHasRole> getHasRoles(@Context SecurityContext sc, @QueryParam("limit") Integer limit) throws Dwo2Exception {
+	  DwoAdminState_HR_R_S_SG_U admin = AnonDomainAuthorizer.build()
+	            .submitUser(sc.getUserPrincipal().getName())
+	            .setDefaultHasRole().buildDwoAdmin();
+	  if (limit == null) limit = 100;
+	  return Collections.emptyList();
+  }
   
 }
