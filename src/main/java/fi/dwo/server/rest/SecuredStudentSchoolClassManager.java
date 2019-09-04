@@ -1,5 +1,6 @@
 package fi.dwo.server.rest;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -8,15 +9,17 @@ import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
-import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
@@ -26,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
 import javax.persistence.PersistenceException;
@@ -49,6 +53,55 @@ public class SecuredStudentSchoolClassManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredStudentSchoolClassManager.class.getName());
 
+    private PersistentHasRole getHasRole(SecurityContext sc, DomContext context) throws Dwo2Exception {
+      PersistentHasRole phr;
+      if (context == null || context.getDomHasRole() == null)
+          phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT);
+      else 
+      {
+          phr = HasRoleManager.findEntity(MySQLPersistenceId.getNativeId(context.getDomHasRole()));
+          if (! phr.getUser().getUsername().equals(sc.getUserPrincipal().getName())||
+                  phr.getSchoolGroup().getGroupID() != RoleType.STUDENT.ordinal())
+              throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "No Permission");
+      }
+      return phr;
+  }
+
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getActive")
+    public DomSchoolClass getActiveSchoolClass(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
+      UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.STUDENT);
+      PersistentHasRole phr = state.getHasRole();
+      PersistentSchool school = state.getSchool();
+      Long classID = phr.getClassID();
+      if (classID == null) {
+        throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Active_SchoolClass_Not_Set, "Non-fatal. You have no active schoolclass selected.");
+      }
+      //fetch schoolclass from hasRole
+      PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(classID);
+      //verify if schoolClass is in school
+      if (schoolClass == null || !schoolClass.getSchoolID().equals(school.getSchoolID())) {
+          LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Active schoolClass {2} from a different school that registered for hasRole in school {1} with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID(), schoolClass.getClassID()});
+          throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Database error using usercode " + sc.getUserPrincipal().getName() + ".");
+      }
+
+      //verify if user is in class
+      PersistentStudentOfClassPK key = new PersistentStudentOfClassPK();
+      key.setClassID(schoolClass.getClassID());
+      key.setSchoolGroupID(phr.getPersistentHasRolePK().getSchoolGroupID());
+      key.setUserID(phr.getPersistentHasRolePK().getUserID());
+      PersistentStudentOfClass soc = StudentOfClassManager.findEntity(key);
+      if (soc == null) {
+          return null;
+      }
+
+      return schoolClass.buildDomSchoolClass();
+    }
+    
+    
+    
     @GET
     @Produces({"application/json"})
     @Path("/getActive")
@@ -101,7 +154,7 @@ public class SecuredStudentSchoolClassManager {
         PersistentSchool school = null;
         PersistentSchoolClass schoolClass = null;
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT);
+            phr = getHasRole(sc,restSchoolClass.getRestContext());
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(restSchoolClass.getDomSchoolClass()));
         } catch (Dwo2Exception ex) {
@@ -143,7 +196,7 @@ public class SecuredStudentSchoolClassManager {
         PersistentSchool school = null;
         PersistentSchoolClass schoolClass = null;
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT);
+            phr = getHasRole(sc,restSchoolClass.getRestContext());
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
             schoolClass = SchoolClassManager.findEntity(MySQLPersistenceId.getNativeId(restSchoolClass.getDomSchoolClass()));
         } catch (Dwo2Exception ex) {
@@ -186,7 +239,7 @@ public class SecuredStudentSchoolClassManager {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT);
+            phr = getHasRole(sc, restSchoolClass.getRestContext());
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access student functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
@@ -200,7 +253,6 @@ public class SecuredStudentSchoolClassManager {
         }
 
         DomNewSchoolClass4Student q = restSchoolClass.getDomNewSchoolClass4Student();
-        PersistenceId id = q.getId();
         PersistentSchoolClass schoolClass;
         try {
             schoolClass = SchoolClassManager.findEntity((MySQLPersistenceId.getNativeId(q)));
@@ -222,7 +274,20 @@ public class SecuredStudentSchoolClassManager {
         }
     }
 
-    /**
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getList")
+    public List<DomSchoolClass> getStudentsSchoolClasses(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
+      UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.STUDENT);
+      PersistentHasRole phr = state.getHasRole();
+      List<PersistentStudentOfClass> tocList = StudentOfClassManager.findEntities(phr.getPersistentHasRolePK());
+      
+      return tocList.stream()
+          .map(toc -> SchoolClassManager.findEntity(toc.getPersistentStudentOfClassPK().getClassID()).buildDomSchoolClass())
+          .collect(Collectors.toList());
+    }
+     /**
      * Returns the school data to be displayed.
      *
      * @param sc
@@ -264,6 +329,19 @@ public class SecuredStudentSchoolClassManager {
         }
     }
 
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getSchoolsList")
+    public List<DomSchoolClass> getSchoolsClasses(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
+      UserState_HR_R_S_SG_U ustate = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+      .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.STUDENT);
+      PersistentSchool school = ustate.getSchool();
+      List<PersistentSchoolClass> scList = SchoolClassManager.findEntities(school);
+      return scList.stream()
+          .map(PersistentSchoolClass::buildDomSchoolClass)
+          .collect(Collectors.toList());
+    }
+    
     /**
      * Returns the school data to be displayed.
      *

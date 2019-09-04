@@ -4,7 +4,6 @@
 package fi.dwo.server.testutil;
 
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
-import java.security.Identity;
 import java.security.Principal;
 import javax.ws.rs.core.SecurityContext;
 
@@ -15,7 +14,7 @@ import javax.ws.rs.core.SecurityContext;
  */
 public class TestSecurityContext implements SecurityContext {
 
-    private Identity principal;
+    private Principal principal;
     private RoleType role;
 
     public TestSecurityContext(String name, final RoleType aRole) {

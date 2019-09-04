@@ -4,6 +4,8 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -16,6 +18,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -78,24 +81,41 @@ public class SecuredStudentSchoolClassManagerIT {
      */
     @Test
     public void testGetStudentsSchoolClasses() {
-        System.out.println("getStudentsSchoolClasses");
         SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);//school01
         SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
         List<DomSchoolClass> result = instance.getStudentsSchoolClasses(sc);
+        assertEquals(2, result.size());
+    }
+    @Test
+    public void testGetStudentsSchoolClasses2() throws Exception {
+        SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);//school01
+        SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
+        RestContext rest = new RestContext();
+        rest.setRestContext(new DomContext());
+        DomHasRole domHasRole;
+        domHasRole = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT).buildDomHasRole();
+        rest.getRestContext().setDomHasRole(domHasRole);
+       List<DomSchoolClass> result = instance.getStudentsSchoolClasses(sc,rest);
         assertEquals(2, result.size());
     }
 
     /**
      * Test of setActiveSchoolClass method, of class
      * SecuredStudentSchoolClassManager.
+     * @throws Dwo2Exception 
      */
     @Test
-    public void testSetActiveSchoolClass() {
-        System.out.println("setActiveSchoolClass");
+    public void testSetActiveSchoolClass() throws Dwo2Exception {
         SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);
         RestSchoolClass restSchoolClass = new RestSchoolClass();
         DomSchoolClass domSchoolClass = new DomSchoolClass();
         restSchoolClass.setDomSchoolClass(domSchoolClass);
+        RestContext rest = new RestContext();
+        rest.setRestContext(new DomContext());
+        DomHasRole domHasRole;
+        domHasRole = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT).buildDomHasRole();
+        rest.getRestContext().setDomHasRole(domHasRole);
+        restSchoolClass.setRestContext(rest.getRestContext());
         //put in schoolgroup 5 , class 3 for user 9 (user02)
         domSchoolClass.setId(PersistentSchoolClass.buildPersistenceId(2L));
         domSchoolClass.setSchoolClassName("SchoolClass02");
@@ -181,7 +201,6 @@ public class SecuredStudentSchoolClassManagerIT {
      */
     @Test
     public void testRegisterStudentForSchoolClass() {
-        System.out.println("registerStudentForSchoolClass");
         SecurityContext sc = new TestSecurityContext("user05", RoleType.STUDENT);
         RestNewSchoolClass4Student restSchoolClass = new RestNewSchoolClass4Student();
         DomNewSchoolClass4Student domSchoolClass = new DomNewSchoolClass4Student();
@@ -247,11 +266,21 @@ public class SecuredStudentSchoolClassManagerIT {
      */
     @Test
     public void testGetSchoolsClasses() {
-        System.out.println("getSchoolsClasses");
-        System.out.println("getStudentsSchoolClasses");
         SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);//school01
         SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
         List<DomSchoolClass> result = instance.getSchoolsClasses(sc);
         assertEquals(2, result.size());
+    }
+    
+    @Test public void testGetSchoolsClasses2() throws Dwo2Exception {
+      SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);//school01
+      SecuredStudentSchoolClassManager instance = new SecuredStudentSchoolClassManager();
+      RestContext rest = new RestContext();
+      rest.setRestContext(new DomContext());
+      DomHasRole domHasRole;
+      domHasRole = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT).buildDomHasRole();
+      rest.getRestContext().setDomHasRole(domHasRole);
+      List<DomSchoolClass> result = instance.getSchoolsClasses(sc, rest);
+      assertEquals(2, result.size());
     }
 }
