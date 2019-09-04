@@ -1,8 +1,11 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.inject.Inject;
 
@@ -209,6 +212,7 @@ public class XAPIService extends StudentResultsService implements StudentResults
         }
         else if(Boolean.TRUE.equals(success))
         {
+        	ids = metVoorkennis(ids, infos);
             //Immediately calculate new scores for all ids
             for(String id: ids)
             {   DomStudentModelScore modelScore = model.get(id);
@@ -286,7 +290,30 @@ private void fill(DomStudentModelObjectiveScore score,
     }
 
 }
-  
+
+List<String> metVoorkennis(List<String> ids,
+	      Map<String, DomStudentModelContextInfo> infos) {
+	    Set<String> all = new TreeSet<String>(ids);
+	    Set<String> extra = new TreeSet<>();
+	    Set<String> work = new TreeSet<>(all);
+	    while( ! work.isEmpty()) {
+	      // extra is empty, work is nonempty, work all in "all"
+	      for (String id: work) {
+	        DomStudentModelContextInfo info = infos.get(id);
+	        if (info == null) continue;
+	        List<String> voorkennis = info.getVoorkennis();
+	        if (voorkennis == null) continue;
+	        extra.addAll(voorkennis);
+	      }
+	      extra.removeAll(all);
+	      work.clear();
+	      work.addAll(extra);
+	      all.addAll(extra);
+	      extra.clear();
+	    }
+	    return new ArrayList<String>(all);
+	  }
+
   
   
 }
