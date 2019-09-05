@@ -183,12 +183,12 @@
     		<artifactId>async-lib</artifactId>
     		<version>0.0.3</version>
     	</dependency>
-<!--     	<dependency> -->
-<!--     		<groupId>netscape.javascript</groupId> -->
-<!--     		<artifactId>mayscript</artifactId> -->
-<!--     		<version>1.0.0</version> -->
-<!--     		<scope>provided</scope> -->
-<!--     	</dependency> -->
+    	<dependency> <!-- when running under openjdk zonder javafx -->
+    		<groupId>netscape.javascript</groupId>
+    		<artifactId>mayscript</artifactId>
+    		<version>1.0.0</version>
+    		<scope>provided</scope>
+    	</dependency>
     	<dependency>
     		<groupId>fi.beans</groupId>
     		<artifactId>ideas</artifactId>
