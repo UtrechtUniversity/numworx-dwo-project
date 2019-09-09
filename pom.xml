@@ -351,7 +351,7 @@
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addClasspath>true</addClasspath>
+                            <addClasspath>false</addClasspath>
                         </manifest>
                         <manifestEntries>
                             <DWOJApplet-Implementation-Version>${project.version}</DWOJApplet-Implementation-Version>
@@ -370,6 +370,7 @@
                             <Bundle-SymbolicName>fi.dwo.dwojapplet.domain.DWO</Bundle-SymbolicName>
                             <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
                             <Fragment-Host>fi.dwo.dwojapplet</Fragment-Host>
+                            <Class-Path>swingbrowser-jfx.jar swingbrowser-api.jar</Class-Path>
                         </manifestEntries>
                     </archive>
                     <descriptorRefs>

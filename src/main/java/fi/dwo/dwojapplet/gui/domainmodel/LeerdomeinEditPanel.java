@@ -99,6 +99,10 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
         if (editorCB.isSelected() && wiskOpdrEditPanel != null) {
           description = wiskOpdrEditPanel.getText();
           WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(description);
+          Dimension size = panel.getMaximumSize();
+          Dimension tsize = text.getMaximumSize();
+          size.width = text.getPreferredSize().width;
+          panel.setMaximumSize(size);
           panel.setBackground(Color.white);
           pane.setViewportView(panel);
           n.setDescriptionAsJSON(toJSON(description));
@@ -161,8 +165,15 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
             wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(description);
             wiskOpdrEditPanel.setBackground(Color.WHITE);
             pane.setViewportView(wiskOpdrEditPanel);
+            wiskOpdrEditPanel.setRequestFocusEnabled(true);
+            wiskOpdrEditPanel.setFocusable(true);
+            wiskOpdrEditPanel.requestFocusInWindow();
           } else {
             WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(description);
+            Dimension size = panel.getMaximumSize();
+            Dimension tsize = text.getMaximumSize();
+            size.width = text.getPreferredSize().width;
+            panel.setMaximumSize(size);
             panel.setBackground(Color.WHITE);
             pane.setViewportView(panel);
           }
@@ -747,6 +758,9 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
                 wiskOpdrEditPanel.setBackground(Color.white);
             }
             pane.setViewportView(wiskOpdrEditPanel);
+            wiskOpdrEditPanel.setRequestFocusEnabled(true);
+            wiskOpdrEditPanel.setFocusable(true);
+            wiskOpdrEditPanel.requestFocusInWindow();
         }
         else if(wiskOpdrEditPanel!=null)
         {   

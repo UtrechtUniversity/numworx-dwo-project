@@ -10,15 +10,21 @@ import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinResultsPanel;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Image;
 import java.awt.MediaTracker;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.AbstractAction;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -26,13 +32,17 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -174,6 +184,56 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
               panel.setClasses(list);
               JOptionPane.showMessageDialog(TeacherStudentModelPanel.this, panel, title, JOptionPane.PLAIN_MESSAGE);  
             }
+        }
+//        private void recursiveUnfocusButtons(Component component) {
+//          if (component instanceof JButton) {
+//              JButton button = (JButton) component;
+//              button.setFocusable(false);
+//              return;
+//          } else if (component instanceof Container) {
+//              for (Component c : ((Container) component).getComponents()) {
+//                  recursiveUnfocusButtons(c);
+//              }
+//          }
+//      }
+
+        private int showConfirmDialog(TeacherStudentModelPanel teacherStudentModelPanel,
+            JScrollPane scrollPane, String title, int okCancelOption, int plainMessage) {
+         return JOptionPane.showConfirmDialog(teacherStudentModelPanel, scrollPane, title, okCancelOption,plainMessage );
+
+//          JOptionPane optionPane = new JOptionPane() {
+//            
+//          };
+//          optionPane.setMessage(scrollPane);
+//          optionPane.setMessageType(plainMessage);
+//          optionPane.setOptionType(okCancelOption);
+//
+//          KeyStroke enterStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+//          optionPane.getInputMap(JComponent.WHEN_FOCUSED).put(enterStroke, enterStroke.toString());
+//          optionPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enterStroke, enterStroke.toString());
+//          optionPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(enterStroke, enterStroke.toString());
+//          
+//          optionPane.getActionMap().put(enterStroke.toString(), new AbstractAction() {
+//              @Override
+//              public void actionPerformed(ActionEvent e) {
+//                  // do nothing
+//                System.err.print("ACTION");
+//              }
+//          });
+//
+//          //recursiveUnfocusButtons(optionPane);
+//          JDialog dialog = optionPane.createDialog(teacherStudentModelPanel, title);
+//          recursiveUnfocusButtons(dialog);
+//          dialog.show();
+//          dialog.dispose();
+//          Object        selectedValue = optionPane.getValue();
+//
+//          if(selectedValue == null)
+//              return optionPane.CLOSED_OPTION;         
+//          if(selectedValue instanceof Integer)
+//              return ((Integer)selectedValue).intValue();
+//          return optionPane.CLOSED_OPTION;
+//      
         }
     }
 
