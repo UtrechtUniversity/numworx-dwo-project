@@ -557,7 +557,9 @@ public class WrapSco extends Sco {
             String language = TextMapper.getLanguage();
             language = "?locale=" + language;
             URL path = DwoHelper.getServerUrlPath();
-			String serverBase = path.getProtocol() + "://" + path.getHost();
+            String port = "";
+            if (path.getPort() != -1) port = ":" + path.getPort();
+			String serverBase = path.getProtocol() + "://" + path.getHost() + port;
             return  serverBase + 
             		GuiConstants.PLAYER + language + "#cmi.launch_data:" + getScoID(); // FIXME correct url.
         }
