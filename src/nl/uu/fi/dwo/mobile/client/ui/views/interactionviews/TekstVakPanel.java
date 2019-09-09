@@ -4527,7 +4527,7 @@ private Object CamelCase(String name) {
 			setVisibility(false);
 		}
 		else if(TEXT_CONTENT.equals(command)) {
-			if(!ideasStatistiek) {
+			if(isInIdeasStatistiek().equals(null)) {
 				Map map = (Map)event.getParameters();
 				if(map!=null) {
 					String contentString = ((String)map.get("content"));
