@@ -241,6 +241,18 @@
 									<version>2.1.11</version>
 									<destFileName>dwo/dwo1compat.jar</destFileName>
 								</artifactItem>
+								<artifactItem>
+									<groupId>nl.numworx.swingbrowser</groupId>
+									<artifactId>swingbrowser-api</artifactId>
+									<version>0.0.1-SNAPSHOT</version>
+									<destFileName>dwo/swingbrowser-api.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>nl.numworx.swingbrowser</groupId>
+									<artifactId>swingbrowser-jfx</artifactId>
+									<version>0.0.1-SNAPSHOT</version>
+									<destFileName>dwo/swingbrowser-jfx.jar</destFileName>
+								</artifactItem>
 							</artifactItems>
 							<outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
 							<overWriteReleases>false</overWriteReleases>
