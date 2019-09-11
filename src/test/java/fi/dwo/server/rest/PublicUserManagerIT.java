@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.rest.entities.RestAuthToken;
 import nl.uu.fi.dwo.rest.entities.RestLoginCheck;
 import nl.uu.fi.dwo.rest.entities.RestNewUser;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
+import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
@@ -212,7 +213,30 @@ public class PublicUserManagerIT {
 //        fail("The test case is a prototype.");
 //    }
 //    
-    
+    @Test
+    public void testRegisterSAML() {
+    	PublicUserManager instance = new PublicUserManager();
+    	
+    	SecurityContext sc = null;
+		String userIdent = "user01";
+		String samlUserId = "samluser01";
+		String samlOrgId = "samlORG";
+		String givenName = "test";
+		String insertion = "van";
+		String familyName = "saml";
+		String email = "noreply@numworx.nl";
+		String role = RoleType.STUDENT.name();
+		long schoolID = 1;  // ???
+		String schoolClassName = "";
+		String result = instance.registerSAML(sc , userIdent , samlUserId , samlOrgId , givenName , insertion , familyName , email , role , schoolID, schoolClassName );
+    	assertNotNull(result);
+    	SamlUserManager.destroy(1L);
+		result = instance.registerSAML(sc , userIdent , samlUserId , samlOrgId , givenName , insertion , familyName , email , role , schoolID, schoolClassName );
+    	assertNotNull(result);
+		result = instance.registerSAML(sc , userIdent , samlUserId , samlOrgId , givenName , insertion , familyName , email , role , schoolID, schoolClassName );
+    	assertNotNull(result);
+   	
+    }
 
     /**
      * Test of getSamlUser method, of class PublicUserManager.

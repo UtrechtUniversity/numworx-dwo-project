@@ -468,7 +468,7 @@ CREATE TABLE `tblsamluser` (
   `samluserid` varchar(255) NOT NULL,
   `userID` int(11) NOT NULL,
   `authtoken` varchar(16) NOT NULL DEFAULT '97358736458',
-  `timestampauthtoken` int(11) NOT NULL DEFAULT '0',
+  `timestampauthtoken` bigint(20) NOT NULL DEFAULT '0',
   `optlock` int(11) DEFAULT '0',
   `lastChangeTimeStamp` bigint(20) DEFAULT '0',
   `del` tinyint(4) NOT NULL DEFAULT '0',

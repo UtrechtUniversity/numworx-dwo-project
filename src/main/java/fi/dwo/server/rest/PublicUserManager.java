@@ -443,7 +443,17 @@ public class PublicUserManager {
         LOG.log(Level.FINE, "Checking samluser.");
         PersistentSamlUser samlUser = SamlUserManager.findEntity(samlUserId, samlOrgId);
         if (samlUser == null) {
-            //generate new persistentUser
+
+        	pUser = UserManager.findByUserName(userIdent + '@' + school.getSchoolLogin());
+        	if (pUser != null) {
+        		pUser.setEmail(email);
+        		pUser.setGivenName(givenName);
+        		pUser.setInsertion(insertion);
+        		pUser.setLastname(familyName);
+        		pUser = UserManager.edit(pUser);	
+        	} else {
+        	
+        	//generate new persistentUser
             pUser = new PersistentUser();
             pUser.setEmail(email);
             pUser.setGivenName(givenName);
@@ -488,6 +498,7 @@ public class PublicUserManager {
             } catch (Dwo2Exception ex) {
                 LOG.log(Level.SEVERE, "", ex);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, registration failed.");
+            }
             }
             //generate samlUser
             PersistentSamlUser sUser = new PersistentSamlUser();

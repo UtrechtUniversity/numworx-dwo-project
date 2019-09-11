@@ -190,31 +190,31 @@ public class SamlUserManager {
     }
 
 
-    /**
-     * User manager. Returns null if login validation failed.
-     *
-     * @param userName
-     * @param passwd
-     * @return 
-     */
-    public static PersistentUser login(String userName, String passwd) {
-        PersistentUser user = null;
-        EntityManager em = getEntityManager();
-        try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
-            q.setParameter("username", userName);
-            user = (PersistentUser) q.getSingleResult();
-            if (user.getPassword().compareTo(passwd) != 0) {
-                return null;
-            }
-            LOG.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{userName});
-        } catch(NoResultException noResult) {
-        	return null;
-        }
-        finally {
-            em.close();
-        }
-        return user;
-    }
+//    /**
+//     * User manager. Returns null if login validation failed.
+//     *
+//     * @param userName
+//     * @param passwd
+//     * @return 
+//     */
+//    public static PersistentUser login(String userName, String passwd) {
+//        PersistentUser user = null;
+//        EntityManager em = getEntityManager();
+//        try {
+//            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
+//            q.setParameter("username", userName);
+//            user = (PersistentUser) q.getSingleResult();
+//            if (user.getPassword().compareTo(passwd) != 0) {
+//                return null;
+//            }
+//            LOG.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{userName});
+//        } catch(NoResultException noResult) {
+//        	return null;
+//        }
+//        finally {
+//            em.close();
+//        }
+//        return user;
+//    }
 
 }
