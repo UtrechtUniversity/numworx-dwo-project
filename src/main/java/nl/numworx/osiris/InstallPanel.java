@@ -1,0 +1,104 @@
+package nl.numworx.osiris;
+
+import java.awt.event.ActionEvent;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Map;
+
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import org.xml.sax.InputSource;
+
+import nl.numworx.edexml.OsirisBuilder;
+import nl.numworx.edexml.ServerBuilder;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+
+@SuppressWarnings("serial")
+public class InstallPanel extends JPanel {
+	
+	Main main;
+	JButton install;
+	
+	OsirisBuilder osiris;
+	ServerBuilder numworx;
+	URL base;
+	
+	public InstallPanel(Main main, URL base) {
+		this.main = main;
+		this.base = base;
+
+		install = new JButton("INSTALL IN NUMWORX");
+		install.addActionListener(this::doInstall);
+		add(install);
+		
+		osiris = new OsirisBuilder();
+		numworx = new ServerBuilder();
+	}
+
+	public void doInstall(ActionEvent e) {
+		if (! main.login.complete.isDone()) {
+			showConfirmDialog(main, "login first");
+			return;
+		}
+		try {
+			if (main.login.complete.getFailure() != null) {
+				showConfirmDialog(main, "login failed");
+				return;
+			}
+		} catch (InterruptedException e1) {
+		}
+		
+		if (main.student.file == null || main.docent.file == null || main.toets.file == null | main.cursus.file == null) {
+				showConfirmDialog(main, "need more csv files");
+				return;
+		}
+	
+		String message  = "";
+		
+		InputSource is;
+		try {
+			DomUserFullwLoginContext user = main.login.complete.getValue();
+			String userName = user.getDomUserFull().getUserName() + user.getDomLoginContext().getRealm();
+			numworx.setSource(userName, user.getDomUserFull().getPassword(), base);
+			numworx.setRealm(user.getDomLoginContext().getRealm());
+			
+			is = new InputSource(new FileInputStream(main.cursus.file));
+			osiris.setGroepenSource(is);
+			is = new InputSource(new FileInputStream(main.student.file));
+			osiris.setLeerlingenSource(is);
+			is = new InputSource(new FileInputStream(main.docent.file));
+			osiris.setLeerkrachtenSource(is);
+			
+		      Map<String, DomUserFull> leerlingen = osiris.parseLeerlingen();
+		      message += leerlingen.size() + " students\n";
+		      Map<String, DomSchoolClassFull> groepen = osiris.parseGroepen();
+		      message += groepen.size() + " courses\n";
+		      Map<String, DomUserFull> leerkrachten = osiris.parseLeerkrachten();
+		      message += leerkrachten.size() + " teachers\n";
+		      Map<String, Collection<String>> members = osiris.memberships();
+		      
+		      numworx.addSchoolClasses(groepen);
+		      numworx.addStudents(leerlingen, members, groepen);
+		      numworx.addTeachers(leerkrachten, members, groepen);
+			
+			message += "Installation done";
+		} catch (Exception e1) {
+			message += e1.getLocalizedMessage();
+		}
+		
+		showConfirmDialog(main, message);
+	}
+
+	private void showConfirmDialog(Main main, String message) {
+		JOptionPane.showMessageDialog(main, message, "Installation", JOptionPane.PLAIN_MESSAGE);
+		
+	}
+
+}
