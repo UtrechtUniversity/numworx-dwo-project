@@ -61,6 +61,7 @@ class SchoolClassStudentController {
     /**
      *
      * @param callBack
+     * @deprecated
      */
     public void getCurrentSchoolRoleAndClass(AsyncCallback<DomSchoolsRolesAndClassesV2> callBack) {
         loginManager.getSchoolLoginsV2(callBack);
@@ -130,27 +131,30 @@ class SchoolClassStudentController {
     /**
      *
      * @param callBack
+     * @deprecated
      */
     public void getActiveSchoolClass(AsyncCallback<DomSchoolClass> callBack) {
-        manager.getActiveSchoolClass(context, callBack);
+        manager.getActiveSchoolClass(context).then(p -> {callBack.onSuccess(p.getValue());return p;}, p-> callBack.onFailure(p.getFailure()));
     }
 
     /**
      *
      * @param submit
      * @param callBack
+     * @deprecated
      */
     public void removeSchoolClass(DomSchoolClass submit, AsyncCallback<Boolean> callBack) {
-        manager.removeSchoolClass(context, submit, callBack);
+        manager.removeSchoolClass(context, submit).then(p -> {callBack.onSuccess(p.getValue());return p;}, p-> callBack.onFailure(p.getFailure()));
     }
 
     /**
      *
      * @param submit
      * @param callBack
+     * @deprecated
      */
     public void registerStudentForSchoolClass(DomNewSchoolClass4Student submit, AsyncCallback<Boolean> callBack) {
-        manager.registerStudentForSchoolClass(context, submit, callBack);
+        manager.registerStudentForSchoolClass(context, submit).then(p -> {callBack.onSuccess(p.getValue());return p;}, p-> callBack.onFailure(p.getFailure()));
     }
 
     /**

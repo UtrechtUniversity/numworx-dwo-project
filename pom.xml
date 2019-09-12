@@ -16,7 +16,7 @@
         <maven.test.skip>true</maven.test.skip>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <DwoGWTVersion>2.3.9</DwoGWTVersion>
+        <DwoGWTVersion>2.3.12-SNAPSHOT</DwoGWTVersion>
     </properties>
     <build>
         <outputDirectory>target/${project.build.finalName}/WEB-INF/classes</outputDirectory>

@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.account.client;
 
+import com.google.gwt.core.client.Callback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentSchoolClassManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -81,34 +82,38 @@ class AddSchoolClassStudentController {
      *
      * @param submit
      * @param callBack
+	 * @deprecated
      */
     public void setActiveSchoolClass(DomSchoolClass submit,AsyncCallback<Boolean> callBack) {
-        manager.setActiveSchoolClass(context, submit, callBack);
+        manager.setActiveSchoolClass(context, submit).then(p -> {callBack.onSuccess(p.getValue());return p;}, p-> callBack.onFailure(p.getFailure()));
     }
     
     /**
      *
      * @param callBack
+     * @deprecated
      */
     public void getActiveSchoolClass(AsyncCallback<DomSchoolClass> callBack){
-        manager.getActiveSchoolClass(context, callBack);
+        manager.getActiveSchoolClass(context).then(p -> {callBack.onSuccess(p.getValue());return p;}, p-> callBack.onFailure(p.getFailure()));
     }
     
     /**
      *
      * @param submit
      * @param callBack
+     * @deprecated
      */
     public void removeSchoolClass(DomSchoolClass submit, AsyncCallback<Boolean> callBack) {
-        manager.removeSchoolClass(context, submit, callBack);
+        manager.removeSchoolClass(context, submit).then(p -> {callBack.onSuccess(p.getValue());return p;}, p-> callBack.onFailure(p.getFailure()));
     }
 
     /**
      *
      * @param submit
      * @param callBack
+     * @deprecated
      */
     public void registerStudentForSchoolClass(DomNewSchoolClass4Student submit, AsyncCallback<Boolean> callBack) {
-        manager.registerStudentForSchoolClass(context, submit, callBack);
+        manager.registerStudentForSchoolClass(context, submit).then(p -> {callBack.onSuccess(p.getValue());return p;}, p-> callBack.onFailure(p.getFailure()));
     }
 }
