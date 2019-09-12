@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
@@ -42,12 +43,13 @@ public class ServerBuilder implements Builder {
 	Map<String, DomUserFull> teachers = new TreeMap<>();
 	Map<String, DomSchoolClassFull> classes = new TreeMap<>();
 	Map<String, Collection<String>> memberships = new TreeMap<>();
+	private DomSchoolsRolesAndClassesV2 logins;
 	
 	public void setSource(String username, String password, URL base) throws Dwo2Exception {
 		schoolClassManager = new SecureSchoolAdminSchoolClassManager();
 		StoredRestManager.getInstance().setBasicAuthString(username, password, null);
 		StoredRestManager.getInstance().getAuthenticator().setServerUrlPath(base);
-		DomSchoolsRolesAndClassesV2 logins = SecureUserAccountLoginsManager.getSchoolLogins();
+		logins = SecureUserAccountLoginsManager.getSchoolLogins();
 		DomContext context = new DomContext();
 		DomRole role = logins.getActiveSchoolRoleAndClass().getRole();
 		if (role.getRoleName().equals(RoleType.SCHOOLADMIN.name())) {
@@ -61,6 +63,10 @@ public class ServerBuilder implements Builder {
 		StoredRestManager.getInstance().getAuthenticator().getContext().setRealm(realm);
 	}
 	
+	public DomSchool getSchool() {
+		return logins.getActiveSchoolRoleAndClass().getSchool();
+	}
+
 	@Override
 	public Map<String, DomUserFull> parseLeerlingen() {
 		try {
