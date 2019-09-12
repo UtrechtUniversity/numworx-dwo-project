@@ -360,60 +360,35 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
             GuiCreator.instance().getMainPanel().center.setStrategy(NULS);
             final Sco s = sco;
             // Java 1.6 minimum
-            SwingWorker<CenterSubPanel, Void> worker;
-            worker = new SwingWorker<CenterSubPanel, Void>() {
-
-                @Override
-                protected CenterSubPanel doInBackground() throws Exception {
+//            SwingWorker<CenterSubPanel, Void> worker;
+//            worker = new SwingWorker<CenterSubPanel, Void>() {
+//
+//                @Override
+//                protected CenterSubPanel doInBackground() throws Exception {
                     CenterSubPanel csp = GuiCreator.instance().getHTML5ScoPanel(s);
-                    return csp;
-                }
-
-                @Override
-                protected void done() {
-                    try {
-                        CenterSubPanel csp = get();
+//                    return csp;
+//                }
+//
+//                @Override
+//                protected void done() {
+//                    try {
+//                        CenterSubPanel csp = get();
                         if (csp != null) {
                             s.setLessonMode(getLessonMode());
                             center.loadTotal(csp);
                         }
-                    } catch (InterruptedException e) {
-                    } catch (ExecutionException e) {
-                    }
+//                    } catch (InterruptedException e) {
+//                    } catch (ExecutionException e) {
+//                    }
                     synchronized (CoursePanel.this) {
                         GuiCreator.instance().getMainPanel().center.setStrategy(null);
                         GuiCreator.instance().setReady();
                         scoLoading = false;
                     }
-                }
-
-            };
-            worker.execute();
-            /*           
-             // FIXME SWINGWORKER
-             Thread thread = new Thread() {	
-
-             public void run() {	
-             try {
-             CenterSubPanel csp = GuiCreator.instance().getScoPanel(s);
-             if(csp != null) {
-             s.setLessonMode(getLessonMode());
-             center.loadTotal(csp);
-             }
-             } catch (Exception e) {
-             try {
-             LOG.log(Level.FINE,e.toString());
-             } catch (Exception _) {
-             } 
-             }
-             synchronized(CoursePanel.this) {
-             GuiCreator.instance().setReady();
-             scoLoading = false;
-             }
-             }
-             };
-             thread.start();
-             */
+//                }
+//
+//            };
+//            worker.execute();
         } else if (e.getSource() == showResultsButton) {
             CenterSubPanel cp = GuiCreator.instance().getResultPanel(course);
             center.loadCenter(cp);
