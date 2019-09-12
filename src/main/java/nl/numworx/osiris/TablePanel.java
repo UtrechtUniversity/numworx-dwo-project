@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,6 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.Box;
@@ -30,7 +32,7 @@ import org.apache.commons.csv.CSVRecord;
 
 import nl.numworx.osiris.TablePanel.Model;
 
-public class TablePanel extends JPanel {
+public class TablePanel extends JPanel implements Iterable<CSVRecord> {
 
 	public class Model extends AbstractTableModel {
 
@@ -72,13 +74,20 @@ public class TablePanel extends JPanel {
 
 	private static final CSVFormat EXCEL = CSVFormat.EXCEL.withHeader().withDelimiter(';');
 
+	private static final int BOM = '\uFEFF';
+
 	final Main main;
 	
 	JButton openBtn;
 	JTable table;
+	Model model;
 	JLabel header;
 	
 	File file;
+
+	public Iterator<CSVRecord> iterator() {
+		return model.records.iterator();
+	}
 	
 	public TablePanel(Main main) {
 		super(new BorderLayout());
@@ -103,8 +112,14 @@ public class TablePanel extends JPanel {
 				File file = main.chooser.getSelectedFile();
 				InputStream in = new FileInputStream(file);
 				Reader reader = new InputStreamReader(in, "UTF-8");
+				BufferedReader buffered = new BufferedReader(reader);
+				buffered.mark(1);
+				reader = buffered;
+				if (buffered.read() != BOM) {
+					buffered.reset();
+				}
 				CSVParser parser = CSVParser.parse(reader, EXCEL);
-				table.setModel(new Model(parser));
+				table.setModel(model = new Model(parser));
 				in.close();
 				this.file = file;
 				header.setText(file.getCanonicalPath());

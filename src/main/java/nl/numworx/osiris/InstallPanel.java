@@ -12,6 +12,8 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.xml.sax.InputSource;
 
 import nl.numworx.edexml.OsirisBuilder;
@@ -29,10 +31,12 @@ public class InstallPanel extends JPanel {
 	OsirisBuilder osiris;
 	ServerBuilder numworx;
 	URL base;
+	String profile;
 	
-	public InstallPanel(Main main, URL base) {
+	public InstallPanel(Main main, URL base, String profile) {
 		this.main = main;
 		this.base = base;
+		this.profile = profile;
 
 		install = new JButton("INSTALL IN NUMWORX");
 		install.addActionListener(this::doInstall);
@@ -68,6 +72,13 @@ public class InstallPanel extends JPanel {
 			String userName = user.getDomUserFull().getUserName() + user.getDomLoginContext().getRealm();
 			numworx.setSource(userName, user.getDomUserFull().getPassword(), base);
 			numworx.setRealm(user.getDomLoginContext().getRealm());
+
+			CourseManager man = new CourseManager(profile, numworx.getSchool());
+			for (CSVRecord record: main.toets) {
+				man.createToets(record);
+			}
+			
+			
 			
 			is = new InputSource(new FileInputStream(main.cursus.file));
 			osiris.setGroepenSource(is);
@@ -90,7 +101,7 @@ public class InstallPanel extends JPanel {
 			
 			message += "Installation done";
 		} catch (Exception e1) {
-			message += e1.getLocalizedMessage();
+			message +=  "\n" + e1.getLocalizedMessage();
 		}
 		
 		showConfirmDialog(main, message);
