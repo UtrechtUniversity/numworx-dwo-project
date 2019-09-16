@@ -77,6 +77,20 @@ public class ServerITTest extends TestCase {
       builder.addSchoolClasses(groepen);
       builder.addStudents(leerlingen, members, groepen);
       builder.addTeachers(leerkrachten, members, groepen);
+       input = new EdeXmlBuilder();
+       in  = getClass().getResourceAsStream("/sample2.xml");
+       is = new InputSource();
+      is.setByteStream(in);
+      input.setSource(is);
+      
+      leerlingen = input.parseLeerlingen();
+      groepen = input.parseGroepen();
+      leerkrachten = input.parseLeerkrachten();
+      members = input.memberships();
+      
+      builder.addSchoolClasses(groepen);
+      builder.addStudents(leerlingen, members, groepen);
+      builder.addTeachers(leerkrachten, members, groepen);
 	
 	}
 	
