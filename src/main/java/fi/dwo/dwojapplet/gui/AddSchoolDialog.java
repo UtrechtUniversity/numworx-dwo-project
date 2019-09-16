@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.JButton;
+import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;

@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.text.MessageFormat;
 import java.util.Hashtable;
-import javax.swing.JButton;
+import fi.dwo.dwojapplet.gui.numworx.JButton;
 
 public class SingleLevelTreeParameterComponent extends ParameterComponent implements ParameterComponentIF,
         ActionListener {

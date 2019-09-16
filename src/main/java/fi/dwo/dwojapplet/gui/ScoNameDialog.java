@@ -9,7 +9,7 @@ import fi.dwo.dwojapplet.domain.Sco;
 
 import java.awt.Component;
 
-import javax.swing.JButton;
+import fi.dwo.dwojapplet.gui.numworx.JButton;
 
 /**
  * This is a dialog for editing the SCO name and description.

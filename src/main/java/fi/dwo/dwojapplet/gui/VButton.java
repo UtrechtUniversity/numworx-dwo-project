@@ -20,7 +20,7 @@ import java.awt.image.ImageProducer;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.JButton;
+import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.SwingConstants;
@@ -308,6 +308,7 @@ public class VButton extends JButton {
     @Override
     public void updateUI() {
         ButtonUI ui = (ButtonUI) UIManager.getUI(this);
+        //ui = JButton.UI;
         setUI(ui); // install all defaults
         Border b = getBorder(); // KEEP BORDER
         setUI(new UI(ui)); // override new

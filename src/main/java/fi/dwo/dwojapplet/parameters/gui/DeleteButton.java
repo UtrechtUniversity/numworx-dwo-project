@@ -12,7 +12,7 @@ import java.awt.event.MouseListener;
 import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
+import fi.dwo.dwojapplet.gui.numworx.JButton;
 
 public class DeleteButton extends JButton implements MouseListener {
 

@@ -16,7 +16,7 @@ import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.Vector;
-import javax.swing.JButton;
+import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JPanel;
 
 public class MultiLevelTreeTabSheet extends TreeTabSheet implements

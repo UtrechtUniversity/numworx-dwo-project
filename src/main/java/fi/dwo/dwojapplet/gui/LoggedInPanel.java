@@ -12,7 +12,7 @@ import java.awt.Image;
 import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
+import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 

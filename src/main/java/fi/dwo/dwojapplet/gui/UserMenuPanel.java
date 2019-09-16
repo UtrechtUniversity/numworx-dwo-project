@@ -5,7 +5,7 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.commons.system.TextMapper;
 import java.awt.event.ActionEvent;
 import javax.swing.Box;
-import javax.swing.JButton;
+import fi.dwo.dwojapplet.gui.numworx.JButton;
 
 /**
  * This class is the menu panel for a user who logged in. It only adds support 

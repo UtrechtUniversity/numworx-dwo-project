@@ -52,7 +52,7 @@ import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.Box;
-import javax.swing.JButton;
+import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;

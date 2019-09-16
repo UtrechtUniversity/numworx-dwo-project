@@ -32,6 +32,7 @@ public class LinkedLabel extends JButton {
         setBorder(null);
         setBorderPainted(false);
         setContentAreaFilled(false);
+        setForeground(defForeground);
         enableEvents(AWTEvent.MOUSE_EVENT_MASK);
     }
 
