@@ -21,7 +21,7 @@ public class NumworxButtonUI extends BasicButtonUI {
   private static final Color BACKGROUND = new ColorUIResource(0x1b75bb);
   private Color FOREGROUND = new ColorUIResource(Color.white);
   private static final Font FONT = new FontUIResource("Ubuntu", Font.BOLD, 13);
-  private static final Border BORDER = new BorderUIResource(BorderFactory.createMatteBorder(3,12,3,12,BACKGROUND));
+  private static final Border BORDER = new BorderUIResource(BorderFactory.createEmptyBorder(3,12,3,12));
 
   NumworxButtonUI() {
     super();
@@ -46,6 +46,12 @@ public class NumworxButtonUI extends BasicButtonUI {
   public void paint(Graphics g, JComponent c) {
     // TODO Auto-generated method stub
     super.paint(g, c);
+  }
+
+  @Override
+  public void update(Graphics arg0, JComponent arg1) {
+    // TODO Auto-generated method stub
+    super.update(arg0, arg1);
   }
 
 }
