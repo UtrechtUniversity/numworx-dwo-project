@@ -131,9 +131,10 @@ public class CenterPanel extends JPanel implements CourseContainer {
             window.setBorder(borderm);
             Box header = Box.createHorizontalBox();
             header.add(Box.createHorizontalGlue());
-            JButton btn = new JButton(ip.getCloseAction());
+            javax.swing.JButton btn = new javax.swing.JButton(ip.getCloseAction());
             btn.setBorderPainted(false);
             btn.setContentAreaFilled(false);
+            //btn.setForeground(Color.black);
             header.add(btn);
             ip.setWindow(window);
             window.add(header, BorderLayout.NORTH);

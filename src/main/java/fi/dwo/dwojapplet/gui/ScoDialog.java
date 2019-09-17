@@ -519,9 +519,10 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 
         JPanel vbox = new JPanel(new BorderLayout());
         vbox.setOpaque(false);
-        JButton btn = new JButton(panel.getCloseAction());
+        javax.swing.JButton btn = new javax.swing.JButton(panel.getCloseAction());
         btn.setBorderPainted(false);
         btn.setContentAreaFilled(false);
+        //btn.setForeground(Color.BLACK);
         vbox.add(btn, BorderLayout.NORTH);
         vbox.add(new Mover(6), BorderLayout.EAST);
         tableModel.sizing = true;

@@ -28,6 +28,7 @@ import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Image;
@@ -465,9 +466,10 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 
     protected void createCloseBtn(Box toolbar) {
         ip = new IconizedPanel(TextMapper.getText(TextMapper.GUIMNU_MAIN_MENU));
-        JButton closeBtn = new JButton(ip.getCloseAction()); // TODO icon..
+        javax.swing.JButton closeBtn = new javax.swing.JButton(ip.getCloseAction()); // TODO icon..
         closeBtn.setBorderPainted(false);
         closeBtn.setContentAreaFilled(false);
+        //closeBtn.setForeground(Color.BLACK);
         toolbar.add(Box.createHorizontalGlue());
         toolbar.add(closeBtn);
         add(toolbar, BorderLayout.NORTH);
