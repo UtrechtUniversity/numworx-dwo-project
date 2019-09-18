@@ -193,7 +193,7 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
                         .getText(TextMapper.MSG_TO_MANY_TREE_ITEMS);
 
                 s = MessageFormat.format(s, arguments);
-                javax.swing.JOptionPane.showMessageDialog(null, s);
+                fi.dwo.dwojapplet.gui.numworx.JOptionPane.showMessageDialog(null, s);
                 return;
             }
         }

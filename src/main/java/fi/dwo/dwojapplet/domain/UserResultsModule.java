@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
-import javax.swing.JOptionPane;
+import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 
 /**
  * Een ResultsModuleIF geschikt gemaakt voor één enkele student. TODO een common

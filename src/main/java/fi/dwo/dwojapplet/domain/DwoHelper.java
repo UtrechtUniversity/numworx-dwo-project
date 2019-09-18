@@ -37,7 +37,7 @@ import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.JOptionPane;
+import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 
 import netscape.javascript.JSObject;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;

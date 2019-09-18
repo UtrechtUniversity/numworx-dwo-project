@@ -19,13 +19,13 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
-import javax.swing.JCheckBox;
+import fi.dwo.dwojapplet.gui.numworx.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.JTextField;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.Document;
 

@@ -3,7 +3,7 @@ package fi.dwo.dwojapplet.gui;
 import java.awt.Component;
 import java.util.Vector;
 
-import javax.swing.JComboBox;
+import fi.dwo.dwojapplet.gui.numworx.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;

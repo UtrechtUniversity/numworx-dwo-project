@@ -24,19 +24,21 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
+import fi.dwo.dwojapplet.gui.numworx.JCheckBox;
+import fi.dwo.dwojapplet.gui.numworx.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
+import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.NumworxTextFieldUI;
+
 import javax.swing.JTree;
 import javax.swing.JTree.DynamicUtilTreeNode;
 import javax.swing.event.TreeSelectionEvent;
@@ -611,9 +613,18 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
     rightBox.add(pane);
     
     bkt = Box.createHorizontalBox();
-    bkt.add(new JLabel("init"));init = new JFormattedTextField(NumberFormat.getInstance()); bkt.add(init);
-    bkt.add(new JLabel("learn")); learn = new JFormattedTextField(NumberFormat.getInstance()); bkt.add(learn);
-    bkt.add(new JLabel("slip"));slip = new JFormattedTextField(NumberFormat.getInstance()); bkt.add(slip);
+    bkt.add(new JLabel("init"));
+      init = new JFormattedTextField(NumberFormat.getInstance());
+      init.setUI(NumworxTextFieldUI.createUI(init));
+      bkt.add(init);
+    bkt.add(new JLabel("learn"));
+      learn = new JFormattedTextField(NumberFormat.getInstance());
+      learn.setUI(NumworxTextFieldUI.createUI(learn));
+      bkt.add(learn);
+    bkt.add(new JLabel("slip"));
+      slip = new JFormattedTextField(NumberFormat.getInstance());
+      slip.setUI(NumworxTextFieldUI.createUI(slip));
+      bkt.add(slip);
     if (DwoHelper.isTest())
     {
       voorkennisBtn = new JButton(new VoorkennisAction()); bkt.add(voorkennisBtn);

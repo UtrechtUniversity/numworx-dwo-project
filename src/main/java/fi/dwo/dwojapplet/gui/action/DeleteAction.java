@@ -7,7 +7,7 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import java.awt.event.ActionEvent;
 import java.text.MessageFormat;
-import javax.swing.JOptionPane;
+import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 
 public class DeleteAction extends GuiAction {
 

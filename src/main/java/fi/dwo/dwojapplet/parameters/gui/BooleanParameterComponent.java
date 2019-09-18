@@ -8,7 +8,7 @@ import java.awt.FontMetrics;
 import java.awt.event.FocusEvent;
 import java.util.Hashtable;
 import javax.swing.ButtonGroup;
-import javax.swing.JRadioButton;
+import fi.dwo.dwojapplet.gui.numworx.JRadioButton;
 
 public class BooleanParameterComponent extends ParameterComponent {
 

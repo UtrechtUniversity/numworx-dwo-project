@@ -13,17 +13,20 @@ import java.awt.event.ActionListener;
 
 import javax.swing.GroupLayout;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.NumworxTextFieldUI;
 
 public class ReauthenticatePanel extends JPanel implements ActionListener {
 
     private JLabel usernameLabel = new JLabel(TextMapper.getText(LBL_USERNAME));
     private JTextField usernameField = new JTextField(25);
     private JLabel passwordLabel = new JLabel(TextMapper.getText(LBL_PASSWORD));
-    private JPasswordField passwordField = new JPasswordField(25);
+    private JPasswordField passwordField = new JPasswordField(25); {
+      passwordField.setUI(NumworxTextFieldUI.createUI(passwordField));
+    }
     private JLabel messageLabel = new JLabel("");
 
     

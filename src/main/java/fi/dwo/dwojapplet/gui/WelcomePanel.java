@@ -39,14 +39,16 @@ import java.util.logging.Logger;
 
 import javax.swing.ButtonGroup;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
-import javax.swing.JCheckBox;
+import fi.dwo.dwojapplet.gui.numworx.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import fi.dwo.dwojapplet.gui.numworx.JRadioButton;
-import javax.swing.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.NumworxTextFieldUI;
+
 import javax.swing.SwingConstants;
 
 import org.osgi.util.promise.Promise;
@@ -353,6 +355,7 @@ if(DwoHelper.isSamlLogin()) {
 
         /* Password field */
         password = new JPasswordField(DwoHelper.getDefaultPassword());
+        password.setUI(NumworxTextFieldUI.createUI(password));
         password.setBackground(ITEM_BACKGROUND);
         password.setForeground(Color.WHITE);
         password.setBounds(130, 53, 120, 20);

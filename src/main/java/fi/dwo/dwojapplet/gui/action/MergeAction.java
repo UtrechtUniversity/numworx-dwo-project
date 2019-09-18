@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.JOptionPane;
+import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 
 public class MergeAction extends GuiAction {
     private static final Logger LOG = Logger.getLogger(MergeAction.class.getName());

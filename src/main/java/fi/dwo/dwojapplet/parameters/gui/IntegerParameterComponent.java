@@ -3,6 +3,8 @@ package fi.dwo.dwojapplet.parameters.gui;
 
 import fi.beans.scorm.Parameter;
 import fi.beans.scorm.ScormInteger;
+import fi.dwo.dwojapplet.gui.numworx.NumworxTextFieldUI;
+
 import java.awt.Component;
 import java.util.Hashtable;
 import javax.swing.JFormattedTextField;
@@ -40,6 +42,8 @@ public class IntegerParameterComponent extends ParameterComponent {
         defaultFormatterFactory.setDefaultFormatter(numberFormatter);
 
         textField = new JFormattedTextField();
+        textField.setUI(NumworxTextFieldUI.createUI(textField));
+
         textField.setFormatterFactory(defaultFormatterFactory);
         int n = Math.max(Math.min(0, i.getMax()), i.getMin());
         textField.setValue(this.n = new Integer(n));

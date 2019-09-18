@@ -45,7 +45,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
-import javax.swing.JCheckBox;
+import fi.dwo.dwojapplet.gui.numworx.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;

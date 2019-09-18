@@ -30,7 +30,7 @@ import javax.swing.ButtonModel;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import fi.dwo.dwojapplet.gui.numworx.JRadioButton;
 import javax.swing.JScrollPane;

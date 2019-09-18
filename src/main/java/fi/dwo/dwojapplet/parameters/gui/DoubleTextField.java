@@ -9,7 +9,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
-import javax.swing.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.JTextField;
 
 public class DoubleTextField extends JTextField {
 

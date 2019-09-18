@@ -14,7 +14,7 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JRadioButton;
+import fi.dwo.dwojapplet.gui.numworx.JRadioButton;
 import javax.swing.filechooser.FileFilter;
 
 /**

@@ -11,10 +11,10 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 import javax.swing.GroupLayout;
-import javax.swing.JCheckBox;
+import fi.dwo.dwojapplet.gui.numworx.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.JTextField;
 import javax.swing.SwingConstants;
 
 /**

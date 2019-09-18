@@ -4,7 +4,7 @@ package fi.dwo.dwojapplet.parameters.gui;
 import fi.beans.scorm.Parameter;
 import java.awt.Component;
 import java.util.Hashtable;
-import javax.swing.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.JTextField;
 
 public class StringParameterComponent extends ParameterComponent {
 

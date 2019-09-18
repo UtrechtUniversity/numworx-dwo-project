@@ -17,12 +17,13 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.BorderFactory;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
-import javax.swing.JComboBox;
+import fi.dwo.dwojapplet.gui.numworx.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.NumworxTextFieldUI;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 
 /**
@@ -171,6 +172,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
 
         /* Password field */
         password = new JPasswordField();
+        password.setUI(NumworxTextFieldUI.createUI(password));
         password.setBounds(160, 53, 120, 20);
         password.setEchoChar('*');
         p.add(password);
@@ -250,6 +252,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
 
         /* Schoolpassword field */
         schoolpassword = new JPasswordField();
+        schoolpassword.setUI(NumworxTextFieldUI.createUI(schoolpassword));
         schoolpassword.setBounds(160, 88, 120, 20);
         schoolpassword.setEchoChar('*');
         p.add(schoolpassword);

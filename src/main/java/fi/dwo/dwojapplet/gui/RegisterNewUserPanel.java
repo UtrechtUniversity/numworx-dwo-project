@@ -21,12 +21,13 @@ import java.awt.event.ComponentEvent;
 
 import javax.swing.BorderFactory;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
-import javax.swing.JComboBox;
+import fi.dwo.dwojapplet.gui.numworx.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.NumworxTextFieldUI;
 
 /**
  * <p>
@@ -170,6 +171,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
 
         /* Password field */
         password = new JPasswordField();
+        password.setUI(NumworxTextFieldUI.createUI(password));
         password.setBounds(160, 53, 120, 20);
         password.setEchoChar('*');
         p.add(password);
@@ -190,6 +192,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
 
         /* RePassword field */
         repassword = new JPasswordField();
+        repassword.setUI(NumworxTextFieldUI.createUI(repassword));
         repassword.setBounds(160, 78, 120, 20);
         repassword.setEchoChar('*');
         p.add(repassword);
@@ -369,6 +372,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
 
         /* Schoolpassword field */
         schoolpassword = new JPasswordField();
+        schoolpassword.setUI(NumworxTextFieldUI.createUI(schoolpassword));
         schoolpassword.setBounds(160, 88, 120, 20);
         schoolpassword.setEchoChar('*');
         p.add(schoolpassword);

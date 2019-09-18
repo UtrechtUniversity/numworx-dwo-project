@@ -3,11 +3,11 @@ package fi.dwo.dwojapplet.gui;
 import java.awt.Component;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.JTextField;
 import javax.swing.SpringLayout;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;

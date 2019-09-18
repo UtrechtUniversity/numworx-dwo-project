@@ -11,7 +11,7 @@ import java.awt.Component;
 import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.Vector;
-import javax.swing.JOptionPane;
+import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 
 public class TreeSheetCreator implements TabSheetCreatorIF, ItemLaunchdataCallBackIF,
         ParameterComponentIF {

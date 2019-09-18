@@ -4,7 +4,7 @@ import fi.beans.scorm.Parameter;
 import fi.beans.scorm.ScormEnum;
 import java.awt.Component;
 import java.util.Hashtable;
-import javax.swing.JComboBox;
+import fi.dwo.dwojapplet.gui.numworx.JComboBox;
 
 public class EnumParameterComponent extends ParameterComponent implements ParameterComponentIF {
 

@@ -29,11 +29,11 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
-import javax.swing.JComboBox;
+import fi.dwo.dwojapplet.gui.numworx.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.JTextField;
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
 

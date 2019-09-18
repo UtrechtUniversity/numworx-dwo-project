@@ -18,10 +18,11 @@ import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.JTextField;
+import fi.dwo.dwojapplet.gui.numworx.NumworxTextFieldUI;
 
 /**
  * Utility panel to fetch changing user-data.
@@ -128,6 +129,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
 
         /* Old-Password field */
         oldpassword = new JPasswordField();
+        oldpassword.setUI(NumworxTextFieldUI.createUI(oldpassword));
         oldpassword.setBounds(160, 53, 120, 20);
         oldpassword.setEchoChar('*');
         p.add(oldpassword);
@@ -148,6 +150,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
 
         /* Password field */
         password = new JPasswordField();
+        password.setUI(NumworxTextFieldUI.createUI(password));
         password.setBounds(160, 78, 120, 20);
         password.setEchoChar('*');
         p.add(password);
@@ -163,6 +166,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
 
         /* RePassword field */
         repassword = new JPasswordField();
+        repassword.setUI(NumworxTextFieldUI.createUI(repassword));
         repassword.setBounds(160, 103, 120, 20);
         repassword.setEchoChar('*');
         p.add(repassword);

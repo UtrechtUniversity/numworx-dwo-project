@@ -41,7 +41,7 @@ import javax.swing.Box;
 import javax.swing.JApplet;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
