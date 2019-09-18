@@ -443,7 +443,7 @@
 		<DWOplayerVersion>2.3.12-SNAPSHOT</DWOplayerVersion>
 		<DWOmAccessVersion>2.3.9</DWOmAccessVersion>
 		<RegisterVersion>2.3.11</RegisterVersion>
-		<DWOGwtClientVersion>2.3.11</DWOGwtClientVersion>
+		<DWOGwtClientVersion>2.3.12-SNAPSHOT</DWOGwtClientVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testeb2server</aws.environmentName>
