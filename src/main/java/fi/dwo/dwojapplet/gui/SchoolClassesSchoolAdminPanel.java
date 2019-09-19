@@ -393,7 +393,7 @@ public class SchoolClassesSchoolAdminPanel extends JPanel implements CenterSubPa
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     @Override
-    public Component getHeaderPanel() {
+    public JComponent getHeaderPanel() {
         return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT));
     }
 

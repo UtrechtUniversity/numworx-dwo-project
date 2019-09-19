@@ -277,7 +277,7 @@ class AppletConfigPanel extends JPanel implements CenterSubPanel, ActionListener
 
   public void end() {}
 
-  public Component getHeaderPanel() {
+  public JComponent getHeaderPanel() {
     return new HeaderPanel(TextMapper.getText(TextMapper.DWO_PROFILE_ADMIN));
   }
 

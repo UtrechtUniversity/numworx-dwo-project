@@ -380,7 +380,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     @Override
-    public Component getHeaderPanel() {
+    public JComponent getHeaderPanel() {
         return new HeaderPanel(TextMapper.getText(TextMapper.TBL_CLASSLIST) + ": " + domUser.getUniqueDisplayName());
     }
 

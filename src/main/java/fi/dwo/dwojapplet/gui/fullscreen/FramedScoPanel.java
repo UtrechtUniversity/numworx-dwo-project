@@ -78,7 +78,7 @@ public class FramedScoPanel extends JPanel implements CenterSubPanel, ActionList
         return this;
     }
 
-    public Component getHeaderPanel() {
+    public JComponent getHeaderPanel() {
         return csp.getHeaderPanel();
     }
 

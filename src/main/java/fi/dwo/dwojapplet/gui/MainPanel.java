@@ -21,6 +21,7 @@ import java.awt.Image;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -118,7 +119,7 @@ public class MainPanel extends BackgroundPanel {
                 hbox.add(Box.createHorizontalStrut(15));
             }
         }
-        top.add(hbox, BorderLayout.NORTH);
+        //top.add(hbox, BorderLayout.NORTH); hbox.setBorder(BorderFactory.createLineBorder(Color.GREEN));
         hbox.setBounds(0, 0, getWidth(), hbox.getPreferredSize().height);
         hbox.doLayout();
 
@@ -159,11 +160,11 @@ public class MainPanel extends BackgroundPanel {
         /* Logged In panel */
         loggedIn = new LoggedInPanel();
         int w = 250; // size of login-role and username
-        loggedIn.setBounds(605, 20, w, 70);
+        loggedIn.setBounds(605, 0, w, 70);
         if (GuiConstants.GUI_IMAGE_BG) {
             w = w - 30;
         }
-        loggedIn.setPreferredSize(new Dimension(w, 70));
+        loggedIn.setPreferredSize(new Dimension(w, 90));
         //loggedIn.doLayout();
         loggedIn.setVisible(false);
         top.add(loggedIn, BorderLayout.EAST);
@@ -196,7 +197,7 @@ public class MainPanel extends BackgroundPanel {
      *
      * @param p The panel to set as a header.
      */
-    public void setHeaderPanel(Component p) {
+    public void setHeaderPanel(JComponent p) {
         if (this.header != null) {
             header.setVisible(false);
             top.remove(header);
@@ -205,6 +206,7 @@ public class MainPanel extends BackgroundPanel {
 
         header = p;
         header.setVisible(false);
+        //p.setBorder(BorderFactory.createLineBorder(Color.red));
         top.add(header, BorderLayout.CENTER);
 // EPN-logo hok is wat breder, 
         int margin = GuiConstants.GUI_IMAGE_BG ? 30 : 0;

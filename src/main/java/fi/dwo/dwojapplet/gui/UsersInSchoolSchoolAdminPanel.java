@@ -441,7 +441,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     @Override
-    public Component getHeaderPanel() {
+    public JComponent getHeaderPanel() {
         return new HeaderPanel(TextMapper.getText(TextMapper.GUIMNU_USERS_SCHOOL));
     }
 

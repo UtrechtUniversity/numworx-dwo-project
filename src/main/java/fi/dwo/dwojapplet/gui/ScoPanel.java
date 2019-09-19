@@ -191,7 +191,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     @Override
-    public Component getHeaderPanel() {
+    public JComponent getHeaderPanel() {
 // TODO cleanup needed!!!!
         JPanel jp = new JPanel(new BorderLayout());
         jp.setBackground(GuiConstants.MAIN_BACKGROUND);
@@ -206,6 +206,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
         hp.setHorizontalAlignment(SwingConstants.LEFT);
         hp.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
         hbox.add(Box.createHorizontalStrut(10));
+        hbox.setBorder(BorderFactory.createEmptyBorder(18, 0, 0, 0));
 // goto modules
         if (!scoView && !courseView) {
             mainMenuImageButton = new JButton(new ImageIcon(DwoHelper.getResourceImage(GuiConstants.BACK_MAINMENU_IMAGE)));

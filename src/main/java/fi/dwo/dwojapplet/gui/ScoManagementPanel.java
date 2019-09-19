@@ -585,7 +585,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     }
 
     @Override
-    public Component getHeaderPanel() {
+    public JComponent getHeaderPanel() {
         HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIS_SCO_MANAGEMENT));
         stopBtn = new JButton(TextMapper.getText(TextMapper.GUIH_STOP_EDIT));
         stopBtn.addActionListener(this);

@@ -416,7 +416,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     @Override
-    public Component getHeaderPanel() {
+    public JComponent getHeaderPanel() {
         return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT)
                 + " - " + TextMapper.getText(TextMapper.TBL_CLASSNAME)
                 + ": " + schoolClass.getSchoolClassName()

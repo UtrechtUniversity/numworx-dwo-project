@@ -589,7 +589,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
      */
     
      @Override
-    public Component getHeaderPanel() {
+    public JComponent getHeaderPanel() {
     	HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIC_COURSE_MANAGEMENT));
     	stopBtn = new JButton(TextMapper.getText(TextMapper.GUIH_STOP_EDIT));
     	stopBtn.setActionCommand("stop");

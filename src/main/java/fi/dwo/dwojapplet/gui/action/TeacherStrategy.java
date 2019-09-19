@@ -48,7 +48,7 @@ public class TeacherStrategy implements SelectStrategy {
         }
 
         @Override
-        public Component getHeaderPanel() {
+        public JComponent getHeaderPanel() {
             return panel;
         }
 

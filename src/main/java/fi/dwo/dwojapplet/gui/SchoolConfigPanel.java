@@ -112,7 +112,7 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
     }
 
     @Override
-    public Component getHeaderPanel() {
+    public JComponent getHeaderPanel() {
         String opschrift = TextMapper.getText(TextMapper.GUIH_SETTINGS);
         return new HeaderPanel(opschrift);
     }

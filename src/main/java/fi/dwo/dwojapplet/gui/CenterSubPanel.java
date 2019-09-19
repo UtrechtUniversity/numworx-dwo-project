@@ -26,7 +26,7 @@ public interface CenterSubPanel extends ChangeListener {
      *
      * @return The Header Panel.
      */
-    public Component getHeaderPanel();
+    public JComponent getHeaderPanel();
 
     /**
      * Sets the centerpanel.

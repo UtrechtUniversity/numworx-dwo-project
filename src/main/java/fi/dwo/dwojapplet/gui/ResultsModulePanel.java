@@ -819,7 +819,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     @Override
-    public Component getHeaderPanel() {
+    public JComponent getHeaderPanel() {
         return new HeaderPanel(TextMapper.getText(TextMapper.GUIRS_RESULTS));
     }
 

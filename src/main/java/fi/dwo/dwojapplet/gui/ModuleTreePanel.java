@@ -335,13 +335,14 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 
     class TreeCellRenderer extends DefaultTreeCellRenderer {
 
-        Icon bookIcon;
+        Icon bookIcon, folderIcon;
         boolean isCourse, isMap;
 
         TreeCellRenderer() {
             super();
             Image book = DwoHelper.getResourceImage("resources/book.png");
             bookIcon = new ImageIcon(book);
+            folderIcon = new ImageIcon(DwoHelper.getResourceImage("resources/folder.png"));
         }
 
         @Override
@@ -349,7 +350,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
             if (isCourse) {
                 return bookIcon;
             }
-            return super.getDefaultOpenIcon();
+            return folderIcon;
         }
 
         @Override
@@ -357,7 +358,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
             if (isCourse) {
                 return bookIcon;
             }
-            return super.getDefaultClosedIcon();
+            return folderIcon;
         }
 
         @Override

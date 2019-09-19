@@ -307,7 +307,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     @Override
-    public Component getHeaderPanel() {
+    public JComponent getHeaderPanel() {
 
         HeaderPanel hp = new HeaderPanel(course.getName(), true);
         if (!GuiConstants.GUI_IMAGE_BG) {

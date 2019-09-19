@@ -76,7 +76,7 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     @Override
-    public Component getHeaderPanel() {
+    public JComponent getHeaderPanel() {
         return new HeaderPanel(TextMapper.getText(TextMapper.GUIP_MY_PROFILE));
     }
 

@@ -272,7 +272,7 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     @Override
-    public Component getHeaderPanel() {
+    public JComponent getHeaderPanel() {
         HeaderPanel p; //  = new BorderedPanel(null); 
 
         p = new HeaderPanel(TextMapper.getText(TextMapper.GUIM_MAIN_MENU));
