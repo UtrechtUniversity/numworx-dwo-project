@@ -506,7 +506,7 @@ public class GuiCreator {
         if (dwo.getScoViewNr() > 0) {
             Sco viewSco = null;
             try {
-                viewSco = (Sco) PersistenceFacade.instance().get(dwo.getScoViewNr(), Sco.class);
+                viewSco = PersistenceFacade.instance().getSco(dwo.getScoViewNr());
             }
             catch (Exception e) {
                 LOG.log(Level.SEVERE, null, e);
@@ -522,7 +522,7 @@ public class GuiCreator {
         } else if (dwo.getCourseViewNr() > 0) {
             Course viewCourse = null;
             try {
-                viewCourse = (Course) PersistenceFacade.instance().get(dwo.getCourseViewNr(), Course.class);
+                viewCourse = PersistenceFacade.instance().getCourse(dwo.getCourseViewNr());
             }
             catch (Exception exc) {
             }

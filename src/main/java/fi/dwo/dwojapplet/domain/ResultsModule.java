@@ -94,7 +94,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
       this(domresults, dwo);
       int id = MySQLPersistenceId.getNativeId(domclass).intValue();
       this.courses = selection;
-      currentlyZoomedUser = PersistenceFacade.instance().get(id, SchoolClass.class);      
+      currentlyZoomedUser = PersistenceFacade.instance().getSchoolClass(id);      
       calculateCoursesByStudents(domclass);
     }
     private void calculateCoursesByStudents(DomSchoolClassId domclass)
@@ -143,13 +143,13 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
     private User getUser(DomResultStudent student) throws Dwo2Exception, PersistenceException {
       DomStudent s = student.getStudent();
       int uid = MySQLPersistenceId.getNativeId(s).intValue();
-      return PersistenceFacade.instance().get(uid, User.class);
+      return PersistenceFacade.instance().getUser(uid);
     }
     
     private UserGroup getUser(DomResultSchoolClass sc) throws Dwo2Exception, PersistenceException {
       DomSchoolClass s = sc.getSchoolClass();
       int uid = MySQLPersistenceId.getNativeId(s).intValue();
-      return PersistenceFacade.instance().get(uid, SchoolClass.class);
+      return PersistenceFacade.instance().getSchoolClass(uid);
    }
     
     private UserGroup getUser(DomResultScore r) throws Dwo2Exception, PersistenceException {
@@ -163,7 +163,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
       String id = r.getId();
       DomStudent student = mappedresults.getStudents().get(new PersistenceId(id));
       int uid = MySQLPersistenceId.getNativeId(student).intValue();
-      return PersistenceFacade.instance().get(uid, User.class);
+      return PersistenceFacade.instance().getUser(uid);
       //return DwoHelper.getCurrentFacadeUser();
     }
 
@@ -174,13 +174,13 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
       {
         DomCourse course = mappedresults.getCourses().get(pid);
         int cid = MySQLPersistenceId.getNativeId(course).intValue();
-        return PersistenceFacade.instance().get(cid, Course.class);
+        return PersistenceFacade.instance().getCourse(cid);
       } 
       if (pid.getType() == PersistenceClassType.PersistentScoContext)
       {
         DomScoContext sco = mappedresults.getScoContexts().get(pid);
         int sid = MySQLPersistenceId.getNativeId(sco).intValue();
-        return PersistenceFacade.instance().get(sid, Sco.class);
+        return PersistenceFacade.instance().getSco(sid);
       }
       return null;
     }

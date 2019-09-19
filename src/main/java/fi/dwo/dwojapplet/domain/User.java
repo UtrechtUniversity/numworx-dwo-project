@@ -156,20 +156,20 @@ public class User implements UserGroup, Comparable {
     	else {
      		try {
 				int sid = MySQLPersistenceId.getNativeId(dom.getActiveSchoolRoleAndClass().getSchool()).intValue();
-				School s = (School) PersistenceFacade.instance().get(sid, School.class);
+				School s = PersistenceFacade.instance().getSchool(sid);
 				if(s != null) {
 					setSchool(s);
 				} else {
 					s = new School(); s.setDomSchool(dom.getActiveSchoolRoleAndClass().getSchool());
-					PersistenceFacade.instance().put(s.getSchoolID(), s, School.class);
+					PersistenceFacade.instance().putSchool(s.getSchoolID(), s);
 				}
 				DomSchoolClass domSchoolClass = dom.getActiveSchoolRoleAndClass().getSchoolClass();
 				if(domSchoolClass != null) {
-					SchoolClass cls = (SchoolClass)PersistenceFacade.instance().get(MySQLPersistenceId.getNativeId(domSchoolClass).intValue(), SchoolClass.class);
+					SchoolClass cls = PersistenceFacade.instance().getSchoolClass(MySQLPersistenceId.getNativeId(domSchoolClass).intValue());
 					if(cls == null) {
 						cls = new SchoolClass();
 						cls.setDomSchoolClass(domSchoolClass);
-						PersistenceFacade.instance().put(cls.getID(), cls, SchoolClass.class);
+						PersistenceFacade.instance().putSchoolClass(cls.getID(), cls);
 					}
 					inClass = cls;
 				} 

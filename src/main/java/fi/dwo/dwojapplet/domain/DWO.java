@@ -523,8 +523,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      *
      */
     public boolean loginWithMd5(String username, String password) throws LoginException {
-        PersistenceFacade.instance().clearCurrentMapperDataCache(Sco.class);
-        PersistenceFacade.instance().clearCurrentMapperDataCache(Course.class);
+        PersistenceFacade.instance().clearCurrentScoDataCache();
+        PersistenceFacade.instance().clearCurrentCourseDataCache();
         String plainPassword = DwoHelper.getPlainPassword();
         // DomFullUser user=null;
         // try {
@@ -984,8 +984,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         // MapperCreator.instance(Applet.class).removeAllObjects();
 
         // TODO NOW do a clear cache function.
-        PersistenceFacade.instance().clearCurrentMapperDataCache(Sco.class);
-        PersistenceFacade.instance().clearCurrentMapperDataCache(Course.class);
+        PersistenceFacade.instance().clearCurrentScoDataCache();
+        PersistenceFacade.instance().clearCurrentCourseDataCache();
     }
 
     /**
@@ -2075,7 +2075,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 			edit = manager.add(edit);
 // legacy
 			int pid = MySQLPersistenceId.getNativeId(edit).intValue();
-			Course c = (Course) PersistenceFacade.instance().get(pid, Course.class);
+			Course c = PersistenceFacade.instance().getCourse(pid);
 			return c;
     	} catch (Dwo2Exception e) {
           LOG.log(Level.SEVERE, "add course", e);
@@ -2187,7 +2187,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 		scoContext = manager.add(scoContext, scoData, getDwoProfile());
 // legacy
 		int scoid = MySQLPersistenceId.getNativeId(scoContext).intValue();
-		sco = (Sco) PersistenceFacade.instance().get(scoid, Sco.class);
+		sco = PersistenceFacade.instance().getSco(scoid);
 		return sco;
 	}
 
@@ -2247,7 +2247,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     	}
 		try {
 // TODO this needs refactoring
-            PersistenceFacade.instance().clearObjectInMapperCache(Sco.class, sco.getID()); // ons kent ons, zowel de oude als de nieuwe course cache moet worden gecleart
+            PersistenceFacade.instance().clearObjectInScoCache(sco.getID()); // ons kent ons, zowel de oude als de nieuwe course cache moet worden gecleart
 		    manager.update(scoContext, scoData, getDwoProfile());
 			sco.setImageData(null);
 			sco.setCourseChanged(false);
@@ -2275,7 +2275,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
       c.setId(PersistentCourse.buildPersistenceId(Long.valueOf(course.getID())));
       boolean r = manager.remove(c, getDwoProfile()).booleanValue();
       if (r) {
-        PersistenceFacade.instance().removeObject(course.getID(), Course.class);
+        PersistenceFacade.instance().removeObjectCourse(course.getID());
       }
 
       return r;
@@ -2296,7 +2296,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
       scoContext.setId(PersistentScoContext.buildPersistenceId(Long.valueOf(sco.getScoID())));
       boolean returnValue = manager.remove(scoContext, getDwoProfile());
       if (returnValue) {
-        PersistenceFacade.instance().removeObject(sco.getID(), Sco.class);
+        PersistenceFacade.instance().removeObjectSco(sco.getID());
 
         /*
          * Delete the sco in the course, and reset all the sequencenrs
@@ -2331,7 +2331,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      */
     public AppletConfig[] getAppletConfig() {
         try {
-            AppletConfig[] ac = (AppletConfig[]) PersistenceFacade.instance().get(AppletConfig.class, getLocale());
+            AppletConfig[] ac = PersistenceFacade.instance().getAppletConfig(getLocale());
             // for(int i = 0; i < ac.length; i++) {
             // System.out.println("AppletConfig: " + ac[i].getAppletID() + "; "
             // + ac[i].getName() + "; " + ac[i].getLaunchdata());
@@ -2818,7 +2818,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         schoolManager.updateSchool(school);
         school.setExpire(date);
         int id = MySQLPersistenceId.getNativeId(school).intValue();
-        School newSchool = (School) PersistenceFacade.instance().get(id, School.class); // FROM CACHE
+        School newSchool = (School) PersistenceFacade.instance().getSchool(id); // FROM CACHE
         newSchool.setExpire(date);
         newSchool.setName(schoolName);
         newSchool.setSchoolLogin(schoolLogin);
@@ -2849,7 +2849,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     public String selectSco(String scoid) {
         int id = Integer.parseInt(scoid); // In dwo-appengine id = scoid
         try {
-            Sco sco = (Sco) PersistenceFacade.instance().get(id, Sco.class);
+            Sco sco = (Sco) PersistenceFacade.instance().getSco(id);
             GuiCreator.instance().getMainPanel().getCenter().select(sco);
             return "true";
         } catch (Exception e) {

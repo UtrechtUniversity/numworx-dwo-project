@@ -572,7 +572,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
                 if (course.getSchoolID() == 0) {
                     if (course.getParentID() != 0) {
                         try {
-                            Course parent = (Course) PersistenceFacade.instance().get(course.getParentID(), Course.class);
+                            Course parent = PersistenceFacade.instance().getCourse(course.getParentID());
                             course.setParentMap(parent);
                             DefaultMutableTreeNode find = find(parent, dwonode);
                             if (find == null) {
@@ -592,7 +592,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
                 } else {
                     if (course.getParentID() != 0) {
                         try {
-                            Course parent = (Course) PersistenceFacade.instance().get(course.getParentID(), Course.class);
+                            Course parent = PersistenceFacade.instance().getCourse(course.getParentID());
                             course.setParentMap(parent);
                             DefaultMutableTreeNode find = find(parent, schoolnode);
                             if (find == null) {
@@ -813,7 +813,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
             if (parentMap == null) {
                 int id = c.getParentID();
                 try {
-                    parentMap = (CourseMap) PersistenceFacade.instance().get(id, Course.class);
+                    parentMap = PersistenceFacade.instance().getCourse(id);
                     c.setParentMap(parentMap);
                 } catch (PersistenceException e) {
                 }

@@ -167,11 +167,9 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
             try {
                 Course[] courses;
                 if (map == null) {
-//                    courses = (Course[]) MapperCreator.instance(Course.class).get(s);
-                    courses = PersistenceFacade.instance().getCourseFromMapper(s);
+                    courses = PersistenceFacade.instance().getCourses(s);
                 } else {
-//                    courses = (Course[]) MapperCreator.instance(Course.class).get(map);
-                    courses = PersistenceFacade.instance().getCourseFromMapper(map);
+                    courses = PersistenceFacade.instance().getCourses(map);
                 }
                 for (Course course : courses) {
                     set.add(course.getName());
@@ -757,7 +755,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
             exportModules = new JScrollPane(exportModuleTable);
 
         }
-        School[] schools = (School[]) PersistenceFacade.instance().get(School.class, Boolean.TRUE);
+        School[] schools = PersistenceFacade.instance().getSchool(Boolean.TRUE);
         final ExportSchoolModel exportSchoolModel = new ExportSchoolModel(schools);
         JTable exportSchoolTable = new JTable(exportSchoolModel);
         TableUtil.setJTableSizes(exportSchoolTable);

@@ -123,7 +123,7 @@ public class Teacher extends User {
 		superSetSchoolRoleAndClass(dom);
         Object[] o = null;
 		try {
-			o = PersistenceFacade.instance().get(SchoolClass.class,this);
+			o = PersistenceFacade.instance().getSchoolClass(this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -376,7 +376,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
                 if (id != 0) {
                     CourseMap map;
                     try {
-                        map = (CourseMap) PersistenceFacade.instance().get(id, Course.class);
+                        map = PersistenceFacade.instance().getCourse(id);
                         center.loadCenter(GuiCreator.instance().getCourseManagementPanel(map));
                     } catch (PersistenceException e) {
         
@@ -651,7 +651,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             // speciaal voor de SAG en REV: er kan maar 1 soort appletConfig gebruikt worden, nl WiskOpdr
             if (course.getDwoProfile() == 15) {
                 try {
-                    AppletConfig ac = (AppletConfig) (PersistenceFacade.instance().get(55, AppletConfig.class));
+                    AppletConfig ac = (PersistenceFacade.instance().getAppletConfig(55));
                     s = ScoNameDialog.addSco(this, course, ac);
                 } catch (PersistenceException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());

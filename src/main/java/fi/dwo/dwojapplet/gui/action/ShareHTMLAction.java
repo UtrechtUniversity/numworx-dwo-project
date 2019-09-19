@@ -22,7 +22,7 @@ public class ShareHTMLAction extends ShareAction {
 		super(TextMapper.getText("copylinkhtml"), lesson, deepest);
 		if(!deepest) {
 			try {
-				Course c = PersistenceFacade.instance().get(lesson, Course.class);
+				Course c = PersistenceFacade.instance().getCourse(lesson);
 				setEnabled(!c.isWithChildren());
 			} catch (PersistenceException e) {
 				setEnabled(false);

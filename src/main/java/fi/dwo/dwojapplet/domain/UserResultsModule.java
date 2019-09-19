@@ -156,7 +156,7 @@ public class UserResultsModule implements Comparator<UserResultList>, ResultsMod
 
     //@Override
     private void reset() {
-        PersistenceFacade.instance().clearCurrentMapperDataCache(UserResultList.class);
+        PersistenceFacade.instance().clearCurrentUserResultListDataCache();
         PersistenceFacade.instance().setResultsModule(this);
         currentlyZoomedLesson = null;
         currentlyZoomedUser = null;

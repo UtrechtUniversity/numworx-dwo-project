@@ -99,7 +99,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
                 long schoolid;
                 try {
                     schoolid = MySQLPersistenceId.getNativeId(school);
-                    oldSchool = (School) PersistenceFacade.instance().get((int) schoolid, School.class);
+                    oldSchool = PersistenceFacade.instance().getSchool((int) schoolid);
                 } catch (Dwo2Exception ex) {
                     Logger.getLogger(SchoolDwoAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }

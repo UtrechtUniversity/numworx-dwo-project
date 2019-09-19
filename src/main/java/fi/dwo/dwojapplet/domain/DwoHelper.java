@@ -646,7 +646,7 @@ public final class DwoHelper {
 		u.setDomLoginContext(context);
 		u.setDomUserFull(user);
 		u.setSchoolRoleAndClass(dom);
-		PersistenceFacade.instance().put(u.getID(), u, User.class);
+		PersistenceFacade.instance().putUser(u.getID(), u);
 		return u;
 	}
 

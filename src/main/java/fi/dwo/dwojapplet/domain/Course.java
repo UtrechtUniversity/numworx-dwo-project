@@ -410,7 +410,7 @@ public class Course implements LessonGroup, Comparable<Course>, CourseMap, Descr
 
     public void loadScos() {
         try {
-            scoList = PersistenceFacade.instance().get(Sco.class, this);
+            scoList = PersistenceFacade.instance().getSco(this);
             if(scoList != null) fixSnr(); // FIXME check sequencenr is correct.
             coursePanel = null;
         } catch (PersistenceException e) {

@@ -209,7 +209,7 @@ public class ImportModuleAction extends GuiAction {
 		}
 		if(schoolID != 0 || dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT))
 		{	id = zipper.addCourse(result, DWO.getDwoProfileID(), schoolID, id, parent.getChildren().length);
-		    Course c = PersistenceFacade.instance().get(id, Course.class);
+		    Course c = PersistenceFacade.instance().getCourse(id);
 			parent.addChild(c);
 		}
 	}

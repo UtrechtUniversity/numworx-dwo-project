@@ -128,7 +128,7 @@ public class ClassCourse {
 
     protected void fetchSchoolClass() {
         try {
-            schoolClass = (SchoolClass) PersistenceFacade.instance().get(getClassID(), SchoolClass.class);
+            schoolClass = PersistenceFacade.instance().getSchoolClass(getClassID());
         } catch (Exception e) {
             LOG.log(Level.SEVERE,null,e);
         }
@@ -146,7 +146,7 @@ public class ClassCourse {
 
     protected void fetchCourse() {
         try {
-            course = (Course) PersistenceFacade.instance().get(getCourseID(), Course.class);
+            course = (Course) PersistenceFacade.instance().getCourse(getCourseID());
         } catch (Exception e) {
             LOG.log(Level.SEVERE,null,e);
         }

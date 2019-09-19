@@ -192,7 +192,7 @@ final public class ClassTeacherModules {
       .map(this::toMyCourse)
       .collect(Collectors.toList())
       .toArray(NULL);
-      sc = PersistenceFacade.instance().get(MySQLPersistenceId.getNativeId(schoolClass).intValue(),SchoolClass.class);
+      sc = PersistenceFacade.instance().getSchoolClass(MySQLPersistenceId.getNativeId(schoolClass).intValue());
     } catch (Dwo2Exception ex) {
         LOG.log(Level.SEVERE, null, ex);
     } catch (PersistenceException ex) {

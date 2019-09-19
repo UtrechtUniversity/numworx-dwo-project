@@ -317,7 +317,7 @@ public class PasteAction extends GuiAction
 					if(pid == id)
 						return;			// course move into course
 					try {
-						pid = ((Course) PersistenceFacade.instance().get(pid, Course.class)).getParentID();
+						pid = (PersistenceFacade.instance().getCourse(pid)).getParentID();
 					} catch (PersistenceException e1) {
 						e1.printStackTrace();
 						return; 
@@ -377,7 +377,7 @@ public class PasteAction extends GuiAction
 					return ModuleTreePanel.SCHOOL_MAP;
 			}
 			try {
-				return (CourseMap) PersistenceFacade.instance().get(id, Course.class);
+				return PersistenceFacade.instance().getCourse(id);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new RuntimeException(e.getMessage(), e);

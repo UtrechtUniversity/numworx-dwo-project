@@ -440,7 +440,7 @@ class ManifestFile {
     	            
 // legacy?
     			int scoid = MySQLPersistenceId.getNativeId(scoContext).intValue();
-    			Sco newsco = PersistenceFacade.instance().get(scoid, Sco.class);
+    			Sco newsco = PersistenceFacade.instance().getSco(scoid);
    
 			
 			

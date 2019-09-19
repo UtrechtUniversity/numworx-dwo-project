@@ -123,7 +123,7 @@ public class SchoolClass implements UserGroup, Comparable {
     public User[] getStudents() {
         User[] users = null;
         try {
-            users = (User[]) PersistenceFacade.instance().get(User.class, this);
+            users = PersistenceFacade.instance().getUser(this);
 // TODO            create method
 //            users = (User[]) PersistenceFacade.instance().getUsersInSchoolClass(this);
         } catch (PersistenceException e) {

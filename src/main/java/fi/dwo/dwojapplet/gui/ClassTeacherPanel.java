@@ -239,7 +239,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                         //FIXED legacy schoolclass updaten!
                         int classId = getSchoolClassID(sc);
                         try {
-                            SchoolClass scold = (SchoolClass) PersistenceFacade.instance().get(classId, SchoolClass.class);
+                            SchoolClass scold = (SchoolClass) PersistenceFacade.instance().getSchoolClass(classId);
                             scold.setClassName(fullSchoolClass.getSchoolClassName());
                         } catch (PersistenceException e) {
                             LOG.log(Level.SEVERE, "should not happen!", e);
@@ -634,11 +634,11 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
     private void refreshSchoolClasses() {
         // update schoolclass[] of teacher and school
         try {
-            SchoolClass[] scold = (SchoolClass[]) PersistenceFacade.instance().get(SchoolClass.class, DwoHelper.getCurrentFacadeUser());
+            SchoolClass[] scold = PersistenceFacade.instance().getSchoolClass(DwoHelper.getCurrentFacadeUser());
             ((Teacher) DwoHelper.getCurrentFacadeUser()).setClasses(scold);
             School school = DwoHelper.getCurrentFacadeUser().getSchool();
             if (school != null) {
-                school.setClassList((SchoolClass[]) PersistenceFacade.instance().get(SchoolClass.class, school));
+                school.setClassList( PersistenceFacade.instance().getSchoolClass(school));
             }
         } catch (PersistenceException e1) {
             LOG.log(Level.SEVERE, "should not happen!", e1); // famous last words

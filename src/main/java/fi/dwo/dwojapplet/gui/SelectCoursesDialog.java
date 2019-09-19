@@ -1152,7 +1152,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             int parentID = course.getParentID();
             if (parentID != 0) {
                 try {
-                    pa = (Course) PersistenceFacade.instance().get(parentID, Course.class);
+                    pa = PersistenceFacade.instance().getCourse(parentID);
                     addParentInsert(vector, pa);
                 } catch (PersistenceException e) {
                     // should not happen
