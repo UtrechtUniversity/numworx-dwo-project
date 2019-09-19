@@ -1221,8 +1221,12 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			if (pijlAdministratieBijwerken) // de pijladministratie moet alleen bijgewerkt worden als de gebruiker zelf een stap weghaalt
 			{
 				// er wordt een stap weggehaald, dus ook de laatste pijlvakinhouden en -operatoren bijwerken
-				setPijlVakInhouden(pijlVakInhoudenArray.size() - 1, "");
-				setPijlVakOperatoren(pijlVakOperatorenArray.size() - 1, "");
+			    // bugfix: check of administratie leeg is...
+			    if (pijlVakInhoudenArray.size() > 0 && pijlVakOperatorenArray.size() > 0)
+			    {
+    				setPijlVakInhouden(pijlVakInhoudenArray.size() - 1, "");
+    				setPijlVakOperatoren(pijlVakOperatorenArray.size() - 1, "");
+			    }
 			}
 			
 			if (pijlVak.geefOperator().equals("sub"))
