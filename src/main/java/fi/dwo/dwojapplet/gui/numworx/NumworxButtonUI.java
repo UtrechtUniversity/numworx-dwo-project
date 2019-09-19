@@ -18,9 +18,9 @@ import javax.swing.plaf.basic.BasicButtonUI;
 
 public class NumworxButtonUI extends BasicButtonUI {
 
-  private static final Color BACKGROUND = new ColorUIResource(0x1b75bb);
+  private static final Color BACKGROUND = Constants.colorBlue3;
   private Color FOREGROUND = new ColorUIResource(Color.white);
-  private static final Font FONT = new FontUIResource("Ubuntu", Font.BOLD, 13);
+  private static final Font FONT = Constants.FONT13;
   private static final Border BORDER = new BorderUIResource(BorderFactory.createEmptyBorder(3,12,3,12));
 
   NumworxButtonUI() {

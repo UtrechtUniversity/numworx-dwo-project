@@ -44,9 +44,9 @@ public class NumworxRadioButtonUI extends BasicRadioButtonUI implements Constant
   protected void installDefaults(AbstractButton b) {
     super.installDefaults(b);
     Font f = b.getFont();
-    if (f instanceof UIResource) b.setFont(FONT);
+    if (f instanceof UIResource) b.setFont(FONT12);
     Color c = b.getForeground();
-    if (c instanceof UIResource) b.setForeground(BLUE1);
+    if (c instanceof UIResource) b.setForeground(colorBlue1);
     icon = new NumworxRadioIcon();
   }
 
