@@ -64,4 +64,11 @@ public class CenterMainSubPanel extends JPanel {
         }
     }
 
+//    @Override
+//    public void setBounds(int x, int y, int width, int height) {
+//      System.err.println("setBounds x=" + x);
+//      super.setBounds(x, y, width, height);
+//    }
+
+    
 }

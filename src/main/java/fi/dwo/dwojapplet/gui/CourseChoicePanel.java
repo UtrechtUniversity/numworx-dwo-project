@@ -284,7 +284,7 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
 
         return p;
     }
-
+    
     /**
      * Sets the centerpanel to communicate with.
      *

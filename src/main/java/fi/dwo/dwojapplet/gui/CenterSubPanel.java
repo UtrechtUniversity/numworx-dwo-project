@@ -43,4 +43,6 @@ public interface CenterSubPanel extends ChangeListener {
     public JComponent getComponent();
 
     Object getUserObject();
+
+    default JComponent getSubHeaderPanel() { return null; }
 }

@@ -184,6 +184,104 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
         center = centerPanel;
     }
 
+    @Override
+    public JComponent getSubHeaderPanel() {
+      // TODO cleanup needed!!!!
+              JPanel jp = new JPanel(new BorderLayout());
+              jp.setBackground(GuiConstants.MAIN_BACKGROUND);
+              jp.setOpaque(!GuiConstants.GUI_IMAGE_BG);
+              jp.setDoubleBuffered(false);
+              Box hbox = Box.createHorizontalBox();
+              String text = sco.getScoName();
+              JLabel l;
+              //if(!scoView)
+              //text = sco.getSequencenr() + ".  " + text;
+              HeaderPanel hp = new HeaderPanel(text, true); hp.hide();
+              hp.setHorizontalAlignment(SwingConstants.LEFT);
+              hp.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+              hbox.add(Box.createHorizontalStrut(10));
+              hbox.setBorder(BorderFactory.createEmptyBorder(18, 0, 0, 0));
+      // goto modules
+              if (!scoView && !courseView) {
+                  mainMenuImageButton = new JButton(new ImageIcon(DwoHelper.getResourceImage(GuiConstants.BACK_MAINMENU_IMAGE)));
+                  mainMenuImageButton.setBorder(null);
+                  mainMenuImageButton.setContentAreaFilled(false);
+                  hbox.add(mainMenuImageButton);
+                  mainMenuImageButton.addActionListener(this);
+      // separator label
+                  l = new JLabel(" >> ");
+                  l.setFont(GuiConstants.RED_TEXT);
+                  l.setForeground(HOME_COLOR);
+                  l.setOpaque(false);
+                  hbox.add(l);
+              }
+      // goto course
+              if (!scoView) {
+                  courseButton = new LinkedLabel(sco.getCourse().getName());
+                  //courseButton.setCursor(new JButton().getCursor()); // restore button cursor
+                  courseButton.setNewForeground(HOME_COLOR);
+                  courseButton.setFont(GuiConstants.RED_TEXT);
+                  courseButton.addActionListener(this);
+                  courseButton.setIcon(new ImageIcon(DwoHelper.getResourceImage(GuiConstants.BACK_COURSEMENU_IMAGE))
+                  );
+                  courseButton.setHorizontalTextPosition(JButton.LEADING);
+                  hbox.add(courseButton);
+              }
+              hbox.add(Box.createGlue());
+              if (!scoView && !GuiConstants.GUI_IMAGE_BG) {
+                  Image courseLogo;
+                  Course course = sco.getCourse();
+                  courseLogo = course.getCourseLogo();
+                  MediaTracker tr = new MediaTracker(this);
+                  tr.addImage(courseLogo, 0);
+                  try {
+                      tr.waitForAll();
+                  } catch (Exception e) {
+                  }
+                  
+                  int w = courseLogo.getWidth(null);
+                  int s = 2;
+                  int h = courseLogo.getHeight(null);
+                  s  =  (h-1)/30+1; 
+      // bepaal s zodat h/s < 30       
+                  
+                  courseLogo = courseLogo.getScaledInstance(w / s, h / s, Image.SCALE_SMOOTH);
+                  tr.addImage(courseLogo, 0);
+                  try {
+                      tr.waitForAll();
+                  } catch (Exception e) {
+                  }
+                  l = new JLabel(new ImageIcon(courseLogo));
+                  hbox.add(l);
+      
+                  hbox.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 10));
+              }
+      
+              jp.add(hp, BorderLayout.CENTER);
+              jp.add(hbox, BorderLayout.NORTH);
+              if (!scoView && !courseView) // deeplink
+              {
+                  JComponent buttonBox = GuiCreator.instance().getButtonBox(this);
+                  if (buttonBox != null) {
+                      hp.setButtonBox(buttonBox);
+                  }
+              }
+              if (!GuiConstants.GUI_IMAGE_BG) {
+                  jp.setBorder(MainPanel.createNBorder()); // n shape border ....
+              }
+              jp.setSize(469, 70); // FIXME
+              jp.setMaximumSize(new Dimension(Short.MAX_VALUE, 70));
+              jp.setPreferredSize(jp.getSize());
+              jp.setMinimumSize(new Dimension(50, 70));
+              jp.invalidate();
+              //jp.validate();
+              //jp.doLayout();
+              //hbox.doLayout();
+              return jp;
+    }
+    
+    
+    
     /**
      * Returns a Component that can function as a header panel.
      *
@@ -193,78 +291,10 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
     @Override
     public JComponent getHeaderPanel() {
 // TODO cleanup needed!!!!
-        JPanel jp = new JPanel(new BorderLayout());
-        jp.setBackground(GuiConstants.MAIN_BACKGROUND);
-        jp.setOpaque(!GuiConstants.GUI_IMAGE_BG);
-        jp.setDoubleBuffered(false);
-        Box hbox = Box.createHorizontalBox();
         String text = sco.getScoName();
-        JLabel l;
-        //if(!scoView)
-        //text = sco.getSequencenr() + ".  " + text;
         HeaderPanel hp = new HeaderPanel(text, true);
         hp.setHorizontalAlignment(SwingConstants.LEFT);
         hp.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-        hbox.add(Box.createHorizontalStrut(10));
-        hbox.setBorder(BorderFactory.createEmptyBorder(18, 0, 0, 0));
-// goto modules
-        if (!scoView && !courseView) {
-            mainMenuImageButton = new JButton(new ImageIcon(DwoHelper.getResourceImage(GuiConstants.BACK_MAINMENU_IMAGE)));
-            mainMenuImageButton.setBorder(null);
-            mainMenuImageButton.setContentAreaFilled(false);
-            hbox.add(mainMenuImageButton);
-            mainMenuImageButton.addActionListener(this);
-// separator label
-            l = new JLabel(" >> ");
-            l.setFont(GuiConstants.RED_TEXT);
-            l.setForeground(HOME_COLOR);
-            l.setOpaque(false);
-            hbox.add(l);
-        }
-// goto course
-        if (!scoView) {
-            courseButton = new LinkedLabel(sco.getCourse().getName());
-            //courseButton.setCursor(new JButton().getCursor()); // restore button cursor
-            courseButton.setNewForeground(HOME_COLOR);
-            courseButton.setFont(GuiConstants.RED_TEXT);
-            courseButton.addActionListener(this);
-            courseButton.setIcon(new ImageIcon(DwoHelper.getResourceImage(GuiConstants.BACK_COURSEMENU_IMAGE))
-            );
-            courseButton.setHorizontalTextPosition(JButton.LEADING);
-            hbox.add(courseButton);
-        }
-        hbox.add(Box.createGlue());
-        if (!scoView && !GuiConstants.GUI_IMAGE_BG) {
-            Image courseLogo;
-            Course course = sco.getCourse();
-            courseLogo = course.getCourseLogo();
-            MediaTracker tr = new MediaTracker(this);
-            tr.addImage(courseLogo, 0);
-            try {
-                tr.waitForAll();
-            } catch (Exception e) {
-            }
-            
-            int w = courseLogo.getWidth(null);
-            int s = 2;
-            int h = courseLogo.getHeight(null);
-            s  =  (h-1)/30+1; 
-// bepaal s zodat h/s < 30       
-            
-            courseLogo = courseLogo.getScaledInstance(w / s, h / s, Image.SCALE_SMOOTH);
-            tr.addImage(courseLogo, 0);
-            try {
-                tr.waitForAll();
-            } catch (Exception e) {
-            }
-            l = new JLabel(new ImageIcon(courseLogo));
-            hbox.add(l);
-
-            hbox.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 10));
-        }
-
-        jp.add(hp, BorderLayout.CENTER);
-        jp.add(hbox, BorderLayout.NORTH);
         if (!scoView && !courseView) // deeplink
         {
             JComponent buttonBox = GuiCreator.instance().getButtonBox(this);
@@ -272,154 +302,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
                 hp.setButtonBox(buttonBox);
             }
         }
-        if (!GuiConstants.GUI_IMAGE_BG) {
-            jp.setBorder(MainPanel.createNBorder()); // n shape border ....
-        }
-        jp.setSize(469, 70); // FIXME
-        jp.setMaximumSize(new Dimension(Short.MAX_VALUE, 70));
-        jp.setPreferredSize(jp.getSize());
-        jp.setMinimumSize(new Dimension(50, 70));
-        jp.invalidate();
-        //jp.validate();
-        //jp.doLayout();
-        //hbox.doLayout();
-        return jp;
-//    	
-//    	
-//    	
-//    	
-//    	Panel p = new BorderedPanel(null, BorderedPanel.NORTH
-//                | BorderedPanel.EAST | BorderedPanel.WEST);
-//    	if(GuiConstants.GUI_IMAGE_BG) {
-//        	p = new BorderedPanel(null,0)
-//            {
-//	        	public void paint(Graphics g)
-//	            {	Point p = DwoHelper.getComponentLocation(this);
-//	            	g.drawImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO),-p.x,-p.y,null);
-//	            	super.paint(g);
-//	            }
-//	        };
-//        }
-//        p.setBackground(GuiConstants.MAIN_BACKGROUND);
-//        p.setBounds(181, 20, 469, 71);
-//        if(GuiConstants.GUI_IMAGE_BG) p.setBounds(181, 0, 469, 81);
-////        this.add(p);
-//        
-//        mainMenuImageButton = new JButton(new ImageIcon(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.BACK_MAINMENU_IMAGE)));
-//        mainMenuImageButton.setBorder(null);
-//        mainMenuImageButton.setBackground(GuiConstants.MAIN_BACKGROUND);
-//        mainMenuImageButton.setSize(18,18);
-//        mainMenuImageButton.setLocation(8,8);
-//        if(GuiConstants.GUI_IMAGE_BG) mainMenuImageButton.setLocation(48,0);
-//		p.add(mainMenuImageButton);	
-//		mainMenuImageButton.addActionListener(this);
-//		
-//        mainMenuButton = new LinkedLabel(TextMapper.getText(TextMapper.GUIMNU_MAIN_MENU));
-//        mainMenuButton.setFont(GuiConstants.RED_TEXT);
-//        mainMenuButton.setNewForeground(new Color(3,65,123));
-//        FontMetrics fm = mainMenuButton.getFontMetrics(mainMenuButton.getFont());
-//        mainMenuButton.setSize(fm.stringWidth(mainMenuButton.getText()) + 5, fm.getHeight() + 10);
-//        mainMenuButton.setLocation(4+mainMenuImageButton.getLocation().x + mainMenuImageButton.getSize().width, 4);
-//        mainMenuButton.addActionListener(this);
-//        //mainMenuButton.setVisible(false);
-//        //if(!scoView && !courseView)p.add(mainMenuButton);
-//        //mainMenuButton.setVisible(true);
-//        
-//        
-//        
-//        JLabel l = new JLabel(">>");
-//        l.setOpaque(false);
-//        l.setFont(GuiConstants.RED_TEXT);
-//        l.setForeground(new Color(3,65,123));
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setSize(fm.stringWidth(l.getText()) + 5, fm.getHeight() + 10);
-//        l.setLocation(5+mainMenuImageButton.getLocation().x + mainMenuImageButton.getSize().width, 4);
-//        if(GuiConstants.GUI_IMAGE_BG) l.setLocation(5+mainMenuImageButton.getLocation().x + mainMenuImageButton.getSize().width, -4);
-//        // l.setVisible(false);
-//        if(!scoView && !courseView)p.add(l);
-//        //l.setVisible(true);
-//
-//       
-//		
-//		courseButton = new LinkedLabel(sco.getCourse().getName());
-//        courseButton.setFont(GuiConstants.RED_TEXT);
-//        courseButton.setNewForeground(new Color(3,65,123));
-//        fm = courseButton.getFontMetrics(courseButton.getFont());
-//        courseButton.setSize(fm.stringWidth(courseButton.getText()) + 5, fm.getHeight() + 10);
-//        if(courseView) courseButton.setLocation(20, 4);
-//        else courseButton.setLocation(5+l.getLocation().x + l.getSize().width, 4);
-//        if(GuiConstants.GUI_IMAGE_BG) courseButton.setLocation(5+l.getLocation().x + l.getSize().width, -4);
-//        courseButton.addActionListener(this);
-//        //courseButton.setVisible(false);
-//        if(!scoView)p.add(courseButton);
-//        //courseButton.setVisible(true);
-//        
-//        courseImageButton = new JButton(new ImageIcon(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.BACK_COURSEMENU_IMAGE)));
-//        courseImageButton.setBorder(null);
-//        courseImageButton.setBackground(GuiConstants.MAIN_BACKGROUND);
-//        courseImageButton.setSize(22,22);
-//        courseImageButton.setLocation(5+courseButton.getLocation().x + courseButton.getSize().width,7);
-//        if(GuiConstants.GUI_IMAGE_BG) courseImageButton.setLocation(5+courseButton.getLocation().x + courseButton.getSize().width,0);
-//		p.add(courseImageButton);	
-//		courseImageButton.addActionListener(this);
-//
-//        l = new JLabel(">>");
-//        l.setFont(GuiConstants.RED_TEXT);
-//        l.setForeground(new Color(3,65,123));
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setSize(fm.stringWidth(l.getText()) + 5, fm.getHeight() + 10);
-//        l.setLocation(courseButton.getLocation().x + courseButton.getSize().width, 4);
-//        //l.setVisible(false);
-//        //if(!scoView)p.add(l);
-//        //l.setVisible(true);
-//
-//        /* My Sco-Label */
-//        
-//        if(!scoView)l = new JLabel(sco.getSequencenr() + ".  " + sco.getScoName());
-//        else l = new JLabel(sco.getScoName());
-//        l.setFont(GuiConstants.HEADER_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setSize(fm.stringWidth(l.getText()) + 5, fm.getHeight());
-//        if(!scoView)l.setLocation(20, mainMenuButton.getSize().height + mainMenuButton.getLocation().y + 10);
-//        //if(GuiConstants.GUI_IMAGE_BG && !scoView) l.setLocation(20, mainMenuButton.getSize().height + mainMenuButton.getLocation().y + 28);
-//        else l.setLocation(20, 20);
-//        Font f;
-//
-//        int maxHeight = 26;//p.getSize().height - l.getLocation().y;
-//
-//        /* Scale the fontsize */
-//        while ((l.getSize().width > p.getSize().width - 25)
-//                || (l.getSize().height > maxHeight)) {
-//            f = l.getFont();
-//            l.setFont(new Font(f.getName(), f.getStyle(), f.getSize() - 1));
-//            fm = l.getFontMetrics(l.getFont());
-//            l.setSize(fm.stringWidth(l.getText()) + 5, fm.getHeight());
-//        }
-//        l.setVisible(false);
-//        p.add(l);
-//        l.setVisible(true);
-//
-//		Image courseLogo;
-//		Course course = sco.getCourse();
-//		courseLogo = course.getCourseLogo();
-//        MediaTracker tr = new MediaTracker(this);
-//        tr.addImage(courseLogo, 0);
-//        try {
-//            tr.waitForAll();
-//        } catch (Exception e) {
-//        }
-//        courseLogo = courseLogo.getScaledInstance(courseLogo.getWidth(null)/2 , courseLogo.getHeight(null)/2 , Image.SCALE_SMOOTH);
-//        tr.addImage(courseLogo, 0);
-//        try {
-//            tr.waitForAll();
-//        } catch (Exception e) {
-//        }
-//        ImagePanel ip = new ImagePanel(courseLogo);
-//        ip.setLocation(p.getSize().width - ip.getSize().width - 8 , 8);
-//        if(!scoView) p.add(ip, 0);
-//        if(GuiConstants.GUI_IMAGE_BG) p.remove(ip);
-//        
-//        return p;
+        return hp;
     }
 
     public void xxxpaintComponent(Graphics g) {

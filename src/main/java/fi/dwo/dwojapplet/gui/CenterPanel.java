@@ -75,6 +75,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
     private CenterSubPanel centerSubPanel;
 
     private JPanel centermainSub;
+    private SubHeaderPanel subHeader;
 
     private JScrollPane sp;
     private boolean showMenu;
@@ -97,9 +98,16 @@ public class CenterPanel extends JPanel implements CourseContainer {
         this.setLayout(new BorderLayout());
 
         centermainSub = new CenterMainSubPanel(null);
-        centermainSub.setLayout(new BoxLayout(centermainSub, BoxLayout.LINE_AXIS));
+        centermainSub.setLayout(new BoxLayout(centermainSub, BoxLayout.X_AXIS));
         centermainSub.setBackground(GuiConstants.MAIN_BACKGROUND);
-        this.add(centermainSub, BorderLayout.CENTER);
+
+        subHeader = new SubHeaderPanel();
+        JPanel container = new JPanel(new BorderLayout());
+        container.add(subHeader, BorderLayout.NORTH);
+        inbetween = new JPanel(null, false);
+        inbetween.setLayout(new BoxLayout(inbetween, BoxLayout.X_AXIS));
+        this.add(inbetween, BorderLayout.CENTER);
+        
         if (!GuiConstants.GUI_IMAGE_BG) {
             setBorder(BorderFactory.createMatteBorder(10, 5, 7, 4, GuiConstants.SUB_BACKGROUND));
             setBorder(BorderFactory.createCompoundBorder(getBorder(),
@@ -112,7 +120,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
             setBorder(MAIN_BORDER);
         }
 // START INKLAPBAAR MENU 
-        window = centermainSub; // alternatief
+        window = inbetween; // alternatief
         ip = new IconizedPanel(TextMapper.getText("Menu"));
         if (iconizer) {
             MAIN_BORDER = BorderFactory.createEmptyBorder(0, 0, 0, 0);
@@ -138,12 +146,12 @@ public class CenterPanel extends JPanel implements CourseContainer {
             header.add(btn);
             ip.setWindow(window);
             window.add(header, BorderLayout.NORTH);
-            centermainSub.add(ip);
+            inbetween.add(ip);
         }// END       
         loadMenu();
         showMenu = true;
         if (!iconizer) {
-            centermainSub.add(RAND);
+            window.add(RAND);
         }
         if (iconizer) {
 
@@ -165,10 +173,11 @@ public class CenterPanel extends JPanel implements CourseContainer {
             DWOBorder treeBorder = new DWOBorder(imgs, inset2, GuiConstants.GUI_9PATCH_SCO);
             tree.setBorder(treeBorder);
             ip2.setMaximumSize(new Dimension(150 - 1, Short.MAX_VALUE));
-            centermainSub.add(ip2);
+            inbetween.add(ip2);
             tree.setCenterPanel(this);
         }
-
+        inbetween.add(container);
+        container.add(centermainSub);
         sp = new JScrollPane();
         //spe = new Panel(new BorderLayout());
         //sp.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
@@ -179,7 +188,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
         spe = sp; // alles is nu jpanel
         centermainSub.add(spe);
         if (iconizer) {
-            sp.setBorder(scoBorder);
+            container.setBorder(scoBorder);
         }
 
         //TODO Wim: Dit moet eigenlijk "NA" de constructor van mainpanel. mp en guicreator variabelen zijn nog niet gezet.
@@ -278,7 +287,8 @@ public class CenterPanel extends JPanel implements CourseContainer {
         spe.setVisible(true);
         c.invalidate();
         showMenu = true;
-        mainPanel.setHeaderPanel(panel.getHeaderPanel());
+        mainPanel.setHeaderPanel(panel.getSubHeaderPanel());
+        subHeader.setSubHeaderPanel(panel.getHeaderPanel());
 
         GuiCreator.instance().setReady();
         SwingUtilities.invokeLater(new RequestFocusAST(c));
@@ -340,9 +350,9 @@ public class CenterPanel extends JPanel implements CourseContainer {
             menu.setVisible(false);
             centermainSub.invalidate();
         }
-        if (iconizer) {
-            centerSubPanel.getComponent().setBorder(scoBorder);
-        }
+//        if (iconizer) {
+//            centerSubPanel.getComponent().setBorder(scoBorder);
+//        }
         Component c = centerSubPanel.getComponent();
         centermainSub.add(c); // FIXME hier gebeurt het met een  FLITS 
         c.setVisible(true);
@@ -350,7 +360,8 @@ public class CenterPanel extends JPanel implements CourseContainer {
         c.invalidate();
 
         showMenu = false;
-        mainPanel.setHeaderPanel(panel.getHeaderPanel());
+        mainPanel.setHeaderPanel(panel.getSubHeaderPanel());
+        subHeader.setSubHeaderPanel(panel.getHeaderPanel());
 //        repaint();
     }
 
@@ -411,6 +422,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
     }
 
     private boolean hasStarted = true;
+    private JPanel inbetween;
 
     /**
      * Called when this panel is closes. Can be used to save session-data, for

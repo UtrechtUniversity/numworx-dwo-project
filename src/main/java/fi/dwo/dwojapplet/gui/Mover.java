@@ -3,6 +3,8 @@ package fi.dwo.dwojapplet.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -30,34 +32,34 @@ public class Mover extends JComponent {
         setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
     }
 
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("testing");
-        Box box = Box.createHorizontalBox();
-        JPanel center = new JPanel();
-        center.setSize(new Dimension(200, 200));
-        center.setOpaque(true);
-        center.setBackground(Color.cyan);
-        JPanel left = new JPanel(new BorderLayout());
-        Mover mover = new Mover();
-        mover.setOpaque(true);
-        mover.setBackground(Color.white);
-        JPanel menu = new JPanel();
-        menu.setOpaque(true);
-        menu.setBackground(Color.green);
-        menu.setPreferredSize(new Dimension(30, 200));
-        left.setMinimumSize(new Dimension(10, 0));
-        left.add(menu, BorderLayout.CENTER);
-        left.add(mover, BorderLayout.EAST);
-        box.add(left);
-        box.add(center);
-        frame.setContentPane(box);
-        frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.show();
-    }
+//    /**
+//     * @param args
+//     */
+//    public static void main(String[] args) {
+//        JFrame frame = new JFrame("testing");
+//        Box box = Box.createHorizontalBox();
+//        JPanel center = new JPanel();
+//        center.setSize(new Dimension(200, 200));
+//        center.setOpaque(true);
+//        center.setBackground(Color.cyan);
+//        JPanel left = new JPanel(new BorderLayout());
+//        Mover mover = new Mover();
+//        mover.setOpaque(true);
+//        mover.setBackground(Color.white);
+//        JPanel menu = new JPanel();
+//        menu.setOpaque(true);
+//        menu.setBackground(Color.green);
+//        menu.setPreferredSize(new Dimension(30, 200));
+//        left.setMinimumSize(new Dimension(10, 0));
+//        left.add(menu, BorderLayout.CENTER);
+//        left.add(mover, BorderLayout.EAST);
+//        box.add(left);
+//        box.add(center);
+//        frame.setContentPane(box);
+//        frame.pack();
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.show();
+//    }
 
     @Override
     protected void processMouseEvent(MouseEvent e) {
@@ -89,8 +91,9 @@ public class Mover extends JComponent {
 //System.out.println("change "+ getParent().getSize() + " to " + size);				
                 getParent().setSize(size);
 // DONE 1.4 maken!
-                if (getParent() instanceof JComponent) {
-                    JComponent swingParent = (JComponent) getParent();
+                //if (getParent() instanceof JComponent) 
+                {
+                    Component swingParent = getParent();
                     swingParent.setPreferredSize(size);
                     size.height = swingParent.getMinimumSize().height;
                     swingParent.setMinimumSize(size);
@@ -98,7 +101,10 @@ public class Mover extends JComponent {
                     swingParent.setMaximumSize(size);
                 }
                 getParent().invalidate();
-                getParent().validate();
+ //               getParent().validate();
+            Container parent = getParent().getParent().getParent();
+            parent.validate();
+                //getParent().getParent().repaint();
 //System.out.println("got " + getParent().getSize());
         }
 

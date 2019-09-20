@@ -205,6 +205,7 @@ public class MainPanel extends BackgroundPanel {
         }
 
         header = p;
+        if (header == null) return;
         header.setVisible(false);
         //p.setBorder(BorderFactory.createLineBorder(Color.red));
         top.add(header, BorderLayout.CENTER);

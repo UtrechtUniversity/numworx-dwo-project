@@ -407,36 +407,36 @@ public class VButton extends JButton {
 	/**
      * @param args
      */
-    public static void main(String[] args) {
-        javax.swing.JFrame frame = new JFrame("test");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        VButton button = new VButton("Knoppen", new VButton.V());
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(e);
-            }
-        });
-        frame.getContentPane().add(button);
-        JButton comp = new JButton("Knoppen") {
-
-			@Override
-			public void setBorder(Border border) {
-				// TODO Auto-generated method stub
-				super.setBorder(border);
-			}
-
-			@Override
-			public void paint(Graphics g) {
-				// TODO Auto-generated method stub
-				super.paint(g);
-			}};
-			comp.        setFocusPainted(false);
-
-		frame.getContentPane().add(comp);
-        frame.getContentPane().setLayout(new FlowLayout());
-        frame.pack();
-        frame.show();
-    }
+//    public static void main(String[] args) {
+//        javax.swing.JFrame frame = new JFrame("test");
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        VButton button = new VButton("Knoppen", new VButton.V());
+//        button.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                System.out.println(e);
+//            }
+//        });
+//        frame.getContentPane().add(button);
+//        JButton comp = new JButton("Knoppen") {
+//
+//			@Override
+//			public void setBorder(Border border) {
+//				// TODO Auto-generated method stub
+//				super.setBorder(border);
+//			}
+//
+//			@Override
+//			public void paint(Graphics g) {
+//				// TODO Auto-generated method stub
+//				super.paint(g);
+//			}};
+//			comp.        setFocusPainted(false);
+//
+//		frame.getContentPane().add(comp);
+//        frame.getContentPane().setLayout(new FlowLayout());
+//        frame.pack();
+//        frame.show();
+//    }
 
 }
