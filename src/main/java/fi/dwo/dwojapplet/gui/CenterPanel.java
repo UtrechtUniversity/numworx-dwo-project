@@ -109,10 +109,11 @@ public class CenterPanel extends JPanel implements CourseContainer {
         this.add(inbetween, BorderLayout.CENTER);
         
         if (!GuiConstants.GUI_IMAGE_BG) {
-            setBorder(BorderFactory.createMatteBorder(10, 5, 7, 4, GuiConstants.SUB_BACKGROUND));
-            setBorder(BorderFactory.createCompoundBorder(getBorder(),
-                    BorderFactory.createMatteBorder(0, 1, 1, 1, Color.black)));
-        } else {
+//            setBorder(BorderFactory.createMatteBorder(10, 5, 7, 4, GuiConstants.SUB_BACKGROUND));
+//            setBorder(BorderFactory.createCompoundBorder(getBorder(),
+//                    BorderFactory.createMatteBorder(0, 1, 1, 1, Color.black)));
+          setBorder(MAIN_BORDER);
+       } else {
 // TODO Tuning!!!
             setOpaque(false);
             setDoubleBuffered(false);
@@ -397,26 +398,26 @@ public class CenterPanel extends JPanel implements CourseContainer {
         super.paint(g);
         if (!GuiConstants.GUI_IMAGE_BG) {
 
-            int w = getWidth();
-            if (showMenu) {
-                g.setColor(Color.black);
-                g.drawLine(151 + 5, 0, /*629+5*/ w - 155 - 11, 0);
-                g.drawLine(150 + 5, 0, 150 + 5, 9);
-                g.drawLine(161 + 5, 0, 161 + 5, 9);
-                g.drawLine(0 + 5, 9, w - 5, 9);
-            } else {
-                g.setColor(GuiConstants.MAIN_BACKGROUND);
-                g.fillRect(162 + 5, 0, w - 155 - 12 - 162 - 5, 10);
-
-                g.setColor(Color.black);
-                g.drawLine(161 + 5, 0, 161 + 5, 10);
-                g.drawLine(w - 155 - 11, 0, w - 155 - 11, 10);
-
-                g.drawLine(0 + 5, 9, 161 + 5, 9);
-                g.drawLine(w - 155 - 10, 9, w - 5, 9);
-            }
-            g.drawLine(5, 0, 155, 0);	// border-lijntje van filogo panel     	      
-            g.drawLine(w - 5, 0, w - 155, 0); // border-lijntje loggedin panel
+//            int w = getWidth();
+//            if (showMenu) {
+//                g.setColor(Color.black);
+//                g.drawLine(151 + 5, 0, /*629+5*/ w - 155 - 11, 0);
+//                g.drawLine(150 + 5, 0, 150 + 5, 9);
+//                g.drawLine(161 + 5, 0, 161 + 5, 9);
+//                g.drawLine(0 + 5, 9, w - 5, 9);
+//            } else {
+//                g.setColor(GuiConstants.MAIN_BACKGROUND);
+//                g.fillRect(162 + 5, 0, w - 155 - 12 - 162 - 5, 10);
+//
+//                g.setColor(Color.black);
+//                g.drawLine(161 + 5, 0, 161 + 5, 10);
+//                g.drawLine(w - 155 - 11, 0, w - 155 - 11, 10);
+//
+//                g.drawLine(0 + 5, 9, 161 + 5, 9);
+//                g.drawLine(w - 155 - 10, 9, w - 5, 9);
+//            }
+//            g.drawLine(5, 0, 155, 0);	// border-lijntje van filogo panel     	      
+//            g.drawLine(w - 5, 0, w - 155, 0); // border-lijntje loggedin panel
         }
 
     }

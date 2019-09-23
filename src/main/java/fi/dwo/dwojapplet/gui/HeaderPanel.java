@@ -43,7 +43,7 @@ public class HeaderPanel extends JPanel {
         setForeground(GuiConstants.HEADER_COLOR);
         label.setForeground(getForeground()); // overerf color
         if (!ibg) {
-            setBorder(MainPanel.createNBorder());
+            setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         } else {
             setBorder(BorderFactory.createEmptyBorder(0, 0, 1, 0));
         }

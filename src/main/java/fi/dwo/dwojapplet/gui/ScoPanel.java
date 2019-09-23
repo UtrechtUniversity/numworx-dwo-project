@@ -189,16 +189,16 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
       // TODO cleanup needed!!!!
               JPanel jp = new JPanel(new BorderLayout());
               jp.setBackground(GuiConstants.MAIN_BACKGROUND);
-              jp.setOpaque(!GuiConstants.GUI_IMAGE_BG);
+              jp.setOpaque(false);
               jp.setDoubleBuffered(false);
               Box hbox = Box.createHorizontalBox();
-              String text = sco.getScoName();
+              //String text = sco.getScoName();
               JLabel l;
               //if(!scoView)
               //text = sco.getSequencenr() + ".  " + text;
-              HeaderPanel hp = new HeaderPanel(text, true); hp.hide();
-              hp.setHorizontalAlignment(SwingConstants.LEFT);
-              hp.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+//              HeaderPanel hp = new HeaderPanel(text, true); hp.hide();
+//              hp.setHorizontalAlignment(SwingConstants.LEFT);
+//              hp.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
               hbox.add(Box.createHorizontalStrut(10));
               hbox.setBorder(BorderFactory.createEmptyBorder(18, 0, 0, 0));
       // goto modules
@@ -211,7 +211,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
       // separator label
                   l = new JLabel(" >> ");
                   l.setFont(GuiConstants.RED_TEXT);
-                  l.setForeground(HOME_COLOR);
+                  l.setForeground(fi.dwo.dwojapplet.gui.numworx.Constants.COLOR13);
                   l.setOpaque(false);
                   hbox.add(l);
               }
@@ -219,19 +219,18 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
               if (!scoView) {
                   courseButton = new LinkedLabel(sco.getCourse().getName());
                   //courseButton.setCursor(new JButton().getCursor()); // restore button cursor
-                  courseButton.setNewForeground(HOME_COLOR);
+                  courseButton.setNewForeground(fi.dwo.dwojapplet.gui.numworx.Constants.COLOR13);
                   courseButton.setFont(GuiConstants.RED_TEXT);
                   courseButton.addActionListener(this);
-                  courseButton.setIcon(new ImageIcon(DwoHelper.getResourceImage(GuiConstants.BACK_COURSEMENU_IMAGE))
-                  );
+                  //courseButton.setIcon(new ImageIcon(DwoHelper.getResourceImage(GuiConstants.BACK_COURSEMENU_IMAGE)));
                   courseButton.setHorizontalTextPosition(JButton.LEADING);
                   hbox.add(courseButton);
               }
               hbox.add(Box.createGlue());
-              if (!scoView && !GuiConstants.GUI_IMAGE_BG) {
+              if (!scoView ) {
                   Image courseLogo;
                   Course course = sco.getCourse();
-                  courseLogo = course.getCourseLogo();
+                  courseLogo = DwoHelper.getResourceImage(GuiConstants.BACK_COURSEMENU_IMAGE);
                   MediaTracker tr = new MediaTracker(this);
                   tr.addImage(courseLogo, 0);
                   try {
@@ -245,34 +244,37 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
                   s  =  (h-1)/30+1; 
       // bepaal s zodat h/s < 30       
                   
-                  courseLogo = courseLogo.getScaledInstance(w / s, h / s, Image.SCALE_SMOOTH);
+                  //courseLogo = courseLogo.getScaledInstance(w / s, h / s, Image.SCALE_SMOOTH);
                   tr.addImage(courseLogo, 0);
                   try {
                       tr.waitForAll();
                   } catch (Exception e) {
                   }
-                  l = new JLabel(new ImageIcon(courseLogo));
-                  hbox.add(l);
+                  JButton b = new JButton(new ImageIcon(courseLogo));
+                  b.setContentAreaFilled(false);
+                  b.setBorderPainted(false);
+                  b.addActionListener(e -> { center.select(sco.getCourse()); });
+                  hbox.add(b);
       
                   hbox.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 10));
               }
       
-              jp.add(hp, BorderLayout.CENTER);
+//              jp.add(hp, BorderLayout.CENTER);
               jp.add(hbox, BorderLayout.NORTH);
-              if (!scoView && !courseView) // deeplink
+//              if (!scoView && !courseView) // deeplink
+//              {
+//                  JComponent buttonBox = GuiCreator.instance().getButtonBox(this);
+//                  if (buttonBox != null) {
+//                      hp.setButtonBox(buttonBox);
+//                  }
+//              }
               {
-                  JComponent buttonBox = GuiCreator.instance().getButtonBox(this);
-                  if (buttonBox != null) {
-                      hp.setButtonBox(buttonBox);
-                  }
+                  jp.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0)); // n shape border ....
               }
-              if (!GuiConstants.GUI_IMAGE_BG) {
-                  jp.setBorder(MainPanel.createNBorder()); // n shape border ....
-              }
-              jp.setSize(469, 70); // FIXME
-              jp.setMaximumSize(new Dimension(Short.MAX_VALUE, 70));
+              jp.setSize(469, 50); // FIXME
+              jp.setMaximumSize(new Dimension(Short.MAX_VALUE, 50));
               jp.setPreferredSize(jp.getSize());
-              jp.setMinimumSize(new Dimension(50, 70));
+              jp.setMinimumSize(new Dimension(50, 50));
               jp.invalidate();
               //jp.validate();
               //jp.doLayout();

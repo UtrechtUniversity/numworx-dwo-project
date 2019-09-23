@@ -10,6 +10,7 @@ import fi.dwo.dwojapplet.gui.action.LogoutAction;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.Action;
@@ -41,6 +42,7 @@ import javax.swing.plaf.basic.BasicMenuItemUI;
  */
 public class LoggedInPanel extends JPanel {
 
+    private static final Font FONT13 = new Font("Ubuntu", Font.BOLD, 13);
     private JButton logoffButton;
 
 //    final class LoggedInPanelButton extends JButton {
@@ -63,12 +65,9 @@ public class LoggedInPanel extends JPanel {
     public LoggedInPanel() {
         super(new FlowLayout(FlowLayout.TRAILING,0,10), false);
         setOpaque(false);
-        if (GuiConstants.GUI_IMAGE_BG) {
+        {
+            setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
             setOpaque(false);
-        } else {
-            setBorder(MainPanel.createNBorder());
-            setBackground(GuiConstants.MAIN_BACKGROUND);
-            setOpaque(true);
         }
         //setBorder(BorderFactory.createLineBorder(Color.red));
         // fill the box
@@ -81,7 +80,7 @@ public class LoggedInPanel extends JPanel {
         JMenu loggedin = new JMenu(
                 gast
                         ? TextMapper.getText(TextMapper.GUIL_NOT_LOGGED_IN).trim()
-                        : TextMapper.getText(TextMapper.GUIL_LOGGED_IN_AS) + ":")
+                        : user.getName())
             
 //            {
 //
@@ -99,7 +98,8 @@ public class LoggedInPanel extends JPanel {
 //            }
             ;
         loggedin.setIcon(icon);
-        loggedin.setFont(GuiConstants.NORMAL_TEXT);
+        loggedin.setFont(FONT13);
+        loggedin.setForeground(fi.dwo.dwojapplet.gui.numworx.Constants.COLOR13);
         loggedin.setHorizontalTextPosition(SwingConstants.LEADING);
         loggedin.setUI(new BasicMenuItemUI() {
 
@@ -137,16 +137,16 @@ public class LoggedInPanel extends JPanel {
         loggedin.add(new LogoutAction());
         bar.add(loggedin);
         JLabel username = null;
-        if (!gast) {
-            if (GuiConstants.GUI_IMAGE_BG) {
-                loggedin.setText(/*TextMapper.getText(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName())+" "+*/user.getName());
-                loggedin.setHorizontalAlignment(SwingConstants.RIGHT);
-            } else {
-                username = new JLabel(user.getName());
-                username.setAlignmentX(RIGHT_ALIGNMENT);
-                username.setFont(GuiConstants.NORMAL_TEXT);
-            }
-        }
+//        if (!gast) {
+//            if (GuiConstants.GUI_IMAGE_BG) {
+//                loggedin.setText(/*TextMapper.getText(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName())+" "+*/user.getName());
+//                loggedin.setHorizontalAlignment(SwingConstants.RIGHT);
+//            } else {
+//                username = new JLabel(user.getName());
+//                username.setAlignmentX(RIGHT_ALIGNMENT);
+//                username.setFont(GuiConstants.NORMAL_TEXT);
+//            }
+//        }
         logoffButton = new JButton(new LogoutAction());
         logoffButton.setAlignmentX(CENTER_ALIGNMENT);
 

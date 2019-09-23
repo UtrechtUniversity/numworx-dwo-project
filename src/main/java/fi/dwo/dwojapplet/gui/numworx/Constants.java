@@ -13,5 +13,6 @@ public interface Constants {
   Font FONT13 = new FontUIResource("SansSerif", Font.BOLD, 13);
   Color WHITE = new ColorUIResource(Color.WHITE);
   Font FONT12 = new Font("SansSerif",Font.PLAIN,12);
+  Color COLOR13 = new Color(114,151,199);
 
 }

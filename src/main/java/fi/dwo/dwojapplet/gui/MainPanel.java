@@ -8,6 +8,8 @@ import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.LogoutURLAction;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -33,14 +35,15 @@ import javax.swing.border.Border;
  * @author M.J.B. Kupers
  *
  */
-public class MainPanel extends BackgroundPanel {
+public class MainPanel extends JPanel {
 
     static class TopPanel extends JPanel {
 
         TopPanel() {
             super(new BorderLayout(10, 0), false);
-            setOpaque(false);
+            setOpaque(true);
             setDoubleBuffered(false);
+            setBackground(fi.dwo.dwojapplet.gui.numworx.Constants.colorBlue1);
             setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 4));
         }
 
@@ -86,17 +89,17 @@ public class MainPanel extends BackgroundPanel {
         Container p;
         JLabel l;
         top = new TopPanel();
-        top.setBounds(0, 0, GuiConstants.DWO_WIDTH, 90); // TODO 70!
+        top.setBounds(0, 0, GuiConstants.DWO_WIDTH, 50); // TODO 70!
         add(top, BorderLayout.NORTH);
         if (GuiConstants.GUI_IMAGE_BG) {
-            guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE);
+            Image guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE);
             if (guiImage == null) {
                 GuiConstants.GUI_IMAGE_BG = false;
             }
         }
 
         Box hbox = Box.createHorizontalBox();
-        if (!GuiConstants.GUI_IMAGE_BG) {
+        if (true) {
             l = new JLabel(dwoProfile.getDwoProfileDescription());
             l.setFont(GuiConstants.RED_TEXT);
             l.setOpaque(false);
@@ -123,32 +126,32 @@ public class MainPanel extends BackgroundPanel {
         hbox.setBounds(0, 0, getWidth(), hbox.getPreferredSize().height);
         hbox.doLayout();
 
-        if (!GuiConstants.GUI_IMAGE_BG) {
+        if (true) {
 
             /* Add FI logo */
             Image fiLogo;
             fiLogo = DwoHelper.getResourceImage(GuiConstants.WISWEB_LOGO_SMALL_LOCATION);
             ImageIcon ip = new ImageIcon(fiLogo);
 
-            l = new JLabel(TextMapper.getText(TextMapper.GUIM_FI_NAME));
+            DomSchoolsRolesAndClassesV2 schoolLogins = DwoHelper.getSchoolLogins();
+            String roleName = schoolLogins == null ? "" : TextMapper.getText(schoolLogins.getActiveSchoolRoleAndClass().getRole().getRoleName());
+            l = new JLabel((roleName).toUpperCase()); // ROL
             l.setIcon(ip);
-            l.setVerticalTextPosition(JLabel.BOTTOM);
-            l.setHorizontalTextPosition(JLabel.CENTER);
+            l.setVerticalTextPosition(JLabel.CENTER);
+            l.setHorizontalTextPosition(JLabel.RIGHT);
             l.setHorizontalAlignment(JLabel.CENTER);
             l.setVerticalAlignment(JLabel.CENTER);
-            l.setBackground(GuiConstants.MAIN_BACKGROUND);
-            l.setOpaque(true);
-            l.setFont(new Font("SansSerif", Font.BOLD, 12));
-            l.setForeground(new Color(3, 65, 123));
-            l.setBorder(BorderFactory.createCompoundBorder(createNBorder(),
-                    BorderFactory.createEmptyBorder(2, 0, 4, 0)));
+            l.setFont(new Font("Ubuntu", Font.PLAIN, 22));
+            l.setForeground(fi.dwo.dwojapplet.gui.numworx.Constants.COLOR13);
+//            l.setBorder(BorderFactory.createCompoundBorder(createNBorder(),
+//                    BorderFactory.createEmptyBorder(2, 0, 4, 0)));
 // nota bene: het CenterPanel ligt als heavy weight over de bottom-borderline heen
 // daarom wordt daar dit lijntje hertekend.
-            l.setBounds(5, 20, 151, 70);
+            l.setBounds(5, 20, 151, 50);
             top.add(l, BorderLayout.WEST);
-            l.setPreferredSize(new Dimension(151, 70));
+           // l.setPreferredSize(new Dimension(151, 35));
         } else {
-            top.add(Box.createRigidArea(new Dimension(151 + 30, 70)), BorderLayout.WEST);
+            top.add(Box.createRigidArea(new Dimension(151 + 30, 50)), BorderLayout.WEST);
 
             //toevoeging om iets meer ruimte te krijgen tussen sco en header
             top.add(Box.createRigidArea(new Dimension(151 + 30, 6)), BorderLayout.SOUTH);
@@ -160,11 +163,11 @@ public class MainPanel extends BackgroundPanel {
         /* Logged In panel */
         loggedIn = new LoggedInPanel();
         int w = 250; // size of login-role and username
-        loggedIn.setBounds(605, 0, w, 70);
+        loggedIn.setBounds(605, 0, w, 50);
         if (GuiConstants.GUI_IMAGE_BG) {
             w = w - 30;
         }
-        loggedIn.setPreferredSize(new Dimension(w, 90));
+        loggedIn.setPreferredSize(new Dimension(w, 50));
         //loggedIn.doLayout();
         loggedIn.setVisible(false);
         top.add(loggedIn, BorderLayout.EAST);
@@ -176,20 +179,18 @@ public class MainPanel extends BackgroundPanel {
         this.add(center);
         center.setVisible(true);
         this.setVisible(true);
-
     }
 
-    /**
-     * @return
-     */
-    static Border createNBorder() {
-        return BorderFactory.createMatteBorder(1, 1, 0, 1, Color.black);
-    }
+//    /**
+//     * @return
+//     */
+//    static Border createNBorder() {
+//        return BorderFactory.createMatteBorder(1, 1, 0, 1, Color.black);
+//    }
 
-    @Override
     public void setGuiImage(Image image) {
-        loggedIn.setGuiImage(image);
-        guiImage = image;
+//        loggedIn.setGuiImage(image);
+//        guiImage = image;
     }
 
     /**
@@ -213,7 +214,7 @@ public class MainPanel extends BackgroundPanel {
         int margin = GuiConstants.GUI_IMAGE_BG ? 30 : 0;
         int x = 166 + margin;
         int width = 469 - margin;
-        header.setBounds(x, 20, width, 71);
+        header.setBounds(x, 20, width, 50);
         header.setVisible(true);
     }
 
