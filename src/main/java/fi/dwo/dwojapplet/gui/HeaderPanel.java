@@ -36,7 +36,7 @@ public class HeaderPanel extends JPanel {
         label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
         label.setAlignmentY(BOTTOM_ALIGNMENT);
         origFont = f;
-        setOpaque(!ibg);
+        setOpaque(true);
         label.setHorizontalAlignment(ibg ? JLabel.LEFT : JLabel.CENTER);
         label.setVerticalAlignment(ibg ? JLabel.BOTTOM : JLabel.CENTER);
         setBackground(GuiConstants.MAIN_BACKGROUND);
@@ -45,7 +45,7 @@ public class HeaderPanel extends JPanel {
         if (!ibg) {
             setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         } else {
-            setBorder(BorderFactory.createEmptyBorder(0, 0, 1, 0));
+            setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         }
         setButtonBox(createButtonBox());
         //add(Box.createHorizontalGlue());

@@ -2,6 +2,7 @@ package fi.dwo.dwojapplet.gui;
 
 import java.awt.Dimension;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -17,7 +18,8 @@ class SubHeaderPanel extends JPanel {
     setMinimumSize(new Dimension(HEIGHT, HEIGHT));
     setMaximumSize(new Dimension(Short.MAX_VALUE, HEIGHT));
     setPreferredSize(new Dimension(500, HEIGHT)); // sort of.. stretch horizontal.
-    setBackground(GuiConstants.MAIN_BACKGROUND); 
+    setBackground(GuiConstants.MAIN_BACKGROUND);
+    setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
   }
 
   public void setSubHeaderPanel(JComponent sub) {

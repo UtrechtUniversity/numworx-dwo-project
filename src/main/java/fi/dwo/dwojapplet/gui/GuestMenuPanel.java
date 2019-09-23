@@ -121,7 +121,7 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
     }
 
     protected void createGap() {
-        add(Box.createVerticalStrut(5));
+        add(Box.createVerticalStrut(10));
     }
 
 

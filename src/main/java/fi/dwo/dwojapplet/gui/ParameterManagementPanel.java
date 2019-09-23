@@ -320,6 +320,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     @Override
     public JComponent getHeaderPanel() {
         HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIPA_SCO_EDIT));
+        //hp.setBackground(Color.gray);
         Box box = Box.createHorizontalBox();
         box.add(stopBtn = new JButton(TextMapper.getText(TextMapper.GUIH_STOP_EDIT)));
         box.add(Box.createHorizontalStrut(10));
@@ -329,7 +330,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 
         PreviewHtml5 action = new PreviewHtml5(this, sco);
         if (action.isEnabled()) {
-            box.add(new JButton(action));
+           box.add(Box.createHorizontalStrut(10));
+           box.add(new JButton(action));
         }
 
         if (DwoHelper.isAdminLoggedIn()) {

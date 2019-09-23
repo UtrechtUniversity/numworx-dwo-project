@@ -23,7 +23,9 @@ public class SchoolAdminMenuPanel extends UserMenuPanel {
     protected void createMenuButtons() {
         super.createMenuButtons();
         add(Box.createVerticalStrut(20));
-        add(new JLabel(TextMapper.getText(TextMapper.GUIMNU_FEATURES_SCHOOLADMIN)));
+        JLabel features = new JLabel(TextMapper.getText(TextMapper.GUIMNU_FEATURES_SCHOOLADMIN));
+        features.setForeground(GuiConstants.HEADER_COLOR);
+        add(features);
         createGap();
         this.userManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_USERS_SCHOOL));
         userManagementButton.addActionListener(this);

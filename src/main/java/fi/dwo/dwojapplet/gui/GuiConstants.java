@@ -184,6 +184,13 @@ public abstract class GuiConstants {
         PLAYER_BASE = getString(prop, "player_base");
 // TODO deze code opnemen in profile.properties:
         dwoProfile = profile;
+
+        if (profile == 77) {
+          HEADER_COLOR = new Color(0x314770);
+        } else
+        
+        
+        
         if (profile == 5 || profile == 56) {
             MAIN_BACKGROUND = new Color(255, 255, 255);
             CELL_BACKGROUND = new Color(255, 255, 255);

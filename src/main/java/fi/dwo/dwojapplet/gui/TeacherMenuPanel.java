@@ -130,6 +130,7 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
                         + ":");
                 l.setOpaque(false);
                 l.setFont(GuiConstants.NORMAL_TEXT);
+                l.setForeground(GuiConstants.HEADER_COLOR);
                 l.setBorder(TITLE_BORDER);
                 classBox.add(l);
 
@@ -143,6 +144,7 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
                     cll.addActionListener(this);
                     classLinkedList[i] = cll;
                     cll.setFont(GuiConstants.NORMAL_TEXT);
+                    cll.setForeground(GuiConstants.HEADER_COLOR);
                     classBox.add(cll);
                 }
             }
