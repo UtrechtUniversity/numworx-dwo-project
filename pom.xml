@@ -194,6 +194,12 @@
     		<artifactId>ideas</artifactId>
     		<version>1.2.2</version>
     	</dependency>
+    	<dependency>
+    		<groupId>nl.numworx.swingbrowser</groupId>
+    		<artifactId>swingbrowser-jfx</artifactId>
+    		<version>0.0.1-SNAPSHOT</version>
+    		<scope>runtime</scope>
+    	</dependency>
     </dependencies>      
 
     <build>
