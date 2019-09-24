@@ -295,14 +295,14 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
     public JComponent getHeaderPanel() {
 // TODO cleanup needed!!!!
         String text = sco.getScoName();
-        boolean istoets = false;
+        boolean istoets = false; // FIXME moeilijk te bepalen
         Icon icon = null;
         if (istoets) 
           icon = new ImageIcon(DwoHelper.getResourceImage("resources/zelftoets.png"));
         else
           icon = new ImageIcon(DwoHelper.getResourceImage("resources/lesstof.png"));
         HeaderPanel hp = new HeaderPanel(text, true);
-        hp.setIcon(icon);
+        //hp.setIcon(icon);
         hp.setHorizontalAlignment(SwingConstants.LEFT);
         hp.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
         if (!scoView && !courseView) // deeplink
