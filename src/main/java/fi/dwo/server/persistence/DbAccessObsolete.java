@@ -2,15 +2,13 @@ package fi.dwo.server.persistence;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.Hashtable;
 import java.util.Vector;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.commons.exceptions.DwoXmlRpcException;
-
 public interface DbAccessObsolete {
+  public Vector<Object> getHasRoleUser(int uid, int sgid) throws IOException, XmlRpcException, SQLException;
+
 /*  public Vector getResults(Vector courses, int userID) throws IOException, XmlRpcException, SQLException;
 
   public Vector getResults(Vector courses, int classID, int userID) throws IOException, XmlRpcException, SQLException;

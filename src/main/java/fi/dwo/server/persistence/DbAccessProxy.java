@@ -623,7 +623,7 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, /*ScormA
 
     @Override
     public Vector<Object> getHasRoleUser(int uid, int sgid) throws IOException, XmlRpcException, SQLException {
-        return getDelegate().getHasRoleUser(uid, sgid);
+        return getDelegateObsolete().getHasRoleUser(uid, sgid);
     }
 
 //    @Override
