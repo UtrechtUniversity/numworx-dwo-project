@@ -175,7 +175,8 @@ public class HeaderPanel extends JPanel {
         }
         buttonBox = box;
         if (buttonBox != null) {
-            add(buttonBox, 1);
+            add(buttonBox, 0);
+            buttonBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
             buttonBox.setAlignmentY(BOTTOM_ALIGNMENT);
             buttonBox.setMaximumSize(buttonBox.getPreferredSize());
         }

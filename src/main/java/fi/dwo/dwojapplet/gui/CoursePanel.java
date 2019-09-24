@@ -310,29 +310,29 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
     public JComponent getHeaderPanel() {
 
         HeaderPanel hp = new HeaderPanel(course.getName(), true);
-        if (!GuiConstants.GUI_IMAGE_BG) {
-            hp.setHorizontalAlignment(SwingConstants.LEFT);
-            Image courseLogo;
-            courseLogo = course.getCourseLogo();
-            MediaTracker tr = new MediaTracker(this);
-            tr.addImage(courseLogo, 0);
-            try {
-                tr.waitForAll();
-            } catch (Exception e) {
-            }
-            courseLogo = courseLogo.getScaledInstance(courseLogo.getWidth(null) / 2, courseLogo.getHeight(null) / 2, Image.SCALE_SMOOTH);
-            tr.addImage(courseLogo, 0);
-            try {
-                tr.waitForAll();
-            } catch (Exception e) {
-            }
-            ImageIcon icon = new ReducedImageIcon(courseLogo);
-            hp.setIcon(icon);
-            hp.setIconTextGap(20);
-            Border oldBorder = hp.getBorder();
-            Border gapBorder = BorderFactory.createEmptyBorder(0, 10, 0, 0);
-            hp.setBorder(BorderFactory.createCompoundBorder(oldBorder, gapBorder));
-        }
+//        if (false) {
+//            hp.setHorizontalAlignment(SwingConstants.LEFT);
+//            Image courseLogo;
+//            courseLogo = course.getCourseLogo();
+//            MediaTracker tr = new MediaTracker(this);
+//            tr.addImage(courseLogo, 0);
+//            try {
+//                tr.waitForAll();
+//            } catch (Exception e) {
+//            }
+//            courseLogo = courseLogo.getScaledInstance(courseLogo.getWidth(null) / 2, courseLogo.getHeight(null) / 2, Image.SCALE_SMOOTH);
+//            tr.addImage(courseLogo, 0);
+//            try {
+//                tr.waitForAll();
+//            } catch (Exception e) {
+//            }
+//            ImageIcon icon = new ReducedImageIcon(courseLogo);
+//            hp.setIcon(icon);
+//            hp.setIconTextGap(20);
+//            Border oldBorder = hp.getBorder();
+//            Border gapBorder = BorderFactory.createEmptyBorder(0, 10, 0, 0);
+//            hp.setBorder(BorderFactory.createCompoundBorder(oldBorder, gapBorder));
+//        }
         if (!getCourseView()) {
             hp.setButtonBox(GuiCreator.instance().getButtonBox(this));
         }

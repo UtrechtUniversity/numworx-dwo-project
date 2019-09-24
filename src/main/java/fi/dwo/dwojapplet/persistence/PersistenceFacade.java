@@ -947,10 +947,10 @@ public class PersistenceFacade {
     private ResultsModuleIF resultsModule;
     public void setResultsModule(ResultsModuleIF resultsModule) {
       this.resultsModule = resultsModule;
-      MapperIF m = MapperCreator.instance(UserResultList.class);
-      if (m instanceof UserResultListMapper) {
-          ((UserResultListMapper) m).setResultsModule(resultsModule);
-      }
+//      MapperIF m = MapperCreator.instance(UserResultList.class);
+//      if (m instanceof UserResultListMapper) {
+//          ((UserResultListMapper) m).setResultsModule(resultsModule);
+//      }
     }
 
     public Vector getResultCount(DomCoursesOfSchoolClass4Teacher result) {
@@ -1061,9 +1061,9 @@ public class PersistenceFacade {
       put(id, cls, SchoolClass.class);
     }
 
-    public void clearCurrentUserResultListDataCache() {
-      clearCurrentMapperDataCache(UserResultList.class);
-    }
+//    public void clearCurrentUserResultListDataCache() {
+//      //clearCurrentMapperDataCache(UserResultList.class);
+//    }
 
     public AppletConfig getAppletConfig(int i) throws PersistenceException {
       return get(i, AppletConfig.class);

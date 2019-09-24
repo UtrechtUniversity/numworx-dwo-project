@@ -152,32 +152,32 @@ class UserMapper extends XmlRpcMapper {
         return super.get(ht);
     }
 
-    @Override
-    public Object get(int uid, Integer sgid) {
-        String key = Integer.toString(uid).concat("-").concat(sgid.toString());
-        if (hasRoleObjects.containsKey(key)) {
-            return hasRoleObjects.get(key);
-        } else {
-            if(objects.containsKey(uid)){
-                User u = (User) objects.get(uid);
-                if(u!=null && PersistenceFacade.idOf(u.getSchoolGroupID())==sgid.intValue()){
-                    return u;
-                }
-            }
-            Vector v = new Vector();
-            DbAccessIF dbAccess = DbAccessCreator.instance();
-            try {
-                v =  dbAccess.getHasRoleUser(uid, sgid.intValue());
-                if (!v.isEmpty()) {                    
-                    return getObjectFromReturn((Hashtable) v.get(0));
-                }
-
-            } catch (Exception ex) {
-                Logger.getLogger(ClassMapper.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return null;
-        }
-    }
+//    @Override
+//    public Object get(int uid, Integer sgid) {
+//        String key = Integer.toString(uid).concat("-").concat(sgid.toString());
+//        if (hasRoleObjects.containsKey(key)) {
+//            return hasRoleObjects.get(key);
+//        } else {
+//            if(objects.containsKey(uid)){
+//                User u = (User) objects.get(uid);
+//                if(u!=null && PersistenceFacade.idOf(u.getSchoolGroupID())==sgid.intValue()){
+//                    return u;
+//                }
+//            }
+//            Vector v = new Vector();
+//            DbAccessIF dbAccess = DbAccessCreator.instance();
+//            try {
+//                v =  dbAccess.getHasRoleUser(uid, sgid.intValue());
+//                if (!v.isEmpty()) {                    
+//                    return getObjectFromReturn((Hashtable) v.get(0));
+//                }
+//
+//            } catch (Exception ex) {
+//                Logger.getLogger(ClassMapper.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//            return null;
+//        }
+//    }
         /*
      * (non-Javadoc)
      * 

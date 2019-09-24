@@ -4,7 +4,6 @@ import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import fi.dwo.dwojapplet.persistence.UserResultListMapper;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -156,8 +155,8 @@ public class UserResultsModule implements Comparator<UserResultList>, ResultsMod
 
     //@Override
     private void reset() {
-        PersistenceFacade.instance().clearCurrentUserResultListDataCache();
-        PersistenceFacade.instance().setResultsModule(this);
+//        PersistenceFacade.instance().clearCurrentUserResultListDataCache();
+//        PersistenceFacade.instance().setResultsModule(this);
         currentlyZoomedLesson = null;
         currentlyZoomedUser = null;
         currentlyOrderedUser = null;

@@ -133,8 +133,7 @@ public class MainPanel extends JPanel {
             fiLogo = DwoHelper.getResourceImage(GuiConstants.WISWEB_LOGO_SMALL_LOCATION);
             ImageIcon ip = new ImageIcon(fiLogo);
 
-            DomSchoolsRolesAndClassesV2 schoolLogins = DwoHelper.getSchoolLogins();
-            String roleName = schoolLogins == null ? "" : TextMapper.getText(schoolLogins.getActiveSchoolRoleAndClass().getRole().getRoleName());
+            String roleName = "AUTHOR";
             l = new JLabel((roleName).toUpperCase()); // ROL
             l.setIcon(ip);
             l.setVerticalTextPosition(JLabel.CENTER);

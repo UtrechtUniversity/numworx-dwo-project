@@ -12,6 +12,8 @@ import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+
+import fi.dwo.dwojapplet.gui.numworx.Constants;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -479,7 +481,13 @@ public class GuiCreatorTeacher extends GuiCreator {
                 return null;
             }
         }
-        return fx(new JButton(new CourseManagementAction(courseChoisePanel)));
+        return fx(y(new JButton(new CourseManagementAction(courseChoisePanel))));
+    }
+
+    private JButton y(JButton b) {
+      b.setBackground(Constants.COLOR30);
+      b.setForeground(Constants.COLOR15);
+      return b;
     }
 
     @Override
@@ -499,7 +507,7 @@ public class GuiCreatorTeacher extends GuiCreator {
         if (noAdmin && coursePanel.getCourse().getSchoolID() == 0) {
             return null;
         }
-        return fx(new JButton(new ScoManagementAction(coursePanel)));
+        return fx(y(new JButton(new ScoManagementAction(coursePanel))));
     }
 
     @Override
@@ -524,7 +532,7 @@ public class GuiCreatorTeacher extends GuiCreator {
             }
             return fx(box);
         }
-        return fx(new JButton(new ScoParameterAction(scoPanel)));
+        return fx(y(new JButton(new ScoParameterAction(scoPanel))));
     }
 
     @Override

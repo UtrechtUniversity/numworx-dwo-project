@@ -290,6 +290,10 @@ public class CenterPanel extends JPanel implements CourseContainer {
         showMenu = true;
         mainPanel.setHeaderPanel(panel.getSubHeaderPanel());
         subHeader.setSubHeaderPanel(panel.getHeaderPanel());
+        Color background = panel.getSubHeaderColor();
+        if (background == null) 
+          background = GuiConstants.MAIN_BACKGROUND;
+        subHeader.setBackground(background);
 
         GuiCreator.instance().setReady();
         SwingUtilities.invokeLater(new RequestFocusAST(c));
@@ -363,6 +367,10 @@ public class CenterPanel extends JPanel implements CourseContainer {
         showMenu = false;
         mainPanel.setHeaderPanel(panel.getSubHeaderPanel());
         subHeader.setSubHeaderPanel(panel.getHeaderPanel());
+        Color background = panel.getSubHeaderColor();
+        if (background == null) 
+          background = GuiConstants.MAIN_BACKGROUND;
+        subHeader.setBackground(background);
 //        repaint();
     }
 

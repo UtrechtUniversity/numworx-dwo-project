@@ -187,6 +187,8 @@ public abstract class GuiConstants {
 
         if (profile == 77) {
           HEADER_COLOR = new Color(0x314770);
+          HEADER_TEXT = new Font("Ubuntu", Font.BOLD, 24);
+
         } else
         
         

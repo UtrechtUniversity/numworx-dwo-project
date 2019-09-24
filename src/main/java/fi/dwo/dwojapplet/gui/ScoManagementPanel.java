@@ -13,6 +13,7 @@ import fi.dwo.dwojapplet.gui.action.DeleteAction;
 import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
 import fi.dwo.dwojapplet.gui.action.NewAction;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import sun.security.action.GetBooleanSecurityPropertyAction;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
 import java.awt.BorderLayout;
@@ -40,6 +41,8 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
+
+import fi.dwo.dwojapplet.gui.numworx.Constants;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
 import fi.dwo.dwojapplet.gui.numworx.JCheckBox;
 import javax.swing.JComponent;
@@ -148,7 +151,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         super(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 30, 0, 10));
         this.course = course;
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setBackground(Constants.COLOR20);
         //this.setSize(620, 485);
         //this.setSize(600, 470);
         //setPreferredSize(getSize());
@@ -571,6 +574,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         //jtbl.setLocation(30, label.getSize().height
         //        + label.getLocation().y+10);
         //TableUtil.shrinkToFit(table, jtbl, 520-30, 405);
+        table.setBackground(getSubHeaderColor());
+        table.setGridColor(getSubHeaderColor());
         return table;
     }
 
@@ -586,11 +591,18 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 
     @Override
     public JComponent getHeaderPanel() {
-        HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIS_SCO_MANAGEMENT));
+        HeaderPanel hp = new HeaderPanel(course.getName());
+        hp.setBackground(getSubHeaderColor());
         stopBtn = new JButton(TextMapper.getText(TextMapper.GUIH_STOP_EDIT));
         stopBtn.addActionListener(this);
+        stopBtn.setBackground(Constants.COLOR30);
         hp.setButtonBox(GuiCreator.instance().fx(stopBtn));
         return hp;
+    }
+
+    @Override
+    public Color getSubHeaderColor() {
+      return Constants.COLOR20;
     }
 
     /**

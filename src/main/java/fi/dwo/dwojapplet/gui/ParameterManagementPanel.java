@@ -38,6 +38,8 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+
+import fi.dwo.dwojapplet.gui.numworx.Constants;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -319,10 +321,11 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
      */
     @Override
     public JComponent getHeaderPanel() {
-        HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIPA_SCO_EDIT));
-        //hp.setBackground(Color.gray);
+        HeaderPanel hp = new HeaderPanel(sco.getScoName());
+        hp.setBackground(getSubHeaderColor());
         Box box = Box.createHorizontalBox();
         box.add(stopBtn = new JButton(TextMapper.getText(TextMapper.GUIH_STOP_EDIT)));
+        stopBtn.setBackground(Constants.COLOR30);
         box.add(Box.createHorizontalStrut(10));
         box.add(saveBtn = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_SAVE)));
         box.add(Box.createHorizontalStrut(10));
@@ -678,6 +681,12 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     public void stateChanged(ChangeEvent e) {
 
 
+    }
+    public static Color BG_BLUE = Constants.COLOR20;
+
+    @Override
+    public Color getSubHeaderColor() {
+      return BG_BLUE;
     }
 
     /**

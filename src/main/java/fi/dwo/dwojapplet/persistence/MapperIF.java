@@ -36,16 +36,16 @@ interface MapperIF<T> {
     public T get(int oid) throws IOException, XmlRpcException,
             SQLException, PersistenceException;
 
-    /** only supported for users
-     * @param uid
-     * @param sgid
-     * @return 
-     * @throws java.io.IOException
-     * @throws org.apache.xmlrpc.applet.XmlRpcException
-     * @throws java.sql.SQLException 
-     */
-    public T get(int uid, Integer sgid) throws IOException, XmlRpcException,
-            SQLException;
+//    /** only supported for users
+//     * @param uid
+//     * @param sgid
+//     * @return 
+//     * @throws java.io.IOException
+//     * @throws org.apache.xmlrpc.applet.XmlRpcException
+//     * @throws java.sql.SQLException 
+//     */
+//    public T get(int uid, Integer sgid) throws IOException, XmlRpcException,
+//            SQLException;
     
     /**
      * This method saves an object in the cache.<br>

@@ -977,13 +977,13 @@ class DbAccessClient extends Client implements DbAccessIF {
 //        return (java.util.Vector) object;
 //    }
 
-    @Override
-    public Vector<Object> getHasRoleUser(int uid, int sgid) throws  IOException, XmlRpcException, SQLException{
-        Vector vv = new Vector(2);
-        vv.addElement(new Integer(uid));
-        vv.addElement(new Integer(sgid));
-        Object object = invoke("getHasRoleUser", vv);
-        return (java.util.Vector) object;
-    }    
+ // @Override
+//    public Vector<Object> getHasRoleUser(int uid, int sgid) throws  IOException, XmlRpcException, SQLException{
+//        Vector vv = new Vector(2);
+//        vv.addElement(new Integer(uid));
+//        vv.addElement(new Integer(sgid));
+//        Object object = invoke("getHasRoleUser", vv);
+//        return (java.util.Vector) object;
+//    }    
 
 }

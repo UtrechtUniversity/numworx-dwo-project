@@ -36,7 +36,7 @@ class MapperCreator {
         {"Course", "CourseMapper"},
         {"Sco", "ScoMapper"},
         {"SchoolClass", "ClassMapper"},
-        {"UserResultList", "UserResultListMapper"},
+//        {"UserResultList", "UserResultListMapper"},
         {"AppletConfig", "AppletConfigMapper"},
  //       {"DwoProfile", "DwoProfileMapper"},
         {"AppletData", "AppletDataMapper"},
@@ -90,7 +90,7 @@ class MapperCreator {
 // de applet mapper levert een Class<Applet> op
 // de userresultlist mapper levert een Vector<UserResultList> op.
         classList.put(Class.class, classList.get(Applet.class));
-        classList.put(Vector.class, classList.get(UserResultList.class));
+//        classList.put(Vector.class, classList.get(UserResultList.class));
     }
 
     /**

@@ -62,5 +62,15 @@ public class SchoolAdminMenuPanel extends UserMenuPanel {
         }
 
     }
+    @Override
+    public void setEditing(boolean b) {
+        boolean enabled = !b;
+        setEnabled(enabled);
+        for (int i = 0; i < getComponentCount(); i++) {
+            getComponent(i).setEnabled(enabled);
+        }
+        //repaint();
+
+    }
 
 }

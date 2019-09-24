@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JApplet;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
@@ -294,7 +295,14 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
     public JComponent getHeaderPanel() {
 // TODO cleanup needed!!!!
         String text = sco.getScoName();
+        boolean istoets = false;
+        Icon icon = null;
+        if (istoets) 
+          icon = new ImageIcon(DwoHelper.getResourceImage("resources/zelftoets.png"));
+        else
+          icon = new ImageIcon(DwoHelper.getResourceImage("resources/lesstof.png"));
         HeaderPanel hp = new HeaderPanel(text, true);
+        hp.setIcon(icon);
         hp.setHorizontalAlignment(SwingConstants.LEFT);
         hp.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
         if (!scoView && !courseView) // deeplink
@@ -307,15 +315,15 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
         return hp;
     }
 
-    public void xxxpaintComponent(Graphics g) {
-        if (GuiConstants.GUI_IMAGE_BG) {
-            Point p = DwoHelper.getComponentLocation(this);
-            Image image = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO);
-            if (image != null && p != null) {
-                g.drawImage(image, -p.x, -p.y, null);
-            }
-        }
-    }
+//    public void xxxpaintComponent(Graphics g) {
+//        if (GuiConstants.GUI_IMAGE_BG) {
+//            Point p = DwoHelper.getComponentLocation(this);
+//            Image image = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO);
+//            if (image != null && p != null) {
+//                g.drawImage(image, -p.x, -p.y, null);
+//            }
+//        }
+//    }
 
     /**
      * Invoked when an action occurs.

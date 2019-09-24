@@ -2,6 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\CenterSubPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
@@ -45,4 +46,5 @@ public interface CenterSubPanel extends ChangeListener {
     Object getUserObject();
 
     default JComponent getSubHeaderPanel() { return null; }
+    default Color getSubHeaderColor() { return  null; }
 }

@@ -44,6 +44,8 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
+
+import fi.dwo.dwojapplet.gui.numworx.Constants;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
 import fi.dwo.dwojapplet.gui.numworx.JCheckBox;
 import javax.swing.JComponent;
@@ -246,12 +248,13 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 			super();
 			Image book = DwoHelper.getResourceImage("resources/book.png");
 			setLeafIcon(new ImageIcon(book));
-			
+            ImageIcon folder = new ImageIcon(DwoHelper.getResourceImage("resources/folder.png"));
+            setOpenIcon(folder);
 			setIcon(getLeafIcon());
 			Dimension leaf = getPreferredSize();
 			setIcon(getOpenIcon());
 			Dimension open = getPreferredSize();
-			
+			setOpaque(true);
 			int w = Math.max(leaf.width, open.width);
 			int h = Math.max(leaf.height, open.height);
 			preferredSize = new Dimension(w,h);
@@ -400,7 +403,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         upImage = DwoHelper.getResourceImage(GuiConstants.UP_SCO_IMAGE);
         downImage = DwoHelper.getResourceImage(GuiConstants.DOWN_SCO_IMAGE);
        this.courses = courses;
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setBackground(getSubHeaderColor());
         JPanel panel = new JPanel(new BorderLayout(5,5));
         panel.setOpaque(false);
         add(panel, BorderLayout.CENTER);
@@ -565,6 +568,9 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         jTable.setSize(jTable.getPreferredSize());
         tablePane.add(jTable);
         tablePane.invalidate();
+        jTable.setBackground(getSubHeaderColor());
+        jTable.setGridColor(getSubHeaderColor());
+        jTable.setBorder(BorderFactory.createEmptyBorder());
         validate();
         repaint();
     }
@@ -590,10 +596,12 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     
      @Override
     public JComponent getHeaderPanel() {
-    	HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIC_COURSE_MANAGEMENT));
+    	HeaderPanel hp = new HeaderPanel(map.toString());
+    	hp.setBackground(Constants.COLOR20);
     	stopBtn = new JButton(TextMapper.getText(TextMapper.GUIH_STOP_EDIT));
     	stopBtn.setActionCommand("stop");
     	stopBtn.addActionListener(this);
+    	stopBtn.setBackground(Constants.COLOR30);
     	hp.setButtonBox(GuiCreator.instance().fx(stopBtn));
 		return hp;
     }
@@ -916,6 +924,14 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
             course.setImageUrl("");
             update = true;
         }
+        
+        
+        
+    }
+
+    @Override
+    public Color getSubHeaderColor() {
+      return Constants.COLOR20;
     }
 
 	
