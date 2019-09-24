@@ -653,7 +653,7 @@ public interface DbAccessIF  {
 
 //    public boolean isInTeacherRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 
-    public Vector<Object> getHasRoleUser(int uid, int sgid) throws IOException, XmlRpcException, SQLException;
+//    public Vector<Object> getHasRoleUser(int uid, int sgid) throws IOException, XmlRpcException, SQLException;
 
 //	public Vector getCoursesJS(int profileValue) throws IOException, XmlRpcException,
 //	SQLException;
