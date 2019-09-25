@@ -30,7 +30,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;

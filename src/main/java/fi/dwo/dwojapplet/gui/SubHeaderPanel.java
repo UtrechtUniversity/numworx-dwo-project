@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 class SubHeaderPanel extends JPanel {
 
-  private static final int HEIGHT = 40;
+  private static final int HEIGHT = 50;
   private JComponent sub;
   
   SubHeaderPanel() {
@@ -28,7 +28,9 @@ class SubHeaderPanel extends JPanel {
     this.sub = sub;
     if (sub != null) {
       add(sub);
+      sub.setAlignmentY(0.5f);
     }
+    repaint();
   }
 
 }

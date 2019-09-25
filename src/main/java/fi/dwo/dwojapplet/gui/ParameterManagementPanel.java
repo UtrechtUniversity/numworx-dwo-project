@@ -46,7 +46,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.event.ChangeEvent;
 
 /**
@@ -326,6 +326,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         Box box = Box.createHorizontalBox();
         box.add(stopBtn = new JButton(TextMapper.getText(TextMapper.GUIH_STOP_EDIT)));
         stopBtn.setBackground(Constants.COLOR30);
+        stopBtn.setForeground(Constants.COLOR15);
         box.add(Box.createHorizontalStrut(10));
         box.add(saveBtn = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_SAVE)));
         box.add(Box.createHorizontalStrut(10));
@@ -333,9 +334,11 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 
         PreviewHtml5 action = new PreviewHtml5(this, sco);
         if (action.isEnabled()) {
-           box.add(Box.createHorizontalStrut(10));
-           box.add(new JButton(action));
-        }
+           //box.add(Box.createHorizontalStrut(10));
+           //box.add(new JButton(action));
+          previewBtn.setAction(action);
+        } else
+          previewBtn.addActionListener(this);
 
         if (DwoHelper.isAdminLoggedIn()) {
             box.add(Box.createHorizontalStrut(30));
@@ -346,7 +349,6 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         hp.setButtonBox(GuiCreator.instance().fx(box));
 
         stopBtn.addActionListener(this);
-        previewBtn.addActionListener(this);
         saveBtn.addActionListener(this);
         return hp;
     }

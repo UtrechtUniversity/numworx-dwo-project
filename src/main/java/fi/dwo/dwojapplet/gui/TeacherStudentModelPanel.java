@@ -37,7 +37,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
@@ -330,6 +330,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
 
         Box header = Box.createHorizontalBox();
         header.add(addModelButton);
+        header.add(Box.createRigidArea(new Dimension(10,1)));
         header.add(importModelButton);
         header.add(Box.createHorizontalGlue());
 //        header.add(cancelButton);
@@ -375,7 +376,8 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
      */
     @Override
     public JComponent getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT));
+        HeaderPanel b = new HeaderPanel(TextMapper.getText(TextMapper.GUIMNU_STUDENTMODELS));
+        return b;
     }
 
     /**

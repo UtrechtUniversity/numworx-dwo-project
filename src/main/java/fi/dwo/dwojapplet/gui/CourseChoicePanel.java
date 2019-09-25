@@ -9,11 +9,13 @@ import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.Descriptor;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
+import fi.dwo.dwojapplet.gui.numworx.Constants;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 import fi.dwo.dwojapplet.gui.wiskopdr.LinkIF;
 import java.applet.AppletContext;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -25,9 +27,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JViewport;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
@@ -43,6 +48,14 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class CourseChoicePanel extends JPanel implements ActionListener,
         CenterSubPanel, Scrollable, LinkIF 
 {
+
+    /* (non-Javadoc)
+   * @see fi.dwo.dwojapplet.gui.CenterSubPanel#getSubHeaderColor()
+   */
+  @Override
+  public Color getSubHeaderColor() {
+    return Constants.COLOR10;
+  }
 
     private CenterPanel center;
 
@@ -104,18 +117,20 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
      */
     public CourseChoicePanel(Descriptor dwoProfile, CourseMap[] courseList, Object userObject) {
         super();
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
-        setLayout(new BorderLayout());
+        this.setBackground(getSubHeaderColor());
+
+        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         this.dwoProfile = dwoProfile;
         this.userObject = userObject;
 
         initialize(dwoProfile, courseList);
+        //setBorder(BorderFactory.createLineBorder(Color.red));
     }
 
     private void initialize(Descriptor dwoProfile, CourseMap[] courseList) {
         CourseMap[] courses = courseList;
-
+        setBackground(getSubHeaderColor());
         //Panel ph;
         //ph = new Panel(null);
         String s = dwoProfile.getText();
@@ -123,19 +138,34 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
         if ((s != null) && (!s.trim().equals(""))) {
             if (s.startsWith("<html>")) {
                 URL base = DwoHelper.getServerUrlPath();
-                profileTextArea = new JMathPane(base);
+                profileTextArea = new JMathPane(base){
+
+                  public Dimension getMaximumSize() {
+                    return super.getPreferredSize();
+                  } 
+                  
+                };
             } else if (s.startsWith("H4sIAAAAAA")) {
                 wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s);
                 wiskOpdrPanel.setJSObjectOwner(this);
                 wiskOpdrPanel.setLocation(20, 20);
+                wiskOpdrPanel.setBackground(getSubHeaderColor());
                 JPanel wrapPanel = new JPanel();
                 wrapPanel.setOpaque(false);
                 wrapPanel.setLayout(null);
                 wrapPanel.setPreferredSize(new Dimension(wiskOpdrPanel.getWidth() + 40, (wiskOpdrPanel.getHeight() + 40)));
+                wrapPanel.setMaximumSize(wrapPanel.getPreferredSize());
                 wrapPanel.add(wiskOpdrPanel);
-                add(wrapPanel, BorderLayout.NORTH);
+                
+                add(wrapPanel);
             } else {
-                JTextArea area = new JTextArea();
+                JTextArea area = new JTextArea() {
+
+                  public Dimension getMaximumSize() {
+                    return super.getPreferredSize();
+                  } 
+                  
+                } ;
                 area.setLineWrap(true);
                 area.setWrapStyleWord(true);
                 area.setColumns(20);
@@ -149,7 +179,8 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
                 profileTextArea.setBounds(20, 20, 600, 110);
                 profileTextArea.setOpaque(false);
                 profileTextArea.setText(s);
-                add(profileTextArea, BorderLayout.NORTH);
+                profileTextArea.setBackground(getSubHeaderColor());
+                add(profileTextArea);
             }
 
         }
@@ -159,8 +190,14 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
         //profileTextArea.setPreferredSize(profileTextArea.getMinimumSize());
         //ph.setPreferredSize(getSize());
         // ph.setMaximumSize(getSize());
-        JPanel pp = new JPanel();
-        pp.setBackground(GuiConstants.MAIN_BACKGROUND);
+        JPanel pp = new JPanel(){
+
+          public Dimension getMaximumSize() {
+            return new Dimension(Short.MAX_VALUE, getPreferredSize().height);
+          } 
+          
+        };
+        pp.setBackground(getSubHeaderColor());
         pp.setOpaque(true);
         pp.setDoubleBuffered(false);
         add(pp);
@@ -225,13 +262,15 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
         unit.width = maxWidth / 2;
         unit.height = maxHeight / 4;
         setMinimumSize(pref);
+        setMaximumSize(new Dimension(pref.width, Short.MAX_VALUE));
+        add(Box.createGlue());
     }
 
-    @Override
-    public void paint(Graphics g) {
-        //validate();
-        super.paint(g);
-    }
+//    @Override
+//    public void paint(Graphics g) {
+//        //validate();
+//        super.paint(g);
+//    }
 
     /**
      * Invoked when an action occurs.
@@ -281,7 +320,7 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
             p = new HeaderPanel(dwoProfile.getHeader(), true); // wim: Wat wordt hier bedoeld?
         }
         p.setButtonBox(GuiCreator.instance().getButtonBox(this));
-
+        p.setBackground(getSubHeaderColor());
         return p;
     }
     
@@ -323,7 +362,11 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
 
     @Override
     public boolean getScrollableTracksViewportHeight() {
-        return false;
+      if (getParent() instanceof JViewport)
+      {
+          return getParent().getHeight() > getPreferredSize().height;
+      }
+      return false;
     }
 
     @Override

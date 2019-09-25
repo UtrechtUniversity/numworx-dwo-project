@@ -60,7 +60,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
+import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;

@@ -27,6 +27,8 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+
+import fi.dwo.dwojapplet.gui.numworx.Constants;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -46,6 +48,14 @@ import javax.swing.text.JTextComponent;
 public class CoursePanel extends JPanel implements CenterSubPanel,
         ActionListener, LinkIF
         {
+
+    /* (non-Javadoc)
+   * @see fi.dwo.dwojapplet.gui.CenterSubPanel#getSubHeaderColor()
+   */
+  @Override
+  public Color getSubHeaderColor() {
+    return Constants.COLOR10;
+  }
 
     private static final int MINWIDTH = 600;
 
@@ -86,7 +96,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
     public CoursePanel(Course course) {
         this.course = course;
         this.setLayout(null);
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setBackground(Constants.COLOR10);
         this.setSize(MINWIDTH, MINHEIGHT);
 
         ScoLinkedLabel l;
@@ -172,6 +182,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
         }
 
         setPreferredSize(getSize());
+        //setBorder(BorderFactory.createLineBorder(Color.GREEN));
     }
 
     /**
@@ -283,6 +294,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
                 button.setLocation(ipx - button.getSize().width, nextY - 5);
                 ((ResultScoreButton) button).setBarMode();
                 button.setVisible(sco.isShowScore());
+                button.setBackground(getSubHeaderColor());
                 this.add(button);
                 nextY += l.getSize().height + 3;
             }
@@ -310,6 +322,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
     public JComponent getHeaderPanel() {
 
         HeaderPanel hp = new HeaderPanel(course.getName(), true);
+        hp.setBackground(getSubHeaderColor());
 //        if (false) {
 //            hp.setHorizontalAlignment(SwingConstants.LEFT);
 //            Image courseLogo;

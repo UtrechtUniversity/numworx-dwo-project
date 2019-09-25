@@ -21,7 +21,7 @@ import fi.dwo.dwojapplet.gui.numworx.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import fi.dwo.dwojapplet.gui.numworx.JRadioButton;
-import javax.swing.JScrollPane;
+import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import javax.swing.JTree;

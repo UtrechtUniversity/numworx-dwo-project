@@ -22,7 +22,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
+import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.border.Border;
 
 /**

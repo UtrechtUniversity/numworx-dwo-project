@@ -23,7 +23,7 @@ import fi.dwo.dwojapplet.gui.numworx.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.JTextArea;
 import fi.dwo.dwojapplet.gui.numworx.JTextField;
 import javax.swing.text.AbstractDocument;

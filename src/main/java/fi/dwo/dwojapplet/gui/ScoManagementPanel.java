@@ -596,6 +596,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         stopBtn = new JButton(TextMapper.getText(TextMapper.GUIH_STOP_EDIT));
         stopBtn.addActionListener(this);
         stopBtn.setBackground(Constants.COLOR30);
+        stopBtn.setForeground(Constants.COLOR15);
         hp.setButtonBox(GuiCreator.instance().fx(stopBtn));
         return hp;
     }

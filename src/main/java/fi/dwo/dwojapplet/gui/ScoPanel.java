@@ -28,6 +28,8 @@ import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JApplet;
+
+import fi.dwo.dwojapplet.gui.numworx.Constants;
 import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -83,6 +85,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
         this.sco = sco;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setOpaque(!GuiConstants.GUI_IMAGE_BG);
+        this.setBorder(BorderFactory.createEmptyBorder(120, 0, 0, 0));
         //this.setBackground(Color.red);
         //this.setSize(789, 492);
         Dimension dim = DwoHelper.getApplet().getSize();
@@ -183,6 +186,14 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
     @Override
     public void setCenterPanel(CenterPanel centerPanel) {
         center = centerPanel;
+    }
+
+    /* (non-Javadoc)
+     * @see fi.dwo.dwojapplet.gui.CenterSubPanel#getSubHeaderColor()
+     */
+    @Override
+    public Color getSubHeaderColor() {
+      return Constants.COLOR20;
     }
 
     @Override
@@ -295,16 +306,16 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
     public JComponent getHeaderPanel() {
 // TODO cleanup needed!!!!
         String text = sco.getScoName();
-        boolean istoets = false; // FIXME moeilijk te bepalen
-        Icon icon = null;
-        if (istoets) 
-          icon = new ImageIcon(DwoHelper.getResourceImage("resources/zelftoets.png"));
-        else
-          icon = new ImageIcon(DwoHelper.getResourceImage("resources/lesstof.png"));
+//        boolean istoets = false; // FIXME moeilijk te bepalen
+//        Icon icon = null;
+//        if (istoets) 
+//          icon = new ImageIcon(DwoHelper.getResourceImage("resources/zelftoets.png"));
+//        else
+//          icon = new ImageIcon(DwoHelper.getResourceImage("resources/lesstof.png"));
         HeaderPanel hp = new HeaderPanel(text, true);
+        hp.setBackground(getSubHeaderColor());
         //hp.setIcon(icon);
         hp.setHorizontalAlignment(SwingConstants.LEFT);
-        hp.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
         if (!scoView && !courseView) // deeplink
         {
             JComponent buttonBox = GuiCreator.instance().getButtonBox(this);

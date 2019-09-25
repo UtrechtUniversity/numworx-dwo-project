@@ -602,6 +602,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     	stopBtn.setActionCommand("stop");
     	stopBtn.addActionListener(this);
     	stopBtn.setBackground(Constants.COLOR30);
+        stopBtn.setForeground(Constants.COLOR15);
     	hp.setButtonBox(GuiCreator.instance().fx(stopBtn));
 		return hp;
     }

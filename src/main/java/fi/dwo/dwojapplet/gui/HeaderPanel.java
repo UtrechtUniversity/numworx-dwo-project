@@ -47,13 +47,13 @@ public class HeaderPanel extends JPanel {
         } else {
             setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         }
-        setButtonBox(createButtonBox());
+        //setButtonBox(createButtonBox());
         //add(Box.createHorizontalGlue());
     }
 
     protected JComponent createButtonBox() {
         Box box = Box.createHorizontalBox();
-        box.setBorder(BorderFactory.createEmptyBorder(38, 0, 0, 0));
+        box.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         return box;
 //		return null;
     }

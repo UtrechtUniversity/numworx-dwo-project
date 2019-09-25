@@ -4,7 +4,7 @@ package fi.dwo.dwojapplet.parameters.gui;
 import fi.beans.scorm.Parameter;
 import java.awt.Component;
 import java.util.Hashtable;
-import javax.swing.JScrollPane;
+import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.JTextArea;
 
 public class TextParameterComponent extends ParameterComponent {
