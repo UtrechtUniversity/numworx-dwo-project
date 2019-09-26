@@ -1115,6 +1115,7 @@ public class FormuleRegel extends FormuleElement
 	public void insert(String s)
 	{	if (s == null)
 			return;
+	    s += "@"; // make sure its terminated with @
 		while (s.length() > 0)
 		{
 			char ch0 = s.charAt(0);
