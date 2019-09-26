@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.sco;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.Widget;
@@ -53,6 +54,12 @@ public class ShareFacade implements InteractionView, TekstElementWithFont {
 		ShareFacade.stateMap = stateMap;
 	}
 	
+	static void clearSharedState(String key) {
+	  if (stateMap != null) {
+	    stateMap.put(key, null);
+	  }
+	}
+	
 	public static void clearSharedState() {
 		if(stateMap != null) {
 			stateMap = new JSONObject();
@@ -96,9 +103,10 @@ public class ShareFacade implements InteractionView, TekstElementWithFont {
 			return;
 		}
 		JSONObject other = stateMap.get(shareKey).isObject();
-		HashMap otherMap = JSONUtilities.fromJSONObject(other);
-		HashMap hh = h != null ? new HashMap(h): new HashMap();
-		hh.putAll(otherMap);
+//		HashMap otherMap = JSONUtilities.fromJSONObject(other);
+//		HashMap hh = h != null ? new HashMap(h): new HashMap();
+//		hh.putAll(otherMap);
+		HashMap hh = JSONUtilities.wrapMap(other);
 		delegate.setState(hh);
 	}
 

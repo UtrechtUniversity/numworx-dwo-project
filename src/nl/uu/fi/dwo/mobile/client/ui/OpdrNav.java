@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
+import nl.uu.fi.dwo.mobile.client.sco.ShareFacade;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 
@@ -2280,7 +2281,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		{
 			randomize = true; // Alles opnieuw, dus ook nieuwe random variabelen
 			currentOpdracht = 0;
-
+			ShareFacade.clearSharedState();
 			for (opdracht = 0; opdracht < aantalOpdrachten[currentActiviteit]; opdracht++)
 			{
 				clearState(opdracht, source);
@@ -2322,7 +2323,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			clearState(opdracht, source);
 			if (entry.bolletjesZichtbaar())
 				setButtonCorrect(buttons.get(opdracht), isCorrect[currentActiviteit][opdracht], opdracht);
-
+			{
+			  HashMap<String, Object> map = opdrachten[currentActiviteit][opdracht];
+			  resetShareFacade(map);
+			}
 			resetBezocht(currentActiviteit, opdracht);
 		}
 		source.setBeantwoord(getAantalBeantwoord());
@@ -2351,7 +2355,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			entry.setTitle("Vraag " + (getCurrentOpdracht() + 1) + " van " + getAantalOpdrachten());
 	}
 
-	/**
+	private void resetShareFacade(HashMap<String, Object> map) {
+    // TODO Auto-generated method stub
+      GWT.log("reset share facade for" + map);
+  }
+
+  /**
 	 * Reset bezocht
 	 */
 	public void resetBezocht()
