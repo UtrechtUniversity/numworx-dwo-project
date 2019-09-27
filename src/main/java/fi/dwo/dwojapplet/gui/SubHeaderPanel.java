@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.Dimension;
+import java.awt.Graphics;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -30,7 +31,14 @@ class SubHeaderPanel extends JPanel {
       add(sub);
       sub.setAlignmentY(0.5f);
     }
+    invalidate();
     repaint();
+  }
+
+  @Override
+  public void paint(Graphics g) {
+    if (!isValid()) validate();
+    super.paint(g);
   }
 
 }

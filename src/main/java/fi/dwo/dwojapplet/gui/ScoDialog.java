@@ -378,6 +378,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         printer.setComponent(component);
 // into hbox1        
         hhbox.add(printer.asComponent());hbox1.add(Box.createHorizontalStrut(20));
+        printer.asComponent().setVisible(false);
         } 
         hbox1.add(globalSeal);
         hbox1.add(Box.createHorizontalStrut(10));
@@ -498,6 +499,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         sd.studentSeal.setModel(sealmodel);
         sd.studentSeal.setVisible(true);
         sd.globalSeal.setVisible(true);
+        sd.printer.asComponent().setVisible(true);
         sealmodel.addItemListener(new ItemListener() {
 
             @Override

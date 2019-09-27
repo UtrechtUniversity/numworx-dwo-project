@@ -120,7 +120,7 @@ public class AddScoDialog extends JDialog implements ActionListener,
     private Hashtable radioApplet;
 
     private JPanel table;
-    private JLabel tableTitle;
+//    private JLabel tableTitle;
 
     private LinkedLabel allItems;
 
@@ -165,46 +165,46 @@ public class AddScoDialog extends JDialog implements ActionListener,
         titleBox.add(Box.createHorizontalGlue());
         contentPane.add(titleBox);
 
-        Box panel = Box.createHorizontalBox();
-        panel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.black));
-        panel.add(Box.createRigidArea(new Dimension(10, 20)));
-        contentPane.add(panel);
-        l = new JLabel(TextMapper.getText(TextMapper.GUISDLG_SHOW) + ": ");
-        l.setFont(GuiConstants.NORMAL_TEXT);
-        panel.add(l);
-        panel.add(Box.createHorizontalGlue());
-        LinkedLabel ll = new LinkedLabel(TextMapper.getText(TextMapper.GUISDLG_ALL));
-        allItems = ll;
-        ll.setFont(GuiConstants.NORMAL_TEXT);
-        ll.addActionListener(this);
-        panel.add(ll);
+//        Box panel = Box.createHorizontalBox();
+//        panel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.black));
+//        panel.add(Box.createRigidArea(new Dimension(10, 20)));
+//        contentPane.add(panel);
+//        l = new JLabel(TextMapper.getText(TextMapper.GUISDLG_SHOW) + ": ");
+//        l.setFont(GuiConstants.NORMAL_TEXT);
+//        panel.add(l);
+//        panel.add(Box.createHorizontalGlue());
+//        LinkedLabel ll = new LinkedLabel(TextMapper.getText(TextMapper.GUISDLG_ALL));
+//        allItems = ll;
+//        ll.setFont(GuiConstants.NORMAL_TEXT);
+//        ll.addActionListener(this);
+//        panel.add(ll);
 
-        String s;
-        for (int i = 65; i < 91; i++) {
-            panel.add(Box.createHorizontalGlue());
-            l = new JLabel("-");
-            l.setFont(GuiConstants.NORMAL_TEXT);
-            panel.add(l);
-            panel.add(Box.createHorizontalGlue());
-
-            s = "" + ((char) i);
-            ll = new LinkedLabel(s);
-            ll.setFont(GuiConstants.NORMAL_TEXT);
-            ll.addActionListener(this);
-            panel.add(ll);
-        }
-        panel.add(Box.createHorizontalStrut(10));
+//        String s;
+//        for (int i = 65; i < 91; i++) {
+//            panel.add(Box.createHorizontalGlue());
+//            l = new JLabel("-");
+//            l.setFont(GuiConstants.NORMAL_TEXT);
+//            panel.add(l);
+//            panel.add(Box.createHorizontalGlue());
+//
+//            s = "" + ((char) i);
+//            ll = new LinkedLabel(s);
+//            ll.setFont(GuiConstants.NORMAL_TEXT);
+//            ll.addActionListener(this);
+//            panel.add(ll);
+//        }
+//        panel.add(Box.createHorizontalStrut(10));
 
         table = new ScoTable(null);
         table.setBackground(GuiConstants.MAIN_BACKGROUND);
         table.setLayout(new BoxLayout(table, BoxLayout.Y_AXIS));
-        tableTitle = new JLabel();
-        tableTitle.setText(allItems.getText() + ":");
+//        tableTitle = new JLabel();
+//        tableTitle.setText(allItems.getText() + ":");
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.getViewport().setBackground(table.getBackground());
         JPanel jp = new JPanel(new BorderLayout());
         jp.setBackground(GuiConstants.MAIN_BACKGROUND);
-        jp.add(tableTitle, BorderLayout.NORTH);
+        //jp.add(tableTitle, BorderLayout.NORTH);
         jp.add(scrollPane, BorderLayout.CENTER);
         jp.setBorder(BorderFactory.createEmptyBorder(4, 10, 2, 5));
         contentPane.add(jp);
@@ -417,15 +417,16 @@ public class AddScoDialog extends JDialog implements ActionListener,
             } else {
                 JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUISDLG_MSG_NO_SELECTION));
             }
-        } else if (e.getSource() instanceof LinkedLabel) {
-            tableTitle.setText(((LinkedLabel) e.getSource()).getText() + ":");
-            if (e.getSource() == allItems) {
-                selectChar(null);
-            } else {
-                String s = ((LinkedLabel) e.getSource()).getText();
-                selectChar(s);
-            }
         }
+//        else if (e.getSource() instanceof LinkedLabel) {
+//            tableTitle.setText(((LinkedLabel) e.getSource()).getText() + ":");
+//            if (e.getSource() == allItems) {
+//                selectChar(null);
+//            } else {
+//                String s = ((LinkedLabel) e.getSource()).getText();
+//                selectChar(s);
+//            }
+//        }
 
     }
 
