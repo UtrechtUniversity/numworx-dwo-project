@@ -14,6 +14,9 @@ public class JComboBoxFrame {
     JComboBox<String> box = new JComboBox<>(new String[] { "1", "twee", "3"} );
     main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     main.getContentPane().add(box);
+    JComboBox<String> box1 = new JComboBox<>(new String[] { "1", "twee", "3"} );
+    box1.setEnabled(false);
+    main.getContentPane().add(box1);
     
     javax.swing.JComboBox<String> org = new javax.swing.JComboBox<>(new String[] { "org 1", "org twee"});
     main.getContentPane().add(org);
