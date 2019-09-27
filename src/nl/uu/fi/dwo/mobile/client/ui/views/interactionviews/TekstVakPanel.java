@@ -4583,7 +4583,7 @@ private Object CamelCase(String name) {
 				}
 				catch(Exception e){
 					ObjectMap contentMap = objectMap.getObjectMap("content");
-					maakStap(contentMap);
+					maakStap(contentMap, randomVarNamen, randomVarWaarden);
 					
 				}
 			}
@@ -4664,7 +4664,7 @@ private Object CamelCase(String name) {
 			
 	}
 	
-	public void maakStap(ObjectMap contentMap)
+	public void maakStap(ObjectMap contentMap, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden)
 	{
 		//Heeft omliggende (statistiek)TekstVakPanel nog een feedbackPanel? Dan weghalen.
 		TekstVakPanel statPanel = isInIdeasStatistiek();
@@ -4682,7 +4682,7 @@ private Object CamelCase(String name) {
 		stapNr++;
 		
 		if(contentMap != null) 
-			addTekstVakPanel((HashMap<String, Object>) contentMap, stapNr - 1, breedtes.size() -1);
+			addTekstVakPanel((HashMap<String, Object>) contentMap, randomVarNamen, randomVarWaarden, stapNr - 1, breedtes.size() -1);
 	}
 
 	// visible (default) or hidden.
@@ -4737,9 +4737,9 @@ private Object CamelCase(String name) {
 		resize();
 	}
 	
-	public void addTekstVakPanel(HashMap<String, Object> contentMap, int row, int column)
+	public void addTekstVakPanel(HashMap<String, Object> contentMap, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int row, int column)
 	{
-		TekstVakPanel tvp = new TekstVakPanel(contentMap, null, null);
+		TekstVakPanel tvp = new TekstVakPanel(contentMap, randomVarNamen, randomVarWaarden);
 		tvp.setParent(tekstVakken[row][column]);
 		tvp.zetInstellingen(instellingen);
 		tvp.setKeyboard(kb);

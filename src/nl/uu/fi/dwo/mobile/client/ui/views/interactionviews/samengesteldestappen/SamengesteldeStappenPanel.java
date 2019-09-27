@@ -68,6 +68,10 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	private boolean[] stepRequired = null;
 	private ArrayList<Integer> selectedSteps = new ArrayList<Integer>();
 	
+	String[] randomVarNamen = null;
+	HashMap<String, Number> randomVarWaarden = null;
+	
+	
 	public SamengesteldeStappenPanel(HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int volleBreedte)
 	{
 		if (h != null && h.containsKey("breedte"))
@@ -78,8 +82,8 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 			volledigeBreedte = ((Boolean) h.get("volledigeBreedte")).booleanValue();
 		if (h != null && h.containsKey("interactiePanelLaunchState"))
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
-		//this.randomVarNamen = randomVarNamen;
-		//this.randomVarWaarden = randomVarWaarden;
+		this.randomVarNamen = randomVarNamen;
+		this.randomVarWaarden = randomVarWaarden;
 		if(volledigeBreedte)
 			breedte = volleBreedte;
 		
@@ -170,7 +174,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 		keuzeVakMap.put("breedte", breedte - buttonWidth - labelWidth - 2 * offset - (ideasStatistiek?(offset + buttonWidth):0)); 
 		keuzeVakMap.put("height", buttonHeight);
 		keuzeVakMap.put("launchState", launchState);
-		keuzeVak = new StappenKeuzeVak(keuzeVakMap, null, null);
+		keuzeVak = new StappenKeuzeVak(keuzeVakMap, randomVarNamen, randomVarWaarden);
 		keuzeVak.setParent(this);
 		Widget kvWidget = keuzeVak.asWidget();
 		kvWidget.getElement().getStyle().setProperty("display", "inline-block");
@@ -334,7 +338,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	
 	public void makeStep(ObjectMap contentMap)
 	{
-		stappenVak.maakStap(contentMap);
+		stappenVak.maakStap(contentMap, randomVarNamen, randomVarWaarden);
 		resize(); 
 	}
 	

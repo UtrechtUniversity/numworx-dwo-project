@@ -51,6 +51,9 @@ public class StappenKeuzeVak {
 	boolean isShowing = false;
 	ArrayList<Object> kiesObjects;
 	private int hoogtePopup;
+	String[] randomVarNamen = null;
+	HashMap<String, Number> randomVarWaarden = null;
+	
 	
 	public StappenKeuzeVak(HashMap<String, Object> h, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
 	{
@@ -64,8 +67,8 @@ public class StappenKeuzeVak {
 			launchState = (HashMap<String, Object>) h.get("launchState");
 			
 		
-		//this.randomVarNamen = randomVarNamen;
-		//this.randomVarWaarden = randomVarWaarden;
+		this.randomVarNamen = randomVarNamen;
+		this.randomVarWaarden = randomVarWaarden;
 		
 		basisPanel = new LayoutPanel();
 		basisPanel.setPixelSize(breedte, hoogte);
