@@ -17,6 +17,12 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -249,7 +255,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private Widget getContent(ObjectMap launchdata)
 	{
 		FlowPanel touch = new FlowPanel();
-		touch.addDomHandler(new Tapper(this,touch.getElement()), ClickEvent.getType());
+		Tapper tapper = new Tapper(this,touch.getElement());
+        touch.addDomHandler(tapper, MouseDownEvent.getType());
+        touch.addDomHandler(tapper, MouseUpEvent.getType());
+        touch.addDomHandler(tapper, MouseMoveEvent.getType());
 		flow = touch; // XXX voorlopig ok
 		setState(launchdata);
 		return touch;
@@ -521,7 +530,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		cursor = 0;
 		selectionEnd = -1;
 		flow.clear();
-		flow.add(setCursorWidget(new InlineHTML(" \u00A0")));
+		flow.add(setCursorWidget(new InlineHTML(" \u200A")));
 	}
 
 	@Override
@@ -1118,17 +1127,152 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	
 	
 	
-	class Tapper implements ClickHandler {
+	class Tapper implements /*ClickHandler,*/ MouseDownHandler, MouseUpHandler, MouseMoveHandler {
 		private FormuleEditorIF deze;
 		private Element target;
+        private int downX;
+        private int downY;
+        private Widget downWidget;
+        private int down;
+        private int move;
+  
+        public void onMouseMove(MouseMoveEvent event) {
+          if (downWidget != null) {
+            event.preventDefault();
+            Widget moveWidget = findWidget(event.getClientX(),event.getClientY());
+            downWidget.removeStyleName(css.textEditor_cursor());
+            if( (moveWidget == downWidget || moveWidget == null) && downWidget != flow.getWidget(flow.getWidgetCount()-1)) {
+              downWidget.addStyleName(css.textEditor_select());
+              return;
+            }
+            clearDownMove();
+            down = flow.getWidgetIndex(downWidget);
+            move = flow.getWidgetIndex(moveWidget);
+            GWT.log("down = " + down + ", move = " + move);
+            if (move > down) {
+              int m = move;
+              while(--m >= down) {
+                flow.getWidget(m).addStyleName(css.textEditor_select());
+                GWT.log("select " + m);
+              }
+            } else {
+              int m = move-1;
+              while( ++m < down && m < flow.getWidgetCount()-1) 
+                flow.getWidget(m).addStyleName(css.textEditor_select());
+                GWT.log("select " + m);
+          }
+          
+          }
+          
+        }
 		
+		public void onMouseDown(MouseDownEvent event) {
+		    downX = event.getClientX();
+		    downY = event.getClientY();
+		    downWidget = findWidget(event.getClientX(), event.getClientY());
+		    down=move=cursor;
+		    deSelection();
+		    setCursorWidget(downWidget);
+		    
+		    if (downWidget != null) {
+		      if (downWidget instanceof FormulaVak) {
+		        downWidget = null;
+		        removeCursor();
+		      }
+		      event.preventDefault();
+		      //DOM.setCapture(getElement());
+		    }
+		  }
+		  private void clearDownMove() {
+		    int min = Math.min(down,move);
+		    int max = Math.max(down,move);
+		    while (min <= max) {
+		      flow.getWidget(min++).removeStyleName(css.textEditor_select());
+		      GWT.log("deselect " + min);
+
+		    } 
+		  }
+
+		protected Widget findWidget(int clientX, int clientY) {
+		    Widget wid = null;
+		    int max = flow.getWidgetCount();
+		    int px = clientX;
+		    int py = clientY;
+		    LOGGER.fine("px = " + px + ", py = " + py);
+		    while (--max > -1) {
+		      wid = flow.getWidget(max);
+		      int x = wid.getAbsoluteLeft();
+		      int y = wid.getAbsoluteTop();
+		      LOGGER.fine("m=" + max + "x=" + x + "y=" + y);
+		      if (y > py ) {
+		        LOGGER.fine("too low");
+		        continue; // line below mouse
+		      }
+		      if (x > px ) {
+		        LOGGER.fine("too right");
+		        continue;
+		      }
+		      int h = wid.getOffsetHeight();
+		      int w = wid.getOffsetWidth();
+		      if (wid instanceof Enter) {
+		          w = Short.MAX_VALUE;
+		      }
+		      if (px <= x + w || py >= y + h) {
+		        LOGGER.fine("found");
+		        break;
+		      }
+		    }
+		    return wid;
+		  }
+	
+		  public void onMouseUp(MouseUpEvent event) {
+		    //DOM.releaseCapture(getElement());
+		    if (downWidget != null) {
+		      event.preventDefault();
+		      GWT.log("mouse up");
+              FormuleKeyboardIF kb = comRoot.getKeyboard();
+		      kb.blur();
+		      kb.setEditor(deze);
+		      kb.softFocus();
+		      clearDownMove();
+		      int r = Math.abs(downX-event.getClientX()) + Math.abs(downY-event.getClientY());
+		      Widget moveWidget = findWidget(event.getClientX(), event.getClientY());
+		      if(moveWidget == downWidget || moveWidget == null) {
+		        if(r < 3) {
+		          setCursorWidget(downWidget);
+		          downWidget = null;
+		          GWT.log("mouse up cursor");
+		          return;
+		        }
+		      }
+		      downWidget.removeStyleName(css.textEditor_cursor());
+		      int down = flow.getWidgetIndex(downWidget);
+		      int move = flow.getWidgetIndex(moveWidget);
+		      downWidget = null;
+		    if (move > down) {
+		        cursor = move;
+		        selectionEnd = down;
+		        while(--move >= down) {
+		          flow.getWidget(move).addStyleName(css.textEditor_select());
+		          GWT.log("mouse select " + move);
+		        }
+		      } else {
+		        cursor = move;
+		        selectionEnd = down;
+		        while( move++ < down) 
+		          flow.getWidget(move-1).addStyleName(css.textEditor_select());
+		          GWT.log("mouse select " + move);
+		      }
+		      GWT.log("mouse up select");
+	          setCursorWidget(flow.getWidget(cursor));
+		    }
+		 }
 
 		public Tapper(FormuleEditorIF deze, Element target) {
 			this.deze = deze;
 			this.target = target;
 		}
 
-		@Override
 		public void onClick(ClickEvent event)
 		{
 //			Element targetElement = event.getTargetElement();
@@ -1519,7 +1663,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	{
 		private Enter()
 		{
-			super("<br>");
+			super("\u200A<br>");
 		}
 		
 		public String getText()
