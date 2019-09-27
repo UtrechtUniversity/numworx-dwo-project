@@ -1,6 +1,9 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.JOptionPane;
+import fi.beans.numworxlf.JTextField;
+import fi.beans.numworxlf.NumworxTextFieldUI;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import static fi.dwo.commons.system.TextMapper.BTN_CANCEL;
@@ -13,11 +16,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.GroupLayout;
 import javax.swing.JLabel;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import fi.dwo.dwojapplet.gui.numworx.JTextField;
-import fi.dwo.dwojapplet.gui.numworx.NumworxTextFieldUI;
 
 public class ReauthenticatePanel extends JPanel implements ActionListener {
 

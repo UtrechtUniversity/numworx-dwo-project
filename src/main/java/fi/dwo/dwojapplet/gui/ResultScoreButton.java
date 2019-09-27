@@ -1,6 +1,7 @@
 //Source file: N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\ResultScoreButton.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.JOptionPane;
 import fi.beans.scorm.PartialScoreIF;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -20,7 +21,6 @@ import javax.swing.AbstractButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 

@@ -17,11 +17,8 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import fi.dwo.dwojapplet.gui.numworx.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import fi.dwo.dwojapplet.gui.numworx.JRadioButton;
-import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import javax.swing.JTree;
@@ -36,6 +33,9 @@ import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 
+import fi.beans.numworxlf.JCheckBox;
+import fi.beans.numworxlf.JRadioButton;
+import fi.beans.numworxlf.JScrollPane;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 

@@ -1,9 +1,9 @@
 // Source file: C:\\fi\\dwo\\parameters\\gui\\IntegerParameterComponent.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.numworxlf.NumworxTextFieldUI;
 import fi.beans.scorm.Parameter;
 import fi.beans.scorm.ScormInteger;
-import fi.dwo.dwojapplet.gui.numworx.NumworxTextFieldUI;
 
 import java.awt.Component;
 import java.util.Hashtable;

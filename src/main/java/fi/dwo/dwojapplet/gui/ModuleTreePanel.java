@@ -1,5 +1,7 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JScrollPane;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
@@ -46,13 +48,11 @@ import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.JTree.DynamicUtilTreeNode;
 import javax.swing.event.TreeSelectionEvent;

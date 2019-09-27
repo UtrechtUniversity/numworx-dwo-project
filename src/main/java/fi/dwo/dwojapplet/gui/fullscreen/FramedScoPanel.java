@@ -1,5 +1,8 @@
 package fi.dwo.dwojapplet.gui.fullscreen;
 
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JOptionPane;
+import fi.beans.numworxlf.JTextField;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.ClassCourse;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -14,12 +17,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
 
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
-import fi.dwo.dwojapplet.gui.numworx.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;

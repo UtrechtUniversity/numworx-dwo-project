@@ -4,6 +4,11 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JCheckBox;
+import fi.beans.numworxlf.JComboBox;
+import fi.beans.numworxlf.JOptionPane;
+import fi.beans.numworxlf.JScrollPane;
 import fi.beans.scorm.PartialScoreIF;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.dwo.commons.system.TextMapper;
@@ -53,14 +58,9 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ButtonModel;
 import javax.swing.DefaultComboBoxModel;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
-import fi.dwo.dwojapplet.gui.numworx.JCheckBox;
-import fi.dwo.dwojapplet.gui.numworx.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
-import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingWorker;

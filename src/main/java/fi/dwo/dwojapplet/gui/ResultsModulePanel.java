@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -43,6 +42,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
+import fi.beans.numworxlf.JButton;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;

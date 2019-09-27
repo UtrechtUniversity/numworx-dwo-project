@@ -2,6 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\ResultsModule.java
 package fi.dwo.dwojapplet.domain;
 
+import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
@@ -40,7 +41,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 
 /**
  * This class managed the results (zooming, ordering, select courses) who are

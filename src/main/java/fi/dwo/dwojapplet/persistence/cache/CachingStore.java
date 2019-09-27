@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.persistence.cache;
 
+import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.DbAccessIF;
@@ -15,7 +16,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
+
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 public class CachingStore implements IStore, Runnable {

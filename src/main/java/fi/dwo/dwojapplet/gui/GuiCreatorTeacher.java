@@ -12,12 +12,11 @@ import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-
-import fi.dwo.dwojapplet.gui.numworx.Constants;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
+import fi.beans.numworxlf.Constants;
+import fi.beans.numworxlf.JButton;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.system.TextMapper;

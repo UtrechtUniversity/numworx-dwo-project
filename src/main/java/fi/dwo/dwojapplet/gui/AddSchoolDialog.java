@@ -3,6 +3,10 @@ package fi.dwo.dwojapplet.gui;
 
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JSpinnerDateEditor;
+
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JComboBox;
+import fi.beans.numworxlf.JTextField;
 import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -28,12 +32,9 @@ import java.util.Date;
 import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
-import fi.dwo.dwojapplet.gui.numworx.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import fi.dwo.dwojapplet.gui.numworx.JTextField;
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
 

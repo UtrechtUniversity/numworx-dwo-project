@@ -4,6 +4,8 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.system.MD5;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
@@ -35,10 +37,8 @@ import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;

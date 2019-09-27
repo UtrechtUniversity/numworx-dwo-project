@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui.action;
 
+import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.AppletConfig;
@@ -18,7 +19,6 @@ import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 
 public class NewAction extends GuiAction {
     private static final Logger LOG = Logger.getLogger(NewAction.class.getName());

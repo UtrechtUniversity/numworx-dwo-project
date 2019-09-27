@@ -2,6 +2,8 @@
 package fi.dwo.dwojapplet.gui;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import fi.beans.numworxlf.JCheckBox;
+import fi.beans.numworxlf.JTextField;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.commons.util.RandomPasswordGenerator;
 import java.awt.Color;
@@ -11,10 +13,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 import javax.swing.GroupLayout;
-import fi.dwo.dwojapplet.gui.numworx.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import fi.dwo.dwojapplet.gui.numworx.JTextField;
 import javax.swing.SwingConstants;
 
 /**

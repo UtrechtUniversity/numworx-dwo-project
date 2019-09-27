@@ -5,13 +5,14 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
 import javax.swing.BorderFactory;
-import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+
+import fi.beans.numworxlf.JScrollPane;
 
 /**
  * Utility class for JTables

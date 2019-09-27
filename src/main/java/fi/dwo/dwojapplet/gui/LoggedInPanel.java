@@ -2,6 +2,8 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\LoggedInPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.Constants;
+import fi.beans.numworxlf.JButton;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Guest;
@@ -20,8 +22,6 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
-import fi.dwo.dwojapplet.gui.numworx.Constants;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 
 import javax.swing.JLabel;
@@ -99,7 +99,7 @@ public class LoggedInPanel extends JPanel {
             ;
         loggedin.setIcon(icon);
         loggedin.setFont(FONT13);
-        loggedin.setForeground(fi.dwo.dwojapplet.gui.numworx.Constants.COLOR13);
+        loggedin.setForeground(fi.beans.numworxlf.Constants.COLOR13);
         loggedin.setHorizontalTextPosition(SwingConstants.LEADING);
         loggedin.setUI(new BasicMenuItemUI() {
 

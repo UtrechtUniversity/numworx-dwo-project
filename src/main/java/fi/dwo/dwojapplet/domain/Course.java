@@ -2,6 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\Course.java
 package fi.dwo.dwojapplet.domain;
 
+import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
@@ -20,8 +21,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 
 /**
  * This class is responsible for the Course data.

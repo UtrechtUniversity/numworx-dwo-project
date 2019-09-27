@@ -13,11 +13,12 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+
+import fi.beans.numworxlf.JButton;
 
 public class IconizedPanel extends JPanel implements ActionListener {
 

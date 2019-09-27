@@ -2,14 +2,13 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\SchoolClass.java
 package fi.dwo.dwojapplet.domain;
 
+import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
-
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 
 /**
  * This class is responsible for the SchoolClass data.

@@ -3,6 +3,7 @@
 package fi.dwo.dwojapplet.domain;
 
 import fi.beans.dwomaccess.JSONEncoder;
+import fi.beans.numworxlf.JOptionPane;
 import fi.beans.scorm.PartialScoreIF;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.dwo.commons.exceptions.PersistenceException;
@@ -36,7 +37,6 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import com.owlike.genson.Genson;

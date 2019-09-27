@@ -3,6 +3,10 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JCheckBox;
+import fi.beans.numworxlf.JOptionPane;
+import fi.beans.numworxlf.JScrollPane;
 import fi.dwo.commons.exceptions.CourseException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -67,16 +71,12 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ButtonModel;
 import javax.swing.Icon;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
-import fi.dwo.dwojapplet.gui.numworx.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;

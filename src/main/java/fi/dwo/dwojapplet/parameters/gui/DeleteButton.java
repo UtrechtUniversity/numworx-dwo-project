@@ -1,6 +1,7 @@
 // Source file: C:\\fi\\dwo\\parameters\\gui\\HelpButton.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.numworxlf.JButton;
 import fi.dwo.dwojapplet.parameters.system.TextMapper;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -12,7 +13,6 @@ import java.awt.event.MouseListener;
 import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 
 public class DeleteButton extends JButton implements MouseListener {
 

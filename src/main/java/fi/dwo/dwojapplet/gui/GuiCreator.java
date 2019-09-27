@@ -8,8 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JComponent;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 
+import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.SchoolException;

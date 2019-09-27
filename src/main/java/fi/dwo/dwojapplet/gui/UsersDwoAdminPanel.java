@@ -4,6 +4,9 @@
 package fi.dwo.dwojapplet.gui;
 
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JOptionPane;
+import fi.beans.numworxlf.JTextField;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Component;
@@ -20,13 +23,10 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import fi.dwo.dwojapplet.gui.numworx.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;

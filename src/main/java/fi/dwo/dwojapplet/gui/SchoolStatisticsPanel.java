@@ -3,10 +3,10 @@ package fi.dwo.dwojapplet.gui;
 import java.awt.Dimension;
 
 import javax.swing.JPanel;
-import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
+import fi.beans.numworxlf.JScrollPane;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;

@@ -2,6 +2,9 @@
 
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.Constants;
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JCheckBox;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
@@ -44,10 +47,6 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
-
-import fi.dwo.dwojapplet.gui.numworx.Constants;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
-import fi.dwo.dwojapplet.gui.numworx.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;

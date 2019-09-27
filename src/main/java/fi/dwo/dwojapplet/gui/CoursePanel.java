@@ -3,6 +3,8 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.beans.mathkit.JMathPane;
+import fi.beans.numworxlf.Constants;
+import fi.beans.numworxlf.JButton;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -27,9 +29,6 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-
-import fi.dwo.dwojapplet.gui.numworx.Constants;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;

@@ -43,7 +43,7 @@ public class MainPanel extends JPanel {
             super(new BorderLayout(10, 0), false);
             setOpaque(true);
             setDoubleBuffered(false);
-            setBackground(fi.dwo.dwojapplet.gui.numworx.Constants.colorBlue1);
+            setBackground(fi.beans.numworxlf.Constants.colorBlue1);
             setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 4));
         }
 
@@ -141,7 +141,7 @@ public class MainPanel extends JPanel {
             l.setHorizontalAlignment(JLabel.CENTER);
             l.setVerticalAlignment(JLabel.CENTER);
             l.setFont(new Font("Ubuntu", Font.PLAIN, 22));
-            l.setForeground(fi.dwo.dwojapplet.gui.numworx.Constants.COLOR13);
+            l.setForeground(fi.beans.numworxlf.Constants.COLOR13);
 //            l.setBorder(BorderFactory.createCompoundBorder(createNBorder(),
 //                    BorderFactory.createEmptyBorder(2, 0, 4, 0)));
 // nota bene: het CenterPanel ligt als heavy weight over de bottom-borderline heen

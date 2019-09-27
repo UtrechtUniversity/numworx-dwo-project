@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.JCheckBox;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.system.TextMapper;
@@ -12,7 +13,6 @@ import java.awt.Component;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BoxLayout;
-import fi.dwo.dwojapplet.gui.numworx.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;

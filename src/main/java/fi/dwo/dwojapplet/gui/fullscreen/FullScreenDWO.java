@@ -1,5 +1,8 @@
 package fi.dwo.dwojapplet.gui.fullscreen;
 
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JOptionPane;
+import fi.beans.numworxlf.JScrollPane;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.User;
@@ -22,16 +25,13 @@ import java.beans.PropertyVetoException;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JDialog;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;

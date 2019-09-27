@@ -1,6 +1,10 @@
 // Source file: C:\\parameters\\fi\\dwo\\client\\gui\\AddScoDialog.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JOptionPane;
+import fi.beans.numworxlf.JRadioButton;
+import fi.beans.numworxlf.JScrollPane;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.AppletConfig;
 import fi.dwo.dwojapplet.domain.Course;
@@ -27,13 +31,9 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
-import fi.dwo.dwojapplet.gui.numworx.JRadioButton;
-import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 

@@ -1,6 +1,7 @@
 // Source file: C:\\parameters\\fi\\dwo\\client\\gui\\ScoNameDialog.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.JButton;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.AppletConfig;
 import fi.dwo.dwojapplet.domain.Course;
@@ -8,8 +9,6 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 
 import java.awt.Component;
-
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 
 /**
  * This is a dialog for editing the SCO name and description.

@@ -8,7 +8,8 @@ import java.awt.AWTEvent;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.TextEvent;
-import fi.dwo.dwojapplet.gui.numworx.JTextField;
+
+import fi.beans.numworxlf.JTextField;
 
 /**
  * TODO paste events.

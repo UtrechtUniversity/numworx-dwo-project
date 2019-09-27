@@ -2,6 +2,8 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\CenterPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JScrollPane;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
@@ -28,9 +30,7 @@ import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JPanel;
-import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;

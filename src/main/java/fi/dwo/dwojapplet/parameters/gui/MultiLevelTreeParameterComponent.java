@@ -2,6 +2,7 @@
 // C:\\parameters\\fi\\dwo\\parameters\\gui\\MultiLevelTreeParameterComponent.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.numworxlf.JButton;
 import fi.beans.scorm.Parameter;
 import fi.beans.scorm.TreeParameter;
 import fi.dwo.dwojapplet.parameters.system.TextMapper;
@@ -13,7 +14,6 @@ import java.awt.event.ComponentEvent;
 import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.Vector;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 
 public class MultiLevelTreeParameterComponent extends ParameterComponent
         implements ActionListener {

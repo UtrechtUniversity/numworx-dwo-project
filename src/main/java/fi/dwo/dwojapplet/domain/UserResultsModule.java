@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.domain;
 
+import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import fi.dwo.dwojapplet.gui.GuiCreator;
@@ -8,7 +9,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 
 /**
  * Een ResultsModuleIF geschikt gemaakt voor één enkele student. TODO een common

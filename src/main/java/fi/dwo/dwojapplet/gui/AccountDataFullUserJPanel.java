@@ -2,6 +2,10 @@ package fi.dwo.dwojapplet.gui;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JOptionPane;
+import fi.beans.numworxlf.JTextField;
+import fi.beans.numworxlf.NumworxTextFieldUI;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -16,13 +20,9 @@ import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JLabel;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import fi.dwo.dwojapplet.gui.numworx.JTextField;
-import fi.dwo.dwojapplet.gui.numworx.NumworxTextFieldUI;
 
 /**
  * Utility panel to fetch changing user-data.

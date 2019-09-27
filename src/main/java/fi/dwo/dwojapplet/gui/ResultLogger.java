@@ -2,6 +2,9 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.beans.mathkit.JMathPane;
 import fi.beans.mathkit.JMathToolTip;
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JOptionPane;
+import fi.beans.numworxlf.JScrollPane;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.beans.scorm.PartialScoreIF;
 import fi.beans.scorm2xml.Scorm2Xml;
@@ -52,13 +55,10 @@ import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.Box;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
-import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;

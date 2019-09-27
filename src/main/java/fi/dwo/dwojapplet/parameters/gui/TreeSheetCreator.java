@@ -1,6 +1,7 @@
 // Source file: C:\\parameters\\fi\\dwo\\parameters\\gui\\TreeSheetCreator.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.numworxlf.JOptionPane;
 import fi.beans.scorm.Parameter;
 import fi.beans.scorm.ScormTree;
 import fi.beans.scorm.TreeParameter;
@@ -11,7 +12,6 @@ import java.awt.Component;
 import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.Vector;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 
 public class TreeSheetCreator implements TabSheetCreatorIF, ItemLaunchdataCallBackIF,
         ParameterComponentIF {

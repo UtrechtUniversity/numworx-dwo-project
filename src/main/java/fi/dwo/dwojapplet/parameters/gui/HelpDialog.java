@@ -1,6 +1,7 @@
 // Source file: C:\\fi\\dwo\\parameters\\gui\\HelpDialog.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.numworxlf.JButton;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.parameters.system.TextMapper;
@@ -16,7 +17,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JDialog;
 import javax.swing.JTextArea;
 

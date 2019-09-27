@@ -12,7 +12,8 @@ import java.awt.FontMetrics;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
+
+import fi.beans.numworxlf.JButton;
 
 /**
  * @author M.J.B. Kupers

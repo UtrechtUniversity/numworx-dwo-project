@@ -4,6 +4,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JScrollPane;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
@@ -19,10 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.Box;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 

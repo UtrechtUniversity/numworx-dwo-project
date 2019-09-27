@@ -2,6 +2,9 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\ScoPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.Constants;
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JOptionPane;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -28,12 +31,8 @@ import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JApplet;
-
-import fi.dwo.dwojapplet.gui.numworx.Constants;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.SwingConstants;
@@ -223,7 +222,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
       // separator label
                   l = new JLabel(" >> ");
                   l.setFont(GuiConstants.RED_TEXT);
-                  l.setForeground(fi.dwo.dwojapplet.gui.numworx.Constants.COLOR13);
+                  l.setForeground(fi.beans.numworxlf.Constants.COLOR13);
                   l.setOpaque(false);
                   hbox.add(l);
               }
@@ -231,7 +230,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
               if (!scoView) {
                   courseButton = new LinkedLabel(sco.getCourse().getName());
                   //courseButton.setCursor(new JButton().getCursor()); // restore button cursor
-                  courseButton.setNewForeground(fi.dwo.dwojapplet.gui.numworx.Constants.COLOR13);
+                  courseButton.setNewForeground(fi.beans.numworxlf.Constants.COLOR13);
                   courseButton.setFont(GuiConstants.RED_TEXT);
                   courseButton.addActionListener(this);
                   //courseButton.setIcon(new ImageIcon(DwoHelper.getResourceImage(GuiConstants.BACK_COURSEMENU_IMAGE)));

@@ -5,14 +5,13 @@ import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.beans.loader.Loader;
+import fi.beans.numworxlf.JOptionPane;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 
 public class MergeAction extends GuiAction {
     private static final Logger LOG = Logger.getLogger(MergeAction.class.getName());

@@ -1,10 +1,10 @@
 // Source file: C:\\fi\\dwo\\parameters\\gui\\StringParameterComponent.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.numworxlf.JTextField;
 import fi.beans.scorm.Parameter;
 import java.awt.Component;
 import java.util.Hashtable;
-import fi.dwo.dwojapplet.gui.numworx.JTextField;
 
 public class StringParameterComponent extends ParameterComponent {
 

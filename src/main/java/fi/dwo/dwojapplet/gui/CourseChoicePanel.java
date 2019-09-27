@@ -3,13 +3,13 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.beans.mathkit.JMathPane;
+import fi.beans.numworxlf.Constants;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.Descriptor;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
-import fi.dwo.dwojapplet.gui.numworx.Constants;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 import fi.dwo.dwojapplet.gui.wiskopdr.LinkIF;

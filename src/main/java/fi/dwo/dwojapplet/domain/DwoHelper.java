@@ -6,6 +6,7 @@ package fi.dwo.dwojapplet.domain;
 
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
+import fi.beans.numworxlf.JOptionPane;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
@@ -36,8 +37,6 @@ import java.net.URL;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 
 import netscape.javascript.JSObject;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;

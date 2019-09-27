@@ -1,13 +1,13 @@
 // Source file: C:\\fi\\dwo\\parameters\\gui\\TreeParameterComponent.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.numworxlf.JButton;
 import fi.beans.scorm.Parameter;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Hashtable;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 
 public class TreeParameterComponent extends ParameterComponent implements ActionListener {
 

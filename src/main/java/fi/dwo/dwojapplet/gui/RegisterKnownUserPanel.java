@@ -3,6 +3,11 @@ package fi.dwo.dwojapplet.gui;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JComboBox;
+import fi.beans.numworxlf.JOptionPane;
+import fi.beans.numworxlf.JTextField;
+import fi.beans.numworxlf.NumworxTextFieldUI;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
@@ -16,14 +21,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.BorderFactory;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
-import fi.dwo.dwojapplet.gui.numworx.JComboBox;
 import javax.swing.JLabel;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import fi.dwo.dwojapplet.gui.numworx.JTextField;
-import fi.dwo.dwojapplet.gui.numworx.NumworxTextFieldUI;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 
 /**

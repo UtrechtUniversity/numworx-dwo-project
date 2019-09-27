@@ -4,6 +4,7 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.JButton;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DWO;
 
@@ -18,7 +19,6 @@ import java.awt.event.ActionListener;
 import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 

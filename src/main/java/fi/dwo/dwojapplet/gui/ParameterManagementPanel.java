@@ -2,6 +2,10 @@
 // C:\\parameters\\fi\\dwo\\client\\gui\\ParameterManagementPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.Constants;
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JOptionPane;
+import fi.beans.numworxlf.JScrollPane;
 import fi.beans.scorm.Parameter;
 import fi.beans.scorm.ScormAppletIF;
 import fi.beans.scorm.ScormEditComponentIF;
@@ -38,15 +42,10 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-
-import fi.dwo.dwojapplet.gui.numworx.Constants;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
-import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.event.ChangeEvent;
 
 /**

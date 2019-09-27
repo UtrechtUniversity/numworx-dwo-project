@@ -6,6 +6,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JScrollPane;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureStudentSchoolClassManager;
@@ -20,9 +22,7 @@ import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JLabel;
-import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.border.Border;
 
 /**

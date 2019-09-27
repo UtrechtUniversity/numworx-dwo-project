@@ -3,11 +3,11 @@ package fi.dwo.dwojapplet.gui;
 import java.awt.Component;
 import java.util.Vector;
 
-import fi.dwo.dwojapplet.gui.numworx.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
+import fi.beans.numworxlf.JComboBox;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.User;

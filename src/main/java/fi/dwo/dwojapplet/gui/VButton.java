@@ -20,13 +20,14 @@ import java.awt.image.ImageProducer;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.Icon;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.plaf.ButtonUI;
+
+import fi.beans.numworxlf.JButton;
 
 public class VButton extends JButton {
 

@@ -2,6 +2,7 @@
 // C:\\parameters\\fi\\dwo\\parameters\\gui\\MultiLevelTreeTabSheet.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.numworxlf.JButton;
 import fi.beans.scorm.Parameter;
 import fi.beans.scorm.ScormTree;
 import fi.beans.scorm.TreeParameter;
@@ -16,7 +17,7 @@ import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.Vector;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
+
 import javax.swing.JPanel;
 
 public class MultiLevelTreeTabSheet extends TreeTabSheet implements
@@ -193,7 +194,7 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
                         .getText(TextMapper.MSG_TO_MANY_TREE_ITEMS);
 
                 s = MessageFormat.format(s, arguments);
-                fi.dwo.dwojapplet.gui.numworx.JOptionPane.showMessageDialog(null, s);
+                fi.beans.numworxlf.JOptionPane.showMessageDialog(null, s);
                 return;
             }
         }

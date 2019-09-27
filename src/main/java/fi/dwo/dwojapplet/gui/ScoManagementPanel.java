@@ -1,6 +1,11 @@
 // Source file: C:\\parameters\\fi\\dwo\\client\\gui\\ScoManagementPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.Constants;
+import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JCheckBox;
+import fi.beans.numworxlf.JOptionPane;
+import fi.beans.numworxlf.JTextField;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.AppletConfig;
@@ -40,19 +45,13 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
-
-import fi.dwo.dwojapplet.gui.numworx.Constants;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
-import fi.dwo.dwojapplet.gui.numworx.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
-import fi.dwo.dwojapplet.gui.numworx.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;

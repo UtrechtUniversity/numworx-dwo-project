@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
+import fi.beans.numworxlf.JTextField;
 import fi.dwo.commons.system.TextMapper;
 import java.awt.Color;
 
@@ -12,7 +13,6 @@ import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import fi.dwo.dwojapplet.gui.numworx.JTextField;
 import javax.swing.SwingConstants;
 
 /**

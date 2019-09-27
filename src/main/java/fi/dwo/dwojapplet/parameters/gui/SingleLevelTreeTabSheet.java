@@ -2,6 +2,7 @@
 // C:\\parameters\\fi\\dwo\\parameters\\gui\\SingleLevelTreeTabSheet.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.numworxlf.JButton;
 import fi.beans.scorm.TreeParameter;
 import fi.dwo.dwojapplet.parameters.system.TextMapper;
 import java.awt.Dimension;
@@ -13,7 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.Hashtable;
-import fi.dwo.dwojapplet.gui.numworx.JButton;
+
 import javax.swing.JPanel;
 
 public class SingleLevelTreeTabSheet extends TreeTabSheet implements

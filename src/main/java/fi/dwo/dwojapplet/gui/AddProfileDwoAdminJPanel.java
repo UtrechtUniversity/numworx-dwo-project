@@ -3,13 +3,13 @@ package fi.dwo.dwojapplet.gui;
 import java.awt.Component;
 
 import javax.swing.JLabel;
-import fi.dwo.dwojapplet.gui.numworx.JOptionPane;
 import javax.swing.JPanel;
-import fi.dwo.dwojapplet.gui.numworx.JScrollPane;
 import javax.swing.JTextArea;
-import fi.dwo.dwojapplet.gui.numworx.JTextField;
 import javax.swing.SpringLayout;
 
+import fi.beans.numworxlf.JOptionPane;
+import fi.beans.numworxlf.JScrollPane;
+import fi.beans.numworxlf.JTextField;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 
