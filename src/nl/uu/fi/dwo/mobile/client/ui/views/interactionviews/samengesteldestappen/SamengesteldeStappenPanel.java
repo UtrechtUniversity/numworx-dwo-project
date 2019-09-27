@@ -28,6 +28,7 @@ import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -42,6 +43,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	
 	static final String holderId = "dockholder";
 	private HashMap<String, Object> launchState; 
+	private OpdrNavIF comRoot = null;
 	
 	int breedte = 400;
 	int hoogte = 300; 
@@ -62,6 +64,9 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	private FormuleKeyboardIF kb = null;
 	
 	private boolean ideasStatistiek = false;
+	private int scoreMax = 10;
+	private boolean[] stepRequired = null;
+	private ArrayList<Integer> selectedSteps = new ArrayList<Integer>();
 	
 	public SamengesteldeStappenPanel(HashMap<String, Object> h, String[] randomVarNamen, HashMap<String, Number> randomVarWaarden, int volleBreedte)
 	{
@@ -87,9 +92,16 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 			Map<String, Number> values) {
 		breedte = width;
 		hoogte = height;
-		
-		if(launchData.containsKey("ideasStatistiek"))
-			this.ideasStatistiek = ((Boolean) launchData.get("ideasStatistiek")).booleanValue();
+		ObjectMap map = JSONUtilities.wrapMap(launchData);
+		if (map != null)
+		{
+			if(map.containsKey("ideasStatistiek"))
+				this.ideasStatistiek = map.getBoolean("ideasStatistiek");
+			if(map.containsKey("scoreMax"))
+				this.scoreMax = map.getInt("scoreMax");
+			if(map.containsKey("stepRequired"))
+				this.stepRequired = map.getBooleanArray("stepRequired");
+		}
 	}
 	
 	public void initialize(HashMap<String, Object> h)
@@ -104,7 +116,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 //		mainPanel.getElement().getStyle().setProperty("boxShadow", "5px -5px darkturquoise inset");
 		
 		//Stappenvak initialiseren
-		int nrOfSteps = 15;//later nog wat flexibeler?
+		int nrOfSteps = 20;//later nog wat flexibeler?
 	    makeStepsTVP(nrOfSteps);
 	    
 		mainPanel.add(stappenVak);
@@ -250,7 +262,10 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 			public void onClick(ClickEvent e)
 			{
 				stappenVak.backAction();
-			    resize();
+				if(selectedSteps.size() > 0)
+			        selectedSteps.remove(selectedSteps.size() - 1);
+				resize();
+				comRoot.setChanged(!isCorrect());
 			}
 		}, ClickEvent.getType());
 		
@@ -323,6 +338,11 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 		resize(); 
 	}
 	
+	public void addSelectedStep(int stepNr)
+	{
+	  selectedSteps.add(stepNr);
+	}
+	
 	public void zetInstellingen(ObjectMap instellingen)
 	{
 		stappenVak.zetInstellingen(instellingen);
@@ -337,17 +357,27 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	public HashMap<String, Object> getState() {
 		
 		HashMap<String, Object> state = stappenVak.getState();
+		state.put("selectedSteps", selectedSteps);
 		return state;
 	}
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
+		ObjectMap map = JSONUtilities.wrapMap(h);
+		int[] selectedStepsList = null;
+		if(map.containsKey("selectedSteps"))
+			selectedStepsList = map.getIntArray("selectedSteps");
+		selectedSteps = new ArrayList<Integer>();
+		for(int i = 0; i < selectedStepsList.length; i++)
+			selectedSteps.add(selectedStepsList[i]);
 		stappenVak.setState(h);
 		resize();
 	}
 
 	@Override
 	public int getScore() {
+		if(isCorrect())
+		      return scoreMax;
 		return 0;
 		//return stappenVak.getScore();
 	}
@@ -360,9 +390,28 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 
 	@Override
 	public Boolean isCorrect() {
-		return null;
+		if(ideasStatistiek)
+		{
+			//TODO: ideas statistiek verder implementeren. 
+		}
 		
-		//return stappenVak.isCorrect();
+		//Requirement 1: stappenVak is correct
+	    if(stappenVak.isCorrect() && stepRequired != null)
+	    {
+	      boolean correct = true;
+	      //Requirement 2: all required steps are present
+	      for(int i = 0; i < stepRequired.length; i++)
+	      {
+	        if(stepRequired[i])
+	        {
+	          if(!selectedSteps.contains(i))
+	            correct = false;
+	        }
+	      }
+	      return correct;
+	    }
+	    return false;
+	        //stappenVak.isCorrect();
 	}
 
 	@Override
@@ -378,6 +427,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
+		this.comRoot = comRoot;
 		stappenVak.setCommunicationRoot(comRoot);
 		
 	}

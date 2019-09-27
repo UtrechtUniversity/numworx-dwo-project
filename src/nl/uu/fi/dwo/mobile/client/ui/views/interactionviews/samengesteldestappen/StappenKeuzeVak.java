@@ -328,6 +328,7 @@ public class StappenKeuzeVak {
 		isShowing = false;
 		
 		parent.makeStep(stepContents[index - 1]);
+		parent.addSelectedStep(index - 1);
 	    
 	}
 	
