@@ -1932,7 +1932,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			locationX = map.getInt("locationX");
 		if(map.containsKey("locationY"))
 			locationY = map.getInt("locationY");
-		if (!callOut && parent != null && zwevend)
+		if (!callOut && parent != null && zwevend && parent == asWidget().getParent())
 		{	
 			parent.setWidgetLeftWidth(this.asWidget(), locationX, Style.Unit.PX, breedte, Style.Unit.PX);
 			parent.setWidgetTopHeight(this.asWidget(), locationY, Style.Unit.PX, hoogte, Style.Unit.PX);
@@ -3267,10 +3267,23 @@ private Object CamelCase(String name) {
 		{
 			if (!callOut && isZwevend() && this.getAsPanel().isAttached())
 			{
+			  Widget p = getAsPanel().getParent();
+			  if (p == parent) {  
+			  
 				parent.setWidgetLeftWidth(this.getAsPanel(), this.getLocationX(), Style.Unit.PX, totaleBreedte,
 					Style.Unit.PX);
 				parent.setWidgetTopHeight(this.getAsPanel(), this.getLocationY(), Style.Unit.PX, totaleHoogte,
 					Style.Unit.PX);
+			  } else {
+			    LOG.severe("parent mismatch");
+			    if (p instanceof LayoutPanel) {
+	               ((LayoutPanel) p).setWidgetLeftWidth(this.getAsPanel(), this.getLocationX(), Style.Unit.PX, totaleBreedte,
+	                    Style.Unit.PX);
+	                ((LayoutPanel) p).setWidgetTopHeight(this.getAsPanel(), this.getLocationY(), Style.Unit.PX, totaleHoogte,
+	                    Style.Unit.PX);
+		      
+			    }
+			  }
 			}
 			if (!vulHoogte)
 				parent.resize();
