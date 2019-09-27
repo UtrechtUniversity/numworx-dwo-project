@@ -1,25 +1,18 @@
 package fi.dwo.dwojapplet.gui.numworx;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
-import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicComboBoxUI;
-
-import sun.swing.DefaultLookup;
 
 public class NumworxComboBoxUI extends BasicComboBoxUI implements Constants {
 
@@ -35,6 +28,7 @@ public class NumworxComboBoxUI extends BasicComboBoxUI implements Constants {
       g.setFont(ARROW_FONT);
       g.setColor(WHITE);
       g.drawString("▾", x+2, y+14);
+      g.setFont(f);
     }
 
     @Override
@@ -107,10 +101,8 @@ public class NumworxComboBoxUI extends BasicComboBoxUI implements Constants {
             c.setBackground(comboBox.getBackground());
         }
         else { // TODO correct colors
-            c.setForeground(DefaultLookup.getColor(
-                     comboBox, this, "ComboBox.disabledForeground", null));
-            c.setBackground(DefaultLookup.getColor(
-                     comboBox, this, "ComboBox.disabledBackground", null));
+            c.setForeground(Constants.COLOR22);
+            c.setBackground(comboBox.getBackground());
         }
     }
     

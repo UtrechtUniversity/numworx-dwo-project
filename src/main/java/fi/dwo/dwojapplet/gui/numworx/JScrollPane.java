@@ -4,7 +4,6 @@ import java.awt.Component;
 
 import javax.swing.JScrollBar;
 import javax.swing.plaf.ScrollBarUI;
-import javax.swing.plaf.basic.BasicScrollBarUI;
 
 public class JScrollPane extends javax.swing.JScrollPane {
 

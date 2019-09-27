@@ -177,7 +177,7 @@ public class JOptionPane extends javax.swing.JOptionPane {
     JDialog dialog = pane.createDialog(parent, title, style);
     
     pane.selectInitialValue();
-    dialog.show();
+    dialog.setVisible(true);
     dialog.dispose();
     
     Object        selectedValue = pane.getValue();

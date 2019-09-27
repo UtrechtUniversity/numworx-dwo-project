@@ -3,7 +3,6 @@ package fi.dwo.dwojapplet.gui.numworx;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPasswordField;
-import javax.swing.LookAndFeel;
 import javax.swing.border.Border;
 import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.TextUI;

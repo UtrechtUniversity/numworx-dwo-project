@@ -1,6 +1,5 @@
 package fi.dwo.dwojapplet.gui.numworx;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 

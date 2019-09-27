@@ -2,23 +2,20 @@ package fi.dwo.dwojapplet.gui.numworx;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
-import javax.swing.ButtonModel;
 import javax.swing.JComponent;
 import javax.swing.LookAndFeel;
 import javax.swing.border.Border;
 import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.ColorUIResource;
-import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicButtonUI;
 
-import sun.swing.SwingUtilities2;
+//import sun.swing.SwingUtilities2; // FIXME DUS NOT WORK
 
 public class NumworxButtonUI extends BasicButtonUI {
 
@@ -64,24 +61,12 @@ public class NumworxButtonUI extends BasicButtonUI {
 
   @Override
   protected void paintText(Graphics g, AbstractButton b, Rectangle textRect, String text) {
-    JComponent c = (JComponent)b;
-    AbstractButton b1 = (AbstractButton) c;
-    ButtonModel model = b1.getModel();
-    FontMetrics fm = SwingUtilities2.getFontMetrics(c, g);
-    int mnemonicIndex = b1.getDisplayedMnemonicIndex();
-    
-    /* Draw the Text */
-    if(model.isEnabled() || true ){
-        /*** paint the text normally */
-        g.setColor(b1.getForeground());
+    if (!b.isEnabled()) {
+      b.setEnabled(true);
+      super.paintText(g, b, textRect, text);
+      b.setEnabled(false);
+      return;
     }
-    else {
-        /*** paint the text disabled ***/
-        g.setColor(b1.getBackground().brighter());
-    }
-    SwingUtilities2.drawStringUnderlineCharAt(c, g,text, mnemonicIndex,
-      textRect.x + getTextShiftOffset(),
-      textRect.y + fm.getAscent() + getTextShiftOffset());
+    super.paintText(g, b, textRect, text);
   }
-
 }

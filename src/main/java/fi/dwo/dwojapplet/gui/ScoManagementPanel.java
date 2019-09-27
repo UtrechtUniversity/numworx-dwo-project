@@ -13,7 +13,6 @@ import fi.dwo.dwojapplet.gui.action.DeleteAction;
 import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
 import fi.dwo.dwojapplet.gui.action.NewAction;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import sun.security.action.GetBooleanSecurityPropertyAction;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
 import java.awt.BorderLayout;
