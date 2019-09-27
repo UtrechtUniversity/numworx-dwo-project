@@ -1572,13 +1572,14 @@ public class FormuleRegel extends FormuleElement
 					firstElement = i; // FIXME voor overlap!!
 					lastElement = i;
 
-					if (el.getX() + el.getWidth() / 2 > selectionEndX)
+					if (Math.abs(selectionEndX - selectionStartX)<2 && Math.abs(selectionEndY - selectionStartY)<2) // alleen selectie als hokje > 3x3
 					{
-						lastElement--;
-						firstElement--;
+					    firstElement = -1;
+	                    if (el.getX() + el.getWidth() / 2 > selectionEndX)
+	                    {
+	                        lastElement--;
+	                    }
 					}
-					if (Math.abs(selectionEndX - selectionStartX)<1 && Math.abs(selectionEndY - selectionStartY)<1) // alleen selectie als hokje > 0x0
-						firstElement = -1;
 					else
 						el.setSelected(true);
 
