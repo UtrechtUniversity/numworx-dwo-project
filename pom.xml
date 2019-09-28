@@ -187,7 +187,6 @@
     		<groupId>netscape.javascript</groupId>
     		<artifactId>mayscript</artifactId>
     		<version>1.0.0</version>
-    		<scope>provided</scope>
     	</dependency>
     	<dependency>
     		<groupId>fi.beans</groupId>

@@ -31,6 +31,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import fi.beans.numworxlf.JCheckBox;
@@ -261,9 +262,9 @@ public class StudentModelChoicePanel extends JPanel implements TreeSelectionList
  // new style 
     if (ids != null) {
       @SuppressWarnings("unchecked")
-      Enumeration<DefaultMutableTreeNode> all = root.depthFirstEnumeration();
+      Enumeration<TreeNode> all = root.depthFirstEnumeration();
       while (all.hasMoreElements()) {
-        DefaultMutableTreeNode node = all.nextElement();
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) all.nextElement();
         Object u = node.getUserObject();
         if (u instanceof NodeLeaf) {
           NodeLeaf leaf = (NodeLeaf) u;

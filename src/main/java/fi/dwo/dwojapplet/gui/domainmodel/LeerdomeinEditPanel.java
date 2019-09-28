@@ -532,9 +532,9 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
     language.setEditable(true);
     language.addActionListener(ev -> {
       @SuppressWarnings("unchecked")
-      Enumeration<DefaultMutableTreeNode> children = root.breadthFirstEnumeration();
+      Enumeration<TreeNode> children = root.breadthFirstEnumeration();
       while (children.hasMoreElements()) {
-        DefaultMutableTreeNode node = children.nextElement();
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) children.nextElement();
         ((Node) node.getUserObject()).setLanguage(getLanguage());
       }
       title.setText(root.getUserObject().toString());
@@ -711,17 +711,17 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
     result.setInfo(u.getInfo());
     List<DomStudentModelCategory> categories = new ArrayList<>(root.getChildCount());
     result.setCategories(categories);
-    Enumeration<DefaultMutableTreeNode> children = root.children();
+    Enumeration<TreeNode> children = root.children();
     while (children.hasMoreElements()) {
-      DefaultMutableTreeNode object = children.nextElement();
+      DefaultMutableTreeNode object = (DefaultMutableTreeNode) children.nextElement();
       u = (Node) object.getUserObject();
       DomStudentModelCategory cat = new DomStudentModelCategory();
       cat.setInfo(u.getInfo());
       List<DomStudentModelObj> objectives = new ArrayList<>(object.getChildCount());
       cat.setObjectives(objectives );
-      Enumeration<DefaultMutableTreeNode> kids = object.children();
+      Enumeration<TreeNode> kids = object.children();
       while (kids.hasMoreElements()) {
-        DefaultMutableTreeNode kid = kids.nextElement();
+        DefaultMutableTreeNode kid = (DefaultMutableTreeNode) kids.nextElement();
         u = (Node) kid.getUserObject();
         DomStudentModelObj objective = new DomStudentModelObj();
         objective.setInfo(u.getInfo());
@@ -737,7 +737,7 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
   }
 
   private void setObjectiveChildren(DomStudentModelObj node, int childCount,
-      Enumeration<DefaultMutableTreeNode> children) {
+      Enumeration<? extends TreeNode> children) {
     // TODO Auto-generated method stub
     System.out.println("add children");
     List<DomStudentModelObj> objectives = new ArrayList<>(childCount);
