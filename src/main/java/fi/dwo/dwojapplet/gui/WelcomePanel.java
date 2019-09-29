@@ -260,8 +260,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p.setBounds(dialog.getWidth() / 2 - 175, 110+100, 340, 100);
         Color PANEL_BACKGROUND = Color.decode("#314770");
         Color ITEM_BACKGROUND = Color.decode("#1b75bb");
-        Font  PLAIN = new Font("Ubuntu",Font.PLAIN, 13);
-        Font  BOLD  = new Font("Ubuntu", Font.BOLD, 13);
+        Font  PLAIN = new Font("SansSerif",Font.PLAIN, 13);
+        Font  BOLD  = new Font("SansSerif", Font.BOLD, 13);
         p.setBackground(PANEL_BACKGROUND);
         vo = new JRadioButton("VO");
         vo.setBackground(PANEL_BACKGROUND);vo.setFont(PLAIN);
