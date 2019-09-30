@@ -23,7 +23,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 @SuppressWarnings("serial")
 public class Main extends JFrame {
 
-	URL base = url("https://uu-dev.dwo.nl/dwo/");
+	URL base = url("https://numworx.acc.uu.nl/dwo/");
 	String login_URL =  base + "saml/login.jsp";
 	String profileName = "100";
 	
