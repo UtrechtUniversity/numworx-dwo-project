@@ -28,25 +28,28 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
+import dagger.Lazy;
+
 @Singleton
 public class DummyClientFactory implements ClientFactory {
 
 	final private EventBus eventBus;
 	final private RPCHandler handler;
 	final private boolean premium;
-	private ViewModuleView entryView;
+	private Lazy<ViewModuleView> entryView;
 	private IsWidget logoutWidget;
 	private TrafficAgent agent;
 	
-	public DummyClientFactory() {
-	  this(new SimpleEventBus(),new DummyRPCHandler(), new TrafficAgent(), false);
-	}
+//	public DummyClientFactory() {
+//	  this(new SimpleEventBus(),new DummyRPCHandler(), new TrafficAgent(), false);
+//	}
 
 	@Inject DummyClientFactory(EventBus eventBus, RPCHandler handler, TrafficAgent agent, @Named("premium") boolean premium) {
       this.eventBus = eventBus;
       this.handler = handler;
       this.agent = agent;
       this.premium = premium;
+      java.util.logging.Logger.getLogger("DummyClientFactory " + premium);
     }
 
   @Override
@@ -61,7 +64,7 @@ public class DummyClientFactory implements ClientFactory {
 
 	@Override
 	public ViewModuleView getEntryView() {
-		return entryView;
+		return entryView.get();
 	}
 
 	@Override
@@ -85,7 +88,7 @@ public class DummyClientFactory implements ClientFactory {
 	}
 
 	@Inject
-	public void setEntryView(ViewModuleView entryView) {
+	public void setEntryView(Lazy<ViewModuleView> entryView) {
 		this.entryView = entryView;
 	}
 

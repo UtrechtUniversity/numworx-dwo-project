@@ -380,6 +380,7 @@ public class DWOplayer implements EntryPoint
 		try { 
 			return clientfactory.isPremium();
 		} catch (Throwable t){
+			Logger.getLogger("DWOplayer").log(Level.INFO,"isPremium", t);
 			return false;
 		}
 	}

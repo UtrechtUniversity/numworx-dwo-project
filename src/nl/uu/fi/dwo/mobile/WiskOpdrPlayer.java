@@ -133,9 +133,11 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
         	return "false"; })        
         .then( p -> {
         	logger.log(Level.INFO, "initialize api " + p.getValue() + ".");
+        	String abo_type = api.GetValue("dme.abo_type");
+        	logger.log(Level.INFO, "aboType =" + abo_type);
 		DaggerWiskOpdrComponent.builder()
 			.api(api)
-			.premium("premium".equals(api.GetValue("dme.abo_type")))
+			.premium("premium".equals(abo_type))
 			.moduleView(new ModuleViewModuleImpl())
 			.build()
 			.inject(this);
@@ -161,8 +163,11 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 
 
 	@Override
-    protected ViewModuleViewImpl getViewModuleView(Scorm2004IF api) {
-      return createEntryView(header, api);
+    protected ViewModuleViewImpl getViewModuleView(Scorm2004IF api, ClientFactory clientFactory) {
+		logger.info("getViewModuleView " + clientFactory.isPremium());
+// FIXME Smelly code. clientfactory injected early.
+		DWOplayer.clientfactory = clientFactory;
+		return createEntryView(header, api);
     }
 	  
 	}
