@@ -14,6 +14,7 @@ import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherStudentModelManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -39,7 +40,9 @@ import java.util.logging.Logger;
 
 import javax.swing.SwingUtilities;
 
+import com.owlike.genson.GenericType;
 import com.owlike.genson.Genson;
+import com.owlike.genson.GensonBuilder;
 
 /**
  * This class is responsible for the Sco data. It also implements the
@@ -622,7 +625,12 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
             return AboType.standard.name();
           }
         }
-        
+        if ("dwoProfile".equals(name)) {
+          Genson g = StoredRestManager.getInstance().getGenson();
+          DomDwoProfile profile = DWO.getDwoProfile();
+          return g.serialize(profile, new GenericType<DomDwoProfile>() {});
+        }
+
         Hashtable ld = getLaunchdata();
 
         Object result = ld.get(name);

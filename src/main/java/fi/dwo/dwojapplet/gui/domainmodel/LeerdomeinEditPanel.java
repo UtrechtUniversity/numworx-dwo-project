@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.JTree.DynamicUtilTreeNode;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -163,7 +165,8 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
         String description = ((Node) u).getDescription();
         if (description == null || description.startsWith(WISKOPDR_SIG)||description.isEmpty()) {
           if (text.isEditable()) {
-            wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(description);
+            Locale locale = Locale.forLanguageTag(getLanguage());
+            wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(description, locale, 500 , 325, 425, 300);
             wiskOpdrEditPanel.setBackground(Color.WHITE);
             pane.setViewportView(wiskOpdrEditPanel);
             wiskOpdrEditPanel.setRequestFocusEnabled(true);
@@ -763,7 +766,9 @@ public class LeerdomeinEditPanel extends JPanel implements ActionListener {
     if(src == editorCB)
     {   if(editorCB.isSelected())
         {   if(wiskOpdrEditPanel==null)
-            {   wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel("");
+            {   
+                Locale locale = Locale.forLanguageTag(getLanguage());
+                wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel("", locale, 500 , 325, 425, 300 );
                 wiskOpdrEditPanel.setPreferredSize(new Dimension(400,350));
                 wiskOpdrEditPanel.setBackground(Color.white);
             }
