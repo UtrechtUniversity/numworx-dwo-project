@@ -25,4 +25,134 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.10</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>post-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<includeScope>runtime</includeScope>
+				</configuration>
+			</plugin>		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>nl.numworx.osiris.Main</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<profiles>
+			<profile>
+			<id>windows</id>
+			<activation><os><family>windows</family></os></activation>
+			<properties>
+				<arch>win64</arch>
+			</properties>
+			<build>
+				<plugins>
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-antrun-plugin</artifactId>
+		<version>1.8</version>
+		<dependencies>
+			<dependency>
+				<groupId>javafx</groupId>
+				<artifactId>ant-javafx.jar</artifactId>
+				<version>1.8</version>
+				<systemPath>${java.home}/lib/ant-javafx.jar</systemPath>
+				<scope>system</scope>
+			</dependency>
+		</dependencies>
+		<executions>
+			<execution>
+				<phase>verify</phase>
+				<configuration>
+					<target
+						xmlns:fx="javafx:com.sun.javafx.tools.ant">
+						<echo message="JAVA_HOME = ${java.home}" />
+						<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+							uri="javafx:com.sun.javafx.tools.ant"
+						/>
+						<fx:application id="nl.numworx.osiris"
+							name="Osiris Numworx Import" 
+							mainClass="fi.microserver.Numworx" 
+							version="${project.version}" 
+							toolkit="swing" />
+						<fx:resources id="appRes">
+						    <fx:fileset dir="target/dependency" includes="*.jar"/>
+						    <fx:fileset dir="target" includes='${project.build.finalName}.jar' />
+						</fx:resources>
+						<fx:deploy width="800" height="600"
+					        outdir="target/deploy" embedJNLP="true"
+					        outfile="OsirisImport"
+							nativeBundles='exe'
+							signBundle='false'
+						>
+							<fx:platform j2se="1.8" >
+							</fx:platform>
+					        <fx:application refId="nl.numworx.osiris"/>					 
+					        <fx:resources refid="appRes"/>						 
+					        <fx:info 
+					        	title="Osiris Numworx Import"
+					          	vendor="Numworx"
+					          	description="Import Osiris data into Numworx"
+					         >
+					         </fx:info>
+					      </fx:deploy>
+					</target>
+				</configuration>
+				<goals>
+					<goal>run</goal>
+				</goals>
+			</execution>
+		</executions>
+	</plugin>
+   <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>attach-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>attach-artifact</goal>
+            </goals>
+            <configuration>
+              <artifacts>
+                <artifact>
+                  <file>target/deploy/OsirisImport-${project.version}.exe</file>
+                  <type>exe</type>
+                  <classifier>installer</classifier>
+                </artifact>
+              </artifacts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>	
+     </plugins>
+			</build>
+		
+		</profile>
+	
+	
+	</profiles>
 </project>
