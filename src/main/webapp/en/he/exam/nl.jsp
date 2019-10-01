@@ -9,23 +9,24 @@
 <title>Safe Exam Browser</title>
 </head>
 <body>
-<h1>Start</h1>
+<h1>Starten</h1>
+
 <p>
 <%
 	String host = request.getRemoteAddr();
 	String server = request.getHeader("host");
 	if ( ! Subnet.netMatchRange(IPRANGE, host) ) {
 %>
-	The device at this address <%=host %> is not allowed for assessments. Use a secured device.
+	Het apparaat op dit adres <%=host %> is niet toegestaan voor toetsen. Gebruik een beveiligd apparaat.
 <%	  
 	}
 	else if ( needSEB ) {
 %>
-<a href='sebs://<%=server %>/ho/en/exam/leerling.seb'>Start the safe <strong>exam</strong> environment</a>
+<a href='sebs://<%=server %>/ho/en/exam/leerling.seb'>Start de beveiligde <strong>exam</strong> omgeving</a>
 <%
 	} else {
 %>
-	  <a href='/ho/en/exam/toets_nl.jsp'>Start the safe <strong>exam</strong> environment</a>
+	  <a href='/ho/en/exam/toets_nl.jsp'>Start de beveiligde <strong>exam</strong> omgeving</a>
 <%	  
 	}
 
