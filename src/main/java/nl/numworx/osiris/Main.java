@@ -16,6 +16,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
+
 /**
  * @author peterboon
  *
@@ -41,6 +45,8 @@ public class Main extends JFrame {
 	 * @throws HeadlessException 
 	 */
 	public static void main(String[] args) throws HeadlessException, IOException {
+		
+		Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
 		
 		Main main = new Main();
 		main.setSize(1024,768);

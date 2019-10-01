@@ -2,8 +2,6 @@ package nl.numworx.osiris;
 
 import java.awt.event.ActionEvent;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
@@ -12,7 +10,6 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.xml.sax.InputSource;
 
@@ -38,7 +35,7 @@ public class InstallPanel extends JPanel {
 		this.base = base;
 		this.profile = profile;
 
-		install = new JButton("INSTALL IN NUMWORX");
+		install = new JButton("IMPORT IN NUMWORX");
 		install.addActionListener(this::doInstall);
 		add(install);
 		
@@ -65,6 +62,7 @@ public class InstallPanel extends JPanel {
 		}
 	
 		String message  = "";
+		int toets = 0;
 		
 		InputSource is;
 		try {
@@ -76,7 +74,9 @@ public class InstallPanel extends JPanel {
 			CourseManager man = new CourseManager(profile, numworx.getSchool());
 			for (CSVRecord record: main.toets) {
 				man.createToets(record);
+				toets ++;
 			}
+		      message += toets + " exams\n";
 			
 			
 			
