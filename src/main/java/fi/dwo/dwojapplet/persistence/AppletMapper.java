@@ -181,9 +181,5 @@ class AppletMapper extends XmlRpcMapper<Class<Applet>> {
         return object;
     }
 
-    @Override
-    public Class<Applet> get(int uid, Integer sgid) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
 }

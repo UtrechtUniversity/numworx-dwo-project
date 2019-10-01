@@ -87,12 +87,12 @@ abstract class XmlRpcMapper<T> implements MapperIF<T> {
         }
     }
 
-    @Deprecated
-    public T get(int uid, Integer sgid) throws IOException, XmlRpcException,
-            SQLException {
-        System.err.println("UserMapper.get(u,s) Not implemented!");
-        return null;
-    }
+//    @Deprecated
+//    public T get(int uid, Integer sgid) throws IOException, XmlRpcException,
+//            SQLException {
+//        System.err.println("UserMapper.get(u,s) Not implemented!");
+//        return null;
+//    }
 
     /**
      *

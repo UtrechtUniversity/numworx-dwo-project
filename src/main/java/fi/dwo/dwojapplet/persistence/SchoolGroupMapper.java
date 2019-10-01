@@ -136,8 +136,4 @@ class SchoolGroupMapper extends XmlRpcMapper {
         return ORDERCOL;
     }
 
-    @Override
-    public Object get(int uid, Integer sgid) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-}
+ }

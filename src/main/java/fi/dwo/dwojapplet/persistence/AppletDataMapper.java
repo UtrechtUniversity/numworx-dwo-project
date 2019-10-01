@@ -1,9 +1,15 @@
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentApplet;
 import fi.dwo.dwojapplet.domain.AppletData;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicAppletManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminAppletManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomAppletId;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -96,8 +102,8 @@ class AppletDataMapper extends XmlRpcMapper<AppletData> {
       }
     }
 
-    private AppletData getObjectFromReturn(DomAppletFull dom) {
-      int id = PersistenceFacade.idOf(dom.getId());
+    private AppletData getObjectFromReturn(DomAppletFull dom) throws Dwo2Exception {
+      int id = MySQLPersistenceId.getNativeId(dom).intValue();
       AppletData s = objects.get(id);
       if(s == null) 
         s = new AppletData();
@@ -110,4 +116,26 @@ class AppletDataMapper extends XmlRpcMapper<AppletData> {
       return s;
     }
 
+    /* (non-Javadoc)
+     * @see fi.dwo.dwojapplet.persistence.XmlRpcMapper#get(int)
+     */
+    @Override
+    public AppletData get(int oid)
+        throws IOException, XmlRpcException, SQLException, PersistenceException {
+      AppletData s = objects.get(oid);
+      if(s != null) return s;
+
+      PersistenceId id = PersistentApplet.buildPersistenceId((long)oid);
+      DomAppletId appletid = new DomAppletId(id);
+      DomAppletFull applet;
+      try {
+        applet = PublicAppletManager.getApplet(appletid);
+        return getObjectFromReturn(applet);
+      } catch (Dwo2Exception e) {
+        throw new PersistenceException(PersistenceException.EX_XML_RPC);
+      }
+    }
+
+    
+    
 }
