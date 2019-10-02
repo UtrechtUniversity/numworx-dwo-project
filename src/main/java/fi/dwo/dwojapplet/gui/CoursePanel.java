@@ -125,6 +125,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 				wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s, DwoHelper.getAu().getLocale()) ; //TODO java locale
 				wiskOpdrPanel.setLocation(20,startY);
 				wiskOpdrPanel.setJSObjectOwner(this);
+				wiskOpdrPanel.setBackground(getBackground());
 	        	add(wiskOpdrPanel);
 	        	startY += wiskOpdrPanel.getHeight() + 10;
 			}

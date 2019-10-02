@@ -118,7 +118,7 @@ public class GuiCreatorAdmin extends GuiCreator {
         dwo.setWait();
         CenterSubPanel csb;
         csb = //new TeacherProfilePanel();
-                new AccountPanel(dwo.getGroups());
+                new AccountPanel();
         dwo.setReady();
         return csb;
     }
@@ -241,13 +241,13 @@ public class GuiCreatorAdmin extends GuiCreator {
         return dwo.getAppletConfig();
     }
 
-    /**
-     * @return fi.dwo.client.domain.AppletConfig[]
-     */
-    @Override
-    public School[] getSchool() {
-        return dwo.getSchool();
-    }
+//    /**
+//     * @return fi.dwo.client.domain.AppletConfig[]
+//     */
+//    @Override
+//    public School[] getSchool() {
+//        return dwo.getSchool();
+//    }
 
     /**
      * @param appletConfig

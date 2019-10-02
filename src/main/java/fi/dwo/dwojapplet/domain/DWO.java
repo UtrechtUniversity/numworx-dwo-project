@@ -851,20 +851,20 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 //        }
 //    }
 
-    /**
-     * Returns all the available groups.
-     *
-     * @return An array of all the available groups.
-     *
-     */
-    public Group[] getGroups() {
-        try {
-            return PersistenceFacade.instance().getGroup();
-        } catch (PersistenceException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-            return null;
-        }
-    }
+//    /**
+//     * Returns all the available groups.
+//     *
+//     * @return An array of all the available groups.
+//     *
+//     */
+//    public Group[] getGroups() {
+//        try {
+//            return PersistenceFacade.instance().getGroup();
+//        } catch (PersistenceException e) {
+//            JOptionPane.showMessageDialog(this, e.getMessage());
+//            return null;
+//        }
+//    }
 
     /**
      * Returns the current user who is logged in. If the user is logged in as a
@@ -2343,19 +2343,19 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     */
-    public School[] getSchool() {
-        try {
-            School[] sc = PersistenceFacade.instance().getSchool();
-            return sc;
-        } catch (PersistenceException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-            return null;
-        }
-    }
+//    /*
+//     * (non-Javadoc)
+//     * 
+//     */
+//    public School[] getSchool() {
+//        try {
+//            School[] sc = PersistenceFacade.instance().getSchool();
+//            return sc;
+//        } catch (PersistenceException e) {
+//            JOptionPane.showMessageDialog(this, e.getMessage());
+//            return null;
+//        }
+//    }
 
     /*
      * (non-Javadoc)
@@ -2640,34 +2640,34 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 //        }
 //    }
 
-    /**
-     * Converteer een role naar een Group. De namen van de group zijn niet
-     * gelijk aan die van de 'role' (entree.kennisnet.nl). Er moet daarom
-     * gemapped worden.
-     *
-     * @param role
-     * @return de Group die role representeerd.
-     */
-    private Group findGroup(String role) {
-        if (role == null) {
-            return null;
-        }
-        // TODO is deze mapping compleet?
-        // if (false) // docent en contactdocent
-        // {
-        // role = "TEACHER";
-        // }
-        // if (false) {
-        // role = "STUDENT";
-        // }
-        Group[] groups = getGroups();
-        for (Group group : groups) {
-            if (role.equalsIgnoreCase(group.getName())) {
-                return group;
-            }
-        }
-        return null;
-    }
+//    /**
+//     * Converteer een role naar een Group. De namen van de group zijn niet
+//     * gelijk aan die van de 'role' (entree.kennisnet.nl). Er moet daarom
+//     * gemapped worden.
+//     *
+//     * @param role
+//     * @return de Group die role representeerd.
+//     */
+//    private Group findGroup(String role) {
+//        if (role == null) {
+//            return null;
+//        }
+//        // TODO is deze mapping compleet?
+//        // if (false) // docent en contactdocent
+//        // {
+//        // role = "TEACHER";
+//        // }
+//        // if (false) {
+//        // role = "STUDENT";
+//        // }
+//        Group[] groups = getGroups();
+//        for (Group group : groups) {
+//            if (role.equalsIgnoreCase(group.getName())) {
+//                return group;
+//            }
+//        }
+//        return null;
+//    }
 
     public boolean deleteSchool(School sc, SecureDwoAdminSchoolManager schoolManager) {
         try {

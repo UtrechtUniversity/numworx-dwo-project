@@ -4,7 +4,9 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
@@ -396,7 +398,19 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
 
             return;
         } else if (source == copyButton) {
-            ClipboardExport.instance().export(GuiCreator.instance().getSchool());
+            int size = tableModel.getRowCount();
+            DomSchoolFull schools[] = new DomSchoolFull[size];
+            for(int i = 0; i < size; i++ ) {
+              int n = i; // sorting?
+              n = rowSorter.convertRowIndexToModel(i);
+              DomSchool4DwoAdmin s = tableModel.getSchool(n);
+              try {
+                schools[i] = SecureDwoAdminSchoolManager.getSchool(s);
+              } catch (Dwo2Exception e1) {
+                LOG.log(Level.WARNING, "getSchool " + n, e1);
+              }
+            }
+            ClipboardExport.instance().export(schools);
             return;
         }
         if (source == addSchoolButton) {

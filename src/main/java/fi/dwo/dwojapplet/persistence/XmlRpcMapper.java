@@ -39,7 +39,7 @@ abstract class XmlRpcMapper<T> implements MapperIF<T> {
      * @throws java.sql.SQLException
      * @see fi.dwo.client.persistence.MapperIF#get()
      */
-    @Override
+//    @Override
     public T[] get() throws IOException, XmlRpcException, SQLException {
 //        DbAccessIF dbAccess = DbAccessCreator.instance();
 //        return getObjectFromReturn(dbAccess.getTable(getTableName(), getOrderbyCol()));

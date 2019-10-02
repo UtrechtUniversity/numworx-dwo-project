@@ -1,6 +1,5 @@
 package fi.dwo.dwojapplet.persistence;
 
-import fi.dwo.commons.exceptions.CourseException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
@@ -14,7 +13,6 @@ import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.Group;
 import fi.dwo.dwojapplet.domain.Guest;
 import fi.dwo.dwojapplet.domain.ResultScore;
 import fi.dwo.dwojapplet.domain.ResultsModuleIF;
@@ -199,43 +197,43 @@ public class PersistenceFacade {
         }
     }
 
-    /**
-     * Returns all the objects of the specified class.<br>
-     * e.g. if the class is fi.dwo.client.domain.Course, all the Course objects
-     * representing the courses in the database are returned.
-     *
-     * @param c The class, indicating the type of Object to get.
-     * @return The objects representing the specified class.
-     * @throws fi.dwo.commons.exceptions.PersistenceException
-     *
-     */
-     private <T> T[] get(java.lang.Class<T> c) throws PersistenceException {
-        MapperIF<T> mapper = MapperCreator.instance(c);
-        try {
-            return mapper.get();
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-    }
+//    /**
+//     * Returns all the objects of the specified class.<br>
+//     * e.g. if the class is fi.dwo.client.domain.Course, all the Course objects
+//     * representing the courses in the database are returned.
+//     *
+//     * @param c The class, indicating the type of Object to get.
+//     * @return The objects representing the specified class.
+//     * @throws fi.dwo.commons.exceptions.PersistenceException
+//     *
+//     */
+//     private <T> T[] get(java.lang.Class<T> c) throws PersistenceException {
+//        MapperIF<T> mapper = MapperCreator.instance(c);
+//        try {
+//            return mapper.get();
+//        }
+//        catch (IOException e) {
+//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        }
+//        catch (XmlRpcException e) {
+//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//        }
+//        catch (SQLException e) {
+//            throw new PersistenceException(PersistenceException.EX_DB, e);
+//        }
+//    }
 // choose one:
-     public Group[] getGroup() throws PersistenceException {
-       return get(Group.class);
-     }
+//     public Group[] getGroup() throws PersistenceException {
+//       return get(Group.class);
+//     }
      
-     public School[] getSchool() throws PersistenceException {
-       return get(School.class);
-     }
+//     public School[] getSchool() throws PersistenceException {
+//       return get(School.class);
+//     }
      
-     public AppletData[] getAppletData() throws PersistenceException {
-       return get(AppletData.class);
-     }
+//     public AppletData[] getAppletData() throws PersistenceException {
+//       return get(AppletData.class);
+//     }
      
     /**
      * Returns all the objects of the specified class with the restriction of
@@ -885,14 +883,14 @@ public class PersistenceFacade {
         MapperCreator.instance(User.class).removeObject(id);
     }
 
-    /**
-     * Clears data from mapper cache for a certain class
-     *
-     * @param c Class
-     */
-    private void clearCurrentMapperDataCache(Class<?> c) {
-        MapperCreator.instance(c).removeAllObjects();
-    }
+//    /**
+//     * Clears data from mapper cache for a certain class
+//     *
+//     * @param c Class
+//     */
+//    private void clearCurrentMapperDataCache(Class<?> c) {
+//        MapperCreator.instance(c).removeAllObjects();
+//    }
 
     /**
      * Clears data from mapper cache for a certain class
@@ -1044,13 +1042,14 @@ public class PersistenceFacade {
       return get(uid,User.class);
     }
 
-    @SuppressWarnings("unchecked")
+    private AppletMapper appletMapper = new AppletMapper();
     public Class<Applet> getAppletClass(int appletID) throws PersistenceException {
-      return (Class<Applet>) get(appletID, Class.class);
+      return appletMapper.get(appletID);
     }
 
+    private AppletDataMapper appletDataMapper = new AppletDataMapper();
     public AppletData getAppletData(int appletID) throws PersistenceException {
-      return get(appletID, AppletData.class);
+      return appletDataMapper.get(appletID);
     }
 
     public void putSchool(int schoolID, School s) {

@@ -59,17 +59,17 @@ interface MapperIF<T> {
      */
     public void put(int oid, T obj);
 
-    /**
-     * Returns all the objects of this mapper.<br>
-     * e.g. if this is the CourseMapper, all the Course objects representing the
-     * courses in the database are returned.
-     *
-     * @return The objects representing the specified class.
-     * @throws java.io.IOException
-     * @throws org.apache.xmlrpc.applet.XmlRpcException
-     * @throws java.sql.SQLException
-     */
-    public T[] get() throws IOException, SQLException, XmlRpcException;
+//    /**
+//     * Returns all the objects of this mapper.<br>
+//     * e.g. if this is the CourseMapper, all the Course objects representing the
+//     * courses in the database are returned.
+//     *
+//     * @return The objects representing the specified class.
+//     * @throws java.io.IOException
+//     * @throws org.apache.xmlrpc.applet.XmlRpcException
+//     * @throws java.sql.SQLException
+//     */
+//    public T[] get() throws IOException, SQLException, XmlRpcException;
 
     /**
      * Creates an object out of the Hashtable. If this is the CourseMapper, a

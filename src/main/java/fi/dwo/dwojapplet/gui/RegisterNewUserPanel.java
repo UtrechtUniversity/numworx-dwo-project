@@ -6,13 +6,11 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JComboBox;
-import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JTextField;
 import fi.beans.numworxlf.NumworxTextFieldUI;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.Group;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicUserManager;
 
 import java.awt.Color;
@@ -85,9 +83,8 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
      * Creates a new RegisterPanel. At the register panel, a user can register
      * himself.
      *
-     * @param groups The possible groups wherefrom a user can be part of.
      */
-    public RegisterNewUserPanel(Group[] groups) {
+    public RegisterNewUserPanel() {
 
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setLayout(null);

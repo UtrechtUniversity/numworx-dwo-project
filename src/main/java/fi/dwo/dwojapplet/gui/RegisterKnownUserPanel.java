@@ -10,7 +10,6 @@ import fi.beans.numworxlf.JTextField;
 import fi.beans.numworxlf.NumworxTextFieldUI;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.Group;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import java.awt.Color;
 import java.awt.FontMetrics;
@@ -50,8 +49,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
  */
 public class RegisterKnownUserPanel extends ContentPanel implements ActionListener {
 
-    private Group groupList[];
-
     private JTextField username;
 
     private JPasswordField password;
@@ -86,9 +83,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
      *
      * @param groups The possible groups wherefrom a user can be part of.
      */
-    public RegisterKnownUserPanel(Group[] groups) {
-        groupList = groups;
-
+    public RegisterKnownUserPanel() {
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setLayout(null);
         this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
@@ -235,7 +230,6 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
         groupChoice.addItem(TextMapper.getText(TextMapper.GUIR_OPT_SELECT_GROUP));
         RoleType[] rl = DwoHelper.getRoles();
         for (int i = 0; i < rl.length; i++) {
-            //if(!groupList[i].getName().equals("ADMIN"))
             groupChoice.addItem(TextMapper.getText(rl[i].name()));
         }
         groupChoice.setSize(groupChoice.getPreferredSize());

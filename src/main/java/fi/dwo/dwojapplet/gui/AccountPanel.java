@@ -2,8 +2,6 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.Group;
-import java.awt.Component;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,15 +24,15 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
     private AccountSchoolsRolesJPanel sarPanel;
     private RegisterMoreSchoolLoginsPanel rmsPanel = new RegisterMoreSchoolLoginsPanel();
 
-    /**
-     * Creates a new ProfilePanel for the current user. The account of the
-     * current user can be changed.
-     *
-     * @param groups The possible groups wherefrom a user can be part of.
-     */
-    public AccountPanel(Group[] groups) {
-        this.init();
-    }
+//    /**
+//     * Creates a new ProfilePanel for the current user. The account of the
+//     * current user can be changed.
+//     *
+//     * @param groups The possible groups wherefrom a user can be part of.
+//     */
+//    public AccountPanel(Group[] groups) {
+//        this.init();
+//    }
 
     /**
      * Creates a new ProfilePanel for the current user. The account of the

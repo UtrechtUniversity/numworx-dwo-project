@@ -6,8 +6,13 @@ import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.UserResultList;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 abstract class Exporter {
 
@@ -24,6 +29,39 @@ abstract class Exporter {
 
     protected abstract ExportBuffer createExportBuffer();
 
+    /**
+     * for DWOAdmin only.
+     * @param schools
+     */
+    public void export(DomSchoolFull[] schools) {
+      ExportBuffer sb = createExportBuffer();
+      if (schools == null) {
+          sb.export();
+          return;
+      }
+      String[] line = {"School", "Login", "Leerling", "Docent", "SchoolAdmin"};
+      sb.exportHeader(line);
+      for (DomSchoolFull school : schools) {
+        line[0] = school.getSchoolName();
+        line[1] = school.getSchoolLogin();
+        line[2] = getPasswd(school.getPasswords(), RoleType.STUDENT);
+        line[3] = getPasswd(school.getPasswords(), RoleType.TEACHER);
+        line[4] = getPasswd(school.getPasswords(), RoleType.SCHOOLADMIN);
+        sb.export(line);
+      }
+      sb.export();
+    }
+    
+    private String getPasswd(List<DomMapEntry<RoleType, String>> passwords, RoleType role) {
+      if (passwords == null) return "";
+      Optional<String> result = passwords.stream()
+          .filter(e -> role == e.getKey())
+          .map(DomMapEntry::getValue)
+          .findAny();
+      return result.orElse("");
+    }
+
+    @Deprecated
     public void export(School[] schools) {
         ExportBuffer sb = createExportBuffer();
         if (schools == null) {

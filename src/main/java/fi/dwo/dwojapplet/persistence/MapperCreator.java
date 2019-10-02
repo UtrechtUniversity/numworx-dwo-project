@@ -31,7 +31,7 @@ class MapperCreator {
     private final static String mapperDefenitionList[][] = {
         {"User", "UserMapper"},
         {"School", "SchoolMapper"},
-        {"Group", "GroupMapper"},
+ //     {"Group", "GroupMapper"},
         {"SchoolGroup", "SchoolGroupMapper"},
         {"Course", "CourseMapper"},
         {"Sco", "ScoMapper"},
@@ -39,7 +39,7 @@ class MapperCreator {
 //        {"UserResultList", "UserResultListMapper"},
         {"AppletConfig", "AppletConfigMapper"},
  //       {"DwoProfile", "DwoProfileMapper"},
-        {"AppletData", "AppletDataMapper"},
+ //      {"AppletData", "AppletDataMapper"},
  //       {"CourseSequence", "CourseSequenceMapper"},
         {"ClassCourse", "ClassCourseMapper"}};
 
@@ -48,7 +48,7 @@ class MapperCreator {
      * DOMAIN_PACKAGE
      */
     private final static String mapperDefenitionOtherList[][] = {
-        {"java.applet.Applet", PERSISTENCE_PACKAGE + ".AppletMapper"}
+ //       {"java.applet.Applet", PERSISTENCE_PACKAGE + ".AppletMapper"}
     };
 
     private static Hashtable mapperList;
@@ -89,7 +89,7 @@ class MapperCreator {
         }
 // de applet mapper levert een Class<Applet> op
 // de userresultlist mapper levert een Vector<UserResultList> op.
-        classList.put(Class.class, classList.get(Applet.class));
+//       classList.put(Class.class, classList.get(Applet.class));
 //        classList.put(Vector.class, classList.get(UserResultList.class));
     }
 

@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.gui.wiskopdr;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -71,5 +72,11 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 		
 		return null;
 	}
+
+  @Override
+  public void setBackground(Color bg) {
+    super.setBackground(bg);
+    component.setBackground(bg);
+  }
 
 }

@@ -363,7 +363,7 @@ public class GuiCreator {
      */
     public void toRegisterNewUser() {
         dwo.setWait();
-        RegisterNewUserPanel rp = new RegisterNewUserPanel(dwo.getGroups());
+        RegisterNewUserPanel rp = new RegisterNewUserPanel();
         dwo.setPanel(rp);
         dwo.setReady();
     }
@@ -373,7 +373,7 @@ public class GuiCreator {
      */
     public void toRegisterExistingUser() {
         dwo.setWait();
-        RegisterKnownUserPanel rp = new RegisterKnownUserPanel(dwo.getGroups());
+        RegisterKnownUserPanel rp = new RegisterKnownUserPanel();
         dwo.setPanel(rp);
         dwo.setReady();
     }
@@ -587,7 +587,7 @@ public class GuiCreator {
         dwo.setWait();
         CenterSubPanel csb;
 //        csb = new ProfilePanel(dwo.getGroups());
-        csb = new AccountPanel(dwo.getGroups());
+        csb = new AccountPanel();
 //        csb = new TabbedProfilePanel(dwo.getGroups());
         dwo.setReady();
         return csb;
@@ -923,12 +923,12 @@ public class GuiCreator {
         return null;
     }
 
-    /**
-     * @return fi.dwo.client.domain.AppletConfig[]
-     */
-    public School[] getSchool() {
-        return null;
-    }
+//    /**
+//     * @return fi.dwo.client.domain.AppletConfig[]
+//     */
+//    public School[] getSchool() {
+//        return null;
+//    }
 
     /**
      * @param appletConfig

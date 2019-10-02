@@ -3,8 +3,10 @@ package fi.dwo.dwojapplet.gui;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
@@ -30,9 +32,12 @@ import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.action.ImportScorm;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminAppletManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
+import nl.uu.fi.dwo.rest.dom.entities.DomAppletFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
@@ -107,6 +112,27 @@ class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
 	private JTextArea dataField;
 	private JComboBox<AppletData> appletField;
 
+    public AppletData[] getAppletData() throws Dwo2Exception  {
+        List<DomAppletFull> list = SecureDwoAdminAppletManager.getApplets();
+        AppletData[] result = new AppletData[list.size()];
+        for (int i = 0; i < result.length; i++) {
+          result[i] = getObjectFromReturn(list.get(i));
+        }
+        return result;
+    }
+
+    private AppletData getObjectFromReturn(DomAppletFull dom) throws Dwo2Exception {
+      int id = MySQLPersistenceId.getNativeId(dom).intValue();
+      AppletData s;
+      s = new AppletData();
+      s.setId(id);
+      s.setAppletName(dom.getAppletName());
+      s.setClassName(dom.getClassname());
+      s.setFeatures(dom.getFeatures());
+      s.setJarName(dom.getJarname());
+      return s;
+    }
+	
 	private AddConfigDwoAdminJPanel(DomAppletConfig config) {
 		super(new SpringLayout());
 		this.config = config;
@@ -132,8 +158,8 @@ class AddConfigDwoAdminJPanel extends JPanel implements Comparator<AppletData >{
 		list[0].setId(config.getAppletID());
 		list[0].setAppletName("");
 		try {
-			list = PersistenceFacade.instance().getAppletData();
-		} catch (PersistenceException e) {
+			list = getAppletData();
+		} catch (Dwo2Exception e) {
 		}
 		Arrays.sort(list, this);
 		AppletData current = list[0];
