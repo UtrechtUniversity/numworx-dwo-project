@@ -1,6 +1,7 @@
 // Source file: C:\\parameters\\fi\\dwo\\client\\gui\\CourseNameDialog.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JScrollPane;
@@ -23,6 +24,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -306,9 +308,22 @@ public class CourseNameDialog extends JDialog implements ActionListener {
 
 	public JButton addLogoBtn() {
 		JButton btn = new JButton();
+		btn.setContentAreaFilled(false);
+		btn.setBorder(BorderFactory.createLineBorder(Constants.COLOR15));
+		btn.setBorderPainted(true);
 		getContentPane().add(btn);
 		FontMetrics fm = btn.getFontMetrics(GuiConstants.NORMAL_TEXT);
-		btn.setBounds(10, 55 + fm.getHeight() + 10, 64, 64);
+		btn.setBounds(10, 55 + fm.getHeight() + 10, 252, 160);
+		int extrax = 252-64-48;
+		int extray = 160-64;
+		pane.setLocation(pane.getX()+extrax, pane.getY());
+		name.setLocation(name.getX()+extrax, name.getY());
+        okButton.setLocation(okButton.getX(), okButton.getY()+extray);
+        cancelButton.setLocation(cancelButton.getX(), cancelButton.getY()+extray);
+        if(showScore != null) {
+          showScore.setLocation(showScore.getX()+extrax, showScore.getY());
+        }
+		this.setSize(this.getWidth()+extrax, this.getHeight()+extray);
 		return btn;
 	}
 }

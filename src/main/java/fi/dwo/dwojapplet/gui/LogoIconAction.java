@@ -42,7 +42,7 @@ import fi.dwo.dwojapplet.gui.ScoManagementPanel.IconDialog;
 public class LogoIconAction extends AbstractAction implements Action {
 
 	Logger LOG = Logger.getLogger(getClass().getName());
-	private final LogoIcon scoIcon = new LogoIcon();
+	private final Icon scoIcon = new ImageIcon(DwoHelper.getResourceImage("resources/activiteit_numworx.png"));
 	private IconDialog iconDial;
 	private boolean update;
 	private byte[] imageData;
@@ -123,7 +123,7 @@ public class LogoIconAction extends AbstractAction implements Action {
 				byte[] data = reduceToFit(img0);
 	            reduced = Toolkit.getDefaultToolkit().createImage(data);
 	            setImageData(data);
-	            setIcon(new ReducedImageIcon(reduced));
+	            setIcon(new ImageIcon(reduced));
 	        	setUpdate(true);
 	        	return;
 	        }
@@ -132,7 +132,7 @@ public class LogoIconAction extends AbstractAction implements Action {
 				byte[] data = reduceToFit(img0);
 	            reduced = Toolkit.getDefaultToolkit().createImage(data);
 	            setImageData(data);
-	            setIcon(new ReducedImageIcon(reduced));
+	            setIcon(new ImageIcon(reduced));
 	            setImageUrl("");
 	            setUpdate(true);
 	        }

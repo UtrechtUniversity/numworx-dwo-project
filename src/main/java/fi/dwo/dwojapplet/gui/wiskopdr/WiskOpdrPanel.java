@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -20,7 +21,7 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 	private static final long serialVersionUID = 1L;
 	private final Logger LOG = Logger.getLogger(getClass().getName());
 
-	Component component;
+	JComponent component;
 	String text;
 	LinkIF link;
 
@@ -31,7 +32,8 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 		try {
 			Class<?> wiskopdr = WiskOpdrCache.getInstance();
 			Method m = wiskopdr.getMethod("getWiskOpdrPanel", String.class, Locale.class);
-			component = (Component) m.invoke(null, s, locale);
+			component = (JComponent) m.invoke(null, s, locale);
+			component.setBackground(getBackground());
 			add(component, BorderLayout.CENTER);
 			setSize(component.getSize());
 			return;
@@ -76,7 +78,12 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
   @Override
   public void setBackground(Color bg) {
     super.setBackground(bg);
-    component.setBackground(bg);
+    if (component != null) {
+      component.setBackground(bg);
+      for(Component c: component.getComponents()) {
+        c.setBackground(bg);
+      }
+    }
   }
 
 }
