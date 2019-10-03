@@ -834,13 +834,15 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		setStapOk(false);
 		nagekeken = false;
 		correct = Boolean.FALSE;//moet correct hier niet null zijn?
-		if(feedbackPanel != null)
-		{	feedbackPanel.removeFromParent();
-			//25-11-2016: feedback leeg gezet om te zorgen dat in stelselEditor de feedback niet opnieuw verschijnt. 	
-			//feedback = "";
-			setFeedback("");
-			
-		}
+		
+		// uitgezet, omdat het de feedback bij 'doorgaan' (nieuwe stap) weghaalde
+//		if (feedbackPanel != null)
+//		{
+//		    feedbackPanel.removeFromParent();
+//			//25-11-2016: feedback leeg gezet om te zorgen dat in stelselEditor de feedback niet opnieuw verschijnt. 	
+//			//feedback = "";
+//			setFeedback("");			
+//		}
 		vervangEditorDoorViewer(useranswer, show, setState);
 		terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 	}
