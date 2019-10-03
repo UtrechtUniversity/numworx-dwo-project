@@ -3501,7 +3501,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{
 			// werk de administratie bij
 			
-			if ((pijlVakOperatorenArray.size() > 0) && (pijlVakOperatorenArray.size() == pijlVakken.size())) 
+			if ((pijlVakOperatorenArray.size() > 0) && (pijlVakInhoudenArray.size() > 0) && (pijlVakOperatorenArray.size() == pijlVakken.size())) 
 				// als pijlVakOperatorenArray.size kleiner dan aantal pijlvakken, dan moet hij gewoon toegevoegd worden en niet overschreven
 			{
 				setPijlVakOperatoren(pijlVakOperatorenArray.size() - 1, operator);
@@ -3802,8 +3802,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 			if (vergNieuw == null)
 				vergNieuw = verg.bewerkVergelijking(operator, en);
 
-			setPijlVakOperatoren(pijlVakOperatorenArray.size() - 1, operator);
-			setPijlVakInhouden(pijlVakInhoudenArray.size() - 1, expressie);
+			if (pijlVakOperatorenArray.size() > 0)
+			    setPijlVakOperatoren(pijlVakOperatorenArray.size() - 1, operator);
+			if (pijlVakInhoudenArray.size() > 0)
+			    setPijlVakInhouden(pijlVakInhoudenArray.size() - 1, expressie);
 		}
 		else
 			vergNieuw = verg.bewerkVergelijking(operator, en);
