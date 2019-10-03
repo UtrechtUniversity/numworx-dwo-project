@@ -8,6 +8,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JComponent;
+import javax.swing.SwingWorker;
+
+import org.osgi.util.promise.Deferred;
+import org.osgi.util.promise.Promise;
 
 import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.exceptions.LoginException;
@@ -32,6 +36,8 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.WrapSco;
 import fi.dwo.dwojapplet.gui.fullscreen.FramedScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.numworx.swingbrowser.api.SwingBrowserFactory;
+import nl.numworx.swingbrowser.api.SwingBrowserProvider;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.LoginManager;
@@ -58,6 +64,32 @@ public class GuiCreator {
     protected MainPanel mainPanel;
 
     protected WelcomePanel welcomePanel;
+    
+    private Promise<SwingBrowserFactory> sbf;
+    
+    public Promise<SwingBrowserFactory> getSBF() {
+      if (sbf == null) {
+        Deferred<SwingBrowserFactory> defer = new Deferred<>();
+        sbf = defer.getPromise();
+        new SwingWorker<SwingBrowserFactory, Void>() {
+          @Override
+          protected SwingBrowserFactory doInBackground() throws Exception {
+            SwingBrowserFactory factory = new SwingBrowserProvider().getFactory();
+            factory.newBrowser().close(); // force 1 spare browser
+            return factory;
+          }
+          @Override
+          protected void done() {
+              try {
+                defer.resolve(get());
+              } catch(Throwable t) {
+                defer.fail(t);
+              }
+          }
+        }.execute();
+      }
+      return sbf;
+    }
 
     /**
      * Creates a new instance of a GuiCreator. The GuiCreator can be reached by
@@ -211,19 +243,19 @@ public class GuiCreator {
         }
     }
 
-    /**
-     * Toon <b>G</b>een waarschuwing. Fix voor gebruikersnamen die met het
-     * fidentity systeem ongeldig worden.
-     *
-     * @param username gebruikersnaam
-     * @deprecated wordt niet meer gebruikt.
-     */
-    private void validUsernameCheck(String username) {
+//    /**
+//     * Toon <b>G</b>een waarschuwing. Fix voor gebruikersnamen die met het
+//     * fidentity systeem ongeldig worden.
+//     *
+//     * @param username gebruikersnaam
+//     * @deprecated wordt niet meer gebruikt.
+//     */
+//    private void validUsernameCheck(String username) {
 //		if(!DWO.isValid(username))
 //		{
 //			JOptionPane.showMessageDialog(null,'\'' + username + "' is vanaf november 2007 ongeldig!\nRegistreer een nieuwe gebruikersnaam");	
 //		}
-    }
+//    }
 
     private void validLicenceCheck(User u) {
         School s = u.getSchool();
@@ -241,6 +273,7 @@ public class GuiCreator {
      * @param u
      */
     public void configurePanelsForUser(User u) {
+        getSBF();
         //TODO rewrite nightmare code.
         if (u instanceof Teacher) {
             GuiCreator gc;

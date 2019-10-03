@@ -714,48 +714,48 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         }
     }
 
-    // checks:
-    // no spaces (trimmed)
-    // ascii only
-    // aselect: ....
-    /**
-     * Test username op illegale characters. Alleen ASCII is toegestaan, echter
-     * geen =?* en geen geen ( ) , of \ spaties zijn wel toegestaan, maar niet
-     * aan begin of eind.
-     *
-     * @param username String
-     * @return true als username voldoet
-     * @see org.aselect.server.udb.jndi.JNDIConnector#getUserProfile(String)
-     */
-    public static boolean isValid(String username) {
-
-        if (!username.trim().equals(username)) {
-            return false;
-        }
-        char[] chars = username.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            char c = chars[i];
-            if (c < 0x20 || c >= 0x7F // ascii, no space?, no delete?
-                    || c == '(' // aselect verbiedt =*?
-                    || c == ')' // maar ook , \ ( en ) mogen niet
-                    || c == '*' || c == '?' || c == '=' || c == '\\' || c == ',' || c == ';' // beter
-                    // van
-                    // niet
-                    // in
-                    // LDAP
-                    || c == '+' || c == '#' // nieuw, werkt niet in PHP
-                    ) {
-                return false;
-            }
-        }
-
-        for (String realm : realms) {
-            if (username.endsWith(realm)) {
-                return false;
-            }
-        }
-        return true;
-    }
+//    // checks:
+//    // no spaces (trimmed)
+//    // ascii only
+//    // aselect: ....
+//    /**
+//     * Test username op illegale characters. Alleen ASCII is toegestaan, echter
+//     * geen =?* en geen geen ( ) , of \ spaties zijn wel toegestaan, maar niet
+//     * aan begin of eind.
+//     *
+//     * @param username String
+//     * @return true als username voldoet
+//     * @see org.aselect.server.udb.jndi.JNDIConnector#getUserProfile(String)
+//     */
+//    public static boolean isValid(String username) {
+//
+//        if (!username.trim().equals(username)) {
+//            return false;
+//        }
+//        char[] chars = username.toCharArray();
+//        for (int i = 0; i < chars.length; i++) {
+//            char c = chars[i];
+//            if (c < 0x20 || c >= 0x7F // ascii, no space?, no delete?
+//                    || c == '(' // aselect verbiedt =*?
+//                    || c == ')' // maar ook , \ ( en ) mogen niet
+//                    || c == '*' || c == '?' || c == '=' || c == '\\' || c == ',' || c == ';' // beter
+//                    // van
+//                    // niet
+//                    // in
+//                    // LDAP
+//                    || c == '+' || c == '#' // nieuw, werkt niet in PHP
+//                    ) {
+//                return false;
+//            }
+//        }
+//
+//        for (String realm : realms) {
+//            if (username.endsWith(realm)) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 
     /**
      * Lijst met realms die niet in een te registreren username mogen voorkomen.
@@ -764,7 +764,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      *
      * @see #getInitialUser()
      */
-    private static final String[] realms = {"@kennisnet.org", "@fi.uu.nl", "@w2k3.fi.uu.nl", "@soliscom.uu.nl"};
+//    private static final String[] realms = {"@kennisnet.org", "@fi.uu.nl", "@w2k3.fi.uu.nl", "@soliscom.uu.nl"};
 
     private static final String LEARNER_ID = "cmi.learner_id";
     private static final String LEARNER_NAME = "cmi.learner_name";
@@ -1658,11 +1658,11 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         }
         // Inloggen met ENTREE/OpenID (SAML)
         DwoHelper.setCurrentFacadeUser(getSAMLUser());
-        if (DwoHelper.getCurrentFacadeUser() == null) // Hier wordt A-Select in
-        // DWO actief
-        {
-            DwoHelper.setCurrentFacadeUser(getInitialUser());
-        }
+//        if (DwoHelper.getCurrentFacadeUser() == null) // Hier wordt A-Select in
+//        // DWO actief
+//        {
+//            DwoHelper.setCurrentFacadeUser(getInitialUser());
+//        }
         if (DwoHelper.getCurrentFacadeUser() != null) // Dit is de enige plaats
         // waar op null
         // getest mag worden!
@@ -2603,14 +2603,14 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 
     }
 
-    /**
-     * Geef mij een gebruiker buitenom.
-     *
-     * @return a user.
-     */
-    private User getInitialUser() {
-        return null;
-    }
+//    /**
+//     * Geef mij een gebruiker buitenom.
+//     *
+//     * @return a user.
+//     */
+//    private User getInitialUser() {
+//        return null;
+//    }
 
 //    /**
 //     * Zet een gebruiker in een klas.

@@ -195,7 +195,13 @@
     	</dependency>
     	<dependency>
     		<groupId>nl.numworx.swingbrowser</groupId>
-    		<artifactId>swingbrowser-jfx</artifactId>
+    		<artifactId>swingbrowser-jxb</artifactId>
+    		<version>0.0.1-SNAPSHOT</version>
+    		<scope>provided</scope>
+    	</dependency>
+    	<dependency>
+    		<groupId>nl.numworx.swingbrowser</groupId>
+    		<artifactId>swingbrowser-api</artifactId>
     		<version>0.0.1-SNAPSHOT</version>
     		<scope>provided</scope>
     	</dependency>
@@ -380,8 +386,9 @@
                             <Bundle-SymbolicName>fi.dwo.dwojapplet.domain.DWO</Bundle-SymbolicName>
                             <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
                             <Fragment-Host>fi.dwo.dwojapplet</Fragment-Host>
-                            <Class-Path>swingbrowser-jfx.jar swingbrowser-api.jar</Class-Path>
+                            <Class-Path>swingbrowser-jxb.jar swingbrowser-jfx.jar swingbrowser-api.jar</Class-Path>
                             <Export-Package>fi.beans.numworxlf;version="1.0"</Export-Package>
+  							<Import-Package>nl.numworx.swingbrowser.api;version="[1.0,2)"</Import-Package>
                         </manifestEntries>
                     </archive>
                     <descriptorRefs>
