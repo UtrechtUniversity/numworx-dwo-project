@@ -42,4 +42,6 @@ public enum PersistenceClassType {
     PersistentUrnResource,
     PersistentUser, 
 
+    PersistentACL, 
+
 }

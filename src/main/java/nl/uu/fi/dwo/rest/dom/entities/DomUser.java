@@ -12,9 +12,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class DomUser {
+public class DomUser extends DomId {
 
-    private PersistenceId id;
     private String userName;
     private String givenName;
     private String familyName;
@@ -38,30 +37,12 @@ public class DomUser {
     }
 
     public void clearSettings() {
-        id = null;
+        setId(null);
         userName = "";
         givenName = "";
         familyName = "";
         insertion = "";
         singleSchool = new Boolean(true);
-    }
-
-    /**
-     * The persistence id of the {@Link PersistentUser}.
-     *
-     * @return the classId
-     */
-    public PersistenceId getId() {
-        return id;
-    }
-
-    /**
-     * The persistence id of the {@Link PersistentUser}.
-     *
-     * @param id the id to set
-     */
-    public void setId(PersistenceId id) {
-        this.id = id;
     }
 
     /**
@@ -179,7 +160,7 @@ public class DomUser {
     }
 
     protected void fill(DomUser user) {
-        user.id = this.id == null ? null : this.id.duplicate();
+        user.setId(this.getId() == null ? null : this.getId().duplicate());
         user.userName = this.userName;
         user.singleSchool = this.singleSchool;
         user.givenName = this.givenName;

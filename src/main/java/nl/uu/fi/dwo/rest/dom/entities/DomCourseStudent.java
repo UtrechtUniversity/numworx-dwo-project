@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -13,6 +15,7 @@ public class DomCourseStudent extends DomCourse{
     private byte[] imageData;
     private String description;
     private boolean notVisible;
+    private List<DomACL> acls;
     /**
      * @return the description
      */
@@ -62,6 +65,20 @@ public class DomCourseStudent extends DomCourse{
 
 	public void setNotVisible(boolean notVisible) {
 		this.notVisible = notVisible;
-	} 
+	}
+
+  /**
+   * @return the acls
+   */
+  public List<DomACL> getAcls() {
+    return acls;
+  }
+
+  /**
+   * @param acls the acls to set
+   */
+  public void setAcls(List<DomACL> acls) {
+    this.acls = acls;
+  } 
     
 }
