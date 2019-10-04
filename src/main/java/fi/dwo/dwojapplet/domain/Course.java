@@ -9,6 +9,7 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.CoursePanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import nl.uu.fi.dwo.rest.dom.entities.DomACL;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
@@ -18,6 +19,7 @@ import java.awt.Image;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -690,6 +692,15 @@ public class Course implements LessonGroup, Comparable<Course>, CourseMap, Descr
         }
       }
     }
+
+    private List<DomACL> acls;
+    public void setAcls(List<DomACL> acls) {
+      this.acls = acls;
+    }
+    public List<DomACL> getAcls() {
+      return acls;
+    }
+    
     
     
 }

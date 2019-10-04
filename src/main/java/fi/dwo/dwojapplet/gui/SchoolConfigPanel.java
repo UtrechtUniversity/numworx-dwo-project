@@ -1,15 +1,12 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.beans.numworxlf.JCheckBox;
-import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 
-import java.awt.Component;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BoxLayout;
@@ -26,6 +23,7 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
     private School school;
     JCheckBox modifyModules;
     JCheckBox changeClassStudent;
+    JCheckBox accessTeacher;
 //    JCheckBox changeClassTeacher;
 
     public SchoolConfigPanel(School school) {
@@ -44,14 +42,18 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
 //        add(changeClassTeacher);
         modifyModules = new JCheckBox();
         add(modifyModules);
-
+        accessTeacher = new JCheckBox();
+        add(accessTeacher);
+        
 // opschriften		
         changeClassStudent.setText(TextMapper.getText(TextMapper.GUIC_SETTINGS_STUDENT));
 //        changeClassTeacher.setText(TextMapper.getText(TextMapper.GUIC_SETTINGS_TEACHER));
         modifyModules.setText(TextMapper.getText(TextMapper.GUIC_SETTINGS_MODULE));
+        accessTeacher.setText(TextMapper.dwo2Message().NUM_SEC_ORGANISATION_ACCESSTEACHER());
         changeClassStudent.setBackground(GuiConstants.CELL_BACKGROUND);
 //        changeClassTeacher.setBackground(GuiConstants.CELL_BACKGROUND);
         modifyModules.setBackground(GuiConstants.CELL_BACKGROUND);
+        accessTeacher.setBackground(GuiConstants.CELL_BACKGROUND);
 // initiele waarden
         boolean b;
         b = school.hasRight(User.CHANGE_CLASS_RIGHT);
@@ -60,6 +62,8 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
 //        changeClassTeacher.setSelected(b);
         b = school.hasRight(User.MODIFY_MODULES_RIGHT);
         modifyModules.setSelected(b);
+        b = school.hasRight(User.ACCESS_RIGHT);
+        accessTeacher.setSelected(b);
     }
 
     @Override
@@ -78,7 +82,11 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
         if (i >= 0) {
             sb.replace(i, i + 1, "");
         }
-
+        i = sb.indexOf(String.valueOf(User.ACCESS_RIGHT));
+        if (i>=0) 
+          sb.deleteCharAt(i);
+        
+        
         boolean b;
         b = changeClassStudent.isSelected();
         if (b) {
@@ -92,7 +100,10 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
         if (b) {
             sb.append(User.MODIFY_MODULES_RIGHT);
         }
-
+        b = accessTeacher.isSelected();
+        if (b) {
+          sb.append(User.ACCESS_RIGHT);
+        }
         // school.setRights(sb.toString()); // testing
         try {
             DomSchoolFull dom = new DomSchoolFull();

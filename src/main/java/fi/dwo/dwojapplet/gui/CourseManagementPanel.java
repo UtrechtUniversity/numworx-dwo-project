@@ -14,6 +14,7 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.ScoManagementPanel.IconDialog;
+import fi.dwo.dwojapplet.gui.action.AccessControlAction;
 import fi.dwo.dwojapplet.gui.action.DeleteAction;
 import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
 import fi.dwo.dwojapplet.gui.action.ShareCourseAction;
@@ -518,6 +519,12 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	        	uploadCourseButton.setVisible(true);
         }
         
+        accessAction = new AccessControlAction(this);
+        if (accessAction.isEnabled()) {
+          header.add(Box.createHorizontalStrut(10));
+          header.add(new JButton(accessAction));
+        }
+        
         if(!DWO.SEQUENCE)
         	Arrays.sort(courses);
 
@@ -813,7 +820,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 	private ImportModuleAction importAction;
 	private ShareCourseAction  shareAction;
-
+	private AccessControlAction accessAction;
 
 	private IconDialog iconDial;
 
@@ -862,6 +869,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 		this.map = map;
 		if(importAction!=null)importAction.setCourse(map);
 		if(shareAction != null) shareAction.setMap(map);
+		if(accessAction != null) accessAction.setMap(map);
 	}
 
 // KOPIE van ScoManagement

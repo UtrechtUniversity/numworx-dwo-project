@@ -72,6 +72,11 @@ public class User implements UserGroup, Comparable {
      */
     public static final char CHANGE_CLASS_RIGHT_TEACHER = 'C';
 
+    /**
+     * Access rules 
+    */
+    public static final char ACCESS_RIGHT = 'X';
+
     private String rights = "";
 
     /**
