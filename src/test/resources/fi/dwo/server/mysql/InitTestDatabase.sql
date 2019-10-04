@@ -916,3 +916,18 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2018-03-14 11:13:20
+DROP TABLE IF EXISTS `tblacl`;
+CREATE TABLE `tblacl` (
+  `aclID` int(11) NOT NULL AUTO_INCREMENT,
+  `courseID` int(11) NOT NULL,
+  `dwoProfileID` int(11) NOT NULL,
+  `schoolID` int(11) NOT NULL,
+  `entity` varchar(45) NOT NULL,
+  `access` int(11) NOT NULL,
+  `optlock` int(11) NOT NULL,
+  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
+  `del` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`aclID`),
+  UNIQUE KEY `AK_UNIEK` (`courseID`,`dwoProfileID`,`schoolID`,`entity`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
