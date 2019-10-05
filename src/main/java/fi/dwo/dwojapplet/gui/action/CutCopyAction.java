@@ -21,6 +21,11 @@ public class CutCopyAction extends GuiAction {
     public CutCopyAction(CourseMap object) {
         this.object = object;
     }
+    public CutCopyAction(CourseMap object, boolean cut) {
+      this.object = object;
+      this.cut = cut;
+      setMap(object);
+  }
 
     public CutCopyAction(boolean cut) {
         Clipboard.addPropertyChangeListener("selection", this);

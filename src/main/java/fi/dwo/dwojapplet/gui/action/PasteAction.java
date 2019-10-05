@@ -387,6 +387,7 @@ public class PasteAction extends GuiAction
 		public PasteAction(CourseMap object) {
 			super(TextMapper.getText("paste"));
 			this.map = object;
+			setMap(map);
 		}
 		
 		public PasteAction() {

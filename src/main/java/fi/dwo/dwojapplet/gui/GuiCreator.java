@@ -412,6 +412,15 @@ public class GuiCreator {
     }
 
     /**
+     * check access rights of object
+     * @param o
+     * @return cannot write
+     */
+    public boolean readOnly(Object o) {
+      return true;
+    }
+    
+    /**
      * Returns the current user who is logged in. If the user is logged in as a
      * guest, an instance of Guest is returned.
      *
@@ -1045,7 +1054,7 @@ public class GuiCreator {
         return null;
     }
 
-    public JComponent fx(JComponent stopBtn) {
+    public JComponent fx(Object o, JComponent stopBtn) {
         return null;
     }
 

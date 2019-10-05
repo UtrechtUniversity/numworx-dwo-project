@@ -115,12 +115,12 @@ public class TeacherStrategy implements SelectStrategy {
             }
         }
         if (object instanceof Course || object instanceof Sco) {
-            ActionListener listener = new CutCopyAction(map);
+          CutCopyAction listener = new CutCopyAction(map);
             if (update) {
-                item = new JMenuItem(TextMapper.getText("cut"));
+                item = new JMenuItem(new CutCopyAction(map, true));
                 item.setActionCommand("cut");
-                item.addActionListener(listener);
-                m.add(item);
+                item.setText(TextMapper.getText("cut"));
+               m.add(item);
             }
             item = new JMenuItem(TextMapper.getText("copy"));
             item.setActionCommand("copy");
@@ -131,10 +131,10 @@ public class TeacherStrategy implements SelectStrategy {
               LessonGroup lg = (LessonGroup) object;                  
               int id = lg.getID();
               Action action;
-              if (DwoHelper.isTest()) {
-                action = new ShareAction(id, lg.isDeepestLevel());
-                item = new JMenuItem(action);m.add(item);
-              }
+//              if (DwoHelper.isTest()) {
+//                action = new ShareAction(id, lg.isDeepestLevel());
+//                item = new JMenuItem(action);m.add(item);
+//              }
               action = new ShareHTMLAction(id, lg.isDeepestLevel());
               item = new JMenuItem(action);m.add(item);
             }
@@ -193,7 +193,7 @@ public class TeacherStrategy implements SelectStrategy {
 
     @Override
     public JPopupMenu nodeAction(CourseMap node) {
-        if (getUser().hasRight(User.MODIFY_MODULES_RIGHT)) {
+        if (getUser().hasRight(User.MODIFY_MODULES_RIGHT) || getUser().hasRight(User.ACCESS_RIGHT)) {
             return getPopup(node);
         } else {
             return null;

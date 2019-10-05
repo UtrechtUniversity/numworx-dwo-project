@@ -86,7 +86,7 @@ public class AccessControlAction extends GuiAction {
   public void setMap(Object map) {
     course = map;
     setEnabled(course instanceof Course && 
-      DwoHelper.getCurrentFacadeUser().hasRight(User.ACCESS_RIGHT) &&
+      instance().getUser().hasRight(User.ACCESS_RIGHT) &&
       ((Course)course).getSchoolID() == DwoHelper.getActiveSchoolId() &&
       hasFullAccess( (Course)course)
       );
@@ -114,7 +114,7 @@ public class AccessControlAction extends GuiAction {
         acls = null;
       }
     }
-    if (acls == null||acls.isEmpty()) return DwoHelper.getCurrentFacadeUser().hasRight(User.MODIFY_MODULES_RIGHT);
+    if (acls == null||acls.isEmpty()) return instance().getUser().hasRight(User.MODIFY_MODULES_RIGHT);
     return acls.stream().filter(a -> a.getAccess() == ACL.FULL).anyMatch(a -> set.contains(a.getEntity()));
   }
 

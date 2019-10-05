@@ -6,6 +6,9 @@ package fi.dwo.dwojapplet.gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,11 +40,17 @@ import fi.dwo.dwojapplet.gui.action.WrapSco;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
+import nl.uu.fi.dwo.rest.dom.entities.DomACL;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
  * This class implements Teacher-specific methods of the GuiCreator. These
@@ -87,16 +96,68 @@ public class GuiCreatorTeacher extends GuiCreator {
         }
     }
 
-    private boolean noAdmin, readOnly;
+    private boolean noAdmin;
     protected SecuredTeacherScoContextManager manager;
     protected SecuredTeacherCourseManager courseManager;
+
+    
+    protected Set<PersistenceId> ids;
+    
+    public boolean canWrite(Course c) {
+      if (ids == null) {
+        Set<PersistenceId> set = new HashSet<>();
+        DomSchool school = DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool();
+        set.add(DwoHelper.getCurrentUser().getId());
+        set.add(school.getId());
+        try {
+          List<DomSchoolClass> classes;
+          classes = SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
+          classes.forEach(cl -> set.add(cl.getId()));
+        } catch (Dwo2Exception e) {
+        }
+        ids = set;
+      }
+      List<DomACL> acls = c == null ? null : c.getAcls();
+      while ( (acls == null||acls.isEmpty()) && c != null) {
+        CourseMap m = c.getParentMap();
+        if (m instanceof Course) {
+          c = (Course)m;
+          acls = c.getAcls();
+        } else {
+          c = null;
+          acls = null;
+        }
+      }
+      if (acls == null||acls.isEmpty()) 
+      { User u = DwoHelper.getCurrentFacadeUser();
+// modify + accesscontrol => FULL
+// modify + !accesscontrol -> WRITE
+// !modify + accesscontrol -> READ
+// !modify + !accesscontrokl -> ACCESS
+      return u.hasRight(User.MODIFY_MODULES_RIGHT);
+      }
+      return acls.stream().filter(a -> a.getAccess() == ACL.FULL || a.getAccess() == ACL.WRITE).anyMatch(a -> ids.contains(a.getEntity())); 
+    }
+    
+    @Override
+    public boolean readOnly(Object o) {
+      if (o instanceof Sco) {
+        o = ((Sco) o).getCourse();
+      }
+      if (o instanceof Course) {
+        return ! canWrite((Course) o);
+      }
+
+      return !dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT);
+    }
+    
+    
     /**
      * @param dwo
      */
     public GuiCreatorTeacher(DWO dwo) {
         super(dwo);
         noAdmin = !dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
-        readOnly = !dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT);
         manager = new SecuredTeacherScoContextManager(RestAuthenticator.getInstance().getContext());
         courseManager = new SecuredTeacherCourseManager();
     }
@@ -480,7 +541,7 @@ public class GuiCreatorTeacher extends GuiCreator {
                 return null;
             }
         }
-        return fx(y(new JButton(new CourseManagementAction(courseChoisePanel))));
+        return fx(userObject, y(new JButton(new CourseManagementAction(courseChoisePanel))));
     }
 
     private JButton y(JButton b) {
@@ -490,8 +551,8 @@ public class GuiCreatorTeacher extends GuiCreator {
     }
 
     @Override
-    public JComponent fx(JComponent b) {
-        if (!CenterPanel.isIconizer() || readOnly) {
+    public JComponent fx(Object o, JComponent b) {
+        if (!CenterPanel.isIconizer() || readOnly(o)) {
             return null;
         }
         Box box = Box.createVerticalBox();
@@ -506,7 +567,7 @@ public class GuiCreatorTeacher extends GuiCreator {
         if (noAdmin && coursePanel.getCourse().getSchoolID() == 0) {
             return null;
         }
-        return fx(y(new JButton(new ScoManagementAction(coursePanel))));
+        return fx(coursePanel.getCourse(), y(new JButton(new ScoManagementAction(coursePanel))));
     }
 
     @Override
@@ -529,9 +590,9 @@ public class GuiCreatorTeacher extends GuiCreator {
             } else {
                 box.add(new JButton(new ScoParameterAction(scoPanel)));
             }
-            return fx(box);
+            return fx(scoPanel.getSco(), box);
         }
-        return fx(y(new JButton(new ScoParameterAction(scoPanel))));
+        return fx(scoPanel.getSco(), y(new JButton(new ScoParameterAction(scoPanel))));
     }
 
     @Override

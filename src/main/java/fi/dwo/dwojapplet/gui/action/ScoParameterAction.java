@@ -18,6 +18,8 @@ public class ScoParameterAction extends GuiAction {
     public ScoParameterAction(Sco sco) {
         super(TextMapper.getText(TextMapper.GUIH_EDIT));
         this.sco = sco;
+        setEnabled(!instance().readOnly(sco));
+
     }
 
     @Override

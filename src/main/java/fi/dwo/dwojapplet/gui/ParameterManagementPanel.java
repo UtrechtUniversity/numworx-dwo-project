@@ -345,7 +345,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             unsafeSaveBtn.setForeground(Color.red);
         }
         //box.setBorder(BorderFactory.createLineBorder(Color.red));
-        hp.setButtonBox(GuiCreator.instance().fx(box));
+        hp.setButtonBox(GuiCreator.instance().fx(sco, box));
 
         stopBtn.addActionListener(this);
         saveBtn.addActionListener(this);

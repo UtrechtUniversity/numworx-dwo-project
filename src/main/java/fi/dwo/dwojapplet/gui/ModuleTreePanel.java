@@ -417,7 +417,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 	protected void createMenubar(Box hbox) {
 		bar = new JMenuBar();
 		bar.setOpaque(false);
-		bar.setVisible(GuiCreator.instance().getUser().hasRight(User.MODIFY_MODULES_RIGHT));
+		User user = GuiCreator.instance().getUser();
+        bar.setVisible(user.hasRight(User.MODIFY_MODULES_RIGHT)||user.hasRight(User.ACCESS_RIGHT));
 		JMenu menu; JMenuItem item;
 		menu = new JMenu(TextMapper.getText("file"));
 		item = new JMenuItem();menu.add(item);item.setAction(new NewAction(true, true));

@@ -10,6 +10,10 @@ import fi.dwo.dwojapplet.domain.User;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JComponent;
+
 public class GuiCreatorSchoolAdmin extends GuiCreatorTeacher {
 
     private static final Logger LOG = Logger.getLogger(GuiCreatorSchoolAdmin.class.getName());
@@ -67,4 +71,17 @@ public class GuiCreatorSchoolAdmin extends GuiCreatorTeacher {
         }
         return csp;
     }
+
+    @Override
+    public JComponent fx(Object o, JComponent b) {
+      if (!CenterPanel.isIconizer()) {
+          return null;
+      }
+      Box box = Box.createVerticalBox();
+      box.add(Box.createGlue());
+      box.add(b);
+      box.setBorder(BorderFactory.createEmptyBorder(0, 0, 3, 0)); // Meten!
+      return box;
+    }
+    
 }

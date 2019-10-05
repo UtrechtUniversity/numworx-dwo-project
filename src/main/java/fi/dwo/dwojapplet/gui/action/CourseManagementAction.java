@@ -21,6 +21,7 @@ public class CourseManagementAction extends GuiAction {
     public CourseManagementAction(CourseMap map) {
         super(TextMapper.getText(TextMapper.GUIH_EDIT));
         userObject = map.getUserObject();
+        setEnabled(canModify(map));
     }
 
     @Override

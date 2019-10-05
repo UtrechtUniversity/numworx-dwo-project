@@ -20,7 +20,8 @@ public class ScoManagementAction extends GuiAction {
     public ScoManagementAction(Course course) {
         super(TextMapper.getText(TextMapper.GUIH_EDIT));
         this.course = course;
-    }
+        setEnabled(canModify(course));
+   }
 
     @Override
     public void actionPerformed(ActionEvent arg0) {

@@ -310,11 +310,11 @@ public class GuiCreatorAdmin extends GuiCreator {
         if (userObject == ModuleTreePanel.ALLE_MODULES) {
             return null;
         }
-        return fx(new JButton(new CourseManagementAction(courseChoisePanel)));
+        return fx(null, new JButton(new CourseManagementAction(courseChoisePanel)));
     }
 
     @Override
-    public JComponent fx(JComponent b) {
+    public JComponent fx(Object o, JComponent b) {
         if (!CenterPanel.isIconizer()) {
             return null;
         }
@@ -327,7 +327,7 @@ public class GuiCreatorAdmin extends GuiCreator {
 
     @Override
     public JComponent getButtonBox(CoursePanel coursePanel) {
-        return fx(new JButton(new ScoManagementAction(coursePanel)));
+        return fx(null, new JButton(new ScoManagementAction(coursePanel)));
     }
 
     @Override
@@ -341,9 +341,9 @@ public class GuiCreatorAdmin extends GuiCreator {
             box.add(lab);
             box.add(Box.createHorizontalStrut(10));
             box.add(new JButton(new PreviewAction(scoPanel)));
-            return fx(box);
+            return fx(null, box);
         }
-        return fx(new JButton(new ScoParameterAction(scoPanel)));
+        return fx(null, new JButton(new ScoParameterAction(scoPanel)));
     }
 
     /* (non-Javadoc)

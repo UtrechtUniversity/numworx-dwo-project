@@ -40,7 +40,10 @@ abstract public class GuiAction extends AbstractAction implements PropertyChange
     }
 
     boolean canModify(CourseMap map) {
-        if (instance().getUser().getSchool() == null) {
+      // TODO Kontroleren of dit goed is.
+      //if (true) return !instance().readOnly(map);
+
+      if (instance().getUser().getSchool() == null) {
             return false;
         }
 
@@ -56,18 +59,18 @@ abstract public class GuiAction extends AbstractAction implements PropertyChange
             User user = instance().getUser();
             School school = user.getSchool();
             int ID = school.getSchoolID();
-            return id == ID;// course.getSchoolID() == instance.getUser().getSchool().getSchoolID();
+            return id == ID && !instance().readOnly(course);// course.getSchoolID() == instance.getUser().getSchool().getSchoolID();
         } else if (map.getUserObject() instanceof Sco) {
             if (hasAdminRight()) {
                 return true;
             }
             Course course = ((Sco) map.getUserObject()).getCourse();
-            return course.getSchoolID() == instance().getUser().getSchool().getSchoolID();
+            return course.getSchoolID() == instance().getUser().getSchool().getSchoolID()  && !instance().readOnly(course);
         }
         if (map.getUserObject() == ModuleTreePanel.ALLE_MODULES) {
             return false;
         }
-        return hasAdminRight() || map.getUserObject() == ModuleTreePanel.SCHOOL_MODULES;
+        return hasAdminRight() || (map.getUserObject() == ModuleTreePanel.SCHOOL_MODULES && !instance().readOnly(map)) ;
     }
 
     public GuiAction(String text) {

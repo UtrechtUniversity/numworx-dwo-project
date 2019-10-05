@@ -518,13 +518,13 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	        if(DwoHelper.isSecure()) 
 	        	uploadCourseButton.setVisible(true);
         }
-        
-        accessAction = new AccessControlAction(this);
-        if (accessAction.isEnabled()) {
-          header.add(Box.createHorizontalStrut(10));
-          header.add(new JButton(accessAction));
+        if (DwoHelper.isTest() && DwoHelper.isPremium()) {
+          accessAction = new AccessControlAction(this);
+          if (accessAction.isEnabled()) {
+            header.add(Box.createHorizontalStrut(10));
+            header.add(new JButton(accessAction));
+          }
         }
-        
         if(!DWO.SEQUENCE)
         	Arrays.sort(courses);
 
@@ -609,7 +609,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     	stopBtn.addActionListener(this);
     	stopBtn.setBackground(Constants.COLOR30);
         stopBtn.setForeground(Constants.COLOR15);
-    	hp.setButtonBox(GuiCreator.instance().fx(stopBtn));
+    	hp.setButtonBox(GuiCreator.instance().fx(userObject, stopBtn));
 		return hp;
     }
 
