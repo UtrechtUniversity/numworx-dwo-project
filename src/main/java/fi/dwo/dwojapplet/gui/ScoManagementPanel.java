@@ -595,7 +595,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         stopBtn.addActionListener(this);
         stopBtn.setBackground(Constants.COLOR30);
         stopBtn.setForeground(Constants.COLOR15);
-        hp.setButtonBox(GuiCreator.instance().fx(stopBtn));
+        hp.setButtonBox(GuiCreator.instance().fx(course, stopBtn));
         return hp;
     }
 
