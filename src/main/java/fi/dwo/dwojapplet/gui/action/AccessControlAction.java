@@ -64,7 +64,7 @@ public class AccessControlAction extends GuiAction {
         if (acls == null) acls = Collections.emptyList();
         
         AccessControlPanel panel = new AccessControlPanel(acls, teachers, classes, school);
-        int ok = JOptionPane.showConfirmDialog(getCenter(), panel, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION);
+        int ok = JOptionPane.showConfirmDialog(getCenter(), panel, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (ok == JOptionPane.OK_OPTION) {
           acls = panel.getAcls();
           DomCourseFull edit = new DomCourseFull();
@@ -72,6 +72,7 @@ public class AccessControlAction extends GuiAction {
           edit.setDwoProfileId(DWO.getDwoProfile().getId());
           edit.setSchoolId(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getId());
           edit.setAcls(acls);
+          edit.setNotVisible(c.isNotVisible()); // Moet
           instance().getCourseManager().update(edit);
           c.setAcls(acls);
         }
@@ -103,14 +104,17 @@ public class AccessControlAction extends GuiAction {
     } catch (Dwo2Exception e) {
     }
     List<DomACL> acls = c.getAcls();
-    while (acls == null && c != null) {
+    while ( (acls == null||acls.isEmpty()) && c != null) {
       CourseMap m = c.getParentMap();
       if (m instanceof Course) {
         c = (Course)m;
         acls = c.getAcls();
-      }     
+      } else {
+        c = null;
+        acls = null;
+      }
     }
-    if (acls == null) return false;
+    if (acls == null||acls.isEmpty()) return DwoHelper.getCurrentFacadeUser().hasRight(User.MODIFY_MODULES_RIGHT);
     return acls.stream().filter(a -> a.getAccess() == ACL.FULL).anyMatch(a -> set.contains(a.getEntity()));
   }
 

@@ -661,6 +661,7 @@ public class Course implements LessonGroup, Comparable<Course>, CourseMap, Descr
       setName(sample.getName());
       setImageData(sample.getImageData());
       setImageUrl(sample.getImage());
+      setAcls(sample.getAcls());
       if(sample.getSequenceNr() != null)
         sequencenr = sample.getSequenceNr().intValue();
       else

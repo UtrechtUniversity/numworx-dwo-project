@@ -31,7 +31,7 @@ import javax.swing.table.TableCellRenderer;
 
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JComboBox;
-import fi.beans.numworxlf.JOptionPane;
+import javax.swing.JOptionPane;
 import fi.beans.numworxlf.JRadioButton;
 import fi.beans.numworxlf.JScrollPane;
 import fi.dwo.commons.system.TextMapper;
@@ -172,7 +172,7 @@ public class AccessControlPanel extends JPanel implements ActionListener {
           {
               DomACL c = model.acls.get(row);
               if (editACL(c)) {
-                  model.fireTableCellUpdated(row,0);
+                  model.fireTableCellUpdated(row,2);
               }
           } else if (value == deleteImage)
           {
@@ -330,9 +330,13 @@ public class AccessControlPanel extends JPanel implements ActionListener {
     this.classes = toMap(classes);
     this.school = Collections.singletonMap(school.getId(),school);
     this.teachers = toMap(teachers);
-    this.model = new TableModel(Collections.singletonList(new DomACL()));
+    DomACL o = new DomACL();
+    o.setEntity(school.getId());
+    o.setAccess(ACL.ACCESS);
+    this.model = new TableModel(Collections.singletonList(o));
     this.table = new JTable(model);
     TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
+    TableUtil.setJTableSizes(table);
     this.model.acls = new ArrayList<>(acls);
     
     this.addButton = new JButton("Toegang toevoegen");
@@ -353,7 +357,7 @@ public class AccessControlPanel extends JPanel implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == addButton) {
       AddAccessPanel panel = new AddAccessPanel();
-      int ok = JOptionPane.showConfirmDialog(this, panel, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION);
+      int ok = JOptionPane.showConfirmDialog(this, panel, e.getActionCommand(), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
       if (ok == JOptionPane.OK_OPTION) {
         int i = model.getRowCount();
         model.acls.add(panel.getAcl());
