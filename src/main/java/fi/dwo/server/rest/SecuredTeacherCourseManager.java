@@ -89,6 +89,7 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
                       result.setCourseID(courseID);
                       result.setDwoProfileID(profile);
                       result.setSchoolID(schoolid);
+                      result.setOptlock(dom.getOptLock());
                     } catch (Dwo2Exception e) {
                         throw new Dwo2RestException(e);
                      }
