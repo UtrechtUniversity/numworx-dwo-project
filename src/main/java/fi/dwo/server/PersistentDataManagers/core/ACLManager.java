@@ -4,7 +4,10 @@ import fi.dwo.commons.persistence.entities.PersistentACL;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -166,7 +169,7 @@ public class ACLManager {
     public static List<PersistentACL> findByCourse(PersistentCourse s) {
       EntityManager em = getEntityManager();
       try {
-          javax.persistence.TypedQuery<PersistentACL> q = em.createNamedQuery("PersistentACL.findByCourseID", PersistentACL.class);
+          TypedQuery<PersistentACL> q = em.createNamedQuery("PersistentACL.findByCourseID", PersistentACL.class);
           q.setParameter("courseID", s.getCourseID());
           List<PersistentACL> list = q.getResultList();
           LOG.log(Level.FINE, "ACL-manager retrieved {0} PersistentACL with courseid {1}", new Object[]{list.size(), s.getCourseID()});
@@ -176,5 +179,40 @@ public class ACLManager {
           em.close();
       }
   }
-
+    
+    public static List<PersistentACL> updateByCourse(PersistentCourse s, List<PersistentACL> acls) 
+    throws PersistenceException {
+      EntityManager em = getEntityManager();
+      try {
+        em.getTransaction().begin();
+        TypedQuery<PersistentACL> q = em.createNamedQuery("PersistentACL.findByCourseID", PersistentACL.class);
+        q.setParameter("courseID", s.getCourseID());
+        List<PersistentACL> list = q.getResultList();
+        for (PersistentACL item: list) {
+          boolean present = acls.stream().anyMatch(a -> item.getAclID().equals(a.getAclID()) );
+          if (!present) {
+            em.remove(item);
+          }
+        }
+        list = new ArrayList<>(); 
+        for(PersistentACL item : acls) {
+           if (item.getAclID() == null) {
+             item.setCourseID(s.getCourseID());
+             item.setDwoProfileID(s.getDwoProfileID());
+             item.setSchoolID(s.getSchoolID());
+             em.persist(item);
+           } else {
+             item = em.merge(item);
+           }
+           list.add(item);
+         }
+        em.getTransaction().commit();
+        acls = list;       
+      } finally {
+        em.close();
+      }
+      return acls;
+    }
+    
+    
 }

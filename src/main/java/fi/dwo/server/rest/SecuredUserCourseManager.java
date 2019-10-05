@@ -124,7 +124,7 @@ public class SecuredUserCourseManager {
 		List<PersistentCourse> courses = CourseManager.findChildrenOf(profile, school);		
 		Stream<PersistentCourse> stream = courses.stream();
 		String pfx = info.getRequestUri().resolve(PUBLIC_COURSE_GET_IMAGE).toString();
-		Stream<DomCourseStudent> map = stream.map(new CourseBuilder(pfx, hasRole));
+		Stream<DomCourseStudent> map = stream.map(new CourseBuilder(pfx, hasRole,school.accessControl()));
 		map = map.sorted(DomCourseStudentComparator.INSTANCE);
 		return map.collect(Collectors.toList());
     }
@@ -162,7 +162,7 @@ public class SecuredUserCourseManager {
     		List<PersistentCourse> courses = CourseManager.findChildrenOf(profile, school);
     		String pfx = info.getRequestUri().resolve(PUBLIC_COURSE_GET_IMAGE).toString();
     		Stream<PersistentCourse> stream = courses.stream();
-			Stream<DomCourseStudent> map = stream.map(new CourseBuilder(pfx,hasRole));
+			Stream<DomCourseStudent> map = stream.map(new CourseBuilder(pfx,hasRole,false));
 			map = map.sorted(DomCourseStudentComparator.INSTANCE);
     		return map.collect(Collectors.toList());
     	} catch (Dwo2RestException e) {
@@ -214,7 +214,7 @@ public class SecuredUserCourseManager {
     		List<PersistentCourse> courses = CourseManager.findChildrenOf(parent);
     		String pfx = info.getRequestUri().resolve(PUBLIC_COURSE_GET_IMAGE).toString();
     		return courses.stream()
-    				.map( new CourseBuilder(pfx, hasRole) )
+    				.map( new CourseBuilder(pfx, hasRole, school.accessControl()) )
     				.sorted(DomCourseStudentComparator.INSTANCE)
     				.collect(Collectors.toList());
     	} catch (Dwo2RestException e) {

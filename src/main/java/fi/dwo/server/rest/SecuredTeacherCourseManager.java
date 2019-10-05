@@ -4,14 +4,21 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentACL;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.actions.MySQLCourseActions;
+import fi.dwo.server.PersistentDataManagers.core.ACLManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 
+import java.util.List;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
 import javax.persistence.RollbackException;
@@ -21,6 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomACL;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -57,8 +65,10 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
     @Path("update")
     @Produces({"application/json"})
     public DomCourseFull update(@Context SecurityContext sc, RestCourseFull rest) throws Dwo2Exception {
-      SchoolAdminTeacherState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
-          .setHasRole(rest.getRestContext().getDomHasRole()).buildSchoolAdminTeacher();
+      UserState_HR_R_S_SG_U withrole = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName())
+          .setHasRole(rest.getRestContext().getDomHasRole());
+      PersistentSchool school = withrole.getSchool();
+      SchoolAdminTeacherState_HR_R_S_SG_U state = withrole.buildSchoolAdminTeacher();
       
       DomCourseFull course = rest.getDomCourse();
     	try {
@@ -66,6 +76,33 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 			Long courseID = MySQLPersistenceId.getNativeId(course);
 			PersistentCourse pc = CourseManager.findEntity(courseID);
 // editable fields?
+			if(course.getAcls() != null && school.accessControl() && school.getSchoolID().equals(pc.getSchoolID())) {
+			  Long profile = pc.getDwoProfileID();
+			  Long schoolid = pc.getSchoolID();
+			  Function<DomACL, PersistentACL> mapper = 
+			      dom -> {
+			        PersistentACL result = new PersistentACL();
+			        try {
+                      result.setAclID(MySQLPersistenceId.getNativeId(dom));
+                      result.setAccess(dom.getAccess());
+                      result.setEntity(dom.getEntity().getIdString());
+                      result.setCourseID(courseID);
+                      result.setDwoProfileID(profile);
+                      result.setSchoolID(schoolid);
+                    } catch (Dwo2Exception e) {
+                        throw new Dwo2RestException(e);
+                     }
+			        return result;
+			      };
+              List<PersistentACL> list = 
+			      course.getAcls().stream().map(
+			          mapper         
+			          ).collect(Collectors.toList());
+// FIXME more security
+              ACLManager.updateByCourse(pc, list);
+			}
+			
+			
 			if(course.getName() != null) pc.setName(course.getName());
 			if(course.getDescription() != null) pc.setDescription(course.getDescription());
 			//if(course.getImage() != null) pc.setImage(course.getImage()); // course.getImage is NOT EDITABLE
@@ -113,6 +150,9 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 
 			pc=CourseManager.edit(pc);
 			course = pc.buildDomCourseFull();
+			if (school.accessControl()) {
+			  course.setAcls(ACLManager.findByCourse(pc).stream().map(PersistentACL::buildDomACL).collect(Collectors.toList()));
+			}
     	} catch (RollbackException e) {
     	    String msg = e.getMessage();
     	    //if(msg.contains("Duplicate entry")) 

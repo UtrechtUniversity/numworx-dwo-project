@@ -925,9 +925,10 @@ CREATE TABLE `tblacl` (
   `entity` varchar(45) NOT NULL,
   `access` int(11) NOT NULL,
   `optlock` int(11) NOT NULL,
-  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
+  `lastChangeTimeStamp` bigint(20) NOT NULL,
   `del` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`aclID`),
-  UNIQUE KEY `AK_UNIEK` (`courseID`,`dwoProfileID`,`schoolID`,`entity`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+  UNIQUE KEY `UNIEK` (`courseID`,`dwoProfileID`,`schoolID`,`entity`),
+  KEY `COURSE` (`courseID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

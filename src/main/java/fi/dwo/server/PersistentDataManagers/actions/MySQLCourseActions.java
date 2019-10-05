@@ -1,5 +1,6 @@
 package fi.dwo.server.PersistentDataManagers.actions;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,6 +11,7 @@ import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
+import fi.dwo.server.PersistentDataManagers.core.ACLManager;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
@@ -149,6 +151,7 @@ public class MySQLCourseActions {
       scos.stream().forEach(sco -> {MySQLScoContextActions.remove(sco,pc);});
       List<PersistentClassCourse> cc = ClassCourseManager.findEntities(pc);
       cc.forEach(ccc -> ClassCourseManager.destroy(ccc.getClassCourseID()));
+      ACLManager.updateByCourse(pc, Collections.emptyList());
       CourseManager.destroy(pc.getCourseID());
  // sequencenr doorschuiven.
       long parentID = pc.getParentID();

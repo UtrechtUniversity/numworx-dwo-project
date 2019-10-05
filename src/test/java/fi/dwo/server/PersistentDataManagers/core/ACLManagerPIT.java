@@ -11,6 +11,8 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -126,8 +128,8 @@ public class ACLManagerPIT {
         ACLManager.destroy(acl.getAclID());
         acl = ACLManager.findEntity(acl2.getAclID());
         ACLManager.destroy(acl.getAclID());
-        list = ACLManager.findByCourse(new PersistentCourse(acl1.getCourseID()));
-        assertFalse("ACLManager.destroy() failed.",list.isEmpty());
+        list = ACLManager.findByCourse(new PersistentCourse(acl2.getCourseID()));
+        assertTrue("ACLManager.destroy() failed.",list.isEmpty());
         }    
     
     /**
@@ -299,21 +301,25 @@ public class ACLManagerPIT {
     }
 
     /**
-     * Test of findBySchoolName method, of class SchoolManager.
+     * Test of findByCourse method, of class ACLManager.
      */
-    @Test @Ignore
-    public void testFindBySchoolLogin() {
-//        try {
-//            SchoolManager.create(schoolA);
-//            PersistentSchool result = SchoolManager.findBySchoolLogin(schoolA.getSchoolLogin());
-//            if (!result.similar(schoolA)) {
-//                fail("Found different school as created.");
-//            }
-//            SchoolManager.destroy(result.getSchoolID());
-//        }
-//        catch (Exception e) {
-//            fail("Exception during find.");
-//        }
+    @Test 
+    public void testFindByCourse() throws Exception {
+      PersistentCourse c = new PersistentCourse(acl1.getCourseID());
+      c.setDwoProfileID(acl1.getDwoProfileID());
+      c.setSchoolID(acl1.getSchoolID());
+      ACLManager.create(acl1);
+
+      List<PersistentACL> list = ACLManager.findByCourse(c);
+      list.add(acl2);
+      list = ACLManager.updateByCourse(c, list);
+      assertEquals(2, list.size());
+      assertNotNull(list.get(1).getAclID());
+      list.remove(0);
+      list = ACLManager.updateByCourse(c, list);
+      assertEquals(1, list.size());
+      assertNull(ACLManager.findEntity(acl1.getAclID()));
+      ACLManager.updateByCourse(c, Collections.emptyList());
     }
 
 }
