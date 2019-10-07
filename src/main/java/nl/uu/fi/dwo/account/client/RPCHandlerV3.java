@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.account.client;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -64,6 +65,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	UserResultsManager resultManager;
 	StudentScoDataManager scormApi;
 	SecuredStudentStudentModelManager studentModelManager;
+	AccessManager accessManager;
 	
 	protected Promise<DomDwoProfileFull> profile;
 	
@@ -77,6 +79,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		studentManager = new PublicCoursesOfSchoolClassManager();
 		resultManager = new PublicUserResultsManager();
 		scormApi = new PublicStudentScoDataManager();
+		accessManager = new AccessManager();
 		
 		this.profile = getDwoProfile(profile);
 	}
@@ -162,17 +165,21 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 		);
 	}
 	
+	public static final Promise<List<DomCourseStudent>> NO_ACCESS = Promises.resolved(Collections.emptyList());
+	
 	public Promise<List<DomCourseStudent>> getCourses(Object id) {
-		final DomCourse parent = toCourse(id);	
-		return profile.then(new Success<DomDwoProfile, List<DomCourseStudent>>() {
 
-			@Override
-			public Promise<List<DomCourseStudent>> call(
-					Promise<DomDwoProfile> resolved) throws Exception {
-				return courseManager.getCourses(parent, resolved.getValue(),context);
-			}
-		});
-	}
+	  Promise<Boolean> start = AccessManager.TRUE;
+	  if (id instanceof DomCourseStudent) {
+	    start = accessManager.access((DomCourseStudent) id);
+	  }
+	  final DomCourse parent = toCourse(id);
+	  return start.then(p -> {
+	    if (p.getValue().booleanValue())
+	      return profile.then(resolved-> courseManager.getCourses(parent, resolved.getValue(),context));
+	    return NO_ACCESS;
+	  });}
+
 
 	private DomCourse toCourse(Object id) {
 		if(id instanceof DomCourse) return (DomCourse) id;

@@ -79,9 +79,7 @@ public abstract class RPCHandlerV2 extends RPCHandlerV1 {
      * @return
      */
     public Promise<DomSchoolsRolesAndClassesV2> getSchoolLogins() {
-		PromiseCallback<DomSchoolsRolesAndClassesV2> defer = new PromiseCallback<>();
-		schoolManager.getSchoolLoginsV2(defer);
-		return defer.getPromise();
+		return schoolManager.getSchoolLogins();
 	}
 		
     /**

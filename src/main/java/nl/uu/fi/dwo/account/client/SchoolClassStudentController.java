@@ -58,14 +58,14 @@ class SchoolClassStudentController {
         updateStudentsSchoolClassesInView();
     }
 
-    /**
-     *
-     * @param callBack
-     * @deprecated
-     */
-    public void getCurrentSchoolRoleAndClass(AsyncCallback<DomSchoolsRolesAndClassesV2> callBack) {
-        loginManager.getSchoolLoginsV2(callBack);
-    };
+//    /**
+//     *
+//     * @param callBack
+//     * @deprecated
+//     */
+//    public void getCurrentSchoolRoleAndClass(AsyncCallback<DomSchoolsRolesAndClassesV2> callBack) {
+//        loginManager.getSchoolLoginsV2(callBack);
+//    };
     /**
      * @return the currentUser
      */
