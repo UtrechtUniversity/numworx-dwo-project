@@ -23,7 +23,7 @@ public class NumworxTextFieldUI extends BasicTextFieldUI implements Constants {
       Border b = getComponent().getBorder();
       if (b == null || b instanceof UIResource) 
       {
-        getComponent().setBorder(new BorderUIResource(BorderFactory.createLineBorder(colorBlue3)));
+        getComponent().setBorder(createDefaultBorder());
         getComponent().repaint();
       }
     }
@@ -38,7 +38,15 @@ public class NumworxTextFieldUI extends BasicTextFieldUI implements Constants {
     return new BasicTextFieldUI();
 }
 
-  private javax.swing.JTextField editor;
+  private static BorderUIResource createDefaultBorder() {
+	return new BorderUIResource(
+			BorderFactory.createCompoundBorder(
+			BorderFactory.createLineBorder(colorBlue3),
+			BorderFactory.createEmptyBorder(2,2,2,2)
+			));
+}
+
+private javax.swing.JTextField editor;
   
   /* (non-Javadoc)
    * @see javax.swing.plaf.basic.BasicTextUI#installDefaults()
@@ -49,7 +57,7 @@ public class NumworxTextFieldUI extends BasicTextFieldUI implements Constants {
     super.installDefaults();
     Border b = editor.getBorder();
     if (b == null || b instanceof UIResource) 
-      editor.setBorder(new BorderUIResource(BorderFactory.createLineBorder(colorBlue3)));
+      editor.setBorder(createDefaultBorder());
   }
 
   /* (non-Javadoc)
