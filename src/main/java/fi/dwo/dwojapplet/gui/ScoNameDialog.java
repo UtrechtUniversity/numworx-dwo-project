@@ -1,14 +1,36 @@
 // Source file: C:\\parameters\\fi\\dwo\\client\\gui\\ScoNameDialog.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JCheckBox;
+import fi.beans.numworxlf.JScrollPane;
+import fi.beans.numworxlf.JTextField;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.AppletConfig;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.gui.action.CopyLabel;
+import fi.dwo.dwojapplet.gui.action.ShareHTMLAction;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 /**
  * This is a dialog for editing the SCO name and description.
@@ -16,115 +38,136 @@ import java.awt.Component;
  * @author M.J.B. Kupers
  *
  */
-public class ScoNameDialog //extends Dialog implements ActionListener,
-// WindowListener
-{
+public class ScoNameDialog extends JDialog 
 
-//    private String scoName;
-//
-//    private String scoDescription;
-//
-//    private boolean confirmed;
-//
-//    private TextField name;
-//
-//    private TextArea description;
-//
-//    private JButton okButton;
-//
-//    private JButton cancelButton;
-//
-//    private ScoNameDialog(Component owner, String windowTitle, String scoName,
-//            String scoDescription) {
-//        super(DwoHelper.getFrameForComponent(owner),
-//                windowTitle, true);
-//        this.setLayout(new FlowLayout());
-//        Panel contentPane = new Panel(null);
-//        add(contentPane);
-//        this.setBackground(GuiConstants.MAIN_BACKGROUND);
-//        this.scoName = scoName;
-//        this.scoDescription = scoDescription;
-//        confirmed = false;
-//
-//        Label l;
-//        FontMetrics fm;
-//
-//        /* Sconame label */
-//        l = new Label(TextMapper.getText(TextMapper.GUISDLG_SCO_NAME) + ":");
-//        l.setForeground(Color.black);
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setLocation(10, 30);
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        l.setVisible(false);
-//        contentPane.add(l);
-//        l.setVisible(true);
-//
-//        /* Sconame field */
-//        name = new TextField(scoName);
-//        name.setBounds(150, 28, 200, 20);
-//        name.setVisible(false);
-//        contentPane.add(name);
-//        name.setVisible(true);
-//
-//        /* Scodescription label */
-//        l = new Label(TextMapper.getText(TextMapper.GUISDLG_SCO_DESCRIPTION)
-//                + ":");
-//        l.setForeground(Color.black);
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setLocation(10, 55);
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        l.setVisible(false);
-//        contentPane.add(l);
-//        l.setVisible(true);
-//
-//        /* Scodescription field */
-//        description = new TextArea(scoDescription, 0, 0, TextArea.SCROLLBARS_VERTICAL_ONLY);
-//        description.setBounds(150, 53, 200, 100);
-//        description.setVisible(false);
-//        contentPane.add(description);
-//        description.setVisible(true);
-//
-//        contentPane.setSize(360, 220);
-//
-//        /* Register button */
-//        okButton = new JButton(TextMapper.getText(TextMapper.BTN_OK));//,  GuiConstants.MAIN_BACKGROUND);
-//        okButton.setSize(okButton.getPreferredSize());
-//        okButton.addActionListener(this);
-//
-//        /* Reset button */
-//        cancelButton = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));//, GuiConstants.MAIN_BACKGROUND);
-//        cancelButton.setSize(cancelButton.getPreferredSize());
-//        cancelButton.addActionListener(this);
-//
-//        okButton.setLocation(
-//                (contentPane.getSize().width / 2)
-//                        - ((okButton.getSize().width
-//                                + cancelButton.getSize().width + 5) / 2), 163);
-//        contentPane.add(okButton);
-//
-//        cancelButton.setLocation(
-//                (contentPane.getSize().width / 2)
-//                        - ((okButton.getSize().width
-//                                + cancelButton.getSize().width + 5) / 2)
-//                        + okButton.getSize().width + 5, 163);
-//        contentPane.add(cancelButton);
-//
-//        Point p = owner != null ? owner.getLocation() : new Point(0, 0);
-//        Dimension parentSize = owner != null ? owner.getSize() : Toolkit
-//                .getDefaultToolkit().getScreenSize();
-//        Dimension mySize = getSize();
-//        int x = p.x + (parentSize.width - mySize.width) / 2;
-//        int y = p.y + (parentSize.height - mySize.height) / 2;
-//
-//        setLocation(x, y);
-//        this.addWindowListener(this);
-//        pack();
-//    }
-//    public static Sco addSco(Course course, AppletConfig appletConfig) {
-//        return addSco(null, course, appletConfig);
-//    }
+{
+    private boolean confirmed;
+    private JCheckBox showScore;
+    private JTextField nameField;
+    private JTextArea textarea;
+    private JButton logoBtn;
+
+    public ScoNameDialog(Component owner, String title, int id, String name, String description,
+      String guiName, String guiDescription, boolean b) {
+      super(DwoHelper.getFrameForComponent(owner), true);
+      setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+      Container content = getContentPane();
+      content.setLayout(new BorderLayout());
+      JLabel header = new JLabel(title);
+      header.setOpaque(true);
+      header.setFont(new Font("Ubuntu", Font.PLAIN, 24));
+      header.setForeground(Constants.COLOR21);
+      header.setBackground(GuiConstants.HEADER_COLOR);
+      header.setHorizontalAlignment(JLabel.CENTER);
+      header.setBorder(BorderFactory.createEmptyBorder(7,7,7,7));
+
+      content.add(header, BorderLayout.PAGE_START);
+      JPanel footer = new JPanel(new FlowLayout(FlowLayout.CENTER,20,10));
+      footer.setOpaque(true);
+      footer.setBackground(Constants.COLOR21);
+      JButton ok = new JButton(TextMapper.getText(TextMapper.BTN_OK));
+      ok.addActionListener(this::onOk);
+      footer.add(ok);
+      JButton cancel = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
+      sameSize(ok, cancel);
+      cancel.addActionListener(this::onCancel);
+      footer.add(cancel);
+      content.add(footer, BorderLayout.PAGE_END);
+      
+      Box hb = Box.createHorizontalBox(); content.add(hb);
+      
+      Box vb;
+// left box:
+      vb = Box.createVerticalBox(); hb.add(vb);
+      JLabel nameLabel = new JLabel(TextMapper.getText(guiName));
+      nameLabel.setForeground(Constants.COLOR15);
+      nameLabel.setFont(Constants.FONT13);
+      vb.add(nameLabel); vb.add(Box.createVerticalStrut(5));
+      nameLabel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      this.nameField = new JTextField(name);
+      nameField.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      vb.add(nameField); vb.add(Box.createVerticalStrut(5));
+      JLabel descLabel = new JLabel(TextMapper.getText(guiDescription));
+      descLabel.setForeground(Constants.COLOR15);
+      descLabel.setFont(Constants.FONT13);
+      descLabel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      vb.add(descLabel); vb.add(Box.createVerticalStrut(5));
+      this.textarea = new JTextArea(description, 0, 0);
+      JScrollPane pane = new JScrollPane(textarea);
+      pane.setSize(200, 100);
+      pane.setPreferredSize(pane.getSize());
+      pane.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      pane.setBorder(BorderFactory.createLineBorder(Constants.colorBlue3));
+      
+      vb.add(pane); vb.add(Box.createVerticalStrut(5));
+      
+      showScore = new JCheckBox(TextMapper.getText(TextMapper.GUIS_SHOW_SCORE));
+      showScore.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      vb.add(showScore); 
+      
+      if (id > 0) {
+        vb.add(Box.createVerticalStrut(5));
+        JLabel idLabel = new JLabel(TextMapper.getText("Activiteitnummer: " + id));
+        vb.add(idLabel);
+        idLabel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        idLabel.setForeground(Constants.COLOR15);
+        if (DwoHelper.isPremium()) {
+          CopyLabel copyAction = new CopyLabel(idLabel.getText());
+          copyAction.add(new ShareHTMLAction(id, true));        
+          idLabel.addMouseListener(copyAction);
+        }
+      }
+      hb.add(Box.createHorizontalStrut(40));
+      hb.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+// right box
+      vb = Box.createVerticalBox(); hb.add(vb);
+      JLabel logoLabel = new JLabel(TextMapper.getText("Activiteitafbeelding"));
+      logoLabel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      logoLabel.setForeground(Constants.COLOR15);
+      logoLabel.setFont(Constants.FONT13);
+      vb.add(logoLabel);vb.add(Box.createVerticalStrut(5));
+      
+      logoBtn = new JButton();
+      logoBtn.setContentAreaFilled(false);
+      logoBtn.setBorder(BorderFactory.createLineBorder(Constants.colorBlue3));
+      logoBtn.setBorderPainted(true);
+      logoBtn.setSize(252, 160);
+      logoBtn.setPreferredSize(logoBtn.getSize());
+      logoBtn.setMinimumSize(logoBtn.getSize());
+      logoBtn.setMaximumSize(logoBtn.getSize());
+      logoBtn.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      vb.add(logoBtn);
+      vb.add(Box.createVerticalGlue());
+
+      owner = DwoHelper.getApplet(); // centreer t.o.v. dwo applet
+      Point p = owner != null ? owner.getLocationOnScreen() : new Point(0, 0);
+      Dimension parentSize = owner != null ? owner.getSize()
+              : Toolkit.getDefaultToolkit().getScreenSize();
+      pack();
+      Dimension mySize = getSize();
+      int x = p.x + (parentSize.width - mySize.width) / 2;
+      int y = p.y + (parentSize.height - mySize.height) / 2;
+      setLocation(x, y);
+
+    }
+
+    private void sameSize(JButton... btns) {
+      Dimension max = btns[0].getPreferredSize();
+      for(JButton b: btns) {
+        Dimension pref = b.getPreferredSize();
+        if (pref.width > max.width) max.width = pref.width;
+        if (pref.height > max.height) max.height = pref.height;
+      }
+      for(JButton b: btns) {
+        b.setPreferredSize(max);
+      }
+      
+    }
+
+    private void onOk(ActionEvent e) {this.confirmed = true; dispose();}
+    private void onCancel(ActionEvent e) { dispose(); }
+    
     /**
      * @param owner
      * @param appletConfig
@@ -132,7 +175,7 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
      * @return fi.dwo.client.domain.Sco
      */
     public static Sco addSco(Component owner, Course course, AppletConfig appletConfig) {
-        CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper
+        ScoNameDialog cnd = new ScoNameDialog(owner, TextMapper
                 .getText(TextMapper.GUISDLG_TTL_ADD_SCO), 0, appletConfig.getName(), "", TextMapper.GUISDLG_SCO_NAME, TextMapper.GUISDLG_SCO_DESCRIPTION, true);
         cnd.setShowScore(true);
         JButton logobtn = cnd.addLogoBtn();
@@ -161,6 +204,31 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
         }
     }
 
+    private boolean isConfirmed() {
+      return confirmed;
+    }
+
+    private JButton addLogoBtn() {
+      return logoBtn;
+    }
+
+    private void setShowScore(boolean b) {
+      showScore.setSelected(b);
+      
+    }
+
+    private String getScoName() {
+      return nameField.getText();
+    }
+
+    private String getScoDescription() {
+      return textarea.getText();
+    }
+
+    private boolean isShowScore() {
+      return showScore.isSelected();
+    }
+
     public static boolean editSco(Sco sco) {
         return editSco(sco, DwoHelper.getApplet());
     }
@@ -171,7 +239,7 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
      * @return boolean
      */
     public static boolean editSco(Sco sco, Component owner) {
-        CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper
+        ScoNameDialog cnd = new ScoNameDialog(owner, TextMapper
                 .getText(TextMapper.GUISDLG_TTL_EDIT_SCO), sco.getScoID(), sco.getScoName(),
                 sco.getDescription(), TextMapper.GUISDLG_SCO_NAME, TextMapper.GUISDLG_SCO_DESCRIPTION, true);
         cnd.setShowScore(sco.isShowScore());
@@ -216,123 +284,5 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-//    public void actionPerformed(ActionEvent e) {
-//        if (e.getSource() == cancelButton) {
-//            this.setVisible(false);
-//        } else if (e.getSource() == okButton) {
-//            scoName = name.getText();
-//            scoDescription = description.getText();
-//            confirmed = true;
-//            this.setVisible(false);
-//        }
-//
-//    }
-//
-//    /**
-//     * Invoked when the window is set to be the user's active window, which
-//     * means the window (or one of its subcomponents) will receive keyboard
-//     * events.
-//     * 
-//     * @param e
-//     *            The WindowEvent.
-//     * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
-//     */
-//    public void windowActivated(WindowEvent e) {
-//    }
-//
-//    /**
-//     * Invoked when a window has been closed as the result of calling dispose on
-//     * the window.
-//     * 
-//     * @param e
-//     *            The WindowEvent.
-//     * @see java.awt.event.WindowListener#windowClosed(java.awt.event.WindowEvent)
-//     */
-//    public void windowClosed(WindowEvent e) {
-//    }
-//
-//    /**
-//     * Invoked when the user attempts to close the window from the window's
-//     * system menu. If the program does not explicitly hide or dispose the
-//     * window while processing this event, the window close operation will be
-//     * cancelled.
-//     * 
-//     * @param e
-//     *            The WindowEvent.
-//     * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
-//     */
-//    public void windowClosing(WindowEvent e) {
-//        setVisible(false);
-//        dispose();
-//    }
-//
-//    /**
-//     * Invoked when a window is no longer the user's active window, which means
-//     * that keyboard events will no longer be delivered to the window or its
-//     * subcomponents.
-//     * 
-//     * @param e
-//     *            The WindowEvent.
-//     * @see java.awt.event.WindowListener#windowDeactivated(java.awt.event.WindowEvent)
-//     */
-//    public void windowDeactivated(WindowEvent e) {
-//    }
-//
-//    /**
-//     * Invoked when a window is changed from a minimized to a normal state.
-//     * 
-//     * @param e
-//     *            The WindowEvent.
-//     * @see java.awt.event.WindowListener#windowDeiconified(java.awt.event.WindowEvent)
-//     */
-//    public void windowDeiconified(WindowEvent e) {
-//    }
-//
-//    /**
-//     * Invoked when a window is changed from a minimized to a normal state.
-//     * 
-//     * @param e
-//     *            The WindowEvent.
-//     * @see java.awt.event.WindowListener#windowIconified(java.awt.event.WindowEvent)
-//     */
-//    public void windowIconified(WindowEvent e) {
-//    }
-//
-//    /**
-//     * Invoked when a window is changed from a normal to a minimized state. For
-//     * many platforms, a minimized window is displayed as the icon specified in
-//     * the window's iconImage property.
-//     * 
-//     * @param e
-//     *            The WindowEvent.
-//     * @see java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
-//     */
-//    public void windowOpened(WindowEvent e) {
-//    }
-//
-//    /**
-//     * @return Returns the confirmed.
-//     */
-//    public boolean isConfirmed() {
-//        return confirmed;
-//    }
-//
-//    /**
-//     * @return Returns the scoDescription.
-//     */
-//    public String getScoDescription() {
-//        return scoDescription;
-//    }
-//
-//    /**
-//     * @return Returns the scoName.
-//     */
-//    public String getScoName() {
-//        return scoName;
-//    }
+
 }
