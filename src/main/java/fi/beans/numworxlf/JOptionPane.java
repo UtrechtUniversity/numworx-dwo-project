@@ -230,15 +230,13 @@ public class JOptionPane extends javax.swing.JOptionPane {
     super(message, messageType, optionType, icon, options, initialValue);
   }
 
-  public static final OptionPaneUI UI = new NumworxOptionPaneUI();
   /* (non-Javadoc)
    * @see javax.swing.JOptionPane#updateUI()
    */
 
   @Override
   public void updateUI() {
-    //super.updateUI();
-    setUI(UI);
+    setUI(NumworxOptionPaneUI.createUI(this));
   }
 
 }

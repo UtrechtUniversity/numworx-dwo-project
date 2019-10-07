@@ -4,9 +4,17 @@ import java.awt.Component;
 import java.awt.Container;
 
 import javax.swing.AbstractButton;
+import javax.swing.JComponent;
+import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicOptionPaneUI;
 
 public class NumworxOptionPaneUI extends BasicOptionPaneUI {
+  /**
+   * Creates a new BasicOptionPaneUI instance.
+   */
+ public static ComponentUI createUI(JComponent x) {
+     return new NumworxOptionPaneUI();
+ }
 
   /* (non-Javadoc)
    * @see javax.swing.plaf.basic.BasicOptionPaneUI#createButtonArea()
