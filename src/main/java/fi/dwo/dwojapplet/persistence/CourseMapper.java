@@ -5,6 +5,7 @@ package fi.dwo.dwojapplet.persistence;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.dwojapplet.domain.ClassCourse;
 import fi.dwo.dwojapplet.domain.Course;
 import static fi.dwo.dwojapplet.domain.Course.NO_CHILDREN;
@@ -17,9 +18,12 @@ import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserCourseManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomACL;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -35,6 +39,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -44,7 +49,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>{
     private static final Logger LOG = Logger.getLogger(CourseMapper.class.getName());
-
+    private static final Course[] NO_ACCESS = new Course[0];
     private static final String TABLENAME = "tblCourse";
 
     private static final String IDCOL = "courseID";
@@ -171,8 +176,10 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>{
               DomCourse domcourse = new DomCourse();
               domcourse.setId(PersistentCourse.buildPersistenceId(Long.valueOf(course.getID())));
               try {
-                return getObjectFromReturn(new Vector<DomCourseStudent>(SecureUserCourseManager.getCourses(domcourse, DWO.getDwoProfile())));
-              } catch (Dwo2Exception e) {
+                  if (effectiveAccess(course) != ACL.NONE)
+                      return getObjectFromReturn(new Vector<DomCourseStudent>(SecureUserCourseManager.getCourses(domcourse, DWO.getDwoProfile())));
+                  return NO_ACCESS;
+           } catch (Dwo2Exception e) {
                 LOG.log(Level.SEVERE, "getCourses of course", e);
               }
             }
@@ -195,6 +202,67 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>{
             ht.put("dwoProfileID", new Integer(profileID));
         }
         return cached(ht); // was super.get(ht);
+    }
+
+    private ACL effectiveAccess(Course course) {
+      if (course.getSchoolID() == 0) return ACL.READ; // write if profileadmin/dwoadmin
+      RoleType role = getRoleType();
+      switch(role) {
+        case STUDENT: return ACL.READ; // oe ACL.NONE if not in classcourse
+        case SCHOOLADMIN: return ACL.FULL; // or ACL.WRITE if no Access
+        case ADMIN: return ACL.WRITE;
+        case TEACHER: {
+          boolean parent = false;
+          List<DomACL> acls = course.getAcls();
+          Course c = course;
+          while ( (acls == null||acls.isEmpty()) && c != null) {
+            parent = true;
+            CourseMap m = c.getParentMap();
+            if (m instanceof Course) {
+              c = (Course)m; acls = c.getAcls();
+            } else {
+              c = null; acls = null;
+            }
+          }
+          if (acls == null) { 
+            if (DwoHelper.getCurrentFacadeUser().hasRight(User.ACCESS_RIGHT)) return ACL.NONE;
+            return ACL.FULL; // Of read // of Write
+          } else {
+            Set<PersistenceId> ids = getIds();
+            Comparator<ACL> sorter = this::compare;
+            Optional<ACL> opt = acls.stream().filter(a -> ids.contains(a.getEntity())).map(DomACL::getAccess).sorted(sorter).findFirst();
+            ACL acl = opt.orElse(ACL.NONE);
+            if (acl == ACL.ACCESS && parent) return ACL.NONE; 
+            return acl;
+          }
+        }
+      }    
+      return ACL.NONE;
+    }
+
+    int compare(ACL a, ACL b) {
+      return -a.compareTo(b);
+    }
+    
+    private Set<PersistenceId> getIds() {
+      Set<PersistenceId> set = new HashSet();
+      set.add(DwoHelper.getCurrentUser().getId());
+      set.add(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().getId());
+      Teacher t = (Teacher) DwoHelper.getCurrentFacadeUser();
+      SchoolClass[] classes = t.getClasses();
+      for(SchoolClass c: classes) {
+        long id = c.getID();
+        set.add(PersistentSchoolClass.buildPersistenceId(id));
+      }
+      return set;
+    }
+
+    private RoleType getRoleType() {
+      try {
+        return RoleType.valueOf(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName());
+      } catch(Exception t) {
+      }
+      return RoleType.NONE;
     }
 
     /* (non-Javadoc)
