@@ -74,6 +74,7 @@ import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
+import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
@@ -128,6 +129,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	
 	DWOLogger logging;
 	private String lastAttempt;
+	private CorrectieFacade correctie;
+	private boolean teltMee;
+    private int scoreMax;
 	
 	TextEditor(int breedte, int hoogte, boolean boxMetRand)
 	{
@@ -169,6 +173,13 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		height = h.getInt("hoogte");
 		volledigeBreedte = h.getBoolean("volledigeBreedte", false);
 		boxMetRand = launchdata.getBoolean("boxMetRand", true);
+
+		if(teltMee = launchdata.containsKey("scoreMax")) 
+			scoreMax = launchdata.getInt("scoreMax");
+//		if(launchdata.containsKey("teltMee")) 
+//			teltMee = launchdata.getBoolean("teltMee");
+		
+		
 		boxsize = boxMetRand?2:0;
 		hbox = new FlowPanel();
 		hbox.setStyleName(css.textEditor());
@@ -319,7 +330,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 
 	private void initWidget(Widget w) {
-		this.widget = w;
+		this.widget = CorrectieFacade.wrap(w);
 	}
 
 	@Override
@@ -423,6 +434,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		HashMap<String,Object> state = new HashMap<String,Object>();
 		state.put("tekst", sb);
 		state.put("editable", editable);
+		if(correctie != null) correctie.correctie(state);
 		return state;
 	}
 
@@ -451,7 +463,17 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	public void setState(HashMap<String, Object> h) {
 		addExecuteBtn(comRoot); // last change, all listeners are there.
 		if(h == null) setStateNull();
-		else setState( JSONUtilities.wrapMap(h));
+		else {
+			CorrectieFacade.showReview(h, this);
+			setState( JSONUtilities.wrapMap(h));
+			correctie = CorrectieFacade.get(h, this, getScoreMax());
+		}
+	}
+
+	private int getScoreMax() {
+		if (!teltMee)
+			return 0;
+		return scoreMax;
 	}
 
 	private void setStateNull() {
