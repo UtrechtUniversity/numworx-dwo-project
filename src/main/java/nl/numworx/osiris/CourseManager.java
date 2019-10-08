@@ -1,6 +1,7 @@
 package nl.numworx.osiris;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,11 +12,14 @@ import org.apache.commons.csv.CSVRecord;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomACL;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -43,14 +47,20 @@ public class CourseManager {
 	
 	Map<PersistenceId, List<DomCourseStudent>> children;
 	DomSchool school;
+	DomACL schoolright;
+	private Map<String, DomSchoolClassFull> groepen;
 	
-	public CourseManager(String name, DomSchool school) throws Dwo2Exception {
+	public CourseManager(String name, DomSchool school, Map<String, DomSchoolClassFull> groepen) throws Dwo2Exception {
 		
 		profile = PublicProfileManager.get(name);
 		getter = new SecureUserCourseManager();
 		updater = new SecuredTeacherCourseManager();
 		children = new HashMap<>();
+		this.groepen = groepen;
 		this.school = school;
+		schoolright = new DomACL();
+		schoolright.setAccess(ACL.READ);
+		schoolright.setEntity(school.getId());
 	}
 	
 	Collection<String> names(Collection<? extends DomCourse> list) {
@@ -83,11 +93,23 @@ public class CourseManager {
  				+ " - " + record.get(Col.OMSCHRIJVING);
 		courses = getChildren(root);
 		if ( ! names(courses).contains(toets) ) {
-			courses.add(createMap(root, toets, Boolean.FALSE));
+			DomCourseStudent c = createMap(root, toets, Boolean.FALSE);
+			DomCourseFull d = new DomCourseFull();
+			d.setId(c.getId());
+			d.setNotVisible(c.isNotVisible());			
+			DomACL acl = new DomACL();
+			acl.setAccess(ACL.WRITE);
+			String groepNaam = year + " - " + course;
+			PersistenceId klas = groepen.get(groepNaam).getId();
+			acl.setEntity(klas);
+			d.setAcls(Collections.singletonList(acl));
+			updater.update(d);
+			courses.add(c);
 		}
 		
  	}
 
+	
 	private List<DomCourseStudent> getChildren(DomCourse root) throws Dwo2Exception {
 		List<DomCourseStudent> courses;
 		courses = children.get(root.getId());
@@ -112,6 +134,7 @@ public class CourseManager {
 		return root;
 	}
 
+	
 	private DomCourseStudent createMap(DomCourse parent, String name, Boolean map) throws Dwo2Exception {
 		DomCourseFull edit = new DomCourseFull();
 		edit.setName(name);
@@ -122,6 +145,8 @@ public class CourseManager {
 		edit.setWithChildren(map);
 		edit.setExport(Boolean.FALSE);		
 		edit = updater.add(edit);
+		edit.setAcls(Collections.singletonList(schoolright));
+		edit = updater.update(edit);
 		return edit;
 	}
 		

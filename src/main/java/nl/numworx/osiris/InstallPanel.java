@@ -70,15 +70,6 @@ public class InstallPanel extends JPanel {
 			String userName = user.getDomUserFull().getUserName() + user.getDomLoginContext().getRealm();
 			numworx.setSource(userName, user.getDomUserFull().getPassword(), base);
 			numworx.setRealm(user.getDomLoginContext().getRealm());
-
-			CourseManager man = new CourseManager(profile, numworx.getSchool());
-			for (CSVRecord record: main.toets) {
-				man.createToets(record);
-				toets ++;
-			}
-		      message += toets + " exams\n";
-			
-			
 			
 			is = new InputSource(new FileInputStream(main.cursus.file));
 			osiris.setGroepenSource(is);
@@ -98,6 +89,13 @@ public class InstallPanel extends JPanel {
 		      numworx.addSchoolClasses(groepen);
 		      numworx.addStudents(leerlingen, members, groepen);
 		      numworx.addTeachers(leerkrachten, members, groepen);
+
+		      CourseManager man = new CourseManager(profile, numworx.getSchool(), groepen);
+			  for (CSVRecord record: main.toets) {
+					man.createToets(record);
+					toets ++;
+				}
+			      message += toets + " exams\n";
 			
 			message += "Installation done";
 		} catch (Exception e1) {
