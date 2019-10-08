@@ -52,9 +52,6 @@ public class SecuredTeacherResultsManager {
 	  DomResultsPerTeacher result;
 	  result = StoredRestManager.getInstance().put("rest/sec:" + PathId.getId(getContext()) + "/teacher/results/selectedTeachersResults",
 			  DomResultsPerTeacher.class, rest);
-	  LOG.log(Level.FINE, "Retrieved selected teacher results for the teacher with username {0}.",
-	            new Object[] {RestAuthenticator.getInstance().getUsername()});
-	 
 	  return result;
   }
   
