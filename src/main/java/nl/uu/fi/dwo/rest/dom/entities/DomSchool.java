@@ -105,6 +105,18 @@ public class DomSchool extends DomSchoolId {
 
     public void setAboType(AboType aboType) {
       this.aboType = aboType;
+    }
+
+    public boolean teachersCanWrite() {
+      String r = schoolRights;
+      if (r == null || "_".equals(r))
+          r = defaultRights;
+      return r.contains("m");
     }  
-    
+
+    public boolean accessControl() {
+      String r = schoolRights;
+      if (r == null) return false;
+      return r.contains("X");
+    }
 }

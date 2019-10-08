@@ -19,6 +19,11 @@ public class DomCourse {
     private String treeIndex;
     private Long  lastChangeTimeStamp;    
 
+    public DomCourse() {}
+    public DomCourse(PersistenceId id) {
+      setId(id);
+    }
+
     /**
      * @return the id
      */
