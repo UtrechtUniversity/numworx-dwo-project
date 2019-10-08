@@ -16,11 +16,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerStudentCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
@@ -121,7 +123,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			public Promise<List<DomCourseStudent>> call(
 					Promise<DomDwoProfile> resolved) throws Exception {
 				DomDwoProfile p = resolved.getValue();
-				return courseManager.getCourses(p,context);
+				return courseManager.getCourses(p,context).map(accessManager);
 			}
 		});
 	}
@@ -133,7 +135,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			public Promise<List<DomCourseStudent>> call(
 					Promise<DomDwoProfile> resolved) throws Exception {
 				DomDwoProfile p = resolved.getValue();
-				return courseManager.getCoursesSchool(p,context);
+				return courseManager.getCoursesSchool(p,context).map(accessManager);
 			}
 		});
 	}
@@ -170,13 +172,13 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	public Promise<List<DomCourseStudent>> getCourses(Object id) {
 
 	  Promise<Boolean> start = AccessManager.TRUE;
-	  if (id instanceof DomCourseStudent) {
+	  if (id instanceof DomCourseStudent && ((DomCourseStudent) id).getSchoolId() != null) {
 	    start = accessManager.access((DomCourseStudent) id);
 	  }
 	  final DomCourse parent = toCourse(id);
 	  return start.then(p -> {
 	    if (p.getValue().booleanValue())
-	      return profile.then(resolved-> courseManager.getCourses(parent, resolved.getValue(),context));
+	      return profile.then(resolved-> courseManager.getCourses(parent, resolved.getValue(),context)).map(accessManager);
 	    return NO_ACCESS;
 	  });}
 
@@ -267,7 +269,8 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			public Promise<DomSchoolsRolesAndClassesV2> call(Promise<DomSchoolsRolesAndClassesV2> resolved)
 					throws Exception {
 				
-				DomHasRole hasRole = resolved.getValue().getActiveSchoolRoleAndClass().getHasRole();
+				DomSchoolRoleAndClassV2 active = resolved.getValue().getActiveSchoolRoleAndClass();
+                DomHasRole hasRole = active.getHasRole();
 				context.setDomHasRole(hasRole);
 				scoManager = new SecuredUserScoContextManager(secure);
 				courseManager = new SecuredUserCourseManager();
@@ -275,6 +278,9 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 				resultManager = new SecuredUserResultsManager();
 				scormApi = new SecuredStudentScoDataManager(secure);
 				studentModelManager = new SecuredStudentStudentModelManager();
+				if (active.getSchool().accessControl() && active.getRole().getRoleName().equals(RoleType.TEACHER.name())) {
+				  accessManager = new TeacherAccessManager(active, null, profile);
+				}
 				return resolved;
 			}
 		});
@@ -294,6 +300,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 				studentManager = new PublicCoursesOfSchoolClassManager();
 				resultManager = new PublicUserResultsManager();
 				scormApi = new PublicStudentScoDataManager();
+				accessManager = new AccessManager();
 				studentModelManager = null;
 				return null;
 			}});
