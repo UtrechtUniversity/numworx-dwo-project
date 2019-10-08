@@ -922,7 +922,7 @@ CREATE TABLE `tblacl` (
   `courseID` int(11) NOT NULL,
   `dwoProfileID` int(11) NOT NULL,
   `schoolID` int(11) NOT NULL,
-  `entity` varchar(45) NOT NULL,
+  `entity` varchar(90) NOT NULL,
   `access` int(11) NOT NULL,
   `optlock` int(11) NOT NULL,
   `lastChangeTimeStamp` bigint(20) NOT NULL,
