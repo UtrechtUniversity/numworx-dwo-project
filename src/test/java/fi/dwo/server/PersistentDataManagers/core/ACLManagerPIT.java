@@ -8,6 +8,7 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.commons.persistence.entities.PersistentACL;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -19,6 +20,7 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 
 import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -58,17 +60,20 @@ public class ACLManagerPIT {
         instance = null;
     }
 
+    PersistenceId jip = PersistentSchoolClass.buildPersistenceId(1L);
+    PersistenceId janneke = PersistentSchool.buildPersistenceId(1L);
+    
     @Before
     public void setUp() {
       instance.IntializeTestDatabase();
       acl1.setAccess(ACL.ACCESS);
-      acl1.setEntity("jip");
+      acl1.setEntity(jip.getIdString());
       acl1.setCourseID(1L);
       acl1.setSchoolID(1L);
       acl1.setDwoProfileID(1L);
  
       acl2.setAccess(ACL.ACCESS);
-      acl2.setEntity("janneke");
+      acl2.setEntity(janneke.getIdString());
       acl2.setCourseID(1L);
       acl2.setSchoolID(1L);
       acl2.setDwoProfileID(1L);

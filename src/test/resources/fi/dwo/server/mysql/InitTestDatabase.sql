@@ -922,13 +922,16 @@ CREATE TABLE `tblacl` (
   `courseID` int(11) NOT NULL,
   `dwoProfileID` int(11) NOT NULL,
   `schoolID` int(11) NOT NULL,
-  `entity` varchar(90) NOT NULL,
+  `userID` int(11),
+  `classID` int(11),
+  `entity` varchar(50) NOT NULL,
   `access` int(11) NOT NULL,
   `optlock` int(11) NOT NULL,
   `lastChangeTimeStamp` bigint(20) NOT NULL,
   `del` tinyint(4) NOT NULL DEFAULT '0',
+
   PRIMARY KEY (`aclID`),
-  UNIQUE KEY `UNIEK` (`courseID`,`dwoProfileID`,`schoolID`,`entity`),
+  UNIQUE KEY `UNIEK` (`courseID`,`entity`),
   KEY `COURSE` (`courseID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
