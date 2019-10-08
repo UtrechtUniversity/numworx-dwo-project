@@ -408,7 +408,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 		Promise<List<SelectModuleItem>> promise = parent.getChildrenAsync();
 
 		if(promise == null || (promise.isDone() && promise.getFailure() != null)) {
-			promise = DWOplayer.clientfactory.getRPCHandler().getCourses(parent.getID())
+			promise = DWOplayer.clientfactory.getRPCHandler().getCourses(parent.original())
 					.map(new COURSE_TO_MODULEITEM(parent));
 			parent.setChildrenAsync(promise);
 			promise
@@ -419,7 +419,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 					for(SelectModuleItem item: resolved.getValue()) {
 						if(item.getType() == SelectModuleItem.Type.FOLDER) {
 							if(item.getChildrenAsync() == null) {
-								item.setChildrenAsync(DWOplayer.clientfactory.getRPCHandler().getCourses(item.getID())
+								item.setChildrenAsync(DWOplayer.clientfactory.getRPCHandler().getCourses(item.original())
 										.map(new COURSE_TO_MODULEITEM(item)));
 							}
 						}

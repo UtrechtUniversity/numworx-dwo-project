@@ -54,7 +54,7 @@ public class SelectModuleItem
 	private String name;
 	private String file;
 	private String description;
-	private Object id;
+	private Object id, original;
 	private boolean showScore, fromSchool;
 	private int sequencenr;
 	private String image;
@@ -397,7 +397,12 @@ public class SelectModuleItem
 		return studentModelId;
 	}
 
+	public Object original() {
+		return original == null ? id : original;
+	}
+
 	public void setDomClassCourseStudent(DomCourseStudent course, DomClassCourse cc) {
+		original = course;
 		Boolean withChildren = course.getWithChildren();
 		type = withChildren != null && withChildren.booleanValue() ? Type.FOLDER : Type.MODULE;
 		description = course.getDescription();
