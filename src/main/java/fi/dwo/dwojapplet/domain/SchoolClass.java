@@ -44,7 +44,7 @@ public class SchoolClass implements UserGroup, Comparable {
     public Course[] getSelectedSchoolCourses() {
         Course[] courses = null;
         try {
-            courses = (Course[]) PersistenceFacade.instance()
+            courses = PersistenceFacade.instance()
                     .getSelectedSchoolCourses(this);
         } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());

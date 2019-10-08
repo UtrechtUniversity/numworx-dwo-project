@@ -183,6 +183,7 @@ public class TeacherMenuPanel extends UserMenuPanel implements SelectStrategy {
 
         if (src instanceof ClassLinkedLabel) {
             instance.setWait();
+            instance.dwo.clearResultsModule();
             CenterSubPanel cp = instance.getResultPanel(((ClassLinkedLabel) src).getSchoolClass());
             center.reset();
             center.loadCenter(cp);

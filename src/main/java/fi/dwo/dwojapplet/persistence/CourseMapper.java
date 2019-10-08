@@ -47,7 +47,7 @@ import java.util.logging.Logger;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>{
+class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>, MapperIF<Course>{
     private static final Logger LOG = Logger.getLogger(CourseMapper.class.getName());
     private static final Course[] NO_ACCESS = new Course[0];
     private static final String TABLENAME = "tblCourse";
@@ -225,7 +225,7 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>{
             }
           }
           if (acls == null) { 
-            if (DwoHelper.getCurrentFacadeUser().hasRight(User.ACCESS_RIGHT)) return ACL.NONE;
+            if (DwoHelper.getCurrentFacadeUser().hasRight(User.ACCESS_RIGHT) && !DwoHelper.getCurrentFacadeUser().hasRight(User.MODIFY_MODULES_RIGHT)) return ACL.NONE;
             return ACL.FULL; // Of read // of Write
           } else {
             Set<PersistenceId> ids = getIds();
@@ -572,7 +572,7 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>{
       return c;
     }
  
-    private Course getObjectFromReturn(DomCourse data) {
+    Course getObjectFromReturn(DomCourse data) {
       int id = PersistenceFacade.idOf(data.getId());
       Course c = objects.get(Integer.valueOf(id));
       if (c == null) {
@@ -604,20 +604,20 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>{
       return o1.getName().compareTo(o2.getName());
     }
     
-    void insertCache(List<DomMapEntry<PersistenceId, DomCourse>> all) {
+    Map<PersistenceId, DomCourse> insertCache(List<DomMapEntry<PersistenceId, DomCourse>> all) {
       Map<PersistenceId, DomCourse> allcourses = new HashMap<>();
       all.forEach(e -> allcourses.put(e.getKey(), e.getValue()));
-      Map<PersistenceId, Set<PersistenceId>> children = new HashMap<>();
-      allcourses.values().forEach(course -> {
-        PersistenceId parent = course.getParentID();
-        Set<PersistenceId> set = children.get(parent);
-        if(set == null) {
-          set = new HashSet<>();
-          children.put(parent,  set);
-        }
-        set.add(course.getId());
-      });
-      
+//      Map<PersistenceId, Set<PersistenceId>> children = new HashMap<>();
+//      allcourses.values().forEach(course -> {
+//        PersistenceId parent = course.getParentID();
+//        Set<PersistenceId> set = children.get(parent);
+//        if(set == null) {
+//          set = new HashSet<>();
+//          children.put(parent,  set);
+//        }
+//        set.add(course.getId());
+//      });
+      return allcourses;
 
       
       

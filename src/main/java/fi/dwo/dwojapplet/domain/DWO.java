@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -88,12 +89,14 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicUserManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherResultsManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacher;
@@ -108,6 +111,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -878,22 +882,22 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         return DwoHelper.getCurrentFacadeUser();
     }
 
-    private Course[] selectDwoProfileCourses(Course[] completeList) {
-        if (completeList == null) {
-            return null;
-        }
-        Vector v = new Vector();
-        for (Course completeList1 : completeList) {
-            if (completeList1.getDwoProfile() == dwoProfileID) {
-                v.addElement(completeList1);
-            }
-        }
-        Course[] selectedCourses = new Course[v.size()];
-        for (int i = 0; i < selectedCourses.length; i++) {
-            selectedCourses[i] = (Course) v.elementAt(i);
-        }
-        return selectedCourses;
-    }
+//    private Course[] selectDwoProfileCourses(Course[] completeList) {
+//        if (completeList == null) {
+//            return null;
+//        }
+//        Vector v = new Vector();
+//        for (Course completeList1 : completeList) {
+//            if (completeList1.getDwoProfile() == dwoProfileID) {
+//                v.addElement(completeList1);
+//            }
+//        }
+//        Course[] selectedCourses = new Course[v.size()];
+//        for (int i = 0; i < selectedCourses.length; i++) {
+//            selectedCourses[i] = (Course) v.elementAt(i);
+//        }
+//        return selectedCourses;
+//    }
 
     /**
      * Returns all the courses available for the user. If some courses are
@@ -906,8 +910,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         try {
             courseList = PersistenceFacade.instance().getCoursesJS(DwoHelper.getCurrentFacadeUser()); // was getCourses
             if(true)
-            	return selectDwoProfileCourses(courseList); // Sorted by server
-            return (selectDwoProfileCourses(courseList));
+            	return (courseList); // Sorted by server
+            return ((courseList));
         } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
@@ -952,7 +956,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     public Course[] getSelectedCourses(SchoolClass schoolClass) {
         Course[] courses;
         courses = schoolClass.getSelectedSchoolCourses();
-        return selectDwoProfileCourses(courses);
+        return (courses);
     }
 
     public static DomDwoProfileFull getDwoProfile() {
@@ -1270,38 +1274,64 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      *
      */
     public ResultsModule getResultsModule(SchoolClass schoolClass) {
-        if (resultsModule == null) {
- //           resultsModule = new ResultsModule(new Course[0], (Teacher) DwoHelper.getCurrentFacadeUser(), this);
+      Course[] selection;
+      if (resultsModule == null) {
          try {
-//          DomResultsPerTeacher results = SecuredTeacherResultsManager.getTeachersResults(getDwoProfile());
             DomSchoolClass sc = new DomSchoolClass();
             sc.setId(PersistentSchoolClass.buildPersistenceId(Long.valueOf(schoolClass.getID())));
+long w = System.currentTimeMillis();
+            DomCoursesOfSchoolClass4Teacher result = 
+                SecureTeacherSchoolClassManager.getModules(sc, DWO.getDwoProfile());
+w -= System.currentTimeMillis();
+LOG.info("time selected courses " + (-w) + " ms");
+            Map<PersistenceId, DomCourse> allcourses = insertCache(result.getCourses());
+            List<DomCourse> course = result.getClassCourses().stream().parallel()
+            .map(DomMapEntry::getValue)
+            .filter(cc -> cc.getViewState() != ViewState.invisible)
+            .map(cc -> allcourses.get(cc.getCourseId()))
+            .filter(course1 -> !course1.getWithChildren().booleanValue())
+            .collect(Collectors.toList());
             DomResultsPerTeacher results, source;
             source = new DomResultsPerTeacher();
-           // source.setSchoolClasses(Collections.singletonList(new DomMapEntry<PersistenceId, DomSchoolClass>(sc.getId(), null)));
-            Course[] selection = getSelectedCourses(schoolClass);
-            source.setCourses(
-            Arrays.asList(selection).stream().map((Course c) -> {
-              
-              PersistenceId id = (PersistentCourse.buildPersistenceId(Long.valueOf(c.getID())));
-              return new DomMapEntry<PersistenceId, DomCourse>(id, null);
-            }).collect(Collectors.toList()));
+            
+            selection = PersistenceFacade.instance().toCourse(course);
+            
+            source.setCourses(course
+              .stream()
+              .map(t -> new DomMapEntry<>(t.getId(), t))
+              .collect(Collectors.toList()
+            ));
+            source.setSchoolClasses(Collections.singletonList(new DomMapEntry<>(sc.getId(), sc)));
+long t = System.currentTimeMillis();
             results = SecuredTeacherResultsManager.selectedTeacherResults(getDwoProfile(), source);
+t -= System.currentTimeMillis();
+LOG.info("time results = " + (-t) + " ms");
             return new ResultsModule(results, this, sc, selection);
         } catch (Dwo2Exception e) {
           // TODO Auto-generated catch block
           e.printStackTrace();
+          return null;
         } catch (PersistenceException e) {
           // TODO Auto-generated catch block
           e.printStackTrace();
+          return null;
         }
 
+        } else {
+          selection = resultsModule.getSelectedCourse();
         }
 
         resultsModule.reset();
-        resultsModule.selectCourses(getSelectedCourses(schoolClass), false);
+        resultsModule.selectCourses(selection, false);
         resultsModule.zoomIn(schoolClass);
         return resultsModule;
+    }
+
+    private static Map<PersistenceId, DomCourse> insertCache(
+        List<DomMapEntry<PersistenceId, DomCourse>> all) {
+        Map<PersistenceId, DomCourse> allcourses = new HashMap<>();
+        all.forEach(e -> allcourses.put(e.getKey(), e.getValue()));
+      return allcourses;
     }
 
     /**
@@ -2888,6 +2918,12 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
       } catch(Exception oops) {
         LOG.log(Level.WARNING, "switch to " + p + " " + lang, oops);
       }
+      
+    }
+
+    public void clearResultsModule() {
+      resultsModule = null;
+      PersistenceFacade.instance().setResultsModule(null);
       
     }
 

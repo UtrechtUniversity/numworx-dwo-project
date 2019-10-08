@@ -370,36 +370,18 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
             GuiCreator.instance().getMainPanel().center.setStrategy(NULS);
             final Sco s = sco;
             // Java 1.6 minimum
-//            SwingWorker<CenterSubPanel, Void> worker;
-//            worker = new SwingWorker<CenterSubPanel, Void>() {
-//
-//                @Override
-//                protected CenterSubPanel doInBackground() throws Exception {
                     CenterSubPanel csp = GuiCreator.instance().getHTML5ScoPanel(s);
-//                    return csp;
-//                }
-//
-//                @Override
-//                protected void done() {
-//                    try {
-//                        CenterSubPanel csp = get();
                         if (csp != null) {
                             s.setLessonMode(getLessonMode());
                             center.loadTotal(csp);
                         }
-//                    } catch (InterruptedException e) {
-//                    } catch (ExecutionException e) {
-//                    }
                     synchronized (CoursePanel.this) {
                         GuiCreator.instance().getMainPanel().center.setStrategy(null);
                         GuiCreator.instance().setReady();
                         scoLoading = false;
                     }
-//                }
-//
-//            };
-//            worker.execute();
         } else if (e.getSource() == showResultsButton) {
+            GuiCreator.instance().dwo.clearResultsModule();
             CenterSubPanel cp = GuiCreator.instance().getResultPanel(course);
             center.loadCenter(cp);
         }
