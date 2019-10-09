@@ -53,7 +53,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JTree;
+import fi.beans.numworxlf.JTree;
 import javax.swing.JTree.DynamicUtilTreeNode;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -375,7 +375,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
         }
 
         @Override
-        public Component getTreeCellRendererComponent(JTree tree, Object value,
+        public Component getTreeCellRendererComponent(javax.swing.JTree tree, Object value,
                 boolean sel, boolean expanded, boolean leaf, int row,
                 boolean hasFocus) {
 // bookicon als het een course is
