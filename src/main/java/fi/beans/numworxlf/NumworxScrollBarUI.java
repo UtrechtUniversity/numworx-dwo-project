@@ -1,17 +1,23 @@
 package fi.beans.numworxlf;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.border.Border;
+import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
 public class NumworxScrollBarUI extends BasicScrollBarUI implements Constants {
 
-  public static ComponentUI createUI(JComponent c)    {
+  private static final Border BORDER = new BorderUIResource(BorderFactory.createLineBorder(Color.WHITE));
+
+public static ComponentUI createUI(JComponent c)    {
     return new NumworxScrollBarUI();
 }
 
@@ -21,6 +27,8 @@ public class NumworxScrollBarUI extends BasicScrollBarUI implements Constants {
   @Override
   protected void installDefaults() {
     super.installDefaults();
+    if (scrollbar.getBorder() == null || scrollbar.getBorder() instanceof UIResource)
+    	scrollbar.setBorder(BORDER);
     scrollbar.setBackground(COLOR20);
     thumbColor = COLOR21;
     thumbDarkShadowColor = COLOR21;
@@ -63,7 +71,7 @@ public class NumworxScrollBarUI extends BasicScrollBarUI implements Constants {
   @Override
   protected JButton createDecreaseButton(int orientation) {
     JButton b = super.createDecreaseButton(orientation);
-    b.setBorder(BorderFactory.createLineBorder(WHITE));
+    //b.setBorder(BorderFactory.createLineBorder(WHITE));
     b.setBackground(COLOR20);
     return b;
   }
@@ -74,7 +82,7 @@ public class NumworxScrollBarUI extends BasicScrollBarUI implements Constants {
   @Override
   protected JButton createIncreaseButton(int orientation) {
     JButton b = super.createIncreaseButton(orientation);
-    b.setBorder(BorderFactory.createLineBorder(WHITE));
+    //b.setBorder(BorderFactory.createLineBorder(WHITE));
     b.setBackground(COLOR20);
     return b;
   }
