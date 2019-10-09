@@ -40,13 +40,18 @@ public class TeacherAccessManager extends AccessManager {
    
   final ParentAccess getParent;
   private Promise<Boolean> root;
-  
+  private Promise<DomCourseStudent> NULL = Promises.resolved(null);
   class DefaultGetParent implements ParentAccess {
 
     SecuredUserCourseManager securedUserCourseManager = new SecuredUserCourseManager();
 
     Map<PersistenceId, Promise<DomCourseStudent>> map = new HashMap<>();
     
+    
+    DefaultGetParent() {
+      map.put(null, NULL);
+    }
+
     @Override
     public Promise<DomCourseStudent> apply(DomCourseStudent t) {
       Promise<DomCourseStudent> r = map.get(t.getParentID());
@@ -105,7 +110,7 @@ public class TeacherAccessManager extends AccessManager {
         return getParent.apply(course).then(p -> new Checker(p.getValue(), true).call(ids));
       }      
       Comparator<ACL> comparator = (a,b) -> -a.compareTo(b);
-      ACL max = acls.stream().filter(t -> ids.getValue().contains(t)).map(DomACL::getAccess).
+      ACL max = acls.stream().filter(t -> ids.getValue().contains(t.getEntity())).map(DomACL::getAccess).
           sorted(comparator).findFirst().orElse(ACL.NONE);
       if (max == ACL.NONE || (max==ACL.ACCESS && parent))
         return FALSE;
