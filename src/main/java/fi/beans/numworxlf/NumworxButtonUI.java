@@ -4,12 +4,18 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
+import javax.swing.DefaultButtonModel;
 import javax.swing.JComponent;
 import javax.swing.LookAndFeel;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeListener;
 import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.UIResource;
@@ -59,12 +65,17 @@ public class NumworxButtonUI extends BasicButtonUI {
     super.update(arg0, arg1);
   }
 
+  private final AbstractButton dummy = new AbstractButton() { { 
+	  setModel(new DefaultButtonModel());
+  }  };
   @Override
   protected void paintText(Graphics g, AbstractButton b, Rectangle textRect, String text) {
     if (!b.isEnabled()) {
-      b.setEnabled(true);
-      super.paintText(g, b, textRect, text);
-      b.setEnabled(false);
+      //b.setEnabled(true);
+    	dummy.setFont(b.getFont());
+    	dummy.setForeground(b.getForeground());
+      super.paintText(g, dummy, textRect, text);
+      //b.setEnabled(false);
       return;
     }
     super.paintText(g, b, textRect, text);
