@@ -118,6 +118,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 				courseDescriptionHTML.setOpaque(false);
 				courseDescriptionHTML.setBounds(20,startY,550,110);
 				courseDescriptionHTML.setSize(courseDescriptionHTML.getPreferredSize());
+				courseDescriptionHTML.setForeground(GuiConstants.MAIN_FOREGROUND);
 				startY += courseDescriptionHTML.getHeight() + 10;
 			}
 			else if(s.startsWith("H4sIAAAAAA"))
@@ -140,6 +141,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 				courseDescription.setBounds(20,startY,550,110);
 				courseDescription.setText(s);
 				courseDescription.setSize(courseDescription.getPreferredSize());
+				courseDescription.setForeground(GuiConstants.MAIN_FOREGROUND);
 				startY += courseDescription.getHeight() + 10;
 			}
 		}
@@ -147,6 +149,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 		
         scoListHeader = new JLabel(TextMapper.getText(TextMapper.GUICO_SCO_LIST_TITLE));
         scoListHeader.setFont(GuiConstants.SCO_HEADER_TEXT);
+        scoListHeader.setForeground(GuiConstants.MAIN_FOREGROUND);
         fm = scoListHeader.getFontMetrics(scoListHeader.getFont());
         scoListHeader.setSize(fm.stringWidth(scoListHeader.getText()) + 10, fm.getHeight());
         scoListHeader.setLocation(30, startY);
@@ -196,7 +199,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
         if (!course.isNotVisible() && course.getScoList()!=null) {
             for (i = 0; i < course.getScoList().length; i++) {
                 l = new ScoLinkedLabel(course.getScoList()[i]);
-                l.setForeground(Color.black);
+                l.setForeground(GuiConstants.MAIN_FOREGROUND);
                 l.setFont(GuiConstants.SCO_TEXT);
                 fm = l.getFontMetrics(l.getFont());
                 l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());

@@ -58,6 +58,7 @@ public class CourseIcon extends JButton implements CourseIconIF {
     public CourseIcon(Course course) {
         super();
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setForeground(GuiConstants.MAIN_FOREGROUND);
         this.setBorder(null);
         setBorderPainted(false);
         this.setContentAreaFilled(false);
@@ -109,7 +110,7 @@ public class CourseIcon extends JButton implements CourseIconIF {
             setForeground(GuiConstants.RED_COLOR);
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         } else if (e.getID() == MouseEvent.MOUSE_EXITED) {
-            setForeground(Color.black);
+            setForeground(GuiConstants.MAIN_FOREGROUND);
             setCursor(Cursor.getDefaultCursor());
         }
     }

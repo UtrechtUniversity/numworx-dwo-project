@@ -81,6 +81,7 @@ public class MainPanel extends JPanel {
     public MainPanel(DomDwoProfileFull dwoProfile) {
         this.setVisible(false);
         this.setBackground(GuiConstants.SUB_BACKGROUND);
+        this.setForeground(GuiConstants.MAIN_FOREGROUND);
         this.setLayout(new BorderLayout());
         this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
         invalidate();

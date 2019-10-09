@@ -28,6 +28,7 @@ public abstract class GuiConstants {
     private static final Logger LOG = Logger.getLogger(GuiConstants.class.getName());
 
     public static Color MAIN_BACKGROUND = new Color(221, 238, 255);
+    public static Color MAIN_FOREGROUND = Color.BLACK;
     public static Color CELL_BACKGROUND = new Color(221, 238, 255);//new Color(210, 230, 255);
     public static Color SUB_BACKGROUND = new Color(255, 255, 255);
 
@@ -153,6 +154,7 @@ public abstract class GuiConstants {
         GUI_IMAGE_BG = getBoolean(prop, "gui_image_bg");
         HEADER_TEXT = getFont(prop, "header_text");
         MAIN_BACKGROUND = getColor(prop, "main_background");
+        MAIN_FOREGROUND = getColor(prop, "main_foreground");
         CELL_BACKGROUND = getColor(prop, "cell_background");
         FI_LOGO_LOCATION = getString(prop, "fi_logo_location");
         WISWEB_LOGO_SMALL_LOCATION = getString(prop, "wisweb_logo_small_location");
@@ -188,6 +190,7 @@ public abstract class GuiConstants {
         if (profile == 77) {
           HEADER_COLOR = new Color(0x314770);
           HEADER_TEXT = new Font("Ubuntu", Font.BOLD, 24);
+          MAIN_FOREGROUND = fi.beans.numworxlf.Constants.COLOR15;
 
         } else
         

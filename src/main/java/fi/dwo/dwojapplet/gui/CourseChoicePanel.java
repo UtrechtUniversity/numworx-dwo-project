@@ -36,7 +36,12 @@ import javax.swing.JViewport;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
 import javax.swing.tree.DefaultMutableTreeNode;
 /**
  * This class is a panel where the user gets a overview of the different
@@ -142,6 +147,21 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
 
                   public Dimension getMaximumSize() {
                     return super.getPreferredSize();
+                  }
+
+                  /* (non-Javadoc)
+                   * @see javax.swing.JComponent#setForeground(java.awt.Color)
+                   */
+                  @Override
+                  public void setForeground(Color fg) {
+                    super.setForeground(fg);
+                    StyledDocument doc = this.getStyledDocument();
+                    if (doc == null) return;
+                    boolean replace = false;
+                    SimpleAttributeSet attr = new SimpleAttributeSet();
+                    attr.addAttribute(StyleConstants.Foreground, fg);
+                    doc.setCharacterAttributes(0, doc.getLength(), attr, replace);
+                    doc.getForeground(attr);
                   } 
                   
                 };
@@ -179,8 +199,9 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
                 profileTextArea.setBounds(20, 20, 600, 110);
                 profileTextArea.setOpaque(false);
                 profileTextArea.setText(s);
+                profileTextArea.setForeground(GuiConstants.MAIN_FOREGROUND);
                 profileTextArea.setBackground(getSubHeaderColor());
-                add(profileTextArea);
+              add(profileTextArea);
             }
 
         }

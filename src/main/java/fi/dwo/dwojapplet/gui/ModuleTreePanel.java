@@ -343,6 +343,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
             Image book = DwoHelper.getResourceImage("resources/book.png");
             bookIcon = new ImageIcon(book);
             folderIcon = new ImageIcon(DwoHelper.getResourceImage("resources/folder.png"));
+            setTextNonSelectionColor(fi.beans.numworxlf.Constants.COLOR15);
+            setBackgroundSelectionColor(fi.beans.numworxlf.Constants.COLOR14);
         }
 
         @Override
