@@ -6,6 +6,7 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FocusTraversalPolicy;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Window;
@@ -54,6 +55,7 @@ import fi.beans.dwomaccess.Compressor;
 import fi.beans.jvmchecker.JVMChecker;
 import fi.beans.loader.Loader;
 import fi.beans.mainframe.MainFrame;
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.beans.scorm.SCORM12APIInterface;
@@ -1957,20 +1959,21 @@ LOG.info("time results = " + (-t) + " ms");
      *
      */
     public void setWait() {
-        setWait(TextMapper.getText(TextMapper.GUI_WAIT_A_MOMENT));
+        setWait(TextMapper.dwo2Message().NUM_TBL_FETCHINGDATA()); // uit numteacher
     }
 
     private JLabel waitLabel = new JLabel("Even geduld");
 
     private void initWaitLabel() {
-        waitLabel.setFont(GuiConstants.HEADER_TEXT);
+        waitLabel.setFont(new Font("SansSerif", Font.BOLD, 26));
 
         waitLabel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         waitLabel.setHorizontalAlignment(JLabel.CENTER);
         waitLabel.setVerticalAlignment(JLabel.CENTER);
-        waitLabel.setBackground(new Color(218, 238, 249));// GuiConstants.MAIN_BACKGROUND);
+        waitLabel.setBackground(Constants.COLOR14);// GuiConstants.MAIN_BACKGROUND);
+        waitLabel.setForeground(Color.WHITE);
         waitLabel.setOpaque(true);
-        waitLabel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        waitLabel.setBorder(BorderFactory.createEmptyBorder(20, 130, 20, 130));
         // {
         // Image img;
         // img = DwoHelper.getImage(GuiConstants.RESOURCES +
