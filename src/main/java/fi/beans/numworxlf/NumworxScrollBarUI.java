@@ -44,7 +44,6 @@ public static ComponentUI createUI(JComponent c)    {
    */
   @Override
   public void paint(Graphics g, JComponent c) {
-    // TODO Auto-generated method stub
     super.paint(g, c);
   }
 
@@ -53,7 +52,6 @@ public static ComponentUI createUI(JComponent c)    {
    */
   @Override
   protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
-    // TODO Auto-generated method stub
     super.paintTrack(g, c, trackBounds);
   }
 
@@ -71,7 +69,7 @@ public static ComponentUI createUI(JComponent c)    {
   @Override
   protected JButton createDecreaseButton(int orientation) {
     JButton b = super.createDecreaseButton(orientation);
-    //b.setBorder(BorderFactory.createLineBorder(WHITE));
+    b.setBorder(BorderFactory.createEmptyBorder());
     b.setBackground(COLOR20);
     return b;
   }
@@ -82,7 +80,7 @@ public static ComponentUI createUI(JComponent c)    {
   @Override
   protected JButton createIncreaseButton(int orientation) {
     JButton b = super.createIncreaseButton(orientation);
-    //b.setBorder(BorderFactory.createLineBorder(WHITE));
+    b.setBorder(BorderFactory.createEmptyBorder());
     b.setBackground(COLOR20);
     return b;
   }
