@@ -116,12 +116,14 @@ public void onMessage(MessageEvent event) {
   String message = event.getMessage();
   if (Actions.ARROWUP.name().equals(message)) {
     presenter.goTo(upPlace);
-  } else if (message.startsWith(SEARCH)) {
-    message = message.substring(SEARCH.length());
-    JSONValue dom = JSONParser.parseStrict(message);
-    message = dom.isObject().get("input").isString().stringValue();
-    presenter.goTo(HeaderViewNumworx.computeSearch(message, Text.constants));
-  } else if (message.startsWith(GOTO)) {
+  } else
+//	  if (message.startsWith(SEARCH)) {
+//    message = message.substring(SEARCH.length());
+//    JSONValue dom = JSONParser.parseStrict(message);
+//    message = dom.isObject().get("input").isString().stringValue();
+//    presenter.goTo(HeaderViewNumworx.computeSearch(message, Text.constants));
+//  } else 
+	  if (message.startsWith(GOTO)) {
     message = message.substring(GOTO.length());
     Place place = mapper.getPlace(message);
     if (place != null) presenter.goTo(place);

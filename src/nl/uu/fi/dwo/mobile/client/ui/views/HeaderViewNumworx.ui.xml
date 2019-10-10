@@ -6,8 +6,8 @@
 	<ui:style field='style' src="TreeModuleViewNumworx.css" type='nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewNumworxCss'/>	
 			<g:FlowPanel styleName='{style.headerPanel}'>
 			  	<g:FlowPanel styleName='{style.numworx}'><g:Image url="{pfx}images/numworx/logo-Numworx-grijs2.svg"></g:Image></g:FlowPanel>
-				<g:TextBox ui:field='searchInput' styleName='{style.search-input}'></g:TextBox>
-				<g:InlineHTML ui:field='searchBtn' styleName='{style.search}'><img src='{pfx}images/numworx/search-numworx.svg'/></g:InlineHTML>
+<!-- 				<g:TextBox ui:field='searchInput' styleName='{style.search-input}'></g:TextBox> -->
+<!-- 				<g:InlineHTML ui:field='searchBtn' styleName='{style.search}'><img src='{pfx}images/numworx/search-numworx.svg'/></g:InlineHTML> -->
 				<g:InlineHTML addStyleNames='{style.status}' ui:field='status'><i class='fa fa-cloud-upload'/></g:InlineHTML>
 				<g:MenuBar addStyleNames='{style.menu}'>
 					<g:MenuItem ui:field='user' addStyleNames='{style.menuItem}' />

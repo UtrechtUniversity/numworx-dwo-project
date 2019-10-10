@@ -73,7 +73,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 	@UiField Label loginLabel;
 	@UiField Text rb;
 	@UiField(provided=true) MenuItem user;
-	@UiField TextBox searchInput;
+	/*@UiField*/ //TextBox searchInput;
 	@UiField TreeModuleViewNumworxCss style;
 
 	MenuBar items = new MenuBar(true);
@@ -103,7 +103,7 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
             }
 		};
 		initWidget(uiBinder.createAndBindUi(this));
-		searchInput.getElement().setPropertyString("placeholder", rb.search());
+		//searchInput.getElement().setPropertyString("placeholder", rb.search());
 	}
 
 	@Override
@@ -155,14 +155,14 @@ public class HeaderViewNumworx extends Composite implements HasText, Command, He
 		this.homePlace = homePlace;
 	}
 
-	@UiHandler("searchBtn")
-	void onSearch(ClickEvent ev) {
-      String search = searchInput.getText().trim();
-		SearchPlace place = computeSearch(search, rb);
-    presenter.goTo(place);
-	}
+//	/*@UiHandler("searchBtn")*/
+//	void onSearch(ClickEvent ev) {
+//      String search = searchInput.getText().trim();
+//		SearchPlace place = computeSearch(search, rb);
+//    presenter.goTo(place);
+//	}
 
-  static SearchPlace computeSearch(String search, Text rb) {
+  private static SearchPlace computeSearch(String search, Text rb) {
     long id = System.currentTimeMillis();
 		SelectModuleItem item = SelectModuleItemHolder.getSearch(search);
 		if(item == null)
