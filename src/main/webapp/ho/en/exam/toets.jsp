@@ -49,7 +49,16 @@
     	DWO_PROFILE_ID = 100
     	SECURE_MODE="SEB" // possibly others
     	function logout() {
-    		window.location = "https://<%=server%>/ho/en/exam/logout.html"
+    		<%
+    		if (needSEB || !"shibboleth".equals(request.getAuthType()) ) {
+    	%>    		
+    	    		window.location = "https://<%=server%>/ho/en/exam/logout.html"
+    	<% } else { 
+    		// Let op, dit is UU only.....
+    	%>
+    				window.location = "https://<%=server%>/Shibboleth.sso/Logout?return=https://logout.uu.nl"
+    		
+    	<% } %>	
     	}
     </script>
     <title>Save Exam Browser</title>
