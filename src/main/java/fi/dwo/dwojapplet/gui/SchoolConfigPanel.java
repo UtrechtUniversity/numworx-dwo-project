@@ -32,6 +32,7 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
         BoxLayout layout = new BoxLayout(this, BoxLayout.PAGE_AXIS);
         setLayout(layout);
         JLabel title = new JLabel(TextMapper.format(TextMapper.GUIC_SETTINGS, new Object[]{school.toString()}));
+        title.setForeground(GuiConstants.MAIN_FOREGROUND);
         add(title);
 
 // insert checkboxes.		

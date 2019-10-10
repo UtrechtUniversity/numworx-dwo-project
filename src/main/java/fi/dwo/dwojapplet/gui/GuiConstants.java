@@ -187,8 +187,8 @@ public abstract class GuiConstants {
 // TODO deze code opnemen in profile.properties:
         dwoProfile = profile;
 
-        if (profile == 77) {
-          HEADER_COLOR = new Color(0x314770);
+        if (profile == 77||profile==100) {
+          HEADER_COLOR = fi.beans.numworxlf.Constants.COLOR15;
           HEADER_TEXT = new Font("Ubuntu", Font.BOLD, 24);
           MAIN_FOREGROUND = fi.beans.numworxlf.Constants.COLOR15;
 

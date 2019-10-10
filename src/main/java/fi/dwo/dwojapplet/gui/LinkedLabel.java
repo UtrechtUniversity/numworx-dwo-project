@@ -20,7 +20,7 @@ import javax.swing.JButton;
 public class LinkedLabel extends JButton {
 
     private Color mouseoverColor = GuiConstants.RED_COLOR;
-    private Color defForeground = Color.black;
+    private Color defForeground = GuiConstants.MAIN_FOREGROUND;
 
     /**
      * Creates a new LinkedLabel with the specified text.
