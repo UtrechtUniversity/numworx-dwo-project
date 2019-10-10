@@ -123,7 +123,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			public Promise<List<DomCourseStudent>> call(
 					Promise<DomDwoProfile> resolved) throws Exception {
 				DomDwoProfile p = resolved.getValue();
-				return courseManager.getCourses(p,context).map(accessManager);
+				return courseManager.getCourses(p,context).then(accessManager);
 			}
 		});
 	}
@@ -135,7 +135,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 			public Promise<List<DomCourseStudent>> call(
 					Promise<DomDwoProfile> resolved) throws Exception {
 				DomDwoProfile p = resolved.getValue();
-				return courseManager.getCoursesSchool(p,context).map(accessManager);
+				return courseManager.getCoursesSchool(p,context).then(accessManager);
 			}
 		});
 	}
@@ -178,7 +178,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 	  final DomCourse parent = toCourse(id);
 	  return start.then(p -> {
 	    if (p.getValue().booleanValue())
-	      return profile.then(resolved-> courseManager.getCourses(parent, resolved.getValue(),context)).map(accessManager);
+	      return profile.then(resolved-> courseManager.getCourses(parent, resolved.getValue(),context)).then(accessManager);
 	    return NO_ACCESS;
 	  });}
 
@@ -203,7 +203,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 					Promise<DomDwoProfile> resolved) throws Exception {
 				return courseManager.getCourse(course, resolved.getValue(), 
 						getSchoolClass(),
-						context);
+						context).then(accessManager::single);
 			}
 		});
 	}
@@ -244,7 +244,7 @@ public class RPCHandlerV3 extends RPCHandlerV2 {
 				return scoManager.getSco(dummy, resolved.getValue(), getSchoolClass(), getContext());
 			}
 			
-		});
+		}).then(accessManager::sco);
 	}
 
 	private DomScoContext toScoContext(Object scoID) {
