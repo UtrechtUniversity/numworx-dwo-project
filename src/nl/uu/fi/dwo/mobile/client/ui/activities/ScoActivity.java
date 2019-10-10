@@ -153,10 +153,14 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 	            	if (school == null) return false;
 	            	return school.getId().equals(schoolID);
 	            });
-	            scoList = sco.flatMap(p -> rpcHandler.getCourse(p.getCourseId())).then( p -> { 
-	              SelectModuleItem parent = new SelectModuleItem(p.getValue(),(DomClassCourse)null);
-                  SelectModuleItemHolder.insert(parent);item.setParent(parent);
-	              return sco;}).flatMap(dom -> rpcHandler.getScos(dom.getCourseId()));;
+	            scoList = sco
+	                .flatMap(p -> rpcHandler.getCourse(p.getCourseId()))
+	                .then( p -> { 
+	                    SelectModuleItem parent = new SelectModuleItem(p.getValue(),(DomClassCourse)null);
+	                    SelectModuleItemHolder.insert(parent);
+	                    item.setParent(parent);
+	                    return rpcHandler.getScos(p.getValue());
+	                });
 			}
 			namePromise = 
 			  sco.then(new Success<DomScoContext, String>() {
