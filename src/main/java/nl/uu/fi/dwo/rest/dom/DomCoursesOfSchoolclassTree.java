@@ -32,13 +32,13 @@ public class DomCoursesOfSchoolclassTree {
     private Map<String, DomTree> cocMap;
 
     public DomCoursesOfSchoolclassTree(DomSchool school, DomCoursesOfSchoolClass4Teacher resultData) {
-        LOG.log(Level.INFO, "Initializing a DomCoureTree.");
+        LOG.log(Level.INFO, "Initializing a DomCourseTree.");
         courseTree = buildCourseTree(school, resultData);
         //reCalculateResults();
     }
     
     public DomCoursesOfSchoolclassTree(DomSchool school, DomResultsPerTeacher resultData) {
-      LOG.log(Level.INFO, "Initializing a DomCoureTree.");
+      LOG.log(Level.INFO, "Initializing a DomCourseTree.");
       courseTree = buildCourseTree(school, resultData);
     }
 
@@ -55,7 +55,7 @@ public class DomCoursesOfSchoolclassTree {
         final List<DomMapEntry<PersistenceId, DomCourse>> courses,
         final List<DomMapEntry<PersistenceId, DomClassCourse4Teacher>> classCourses) {
       cocMap = new HashMap<String, DomTree>(courses.size());
-      Map<String, DomClassCourse4Teacher> classCourseMap = new HashMap<String, DomClassCourse4Teacher>(classCourses.size());
+      Map<PersistenceId, DomClassCourse4Teacher> classCourseMap = new HashMap<>(classCourses.size());
 
         for (DomMapEntry<PersistenceId, DomCourse> courseEntry : courses) {
 
@@ -63,7 +63,7 @@ public class DomCoursesOfSchoolclassTree {
         }
 
         for (DomMapEntry<PersistenceId, DomClassCourse4Teacher> ccEntry : classCourses) {
-            classCourseMap.put(ccEntry.getValue().getCourseId().getIdString(), ccEntry.getValue());
+            classCourseMap.put(ccEntry.getValue().getCourseId(), ccEntry.getValue());
         }
 
         //build DomTree<DomCourseOfClass> tree add every course
@@ -94,12 +94,13 @@ public class DomCoursesOfSchoolclassTree {
         schoolRoot.setObject(new DomCourseOfClass(schoolRootCourse));
 
         for (DomTree<DomCourseOfClass> n : cocMap.values()) {
+        	if (n.getObject().getCourse() == null) continue;
             //attach classCourse to DomTree<DomCourseOfClass> n if it exists
             //LOG.log(Level.FINE, " id, parent id " + n.getObject().getCourse().getId() + ", " + n.getObject().getCourse().getParentID());
-            if (classCourseMap.containsKey(n.getObject().getCourse().getId().getIdString())
+            if (classCourseMap.containsKey(n.getObject().getCourse().getId())
 //               && classCourseMap.get(n.getObject().getCourse().getId().getIdString()).getViewState()!=ViewState.invisible
                     ){
-                n.getObject().setClassCourse(classCourseMap.get(n.getObject().getCourse().getId().getIdString()));
+                n.getObject().setClassCourse(classCourseMap.get(n.getObject().getCourse().getId()));
             }
             //build tree in O(n) time, link parents and kids
             PersistenceId pId = n.getObject().getCourse().getParentID();
