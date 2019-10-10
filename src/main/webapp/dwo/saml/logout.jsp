@@ -17,9 +17,28 @@
 	
 %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link type="text/css" rel="stylesheet" href="/index.css">
 <title>Logout</title>
 </head>
 <body>
-<a id='logout' href="/Shibboleth.sso/Logout?return=/" target="_parent" >Main menu</a>
+<h1>Uitloggen</h1>
+<ul>
+	<li>
+		<a class='logout' href="/Shibboleth.sso/Logout?return=/" target="_parent" >Naar het hoofdmenu, sessie afsluiten</a>
+	</li>
+	<li>
+		<a class='nologout' href="/" target="_parent" >Naar het hoofdmenu zonder sessie af te sluiten</a>
+	</li>
+</ul>
+
+<h1>Logout</h1>
+<ul>
+	<li>
+		<a class='logout' href="/Shibboleth.sso/Logout?return=/" target="_parent" >To the main screen, ending your session </a>
+	</li>
+	<li>
+		<a class='nologout' href="/" >To the main screen, keeping your session</a>
+	</li>
+</ul>
 </body>
 </html>
