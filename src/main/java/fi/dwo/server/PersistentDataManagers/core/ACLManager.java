@@ -2,6 +2,7 @@ package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentACL;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
 
@@ -166,6 +167,21 @@ public class ACLManager {
         }
     }
 
+    public static List<PersistentACL> findBySchool(PersistentSchool s, PersistentDwoProfile p) {
+      EntityManager em = getEntityManager();
+      try {
+        TypedQuery<PersistentACL> q = em.createNamedQuery("PersistentACL.findBySchoolIDProfileID", PersistentACL.class);
+        q.setParameter("schoolID", s.getSchoolID());
+        q.setParameter("profileID", p.getDwoProfileID());
+        List<PersistentACL> list = q.getResultList();
+        LOG.log(Level.FINE, "ACL-manager retrieved {0} PersistentACL with schoolid {1}", new Object[]{list.size(), s.getSchoolID()});
+        return list;
+      }
+      finally {
+          em.close();
+      }     
+    }
+  
     public static List<PersistentACL> findByCourse(PersistentCourse s) {
       EntityManager em = getEntityManager();
       try {

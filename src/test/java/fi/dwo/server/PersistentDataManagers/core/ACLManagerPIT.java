@@ -7,6 +7,7 @@ import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.commons.persistence.entities.PersistentACL;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
@@ -325,6 +326,21 @@ public class ACLManagerPIT {
       assertEquals(1, list.size());
       assertNull(ACLManager.findEntity(acl1.getAclID()));
       ACLManager.updateByCourse(c, Collections.emptyList());
+    }
+    /**
+     * Test of findBySchool method, of class ACLManager.
+     */
+    @Test 
+    public void testFindBySchool() throws Exception {
+      PersistentCourse c = new PersistentCourse(acl1.getCourseID());
+      c.setDwoProfileID(acl1.getDwoProfileID());
+      c.setSchoolID(acl1.getSchoolID());
+      ACLManager.create(acl1);
+
+      PersistentDwoProfile p = new PersistentDwoProfile(acl1.getDwoProfileID());
+      PersistentSchool s = new PersistentSchool(acl1.getSchoolID());
+      List<PersistentACL> list = ACLManager.findBySchool(s,p);      
+      assertEquals("size ", 1, list.size());
     }
 
 }

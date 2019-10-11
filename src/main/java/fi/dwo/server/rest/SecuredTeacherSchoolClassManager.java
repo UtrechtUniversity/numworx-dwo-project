@@ -11,6 +11,7 @@ import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentACL;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
@@ -40,11 +41,16 @@ import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder;
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_P_R_S_SC_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
+import fi.dwo.server.PersistentDataManagers.core.ACLManager;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
+import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -58,10 +64,15 @@ import fi.dwo.server.rest.util.Realm;
 import java.text.MessageFormat;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -1178,43 +1189,16 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @Produces({"application/json"})
     @Path("/getModules")
     public DomCoursesOfSchoolClass4Teacher getModules(@Context SecurityContext sc, RestSchoolClassAndProfile rest) throws Dwo2Exception {
-        //init
-        PersistentHasRole phr = null;
-        PersistentHasRolePK phrPK = MySQLPersistenceId.getNativeId(rest.getRestContext().getDomHasRole());
-        PersistentSchool school = null;
-        PersistentSchoolClass schoolClass = null;
-        DomDwoProfile domProfile = rest.getDomSchoolClassAndProfile().getDomDwoProfile();
-        final PersistentDwoProfile profile;
-        //check if user has matching hasRole
-        try {
-            PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
-            if (!u.getId().equals(phrPK.getUserID())) {
-                throw new Dwo2Exception();
-            }
-            phr = HasRoleManager.findEntity(phrPK);
-            school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            profile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(domProfile));
-            if (profile == null) {
-                LOG.log(Level.SEVERE, "Username {0}: ILLEGAL USER-OPERATION: Using unknown profileId {1}.", new Object[]{sc.getUserPrincipal().getName(), domProfile.getId()});
-                throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
-            }
-        } catch (Dwo2Exception ex) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access teacher functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
-        } catch (Exception e) {
-            //in case use disappeared and such
-            LOG.log(Level.WARNING, "Username {0}: Internal error.", new Object[]{sc.getUserPrincipal().getName()});
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Internal error.");
-        }
+        UserState_U ustate = AnonDomainAuthorizer.build().submitUser(sc.getUserPrincipal().getName());
+        UserState_HR_R_S_SG_U hrstate = ustate.setHasRole(rest.getRestContext().getDomHasRole());
+        TeacherState_HR_R_S_SG_U tstate = hrstate.buildSchoolAdminTeacher().setTeacher();
+        TeacherState_HR_P_R_S_SC_SG_U psstate = tstate.addProfile(rest.getDomSchoolClassAndProfile().getDomDwoProfile()).addSchoolClass(rest.getDomSchoolClassAndProfile().getDomSchoolClass());
+      //init
+        PersistentHasRole phr = hrstate.getHasRole();
+        PersistentSchool school = hrstate.getSchool();
+        PersistentSchoolClass schoolClass = psstate.getSchoolClass();
+        final PersistentDwoProfile profile = psstate.getDwoProfile();
 
-        //fetch schoolclass from parameter
-        Long classID = MySQLPersistenceId.getNativeId(rest.getDomSchoolClass());
-        schoolClass = SchoolClassManager.findEntity(classID);
-        if (schoolClass == null) {
-            String msg = MessageFormat.format("Username {0}: Given schoolclass with id {1} can not be found.", new Object[]{sc.getUserPrincipal().getName(), classID});
-            LOG.log(Level.WARNING, msg);
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_SchoolclassDoesNotExist, msg);
-        }
         //verify if user is in class
         PersistentTeacherOfClassPK key = new PersistentTeacherOfClassPK();
         key.setClassID(schoolClass.getClassID());
@@ -1222,7 +1206,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         key.setUserID(phr.getPersistentHasRolePK().getUserID());
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(key);
         if (toc == null) {
-            String msg = MessageFormat.format("Username {0} is not a teacher of schoolclass {1}.", new Object[]{sc.getUserPrincipal().getName(), classID});
+            String msg = MessageFormat.format("Username {0} is not a teacher of schoolclass {1}.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClass1()});
             LOG.log(Level.WARNING, msg);
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, msg);
         }
@@ -1234,29 +1218,70 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
 // end verification		
         DomCoursesOfSchoolClass4Teacher result = new DomCoursesOfSchoolClass4Teacher();
 
-        Long profileID = MySQLPersistenceId.getNativeId(rest.getDomDwoProfile());
+        Long profileID = profile.getDwoProfileID();
 
         //fetch all courses in the school and profile
-        List<PersistentCourse> listCourse = CourseManager.findEntities(profile.getDwoProfileID(), school.getSchoolID());
+        Collection<PersistentCourse> listCourse = CourseManager.findEntities(profileID, school.getSchoolID());
+        Map<Long, PersistentCourse> courseMap = new TreeMap<>();
+        listCourse.forEach(item -> courseMap.put(item.getCourseID(), item));
+ // Filter by schoolAccess       
+        if (school.accessControl()) {
+          List<PersistentACL> acls = ACLManager.findBySchool(school, profile);
+          List<PersistentSchoolClass> classes = SchoolClassUtilManager.getSchoolClassesOfTeacher(phr);
+          Set<String> rights = classes.stream().map(c -> c.buildPersistenceId().getIdString()).collect(Collectors.toSet());
+          rights.add(ustate.getUser().buildPersistenceId().getIdString());
+          rights.add(school.buildPersistenceId().getIdString());
+          Map<Long, List<PersistentACL>> aclmap = new TreeMap<>();
+          acls.forEach(acl -> {
+            List<PersistentACL> l = aclmap.get(acl.getCourseID());
+            if (l == null) { l = new ArrayList<>(); aclmap.put(acl.getCourseID(), l); }
+            l.add(acl);
+          });
+          listCourse = courseMap.values();
+          Iterator<PersistentCourse> iterator = listCourse.iterator();
+          while (iterator.hasNext()) {
+            PersistentCourse pc = iterator.next();
+            if (pc.getSchoolID() == null) continue;
+            List<PersistentACL> a = aclmap.get(pc.getCourseID());
+            boolean parent = false;
+            while ( (a == null || a.isEmpty()) && pc != null) {
+              parent = true;
+              pc = courseMap.get(pc.getParentID());
+              if (pc != null) a = aclmap.get(pc.getCourseID());
+              else a = null;
+            }
+            if (a ==null) {
+              if (! school.teachersCanWrite()) iterator.remove();
+            } else {
+              ACL acl = a.stream()
+                  .filter(item -> rights.contains(item.getEntity()))
+                  .map(PersistentACL::getAccess)
+                  .sorted( (ACL aa, ACL bb) -> - aa.compareTo(bb))
+                  .findFirst()
+                  .orElse(ACL.NONE);
+              if ( acl == ACL.NONE|| (parent && acl == ACL.ACCESS))
+                iterator.remove();
+            }
+          }
+          
+        }
+        
         result.setCourses(listCourse.stream().map((e) -> new DomMapEntry<PersistenceId, DomCourse>(e.buildPersistenceId(), e.buildDomCourse()))
                 .collect(Collectors.toList()));
 
         List<PersistentClassCourse> listClassCourse = ClassCourseManager.findEntities(schoolClass);
 
         Map<PersistenceId, DomClassCourse4Teacher> classCourseMap = new HashMap<>();
-        Map<PersistenceId, DomCourse> courseMap = new HashMap<>();
-
-        listClassCourse.stream().forEach(
+ 
+        listClassCourse.forEach(
                 (scc) -> {
                     Long courseID = scc.getCourseID();
-                    PersistentCourse course = CourseManager.findEntity(courseID);
+                    PersistentCourse course = courseMap.get(courseID);
                     if (course == null) {
-                        LOG.log(Level.SEVERE, "course null for courseid = " + courseID + " sccid = " + scc.getClassCourseID());
-                    } else if (profileID.longValue() == course.getDwoProfileID().longValue()) {
+                        LOG.log(Level.INFO, "course null for courseid = " + courseID + " sccid = " + scc.getClassCourseID());
+                    } else {
                         DomClassCourse4Teacher dcc = scc.buildDomClassCourse4Teacher();
                         classCourseMap.put(dcc.getId(), dcc);
-                        DomCourse dcs = course.buildDomCourse();
-                        courseMap.put(dcs.getId(), dcs);
                     }
                 });
 
