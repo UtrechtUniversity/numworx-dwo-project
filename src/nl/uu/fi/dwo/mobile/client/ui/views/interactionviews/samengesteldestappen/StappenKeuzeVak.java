@@ -335,6 +335,11 @@ public class StappenKeuzeVak {
 	    
 	}
 	
+	public ObjectMap[] getStepContents()
+	{
+		return stepContents;
+	}
+	
 	public void setParent(SamengesteldeStappenPanel parent)
 	{
 	    this.parent = parent;

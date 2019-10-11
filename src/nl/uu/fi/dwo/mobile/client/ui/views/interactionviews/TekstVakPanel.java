@@ -239,6 +239,7 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 	HashMap<String, Number> randomVarWaarden = null;
 	
 	private TekstVak parent = null;
+	private SamengesteldeStappenPanel parentStappen = null;
 	private int mode = OpdrNav.OEFENEN;
 	
 	private ArrayList<Object> interactionViewObjects = new ArrayList<Object>();
@@ -1297,52 +1298,11 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 		//resize gebeurt in setVisibility.
 		setVisibility(visible);
 		if(ideasStatistiek)
-			initialStatistiekState = initialiseIdeasStatistiek();
+			initialiseIdeasStatistiek();
 	}
 	
-	private ArrayList<Tupel> initialiseIdeasStatistiek()
+	public void initialiseIdeasStatistiek(ArrayList<Tupel> initialState)
 	{
-		ArrayList<Tupel> initialState = new ArrayList<Tupel>();
-		//1. Find the big AntwoordKeuzeVak containing all steps
-		AntwoordKeuzeVak akv = null;
-		//isIdeasStatistiek is checked for the box containing all steps.
-		//The AntwoordKeuzeVak for choosing the steps is situated in the parent of this box.
-		for(int i = 0; i < interactionViewObjects.size(); i++)
-		{
-			if(interactionViewObjects.get(i) instanceof AntwoordKeuzeVak)
-			{	akv = (AntwoordKeuzeVak) interactionViewObjects.get(i);
-				break;
-			}
-		}
-		
-		if(akv == null)
-			return null;
-		
-		for(int i = 0; i < akv.getAnswerModels().length; i++)
-		{
-			if(akv.getAnswerModels()[i].containsKey("feedback"))
-			{
-				try{
-					ObjectMap feedbackMap = akv.getAnswerModels()[i].getObjectMap("feedback");
-					TekstVakPanel tvp = new TekstVakPanel((HashMap<String, Object>) feedbackMap, null, null);
-					tvp.zetInstellingen(instellingen);
-					tvp.setKeyboard(kb);
-					final Object orgObject = tvp;
-					OpdrNavIF comRoot2 = comRoot;
-					Connector connector = find(tvp);
-					comRoot2 = new OpdrNavContext(comRoot,connector, this.bgColorZichtbaar ? bgColor : comRoot.getBackground());
-					((InteractionView) orgObject).setCommunicationRoot(comRoot2);
-					HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) feedbackMap).get("interactiePanelLaunchState");
-					tvp.zetOpdracht(launchState);
-					initialState.addAll(tvp.getAnswerModels());
-				}
-				catch(Exception e)
-				{
-					//Situation back; can be ignored in this method
-				}
-			}
-			
-		}
 		//Make lists out of separate list elements
 		ListIterator<Tupel> initIt = initialState.listIterator();
 		ArrayList<Tupel> allListElements = new ArrayList<Tupel>();
@@ -1413,7 +1373,55 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			initialState.add(newTupel);
 		}
 		
-		return initialState;
+		initialStatistiekState = initialState;
+	}
+	
+	private void initialiseIdeasStatistiek()
+	{
+		ArrayList<Tupel> initialState = new ArrayList<Tupel>();
+		//1. Find the big AntwoordKeuzeVak containing all steps
+		AntwoordKeuzeVak akv = null;
+		//isIdeasStatistiek is checked for the box containing all steps.
+		//The AntwoordKeuzeVak for choosing the steps is situated in the parent of this box.
+		for(int i = 0; i < interactionViewObjects.size(); i++)
+		{
+			if(interactionViewObjects.get(i) instanceof AntwoordKeuzeVak)
+			{	akv = (AntwoordKeuzeVak) interactionViewObjects.get(i);
+				break;
+			}
+		}
+		
+		if(akv == null)
+			return;
+		
+		for(int i = 0; i < akv.getAnswerModels().length; i++)
+		{
+			if(akv.getAnswerModels()[i].containsKey("feedback"))
+			{
+				try{
+					ObjectMap feedbackMap = akv.getAnswerModels()[i].getObjectMap("feedback");
+//					
+//					TekstVakPanel tvp = new TekstVakPanel((HashMap<String, Object>) feedbackMap, null, null);
+//					tvp.zetInstellingen(instellingen);
+//					tvp.setKeyboard(kb);
+//					final Object orgObject = tvp;
+//					OpdrNavIF comRoot2 = comRoot;
+//					Connector connector = find(tvp);
+//					comRoot2 = new OpdrNavContext(comRoot,connector, this.bgColorZichtbaar ? bgColor : comRoot.getBackground());
+//					((InteractionView) orgObject).setCommunicationRoot(comRoot2);
+//					HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) feedbackMap).get("interactiePanelLaunchState");
+//					tvp.zetOpdracht(launchState);
+					initialState.addAll(getAnswerModels(feedbackMap));
+				}
+				catch(Exception e)
+				{
+					//Situation back; can be ignored in this method
+				}
+			}
+			
+		}
+		initialiseIdeasStatistiek(initialState);
+		
 	}
 	
 	class NameComparator implements Comparator<Tupel> {
@@ -1560,6 +1568,21 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 					}
 				}
 				return answerModels;
+	}
+	
+	public ArrayList<Tupel> getAnswerModels(ObjectMap map)
+	{
+		TekstVakPanel tvp = new TekstVakPanel((HashMap<String, Object>) map, randomVarNamen, randomVarWaarden);
+		tvp.zetInstellingen(instellingen);
+		tvp.setKeyboard(kb);
+		final Object orgObject = tvp;
+		OpdrNavIF comRoot2 = comRoot;
+		Connector connector = find(tvp);
+		comRoot2 = new OpdrNavContext(comRoot,connector, bgColorZichtbaar ? bgColor : comRoot.getBackground());
+		((InteractionView) orgObject).setCommunicationRoot(comRoot2);
+		HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) map).get("interactiePanelLaunchState");
+		tvp.zetOpdracht(launchState);
+		return tvp.getAnswerModels();
 	}
 	
 	private int initialiseerObjects(ArrayList<Object> opdrachtObjects, List<Object> opdrachtGegevens, int rij, int kolom, int aantalVakken)
@@ -2193,6 +2216,47 @@ public class TekstVakPanel implements InteractionViewWithMisconceptions, FacetAw
 			return parent.getTekstVakParent().isInIdeasStatistiek();
 		else
 			return null;
+	}
+	
+	public void getHintIdeasStatistiek()
+	{
+		final TekstVakPanel statPanel = isInIdeasStatistiek();
+		final List<Tupel> newAnswers = statPanel.getAllAnswers();
+		
+		//TODO: ask for hint based on newAnswers: String hint = ideas.getOneFirst(newAnswers);
+		Promise<String> promise;
+		
+		promise = statPanel.getOneHint(newAnswers).map(new Function<RuleIF, String>() {
+			private final MapperConstants constants = new MapperConstants();
+			@Override
+			public String apply(RuleIF t) {
+//convert ruleif to string						
+				String id = t.getId(); // ideas identifier
+				String hint;						 
+
+				if(id.equals("error"))
+				{
+					String expr = t.getExpr();
+					if(expr.equals("no hint available"))
+						id = "no hint available";
+				}
+				hint = constants.getHint(id);//getFromMap(constants, "hint", id); // ID to hint tekst
+//toevoegen: reason/expr/..?
+				
+				return hint;
+			}});
+		
+		promise.then( new Success<String,Void>() {
+
+			@Override
+			public Promise<Void> call(Promise<String> resolved)
+					throws Exception {
+				String hint = resolved.getValue();
+				
+				statPanel.feedbackImage = null;
+				statPanel.vulFeedbackPanelEnVoegToe(hint);
+				return null;
+			}});
 	}
 	
 	public TekstVakPanel findStappenVak()
@@ -3294,6 +3358,8 @@ private Object CamelCase(String name) {
 		// instellen
 		corrigeerOpvulHoogtes();
 		vulSymboolHoogtes();
+		if(parentStappen != null)
+			parentStappen.resize();
 	}
 	
 	/**
@@ -3888,43 +3954,7 @@ private Object CamelCase(String name) {
 		{
 			if(isInIdeasStatistiek() != null)
 			{
-				final TekstVakPanel statPanel = isInIdeasStatistiek();
-				final List<Tupel> newAnswers = statPanel.getAllAnswers();
-				
-				//TODO: ask for hint based on newAnswers: String hint = ideas.getOneFirst(newAnswers);
-				Promise<String> promise;
-				
-				promise = statPanel.getOneHint(newAnswers).map(new Function<RuleIF, String>() {
-					private final MapperConstants constants = new MapperConstants();
-					@Override
-					public String apply(RuleIF t) {
-// convert ruleif to string						
-						String id = t.getId(); // ideas identifier
-						String hint;						 
-
-						if(id.equals("error"))
-						{
-							String expr = t.getExpr();
-							if(expr.equals("no hint available"))
-								id = "no hint available";
-						}
-						hint = constants.getHint(id);//getFromMap(constants, "hint", id); // ID to hint tekst
-// toevoegen: reason/expr/..?
-						
-						return hint;
-					}});
-				
-				promise.then( new Success<String,Void>() {
-
-					@Override
-					public Promise<Void> call(Promise<String> resolved)
-							throws Exception {
-						String hint = resolved.getValue();
-						
-						statPanel.feedbackImage = null;
-						statPanel.vulFeedbackPanelEnVoegToe(hint);
-						return null;
-					}});
+				getHintIdeasStatistiek();
 				return;
 			}
 		}
@@ -4564,15 +4594,8 @@ private Object CamelCase(String name) {
 			{	ObjectMap objectMap = JSONUtilities.wrapMap(map);
 				
 				//Heeft omliggende (statistiek)TekstVakPanel nog een feedbackPanel? Dan weghalen.
-				TekstVakPanel statPanel = isInIdeasStatistiek();
-				if(statPanel != null && statPanel.feedbackPanel != null)
-				{	statPanel.feedbackPanel.removeFromParent();
-					statPanel.feedbackPanelHeight = 0;
-					statPanel.removeFeedbackImage();
-				}
-				//feedbackPanelHeight = 0;
-				
-				
+				removeFeedback();
+							
 				try{
 					String contentString = ((String)map.get("content"));
 					if(contentString.startsWith("back"))
@@ -4617,6 +4640,16 @@ private Object CamelCase(String name) {
 		
 	}
 
+	public void removeFeedback()
+	{
+		TekstVakPanel statPanel = isInIdeasStatistiek();
+		if(statPanel != null && statPanel.feedbackPanel != null)
+		{	statPanel.feedbackPanel.removeFromParent();
+			statPanel.feedbackPanelHeight = 0;
+			statPanel.removeFeedbackImage();
+		}
+		//feedbackPanelHeight = 0;
+	}
 	private void seal(CBookEvent event) {
 		for (Object object : interactionViewObjects)
 		{
@@ -4640,6 +4673,7 @@ private Object CamelCase(String name) {
 			if(stappen.size() > stapNr)
 				stappen.remove(stapNr);
 			resize();
+			goedHalfFoutStatistiek = AntwoordVakChecker.GEEN;
 			return true;
 		}
 		else //back has to be performed on TekstVakPanel containing stappen, somewhere in this TekstVakPanel
@@ -5289,5 +5323,10 @@ private Object CamelCase(String name) {
 	public TekstVak geefTekstVak(int row, int col)
 	{
 		return(tekstVakken[row][col]);
+	}
+	
+	public void setParentStappen(SamengesteldeStappenPanel panel)
+	{
+		parentStappen = panel;
 	}
 }

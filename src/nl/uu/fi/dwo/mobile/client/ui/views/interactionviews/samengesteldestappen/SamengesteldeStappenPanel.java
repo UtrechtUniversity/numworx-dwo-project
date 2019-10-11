@@ -11,31 +11,25 @@ import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.wiskopdr.text.Text;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
-import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
-import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstRegel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel.Tupel;
 
 public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, TekstElementWithFont {
 	
@@ -113,11 +107,6 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 		// alle vakken op een panel zetten. 
 		
 		mainPanel = new FlowPanel();
-//		mainPanel.getElement().getStyle().setBackgroundColor("hotPink");
-////		mainPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-////		mainPanel.getElement().getStyle().setBorderColor("salmon");
-////		mainPanel.getElement().getStyle().setBorderWidth(5, Style.Unit.PX);
-//		mainPanel.getElement().getStyle().setProperty("boxShadow", "5px -5px darkturquoise inset");
 		
 		//Stappenvak initialiseren
 		int nrOfSteps = 20;//later nog wat flexibeler?
@@ -218,7 +207,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 			hintButton.addDomHandler(new ClickHandler(){
 				public void onClick(ClickEvent e)
 				{
-					//stappenVak.hintIdeasStatistiek();
+					stappenVak.getHintIdeasStatistiek();
 				    resize();
 				}
 			}, ClickEvent.getType());
@@ -265,6 +254,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 		backButton.addDomHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
 			{
+				stappenVak.removeFeedback();
 				stappenVak.backAction();
 				if(selectedSteps.size() > 0)
 			        selectedSteps.remove(selectedSteps.size() - 1);
@@ -279,7 +269,6 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 			backButton.getElement().getStyle().setCursor(Cursor.POINTER);  
 			}
 		}, MouseOverEvent.getType());
-		//TODO: bij over backButton heen bewegen: muis veranderen in handje?
 		
 		mainPanel.add(choiceLine);
 		
@@ -304,6 +293,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
       ipLaunchState.put("cellSpaceRow", new Integer(6));
       ipLaunchState.put("breedtes", breedtes);
       ipLaunchState.put("hoogtes", hoogtes);
+      ipLaunchState.put("ideasStatistiek", ideasStatistiek);
       
       HashMap<String, Object> launchData = new HashMap<String, Object>();
       launchData.put("soortInteractiePanel", new Integer(9));
@@ -313,14 +303,25 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
       launchData.put("volledigeBreedte", volledigeBreedte);
       launchData.put("hoogte", new Integer(4));
       
-      stappenVak = new TekstVakPanel(launchData, null, null);
+      stappenVak = new TekstVakPanel(launchData, randomVarNamen, randomVarWaarden);
       stappenVak.setKeyboard(kb);
-      //stappenVak.setCommunicationRoot(comRoot);
+      //stappenVak.setCommunicationRoot(comRoot); // gebeurt nu in setComRoot. 
       stappenVak.initialiseerStappen();
-      
-      
       //stappenVak.addActionListener(this);
+      stappenVak.setParentStappen(this);
     }
+	
+	private ArrayList<Tupel> getInitialStatistiekState()
+	{
+		ArrayList<Tupel> initialState = new ArrayList<Tupel>();
+		ObjectMap[] stepContents = keuzeVak.getStepContents();
+		for(int i = 0; i < stepContents.length; i++)
+		{
+			ObjectMap contentMap = stepContents[i];
+			initialState.addAll(stappenVak.getAnswerModels(contentMap));
+		}
+		return initialState;
+	}
 	
 	public void resize()
 	{
@@ -350,6 +351,10 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	public void zetInstellingen(ObjectMap instellingen)
 	{
 		stappenVak.zetInstellingen(instellingen);
+		if(ideasStatistiek)
+	    {   ArrayList<Tupel> initialState = getInitialStatistiekState();
+	       stappenVak.initialiseIdeasStatistiek(initialState);
+	    }
 	}
 	
 	public void setKeyboard(FormuleKeyboardIF kb)
@@ -396,7 +401,7 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	public Boolean isCorrect() {
 		if(ideasStatistiek)
 		{
-			//TODO: ideas statistiek verder implementeren. 
+			return(stappenVak.isCorrect()); 
 		}
 		
 		//Requirement 1: stappenVak is correct
@@ -409,7 +414,9 @@ public class SamengesteldeStappenPanel implements InteractionStub, FacetAware, T
 	        if(stepRequired[i])
 	        {
 	          if(!selectedSteps.contains(i))
-	            correct = false;
+	          {  correct = false;
+	             break;
+	          }
 	        }
 	      }
 	      return correct;
