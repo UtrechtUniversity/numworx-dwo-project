@@ -245,8 +245,12 @@ public class PersistentSchool implements Serializable {
         return schoolRights.contains("c") || schoolRights.equals("_");
     }
     public boolean accessControl() {
-      return schoolRights != null  && schoolRights.contains("X");
+      return schoolRights.contains("X");
     }
+    public boolean teachersCanWrite() {
+      return schoolRights.contains("m") || schoolRights.equals("_");
+    }
+    
     
     public DomSchool buildDomSchool() {
         DomSchool school = new DomSchool();

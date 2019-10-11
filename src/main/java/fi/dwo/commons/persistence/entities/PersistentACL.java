@@ -27,7 +27,8 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @Table(name = "tblacl", schema = "", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"courseID", "entity", "dwoProfileID", "schoolID"})})
 @NamedQueries({
-  @NamedQuery(name = "PersistentACL.findByCourseID", query = "SELECT p FROM PersistentACL p WHERE p.courseID = :courseID")
+  @NamedQuery(name = "PersistentACL.findByCourseID", query = "SELECT p FROM PersistentACL p WHERE p.courseID = :courseID"),
+  @NamedQuery(name = "PersistentACL.findBySchoolIDProfileID", query = "SELECT p FROM PersistentACL p WHERE p.schoolID = :schoolID AND p.dwoProfileID = :profileID")
 })
 public class PersistentACL implements Serializable {
   private static final long serialVersionUID = 1L;
