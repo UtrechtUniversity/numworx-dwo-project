@@ -553,6 +553,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			checkPanel.getElement().getStyle().setPaddingLeft(5, Style.Unit.PX);
 			checkPanel.getElement().getStyle().setProperty("verticalAlign", "top");
 			checkPanel.getElement().getStyle().setMarginTop(-3, Style.Unit.PX);
+
 			checkPanel.add(checkimg);
 			checkPanel.add(feedbackLabel);
 			checkPanel.setPixelSize(15, hoogte);
@@ -671,7 +672,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//sp.add(prefixPanel);
 			
 			sp.add(this.getMainRegel().asWidget());
-			sp.add(checkPanel);
+	         if (fe == null) // DWOPLAY-363 Altijd dubbel kruisje, geen checkImage/feedback als je in FE zit!
+	           sp.add(checkPanel);
 			
 			//checkPanel.getElement().getStyle().setBackgroundColor("red");
 			//prefixPanel.getElement().getStyle().setBackgroundColor("yellow");
