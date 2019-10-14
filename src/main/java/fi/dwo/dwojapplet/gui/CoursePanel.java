@@ -287,7 +287,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
             for (i = 0; i < course.getScoList().length; i++) {
                 Sco sco = course.getScoList()[i];
                 l = new ScoLinkedLabel(sco);
-                l.setForeground(Color.black);
+                l.setForeground(GuiConstants.MAIN_FOREGROUND);
                 l.setFont(GuiConstants.SCO_TEXT);
                 fm = l.getFontMetrics(l.getFont());
                 l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());

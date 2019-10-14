@@ -7,7 +7,6 @@ import fi.beans.numworxlf.JTextField;
 import fi.beans.numworxlf.NumworxTextFieldUI;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
@@ -100,7 +99,7 @@ public class AccountDataFullStudentJPanel extends JPanel implements
 
         /* Username label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_USERNAME) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
@@ -124,7 +123,7 @@ public class AccountDataFullStudentJPanel extends JPanel implements
 
 //        /* Old-Password label */
 //        l = new JLabel(TextMapper.getText(TextMapper.GUIP_OLD_PASSWORD) + ":");
-//        l.setForeground(Color.black);
+//        l.setForeground(GuiConstants.MAIN_FOREGROUND);
 //        l.setFont(GuiConstants.NORMAL_TEXT);
 //        fm = l.getFontMetrics(l.getFont());
 //        l.setLocation(10, 55);
@@ -145,7 +144,7 @@ public class AccountDataFullStudentJPanel extends JPanel implements
 
         /* Password label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_PASSWORD) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 80);
@@ -161,7 +160,7 @@ public class AccountDataFullStudentJPanel extends JPanel implements
 
         /* RePassword label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_RE_PASSWORD) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 105);
@@ -192,7 +191,7 @@ public class AccountDataFullStudentJPanel extends JPanel implements
 
         /* Firstname label */
         l = new JLabel(TextMapper.getText(TextMapper.TBL_GIVENNAME) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 30);
@@ -213,7 +212,7 @@ public class AccountDataFullStudentJPanel extends JPanel implements
         /* Middlename label */
         String middleNameLabel = TextMapper.getText(TextMapper.TBL_INSERTION);
         l = new JLabel(middleNameLabel + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 55);
@@ -229,12 +228,12 @@ public class AccountDataFullStudentJPanel extends JPanel implements
 //        boolean visible = prop.getUser().getInsertion().length() > 0 || middleNameLabel.length() > 0;
         middlename.setVisible(true);
         l.setVisible(true);
-        int v = true ? 0 : 25;
+        int v = 0;//true ? 0 : 25;
 
 
         /* Lastname label */
         l = new JLabel(TextMapper.getText(TextMapper.TBL_FAMILYNAME) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 80 - v);
@@ -254,7 +253,7 @@ public class AccountDataFullStudentJPanel extends JPanel implements
 
         /* Email label */
         l = new JLabel(TextMapper.getText(TextMapper.TBL_EMAIL) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 105 - v);
@@ -283,7 +282,7 @@ public class AccountDataFullStudentJPanel extends JPanel implements
      */
     protected void addButtonsPanel(Container p2) {
         /* Add Button-panel */
-        FontMetrics fm;
+        //FontMetrics fm;
 
         int locationY = p2.getSize().height + p2.getLocation().y
                 - 1;
@@ -422,6 +421,7 @@ public class AccountDataFullStudentJPanel extends JPanel implements
         email.setText(aUser.getEmail());
     }
 
+    @SuppressWarnings("deprecation")
     public DomUserFull getUser() {
         if (!password.getText().equals("")
                 && repassword.getText().equals(password.getText())) {

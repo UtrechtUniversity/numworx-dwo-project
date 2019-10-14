@@ -12,7 +12,6 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
@@ -103,7 +102,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
 
         /* Username label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_USERNAME) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
@@ -113,6 +112,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
         /* Username Label */
         l = new JLabel(user.getUserName());
         l.setFont(GuiConstants.NORMAL_TEXT);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         fm = l.getFontMetrics(l.getFont());
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         l.setLocation(160, 30);
@@ -120,7 +120,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
 
         /* Old-Password label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_OLD_PASSWORD) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 55);
@@ -141,7 +141,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
 
         /* Password label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_PASSWORD) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 80);
@@ -157,7 +157,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
 
         /* RePassword label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_RE_PASSWORD) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 105);
@@ -188,7 +188,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
 
         /* Firstname label */
         l = new JLabel(TextMapper.getText(TextMapper.TBL_GIVENNAME) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 30);
@@ -209,7 +209,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
         /* Middlename label */
         String middleNameLabel = TextMapper.getText(TextMapper.TBL_INSERTION);
         l = new JLabel(middleNameLabel + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 55);
@@ -230,7 +230,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
 
         /* Lastname label */
         l = new JLabel(TextMapper.getText(TextMapper.TBL_FAMILYNAME) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 80 - v);
@@ -250,7 +250,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
 
         /* Email label */
         l = new JLabel(TextMapper.getText(TextMapper.TBL_EMAIL) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 105 - v);

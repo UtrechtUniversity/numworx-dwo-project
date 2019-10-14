@@ -332,7 +332,9 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         jtable.setRowSelectionAllowed(false);
         jtable.setColumnSelectionAllowed(false);
         jtable.setCellSelectionEnabled(false);
+        jtable.setForeground(GuiConstants.MAIN_FOREGROUND);
         TableUtil.setDefaults(jtable, true, new ImageRenderer(), new ImageButtonEditor());
+        jtable.getTableHeader().setForeground(GuiConstants.MAIN_FOREGROUND);
         TableUtil.setJTableSizes(jtable);
 //        Dimension pref = viewport.getPreferredSize();
 //        pref.width = jtable.getPreferredSize().width + 20; // iets breder!

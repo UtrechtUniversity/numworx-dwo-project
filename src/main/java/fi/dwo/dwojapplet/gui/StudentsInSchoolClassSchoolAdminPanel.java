@@ -62,7 +62,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
     private CenterPanel center;
 
     private JButton backButton;
-    private JComboBox studentBox;
+    private JComboBox<DomStudent> studentBox;
     private JButton deleteButton;
     private JButton copyToSchoolClassButton;
     private JButton addStudentsButton;
@@ -349,18 +349,10 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         copyToSchoolClassButton = new JButton(TextMapper.getText(TextMapper.BTN_ADD) + ":");
         copyToSchoolClassButton.setSize(copyToSchoolClassButton.getPreferredSize());
         copyToSchoolClassButton.addActionListener(this);
-//        Vector<DomStudent> schoolClassVector = new Vector<DomStudent>(prop.getStudentsInSchoolNotInClass(sc));
-//        Collections.sort(schoolClassVector, new Comparator<DomStudent>() {
-//            public int compare(DomStudent a, DomStudent b) {
-//                return a.getFamilyName().compareTo(b.getFamilyName());
-//            }
-//        });
-//        studentBox = new JComboBox(schoolClassVector);
-        studentBox = new JComboBox();
-//        studentBox.setSize(70,studentBox.getHeight());
+        studentBox = new JComboBox<>();
+        studentBox.setForeground(GuiConstants.MAIN_FOREGROUND);
         studentBox.addPopupMenuListener(new PopupMenuListener() {
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-//                JComboBox comboBox = (JComboBox) e.getSource();
                 Vector<DomStudent> schoolClassVector;
                 try {
                     schoolClassVector = new Vector<DomStudent>(prop.getStudentsInSchoolNotInClass(sc));
@@ -369,7 +361,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                             return a.getFamilyName().compareTo(b.getFamilyName());
                         }
                     });
-                    DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
+                    DefaultComboBoxModel<DomStudent> model = new DefaultComboBoxModel<>(schoolClassVector);
                     studentBox.setModel(model);
                 } catch (Dwo2Exception ex) {
                     LOG.log(Level.SEVERE, "", ex);

@@ -57,12 +57,12 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
 
     private JButton backButton;
     private JButton addTeacherButton;
-    private JComboBox addTeacherBox;
+    private JComboBox<DomTeacher> addTeacherBox;
 
     private Image removeImage, emptyImage;
 
     private JPanel jtbl;
-    private TableRowSorter rowSorter;
+    private TableRowSorter<TeachersInSchoolClassTeacherPanelTableModel> rowSorter;
 
     /**
      * @return the schoolClass
@@ -90,7 +90,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
             setIcon(icon);
             setHorizontalAlignment(SwingConstants.CENTER);
             setOpaque(true);
-            Object[] arguments = new Object[]{table.getValueAt(row, 0)};
+//           Object[] arguments = new Object[]{table.getValueAt(row, 0)};
 //            switch (col) {
 //                case 1:
 //                    String s = TextMapper.getText(TextMapper.GUIC_TLTP_USERS_CLASS);
@@ -100,7 +100,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
 //                    setToolTipText(TextMapper.getText(TextMapper.GUIC_TLTP_EDIT_CLASS));
 //                    break;
 //                default:
-//                    setToolTipText("Message " + col); // TODO ....
+//                    setToolTipText("Message " + col); // TO DO ....
 //            }
             if (selected) {
                 setBackground(table.getSelectionBackground());
@@ -188,8 +188,10 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
         TableUtil.setDefaults(jtable, true, new TeachersInSchoolClassTeacherPanel.ImageRenderer(), new TeachersInSchoolClassTeacherPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
         TableUtil.setBorder(jtable);
+        jtable.setForeground(GuiConstants.MAIN_FOREGROUND);
+        jtable.getTableHeader().setForeground(GuiConstants.MAIN_FOREGROUND);
         jtbl.setVisible(false);
-        rowSorter = new TableRowSorter(tableModel);
+        rowSorter = new TableRowSorter<TeachersInSchoolClassTeacherPanelTableModel>(tableModel);
         rowSorter.toggleSortOrder(3);//
         jtable.setRowSorter(rowSorter);
         this.add(jtbl);
@@ -236,7 +238,8 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
 //                return a.getFamilyName().compareTo(b.getFamilyName());
 //            }
 //        });
-        addTeacherBox = new JComboBox();
+        addTeacherBox = new JComboBox<>();
+        addTeacherBox.setForeground(GuiConstants.MAIN_FOREGROUND);
         addTeacherBox.addPopupMenuListener(new PopupMenuListener() {
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 //                JComboBox comboBox = (JComboBox) e.getSource();
@@ -248,7 +251,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
                             return a.getFamilyName().compareTo(b.getFamilyName());
                         }
                     });
-                    DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
+                    DefaultComboBoxModel<DomTeacher> model = new DefaultComboBoxModel<DomTeacher>(schoolClassVector);
                     addTeacherBox.setModel(model);
                 } catch (Dwo2Exception ex) {
                     LOG.log(Level.SEVERE, "", ex);

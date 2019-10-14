@@ -57,12 +57,12 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
 
     private JButton backButton;
     private JButton addTeacherButton;
-    private JComboBox addTeacherBox;
+    private JComboBox<DomTeacher> addTeacherBox;
 
     private Image removeImage, emptyImage;
 
     private JPanel jtbl;
-    private TableRowSorter rowSorter;
+    private TableRowSorter<TeachersInSchoolClassTeacherPanelTableModel> rowSorter;
 
 	private JTable jtable;
 
@@ -92,7 +92,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
             setIcon(icon);
             setHorizontalAlignment(SwingConstants.CENTER);
             setOpaque(true);
-            Object[] arguments = new Object[]{table.getValueAt(row, 0)};
+//            Object[] arguments = new Object[]{table.getValueAt(row, 0)};
 //            switch (col) {
 //                case 1:
 //                    String s = TextMapper.getText(TextMapper.GUIC_TLTP_USERS_CLASS);
@@ -187,7 +187,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
 
         tableModel.init(prop.getTeachersInSchoolClass(schoolClass), removeImage, emptyImage);
         jtable.setModel(tableModel);
-        rowSorter = new TableRowSorter(tableModel);
+        rowSorter = new TableRowSorter<>(tableModel);
         rowSorter.toggleSortOrder(3);//        
         jtable.setRowSorter(rowSorter);
 
@@ -245,8 +245,8 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
 //                return a.getFamilyName().compareTo(b.getFamilyName());
 //            }
 //        });
-        addTeacherBox = new JComboBox();
-
+        addTeacherBox = new JComboBox<>();
+        addTeacherBox.setForeground(GuiConstants.MAIN_FOREGROUND);
         addTeacherBox.addPopupMenuListener(new PopupMenuListener() {
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 //                JComboBox comboBox = (JComboBox) e.getSource();
@@ -258,7 +258,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                             return a.getFamilyName().compareTo(b.getFamilyName());
                         }
                     });
-                    DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
+                    DefaultComboBoxModel<DomTeacher> model = new DefaultComboBoxModel<DomTeacher>(schoolClassVector);
                     addTeacherBox.setModel(model);
                 } catch (Dwo2Exception ex) {
                     LOG.log(Level.SEVERE, "", ex);
@@ -349,7 +349,7 @@ public class TeachersInSchoolClassSchoolAdminPanel extends JPanel implements Cen
             if (teacher != null) {
                 try {
                     prop.submitTeacherToSchoolClass(schoolClass, teacher);
-                    TeachersInSchoolClassSchoolAdminPanel panel = new TeachersInSchoolClassSchoolAdminPanel(schoolClass);
+//                    TeachersInSchoolClassSchoolAdminPanel panel = new TeachersInSchoolClassSchoolAdminPanel(schoolClass);
 //                    Vector<DomTeacher> teacherVector = new Vector<DomTeacher>(prop.getTeachersInSchoolNotInClass(schoolClass));
 //                    Collections.sort(teacherVector, new Comparator<DomTeacher>() {
 //                        public int compare(DomTeacher a, DomTeacher b) {

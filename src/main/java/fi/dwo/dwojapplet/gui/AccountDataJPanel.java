@@ -109,7 +109,7 @@ public class AccountDataJPanel extends JPanel implements
 
         /* Username label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_USERNAME) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
@@ -126,7 +126,7 @@ public class AccountDataJPanel extends JPanel implements
 
         /* Old-Password label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_OLD_PASSWORD) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 55);
@@ -147,7 +147,7 @@ public class AccountDataJPanel extends JPanel implements
 
         /* Password label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_PASSWORD) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 80);
@@ -163,7 +163,7 @@ public class AccountDataJPanel extends JPanel implements
 
         /* RePassword label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_RE_PASSWORD) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 105);
@@ -194,7 +194,7 @@ public class AccountDataJPanel extends JPanel implements
 
         /* Firstname label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_FIRSTNAME) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 30);
@@ -215,7 +215,7 @@ public class AccountDataJPanel extends JPanel implements
         /* Middlename label */
         String middleNameLabel = TextMapper.getText(TextMapper.GUIP_MIDDLENAME);
         l = new JLabel(middleNameLabel + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 55);
@@ -236,7 +236,7 @@ public class AccountDataJPanel extends JPanel implements
 
         /* Lastname label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_LASTNAME) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 80 - v);
@@ -256,7 +256,7 @@ public class AccountDataJPanel extends JPanel implements
 
         /* Email label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_EMAIL) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 105 - v);

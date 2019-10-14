@@ -428,7 +428,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
             else
             {	area = new JTextArea();
 	            area.setText(course.getText());
-	            area.setBorder(BorderFactory.createLineBorder(Color.black));
+	            area.setBorder(BorderFactory.createLineBorder(fi.beans.numworxlf.Constants.COLOR13));
             	editorBox.add(area);
             }
             panel.add(editorBox, BorderLayout.NORTH);
@@ -636,7 +636,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     		{	if(area==null)
 				{	area = new JTextArea();
 					area.setText("");
-					area.setBorder(BorderFactory.createLineBorder(Color.black));
+					area.setBorder(BorderFactory.createLineBorder(fi.beans.numworxlf.Constants.COLOR13));
 		        	editorBox.add(area);
 				}
     			wiskOpdrEditPanel.setVisible(false);

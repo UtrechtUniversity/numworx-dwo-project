@@ -89,7 +89,7 @@ public class ResultScoreButton extends JPanel implements
             if (domain.isDeepest()) {
                 LinkedLabel ll = new LinkedLabel(((int) Math.round(score)) + " %");
                 ll.addActionListener(this);
-                ll.setMouseoverColor(Color.black);
+                ll.setMouseoverColor(GuiConstants.MAIN_FOREGROUND);
                 String[] arguments = new String[2];
                 arguments[0] = domain.getUserGroup().getName();
                 arguments[1] = domain.getLessonGroup().getToolTip();

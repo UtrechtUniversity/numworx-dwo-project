@@ -5,12 +5,11 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JComboBox;
-import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JTextField;
+import fi.beans.numworxlf.NumworxTextFieldUI;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
-import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -55,11 +54,11 @@ public class RegisterMoreSchoolLoginsPanel extends JPanel implements ActionListe
 
     private JButton registerButton;
 
-    private JButton resetButton;
+    //private JButton resetButton;
 
     private JButton backButton;
 
-    private JComboBox groupChoice;
+    private JComboBox<String> groupChoice;
 
     /**
      * Creates a new RegisterPanel. At the register panel, a user can register
@@ -80,7 +79,7 @@ public class RegisterMoreSchoolLoginsPanel extends JPanel implements ActionListe
 
         /* Add School-panel */
         p = new JPanel(null);
-        //p.setBorder(BorderFactory.createLineBorder(Color.black));
+        //p.setBorder(BorderFactory.createLineBorder(GuiConstants.MAIN_FOREGROUND));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 180, 10, 310, 120);
         this.add(p);
@@ -104,7 +103,7 @@ public class RegisterMoreSchoolLoginsPanel extends JPanel implements ActionListe
 
         /* Schoologin label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_SCHOOLLOGIN) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 40);
@@ -118,7 +117,7 @@ public class RegisterMoreSchoolLoginsPanel extends JPanel implements ActionListe
 
         /* Group label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_SCHOOLGROUP) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 65);
@@ -126,7 +125,7 @@ public class RegisterMoreSchoolLoginsPanel extends JPanel implements ActionListe
         p.add(l);
 
         /* Password field */
-        groupChoice = new JComboBox();
+        groupChoice = new JComboBox<>();
 //        groupChoice.addItem(TextMapper.getText(TextMapper.GUIR_OPT_SELECT_GROUP));
         RoleType[] rl = DwoHelper.getRoles();
         for (int i = 1; i < rl.length; i++) {
@@ -144,7 +143,7 @@ public class RegisterMoreSchoolLoginsPanel extends JPanel implements ActionListe
 
         /* Schoolpassword label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_SCHOOLPASSWORD) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 90);
@@ -153,13 +152,14 @@ public class RegisterMoreSchoolLoginsPanel extends JPanel implements ActionListe
 
         /* Schoolpassword field */
         schoolpassword = new JPasswordField();
+        schoolpassword.setUI(NumworxTextFieldUI.createUI(schoolpassword));
         schoolpassword.setBounds(160, 88, 120, 20);
         schoolpassword.setEchoChar('*');
         p.add(schoolpassword);
 
         /* Add Button-panel */
         p = new JPanel(null);
-        //p.setBorder(BorderFactory.createLineBorder(Color.black));
+        //p.setBorder(BorderFactory.createLineBorder(GuiConstants.MAIN_FOREGROUND));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 180, 140, 310, 80);//487
         this.add(p);
@@ -189,20 +189,20 @@ public class RegisterMoreSchoolLoginsPanel extends JPanel implements ActionListe
 
     }
 
-    /**
-     * Creates a new label with a asterisk. It can be used to indicate that a
-     * field is mandatory.
-     *
-     * @return A label with the caption of a asterisk.
-     */
-    private JLabel createMandatoryLabel() {
-        JLabel mandatoryLabel = new JLabel("*");
-        mandatoryLabel.setForeground(GuiConstants.RED_COLOR);
-        mandatoryLabel.setFont(GuiConstants.RED_TEXT);
-        FontMetrics fm = mandatoryLabel.getFontMetrics(mandatoryLabel.getFont());
-        mandatoryLabel.setSize(fm.stringWidth(mandatoryLabel.getText()) + 5, fm.getHeight());
-        return mandatoryLabel;
-    }
+//    /**
+//     * Creates a new label with a asterisk. It can be used to indicate that a
+//     * field is mandatory.
+//     *
+//     * @return A label with the caption of a asterisk.
+//     */
+//    private JLabel createMandatoryLabel() {
+//        JLabel mandatoryLabel = new JLabel("*");
+//        mandatoryLabel.setForeground(GuiConstants.RED_COLOR);
+//        mandatoryLabel.setFont(GuiConstants.RED_TEXT);
+//        FontMetrics fm = mandatoryLabel.getFontMetrics(mandatoryLabel.getFont());
+//        mandatoryLabel.setSize(fm.stringWidth(mandatoryLabel.getText()) + 5, fm.getHeight());
+//        return mandatoryLabel;
+//    }
 
     @Override
     public void paintComponent(Graphics g) {

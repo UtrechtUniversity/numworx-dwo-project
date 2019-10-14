@@ -108,7 +108,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
 
         /* schoolName label */
         l = new JLabel("Naam van de school");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 30);
@@ -128,7 +128,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
 
         /* schoolLogin label */
         l = new JLabel("Schoollogin");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 80);
@@ -151,7 +151,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
             }
             if (usePasswd[groupId]) {
                 l = new JLabel(passwdLabel[groupId]);
-                l.setForeground(Color.black);
+                l.setForeground(GuiConstants.MAIN_FOREGROUND);
                 l.setFont(GuiConstants.NORMAL_TEXT);
                 form.add(l);
                 passwdField[groupId] = new JTextField(text);

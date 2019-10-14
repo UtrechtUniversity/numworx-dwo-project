@@ -3,7 +3,6 @@
  */
 package fi.dwo.dwojapplet.gui.domutils;
 
-import fi.dwo.commons.system.TextMapper;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import java.awt.Component;
 import javax.swing.JLabel;
@@ -17,7 +16,7 @@ import static javax.swing.SwingConstants.CENTER;
  * @author G.A.J. van der Plas
  */
 public class DomSchoolClassListCellRenderer extends JLabel
-        implements ListCellRenderer {
+        implements ListCellRenderer<DomSchoolClass> {
     private String emptyText="";
 
     public DomSchoolClassListCellRenderer() {
@@ -40,8 +39,8 @@ public class DomSchoolClassListCellRenderer extends JLabel
      */
     @Override
     public Component getListCellRendererComponent(
-            JList list,
-            Object value,
+            JList<? extends DomSchoolClass> list,
+            DomSchoolClass value,
             int index,
             boolean isSelected,
             boolean cellHasFocus) {

@@ -72,7 +72,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
     private CenterPanel center;
 
     private JButton backButton;
-    private JComboBox targetSchoolClassBox;
+    private JComboBox<DomSchoolClass> targetSchoolClassBox;
     private JButton deleteButton;
     private JButton copyToSchoolClassButton;
     private JButton addStudentsButton;
@@ -82,7 +82,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
     private Image loginImage;
 
     private JPanel jtbl;
-    private TableRowSorter rowSorter;
+    private TableRowSorter<StudentsInSchoolClassTeacherPanelTableModel> rowSorter;
 
     /**
      * @return the schoolClass
@@ -275,13 +275,15 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         jtable.setCellSelectionEnabled(false);
         TableUtil.setDefaults(jtable, true, new StudentsInSchoolClassTeacherPanel.ImageRenderer(), new StudentsInSchoolClassTeacherPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
+        jtable.setForeground(GuiConstants.MAIN_FOREGROUND);
+        jtable.getTableHeader().setForeground(GuiConstants.MAIN_FOREGROUND);
         for (int i = 0; i < jtable.getColumnModel().getColumnCount(); i++) {
             jtable.getColumnModel().getColumn(i).setPreferredWidth(jtable.getColumnModel().getColumn(i).getMinWidth());
         }
 
         TableUtil.setBorder(jtable);
         jtbl.setVisible(false);
-        rowSorter = new TableRowSorter(tableModel);
+        rowSorter = new TableRowSorter<StudentsInSchoolClassTeacherPanelTableModel>(tableModel);
         rowSorter.toggleSortOrder(3);//        
         jtable.setRowSorter(rowSorter);
 
@@ -363,7 +365,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         });
 
         DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer(TextMapper.getText(TextMapper.LBL_CLICK_TO_SELECT_A_SCHOOLCLASS));
-//        if (schoolClassVector.size() > 0) {
+        //        if (schoolClassVector.size() > 0) {
 //            targetSchoolClassBox.setSelectedIndex(0);
 //            targetSchoolClassBox.setEnabled(true);
 //            copyToSchoolClassButton.setEnabled(true);
@@ -372,6 +374,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
 //            copyToSchoolClassButton.setEnabled(false);
 //        }
         targetSchoolClassBox.setRenderer(renderer);
+        targetSchoolClassBox.setForeground(GuiConstants.MAIN_FOREGROUND);
         targetSchoolClassBox.setMaximumRowCount(10);
         targetSchoolClassBox.addActionListener(this);
 //        targetSchoolClassBox.setMaximumSize(targetSchoolClassBox.getPreferredSize());

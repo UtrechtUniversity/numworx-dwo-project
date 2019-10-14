@@ -68,7 +68,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
 
         /* CourseID label */
         l = new JLabel("" + courseID);
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         CopyLabel copyAction = new CopyLabel(l.getText());
 
@@ -87,7 +87,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
 
         /* Coursename label */
         l = new JLabel(TextMapper.getText(courseNameLabel) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 30);
@@ -108,7 +108,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
 
         /* Coursedescription label */
         l = new JLabel(TextMapper.getText(courseDescriptionLabel) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 55);

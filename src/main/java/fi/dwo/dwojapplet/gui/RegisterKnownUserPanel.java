@@ -140,7 +140,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
 
         /* Username label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_USERNAME) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 30);
@@ -159,7 +159,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
 
         /* Password label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_PASSWORD) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 55);
@@ -204,7 +204,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
 
         /* Schoologin label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_SCHOOLLOGIN) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 40);
@@ -218,7 +218,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
 
         /* Group label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_SCHOOLGROUP) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 65);
@@ -238,7 +238,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
 
         /* Schoolpassword label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_SCHOOLPASSWORD) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 90);

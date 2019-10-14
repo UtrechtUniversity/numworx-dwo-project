@@ -8,7 +8,6 @@ import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-import static javax.swing.SwingConstants.CENTER;
 
 /**
  * List cell renderer to render DomUser
@@ -16,7 +15,7 @@ import static javax.swing.SwingConstants.CENTER;
  * @author G.A.J. van der Plas
  */
 public class DomUserListCellRenderer extends JLabel
-        implements ListCellRenderer {
+        implements ListCellRenderer<DomUser> {
     private String emptyText="";
 
     public DomUserListCellRenderer() {
@@ -39,8 +38,8 @@ public class DomUserListCellRenderer extends JLabel
      */
     @Override
     public Component getListCellRendererComponent(
-            JList list,
-            Object value,
+            JList<? extends DomUser> list,
+            DomUser value,
             int index,
             boolean isSelected,
             boolean cellHasFocus) {

@@ -1731,27 +1731,27 @@ LOG.info("time results = " + (-t) + " ms");
         return scoViewNr;
     }
 
-    /**
-     * Overides the Applet.paint method. Draws a wait string, and calls the
-     * super. If the mainpanel is made invisible, nothing is showed above the
-     * wait string, so the wait string is showed.
-     *
-     * @param g
-     */
-    public void paintx(Graphics g) {
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getSize().width, getSize().height);
-        String text = waitText;
-        text += "...";
-        g.setFont(GuiConstants.HEADER_TEXT);
-        g.setColor(Color.black);
-        FontMetrics fm = this.getFontMetrics(GuiConstants.HEADER_TEXT);
-        int x = (getSize().width / 2) - (fm.stringWidth(text) / 2);
-        int y = (getSize().height / 2) - (fm.getHeight() / 2);
-        g.drawString(text, x, y);
-        super.paint(g);
-
-    }
+//    /**
+//     * Overides the Applet.paint method. Draws a wait string, and calls the
+//     * super. If the mainpanel is made invisible, nothing is showed above the
+//     * wait string, so the wait string is showed.
+//     *
+//     * @param g
+//     */
+//    public void paintx(Graphics g) {
+//        g.setColor(getBackground());
+//        g.fillRect(0, 0, getSize().width, getSize().height);
+//        String text = waitText;
+//        text += "...";
+//        g.setFont(GuiConstants.HEADER_TEXT);
+//        g.setColor(Color.black);
+//        FontMetrics fm = this.getFontMetrics(GuiConstants.HEADER_TEXT);
+//        int x = (getSize().width / 2) - (fm.stringWidth(text) / 2);
+//        int y = (getSize().height / 2) - (fm.getHeight() / 2);
+//        g.drawString(text, x, y);
+//        super.paint(g);
+//
+//    }
 
     /**
      * Sets the current panel of the applet.

@@ -140,7 +140,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
 
         /* Username label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_USERNAME) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 30);
@@ -159,7 +159,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
 
         /* Password label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_PASSWORD) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 55);
@@ -180,7 +180,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
 
         /* RePassword label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_RE_PASSWORD) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 80);
@@ -216,7 +216,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
 
         /* Firstname label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_FIRSTNAME) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 30);
@@ -236,7 +236,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
         /* Middlename label */
         String middleNameLabel = TextMapper.getText(TextMapper.GUIR_MIDDLENAME);
         l = new JLabel(middleNameLabel + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 55);
@@ -256,7 +256,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
 
         /* Lastname label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_LASTNAME) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 80 - v);
@@ -275,7 +275,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
 
         /* Email label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_EMAIL) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 105 - v);
@@ -318,7 +318,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
 
         /* Schoologin label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_SCHOOLLOGIN) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 40);
@@ -332,7 +332,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
 
         /* Group label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_SCHOOLGROUP) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 65);
@@ -360,7 +360,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
 
         /* Schoolpassword label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_SCHOOLPASSWORD) + ":");
-        l.setForeground(Color.black);
+        l.setForeground(GuiConstants.MAIN_FOREGROUND);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 90);

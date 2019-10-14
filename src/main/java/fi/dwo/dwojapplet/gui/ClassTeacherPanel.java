@@ -483,6 +483,8 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
         jtable.setCellSelectionEnabled(false);
         TableUtil.setDefaults(jtable, true, new ClassTeacherPanel.ImageRenderer(), new ClassTeacherPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
+        jtable.setForeground(GuiConstants.MAIN_FOREGROUND);
+        jtable.getTableHeader().setForeground(GuiConstants.MAIN_FOREGROUND);
 
 //        TableUtil.setDefaults(jtable, false, new ImageRenderer(), new ImageButtonEditor());
 //        TableUtil.setJTableSizes(jtable);
