@@ -56,6 +56,7 @@ public class LoggingFailure implements Failure {
 	        //throw directly
 	    }
 	}
+
 	private Set<String> messages(Collection<Promise<?>> collection) {
         collection = new ArrayList<>(collection);
         Set<String> set = new TreeSet<>();
