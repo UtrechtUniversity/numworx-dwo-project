@@ -1,5 +1,7 @@
 package fi.beans.numworxlf;
 
+import java.awt.Color;
+
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPasswordField;
@@ -9,6 +11,7 @@ import javax.swing.plaf.TextUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicPasswordFieldUI;
 import javax.swing.plaf.basic.BasicTextFieldUI;
+import javax.swing.text.JTextComponent;
 
 public class NumworxTextFieldUI extends BasicTextFieldUI implements Constants {
 
@@ -20,12 +23,16 @@ public class NumworxTextFieldUI extends BasicTextFieldUI implements Constants {
     @Override
     protected void installDefaults() {
       super.installDefaults();
-      Border b = getComponent().getBorder();
+      JTextComponent editor = getComponent();
+      Border b = editor.getBorder();
       if (b == null || b instanceof UIResource) 
       {
         getComponent().setBorder(createDefaultBorder());
         getComponent().repaint();
       }
+      Color c = editor.getForeground();
+      if (c instanceof UIResource) editor.setForeground(colorBlue1);
+
     }
     
   }
@@ -35,7 +42,7 @@ public class NumworxTextFieldUI extends BasicTextFieldUI implements Constants {
     if (c instanceof JPasswordField) {
       return new NumworxPassword();
     }
-    return new BasicTextFieldUI();
+    return new NumworxTextFieldUI();
 }
 
   private static BorderUIResource createDefaultBorder() {
@@ -58,6 +65,8 @@ private javax.swing.JTextField editor;
     Border b = editor.getBorder();
     if (b == null || b instanceof UIResource) 
       editor.setBorder(createDefaultBorder());
+    Color c = editor.getForeground();
+    if (c instanceof UIResource) editor.setForeground(colorBlue1);
   }
 
   /* (non-Javadoc)
