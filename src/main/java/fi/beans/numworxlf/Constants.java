@@ -18,7 +18,7 @@ public interface Constants {
   Color COLOR30 = new Color(252,211, 69);  // bewerken
 
   Color BLUE1 = new ColorUIResource(COLOR14);
-  Color colorBlue3 = new ColorUIResource(120,150,202);
+  Color colorBlue3 = new ColorUIResource(COLOR13);
   Color colorBlue1 = new ColorUIResource(COLOR15); 
   Font FONT13 = new FontUIResource("SansSerif", Font.BOLD, 13);
   Color WHITE = new ColorUIResource(Color.WHITE);
