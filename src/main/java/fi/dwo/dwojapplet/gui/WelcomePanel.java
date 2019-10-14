@@ -78,9 +78,9 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
     private JButton loginButton;
 
-    private JButton guestButton;
+//    private JButton guestButton;
 
-    private JButton registerNewUserButton;
+    //private JButton registerNewUserButton;
 
     FIButton fiButton;
     JPanel dialog;
@@ -421,64 +421,64 @@ if(DwoHelper.isSamlLogin()) {
         if (loginOnly) {
             return;
         }
-        /* Add GuestLogin-panel */
-        p = new JPanel(null);
-        //p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
-        p.setBackground(PANEL_BACKGROUND);
-        p.setBounds(dialog.getWidth() / 2 - 175, 275 + h+100+100, 340, 85);
-        //p.setBorderColor(new Color(52,90,126));
-        dialog.add(p);
+//        /* Add GuestLogin-panel */
+//        p = new JPanel(null);
+//        //p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
+//        p.setBackground(PANEL_BACKGROUND);
+//        p.setBounds(dialog.getWidth() / 2 - 175, 275 + h+100+100, 340, 85);
+//        //p.setBorderColor(new Color(52,90,126));
+//        dialog.add(p);
+//
+//        /* Guestlogin label */
+//        l = new JLabel(TextMapper.getText(TextMapper.GUIW_GUESTLOGIN) + ":");
+//        l.setForeground(Color.WHITE);
+//        l.setFont(GuiConstants.RED_TEXT);
+//        fm = l.getFontMetrics(l.getFont());
+//        l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
+//        p.add(l);
 
-        /* Guestlogin label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIW_GUESTLOGIN) + ":");
-        l.setForeground(Color.WHITE);
-        l.setFont(GuiConstants.RED_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
-        p.add(l);
+//        /* GuestLogin button */
+//        guestButton = new JButton(TextMapper.getText(TextMapper.GUIW_BTN_GUESTLOGIN));//, GuiConstants.SUB_BACKGROUND);
+//        fm = guestButton.getFontMetrics(guestButton.getFont());
+//        guestButton.setSize(guestButton.getPreferredSize());
+//        guestButton.setLocation((p.getSize().width / 2)
+//                - (guestButton.getSize().width / 2), 27);
+//        p.add(guestButton);
 
-        /* GuestLogin button */
-        guestButton = new JButton(TextMapper.getText(TextMapper.GUIW_BTN_GUESTLOGIN));//, GuiConstants.SUB_BACKGROUND);
-        fm = guestButton.getFontMetrics(guestButton.getFont());
-        guestButton.setSize(guestButton.getPreferredSize());
-        guestButton.setLocation((p.getSize().width / 2)
-                - (guestButton.getSize().width / 2), 27);
-        p.add(guestButton);
-
-        /* GuestLogin message */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIW_MSG_WORK_NOT_SAVE));
-        l.setFont(GuiConstants.NORMAL_TEXT);
-        l.setForeground(Color.WHITE);
-        fm = l.getFontMetrics(l.getFont());
-        l.setSize(fm.stringWidth(l.getText()), fm.getHeight());
-        l.setLocation((p.getSize().width / 2) - (l.getSize().width / 2), 60);
-        p.add(l);
+//        /* GuestLogin message */
+//        l = new JLabel(TextMapper.getText(TextMapper.GUIW_MSG_WORK_NOT_SAVE));
+//        l.setFont(GuiConstants.NORMAL_TEXT);
+//        l.setForeground(Color.WHITE);
+//        fm = l.getFontMetrics(l.getFont());
+//        l.setSize(fm.stringWidth(l.getText()), fm.getHeight());
+//        l.setLocation((p.getSize().width / 2) - (l.getSize().width / 2), 60);
+//        p.add(l);
 
 
-        /* Add Register-panel */
-        p = new JPanel(null);
-        //p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
-        p.setBackground(PANEL_BACKGROUND);
-        p.setBounds(dialog.getWidth() / 2 - 175, 370 + h+100+100, 340, 65);
-        //p.setBorderColor(new Color(52,90,126));
-        dialog.add(p);
+//        /* Add Register-panel */
+//        p = new JPanel(null);
+//        //p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
+//        p.setBackground(PANEL_BACKGROUND);
+//        p.setBounds(dialog.getWidth() / 2 - 175, 370 + h+100+100, 340, 65);
+//        //p.setBorderColor(new Color(52,90,126));
+//        dialog.add(p);
+//
+//        /* Register label */
+//        l = new JLabel(TextMapper.getText(TextMapper.GUIW_REGISTER) + ":");
+//        l.setForeground(Color.WHITE);
+//        l.setFont(GuiConstants.RED_TEXT);
+//        fm = l.getFontMetrics(l.getFont());
+//        l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
+//        p.add(l);
 
-        /* Register label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIW_REGISTER) + ":");
-        l.setForeground(Color.WHITE);
-        l.setFont(GuiConstants.RED_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
-        p.add(l);
-
-        /* Register button */
-        registerNewUserButton = new JButton(TextMapper.getText(TextMapper.GUIW_MSG_REGISTER_NEW));// GuiConstants.SUB_BACKGROUND);
-        fm = registerNewUserButton.getFontMetrics(registerNewUserButton.getFont());
-        registerNewUserButton.setSize(registerNewUserButton.getPreferredSize());
-        registerNewUserButton.setLocation((p.getSize().width / 2)
-                - (registerNewUserButton.getPreferredSize().width / 2), 27);
-//        p.setBounds(dialog.getWidth() / 2 - 175, 350 , 340, 35);
-        p.add(registerNewUserButton);
+//        /* Register button */
+//        registerNewUserButton = new JButton(TextMapper.getText(TextMapper.GUIW_MSG_REGISTER_NEW));// GuiConstants.SUB_BACKGROUND);
+//        fm = registerNewUserButton.getFontMetrics(registerNewUserButton.getFont());
+//        registerNewUserButton.setSize(registerNewUserButton.getPreferredSize());
+//        registerNewUserButton.setLocation((p.getSize().width / 2)
+//                - (registerNewUserButton.getPreferredSize().width / 2), 27);
+////        p.setBounds(dialog.getWidth() / 2 - 175, 350 , 340, 35);
+//        p.add(registerNewUserButton);
 
 //        /* Register button */
 //        registerExistingUserButton = new JButton(TextMapper.getText(TextMapper.GUIW_MSG_REGISTER_EXISTING));//, GuiConstants.SUB_BACKGROUND);
@@ -494,8 +494,8 @@ if(DwoHelper.isSamlLogin()) {
 //        l.setSize(fm.stringWidth(l.getText()), fm.getHeight());
 //        l.setLocation((p.getSize().width / 2) - (l.getSize().width / 2), 60);
 //        p.add(l);
-        guestButton.addActionListener(this);
-        registerNewUserButton.addActionListener(this);
+//        guestButton.addActionListener(this);
+//        registerNewUserButton.addActionListener(this);
         if(loginButton != null)
           loginButton.requestFocus();
 
@@ -572,14 +572,14 @@ if(DwoHelper.isSamlLogin()) {
                 JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), null, JOptionPane.ERROR_MESSAGE);
                 LOG.log(Level.SEVERE, "", ex);
             }
-        } else if (src == guestButton) {
-            try {
-                GuiCreator.instance().login();
-            } catch (LoginException exc) {
-                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
-            }
-        } else if (src == registerNewUserButton) {
-            GuiCreator.instance().toRegisterNewUser();
+//        } else if (src == guestButton) {
+//            try {
+//                GuiCreator.instance().login();
+//            } catch (LoginException exc) {
+//                GuiCreator.instance().ShowMessageDialog(GuiCreator.instance().getMainPanel(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN));
+//            }
+//        } else if (src == registerNewUserButton) {
+//            GuiCreator.instance().toRegisterNewUser();
         }
     }
 
