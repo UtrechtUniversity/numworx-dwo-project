@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
@@ -31,20 +30,14 @@ public class LoggingFailure implements Failure {
 	public void fail(Promise<?> resolved) throws Exception {
 	    Throwable fail = resolved.getFailure();
 	    
-	    if (fail instanceof FailedPromisesException)
+	    while (fail instanceof FailedPromisesException)
 	    {
 	      FailedPromisesException fromPromises = (FailedPromisesException) fail;
 	      Collection<Promise<?>> collection = fromPromises.getFailedPromises();
 	      if(collection.size() == 1) {
 	        fail = collection.iterator().next().getFailure();
 	      } else {
-	        collection = new ArrayList<>(collection);
-	        Set<String> set = new TreeSet<>();
-	        Iterator<Promise<?>> it = collection.iterator();
-	        while (it.hasNext()) {
-	          Promise<?> p =  it.next();
-	          set.add(p.getFailure().getLocalizedMessage() );
-            }
+	    	  Set<String> set = messages(collection);
 	        String message = "";
 	        for(String item: set) {
 	          message += "\n" + item;
@@ -59,8 +52,25 @@ public class LoggingFailure implements Failure {
 	        eventBus.fireEvent(new AlertDialogWithOKEvent((Dwo2Exception) fail));
 	    } else {
 	        LOG.log(Level.SEVERE, fail.getMessage(), fail);
-	        eventBus.fireEvent(new AlertDialogWithOKEvent(fail.getMessage()));
+	        eventBus.fireEvent(new AlertDialogWithOKEvent(fail.toString()));
 	        //throw directly
 	    }
+	}
+	private Set<String> messages(Collection<Promise<?>> collection) {
+        collection = new ArrayList<>(collection);
+        Set<String> set = new TreeSet<>();
+        Iterator<Promise<?>> it = collection.iterator();
+        while (it.hasNext()) {
+          Promise<?> p =  it.next();
+          Throwable failure = p.getFailure();
+          if (failure instanceof FailedPromisesException) {
+        	  set.addAll(messages( ((FailedPromisesException) failure).getFailedPromises()));
+          } else 
+          {  if (failure instanceof Dwo2Exception)
+        		  set.add(failure.getLocalizedMessage() );
+        	  else 
+        		  set.add(failure.toString());
+        }}
+        return set;
 	}
 }
