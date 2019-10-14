@@ -265,6 +265,10 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
                 String realm = Realm.of(restSchoolClass.getRestContext());
                 for (PersistentTeacherOfClass t : teachersOfClass) {
                     PersistentUser u = UserManager.findEntity(t.getPersistentTeacherOfClassPK().getUserID());
+                    if (u == null) {
+                    	LOG.log(Level.WARNING, "Database error: Teacher not found in schoolclass " + schoolClass.getClassID());
+                    	continue; // skip adding
+                    }
                     domTeachers.add(u.buildDomTeacher(realm));
                 }
             } catch (Exception e) {
