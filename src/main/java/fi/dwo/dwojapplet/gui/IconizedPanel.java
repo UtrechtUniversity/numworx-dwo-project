@@ -13,12 +13,14 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 import fi.beans.numworxlf.JButton;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 
 public class IconizedPanel extends JPanel implements ActionListener {
 
@@ -184,7 +186,7 @@ public class IconizedPanel extends JPanel implements ActionListener {
         }
 
         CloseAction() {
-            super("<"); // super(string, icon ) 
+            super(null, new ImageIcon(DwoHelper.getResourceImage("resources/chevron-left.png"))); // super(string, icon ) 
         }
     }
 

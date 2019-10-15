@@ -419,46 +419,65 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 	protected void createMenubar(Box hbox) {
 		bar = new JMenuBar();
 		bar.setOpaque(false);
+		bar.setForeground(GuiConstants.MAIN_FOREGROUND);
 		User user = GuiCreator.instance().getUser();
         bar.setVisible(user.hasRight(User.MODIFY_MODULES_RIGHT)||user.hasRight(User.ACCESS_RIGHT));
 		JMenu menu; JMenuItem item;
 		menu = new JMenu(TextMapper.getText("file"));
+		menu.setForeground(GuiConstants.MAIN_FOREGROUND);
 		item = new JMenuItem();menu.add(item);item.setAction(new NewAction(true, true));
+        item.setForeground(GuiConstants.MAIN_FOREGROUND);
 		item = new JMenuItem();menu.add(item);item.setAction(new NewAction(false, false));
+        item.setForeground(GuiConstants.MAIN_FOREGROUND);
 		if(DwoHelper.isSecure())
 		{  	
 			menu.addSeparator();
 			item = new JMenuItem(/*"Import module"*/);menu.add(item);item.setAction(new ImportModuleAction());
+	        item.setForeground(GuiConstants.MAIN_FOREGROUND);
 			item = new JMenuItem(/*"Backup module"*/);menu.add(item);item.setAction(new BackupModuleAction());
+	        item.setForeground(GuiConstants.MAIN_FOREGROUND);
 
 			item = new JMenuItem(/*"Import folder"*/);menu.add(item);item.setAction(new ImportMapAction());
+	        item.setForeground(GuiConstants.MAIN_FOREGROUND);
 			item = new JMenuItem(/*"Backup folder"*/);menu.add(item);item.setAction(new BackupMapAction());
+            item.setForeground(GuiConstants.MAIN_FOREGROUND);
 			if( DwoHelper.isScormExportLoggedIn() || DwoHelper.isAppletExportLoggedIn())
 				menu.addSeparator();
 			if( DwoHelper.isScormExportLoggedIn() )
 			{
 				item = new JMenuItem("Import activiteit"); menu.add(item);item.setAction(new ImportScorm());
+		        item.setForeground(GuiConstants.MAIN_FOREGROUND);
 				item = new JMenuItem("Backup activiteit"); menu.add(item);item.setAction(new Save2004Action());
+		        item.setForeground(GuiConstants.MAIN_FOREGROUND);
 				item = new JMenuItem(new SaveScosAction()); menu.add(item);
+		        item.setForeground(GuiConstants.MAIN_FOREGROUND);
 			}
 			 if (DwoHelper.isAppletExportLoggedIn())
 			{
 				item = new JMenuItem("Export Applet");menu.add(item);item.setAction(new SaveAppletAction()); 
+		        item.setForeground(GuiConstants.MAIN_FOREGROUND);
 			}
 		}	
 		//menu.add(new RefreshAction());
 		bar.add(menu);
 		menu = new JMenu(TextMapper.getText("edit"));
+        menu.setForeground(GuiConstants.MAIN_FOREGROUND);
 		item = new JMenuItem();menu.add(item);item.setAction(new CutCopyAction(true));item.setText(TextMapper.getText("cut"));
+        item.setForeground(GuiConstants.MAIN_FOREGROUND);
 		item.setActionCommand("cut");
+        item.setForeground(GuiConstants.MAIN_FOREGROUND);
 		item = new JMenuItem();menu.add(item);item.setAction(new CutCopyAction(false));item.setText(TextMapper.getText("copy"));
+        item.setForeground(GuiConstants.MAIN_FOREGROUND);
 		item.setActionCommand("copy");
+        item.setForeground(GuiConstants.MAIN_FOREGROUND);
 		item = new JMenuItem("paste");menu.add(item);item.setAction(new PasteAction());
 		menu.addSeparator();
 		item = new JMenuItem(new RenameAction());menu.add(item);
+        item.setForeground(GuiConstants.MAIN_FOREGROUND);
 		menu.addSeparator();
 		item = new JMenuItem("delete");menu.add(item);item.setAction(new DeleteAction());
 // op dit moment is er nog geen user bekend.
+        item.setForeground(GuiConstants.MAIN_FOREGROUND);
 //		if (dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT))
 //		{
 //			menu.addSeparator();
