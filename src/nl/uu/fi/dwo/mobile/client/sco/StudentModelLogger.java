@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.sco;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -202,7 +203,9 @@ public class StudentModelLogger implements Logging {
 
   @Override
   public void setSMObjectives(String[] objectives) {
-    smobjectives = new TreeSet<>(Arrays.asList(objectives));
+    smobjectives = 
+    		objectives == null ? Collections.emptySet() :    		
+    		new TreeSet<>(Arrays.asList(objectives));
   }
 
   @Override

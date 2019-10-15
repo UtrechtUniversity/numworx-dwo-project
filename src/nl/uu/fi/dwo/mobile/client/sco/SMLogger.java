@@ -151,7 +151,9 @@ public class SMLogger implements Logging {
 
   @Override
   public void setSMObjectives(String[] objectives) {
-    extensions.objectives = Arrays.asList(objectives);
+    extensions.objectives = 
+    		objectives == null ? Collections.emptyList() :
+    		Arrays.asList(objectives);
     delegate.setSMObjectives(objectives);
   }
 
