@@ -2,6 +2,7 @@ package nl.numworx.edexml;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -194,7 +195,7 @@ public class ServerBuilder implements Builder {
 	    domSingleSchoolStudent.setEmail("noreply@numworx.nl");
 	  
 	  
-	  Collection<String> collection = members.get(key);
+	  Collection<String> collection = members.getOrDefault(key,Collections.emptySet());
       Iterator<String> iterator = collection.iterator();
       if (!iterator.hasNext()) continue; // or iterator is backup class
       try {
@@ -207,7 +208,7 @@ public class ServerBuilder implements Builder {
       }
       catch (Dwo2Exception e) {
         Dwo2ExceptionCode code = e.getDwo2Code();
-        code = Dwo2ExceptionCode.Rest_Registration_UserName_exists;
+        //code = Dwo2ExceptionCode.Rest_Registration_UserName_exists;
         if (code == Dwo2ExceptionCode.Rest_Registration_UserName_exists) {
           iterator = collection.iterator();
           List<DomStudent> allStudents = SecureSchoolAdminSchoolClassManager.getStudentsInSchool();
@@ -264,7 +265,7 @@ public class ServerBuilder implements Builder {
     } 
     for(Map.Entry<String,DomUserFull> item: users.entrySet()) {
       String key = item.getKey();
-      Collection<String> collection = members.get(key);
+      Collection<String> collection = members.getOrDefault(key, Collections.emptySet());
       DomSubmitTeacherToSchoolClass submit;
       submit = new DomSubmitTeacherToSchoolClass();
       submit.setTeacher(new DomTeacher(item.getValue()));

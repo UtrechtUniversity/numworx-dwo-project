@@ -1,10 +1,14 @@
 package nl.numworx.edexml;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,6 +16,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -54,8 +59,8 @@ public class SomtodayBuilder implements Builder {
 	public void setLeerlingenSource(InputSource is) throws IOException {
 		leerlingen = new TreeMap<>();
 		InputStream in = is.getByteStream();
-		Reader reader = new InputStreamReader(in, "UTF-16");
-		CSVParser parser = CSVParser.parse(reader, CSVFormat.TDF.withHeader());
+		Reader reader = new InputStreamReader(in, "UTF-8");
+		CSVParser parser = CSVParser.parse(reader, CSVFormat.EXCEL.withHeader().withDelimiter(';'));
 
 		for( CSVRecord record: parser) {
 			String leerlingnummer = record.get(0);
@@ -74,22 +79,46 @@ public class SomtodayBuilder implements Builder {
 			user.setEmail(email);
 			user.setFamilyName(achternaam);
 			user.setGivenName(roepnaam);
+			user.setPassword(getHashString(roepnaam + "2019"));
 			user.setInsertion(tussenvoegsel);
-			user.setUserName(leerlingnummer); //????
+			user.setUserName(email); //????
 			
 			leerlingen.put(leerlingnummer, user);
 		}
 		
 	}
 
+	
+	private String getHashString(String string) {
+		try {
+			MessageDigest md5 = MessageDigest.getInstance("MD5");
+			byte[] bytes = md5.digest(string.getBytes(StandardCharsets.UTF_8));
+			return DatatypeConverter.printHexBinary(bytes).toLowerCase();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
 	public Map<String, DomUserFull> parseLeerlingen() {
 		return leerlingen;
 	}
 
+	private static final int BOM = '\uFEFF';
+
 	public void setLesGroupLeerlingSource(InputSource is) throws IOException {
 		InputStream in = is.getByteStream();
 		Reader reader = new InputStreamReader(in, "UTF-8");
-		CSVParser parser = CSVParser.parse(reader, CSVFormat.TDF);
+		BufferedReader buffered = new BufferedReader(reader);
+		buffered.mark(1);
+		reader = buffered;
+		if (buffered.read() != BOM) {
+			buffered.reset();
+		}
+
+		CSVParser parser = CSVParser.parse(reader, CSVFormat.EXCEL.withDelimiter(';'));
 		for( CSVRecord record: parser) {
 			String klas = record.get(0);
 			String student = record.get(1);
@@ -135,7 +164,7 @@ public class SomtodayBuilder implements Builder {
 		docenten = new TreeMap<>();
 		InputStream in = is.getByteStream();
 		Reader reader = new InputStreamReader(in, "UTF-8");
-		CSVParser parser = CSVParser.parse(reader, CSVFormat.TDF.withHeader());
+		CSVParser parser = CSVParser.parse(reader, CSVFormat.EXCEL.withHeader().withDelimiter(';'));
 		for( CSVRecord record: parser) {
 			String klas = record.get(0);
 			String aantal = record.get(1);
@@ -167,7 +196,8 @@ public class SomtodayBuilder implements Builder {
 				user.setFamilyName(achternaam);
 				user.setGivenName(voornaam);
 				user.setInsertion(insertion);
-				user.setUserName(id);
+				user.setUserName(email);
+				user.setPassword(this.getHashString(voornaam + "2019"));
 				docenten.put(id, user);
 			}
 			
