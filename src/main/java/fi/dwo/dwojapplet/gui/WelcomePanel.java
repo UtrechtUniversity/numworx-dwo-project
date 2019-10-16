@@ -304,6 +304,7 @@ if(DwoHelper.isSamlLogin()) {
     SAMLLoginIF browser = getSAMLLogin();
     browser.loadURL(DwoHelper.getServerUrlPath() + "saml/login.jsp");
     browser.getPromise().then(pr -> {
+      switchProfile();
       GuiCreator.instance().dwo.loginViaSaml(pr.getValue());
       return null;
     }, 
