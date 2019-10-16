@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolClassManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
@@ -183,6 +184,8 @@ public class ServerBuilder implements Builder {
 
   // Single school students
   public void addStudents (Map<String, DomUserFull> users, Map<String,Collection<String>>members, Map<String, DomSchoolClassFull> classes) {  
+	DomContext context = RestAuthenticator.getInstance().getContext();   	  // XXX beter SecureSchoolAdminSchoolClassManager.getContext();
+	String realm = context.getRealm();
 	for (Map.Entry<String, DomUserFull> item: users.entrySet()) {
 	  
 	  String key = item.getKey();
@@ -203,10 +206,22 @@ public class ServerBuilder implements Builder {
 	  DomNewSingleSchoolStudent submit = new DomNewSingleSchoolStudent();
 	  submit.setDomSchoolClass(domSchoolClass);
 	  submit.setDomSingleSchoolStudent(domSingleSchoolStudent);
+	  String userName = submit.getDomSingleSchoolStudent().getUserName();
       try {
-        SecureSchoolAdminSchoolClassManager.submitSingleSchoolStudent(submit);
+		if (userName.contains("@")) {
+    		  int i = userName.lastIndexOf('@');
+    		  submit.getDomSingleSchoolStudent().setUserName(userName.substring(0,i));
+    		  context.setRealm(userName.substring(i));
+    	  } else {
+    		  context.setRealm(realm);
+    	  }
+    	  
+    	  SecureSchoolAdminSchoolClassManager.submitSingleSchoolStudent(submit);
+    	  submit.getDomSingleSchoolStudent().setUserName(userName); // restore.
       }
       catch (Dwo2Exception e) {
+    	  submit.getDomSingleSchoolStudent().setUserName(userName); // restore.
+          context.setRealm(realm); // realm of login
         Dwo2ExceptionCode code = e.getDwo2Code();
         //code = Dwo2ExceptionCode.Rest_Registration_UserName_exists;
         if (code == Dwo2ExceptionCode.Rest_Registration_UserName_exists) {
@@ -221,6 +236,7 @@ public class ServerBuilder implements Builder {
           continue;
          }
       }
+      context.setRealm(realm); // realm of login
       // find persistenceid of student by name.
       List<DomStudent> list = SecureSchoolAdminSchoolClassManager.getStudentsInSchoolClass(domSchoolClass);
       list.forEach(i -> { 
@@ -260,6 +276,7 @@ public class ServerBuilder implements Builder {
       for (DomUserFull t: allTeachers) {
         if (t.getUserName().equals(item.getValue().getUserName())) {
           item.setValue(t);
+          break;
         }
       }
     } 
