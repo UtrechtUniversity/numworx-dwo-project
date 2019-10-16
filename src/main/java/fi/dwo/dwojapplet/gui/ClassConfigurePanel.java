@@ -48,6 +48,7 @@ public class ClassConfigurePanel extends JPanel implements ActionListener,
 
 		// Constructing Pane
 		classLabel = new JLabel(TextMapper.getText(TextMapper.GUIC_MSG_CLASS_NAME));
+		classLabel.setForeground(GuiConstants.MAIN_FOREGROUND);
 		classTextField = new JTextField(25);
 		classTextField.addFocusListener(this);
 		classTextField.requestFocusInWindow();// request focus for typing
@@ -61,6 +62,7 @@ public class ClassConfigurePanel extends JPanel implements ActionListener,
 		registrationKeyLabel = new JLabel(
 				TextMapper.getText(TextMapper.GUIC_MSG_CLASS_REGISTRATIONKEY));
 		registrationKeyLabel.setVisible(false);
+		registrationKeyLabel.setForeground(GuiConstants.MAIN_FOREGROUND);
 
 		registrationKeyTextField = new JTextField(25);
 

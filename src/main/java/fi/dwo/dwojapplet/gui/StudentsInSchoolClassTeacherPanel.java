@@ -31,10 +31,8 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,8 +54,6 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
-import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  * The panel which shows the school classes for a teacher.
@@ -110,7 +106,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
             setIcon(icon);
             setHorizontalAlignment(SwingConstants.CENTER);
             setOpaque(true);
-            Object[] arguments = new Object[]{table.getValueAt(row, 0)};
+//            Object[] arguments = new Object[]{table.getValueAt(row, 0)};
 //            switch (col) {
 //                case 1:
 //                    String s = TextMapper.getText(TextMapper.GUIC_TLTP_USERS_CLASS);
@@ -336,7 +332,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
 //                return a.getSchoolClassName().compareTo(b.getSchoolClassName());
 //            }
 //        });
-        targetSchoolClassBox = new JComboBox();
+        targetSchoolClassBox = new JComboBox<>();
         targetSchoolClassBox.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
@@ -349,7 +345,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                             return a.getSchoolClassName().compareTo(b.getSchoolClassName());
                         }
                     });
-                    DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
+                    DefaultComboBoxModel<DomSchoolClass> model = new DefaultComboBoxModel<>(schoolClassVector);
                     targetSchoolClassBox.setModel(model);
                 } catch (Dwo2Exception ex) {
                     LOG.log(Level.SEVERE, "", ex);

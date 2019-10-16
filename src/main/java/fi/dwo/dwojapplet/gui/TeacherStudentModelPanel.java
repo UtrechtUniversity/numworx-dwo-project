@@ -246,6 +246,8 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         jtbl = new JPanel();
 
         JTable jtable = new JTable();
+        jtable.setForeground(GuiConstants.MAIN_FOREGROUND);
+        jtable.getTableHeader().setForeground(GuiConstants.MAIN_FOREGROUND);
         jtable.getTableHeader().setReorderingAllowed(false);
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());

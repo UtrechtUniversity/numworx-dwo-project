@@ -247,6 +247,8 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
 
         jtable = new JTable();
         jtable.getTableHeader().setReorderingAllowed(false);
+        jtable.setForeground(GuiConstants.MAIN_FOREGROUND);
+        jtable.getTableHeader().setForeground(GuiConstants.MAIN_FOREGROUND);
         jtable.setMinimumSize(new Dimension(400, 300));
         jtable.setFillsViewportHeight(true);
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));

@@ -248,6 +248,8 @@ public class SchoolClassRegistrationStudentJPanel extends JPanel implements Acti
 
         JTable jtable = new JTable();
         jt = jtable;
+        jtable.setForeground(GuiConstants.MAIN_FOREGROUND);
+        jtable.getTableHeader().setForeground(GuiConstants.MAIN_FOREGROUND);
         jt.getTableHeader().setReorderingAllowed(false);
         jtbl = new JPanel();
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));

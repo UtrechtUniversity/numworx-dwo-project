@@ -68,14 +68,14 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
 
     private JButton backButton;
     private JButton addSchoolClassBtn;
-    private JComboBox addSchoolClassBox;
+    private JComboBox<DomSchoolClass> addSchoolClassBox;
 
     private Image removeImage;
     private Image classImage;
     private Image editImage;
 
     private JPanel jtbl;
-    private TableRowSorter rowSorter;
+    private TableRowSorter<UsersSchoolClassesSchoolAdminPanelTableModel> rowSorter;
 
     /**
      * @param user
@@ -117,7 +117,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
             setIcon(icon);
             setHorizontalAlignment(SwingConstants.CENTER);
             setOpaque(true);
-            Object[] arguments = new Object[]{table.getValueAt(row, 0)};
+//            Object[] arguments = new Object[]{table.getValueAt(row, 0)};
 //            switch (col) {
 //                case 1:
 //                    String s = TextMapper.getText(TextMapper.GUIC_TLTP_USERS_CLASS);
@@ -221,6 +221,8 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         JTable jtable = new JTable();
         jtable.setMinimumSize(new Dimension(400, 300));
         jtable.getTableHeader().setReorderingAllowed(false);
+        jtable.setForeground(GuiConstants.MAIN_FOREGROUND);
+        jtable.getTableHeader().setForeground(GuiConstants.MAIN_FOREGROUND);
 
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());
@@ -241,7 +243,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         TableUtil.setJTableSizes(jtable);
         TableUtil.setBorder(jtable);
         jtbl.setVisible(false);
-        rowSorter = new TableRowSorter(tableModel);
+        rowSorter = new TableRowSorter<UsersSchoolClassesSchoolAdminPanelTableModel>(tableModel);
         rowSorter.toggleSortOrder(0);//
         jtable.setRowSorter(rowSorter);
         this.add(jtbl);
@@ -293,7 +295,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
 //                return a.getSchoolClassName().compareTo(b.getSchoolClassName());
 //            }
 //        });
-        addSchoolClassBox = new JComboBox();
+        addSchoolClassBox = new JComboBox<>();
         addSchoolClassBox.addPopupMenuListener(new PopupMenuListener() {
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 //                JComboBox comboBox = (JComboBox) e.getSource();
@@ -305,7 +307,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
                             return a.getSchoolClassName().compareTo(b.getSchoolClassName());
                         }
                     });
-                    DefaultComboBoxModel model = new DefaultComboBoxModel(schoolClassVector);
+                    DefaultComboBoxModel<DomSchoolClass> model = new DefaultComboBoxModel<DomSchoolClass>(schoolClassVector);
                     addSchoolClassBox.setModel(model);
                 } catch (Dwo2Exception ex) {
                     Logger.getLogger(StudentsInSchoolClassSchoolAdminPanel.class.getName()).log(Level.SEVERE, "", ex);
@@ -321,7 +323,9 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         });
 
         DomSchoolClassListCellRenderer renderer = new DomSchoolClassListCellRenderer(TextMapper.getText(TextMapper.LBL_CLICK_TO_SELECT_A_SCHOOLCLASS));
-        addSchoolClassBox.setPrototypeDisplayValue(TextMapper.getText(TextMapper.LBL_CLICK_TO_SELECT_A_SCHOOLCLASS));
+        String text = TextMapper.getText(TextMapper.LBL_CLICK_TO_SELECT_A_SCHOOLCLASS);
+        DomSchoolClass dummy =  new DomSchoolClass(); dummy.setSchoolClassName(text);
+        addSchoolClassBox.setPrototypeDisplayValue(dummy);
 //        if (userVector.size() > 0) {
 //            addSchoolClassBox.setSelectedIndex(0);
 //        }

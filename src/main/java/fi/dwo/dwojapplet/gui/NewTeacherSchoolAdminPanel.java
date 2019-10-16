@@ -179,6 +179,8 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
         jtable.setMinimumSize(new Dimension(400, 300));
         jtable.setBackground(Color.LIGHT_GRAY);
         jtable.getTableHeader().setReorderingAllowed(false);
+        jtable.setForeground(GuiConstants.MAIN_FOREGROUND);
+        jtable.getTableHeader().setForeground(GuiConstants.MAIN_FOREGROUND);
 
         jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());

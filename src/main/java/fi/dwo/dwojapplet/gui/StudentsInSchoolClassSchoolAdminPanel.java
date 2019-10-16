@@ -74,7 +74,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
     private Image loginImage;
 
     private JPanel jtbl;
-    private TableRowSorter rowSorter;
+    private TableRowSorter<StudentsInSchoolClassTeacherPanelTableModel> rowSorter;
 
 	private JTable jtable;
 
@@ -119,7 +119,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
             setIcon(icon);
             setHorizontalAlignment(SwingConstants.CENTER);
             setOpaque(true);
-            Object[] arguments = new Object[]{table.getValueAt(row, 0)};
+//           Object[] arguments = new Object[]{table.getValueAt(row, 0)};
 //            switch (col) {
 //                case 1:
 //                    String s = TextMapper.getText(TextMapper.GUIC_TLTP_USERS_CLASS);
@@ -253,9 +253,9 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
                     int row, int column) {
                 Component comp = r.getTableCellRendererComponent(table, value, isSelected,
                         hasFocus, row, column);
-                if (comp instanceof JLabel && column == 6) {
-                    JLabel label = (JLabel) comp;
-                }
+//                if (comp instanceof JLabel && column == 6) {
+//                    JLabel label = (JLabel) comp;
+//                }
                 return comp;
             }
 //
@@ -291,7 +291,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         /**
          * testing *
          */
-        rowSorter = new TableRowSorter(tableModel);
+        rowSorter = new TableRowSorter<StudentsInSchoolClassTeacherPanelTableModel>(tableModel);
         rowSorter.toggleSortOrder(3);//
         jtable.setRowSorter(rowSorter);
 
