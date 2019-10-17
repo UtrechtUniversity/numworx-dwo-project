@@ -403,6 +403,10 @@ private String encode(String string) {
     	school.getPasswords().stream().filter(item -> item.getKey() == key).findAny().get().getValue();
     	cookie = new Cookie("schoolCode", u(password));
     	resp.addCookie(cookie);
+    } else {
+      cookie = new Cookie("form", "FREE");
+      cookie.setMaxAge(0);
+      resp.addCookie(cookie);
     }
     if (putRequest != null) resp.addCookie(putRequest);
     dispatch.forward(req, resp);

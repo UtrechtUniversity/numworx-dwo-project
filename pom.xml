@@ -121,6 +121,7 @@
 					<module>nl.uu.fi.dwo.register.Register</module>
 					<runTarget>${project.artifactId}.html</runTarget>
 					<extraJvmArgs>-Xms768m -Xmx1024m</extraJvmArgs>
+					<style>PRETTY</style>
 					<i18nConstantsBundles>
 						<i18nConstantsBundle>nl.uu.fi.dwo.register.client.RegisterBundle</i18nConstantsBundle>
 					</i18nConstantsBundles>
