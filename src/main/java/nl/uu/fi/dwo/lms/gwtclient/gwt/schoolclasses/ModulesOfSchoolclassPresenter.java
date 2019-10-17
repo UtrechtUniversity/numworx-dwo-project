@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
@@ -44,6 +45,7 @@ public class ModulesOfSchoolclassPresenter {
     private DwoGlobalVars dwoGlobalVars;
     private EventBus eventBus;
     private ModulesOfSchoolclassService service;
+    private Failure FAILURE;
 
     private DomSchoolClass schoolClass;
     private DomCoursesOfSchoolclassTree tree;
@@ -77,20 +79,7 @@ public class ModulesOfSchoolclassPresenter {
                 return null;
             }
 
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-//                view.updateView(courseItems);
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    //throw directly
-                }
-            }
-        });
+        },FAILURE);
     }
 
     @JsMethod
@@ -106,20 +95,7 @@ public class ModulesOfSchoolclassPresenter {
                 return null;
             }
 
-        },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-//                view.updateView(courseItems);
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    //throw directly
-                }
-            }
-        });
+        }, FAILURE);
     }
 
 //    public CourseItem getRoot(){
@@ -132,6 +108,7 @@ public class ModulesOfSchoolclassPresenter {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
         service = aService;
+        FAILURE = new LoggingFailure(LOG, anEventBus);
     }
 
     /**
@@ -181,21 +158,11 @@ public class ModulesOfSchoolclassPresenter {
             }
 
         },
-                new Failure() {
-            @Override
-            public void fail(Promise<?> resolved) throws Exception {
-                Throwable fail = resolved.getFailure();
-//                view.updateView(courseItems);
+            (resolved) -> {
                 view.setEmptyTableMessageModules();
                 view.setEmptyTableMessageSelected();
-                if (fail instanceof Dwo2Exception) {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                } else {
-                    LOG.log(Level.SEVERE, fail.getMessage());
-                    //throw directly
-                }
-            }
-        });
+             }
+        ).then(null, FAILURE);
     }
 
     void goBackToSchoolClasses() {
@@ -264,9 +231,7 @@ public class ModulesOfSchoolclassPresenter {
                 updateViewData();
                 return null;
             }
-        }, (failure) -> {
-            eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
-        });
+        }, FAILURE);
     }
 
     /**
@@ -309,9 +274,7 @@ public class ModulesOfSchoolclassPresenter {
             updateViewData();
             return resolved;
         });
-        p = p.then(null, (failure) -> {
-            eventBus.fireEvent(new AlertDialogWithOKEvent(failure.getFailure().getMessage()));
-        });
+        p = p.then(null, FAILURE);
     }
 
     private Promise<Boolean> setCourseType(String key, String typeString) {
