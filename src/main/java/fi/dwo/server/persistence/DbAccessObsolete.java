@@ -8,6 +8,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 public interface DbAccessObsolete {
   public Vector<Object> getHasRoleUser(int uid, int sgid) throws IOException, XmlRpcException, SQLException;
+public Vector<Object> getStudentsOfClass(int schoolClassID) throws IOException, XmlRpcException, SQLException;
 
 /*  public Vector getResults(Vector courses, int userID) throws IOException, XmlRpcException, SQLException;
 

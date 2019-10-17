@@ -567,8 +567,8 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF, /*ScormA
 //    }
 
     @Override
-    public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
-        return getDelegate().getStudentsOfClass(schoolClassID);
+    public Vector<Object> getStudentsOfClass(int schoolClassID) throws IOException, XmlRpcException, SQLException {
+        return getDelegateObsolete().getStudentsOfClass(schoolClassID);
     }
 
 //    @Override

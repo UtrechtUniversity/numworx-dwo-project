@@ -1472,7 +1472,7 @@ public class DbAccess extends DbConnect implements DbAccessIF, /*ScormAccessIF,*
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
+    public Vector<Object> getStudentsOfClass(int schoolClassID) throws IOException, XmlRpcException, SQLException {
         PreparedStatement ps = getStatement(QRY_SELECT_CLASSSTUDENTS_OF_CLASS);
         ps.setInt(1, schoolClassID);
         Vector v = executeQueryWithResult(ps);
