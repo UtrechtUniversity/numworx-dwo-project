@@ -214,8 +214,8 @@ public interface DbAccessIF  {
 //    public boolean renameClass(int classID, String newName /*, boolean iconizer*/) throws DwoXmlRpcException, IOException, XmlRpcException,
 //            SQLException;
 
-    public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException;
+//    public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException;
 
 //    public Vector<Object> getTeachersOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException,
 //            SQLException;
