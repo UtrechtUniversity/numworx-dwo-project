@@ -77,6 +77,7 @@ public class SMLogger implements Logging {
     definition = new ActivityDefinition();
     widget.definition = definition;
     extensions = new Extensions();
+    extensions.objectives = Collections.emptyList();
     definition.extensions = extensions;
     memento.pmodel.then(this::createModel);
     this.delegate = delegate;
@@ -98,6 +99,10 @@ public class SMLogger implements Logging {
 
   @Override
   public void log(Map<String, ?> parameters) {
+    if (extensions.objectives.isEmpty()) { // no logging if no objectives assigned.
+      delegate.log(parameters);
+      return;
+    }
     Result result = new Result();
     Statement s = new Statement();
     s.actor = prototype.actor;
@@ -121,7 +126,7 @@ public class SMLogger implements Logging {
         result.score.scaled = result.score.raw.doubleValue() / maxScore;
     } catch (Exception e) {
     }
-    s.result = result;   
+    s.result = result;  
     xapi.then(manager -> manager.getValue().saveStatement(s));
     delegate.log(parameters);
   }
