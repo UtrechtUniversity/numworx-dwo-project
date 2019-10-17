@@ -220,6 +220,14 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
      */
     public SchoolDwoAdminPanel() {
         super(null);
+        
+        try {
+          PersistenceFacade.instance().toSchool(prop.getSchoolList());
+        } catch (PersistenceException e1) {
+        } catch (Dwo2Exception e1) {
+        }
+        
+        
         this.setSize(480, 500);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

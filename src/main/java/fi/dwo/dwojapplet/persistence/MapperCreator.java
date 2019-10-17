@@ -32,7 +32,7 @@ class MapperCreator {
         {"User", "UserMapper"},
         {"School", "SchoolMapper"},
  //     {"Group", "GroupMapper"},
- //       {"SchoolGroup", "SchoolGroupMapper"},
+        {"SchoolGroup", "SchoolGroupMapper"},
         {"Course", "CourseMapper"},
         {"Sco", "ScoMapper"},
         {"SchoolClass", "ClassMapper"},

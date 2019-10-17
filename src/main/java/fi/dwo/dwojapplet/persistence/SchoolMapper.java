@@ -3,12 +3,15 @@
 package fi.dwo.dwojapplet.persistence;
 
 import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
+import fi.dwo.dwojapplet.gui.GuiCreator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherFromToManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
@@ -21,6 +24,7 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.xmlrpc.applet.XmlRpcException;
@@ -30,7 +34,31 @@ class SchoolMapper extends XmlRpcMapper<School> {
 
 	// lazy evaluation.
     // DIT STAAT NU AAN!
-    static class LazySchool extends School {
+    class LazySchool extends School {
+
+        Boolean export;
+        
+      
+      
+        @Override
+        public void setExport(boolean export) {
+          this.export = export;
+        }
+
+        @Override
+        public boolean isExport() {
+          if (export == null) {
+            try {
+              DbAccessIF dbAccess = DbAccessCreator.instance();
+              School school = getObjectFromReturn(dbAccess.getRecord(getTableName(),
+                      getIDCol(), getSchoolID()));
+              export = school.isExport();              
+            } catch (Exception e) {
+              return false;
+            }
+          }
+          return export.booleanValue();
+        }
 
         /* (non-Javadoc)
          * @see fi.dwo.client.domain.School#getPasswd(int)
@@ -49,19 +77,7 @@ class SchoolMapper extends XmlRpcMapper<School> {
                 return classes;
             }
             try {
-                setClassList(MapperCreator.instance(SchoolClass.class).get(this));
-            } catch (IOException e) {
-
-                LOG.log(Level.SEVERE,null,e);
-                return new SchoolClass[0];  // FIXME fatal, non fatal, retryable?
-            } catch (SQLException e) {
-
-                LOG.log(Level.SEVERE,null,e);
-                return new SchoolClass[0]; // FIXME
-            } catch (XmlRpcException e) {
-
-                LOG.log(Level.SEVERE,null,e);
-                return new SchoolClass[0]; // FIXME
+                setClassList(PersistenceFacade.instance().getSchoolClass(this));
             } catch (PersistenceException e) {
               LOG.log(Level.SEVERE,null,e);
               return new SchoolClass[0]; // FIXME
@@ -197,11 +213,14 @@ class SchoolMapper extends XmlRpcMapper<School> {
               } else {
                 s = new LazySchool();
                 s.setName(list.get(i).getSchoolName());
+                s.setSchoolID(id);
+                s.setExport(true);
                 objects.put(Integer.valueOf(id), s);
               }
               result[i] = s;
             }
-          } catch (Dwo2Exception e) {
+            return result;
+        } catch (Dwo2Exception e) {
             throw new IOException(e.getDwo2Message(), e);
           }
         }
@@ -249,7 +268,9 @@ class SchoolMapper extends XmlRpcMapper<School> {
             s.setImage((String) data.get("image"));
         }
         if (!(s instanceof LazySchool) && s.getClassList() == null) {
-            s.setClassList((SchoolClass[]) MapperCreator.instance(SchoolClass.class).get(s));
+            SchoolClass[] schoolClasses;
+            schoolClasses = PersistenceFacade.instance().getSchoolClass(s);
+            s.setClassList(schoolClasses);
         } else if (s instanceof LazySchool) {
             s.setClassList(null);
         }
@@ -314,6 +335,36 @@ class SchoolMapper extends XmlRpcMapper<School> {
       }
       s.setDomSchool(full);
       s.setSchoolLogin(full.getSchoolLogin());   
+      objects.putIfAbsent(id, s);
+      return s;
+    }
+
+    @Override
+    public School[] getObjectFromReturn(Vector data)
+        throws IOException, SQLException, XmlRpcException, PersistenceException {
+      int i;
+      School[] oa = createArray(data.size());
+      for (i = 0; i < data.size(); i++) {
+          Object element = data.elementAt(i);
+          if (element instanceof DomSchool4DwoAdmin) {
+            oa[i] = getObjectFromReturn((DomSchool4DwoAdmin) element);
+          } else
+          if (element instanceof DomSchool) {
+            oa[i] = getObjectFromSchool( (DomSchool) element);
+          } else 
+            oa[i] = getObjectFromReturn((Hashtable) element);
+      }
+      
+      return oa;
+    }
+
+    private School getObjectFromSchool(DomSchool element) {
+      int id = PersistenceFacade.idOf(element.getId());
+      School s = objects.get(id);
+      if(s == null) {
+        s = new LazySchool();
+      }
+      s.setDomSchool(element);
       objects.putIfAbsent(id, s);
       return s;
     }

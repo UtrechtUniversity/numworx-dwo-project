@@ -60,7 +60,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
+import fi.beans.numworxlf.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JToolTip;
 import javax.swing.JViewport;

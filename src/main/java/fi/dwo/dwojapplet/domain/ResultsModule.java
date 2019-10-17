@@ -83,6 +83,11 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
       this.dwo = dwo;
       this.domresults = domresults;
       this.mappedresults = new DomMappedResultsPerTeacher(domresults);
+      try {
+        PersistenceFacade.instance().toUser(mappedresults.getStudents().values());
+      } catch (PersistenceException e) {
+        // ignore, cacheing only.
+      }
       this.resulttree = new DomResultTree(mappedresults);
       DomSchool school = DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool();
       this.coursetree = new DomCoursesOfSchoolclassTree(school, domresults);
@@ -141,8 +146,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
     
     private User getUser(DomResultStudent student) throws Dwo2Exception, PersistenceException {
       DomStudent s = student.getStudent();
-      int uid = MySQLPersistenceId.getNativeId(s).intValue();
-      return PersistenceFacade.instance().getUser(uid);
+      return PersistenceFacade.instance().getUser(s);
     }
     
     private UserGroup getUser(DomResultSchoolClass sc) throws Dwo2Exception, PersistenceException {
@@ -161,8 +165,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
       
       String id = r.getId();
       DomStudent student = mappedresults.getStudents().get(new PersistenceId(id));
-      int uid = MySQLPersistenceId.getNativeId(student).intValue();
-      return PersistenceFacade.instance().getUser(uid);
+      return PersistenceFacade.instance().getUser(student);
       //return DwoHelper.getCurrentFacadeUser();
     }
 

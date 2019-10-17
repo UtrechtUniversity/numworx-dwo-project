@@ -2,6 +2,8 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\User.java
 package fi.dwo.dwojapplet.domain;
 
+import java.util.Collections;
+
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
@@ -160,8 +162,10 @@ public class User implements UserGroup, Comparable {
     		setSchool(null);
     	else {
      		try {
-				int sid = MySQLPersistenceId.getNativeId(dom.getActiveSchoolRoleAndClass().getSchool()).intValue();
-				School s = PersistenceFacade.instance().getSchool(sid);
+     		    
+     		    School[] ss = 
+     		    PersistenceFacade.instance().toSchool( Collections.singleton(dom.getActiveSchoolRoleAndClass().getSchool()));
+				School s = ss[0];
 				if(s != null) {
 					setSchool(s);
 				} else {

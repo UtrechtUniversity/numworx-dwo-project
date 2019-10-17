@@ -944,13 +944,13 @@ class DbAccessClient extends Client implements DbAccessIF {
 //        return ((Boolean) object);
 //    }
 
-    @Override
-    public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
-        Vector vv = new Vector(1);
-        vv.addElement(new Integer(schoolClassID));
-        Object object = invoke("getStudentsOfClass", vv);
-        return (java.util.Vector) object;
-    }
+//    @Override
+//    public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
+//        Vector vv = new Vector(1);
+//        vv.addElement(new Integer(schoolClassID));
+//        Object object = invoke("getStudentsOfClass", vv);
+//        return (java.util.Vector) object;
+//    }
 
 //    @Override
 //    public Vector<Object> getTeachersOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {

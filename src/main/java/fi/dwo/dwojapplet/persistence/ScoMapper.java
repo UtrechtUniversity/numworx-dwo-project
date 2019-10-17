@@ -285,8 +285,9 @@ class ScoMapper extends XmlRpcMapper {
         }
 
         if (!data.get("courseID").equals("")) {
-            Course c = (Course) MapperCreator.instance(Course.class).get(((Integer) data.get("courseID")).intValue());
-            //Course c = PersistenceFacade.instance().get((Integer) data.get("courseID"), Course.class);
+            Course c;
+            Number courseID = (Number) data.get("courseID");
+            c = PersistenceFacade.instance().getCourse(courseID.intValue());
             if (c != null) {
                 s.setCourse(c);
             }

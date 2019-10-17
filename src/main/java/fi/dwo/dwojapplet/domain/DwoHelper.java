@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
@@ -625,7 +626,7 @@ public final class DwoHelper {
     }
 
 
-    private static User buildFacadeUser(DomUserFull user, DomSchoolsRolesAndClassesV2 dom, DomLoginContext context) {
+    private static User buildFacadeUser(DomUserFull user, DomSchoolsRolesAndClassesV2 dom, DomLoginContext context) throws Dwo2Exception {
 		DomRole role = dom.getActiveSchoolRoleAndClass().getRole();
 		String name = role == null ? "" : role.getRoleName();
 		User u = null;
@@ -641,6 +642,7 @@ public final class DwoHelper {
 		} else {
 			setContact(false);
 			u = new User(); // Student
+			throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthorizationError, "No students allowed");
 		}
 		u.setDomLoginContext(context);
 		u.setDomUserFull(user);
