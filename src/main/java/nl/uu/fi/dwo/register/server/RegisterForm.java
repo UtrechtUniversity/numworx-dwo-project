@@ -315,7 +315,7 @@ private String encode(String string) {
     String jwt = req.getParameter("j");
   
     Jws<Claims> claims = Jwts.parser()
-        .requireIssuer(server)
+  //      .requireIssuer(server)
         .setSigningKey(key).parseClaimsJws(jwt);
     Claims body = claims.getBody();
     String email = body.getSubject();
@@ -403,8 +403,8 @@ private String encode(String string) {
     	school.getPasswords().stream().filter(item -> item.getKey() == key).findAny().get().getValue();
     	cookie = new Cookie("schoolCode", u(password));
     	resp.addCookie(cookie);
-    	if (putRequest != null) resp.addCookie(putRequest);
     }
+    if (putRequest != null) resp.addCookie(putRequest);
     dispatch.forward(req, resp);
   }
 
