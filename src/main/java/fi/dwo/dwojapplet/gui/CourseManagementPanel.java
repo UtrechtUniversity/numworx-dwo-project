@@ -518,7 +518,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	        if(DwoHelper.isSecure()) 
 	        	uploadCourseButton.setVisible(true);
         }
-        if (DwoHelper.isTest() && DwoHelper.isPremium()) {
+        if ( (DwoHelper.isTest()||DwoHelper.isSamlLogin()) && DwoHelper.isPremium()) {
           accessAction = new AccessControlAction(this);
           if (accessAction.isEnabled()) {
             header.add(Box.createHorizontalStrut(10));
