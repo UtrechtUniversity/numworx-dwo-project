@@ -508,6 +508,8 @@ class RestManager extends RestyDateTimeFormat {
           return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomStudentScoContext>>() {});
         case DomApplet:
           return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomAppletFull>>() {});
+        case DomSchoolFrom:
+          return (List<T>) genson.deserialize(json.toString(), new GenericType<List<DomSchoolFrom>>() {});         
         default:
           String msg = "Programming error, trying to get an unsupported dataType.";
           LOG.log(Level.SEVERE, msg);
