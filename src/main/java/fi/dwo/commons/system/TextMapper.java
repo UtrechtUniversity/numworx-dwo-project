@@ -578,6 +578,17 @@ public abstract class TextMapper {
 
 	public static final String EXS_TOO_BIG = "EXS_TOO_BIG";
 	
+	// AccessControl
+	public static final String GUIAC_ACCESS = "GUIAC_ACCESS";
+	public static final String GUIAC_TYPE   = "GUIAC_TYPE";
+	public static final String GUIAC_NAME   = "GUIAC_NAME";
+	public static final String GUIAC_NONE   = "GUIAC_NONE";
+    public static final String GUIAC_READ   = "GUIAC_READ";
+    public static final String GUIAC_WRITE  = "GUIAC_WRITE";
+    public static final String GUIAC_FULL   = "GUIAC_FULL";
+    public static final String GUIAC_NO_CLASS = "GUIAC_NO_CLASS";
+    public static final String GUIAC_ADD = "GUIAC_ADD";
+	
 	/**
      *
      */

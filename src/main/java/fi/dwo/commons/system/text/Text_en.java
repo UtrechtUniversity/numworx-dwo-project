@@ -517,6 +517,17 @@ public class Text_en extends ListResourceBundle {
             { "Backup module", "Back up Module" },
             { "Import map", "Import Folder"},
             { "Import", "Import Module" },
+ 
+            { TextMapper.GUIAC_ACCESS, "Access" },
+            { TextMapper.GUIAC_NAME, "Type" },
+            { TextMapper.GUIAC_TYPE, "Kind"},
+            { TextMapper.GUIAC_NONE, "No Access"},
+            { TextMapper.GUIAC_READ, "Read"},
+            { TextMapper.GUIAC_WRITE, "Read and write"},
+            { TextMapper.GUIAC_FULL, "Full"},
+            { TextMapper.GUIAC_NO_CLASS, "<unknown>" },
+            { TextMapper.GUIAC_ADD, "Add access"},
+
 
 	};
 

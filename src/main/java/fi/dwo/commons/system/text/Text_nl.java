@@ -491,7 +491,16 @@ public class Text_nl extends ListResourceBundle {
             { TextMapper.GUIMNU_STUDENTMODELS, "Leerdomeinen" },
             { TextMapper.GUIC_STUDENTMODELS_ADD, "Nieuw leerdomein" },
             
-	
+            { TextMapper.GUIAC_ACCESS, "Toegang" },
+            { TextMapper.GUIAC_NAME, "Naam" },
+            { TextMapper.GUIAC_TYPE, "Soort"},
+            { TextMapper.GUIAC_NONE, "Geen toegang"},
+            { TextMapper.GUIAC_READ, "Lezen"},
+            { TextMapper.GUIAC_WRITE, "Lezen en schrijven"},
+            { TextMapper.GUIAC_FULL, "Volledig"},
+            { TextMapper.GUIAC_NO_CLASS, "<onbekend>" },
+            { TextMapper.GUIAC_ADD, "Toegang toevoegen"},
+
 	};
 
 	public Text_nl() {
