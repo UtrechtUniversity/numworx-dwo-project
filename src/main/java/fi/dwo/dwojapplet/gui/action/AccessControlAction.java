@@ -33,7 +33,7 @@ public class AccessControlAction extends GuiAction {
   private DomSchool school = DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool();
   
   AccessControlAction() {
-    super(TextMapper.getText("Toegang"));
+    super(TextMapper.getText(TextMapper.GUIAC_ACCESS));
   }
 
   public AccessControlAction(CourseManagementPanel courseManagementPanel) {
@@ -49,11 +49,10 @@ public class AccessControlAction extends GuiAction {
         List<DomTeacher> teachers;
         Course c = (Course) course;
         
-        String roleName = DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getRole().getRoleName();
-        if (roleName .equals( RoleType.SCHOOLADMIN.name())) {
+        if (DwoHelper.isContact()) {
           classes = SecureSchoolAdminSchoolClassManager.getSchoolClasses();
           teachers = SecureSchoolAdminSchoolClassManager.getTeachersInSchool();       
-        } else if (roleName.equals(RoleType.TEACHER.name())) {
+        } else if (!DwoHelper.isAdminLoggedIn()) {
           classes = SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
           teachers = SecureTeacherSchoolClassManager.getTeachersInSchool();        
         } else {

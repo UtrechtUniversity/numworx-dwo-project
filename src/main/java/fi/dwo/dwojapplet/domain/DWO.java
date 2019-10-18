@@ -1942,7 +1942,7 @@ LOG.info("time results = " + (-t) + " ms");
 			}
         	
         };
-        mf.setTitle("DWO");
+        mf.setTitle("Numworx author");
         mf.pack();
         // Start applet.
         mf.setVisible(true);

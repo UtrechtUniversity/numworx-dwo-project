@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.gui;
 import fi.beans.numworxlf.JCheckBox;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.User;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
@@ -44,7 +45,8 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
         modifyModules = new JCheckBox();
         add(modifyModules);
         accessTeacher = new JCheckBox();
-        add(accessTeacher);
+        if( (DwoHelper.isTest()||DwoHelper.isSamlLogin()) && DwoHelper.isPremium())
+          add(accessTeacher);
         
 // opschriften		
         changeClassStudent.setText(TextMapper.getText(TextMapper.GUIC_SETTINGS_STUDENT));

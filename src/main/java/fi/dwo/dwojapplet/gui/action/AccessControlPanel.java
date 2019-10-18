@@ -5,10 +5,8 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,13 +14,11 @@ import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
-import javax.swing.DefaultButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import fi.beans.numworxlf.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.SingleSelectionModel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
@@ -31,22 +27,13 @@ import javax.swing.table.TableCellRenderer;
 
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JComboBox;
-import javax.swing.JOptionPane;
 import fi.beans.numworxlf.JRadioButton;
 import fi.beans.numworxlf.JScrollPane;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.Course;
-import fi.dwo.dwojapplet.domain.CourseMap;
-import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.AddSchoolDialog;
-import fi.dwo.dwojapplet.gui.CourseNameDialog;
 import fi.dwo.dwojapplet.gui.GuiConstants;
-import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.TableUtil;
-import fi.dwo.dwojapplet.gui.CourseManagementPanel.ImageButtonEditor;
-import fi.dwo.dwojapplet.gui.CourseManagementPanel.ImageRenderer;
-import fi.dwo.dwojapplet.gui.action.AccessControlPanel.AddAccessPanel;
 import nl.uu.fi.dwo.rest.dom.entities.DomACL;
 import nl.uu.fi.dwo.rest.dom.entities.DomId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
@@ -61,7 +48,6 @@ public class AccessControlPanel extends JPanel implements ActionListener {
   public class AddAccessPanel extends JPanel {
 
     private JRadioButton t,c,s;
-    private ButtonModel m;
     private JComboBox<String> access, teachers, classes, school;
     private DomACL acl = new DomACL();
     
@@ -77,15 +63,15 @@ public class AccessControlPanel extends JPanel implements ActionListener {
       Vector<String> av = new Vector<>();
       for (ACL v: ACL.values()) { av.add(AccessControlPanel.this.toString(v));}
       
-      t = new JRadioButton("Teacher"); teachers = new JComboBox<>(tv);
-      c = new JRadioButton("Schoolclass"); classes = new JComboBox<>(cv);
-      s = new JRadioButton("School"); school = new JComboBox<>(sv);
+      t = new JRadioButton(AccessControlPanel.this.toString(PersistenceClassType.PersistentUser)); teachers = new JComboBox<>(tv);
+      c = new JRadioButton(AccessControlPanel.this.toString(PersistenceClassType.PersistentSchoolClass)); classes = new JComboBox<>(cv);
+      s = new JRadioButton(AccessControlPanel.this.toString(PersistenceClassType.PersistentSchool)); school = new JComboBox<>(sv);
       access = new JComboBox<>(av);
  // insert     
       add(t); add(teachers);
       add(c); add(classes);
       add(s); add(school);
-      add(new JLabel("Toegang")); add(access);
+      add(new JLabel(TextMapper.getText(TextMapper.GUIAC_ACCESS))); add(access);
       ButtonGroup group = new ButtonGroup();
       t.getModel().setGroup(group);
       c.getModel().setGroup(group);
@@ -103,8 +89,9 @@ public class AccessControlPanel extends JPanel implements ActionListener {
 
 
     public DomACL getAcl() {
-      acl.setAccess(ACL.values()[access.getSelectedIndex()]);    
-      PersistenceId entity = null;
+      acl.setAccess(ACL.values()[access.getSelectedIndex()]);
+      if (!s.isEnabled()) return acl;
+      PersistenceId entity = acl.getEntity();
       if (s.isSelected()) entity = (PersistenceId) AccessControlPanel.this.school.keySet().toArray()[school.getSelectedIndex()];
       else if (c.isSelected()) entity = (PersistenceId) AccessControlPanel.this.classes.keySet().toArray()[classes.getSelectedIndex()];
       else entity = (PersistenceId) AccessControlPanel.this.teachers.keySet().toArray()[teachers.getSelectedIndex()];    
@@ -112,8 +99,9 @@ public class AccessControlPanel extends JPanel implements ActionListener {
       return acl;
     }
 
-
     public void setAcl(DomACL c2) {
+      teachers.setEditable(true);
+      classes.setEditable(true);
       acl = c2;
       access.setSelectedIndex(c2.getAccess().ordinal());
       PersistenceClassType type = c2.getEntity().getType();
@@ -139,8 +127,8 @@ public class AccessControlPanel extends JPanel implements ActionListener {
   }
 
 
-  private static final DomTeacher NO_TEACHER = new DomTeacher();
-  private static final DomSchoolClass NO_CLASS = new DomSchoolClass();
+  private final DomTeacher NO_TEACHER = new DomTeacher();
+  private final DomSchoolClass NO_CLASS = new DomSchoolClass();
   private static final DomSchool NO_SCHOOL = new DomSchool();
 
   public class ImageButtonEditor extends AbstractCellEditor implements
@@ -264,7 +252,12 @@ public class AccessControlPanel extends JPanel implements ActionListener {
       return columnIndex >= 3;
     }
 
-    String[] names = { "Soort", "Naam", "Toegang", "Edit", "Verwijder" };
+    String[] names = { TextMapper.getText(TextMapper.GUIAC_TYPE), 
+                       TextMapper.getText(TextMapper.GUIAC_NAME), 
+                       TextMapper.getText(TextMapper.GUIAC_ACCESS), 
+                       TextMapper.getText("edit"), 
+                       TextMapper.getText("delete")
+                       };
     @Override
     public String getColumnName(int column) {
       return names[column];
@@ -273,7 +266,14 @@ public class AccessControlPanel extends JPanel implements ActionListener {
   }
 
   private String toString(ACL access) {
-    return access.name();
+    switch(access) {
+      default:
+      case NONE: return TextMapper.getText(TextMapper.GUIAC_NONE);
+      case ACCESS: return TextMapper.getText(TextMapper.GUIAC_ACCESS);
+      case READ: return TextMapper.getText(TextMapper.GUIAC_READ);
+      case WRITE: return TextMapper.getText(TextMapper.GUIAC_WRITE);
+      case FULL: return TextMapper.getText(TextMapper.GUIAC_FULL);
+    }
   }
 
   public boolean deleteACL(DomACL c) {
@@ -283,7 +283,7 @@ public class AccessControlPanel extends JPanel implements ActionListener {
   public boolean editACL(DomACL c) {
     AddAccessPanel panel = new AddAccessPanel();
     panel.setAcl(c);
-    int ok = JOptionPane.showConfirmDialog(this, panel, "Toegang", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+    int ok = JOptionPane.showConfirmDialog(this, panel, TextMapper.getText(TextMapper.GUIAC_ACCESS), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
     if (ok == JOptionPane.OK_OPTION) {
       c = panel.getAcl();
       return true;
@@ -293,9 +293,9 @@ public class AccessControlPanel extends JPanel implements ActionListener {
 
   public String toString(PersistenceClassType type) {
     switch(type) {
-      case PersistentUser: return "Docent";
-      case PersistentSchool: return "School";
-      case PersistentSchoolClass: return "Klas";
+      case PersistentUser: return TextMapper.getText(TextMapper.GUIR_OPT_TEACHER);
+      case PersistentSchool: return TextMapper.getText(TextMapper.TBL_SCHOOL);
+      case PersistentSchoolClass: return TextMapper.getText(TextMapper.HDR_SCHOOLCLASS);
       default:
     }
     return null;
@@ -324,6 +324,9 @@ public class AccessControlPanel extends JPanel implements ActionListener {
       List<DomSchoolClass> classes, DomSchool school) {
     super(new BorderLayout(5,5));
     
+    NO_CLASS.setSchoolClassName(TextMapper.getText(TextMapper.GUIAC_NO_CLASS));
+    NO_TEACHER.setGivenName(TextMapper.getText(TextMapper.GUIAC_NO_CLASS));
+    NO_TEACHER.setFamilyName("");
     deleteImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_COURSE_IMAGE);
     editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_COURSE_IMAGE);
 
@@ -339,7 +342,7 @@ public class AccessControlPanel extends JPanel implements ActionListener {
     TableUtil.setJTableSizes(table);
     this.model.acls = new ArrayList<>(acls);
     
-    this.addButton = new JButton("Toegang toevoegen");
+    this.addButton = new JButton(TextMapper.getText(TextMapper.GUIAC_ADD));
     this.addButton.addActionListener(this);
     add(new JScrollPane(table), BorderLayout.CENTER);
     add(addButton, BorderLayout.NORTH);
