@@ -75,8 +75,9 @@ public class ModulesOfSchoolclassPresenter {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                 //flip back to schoolclasses screen 
-                updateViewData();
-                return null;
+                //updateViewData();
+                LOG.info("Detached " + id);
+               return null;
             }
 
         },FAILURE);
@@ -91,7 +92,8 @@ public class ModulesOfSchoolclassPresenter {
             @Override
             public Promise<Void> call(Promise<Boolean> resolved) throws Exception {
                 //flip back to schoolclasses screen 
-                updateViewData();
+                //updateViewData();
+                LOG.info("Attached " + id);
                 return null;
             }
 
