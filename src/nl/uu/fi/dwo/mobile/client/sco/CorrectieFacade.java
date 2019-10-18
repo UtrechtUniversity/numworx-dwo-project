@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 
 public class CorrectieFacade {
     private static CorrectieFacade instance = GWT.create(CorrectieFacade.class);
@@ -36,7 +37,7 @@ public class CorrectieFacade {
           setWidgetTopBottom(content, 0, Unit.PX, 0, Unit.PX);
           setWidgetBottomHeight(tail, 0, Unit.PX, 16, Unit.PX);
           setWidgetRightWidth(tail, 0, Unit.PX, 16, Unit.PX);
-          tail.setStylePrimaryName("correctie-tail");
+          tail.setStylePrimaryName(DWOplayer.DWO_BUNDLE.dwoplayercss().correctieTail());
       }
   }
     
@@ -60,7 +61,7 @@ public class CorrectieFacade {
     	ObjectMap h = JSONUtilities.wrapMap(h0);
     	h = h.getObjectMap("reviewInteractieData");
     	if(h != null && h.containsKey("reviewScoreCorrectie") && h.getInt("reviewScoreCorrectie")!=0) {
-    		w.asWidget().addStyleName("correctie");
+    		w.asWidget().addStyleName(CorrectieView.CORRECTIE);
     	}
     }
 }

@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.HasHide;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
@@ -28,12 +29,15 @@ public class CorrectieView extends Composite implements HasHide {
   private static final String REVIEW_SCORE_CORRECTIE = "reviewScoreCorrectie";
   public static final String REVIEW_INTERACTIE_DATA = "reviewInteractieData";
   
+  public static final String CORRECTIE = DWOplayer.DWO_BUNDLE.dwoplayercss().correctie();
+  public static final String CORRECTED = DWOplayer.DWO_BUNDLE.dwoplayercss().corrected();
+  
   public static Provider<Map<String,Object>> addCorrection(Map<String,Object> map, InteractionView iv, final Widget widget, int scoreMax) {
-    widget.addStyleName("correctie");
+    widget.addStyleName(CORRECTIE);
     ObjectMap h = JSONUtilities.wrapMap(map);
     h = h.getObjectMap(REVIEW_INTERACTIE_DATA);
     if ( h != null && h.containsKey(REVIEW_SCORE_CORRECTIE)) {
-      widget.setStyleName("corrected", h.getInt(REVIEW_SCORE_CORRECTIE)>0);
+      widget.setStyleName(CORRECTED, h.getInt(REVIEW_SCORE_CORRECTIE)>0);
     }
     return new Provider<Map<String, Object>>() {
 
@@ -129,7 +133,7 @@ public class CorrectieView extends Composite implements HasHide {
     int n = Integer.parseInt(result);
     object.put(REVIEW_SCORE_CORRECTIE, (n));
     if(parent != null) {
-      parent.setStyleName("corrected", n>0);
+      parent.setStyleName(CORRECTED, n>0);
     }
     hide();
   }

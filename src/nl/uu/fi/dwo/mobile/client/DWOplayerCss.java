@@ -51,4 +51,32 @@ public interface DWOplayerCss extends CssResource {
 	String DWOkeyboard();
 	
 	String review();
+	
+	String spaceShiftLabel();
+	String shiftBtn();
+	String spaceLabel();
+	String score();
+	
+	// Score buttons:
+	String v();
+	String nr();
+	String scoreBtn();
+// dependent names
+	@ClassName("scoreBtn-max0")
+	String scoreBtn_max0();
+	@ClassName("scoreBtn-disabled")
+	String scoreBtn_disabled();
+	@ClassName("scoreBtn-correct")
+	String scoreBtn_correct();
+	@ClassName("scoreBtn-selectedcorrect")
+	String scoreBtn_selectedcorrect();
+	@ClassName("scoreBtn-cursor")
+	String scoreBtn_cursor();
+	@ClassName("scoreBtn-popupTime")
+	String scoreBtn_popupTime();
+	
+	String correctie();
+	String corrected();
+	@ClassName("correctie-tail")
+	String correctieTail();
 }

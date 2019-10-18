@@ -28,7 +28,7 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 
 	private static final String MYPUSHBUTTON = DWOplayer.DWO_BUNDLE.dwoplayercss().myPushButton();
 	private static final String MYPUSHBUTTON_DISABLED = DWOplayer.DWO_BUNDLE.dwoplayercss().myPushButton_disabled();
-	
+	private static final String SCORE = DWOplayer.DWO_BUNDLE.dwoplayercss().score();
 	StatusBarIF sb;
 	public void setStatusBar(StatusBarIF bar) {
 		sb = bar;
@@ -116,8 +116,8 @@ public class ScoreNavFacade implements ScoreNavIF, CBookEventListener {
 	
 		// De labels voor totaalscore en aantal keer nagekeken
 		totaalScoreLabel = new Label(); // zonder "Totaal:"
-		totaalScoreLabel.setStyleName("score");
-		totaalScoreLabel.getElement().getStyle().setPaddingTop(6, Style.Unit.PX);
+		totaalScoreLabel.setStyleName(SCORE);
+		//totaalScoreLabel.getElement().getStyle().setPaddingTop(6, Style.Unit.PX);
 		keerNagekekenLabel = new HTML(new SafeHtmlBuilder().appendEscapedLines(0 + Text.constants.nakijkLabel() + "\n" + Text.constants.nakijkLabel2()).toSafeHtml());
 	}
 	

@@ -375,7 +375,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 				score = scoreNav.getTotaalScoreLabel();
 				if (score != null)
 				{ // Bij NOORDHOFF is deze null
-					score.getElement().getStyle().setFloat(Style.Float.LEFT);
+					//score.getElement().getStyle().setFloat(Style.Float.LEFT);
 					sb.addLabel(score);
 					onp.removeFromParent();
 					// addKnop() voegt een widget toe 

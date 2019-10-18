@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOplayerCss;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.ShareFacade;
@@ -90,6 +91,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	private static final int foutStraf = 2;
 	private static final Logger logger = Logger.getLogger("OpdrNav");
+    private static final DWOplayerCss css = DWOplayer.DWO_BUNDLE.dwoplayercss();
 
 	private ViewModuleViewImpl entry;
 	private ListBox lb_activiteiten;
@@ -657,7 +659,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			// altijd maken omdat ze gebruikt worden om de navigatiebalk op maat te maken
 			{	
 				shiftButtonLeft = new TouchButton();
-				shiftButtonLeft.setStylePrimaryName("shiftBtn");
+				shiftButtonLeft.setStylePrimaryName(css.shiftBtn());
 				addScrollButtonHandler(shiftButtonLeft,-1);
 	//			shiftButtonLeft.setText("◀◀"); // lelijk icoon op ipad
 //				shiftButtonLeft.setText("\u27EA"); // <<, dun, hoog; niet zichtbaar op android tablet
@@ -665,7 +667,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				//if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar) // niet, anders heeft hij geen maat
 					fp_opdrachten.add(shiftButtonLeft);
 				spaceStart = new Label();
-				spaceStart.setStylePrimaryName("spaceShiftLabel");
+				spaceStart.setStylePrimaryName(css.spaceShiftLabel());
 				spaceStart.setText("...");
 				//if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
 					fp_opdrachten.add(spaceStart);
@@ -683,11 +685,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
 			{		
 				Label spaceEnd = new Label();
-				spaceEnd.setStylePrimaryName("spaceShiftLabel");
+				spaceEnd.setStylePrimaryName(css.spaceShiftLabel());
 				spaceEnd.setText("...");
 				fp_opdrachten.add(spaceEnd);
 				TouchButton shiftButtonRight = new TouchButton();
-				shiftButtonRight.setStylePrimaryName("shiftBtn");
+				shiftButtonRight.setStylePrimaryName(css.shiftBtn());
 				addScrollButtonHandler(shiftButtonRight,1);
 	//			shiftButtonRight.setText("▶▶"); // lelijk icoon op ipad
 //				shiftButtonRight.setText("\u27EB"); // >>, dun, hoog; niet zichtbaar op android tablet
@@ -729,14 +731,14 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
 			{	
 				shiftButtonLeft = new TouchButton();
-				shiftButtonLeft.setStylePrimaryName("shiftBtn");
+				shiftButtonLeft.setStylePrimaryName(css.shiftBtn());
 				addScrollButtonHandler(shiftButtonLeft,-1);
 	//			shiftButtonLeft.setText("◀◀"); // lelijk icoon op ipad
 //				shiftButtonLeft.setText("\u27EA"); // <<, dun, hoog; niet zichtbaar op android tablet
 				shiftButtonLeft.setText("<<");
 				fp_opdrachten.add(shiftButtonLeft);
 				spaceStart = new Label();
-				spaceStart.setStylePrimaryName("spaceShiftLabel");
+				spaceStart.setStylePrimaryName(css.spaceShiftLabel());
 				spaceStart.setText("...");
 				fp_opdrachten.add(spaceStart);
 			}
@@ -753,11 +755,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			if (aantalOpdrachten[currentActiviteit] > maxAantalOnBar)
 			{		
 				Label spaceEnd = new Label();
-				spaceEnd.setStylePrimaryName("spaceShiftLabel");
+				spaceEnd.setStylePrimaryName(css.spaceShiftLabel());
 				spaceEnd.setText("...");
 				fp_opdrachten.add(spaceEnd);
 				TouchButton shiftButtonRight = new TouchButton();
-				shiftButtonRight.setStylePrimaryName("shiftBtn");
+				shiftButtonRight.setStylePrimaryName(css.shiftBtn());
 				addScrollButtonHandler(shiftButtonRight,1);
 	//			shiftButtonRight.setText("▶▶"); // lelijk icoon op ipad
 //				shiftButtonRight.setText("\u27EB"); // >>, dun, hoog; niet zichtbaar op android tablet
@@ -829,16 +831,16 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			button.addDomHandler(handler, com.google.gwt.event.dom.client.TouchEndEvent.getType());
 		}
 
-		button.setStylePrimaryName("scoreBtn");
-		space.setStylePrimaryName("spaceLabel");
+		button.setStylePrimaryName(css.scoreBtn());
+		space.setStylePrimaryName(css.spaceLabel());
 		final int button_id = j;
 		if (geefNoScore(currentActiviteit, j))
 		{
-			button.addStyleDependentName("max0");
+			button.addStyleName(css.scoreBtn_max0());
 		}
 		if (!buttonsEnabled[currentActiviteit][j])
 		{
-			button.addStyleDependentName("disabled");
+			button.addStyleName(css.scoreBtn_disabled());
 		}
 		
 		String nul = j < 9 ? "0" : "";

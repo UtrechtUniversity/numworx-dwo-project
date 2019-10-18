@@ -129,44 +129,25 @@ div.listItem-dwo-separator {
 
 
 
-.statusbar {
-	float: right;
-	display: inline-block;
-	margin-right: 20px;
-	width: 90px;	
-}
+/* .statusbar { */
+/* 	float: right; */
+/* 	display: inline-block; */
+/* 	margin-right: 20px; */
+/* 	width: 90px;	 */
+/* } */
 
 
-.opdrbutton-container {
-	background-color: #FFFFFF
-}
+/* .opdrbutton-container { */
+/* 	background-color: #FFFFFF */
+/* } */
 
-.opdrnav-bottombar {
-	background-color: #FFFFFF
-}
+/* .opdrnav-bottombar { */
+/* 	background-color: #FFFFFF */
+/* } */
 
 
-.spaceLabel {
-	float: left;
-	display: inline-block;
-	margin-right: 0px;
-	margin-top: 0px;
-	margin-bottom: 0px;
-	padding: 0px;
-	border-radius: 0px;
-	border-width: 0px;
-	border-style: solid;
-	border-color: white;
-	color: #FFFFFF;
-	/*font-weight: bold;*/
- 	font-size: 0px;
-	width: 18px;
-	height: 34px;
-  	background-image: linear-gradient(180deg, 
- 		#ffffff, #ffffff 16px, #b3c2e5 16px, #b3c2e5 18px, #ffffff 18px, #ffffff 34px); 
-}
 
-.statusBarLabel {
+/* .statusBarLabel {
 	
 	display: inline;
 	margin-left: 10px;
@@ -182,157 +163,13 @@ div.listItem-dwo-separator {
 	border-color: white;
 	cursor: pointer;
 	color: #1D71B8;
-	/*font-weight: bold;*/
+	font-weight: bold;
 	font-size: 11px;
 }
+ */
 
-.spaceShiftLabel {
-	float: left;
-	display: inline-block;
-	margin-right: 0px;
-	margin-top: 0px;
-	margin-bottom: 4px;
-	padding: 0px;
-	padding-top: 1px;
-	padding-bottom: 2px;
-	background-color: white;
-	border-radius: 0px;
-	border-width: 0px;
-	border-style: solid;
-	border-color: white;
-	cursor: pointer;
-	color: #B3C2E5;
-	/*font-weight: bold;*/
-	font-size: 20px;
-}
 
-.shiftBtn {
-	float: left;
-	display: inline-block;
-	margin-right: 0px;
-	margin-top: 5px;
-	margin-bottom: 4px;
-	padding: 3px;
-	padding-top: 2px;
-	padding-bottom: 1px;
-	background-color: white;
-	border-radius: 3px;
-	border-width: 1px;
-	border-style: solid;
-	border-color: #B3C2E5;
-	cursor: pointer;
-	color: #B3C2E5;
-	/*font-weight: bold;*/
-	font-size: 16px;
-}
 
-.score {
-	float: left;
-	display: inline-block;
-	margin-left: 10px;
-	margin-right: 10px;
-	margin-top: 10px;
-	margin-bottom: 4px;
-	padding: 6px;
-	padding-top: 6px;
-	padding-bottom: 4px;
-	background-color: #DDE0E3;
-	border-radius: 3px;
-	border-width: 0px;
-	border-style: solid;
-	border-color: white;
-	color: #1B75BB;
-	font-weight: normal;
-	font-size: 12px;
-}
-
-/* Paginabolletje */
-.scoreBtn {
-	float: left;
-	position: relative;
-	overflow: visible;
-}
-
-/* Paginabolletje - vinkje */
-.scoreBtn .v {
-	display: none;
-}
-
-/* Paginabolletje - nummer */
-.scoreBtn .nr { 
-	display: inline-block;
-	margin-left: 0px;
-	margin-right: 0px;
-	margin-top: 5px;
-	margin-bottom: 4px;
-	padding: 6px;
-	padding-top: 6px;
-	padding-bottom: 4px;
-	background-color: #B3C2E5;
-	border-radius: 3px;
-	border-width: 0px;
-	border-style: solid;
-	border-color: white;
-	cursor: pointer;
-	color: #FFFFFF;
-	font-weight: bold;
-	font-size: 12px;
-}
-
-.scoreBtn-popupTime {
-	border-radius: 0px;
-	text-decoration: underline;
-	font-style: italic;
-	font-size: 10px;
-	background-color: white;
-	border-color: #1D71B8;
-	border-width: 1px;
-	color: #1D71B8;
-}
-
-.scoreBtn-max0 .nr {
-	background-color: #C0C0C0;
-}
-
-.scoreBtn-disabled .nr {
-	background-color: white;
-}
-
-.scoreBtn-correct .nr {
-	margin-left: 0px;
-	margin-top: 5px;
-	font-weight: bold;
-}
-
-.scoreBtn-correct .v { 
-	position: absolute;
-	top: -3px;
-	right: -8px;
-	width: 18px;
-	height: 18px;
-	display: block;
- 	background-image: url("images/numworx/goed-numworx.svg") !important;
-	background-repeat: no-repeat !important;
-	background-position: right top !important;
-	background-color: transparent;
-}
-
-.scoreBtn-selectedcorrect .nr {
-	background-color: #96C896;
-	border-color: #1D71B8;
-	border-style: solid;
-	margin-right: 0px;
-	color: green;
-	font-weight: bold;
-}
-
-.scoreBtn-cursor .nr {
-	margin-top: 5px;
-	border-style: solid;
-	border-color: #1D71B8;
-	color: #FFFFFF;
-	background-color: #1D71B8;
-}
 
 .gwt-Tree .gwt-TreeItem-selected {
 	text-decoration: underline;
@@ -374,11 +211,11 @@ div.listItem-dwo-separator {
 	display: none;
 }
 
-.UserBar {
-	background: initial !important; /* not IE */
-	background: inherit !important; /* IE */
-	border: initial !important; /* not IE */
-	border-style: none !important; /* IE */
+/* .UserBar {
+	background: initial !important; not IE
+	background: inherit !important; IE
+	border: initial !important; not IE
+	border-style: none !important; IE
 }
 
 .UserBar .UserItem.gwt-MenuItem {
@@ -386,31 +223,11 @@ div.listItem-dwo-separator {
 	font-size: 9pt;
 }
 .UserBar .UserItem.gwt-MenuItem-selected {
-	background: initial !important; /* not IE */
+	background: initial !important; not IE
 	background: inherit !important; 
 }
+*/
 
-.correctie {
-	background-image: url("images/resources/correctie.png") !important;
-	background-repeat: no-repeat !important;
-	background-position: right bottom !important;
-	background-color: transparent;
-}
-
-.correctie.corrected {
-		background-image: url("images/resources/corrected.png") !important;
-}
-
-.correctie > div > .correctie-tail {
-	background-image: url("images/resources/correctie.png") !important;
-	background-repeat: no-repeat !important;
-	background-position: right bottom !important;
-	background-color: transparent;
-}
-
-.correctie.corrected > div > .correctie-tail {
-	background-image: url("images/resources/corrected.png") !important;
-}
 
 .modules-icon {
 	background-image: url("images/numworx/modules.svg");
