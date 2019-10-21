@@ -49,7 +49,6 @@ public class DwoGlobalVars {
 
     private DwoGlobalVarsState state = DwoGlobalVarsState.Unintialized;
     private DwoGlobalVarDeferred<DwoGlobalVarsState> stateDeferred = new DwoGlobalVarDeferred<>(this, DwoGlobalVarsState.LoggedIn);
-//    private static volatile DwoGlobalVars instance;
     private DomUserFull currentUser;
     private DomLoginContext currentLoginContext;
     private DomSchoolsRolesAndClassesV2 schoolLogins;
@@ -239,7 +238,7 @@ public class DwoGlobalVars {
       setCurrentUser(resolved.getValue().getDomUserFull(), resolved.getValue().getDomLoginContext().getRealm());
       currentLoginContext = resolved.getValue().getDomLoginContext();
       LOG.log(Level.INFO, "Getting current and available school logins.");
-      SecuredUserSchoolLoginManagerV2 loginManager = new SecuredUserSchoolLoginManagerV2();
+      SecuredUserSchoolLoginManagerV2 loginManager = this.loginManager;
       Promise<DomSchoolsRolesAndClassesV2> logins = loginManager.getSchoolLogins();
       return logins;
   }

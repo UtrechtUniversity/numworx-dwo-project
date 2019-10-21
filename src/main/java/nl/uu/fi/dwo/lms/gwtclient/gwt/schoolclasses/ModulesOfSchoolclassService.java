@@ -1,13 +1,16 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
+import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherClassCourseManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import java.util.Date;
 
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
+import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
@@ -28,6 +31,7 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewFrom;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewTo;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewType;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 /**
@@ -43,6 +47,7 @@ public class ModulesOfSchoolclassService {
     private static final Logger LOG = Logger.getLogger(ModulesOfSchoolclassService.class.getName());
 
     private SecuredTeacherSchoolClassManager manager = new SecuredTeacherSchoolClassManager();
+    private SecuredTeacherClassCourseManager ccm = new SecuredTeacherClassCourseManager();
     private final DwoGlobalVars dwoGlobalVars;
 
     @Inject ModulesOfSchoolclassService(DwoGlobalVars aDwoGlobalVars) {
@@ -209,4 +214,24 @@ public class ModulesOfSchoolclassService {
             return manager.setAccessKeyClassCourse(rest);
         });
     }
+    
+    public Promise<Boolean> commit() {
+    	return Promises.resolved(Boolean.TRUE);
+    }
+    
+    public Promise<DomClassCourseFull> setClassCourse(DomSchoolClass sc, DomCourse course, CourseType type, String accessKey, Date from, Date to) {
+    	DomClassCourseFull dom = new DomClassCourseFull();
+    	dom.setAccessKey(accessKey);
+    	dom.setClassId(sc.getId());
+    	dom.setCourseId(course.getId());
+    	dom.setCourseType(type);
+    	dom.setNotBefore(from);
+    	dom.setNotAfter(to);
+    	DomContext context = new DomContext();
+        context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
+		Promise<DomClassCourseFull> result = ccm.update(context, dom);    	
+		return result;
+    }
+    
+    
 }
