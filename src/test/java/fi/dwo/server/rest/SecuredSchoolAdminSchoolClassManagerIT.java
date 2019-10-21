@@ -5,6 +5,7 @@ package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -24,6 +25,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
@@ -120,6 +122,26 @@ public class SecuredSchoolAdminSchoolClassManagerIT {
         SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
         List<DomTeacher> result = instance.getTeachersInSchool(sc);
         assertEquals("Number of teachers don't match.", 2, result.size());
+    }
+
+    @Test
+    public void testGetTeachersInSchoolWithContext() throws Dwo2Exception {
+        System.out.println("getTeachersInSchool with context");
+        SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
+        SecuredSchoolAdminSchoolClassManager instance = new SecuredSchoolAdminSchoolClassManager();
+        RestContext rest = new RestContext();
+        rest.setRestContext(new DomContext());
+        rest.getRestContext().setRealm("@dwo.nl");
+        DomHasRole domHasRole;
+        domHasRole = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN).buildDomHasRole();
+		rest.getRestContext().setDomHasRole(domHasRole);
+		List<DomTeacher> result = instance.getTeachersInSchool(sc, rest);
+        assertEquals("Number of teachers don't match.", 2, result.size());
+        assertEquals("user03@", result.get(0).getUserName());
+        rest.getRestContext().setRealm(null);
+		result = instance.getTeachersInSchool(sc, rest);
+        assertEquals("Number of teachers don't match.", 2, result.size());
+        assertEquals("user03", result.get(0).getUserName());
     }
 
     /**
