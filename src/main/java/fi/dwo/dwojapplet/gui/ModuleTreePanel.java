@@ -1,6 +1,5 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JScrollPane;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
@@ -30,7 +29,6 @@ import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Image;
@@ -344,6 +342,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
             bookIcon = new ImageIcon(book);
             folderIcon = new ImageIcon(DwoHelper.getResourceImage("resources/folder.png"));
             setTextNonSelectionColor(fi.beans.numworxlf.Constants.COLOR15);
+            setTextSelectionColor(java.awt.Color.WHITE);
             setBackgroundSelectionColor(fi.beans.numworxlf.Constants.COLOR14);
         }
 
