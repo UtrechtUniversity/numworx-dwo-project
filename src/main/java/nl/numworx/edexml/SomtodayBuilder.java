@@ -47,7 +47,7 @@ public class SomtodayBuilder implements Builder {
 		} catch (ParserConfigurationException e) {
 		}
 		groepen = new TreeMap<>();
-		memberships = new HashMap<>();
+		memberships = new TreeMap<>();
 
 	}
 

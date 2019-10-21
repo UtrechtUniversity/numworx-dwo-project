@@ -259,7 +259,7 @@ public class ServerBuilder implements Builder {
   }
   
   public void addTeachers(Map<String, DomUserFull> users, Map<String,Collection<String>>members, Map<String, DomSchoolClassFull> classes) {  
-    for (Map.Entry<String, DomUserFull> item: users.entrySet()) {    
+	  for (Map.Entry<String, DomUserFull> item: users.entrySet()) {    
       String key = item.getKey();
       DomUserFull value = item.getValue();
       if (value.getUserName().isEmpty()) {
