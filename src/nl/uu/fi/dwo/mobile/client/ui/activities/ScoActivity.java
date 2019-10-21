@@ -138,12 +138,21 @@ public class ScoActivity extends MGWTAbstractActivity implements AnchorContext, 
 			  .filter(p-> p.getClassCourses().get(0).getValue().getCourseType() != CourseType.assesment);
               sco = course
 			  .map(this::findSco);
+              scoList = 
               course.then(p-> { 
                 SelectModuleItem parent = new SelectModuleItem(p.getValue().getCourses().get(0).getValue(), p.getValue().getClassCourses().get(0).getValue());
                 SelectModuleItemHolder.insert(parent);
                 item.setParent(parent);
-                return p;} );
-              scoList = course.map(this::listScos);
+                return p;} )              
+// all scos of course
+            		  .then(p -> {
+            			  Object id = item.getParentID();
+            			  return rpcHandler.getCourseClass(id, schoolClass);
+            		  })
+//
+            		  .map(this::listScos);
+            		  
+            		 // scoList.then(p -> { item.getParent().setChildrenAsync(p);return p; });
 			} else {
 	            sco = rpcHandler.getSco(item.getID())
 	            // temporary		
