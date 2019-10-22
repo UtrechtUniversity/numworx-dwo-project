@@ -601,7 +601,7 @@ public abstract class TextMapper {
 			if (language == null) {
 				language = DEFAULT_LANGUAGE;
 			}
-			Locale lang = new Locale(language, "");
+			Locale lang = Locale.forLanguageTag(language);
 
 			String className = "fi.dwo.commons.system.text" + "." + TEXT_CLASS;
 			// String className = TextMapper.class.getPackage().getName() + "."
