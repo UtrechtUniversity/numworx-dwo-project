@@ -108,10 +108,15 @@ public class OsirisBuilder implements Builder {
 	}
 
 	private String groepNaam(String collegejaar, String cursus, String blok, String korteNaam) {
-		return collegejaar + " - " + cursus + " - " + blok + " - " + korteNaam;
+		return trunk100(collegejaar + " - " + cursus + " - " + blok + " - " + korteNaam);
 	}
 
-	private void addMember(String student, String klas) {
+	private String trunk100(String string) {
+	  string = string.trim();
+      return string.length()>100?string.substring(0,100):string;
+  }
+
+  private void addMember(String student, String klas) {
 		Collection<String> member = memberships.get(student);
 		if (member == null) {
 			member = new HashSet<>();
