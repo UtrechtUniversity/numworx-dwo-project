@@ -4,18 +4,15 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JScrollPane;
-import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.util.logging.Level;

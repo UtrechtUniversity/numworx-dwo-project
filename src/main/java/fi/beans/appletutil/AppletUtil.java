@@ -48,17 +48,15 @@ public class AppletUtil {
         if (language == null) {
             language = "nl";
         }
-        locale = new Locale(language, "");
-        //DwoHelper.setLocale(new DwoLocale(language));
+        locale = Locale.forLanguageTag(language);
         //LOG.log(Level.INFO, "Locale is set to: {0}", DwoHelper.getLocale().toString());
         try {
             Locale.setDefault(locale);
         }
         catch (SecurityException ex) {
         }
-
         applet.setLocale(locale);
-	JComponent.setDefaultLocale(locale);
+        JComponent.setDefaultLocale(locale);
     }
 
     /**

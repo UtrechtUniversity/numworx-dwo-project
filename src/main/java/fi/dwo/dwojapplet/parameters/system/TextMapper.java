@@ -49,7 +49,7 @@ public abstract class TextMapper {
             if (language == null) {
                 language = DEFAULT_LANGUAGE;
             }
-            Locale lang = new Locale(language, "");
+            Locale lang = Locale.forLanguageTag(language);
 
             String className = "fi.dwo.dwojapplet.parameters.system.text" + "."
                     + TEXT_CLASS;

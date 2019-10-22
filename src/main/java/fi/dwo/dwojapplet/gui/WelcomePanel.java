@@ -7,7 +7,6 @@ import fi.beans.loader.Loader;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JOptionPane;
-import fi.beans.numworxlf.JRadioButton;
 import fi.beans.numworxlf.JTextField;
 import fi.beans.numworxlf.NumworxTextFieldUI;
 import fi.beans.scorm.SAMLLoginIF;
@@ -16,8 +15,8 @@ import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.BUILD;
-import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.gui.domutils.DwoProfileStrategy;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -28,7 +27,6 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -43,7 +41,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -62,13 +59,6 @@ import org.osgi.util.promise.Promises;
  */
 public class WelcomePanel extends ContentPanel implements ActionListener {
 
-    private static final int HE_ID = 100;
-
-    private static final int SE_ID = 92;
-
-    private static final int HO_ID = 99;
-
-    private static final int VO_ID = 77;
 
     private static final Logger LOG = Logger.getLogger(WelcomePanel.class.getName());
 
@@ -77,6 +67,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
     private JPasswordField password;
 
     private JButton loginButton;
+    
+    private DwoProfileStrategy profileselect;
 
 //    private JButton guestButton;
 
@@ -87,13 +79,6 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
     private JCheckBox linkcheck;
 
-    private JRadioButton vo;
-
-    private JRadioButton ho;
-
-    private JRadioButton se;
-
-    private JRadioButton he;
 
     /**
      * Layout manager voor de fiButton. Hou de fiButton in de rechtsbovenhoek.
@@ -204,16 +189,6 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         JLabel l;
         FontMetrics fm;
 
-//        /* Add FI logo */
-//        Image fiLogo = null;
-//        fiLogo = DwoHelper.getResourceImage(GuiConstants.WISWEB_LOGO_LOCATION);
-//
-//        ImagePanel ip = new ImagePanel(fiLogo);
-//        ip.setLocation(dialog.getWidth() / 2 - ip.getWidth() / 2, 440);
-//        dialog.add(ip);
-//        if (GuiConstants.GUI_IMAGE_BG) {
-//            dialog.remove(ip);
-//        }
 
         /* Warning Label */
  /*l = new Label("Helaas zijn er problemen met de DWO. Wordt aan gewerkt.");
@@ -225,17 +200,6 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
          this.add(l);
          l.setVisible(true);*/
  /* Welcome Label */
-        //l = new Label(TextMapper.getText(TextMapper.GUIW_WELCOME) + "!");
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIM_FI_NAME));
-//        l.setFont(new Font("SansSerif", Font.BOLD, 26));
-//        l.setForeground(new Color(3, 65, 123));
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setBounds(dialog.getWidth() / 2 - fm.stringWidth(l.getText()) / 2, 520, fm.stringWidth(l.getText()) + 5, fm.getHeight());
-//        dialog.add(l);
-//        if (GuiConstants.GUI_IMAGE_BG) {
-//            dialog.remove(l);
-//        }
-//
         l = new JLabel(TextMapper.getText(TextMapper.GUIM_DWO_SHORT));
         l.setFont(GuiConstants.HEADER_TEXT);
         l.setForeground(new Color(3, 65, 123));
@@ -256,42 +220,17 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
             dialog.remove(l);
         }
 
-        p = new JPanel(null);
+        p = profileselect = DwoProfileStrategy.instance();
         p.setBounds(dialog.getWidth() / 2 - 175, 110+100, 340, 100);
-        Color PANEL_BACKGROUND = Color.decode("#314770");
-        Color ITEM_BACKGROUND = Color.decode("#1b75bb");
-        Font  PLAIN = new Font("SansSerif",Font.PLAIN, 13);
-        Font  BOLD  = new Font("SansSerif", Font.BOLD, 13);
-        p.setBackground(PANEL_BACKGROUND);
-        vo = new JRadioButton("VO");
-        vo.setBackground(PANEL_BACKGROUND);vo.setFont(PLAIN);
-        if(DWO.getDwoProfileID() == VO_ID) vo.setSelected(true);
-        vo.setSize(vo.getPreferredSize());vo.setLocation(20, 20);
-        ho = new JRadioButton("HO");
-        ho.setBackground(PANEL_BACKGROUND);ho.setFont(PLAIN);
-        if(DWO.getDwoProfileID() == HO_ID) ho.setSelected(true);
-        ho.setSize(ho.getPreferredSize());ho.setLocation(20, 60);
-        se = new JRadioButton("SE (English)");
-        se.setBackground(PANEL_BACKGROUND);se.setFont(PLAIN);
-        if(DWO.getDwoProfileID() == SE_ID) se.setSelected(true);
-        se.setSize(se.getPreferredSize());se.setLocation(160, 20);
-        he = new JRadioButton("HE (English)");
-        he.setBackground(PANEL_BACKGROUND);he.setFont(PLAIN);
-        if(DWO.getDwoProfileID() == HE_ID) he.setSelected(true);
-        he.setSize(he.getPreferredSize());he.setLocation(160, 60);
-        ButtonGroup grp  = new ButtonGroup();
-        grp.add(he);grp.add(se);grp.add(ho);grp.add(vo);
-        ho.setForeground(Color.WHITE);
-        vo.setForeground(Color.WHITE);
-        he.setForeground(Color.WHITE);
-        se.setForeground(Color.WHITE);
-        
-        p.add(ho); p.add(vo);p.add(se);p.add(he);
         dialog.add(p);
         /* Add Login-panel */
         p = new JPanel(null);
         //p.setFocusCycleRoot(true);
         //p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
+        Font  PLAIN = new Font("SansSerif",Font.PLAIN, 13);
+        Font  BOLD  = new Font("SansSerif", Font.BOLD, 13);
+        Color PANEL_BACKGROUND = Color.decode("#314770");
+        Color ITEM_BACKGROUND = Color.decode("#1b75bb");
         p.setBackground(PANEL_BACKGROUND);
         //p.setBorderColor(new Color(52,90,126));
         p.setBounds(dialog.getWidth() / 2 - 175, 110+100+100, 340, 155);
@@ -304,7 +243,7 @@ if(DwoHelper.isSamlLogin()) {
     SAMLLoginIF browser = getSAMLLogin();
     browser.loadURL(DwoHelper.getServerUrlPath() + "saml/login.jsp");
     browser.getPromise().then(pr -> {
-      switchProfile();
+      profileselect.switchProfile();
       GuiCreator.instance().dwo.loginViaSaml(pr.getValue());
       return null;
     }, 
@@ -543,7 +482,7 @@ if(DwoHelper.isSamlLogin()) {
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
         if ((src == loginButton) || (src == loginname) || (src == password)) {
-          switchProfile();
+          profileselect.switchProfile();
           
           
           
@@ -584,17 +523,6 @@ if(DwoHelper.isSamlLogin()) {
         }
     }
 
-    private void switchProfile() {
-      DWO dwo = GuiCreator.instance().getDWO();
-      if(vo.isSelected() && DWO.getDwoProfileID() != VO_ID)
-        dwo.switchProfile(VO_ID,"nl");
-      else if (ho.isSelected() && DWO.getDwoProfileID() != HO_ID)
-        dwo.switchProfile(HO_ID, "nl");
-      else if (se.isSelected() && DWO.getDwoProfileID() != SE_ID)
-        dwo.switchProfile(SE_ID, "en");
-      else if (he.isSelected() && DWO.getDwoProfileID() != HE_ID)
-        dwo.switchProfile(HE_ID, "en");
-     }
 
     public void setUsername(String username) {
         this.loginname.setText(username);

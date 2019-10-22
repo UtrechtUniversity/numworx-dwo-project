@@ -79,9 +79,10 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
         } else {
             STANDAARD_DWO_MODULES = TextMapper.getText("Standaard DWO modules");
         }
+        ALLE_MODULES = TextMapper.getText("Alle modules");
     }
 
-    public static final String ALLE_MODULES = TextMapper.getText("Alle modules");
+    public static String ALLE_MODULES = TextMapper.getText("Alle modules");
 
     private boolean isPossible(Object o) {
         return o instanceof Course
@@ -483,6 +484,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 //			item = new JMenuItem("publiceer");menu.add(item); // cut en paste in standaard modules.
 //		}
         bar.add(menu);
+        bar.setAlignmentY(BOTTOM_ALIGNMENT);
         hbox.add(bar);
     }
 
@@ -494,6 +496,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
         //closeBtn.setForeground(Color.BLACK);
         toolbar.add(Box.createHorizontalGlue());
         toolbar.add(closeBtn);
+        closeBtn.setAlignmentY(BOTTOM_ALIGNMENT);
         add(toolbar, BorderLayout.NORTH);
         ip.setWindow(this);
     }

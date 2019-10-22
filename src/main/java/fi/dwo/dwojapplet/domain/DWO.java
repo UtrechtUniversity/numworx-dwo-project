@@ -133,7 +133,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 
     private static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
 
-    private static final String PROFILE_EXTENSION = "profileExtension";
+    public static final String PROFILE_EXTENSION = "profileExtension";
 
     private Course currentCourse;
 
@@ -318,6 +318,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         dwo_env = properties.getProperty(DWO_ENV, super.getParameter(DWO_ENV));
         LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{DWO_ENV, dwo_env});
 
+        extensionOverride = properties.getProperty(PROFILE_EXTENSION, extensionOverride);
+
         if("test".equals(dwo_env))
             DwoHelper.setTest(true);
         Compressor.setSkip(false);
@@ -461,11 +463,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
                 DwoHelper.setTest(true);
                 o += 1; // no parameter
             }
-//            if (args.length > 1 + o && "-x".equals(args[o])) {
-//                extensionOverride = args[o + 1];
-//                o += 2;
-//            }
-//
+            if (args.length > 1 + o && "-x".equals(args[o])) {
+                extensionOverride = args[o + 1];
+                o += 2;
+            }
         }
         if (args != null && args.length > o && args[o] != null) {
             try {
@@ -1435,19 +1436,6 @@ LOG.info("time results = " + (-t) + " ms");
         } else 
         	Loader.setPrefix(DwoHelper.getJarUrlPath().toExternalForm());
 
-//        //intialize the proper connection but without any credentials.
-//        Client client = ClientBuilder.newClient();
-//        client.property(ClientProperties.CONNECT_TIMEOUT, 5000); //connect within 5 seconds
-//        client.property(ClientProperties.READ_TIMEOUT, 10000); // read stuff within 10 seconds.
-//        WebTarget target;
-//        try {
-//            target = client.target(DwoHelper.getServerUrlPath().toURI());
-//        }
-//        catch (URISyntaxException ex) {
-//            LOG.log(Level.SEVERE, "", ex);
-//            throw new RuntimeException(ex);
-//        }
-//        StoredRestManager.setWebTargetAndCredentials(target);
         // TODO make it configurable in the servlet via a attribute in the jsp
         // initialized via the tomcat context.xml
                 String softwareVersion = BUILD.version;
@@ -2908,12 +2896,12 @@ LOG.info("time results = " + (-t) + " ms");
         dwoProfileID = p;
         firePropertyChange("profile", old, dwoProfile.getDwoProfileName());
         old = getLocale().getLanguage();
-        Locale locale = new Locale(lang);
+        Locale locale = Locale.forLanguageTag(lang);
         DwoHelper.setLocale(new DwoLocale(lang));
         setLocale(locale);
         JComponent.setDefaultLocale(locale);
         DwoHelper.setProfileRights(dwoProfile.getDwoProfileRights());
-        GuiConstants.setDwoProfile(p, "");
+        GuiConstants.setDwoProfile(p, getParameter(PROFILE_EXTENSION));
         TextMapper.setLanguage(lang);
         fi.dwo.dwojapplet.parameters.system.TextMapper.setLanguage(lang);
         firePropertyChange("language", old, lang);

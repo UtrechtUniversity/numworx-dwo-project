@@ -105,7 +105,7 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setDoubleBuffered(false);
         setOpaque(!GuiConstants.GUI_IMAGE_BG);
-        createGap();
+        //createGap();
         createButtons();
         add(Box.createVerticalGlue());
     }
@@ -134,7 +134,6 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
     }
 
     protected void createButtons() {
-        createGap();
         /* Add MainMenu button */
         mainMenuButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_MAIN_MENU));
         mainMenuButton.addActionListener(this);

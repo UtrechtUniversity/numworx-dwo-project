@@ -349,11 +349,15 @@ public abstract class GuiConstants {
         InputStream in = GuiConstants.class.getResourceAsStream("resources/default.properties");
         try {
             result.load(in);
+            
+            if ( !testExtension.isEmpty()) {
+              String r = "resources/profile-" + profile  + ".properties";
+              URL u = new URL(DwoHelper.getResourceUrlPath(),r);
+              result = getProperties(u, result);
+            }
             String resource = "resources/profile-" + profile + testExtension + ".properties";
             URL u;
             u = new URL(DwoHelper.getResourceUrlPath(),resource);
-// testing....
-            //u = GuiConstants.class.getResource("/" + resource);
             result = getProperties(u, result);
         } catch (IOException e) {
             LOG.log(Level.SEVERE, null, e);
