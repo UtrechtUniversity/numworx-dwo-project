@@ -49,6 +49,7 @@ public enum Dwo2ExceptionCode {
     Rest_ScoNameExists, // add sco contraint failed. rollback occurred, possible cause duplicate sconame
     Rest_CourseNameExists,
     Rest_CanNotAddStudentToClass,
+    Rest_NameTooLong, // if coursename,sconame,classname, etc. longer than mysql supports
     // REST LoginContext errors
     Rest_LoginContext_exists,
     Rest_No_LoginContext_exists,

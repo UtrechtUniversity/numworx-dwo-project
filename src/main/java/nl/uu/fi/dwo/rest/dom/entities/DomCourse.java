@@ -9,33 +9,18 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class DomCourse {
-    private PersistenceId id;
+public class DomCourse extends DomId {
     private PersistenceId schoolId;
     private String name;
     private Boolean withChildren;
     private PersistenceId parentID;
     private Long sequenceNr;
     private String treeIndex;
-    private Long  lastChangeTimeStamp;    
+    private Long  lastChangeTimeStamp;
 
     public DomCourse() {}
     public DomCourse(PersistenceId id) {
-      setId(id);
-    }
-
-    /**
-     * @return the id
-     */
-    public PersistenceId getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(PersistenceId id) {
-        this.id = id;
+      super(id);
     }
 
     /**
