@@ -13,6 +13,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -66,6 +67,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class PersistentCourse implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    public static final int MAX_NAME = 40;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -75,8 +77,8 @@ public class PersistentCourse implements Serializable {
     private Long schoolID;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 40)
-    @Column(name = "name", nullable = false, length = 40)
+    @Size(min = 1, max = MAX_NAME)
+    @Column(name = "name", nullable = false, length = MAX_NAME)
     private String name;
     @Basic(optional = false)
     @NotNull
@@ -129,9 +131,10 @@ public class PersistentCourse implements Serializable {
     private Long lastChangeTimeStamp;
 
 //    For future use in case of optimistic locking.    
-//    @Version
-//    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
-//    private long version = 0L;
+    @Version
+    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private Long version;
+
     public PersistentCourse() {
     }
 
