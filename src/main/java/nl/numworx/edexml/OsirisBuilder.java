@@ -1,5 +1,6 @@
 package nl.numworx.edexml;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -57,7 +58,7 @@ public class OsirisBuilder implements Builder {
 
 	public void setLeerlingenSource(InputSource is) throws IOException {
 		InputStream in = is.getByteStream();
-		Reader reader = new InputStreamReader(in, "UTF-8");
+		Reader reader = bom(new InputStreamReader(in, "UTF-8"));
 		CSVParser parser = CSVParser.parse(reader, EXCEL);
 
 		for( CSVRecord record: parser) {
@@ -84,18 +85,28 @@ public class OsirisBuilder implements Builder {
 		}
 	}
 
+	private static final int BOM = '\uFEFF';
+
+	public static final String COLLEGEJAAR = "COLLEGEJAAR";
+	public static final String CURSUS = "CURSUS";
+	public static final String KORTE_NAAM_NL = "KORTE_NAAM_NL";
+	public static final String AANVANGSBLOK = "AANVANGSBLOK";
+	
+	
 	public void setGroepenSource(InputSource is) throws IOException {
 		InputStream in = is.getByteStream();
 		Reader reader = new InputStreamReader(in, "UTF-8");
+		reader = bom(reader);
 		CSVParser parser = CSVParser.parse(reader, EXCEL);
 
 		for( CSVRecord record: parser) {
-			String collegejaar = record.get(0);
-			String cursus = record.get(1);
-			String blok = record.get(2);
-			String korteNaam = record.get(3);
+			String collegejaar = record.get(COLLEGEJAAR);
+			String cursus = record.get(CURSUS);
+			String blok = record.get(AANVANGSBLOK);
+			String korteNaam = record.get(KORTE_NAAM_NL);
 			
 			String groepNaam = groepNaam(collegejaar, cursus, blok, korteNaam);
+			if (groepen.containsKey(groepNaam)) continue;
 			
 			DomSchoolClassFull schoolklas = new DomSchoolClassFull();
 			schoolklas.setSchoolClassName(groepNaam);
@@ -105,6 +116,16 @@ public class OsirisBuilder implements Builder {
 			groepen.put(groepNaam, schoolklas);
 		}
 		
+	}
+
+	private Reader bom(Reader reader) throws IOException {
+		BufferedReader buffered = new BufferedReader(reader);
+		buffered.mark(1);
+		reader = buffered;
+		if (buffered.read() != BOM) {
+			buffered.reset();
+		}
+		return reader;
 	}
 
 	private String groepNaam(String collegejaar, String cursus, String blok, String korteNaam) {
@@ -145,7 +166,7 @@ public class OsirisBuilder implements Builder {
 	}
 	public void setLeerkrachtenSource(InputSource is) throws IOException {
 		InputStream in = is.getByteStream();
-		Reader reader = new InputStreamReader(in, "UTF-8");
+		Reader reader = bom(new InputStreamReader(in, "UTF-8"));
 		CSVParser parser = CSVParser.parse(reader, EXCEL);
 
 		for( CSVRecord record: parser) {
@@ -163,7 +184,7 @@ public class OsirisBuilder implements Builder {
 			
 			leerkrachten.put(solisid, user);
 			
-			String groepnaam = groepNaam(record.get(1), record.get(0), "*" , "*"); // FIXME stars
+			String groepnaam = groepNaam(record.get(COLLEGEJAAR), record.get(CURSUS), "*" , "*"); // FIXME stars
 			if (! groepen.isEmpty()) {
 				Pattern pattern = Pattern.compile(createRegexFromGlob(groepnaam));
 				final String id = solisid;
@@ -171,5 +192,13 @@ public class OsirisBuilder implements Builder {
 			} else 
 				addMember(solisid, groepnaam);
 		}
+	}
+
+	public void setGroepenSource(Collection<DomSchoolClassFull> values) {
+		for(DomSchoolClassFull item: values) {
+			String key = item.getSchoolClassName();
+			groepen.putIfAbsent(key, item);
+		}
+		
 	}
 }
