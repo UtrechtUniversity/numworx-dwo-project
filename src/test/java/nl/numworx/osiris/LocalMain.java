@@ -16,6 +16,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.osgi.util.promise.Promises;
+
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -25,14 +27,11 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
  *
  */
 @SuppressWarnings("serial")
-public class Main extends JFrame {
+public class LocalMain extends Main {
 
-	URL base = url("https://numworx.acc.uu.nl/dwo/");
-	String login_URL =  base + "saml/login.jsp";
-	String profileName = "100";
 	
 	
-	JFileChooser chooser;
+	final JFileChooser chooser;
 	TablePanel cursus, toets, student, docent;
 	LoginPanel login;
 	InstallPanel install;
@@ -48,7 +47,7 @@ public class Main extends JFrame {
 		
 		Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
 		
-		Main main = new Main();
+		LocalMain main = new LocalMain();
 		main.setSize(1024,768);
 		main.setPreferredSize(main.getSize());
 		main.pack();
@@ -68,8 +67,13 @@ public class Main extends JFrame {
 		return config.getProperty(key);
 	}
 
-	private Main() throws HeadlessException, IOException {
-		super("OSIRIS import");
+	private LocalMain() throws HeadlessException, IOException {
+		super("TEST import");
+
+		base = url("http://localhost:8080/dwo/");
+		profileName = "77";
+
+		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		InputStream in = getClass().getResourceAsStream("/config.properties");
@@ -87,6 +91,8 @@ public class Main extends JFrame {
 		docent = new TablePanel(this);
 
 		login = new LoginPanel(this, login_URL, base);
+		Object value;
+		login.complete = Promises.resolved(value);
 		install = new InstallPanel(this, base, profileName);
 		tabs.addTab("Login", login);
 		tabs.addTab("Courses", cursus);
@@ -96,10 +102,6 @@ public class Main extends JFrame {
 		tabs.addTab("Install", install);
 		
 		setContentPane(tabs);
-	}
-
-	Main(String string) {
-		super(string);
 	}
 
 }

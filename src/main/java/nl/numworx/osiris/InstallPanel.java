@@ -2,6 +2,7 @@ package nl.numworx.osiris;
 
 import java.awt.event.ActionEvent;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
@@ -56,10 +57,10 @@ public class InstallPanel extends JPanel {
 		} catch (InterruptedException e1) {
 		}
 		
-		if (main.student.file == null || main.docent.file == null || main.toets.file == null | main.cursus.file == null) {
-				showConfirmDialog(main, "need more csv files");
-				return;
-		}
+//		if (main.student.file == null || main.docent.file == null || main.toets.file == null | main.cursus.file == null) {
+//				showConfirmDialog(main, "need more csv files");
+//				return;
+//		}
 	
 		String message  = "";
 		int toets = 0;
@@ -71,17 +72,38 @@ public class InstallPanel extends JPanel {
 			numworx.setSource(userName, user.getDomUserFull().getPassword(), base);
 			numworx.setRealm(user.getDomLoginContext().getRealm());
 			
-			is = new InputSource(new FileInputStream(main.cursus.file));
-			osiris.setGroepenSource(is);
-			is = new InputSource(new FileInputStream(main.student.file));
-			osiris.setLeerlingenSource(is);
-			is = new InputSource(new FileInputStream(main.docent.file));
-			osiris.setLeerkrachtenSource(is);
+			Map<String, DomSchoolClassFull> initial = numworx.parseGroepen();
+			osiris.setGroepenSource(initial.values());
+			int initialSize = initial.size();
+			
+			if (main.cursus.file != null) {
+				is = new InputSource(new FileInputStream(main.cursus.file));
+				osiris.setGroepenSource(is);
+				close(is);
+			}
+			if (main.toets.file != null) {
+				is = new InputSource(new FileInputStream(main.toets.file));
+				osiris.setGroepenSource(is);
+				close(is);
+			}
+			if (main.student.file != null) {
+				is = new InputSource(new FileInputStream(main.student.file));
+				osiris.setGroepenSource(is);
+				close(is);
+				is = new InputSource(new FileInputStream(main.student.file));
+				osiris.setLeerlingenSource(is);				
+				close(is);
+			}
+			if (main.docent.file != null) {
+				is = new InputSource(new FileInputStream(main.docent.file));
+				osiris.setLeerkrachtenSource(is);
+				close(is);
+			}
 			
 		      Map<String, DomUserFull> leerlingen = osiris.parseLeerlingen();
 		      message += leerlingen.size() + " students\n";
 		      Map<String, DomSchoolClassFull> groepen = osiris.parseGroepen();
-		      message += groepen.size() + " courses\n";
+		      message += (groepen.size()-initialSize) + " courses\n";
 		      Map<String, DomUserFull> leerkrachten = osiris.parseLeerkrachten();
 		      message += leerkrachten.size() + " teachers\n";
 		      Map<String, Collection<String>> members = osiris.memberships();
@@ -104,6 +126,14 @@ public class InstallPanel extends JPanel {
 		}
 		
 		showConfirmDialog(main, message);
+	}
+
+	private void close(InputSource is) {
+		try {
+			is.getByteStream().close();
+		} catch (IOException e) {
+		}
+		
 	}
 
 	private void showConfirmDialog(Main main, String message) {
