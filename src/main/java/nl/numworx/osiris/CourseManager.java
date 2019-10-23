@@ -91,6 +91,7 @@ public class CourseManager {
 				+ " - " + record.get(Col.BLOK) 
 				+ " - " + record.get(Col.GELEGENHEID)
  				+ " - " + record.get(Col.OMSCHRIJVING);
+		toets = trunk40(toets);
 		courses = getChildren(root);
 		if ( ! names(courses).contains(toets) ) {
 			DomCourseStudent c = createMap(root, toets, Boolean.FALSE);
@@ -100,7 +101,9 @@ public class CourseManager {
 			DomACL acl = new DomACL();
 			acl.setAccess(ACL.WRITE);
 			String groepNaam = year + " - " + course;
-			PersistenceId klas = groepen.get(groepNaam).getId();
+			PersistenceId klas = school.getId();
+			if (groepen.containsKey(groepNaam))    
+			  klas =  groepen.get(groepNaam).getId();
 			acl.setEntity(klas);
 			d.setAcls(Collections.singletonList(acl));
 			updater.update(d);
@@ -122,17 +125,26 @@ public class CourseManager {
 
 	private DomCourse optionalCreateMap(String name, List<DomCourseStudent> children, DomCourse parent)
 			throws Dwo2Exception {
+	    name = trunk40(name);
+	    String sname =  name;
 		DomCourse root;
 		Collection<String> set = names(children);
-		if (! set.contains(name)) {
-			DomCourseStudent s = createMap(parent, name, Boolean.TRUE);
+		if (! set.contains(sname)) {
+			DomCourseStudent s = createMap(parent, sname, Boolean.TRUE);
 			children.add(s);
 			root = s;
 		} else {
-			root = children.stream().filter(i -> name.equals(i.getName())).findAny().get();
+			root = children.stream().filter(i -> sname.equals(i.getName())).findAny().get();
 		}
 		return root;
 	}
+
+  String trunk40(String name) {
+    if (name.length() > 40) {
+      name = name.substring(0,40);
+    }
+    return name;
+  }
 
 	
 	private DomCourseStudent createMap(DomCourse parent, String name, Boolean map) throws Dwo2Exception {

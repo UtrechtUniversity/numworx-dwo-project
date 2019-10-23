@@ -99,6 +99,7 @@ public class InstallPanel extends JPanel {
 			
 			message += "Installation done";
 		} catch (Exception e1) {
+		    e1.printStackTrace();
 			message +=  "\n" + e1.getLocalizedMessage();
 		}
 		
