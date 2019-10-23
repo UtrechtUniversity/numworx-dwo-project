@@ -128,7 +128,7 @@ public class SecuredTeacherCourseManagerIT {
     
     RestCourseFull rest = new RestCourseFull();
     DomCourseFull domCourse = course.buildDomCourseFull();   
-   rest.setDomCourse(domCourse);
+    rest.setDomCourse(domCourse);
     DomContext restContext = new DomContext();
     DomHasRole domHasRole = pHasRole.buildDomHasRole();
     restContext.setDomHasRole(domHasRole);
@@ -182,4 +182,66 @@ public class SecuredTeacherCourseManagerIT {
     }
   }
 
+  
+  @Test
+  public void testTooLong() throws Exception {
+    SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+    PersistentUser pUser = UserManager.findByUserName("user07");
+    PersistentSchool pSchool = SchoolManager.findBySchoolLogin("school01");//id =3
+    PersistentHasRole pHasRole = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, pSchool, RoleType.TEACHER);
+
+    RestCourseFull rest = new RestCourseFull();
+    DomCourseFull domCourse = new DomCourseFull();
+    domCourse.setDescription("description");
+    domCourse.setDwoProfileId(PersistentDwoProfile.buildPersistenceId(1L));
+    domCourse.setExport(Boolean.FALSE);
+    domCourse.setName("school add 1234567890123456789012345678901234567890");
+    domCourse.setNotVisible(false);
+    domCourse.setParentID(PersistentCourse.buildPersistenceId(0L));
+    domCourse.setSchoolId(pSchool.buildPersistenceId());
+    domCourse.setSequenceNr(null);
+    domCourse.setWithChildren(Boolean.FALSE);
+    rest.setDomCourse(domCourse);
+    DomContext restContext = new DomContext(); restContext.setDomHasRole(pHasRole.buildDomHasRole());
+    rest.setRestContext(restContext);
+    DomCourseFull result;    
+    try { 
+      result = manager.add(sc, rest);
+      fail("add should fail " + result);
+    } catch(Dwo2Exception e) {
+      assertEquals("add too long", Dwo2ExceptionCode.Rest_NameTooLong, e.getDwo2Code());
+    } catch(Dwo2RestException e) {
+      assertEquals("add too long", Dwo2ExceptionCode.Rest_NameTooLong, e.getDwo2Code());
+    }
+  }
+
+  @Test
+  public void testUpdateTooLong() throws Exception {
+    SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+    PersistentUser pUser = UserManager.findByUserName("user07");
+    PersistentSchool pSchool = SchoolManager.findBySchoolLogin("school01");//id =3
+    PersistentHasRole pHasRole = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, pSchool, RoleType.TEACHER);
+    PersistentCourse  course = CourseManager.findEntity(1L);
+    
+    RestCourseFull rest = new RestCourseFull();
+    DomCourseFull domCourse = course.buildDomCourseFull();   
+    final String newName = "XXXXXXXXXX 1234567890123456789012345678901234567890";
+    domCourse.setName(newName);
+    rest.setDomCourse(domCourse);
+    DomContext restContext = new DomContext();
+    DomHasRole domHasRole = pHasRole.buildDomHasRole();
+    restContext.setDomHasRole(domHasRole);
+    rest.setRestContext(restContext);
+    try {
+		DomCourseFull result = manager.update(sc, rest);
+		fail("update to long should fail");
+	} catch (Dwo2Exception e) {
+		assertEquals("update1", Dwo2ExceptionCode.Rest_NameTooLong, e.getDwo2Code());
+	} catch (Dwo2RestException e) {
+		assertEquals("update2", Dwo2ExceptionCode.Rest_NameTooLong, e.getDwo2Code());		
+	}
+    
+   }
+
+  
 }

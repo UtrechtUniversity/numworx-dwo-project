@@ -14,6 +14,7 @@ import fi.dwo.server.PersistentDataManagers.actions.MySQLCourseActions;
 import fi.dwo.server.PersistentDataManagers.core.ACLManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 
+import java.sql.DataTruncation;
 import java.util.List;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -156,6 +157,13 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 			}
     	} catch (RollbackException e) {
     	    String msg = e.getMessage();
+    	    Throwable t = e;
+    	    while (t.getCause() != null) t = t.getCause(); // deepest, hoe ver?
+    	    
+    	    if (t instanceof DataTruncation) {
+    	    	throw new Dwo2RestException(Dwo2ExceptionCode.Rest_NameTooLong, msg);
+    	    }
+    	    
     	    //if(msg.contains("Duplicate entry")) 
     	    {
     	      throw new Dwo2RestException(Dwo2ExceptionCode.Rest_CourseNameExists, msg);
@@ -227,6 +235,11 @@ public class SecuredTeacherCourseManager extends AbstractSchoolClassManager {
 			CourseManager.create(pc);
 			course = pc.buildDomCourseFull();
     	} catch (RollbackException e) {
+    	    Throwable t = e;
+    	    while (t.getCause() != null) t = t.getCause(); // deepest, hoe ver?   	    
+    	    if (t instanceof DataTruncation) {
+    	    	throw new Dwo2RestException(Dwo2ExceptionCode.Rest_NameTooLong, e.getMessage());
+    	    }
     	  throw new Dwo2RestException(Dwo2ExceptionCode.Rest_CourseNameExists, e.getMessage());
 		} catch (Dwo2Exception e) {
 			throw new Dwo2RestException(e);
