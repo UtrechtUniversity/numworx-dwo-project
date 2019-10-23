@@ -1038,7 +1038,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			public void run()
 			{
 				popupTimer = null;
-				btn.setStyleDependentName("popupTime", false);
+				btn.setStyleName(css.scoreBtn_popupTime(), false);
 				String nul = index < 9 ? "0" : "";
 				// style nr voor paginanummer en v voor feedback-vinkje
 				btn.getElement().setInnerHTML("<div class='nr'>" + nul + (index + 1) + "</div><div class='v'></div>");
@@ -1089,14 +1089,14 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	{
 		if (geefNoScore(currentActiviteit, opdrNr))
 		{
-			button.setStyleDependentName("max0", geefNoScore(currentActiviteit, opdrNr));
+			button.setStyleName(css.scoreBtn_max0(), geefNoScore(currentActiviteit, opdrNr));
 			return;
 		}
-		button.setStyleDependentName("max0", false);
+		button.setStyleName(css.scoreBtn_max0(), false);
 
 		if (correctVisible())
 		{
-			button.setStyleDependentName("correct", b);
+			button.setStyleName(css.scoreBtn_correct(), b);
 			
 			if (scoresVisible())
 			{
@@ -1125,14 +1125,14 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	{
 		if (geefNoScore(currentActiviteit, opdrNr))
 		{
-			button.setStyleDependentName("max0", geefNoScore(currentActiviteit, opdrNr));
+			button.setStyleName(css.scoreBtn_max0(), geefNoScore(currentActiviteit, opdrNr));
 			return;
 		}
-		button.setStyleDependentName("max0", false);
+		button.setStyleName(css.scoreBtn_max0(), false);
 
 		if (correctVisible())
 		{
-			button.setStyleDependentName("correct", b);
+			button.setStyleName(css.scoreBtn_correct(), b);
 			
 			if (scoresVisible())
 			{
@@ -1193,7 +1193,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		buttonsEnabled[currentActiviteit][j] = b;
 		if (b)
 		{
-			buttons.get(j).setStyleDependentName("disabled", false);
+			buttons.get(j).setStyleName(css.scoreBtn_disabled(), false);
 			if (mode == ZELFTOETS)
 				setButtonCorrectZelftoets(buttons.get(j), isCorrectZelftoets[currentActiviteit][j], j);
 			else
@@ -1201,18 +1201,18 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		}
 		else
 		{
-			buttons.get(j).setStyleDependentName("disabled", true);
+			buttons.get(j).setStyleName(css.scoreBtn_disabled(), true);
 		}
 	}
 
 	public void setButtonCursor(TouchButton button)
 	{
-		button.addStyleDependentName("cursor");
+		button.addStyleName(css.scoreBtn_cursor());
 	}
 
 	public void removeButtonCursor(TouchButton button)
 	{
-		button.removeStyleDependentName("cursor");
+		button.removeStyleName(css.scoreBtn_cursor());
 	}
 
 	/**
