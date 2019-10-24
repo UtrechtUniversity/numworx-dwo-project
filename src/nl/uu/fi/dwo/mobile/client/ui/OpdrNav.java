@@ -1045,7 +1045,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				// logger.info("timer for "+ index + " fired");
 			}
 		};
-		//btn.setStyleDependentName("popupTime", true);
+		//btn.setStyleName(css.scoreBtn_popupTime(), true);
 		//btn.setText("score\n"+Integer.toString(score));
 		popupTimer.schedule(2000);
 	}
