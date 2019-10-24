@@ -19,6 +19,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.osgi.util.promise.Promises;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
@@ -28,14 +31,7 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
  */
 @SuppressWarnings("serial")
 public class LocalMain extends Main {
-
-	
-	
-	final JFileChooser chooser;
-	TablePanel cursus, toets, student, docent;
-	LoginPanel login;
-	InstallPanel install;
-	
+			
 	Properties config;
 	
 	/**
@@ -91,7 +87,11 @@ public class LocalMain extends Main {
 		docent = new TablePanel(this);
 
 		login = new LoginPanel(this, login_URL, base);
-		Object value;
+		DomUserFullwLoginContext value = new DomUserFullwLoginContext();
+		value.setDomLoginContext(new DomLoginContext());
+		value.setDomUserFull(new DomUserFull());
+		value.getDomUserFull().setUserName("?");
+		value.getDomUserFull().setPassword("?");
 		login.complete = Promises.resolved(value);
 		install = new InstallPanel(this, base, profileName);
 		tabs.addTab("Login", login);

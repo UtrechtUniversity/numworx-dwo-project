@@ -76,15 +76,15 @@ public class CourseManager {
 			courses = SecureUserCourseManager.getCoursesSchool(profile);
 			children.put(null, courses);
 		}
-		DomCourse root = optionalCreateMap(faculteit, courses, null);
+		DomCourse root = optionalCreateMap(faculteit, courses, null, "Faculteit " + faculteit);
 		
 		courses = getChildren(root);
 		String year = record.get(Col.COLLEGEJAAR);
-		root = optionalCreateMap(year, courses, root);
+		root = optionalCreateMap(year, courses, root, "Jaar " + year);
 		
 		String course = record.get(Col.CURSUS) + " - " + record.get(Col.AANVANGSBLOK) + " - " + record.get(Col.KORTE_NAAM_NL);
 		courses = getChildren(root);
-		root = optionalCreateMap(course, courses, root);
+		root = optionalCreateMap(course, courses, root, record.get(Col.KORTE_NAAM_NL));
 		
 		String toets = record.get(Col.TOETS) 
 				+ " - " + record.get(Col.VOLTIJD_DEELTIJD)
@@ -94,13 +94,13 @@ public class CourseManager {
 		toets = trunk40(toets);
 		courses = getChildren(root);
 		if ( ! names(courses).contains(toets) ) {
-			DomCourseStudent c = createMap(root, toets, Boolean.FALSE);
+			DomCourseStudent c = createMap(root, toets, Boolean.FALSE, record.get(Col.OMSCHRIJVING));
 			DomCourseFull d = new DomCourseFull();
 			d.setId(c.getId());
-			d.setNotVisible(c.isNotVisible());			
+			d.setNotVisible(c.isNotVisible());
 			DomACL acl = new DomACL();
 			acl.setAccess(ACL.WRITE);
-			String groepNaam = year + " - " + course;
+			String groepNaam = trunk100(year + " - " + course);
 			PersistenceId klas = school.getId();
 			if (groepen.containsKey(groepNaam))    
 			  klas =  groepen.get(groepNaam).getId();
@@ -113,6 +113,11 @@ public class CourseManager {
  	}
 
 	
+	private String trunk100(String string) {
+		  string = string.trim();
+	      return string.length()>100?string.substring(0,100):string;
+	  }
+
 	private List<DomCourseStudent> getChildren(DomCourse root) throws Dwo2Exception {
 		List<DomCourseStudent> courses;
 		courses = children.get(root.getId());
@@ -123,14 +128,14 @@ public class CourseManager {
 		return courses;
 	}
 
-	private DomCourse optionalCreateMap(String name, List<DomCourseStudent> children, DomCourse parent)
+	private DomCourse optionalCreateMap(String name, List<DomCourseStudent> children, DomCourse parent, String description)
 			throws Dwo2Exception {
 	    name = trunk40(name);
 	    String sname =  name;
 		DomCourse root;
 		Collection<String> set = names(children);
 		if (! set.contains(sname)) {
-			DomCourseStudent s = createMap(parent, sname, Boolean.TRUE);
+			DomCourseStudent s = createMap(parent, sname, Boolean.TRUE, description);
 			children.add(s);
 			root = s;
 		} else {
@@ -147,10 +152,10 @@ public class CourseManager {
   }
 
 	
-	private DomCourseStudent createMap(DomCourse parent, String name, Boolean map) throws Dwo2Exception {
+	private DomCourseStudent createMap(DomCourse parent, String name, Boolean map, String description) throws Dwo2Exception {
 		DomCourseFull edit = new DomCourseFull();
 		edit.setName(name);
-		edit.setDescription("");
+		edit.setDescription(description == null ?"": description);
 		edit.setDwoProfileId(profile.getId());
 		edit.setParentID(parent == null? null : parent.getId());
 		edit.setSchoolId(school.getId());

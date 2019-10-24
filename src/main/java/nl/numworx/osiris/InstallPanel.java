@@ -68,7 +68,9 @@ public class InstallPanel extends JPanel {
 		InputSource is;
 		try {
 			DomUserFullwLoginContext user = main.login.complete.getValue();
-			String userName = user.getDomUserFull().getUserName() + user.getDomLoginContext().getRealm();
+			String realm = user.getDomLoginContext().getRealm();
+			if (realm == null) realm = "";
+			String userName = user.getDomUserFull().getUserName() + realm;
 			numworx.setSource(userName, user.getDomUserFull().getPassword(), base);
 			numworx.setRealm(user.getDomLoginContext().getRealm());
 			
@@ -122,7 +124,9 @@ public class InstallPanel extends JPanel {
 			message += "Installation done";
 		} catch (Exception e1) {
 		    e1.printStackTrace();
-			message +=  "\n" + e1.getLocalizedMessage();
+			String error = e1.getLocalizedMessage();
+			if (error == null) error = e1.toString();
+			message +=  "\n" + error;
 		}
 		
 		showConfirmDialog(main, message);
