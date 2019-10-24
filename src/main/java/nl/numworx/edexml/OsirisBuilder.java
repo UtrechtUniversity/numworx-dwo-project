@@ -79,8 +79,8 @@ public class OsirisBuilder implements Builder {
 			
 			leerlingen.put(leerlingnummer, user);
 			
-			String groepNaam = groepNaam(record.get(1), record.get(2), record.get(3), record.get(4));
-			groepen.putIfAbsent(groepNaam, null);
+			String groepNaam = groepNaam(record.get(COLLEGEJAAR), record.get(CURSUS), record.get(AANVANGSBLOK), record.get(KORTE_NAAM_NL));
+			groepen.computeIfAbsent(groepNaam,(key)-> createSchoolClass(key, record.get(CURSUS)));
 			addMember(leerlingnummer, groepNaam);
 		}
 	}
@@ -91,6 +91,7 @@ public class OsirisBuilder implements Builder {
 	public static final String CURSUS = "CURSUS";
 	public static final String KORTE_NAAM_NL = "KORTE_NAAM_NL";
 	public static final String AANVANGSBLOK = "AANVANGSBLOK";
+	public static final String SOLIS_ID = "LDAP_LOGIN";
 	
 	
 	public void setGroepenSource(InputSource is) throws IOException {
@@ -108,24 +109,28 @@ public class OsirisBuilder implements Builder {
 			String groepNaam = groepNaam(collegejaar, cursus, blok, korteNaam);
 			if (groepen.containsKey(groepNaam)) continue;
 			
-			DomSchoolClassFull schoolklas = new DomSchoolClassFull();
-			schoolklas.setSchoolClassName(groepNaam);
-			schoolklas.setRegistrationKey(cursus);
-			schoolklas.setIconizer(Boolean.TRUE); // TODO wat is de default?
-			
-			groepen.put(groepNaam, schoolklas);
+			DomSchoolClassFull schoolklas = createSchoolClass(groepNaam, cursus);			
+			groepen.putIfAbsent(groepNaam, schoolklas);
 		}
 		
+	}
+
+	private DomSchoolClassFull createSchoolClass(String groepNaam, String password) {
+		DomSchoolClassFull schoolklas = new DomSchoolClassFull();
+		schoolklas.setSchoolClassName(groepNaam);
+		schoolklas.setRegistrationKey(password);
+		schoolklas.setHasRegKey(Boolean.TRUE);
+		schoolklas.setIconizer(Boolean.TRUE); // TODO wat is de default?
+		return schoolklas;
 	}
 
 	private Reader bom(Reader reader) throws IOException {
 		BufferedReader buffered = new BufferedReader(reader);
 		buffered.mark(1);
-		reader = buffered;
 		if (buffered.read() != BOM) {
 			buffered.reset();
 		}
-		return reader;
+		return buffered;
 	}
 
 	private String groepNaam(String collegejaar, String cursus, String blok, String korteNaam) {
@@ -170,7 +175,7 @@ public class OsirisBuilder implements Builder {
 		CSVParser parser = CSVParser.parse(reader, EXCEL);
 
 		for( CSVRecord record: parser) {
-			String solisid = record.get(2);
+			String solisid = record.get(SOLIS_ID);
 			String roepnaam = "docent";
 			String achternaam = solisid;
 			String tussenvoegsel = "";
