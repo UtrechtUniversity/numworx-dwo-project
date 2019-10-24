@@ -1,9 +1,12 @@
 package nl.numworx.osiris;
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.util.Properties;
 import java.util.logging.Level;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import org.osgi.util.promise.Promise;
@@ -23,15 +26,26 @@ public class LoginPanel extends JPanel {
 	SamlLoginPanel panel;
 	Promise<DomUserFullwLoginContext> complete;
 	URL base;
+	String url;
 	
 	public LoginPanel(Main main, String url, URL base) {
+		super(new BorderLayout());
 		this.main = main;
+		this.url = url;
 		panel = new SamlLoginPanel(url);
-		add(panel);
+		add(panel.asComponent(), BorderLayout.CENTER);
+		JButton redo = new JButton("reload");
+		add(redo, BorderLayout.EAST);
+		redo.addActionListener(this::redo);
 		complete = panel.getPromise().map(this::toLogin);
 		this.base = base;
 	}
 
+	private void redo(ActionEvent ev) {
+		panel.loadURL(url);
+	}
+	
+	
 	public DomUserFullwLoginContext toLogin(Properties p) {
 		StoredRestManager.getInstance().setBasicAuthString(null, null, null);
 		StoredRestManager.getInstance().getAuthenticator().setServerUrlPath(base);
