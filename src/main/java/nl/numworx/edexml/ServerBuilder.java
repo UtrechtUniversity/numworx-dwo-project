@@ -58,7 +58,7 @@ public class ServerBuilder implements Builder {
 			context.setDomHasRole(logins.getActiveSchoolRoleAndClass().getHasRole());
 			StoredRestManager.getInstance().getAuthenticator().setContext(context);
 		} else 
-			throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "Wrong role");
+			throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthorizationError, "Wrong role");
 	}
 
 	public void setRealm(String realm) {
