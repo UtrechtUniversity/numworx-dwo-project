@@ -386,6 +386,8 @@ public final class DwoHelper {
             try {
               if (base == null)  {
                 try {
+                  URL loc = DWO.class.getProtectionDomain().getCodeSource().getLocation();
+                  LOG.severe("DWO IS FROM " + loc);
                   base = new URL("https://app.dwo.nl/dwo/");
                 } catch (MalformedURLException e) {
                 }

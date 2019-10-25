@@ -433,7 +433,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         while (args != null && args.length > 1 + o
                 && args[0].length() > 1
                 && '-' == args[o].charAt(0)
-                && "rlsxtb".indexOf(args[0].charAt(1)) >= 0) {
+                && "rlsxtbR".indexOf(args[0].charAt(1)) >= 0) {
 //            if ("-b".equals(args[o])) {
 //                Sco.setDefaultLessonMode(Sco.BROWSE);
 //                o += 1;
@@ -458,10 +458,14 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
             if (args.length > 1 + o && "-l".equals(args[o])) {
                 languageOveride = args[o + 1];
                 o += 2;
-            }else 
+            }
             if (args.length > o && "-t".equals(args[o])) {
                 DwoHelper.setTest(true);
                 o += 1; // no parameter
+            }
+            if (args.length > o && "-R".equals(args[o])) {
+              RUNNER = true;
+              o += 1;
             }
             if (args.length > 1 + o && "-x".equals(args[o])) {
                 extensionOverride = args[o + 1];
@@ -777,6 +781,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     private static final String LEARNER_NAME = "cmi.learner_name";
 
     public static boolean SEQUENCE = true;
+    public static boolean RUNNER; // running onder dworunner
 
 //    /**
 //     * Register a user in the system. Als links a user to a school.
@@ -1928,6 +1933,13 @@ LOG.info("time results = " + (-t) + " ms");
 			public URL getCodeBase() {
 				return DwoHelper.getURL("");
 			}
+
+      @Override
+      public URL getDocumentBase() {
+        if (RUNNER) return getCodeBase();
+        return super.getDocumentBase();
+      }
+			
         	
         };
         mf.setTitle("Numworx author");
