@@ -57,7 +57,11 @@
     </scm>
 
     <!-- dependencies -->
-    <dependencies>   
+    <dependencies>
+    	<dependency>
+    	    <groupId>nl.uu.fi.dwo.rest</groupId>
+		    <artifactId>DWO-rest-lib</artifactId>
+    	</dependency>   
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-commons-lib</artifactId>
@@ -187,6 +191,7 @@
     		<groupId>netscape.javascript</groupId>
     		<artifactId>mayscript</artifactId>
     		<version>1.0.0</version>
+    		<scope>provided</scope>
     	</dependency>
     	<dependency>
     		<groupId>fi.beans</groupId>
@@ -244,41 +249,7 @@
                 <configuration>
                     <skipTests>true</skipTests>
                 </configuration>
-            </plugin>
-<!--            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.1</version>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin> -->
-                        
+            </plugin>                        
             <!-- ensure the build number is available as ${buildNumber} -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -331,7 +302,45 @@
                     </execution>
                 </executions>
             </plugin>
-            
+         <plugin>   
+		  <groupId>org.apache.felix</groupId>
+		  <artifactId>maven-bundle-plugin</artifactId>
+          <version>2.5.3</version>
+		  <executions>
+		    <execution>
+		      <id>bundle-manifest</id>
+		      <phase>process-classes</phase>
+		      <goals>    
+		        <goal>manifest</goal>
+		      </goals>   
+		    </execution>
+		  </executions>
+       	  <configuration>
+       	    <niceManifest>true</niceManifest>
+          	<instructions>
+                            <Bundle-Name>DWO v2</Bundle-Name>
+                            <Bundle-SymbolicName>fi.dwo.dwojapplet.domain.DWO</Bundle-SymbolicName>
+                            <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+                            <Fragment-Host>fi.dwo.dwojapplet</Fragment-Host>
+                            <Export-Package>fi.beans.numworxlf;version="1.0",fi.beans.copyright,fi.beans.loader,fi.beans.scorm,fi.beans.xmlrpc,fi.beans.mainframe</Export-Package>
+  							<Import-Package>nl.numworx.swingbrowser.api;version="[1.0,2)",
+  								netscape.javascript;resolution:=optional,
+  								javax.swing.*,
+  								javax.*;resolution:=optional,
+  								org.osgi.util.promise;version="[1.0,2)",org.osgi.util.function;version="[1.0,2)",
+  								!com.*,!org.apache.*,!org.eclipse.*,!org.glassfish.*,!org.springframework.*,!org.joda.*,
+  								*</Import-Package>
+ 							<Embed-Dependency>*;scope=compile;type=!pom;inline=true</Embed-Dependency>
+         					<Embed-Transitive>true</Embed-Transitive>
+                            <DWOJApplet-Implementation-Version>${project.version}</DWOJApplet-Implementation-Version>
+                            <Implementation-Build>${buildNumber}</Implementation-Build>
+                            <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
+                            <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
+                            <DWOJApplet-Implementation-Build>${buildNumber}</DWOJApplet-Implementation-Build>
+                            <Class-Path>swingbrowser-jxb.jar swingbrowser-jfx.jar swingbrowser-api.jar</Class-Path>
+          	</instructions>
+          </configuration>
+		</plugin>   
             <!-- put the build number in the manifest -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -340,22 +349,12 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addClasspath>true</addClasspath>
+                            <addDefaultImplementationEntries>false</addDefaultImplementationEntries>
+                            <addClasspath>false</addClasspath>
                         </manifest>
                         <manifestEntries>
-                            <DWOJApplet-Implementation-Version>${project.version}</DWOJApplet-Implementation-Version>
-                            <Implementation-Build>${buildNumber}</Implementation-Build>
-                            <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
-                            <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
-                            <DWOJApplet-Implementation-Build>${buildNumber}</DWOJApplet-Implementation-Build>
                             <Main-Class>fi.dwo.dwojapplet.domain.DWO</Main-Class>
-                            <Trusted-Only>true</Trusted-Only>
-                            <Permissions>all-permissions</Permissions>
-                            <Codebase>*.uu.nl spindle.fisme.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl localhost dme.mathhouse.org</Codebase>
-                            <Caller-Allowable-Codebase>*.uu.nl spindle.fisme.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl localhost dme.mathhouse.org</Caller-Allowable-Codebase>
                             <Application-Name>DWO v2</Application-Name>
-                            <Application-Library-Allowable-Codebase>*</Application-Library-Allowable-Codebase>                       		
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -364,33 +363,21 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <archive>
-                        <manifest>
+ 					<archive>  
+      					<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addClasspath>false</addClasspath>
                         </manifest>
-                        <manifestEntries>
-                            <DWOJApplet-Implementation-Version>${project.version}</DWOJApplet-Implementation-Version>
-                            <Implementation-Build>${buildNumber}</Implementation-Build>
-                            <Implementation-Timestamp>${timestamp}</Implementation-Timestamp>
-                            <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch>
-                            <DWOJApplet-Implementation-Build>${buildNumber}</DWOJApplet-Implementation-Build>
-                            <Main-Class>fi.dwo.dwojapplet.domain.DWO</Main-Class>
-                            <Trusted-Only>true</Trusted-Only>
-                            <Permissions>all-permissions</Permissions>
-                            <Codebase>*.uu.nl spindle.fisme.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl localhost dme.mathhouse.org *.eu-west-1.elasticbeanstalk.com</Codebase>
-                            <Caller-Allowable-Codebase>*.uu.nl spindle.fisme.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl localhost dme.mathhouse.org *.eu-west-1.elasticbeanstalk.com</Caller-Allowable-Codebase>
-                            <Application-Name>DWO v2</Application-Name>
-                            <Application-Library-Allowable-Codebase>*</Application-Library-Allowable-Codebase>                       		
-                            <Bundle-Name>DWO v2</Bundle-Name>
-                            <Bundle-SymbolicName>fi.dwo.dwojapplet.domain.DWO</Bundle-SymbolicName>
-                            <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-                            <Fragment-Host>fi.dwo.dwojapplet</Fragment-Host>
-                            <Class-Path>swingbrowser-jxb.jar swingbrowser-jfx.jar swingbrowser-api.jar</Class-Path>
-                            <Export-Package>fi.beans.numworxlf;version="1.0"</Export-Package>
-  							<Import-Package>nl.numworx.swingbrowser.api;version="[1.0,2)"</Import-Package>
-                        </manifestEntries>
-                    </archive>
+<!--                          <manifestEntries> -->
+<!--                             <Class-Path>swingbrowser-jxb.jar swingbrowser-jfx.jar swingbrowser-api.jar</Class-Path> -->
+<!--                             <DWOJApplet-Implementation-Version>${project.version}</DWOJApplet-Implementation-Version> -->
+<!--                             <Implementation-Build>${buildNumber}</Implementation-Build> -->
+<!--                             <Implementation-Timestamp>${timestamp}</Implementation-Timestamp> -->
+<!--                             <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch> -->
+<!--                             <DWOJApplet-Implementation-Build>${buildNumber}</DWOJApplet-Implementation-Build> -->
+<!--  						 </manifestEntries> -->
+    				</archive> 
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
