@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -156,6 +157,22 @@ class ClassMapper extends XmlRpcMapper<SchoolClass> {
             array[i] = cls;
         }
         return array;
+    }
+
+    /* (non-Javadoc)
+     * @see fi.dwo.dwojapplet.persistence.XmlRpcMapper#getObjectFromReturn(java.util.Vector)
+     */
+    @Override
+    public SchoolClass[] getObjectFromReturn(Vector data)
+        throws IOException, SQLException, XmlRpcException, PersistenceException {
+      if (!data.isEmpty() && data.firstElement() instanceof DomSchoolClass) {
+        try {
+          return toSchoolClasses(data);
+        } catch (Dwo2Exception e) {
+          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+        }
+      }
+      return super.getObjectFromReturn(data);
     }
 
     /*

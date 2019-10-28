@@ -174,7 +174,7 @@ public class User implements UserGroup, Comparable {
 				}
 				DomSchoolClass domSchoolClass = dom.getActiveSchoolRoleAndClass().getSchoolClass();
 				if(domSchoolClass != null) {
-					SchoolClass cls = PersistenceFacade.instance().getSchoolClass(MySQLPersistenceId.getNativeId(domSchoolClass).intValue());
+					SchoolClass cls = PersistenceFacade.instance().toSchoolClass(Collections.singleton(domSchoolClass))[0];
 					if(cls == null) {
 						cls = new SchoolClass();
 						cls.setDomSchoolClass(domSchoolClass);
@@ -184,7 +184,7 @@ public class User implements UserGroup, Comparable {
 				} 
 				
 				
-    		} catch (Dwo2Exception | PersistenceException e) {
+    		} catch (PersistenceException e) {
 				e.printStackTrace();
 			}
     	}

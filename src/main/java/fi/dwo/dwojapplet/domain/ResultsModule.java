@@ -93,12 +93,11 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
       this.coursetree = new DomCoursesOfSchoolclassTree(school, domresults);
       reset();
     }
-    public ResultsModule(DomResultsPerTeacher domresults, DWO dwo, DomSchoolClassId domclass, Course[] selection) throws Dwo2Exception, PersistenceException
+    public ResultsModule(DomResultsPerTeacher domresults, DWO dwo, DomSchoolClass domclass, Course[] selection) throws Dwo2Exception, PersistenceException
     {
       this(domresults, dwo);
-      int id = MySQLPersistenceId.getNativeId(domclass).intValue();
       this.courses = selection;
-      currentlyZoomedUser = PersistenceFacade.instance().getSchoolClass(id);      
+      currentlyZoomedUser = PersistenceFacade.instance().toSchoolClass(Collections.singleton(domclass))[0];      
       calculateCoursesByStudents(domclass);
     }
     private void calculateCoursesByStudents(DomSchoolClassId domclass)
@@ -151,8 +150,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
     
     private UserGroup getUser(DomResultSchoolClass sc) throws Dwo2Exception, PersistenceException {
       DomSchoolClass s = sc.getSchoolClass();
-      int uid = MySQLPersistenceId.getNativeId(s).intValue();
-      return PersistenceFacade.instance().getSchoolClass(uid);
+      return PersistenceFacade.instance().toSchoolClass(Collections.singleton(s))[0];
    }
     
     private UserGroup getUser(DomResultScore r) throws Dwo2Exception, PersistenceException {

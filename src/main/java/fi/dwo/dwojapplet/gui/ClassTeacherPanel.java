@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
@@ -239,9 +240,8 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                         tableModel.fireTableDataChanged();
 
                         //FIXED legacy schoolclass updaten!
-                        int classId = getSchoolClassID(sc);
                         try {
-                            SchoolClass scold = (SchoolClass) PersistenceFacade.instance().getSchoolClass(classId);
+                            SchoolClass scold = PersistenceFacade.instance().toSchoolClass(Collections.singleton(fullSchoolClass))[0];
                             scold.setClassName(fullSchoolClass.getSchoolClassName());
                         } catch (PersistenceException e) {
                             LOG.log(Level.SEVERE, "should not happen!", e);

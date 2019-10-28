@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.gui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -192,7 +193,7 @@ final public class ClassTeacherModules {
       .map(this::toMyCourse)
       .collect(Collectors.toList())
       .toArray(NULL);
-      sc = PersistenceFacade.instance().getSchoolClass(MySQLPersistenceId.getNativeId(schoolClass).intValue());
+      sc = PersistenceFacade.instance().toSchoolClass(Collections.singleton(schoolClass))[0];
     } catch (Dwo2Exception ex) {
         LOG.log(Level.SEVERE, null, ex);
     } catch (PersistenceException ex) {

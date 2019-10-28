@@ -31,6 +31,7 @@ interface MapperIF<T> {
      * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @deprecated use REST API
      *
      */
     public T get(int oid) throws IOException, XmlRpcException,
