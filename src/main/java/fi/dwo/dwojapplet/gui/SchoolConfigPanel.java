@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JCheckBox;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.system.TextMapper;
@@ -8,6 +9,7 @@ import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.User;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 
+import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BoxLayout;
@@ -29,11 +31,12 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
 
     public SchoolConfigPanel(School school) {
         this.school = school;
-        setOpaque(false);
+        setBackground(getSubHeaderColor());
         BoxLayout layout = new BoxLayout(this, BoxLayout.PAGE_AXIS);
         setLayout(layout);
         JLabel title = new JLabel(TextMapper.format(TextMapper.GUIC_SETTINGS, new Object[]{school.toString()}));
-        title.setForeground(GuiConstants.MAIN_FOREGROUND);
+        title.setForeground(GuiConstants.HEADER_COLOR);
+        title.setFont(GuiConstants.SUB_HEADER_TEXT);
         add(title);
 
 // insert checkboxes.		
@@ -53,10 +56,8 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
 //        changeClassTeacher.setText(TextMapper.getText(TextMapper.GUIC_SETTINGS_TEACHER));
         modifyModules.setText(TextMapper.getText(TextMapper.GUIC_SETTINGS_MODULE));
         accessTeacher.setText(TextMapper.dwo2Message().NUM_SEC_ORGANISATION_ACCESSTEACHER());
-        changeClassStudent.setBackground(GuiConstants.CELL_BACKGROUND);
 //        changeClassTeacher.setBackground(GuiConstants.CELL_BACKGROUND);
-        modifyModules.setBackground(GuiConstants.CELL_BACKGROUND);
-        accessTeacher.setBackground(GuiConstants.CELL_BACKGROUND);
+
 // initiele waarden
         boolean b;
         b = school.hasRight(User.CHANGE_CLASS_RIGHT);
@@ -126,9 +127,16 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
     }
 
     @Override
+    public Color getSubHeaderColor() {
+      return Constants.COLOR20;
+    }
+
+    @Override
     public JComponent getHeaderPanel() {
         String opschrift = TextMapper.getText(TextMapper.GUIH_SETTINGS);
-        return new HeaderPanel(opschrift);
+        HeaderPanel header = new HeaderPanel(opschrift);
+        header.setBackground(getSubHeaderColor());
+        return header;
     }
 
     @Override

@@ -11,12 +11,15 @@ import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JComboBox;
 import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.domutils.DomSchoolClassListCellRenderer;
+
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -242,6 +245,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         TableUtil.setDefaults(jtable, true, new UsersSchoolClassesSchoolAdminPanel.ImageRenderer(), new UsersSchoolClassesSchoolAdminPanel.ImageButtonEditor());
         TableUtil.setJTableSizes(jtable);
         TableUtil.setBorder(jtable);
+        jtbl.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
         jtbl.setVisible(false);
         rowSorter = new TableRowSorter<UsersSchoolClassesSchoolAdminPanelTableModel>(tableModel);
         rowSorter.toggleSortOrder(0);//
@@ -265,7 +269,7 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
 
         //fetch user details.
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setBackground(getSubHeaderColor());
         this.setAlignmentX(LEFT_ALIGNMENT);
         this.setAlignmentY(TOP_ALIGNMENT);
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
@@ -377,6 +381,10 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
         center = centerPanel;
     }
 
+    @Override
+    public Color getSubHeaderColor() {
+      return Constants.COLOR20;
+    }
     /**
      * Returns a Panel that can function as a header panel.
      *
@@ -385,7 +393,9 @@ public class UsersSchoolClassesSchoolAdminPanel extends JPanel implements Center
      */
     @Override
     public JComponent getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.TBL_CLASSLIST) + ": " + domUser.getUniqueDisplayName());
+        HeaderPanel header = new HeaderPanel(TextMapper.getText(TextMapper.TBL_CLASSLIST) + ": " + domUser.getUniqueDisplayName());
+        header.setBackground(getSubHeaderColor());
+        return header;
     }
 
     /**

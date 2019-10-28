@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.gui;
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
@@ -283,6 +284,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
                 + addModelButton.getLocation().y + 15);
         TableUtil.setBorder(jtable);
         //TableUtil.shrinkToFit(table, jtbl, 520, 405);
+        jtbl.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
         jtbl.setVisible(false);
         this.add(jtbl);
         jtbl.setVisible(true);
@@ -307,7 +309,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
         }
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setBackground(getSubHeaderColor());
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         MediaTracker tr = new MediaTracker(this);
         searchImage = DwoHelper.getResourceImage(GuiConstants.EDIT_STUDENTMODEL_IMAGE);
@@ -370,6 +372,10 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
     public void setCenterPanel(CenterPanel centerPanel) {
         center = centerPanel;
     }
+    @Override
+    public Color getSubHeaderColor() {
+      return Constants.COLOR20;
+    }
 
     /**
      * Returns a Panel that can function as a header panel.
@@ -380,6 +386,7 @@ public class TeacherStudentModelPanel extends JPanel implements CenterSubPanel, 
     @Override
     public JComponent getHeaderPanel() {
         HeaderPanel b = new HeaderPanel(TextMapper.getText(TextMapper.GUIMNU_STUDENTMODELS));
+        b.setBackground(getSubHeaderColor());
         return b;
     }
 

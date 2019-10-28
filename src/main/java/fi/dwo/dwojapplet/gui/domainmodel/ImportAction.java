@@ -1,11 +1,8 @@
 package fi.dwo.dwojapplet.gui.domainmodel;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,7 +12,6 @@ import javax.swing.JFileChooser;
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 
-import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.TeacherStudentModelPanel;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;

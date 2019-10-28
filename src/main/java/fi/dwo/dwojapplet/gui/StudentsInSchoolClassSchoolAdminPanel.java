@@ -7,6 +7,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JComboBox;
 import fi.beans.numworxlf.JOptionPane;
@@ -16,6 +17,7 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.domutils.DomUserListCellRenderer;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -305,6 +307,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         TableUtil.setJTableSizes(jtable);
         TableUtil.setBorder(jtable);
         jtbl.setVisible(false);
+        jtbl.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
         this.add(jtbl);
         jtbl.setVisible(true);
 
@@ -324,7 +327,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setAlignmentX(LEFT_ALIGNMENT);
         this.setAlignmentY(TOP_ALIGNMENT);
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setBackground(getSubHeaderColor());
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
@@ -452,6 +455,10 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
         center = centerPanel;
     }
 
+    @Override
+    public Color getSubHeaderColor() {
+      return Constants.COLOR20;
+    }
     /**
      * Returns a Panel that can function as a header panel.
      *
@@ -460,7 +467,9 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
      */
     @Override
     public JComponent getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) + " - " + TextMapper.getText(TextMapper.HDR_EDITSTUDENTS) + " - " + TextMapper.getText(TextMapper.HDR_SCHOOLCLASS) + ": " + schoolClass.getSchoolClassName());
+        HeaderPanel header = new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) + " - " + TextMapper.getText(TextMapper.HDR_EDITSTUDENTS) + " - " + TextMapper.getText(TextMapper.HDR_SCHOOLCLASS) + ": " + schoolClass.getSchoolClassName());
+        header.setBackground(getSubHeaderColor());
+        return header;
     }
 
     /**

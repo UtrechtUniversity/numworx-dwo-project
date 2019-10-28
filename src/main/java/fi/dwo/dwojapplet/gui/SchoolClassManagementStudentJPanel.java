@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.gui;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.exceptions.LoginException;
@@ -328,6 +329,7 @@ public class SchoolClassManagementStudentJPanel extends JPanel implements Action
                 + registerSchoolClass.getLocation().y + 15);
         TableUtil.setBorder(jtable);
         //TableUtil.shrinkToFit(table, jtbl, 520, 405);
+        jtbl.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
         jtbl.setVisible(false);
         this.add(jtbl);
         jtbl.setVisible(true);

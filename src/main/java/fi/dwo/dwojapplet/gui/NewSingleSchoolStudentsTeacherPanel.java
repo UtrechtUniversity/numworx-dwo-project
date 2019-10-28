@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.system.MD5;
@@ -309,9 +310,10 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
 
 //        TableUtil.setBorder(jtable);
         //Override default settings for spreadsheet like border.
-        jtable.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
-        jtable.setGridColor(Color.LIGHT_GRAY);
+        TableUtil.setBorder(jtable);
+        jtable.setGridColor(Constants.COLOR13);
         jtable.setShowGrid(true);
+        jtbl.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
         jtbl.setVisible(false);
         this.add(jtbl);
         jtbl.setVisible(true);
@@ -343,7 +345,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
 
         //fetch user details.
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setBackground(getSubHeaderColor());
         this.setAlignmentX(LEFT_ALIGNMENT);
         this.setAlignmentY(TOP_ALIGNMENT);
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
@@ -410,6 +412,10 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
     public void setCenterPanel(CenterPanel centerPanel) {
         center = centerPanel;
     }
+    @Override
+    public Color getSubHeaderColor() {
+      return Constants.COLOR20;
+    }
 
     /**
      * Returns a Panel that can function as a header panel.
@@ -419,10 +425,12 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
      */
     @Override
     public JComponent getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT)
-                + " - " + TextMapper.getText(TextMapper.TBL_CLASSNAME)
-                + ": " + schoolClass.getSchoolClassName()
-                + " - " + TextMapper.getText(TextMapper.HDR_NEW_STUDENTS));
+        HeaderPanel header = new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT)
+              + " - " + TextMapper.getText(TextMapper.TBL_CLASSNAME)
+              + ": " + schoolClass.getSchoolClassName()
+              + " - " + TextMapper.getText(TextMapper.HDR_NEW_STUDENTS));
+        header.setBackground(getSubHeaderColor());
+        return header;
     }
 
     /**

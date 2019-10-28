@@ -4,6 +4,7 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.system.MD5;
@@ -329,11 +330,13 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
         jtable.getColumnModel().getColumn(4).setCellRenderer(new InputCellRendererPassword());
         jtable.getColumnModel().getColumn(5).setCellRenderer(new InputCellRendererEmail());
 
-        jtable.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
-        jtable.setGridColor(Color.LIGHT_GRAY);
+        TableUtil.setBorder(jtable);
+        jtable.setGridColor(Constants.COLOR13);
 
         jtable.setShowGrid(
                 true);
+        jtbl.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
+
         jtbl.setVisible(
                 false);
 
@@ -365,7 +368,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
 
         //fetch user details.
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setBackground(getSubHeaderColor());
         this.setAlignmentX(LEFT_ALIGNMENT);
         this.setAlignmentY(TOP_ALIGNMENT);
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
@@ -440,6 +443,10 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
     public void setCenterPanel(CenterPanel centerPanel) {
         center = centerPanel;
     }
+    @Override
+    public Color getSubHeaderColor() {
+      return Constants.COLOR20;
+    }
 
     /**
      * Returns a Panel that can function as a header panel.
@@ -449,7 +456,9 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
      */
     @Override
     public JComponent getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIMNU_USERS_SCHOOL));
+        HeaderPanel header = new HeaderPanel(TextMapper.getText(TextMapper.GUIMNU_USERS_SCHOOL));
+        header.setBackground(getSubHeaderColor());
+        return header;
     }
 
     /**

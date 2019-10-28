@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JRadioButton;
@@ -157,7 +158,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
                     AccountDataFullStudentJPanel panel = new AccountDataFullStudentJPanel();
                     panel.setUser(user);
                     panel.setVisible(true);
-                    int result = JOptionPane.showConfirmDialog(GuiCreator.instance().mainPanel, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
+                    int result = JOptionPane.showConfirmDialog(GuiCreator.instance().mainPanel, panel, TextMapper.getText(TextMapper.GUIP_ACCOUNTANDCONTACTINFO),
                             JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                     //case OK persist returned values
                     //user = new DomSingleSchoolStudent(panel.getUser()); superfluous.
@@ -299,6 +300,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         TableUtil.setBorder(jtable);
         jtbl.add(jtable);
         jtbl.setVisible(false);
+        jtbl.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
 //        JScrollPane scrollPane = new JScrollPane();
 //        jtable.setSize(100, 100);
 ////        scrollPane.getViewport().add(jtable);
@@ -359,7 +361,7 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setAlignmentX(LEFT_ALIGNMENT);
         this.setAlignmentY(TOP_ALIGNMENT);
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setBackground(getSubHeaderColor());
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
@@ -436,6 +438,10 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
         center = centerPanel;
     }
 
+    @Override
+    public Color getSubHeaderColor() {
+      return Constants.COLOR20;
+    }
     /**
      * Returns a Panel that can function as a header panel.
      *
@@ -444,7 +450,9 @@ public class UsersInSchoolSchoolAdminPanel extends JPanel implements CenterSubPa
      */
     @Override
     public JComponent getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIMNU_USERS_SCHOOL));
+        HeaderPanel header = new HeaderPanel(TextMapper.getText(TextMapper.GUIMNU_USERS_SCHOOL));
+        header.setBackground(getSubHeaderColor());
+        return header;
     }
 
     /**
