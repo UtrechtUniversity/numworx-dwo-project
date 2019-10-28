@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui.action;
 
+import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.CenterPanel;
@@ -15,7 +16,7 @@ public class PreviewHtml5 extends GuiAction {
     Sco sco;
 
     public PreviewHtml5() {
-        super("Preview HTML");
+        super(TextMapper.getText(TextMapper.GUIPA_BTN_PREVIEW));
     }
 
     public PreviewHtml5(String text) {
