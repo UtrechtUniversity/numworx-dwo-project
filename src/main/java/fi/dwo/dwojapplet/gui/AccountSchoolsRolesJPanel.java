@@ -2,6 +2,7 @@ package fi.dwo.dwojapplet.gui;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
@@ -15,6 +16,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.FontMetrics;
@@ -82,7 +84,6 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
 
         //init gui (old code)
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setAlignmentX(LEFT_ALIGNMENT);
         this.setAlignmentY(TOP_ALIGNMENT);
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
@@ -104,8 +105,8 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         JLabel l = new JLabel(TextMapper.getText(TextMapper.GUIP_ROLE_OPTIONS) + ":");
         l.setAlignmentX(LEFT_ALIGNMENT);
         l.setAlignmentY(TOP_ALIGNMENT);
-        l.setForeground(GuiConstants.RED_COLOR);
-        l.setFont(GuiConstants.RED_TEXT);
+        l.setForeground(GuiConstants.HEADER_COLOR);
+        l.setFont(GuiConstants.SUB_HEADER_TEXT);
         FontMetrics fm = l.getFontMetrics(l.getFont());
         l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
         Box b = Box.createHorizontalBox();
@@ -124,7 +125,6 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         JPanel footer = new JPanel();
         footer.setLayout(new BoxLayout(footer, BoxLayout.X_AXIS));
         footer.setBorder(new EmptyBorder(10, 10, 10, 10));
-        footer.setBackground(GuiConstants.MAIN_BACKGROUND);
         footer.add(addRoleButton);
         this.add(footer);
 
@@ -315,7 +315,7 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         JScrollPane scrollPane = new JScrollPane(jtable, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         jtbl.add(scrollPane /*jtable*/);
         JViewport viewport = scrollPane.getViewport();
-		viewport.setBackground(GuiConstants.MAIN_BACKGROUND);
+		viewport.setBackground(Color.white);
 		
         tableModel = new AccountSchoolsRolesTableModel();
 
@@ -349,11 +349,14 @@ public class AccountSchoolsRolesJPanel extends JPanel implements ActionListener 
         jtbl.setLocation(30, addRoleButton.getSize().height
                 + addRoleButton.getLocation().y + 15);
         TableUtil.setBorder(jtable);
+        TableUtil.setBorder(scrollPane);
         //TableUtil.shrinkToFit(table, jtbl, 520, 405);
+        jtbl.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
         jtbl.setVisible(false);
         this.add(jtbl);
         jtbl.setVisible(true);
 
+       
     }
 
     /**

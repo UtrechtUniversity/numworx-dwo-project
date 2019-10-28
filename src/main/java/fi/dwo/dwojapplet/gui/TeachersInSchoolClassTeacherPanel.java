@@ -7,12 +7,15 @@ package fi.dwo.dwojapplet.gui;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JComboBox;
 import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.domutils.DomUserListCellRenderer;
+
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -195,6 +198,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
         rowSorter = new TableRowSorter<TeachersInSchoolClassTeacherPanelTableModel>(tableModel);
         rowSorter.toggleSortOrder(3);//
         jtable.setRowSorter(rowSorter);
+        jtbl.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
         this.add(jtbl);
         jtbl.setVisible(true);
 
@@ -211,7 +215,7 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
 
         //fetch user details.
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setBackground(getSubHeaderColor());
         this.setAlignmentX(LEFT_ALIGNMENT);
         this.setAlignmentY(TOP_ALIGNMENT);
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
@@ -321,6 +325,10 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
         center = centerPanel;
     }
 
+    @Override
+    public Color getSubHeaderColor() {
+      return Constants.COLOR20;
+    }
     /**
      * Returns a Panel that can function as a header panel.
      *
@@ -329,7 +337,9 @@ public class TeachersInSchoolClassTeacherPanel extends JPanel implements CenterS
      */
     @Override
     public JComponent getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) + " - " + TextMapper.getText(TextMapper.HDR_EDITTEACHERS) + " - " + TextMapper.getText(TextMapper.HDR_SCHOOLCLASS) + ": " + schoolClass.getSchoolClassName());
+        HeaderPanel header = new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) + " - " + TextMapper.getText(TextMapper.HDR_EDITTEACHERS) + " - " + TextMapper.getText(TextMapper.HDR_SCHOOLCLASS) + ": " + schoolClass.getSchoolClassName());
+        header.setBackground(getSubHeaderColor());
+        return header;
     }
 
     /**

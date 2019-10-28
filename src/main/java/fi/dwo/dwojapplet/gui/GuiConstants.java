@@ -111,7 +111,7 @@ public abstract class GuiConstants {
     public final static Font RESULTS_HEADER_TEXT = new Font("SansSerif", Font.BOLD, 12);
     public final static Font SCO_TEXT = new Font("SansSerif", Font.PLAIN, 16);
     public final static Font SCO_HEADER_TEXT = new Font("SansSerif", Font.PLAIN, 18);
-
+    public final static Font SUB_HEADER_TEXT = new Font("SansSerif", Font.BOLD, 16);
     public final static Font SMALL_TEXT = new Font("SansSerif", Font.BOLD, 10);
 
     public final static int DWO_HEIGHT = 800;
@@ -191,6 +191,7 @@ public abstract class GuiConstants {
           HEADER_COLOR = fi.beans.numworxlf.Constants.COLOR15;
           HEADER_TEXT = new Font("Ubuntu", Font.BOLD, 24);
           MAIN_FOREGROUND = fi.beans.numworxlf.Constants.COLOR15;
+          CELL_BACKGROUND = Color.WHITE;
 
         } else
         

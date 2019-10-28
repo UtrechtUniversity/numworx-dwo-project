@@ -1,7 +1,10 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.numworxlf.Constants;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+
+import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,8 +45,13 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
         this.init();
     }
 
+    @Override
+    public Color getSubHeaderColor() {
+      return Constants.COLOR20;
+    }
+
     public void init() {
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setBackground(getSubHeaderColor());
         this.setSize(200, 500);
 
         /* Variables used to create items */
@@ -51,14 +59,14 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
         /* Add accountdata-panel */
         accountDataPanel = new AccountDataFullUserJPanel(DwoHelper.getCurrentUser());
         accountDataPanel.setUser(DwoHelper.getCurrentUser());
-        accountDataPanel.setBackground(GuiConstants.SUB_BACKGROUND);
+        accountDataPanel.setBackground(getBackground());
         //      p.setBounds(getSize().width / 2 - 155, 20, 310, 130);
 
         /* Add schoolrole-panel */
         sarPanel = new AccountSchoolsRolesJPanel();
         sarPanel.setVisible(!DwoHelper.isSingleSchoolStudent());
 
-        sarPanel.setBackground(GuiConstants.SUB_BACKGROUND);
+        sarPanel.setBackground(getBackground());
         this.setLayout(null);
         accountDataPanel.setLocation(10, 10);
         //this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
@@ -75,7 +83,9 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
      */
     @Override
     public JComponent getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIP_MY_PROFILE));
+        HeaderPanel header = new HeaderPanel(TextMapper.getText(TextMapper.GUIP_MY_PROFILE));
+        header.setBackground(getSubHeaderColor());
+        return header;
     }
 
     /**

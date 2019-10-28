@@ -73,7 +73,6 @@ public class AccountDataFullUserJPanel extends JPanel implements
         }
         //fetch user details.
 //        groupList = groups;
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setSize(320, 500);
         this.setMinimumSize(this.getSize());
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -88,14 +87,13 @@ public class AccountDataFullUserJPanel extends JPanel implements
         /* Add Register-panel */
         p = new JPanel(null);
 //        p.setBorder(BorderFactory.createLineBorder(getForeground()));
-        p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, 20, 310, 130);
         this.add(p);
 
         /* registerinfo label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_REGISTERINFO) + ":");
-        l.setForeground(GuiConstants.RED_COLOR);
-        l.setFont(GuiConstants.RED_TEXT);
+        l.setForeground(GuiConstants.HEADER_COLOR);
+        l.setFont(GuiConstants.SUB_HEADER_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
         p.add(l);
@@ -174,14 +172,13 @@ public class AccountDataFullUserJPanel extends JPanel implements
         /* Add PersonalInfo-panel */
         p = new JPanel(null);
 //        p.setBorder(BorderFactory.createLineBorder(getForeground()));
-        p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, 149, 310, 130);
         this.add(p);
 
         /* personalinfo label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_PERSONALINFO) + ":");
-        l.setForeground(GuiConstants.RED_COLOR);
-        l.setFont(GuiConstants.RED_TEXT);
+        l.setForeground(GuiConstants.HEADER_COLOR);
+        l.setFont(GuiConstants.SUB_HEADER_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
         p.add(l);
@@ -285,7 +282,6 @@ public class AccountDataFullUserJPanel extends JPanel implements
                 - 1;
         JPanel p = new JPanel(null);
 //        p.setBorder(BorderFactory.createLineBorder(getForeground()));
-        p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, locationY, 310, 35);
         this.add(p);
 
@@ -332,7 +328,7 @@ public class AccountDataFullUserJPanel extends JPanel implements
     private JLabel createMandatoryLabel() {
         JLabel mandatoryLabel = new JLabel("*");
         mandatoryLabel.setForeground(GuiConstants.RED_COLOR);
-        mandatoryLabel.setFont(GuiConstants.RED_TEXT);
+        mandatoryLabel.setFont(GuiConstants.SUB_HEADER_TEXT);
         FontMetrics fm = mandatoryLabel.getFontMetrics(mandatoryLabel.getFont());
         mandatoryLabel.setSize(fm.stringWidth(mandatoryLabel.getText()) + 5, fm.getHeight());
         return mandatoryLabel;

@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewType;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.exceptions.PersistenceException;
@@ -31,6 +32,7 @@ import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -498,6 +500,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
                 + addClassButton.getLocation().y + 15);
         TableUtil.setBorder(jtable);
         //TableUtil.shrinkToFit(table, jtbl, 520, 405);
+        jtbl.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
         jtbl.setVisible(false);
         this.add(jtbl);
         jtbl.setVisible(true);
@@ -521,7 +524,7 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
         }
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setBackground(getSubHeaderColor());
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
@@ -587,7 +590,13 @@ public class ClassTeacherPanel extends JPanel implements CenterSubPanel, ActionL
      */
     @Override
     public JComponent getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT));
+        HeaderPanel header = new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT));
+        header.setBackground(getSubHeaderColor());
+        return header;
+    }
+    @Override
+    public Color getSubHeaderColor() {
+      return Constants.COLOR20;
     }
 
     /**

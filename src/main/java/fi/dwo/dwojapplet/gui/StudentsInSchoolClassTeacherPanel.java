@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JComboBox;
 import fi.beans.numworxlf.JOptionPane;
@@ -21,6 +22,7 @@ import fi.dwo.dwojapplet.gui.domutils.DomSchoolClassListCellRenderer;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -282,6 +284,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         rowSorter = new TableRowSorter<StudentsInSchoolClassTeacherPanelTableModel>(tableModel);
         rowSorter.toggleSortOrder(3);//        
         jtable.setRowSorter(rowSorter);
+        jtbl.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
 
         this.add(jtbl);
         jtbl.setVisible(true);
@@ -301,7 +304,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setAlignmentX(LEFT_ALIGNMENT);
         this.setAlignmentY(TOP_ALIGNMENT);
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setBackground(getSubHeaderColor());
         setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
@@ -393,6 +396,7 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         this.add(header);
         this.add(Box.createRigidArea(new Dimension(0, 10)));
         buildJTable();
+        this.add(Box.createRigidArea(new Dimension(0, 10)));
         addStudentsButton = new JButton(TextMapper.getText(TextMapper.BTN_NEW_STUDENTS));
         addStudentsButton.setEnabled(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool().licenseIsValid());
 //        addStudentsButton.setEnabled(licenseIsValid(DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool()));
@@ -441,6 +445,10 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
         center = centerPanel;
     }
 
+    @Override
+    public Color getSubHeaderColor() {
+      return Constants.COLOR20;
+    }
     /**
      * Returns a Panel that can function as a header panel.
      *
@@ -449,7 +457,9 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
      */
     @Override
     public JComponent getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) + " - " + TextMapper.getText(TextMapper.HDR_EDITSTUDENTS) + " - " + TextMapper.getText(TextMapper.HDR_SCHOOLCLASS) + ": " + schoolClass.getSchoolClassName());
+        HeaderPanel header = new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT) + " - " + TextMapper.getText(TextMapper.HDR_EDITSTUDENTS) + " - " + TextMapper.getText(TextMapper.HDR_SCHOOLCLASS) + ": " + schoolClass.getSchoolClassName());
+        header.setBackground(getSubHeaderColor());
+        return header;
     }
 
     /**
