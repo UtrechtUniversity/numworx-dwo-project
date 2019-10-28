@@ -2850,8 +2850,7 @@ LOG.info("time results = " + (-t) + " ms");
       try {
         schoolManager.updateSchool(school);
         school.setExpire(date);
-        int id = MySQLPersistenceId.getNativeId(school).intValue();
-        School newSchool = (School) PersistenceFacade.instance().getSchool(id); // FROM CACHE
+        School newSchool = PersistenceFacade.instance().toSchool(Collections.singleton(school))[0];
         newSchool.setExpire(date);
         newSchool.setName(schoolName);
         newSchool.setSchoolLogin(schoolLogin);

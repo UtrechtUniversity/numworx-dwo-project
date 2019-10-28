@@ -660,15 +660,16 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             Sco s = null;
 
             // speciaal voor de SAG en REV: er kan maar 1 soort appletConfig gebruikt worden, nl WiskOpdr
-            if (course.getDwoProfile() == 15) {
-                try {
-                    AppletConfig ac = (PersistenceFacade.instance().getAppletConfig(55));
-                    s = ScoNameDialog.addSco(this, course, ac);
-                } catch (PersistenceException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage());
-                }
-            } //
-            else {
+//            if (course.getDwoProfile() == 15) {
+//                try {
+//                    AppletConfig ac = (PersistenceFacade.instance().getAppletConfig(55));
+//                    s = ScoNameDialog.addSco(this, course, ac);
+//                } catch (PersistenceException ex) {
+//                    JOptionPane.showMessageDialog(this, ex.getMessage());
+//                }
+//            } //
+//            else
+            {
                 s = AddScoDialog.addSco(this, course);
             }
             if (s != null) {

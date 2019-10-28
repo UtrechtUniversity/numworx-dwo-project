@@ -5,6 +5,7 @@ package fi.dwo.dwojapplet.persistence;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
@@ -16,6 +17,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -49,10 +51,13 @@ class SchoolMapper extends XmlRpcMapper<School> {
         public boolean isExport() {
           if (export == null) {
             try {
-              DbAccessIF dbAccess = DbAccessCreator.instance();
-              School school = getObjectFromReturn(dbAccess.getRecord(getTableName(),
-                      getIDCol(), getSchoolID()));
-              export = school.isExport();              
+//              DbAccessIF dbAccess = DbAccessCreator.instance();
+//              School school = getObjectFromReturn(dbAccess.getRecord(getTableName(),
+//                      getIDCol(), getSchoolID()));
+//              export = school.isExport();
+              List<DomSchoolFrom> list = SecureTeacherFromToManager.getExports();
+              PersistenceId aId = PersistentSchool.buildPersistenceId(Long.valueOf(getSchoolID()));
+              export = list.stream().anyMatch(item -> item.getId().equals(aId));
             } catch (Exception e) {
               return false;
             }

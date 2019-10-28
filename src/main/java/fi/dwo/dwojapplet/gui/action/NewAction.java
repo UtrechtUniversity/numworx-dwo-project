@@ -107,14 +107,15 @@ public class NewAction extends GuiAction {
                 course.loadScos();
             }
 // speciaal voor de SAG en REV: er kan maar 1 soort appletConfig gebruikt worden, nl WiskOpdr
-            if (course.getDwoProfile() == 15) {
-                try {
-                    AppletConfig ac = (PersistenceFacade.instance().getAppletConfig(55));
-                    s = ScoNameDialog.addSco(DwoHelper.getApplet(), course, ac);
-                } catch (PersistenceException ex) {
-                    JOptionPane.showMessageDialog(DwoHelper.getApplet(), ex.getMessage());
-                }
-            } else {
+//            if (course.getDwoProfile() == 15) {
+//                try {
+//                    AppletConfig ac = (PersistenceFacade.instance().getAppletConfig(55));
+//                    s = ScoNameDialog.addSco(DwoHelper.getApplet(), course, ac);
+//                } catch (PersistenceException ex) {
+//                    JOptionPane.showMessageDialog(DwoHelper.getApplet(), ex.getMessage());
+//                }
+//            } else 
+            {
                 s = AddScoDialog.addSco(DwoHelper.getApplet(), course);
             }
             if (s != null) {

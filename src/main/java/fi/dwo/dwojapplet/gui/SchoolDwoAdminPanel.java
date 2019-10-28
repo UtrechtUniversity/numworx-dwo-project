@@ -28,6 +28,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
@@ -98,14 +99,9 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
             if (value == editImage || value == removeImage || value == rightsImage|| value == imageStats) {
                 lclRow = rowSorter.convertRowIndexToModel(row);
                 DomSchool4DwoAdmin school =  tableModel.getSchool(lclRow);
-                long schoolid;
                 try {
-                    schoolid = MySQLPersistenceId.getNativeId(school);
-                    oldSchool = PersistenceFacade.instance().getSchool((int) schoolid);
-                } catch (Dwo2Exception ex) {
-                    Logger.getLogger(SchoolDwoAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                catch (PersistenceException ex) {
+                    oldSchool = PersistenceFacade.instance().toSchool(Collections.singleton(school))[0];
+                } catch (PersistenceException ex) {
                     LOG.log(Level.SEVERE, null, ex);
                 }
 
