@@ -69,8 +69,7 @@ public class Main extends JFrame {
 	}
 
 	private Main() throws HeadlessException, IOException {
-		super("OSIRIS import");
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this("OSIRIS import");
 		
 		InputStream in = getClass().getResourceAsStream("/config.properties");
 		config = new Properties();
@@ -100,6 +99,7 @@ public class Main extends JFrame {
 
 	Main(String string) {
 		super(string);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
 }

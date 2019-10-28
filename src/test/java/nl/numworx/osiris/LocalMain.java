@@ -11,7 +11,6 @@ import java.net.URL;
 import java.util.Properties;
 
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -19,10 +18,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.osgi.util.promise.Promises;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import fi.dwo.commons.system.MD5;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 /**
@@ -31,9 +30,7 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
  */
 @SuppressWarnings("serial")
 public class LocalMain extends Main {
-			
-	Properties config;
-	
+				
 	/**
 	 * @param args
 	 * @throws IOException 
@@ -43,7 +40,7 @@ public class LocalMain extends Main {
 		
 		Dwo2ExceptionTranslator.setTranslator(new Dwo2ExceptionJavaTranslator());
 		
-		LocalMain main = new LocalMain();
+		Main main = new LocalMain();
 		main.setSize(1024,768);
 		main.setPreferredSize(main.getSize());
 		main.pack();
@@ -62,17 +59,15 @@ public class LocalMain extends Main {
 	String c(String key) {
 		return config.getProperty(key);
 	}
-
-	private LocalMain() throws HeadlessException, IOException {
+  
+  @SuppressWarnings("deprecation")
+  private LocalMain() throws HeadlessException, IOException {
 		super("TEST import");
 
 		base = url("http://localhost:8080/dwo/");
 		profileName = "77";
-
 		
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
-		InputStream in = getClass().getResourceAsStream("/config.properties");
+		InputStream in = getClass().getResourceAsStream("/test.properties");
 		config = new Properties();
 		config.load(in);
 		in.close();
@@ -90,8 +85,8 @@ public class LocalMain extends Main {
 		DomUserFullwLoginContext value = new DomUserFullwLoginContext();
 		value.setDomLoginContext(new DomLoginContext());
 		value.setDomUserFull(new DomUserFull());
-		value.getDomUserFull().setUserName("?");
-		value.getDomUserFull().setPassword("?");
+		value.getDomUserFull().setUserName(c("username"));
+		value.getDomUserFull().setPassword(MD5.getHashString(c("password")));
 		login.complete = Promises.resolved(value);
 		install = new InstallPanel(this, base, profileName);
 		tabs.addTab("Login", login);
