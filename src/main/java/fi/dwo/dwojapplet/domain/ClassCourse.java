@@ -23,7 +23,7 @@ public class ClassCourse {
     private Date notAfter;
     private String accessKey;
 
-    protected SchoolClass schoolClass;
+//    protected SchoolClass schoolClass;
     protected Course course;
 
     /**
@@ -55,7 +55,7 @@ public class ClassCourse {
      * @param classID the classID to set
      */
     public void setClassID(int classID) {
-        schoolClass = null;
+//        schoolClass = null;
         this.classID = classID;
     }
 
@@ -116,42 +116,42 @@ public class ClassCourse {
         this.notAfter = notAfter;
     }
 
-    /**
-     * @return the schoolClass
-     */
-    public SchoolClass getSchoolClass() {
-        if (schoolClass == null) {
-            fetchSchoolClass();
-        }
-        return schoolClass;
-    }
+//    /**
+//     * @return the schoolClass
+//     */
+//    public SchoolClass getSchoolClass() {
+//        if (schoolClass == null) {
+//            fetchSchoolClass();
+//        }
+//        return schoolClass;
+//    }
 
-    protected void fetchSchoolClass() {
-        try {
-            schoolClass = PersistenceFacade.instance().getSchoolClass(getClassID());
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE,null,e);
-        }
-    }
+//    protected void fetchSchoolClass() {
+//        try {
+//            schoolClass = PersistenceFacade.instance().getSchoolClass(getClassID());
+//        } catch (Exception e) {
+//            LOG.log(Level.SEVERE,null,e);
+//        }
+//    }
 
-    /**
-     * @return the course
-     */
-    public Course getCourse() {
-        if (course == null) {
-            fetchCourse();
-        }
-        return course;
-    }
+//    /**
+//     * @return the course
+//     */
+//    public Course getCourse() {
+//        if (course == null) {
+//            fetchCourse();
+//        }
+//        return course;
+//    }
 
-    protected void fetchCourse() {
-        try {
-            course = (Course) PersistenceFacade.instance().getCourse(getCourseID());
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE,null,e);
-        }
-
-    }
+//    protected void fetchCourse() {
+//        try {
+//            course = (Course) PersistenceFacade.instance().getCourse(getCourseID());
+//        } catch (Exception e) {
+//            LOG.log(Level.SEVERE,null,e);
+//        }
+//
+//    }
 
     /**
      * @return the viewState

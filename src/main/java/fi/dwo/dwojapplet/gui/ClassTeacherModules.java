@@ -87,15 +87,15 @@ final public class ClassTeacherModules {
         return cc.getNotAfter();
       }
 
-      @Override
-      public SchoolClass getSchoolClass() {
-        return sc;
-      }
+      //@Override
+//      public SchoolClass getSchoolClass() {
+//        return sc;
+//      }
 
-      @Override
-      public Course getCourse() {
-        return MyCourse.this;
-      }
+      //@Override
+//      public Course getCourse() {
+//        return MyCourse.this;
+//      }
 
       @Override
       public int getViewState() {

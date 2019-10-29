@@ -974,24 +974,24 @@ public class PersistenceFacade {
 //      
 //    }
 
-    @Deprecated
-    public SchoolClass getSchoolClass(int classID) throws PersistenceException {
-      MapperIF<SchoolClass> mapper = MapperCreator.instance(SchoolClass.class);
-      
-      try {
-          return mapper.get(classID);
-      }
-      catch (IOException e) {
-          LOG.log(Level.SEVERE, null, e);
-          throw new PersistenceException(PersistenceException.EX_IO, e);
-      }
-      catch (XmlRpcException e) {
-          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-      }
-      catch (SQLException e) {
-          throw new PersistenceException(PersistenceException.EX_DB, e);
-      }
-    }
+//    @Deprecated
+//    public SchoolClass getSchoolClass(int classID) throws PersistenceException {
+//      MapperIF<SchoolClass> mapper = MapperCreator.instance(SchoolClass.class);
+//      
+//      try {
+//          return mapper.get(classID);
+//      }
+//      catch (IOException e) {
+//          LOG.log(Level.SEVERE, null, e);
+//          throw new PersistenceException(PersistenceException.EX_IO, e);
+//      }
+//      catch (XmlRpcException e) {
+//          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+//      }
+//      catch (SQLException e) {
+//          throw new PersistenceException(PersistenceException.EX_DB, e);
+//      }
+//    }
 
     public Course getCourse(int courseID) throws PersistenceException {
       try {

@@ -2107,8 +2107,7 @@ LOG.info("time results = " + (-t) + " ms");
     		DomCourseFull edit = pc.buildDomCourseFull();
 			edit = manager.add(edit);
 // legacy
-			int pid = MySQLPersistenceId.getNativeId(edit).intValue();
-			Course c = PersistenceFacade.instance().getCourse(pid);
+			Course c = PersistenceFacade.instance().toCourse(Collections.singleton(edit))[0];
 			return c;
     	} catch (Dwo2Exception e) {
           LOG.log(Level.SEVERE, "add course", e);
@@ -2878,27 +2877,27 @@ LOG.info("time results = " + (-t) + " ms");
         //return PersistenceFacade.instance().updateLogo(c);
     }
 
-    public String selectSco(String scoid) {
-        int id = Integer.parseInt(scoid); // In dwo-appengine id = scoid
-        try {
-            Sco sco = (Sco) PersistenceFacade.instance().getSco(id);
-            GuiCreator.instance().getMainPanel().getCenter().select(sco);
-            return "true";
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "", e);
-            return "false";
-        }
-    }
-
-    private static final String SELECT = "select:";
-
-    public String interpret(String command) {
-        if (command.startsWith(SELECT)) {
-            return selectSco(command.substring(SELECT.length()));
-        }
-
-        return "false";
-    }
+//    public String selectSco(String scoid) {
+//        int id = Integer.parseInt(scoid); // In dwo-appengine id = scoid
+//        try {
+//            Sco sco = (Sco) PersistenceFacade.instance().getSco(id);
+//            GuiCreator.instance().getMainPanel().getCenter().select(sco);
+//            return "true";
+//        } catch (Exception e) {
+//            LOG.log(Level.SEVERE, "", e);
+//            return "false";
+//        }
+//    }
+//
+//    private static final String SELECT = "select:";
+//
+//    public String interpret(String command) {
+//        if (command.startsWith(SELECT)) {
+//            return selectSco(command.substring(SELECT.length()));
+//        }
+//
+//        return "false";
+//    }
 
     public void switchProfile(int p, String lang) {
       try {

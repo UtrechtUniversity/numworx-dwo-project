@@ -173,8 +173,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
       if (pid.getType() == PersistenceClassType.PersistentCourse)
       {
         DomCourse course = mappedresults.getCourses().get(pid);
-        int cid = MySQLPersistenceId.getNativeId(course).intValue();
-        return PersistenceFacade.instance().getCourse(cid);
+        return PersistenceFacade.instance().toCourse(Collections.singleton(course))[0];
       } 
       if (pid.getType() == PersistenceClassType.PersistentScoContext)
       {

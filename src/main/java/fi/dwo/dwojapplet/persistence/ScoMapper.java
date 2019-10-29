@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -29,7 +30,7 @@ import java.util.zip.GZIPInputStream;
 import org.apache.xmlrpc.applet.XmlRpcException;
 import org.json.simple.JSONValue;
 
-class ScoMapper extends XmlRpcMapper {
+class ScoMapper extends XmlRpcMapper<Sco> {
     private static final Logger LOG = Logger.getLogger(ScoMapper.class.getName());
 
     private static final Vector LAZY_SCO_KEYS = new Vector();
@@ -40,7 +41,7 @@ class ScoMapper extends XmlRpcMapper {
 
     private static final String ORDERCOL = "sequencenr";
 
-    private static Map cachemap = new HashMap(); // was weakhashmap
+    private static Map<Hashtable, Sco[]> cachemap = new HashMap<>(); // was weakhashmap
 
     class LazySco extends Sco {
 
@@ -115,14 +116,14 @@ class ScoMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public void put(int oid, Object obj)  {
+    public void put(int oid, Sco obj)  {
         objects.put(new Integer(oid), obj);
         cachemap.clear();
     }
 
     
     @Override
-	public Object get(int oid) throws IOException, XmlRpcException, SQLException, PersistenceException {
+	public Sco get(int oid) throws IOException, XmlRpcException, SQLException, PersistenceException {
 		if (!objects.containsKey(Integer.valueOf(oid)))
 				cachemap.clear();
 		return super.get(oid);
@@ -138,7 +139,7 @@ class ScoMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
+    public Sco getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
         Sco s = null;
         if (data.get("scoID") == null) { //We don't know enough to make a
             // scoobject
@@ -181,7 +182,7 @@ class ScoMapper extends XmlRpcMapper {
      * @throws PersistenceException 
      */
     @Override
-    public Object[] get(Object obj) throws IOException, SQLException,
+    public Sco[] get(Object obj) throws IOException, SQLException,
             XmlRpcException, PersistenceException {
         Hashtable ht = new Hashtable();
         if (obj instanceof Course) {
@@ -210,28 +211,28 @@ class ScoMapper extends XmlRpcMapper {
         return cached(ht);
     }
 
-    private Object[] fillcache(Object[] data) {
-        HashMap ht = new HashMap();
+    private Object[] fillcache(Sco[] data) {
+        HashMap<Integer,Vector<Sco>> ht = new HashMap<>();
         Sco[] sco = (Sco[]) data;
         for (int i = 0; i < sco.length; i++) {
             Integer course = new Integer(sco[i].getCourse().getID());
-            Vector v = (Vector) ht.get(course);
+            Vector<Sco> v = ht.get(course);
             if (v == null) {
-                v = new Vector();
+                v = new Vector<>();
                 ht.put(course, v);
             }
             v.add(sco[i]);
         }
-        Set set = ht.entrySet();
-        Iterator iter = set.iterator();
+        Set<Entry<Integer, Vector<Sco>>> set = ht.entrySet();
+        Iterator<Entry<Integer, Vector<Sco>>> iter = set.iterator();
         while (iter.hasNext()) {
-            Map.Entry entry = (Map.Entry) iter.next();
-            Vector v = (Vector) entry.getValue();
+            Entry<Integer, Vector<Sco>> entry = iter.next();
+            Vector<Sco> v = entry.getValue();
             Object key = entry.getKey();
-            Collections.sort(v, new Comparator() {
+            Collections.sort(v, new Comparator<Sco>() {
 
                 @Override
-                public int compare(Object o1, Object o2) {
+                public int compare(Sco o1, Sco o2) {
                     Sco s1 = (Sco) o1;
                     Sco s2 = (Sco) o2;
                     int i1 = s1.getSequencenr();
@@ -239,7 +240,7 @@ class ScoMapper extends XmlRpcMapper {
                     return i1 < i2 ? -1 : i1 == i2 ? 0 : 1;
                 }
             });
-            Hashtable h = new Hashtable();
+            Hashtable<Object,Object> h = new Hashtable<>();
             h.put("courseID", key);
             cachemap.put(h, v.toArray(createArray(v.size())));
         }
@@ -274,7 +275,7 @@ class ScoMapper extends XmlRpcMapper {
      *      java.util.Hashtable)
      */
     @Override
-    protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
+    protected Sco update(Sco obj, Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
         Sco s = (Sco) obj;
         s.setScoID(((Integer) data.get("scoID")).intValue());
         s.setName((String) data.get("sconame"));
@@ -315,7 +316,7 @@ class ScoMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
     @Override
-    protected Object[] createArray(int size) {
+    protected Sco[] createArray(int size) {
         return new Sco[size];
     }
 
@@ -338,10 +339,10 @@ class ScoMapper extends XmlRpcMapper {
     }
     public static boolean hasShowScore = true;
 
-    private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
+    private Sco[] cached(Hashtable ht) throws IOException, XmlRpcException,
             SQLException, PersistenceException {
-        Object[] result;
-        result = (Object[]) cachemap.get(ht);
+        Sco[] result;
+        result = cachemap.get(ht);
         if (result != null) {
             //System.out.println("Found in cache " + ht);
             return result;
@@ -353,7 +354,7 @@ class ScoMapper extends XmlRpcMapper {
     }
 
     @Override
-    public Object[] get(Hashtable wheredef) throws IOException,
+    public Sco[] get(Hashtable wheredef) throws IOException,
             XmlRpcException, SQLException, PersistenceException {
 
         DbAccessIF dbAccess = DbAccessCreator.instance();
