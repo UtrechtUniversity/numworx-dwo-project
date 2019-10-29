@@ -12,6 +12,7 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<app.name>Numworx-import-acceptatie</app.name>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -119,7 +120,7 @@
 							uri="javafx:com.sun.javafx.tools.ant"
 						/>
 						<fx:application id="nl.numworx.osiris"
-							name="Osiris-import" 
+							name="${app.name}" 
 							mainClass="nl.numworx.osiris.Main" 
 							version="${project.version}" 
 							toolkit="swing" />
@@ -129,7 +130,7 @@
 						</fx:resources>
 						<fx:deploy width="800" height="600"
 					        outdir="target/deploy" embedJNLP="true"
-					        outfile="OsirisImport"
+					        outfile="Numworx-import"
 							nativeBundles='exe'
 							signBundle='false'
 						>
@@ -138,7 +139,7 @@
 					        <fx:application refId="nl.numworx.osiris"/>					 
 					        <fx:resources refid="appRes"/>						 
 					        <fx:info 
-					        	title="Osiris Numworx Import"
+					        	title="Numworx Import"
 					          	vendor="Numworx"
 					          	description="Import Osiris data into Numworx"
 					         >
@@ -166,7 +167,7 @@
             <configuration>
               <artifacts>
                 <artifact>
-                  <file>target/deploy/Osiris-import-${project.version}.exe</file>
+                  <file>target/deploy/bundles/${app.name}-${project.version}.exe</file>
                   <type>exe</type>
                   <classifier>installer</classifier>
                 </artifact>

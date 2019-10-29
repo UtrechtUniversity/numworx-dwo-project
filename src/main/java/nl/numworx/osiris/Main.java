@@ -17,7 +17,6 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
-import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 /**
@@ -69,7 +68,7 @@ public class Main extends JFrame {
 	}
 
 	private Main() throws HeadlessException, IOException {
-		this("OSIRIS import");
+		this("Numworx import (acceptatie)");
 		
 		InputStream in = getClass().getResourceAsStream("/config.properties");
 		config = new Properties();
