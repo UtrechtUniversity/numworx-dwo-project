@@ -9,6 +9,7 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.ResultsModuleIF;
+import fi.dwo.dwojapplet.domain.SchoolAdmin;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.UserResultList;
@@ -168,8 +169,10 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 
         int nextY = addScoLinkedLabels();
 
-        /* If the user is a teacher, show a button to go to the results */
-        if (GuiCreator.instance().getUser() instanceof Teacher) {
+        /* If the user is a teacher (NOT A SCHOOLADMIN), show a button to go to the results */
+        if (GuiCreator.instance().getUser() instanceof Teacher 
+            && ! (GuiCreator.instance().getUser() instanceof SchoolAdmin)
+            ) {
             showResultsButton = new JButton(TextMapper.getText(TextMapper.GUIMNU_RESULTS));
             showResultsButton.setLocation(30, nextY + 20);
             showResultsButton.addActionListener(this);

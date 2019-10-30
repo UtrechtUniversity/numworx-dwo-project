@@ -3,6 +3,9 @@ package fi.dwo.dwojapplet.gui;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolManager;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.SchoolAdmin;
 import fi.dwo.dwojapplet.domain.User;
@@ -82,6 +85,16 @@ public class GuiCreatorSchoolAdmin extends GuiCreatorTeacher {
       box.add(b);
       box.setBorder(BorderFactory.createEmptyBorder(0, 0, 3, 0)); // Meten!
       return box;
+    }
+    
+    /* (non-Javadoc)
+     * @see fi.dwo.dwojapplet.gui.GuiCreatorTeacher#getResultPanel(fi.dwo.dwojapplet.domain.Course)
+     */
+    @Override
+    public CenterSubPanel getResultPanel(Course c) {
+      Dwo2Exception ex = new Dwo2Exception(Dwo2ExceptionCode.User_AuthorizationError, "");
+      GuiCreator.instance().ShowErrorDialog(mainPanel, ex);
+      throw new RuntimeException(ex);
     }
     
 }
