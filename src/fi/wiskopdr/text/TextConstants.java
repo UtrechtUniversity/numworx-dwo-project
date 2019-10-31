@@ -70,7 +70,7 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	String feedbackTekst07();
 	@DefaultStringValue("Gebruik geen absoluut strepen ( bv: |x-3| ).")
 	String feedbackTekst08();
-	@DefaultStringValue("De notatie van de vergelijking of oplossingen is niet juist.")
+	@DefaultStringValue("De notatie is niet juist.")
 	String feedbackTekst09();
 	@DefaultStringValue("Oplossing is goed, maar nog niet in de juiste vorm.")
 	String feedbackTekst10();
