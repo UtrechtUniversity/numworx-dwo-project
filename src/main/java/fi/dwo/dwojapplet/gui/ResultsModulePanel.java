@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -42,6 +43,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
+import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
@@ -668,7 +670,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
 //            Logger.getLogger(ResultsModulePanel.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setBackground(getSubHeaderColor());
         //this.setSize(600, 480);
         this.setSize(600, 280);
         setPreferredSize(getSize());
@@ -686,7 +688,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
         int x;
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(GuiConstants.MAIN_BACKGROUND);
+        buttonPanel.setBackground(getSubHeaderColor());
         add(buttonPanel, BorderLayout.NORTH);
 
         selectCoursesButton = new JButton(TextMapper.getText(TextMapper.GUIRS_BTN_SELECT_COURSES));
@@ -698,7 +700,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
         buttonPanel.add(selectCoursesButton);
         selectCoursesButton.setVisible(true);
 
-        copyButton = new JButton(/*FIXME "Copy"*/TextMapper.getText(TextMapper.GUIRS_BTN_COPY_TO_CLIPBOARD));
+        copyButton = new JButton(TextMapper.getText(TextMapper.GUIRS_BTN_COPY_TO_CLIPBOARD));
         copyButton.setSize(copyButton.getPreferredSize());
         copyButton.addActionListener(this);
         copyButton.setLocation(x - copyButton.getSize().width - 20, 3);
@@ -812,6 +814,10 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
 
     }
 
+    @Override
+    public Color getSubHeaderColor() {
+      return Constants.COLOR20;
+    }
     /**
      * Returns a Panel that can functionate as a header panel.
      *
@@ -820,7 +826,9 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
      */
     @Override
     public JComponent getHeaderPanel() {
-        return new HeaderPanel(TextMapper.getText(TextMapper.GUIRS_RESULTS));
+        HeaderPanel header = new HeaderPanel(TextMapper.getText(TextMapper.GUIRS_RESULTS));
+        header.setBackground(getSubHeaderColor());
+        return header;
     }
 
 //    private void setToolTips(UserGroup ug, ResultTableHeader rth) {
@@ -977,23 +985,34 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
             }
 
             table.validate();
-            table.setSize(table.getPreferredSize());
+            Dimension max = table.getPreferredSize();
+            table.setMaximumSize(max); max.width = Short.MAX_VALUE;
             JPanel panel = new JPanel(new BorderLayout());
             panel.add(table.getTableHeader(), BorderLayout.NORTH);
             panel.add(table, BorderLayout.CENTER);
+            panel.setBorder(BorderFactory.createLineBorder(Constants.COLOR13));
+            max = panel.getPreferredSize();
+            max.width = Short.MAX_VALUE;
+            panel.setMaximumSize(max);
 
             table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             //JScrollPane pane = new JScrollPane(panel,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             //pane.getViewport().setBackground(Color.RED);
             //TableUtil.setBorder(pane);
             table.setGridColor(new Color(210, 210, 210));
-            jtbl = new JPanel(new BorderLayout());
+
+            jtbl = Box.createVerticalBox();
             JLabel title = new JLabel(lg.getTitle()); // FIXME je juiste naam...
-            title.setOpaque(false);
+            title.setFont(GuiConstants.SUB_HEADER_TEXT);
+            title.setForeground(GuiConstants.HEADER_COLOR);
+            title.setOpaque(false); 
+            title.setAlignmentX(LEFT_ALIGNMENT);
             jtbl.setOpaque(false);
-            jtbl.add(title, BorderLayout.NORTH);
-            //TableUtil.shrinkToFit(table, pane, 600, 470);
-            jtbl.add(panel, BorderLayout.CENTER);
+            jtbl.add(title);
+            jtbl.add(Box.createVerticalStrut(10));
+            panel.setAlignmentX(LEFT_ALIGNMENT);
+            jtbl.add(panel);
+            jtbl.add(Box.createVerticalGlue());
 
             //Dimension pref = jtbl.getPreferredSize();
             //pref.width = Math.min(623-10, pref.width);
@@ -1030,6 +1049,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
 //    		jtbl.add(chartPanel, BorderLayout.SOUTH);
             jtbl.setLocation(10, 10 + 5);
             jtbl.validate();
+            jtbl.setBorder(BorderFactory.createEmptyBorder(0, 25, 5, 25));
             add(jtbl);
             Dimension pref = jtbl.getPreferredSize();
             pref.height += 40;
