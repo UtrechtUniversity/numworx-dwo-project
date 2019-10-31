@@ -14,10 +14,10 @@ import nl.uu.fi.dwo.rest.entities.RestAppletConfig;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
 
-public class SecureDwoAdminConfigManager {
+public class SecureDwoAdminConfigManager implements ConfigManager {
   private static final Logger LOG = Logger.getLogger(SecureDwoAdminConfigManager.class.getName());
 
-  public static List<DomAppletConfig> getConfigurations(Locale locale) throws Dwo2Exception {
+  public List<DomAppletConfig> getConfigurations(Locale locale) throws Dwo2Exception {
     List<DomAppletConfig> src;
     src = StoredRestManager.getInstance().getList("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/config/getList/" + locale,
         RestListClassTypes.DomAppletConfig);
