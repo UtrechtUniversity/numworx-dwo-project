@@ -34,8 +34,10 @@ import fi.dwo.dwojapplet.gui.action.ScoManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
 import fi.dwo.dwojapplet.persistence.StoreCreator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.ConfigManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminConfigManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminScoContextManager;
@@ -420,4 +422,8 @@ public class GuiCreatorAdmin extends GuiCreator {
       return courseManager;
     }
     
+    @Override
+    public ConfigManager getConfigManager() {
+      return new SecureDwoAdminConfigManager();
+    }
 }

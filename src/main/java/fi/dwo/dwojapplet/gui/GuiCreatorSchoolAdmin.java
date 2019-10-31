@@ -96,5 +96,13 @@ public class GuiCreatorSchoolAdmin extends GuiCreatorTeacher {
       GuiCreator.instance().ShowErrorDialog(mainPanel, ex);
       throw new RuntimeException(ex);
     }
+
+    /* Schooladmin altijd schrijfbaar, profileadmin is er al uit gefilterd
+     * @see fi.dwo.dwojapplet.gui.GuiCreatorTeacher#canWrite(fi.dwo.dwojapplet.domain.Course)
+     */
+    @Override
+    public boolean canWrite(Course c) {
+      return true;
+    }
     
 }

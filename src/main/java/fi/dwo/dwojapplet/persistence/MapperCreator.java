@@ -2,11 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\MapperCreator.java
 package fi.dwo.dwojapplet.persistence;
 
-import java.applet.Applet;
 import java.util.Hashtable;
-import java.util.Vector;
-
-import fi.dwo.dwojapplet.domain.UserResultList;
 
 /**
  * This class creates the mappers which can map database-hashtables on objects.
@@ -37,7 +33,7 @@ class MapperCreator {
         {"Sco", "ScoMapper"},
         {"SchoolClass", "ClassMapper"},
 //        {"UserResultList", "UserResultListMapper"},
-        {"AppletConfig", "AppletConfigMapper"},
+ //       {"AppletConfig", "AppletConfigMapper"},
  //       {"DwoProfile", "DwoProfileMapper"},
  //      {"AppletData", "AppletDataMapper"},
  //       {"CourseSequence", "CourseSequenceMapper"},

@@ -38,8 +38,10 @@ import fi.dwo.dwojapplet.gui.action.ScoManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
 import fi.dwo.dwojapplet.gui.action.WrapSco;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.ConfigManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherConfigManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherCourseManager;
@@ -109,7 +111,8 @@ public class GuiCreatorTeacher extends GuiCreator {
         DomSchool school = DwoHelper.getSchoolLogins().getActiveSchoolRoleAndClass().getSchool();
         set.add(DwoHelper.getCurrentUser().getId());
         set.add(school.getId());
-        try {
+        if( ! DwoHelper.isContact())
+          try {
           List<DomSchoolClass> classes;
           classes = SecureTeacherSchoolClassManager.getTeachersSchoolClasses();
           classes.forEach(cl -> set.add(cl.getId()));
@@ -622,4 +625,8 @@ public class GuiCreatorTeacher extends GuiCreator {
       return courseManager;
     }
     
+    @Override
+    public ConfigManager getConfigManager() {
+      return new SecureTeacherConfigManager();
+    }
 }

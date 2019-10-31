@@ -23,6 +23,7 @@ import fi.dwo.dwojapplet.domain.ScoBase;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.UserResultList;
+import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.persistence.cache.ReadOnly;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicCourseManager;
@@ -32,6 +33,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserCourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserResultsManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredStudentCoursesOfSchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecuredTeacherResultsManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomClearStudentDataForScoAndClass;
@@ -66,6 +68,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -894,15 +897,15 @@ public class PersistenceFacade {
 //        MapperCreator.instance(c).removeAllObjects();
 //    }
 
-    /**
-     * Clears data from mapper cache for a certain class
-     *
-     * @param c Class
-     * @param id
-     */
-    private void clearObjectInMapperCache(Class<?> c, int id) {
-        MapperCreator.instance(c).removeObject(id);
-    }
+//    /**
+//     * Clears data from mapper cache for a certain class
+//     *
+//     * @param c Class
+//     * @param id
+//     */
+//    private void clearObjectInMapperCache(Class<?> c, int id) {
+//        MapperCreator.instance(c).removeObject(id);
+//    }
 
     /**
      * vul de children van de courses. Daarmee wordt een 'loadchildren' hopelijk
@@ -1111,7 +1114,25 @@ public class PersistenceFacade {
     }
 
     public AppletConfig[] getAppletConfig(Locale locale) throws PersistenceException {
-      return get(AppletConfig.class, locale);
+      try {
+        List<DomAppletConfig> configurations = GuiCreator.instance().getConfigManager().getConfigurations(locale, DWO.getDwoProfile());
+// Filter profile
+        Iterator<DomAppletConfig> iter = configurations.iterator();
+        while (iter.hasNext()) {
+          DomAppletConfig ac = iter.next();
+          if (ac.getDwoProfileId() == null) continue; // Global
+          if (ac.getDwoProfileId().getId().equals(DWO.getDwoProfile().getId())) // Specifiek
+            continue;
+          iter.remove();
+        }
+        AppletConfig[] result = new AppletConfig[configurations.size()];
+        for(int i = 0; i < result.length; i++) {
+          result[i] = new AppletConfig( configurations.get(i) );
+        }
+        return result;
+      } catch (Dwo2Exception e) {
+        throw new PersistenceException(PersistenceException.EX_IO, e);
+      }
     }
 
     public School[] getSchool(Boolean true1) throws PersistenceException {

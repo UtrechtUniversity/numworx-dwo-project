@@ -1,6 +1,9 @@
 // Source file: C:\\parameters\\fi\\dwo\\client\\domain\\AppletConfig.java
 package fi.dwo.dwojapplet.domain;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
+import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -41,6 +44,15 @@ public class AppletConfig {
 
     public AppletConfig() {
 
+    }
+
+    public AppletConfig(DomAppletConfig dom) throws Dwo2Exception {
+      setAppletConfigID( MySQLPersistenceId.getNativeId(dom).intValue());
+      setAppletID( dom.getAppletID().intValue());
+      setLanguage( dom.getLanguage());
+      setLaunchdata( dom.getLaunchdata());
+      setName(dom.getName());
+      setImageSource(null);
     }
 
     /**

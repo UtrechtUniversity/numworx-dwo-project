@@ -39,9 +39,11 @@ import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.numworx.swingbrowser.api.SwingBrowserFactory;
 import nl.numworx.swingbrowser.api.SwingBrowserProvider;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.ConfigManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.LoginManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminConfigManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -1119,4 +1121,8 @@ public class GuiCreator {
       e.printStackTrace();
     }
     }
+
+  public ConfigManager getConfigManager() {
+    return null;
+  }
 }

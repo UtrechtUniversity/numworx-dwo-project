@@ -229,7 +229,9 @@ class AppletConfigPanel extends JPanel implements CenterSubPanel, ActionListener
     profiles = new DomAppletConfig[0];
     try {
       Collection<DomAppletConfig> list;
-      list = SecureDwoAdminConfigManager.getConfigurations(DwoHelper.getAu().getLocale());
+      list = 
+          GuiCreator.instance().getConfigManager()
+          .getConfigurations(DwoHelper.getAu().getLocale());
       profiles = list.toArray(profiles);
     } catch (Dwo2Exception e) {
       LOG.log(Level.SEVERE, "getProfiles", e);
