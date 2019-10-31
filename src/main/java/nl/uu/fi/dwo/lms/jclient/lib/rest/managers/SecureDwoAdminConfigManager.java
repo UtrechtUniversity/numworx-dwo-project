@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -10,6 +11,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.entities.RestAppletConfig;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
@@ -59,6 +61,22 @@ public class SecureDwoAdminConfigManager implements ConfigManager {
         Boolean.class, rest);
     return result;
   }
+
+	@Override
+	public List<DomAppletConfig> getConfigurations(Locale locale, DomDwoProfile profile) throws Dwo2Exception {
+	List<DomAppletConfig> result = getConfigurations(locale);
+	 // Filter profile
+    Iterator<DomAppletConfig> iter = result.iterator();
+    while (iter.hasNext()) {
+      DomAppletConfig ac = iter.next();
+      if (ac.getDwoProfileId() == null) continue; // Global
+      if (ac.getDwoProfileId().getId().equals(profile.getId())) // Specifiek
+        continue;
+      iter.remove();
+    }
+
+	return result;
+}
 
 
 }
