@@ -11,11 +11,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentAppletConfig;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.core.AppletConfigManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
-import nl.uu.fi.dwo.rest.entities.RestContext;
+import nl.uu.fi.dwo.rest.entities.RestDwoProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 @PermitAll
@@ -25,19 +26,27 @@ public class SecuredTeacherConfigManager {
   @Produces({"application/json"})
   @Path("/getList/{language}")
   public List<DomAppletConfig> getConfigurations(@Context SecurityContext sc,
-      @PathParam("language") String language, RestContext rest) throws Dwo2Exception {
+      @PathParam("language") String language, RestDwoProfile rest) throws Dwo2Exception {
 
     AnonDomainAuthorizer.build()
       .submitUser(sc.getUserPrincipal().getName())
       .setHasRole(rest.getRestContext().getDomHasRole())
       .buildSchoolAdminTeacher();
+    Long pid = MySQLPersistenceId.getNativeId(rest.getDomDwoProfile());
+
     List<PersistentAppletConfig> config = AppletConfigManager.findEntities();
     List<DomAppletConfig> list = 
     config.stream()
-    .filter(t -> t.getLanguage().equals(language))
+    .filter(t -> {
+    	boolean b = t.getDwoProfileID() == null || t.getDwoProfileID().equals(pid);   	
+    	return b && t.getLanguage().equals(language);
+    })
     .map(PersistentAppletConfig::buildDomAppletConfig)
     .collect(Collectors.toList());
     return list;
   }
 
+  
+  
+  
 }
