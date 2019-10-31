@@ -9,19 +9,10 @@
 html,body{margin:0px; padding:0px;}
 body#main {margin:0px; background:white; color:#000;}
 
-
-/* .RootPanel { background-color: #EFF1F3; } */
-
 /** Example rules used by the template application (remove for your app) */
 
-/*
-div.formula { background: green; width:100px; height: 100px;}
-*/
 .keyboardtabs {background:#000;}
 div.keyboard {background:#E5E7E9; left:0px; right:0px; }
-
-/*div.tekstregel { overflow: hidden; }*/
-
 
 div.mainPanel {
 	height: 100%;
@@ -33,9 +24,7 @@ div.contentPanel {
 	overflow-x: hidden;
 }
 
-div.mainPanel-dwo {
-	/*box-shadow: 3px 3px 3px #b0b4c0 inset;*/
-}
+
 div.gwt-DialogBox-dwo {
 	box-shadow: 0px 0px 15px black;
 }
@@ -63,12 +52,11 @@ div.keyboardtabs div {color:white; background:#444; border-radius:0px; padding:2
 div.keyboardtabs div:active {background:#e00;}
 
 
-div.scrollformule {overflow:scroll; background:blue; width:210px;}
+/* div.scrollformule {overflow:scroll; background:blue; width:210px;} */
 
 
 div.kbd-Button-dwo-numeric {
 	background:#eee;
-	/*background-image: url(images/resources/numericbuttongradient.png);*/
 }
 div.kbd-Button-noordhoff-numeric {
 	background-color:#64add3;
@@ -79,9 +67,7 @@ div.kbd-Button-noordhoff-numeric {
 	background-color: transparent;
 }
 
-
 div.apply {background:#eee; }
-
 
 div.tabkeyboard-dwo { 
 	margin: 0px auto;
@@ -99,9 +85,7 @@ div.tabkeyboard-noordhoff {
 
 div.listitem { color:#000; }
 
-input[name="userid"] { color:#000; }
-
-
+/* input[name="userid"] { color:#000; } */
 
 
 .gwt-Image-noordhoff {
@@ -127,55 +111,10 @@ div.listItem-dwo-separator {
 	font-size: 13pt;
 }
 
-
-
-/* .statusbar { */
-/* 	float: right; */
-/* 	display: inline-block; */
-/* 	margin-right: 20px; */
-/* 	width: 90px;	 */
-/* } */
-
-
-/* .opdrbutton-container { */
-/* 	background-color: #FFFFFF */
-/* } */
-
-/* .opdrnav-bottombar { */
-/* 	background-color: #FFFFFF */
-/* } */
-
-
-
-/* .statusBarLabel {
-	
-	display: inline;
-	margin-left: 10px;
-	margin-top: 0px;
-	margin-bottom: 0px;
-	padding: 0px;
-	padding-top: 0px;
-	padding-bottom: 0px;
-	background-color: white;
-	border-radius: 0px;
-	border-width: 0px;
-	border-style: solid;
-	border-color: white;
-	cursor: pointer;
-	color: #1D71B8;
-	font-weight: bold;
-	font-size: 11px;
-}
- */
-
-
-
-
 .gwt-Tree .gwt-TreeItem-selected {
 	text-decoration: underline;
 	font-weight: bold;
 }
-
 
 .cursor_gum {
 	cursor: url(images/resources/gumcursor.gif) 10 10, auto; 
@@ -196,38 +135,20 @@ div.listItem-dwo-separator {
 	font-size: 12px;
 }
 
-.gwt-Label-infoArea, .gwt-HTML-infoArea {
-	margin: 15px;
-}
+/* .gwt-Label-infoArea, .gwt-HTML-infoArea { */
+/* 	margin: 15px; */
+/* } */
 
-.gwt-HTML-moduleArea, .gwt-Label-moduleArea {
-	margin-top: 5px;
-	margin-left: 10px;
-	margin-right: 10px;
-}
+/* .gwt-HTML-moduleArea, .gwt-Label-moduleArea { */
+/* 	margin-top: 5px; */
+/* 	margin-left: 10px; */
+/* 	margin-right: 10px; */
+/* } */
 
 
 .gwt-MenuItem-disabled {
 	display: none;
 }
-
-/* .UserBar {
-	background: initial !important; not IE
-	background: inherit !important; IE
-	border: initial !important; not IE
-	border-style: none !important; IE
-}
-
-.UserBar .UserItem.gwt-MenuItem {
-	color: inherit;
-	font-size: 9pt;
-}
-.UserBar .UserItem.gwt-MenuItem-selected {
-	background: initial !important; not IE
-	background: inherit !important; 
-}
-*/
-
 
 .modules-icon {
 	background-image: url("images/numworx/modules.svg");
