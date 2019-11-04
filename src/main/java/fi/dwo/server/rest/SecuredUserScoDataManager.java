@@ -427,7 +427,7 @@ public class SecuredUserScoDataManager {
 							if(pssd == null) {
 								pssd = new PersistentStudentScoData(pssc.getStudentSco());
 								pssd.setSuspendData("");
-								pssd.setCocd("");
+								pssd.setCocd(Scorm2Xml.EMPTY_DOC);
 								StudentScoDataManager.create(pssd);
 							}
 						}

@@ -168,6 +168,7 @@ public class SecuredTeacherScormValuesManager {
 		List<DomMapEntry<String, String>> entryList = rest.getDomTeacherScormValues().getValues();
 
 		for(DomMapEntry<String,String> entry: entryList) {
+			logEntry("setTeacher "+sc.getUserPrincipal().getName(), entry, pssc.getPersistentHasRolePK().getUserID(), pssc.getScoID());
 			ScormKey key = ScormKey.getKey(entry.getKey());
 			String value = entry.getValue();
 			switch(key) {
@@ -222,6 +223,7 @@ public class SecuredTeacherScormValuesManager {
 				pssc.setTotalTime(CMI.to1_2Timex(CMI.from2004Time(value)));
 				break;
 			case XML:
+			case STUDENT_MODEL:
 				break;
 			}
 		}
@@ -259,5 +261,15 @@ public class SecuredTeacherScormValuesManager {
 
     static private final CmiConvert CMI = new CmiConvert(); // utility class
 
-	
+	private static void logEntry(String pfx, DomMapEntry<String, String> entry, Long userid, Long scoid) {
+		LOG.log(Level.INFO, "{0} u:{3}, s:{4}, k:{1}, v:{2}", new Object[] { pfx, entry.getKey(), shrink(entry.getValue()), String.valueOf(userid), String.valueOf(scoid)} );
+	}
+
+
+	private static final char ELLIPSIS = '\u2026';
+	private static String shrink(String string) {	  
+    if (string == null || string.length() <= 20) return string;
+    return string.substring(0,19) + ELLIPSIS;
+  }
+
 }
