@@ -306,11 +306,18 @@ public class SecuredUserScoDataManager {
 
 
 	private static void logEntry(String pfx, DomMapEntry<String, String> entry, Long userid, Long scoid) {
-		LOG.log(Level.FINE, "{0} u:{3}, s:{4}, k:{1}, v:{2}", new Object[] { pfx, entry.getKey(), entry.getValue(), String.valueOf(userid), String.valueOf(scoid)} );
+		LOG.log(Level.INFO, "{0} u:{3}, s:{4}, k:{1}, v:{2}", new Object[] { pfx, entry.getKey(), shrink(entry.getValue()), String.valueOf(userid), String.valueOf(scoid)} );
 	}
 
 
-	@PUT
+	private static final char ELLIPSIS = '\u2026';
+	private static String shrink(String string) {	  
+    if (string == null || string.length() <= 20) return string;
+    return string.substring(0,19) + ELLIPSIS;
+  }
+
+
+  @PUT
     @Produces({"application/json"})
     @Path("/setValues")
     public Response setValues(@Context SecurityContext sc, RestScormValues rest, @HeaderParam("if-match") EntityTag match) throws Dwo2Exception {
@@ -469,7 +476,6 @@ public class SecuredUserScoDataManager {
 					pssc.setTotalTime(CMI.to1_2Timex(CMI.from2004Time(value)));
 				} catch (Exception e) {
 					LOG.warning("setValues: totaltime= " + value + " e:" + e);
-
 				}
 				break;
 			case XML:
@@ -527,7 +533,7 @@ public class SecuredUserScoDataManager {
         		throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Wrong if-match", Response.Status.PRECONDITION_FAILED);
  // PATCH
 		for(DomMapEntry<String,String> entry: rest.getDomScormValues().getValues()) {
-			logEntry("set", entry, ssContext.getPersistentHasRolePK().getUserID(), ssContext.getScoID());
+			logEntry("patch", entry, ssContext.getPersistentHasRolePK().getUserID(), ssContext.getScoID());
 			ScormKey key = ScormKey.getKey(entry.getKey());
 			String value = entry.getValue();
 			switch(key) {
