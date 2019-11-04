@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.Hashtable;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-class SchoolGroupMapper extends XmlRpcMapper {
+class SchoolGroupMapper extends XmlRpcMapper<SchoolGroup> {
 
     private static final String TABLENAME = "tblSchoolGroup";
 
@@ -34,7 +34,7 @@ class SchoolGroupMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public void put(int oid, Object obj)  {
+    public void put(int oid, SchoolGroup obj)  {
         System.err.println("GroupMapper.put() Not yet implemented!");
 
     }
@@ -45,7 +45,7 @@ class SchoolGroupMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public Object getObjectFromReturn(Hashtable data) {
+    public SchoolGroup getObjectFromReturn(Hashtable data) {
         SchoolGroup g = null;
         if (data.get("schoolGroupID") == null) { //We don't know enough to make a
             // groupobject
@@ -73,7 +73,7 @@ class SchoolGroupMapper extends XmlRpcMapper {
      *
      */
     @Override
-    public Object[] get(Object obj) throws IOException, SQLException,
+    public SchoolGroup[] get(Object obj) throws IOException, SQLException,
             XmlRpcException, PersistenceException {
         Hashtable ht = new Hashtable();
         if (obj instanceof School) {
@@ -110,7 +110,7 @@ class SchoolGroupMapper extends XmlRpcMapper {
      *      java.util.Hashtable)
      */
     @Override
-    protected Object update(Object obj, Hashtable data) {
+    protected SchoolGroup update(SchoolGroup obj, Hashtable data) {
         SchoolGroup g = (SchoolGroup) obj;
         g.setSchoolGroupID(((Integer) data.get("schoolGroupID")).intValue());
         g.setGroupID(((Integer) data.get("groupID")).intValue());
@@ -124,7 +124,7 @@ class SchoolGroupMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
     @Override
-    protected Object[] createArray(int size) {
+    protected SchoolGroup[] createArray(int size) {
         return new SchoolGroup[size];
     }
 

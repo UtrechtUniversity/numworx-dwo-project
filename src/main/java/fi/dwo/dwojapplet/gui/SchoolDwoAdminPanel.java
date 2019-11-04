@@ -99,11 +99,7 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
             if (value == editImage || value == removeImage || value == rightsImage|| value == imageStats) {
                 lclRow = rowSorter.convertRowIndexToModel(row);
                 DomSchool4DwoAdmin school =  tableModel.getSchool(lclRow);
-                try {
-                    oldSchool = PersistenceFacade.instance().toSchool(Collections.singleton(school))[0];
-                } catch (PersistenceException ex) {
-                    LOG.log(Level.SEVERE, null, ex);
-                }
+                oldSchool = PersistenceFacade.instance().toSchool(Collections.singleton(school))[0];
 
             }
             if (value == editImage) {
@@ -219,7 +215,6 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
         
         try {
           PersistenceFacade.instance().toSchool(prop.getSchoolList());
-        } catch (PersistenceException e1) {
         } catch (Dwo2Exception e1) {
         }
         

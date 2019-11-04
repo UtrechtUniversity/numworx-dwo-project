@@ -2863,8 +2863,6 @@ LOG.info("time results = " + (-t) + " ms");
             p.setPasswd(value);
         }
         return newSchool;
-      } catch (PersistenceException e) {
-        throw new SchoolException(SchoolException.EX_XML_RPC);
       } catch (Dwo2Exception e) {
          throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR);
       }

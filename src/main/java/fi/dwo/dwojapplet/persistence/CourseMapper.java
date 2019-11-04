@@ -474,7 +474,7 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>, M
         }
         if (data.containsKey("ClassCourseID")) {
             try {
-                c.link = (ClassCourse) MapperCreator.instance(ClassCourse.class).getObjectFromReturn(data);
+                c.link =  CLASSCOURSE_MAPPER.getObjectFromReturn(data);
             } catch (Exception e) {
 
                 LOG.log(Level.SEVERE,null,e);
@@ -488,6 +488,8 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>, M
         return c;
     }
 
+    final ClassCourseMapper CLASSCOURSE_MAPPER = new ClassCourseMapper();
+ 
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */

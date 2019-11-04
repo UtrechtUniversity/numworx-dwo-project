@@ -72,7 +72,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.TimeZone;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -101,7 +100,7 @@ public class PersistenceFacade {
     }
     private static final Logger LOG = Logger.getLogger(PersistenceFacade.class.getName());
 
-    private static final Sco[] EMPTY_SCOS = new Sco[0];
+    //private static final Sco[] EMPTY_SCOS = new Sco[0];
 
     private volatile static PersistenceFacade _instance;
 
@@ -123,15 +122,19 @@ public class PersistenceFacade {
 
     private final CourseMapper courseMapper;
     private final UserMapper userMapper;
-    private final MapperIF<Sco> scoMapper;
+    private final ScoMapper scoMapper;
+    private final SchoolMapper schoolMapper;
+    private final ClassMapper  classMapper;
     
     /**
      * Empty constructor
      */
     private PersistenceFacade() {
-      courseMapper = (CourseMapper) MapperCreator.instance(Course.class);
-      userMapper = (UserMapper) MapperCreator.instance(User.class);
-      scoMapper = MapperCreator.instance(Sco.class);
+      courseMapper = new CourseMapper();
+      userMapper = new UserMapper();
+      scoMapper = new ScoMapper();
+      schoolMapper = new SchoolMapper();
+      classMapper = new ClassMapper();
     }
 
     /**
@@ -217,120 +220,37 @@ public class PersistenceFacade {
 //       return get(AppletData.class);
 //     }
      
-    /**
-     * Returns all the objects of the specified class with the restriction of
-     * the specified object.<br>
-     * The meaning of this restriction is defined in the corresponding
-     * mapper-class (e.g. CourseMapper). e.g. if the class is
-     * fi.dwo.client.domain.Course, all the Course objects representing the
-     * courses in the database with the specified restriction are returned.
-     *
-     * @param c The class, indicating the type of Object to get.
-     * @param obj An object that specifies the restriction.
-     *
-     * @return Object[]
-     * @throws fi.dwo.commons.exceptions.PersistenceException
-     *
-     */
-    private <T> T[] get(java.lang.Class<T> c, Object obj)
-            throws PersistenceException {
-        MapperIF<T> mapper = MapperCreator.instance(c);
-        try {
-            return mapper.get(obj);
-        }
-        catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO, e);
-        }
-        catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }
-        catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB, e);
-        }
-    }
-
-    /**
-     * This method saves an object in the CACHE.<br>
-     * school/schoolclass/user
-     *
-     * @param oid
-     * @param obj
-     * @throws fi.dwo.commons.exceptions.PersistenceException
-     *
-     */
-    private <T> void put(int oid, T obj, Class<T> clz) {
-        MapperIF<T> mapper = MapperCreator.instance(clz);
-        mapper.put(oid, obj);
-
-    }
-
-//    public Hashtable getRecord(String tableName, String idCol, int oid)
-//            throws IOException, XmlRpcException, SQLException, PersistenceException {
-//        try {
-//            Hashtable h = DbAccessCreator.instance().getRecord(tableName, idCol, oid);
-//            return h;
-//        }
-//        catch (IOException e) {
-//            throw new PersistenceException(PersistenceException.EX_IO, e);
-//        }
-//        catch (SQLException e) {
-//            throw new PersistenceException(PersistenceException.EX_DB, e);
-//        }
-//        catch (XmlRpcException e) {
-//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-//        }
+//    /**
+//     * =============================================================================
+//     * XMLRPC FUNCTIONALITY
+//     * =============================================================================
+//     */
+//    /**
+//     * Unpack the exception out of XML-RPC. The message of the specified
+//     * exception is the name of the exceptionclass to return.
+//     *
+//     * @param e The exception.
+//     * @param errorCode The errorcode.
+//     * @return The unpackedException.
+//     * @throws PersistenceException
+//     */
+//    private Exception getException(Exception e, int errorCode)
+//            throws PersistenceException {
+//        String exceptionClassName = e.getMessage();
 //
-//    }
-
-//    public Vector getRecord(String tableName, Hashtable restriction, String seq)
-//            throws IOException, XmlRpcException, SQLException, PersistenceException {
+//        Class excClass;
 //        try {
-//            Vector h = DbAccessCreator.instance().getTable(tableName, restriction, seq);
-//            return h;
+//            excClass = Class.forName(exceptionClassName);
+//            Class[] constrArgTypes = {int.class};
+//            Constructor excConstr = excClass.getConstructor(constrArgTypes);
+//            Object[] constrArgs = {new Integer(errorCode)};
+//            return (Exception) excConstr.newInstance(constrArgs);
 //        }
-//        catch (IOException e) {
-//            throw new PersistenceException(PersistenceException.EX_IO, e);
+//        catch (Exception e1) {
+//            throw new PersistenceException(
+//                    PersistenceException.EX_UNKNOWN_ERROR, e);
 //        }
-//        catch (SQLException e) {
-//            throw new PersistenceException(PersistenceException.EX_DB, e);
-//        }
-//        catch (XmlRpcException e) {
-//            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-//        }
-//
 //    }
-
-    /**
-     * =============================================================================
-     * XMLRPC FUNCTIONALITY
-     * =============================================================================
-     */
-    /**
-     * Unpack the exception out of XML-RPC. The message of the specified
-     * exception is the name of the exceptionclass to return.
-     *
-     * @param e The exception.
-     * @param errorCode The errorcode.
-     * @return The unpackedException.
-     * @throws PersistenceException
-     */
-    private Exception getException(Exception e, int errorCode)
-            throws PersistenceException {
-        String exceptionClassName = e.getMessage();
-
-        Class excClass;
-        try {
-            excClass = Class.forName(exceptionClassName);
-            Class[] constrArgTypes = {int.class};
-            Constructor excConstr = excClass.getConstructor(constrArgTypes);
-            Object[] constrArgs = {new Integer(errorCode)};
-            return (Exception) excConstr.newInstance(constrArgs);
-        }
-        catch (Exception e1) {
-            throw new PersistenceException(
-                    PersistenceException.EX_UNKNOWN_ERROR, e);
-        }
-    }
 
     /*
      * =============================================================================
@@ -629,10 +549,6 @@ public class PersistenceFacade {
    	
     }
     
-    
-    
-    
-
     public Course[] getImportCourses(School s, School school, int profileID) throws PersistenceException {
         try {
             Vector v;
@@ -888,25 +804,6 @@ public class PersistenceFacade {
         userMapper.removeObject(id);
     }
 
-//    /**
-//     * Clears data from mapper cache for a certain class
-//     *
-//     * @param c Class
-//     */
-//    private void clearCurrentMapperDataCache(Class<?> c) {
-//        MapperCreator.instance(c).removeAllObjects();
-//    }
-
-//    /**
-//     * Clears data from mapper cache for a certain class
-//     *
-//     * @param c Class
-//     * @param id
-//     */
-//    private void clearObjectInMapperCache(Class<?> c, int id) {
-//        MapperCreator.instance(c).removeObject(id);
-//    }
-
     /**
      * vul de children van de courses. Daarmee wordt een 'loadchildren' hopelijk
      * niet aangeroepen.
@@ -950,10 +847,6 @@ public class PersistenceFacade {
     private ResultsModuleIF resultsModule;
     public void setResultsModule(ResultsModuleIF resultsModule) {
       this.resultsModule = resultsModule;
-//      MapperIF m = MapperCreator.instance(UserResultList.class);
-//      if (m instanceof UserResultListMapper) {
-//          ((UserResultListMapper) m).setResultsModule(resultsModule);
-//      }
     }
 
     public Vector getResultCount(DomCoursesOfSchoolClass4Teacher result) {
@@ -971,30 +864,7 @@ public class PersistenceFacade {
 
     
     
-//    private void removeObject(int id, Class<?> class1) {
-//      MapperCreator.instance(class1).removeObject(id);
-//
-//      
-//    }
 
-//    @Deprecated
-//    public SchoolClass getSchoolClass(int classID) throws PersistenceException {
-//      MapperIF<SchoolClass> mapper = MapperCreator.instance(SchoolClass.class);
-//      
-//      try {
-//          return mapper.get(classID);
-//      }
-//      catch (IOException e) {
-//          LOG.log(Level.SEVERE, null, e);
-//          throw new PersistenceException(PersistenceException.EX_IO, e);
-//      }
-//      catch (XmlRpcException e) {
-//          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-//      }
-//      catch (SQLException e) {
-//          throw new PersistenceException(PersistenceException.EX_DB, e);
-//      }
-//    }
 
     public Course getCourse(int courseID) throws PersistenceException {
       try {
@@ -1048,9 +918,6 @@ public class PersistenceFacade {
       courseMapper.removeObject(id);
     }
 
-//    public School getSchool(int id) throws PersistenceException {
-//      return get(id, School.class);
-//    }
 
     public void putUser(int id, User u) {
       userMapper.put(id, u);
@@ -1071,23 +938,15 @@ public class PersistenceFacade {
     }
 
     public void putSchool(int schoolID, School s) {
-      put(schoolID, s, School.class);
+      schoolMapper.put(schoolID, s);
     }
 
     public void putSchoolClass(int id, SchoolClass cls) {
-      put(id, cls, SchoolClass.class);
+      classMapper.put(id, cls);
     }
 
-//    public void clearCurrentUserResultListDataCache() {
-//      //clearCurrentMapperDataCache(UserResultList.class);
-//    }
-
-//    public AppletConfig getAppletConfig(int i) throws PersistenceException {
-//      return get(i, AppletConfig.class);
-//    }
-
     public SchoolClass[] getSchoolClass(User teacher) throws PersistenceException {
-      return get(SchoolClass.class, teacher);
+      return classMapper.getFromTeacher();
     }
 
     public User[] getUser(SchoolClass schoolClass) throws PersistenceException {
@@ -1106,11 +965,22 @@ public class PersistenceFacade {
     }
 
     public SchoolClass[] getSchoolClass(School school) throws PersistenceException {
-      return get(SchoolClass.class, school);
+      return classMapper.getFromSchool();
     }
 
     public Sco[] getSco(Course course) throws PersistenceException {
-      return get(Sco.class, course);
+      try {
+          return scoMapper.get(course);
+      }
+      catch (IOException e) {
+          throw new PersistenceException(PersistenceException.EX_IO, e);
+      }
+      catch (XmlRpcException e) {
+          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+      }
+      catch (SQLException e) {
+          throw new PersistenceException(PersistenceException.EX_DB, e);
+      }
     }
 
     public AppletConfig[] getAppletConfig(Locale locale) throws PersistenceException {
@@ -1136,7 +1006,12 @@ public class PersistenceFacade {
     }
 
     public School[] getSchool(Boolean true1) throws PersistenceException {
-      return get(School.class, true1);
+      try {
+          return schoolMapper.getFromExport();
+      }
+      catch (Dwo2Exception e) {
+        throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+      }
     }
 
     public Course[] getCourses(Course parent) throws PersistenceException, IOException, SQLException, XmlRpcException {
@@ -1147,29 +1022,14 @@ public class PersistenceFacade {
       return getCourseFromMapper(parent);
     }
 
-    public School[] toSchool(Collection<? extends DomSchool> data) throws PersistenceException {
-      try {
-        return MapperCreator.instance(School.class).getObjectFromReturn(new Vector(data));
-      }
-      catch (IOException e) {
-          throw new PersistenceException(PersistenceException.EX_IO, e);
-      }
-      catch (XmlRpcException e) {
-          throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-      }
-      catch (SQLException e) {
-          throw new PersistenceException(PersistenceException.EX_DB, e);
-      }
+    public School[] toSchool(Collection<? extends DomSchool> data) {
+      return schoolMapper.getObjectFromDom(data);
     }
     
     public SchoolClass[] toSchoolClass(Collection<DomSchoolClass> data) throws PersistenceException {
       try {
-        return MapperCreator.instance(SchoolClass.class).getObjectFromReturn(new Vector(data));
-      } catch (IOException e) {
-        throw new PersistenceException(PersistenceException.EX_IO, e);
-      } catch (SQLException e) {
-        throw new PersistenceException(PersistenceException.EX_DB, e);
-      } catch (XmlRpcException e) {
+        return classMapper.toSchoolClasses(new Vector(data));
+      } catch (Dwo2Exception e) {
         throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
       }
     }
