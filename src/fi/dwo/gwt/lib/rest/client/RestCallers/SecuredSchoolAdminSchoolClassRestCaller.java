@@ -2,7 +2,6 @@ package fi.dwo.gwt.lib.rest.client.RestCallers;
 
 import java.util.List;
 
-import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -26,26 +25,18 @@ import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 
 public interface SecuredSchoolAdminSchoolClassRestCaller extends RestService {
 
-    @GET
-    @Path("/secure/schooladmin/schoolclass/getList")
-    public void getSchoolClasses(MethodCallback<List<DomSchoolClass>> callback);
-
-    @GET
-    @Path("/secure/schooladmin/schoolclass/getTeachersInSchoolList")
-    public void getTeachersInSchool(MethodCallback<List<DomTeacher>> callback);
+    @PUT
+    @Path("/sec:{id}/schooladmin/schoolclass/getList")
+    public void getSchoolClasses(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomSchoolClass>> callback);
 
     @PUT
     @Path("/sec:{id}/schooladmin/schoolclass/getTeachersInSchoolList")
     public void getTeachersInSchool(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomTeacher>> callback);
 
-    @GET
+    @PUT
     @Path("/sec:{id}/schooladmin/schoolclass/getStudentsInSchoolList")
     public void getStudentsInSchool(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomStudent>> callback);
  
-    @PUT
-    @Path("/secure/schooladmin/schoolclass/getStudentsInSchoolList")
-    public void getStudentsInSchool(MethodCallback<List<DomStudent>> callback);
-
     @PUT
     @Path("/secure/schooladmin/schoolclass/getTeacherList")
     public void getTeachersInSchoolClass(RestSchoolClass restData, MethodCallback<List<DomTeacher>> callback);
@@ -62,9 +53,9 @@ public interface SecuredSchoolAdminSchoolClassRestCaller extends RestService {
     @Path("/secure/schooladmin/schoolclass/remove")
     public void removeSchoolClass(RestSchoolClass restSchoolClass, MethodCallback<Boolean> callback);
 
-    @GET
-    @Path("/secure/schooladmin/schoolclass/getSchoolsList")
-    public void getSchoolsClasses(MethodCallback<List<DomSchoolClass>> callback);
+//    @GET
+//    @Path("/secure/schooladmin/schoolclass/getSchoolsList")
+//    public void getSchoolsClasses(MethodCallback<List<DomSchoolClass>> callback);
 
     @PUT
     @Path("/secure/schooladmin/schoolclass/submitTeacher")
@@ -94,9 +85,9 @@ public interface SecuredSchoolAdminSchoolClassRestCaller extends RestService {
     @Path("/secure/schooladmin/schoolclass/getFull")
     public void getFullSchoolClass(RestSchoolClass schoolClass, MethodCallback<DomSchoolClassFull> callBack);
 
-    @GET
-    @Path("/secure/schooladmin/schoolclass/getSingleSchoolStudentsInSchoolList")
-    public void getSingleSchoolStudentsInSchool(MethodCallback<List<DomStudent>> callback);
+    @PUT
+    @Path("/sec:{id}/schooladmin/schoolclass/getSingleSchoolStudentsInSchoolList")
+    public void getSingleSchoolStudentsInSchool(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomStudent>> callback);
     
     @PUT
     @Path("/secure/schooladmin/schoolclass/submitSingleSchoolStudent")

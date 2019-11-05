@@ -46,23 +46,13 @@ public class SecuredSchoolAdminSchoolClassManager {
         service =  GWT.create(SecuredSchoolAdminSchoolClassRestCaller.class);
     }
 
-    public Promise<List<DomSchoolClass>> getSchoolClasses() {
+    public Promise<List<DomSchoolClass>> getSchoolClasses(DomContext context) {
         PromiseCallback<List<DomSchoolClass>> defer = new PromiseCallback<List<DomSchoolClass>>();
-        this.getSchoolClasses(defer);
+        RestContext rest = new RestContext(); rest.setRestContext(context);
+        service.getSchoolClasses(PathId.getId(context), rest, defer);
         return defer.getPromise();
     }
 
-    private void getSchoolClasses(MethodCallback<List<DomSchoolClass>> callBack) {
-        service.getSchoolClasses(callBack);
-        LOG.log(Level.FINE, "Rest Callback performed.");
-    }
-
-    @Deprecated
-    public Promise<List<DomTeacher>> getTeachersInSchool() {
-        PromiseCallback<List<DomTeacher>> defer = new PromiseCallback<List<DomTeacher>>();
-        this.getTeachersInSchool(defer);
-        return defer.getPromise();
-    }
     
     public Promise<List<DomTeacher>> getTeachersInSchool(DomContext context) {
     	PromiseCallback<List<DomTeacher>> defer = new PromiseCallback<>();
@@ -71,18 +61,7 @@ public class SecuredSchoolAdminSchoolClassManager {
     	return defer.getPromise();
     }
 
-    private void getTeachersInSchool(MethodCallback<List<DomTeacher>> callBack) {
-        service.getTeachersInSchool(callBack);
-        LOG.log(Level.FINE, "Rest Callback performed.");
-    }
-
-    @Deprecated
-    public Promise<List<DomStudent>> getStudentsInSchool() {
-        PromiseCallback<List<DomStudent>> defer = new PromiseCallback<List<DomStudent>>();
-        this.getStudentsInSchool(defer);
-        return defer.getPromise();
-    }
-    
+   
     public Promise<List<DomStudent>> getStudentsInSchool(DomContext context) {
     	PromiseCallback<List<DomStudent>> defer = new PromiseCallback<>();
     	RestContext rest = new RestContext();
@@ -91,10 +70,6 @@ public class SecuredSchoolAdminSchoolClassManager {
     	return defer.getPromise();
     }
 
-    private void getStudentsInSchool(MethodCallback<List<DomStudent>> callBack) {
-        service.getStudentsInSchool(callBack);
-        LOG.log(Level.FINE, "Rest Callback performed.");
-    }
 
     public Promise<List<DomTeacher>> getTeachersInSchoolClass(DomSchoolClass schoolClass) {
         PromiseCallback<List<DomTeacher>> defer = new PromiseCallback<List<DomTeacher>>();
@@ -147,16 +122,6 @@ public class SecuredSchoolAdminSchoolClassManager {
 
     private void removeSchoolClass(RestSchoolClass restData, MethodCallback<Boolean> callBack) {
         service.removeSchoolClass(restData, callBack);
-    }
-
-    public Promise<List<DomSchoolClass>> getSchoolsClasses() {
-        PromiseCallback<List<DomSchoolClass>> defer = new PromiseCallback<List<DomSchoolClass>>();
-        this.getSchoolsClasses(defer);
-        return defer.getPromise();
-    }
-
-    private void getSchoolsClasses(MethodCallback<List<DomSchoolClass>> callBack) {
-        service.getSchoolsClasses(callBack);
     }
 
     public Promise<Boolean> submitTeacherToSchoolClass(DomSubmitTeacherToSchoolClass teacherToClass) {
@@ -250,14 +215,11 @@ public class SecuredSchoolAdminSchoolClassManager {
         service.getFullSchoolClass(restData, (callBack));
     }
 
-    public Promise<List<DomStudent>> getSingleSchoolStudentsInSchool() {
+    public Promise<List<DomStudent>> getSingleSchoolStudentsInSchool(DomContext context) {
         PromiseCallback<List<DomStudent>> defer = new PromiseCallback<List<DomStudent>>();
-        this.getSingleSchoolStudentsInSchool(defer);
+        RestContext rest = new RestContext(); rest.setRestContext(context);
+        service.getSingleSchoolStudentsInSchool(PathId.getId(context), rest, defer);
         return defer.getPromise();
-    }
-
-    public void getSingleSchoolStudentsInSchool(MethodCallback<List<DomStudent>> callBack) {
-        service.getSingleSchoolStudentsInSchool(callBack);
     }
 
     public Promise<Boolean> submitSingleSchoolStudent(DomNewSingleSchoolStudent newStudent) {
