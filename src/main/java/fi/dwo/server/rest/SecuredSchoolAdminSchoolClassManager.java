@@ -50,6 +50,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
 import javax.persistence.PersistenceException;
@@ -74,6 +75,21 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
 
     private static final Logger LOG = Logger.getLogger(SecuredSchoolAdminSchoolClassManager.class.getName());
 
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getList")
+    public List<DomSchoolClass> getSchoolClasses(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
+      UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build()
+          .submitUser(sc.getUserPrincipal().getName())
+          .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.SCHOOLADMIN);
+      PersistentSchool school = state.getSchool();
+      
+      return SchoolClassManager.findEntities(school)
+          .stream()
+          .map(PersistentSchoolClass::buildDomSchoolClass)
+          .collect(Collectors.toList());
+    }
+    
     /**
      * Returns the school data to be displayed.
      *
