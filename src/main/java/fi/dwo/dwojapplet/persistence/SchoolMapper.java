@@ -2,6 +2,17 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\SchoolMapper.java
 package fi.dwo.dwojapplet.persistence;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.xmlrpc.applet.XmlRpcException;
+
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
@@ -13,29 +24,13 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherFromToManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
-import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.xmlrpc.applet.XmlRpcException;
 
 class SchoolMapper  {
     private static final Logger LOG = Logger.getLogger(SchoolMapper.class.getName());
 
-    private final SchoolGroupMapper SCHOOLGROUP_MAPPER = new SchoolGroupMapper();
+    //private final SchoolGroupMapper SCHOOLGROUP_MAPPER = new SchoolGroupMapper();
     private Map<Integer, School> objects = new HashMap<>();
 
     // lazy evaluation.
@@ -44,8 +39,6 @@ class SchoolMapper  {
 
         Boolean export;
         
-      
-      
         @Override
         public void setExport(boolean export) {
           this.export = export;
@@ -65,13 +58,6 @@ class SchoolMapper  {
           return export.booleanValue();
         }
 
-        /* (non-Javadoc)
-         * @see fi.dwo.client.domain.School#getPasswd(int)
-         */
-        public String getPasswd(int groupID) {
-            getSchoolGroupList();
-            return super.getPasswd(groupID);
-        }
 
         /* (non-Javadoc)
          * @see fi.dwo.client.domain.School#getClassList()
@@ -91,28 +77,28 @@ class SchoolMapper  {
             return super.getClassList();
         }
 
-        /* (non-Javadoc)
-         * @see fi.dwo.client.domain.School#getSchoolGroupList()
-         */
-        public SchoolGroup[] getSchoolGroupList() {
-            if (super.getSchoolGroupList() == null) {
-                try {
-                    setSchoolGroupList(SCHOOLGROUP_MAPPER.get(this));
-                } catch (IOException e) {
-    
-                    LOG.log(Level.SEVERE,null,e);
-                } catch (SQLException e) {
-    
-                    LOG.log(Level.SEVERE,null,e);
-                } catch (XmlRpcException e) {
-    
-                    LOG.log(Level.SEVERE,null,e);
-                } catch (PersistenceException e) {
-                  LOG.log(Level.SEVERE,null,e);
-                }
-            }
-            return super.getSchoolGroupList();
-        }
+//        /* (non-Javadoc)
+//         * @see fi.dwo.client.domain.School#getSchoolGroupList()
+//         */
+//        public SchoolGroup[] getSchoolGroupList() {
+//            if (super.getSchoolGroupList() == null) {
+//                try {
+//                    setSchoolGroupList(SCHOOLGROUP_MAPPER.get(this));
+//                } catch (IOException e) {
+//    
+//                    LOG.log(Level.SEVERE,null,e);
+//                } catch (SQLException e) {
+//    
+//                    LOG.log(Level.SEVERE,null,e);
+//                } catch (XmlRpcException e) {
+//    
+//                    LOG.log(Level.SEVERE,null,e);
+//                } catch (PersistenceException e) {
+//                  LOG.log(Level.SEVERE,null,e);
+//                }
+//            }
+//            return super.getSchoolGroupList();
+//        }
 
         /**
          * assert classList != null.

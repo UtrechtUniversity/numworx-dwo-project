@@ -21,7 +21,7 @@ class DbAccessCreator {
      * @see fi.dwo.client.domain.DWO#main(String[])
      */
 
-    public static String SERVLET = "/dwo/dsaccess";
+     static String SERVLET = "/dwo/dsaccess";
     //public static String SERVLET = "/servlet/dwodsaccess";
     //public static String SERVLET = "/dwo/dbaccess";
 
@@ -29,11 +29,11 @@ class DbAccessCreator {
     /**
      *
      */
-    public DbAccessCreator() {
+     DbAccessCreator() {
 
     }
 
-    public static void setInstance(DbAccessIF update) {
+     static void setInstance(DbAccessIF update) {
         dbAccess = update;
     }
 
@@ -41,7 +41,7 @@ class DbAccessCreator {
      * @return fi.dwo.client.persistence.DbAccessIF
      *
      */
-    public static DbAccessIF instance() {
+     static DbAccessIF instance() {
         if (dbAccess == null) {
         URL server;
             if(DwoHelper.getServerUrlPath()!=null){

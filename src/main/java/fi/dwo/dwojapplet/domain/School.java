@@ -26,7 +26,7 @@ public class School {
 
     private String schoolLogin;
 
-    private SchoolGroup[] schoolGroupList;
+//    private SchoolGroup[] schoolGroupList;
 
     private SchoolClass[] classList;
 
@@ -105,34 +105,34 @@ public class School {
         this.schoolLogin = schoolLogin;
     }
 
-    /**
-     * Returns the list of schoolGroups specified for the school.
-     *
-     * @return The list of schoolGroups specified for the school.
-     */
-    public SchoolGroup[] getSchoolGroupList() {
-        return schoolGroupList;
-    }
+//    /**
+//     * Returns the list of schoolGroups specified for the school.
+//     *
+//     * @return The list of schoolGroups specified for the school.
+//     */
+//    public SchoolGroup[] getSchoolGroupList() {
+//        return schoolGroupList;
+//    }
 
-    /**
-     * Sets the list of schoolGroups for the school.
-     *
-     * @param schoolGroupList The list of schoolGroups for the school.
-     */
-    public void setSchoolGroupList(SchoolGroup[] schoolGroupList) {
-        this.schoolGroupList = schoolGroupList;
-    }
+//    /**
+//     * Sets the list of schoolGroups for the school.
+//     *
+//     * @param schoolGroupList The list of schoolGroups for the school.
+//     */
+//    public void setSchoolGroupList(SchoolGroup[] schoolGroupList) {
+//        this.schoolGroupList = schoolGroupList;
+//    }
 
-    public String getPasswd(int groupID) {
-        if (schoolGroupList != null) {
-            for (int i = 0; i < schoolGroupList.length; i++) {
-                if (schoolGroupList[i] != null && schoolGroupList[i].getGroupID() == groupID) {
-                    return schoolGroupList[i].getPasswd();
-                }
-            }
-        }
-        return null;
-    }
+//    public String getPasswd(int groupID) {
+//        if (schoolGroupList != null) {
+//            for (int i = 0; i < schoolGroupList.length; i++) {
+//                if (schoolGroupList[i] != null && schoolGroupList[i].getGroupID() == groupID) {
+//                    return schoolGroupList[i].getPasswd();
+//                }
+//            }
+//        }
+//        return null;
+//    }
 
     /**
      * Returns the list of classes specified for the school.

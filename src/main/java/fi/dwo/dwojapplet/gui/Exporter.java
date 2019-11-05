@@ -61,25 +61,25 @@ abstract class Exporter {
       return result.orElse("");
     }
 
-    @Deprecated
-    public void export(School[] schools) {
-        ExportBuffer sb = createExportBuffer();
-        if (schools == null) {
-            sb.export();
-            return;
-        }
-        String[] line = {"School", "Login", "Leerling", "Docent", "SchoolAdmin"};
-        sb.exportHeader(line);
-        for (School school : schools) {
-            line[0] = school.getName();
-            line[1] = school.getSchoolLogin();
-            line[2] = school.getPasswd(SchoolGroup.STUDENT);
-            line[3] = school.getPasswd(SchoolGroup.TEACHER);
-            line[4] = school.getPasswd(SchoolGroup.SCHOOLADMIN);
-            sb.export(line);
-        }
-        sb.export();
-    }
+//    @Deprecated
+//    public void export(School[] schools) {
+//        ExportBuffer sb = createExportBuffer();
+//        if (schools == null) {
+//            sb.export();
+//            return;
+//        }
+//        String[] line = {"School", "Login", "Leerling", "Docent", "SchoolAdmin"};
+//        sb.exportHeader(line);
+//        for (School school : schools) {
+//            line[0] = school.getName();
+//            line[1] = school.getSchoolLogin();
+//            line[2] = school.getPasswd(SchoolGroup.STUDENT);
+//            line[3] = school.getPasswd(SchoolGroup.TEACHER);
+//            line[4] = school.getPasswd(SchoolGroup.SCHOOLADMIN);
+//            sb.export(line);
+//        }
+//        sb.export();
+//    }
 
     public void export(UserResultList[] userResults) {
         ExportBuffer sb = createExportBuffer();

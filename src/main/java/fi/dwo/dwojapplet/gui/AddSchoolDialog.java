@@ -14,6 +14,7 @@ import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
 import fi.dwo.dwojapplet.domain.SchoolPasswdMap;
 import fi.dwo.dwojapplet.gui.action.CopyLabel;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 
 import java.awt.BorderLayout;
@@ -259,9 +260,9 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         return s;
     }
 
-    public static School editSchool(School school) throws SchoolException {
-        return editSchool(null, school);
-    }
+//    public static School editSchool(School school) throws SchoolException {
+//        return editSchool(null, school);
+//    }
 
     /**
      * @param owner
@@ -269,10 +270,10 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      * @return fi.dwo.client.domain.Sco
      * @throws fi.dwo.commons.exceptions.SchoolException
      */
-    public static School editSchool(Component owner, School school) throws SchoolException {
+    public static School editSchool(Component owner, School school, DomSchoolFull dom) throws SchoolException {
         String sn = school.getName();
         String sl = school.getSchoolLogin();
-        SchoolPasswdMap spm = new SchoolPasswdMap(school);
+        SchoolPasswdMap spm = new SchoolPasswdMap(dom);
         Date expire = school.getExpire();
         AboType aboType = school.getAboType();
         AddSchoolDialog asd = new AddSchoolDialog(owner, "Schoolgegevens wijzigen", sn, sl, spm, expire, aboType);
@@ -285,7 +286,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         if (asd.isConfirmed()) {
             School s = GuiCreator.instance().editSchool(school.getSchoolID(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap(), asd.dateField.getDate(), (AboType) asd.aboField.getSelectedItem());
             if (s == null) { //something went wrong, reshow the dialog
-                s = editSchool(owner, school);
+                s = editSchool(owner, school, dom);
             }
             return s;
         } else { //action canceled

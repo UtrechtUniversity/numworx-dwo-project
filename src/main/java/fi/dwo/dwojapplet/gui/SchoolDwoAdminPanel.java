@@ -104,14 +104,16 @@ public class SchoolDwoAdminPanel extends JPanel implements CenterSubPanel, Actio
             }
             if (value == editImage) {
                 try {
-                    School s = AddSchoolDialog.editSchool(SchoolDwoAdminPanel.this.center, oldSchool);
+                    DomSchool4DwoAdmin school =  tableModel.getSchool(lclRow);
+                    DomSchoolFull full = SecureDwoAdminSchoolManager.getSchool(school);
+                    School s = AddSchoolDialog.editSchool(SchoolDwoAdminPanel.this.center, oldSchool,full);
                     if (s != null) {
                         tableModel.setValueAt(s.getSchoolLogin(), lclRow, 1);
                         tableModel.setValueAt(s.getName(), lclRow, 0);
                         model.fireTableRowsUpdated(lclRow, lclRow);
                     }
                 }
-                catch (SchoolException e) {
+                catch (Exception e) {
                     LOG.log(Level.SEVERE, null, e);
                 }
             } else if (value == removeImage) {

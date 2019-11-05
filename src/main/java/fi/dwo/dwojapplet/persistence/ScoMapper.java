@@ -103,7 +103,7 @@ class ScoMapper extends XmlRpcMapper<Sco> {
     /**
      *
      */
-    public ScoMapper() {
+    ScoMapper() {
 
     }
 
@@ -115,15 +115,14 @@ class ScoMapper extends XmlRpcMapper<Sco> {
      * @throws java.sql.SQLException
      *
      */
-    @Override
-    public void put(int oid, Sco obj)  {
+    void put(int oid, Sco obj)  {
         objects.put(new Integer(oid), obj);
         cachemap.clear();
     }
 
     
     @Override
-	public Sco get(int oid) throws IOException, XmlRpcException, SQLException, PersistenceException {
+	Sco get(int oid) throws IOException, XmlRpcException, SQLException, PersistenceException {
 		if (!objects.containsKey(Integer.valueOf(oid)))
 				cachemap.clear();
 		return super.get(oid);
@@ -138,8 +137,7 @@ class ScoMapper extends XmlRpcMapper<Sco> {
 	 * @throws PersistenceException 
      *
      */
-    @Override
-    public Sco getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
+     Sco getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
         Sco s = null;
         if (data.get("scoID") == null) { //We don't know enough to make a
             // scoobject
@@ -181,33 +179,13 @@ class ScoMapper extends XmlRpcMapper<Sco> {
      * @throws java.sql.SQLException
      * @throws PersistenceException 
      */
-    @Override
-    public Sco[] get(Object obj) throws IOException, SQLException,
+    Sco[] get(Object obj) throws IOException, SQLException,
             XmlRpcException, PersistenceException {
         Hashtable ht = new Hashtable();
         if (obj instanceof Course) {
             Course c = (Course) obj;
             ht.put("courseID", new Integer(c.getID()));
         }
-//        else if (obj instanceof Object[]) {
-//            Object[] objs = (Object[]) obj;
-//            School school = (School) objs[0];
-//            DwoProfile profile = (DwoProfile) objs[1];
-//            Hashtable wheredef = new Hashtable();
-//            wheredef.put("schoolID", new Integer(school.getSchoolID()));
-//            wheredef.put("dwoprofileid", new Integer(profile.getID()));
-//            String tableName = "tblScoView left join tblCourse on tblScoView.courseid = tblCourse.courseid";
-//            String orderBy = "sconame";
-//
-//            Vector data = (Vector) cachemap.get(wheredef);
-//            if (data == null) {
-//                data = DbAccessCreator.instance().getTable(tableName, LAZY_SCO_KEYS, wheredef, orderBy);
-//                cachemap.put(wheredef, data);
-//            } else {
-//                return getObjectFromReturn(data);
-//            }
-//            return fillcache(getObjectFromReturn(data));
-//        }
         return cached(ht);
     }
 
@@ -274,7 +252,6 @@ class ScoMapper extends XmlRpcMapper<Sco> {
      * @see fi.dwo.client.persistence.XmlRpcMapper#update(java.lang.Object,
      *      java.util.Hashtable)
      */
-    @Override
     protected Sco update(Sco obj, Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
         Sco s = (Sco) obj;
         s.setScoID(((Integer) data.get("scoID")).intValue());

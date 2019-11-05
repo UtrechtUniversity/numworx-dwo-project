@@ -6,9 +6,7 @@ import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
-import fi.dwo.dwojapplet.domain.ClassCourse;
 import fi.dwo.dwojapplet.domain.Course;
-import static fi.dwo.dwojapplet.domain.Course.NO_CHILDREN;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -30,7 +28,6 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -47,7 +44,7 @@ import java.util.logging.Logger;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>, MapperIF<Course>{
+class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course> {
     private static final Logger LOG = Logger.getLogger(CourseMapper.class.getName());
     private static final Course[] NO_ACCESS = new Course[0];
     private static final String TABLENAME = "tblCourse";
@@ -77,7 +74,6 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>, M
      * @throws java.sql.SQLException
      *
      */
-    @Override
     public void put(int oid, Course obj)  {
         objects.put(new Integer(oid), obj);
         cachemap.clear();
@@ -158,7 +154,6 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>, M
      * @throws java.sql.SQLException
      * @throws PersistenceException 
      */
-    @Override
     public Course[] get(Object obj) throws IOException, SQLException,
             XmlRpcException, PersistenceException {
         Hashtable ht = new Hashtable();
@@ -425,7 +420,7 @@ class CourseMapper extends XmlRpcMapper<Course> implements Comparator<Course>, M
      *      java.util.Hashtable)
      */
 
-    @Override
+    
     protected Course update(Course obj, Hashtable data) {
         Course c = (Course) obj;
         c.setCourseID(((Integer) data.get("courseID")).intValue());

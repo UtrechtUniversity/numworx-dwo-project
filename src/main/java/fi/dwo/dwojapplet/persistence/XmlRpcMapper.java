@@ -17,33 +17,16 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  * @author M.J.B. Kupers
  *
  */
-abstract class XmlRpcMapper<T> implements MapperIF<T> {
+abstract class XmlRpcMapper<T>  {
 
-    protected Hashtable<Integer, T> objects = new Hashtable();
+     Hashtable<Integer, T> objects = new Hashtable<>();
 
-    @Override
-    public void removeObject(int key) {
+     void removeObject(int key) {
         objects.remove(new Integer(key));
     }
 
-    @Override
-    public void removeAllObjects() {
+     void removeAllObjects() {
         objects.clear();
-    }
-
-    /**
-     * Returns alle the objects representing the specified mapper.
-     *
-     * @return All the objects representing the specified mapper.
-     * @throws java.io.IOException
-     * @throws java.sql.SQLException
-     * @see fi.dwo.client.persistence.MapperIF#get()
-     */
-//    @Override
-    public T[] get() throws IOException, XmlRpcException, SQLException {
-//        DbAccessIF dbAccess = DbAccessCreator.instance();
-//        return getObjectFromReturn(dbAccess.getTable(getTableName(), getOrderbyCol()));
-      return createArray(0); // not supported
     }
 
     /**
@@ -56,7 +39,7 @@ abstract class XmlRpcMapper<T> implements MapperIF<T> {
      * @throws SQLException
      * @throws PersistenceException 
      */
-    public T[] get(Hashtable wheredef) throws IOException, XmlRpcException, SQLException, PersistenceException {
+    T[] get(Hashtable wheredef) throws IOException, XmlRpcException, SQLException, PersistenceException {
         DbAccessIF dbAccess = DbAccessCreator.instance();
         return getObjectFromReturn(dbAccess.getTable(getTableName(), wheredef, getOrderbyCol()));
     }
@@ -71,8 +54,7 @@ abstract class XmlRpcMapper<T> implements MapperIF<T> {
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws PersistenceException 
      */
-    @Override
-    public T get(int oid) throws IOException, XmlRpcException,
+    T get(int oid) throws IOException, XmlRpcException,
             SQLException, PersistenceException {
         if (objects.containsKey(new Integer(oid))) {
             return objects.get(new Integer(oid));
@@ -80,30 +62,20 @@ abstract class XmlRpcMapper<T> implements MapperIF<T> {
             DbAccessIF dbAccess = DbAccessCreator.instance();
             T obj = getObjectFromReturn(dbAccess.getRecord(getTableName(),
                     getIDCol(), oid));
-            if (obj != null) {
-                //               objects.put(new Integer(oid), obj);
-            }
             return obj;
         }
     }
 
-//    @Deprecated
-//    public T get(int uid, Integer sgid) throws IOException, XmlRpcException,
-//            SQLException {
-//        System.err.println("UserMapper.get(u,s) Not implemented!");
-//        return null;
-//    }
+    abstract T getObjectFromReturn(Hashtable record) throws IOException, SQLException, XmlRpcException, PersistenceException;
 
     /**
      *
      */
-    public XmlRpcMapper() {
+    XmlRpcMapper() {
 
     }
 
-    protected abstract T update(T obj, Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException;
-
-    protected abstract T[] createArray(int size);
+     abstract T[] createArray(int size);
 
     /**
      * Returns the ID column of the object corresponding to this mapper. e.g.
@@ -111,7 +83,7 @@ abstract class XmlRpcMapper<T> implements MapperIF<T> {
      *
      * @return The ID column of the object corresponding to this mapper.
      */
-    protected abstract String getIDCol();
+     abstract String getIDCol();
 
     /**
      * Returns the TableName of the object corresponding to this mapper. e.g.
@@ -119,7 +91,7 @@ abstract class XmlRpcMapper<T> implements MapperIF<T> {
      *
      * @return The TableName of the object corresponding to this mapper.
      */
-    protected abstract String getTableName();
+     abstract String getTableName();
 
     /**
      * Returns the column name, that is default to sort the results. e.g. The
@@ -127,14 +99,13 @@ abstract class XmlRpcMapper<T> implements MapperIF<T> {
      *
      * @return the column name, that is default to sort the results.
      */
-    protected abstract String getOrderbyCol();
+     abstract String getOrderbyCol();
 
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.MapperIF#getObjectFromReturn(java.util.Vector)
      */
 
-    @Override
-    public T[] getObjectFromReturn(Vector data) throws IOException,
+     T[] getObjectFromReturn(Vector data) throws IOException,
             SQLException, XmlRpcException, PersistenceException {
         int i;
         T[] oa = createArray(data.size());

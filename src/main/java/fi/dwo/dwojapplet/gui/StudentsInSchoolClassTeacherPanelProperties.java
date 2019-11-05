@@ -35,22 +35,22 @@ public class StudentsInSchoolClassTeacherPanelProperties {
      * @return
      * @throws Dwo2Exception 
      */
-    public List<DomStudent> getStudentsInSchoolNotInClass(DomSchoolClass sc) throws Dwo2Exception {
-        List<DomStudent> classStudents = SecureTeacherSchoolClassManager.getStudentsInSchoolClass(sc);
-        List<DomStudent> schoolStudents = SecureTeacherSchoolClassManager.getSingleSchoolStudentsInSchool();
-        List<DomStudent> result = new ArrayList<DomStudent>(schoolStudents.size() - classStudents.size());
-        for (DomStudent t : schoolStudents) {
-            Boolean flag = true; //add teacher to result list
-            for (DomStudent c : classStudents) {
-                if (t.equals(c)) {
-                    flag = false;
-                }
-            }
-            result.add(t);
-        }
-        return result;
-    }
-    
+//    public List<DomStudent> getStudentsInSchoolNotInClass(DomSchoolClass sc) throws Dwo2Exception {
+//        List<DomStudent> classStudents = SecureTeacherSchoolClassManager.getStudentsInSchoolClass(sc);
+//        List<DomStudent> schoolStudents = SecureTeacherSchoolClassManager.getSingleSchoolStudentsInSchool();
+//        List<DomStudent> result = new ArrayList<DomStudent>(schoolStudents.size() - classStudents.size());
+//        for (DomStudent t : schoolStudents) {
+//            Boolean flag = true; //add teacher to result list
+//            for (DomStudent c : classStudents) {
+//                if (t.equals(c)) {
+//                    flag = false;
+//                }
+//            }
+//            result.add(t);
+//        }
+//        return result;
+//    }
+//    
     public List<DomStudent> getStudentsInSchoolClass(DomSchoolClass sc) throws Dwo2Exception {
         return SecureTeacherSchoolClassManager.getStudentsInSchoolClass(sc);
     }

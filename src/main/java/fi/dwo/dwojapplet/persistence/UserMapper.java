@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-class UserMapper implements MapperIF<User> {
+class UserMapper {
 
     private static final Logger LOG = Logger.getLogger(UserMapper.class.getName());
 
@@ -46,7 +46,7 @@ class UserMapper implements MapperIF<User> {
     /**
      *
      */
-    public UserMapper() {
+    UserMapper() {
 
     }
 
@@ -58,8 +58,7 @@ class UserMapper implements MapperIF<User> {
      * @throws java.sql.SQLException
      *
      */
-    @Override
-    public void put(int oid, User obj) {
+     void put(int oid, User obj) {
     	objects.put(oid, obj);
     }
 
@@ -72,47 +71,8 @@ class UserMapper implements MapperIF<User> {
      * @throws PersistenceException 
      *
      */
-    @Override
-    public User getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
+     User getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
         User u = null;
-//        if (data.get("userID") == null) { //We don't know enough to make a
-//            // userobject
-//            return null;
-//        } else if (objects.containsKey(data.get("userID"))) { // Did we know the
-//            // user?
-//            u = (User) objects.get(data.get("userID"));
-//            //TODO NOW
-//            if (PersistenceFacade.idOf(u.getSchoolGroupID()) != ((Integer) (data.get("schoolGroupID"))).intValue()) {
-//                u = new User();
-//                u = (User) update(u, data);
-//                return u;
-//            }
-//        } else {
-//            /* Is the user a teacher? */
-//            Object groupName = data.get("groupname");
-//            if (groupName != null) {
-//                if (TextMapper.GUIR_OPT_TEACHER.equals(groupName)) {
-//                    if (DwoHelper.isContact()) {
-//                        u = new SchoolAdmin();
-//                    } else {
-//                        u = new Teacher();
-//                    }
-//                } else if (TextMapper.GUIR_OPT_ADMIN.equals(groupName)) {
-//                    u = new Admin();
-//                } else if (TextMapper.GUIR_OPT_SCHOOLADMIN.equals(groupName)) {
-//                    u = new SchoolAdmin();
-//                    DwoHelper.setContact(true);
-//                }
-//            }
-//        }
-//
-//        if (u == null) {
-//            u = new User();
-//        }
-//        u = (User) update(u, data);
-//        if (!objects.containsKey(new Integer(u.getID()))) {
-//            objects.put(new Integer(u.getID()), u);
-//        }
         LOG.severe("Illegal access");
         return u;
     }
@@ -165,146 +125,18 @@ class UserMapper implements MapperIF<User> {
       if (teacher) v = SecureTeacherSchoolClassManager.getStudentsInSchoolClass(dsc);
       else v = SecureSchoolAdminSchoolClassManager.getStudentsInSchoolClass(dsc);
       return new Vector<DomStudent>(v);
-//      DbAccessIF dbAccess = DbAccessCreator.instance();
-//      Vector<Object> vList = null;
-//      try {
-//          int schoolClassID = sc.getID();
-//          vList = dbAccess.getStudentsOfClass(schoolClassID);
-//      } catch (DwoXmlRpcException ex) {
-//          Logger.getLogger(ClassMapper.class.getName()).log(Level.SEVERE, null, ex);
-//      }
-//      return vList;
     }
 
-//    @Override
-//    public Object get(int uid, Integer sgid) {
-//        String key = Integer.toString(uid).concat("-").concat(sgid.toString());
-//        if (hasRoleObjects.containsKey(key)) {
-//            return hasRoleObjects.get(key);
-//        } else {
-//            if(objects.containsKey(uid)){
-//                User u = (User) objects.get(uid);
-//                if(u!=null && PersistenceFacade.idOf(u.getSchoolGroupID())==sgid.intValue()){
-//                    return u;
-//                }
-//            }
-//            Vector v = new Vector();
-//            DbAccessIF dbAccess = DbAccessCreator.instance();
-//            try {
-//                v =  dbAccess.getHasRoleUser(uid, sgid.intValue());
-//                if (!v.isEmpty()) {                    
-//                    return getObjectFromReturn((Hashtable) v.get(0));
-//                }
-//
-//            } catch (Exception ex) {
-//                Logger.getLogger(ClassMapper.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//            return null;
-//        }
-//    }
-        /*
-//     * (non-Javadoc)
-//     * 
-//     * @see fi.dwo.client.persistence.XmlRpcMapper#getIDCol()
-//         */
-//        @Override
-//        protected String getIDCol() {
-//        return IDCOL;
-//        }
-
-//        /*
-//     * (non-Javadoc)
-//     * 
-//     * @see fi.dwo.client.persistence.XmlRpcMapper#getTableName()
-//         */
-//        @Override
-//        protected String getTableName() {
-//        return TABLENAME;
-//        }
-
-//        /*
-//     * (non-Javadoc)
-//     * 
-//     * @see fi.dwo.client.persistence.XmlRpcMapper#update(java.lang.Object,
-//     *      java.util.Hashtable)
-//         */
-//        @Override
-//        protected User update
-//        (User obj, Hashtable data) throws IOException, SQLException, XmlRpcException, PersistenceException {
-//            User u = (User) obj;
-//            u.setEmail((String) data.get("email"));
-//            u.setFirstname((String) data.get("firstname"));
-//            u.setLastName((String) data.get("lastname"));
-//            u.setMiddleName((String) data.get("middlename"));
-//            u.setUserID(((Integer) data.get("userID")).intValue());
-//            u.setUsername((String) data.get("username"));
-//            u.setRights((String) data.get("rights"));
-//            Number integer = (Number) data.get("schoolGroupID");
-//			u.setSchoolGroupID(PersistentSchoolGroup.buildPersistenceId(integer.longValue()));
-//            /* Maybe we've got some information about the school */
-//            School s = (School) MapperCreator.instance(School.class)
-//                    .getObjectFromReturn(data);
-//            if (s != null) {
-//                u.setSchool(s);
-//                String rights = s.getRights();
-//                for (int i = 0; i < rights.length(); i++) {
-//                    u.addRight(rights.charAt(i));
-//                }
-//            }
-//            String lastLogin = (String) data.get("timestamp"); // lastLogin is al in gebruik, maar dan een Date
-//            try {
-//                u.setLastLogin(Long.parseLong(lastLogin));
-//            } catch (Exception e) {
-//            }
-//
-//            Object classID = data.get("classID");
-//            if (classID != null && !classID.equals("") && !NUL.equals(classID)) {
-//                try {
-//                    SchoolClass c = (SchoolClass) MapperCreator.instance(SchoolClass.class).get(((Integer) data.get("classID")).intValue());
-//                    if (c != null) {
-//                        u.setInClass(c);
-//                    }
-//                } catch (Exception e) {
-//                    System.err.println("User: " + data);
-//                    LOG.log(Level.SEVERE, null, e);
-//                }
-//            }
-//
-//            if (u instanceof Teacher) {
-//                Object[] o = MapperCreator.instance(SchoolClass.class).get(u);
-//                if (o != null) {
-//                    SchoolClass[] slist = (SchoolClass[]) o;
-//                    ((Teacher) u).setClasses(slist);
-//                } else {
-//                    ((Teacher) u).setClasses(null);
-//                }
-//            }
-//            /*if(u instanceof Admin) {
-//         Object[] o = MapperCreator.instance(SchoolClass.class).get(u);
-//         ((Admin) u).setClasses((SchoolClass[]) o);
-//         }*/
-//
-//            return u;
-//        }
 
         /* (non-Javadoc)
          * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
          */
-        protected User[] createArray (int size) {
+        User[] createArray (int size) {
         return new User[size];
         }
 
-//        /* (non-Javadoc)
-//     * @see fi.dwo.client.persistence.XmlRpcMapper#getOrderbyCol()
-//         */
-//        @Override
-//        protected String getOrderbyCol() {
-//        return ORDERCOL;
-//        }
-
         @SuppressWarnings("rawtypes")
-        @Override
-        public User[] getObjectFromReturn(Vector data)
+        User[] getObjectFromReturn(Vector data)
             throws IOException, SQLException, XmlRpcException, PersistenceException {
           int i;
           User[] oa = createArray(data.size());
@@ -361,19 +193,16 @@ class UserMapper implements MapperIF<User> {
           return u;
         }
 
-        @Override
-        public User get(int oid)
+        User get(int oid)
         {   
           return objects.get(oid);
         }
 
-        @Override
-        public void removeObject(int key) {
+         void removeObject(int key) {
           objects.remove(key);
         }
 
-        @Override
-        public void removeAllObjects() {
+         void removeAllObjects() {
           objects.clear();
         }
 

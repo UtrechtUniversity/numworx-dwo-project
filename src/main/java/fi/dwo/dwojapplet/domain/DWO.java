@@ -2854,14 +2854,14 @@ LOG.info("time results = " + (-t) + " ms");
         newSchool.setName(schoolName);
         newSchool.setSchoolLogin(schoolLogin);
         newSchool.setAboType(aboType);
-        SchoolGroup[] pw = newSchool.getSchoolGroupList();
-        HashMap<Integer,String> hash = new HashMap<>();
-        passwords.stream().forEach(e -> hash.put(e.getKey().ordinal(), e.getValue()));
-        for(SchoolGroup p : pw) {
-          String value = hash.get(p.getGroupID());
-          if(value != null)
-            p.setPasswd(value);
-        }
+//        SchoolGroup[] pw = newSchool.getSchoolGroupList();
+//        HashMap<Integer,String> hash = new HashMap<>();
+//        passwords.stream().forEach(e -> hash.put(e.getKey().ordinal(), e.getValue()));
+//        for(SchoolGroup p : pw) {
+//          String value = hash.get(p.getGroupID());
+//          if(value != null)
+//            p.setPasswd(value);
+//        }
         return newSchool;
       } catch (Dwo2Exception e) {
          throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR);
