@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
+import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
@@ -66,8 +67,10 @@ public class SecureTeacherSchoolClassManager {
    */
   public static List<DomSchoolClass> getTeachersSchoolClasses() throws Dwo2Exception {
     List<DomSchoolClass> src;
-    src = getRestManager().getList("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/getList",
-        RestListClassTypes.DomSchoolClass);
+    RestContext rest = new RestContext();
+    rest.setRestContext(getContext());
+    src = getRestManager().getPutList("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/getList",
+        RestListClassTypes.DomSchoolClass, rest);
     LOG.log(Level.FINE, "Retrieved list of schoolclasses of the teacher with username {0}.",
         new Object[] {getUserName()});
     return src;
@@ -75,8 +78,10 @@ public class SecureTeacherSchoolClassManager {
 
   public static List<DomTeacher> getTeachersInSchool() throws Dwo2Exception {
     List<DomTeacher> src;
-    src = getRestManager().getList("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/getTeachersInSchoolList",
-        RestListClassTypes.DomTeacher);
+    RestContext rest = new RestContext();
+    rest.setRestContext(getContext());
+    src = getRestManager().getPutList("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/getTeachersInSchoolList",
+        RestListClassTypes.DomTeacher, rest);
     LOG.log(Level.FINE,
         "Retrieved list of teachers in the school for the teacher with username {0}.",
         new Object[] {getUserName()});
@@ -87,15 +92,17 @@ public class SecureTeacherSchoolClassManager {
     return getRestManager().getAuthenticator().getUsername();
   }
 
-  public static List<DomStudent> getStudentsInSchool() throws Dwo2Exception {
-    List<DomStudent> src;
-    src = getRestManager().getList("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/getStudentsInSchoolList",
-        RestListClassTypes.DomStudent);
-    LOG.log(Level.FINE,
-        "Retrieved list of single school students in the school for the teacher with username {0}.",
-        new Object[] {getUserName()});
-    return src;
-  }
+//  public static List<DomStudent> getStudentsInSchool() throws Dwo2Exception {
+//    List<DomStudent> src;
+//    RestContext rest = new RestContext();
+//    rest.setRestContext(getContext());
+//    src = getRestManager().getPutList("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/getStudentsInSchoolList",
+//        RestListClassTypes.DomStudent, rest);
+//    LOG.log(Level.FINE,
+//        "Retrieved list of single school students in the school for the teacher with username {0}.",
+//        new Object[] {getUserName()});
+//    return src;
+//  }
 
   public static Boolean submitSchoolClass(DomSchoolClassFull schoolClass) throws Dwo2Exception {
     RestSchoolClassFull rest = new RestSchoolClassFull();
@@ -234,9 +241,11 @@ public class SecureTeacherSchoolClassManager {
 
   public static List<DomStudent> getSingleSchoolStudentsInSchool() throws Dwo2Exception {
     List<DomStudent> src;
-    src = getRestManager().getList(
+    RestContext rest = new RestContext();
+    rest.setRestContext(getContext());
+    src = getRestManager().getPutList(
         "rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/getSingleSchoolStudentsInSchoolList",
-        RestListClassTypes.DomStudent);
+        RestListClassTypes.DomStudent, rest);
     LOG.log(Level.FINE,
         "Retrieved list of single school students in the school for the teacher with username {0}.",
         new Object[] {getUserName()});
