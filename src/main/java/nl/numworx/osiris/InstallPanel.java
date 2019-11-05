@@ -24,7 +24,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 public class InstallPanel extends JPanel {
 	
 	Main main;
-	JButton install;
+	JButton install, delete;
 	
 	OsirisBuilder osiris;
 	ServerBuilder numworx;
@@ -39,11 +39,21 @@ public class InstallPanel extends JPanel {
 		install = new JButton("IMPORT IN NUMWORX");
 		install.addActionListener(this::doInstall);
 		add(install);
+		delete = new JButton("Empty all tables");
+		delete.addActionListener(this::doDelete);
+		add(delete);
 		
 		osiris = new OsirisBuilder();
 		numworx = new ServerBuilder();
 	}
 
+	void doDelete(ActionEvent e) {
+	  main.cursus.doDelete(e);
+	  main.docent.doDelete(e);
+	  main.student.doDelete(e);
+	  main.toets.doDelete(e);
+	}
+	
 	public void doInstall(ActionEvent e) {
 		if (! main.login.complete.isDone()) {
 			showConfirmDialog(main, "login first");
@@ -116,9 +126,13 @@ public class InstallPanel extends JPanel {
 
 		      CourseManager man = new CourseManager(profile, numworx.getSchool(), groepen);
 			  for (CSVRecord record: main.toets) {
-					man.createToets(record);
-					toets ++;
-				}
+				if (man.createToets(record))
+				  toets ++;
+			  }
+			  for (CSVRecord record: main.student) {
+			    if (man.createToets(record))
+			      toets ++;
+			  }
 			      message += toets + " exams\n";
 			
 			message += "Installation done";

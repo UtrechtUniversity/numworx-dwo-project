@@ -76,10 +76,10 @@ public class LocalMain extends Main {
 		FileFilter filter = new FileNameExtensionFilter("CSV files (excel)", "csv");
 		chooser.setFileFilter(filter );		
 		JTabbedPane tabs = new JTabbedPane();
-		cursus = new TablePanel(this);
-		toets  = new TablePanel(this);
-		student = new TablePanel(this);
-		docent = new TablePanel(this);
+        cursus = new TablePanel(this, Col.COLLEGEJAAR, Col.CURSUS, Col.AANVANGSBLOK, Col.KORTE_NAAM_NL);
+        toets  = new TablePanel(this, Col.FACULTEIT, Col.COLLEGEJAAR, Col.CURSUS, Col.AANVANGSBLOK, Col.KORTE_NAAM_NL, Col.TOETS, Col.VOLTIJD_DEELTIJD, Col.BLOK,Col.GELEGENHEID, Col.OMSCHRIJVING);        
+        student = new TablePanel(this, Col.STUDENTNUMMER, Col.FACULTEIT, Col.COLLEGEJAAR, Col.CURSUS, Col.AANVANGSBLOK, Col.KORTE_NAAM_NL, Col.TOETS, Col.VOLTIJD_DEELTIJD, Col.BLOK,Col.GELEGENHEID, Col.OMSCHRIJVING);
+        docent = new TablePanel(this, Col.COLLEGEJAAR, Col.CURSUS, Col.LDAP_LOGIN);
 
 		login = new LoginPanel(this, login_URL, base);
 		DomUserFullwLoginContext value = new DomUserFullwLoginContext();

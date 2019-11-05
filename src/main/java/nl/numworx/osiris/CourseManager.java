@@ -25,19 +25,6 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class CourseManager {
 	
-	enum Col {
-		FACULTEIT,
-		COLLEGEJAAR,
-		CURSUS,
-		AANVANGSBLOK,
-		KORTE_NAAM_NL,
-		TOETS,
-		VOLTIJD_DEELTIJD,
-		BLOK,
-		GELEGENHEID,
-		OMSCHRIJVING
-	}
-
 	SecuredTeacherCourseManager updater;
 	SecureUserCourseManager getter;
 	
@@ -67,7 +54,7 @@ public class CourseManager {
 		return list.stream().map(DomCourse::getName).collect(Collectors.toSet());
 	}
 	
-	void createToets(CSVRecord record) throws Dwo2Exception {
+	boolean createToets(CSVRecord record) throws Dwo2Exception {
 		String faculteit =  record.get(Col.FACULTEIT);		
 		List<DomCourseStudent> courses;
 		
@@ -108,6 +95,9 @@ public class CourseManager {
 			d.setAcls(Collections.singletonList(acl));
 			updater.update(d);
 			courses.add(c);
+			return true;
+		} else {
+		  return false;
 		}
 		
  	}
@@ -136,6 +126,15 @@ public class CourseManager {
 		Collection<String> set = names(children);
 		if (! set.contains(sname)) {
 			DomCourseStudent s = createMap(parent, sname, Boolean.TRUE, description);
+	          DomCourseFull d = new DomCourseFull();
+	          d.setId(s.getId());
+	          d.setNotVisible(s.isNotVisible());
+	          DomACL acl = new DomACL();
+              acl.setAccess(ACL.READ);
+              acl.setEntity(school.getId());
+              d.setAcls(Collections.singletonList(acl));
+              s.setAcls(d.getAcls());
+              updater.update(d);
 			children.add(s);
 			root = s;
 		} else {
