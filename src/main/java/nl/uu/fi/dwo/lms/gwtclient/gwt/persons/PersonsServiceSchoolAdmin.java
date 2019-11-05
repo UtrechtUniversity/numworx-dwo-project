@@ -44,7 +44,7 @@ public class PersonsServiceSchoolAdmin extends PersonsService {
 
   @Override
   public Promise<List<DomSchoolClass>> getTeachersSchoolClasses() {
-    return manager.getSchoolClasses();
+    return manager.getSchoolClasses(context);
   }
 
   @Override
