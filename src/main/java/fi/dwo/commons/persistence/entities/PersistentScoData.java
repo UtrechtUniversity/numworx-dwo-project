@@ -10,13 +10,17 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoDataFull;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -51,6 +55,22 @@ public class PersistentScoData implements Serializable {
     @Lob
     @Column(name = "launchdatabytes")
     private byte[] launchdatabytes;
+    /**
+     * @since 1.5
+     */
+    @Column(name = "optlock")
+    @Version int optlock;
+    @Column(name = "lastChangeTimeStamp")
+    long lastChangeTimeStamp;
+    @NotNull
+    @Column(name="del",nullable = false)
+    private DelState delState = DelState.not;
+
+    @PrePersist
+    @PreUpdate
+    void changeTimestamp() {
+        lastChangeTimeStamp = System.currentTimeMillis();
+    }
 
     public PersistentScoData() {
     }

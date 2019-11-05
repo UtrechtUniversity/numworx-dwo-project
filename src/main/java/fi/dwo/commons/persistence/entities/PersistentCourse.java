@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
@@ -406,5 +408,11 @@ public class PersistentCourse implements Serializable {
 	public void setNotVisible(boolean notVisible) {
 		this.notVisible = notVisible;
 	}
-    
+
+	@PrePersist
+    @PreUpdate
+	  private void now() {
+	    lastChangeTimeStamp = System.currentTimeMillis();
+	  }
+  
 }

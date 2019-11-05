@@ -20,13 +20,17 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -105,6 +109,15 @@ public class PersistentUser implements Serializable {
     private Boolean singleSchoolAccount;
     @Column(name = "lastLoginTime")
     private java.sql.Time lastLoginTime;
+
+    // since 1.5.0
+    @Column(name = "optlock")
+    @Version private Long optlock;
+    @Column(name = "lastChangeTimeStamp")
+    long lastChangeTimeStamp;
+    @NotNull
+    @Column(name="del",nullable = false)
+    private DelState delState = DelState.not;
 
     public PersistentUser() {
     }
@@ -426,4 +439,11 @@ public class PersistentUser implements Serializable {
     public DomUserFull buildDomUserFull(String realm) {
       return withoutRealm(realm, buildDomUserFull());
     }
+    
+    @PrePersist
+    @PreUpdate
+    void changeTimestamp() {
+        lastChangeTimeStamp = System.currentTimeMillis();
+    }
+
 }

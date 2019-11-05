@@ -4,6 +4,7 @@ package fi.dwo.commons.persistence.entities;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolClass4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -16,6 +17,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -65,6 +67,16 @@ public class PersistentSchoolClass implements Serializable {
     @Size(max = 100)
     @Column(name = "registrationKey", length = 100)
     private String registrationKey;
+    /**
+     * @since 1.5
+     */
+    @Column(name = "optlock")
+    @Version int optlock;
+    @Column(name = "lastChangeTimeStamp")
+    long lastChangeTimeStamp;
+    @NotNull
+    @Column(name="del",nullable = false)
+    private DelState delState = DelState.not;
 
     public PersistentSchoolClass() {
     }
