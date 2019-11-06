@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomScoDataFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -163,10 +163,20 @@ public class PersistentScoData implements Serializable {
         return id;
     }
     
-    public void fillDomScoDataFull(DomScoDataFull domScoData) {
-    	domScoData.setId(buildPersistenceId());
-    }
     public void fillDomScoContextFull(DomScoContextFull scoContext) {
     	scoContext.setDescription(description);
+    }
+    
+    public void fillDomScoData(DomScoData dom) {
+      dom.setId(buildPersistenceId());
+      dom.setLaunchdata(getLaunchdata());
+      dom.setLaunchdatabytes(getLaunchdatabytes());
+      dom.setOptLock(Long.valueOf(optlock));
+    }
+    
+    public DomScoData buildDomScoData() {
+      DomScoData d = new DomScoData();
+      fillDomScoData(d);
+      return d;
     }
 }
