@@ -57,7 +57,7 @@ public class OsirisBuilder implements Builder {
 
 	public void setLeerlingenSource(InputSource is) throws IOException {
 		InputStream in = is.getByteStream();
-		Reader reader = bom(new InputStreamReader(in, "UTF-8"));
+		Reader reader = bom(new InputStreamReader(in, is.getEncoding()));
 		CSVParser parser = CSVParser.parse(reader, EXCEL);
 
 		for( CSVRecord record: parser) {
@@ -95,7 +95,7 @@ public class OsirisBuilder implements Builder {
 	
 	public void setGroepenSource(InputSource is) throws IOException {
 		InputStream in = is.getByteStream();
-		Reader reader = new InputStreamReader(in, "UTF-8");
+		Reader reader = new InputStreamReader(in, is.getEncoding());
 		reader = bom(reader);
 		CSVParser parser = CSVParser.parse(reader, EXCEL);
 
@@ -170,7 +170,7 @@ public class OsirisBuilder implements Builder {
 	}
 	public void setLeerkrachtenSource(InputSource is) throws IOException {
 		InputStream in = is.getByteStream();
-		Reader reader = bom(new InputStreamReader(in, "UTF-8"));
+		Reader reader = bom(new InputStreamReader(in, is.getEncoding()));
 		CSVParser parser = CSVParser.parse(reader, EXCEL);
 
 		for( CSVRecord record: parser) {
