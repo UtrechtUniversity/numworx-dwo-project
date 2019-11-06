@@ -47,6 +47,10 @@
         <filter-name>xss</filter-name>
         <url-pattern>/dwo/*</url-pattern>
     </filter-mapping>
+    <filter-mapping>
+        <filter-name>xss</filter-name>
+        <url-pattern>/gwtclient/gwtclient/*</url-pattern>
+    </filter-mapping>
     <filter>
         <filter-name>UrlRewriteFilter</filter-name>
         <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
